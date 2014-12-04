@@ -24,46 +24,17 @@ class CursorType {
 class Collection {
     protected $manager;
     protected $rp;
+    protected $wc;
     protected $ns;
 
-    function __construct(Manager $manager, $ns, ReadPreference $rp = null) {
+    function __construct(Manager $manager, $ns, WriteConcern $wc = null, ReadPreference $rp = null) {
         $this->manager = $manager;
         $this->ns = $ns;
+        $this->wc = $wc;
         $this->rp = $rp;
     }
 
-    protected function _opQueryFlags($options) {
-        $flags = 0;
-
-        $flags |= $options["allowPartialResults"] ? QueryFlags::PARTIAL : 0;
-        $flags |= $options["cursorType"] ? $options["cursorType"] : 0;
-        $flags |= $options["oplogReplay"] ? QueryFlags::OPLOG_REPLY: 0;
-        $flags |= $options["noCursorTimeout"] ? QueryFlags::NO_CURSOR_TIMEOUT : 0;
-
-        return $flags;
-    }
-
-    protected function _buildQuery($document, $options) {
-        if ($options["comment"]) {
-            $options["modifiers"]['$comment'] = $options["comment"];
-        }
-        if ($options["maxTimeMS"]) {
-            $options["modifiers"]['$maxTimeMS'] = $options["maxTimeMS"];
-        }
-        if ($options["sort"]) {
-            $options['$orderby'] = $options["sort"];
-        }
-
-        $flags = $this->_opQueryFlags($options);
-        $options["cursorFlags"] = $flags;
-
-
-        $query = new Query($document, $options);
-
-        return $query;
-    }
-
-    function find(array $document = array(), array $options = array()) {
+    function find(array $document = array(), array $options = array()) { /* {{{ {{{ */
 
         $options = array_merge($this->getFindOptions(), $options);
 
@@ -72,9 +43,8 @@ class Collection {
         $cursor = $this->manager->executeQuery($this->ns, $query, $this->rp);
 
         return $cursor;
-    }
-
-    function getFindOptions() {
+    } /* }}} */
+    function getFindOptions() { /* {{{ */
         return array(
             /**
              * Get partial results from a mongos if some shards are down (instead of throwing an error).
@@ -166,6 +136,37 @@ class Collection {
              */
             "sort" => array(),
         );
+    } /* }}} */
+    protected function _opQueryFlags($options) { /* {{{ */
+        $flags = 0;
+
+        $flags |= $options["allowPartialResults"] ? QueryFlags::PARTIAL : 0;
+        $flags |= $options["cursorType"] ? $options["cursorType"] : 0;
+        $flags |= $options["oplogReplay"] ? QueryFlags::OPLOG_REPLY: 0;
+        $flags |= $options["noCursorTimeout"] ? QueryFlags::NO_CURSOR_TIMEOUT : 0;
+
+        return $flags;
+    } /* }}} */
+    protected function _buildQuery($document, $options) { /* {{{ */
+        if ($options["comment"]) {
+            $options["modifiers"]['$comment'] = $options["comment"];
+        }
+        if ($options["maxTimeMS"]) {
+            $options["modifiers"]['$maxTimeMS'] = $options["maxTimeMS"];
+        }
+        if ($options["sort"]) {
+            $options['$orderby'] = $options["sort"];
+        }
+
+        $flags = $this->_opQueryFlags($options);
+        $options["cursorFlags"] = $flags;
+
+
+        $query = new Query($document, $options);
+
+        return $query;
+    } /* }}} */
+    /* }}} */
     }
 }
 

@@ -4,6 +4,7 @@ namespace MongoDB;
 use MongoDB\Manager;
 use MongoDB\Query;
 use MongoDB\ReadPreference;
+use MongoDB\WriteBatch;
 
 class QueryFlags {
     const TAILABLE_CURSOR   = 0x02;
@@ -22,6 +23,10 @@ class CursorType {
 }
 
 class Collection {
+    const INSERT = 0x01;
+    const UPDATE = 0x02;
+    const DELETE = 0x04;
+
     protected $manager;
     protected $rp;
     protected $wc;
@@ -167,6 +172,31 @@ class Collection {
         return $query;
     } /* }}} */
     /* }}} */
-    }
+
+    protected function _writeSingle($filter, $type, array $options = array(), $newobj = array()) { /* {{{ */
+        $options = array_merge($this->getWriteOptions(), $options);
+
+        $batch  = new WriteBatch($options["ordered"]);
+        switch($type) {
+            case self::INSERT:
+                $batch->insert($filter);
+                break;
+
+            case self::DELETE:
+                $batch->delete($filter, $options);
+                break;
+
+            case self::UPDATE:
+                $batch->update($filter, $newobj, $options);
+                break;
+        }
+
+        return $this->manager->executeWriteBatch($this->ns, $batch, $this->wc);
+    } /* }}} */
+    function getWriteOptions() { /* {{{ */
+        return array(
+            "ordered" => false,
+        );
+    } /* }}} */
 }
 

@@ -7,8 +7,8 @@ $manager = new MongoDB\Manager("mongodb://localhost:27017");
 
 
 var_dump($manager);
-$collection = new MongoDB\Collection($manager, "phongo_test.functional_cursor_001");
-$result = $collection->find(array("username" => "pacocha.quentin"), array("projection" => array("firstName" =>1)));
+$collection = new MongoDB\Collection($manager, "crud.examples");
+$result = $collection->find(array("nick" => "bjori"), array("projection" => array("name" =>1)));
 
 
 foreach($result as $document) {

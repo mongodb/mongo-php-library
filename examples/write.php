@@ -14,28 +14,79 @@ $hannes = array(
 );
 $hayley = array(
 	"name"    => "Hayley",
-	"nick"    => "Alien Ninja",
+	"nick"    => "Ninja",
 	"citizen" => "USA",
 );
-$jonpall = array(
-	"name"    => "Jon Pall",
-	"nick"    => "unknown",
-	"citizen" => "Iceland",
+$bobby = array(
+    "name" => "Robert Fischer",
+    "nick" => "Bobby Fischer",
+    "citizen" => "USA",
 );
 
 try {
-    $hannes_id = $collection->insertOne($hannes);
+    $result = $collection->insertOne($hannes);
+    printf("Inserted: %s (out of expected 1)\n", $result->getNumInserted());
+    $result = $collection->insertOne($hayley);
+    printf("Inserted: %s (out of expected 1)\n", $result->getNumInserted());
+    $result = $collection->insertOne($bobby);
+    printf("Inserted: %s (out of expected 1)\n", $result->getNumInserted());
+
+    $result = $collection->find(array("nick" => "bjori"), array("projection" => array("name" => 1)));
+    echo "Searching for nick => bjori, should have only one result:\n";
+    foreach($result as $document) {
+        var_dump($document);
+    }
+
+    $result = $collection->deleteOne($document);
+    printf("Deleted: %s (out of expected 1)\n", $result->getNumRemoved());
+    $result = $collection->updateOne(
+        array("citizen" => "USA"),
+        array('$set' => array("citizen" => "Iceland"))
+    );
+    printf("Updated: %s (out of expected 1)\n", $result->getNumModified());
+
+    $result = $collection->find(array("citizen" => "Iceland"), array("comment" => "Excellent query"));
+    echo "Searching for citizen => Iceland, verify Hayley is now Icelandic\n";
+    foreach($result as $document) {
+        var_dump($document);
+    }
+    $result = $collection->deleteOne($document);
+    printf("Deleted: %d (out of expected 1)\n", $result->getNumRemoved());
+
 } catch(Exception $e) {
     echo $e->getMessage(), "\n";
     exit;
 }
 
 try {
-    $results = $collection->insertMany(array($hayley, $jonpall));
+    /* These two were removed earlier */
+    $result = $collection->insertOne($hannes);
+    printf("Inserted: %s (out of expected 1)\n", $result->getNumInserted());
+    $result = $collection->insertOne($hayley);
+    printf("Inserted: %s (out of expected 1)\n", $result->getNumInserted());
+
+    $result = $collection->find();
+    echo "Find all docs, should be 3, verify 2x USA citizen, 1 Icelandic\n";
+    foreach($result as $document) {
+        var_dump($document);
+    }
+
+    $result = $collection->updateMany(
+        array("citizen" => "USA"),
+        array('$set' => array("citizen" => "Iceland"))
+    );
+
+    printf("Updated: %d (out of expected 2), verify everyone is Icelandic\n", $result->getNumModified());
+    $result = $collection->find();
+    foreach($result as $document) {
+        var_dump($document);
+    }
+
+    $result = $collection->deleteMany(array("citizen" => "Iceland"));
+    printf("Deleted: %d (out of expected 3)\n", $result->getNumRemoved());
 } catch(Exception $e) {
     echo $e->getMessage(), "\n";
     exit;
+
 }
-
-
 

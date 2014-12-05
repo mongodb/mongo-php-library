@@ -209,5 +209,11 @@ class Collection {
     function deleteMany(array $filter) { /* {{{ */
         return $this->_writeSingle($filter, self::DELETE, array("limit" => 0));
     } /* }}} */
+    function updateOne(array $filter, $update, array $options = array()) { /* {{{ */
+        return $this->_writeSingle($filter, self::UPDATE, $options, $update);
+    } /* }}} */
+    function updateMany(array $filter, $update, array $options = array()) { /* {{{ */
+        return $this->_writeSingle($filter, self::UPDATE, $options + array("limit" => 0), $update);
+    } /* }}} */
 }
 

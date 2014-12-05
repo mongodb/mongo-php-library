@@ -81,6 +81,15 @@ try {
     foreach($result as $document) {
         var_dump($document);
     }
+    $result = $collection->replaceOne(
+        array("nick" => "Bobby Fischer"),
+        array("name" => "Magnus Carlsen", "nick" => "unknown", "citizen" => "Norway")
+    );
+    printf("Replaced: %d (out of expected 1), verify Bobby has been replaced with Magnus\n", $result->getNumModified());
+    $result = $collection->find();
+    foreach($result as $document) {
+        var_dump($document);
+    }
 
     $result = $collection->deleteMany(array("citizen" => "Iceland"));
     printf("Deleted: %d (out of expected 3)\n", $result->getNumRemoved());

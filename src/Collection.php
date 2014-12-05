@@ -209,8 +209,17 @@ class Collection {
     function deleteMany(array $filter) { /* {{{ */
         return $this->_writeSingle($filter, self::DELETE, array("limit" => 0));
     } /* }}} */
-    function updateOne(array $filter, $update, array $options = array()) { /* {{{ */
+    function updateOne(array $filter, array $update, array $options = array()) { /* {{{ */
+        if (key($update)[0] != '$') {
+            throw new \RuntimeException("First key in \$update must be a \$operator");
+        }
         return $this->_writeSingle($filter, self::UPDATE, $options, $update);
+    } /* }}} */
+    function replaceOne(array $filter, array $update, array $options = array()) { /* {{{ */
+        if (key($update)[0] == '$') {
+            throw new \RuntimeException("First key in \$update must NOT be a \$operator");
+        }
+        return $this->_writeSingle($filter, self::UPDATE, $options, array('$set' => $update));
     } /* }}} */
     function updateMany(array $filter, $update, array $options = array()) { /* {{{ */
         return $this->_writeSingle($filter, self::UPDATE, $options + array("limit" => 0), $update);

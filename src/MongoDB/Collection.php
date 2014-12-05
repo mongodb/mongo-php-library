@@ -264,6 +264,32 @@ class Collection {
         );
     } /* }}} */
 
+    function distinct($fieldName, array $filter = array(), array $options = array()) { /* {{{ */
+        $options = array_merge($this->getFindOptions(), $options);
+        $cmd = array(
+            "distinct" => $this->collname,
+            "key"      => $fieldName,
+            "query"    => $filter,
+            $options
+        );
+
+        $doc = $this->_runCommand($this->dbname, $cmd)->getResponseDocument();
+        if ($doc["ok"]) {
+            return $doc["values"];
+        }
+        throw $this->_generateCommandException($doc);
+    } /* }}} */
+    function getDistinctOptions() { /* {{{ */
+        return array(
+            /**
+             * The maximum amount of time to allow the query to run. The default is infinite.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/distinct/
+             */
+            "maxTimeMS" => 0,
+        );
+    } /* }}} */
+
     protected function _generateCommandException($doc) { /* {{{ */
         if ($doc["errmsg"]) {
             return new Exception($doc["errmsg"]);

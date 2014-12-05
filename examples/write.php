@@ -58,6 +58,9 @@ try {
     foreach($result as $document) {
         var_dump($document);
     }
+    $result = $collection->distinct("citizen");
+    echo "Distinct countries:\n";
+    var_dump($result);
 
     $result = $collection->updateMany(
         array("citizen" => "Iceland"),

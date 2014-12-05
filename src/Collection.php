@@ -195,7 +195,13 @@ class Collection {
     function getWriteOptions() { /* {{{ */
         return array(
             "ordered" => false,
+            "upsert"  => false,
+            "limit"   => 1,
         );
+    } /* }}} */
+
+    function insertOne(array $filter) { /* {{{ */
+        return $this->_writeSingle($filter, self::INSERT);
     } /* }}} */
 }
 

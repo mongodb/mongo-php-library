@@ -223,8 +223,7 @@ class Collection {
         $cmd = array(
             "count" => $this->collname,
             "query" => $filter,
-            $options
-        );
+        ) + $options;
 
         $doc = $this->_runCommand($this->dbname, $cmd)->getResponseDocument();
         if ($doc["ok"]) {
@@ -265,13 +264,12 @@ class Collection {
     } /* }}} */
 
     function distinct($fieldName, array $filter = array(), array $options = array()) { /* {{{ */
-        $options = array_merge($this->getFindOptions(), $options);
+        $options = array_merge($this->getDistinctOptions(), $options);
         $cmd = array(
             "distinct" => $this->collname,
             "key"      => $fieldName,
             "query"    => $filter,
-            $options
-        );
+        ) + $options;
 
         $doc = $this->_runCommand($this->dbname, $cmd)->getResponseDocument();
         if ($doc["ok"]) {
@@ -298,6 +296,7 @@ class Collection {
         return new Exception("FIXME: Unknown error");
     } /* }}} */
     protected function _runCommand($dbname, array $cmd, ReadPreference $rp = null) { /* {{{ */
+        //var_dump(\BSON\toJSON(\BSON\fromArray($cmd)));
         $command = new Command($cmd);
         return $this->manager->executeCommand($dbname, $command, $rp);
     } /* }}} */

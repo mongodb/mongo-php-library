@@ -62,6 +62,10 @@ try {
     echo "Distinct countries:\n";
     var_dump($result);
 
+    $aggregate = $collection->aggregate(array(array('$project' => array("name" => 1, "_id" => 0))), array("useCursor" => false));
+    printf("Should be 3 different people\n");
+    var_dump($aggregate);
+
     $result = $collection->updateMany(
         array("citizen" => "Iceland"),
         array('$set' => array("viking" => true))

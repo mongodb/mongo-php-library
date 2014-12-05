@@ -288,6 +288,71 @@ class Collection {
         );
     } /* }}} */
 
+    function aggregate(array $pipeline, array $options = array()) { /* {{{ */
+        $options = array_merge($this->getAggregateOptions(), $options);
+        $options = $this->_massageAggregateOptions($options);
+        $cmd = array(
+            "aggregate" => $this->collname,
+            "pipeline"  => $pipeline,
+        ) + $options;
+
+        $doc = $this->_runCommand($this->dbname, $cmd)->getResponseDocument();
+        if ($doc["ok"]) {
+            return $doc["result"];
+        }
+        throw $this->_generateCommandException($doc);
+    } /* }}} */
+    function getAggregateOptions() { /* {{{ */
+        $opts = array(
+            /**
+             * Enables writing to temporary files. When set to true, aggregation stages
+             * can write data to the _tmp subdirectory in the dbPath directory. The
+             * default is false.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/aggregate/
+             */
+            "allowDiskUse" => false,
+
+            /**
+             * The number of documents to return per batch.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/aggregate/
+             */
+            "batchSize" => 0,
+
+            /**
+             * The maximum amount of time to allow the query to run.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/aggregate/
+             */
+            "maxTimeMS" => 0,
+
+            /**
+             * Indicates if the results should be provided as a cursor.
+             *
+             * The default for this value depends on the version of the server.
+             * - Servers >= 2.6 will use a default of true.
+             * - Servers < 2.6 will use a default of false.
+             *
+             * As with any other property, this value can be changed.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/aggregate/
+             */
+            "useCursor" => true,
+        );
+
+        /* FIXME: Add a version check for useCursor */
+        return $opts;
+    } /* }}} */
+    protected function _massageAggregateOptions($options) {
+        if ($options["useCursor"]) {
+            $options["cursor"] = array("batchSize" => $options["batchSize"]);
+        }
+        unset($options["useCursor"], $options["batchSize"]);
+
+        return $options;
+    }
+
     protected function _generateCommandException($doc) { /* {{{ */
         if ($doc["errmsg"]) {
             return new Exception($doc["errmsg"]);

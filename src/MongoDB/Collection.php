@@ -296,10 +296,16 @@ class Collection {
             "pipeline"  => $pipeline,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->getResponseDocument();
-        if ($doc["ok"]) {
-            return $doc["result"];
+        $result = $this->_runCommand($this->dbname, $cmd);
+        $doc = $result->getResponseDocument();
+        if (isset($cmd["cursor"]) && $cmd["cursor"]) {
+            return $result;
+        } else {
+            if ($doc["ok"]) {
+                return new \ArrayIterator($doc["result"]);
+            }
         }
+
         throw $this->_generateCommandException($doc);
     } /* }}} */
     function getAggregateOptions() { /* {{{ */
@@ -358,7 +364,7 @@ class Collection {
             return new Exception($doc["errmsg"]);
         }
         var_dump($doc);
-        return new Exception("FIXME: Unknown error");
+        return new \Exception("FIXME: Unknown error");
     } /* }}} */
     protected function _runCommand($dbname, array $cmd, ReadPreference $rp = null) { /* {{{ */
         //var_dump(\BSON\toJSON(\BSON\fromArray($cmd)));

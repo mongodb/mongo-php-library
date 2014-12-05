@@ -62,9 +62,12 @@ try {
     echo "Distinct countries:\n";
     var_dump($result);
 
-    $aggregate = $collection->aggregate(array(array('$project' => array("name" => 1, "_id" => 0))), array("useCursor" => false));
+    echo "aggregate\n";
+    $aggregate = $collection->aggregate(array(array('$project' => array("name" => 1, "_id" => 0))), array("useCursor" => true, "batchSize" => 2));
     printf("Should be 3 different people\n");
-    var_dump($aggregate);
+    foreach($aggregate as $person) {
+        var_dump($person);
+    }
 
     $result = $collection->updateMany(
         array("citizen" => "Iceland"),

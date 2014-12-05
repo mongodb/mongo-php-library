@@ -4,6 +4,7 @@ namespace MongoDB;
 /* phongo includes */
 use MongoDB\Manager;
 use MongoDB\Query;
+use MongoDB\Command;
 use MongoDB\ReadPreference;
 use MongoDB\WriteBatch;
 
@@ -20,11 +21,14 @@ class Collection {
     protected $wc;
     protected $ns;
 
+    protected $dbname;
+    protected $collname;
     function __construct(Manager $manager, $ns, WriteConcern $wc = null, ReadPreference $rp = null) {
         $this->manager = $manager;
         $this->ns = $ns;
         $this->wc = $wc;
         $this->rp = $rp;
+        list($this->dbname, $this->collname) = explode(".", $ns, 2);
     }
 
     function find(array $filter = array(), array $options = array()) { /* {{{ {{{ */
@@ -159,7 +163,7 @@ class Collection {
         return $query;
     } /* }}} */
     /* }}} */
-
+    /* {{{ writes */
     protected function _writeSingle($filter, $type, array $options = array(), $newobj = array()) { /* {{{ */
         $options = array_merge($this->getWriteOptions(), $options);
 
@@ -211,6 +215,65 @@ class Collection {
     } /* }}} */
     function updateMany(array $filter, $update, array $options = array()) { /* {{{ */
         return $this->_writeSingle($filter, self::UPDATE, $options + array("limit" => 0), $update);
+    } /* }}} */
+    /* }}} */
+
+    function count(array $filter = array(), array $options = array()) { /* {{{ */
+        $options = array_merge($this->getFindOptions(), $options);
+        $cmd = array(
+            "count" => $this->collname,
+            "query" => $filter,
+            $options
+        );
+
+        $doc = $this->_runCommand($this->dbname, $cmd)->getResponseDocument();
+        if ($doc["ok"]) {
+            return $doc["n"];
+        }
+        throw $this->_generateCommandException($doc);
+    } /* }}} */
+    function getCountOptions() { /* {{{ */
+        return array(
+            /**
+             * The index to use.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/count/
+             */
+            "hint" => "", // string or document
+
+            /**
+             * The maximum number of documents to count.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/count/
+             */
+            "limit" => 0,
+
+            /**
+             * The maximum amount of time to allow the query to run.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/count/
+             */
+            "maxTimeMS" => 0,
+
+            /**
+             * The number of documents to skip before returning the documents.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/count/
+             */
+            "skip"  => 0,
+        );
+    } /* }}} */
+
+    protected function _generateCommandException($doc) { /* {{{ */
+        if ($doc["errmsg"]) {
+            return new Exception($doc["errmsg"]);
+        }
+        var_dump($doc);
+        return new Exception("FIXME: Unknown error");
+    } /* }}} */
+    protected function _runCommand($dbname, array $cmd, ReadPreference $rp = null) { /* {{{ */
+        $command = new Command($cmd);
+        return $this->manager->executeCommand($dbname, $command, $rp);
     } /* }}} */
 }
 

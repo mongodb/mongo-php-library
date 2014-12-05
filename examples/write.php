@@ -1,6 +1,8 @@
 <?php
 
-require __DIR__ . "/../src/Collection.php";
+require __DIR__ . "/../src/MongoDB/QueryFlags.php";
+require __DIR__ . "/../src/MongoDB/CursorType.php";
+require __DIR__ . "/../src/MongoDB/Collection.php";
 
 
 $manager = new MongoDB\Manager("mongodb://localhost:27017");

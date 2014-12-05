@@ -39,11 +39,10 @@ class Collection {
         $this->rp = $rp;
     }
 
-    function find(array $document = array(), array $options = array()) { /* {{{ {{{ */
-
+    function find(array $filter = array(), array $options = array()) { /* {{{ {{{ */
         $options = array_merge($this->getFindOptions(), $options);
 
-        $query = $this->_buildQuery($document, $options);
+        $query = $this->_buildQuery($filter, $options);
 
         $cursor = $this->manager->executeQuery($this->ns, $query, $this->rp);
 
@@ -152,7 +151,7 @@ class Collection {
 
         return $flags;
     } /* }}} */
-    protected function _buildQuery($document, $options) { /* {{{ */
+    protected function _buildQuery($filter, $options) { /* {{{ */
         if ($options["comment"]) {
             $options["modifiers"]['$comment'] = $options["comment"];
         }
@@ -167,7 +166,7 @@ class Collection {
         $options["cursorFlags"] = $flags;
 
 
-        $query = new Query($document, $options);
+        $query = new Query($filter, $options);
 
         return $query;
     } /* }}} */

@@ -203,5 +203,11 @@ class Collection {
     function insertOne(array $filter) { /* {{{ */
         return $this->_writeSingle($filter, self::INSERT);
     } /* }}} */
+    function deleteOne(array $filter) { /* {{{ */
+        return $this->_writeSingle($filter, self::DELETE);
+    } /* }}} */
+    function deleteMany(array $filter) { /* {{{ */
+        return $this->_writeSingle($filter, self::DELETE, array("limit" => 0));
+    } /* }}} */
 }
 

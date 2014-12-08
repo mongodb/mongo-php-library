@@ -1,15 +1,15 @@
 {
     "name": "bjori/phongo-crud",
     "description": "MongoDB CRUD interface for PHongo",
-    "license": "BSD",
+    "require": {
+        "ext-phongo": ">=0.1.1"
+    },
+    "license": "BSD-2-Clause",
     "authors": [
         {
             "name": "Hannes Magnusson",
             "email": "bjori@mongodb.com"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {
-	    "ext-phongo": ">=0.1.0"
-    }
+    "minimum-stability": "dev"
 }

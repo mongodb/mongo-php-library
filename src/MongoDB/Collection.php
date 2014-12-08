@@ -18,6 +18,9 @@ class Collection {
     const UPDATE = 0x02;
     const DELETE = 0x04;
 
+    const FIND_ONE_AND_RETURN_BEFORE = 0x01;
+    const FIND_ONE_AND_RETURN_AFTER  = 0x02;
+
     protected $manager;
     protected $rp;
     protected $wc;
@@ -364,6 +367,88 @@ class Collection {
         return $options;
     } /* }}} */
 
+    /* {{{ findAndModify */
+
+    function findOneAndReplace(array $filter, array $replacement, array $options = array()) { /* {{{ */
+        if (key($replacement)[0] == '$') {
+            throw new \RuntimeException("First key in \$replacement must NOT be a \$operator");
+        }
+
+        $options = array_merge($this->getFindOneAndReplaceOptions(), $options);
+        $options = $this->_massageFindAndModifyOptions($options, $replacement);
+
+        $cmd = array(
+            "findandmodify" => $this->collname,
+            "query"         => $filter,
+        ) + $options;
+
+        $doc = $this->_runCommand($this->dbname, $cmd)->getResponseDocument();
+        if ($doc["ok"]) {
+            return $doc["value"];
+        }
+
+        throw $this->_generateCommandException($doc);
+    } /* }}} */
+    function getFindOneAndReplaceOptions() { /* {{{ */
+        return array(
+
+            /**
+             * The maximum amount of time to allow the query to run.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+             */
+            "maxTimeMS" => 0,
+
+            /**
+             * Limits the fields to return for all matching documents.
+             *
+             * @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results
+             */
+            "projection" => array(),
+
+            /**
+             * When ReturnDocument.After, returns the replaced or inserted document rather than the original.
+             * Defaults to ReturnDocument.Before.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+             */
+            "returnDocument" => self::FIND_ONE_AND_RETURN_BEFORE,
+
+            /**
+             * Determines which document the operation modifies if the query selects multiple documents.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+             */
+            "sort" => array(),
+
+            /**
+             * When true, findAndModify creates a new document if no document matches the query. The
+             * default is false.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+             */
+            "upsert" => false,
+        );
+
+    } /* }}} */
+
+
+    protected function _massageFindAndModifyOptions($options, $update = array()) { /* {{{ */
+        $ret = array(
+            "sort"   => $options["sort"],
+            "new"    => isset($options["returnDocument"]) ? $options["returnDocument"] == self::FIND_ONE_AND_RETURN_AFTER : false,
+            "fields" => $options["projection"],
+            "upsert" => isset($options["upsert"]) ? $options["upsert"] : false,
+        );
+        if ($update) {
+            $ret["update"] = $update;
+        } else {
+            $ret["remove"] = true;
+        }
+
+        return $ret;
+    } /* }}} */
+    /* }}} */
 
     protected function _generateCommandException($doc) { /* {{{ */
         if ($doc["errmsg"]) {

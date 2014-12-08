@@ -128,6 +128,17 @@ try {
 } catch(Exception $e) {
     printf("Caught exception '%s', on line %d\n", $e->getMessage(), __LINE__);
     exit;
+}
+
+try {
+    echo "FindOneAndReplace\n";
+    $result = $collection->findOneAndReplace($spassky, $kasparov, array("upsert" => true));
+    echo "Kasparov\n";
+    var_dump($result);
+
+} catch(Exception $e) {
+    printf("Caught exception '%s', on line %d\n", $e->getMessage(), __LINE__);
+    exit;
 
 }
 

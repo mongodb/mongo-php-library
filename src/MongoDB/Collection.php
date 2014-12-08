@@ -216,7 +216,7 @@ class Collection {
         if (key($update)[0] == '$') {
             throw new \RuntimeException("First key in \$update must NOT be a \$operator");
         }
-        return $this->_writeSingle($filter, self::UPDATE, $options, array('$set' => $update));
+        return $this->_writeSingle($filter, self::UPDATE, $options, $update);
     } /* }}} */
     function updateMany(array $filter, $update, array $options = array()) { /* {{{ */
         return $this->_writeSingle($filter, self::UPDATE, $options + array("limit" => 0), $update);

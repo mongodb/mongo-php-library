@@ -1,12 +1,12 @@
 <?php
 namespace MongoDB\QueryFlags;
 
-const TAILABLE_CURSOR   = 1 << 1;
-const SLAVE_OKAY        = 1 << 2;
-const OPLOG_REPLY       = 1 << 3;
-const NO_CURSOR_TIMEOUT = 1 << 4;
-const AWAIT_DATA        = 1 << 5;
-const EXHAUST           = 1 << 6;
-const PARTIAL           = 1 << 7;
+const TAILABLE_CURSOR   = 0x02;
+const SLAVE_OKAY        = 0x04;
+const OPLOG_REPLY       = 0x08;
+const NO_CURSOR_TIMEOUT = 0x10;
+const AWAIT_DATA        = 0x20;
+const EXHAUST           = 0x40;
+const PARTIAL           = 0x80;
 
 

@@ -1,7 +1,7 @@
 <?php
 namespace MongoDB;
 
-/* phongo includes */
+/* {{{ phongo includes */
 use MongoDB\Manager;
 use MongoDB\Query;
 use MongoDB\Command;
@@ -10,8 +10,10 @@ use MongoDB\WriteBatch;
 
 use MongoDB\QueryFlags;
 use MongoDB\CursorType;
+/* }}} */
 
 class Collection {
+    /* {{{ consts & vars */
     const INSERT = 0x01;
     const UPDATE = 0x02;
     const DELETE = 0x04;
@@ -23,13 +25,16 @@ class Collection {
 
     protected $dbname;
     protected $collname;
-    function __construct(Manager $manager, $ns, WriteConcern $wc = null, ReadPreference $rp = null) {
+    /* }}} */
+
+
+    function __construct(Manager $manager, $ns, WriteConcern $wc = null, ReadPreference $rp = null) { /* {{{ */
         $this->manager = $manager;
         $this->ns = $ns;
         $this->wc = $wc;
         $this->rp = $rp;
         list($this->dbname, $this->collname) = explode(".", $ns, 2);
-    }
+    } /* }}} */
 
     function find(array $filter = array(), array $options = array()) { /* {{{ {{{ */
         $options = array_merge($this->getFindOptions(), $options);
@@ -350,14 +355,15 @@ class Collection {
         /* FIXME: Add a version check for useCursor */
         return $opts;
     } /* }}} */
-    protected function _massageAggregateOptions($options) {
+    protected function _massageAggregateOptions($options) { /* {{{ */
         if ($options["useCursor"]) {
             $options["cursor"] = array("batchSize" => $options["batchSize"]);
         }
         unset($options["useCursor"], $options["batchSize"]);
 
         return $options;
-    }
+    } /* }}} */
+
 
     protected function _generateCommandException($doc) { /* {{{ */
         if ($doc["errmsg"]) {

@@ -136,6 +136,15 @@ try {
     echo "Kasparov\n";
     var_dump($result);
 
+    echo "Deleting him, he isn't Croatian just yet\n";
+    $result = $collection->findOneAndDelete(array("citizen" => "Croatia"));
+    var_dump($result);
+
+    echo "This should be empty\n";
+    $result = $collection->find(array());
+    foreach($result as $document) {
+        var_dump($document);
+    }
 } catch(Exception $e) {
     printf("Caught exception '%s', on line %d\n", $e->getMessage(), __LINE__);
     exit;

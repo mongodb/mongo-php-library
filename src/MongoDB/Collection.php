@@ -368,6 +368,46 @@ class Collection {
     } /* }}} */
 
     /* {{{ findAndModify */
+    function findOneAndDelete(array $filter, array $options = array()) { /* {{{ */
+        $options = array_merge($this->getFindOneAndDeleteOptions(), $options);
+        $options = $this->_massageFindAndModifyOptions($options);
+        $cmd = array(
+            "findandmodify" => $this->collname,
+            "query"         => $filter,
+        ) + $options;
+
+        $doc = $this->_runCommand($this->dbname, $cmd)->getResponseDocument();
+        if ($doc["ok"]) {
+            return $doc["value"];
+        }
+
+        throw $this->_generateCommandException($doc);
+    } /* }}} */
+    function getFindOneAndDeleteOptions() { /* {{{ */
+        return array(
+
+            /**
+             * The maximum amount of time to allow the query to run.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+             */
+            "maxTimeMS" => 0,
+
+            /**
+             * Limits the fields to return for all matching documents.
+             *
+             * @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results
+             */
+            "projection" => array(),
+
+            /**
+             * Determines which document the operation modifies if the query selects multiple documents.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+             */
+            "sort" => array(),
+        );
+    } /* }}} */
 
     function findOneAndReplace(array $filter, array $replacement, array $options = array()) { /* {{{ */
         if (key($replacement)[0] == '$') {

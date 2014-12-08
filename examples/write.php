@@ -136,6 +136,10 @@ try {
     echo "Kasparov\n";
     var_dump($result);
 
+    echo "Returning the old document where he was Russian\n";
+    $result = $collection->findOneAndUpdate($kasparov, array('$set' => array("citizen" => "Croatia")));
+    var_dump($result);
+
     echo "Deleting him, he isn't Croatian just yet\n";
     $result = $collection->findOneAndDelete(array("citizen" => "Croatia"));
     var_dump($result);

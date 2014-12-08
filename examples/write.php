@@ -2,6 +2,9 @@
 
 require __DIR__ . "/../src/MongoDB/QueryFlags.php";
 require __DIR__ . "/../src/MongoDB/CursorType.php";
+require __DIR__ . "/../src/MongoDB/InsertResult.php";
+require __DIR__ . "/../src/MongoDB/DeleteResult.php";
+require __DIR__ . "/../src/MongoDB/UpdateResult.php";
 require __DIR__ . "/../src/MongoDB/Collection.php";
 
 
@@ -37,11 +40,11 @@ $spassky = array(
 
 try {
     $result = $collection->insertOne($hannes);
-    printf("Inserted: %s (out of expected 1)\n", $result->getNumInserted());
+    printf("Inserted _id: %s\n", $result->getInsertedId());
     $result = $collection->insertOne($hayley);
-    printf("Inserted: %s (out of expected 1)\n", $result->getNumInserted());
+    printf("Inserted _id: %s\n", $result->getInsertedId());
     $result = $collection->insertOne($bobby);
-    printf("Inserted: %s (out of expected 1)\n", $result->getNumInserted());
+    printf("Inserted _id: %s\n", $result->getInsertedId());
 
     $count = $collection->count(array("nick" => "bjori"));
     printf("Searching for nick => bjori, should have only one result: %d\n", $count);
@@ -50,7 +53,7 @@ try {
         array("citizen" => "USA"),
         array('$set' => array("citizen" => "Iceland"))
     );
-    printf("Updated: %s (out of expected 1)\n", $result->getNumModified());
+    printf("Updated: %s (out of expected 1)\n", $result->getModifiedCount());
 
     $result = $collection->find(array("citizen" => "Iceland"), array("comment" => "Excellent query"));
     echo "Searching for citizen => Iceland, verify Hayley is now Icelandic\n";
@@ -91,7 +94,7 @@ try {
         array('$set' => array("viking" => true))
     );
 
-    printf("Updated: %d (out of expected 2), verify Icelandic people are vikings\n", $result->getNumModified());
+    printf("Updated: %d (out of expected 2), verify Icelandic people are vikings\n", $result->getModifiedCount());
     $result = $collection->find();
     foreach($result as $document) {
         var_dump($document);
@@ -108,7 +111,7 @@ try {
         array("nick" => "Bobby Fischer"),
         array("name" => "Magnus Carlsen", "nick" => "unknown", "citizen" => "Norway")
     );
-    printf("Replaced: %d (out of expected 1), verify Bobby has been replaced with Magnus\n", $result->getNumModified());
+    printf("Replaced: %d (out of expected 1), verify Bobby has been replaced with Magnus\n", $result->getModifiedCount());
     $result = $collection->find();
     foreach($result as $document) {
         var_dump($document);
@@ -121,10 +124,10 @@ try {
 
 try {
     $result = $collection->deleteOne($document);
-    printf("Deleted: %d (out of expected 1)\n", $result->getNumRemoved());
+    printf("Deleted: %d (out of expected 1)\n", $result->getDeletedCount());
 
     $result = $collection->deleteMany(array("citizen" => "Iceland"));
-    printf("Deleted: %d (out of expected 2)\n", $result->getNumRemoved());
+    printf("Deleted: %d (out of expected 2)\n", $result->getDeletedCount());
 } catch(Exception $e) {
     printf("Caught exception '%s', on line %d\n", $e->getMessage(), __LINE__);
     exit;

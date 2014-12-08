@@ -172,26 +172,6 @@ class Collection {
     } /* }}} */
     /* }}} */
     /* {{{ writes */
-    protected function _writeSingle($filter, $type, array $options = array(), $newobj = array()) { /* {{{ */
-        $options = array_merge($this->getWriteOptions(), $options);
-
-        $batch  = new WriteBatch($options["ordered"]);
-        switch($type) {
-            case self::INSERT:
-                $batch->insert($filter);
-                break;
-
-            case self::DELETE:
-                $batch->delete($filter, $options);
-                break;
-
-            case self::UPDATE:
-                $batch->update($filter, $newobj, $options);
-                break;
-        }
-
-        return $this->manager->executeWriteBatch($this->ns, $batch, $this->wc);
-    } /* }}} */
     function getWriteOptions() { /* {{{ */
         return array(
             "ordered" => false,
@@ -201,28 +181,60 @@ class Collection {
     } /* }}} */
 
     function insertOne(array $filter) { /* {{{ */
-        return $this->_writeSingle($filter, self::INSERT);
+        $options = array_merge($this->getWriteOptions());
+
+        $batch = new WriteBatch($options["ordered"]);
+        $id    = $batch->insert($filter);
+        $wr    = $this->manager->executeWriteBatch($this->ns, $batch, $this->wc);
+
+        return new InsertResult($wr, $id);
+    } /* }}} */
+
+    protected function _delete($filter, $limit = 1) { /* {{{ */
+        $options = array_merge($this->getWriteOptions(), array("limit" => $limit));
+
+        $batch  = new WriteBatch($options["ordered"]);
+        $batch->delete($filter, $options);
+        return $this->manager->executeWriteBatch($this->ns, $batch, $this->wc);
     } /* }}} */
     function deleteOne(array $filter) { /* {{{ */
-        return $this->_writeSingle($filter, self::DELETE);
+        $wr = $this->_delete($filter);
+
+        return new DeleteResult($wr);
     } /* }}} */
     function deleteMany(array $filter) { /* {{{ */
-        return $this->_writeSingle($filter, self::DELETE, array("limit" => 0));
+        $wr = $this->_delete($filter, 0);
+
+        return new DeleteResult($wr);
+    } /* }}} */
+
+    protected function _update($filter, $update, $options) { /* {{{ */
+        $options = array_merge($this->getWriteOptions(), $options);
+
+        $batch  = new WriteBatch($options["ordered"]);
+        $batch->update($filter, $update, $options);
+        return $this->manager->executeWriteBatch($this->ns, $batch, $this->wc);
     } /* }}} */
     function updateOne(array $filter, array $update, array $options = array()) { /* {{{ */
         if (key($update)[0] != '$') {
             throw new \RuntimeException("First key in \$update must be a \$operator");
         }
-        return $this->_writeSingle($filter, self::UPDATE, $options, $update);
+        $wr = $this->_update($filter, $update, $options);
+
+        return new UpdateResult($wr);
     } /* }}} */
     function replaceOne(array $filter, array $update, array $options = array()) { /* {{{ */
         if (key($update)[0] == '$') {
             throw new \RuntimeException("First key in \$update must NOT be a \$operator");
         }
-        return $this->_writeSingle($filter, self::UPDATE, $options, $update);
+        $wr = $this->_update($filter, $update, $options);
+
+        return new UpdateResult($wr);
     } /* }}} */
     function updateMany(array $filter, $update, array $options = array()) { /* {{{ */
-        return $this->_writeSingle($filter, self::UPDATE, $options + array("limit" => 0), $update);
+        $wr = $this->_update($filter, $update, $options + array("limit" => 0));
+
+        return new UpdateResult($wr);
     } /* }}} */
     /* }}} */
 

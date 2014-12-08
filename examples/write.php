@@ -24,6 +24,16 @@ $bobby = array(
     "nick" => "Bobby Fischer",
     "citizen" => "USA",
 );
+$kasparov = array(
+    "name"    => "Garry Kimovich Kasparov",
+    "nick"    => "Kasparov",
+    "citizen" => "Russia",
+);
+$spassky = array(
+    "name"    => "Boris Vasilievich Spassky",
+    "nick"    => "Spassky",
+    "citizen" => "France",
+);
 
 try {
     $result = $collection->insertOne($hannes);
@@ -48,7 +58,7 @@ try {
         var_dump($document);
     }
 } catch(Exception $e) {
-    echo $e->getMessage(), "\n";
+    printf("Caught exception '%s', on line %d\n", $e->getMessage(), __LINE__);
     exit;
 }
 
@@ -69,6 +79,13 @@ try {
         var_dump($person);
     }
 
+} catch(Exception $e) {
+    printf("Caught exception '%s', on line %d\n", $e->getMessage(), __LINE__);
+    exit;
+}
+
+
+try {
     $result = $collection->updateMany(
         array("citizen" => "Iceland"),
         array('$set' => array("viking" => true))
@@ -79,6 +96,14 @@ try {
     foreach($result as $document) {
         var_dump($document);
     }
+} catch(Exception $e) {
+    printf("Caught exception '%s', on line %d\n", $e->getMessage(), __LINE__);
+    exit;
+}
+
+
+try {
+    echo "This is the trouble maker\n";
     $result = $collection->replaceOne(
         array("nick" => "Bobby Fischer"),
         array("name" => "Magnus Carlsen", "nick" => "unknown", "citizen" => "Norway")
@@ -88,14 +113,20 @@ try {
     foreach($result as $document) {
         var_dump($document);
     }
+} catch(Exception $e) {
+    printf("Caught exception '%s', on line %d\n", $e->getMessage(), __LINE__);
+    exit;
+}
 
+
+try {
     $result = $collection->deleteOne($document);
     printf("Deleted: %d (out of expected 1)\n", $result->getNumRemoved());
 
     $result = $collection->deleteMany(array("citizen" => "Iceland"));
     printf("Deleted: %d (out of expected 2)\n", $result->getNumRemoved());
 } catch(Exception $e) {
-    echo $e->getMessage(), "\n";
+    printf("Caught exception '%s', on line %d\n", $e->getMessage(), __LINE__);
     exit;
 
 }

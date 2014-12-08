@@ -3,3 +3,4 @@
 !.gitignore
 composer.phar
 /vendor/
+php.ini

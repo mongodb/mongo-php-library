@@ -185,7 +185,7 @@ class Collection {
         );
     } /* }}} */
 
-    function bulkWrite(array $bulk, array $options = array()) {
+    function bulkWrite(array $bulk, array $options = array()) { /* {{{ */
         $options = array_merge($this->getBulkOptions(), $options);
 
         $batch = new WriteBatch($options["ordered"]);
@@ -250,7 +250,7 @@ class Collection {
             }
         }
         return $this->manager->executeWriteBatch($this->ns, $batch, $this->wc);
-    }
+    } /* }}} */
 
     function insertOne(array $filter) { /* {{{ */
         $options = array_merge($this->getWriteOptions());

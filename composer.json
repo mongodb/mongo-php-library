@@ -2,7 +2,7 @@
     "name": "bjori/phongo-crud",
     "description": "MongoDB CRUD interface for PHongo",
     "require": {
-        "ext-phongo": ">=0.1.1"
+        "ext-phongo": ">=0.1.2"
     },
     "license": "BSD-2-Clause",
     "authors": [

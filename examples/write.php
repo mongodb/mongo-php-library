@@ -155,6 +155,60 @@ try {
 } catch(Exception $e) {
     printf("Caught exception '%s', on line %d\n", $e->getMessage(), __LINE__);
     exit;
-
 }
 
+
+try {
+    $result = $collection->bulkWrite(
+        // Required writes param (an array of operations)
+        [
+            // Like explain(), operations identified by single key
+            [
+                'insertOne' => [
+                    ['x' => 1]
+                ],
+            ],
+            [
+                'updateMany' => [
+                    ['x' => 1],
+                    ['$set' => ['x' => 2]],
+                ],
+            ],
+            [
+                'updateOne' => [
+                    ['x' => 3],
+                    ['$set' => ['x' => 4]],
+                    // Optional params are still permitted
+                    ['upsert' => true],
+                ],
+            ],
+            [
+                'deleteOne' => [
+                    ['x' => 1],
+                ],
+            ],
+            [
+                'deleteMany' => [
+                    // Required arguments must still be specified
+                    [],
+                ],
+            ],
+        ],
+        // Optional named params in an associative array
+        ['ordered' => false]
+    );
+    printf("insertedCount: %d\n", $result->getInsertedCount());
+    printf("matchedCount: %d\n", $result->getMatchedCount());
+    printf("modifiedCount: %d\n", $result->getModifiedCount());
+    printf("upsertedCount: %d\n", $result->getUpsertedCount());
+    printf("deletedCount: %d\n", $result->getDeletedCount());
+
+    foreach ($result->getUpsertedIds() as $index => $id) {
+        printf("upsertedId[%d]: %s", $index, $id);
+    }
+
+} catch(Exception $e) {
+    printf("Caught exception '%s', on line %d\n", $e->getMessage(), __LINE__);
+    echo $e->getTraceAsString(), "\n";
+    exit;
+}

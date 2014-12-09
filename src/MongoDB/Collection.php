@@ -179,6 +179,78 @@ class Collection {
             "limit"   => 1,
         );
     } /* }}} */
+    function getBulkOptions() { /* {{{ */
+        return array(
+            "ordered" => false,
+        );
+    } /* }}} */
+
+    function bulkWrite(array $bulk, array $options = array()) {
+        $options = array_merge($this->getBulkOptions(), $options);
+
+        $batch = new WriteBatch($options["ordered"]);
+
+        foreach($bulk as $n => $op) {
+            foreach($op as $opname => $args) {
+                if (!isset($args[0])) {
+                    throw \RuntimeException(sprintf("Missing argument#1 for '%s' (operation#%d)", $opname, $n));
+                }
+
+                switch($opname) {
+                case "insertOne":
+                    $batch->insert($args[0]);
+                    break;
+
+                case "updateMany":
+                    if (!isset($args[1])) {
+                        throw \RuntimeException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
+                    }
+                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 0));
+
+                    $batch->update($args[0], $args[1], $options);
+                    break;
+
+                case "updateOne":
+                    if (!isset($args[1])) {
+                        throw \RuntimeException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
+                    }
+                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 1));
+                    if (key($args[1])[0] != '$') {
+                        throw new \RuntimeException("First key in \$update must be a \$operator");
+                    }
+
+                    $batch->update($args[0], $args[1], $options);
+                    break;
+
+                case "replaceOne":
+                    if (!isset($args[1])) {
+                        throw \RuntimeException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
+                    }
+                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 1));
+                    if (key($args[1])[0] == '$') {
+                        throw new \RuntimeException("First key in \$update must NOT be a \$operator");
+                    }
+
+                    $batch->update($args[0], $args[1], $options);
+                    break;
+
+                case "deleteOne":
+                    $options = array_merge($this->getWriteOptions(), isset($args[1]) ? $args[1] : array(), array("limit" => 1));
+                    $batch->delete($args[0], $options);
+                    break;
+
+                case "deleteMany":
+                    $options = array_merge($this->getWriteOptions(), isset($args[1]) ? $args[1] : array(), array("limit" => 1));
+                    $batch->delete($args[0], $options);
+                    break;
+
+                default:
+                    throw \RuntimeException(sprintf("Unknown operation type called '%s' (operation#%d)", $opname, $n));
+                }
+            }
+        }
+        return $this->manager->executeWriteBatch($this->ns, $batch, $this->wc);
+    }
 
     function insertOne(array $filter) { /* {{{ */
         $options = array_merge($this->getWriteOptions());
@@ -215,17 +287,17 @@ class Collection {
         $batch->update($filter, $update, $options);
         return $this->manager->executeWriteBatch($this->ns, $batch, $this->wc);
     } /* }}} */
-    function updateOne(array $filter, array $update, array $options = array()) { /* {{{ */
-        if (key($update)[0] != '$') {
-            throw new \RuntimeException("First key in \$update must be a \$operator");
+    function replaceOne(array $filter, array $update, array $options = array()) { /* {{{ */
+        if (key($update)[0] == '$') {
+            throw new \RuntimeException("First key in \$update must NOT be a \$operator");
         }
         $wr = $this->_update($filter, $update, $options);
 
         return new UpdateResult($wr);
     } /* }}} */
-    function replaceOne(array $filter, array $update, array $options = array()) { /* {{{ */
-        if (key($update)[0] == '$') {
-            throw new \RuntimeException("First key in \$update must NOT be a \$operator");
+    function updateOne(array $filter, array $update, array $options = array()) { /* {{{ */
+        if (key($update)[0] != '$') {
+            throw new \RuntimeException("First key in \$update must be a \$operator");
         }
         $wr = $this->_update($filter, $update, $options);
 

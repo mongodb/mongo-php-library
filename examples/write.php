@@ -1,11 +1,11 @@
 <?php
 
-require __DIR__ . "/../src/MongoDB/QueryFlags.php";
-require __DIR__ . "/../src/MongoDB/CursorType.php";
-require __DIR__ . "/../src/MongoDB/InsertResult.php";
-require __DIR__ . "/../src/MongoDB/DeleteResult.php";
-require __DIR__ . "/../src/MongoDB/UpdateResult.php";
-require __DIR__ . "/../src/MongoDB/Collection.php";
+require __DIR__ . "/../src/QueryFlags.php";
+require __DIR__ . "/../src/CursorType.php";
+require __DIR__ . "/../src/InsertResult.php";
+require __DIR__ . "/../src/DeleteResult.php";
+require __DIR__ . "/../src/UpdateResult.php";
+require __DIR__ . "/../src/Collection.php";
 
 
 $manager = new MongoDB\Manager("mongodb://localhost:27017");

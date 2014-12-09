@@ -2,5 +2,6 @@
 .*
 !.gitignore
 composer.phar
+composer.lock
 /vendor/
 php.ini

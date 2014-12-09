@@ -13,8 +13,8 @@
     ],
     "minimum-stability": "dev",
     "autoload": {
-	    "psr-4": {
-		    "MongoDB\\": "src/"
-	    }
+        "psr-4": {
+            "MongoDB\\": "src/"
+        }
     }
 }

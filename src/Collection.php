@@ -248,7 +248,7 @@ class Collection {
                     break;
 
                 case "deleteMany":
-                    $options = array_merge($this->getWriteOptions(), isset($args[1]) ? $args[1] : array(), array("limit" => 1));
+                    $options = array_merge($this->getWriteOptions(), isset($args[1]) ? $args[1] : array(), array("limit" => 0));
                     $batch->delete($args[0], $options);
                     break;
 

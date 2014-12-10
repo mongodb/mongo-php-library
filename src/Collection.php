@@ -319,7 +319,7 @@ class Collection {
     /* }}} */
 
     function count(array $filter = array(), array $options = array()) { /* {{{ */
-        $options = array_merge($this->getFindOptions(), $options);
+        $options = array_merge($this->getCountOptions(), $options);
         $cmd = array(
             "count" => $this->collname,
             "query" => $filter,

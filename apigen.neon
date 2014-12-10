@@ -1,0 +1,46 @@
+source:
+	- src
+	
+destination: api
+extensions:
+	- php
+	
+exclude:
+	- tests/
+	- vendor/
+	
+skipDocPath:
+	- * <mask>```
+	
+skipDocPrefix:
+	- Example
+	
+charset:
+	- UTF-8
+	
+main: MongoDB
+title: MongoDB CRUD
+baseUrl: http://bjori.github.io/phongo-crud
+googleCseId: null
+googleAnalytics: null
+templateTheme: bootstrap
+templateConfig: null
+groups: auto
+autocomplete:
+	- classes
+	- constants
+	- functions
+	- methods
+	- properties
+	- classconstants
+	
+accessLevels:
+	- public
+	
+internal: false
+php: true
+sourceCode: true
+tree: true
+deprecated: false
+todo: false
+download: false

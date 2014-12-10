@@ -7,16 +7,23 @@ use MongoDB\Query;
 use MongoDB\Command;
 use MongoDB\ReadPreference;
 use MongoDB\WriteBatch;
-
-use MongoDB\QueryFlags;
-use MongoDB\CursorType;
 /* }}} */
 
 class Collection {
     /* {{{ consts & vars */
-    const INSERT = 0x01;
-    const UPDATE = 0x02;
-    const DELETE = 0x04;
+    const QUERY_FLAG_TAILABLE_CURSOR   = 0x02;
+    const QUERY_FLAG_SLAVE_OKAY        = 0x04;
+    const QUERY_FLAG_OPLOG_REPLY       = 0x08;
+    const QUERY_FLAG_NO_CURSOR_TIMEOUT = 0x10;
+    const QUERY_FLAG_AWAIT_DATA        = 0x20;
+    const QUERY_FLAG_EXHAUST           = 0x40;
+    const QUERY_FLAG_PARTIAL           = 0x80;
+
+
+    const CURSOR_TYPE_NON_TAILABLE   = 0x00;
+    const CURSOR_TYPE_TAILABLE       = self::QUERY_FLAG_TAILABLE_CURSOR;
+    //self::QUERY_FLAG_TAILABLE_CURSOR | self::QUERY_FLAG_AWAIT_DATA;
+    const CURSOR_TYPE_TAILABLE_AWAIT = 0x22;
 
     const FIND_ONE_AND_RETURN_BEFORE = 0x01;
     const FIND_ONE_AND_RETURN_AFTER  = 0x02;
@@ -75,11 +82,12 @@ class Collection {
             /**
              * Indicates the type of cursor to use. This value includes both
              * the tailable and awaitData options.
-             * The default is NON_TAILABLE.
+             * The default is MongoDB\self::CURSOR_TYPE_NON_TAILABLE.
              *
+             * @see MongoDB\CursorType
              * @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
              */
-            "cursorType" => CursorType\NON_TAILABLE,
+            "cursorType" => self::CURSOR_TYPE_NON_TAILABLE,
 
             /**
              * The maximum number of documents to return.
@@ -144,10 +152,10 @@ class Collection {
     protected function _opQueryFlags($options) { /* {{{ */
         $flags = 0;
 
-        $flags |= $options["allowPartialResults"] ? QueryFlags\PARTIAL : 0;
+        $flags |= $options["allowPartialResults"] ? self::QUERY_FLAG_PARTIAL : 0;
         $flags |= $options["cursorType"] ? $options["cursorType"] : 0;
-        $flags |= $options["oplogReplay"] ? QueryFlags\OPLOG_REPLY: 0;
-        $flags |= $options["noCursorTimeout"] ? QueryFlags\NO_CURSOR_TIMEOUT : 0;
+        $flags |= $options["oplogReplay"] ? self::QUERY_FLAG_OPLOG_REPLY: 0;
+        $flags |= $options["noCursorTimeout"] ? self::QUERY_FLAG_NO_CURSOR_TIMEOUT : 0;
 
         return $flags;
     } /* }}} */

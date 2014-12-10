@@ -654,6 +654,13 @@ class Collection {
         //var_dump(\BSON\toJSON(\BSON\fromArray($cmd)));
         $command = new Command($cmd);
         return $this->manager->executeCommand($dbname, $command, $rp);
-    } /* }}} */
+    }
+
+    function getCollectionName() {
+        return $this->collname;
+    }
+    function getDatabaseName() {
+        return $this->dbname;
+    }
 }
 

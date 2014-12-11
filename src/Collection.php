@@ -79,6 +79,31 @@ class Collection {
     }
 
     /**
+     * Performs a find (query) on the collection, returning at most one result
+     *
+     * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
+     * @see MongoDB\Collection::getFindOptions() for supported $options
+     *
+     * @param array $filter    The find query to execute
+     * @param array $options   Additional options
+     * @return array|false     The matched document, or false on failure
+     */
+    function findOne(array $filter = array(), array $options = array()) {
+        $options = array_merge($this->getFindOptions(), array("limit" => 1), $options);
+
+        $query = $this->_buildQuery($filter, $options);
+
+        $cursor = $this->manager->executeQuery($this->ns, $query, $this->rp);
+
+        $array = iterator_to_array($cursor);
+        if ($array) {
+            return $array[0];
+        }
+
+        return false;
+    }
+
+    /**
      * Retrieves all find options with their default values.
      *
      * @return array of MongoDB\Collection::find() options

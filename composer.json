@@ -4,6 +4,9 @@
     "require": {
         "ext-phongo": ">=0.1.2"
     },
+    "require-dev": {
+        "fzaninotto/faker": "~1.0"
+    },
     "license": "BSD-2-Clause",
     "authors": [
         {

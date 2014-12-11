@@ -534,7 +534,6 @@ class Collection {
      * @return integer
      */
     function count(array $filter = array(), array $options = array()) {
-        $options = array_merge($this->getCountOptions(), $options);
         $cmd = array(
             "count" => $this->collname,
             "query" => $filter,

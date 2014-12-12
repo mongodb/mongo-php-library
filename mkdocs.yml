@@ -1,5 +1,5 @@
-site_name: "PHongo: CRUD - The Create Read Update and Delete interface for PHongo"
-repo_url: https://github.com/bjori/phongo-crud
+site_name: "PHongo libraries"
+repo_url: https://github.com/10gen-labs/mongo-php-library-prototype
 theme: spacelab
 pages:
     - [index.md, Home]

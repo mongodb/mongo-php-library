@@ -1,6 +1,6 @@
-# Welcome to PHongo CRUD
+# Welcome to phongo libraries!
 
-PHongo CRUD is an CRUD API ontop of [Phongo](https://github.com/bjori/phongo).
+phongo libraries is a CRUD API ontop of [Phongo](https://github.com/10gen-labs/mongo-php-driver-prototype).
 Its purpose is to provide standard MongoDB API and follows the MongoDB CRUD API Specification[1]
 that all [MongoDB](http://mongodb.com) supported drivers follow.
 
@@ -12,9 +12,9 @@ an collection, and delete documents from a collection.
 # Installation
 
 As PHongo CRUD is an abstraction layer for PHongo, it naturally requires [PHongo to be
-installed](http://bjori.github.io/phongo/#installation):
+installed](http://10gen-labs.github.io/mongo-php-driver-prototype/#installation):
 
-	$ wget https://github.com/bjori/phongo/releases/download/0.1.2/phongo-0.1.2.tgz
+	$ wget https://github.com/10gen-labs/mongo-php-driver-prototype/releases/download/0.1.2/phongo-0.1.2.tgz
 	$ pecl install phongo-0.1.2.tgz
 	$ echo "extension=phongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
@@ -26,12 +26,12 @@ by adding the following to
     "repositories": [
         {
 	    "type": "vcs",
-	    "url": "https://github.com/bjori/phongo-crud"
+	    "url": "https://github.com/10gen-labs/mongo-php-library-prototype"
         }
     ],
     "require": {
         "ext-phongo": ">=0.1.2",
-        "bjori/phongo-crud": "dev-master"
+        "10gen-labs/mongo-php-library-prototype": "dev-master"
     }
 ```
 
@@ -46,7 +46,7 @@ $ composer install
 ## Generated API Docs
 
 If you are just interested in looking at the API provided, checkout the apidoc generated
-documentation on: [http://bjori.github.io/phongo-crud/api/class-MongoDB.Collection.html](http://bjori.github.io/phongo-crud/api/class-MongoDB.Collection.html)
+documentation on: [http://10gen-labs.github.io/mongo-php-library-prototype/api/class-MongoDB.Collection.html](http://10gen-labs.github.io/mongo-php-library-prototype/api/class-MongoDB.Collection.html)
 
 
 

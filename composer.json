@@ -1,6 +1,6 @@
 {
-    "name": "bjori/phongo-crud",
-    "description": "MongoDB CRUD interface for PHongo",
+    "name": "10gen-labs/mongo-php-driver-libraries",
+    "description": "phongo libraries for MongoDB",
     "require": {
         "ext-phongo": ">=0.1.2"
     },

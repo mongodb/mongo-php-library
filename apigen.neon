@@ -18,9 +18,9 @@ skipDocPrefix:
 charset:
 	- UTF-8
 	
-main: MongoDB
-title: MongoDB CRUD
-baseUrl: http://bjori.github.io/phongo-crud
+main: phongo libraries
+title: phongo libraries
+baseUrl: http://10gen-labs.github.io/mongo-php-libraries-prototype
 googleCseId: null
 googleAnalytics: null
 templateTheme: bootstrap

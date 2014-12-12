@@ -57,7 +57,8 @@ docs: mkdocs
 
 release: test RELEASE
 	@echo "Please run:"
-	@echo "		" git commit -m \"Add $(PHONGO_LIB_VERSION) release notes\" RELEASE-$(PHONGO_LIB_VERSION)
+	@echo "		" git add RELEASE-$(PHONGO_LIB_VERSION)
+	@echo "		" git commit -m \"Add $(PHONGO_LIB_VERSION) release notes\"
 	@echo "		" git tag -a -m \"Release phongo-library $(PHONGO_LIB_VERSION)\" $(PHONGO_LIB_VERSION)
 	@echo "		" git push --tags
 	@echo "		" make release-docs

@@ -1,5 +1,5 @@
 {
-    "name": "10gen-labs/mongo-php-driver-libraries",
+    "name": "10gen-labs/mongo-php-library-prototype",
     "description": "phongo libraries for MongoDB",
     "require": {
         "ext-phongo": ">=0.1.2"

@@ -4,7 +4,8 @@
     "license": "Apache-2.0",
     "authors": [
         { "name": "Hannes Magnusson", "email": "bjori@mongodb.com" },
-        { "name": "Jeremy Mikola", "email": "jmikola@gmail.com" }
+        { "name": "Jeremy Mikola", "email": "jmikola@gmail.com" },
+        { "name": "Derick Rethans", "email": "github@derickrethans.nl" }
     ],
     "require": {
         "ext-phongo": ">=0.1.2"

@@ -1,7 +1,7 @@
 {
     "name": "10gen-labs/mongo-php-library-prototype",
     "description": "phongo libraries for MongoDB",
-    "license": "BSD-2-Clause",
+    "license": "Apache-2.0",
     "authors": [
         { "name": "Hannes Magnusson", "email": "bjori@mongodb.com"}
     ],

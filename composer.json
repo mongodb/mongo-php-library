@@ -1,6 +1,8 @@
 {
-    "name": "10gen-labs/mongo-php-library-prototype",
-    "description": "phongo libraries for MongoDB",
+    "name": "mongodb/mongodb",
+    "description": "MongoDB driver library",
+    "keywords": ["database", "driver", "mongodb", "persistence"],
+    "homepage": "https://jira.mongodb.org/browse/PHPLIB",
     "license": "Apache-2.0",
     "authors": [
         { "name": "Hannes Magnusson", "email": "bjori@mongodb.com" },

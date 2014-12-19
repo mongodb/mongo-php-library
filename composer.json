@@ -3,7 +3,8 @@
     "description": "phongo libraries for MongoDB",
     "license": "Apache-2.0",
     "authors": [
-        { "name": "Hannes Magnusson", "email": "bjori@mongodb.com"}
+        { "name": "Hannes Magnusson", "email": "bjori@mongodb.com" },
+        { "name": "Jeremy Mikola", "email": "jmikola@gmail.com" }
     ],
     "require": {
         "ext-phongo": ">=0.1.2"

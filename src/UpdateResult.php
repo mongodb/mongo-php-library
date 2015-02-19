@@ -1,11 +1,14 @@
 <?php
+
 namespace MongoDB;
+
+use MongoDB\Driver\WriteResult;
 
 class UpdateResult
 {
     protected $wr;
 
-    public function __construct(\MongoDB\WriteResult $wr)
+    public function __construct(WriteResult $wr)
     {
         $this->wr = $wr;
     }

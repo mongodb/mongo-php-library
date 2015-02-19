@@ -1,4 +1,8 @@
 <?php
+
+use MongoDB\Collection;
+use MongoDB\Driver\Manager;
+
 class CollectionTest extends PHPUnit_Framework_TestCase {
 
     function setUp() {
@@ -6,8 +10,8 @@ class CollectionTest extends PHPUnit_Framework_TestCase {
         $this->faker = Faker\Factory::create();
         $this->faker->seed(1234);
 
-        $this->manager = new MongoDB\Manager("mongodb://localhost");
-        $this->collection = new MongoDB\Collection($this->manager, "test.case");
+        $this->manager = new Manager("mongodb://localhost");
+        $this->collection = new Collection($this->manager, "test.case");
         $this->collection->deleteMany(array());
     }
 
@@ -17,8 +21,8 @@ class CollectionTest extends PHPUnit_Framework_TestCase {
         for($i=0; $i<10;$i++) {
             $user = createUser($this->faker);
             $result = $collection->insertOne($user);
-            $this->assertInstanceOf("MongoDB\\InsertResult", $result);
-            $this->assertInstanceOf("BSON\ObjectId", $result->getInsertedId());
+            $this->assertInstanceOf('MongoDB\InsertResult', $result);
+            $this->assertInstanceOf('BSON\ObjectId', $result->getInsertedId());
             $this->assertEquals(24, strlen($result->getInsertedId()));
 
             $user["_id"] = $result->getInsertedId();
@@ -33,7 +37,7 @@ class CollectionTest extends PHPUnit_Framework_TestCase {
         $count = $collection->count($query);
         $this->assertEquals(1, $count);
         $cursor = $collection->find($query);
-        $this->assertInstanceOf("MongoDB\\QueryResult", $cursor);
+        $this->assertInstanceOf('MongoDB\Driver\Result', $cursor);
 
         foreach($cursor as $n => $person) {
             $this->assertInternalType("array", $person);

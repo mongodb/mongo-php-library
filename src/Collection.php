@@ -1,13 +1,14 @@
 <?php
+
 namespace MongoDB;
 
-/* {{{ phongo includes */
-use MongoDB\Manager;
-use MongoDB\Query;
-use MongoDB\Command;
-use MongoDB\ReadPreference;
-use MongoDB\WriteBatch;
-/* }}} */
+use MongoDB\Driver\Command;
+use MongoDB\Driver\Manager;
+use MongoDB\Driver\Query;
+use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\Result;
+use MongoDB\Driver\WriteBatch;
+use MongoDB\Driver\WriteConcern;
 
 class Collection
 {
@@ -42,15 +43,15 @@ class Collection
 
 
     /**
-     * Constructs new MongoDB\Collection instance
+     * Constructs new Collection instance
      *
      * This is the suggested CRUD interface when using phongo.
      * It implements the MongoDB CRUD specification which is an interface all MongoDB
      * supported drivers follow.
      *
-     * @param MongoDB\Manager         $manager The phongo Manager instance
-     * @param MongoDB\WriteConcern    $wc      The WriteConcern to apply to writes
-     * @param MongoDB\ReadPreference  $rp      The ReadPreferences to apply to reads
+     * @param Manager        $manager The phongo Manager instance
+     * @param WriteConcern   $wc      The WriteConcern to apply to writes
+     * @param ReadPreference $rp      The ReadPreferences to apply to reads
      */
     public function __construct(Manager $manager, $ns, WriteConcern $wc = null, ReadPreference $rp = null)
     {
@@ -66,11 +67,11 @@ class Collection
      * Performs a find (query) on the collection
      *
      * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
-     * @see MongoDB\Collection::getFindOptions() for supported $options
+     * @see Collection::getFindOptions() for supported $options
      *
      * @param array $filter    The find query to execute
      * @param array $options   Additional options
-     * @return MongoDB\QueryResult
+     * @return Result
      */
     public function find(array $filter = array(), array $options = array())
     {
@@ -87,7 +88,7 @@ class Collection
      * Performs a find (query) on the collection, returning at most one result
      *
      * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
-     * @see MongoDB\Collection::getFindOptions() for supported $options
+     * @see Collection::getFindOptions() for supported $options
      *
      * @param array $filter    The find query to execute
      * @param array $options   Additional options
@@ -112,7 +113,7 @@ class Collection
     /**
      * Retrieves all find options with their default values.
      *
-     * @return array of MongoDB\Collection::find() options
+     * @return array of Collection::find() options
      */
     public function getFindOptions()
     {
@@ -142,9 +143,8 @@ class Collection
             /**
              * Indicates the type of cursor to use. This value includes both
              * the tailable and awaitData options.
-             * The default is MongoDB\self::CURSOR_TYPE_NON_TAILABLE.
+             * The default is Collection::CURSOR_TYPE_NON_TAILABLE.
              *
-             * @see MongoDB\CursorType
              * @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
              */
             "cursorType" => self::CURSOR_TYPE_NON_TAILABLE,
@@ -232,11 +232,11 @@ class Collection
     }
 
     /**
-     * Helper to build a MongoDB\Query object
+     * Helper to build a Query object
      *
      * @param array $filter the query document
      * @param array $options query/protocol options
-     * @return MongoDB\Query
+     * @return Query
      * @internal
      */
     final protected function _buildQuery($filter, $options)
@@ -312,14 +312,14 @@ class Collection
      *     - 'insertOne'
      *           Supports no $extraArgument
      *     - 'updateMany'
-     *           Requires $extraArgument1, same as $update for MongoDB\Collection\updateMany()
-     *           Optional $extraArgument2, same as $options for MongoDB\Collection\updateMany()
+     *           Requires $extraArgument1, same as $update for Collection::updateMany()
+     *           Optional $extraArgument2, same as $options for Collection::updateMany()
      *     - 'updateOne'
-     *           Requires $extraArgument1, same as $update for MongoDB\Collection\updateOne()
-     *           Optional $extraArgument2, same as $options for MongoDB\Collection\updateOne()
+     *           Requires $extraArgument1, same as $update for Collection::updateOne()
+     *           Optional $extraArgument2, same as $options for Collection::updateOne()
      *     - 'replaceOne'
-     *           Requires $extraArgument1, same as $update for MongoDB\Collection\replaceOne()
-     *           Optional $extraArgument2, same as $options for MongoDB\Collection\replaceOne()
+     *           Requires $extraArgument1, same as $update for Collection::replaceOne()
+     *           Optional $extraArgument2, same as $options for Collection::replaceOne()
      *     - 'deleteOne'
      *           Supports no $extraArgument
      *     - 'deleteMany'
@@ -327,11 +327,11 @@ class Collection
      *
      * @example Collection-bulkWrite.php Using Collection::bulkWrite()
      *
-     * @see MongoDB\Collection::getBulkOptions() for supported $options
+     * @see Collection::getBulkOptions() for supported $options
      *
      * @param array $bulk    Array of operations
      * @param array $options Additional options
-     * @return MongoDB\WriteResult
+     * @return WriteResult
      */
     public function bulkWrite(array $bulk, array $options = array())
     {
@@ -405,11 +405,11 @@ class Collection
      * Inserts the provided document
      *
      * @see http://docs.mongodb.org/manual/reference/command/insert/
-     * @see MongoDB\Collection::getWriteOptions() for supported $options
+     * @see Collection::getWriteOptions() for supported $options
      *
      * @param array $document  The document to insert
      * @param array $options   Additional options
-     * @return MongoDB\InsertResult
+     * @return InsertResult
      */
     public function insertOne(array $document)
     {
@@ -442,7 +442,7 @@ class Collection
      * @see http://docs.mongodb.org/manual/reference/command/delete/
      *
      * @param array $filter The $filter criteria to delete
-     * @return MongoDB\DeleteResult
+     * @return DeleteResult
      */
     public function deleteOne(array $filter)
     {
@@ -458,7 +458,7 @@ class Collection
      * @see http://docs.mongodb.org/manual/reference/command/delete/
      *
      * @param array $filter The $filter criteria to delete
-     * @return MongoDB\DeleteResult
+     * @return DeleteResult
      */
     public function deleteMany(array $filter)
     {
@@ -484,12 +484,12 @@ class Collection
      * Replace one document
      *
      * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @see MongoDB\Collection::getWriteOptions() for supported $options
+     * @see Collection::getWriteOptions() for supported $options
      *
      * @param array $filter   The document to be replaced
      * @param array $update   The document to replace with
      * @param array $options  Additional options
-     * @return MongoDB\UpdateResult
+     * @return UpdateResult
      */
     public function replaceOne(array $filter, array $update, array $options = array())
     {
@@ -506,12 +506,12 @@ class Collection
      * NOTE: Will update at most ONE document matching $filter
      *
      * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @see MongoDB\Collection::getWriteOptions() for supported $options
+     * @see Collection::getWriteOptions() for supported $options
      *
      * @param array $filter   The document to be replaced
      * @param array $update   An array of update operators to apply to the document
      * @param array $options  Additional options
-     * @return MongoDB\UpdateResult
+     * @return UpdateResult
      */
     public function updateOne(array $filter, array $update, array $options = array())
     {
@@ -528,12 +528,12 @@ class Collection
      * NOTE: Will update ALL documents matching $filter
      *
      * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @see MongoDB\Collection::getWriteOptions() for supported $options
+     * @see Collection::getWriteOptions() for supported $options
      *
      * @param array $filter   The document to be replaced
      * @param array $update   An array of update operators to apply to the document
      * @param array $options  Additional options
-     * @return MongoDB\UpdateResult
+     * @return UpdateResult
      */
     public function updateMany(array $filter, $update, array $options = array())
     {
@@ -547,7 +547,7 @@ class Collection
      * If no $filter provided, returns the numbers of documents in the collection
      *
      * @see http://docs.mongodb.org/manual/reference/command/count/
-     * @see MongoDB\Collection::getCountOptions() for supported $options
+     * @see Collection::getCountOptions() for supported $options
      *
      * @param array $filter   The find query to execute
      * @param array $options  Additional options
@@ -560,7 +560,7 @@ class Collection
             "query" => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->getResponseDocument();
+        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
         if ($doc["ok"]) {
             return $doc["n"];
         }
@@ -570,7 +570,7 @@ class Collection
     /**
      * Retrieves all count options with their default values.
      *
-     * @return array of MongoDB\Collection::count() options
+     * @return array of Collection::count() options
      */
     public function getCountOptions()
     {
@@ -609,7 +609,7 @@ class Collection
      * Finds the distinct values for a specified field across the collection
      *
      * @see http://docs.mongodb.org/manual/reference/command/distinct/
-     * @see MongoDB\Collection::getDistinctOptions() for supported $options
+     * @see Collection::getDistinctOptions() for supported $options
      *
      * @param string $fieldName  The fieldname to use
      * @param array $filter      The find query to execute
@@ -625,7 +625,7 @@ class Collection
             "query"    => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->getResponseDocument();
+        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
         if ($doc["ok"]) {
             return $doc["values"];
         }
@@ -635,7 +635,7 @@ class Collection
     /**
      * Retrieves all distinct options with their default values.
      *
-     * @return array of MongoDB\Collection::distinct() options
+     * @return array of Collection::distinct() options
      */
     public function getDistinctOptions()
     {
@@ -653,15 +653,15 @@ class Collection
      * Runs an aggregation framework pipeline
      * NOTE: The return value of this method depends on your MongoDB server version
      *       and possibly options.
-     *       MongoDB 2.6 (and later) will return a MongoDB\QueryCursor by default
-     *       MongoDB pre 2.6 will return a ArrayIterator
+     *       MongoDB 2.6 (and later) will return a Cursor by default
+     *       MongoDB pre 2.6 will return an ArrayIterator
      *
      * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-     * @see MongoDB\Collection::getAggregateOptions() for supported $options
+     * @see Collection::getAggregateOptions() for supported $options
      *
      * @param array $pipeline The pipeline to execute
      * @param array $options  Additional options
-     * @return Iteratable
+     * @return Iterator
      */
     public function aggregate(array $pipeline, array $options = array())
     {
@@ -673,7 +673,7 @@ class Collection
         ) + $options;
 
         $result = $this->_runCommand($this->dbname, $cmd);
-        $doc = $result->getResponseDocument();
+        $doc = $result->toArray();
         if (isset($cmd["cursor"]) && $cmd["cursor"]) {
             return $result;
         } else {
@@ -688,7 +688,7 @@ class Collection
     /**
      * Retrieves all aggregate options with their default values.
      *
-     * @return array of MongoDB\Collection::aggregate() options
+     * @return array of Collection::aggregate() options
      */
     public function getAggregateOptions()
     {
@@ -752,7 +752,7 @@ class Collection
      * Finds a single document and deletes it, returning the original.
      *
      * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     * @see MongoDB\Collection::getFindOneAndDelete() for supported $options
+     * @see Collection::getFindOneAndDelete() for supported $options
      *
      * @param array $filter   The $filter criteria to search for
      * @param array $options  Additional options
@@ -767,7 +767,7 @@ class Collection
             "query"         => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->getResponseDocument();
+        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
         if ($doc["ok"]) {
             return $doc["value"];
         }
@@ -778,7 +778,7 @@ class Collection
     /**
      * Retrieves all findOneDelete options with their default values.
      *
-     * @return array of MongoDB\Collection::findOneAndDelete() options
+     * @return array of Collection::findOneAndDelete() options
      */
     public function getFindOneAndDeleteOptions()
     {
@@ -811,10 +811,10 @@ class Collection
      * Finds a single document and replaces it, returning either the original or the replaced document
      * By default, returns the original document.
      * To return the new document set:
-     *     $options = array("returnDocument" => MongoDB\Collection::FIND_ONE_AND_RETURN_AFTER);
+     *     $options = array("returnDocument" => Collection::FIND_ONE_AND_RETURN_AFTER);
      *
      * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     * @see MongoDB\Collection::getFindOneAndReplace() for supported $options
+     * @see Collection::getFindOneAndReplace() for supported $options
      *
      * @param array $filter       The $filter criteria to search for
      * @param array $replacement  The document to replace with
@@ -835,7 +835,7 @@ class Collection
             "query"         => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->getResponseDocument();
+        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
         if ($doc["ok"]) {
             return $doc["value"];
         }
@@ -846,7 +846,7 @@ class Collection
     /**
      * Retrieves all findOneAndReplace options with their default values.
      *
-     * @return array of MongoDB\Collection::findOneAndReplace() options
+     * @return array of Collection::findOneAndReplace() options
      */
     public function getFindOneAndReplaceOptions()
     {
@@ -895,11 +895,11 @@ class Collection
      * Finds a single document and updates it, returning either the original or the updated document
      * By default, returns the original document.
      * To return the new document set:
-     *     $options = array("returnDocument" => MongoDB\Collection::FIND_ONE_AND_RETURN_AFTER);
+     *     $options = array("returnDocument" => Collection::FIND_ONE_AND_RETURN_AFTER);
      *
      *
      * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     * @see MongoDB\Collection::getFindOneAndUpdate() for supported $options
+     * @see Collection::getFindOneAndUpdate() for supported $options
      *
      * @param array $filter   The $filter criteria to search for
      * @param array $update   An array of update operators to apply to the document
@@ -920,7 +920,7 @@ class Collection
             "query"         => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->getResponseDocument();
+        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
         if ($doc["ok"]) {
             return $doc["value"];
         }
@@ -931,7 +931,7 @@ class Collection
     /**
      * Retrieves all findOneAndUpdate options with their default values.
      *
-     * @return array of MongoDB\Collection::findOneAndUpdate() options
+     * @return array of Collection::findOneAndUpdate() options
      */
     public function getFindOneAndUpdateOptions()
     {

@@ -1,16 +1,17 @@
 <?php
 namespace MongoDB;
 
-class DeleteResult {
+class DeleteResult
+{
     protected $wr;
 
-    function __construct(\MongoDB\WriteResult $wr) {
+    public function __construct(\MongoDB\WriteResult $wr)
+    {
         $this->wr = $wr;
     }
 
-    function getDeletedCount() {
+    public function getDeletedCount()
+    {
         return $this->wr->getDeletedCount();
     }
 }
-
-

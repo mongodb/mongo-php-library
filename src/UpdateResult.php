@@ -1,25 +1,27 @@
 <?php
 namespace MongoDB;
 
-class UpdateResult {
+class UpdateResult
+{
     protected $wr;
 
-    function __construct(\MongoDB\WriteResult $wr) {
+    public function __construct(\MongoDB\WriteResult $wr)
+    {
         $this->wr = $wr;
     }
 
-    function getMatchedCount() {
+    public function getMatchedCount()
+    {
         return $this->wr->getMatchedCount();
     }
 
-    function getModifiedCount() {
+    public function getModifiedCount()
+    {
         return $this->wr->getModifiedCount();
     }
 
-    function getUpsertedId() {
+    public function getUpsertedId()
+    {
         return $this->wr->getUpsertedIds()[0];
     }
 }
-
-
-

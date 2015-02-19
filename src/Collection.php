@@ -9,7 +9,8 @@ use MongoDB\ReadPreference;
 use MongoDB\WriteBatch;
 /* }}} */
 
-class Collection {
+class Collection
+{
     const VERSION = "0.1.0";
 
     /* {{{ consts & vars */
@@ -51,7 +52,8 @@ class Collection {
      * @param MongoDB\WriteConcern    $wc      The WriteConcern to apply to writes
      * @param MongoDB\ReadPreference  $rp      The ReadPreferences to apply to reads
      */
-    function __construct(Manager $manager, $ns, WriteConcern $wc = null, ReadPreference $rp = null) {
+    public function __construct(Manager $manager, $ns, WriteConcern $wc = null, ReadPreference $rp = null)
+    {
         $this->manager = $manager;
         $this->ns = $ns;
         $this->wc = $wc;
@@ -70,7 +72,8 @@ class Collection {
      * @param array $options   Additional options
      * @return MongoDB\QueryResult
      */
-    function find(array $filter = array(), array $options = array()) {
+    public function find(array $filter = array(), array $options = array())
+    {
         $options = array_merge($this->getFindOptions(), $options);
 
         $query = $this->_buildQuery($filter, $options);
@@ -90,7 +93,8 @@ class Collection {
      * @param array $options   Additional options
      * @return array|false     The matched document, or false on failure
      */
-    function findOne(array $filter = array(), array $options = array()) {
+    public function findOne(array $filter = array(), array $options = array())
+    {
         $options = array_merge($this->getFindOptions(), array("limit" => 1), $options);
 
         $query = $this->_buildQuery($filter, $options);
@@ -110,7 +114,8 @@ class Collection {
      *
      * @return array of MongoDB\Collection::find() options
      */
-    function getFindOptions() {
+    public function getFindOptions()
+    {
         return array(
             /**
              * Get partial results from a mongos if some shards are down (instead of throwing an error).
@@ -214,7 +219,8 @@ class Collection {
      * @return integer OP_QUERY Wire Protocol flags
      * @internal
      */
-    final protected function _opQueryFlags($options) {
+    final protected function _opQueryFlags($options)
+    {
         $flags = 0;
 
         $flags |= $options["allowPartialResults"] ? self::QUERY_FLAG_PARTIAL : 0;
@@ -233,7 +239,8 @@ class Collection {
      * @return MongoDB\Query
      * @internal
      */
-    final protected function _buildQuery($filter, $options) {
+    final protected function _buildQuery($filter, $options)
+    {
         if ($options["comment"]) {
             $options["modifiers"]['$comment'] = $options["comment"];
         }
@@ -258,7 +265,8 @@ class Collection {
      *
      * @return array of available Write options
      */
-    function getWriteOptions() {
+    public function getWriteOptions()
+    {
         return array(
             "ordered" => false,
             "upsert"  => false,
@@ -271,7 +279,8 @@ class Collection {
      *
      * @return array of available Bulk Write options
      */
-    function getBulkOptions() {
+    public function getBulkOptions()
+    {
         return array(
             "ordered" => false,
         );
@@ -324,18 +333,19 @@ class Collection {
      * @param array $options Additional options
      * @return MongoDB\WriteResult
      */
-    function bulkWrite(array $bulk, array $options = array()) {
+    public function bulkWrite(array $bulk, array $options = array())
+    {
         $options = array_merge($this->getBulkOptions(), $options);
 
         $batch = new WriteBatch($options["ordered"]);
 
-        foreach($bulk as $n => $op) {
-            foreach($op as $opname => $args) {
+        foreach ($bulk as $n => $op) {
+            foreach ($op as $opname => $args) {
                 if (!isset($args[0])) {
                     throw new \InvalidArgumentException(sprintf("Missing argument#1 for '%s' (operation#%d)", $opname, $n));
                 }
 
-                switch($opname) {
+                switch ($opname) {
                 case "insertOne":
                     $batch->insert($args[0]);
                     break;
@@ -401,7 +411,8 @@ class Collection {
      * @param array $options   Additional options
      * @return MongoDB\InsertResult
      */
-    function insertOne(array $document) {
+    public function insertOne(array $document)
+    {
         $options = array_merge($this->getWriteOptions());
 
         $batch = new WriteBatch($options["ordered"]);
@@ -415,7 +426,8 @@ class Collection {
      * Internal helper for delete one/many documents
      * @internal
      */
-    final protected function _delete($filter, $limit = 1) {
+    final protected function _delete($filter, $limit = 1)
+    {
         $options = array_merge($this->getWriteOptions(), array("limit" => $limit));
 
         $batch  = new WriteBatch($options["ordered"]);
@@ -432,7 +444,8 @@ class Collection {
      * @param array $filter The $filter criteria to delete
      * @return MongoDB\DeleteResult
      */
-    function deleteOne(array $filter) {
+    public function deleteOne(array $filter)
+    {
         $wr = $this->_delete($filter);
 
         return new DeleteResult($wr);
@@ -447,7 +460,8 @@ class Collection {
      * @param array $filter The $filter criteria to delete
      * @return MongoDB\DeleteResult
      */
-    function deleteMany(array $filter) {
+    public function deleteMany(array $filter)
+    {
         $wr = $this->_delete($filter, 0);
 
         return new DeleteResult($wr);
@@ -457,7 +471,8 @@ class Collection {
      * Internal helper for replacing/updating one/many documents
      * @internal
      */
-    protected function _update($filter, $update, $options) {
+    protected function _update($filter, $update, $options)
+    {
         $options = array_merge($this->getWriteOptions(), $options);
 
         $batch  = new WriteBatch($options["ordered"]);
@@ -476,7 +491,8 @@ class Collection {
      * @param array $options  Additional options
      * @return MongoDB\UpdateResult
      */
-    function replaceOne(array $filter, array $update, array $options = array()) {
+    public function replaceOne(array $filter, array $update, array $options = array())
+    {
         if (key($update)[0] == '$') {
             throw new \InvalidArgumentException("First key in \$update must NOT be a \$operator");
         }
@@ -497,7 +513,8 @@ class Collection {
      * @param array $options  Additional options
      * @return MongoDB\UpdateResult
      */
-    function updateOne(array $filter, array $update, array $options = array()) {
+    public function updateOne(array $filter, array $update, array $options = array())
+    {
         if (key($update)[0] != '$') {
             throw new \InvalidArgumentException("First key in \$update must be a \$operator");
         }
@@ -518,7 +535,8 @@ class Collection {
      * @param array $options  Additional options
      * @return MongoDB\UpdateResult
      */
-    function updateMany(array $filter, $update, array $options = array()) {
+    public function updateMany(array $filter, $update, array $options = array())
+    {
         $wr = $this->_update($filter, $update, $options + array("limit" => 0));
 
         return new UpdateResult($wr);
@@ -535,7 +553,8 @@ class Collection {
      * @param array $options  Additional options
      * @return integer
      */
-    function count(array $filter = array(), array $options = array()) {
+    public function count(array $filter = array(), array $options = array())
+    {
         $cmd = array(
             "count" => $this->collname,
             "query" => $filter,
@@ -553,7 +572,8 @@ class Collection {
      *
      * @return array of MongoDB\Collection::count() options
      */
-    function getCountOptions() {
+    public function getCountOptions()
+    {
         return array(
             /**
              * The index to use.
@@ -596,7 +616,8 @@ class Collection {
      * @param array $options     Additional options
      * @return integer
      */
-    function distinct($fieldName, array $filter = array(), array $options = array()) {
+    public function distinct($fieldName, array $filter = array(), array $options = array())
+    {
         $options = array_merge($this->getDistinctOptions(), $options);
         $cmd = array(
             "distinct" => $this->collname,
@@ -616,7 +637,8 @@ class Collection {
      *
      * @return array of MongoDB\Collection::distinct() options
      */
-    function getDistinctOptions() {
+    public function getDistinctOptions()
+    {
         return array(
             /**
              * The maximum amount of time to allow the query to run. The default is infinite.
@@ -641,7 +663,8 @@ class Collection {
      * @param array $options  Additional options
      * @return Iteratable
      */
-    function aggregate(array $pipeline, array $options = array()) {
+    public function aggregate(array $pipeline, array $options = array())
+    {
         $options = array_merge($this->getAggregateOptions(), $options);
         $options = $this->_massageAggregateOptions($options);
         $cmd = array(
@@ -667,7 +690,8 @@ class Collection {
      *
      * @return array of MongoDB\Collection::aggregate() options
      */
-    function getAggregateOptions() {
+    public function getAggregateOptions()
+    {
         $opts = array(
             /**
              * Enables writing to temporary files. When set to true, aggregation stages
@@ -714,7 +738,8 @@ class Collection {
      * Internal helper for massaging aggregate options
      * @internal
      */
-    protected function _massageAggregateOptions($options) {
+    protected function _massageAggregateOptions($options)
+    {
         if ($options["useCursor"]) {
             $options["cursor"] = array("batchSize" => $options["batchSize"]);
         }
@@ -733,7 +758,8 @@ class Collection {
      * @param array $options  Additional options
      * @return array The original document
      */
-    function findOneAndDelete(array $filter, array $options = array()) {
+    public function findOneAndDelete(array $filter, array $options = array())
+    {
         $options = array_merge($this->getFindOneAndDeleteOptions(), $options);
         $options = $this->_massageFindAndModifyOptions($options);
         $cmd = array(
@@ -754,7 +780,8 @@ class Collection {
      *
      * @return array of MongoDB\Collection::findOneAndDelete() options
      */
-    function getFindOneAndDeleteOptions() {
+    public function getFindOneAndDeleteOptions()
+    {
         return array(
 
             /**
@@ -794,7 +821,8 @@ class Collection {
      * @param array $options      Additional options
      * @return array
      */
-    function findOneAndReplace(array $filter, array $replacement, array $options = array()) {
+    public function findOneAndReplace(array $filter, array $replacement, array $options = array())
+    {
         if (key($replacement)[0] == '$') {
             throw new \InvalidArgumentException("First key in \$replacement must NOT be a \$operator");
         }
@@ -820,7 +848,8 @@ class Collection {
      *
      * @return array of MongoDB\Collection::findOneAndReplace() options
      */
-    function getFindOneAndReplaceOptions() {
+    public function getFindOneAndReplaceOptions()
+    {
         return array(
 
             /**
@@ -860,7 +889,6 @@ class Collection {
              */
             "upsert" => false,
         );
-
     }
 
     /**
@@ -878,7 +906,8 @@ class Collection {
      * @param array $options  Additional options
      * @return array
      */
-    function findOneAndUpdate(array $filter, array $update, array $options = array()) {
+    public function findOneAndUpdate(array $filter, array $update, array $options = array())
+    {
         if (key($update)[0] != '$') {
             throw new \InvalidArgumentException("First key in \$update must be a \$operator");
         }
@@ -904,7 +933,8 @@ class Collection {
      *
      * @return array of MongoDB\Collection::findOneAndUpdate() options
      */
-    function getFindOneAndUpdateOptions() {
+    public function getFindOneAndUpdateOptions()
+    {
         return array(
 
             /**
@@ -943,14 +973,14 @@ class Collection {
              */
             "upsert" => false,
         );
-
     }
 
     /**
      * Internal helper for massaging findandmodify options
      * @internal
      */
-    final protected function _massageFindAndModifyOptions($options, $update = array()) {
+    final protected function _massageFindAndModifyOptions($options, $update = array())
+    {
         $ret = array(
             "sort"   => $options["sort"],
             "new"    => isset($options["returnDocument"]) ? $options["returnDocument"] == self::FIND_ONE_AND_RETURN_AFTER : false,
@@ -970,7 +1000,8 @@ class Collection {
      * Internal helper for throwing an exception with error message
      * @internal
      */
-    final protected function _generateCommandException($doc) {
+    final protected function _generateCommandException($doc)
+    {
         if ($doc["errmsg"]) {
             return new Exception($doc["errmsg"]);
         }
@@ -982,7 +1013,8 @@ class Collection {
      * Internal helper for running a command
      * @internal
      */
-    final protected function _runCommand($dbname, array $cmd, ReadPreference $rp = null) {
+    final protected function _runCommand($dbname, array $cmd, ReadPreference $rp = null)
+    {
         //var_dump(\BSON\toJSON(\BSON\fromArray($cmd)));
         $command = new Command($cmd);
         return $this->manager->executeCommand($dbname, $command, $rp);
@@ -993,7 +1025,8 @@ class Collection {
      *
      * @return string
      */
-    function getCollectionName() {
+    public function getCollectionName()
+    {
         return $this->collname;
     }
 
@@ -1002,8 +1035,8 @@ class Collection {
      *
      * @return string
      */
-    function getDatabaseName() {
+    public function getDatabaseName()
+    {
         return $this->dbname;
     }
 }
-

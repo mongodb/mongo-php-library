@@ -1,16 +1,18 @@
 <?php
 namespace MongoDB;
 
-class InsertResult {
+class InsertResult
+{
     protected $wr;
 
-    function __construct(\MongoDB\WriteResult $wr, \BSON\ObjectId $id = null) {
+    public function __construct(\MongoDB\WriteResult $wr, \BSON\ObjectId $id = null)
+    {
         $this->wr = $wr;
         $this->id = $id;
     }
 
-    function getInsertedId() {
+    public function getInsertedId()
+    {
         return $this->id;
     }
 }
-

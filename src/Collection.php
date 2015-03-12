@@ -50,6 +50,7 @@ class Collection
      * supported drivers follow.
      *
      * @param Manager        $manager The phongo Manager instance
+     * @param string         $ns      Fully Qualified Namespace (dbname.collname)
      * @param WriteConcern   $wc      The WriteConcern to apply to writes
      * @param ReadPreference $rp      The ReadPreferences to apply to reads
      */

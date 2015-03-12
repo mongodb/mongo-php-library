@@ -7,7 +7,7 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Result;
-use MongoDB\Driver\WriteBatch;
+use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
 
 class Collection
@@ -287,7 +287,7 @@ class Collection
     }
 
     /**
-     * Adds a full set of write operations into a batch and executes it
+     * Adds a full set of write operations into a bulk and executes it
      *
      * The syntax of the $bulk array is:
      *     $bulk = [
@@ -337,7 +337,7 @@ class Collection
     {
         $options = array_merge($this->getBulkOptions(), $options);
 
-        $batch = new WriteBatch($options["ordered"]);
+        $bulk = new BulkWrite($options["ordered"]);
 
         foreach ($bulk as $n => $op) {
             foreach ($op as $opname => $args) {
@@ -347,7 +347,7 @@ class Collection
 
                 switch ($opname) {
                 case "insertOne":
-                    $batch->insert($args[0]);
+                    $bulk->insert($args[0]);
                     break;
 
                 case "updateMany":
@@ -356,7 +356,7 @@ class Collection
                     }
                     $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 0));
 
-                    $batch->update($args[0], $args[1], $options);
+                    $bulk->update($args[0], $args[1], $options);
                     break;
 
                 case "updateOne":
@@ -368,7 +368,7 @@ class Collection
                         throw new \InvalidArgumentException("First key in \$update must be a \$operator");
                     }
 
-                    $batch->update($args[0], $args[1], $options);
+                    $bulk->update($args[0], $args[1], $options);
                     break;
 
                 case "replaceOne":
@@ -380,17 +380,17 @@ class Collection
                         throw new \InvalidArgumentException("First key in \$update must NOT be a \$operator");
                     }
 
-                    $batch->update($args[0], $args[1], $options);
+                    $bulk->update($args[0], $args[1], $options);
                     break;
 
                 case "deleteOne":
                     $options = array_merge($this->getWriteOptions(), isset($args[1]) ? $args[1] : array(), array("limit" => 1));
-                    $batch->delete($args[0], $options);
+                    $bulk->delete($args[0], $options);
                     break;
 
                 case "deleteMany":
                     $options = array_merge($this->getWriteOptions(), isset($args[1]) ? $args[1] : array(), array("limit" => 0));
-                    $batch->delete($args[0], $options);
+                    $bulk->delete($args[0], $options);
                     break;
 
                 default:
@@ -398,7 +398,7 @@ class Collection
                 }
             }
         }
-        return $this->manager->executeWriteBatch($this->ns, $batch, $this->wc);
+        return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
     }
 
     /**
@@ -415,9 +415,9 @@ class Collection
     {
         $options = array_merge($this->getWriteOptions());
 
-        $batch = new WriteBatch($options["ordered"]);
-        $id    = $batch->insert($document);
-        $wr    = $this->manager->executeWriteBatch($this->ns, $batch, $this->wc);
+        $bulk = new BulkWrite($options["ordered"]);
+        $id    = $bulk->insert($document);
+        $wr    = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
 
         return new InsertResult($wr, $id);
     }
@@ -430,9 +430,9 @@ class Collection
     {
         $options = array_merge($this->getWriteOptions(), array("limit" => $limit));
 
-        $batch  = new WriteBatch($options["ordered"]);
-        $batch->delete($filter, $options);
-        return $this->manager->executeWriteBatch($this->ns, $batch, $this->wc);
+        $bulk  = new BulkWrite($options["ordered"]);
+        $bulk->delete($filter, $options);
+        return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
     }
 
     /**
@@ -475,9 +475,9 @@ class Collection
     {
         $options = array_merge($this->getWriteOptions(), $options);
 
-        $batch  = new WriteBatch($options["ordered"]);
-        $batch->update($filter, $update, $options);
-        return $this->manager->executeWriteBatch($this->ns, $batch, $this->wc);
+        $bulk  = new BulkWrite($options["ordered"]);
+        $bulk->update($filter, $update, $options);
+        return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
     }
 
     /**

@@ -16,8 +16,8 @@ and will serve as the default reference interface when creating other bindings.
 As `PHongo libraries` is an abstraction layer for PHongo, it naturally requires
 [PHongo to be installed](http://10gen-labs.github.io/mongo-php-driver-prototype/#installation):
 
-	$ wget https://github.com/10gen-labs/mongo-php-driver-prototype/releases/download/0.1.2/phongo-0.1.2.tgz
-	$ pecl install phongo-0.1.2.tgz
+	$ wget https://github.com/10gen-labs/mongo-php-driver-prototype/releases/download/0.1.5/phongo-0.1.5.tgz
+	$ pecl install phongo-0.1.5.tgz
 	$ echo "extension=phongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 The best way to then install `PHongo libraries` is via [composer](https://getcomposer.org/)
@@ -32,7 +32,7 @@ by adding the following to
         }
     ],
     "require": {
-        "ext-phongo": ">=0.1.2",
+        "ext-phongo": ">=0.1.5",
         "10gen-labs/mongo-php-libraries-prototype": "dev-master"
     }
 ```
@@ -44,4 +44,4 @@ $ composer install
 ```
 
 ## Reporting tickets
-TODO
+- https://jira.mongodb.org/secure/CreateIssue.jspa?pid=12483&issuetype=1

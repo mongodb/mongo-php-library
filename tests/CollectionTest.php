@@ -21,7 +21,7 @@ class CollectionTest extends PHPUnit_Framework_TestCase {
         for($i=0; $i<10;$i++) {
             $user = createUser($this->faker);
             $result = $collection->insertOne($user);
-            $this->assertInstanceOf('MongoDB\InsertResult', $result);
+            $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
             $this->assertInstanceOf('BSON\ObjectId', $result->getInsertedId());
             $this->assertEquals(24, strlen($result->getInsertedId()));
 

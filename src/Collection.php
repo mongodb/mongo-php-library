@@ -406,11 +406,10 @@ class Collection
      * Inserts the provided document
      *
      * @see http://docs.mongodb.org/manual/reference/command/insert/
-     * @see Collection::getWriteOptions() for supported $options
      *
      * @param array $document  The document to insert
      * @param array $options   Additional options
-     * @return InsertResult
+     * @return InsertOneResult
      */
     public function insertOne(array $document)
     {
@@ -420,7 +419,7 @@ class Collection
         $id    = $bulk->insert($document);
         $wr    = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
 
-        return new InsertResult($wr, $id);
+        return new InsertOneResult($wr, $id);
     }
 
     /**

@@ -423,6 +423,34 @@ class Collection
     }
 
     /**
+     * Inserts the provided documents
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/insert/
+     *
+     * @param array $documents The documents to insert
+     * @return InsertManyResult
+     */
+    public function insertMany(array $documents)
+    {
+        $options = array_merge($this->getWriteOptions());
+
+        $bulk = new BulkWrite($options["ordered"]);
+        $insertedIds = array();
+
+        foreach ($documents as $i => $document) {
+            $insertedId = $bulk->insert($document);
+
+            if ($insertedId !== null) {
+                $insertedIds[$i] = $insertedId;
+            }
+        }
+
+        $writeResult = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+
+        return new InsertManyResult($writeResult, $insertedIds);
+    }
+
+    /**
      * Internal helper for delete one/many documents
      * @internal
      */

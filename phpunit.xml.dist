@@ -11,7 +11,7 @@
          convertWarningsToExceptions="true"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="vendor/autoload.php"
+         bootstrap="tests/bootstrap.php"
 >
 
     <php>

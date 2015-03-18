@@ -96,6 +96,16 @@ class Collection
     }
 
     /**
+     * Drop this collection.
+     *
+     * @return Result
+     */
+    public function drop()
+    {
+        // TODO
+    }
+
+    /**
      * Drop a single index in the collection.
      *
      * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/

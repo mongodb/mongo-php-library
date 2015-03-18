@@ -58,6 +58,17 @@ class Database
     }
 
     /**
+     * Drop a collection within this database.
+     *
+     * @param string $collectionName
+     * @return Result
+     */
+    public function dropCollection($collectionName)
+    {
+        // TODO
+    }
+
+    /**
      * Select a specific collection in this database
      *
      * It acts as a bridge to access specific collection commands

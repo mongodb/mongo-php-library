@@ -65,226 +65,39 @@ class Collection
     }
 
     /**
-     * Performs a find (query) on the collection
+     * Runs an aggregation framework pipeline
+     * NOTE: The return value of this method depends on your MongoDB server version
+     *       and possibly options.
+     *       MongoDB 2.6 (and later) will return a Cursor by default
+     *       MongoDB pre 2.6 will return an ArrayIterator
      *
-     * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
-     * @see Collection::getFindOptions() for supported $options
+     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
+     * @see Collection::getAggregateOptions() for supported $options
      *
-     * @param array $filter    The find query to execute
-     * @param array $options   Additional options
-     * @return Result
+     * @param array $pipeline The pipeline to execute
+     * @param array $options  Additional options
+     * @return Iterator
      */
-    public function find(array $filter = array(), array $options = array())
+    public function aggregate(array $pipeline, array $options = array())
     {
-        $options = array_merge($this->getFindOptions(), $options);
+        $options = array_merge($this->getAggregateOptions(), $options);
+        $options = $this->_massageAggregateOptions($options);
+        $cmd = array(
+            "aggregate" => $this->collname,
+            "pipeline"  => $pipeline,
+        ) + $options;
 
-        $query = $this->_buildQuery($filter, $options);
-
-        $cursor = $this->manager->executeQuery($this->ns, $query, $this->rp);
-
-        return $cursor;
-    }
-
-    /**
-     * Performs a find (query) on the collection, returning at most one result
-     *
-     * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
-     * @see Collection::getFindOptions() for supported $options
-     *
-     * @param array $filter    The find query to execute
-     * @param array $options   Additional options
-     * @return array|false     The matched document, or false on failure
-     */
-    public function findOne(array $filter = array(), array $options = array())
-    {
-        $options = array_merge($this->getFindOptions(), array("limit" => 1), $options);
-
-        $query = $this->_buildQuery($filter, $options);
-
-        $cursor = $this->manager->executeQuery($this->ns, $query, $this->rp);
-
-        $array = iterator_to_array($cursor);
-        if ($array) {
-            return $array[0];
+        $result = $this->_runCommand($this->dbname, $cmd);
+        $doc = $result->toArray();
+        if (isset($cmd["cursor"]) && $cmd["cursor"]) {
+            return $result;
+        } else {
+            if ($doc["ok"]) {
+                return new \ArrayIterator($doc["result"]);
+            }
         }
 
-        return false;
-    }
-
-    /**
-     * Retrieves all find options with their default values.
-     *
-     * @return array of Collection::find() options
-     */
-    public function getFindOptions()
-    {
-        return array(
-            /**
-             * Get partial results from a mongos if some shards are down (instead of throwing an error).
-             *
-             * @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
-             */
-            "allowPartialResults" => false,
-
-            /**
-             * The number of documents to return per batch.
-             *
-             * @see http://docs.mongodb.org/manual/reference/method/cursor.batchSize/
-             */
-            "batchSize" => 101,
-
-            /**
-             * Attaches a comment to the query. If $comment also exists
-             * in the modifiers document, the comment field overwrites $comment.
-             *
-             * @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
-             */
-            "comment" => "",
-
-            /**
-             * Indicates the type of cursor to use. This value includes both
-             * the tailable and awaitData options.
-             * The default is Collection::CURSOR_TYPE_NON_TAILABLE.
-             *
-             * @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
-             */
-            "cursorType" => self::CURSOR_TYPE_NON_TAILABLE,
-
-            /**
-             * The maximum number of documents to return.
-             *
-             * @see http://docs.mongodb.org/manual/reference/method/cursor.limit/
-             */
-            "limit" => 0,
-
-            /**
-             * The maximum amount of time to allow the query to run. If $maxTimeMS also exists
-             * in the modifiers document, the maxTimeMS field overwrites $maxTimeMS.
-             *
-             * @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS/
-             */
-            "maxTimeMS" => 0,
-
-            /**
-             * Meta-operators modifying the output or behavior of a query.
-             *
-             * @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
-             */
-            "modifiers" => array(),
-
-            /**
-             * The server normally times out idle cursors after an inactivity period (10 minutes)
-             * to prevent excess memory use. Set this option to prevent that.
-             *
-             * @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
-             */
-            "noCursorTimeout" => false,
-
-            /**
-             * Internal replication use only - driver should not set
-             *
-             * @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
-             * @internal
-             */
-            "oplogReplay" => false,
-
-            /**
-             * Limits the fields to return for all matching documents.
-             *
-             * @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
-             */
-            "projection" => array(),
-
-            /**
-             * The number of documents to skip before returning.
-             *
-             * @see http://docs.mongodb.org/manual/reference/method/cursor.skip/
-             */
-            "skip" => 0,
-
-            /**
-             * The order in which to return matching documents. If $orderby also exists
-             * in the modifiers document, the sort field overwrites $orderby.
-             *
-             * @see http://docs.mongodb.org/manual/reference/method/cursor.sort/
-             */
-            "sort" => array(),
-        );
-    }
-
-    /**
-     * Constructs the Query Wire Protocol field 'flags' based on $options
-     * provided to other helpers
-     *
-     * @param array $options
-     * @return integer OP_QUERY Wire Protocol flags
-     * @internal
-     */
-    final protected function _opQueryFlags($options)
-    {
-        $flags = 0;
-
-        $flags |= $options["allowPartialResults"] ? self::QUERY_FLAG_PARTIAL : 0;
-        $flags |= $options["cursorType"] ? $options["cursorType"] : 0;
-        $flags |= $options["oplogReplay"] ? self::QUERY_FLAG_OPLOG_REPLY: 0;
-        $flags |= $options["noCursorTimeout"] ? self::QUERY_FLAG_NO_CURSOR_TIMEOUT : 0;
-
-        return $flags;
-    }
-
-    /**
-     * Helper to build a Query object
-     *
-     * @param array $filter the query document
-     * @param array $options query/protocol options
-     * @return Query
-     * @internal
-     */
-    final protected function _buildQuery($filter, $options)
-    {
-        if ($options["comment"]) {
-            $options["modifiers"]['$comment'] = $options["comment"];
-        }
-        if ($options["maxTimeMS"]) {
-            $options["modifiers"]['$maxTimeMS'] = $options["maxTimeMS"];
-        }
-        if ($options["sort"]) {
-            $options['$orderby'] = $options["sort"];
-        }
-
-        $flags = $this->_opQueryFlags($options);
-        $options["cursorFlags"] = $flags;
-
-
-        $query = new Query($filter, $options);
-
-        return $query;
-    }
-
-    /**
-     * Retrieves all Write options with their default values.
-     *
-     * @return array of available Write options
-     */
-    public function getWriteOptions()
-    {
-        return array(
-            "ordered" => false,
-            "upsert"  => false,
-            "limit"   => 1,
-        );
-    }
-
-    /**
-     * Retrieves all Bulk Write options with their default values.
-     *
-     * @return array of available Bulk Write options
-     */
-    public function getBulkOptions()
-    {
-        return array(
-            "ordered" => false,
-        );
+        throw $this->_generateCommandException($doc);
     }
 
     /**
@@ -403,174 +216,6 @@ class Collection
     }
 
     /**
-     * Inserts the provided document
-     *
-     * @see http://docs.mongodb.org/manual/reference/command/insert/
-     *
-     * @param array $document  The document to insert
-     * @param array $options   Additional options
-     * @return InsertOneResult
-     */
-    public function insertOne(array $document)
-    {
-        $options = array_merge($this->getWriteOptions());
-
-        $bulk = new BulkWrite($options["ordered"]);
-        $id    = $bulk->insert($document);
-        $wr    = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
-
-        return new InsertOneResult($wr, $id);
-    }
-
-    /**
-     * Inserts the provided documents
-     *
-     * @see http://docs.mongodb.org/manual/reference/command/insert/
-     *
-     * @param array $documents The documents to insert
-     * @return InsertManyResult
-     */
-    public function insertMany(array $documents)
-    {
-        $options = array_merge($this->getWriteOptions());
-
-        $bulk = new BulkWrite($options["ordered"]);
-        $insertedIds = array();
-
-        foreach ($documents as $i => $document) {
-            $insertedId = $bulk->insert($document);
-
-            if ($insertedId !== null) {
-                $insertedIds[$i] = $insertedId;
-            }
-        }
-
-        $writeResult = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
-
-        return new InsertManyResult($writeResult, $insertedIds);
-    }
-
-    /**
-     * Internal helper for delete one/many documents
-     * @internal
-     */
-    final protected function _delete($filter, $limit = 1)
-    {
-        $options = array_merge($this->getWriteOptions(), array("limit" => $limit));
-
-        $bulk  = new BulkWrite($options["ordered"]);
-        $bulk->delete($filter, $options);
-        return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
-    }
-
-    /**
-     * Deletes a document matching the $filter criteria.
-     * NOTE: Will delete at most ONE document matching $filter
-     *
-     * @see http://docs.mongodb.org/manual/reference/command/delete/
-     *
-     * @param array $filter The $filter criteria to delete
-     * @return DeleteResult
-     */
-    public function deleteOne(array $filter)
-    {
-        $wr = $this->_delete($filter);
-
-        return new DeleteResult($wr);
-    }
-
-    /**
-     * Deletes a document matching the $filter criteria.
-     * NOTE: Will delete ALL documents matching $filter
-     *
-     * @see http://docs.mongodb.org/manual/reference/command/delete/
-     *
-     * @param array $filter The $filter criteria to delete
-     * @return DeleteResult
-     */
-    public function deleteMany(array $filter)
-    {
-        $wr = $this->_delete($filter, 0);
-
-        return new DeleteResult($wr);
-    }
-
-    /**
-     * Internal helper for replacing/updating one/many documents
-     * @internal
-     */
-    protected function _update($filter, $update, $options)
-    {
-        $options = array_merge($this->getWriteOptions(), $options);
-
-        $bulk  = new BulkWrite($options["ordered"]);
-        $bulk->update($filter, $update, $options);
-        return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
-    }
-
-    /**
-     * Replace one document
-     *
-     * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @see Collection::getWriteOptions() for supported $options
-     *
-     * @param array $filter   The document to be replaced
-     * @param array $update   The document to replace with
-     * @param array $options  Additional options
-     * @return UpdateResult
-     */
-    public function replaceOne(array $filter, array $update, array $options = array())
-    {
-        if (key($update)[0] == '$') {
-            throw new \InvalidArgumentException("First key in \$update must NOT be a \$operator");
-        }
-        $wr = $this->_update($filter, $update, $options);
-
-        return new UpdateResult($wr);
-    }
-
-    /**
-     * Update one document
-     * NOTE: Will update at most ONE document matching $filter
-     *
-     * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @see Collection::getWriteOptions() for supported $options
-     *
-     * @param array $filter   The document to be replaced
-     * @param array $update   An array of update operators to apply to the document
-     * @param array $options  Additional options
-     * @return UpdateResult
-     */
-    public function updateOne(array $filter, array $update, array $options = array())
-    {
-        if (key($update)[0] != '$') {
-            throw new \InvalidArgumentException("First key in \$update must be a \$operator");
-        }
-        $wr = $this->_update($filter, $update, $options);
-
-        return new UpdateResult($wr);
-    }
-
-    /**
-     * Update one document
-     * NOTE: Will update ALL documents matching $filter
-     *
-     * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @see Collection::getWriteOptions() for supported $options
-     *
-     * @param array $filter   The document to be replaced
-     * @param array $update   An array of update operators to apply to the document
-     * @param array $options  Additional options
-     * @return UpdateResult
-     */
-    public function updateMany(array $filter, $update, array $options = array())
-    {
-        $wr = $this->_update($filter, $update, $options + array("limit" => 0));
-
-        return new UpdateResult($wr);
-    }
-
-    /**
      * Counts all documents matching $filter
      * If no $filter provided, returns the numbers of documents in the collection
      *
@@ -596,41 +241,66 @@ class Collection
     }
 
     /**
-     * Retrieves all count options with their default values.
+     * Create a single index in the collection.
      *
-     * @return array of Collection::count() options
+     * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
+     * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
+     * @param array|object $keys
+     * @param array        $options
+     * @return string The name of the created index
      */
-    public function getCountOptions()
+    public function createIndex($keys, array $options = array())
     {
-        return array(
-            /**
-             * The index to use.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/count/
-             */
-            "hint" => "", // string or document
+        // TODO
+    }
 
-            /**
-             * The maximum number of documents to count.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/count/
-             */
-            "limit" => 0,
+    /**
+     * Create multiple indexes in the collection.
+     *
+     * TODO: decide if $models should be an array of associative arrays, using
+     * createIndex()'s parameter names as keys, or tuples, using parameters in
+     * order (e.g. [keys, options]).
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
+     * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
+     * @param array $models
+     * @return string[] The names of the created indexes
+     */
+    public function createIndexes(array $models)
+    {
+        // TODO
+    }
 
-            /**
-             * The maximum amount of time to allow the query to run.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/count/
-             */
-            "maxTimeMS" => 0,
+    /**
+     * Deletes a document matching the $filter criteria.
+     * NOTE: Will delete ALL documents matching $filter
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/delete/
+     *
+     * @param array $filter The $filter criteria to delete
+     * @return DeleteResult
+     */
+    public function deleteMany(array $filter)
+    {
+        $wr = $this->_delete($filter, 0);
 
-            /**
-             * The number of documents to skip before returning the documents.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/count/
-             */
-            "skip"  => 0,
-        );
+        return new DeleteResult($wr);
+    }
+
+    /**
+     * Deletes a document matching the $filter criteria.
+     * NOTE: Will delete at most ONE document matching $filter
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/delete/
+     *
+     * @param array $filter The $filter criteria to delete
+     * @return DeleteResult
+     */
+    public function deleteOne(array $filter)
+    {
+        $wr = $this->_delete($filter);
+
+        return new DeleteResult($wr);
     }
 
     /**
@@ -661,53 +331,183 @@ class Collection
     }
 
     /**
-     * Retrieves all distinct options with their default values.
+     * Drop this collection.
      *
-     * @return array of Collection::distinct() options
+     * @return Result
      */
-    public function getDistinctOptions()
+    public function drop()
     {
-        return array(
-            /**
-             * The maximum amount of time to allow the query to run. The default is infinite.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/distinct/
-             */
-            "maxTimeMS" => 0,
-        );
+        // TODO
     }
 
     /**
-     * Runs an aggregation framework pipeline
-     * NOTE: The return value of this method depends on your MongoDB server version
-     *       and possibly options.
-     *       MongoDB 2.6 (and later) will return a Cursor by default
-     *       MongoDB pre 2.6 will return an ArrayIterator
+     * Drop a single index in the collection.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-     * @see Collection::getAggregateOptions() for supported $options
-     *
-     * @param array $pipeline The pipeline to execute
-     * @param array $options  Additional options
-     * @return Iterator
+     * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
+     * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndex/
+     * @param string $indexName
+     * @return Result
+     * @throws InvalidArgumentException if "*" is specified
      */
-    public function aggregate(array $pipeline, array $options = array())
+    public function dropIndex($indexName)
     {
-        $options = array_merge($this->getAggregateOptions(), $options);
-        $options = $this->_massageAggregateOptions($options);
+        // TODO
+    }
+
+    /**
+     * Drop all indexes in the collection.
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
+     * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndexes/
+     * @return Result
+     */
+    public function dropIndexes()
+    {
+        // TODO
+    }
+
+    /**
+     * Performs a find (query) on the collection
+     *
+     * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
+     * @see Collection::getFindOptions() for supported $options
+     *
+     * @param array $filter    The find query to execute
+     * @param array $options   Additional options
+     * @return Result
+     */
+    public function find(array $filter = array(), array $options = array())
+    {
+        $options = array_merge($this->getFindOptions(), $options);
+
+        $query = $this->_buildQuery($filter, $options);
+
+        $cursor = $this->manager->executeQuery($this->ns, $query, $this->rp);
+
+        return $cursor;
+    }
+
+    /**
+     * Performs a find (query) on the collection, returning at most one result
+     *
+     * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
+     * @see Collection::getFindOptions() for supported $options
+     *
+     * @param array $filter    The find query to execute
+     * @param array $options   Additional options
+     * @return array|false     The matched document, or false on failure
+     */
+    public function findOne(array $filter = array(), array $options = array())
+    {
+        $options = array_merge($this->getFindOptions(), array("limit" => 1), $options);
+
+        $query = $this->_buildQuery($filter, $options);
+
+        $cursor = $this->manager->executeQuery($this->ns, $query, $this->rp);
+
+        $array = iterator_to_array($cursor);
+        if ($array) {
+            return $array[0];
+        }
+
+        return false;
+    }
+
+    /**
+     * Finds a single document and deletes it, returning the original.
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+     * @see Collection::getFindOneAndDelete() for supported $options
+     *
+     * @param array $filter   The $filter criteria to search for
+     * @param array $options  Additional options
+     * @return array The original document
+     */
+    public function findOneAndDelete(array $filter, array $options = array())
+    {
+        $options = array_merge($this->getFindOneAndDeleteOptions(), $options);
+        $options = $this->_massageFindAndModifyOptions($options);
         $cmd = array(
-            "aggregate" => $this->collname,
-            "pipeline"  => $pipeline,
+            "findandmodify" => $this->collname,
+            "query"         => $filter,
         ) + $options;
 
-        $result = $this->_runCommand($this->dbname, $cmd);
-        $doc = $result->toArray();
-        if (isset($cmd["cursor"]) && $cmd["cursor"]) {
-            return $result;
-        } else {
-            if ($doc["ok"]) {
-                return new \ArrayIterator($doc["result"]);
-            }
+        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
+        if ($doc["ok"]) {
+            return $doc["value"];
+        }
+
+        throw $this->_generateCommandException($doc);
+    }
+
+    /**
+     * Finds a single document and replaces it, returning either the original or the replaced document
+     * By default, returns the original document.
+     * To return the new document set:
+     *     $options = array("returnDocument" => Collection::FIND_ONE_AND_RETURN_AFTER);
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+     * @see Collection::getFindOneAndReplace() for supported $options
+     *
+     * @param array $filter       The $filter criteria to search for
+     * @param array $replacement  The document to replace with
+     * @param array $options      Additional options
+     * @return array
+     */
+    public function findOneAndReplace(array $filter, array $replacement, array $options = array())
+    {
+        if (key($replacement)[0] == '$') {
+            throw new \InvalidArgumentException("First key in \$replacement must NOT be a \$operator");
+        }
+
+        $options = array_merge($this->getFindOneAndReplaceOptions(), $options);
+        $options = $this->_massageFindAndModifyOptions($options, $replacement);
+
+        $cmd = array(
+            "findandmodify" => $this->collname,
+            "query"         => $filter,
+        ) + $options;
+
+        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
+        if ($doc["ok"]) {
+            return $doc["value"];
+        }
+
+        throw $this->_generateCommandException($doc);
+    }
+
+    /**
+     * Finds a single document and updates it, returning either the original or the updated document
+     * By default, returns the original document.
+     * To return the new document set:
+     *     $options = array("returnDocument" => Collection::FIND_ONE_AND_RETURN_AFTER);
+     *
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+     * @see Collection::getFindOneAndUpdate() for supported $options
+     *
+     * @param array $filter   The $filter criteria to search for
+     * @param array $update   An array of update operators to apply to the document
+     * @param array $options  Additional options
+     * @return array
+     */
+    public function findOneAndUpdate(array $filter, array $update, array $options = array())
+    {
+        if (key($update)[0] != '$') {
+            throw new \InvalidArgumentException("First key in \$update must be a \$operator");
+        }
+
+        $options = array_merge($this->getFindOneAndUpdateOptions(), $options);
+        $options = $this->_massageFindAndModifyOptions($options, $update);
+
+        $cmd = array(
+            "findandmodify" => $this->collname,
+            "query"         => $filter,
+        ) + $options;
+
+        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
+        if ($doc["ok"]) {
+            return $doc["value"];
         }
 
         throw $this->_generateCommandException($doc);
@@ -763,44 +563,90 @@ class Collection
     }
 
     /**
-     * Internal helper for massaging aggregate options
-     * @internal
+     * Retrieves all Bulk Write options with their default values.
+     *
+     * @return array of available Bulk Write options
      */
-    protected function _massageAggregateOptions($options)
+    public function getBulkOptions()
     {
-        if ($options["useCursor"]) {
-            $options["cursor"] = array("batchSize" => $options["batchSize"]);
-        }
-        unset($options["useCursor"], $options["batchSize"]);
-
-        return $options;
+        return array(
+            "ordered" => false,
+        );
     }
 
     /**
-     * Finds a single document and deletes it, returning the original.
+     * Returns the CollectionName this object operates on
      *
-     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     * @see Collection::getFindOneAndDelete() for supported $options
-     *
-     * @param array $filter   The $filter criteria to search for
-     * @param array $options  Additional options
-     * @return array The original document
+     * @return string
      */
-    public function findOneAndDelete(array $filter, array $options = array())
+    public function getCollectionName()
     {
-        $options = array_merge($this->getFindOneAndDeleteOptions(), $options);
-        $options = $this->_massageFindAndModifyOptions($options);
-        $cmd = array(
-            "findandmodify" => $this->collname,
-            "query"         => $filter,
-        ) + $options;
+        return $this->collname;
+    }
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
-        if ($doc["ok"]) {
-            return $doc["value"];
-        }
+    /**
+     * Retrieves all count options with their default values.
+     *
+     * @return array of Collection::count() options
+     */
+    public function getCountOptions()
+    {
+        return array(
+            /**
+             * The index to use.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/count/
+             */
+            "hint" => "", // string or document
 
-        throw $this->_generateCommandException($doc);
+            /**
+             * The maximum number of documents to count.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/count/
+             */
+            "limit" => 0,
+
+            /**
+             * The maximum amount of time to allow the query to run.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/count/
+             */
+            "maxTimeMS" => 0,
+
+            /**
+             * The number of documents to skip before returning the documents.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/count/
+             */
+            "skip"  => 0,
+        );
+    }
+
+    /**
+     * Returns the DatabaseName this object operates on
+     *
+     * @return string
+     */
+    public function getDatabaseName()
+    {
+        return $this->dbname;
+    }
+
+    /**
+     * Retrieves all distinct options with their default values.
+     *
+     * @return array of Collection::distinct() options
+     */
+    public function getDistinctOptions()
+    {
+        return array(
+            /**
+             * The maximum amount of time to allow the query to run. The default is infinite.
+             *
+             * @see http://docs.mongodb.org/manual/reference/command/distinct/
+             */
+            "maxTimeMS" => 0,
+        );
     }
 
     /**
@@ -833,42 +679,6 @@ class Collection
              */
             "sort" => array(),
         );
-    }
-
-    /**
-     * Finds a single document and replaces it, returning either the original or the replaced document
-     * By default, returns the original document.
-     * To return the new document set:
-     *     $options = array("returnDocument" => Collection::FIND_ONE_AND_RETURN_AFTER);
-     *
-     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     * @see Collection::getFindOneAndReplace() for supported $options
-     *
-     * @param array $filter       The $filter criteria to search for
-     * @param array $replacement  The document to replace with
-     * @param array $options      Additional options
-     * @return array
-     */
-    public function findOneAndReplace(array $filter, array $replacement, array $options = array())
-    {
-        if (key($replacement)[0] == '$') {
-            throw new \InvalidArgumentException("First key in \$replacement must NOT be a \$operator");
-        }
-
-        $options = array_merge($this->getFindOneAndReplaceOptions(), $options);
-        $options = $this->_massageFindAndModifyOptions($options, $replacement);
-
-        $cmd = array(
-            "findandmodify" => $this->collname,
-            "query"         => $filter,
-        ) + $options;
-
-        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
-        if ($doc["ok"]) {
-            return $doc["value"];
-        }
-
-        throw $this->_generateCommandException($doc);
     }
 
     /**
@@ -920,43 +730,6 @@ class Collection
     }
 
     /**
-     * Finds a single document and updates it, returning either the original or the updated document
-     * By default, returns the original document.
-     * To return the new document set:
-     *     $options = array("returnDocument" => Collection::FIND_ONE_AND_RETURN_AFTER);
-     *
-     *
-     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     * @see Collection::getFindOneAndUpdate() for supported $options
-     *
-     * @param array $filter   The $filter criteria to search for
-     * @param array $update   An array of update operators to apply to the document
-     * @param array $options  Additional options
-     * @return array
-     */
-    public function findOneAndUpdate(array $filter, array $update, array $options = array())
-    {
-        if (key($update)[0] != '$') {
-            throw new \InvalidArgumentException("First key in \$update must be a \$operator");
-        }
-
-        $options = array_merge($this->getFindOneAndUpdateOptions(), $options);
-        $options = $this->_massageFindAndModifyOptions($options, $update);
-
-        $cmd = array(
-            "findandmodify" => $this->collname,
-            "query"         => $filter,
-        ) + $options;
-
-        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
-        if ($doc["ok"]) {
-            return $doc["value"];
-        }
-
-        throw $this->_generateCommandException($doc);
-    }
-
-    /**
      * Retrieves all findOneAndUpdate options with their default values.
      *
      * @return array of Collection::findOneAndUpdate() options
@@ -1004,24 +777,282 @@ class Collection
     }
 
     /**
-     * Internal helper for massaging findandmodify options
-     * @internal
+     * Retrieves all find options with their default values.
+     *
+     * @return array of Collection::find() options
      */
-    final protected function _massageFindAndModifyOptions($options, $update = array())
+    public function getFindOptions()
     {
-        $ret = array(
-            "sort"   => $options["sort"],
-            "new"    => isset($options["returnDocument"]) ? $options["returnDocument"] == self::FIND_ONE_AND_RETURN_AFTER : false,
-            "fields" => $options["projection"],
-            "upsert" => isset($options["upsert"]) ? $options["upsert"] : false,
+        return array(
+            /**
+             * Get partial results from a mongos if some shards are down (instead of throwing an error).
+             *
+             * @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
+             */
+            "allowPartialResults" => false,
+
+            /**
+             * The number of documents to return per batch.
+             *
+             * @see http://docs.mongodb.org/manual/reference/method/cursor.batchSize/
+             */
+            "batchSize" => 101,
+
+            /**
+             * Attaches a comment to the query. If $comment also exists
+             * in the modifiers document, the comment field overwrites $comment.
+             *
+             * @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
+             */
+            "comment" => "",
+
+            /**
+             * Indicates the type of cursor to use. This value includes both
+             * the tailable and awaitData options.
+             * The default is Collection::CURSOR_TYPE_NON_TAILABLE.
+             *
+             * @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
+             */
+            "cursorType" => self::CURSOR_TYPE_NON_TAILABLE,
+
+            /**
+             * The maximum number of documents to return.
+             *
+             * @see http://docs.mongodb.org/manual/reference/method/cursor.limit/
+             */
+            "limit" => 0,
+
+            /**
+             * The maximum amount of time to allow the query to run. If $maxTimeMS also exists
+             * in the modifiers document, the maxTimeMS field overwrites $maxTimeMS.
+             *
+             * @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS/
+             */
+            "maxTimeMS" => 0,
+
+            /**
+             * Meta-operators modifying the output or behavior of a query.
+             *
+             * @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
+             */
+            "modifiers" => array(),
+
+            /**
+             * The server normally times out idle cursors after an inactivity period (10 minutes)
+             * to prevent excess memory use. Set this option to prevent that.
+             *
+             * @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
+             */
+            "noCursorTimeout" => false,
+
+            /**
+             * Internal replication use only - driver should not set
+             *
+             * @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
+             * @internal
+             */
+            "oplogReplay" => false,
+
+            /**
+             * Limits the fields to return for all matching documents.
+             *
+             * @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
+             */
+            "projection" => array(),
+
+            /**
+             * The number of documents to skip before returning.
+             *
+             * @see http://docs.mongodb.org/manual/reference/method/cursor.skip/
+             */
+            "skip" => 0,
+
+            /**
+             * The order in which to return matching documents. If $orderby also exists
+             * in the modifiers document, the sort field overwrites $orderby.
+             *
+             * @see http://docs.mongodb.org/manual/reference/method/cursor.sort/
+             */
+            "sort" => array(),
         );
-        if ($update) {
-            $ret["update"] = $update;
-        } else {
-            $ret["remove"] = true;
+    }
+
+    /**
+     * Retrieves all Write options with their default values.
+     *
+     * @return array of available Write options
+     */
+    public function getWriteOptions()
+    {
+        return array(
+            "ordered" => false,
+            "upsert"  => false,
+            "limit"   => 1,
+        );
+    }
+
+    /**
+     * Inserts the provided documents
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/insert/
+     *
+     * @param array $documents The documents to insert
+     * @return InsertManyResult
+     */
+    public function insertMany(array $documents)
+    {
+        $options = array_merge($this->getWriteOptions());
+
+        $bulk = new BulkWrite($options["ordered"]);
+        $insertedIds = array();
+
+        foreach ($documents as $i => $document) {
+            $insertedId = $bulk->insert($document);
+
+            if ($insertedId !== null) {
+                $insertedIds[$i] = $insertedId;
+            }
         }
 
-        return $ret;
+        $writeResult = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+
+        return new InsertManyResult($writeResult, $insertedIds);
+    }
+
+    /**
+     * Inserts the provided document
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/insert/
+     *
+     * @param array $document  The document to insert
+     * @param array $options   Additional options
+     * @return InsertOneResult
+     */
+    public function insertOne(array $document)
+    {
+        $options = array_merge($this->getWriteOptions());
+
+        $bulk = new BulkWrite($options["ordered"]);
+        $id    = $bulk->insert($document);
+        $wr    = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+
+        return new InsertOneResult($wr, $id);
+    }
+
+    /**
+     * Returns information for all indexes in the collection.
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
+     * @see http://docs.mongodb.org/manual/reference/method/db.collection.getIndexes/
+     * @return Result
+     */
+    public function listIndexes()
+    {
+        // TODO
+    }
+
+    /**
+     * Replace one document
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/update/
+     * @see Collection::getWriteOptions() for supported $options
+     *
+     * @param array $filter   The document to be replaced
+     * @param array $update   The document to replace with
+     * @param array $options  Additional options
+     * @return UpdateResult
+     */
+    public function replaceOne(array $filter, array $update, array $options = array())
+    {
+        if (key($update)[0] == '$') {
+            throw new \InvalidArgumentException("First key in \$update must NOT be a \$operator");
+        }
+        $wr = $this->_update($filter, $update, $options);
+
+        return new UpdateResult($wr);
+    }
+
+    /**
+     * Update one document
+     * NOTE: Will update ALL documents matching $filter
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/update/
+     * @see Collection::getWriteOptions() for supported $options
+     *
+     * @param array $filter   The document to be replaced
+     * @param array $update   An array of update operators to apply to the document
+     * @param array $options  Additional options
+     * @return UpdateResult
+     */
+    public function updateMany(array $filter, $update, array $options = array())
+    {
+        $wr = $this->_update($filter, $update, $options + array("limit" => 0));
+
+        return new UpdateResult($wr);
+    }
+
+    /**
+     * Update one document
+     * NOTE: Will update at most ONE document matching $filter
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/update/
+     * @see Collection::getWriteOptions() for supported $options
+     *
+     * @param array $filter   The document to be replaced
+     * @param array $update   An array of update operators to apply to the document
+     * @param array $options  Additional options
+     * @return UpdateResult
+     */
+    public function updateOne(array $filter, array $update, array $options = array())
+    {
+        if (key($update)[0] != '$') {
+            throw new \InvalidArgumentException("First key in \$update must be a \$operator");
+        }
+        $wr = $this->_update($filter, $update, $options);
+
+        return new UpdateResult($wr);
+    }
+
+    /**
+     * Helper to build a Query object
+     *
+     * @param array $filter the query document
+     * @param array $options query/protocol options
+     * @return Query
+     * @internal
+     */
+    final protected function _buildQuery($filter, $options)
+    {
+        if ($options["comment"]) {
+            $options["modifiers"]['$comment'] = $options["comment"];
+        }
+        if ($options["maxTimeMS"]) {
+            $options["modifiers"]['$maxTimeMS'] = $options["maxTimeMS"];
+        }
+        if ($options["sort"]) {
+            $options['$orderby'] = $options["sort"];
+        }
+
+        $flags = $this->_opQueryFlags($options);
+        $options["cursorFlags"] = $flags;
+
+
+        $query = new Query($filter, $options);
+
+        return $query;
+    }
+
+    /**
+     * Internal helper for delete one/many documents
+     * @internal
+     */
+    final protected function _delete($filter, $limit = 1)
+    {
+        $options = array_merge($this->getWriteOptions(), array("limit" => $limit));
+
+        $bulk  = new BulkWrite($options["ordered"]);
+        $bulk->delete($filter, $options);
+        return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
     }
 
     /**
@@ -1038,6 +1069,40 @@ class Collection
     }
 
     /**
+     * Internal helper for massaging aggregate options
+     * @internal
+     */
+    protected function _massageAggregateOptions($options)
+    {
+        if ($options["useCursor"]) {
+            $options["cursor"] = array("batchSize" => $options["batchSize"]);
+        }
+        unset($options["useCursor"], $options["batchSize"]);
+
+        return $options;
+    }
+
+    /**
+     * Constructs the Query Wire Protocol field 'flags' based on $options
+     * provided to other helpers
+     *
+     * @param array $options
+     * @return integer OP_QUERY Wire Protocol flags
+     * @internal
+     */
+    final protected function _opQueryFlags($options)
+    {
+        $flags = 0;
+
+        $flags |= $options["allowPartialResults"] ? self::QUERY_FLAG_PARTIAL : 0;
+        $flags |= $options["cursorType"] ? $options["cursorType"] : 0;
+        $flags |= $options["oplogReplay"] ? self::QUERY_FLAG_OPLOG_REPLY: 0;
+        $flags |= $options["noCursorTimeout"] ? self::QUERY_FLAG_NO_CURSOR_TIMEOUT : 0;
+
+        return $flags;
+    }
+
+    /**
      * Internal helper for running a command
      * @internal
      */
@@ -1049,22 +1114,15 @@ class Collection
     }
 
     /**
-     * Returns the CollectionName this object operates on
-     *
-     * @return string
+     * Internal helper for replacing/updating one/many documents
+     * @internal
      */
-    public function getCollectionName()
+    protected function _update($filter, $update, $options)
     {
-        return $this->collname;
-    }
+        $options = array_merge($this->getWriteOptions(), $options);
 
-    /**
-     * Returns the DatabaseName this object operates on
-     *
-     * @return string
-     */
-    public function getDatabaseName()
-    {
-        return $this->dbname;
+        $bulk  = new BulkWrite($options["ordered"]);
+        $bulk->update($filter, $update, $options);
+        return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
     }
 }

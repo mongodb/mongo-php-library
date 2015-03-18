@@ -2,8 +2,9 @@
 
 namespace MongoDB;
 
-use MongoDB\Driver\Manager;
 use MongoDB\Collection;
+use MongoDB\Driver\Manager;
+use MongoDB\Driver\Result;
 
 class Database
 {
@@ -30,6 +31,53 @@ class Database
         $this->dbname  = $dbname;
         $this->wc = $wc;
         $this->rp = $rp;
+    }
+
+    /**
+     * Create a new collection explicitly.
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/create/
+     * @see http://docs.mongodb.org/manual/reference/method/db.createCollection/
+     * @param string $collectionName
+     * @param array  $options
+     * @return Result
+     */
+    public function createCollection($collectionName, array $options = array())
+    {
+        // TODO
+    }
+
+    /**
+     * Drop this database.
+     *
+     * @return Result
+     */
+    public function drop()
+    {
+        // TODO
+    }
+
+    /**
+     * Drop a collection within this database.
+     *
+     * @param string $collectionName
+     * @return Result
+     */
+    public function dropCollection($collectionName)
+    {
+        // TODO
+    }
+
+    /**
+     * Returns information for all collections in this database.
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/listCollections/
+     * @param array $options
+     * @return Result
+     */
+    public function listCollections(array $options = array())
+    {
+        // TODO
     }
 
     /**

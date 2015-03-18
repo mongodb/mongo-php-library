@@ -2,8 +2,9 @@
 
 namespace MongoDB;
 
-use MongoDB\Driver\Manager;
 use MongoDB\Collection;
+use MongoDB\Driver\Manager;
+use MongoDB\Driver\Result;
 
 class Database
 {
@@ -42,6 +43,16 @@ class Database
      * @return Result
      */
     public function createCollection($collectionName, array $options = array())
+    {
+        // TODO
+    }
+
+    /**
+     * Drop this database.
+     *
+     * @return Result
+     */
+    public function drop()
     {
         // TODO
     }

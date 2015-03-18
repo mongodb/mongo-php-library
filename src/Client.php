@@ -2,9 +2,10 @@
 
 namespace MongoDB;
 
-use MongoDB\Driver\Manager;
-use MongoDB\Database;
 use MongoDB\Collection;
+use MongoDB\Database;
+use MongoDB\Driver\Manager;
+use MongoDB\Driver\Result;
 
 class Client
 {
@@ -27,6 +28,17 @@ class Client
     public function __construct($uri, $options, $driverOptions)
     {
         $this->manager = new Manager($uri, $options, $driverOptions);
+    }
+
+    /**
+     * Drop a database.
+     *
+     * @param string $databaseName
+     * @return Result
+     */
+    public function dropDatabase($databaseName)
+    {
+        // TODO
     }
 
     /**

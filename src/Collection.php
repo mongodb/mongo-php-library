@@ -65,6 +65,37 @@ class Collection
     }
 
     /**
+     * Create a single index in the collection.
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
+     * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
+     * @param array|object $keys
+     * @param array        $options
+     * @return string The name of the created index
+     */
+    public function createIndex($keys, array $options = array())
+    {
+        // TODO
+    }
+
+    /**
+     * Create multiple indexes in the collection.
+     *
+     * TODO: decide if $models should be an array of associative arrays, using
+     * createIndex()'s parameter names as keys, or tuples, using parameters in
+     * order (e.g. [keys, options]).
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
+     * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
+     * @param array $models
+     * @return string[] The names of the created indexes
+     */
+    public function createIndexes(array $models)
+    {
+        // TODO
+    }
+
+    /**
      * Drop a single index in the collection.
      *
      * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/

@@ -33,6 +33,20 @@ class Database
     }
 
     /**
+     * Create a new collection explicitly.
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/create/
+     * @see http://docs.mongodb.org/manual/reference/method/db.createCollection/
+     * @param string $collectionName
+     * @param array  $options
+     * @return Result
+     */
+    public function createCollection($collectionName, array $options = array())
+    {
+        // TODO
+    }
+
+    /**
      * Select a specific collection in this database
      *
      * It acts as a bridge to access specific collection commands

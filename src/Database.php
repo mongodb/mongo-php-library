@@ -69,6 +69,18 @@ class Database
     }
 
     /**
+     * Returns information for all collections in this database.
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/listCollections/
+     * @param array $options
+     * @return Result
+     */
+    public function listCollections(array $options = array())
+    {
+        // TODO
+    }
+
+    /**
      * Select a specific collection in this database
      *
      * It acts as a bridge to access specific collection commands

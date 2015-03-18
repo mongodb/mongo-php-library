@@ -65,6 +65,32 @@ class Collection
     }
 
     /**
+     * Drop a single index in the collection.
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
+     * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndex/
+     * @param string $indexName
+     * @return Result
+     * @throws InvalidArgumentException if "*" is specified
+     */
+    public function dropIndex($indexName)
+    {
+        // TODO
+    }
+
+    /**
+     * Drop all indexes in the collection.
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
+     * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndexes/
+     * @return Result
+     */
+    public function dropIndexes()
+    {
+        // TODO
+    }
+
+    /**
      * Performs a find (query) on the collection
      *
      * @see http://docs.mongodb.org/manual/core/read-operations-introduction/

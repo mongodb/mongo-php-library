@@ -940,6 +940,18 @@ class Collection
     }
 
     /**
+     * Returns information for all indexes in the collection.
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
+     * @see http://docs.mongodb.org/manual/reference/method/db.collection.getIndexes/
+     * @return Result
+     */
+    public function listIndexes()
+    {
+        // TODO
+    }
+
+    /**
      * Replace one document
      *
      * @see http://docs.mongodb.org/manual/reference/command/update/

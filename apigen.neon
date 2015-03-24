@@ -12,9 +12,6 @@ exclude:
 skipDocPath:
 	- * <mask>```
 	
-skipDocPrefix:
-	- Example
-	
 charset:
 	- UTF-8
 	
@@ -26,13 +23,6 @@ googleAnalytics: null
 templateTheme: bootstrap
 templateConfig: null
 groups: auto
-autocomplete:
-	- classes
-	- constants
-	- functions
-	- methods
-	- properties
-	- classconstants
 	
 accessLevels:
 	- public

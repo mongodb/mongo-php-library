@@ -1,6 +1,6 @@
 .PHONY: apigen composer test docs mkdocs
 
-PHONGO_LIB_VERSION=`php -r 'require "src/Collection.php"; echo MongoDB\Collection::VERSION, "\n";'`
+MONGODB_LIB_VERSION=`php -r 'require "src/Collection.php"; echo MongoDB\Collection::VERSION, "\n";'`
 COMPOSER_ARGS=update --no-interaction --prefer-source
 PHPUNIT_ARGS=--process-isolation
 
@@ -57,9 +57,9 @@ docs: mkdocs
 
 release: test RELEASE
 	@echo "Please run:"
-	@echo "		" git add RELEASE-$(PHONGO_LIB_VERSION)
-	@echo "		" git commit -m \"Add $(PHONGO_LIB_VERSION) release notes\"
-	@echo "		" git tag -a -m \"Release phongo-library $(PHONGO_LIB_VERSION)\" $(PHONGO_LIB_VERSION)
+	@echo "		" git add RELEASE-$(MONGODB_LIB_VERSION)
+	@echo "		" git commit -m \"Add $(MONGODB_LIB_VERSION) release notes\"
+	@echo "		" git tag -a -m \"Release MongoDB library $(MONGODB_LIB_VERSION)\" $(MONGODB_LIB_VERSION)
 	@echo "		" git push --tags
 	@echo "		" make release-docs
 	@echo "And don't forget to bump version in src/Collection.php"
@@ -71,5 +71,5 @@ release-docs: docs
 	mkdocs gh-deploy --clean
 
 RELEASE:
-	@git log --pretty=format:"%ad  %an  <%ae>%n%x09* %s%n" --date short --since="$$(git show -s --format=%ad `git rev-list --tags --max-count=1`)" > RELEASE-$(PHONGO_LIB_VERSION)
+	@git log --pretty=format:"%ad  %an  <%ae>%n%x09* %s%n" --date short --since="$$(git show -s --format=%ad `git rev-list --tags --max-count=1`)" > RELEASE-$(MONGODB_LIB_VERSION)
 

@@ -178,7 +178,8 @@ class Collection
                         throw new \InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
                     }
                     $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 1));
-                    if (key($args[1])[0] != '$') {
+                    $firstKey = key($args[1]);
+                    if (!isset($firstKey[0]) || $firstKey[0] != '$') {
                         throw new \InvalidArgumentException("First key in \$update must be a \$operator");
                     }
 
@@ -190,7 +191,8 @@ class Collection
                         throw new \InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
                     }
                     $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 1));
-                    if (key($args[1])[0] == '$') {
+                    $firstKey = key($args[1]);
+                    if (isset($firstKey[0]) && $firstKey[0] == '$') {
                         throw new \InvalidArgumentException("First key in \$update must NOT be a \$operator");
                     }
 
@@ -456,7 +458,8 @@ class Collection
      */
     public function findOneAndReplace(array $filter, array $replacement, array $options = array())
     {
-        if (key($replacement)[0] == '$') {
+        $firstKey = key($replacement);
+        if (isset($firstKey[0]) && $firstKey[0] == '$') {
             throw new \InvalidArgumentException("First key in \$replacement must NOT be a \$operator");
         }
 
@@ -493,7 +496,8 @@ class Collection
      */
     public function findOneAndUpdate(array $filter, array $update, array $options = array())
     {
-        if (key($update)[0] != '$') {
+        $firstKey = key($update);
+        if (!isset($firstKey[0]) || $firstKey[0] != '$') {
             throw new \InvalidArgumentException("First key in \$update must be a \$operator");
         }
 
@@ -964,7 +968,8 @@ class Collection
      */
     public function replaceOne(array $filter, array $update, array $options = array())
     {
-        if (key($update)[0] == '$') {
+        $firstKey = key($update);
+        if (isset($firstKey[0]) && $firstKey[0] == '$') {
             throw new \InvalidArgumentException("First key in \$update must NOT be a \$operator");
         }
         $wr = $this->_update($filter, $update, $options);
@@ -1005,7 +1010,8 @@ class Collection
      */
     public function updateOne(array $filter, array $update, array $options = array())
     {
-        if (key($update)[0] != '$') {
+        $firstKey = key($update);
+        if (!isset($firstKey[0]) || $firstKey[0] != '$') {
             throw new \InvalidArgumentException("First key in \$update must be a \$operator");
         }
         $wr = $this->_update($filter, $update, $options);

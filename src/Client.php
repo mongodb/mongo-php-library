@@ -2,8 +2,7 @@
 
 namespace MongoDB;
 
-use MongoDB\Collection;
-use MongoDB\Database;
+use MongoDB\Driver\Command;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Result;
@@ -35,12 +34,17 @@ class Client
     /**
      * Drop a database.
      *
+     * @see http://docs.mongodb.org/manual/reference/command/dropDatabase/
      * @param string $databaseName
      * @return Result
      */
     public function dropDatabase($databaseName)
     {
-        // TODO
+        $databaseName = (string) $databaseName;
+        $command = new Command(array('dropDatabase' => 1));
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+
+        return $this->manager->executeCommand($databaseName, $command, $readPreference);
     }
 
     /**

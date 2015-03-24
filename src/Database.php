@@ -3,6 +3,7 @@
 namespace MongoDB;
 
 use MongoDB\Collection;
+use MongoDB\Driver\Command;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Result;
@@ -51,11 +52,15 @@ class Database
     /**
      * Drop this database.
      *
+     * @see http://docs.mongodb.org/manual/reference/command/dropDatabase/
      * @return Result
      */
     public function drop()
     {
-        // TODO
+        $command = new Command(array('dropDatabase' => 1));
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+
+        return $this->manager->executeCommand($this->databaseName, $command, $readPreference);
     }
 
     /**

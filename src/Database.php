@@ -4,33 +4,34 @@ namespace MongoDB;
 
 use MongoDB\Collection;
 use MongoDB\Driver\Manager;
+use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Result;
+use MongoDB\Driver\WriteConcern;
 
 class Database
 {
+    private $databaseName;
     private $manager;
-    private $ns;
-    private $wc;
-    private $rp;
-
-    private $dbname;
+    private $readPreference;
+    private $writeConcern;
 
     /**
-     * Constructs new Database instance
+     * Constructs new Database instance.
      *
-     * It acts as a bridge for database specific operations.
+     * This class provides methods for database-specific operations and serves
+     * as a gateway for accessing collections.
      *
-     * @param Manager        $manager The phongo Manager instance
-     * @param string         $dbname  Fully Qualified database name
-     * @param WriteConcern   $wc      The WriteConcern to apply to writes
-     * @param ReadPreference $rp      The ReadPreferences to apply to reads
+     * @param Manager        $manager        Manager instance from the driver
+     * @param string         $databaseName   Database name
+     * @param WriteConcern   $writeConcern   Default write concern to apply
+     * @param ReadPreference $readPreference Default read preference to apply
      */
-    public function __construct(Manager $manager, $databaseName, WriteConcern $wc = null, ReadPreference $rp = null)
+    public function __construct(Manager $manager, $databaseName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
     {
         $this->manager = $manager;
-        $this->dbname  = $dbname;
-        $this->wc = $wc;
-        $this->rp = $rp;
+        $this->databaseName = $databaseName;
+        $this->writeConcern = $writeConcern;
+        $this->readPreference = $readPreference;
     }
 
     /**
@@ -81,19 +82,22 @@ class Database
     }
 
     /**
-     * Select a specific collection in this database
+     * Select a collection within this database.
      *
-     * It acts as a bridge to access specific collection commands
+     * If a write concern or read preference is not specified, the write concern
+     * or read preference of the Database will be applied, respectively.
      *
-     * @param string         $collectionName   The collection to select
-     * @param WriteConcern   $writeConcern     Default Write Concern to apply
-     * @param ReadPreference $readPreferences  Default Read Preferences to apply
+     * @param string         $collectionName Name of the collection to select
+     * @param WriteConcern   $writeConcern   Default write concern to apply
+     * @param ReadPreference $readPreference Default read preference to apply
+     * @return Collection
      */
-    public function selectCollection($collectionName, WriteConcern $writeConcern = null, ReadPreference $readPreferences = null)
+    public function selectCollection($collectionName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
     {
-        return new Collection($this->manager, "{$this->dbname}.{$collectionName}", $writeConcern, $readPreferences);
+        $namespace = $this->databaseName . '.' . $collectionName;
+        $writeConcern = $writeConcern ?: $this->writeConcern;
+        $readPreference = $readPreference ?: $this->readPreference;
+
+        return new Collection($this->manager, $namespace, $writeConcern, $readPreference);
     }
-
 }
-
-

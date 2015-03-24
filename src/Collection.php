@@ -43,25 +43,24 @@ class Collection
 
 
     /**
-     * Constructs new Collection instance
+     * Constructs new Collection instance.
      *
-     * This is the suggested CRUD interface when using phongo.
-     * It implements the MongoDB CRUD specification which is an interface all MongoDB
-     * supported drivers follow.
+     * This class provides methods for collection-specific operations, such as
+     * CRUD (i.e. create, read, update, and delete) and index management.
      *
-     * @param Manager        $manager The phongo Manager instance
-     * @param string         $ns      Fully Qualified Namespace (dbname.collname)
-     * @param WriteConcern   $wc      The WriteConcern to apply to writes
-     * @param ReadPreference $rp      The ReadPreferences to apply to reads
+     * @param Manager        $manager        Manager instance from the driver
+     * @param string         $namespace      Collection namespace (e.g. "db.collection")
+     * @param WriteConcern   $writeConcern   Default write concern to apply
+     * @param ReadPreference $readPreference Default read preference to apply
      */
-    public function __construct(Manager $manager, $ns, WriteConcern $wc = null, ReadPreference $rp = null)
+    public function __construct(Manager $manager, $namespace, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
     {
         $this->manager = $manager;
-        $this->ns = $ns;
-        $this->wc = $wc;
-        $this->rp = $rp;
+        $this->ns = $namespace;
+        $this->wc = $writeConcern;
+        $this->rp = $readPreference;
 
-        list($this->dbname, $this->collname) = explode(".", $ns, 2);
+        list($this->dbname, $this->collname) = explode(".", $namespace, 2);
     }
 
     /**

@@ -1,4 +1,4 @@
-site_name: "PHongo libraries"
+site_name: "MongoDB PHP library"
 repo_url: https://github.com/10gen-labs/mongo-php-library-prototype
 theme: spacelab
 pages:

@@ -1,35 +1,43 @@
-# Example data
+# Example Data
 
-For the purpose of this documentation we will be using the
-[zips.json](http://media.mongodb.org/zips.json) in our examples.
+Usage examples in this documentation will use
+[zips.json](http://media.mongodb.org/zips.json). This is a dataset comprised of
+United States postal codes, populations, and geographic locations.
 
-Importing the dataset into the database can be done in several ways,
-for example using the following script:
+Importing the dataset into MongoDB can be done in several ways. The following
+examples uses the low-level `mongodb` PHP driver:
 
 ```php
 <?php
 
 $file = "http://media.mongodb.org/zips.json";
-
 $zips = file($file, FILE_IGNORE_NEW_LINES);
 
+$bulk = new MongoDB\Driver\BulkWrite());
 
-$batch = new MongoDB\WriteBatch(true);
-foreach($zips as $string) {
+foreach ($zips as $string) {
     $document = json_decode($string);
-    $batch->insert($document);
+    $bulk->insert($document);
 }
 
-$manager = new MongoDB\Manager("mongodb://localhost");
+$manager = new MongoDB\Driver\Manager("mongodb://localhost");
 
-$result = $manager->executeWriteBatch("examples.zips", $batch);
+$result = $manager->executeBulkWrite("test.zips", $bulk);
 printf("Inserted %d documents\n", $result->getInsertedCount());
 
 ?>
 ```
 
-Outputs
+Executing this script should yield the following output:
 
 ```
 Inserted 29353 documents
+```
+
+You may also import the dataset using the
+[`mongoimport`](http://docs.mongodb.org/manual/reference/program/mongoimport/)
+command, which is included with MongoDB:
+
+```
+$ mongoimport --db examples --collection zips --file zips.json
 ```

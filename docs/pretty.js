@@ -1,5 +1,4 @@
-
-$( document ).ready(function() {
-	$('pre code').parent().addClass('prettyprint well');
+$(document).ready(function() {
+    $('pre code').parent().addClass('prettyprint well');
     prettyPrint();
 });

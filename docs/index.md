@@ -1,67 +1,49 @@
-# Welcome to phongo libraries!
+# MongoDB PHP Library
 
-phongo libraries is a CRUD API ontop of [Phongo](https://github.com/10gen-labs/mongo-php-driver-prototype).
-Its purpose is to provide standard MongoDB API and follows the MongoDB CRUD API Specification[1]
-that all [MongoDB](http://mongodb.com) supported drivers follow.
+This library provides a high-level abstraction around the lower-level
+[PHP driver](https://github.com/10gen-labs/mongo-php-driver-prototype) (i.e. the
+`mongodb` extension).
 
-PHongo CRUD provides several convenience methods that abstract the core PHongo extension.
-The methods include functionality to insert a single document, counting all documents in
-an collection, and delete documents from a collection.
+While the extension provides a limited API for executing commands, queries, and
+write operations, this library implements an API similar to that of the
+[legacy PHP driver](http://php.net/manual/en/book.mongo.php). It contains
+abstractions for client, database, and collection objects, and provides methods
+for CRUD operations and common commands (e.g. index and collection management).
 
+If you are developing an application with MongoDB, you should consider using
+this library, or another high-level abstraction, instead of the extension alone.
+
+For further information about the architecture of this library and the `mongodb`
+extension, see:
+
+ - http://www.mongodb.com/blog/post/call-feedback-new-php-and-hhvm-drivers
 
 # Installation
 
-As PHongo CRUD is an abstraction layer for PHongo, it naturally requires [PHongo to be
-installed](http://10gen-labs.github.io/mongo-php-driver-prototype/#installation):
+As a high-level abstraction for the driver, this library naturally requires that
+the [`mongodb` extension be installed](http://10gen-labs.github.io/mongo-php-driver-prototype/#installation):
 
-	$ wget https://github.com/10gen-labs/mongo-php-driver-prototype/releases/download/0.1.2/phongo-0.1.2.tgz
-	$ pecl install phongo-0.1.2.tgz
-	$ echo "extension=phongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+    $ pecl install mongodb-alpha
+    $ echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
-The best way to then install PHongo CRUD is via [composer](https://getcomposer.org/)
-by adding the following to
-[composer.json](https://getcomposer.org/doc/01-basic-usage.md#composer-json-project-setup):
+The preferred method of installing this library is with
+[Composer](https://getcomposer.org/) by running the following from your project
+root:
 
-```json
-    "repositories": [
-        {
-	    "type": "vcs",
-	    "url": "https://github.com/10gen-labs/mongo-php-library-prototype"
-        }
-    ],
-    "require": {
-        "ext-phongo": ">=0.1.2",
-        "10gen-labs/mongo-php-library-prototype": "dev-master"
-    }
-```
-
-and then running
-
-```shell
-$ composer install
-```
-
-
+    $ composer require "mongodb/mongodb=0.2.x-dev"
 
 ## Generated API Docs
 
-If you are just interested in looking at the API provided, checkout the apidoc generated
-documentation on: [http://10gen-labs.github.io/mongo-php-library-prototype/api/class-MongoDB.Collection.html](http://10gen-labs.github.io/mongo-php-library-prototype/api/class-MongoDB.Collection.html)
-
-
+If you are just interested in referencing the API provided by this library, you
+can view generated API documentation [here](./api).
 
 ## MongoDB Tutorial
 
-MongoDB first-timer?
-Checkout these links to get a quick understanding what MongoDB is, how it works, and
-what the most common terms used with MongoDB mean.
+If you are a new MongoDB user, these links should help you become more familiar
+with MongoDB and introduce some of the concepts and terms you will encounter in
+this documentation:
 
- - [MongoDB CRUD Introduction](http://docs.mongodb.org/manual/core/crud-introduction/)
- - [What is a MongoDB Document](http://docs.mongodb.org/manual/core/document/)
- - [MongoDB `dot notation`](http://docs.mongodb.org/manual/core/document/#dot-notation)
- - [MongoDB ObjectId](http://docs.mongodb.org/manual/reference/object-id/)
-
-
-
-[1] The specification has not been published yet - it is still a Work In Progress
-
+ - [Introduction to CRUD operations in MongoDB](http://docs.mongodb.org/manual/core/crud-introduction/)
+ - [What is a MongoDB document?](http://docs.mongodb.org/manual/core/document/)
+ - [MongoDB's *dot notation* for accessing document properties](http://docs.mongodb.org/manual/core/document/#dot-notation)
+ - [ObjectId: MongoDB's document identifier](http://docs.mongodb.org/manual/reference/object-id/)

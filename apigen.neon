@@ -18,8 +18,8 @@ skipDocPrefix:
 charset:
 	- UTF-8
 	
-main: phongo libraries
-title: phongo libraries
+main: MongoDB PHP library
+title: MongoDB PHP library
 baseUrl: http://10gen-labs.github.io/mongo-php-libraries-prototype
 googleCseId: null
 googleAnalytics: null

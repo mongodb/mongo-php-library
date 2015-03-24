@@ -56,7 +56,7 @@ class Collection
     public function __construct(Manager $manager, $namespace, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
     {
         $this->manager = $manager;
-        $this->ns = $namespace;
+        $this->ns = (string) $namespace;
         $this->wc = $writeConcern;
         $this->rp = $readPreference;
 

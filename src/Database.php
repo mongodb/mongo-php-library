@@ -30,7 +30,7 @@ class Database
     public function __construct(Manager $manager, $databaseName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
     {
         $this->manager = $manager;
-        $this->databaseName = $databaseName;
+        $this->databaseName = (string) $databaseName;
         $this->writeConcern = $writeConcern;
         $this->readPreference = $readPreference;
     }

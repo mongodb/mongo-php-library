@@ -10,12 +10,17 @@
         { "name": "Derick Rethans", "email": "github@derickrethans.nl" }
     ],
     "require": {
-        "ext-phongo": ">=0.1.2"
+        "ext-mongodb": "^0.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.0"
     },
     "autoload": {
         "psr-4": { "MongoDB\\": "src/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.2.x-dev"
+        }
     }
 }

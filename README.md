@@ -1,47 +1,44 @@
-phongo libraries
-================
+MongoDB library for PHP
+=======================
 
-MongoDB CRUD interface for [PHongo](https://github.com/10gen-labs/mongo-php-driver-prototype).
+This library provides a high-level abstraction around the lower-level
+[PHP driver](https://github.com/10gen-labs/mongo-php-driver-prototype) (i.e. the
+`mongodb` extension).
 
+While the extension provides a limited API for executing commands, queries, and
+write operations, this library implements an API similar to that of the
+[legacy PHP driver](http://php.net/manual/en/book.mongo.php). It contains
+abstractions for client, database, and collection objects, and provides methods
+for CRUD operations and common commands (e.g. index and collection management).
 
-This interface is meant for the general public to use with PHongo,
-and will serve as the default reference interface when creating other bindings.
+If you are developing an application with MongoDB, you should consider using
+this library, or another high-level abstraction, instead of the extension alone.
 
+For further information about the architecture of this library and the `mongodb`
+extension, see:
+
+ - http://www.mongodb.com/blog/post/call-feedback-new-php-and-hhvm-drivers
 
 ## Documentation
-- http://10gen-labs.github.io/mongo-php-library-prototype/
+
+ - http://10gen-labs.github.io/mongo-php-library-prototype/
 
 # Installation
 
-As `PHongo libraries` is an abstraction layer for PHongo, it naturally requires
-[PHongo to be installed](http://10gen-labs.github.io/mongo-php-driver-prototype/#installation):
+As a high-level abstraction for the driver, this library naturally requires that
+the [`mongodb` extension be installed](http://10gen-labs.github.io/mongo-php-driver-prototype/#installation):
 
-	$ wget https://github.com/10gen-labs/mongo-php-driver-prototype/releases/download/0.1.5/phongo-0.1.5.tgz
-	$ pecl install phongo-0.1.5.tgz
-	$ echo "extension=phongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+    $ pecl install mongodb-alpha
+    $ echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
-The best way to then install `PHongo libraries` is via [composer](https://getcomposer.org/)
-by adding the following to
-[composer.json](https://getcomposer.org/doc/01-basic-usage.md#composer-json-project-setup):
+The preferred method of installing this library is with
+[Composer](https://getcomposer.org/) by running the following from your project
+root:
 
-```json
-    "repositories": [
-        {
-	    "type": "vcs",
-	    "url": "https://github.com/10gen-labs/mongo-php-libraries-prototype"
-        }
-    ],
-    "require": {
-        "ext-phongo": ">=0.1.5",
-        "10gen-labs/mongo-php-libraries-prototype": "dev-master"
-    }
-```
+    $ composer require "mongodb/mongodb=0.2.x-dev"
 
-and then running
+## Reporting Issues
 
-```shell
-$ composer install
-```
+Please use the following form to report any issues:
 
-## Reporting tickets
-- https://jira.mongodb.org/secure/CreateIssue.jspa?pid=12483&issuetype=1
+ - https://jira.mongodb.org/secure/CreateIssue.jspa?pid=12483&issuetype=1

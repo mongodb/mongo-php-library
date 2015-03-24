@@ -1,4 +1,4 @@
-.PHONY: apigen compser test docs mkdocs
+.PHONY: apigen composer test docs mkdocs
 
 PHONGO_LIB_VERSION=`php -r 'require "src/Collection.php"; echo MongoDB\Collection::VERSION, "\n";'`
 COMPOSER_ARGS=update --no-interaction --prefer-source
@@ -32,8 +32,8 @@ apigen:
 	@command -v apigen >/dev/null 2>&1; \
 	if test $$? -eq 0; then \
 		apigen generate
-	elif test -r phpunit.phar; then \
-		php apigen generate \
+	elif test -r apigen.phar; then \
+		php apigen.phar generate \
 	else \
 		echo "Cannot find apigen :("; \
 		echo "Aborting."; \
@@ -45,7 +45,7 @@ mkdocs:
 	if test $$? -eq 0; then \
         mkdocs build --clean \
     else \
-		echo "Cannot find apigen :("; \
+		echo "Cannot find mkdocs :("; \
 		echo "Aborting."; \
 		exit 1; \
     fi
@@ -62,7 +62,7 @@ release: test RELEASE
 	@echo "		" git tag -a -m \"Release phongo-library $(PHONGO_LIB_VERSION)\" $(PHONGO_LIB_VERSION)
 	@echo "		" git push --tags
 	@echo "		" make release-docs
-	@echo "And don't forget to pump version in src/Collection.php"
+	@echo "And don't forget to bump version in src/Collection.php"
 
 docs:
 	mkdocs build --clean

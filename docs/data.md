@@ -22,7 +22,7 @@ foreach ($zips as $string) {
 
 $manager = new MongoDB\Driver\Manager("mongodb://localhost");
 
-$result = $manager->executeBulkWrite("test.zips", $bulk);
+$result = $manager->executeBulkWrite("examples.zips", $bulk);
 printf("Inserted %d documents\n", $result->getInsertedCount());
 
 ?>

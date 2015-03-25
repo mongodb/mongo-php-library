@@ -45,6 +45,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getUri()
     {
-        return getenv('MONGODB_URI') ?: 'mongodb://localhost:27017';
+        return getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1:27017';
     }
 }

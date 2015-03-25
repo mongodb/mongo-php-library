@@ -12,6 +12,7 @@ env:
 services: mongodb
 
 before_script:
+  - mongo --eval 'tojson(db.runCommand({buildInfo:1}))'
   - pecl -q install -f mongodb-${MONGODB_VERSION}
   - php --ri mongodb
   - composer install --dev --no-interaction --prefer-source

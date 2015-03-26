@@ -17,6 +17,16 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->collection->deleteMany(array());
     }
 
+    public function testDrop()
+    {
+        $writeResult = $this->collection->insertOne(array('x' => 1));
+        $this->assertEquals(1, $writeResult->getInsertedCount());
+
+        $commandResult = $this->collection->drop();
+        $this->assertCommandSucceeded($commandResult);
+        $this->assertCollectionCount($this->getNamespace(), 0);
+    }
+
     function testInsertAndRetrieve()
     {
         $generator = new FixtureGenerator();

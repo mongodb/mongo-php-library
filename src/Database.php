@@ -66,12 +66,17 @@ class Database
     /**
      * Drop a collection within this database.
      *
+     * @see http://docs.mongodb.org/manual/reference/command/drop/
      * @param string $collectionName
      * @return Result
      */
     public function dropCollection($collectionName)
     {
-        // TODO
+        $collectionName = (string) $collectionName;
+        $command = new Command(array('drop' => $collectionName));
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+
+        return $this->manager->executeCommand($this->databaseName, $command, $readPreference);
     }
 
     /**

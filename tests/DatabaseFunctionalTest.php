@@ -20,4 +20,15 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertCommandSucceeded($commandResult);
         $this->assertCollectionCount($this->getNamespace(), 0);
     }
+
+    public function testDropCollection()
+    {
+        $writeResult = $this->manager->executeInsert($this->getNamespace(), array('x' => 1));
+        $this->assertEquals(1, $writeResult->getInsertedCount());
+
+        $database = new Database($this->manager, $this->getDatabaseName());
+        $commandResult = $database->dropCollection($this->getCollectionName());
+        $this->assertCommandSucceeded($commandResult);
+        $this->assertCollectionCount($this->getNamespace(), 0);
+    }
 }

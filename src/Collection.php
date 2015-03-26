@@ -334,11 +334,15 @@ class Collection
     /**
      * Drop this collection.
      *
+     * @see http://docs.mongodb.org/manual/reference/command/drop/
      * @return Result
      */
     public function drop()
     {
-        // TODO
+        $command = new Command(array('drop' => $this->collname));
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+
+        return $this->manager->executeCommand($this->dbname, $command, $readPreference);
     }
 
     /**

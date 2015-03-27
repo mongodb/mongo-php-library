@@ -10,13 +10,22 @@ use MongoDB\Database;
  */
 class DatabaseFunctionalTest extends FunctionalTestCase
 {
+    private $database;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->database = new Database($this->manager, $this->getDatabaseName());
+        $this->database->drop();
+    }
+
     public function testDrop()
     {
         $writeResult = $this->manager->executeInsert($this->getNamespace(), array('x' => 1));
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $database = new Database($this->manager, $this->getDatabaseName());
-        $commandResult = $database->drop();
+        $commandResult = $this->database->drop();
         $this->assertCommandSucceeded($commandResult);
         $this->assertCollectionCount($this->getNamespace(), 0);
     }
@@ -26,8 +35,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $writeResult = $this->manager->executeInsert($this->getNamespace(), array('x' => 1));
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $database = new Database($this->manager, $this->getDatabaseName());
-        $commandResult = $database->dropCollection($this->getCollectionName());
+        $commandResult = $this->database->dropCollection($this->getCollectionName());
         $this->assertCommandSucceeded($commandResult);
         $this->assertCollectionCount($this->getNamespace(), 0);
     }

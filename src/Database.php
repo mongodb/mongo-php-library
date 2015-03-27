@@ -5,9 +5,14 @@ namespace MongoDB;
 use MongoDB\Collection;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Manager;
+use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Result;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Model\CollectionInfoIterator;
+use MongoDB\Model\CollectionInfoCommandIterator;
+use MongoDB\Model\CollectionInfoLegacyIterator;
+use InvalidArgumentException;
 
 class Database
 {
@@ -84,11 +89,12 @@ class Database
      *
      * @see http://docs.mongodb.org/manual/reference/command/listCollections/
      * @param array $options
-     * @return Result
+     * @return CollectionInfoIterator
      */
     public function listCollections(array $options = array())
     {
-        // TODO
+        // TODO: Determine if command or legacy method should be used
+        return $this->listCollectionsCommand($options);
     }
 
     /**
@@ -109,5 +115,59 @@ class Database
         $readPreference = $readPreference ?: $this->readPreference;
 
         return new Collection($this->manager, $namespace, $writeConcern, $readPreference);
+    }
+
+    /**
+     * Returns information for all collections in this database using the
+     * listCollections command.
+     *
+     * @param array $options
+     * @return CollectionInfoCommandIterator
+     */
+    private function listCollectionsCommand(array $options = array())
+    {
+        $command = new Command(array('listCollections' => 1) + $options);
+        // TODO: Relax RP if connected to a secondary node in standalone mode
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+
+        $result = $this->manager->executeCommand($this->databaseName, $command, $readPreference);
+
+        return new CollectionInfoCommandIterator($result);
+    }
+
+    /**
+     * Returns information for all collections in this database by querying
+     * the "system.namespaces" collection (MongoDB <2.8).
+     *
+     * @param array $options
+     * @return CollectionInfoLegacyIterator
+     * @throws InvalidArgumentException if the filter option is neither an array
+     *                                  nor object, or if filter.name is not a
+     *                                  string.
+     */
+    private function listCollectionsLegacy(array $options = array())
+    {
+        $filter = array_key_exists('filter', $options) ? $options['filter'] : array();
+
+        if ( ! is_array($filter) && ! is_object($filter)) {
+            throw new InvalidArgumentException(sprintf('Expected filter to be array or object, %s given', gettype($filter)));
+        }
+
+        if (array_key_exists('name', $filter)) {
+            if ( ! is_string($filter['name'])) {
+                throw new InvalidArgumentException(sprintf('Filter "name" must be a string for MongoDB <2.8, %s given', gettype($filter['name'])));
+            }
+
+            $filter['name'] = $this->databaseName . '.' . $filter['name'];
+        }
+
+        $namespace = $this->databaseName . '.system.namespaces';
+        $query = new Query($filter);
+        // TODO: Relax RP if connected to a secondary node in standalone mode
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+
+        $result = $this->manager->executeQuery($namespace, $query, $readPreference);
+
+        return new CollectionInfoLegacyIterator($result);
     }
 }

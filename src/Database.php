@@ -4,10 +4,10 @@ namespace MongoDB;
 
 use MongoDB\Collection;
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\Result;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Model\CollectionInfoCommandIterator;
@@ -47,7 +47,7 @@ class Database
      * @see http://docs.mongodb.org/manual/reference/method/db.createCollection/
      * @param string $collectionName
      * @param array  $options
-     * @return Result
+     * @return Cursor
      */
     public function createCollection($collectionName, array $options = array())
     {
@@ -58,7 +58,7 @@ class Database
      * Drop this database.
      *
      * @see http://docs.mongodb.org/manual/reference/command/dropDatabase/
-     * @return Result
+     * @return Cursor
      */
     public function drop()
     {
@@ -73,7 +73,7 @@ class Database
      *
      * @see http://docs.mongodb.org/manual/reference/command/drop/
      * @param string $collectionName
-     * @return Result
+     * @return Cursor
      */
     public function dropCollection($collectionName)
     {
@@ -130,9 +130,9 @@ class Database
         // TODO: Relax RP if connected to a secondary node in standalone mode
         $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
 
-        $result = $this->manager->executeCommand($this->databaseName, $command, $readPreference);
+        $cursor = $this->manager->executeCommand($this->databaseName, $command, $readPreference);
 
-        return new CollectionInfoCommandIterator($result);
+        return new CollectionInfoCommandIterator($cursor);
     }
 
     /**
@@ -166,8 +166,8 @@ class Database
         // TODO: Relax RP if connected to a secondary node in standalone mode
         $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
 
-        $result = $this->manager->executeQuery($namespace, $query, $readPreference);
+        $cursor = $this->manager->executeQuery($namespace, $query, $readPreference);
 
-        return new CollectionInfoLegacyIterator($result);
+        return new CollectionInfoLegacyIterator($cursor);
     }
 }

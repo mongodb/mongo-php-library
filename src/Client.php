@@ -3,9 +3,9 @@
 namespace MongoDB;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\Result;
 use MongoDB\Driver\WriteConcern;
 use ArrayIterator;
 use stdClass;
@@ -39,7 +39,7 @@ class Client
      *
      * @see http://docs.mongodb.org/manual/reference/command/dropDatabase/
      * @param string $databaseName
-     * @return Result
+     * @return Cursor
      */
     public function dropDatabase($databaseName)
     {
@@ -61,9 +61,8 @@ class Client
     {
         $command = new Command(array('listDatabases' => 1));
 
-        $result = $this->manager->executeCommand('admin', $command);
-        $result = iterator_to_array($result);
-        $result = current($result);
+        $cursor = $this->manager->executeCommand('admin', $command);
+        $result = current($cursor->toArray());
 
         if ( ! isset($result['databases']) || ! is_array($result['databases'])) {
             throw new UnexpectedValueException('listDatabases command did not return a "databases" array');

@@ -3,10 +3,10 @@
 namespace MongoDB;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\Result;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
 
@@ -86,14 +86,16 @@ class Collection
             "pipeline"  => $pipeline,
         ) + $options;
 
-        $result = $this->_runCommand($this->dbname, $cmd);
-        $doc = $result->toArray();
+        $cursor = $this->_runCommand($this->dbname, $cmd);
+
         if (isset($cmd["cursor"]) && $cmd["cursor"]) {
-            return $result;
-        } else {
-            if ($doc["ok"]) {
-                return new \ArrayIterator($doc["result"]);
-            }
+            return $cursor;
+        }
+
+        $doc = current($cursor->toArray());
+
+        if ($doc["ok"]) {
+            return new \ArrayIterator($doc["result"]);
         }
 
         throw $this->_generateCommandException($doc);
@@ -234,7 +236,7 @@ class Collection
             "query" => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
+        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
             return $doc["n"];
         }
@@ -324,7 +326,7 @@ class Collection
             "query"    => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
+        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
             return $doc["values"];
         }
@@ -335,7 +337,7 @@ class Collection
      * Drop this collection.
      *
      * @see http://docs.mongodb.org/manual/reference/command/drop/
-     * @return Result
+     * @return Cursor
      */
     public function drop()
     {
@@ -351,7 +353,7 @@ class Collection
      * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndex/
      * @param string $indexName
-     * @return Result
+     * @return Cursor
      * @throws InvalidArgumentException if "*" is specified
      */
     public function dropIndex($indexName)
@@ -364,7 +366,7 @@ class Collection
      *
      * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndexes/
-     * @return Result
+     * @return Cursor
      */
     public function dropIndexes()
     {
@@ -379,7 +381,7 @@ class Collection
      *
      * @param array $filter    The find query to execute
      * @param array $options   Additional options
-     * @return Result
+     * @return Cursor
      */
     public function find(array $filter = array(), array $options = array())
     {
@@ -437,7 +439,7 @@ class Collection
             "query"         => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
+        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
             return $doc["value"];
         }
@@ -474,7 +476,7 @@ class Collection
             "query"         => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
+        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
             return $doc["value"];
         }
@@ -512,7 +514,7 @@ class Collection
             "query"         => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
+        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
             return $doc["value"];
         }
@@ -951,7 +953,7 @@ class Collection
      *
      * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.getIndexes/
-     * @return Result
+     * @return Cursor
      */
     public function listIndexes()
     {

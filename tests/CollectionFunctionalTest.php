@@ -49,7 +49,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $count = $this->collection->count($query);
         $this->assertEquals(1, $count);
         $cursor = $this->collection->find($query);
-        $this->assertInstanceOf('MongoDB\Driver\Result', $cursor);
+        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
 
         foreach($cursor as $n => $person) {
             $this->assertInternalType("array", $person);

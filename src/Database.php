@@ -51,7 +51,11 @@ class Database
      */
     public function createCollection($collectionName, array $options = array())
     {
-        // TODO
+        $collectionName = (string) $collectionName;
+        $command = new Command(array('create' => $collectionName) + $options);
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+
+        return $this->manager->executeCommand($this->databaseName, $command, $readPreference);
     }
 
     /**

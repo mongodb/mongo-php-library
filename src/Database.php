@@ -164,7 +164,9 @@ class Database
             throw new InvalidArgumentException(sprintf('Expected filter to be array or object, %s given', gettype($filter)));
         }
 
-        if (array_key_exists('name', $filter)) {
+        if (array_key_exists('name', (array) $filter)) {
+            $filter = (array) $filter;
+
             if ( ! is_string($filter['name'])) {
                 throw new InvalidArgumentException(sprintf('Filter "name" must be a string for MongoDB <2.8, %s given', gettype($filter['name'])));
             }

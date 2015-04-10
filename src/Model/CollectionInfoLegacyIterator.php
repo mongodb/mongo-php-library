@@ -3,9 +3,29 @@
 namespace MongoDB\Model;
 
 use FilterIterator;
+use Iterator;
+use IteratorIterator;
+use Traversable;
 
 class CollectionInfoLegacyIterator extends FilterIterator implements CollectionInfoIterator
 {
+    /**
+     * Constructor.
+     *
+     * @param Traversable $iterator
+     */
+    public function __construct(Traversable $iterator)
+    {
+        /* FilterIterator requires an Iterator, so wrap all other Traversables
+         * with an IteratorIterator as a convenience.
+         */
+        if ( ! $iterator instanceof Iterator) {
+            $iterator = new IteratorIterator($iterator);
+        }
+
+        parent::__construct($iterator);
+    }
+
     /**
      * Return the current element as a CollectionInfo instance.
      *

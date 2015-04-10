@@ -71,14 +71,32 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 
     public function testListCollections()
     {
-        $writeResult = $this->manager->executeInsert($this->getNamespace(), array('x' => 1));
-        $this->assertEquals(1, $writeResult->getInsertedCount());
+        $commandResult = $this->database->createCollection($this->getCollectionName());
+        $this->assertCommandSucceeded($commandResult);
 
         $collections = $this->database->listCollections();
         $this->assertInstanceOf('MongoDB\Model\CollectionInfoIterator', $collections);
 
         foreach ($collections as $collection) {
             $this->assertInstanceOf('MongoDB\Model\CollectionInfo', $collection);
+        }
+    }
+
+    public function testListCollectionsWithFilter()
+    {
+        $commandResult = $this->database->createCollection($this->getCollectionName());
+        $this->assertCommandSucceeded($commandResult);
+
+        $collectionName = $this->getCollectionName();
+        $options = array('filter' => array('name' => $collectionName));
+
+        $collections = $this->database->listCollections($options);
+        $this->assertInstanceOf('MongoDB\Model\CollectionInfoIterator', $collections);
+        $this->assertCount(1, $collections);
+
+        foreach ($collections as $collection) {
+            $this->assertInstanceOf('MongoDB\Model\CollectionInfo', $collection);
+            $this->assertEquals($collectionName, $collection->getName());
         }
     }
 

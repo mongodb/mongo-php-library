@@ -1,8 +1,9 @@
 MongoDB library for PHP
 =======================
 
-This library provides a high-level abstraction around the lower-level
-[PHP driver](https://github.com/10gen-labs/mongo-php-driver-prototype) (i.e. the
+This library provides a high-level abstraction around the lower-level drivers for
+[PHP](https://github.com/10gen-labs/mongo-php-driver-prototype) and
+[HHVM](https://github.com/10gen-labs/mongo-hhvm-driver-prototype) (i.e. the
 `mongodb` extension).
 
 While the extension provides a limited API for executing commands, queries, and

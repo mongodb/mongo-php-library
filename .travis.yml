@@ -7,7 +7,7 @@ php:
   - 5.6
 
 env:
-  - MONGODB_VERSION=0.2.0
+  - MONGODB_VERSION=alpha
 
 services: mongodb
 

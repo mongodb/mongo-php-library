@@ -8,6 +8,7 @@ use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Model\CollectionInfoCommandIterator;
@@ -97,8 +98,15 @@ class Database
      */
     public function listCollections(array $options = array())
     {
-        // TODO: Determine if command or legacy method should be used
-        return $this->listCollectionsCommand($options);
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $server = $this->manager->selectServer($readPreference);
+
+        $serverInfo = $server->getInfo();
+        $maxWireVersion = isset($serverInfo['maxWireVersion']) ? $serverInfo['maxWireVersion'] : 0;
+
+        return ($maxWireVersion >= 3)
+            ? $this->listCollectionsCommand($server, $options)
+            : $this->listCollectionsLegacy($server, $options);
     }
 
     /**
@@ -125,16 +133,14 @@ class Database
      * Returns information for all collections in this database using the
      * listCollections command.
      *
-     * @param array $options
+     * @param Server $server
+     * @param array  $options
      * @return CollectionInfoCommandIterator
      */
-    private function listCollectionsCommand(array $options = array())
+    private function listCollectionsCommand(Server $server, array $options = array())
     {
         $command = new Command(array('listCollections' => 1) + $options);
-        // TODO: Relax RP if connected to a secondary node in standalone mode
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
-
-        $cursor = $this->manager->executeCommand($this->databaseName, $command, $readPreference);
+        $cursor = $server->executeCommand($this->databaseName, $command);
 
         return new CollectionInfoCommandIterator($cursor);
     }
@@ -143,13 +149,14 @@ class Database
      * Returns information for all collections in this database by querying
      * the "system.namespaces" collection (MongoDB <2.8).
      *
-     * @param array $options
+     * @param Server $server
+     * @param array  $options
      * @return CollectionInfoLegacyIterator
      * @throws InvalidArgumentException if the filter option is neither an array
      *                                  nor object, or if filter.name is not a
      *                                  string.
      */
-    private function listCollectionsLegacy(array $options = array())
+    private function listCollectionsLegacy(Server $server, array $options = array())
     {
         $filter = array_key_exists('filter', $options) ? $options['filter'] : array();
 
@@ -167,10 +174,7 @@ class Database
 
         $namespace = $this->databaseName . '.system.namespaces';
         $query = new Query($filter);
-        // TODO: Relax RP if connected to a secondary node in standalone mode
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
-
-        $cursor = $this->manager->executeQuery($namespace, $query, $readPreference);
+        $cursor = $server->executeQuery($namespace, $query);
 
         return new CollectionInfoLegacyIterator($cursor);
     }

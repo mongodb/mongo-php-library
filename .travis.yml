@@ -7,11 +7,12 @@ php:
   - 5.6
 
 env:
-  - MONGODB_VERSION=0.2.0
+  - MONGODB_VERSION=alpha
 
 services: mongodb
 
 before_script:
-  - pecl -q install -f mongodb-${MONGODB_VERSION}
+  - mongo --eval 'tojson(db.runCommand({buildInfo:1}))'
+  - pecl install -f mongodb-${MONGODB_VERSION}
   - php --ri mongodb
   - composer install --dev --no-interaction --prefer-source

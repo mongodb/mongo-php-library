@@ -2,30 +2,34 @@
 
 namespace MongoDB;
 
-use MongoDB\Collection;
-use MongoDB\Database;
+use MongoDB\Driver\Command;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
-use MongoDB\Driver\Result;
+use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\WriteConcern;
+use ArrayIterator;
+use stdClass;
+use UnexpectedValueException;
 
 class Client
 {
     private $manager;
-    private $wc;
-    private $rp;
-
+    private $readPreference;
+    private $writeConcern;
 
     /**
-     * Constructs new Client instance
+     * Constructs a new Client instance.
      *
-     * This is the suggested main entry point using phongo.
-     * It acts as a bridge to access individual databases and collection tools
-     * which are provided in this namespace.
+     * This is the preferred class for connecting to a MongoDB server or
+     * cluster of servers. It serves as a gateway for accessing individual
+     * databases and collections.
      *
-     * @param Manager        $uri            The MongoDB URI to connect to
-     * @param WriteConcern   $options        URI Options
-     * @param ReadPreference $driverOptions  Driver specific options
+     * @see http://docs.mongodb.org/manual/reference/connection-string/
+     * @param string $uri           MongoDB connection string
+     * @param array  $options       Additional connection string options
+     * @param array  $driverOptions Driver-specific options
      */
-    public function __construct($uri, $options, $driverOptions)
+    public function __construct($uri, array $options = array(), array $driverOptions = array())
     {
         $this->manager = new Manager($uri, $options, $driverOptions);
     }
@@ -33,42 +37,90 @@ class Client
     /**
      * Drop a database.
      *
+     * @see http://docs.mongodb.org/manual/reference/command/dropDatabase/
      * @param string $databaseName
-     * @return Result
+     * @return Cursor
      */
     public function dropDatabase($databaseName)
     {
-        // TODO
+        $databaseName = (string) $databaseName;
+        $command = new Command(array('dropDatabase' => 1));
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+
+        return $this->manager->executeCommand($databaseName, $command, $readPreference);
     }
 
     /**
-     * Select a database
+     * List databases.
      *
-     * It acts as a bridge to access specific database commands
-     *
-     * @param string         $databaseName     The database to select
-     * @param WriteConcern   $writeConcern     Default Write Concern to apply
-     * @param ReadPreference $readPreferences  Default Read Preferences to apply
+     * @see http://docs.mongodb.org/manual/reference/command/listDatabases/
+     * @return Traversable
+     * @throws UnexpectedValueException if the command result is malformed
      */
-    public function selectDatabase($databaseName, WriteConcern $writeConcern = null, ReadPreference $readPreferences = null)
+    public function listDatabases()
     {
-        return new Database($this->manager, $databaseName, $writeConcern, $readPreferences);
+        $command = new Command(array('listDatabases' => 1));
+
+        $cursor = $this->manager->executeCommand('admin', $command);
+        $result = current($cursor->toArray());
+
+        if ( ! isset($result['databases']) || ! is_array($result['databases'])) {
+            throw new UnexpectedValueException('listDatabases command did not return a "databases" array');
+        }
+
+        $databases = array_map(
+            function(stdClass $database) { return (array) $database; },
+            $result['databases']
+        );
+
+        /* Return a Traversable instead of an array in case listDatabases is
+         * eventually changed to return a command cursor, like the collection
+         * and index enumeration commands. This makes the "totalSize" command
+         * field inaccessible, but users can manually invoke the command if they
+         * need that value.
+         */
+        return new ArrayIterator($databases);
     }
 
     /**
-     * Select a specific collection in a database
+     * Select a database.
      *
-     * It acts as a bridge to access specific collection commands
+     * If a write concern or read preference is not specified, the write concern
+     * or read preference of the Client will be applied, respectively.
      *
-     * @param string         $databaseName     The database where the $collectionName exists
-     * @param string         $collectionName   The collection to select
-     * @param WriteConcern   $writeConcern     Default Write Concern to apply
-     * @param ReadPreference $readPreferences  Default Read Preferences to apply
+     * @param string         $databaseName   Name of the database to select
+     * @param WriteConcern   $writeConcern   Default write concern to apply
+     * @param ReadPreference $readPreference Default read preference to apply
+     * @return Database
      */
-    public function selectCollection($databaseName, $collectionName, WriteConcern $writeConcern = null, ReadPreference $readPreferences = null)
+    public function selectDatabase($databaseName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
     {
-        return new Collection($this->manager, "{$databaseName}.{$collectionName}", $writeConcern, $readPreferences);
+        // TODO: inherit from Manager options once PHPC-196 is implemented
+        $writeConcern = $writeConcern ?: $this->writeConcern;
+        $readPreference = $readPreference ?: $this->readPreference;
+
+        return new Database($this->manager, $databaseName, $writeConcern, $readPreference);
     }
 
+    /**
+     * Select a collection.
+     *
+     * If a write concern or read preference is not specified, the write concern
+     * or read preference of the Client will be applied, respectively.
+     *
+     * @param string         $databaseName   Name of the database containing the collection
+     * @param string         $collectionName Name of the collection to select
+     * @param WriteConcern   $writeConcern   Default write concern to apply
+     * @param ReadPreference $readPreference Default read preference to apply
+     * @return Collection
+     */
+    public function selectCollection($databaseName, $collectionName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
+    {
+        $namespace = $databaseName . '.' . $collectionName;
+        // TODO: inherit from Manager options once PHPC-196 is implemented
+        $writeConcern = $writeConcern ?: $this->writeConcern;
+        $readPreference = $readPreference ?: $this->readPreference;
+
+        return new Collection($this->manager, $namespace, $writeConcern, $readPreference);
+    }
 }
-

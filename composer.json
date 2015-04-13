@@ -10,7 +10,7 @@
         { "name": "Derick Rethans", "email": "github@derickrethans.nl" }
     ],
     "require": {
-        "ext-mongodb": "^0.2"
+        "ext-mongodb": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.0"

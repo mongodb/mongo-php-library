@@ -3,10 +3,10 @@
 namespace MongoDB;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\Result;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
 
@@ -43,25 +43,24 @@ class Collection
 
 
     /**
-     * Constructs new Collection instance
+     * Constructs new Collection instance.
      *
-     * This is the suggested CRUD interface when using phongo.
-     * It implements the MongoDB CRUD specification which is an interface all MongoDB
-     * supported drivers follow.
+     * This class provides methods for collection-specific operations, such as
+     * CRUD (i.e. create, read, update, and delete) and index management.
      *
-     * @param Manager        $manager The phongo Manager instance
-     * @param string         $ns      Fully Qualified Namespace (dbname.collname)
-     * @param WriteConcern   $wc      The WriteConcern to apply to writes
-     * @param ReadPreference $rp      The ReadPreferences to apply to reads
+     * @param Manager        $manager        Manager instance from the driver
+     * @param string         $namespace      Collection namespace (e.g. "db.collection")
+     * @param WriteConcern   $writeConcern   Default write concern to apply
+     * @param ReadPreference $readPreference Default read preference to apply
      */
-    public function __construct(Manager $manager, $ns, WriteConcern $wc = null, ReadPreference $rp = null)
+    public function __construct(Manager $manager, $namespace, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
     {
         $this->manager = $manager;
-        $this->ns = $ns;
-        $this->wc = $wc;
-        $this->rp = $rp;
+        $this->ns = (string) $namespace;
+        $this->wc = $writeConcern;
+        $this->rp = $readPreference;
 
-        list($this->dbname, $this->collname) = explode(".", $ns, 2);
+        list($this->dbname, $this->collname) = explode(".", $namespace, 2);
     }
 
     /**
@@ -87,14 +86,16 @@ class Collection
             "pipeline"  => $pipeline,
         ) + $options;
 
-        $result = $this->_runCommand($this->dbname, $cmd);
-        $doc = $result->toArray();
+        $cursor = $this->_runCommand($this->dbname, $cmd);
+
         if (isset($cmd["cursor"]) && $cmd["cursor"]) {
-            return $result;
-        } else {
-            if ($doc["ok"]) {
-                return new \ArrayIterator($doc["result"]);
-            }
+            return $cursor;
+        }
+
+        $doc = current($cursor->toArray());
+
+        if ($doc["ok"]) {
+            return new \ArrayIterator($doc["result"]);
         }
 
         throw $this->_generateCommandException($doc);
@@ -235,7 +236,7 @@ class Collection
             "query" => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
+        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
             return $doc["n"];
         }
@@ -325,7 +326,7 @@ class Collection
             "query"    => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
+        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
             return $doc["values"];
         }
@@ -335,11 +336,15 @@ class Collection
     /**
      * Drop this collection.
      *
-     * @return Result
+     * @see http://docs.mongodb.org/manual/reference/command/drop/
+     * @return Cursor
      */
     public function drop()
     {
-        // TODO
+        $command = new Command(array('drop' => $this->collname));
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+
+        return $this->manager->executeCommand($this->dbname, $command, $readPreference);
     }
 
     /**
@@ -348,7 +353,7 @@ class Collection
      * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndex/
      * @param string $indexName
-     * @return Result
+     * @return Cursor
      * @throws InvalidArgumentException if "*" is specified
      */
     public function dropIndex($indexName)
@@ -361,7 +366,7 @@ class Collection
      *
      * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndexes/
-     * @return Result
+     * @return Cursor
      */
     public function dropIndexes()
     {
@@ -376,7 +381,7 @@ class Collection
      *
      * @param array $filter    The find query to execute
      * @param array $options   Additional options
-     * @return Result
+     * @return Cursor
      */
     public function find(array $filter = array(), array $options = array())
     {
@@ -434,7 +439,7 @@ class Collection
             "query"         => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
+        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
             return $doc["value"];
         }
@@ -471,7 +476,7 @@ class Collection
             "query"         => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
+        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
             return $doc["value"];
         }
@@ -509,7 +514,7 @@ class Collection
             "query"         => $filter,
         ) + $options;
 
-        $doc = $this->_runCommand($this->dbname, $cmd)->toArray();
+        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
             return $doc["value"];
         }
@@ -948,7 +953,7 @@ class Collection
      *
      * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.getIndexes/
-     * @return Result
+     * @return Cursor
      */
     public function listIndexes()
     {

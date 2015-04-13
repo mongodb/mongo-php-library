@@ -48,7 +48,7 @@ class CollectionInfoLegacyIterator extends FilterIterator implements CollectionI
     /**
      * Filter out internal or invalid collections.
      *
-     * @see http://php.net/manual/en/filteriterator.accept.php
+     * @see http://php.net/filteriterator.accept
      * @return boolean
      */
     public function accept()

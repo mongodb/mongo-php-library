@@ -9,6 +9,7 @@ use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
+use InvalidArgumentException;
 
 class Collection
 {
@@ -354,11 +355,21 @@ class Collection
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndex/
      * @param string $indexName
      * @return Cursor
-     * @throws InvalidArgumentException if "*" is specified
+     * @throws InvalidArgumentException if "*" is specified, since dropIndexes()
+     *                                  should be used to drop multiple indexes
      */
     public function dropIndex($indexName)
     {
-        // TODO
+        $indexName = (string) $indexName;
+
+        if ($indexName === '*') {
+            throw new InvalidArgumentException('dropIndexes() must be used to drop multiple indexes');
+        }
+
+        $command = new Command(array('dropIndexes' => $this->collname, 'index' => $indexName));
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+
+        return $this->manager->executeCommand($this->dbname, $command, $readPreference);
     }
 
     /**
@@ -370,7 +381,10 @@ class Collection
      */
     public function dropIndexes()
     {
-        // TODO
+        $command = new Command(array('dropIndexes' => $this->collname, 'index' => '*'));
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+
+        return $this->manager->executeCommand($this->dbname, $command, $readPreference);
     }
 
     /**

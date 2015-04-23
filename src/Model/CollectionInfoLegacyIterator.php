@@ -7,6 +7,20 @@ use Iterator;
 use IteratorIterator;
 use Traversable;
 
+/**
+ * CollectionInfoIterator for legacy "system.namespaces" query results.
+ *
+ * This iterator may be used to wrap a Cursor returned for queries on the
+ * "system.namespaces" collection. It includes logic to filter out internal
+ * collections and modify the collection name to be consistent with results from
+ * the listCollections command.
+ *
+ * @internal
+ * @see MongoDB\Database::listCollections()
+ * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst
+ * @see http://docs.mongodb.org/manual/reference/command/listCollections/
+ * @see http://docs.mongodb.org/manual/reference/system-collections/
+ */
 class CollectionInfoLegacyIterator extends FilterIterator implements CollectionInfoIterator
 {
     /**

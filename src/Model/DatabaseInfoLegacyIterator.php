@@ -2,6 +2,16 @@
 
 namespace MongoDB\Model;
 
+/**
+ * DatabaseInfoIterator for inline listDatabases command results.
+ *
+ * This iterator may be used to wrap the array returned within the listDatabases
+ * command's single-document result.
+ *
+ * @internal
+ * @see MongoDB\Client::listDatabases()
+ * @see http://docs.mongodb.org/manual/reference/command/listDatabases/
+ */
 class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
 {
     private $databases;

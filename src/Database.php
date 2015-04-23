@@ -146,8 +146,8 @@ class Database
     }
 
     /**
-     * Returns information for all collections in this database by querying
-     * the "system.namespaces" collection (MongoDB <2.8).
+     * Returns information for all collections in this database by querying the
+     * "system.namespaces" collection (MongoDB <2.8).
      *
      * @param Server $server
      * @param array  $options

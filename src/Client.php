@@ -63,16 +63,12 @@ class Client
         $command = new Command(array('listDatabases' => 1));
 
         $cursor = $this->manager->executeCommand('admin', $command);
+        $cursor->setTypeMap(array('document' => 'array'));
         $result = current($cursor->toArray());
 
         if ( ! isset($result['databases']) || ! is_array($result['databases'])) {
             throw new UnexpectedValueException('listDatabases command did not return a "databases" array');
         }
-
-        $databases = array_map(
-            function(stdClass $database) { return (array) $database; },
-            $result['databases']
-        );
 
         /* Return an Iterator instead of an array in case listDatabases is
          * eventually changed to return a command cursor, like the collection
@@ -80,7 +76,7 @@ class Client
          * field inaccessible, but users can manually invoke the command if they
          * need that value.
          */
-        return new DatabaseInfoLegacyIterator($databases);
+        return new DatabaseInfoLegacyIterator($result['databases']);
     }
 
     /**

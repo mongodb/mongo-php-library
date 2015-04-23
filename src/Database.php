@@ -141,6 +141,7 @@ class Database
     {
         $command = new Command(array('listCollections' => 1) + $options);
         $cursor = $server->executeCommand($this->databaseName, $command);
+        $cursor->setTypeMap(array('document' => 'array'));
 
         return new CollectionInfoCommandIterator($cursor);
     }
@@ -177,6 +178,7 @@ class Database
         $namespace = $this->databaseName . '.system.namespaces';
         $query = new Query($filter);
         $cursor = $server->executeQuery($namespace, $query);
+        $cursor->setTypeMap(array('document' => 'array'));
 
         return new CollectionInfoLegacyIterator($cursor);
     }

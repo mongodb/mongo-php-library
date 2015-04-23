@@ -2,11 +2,19 @@
 
 namespace MongoDB\Model;
 
+/**
+ * Database information model class.
+ *
+ * This class models the database information returned by the listDatabases
+ * command. It provides methods to access common database properties.
+ *
+ * @api
+ * @see MongoDB\Client::listDatabases()
+ * @see http://docs.mongodb.org/manual/reference/command/listDatabases/
+ */
 class DatabaseInfo
 {
-    private $empty;
-    private $name;
-    private $sizeOnDisk;
+    private $info;
 
     /**
     * Constructor.
@@ -15,9 +23,7 @@ class DatabaseInfo
     */
     public function __construct(array $info)
     {
-        $this->name = (string) $info['name'];
-        $this->empty = (boolean) $info['empty'];
-        $this->sizeOnDisk = (integer) $info['sizeOnDisk'];
+        $this->info = $info;
     }
 
     /**
@@ -27,7 +33,7 @@ class DatabaseInfo
      */
     public function getName()
     {
-        return $this->name;
+        return (string) $this->info['name'];
     }
 
     /**
@@ -37,7 +43,7 @@ class DatabaseInfo
      */
     public function getSizeOnDisk()
     {
-        return $this->sizeOnDisk;
+        return (integer) $this->info['sizeOnDisk'];
     }
 
     /**
@@ -47,6 +53,6 @@ class DatabaseInfo
      */
     public function isEmpty()
     {
-        return $this->empty;
+        return (boolean) $this->info['empty'];
     }
 }

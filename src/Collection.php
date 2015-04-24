@@ -14,7 +14,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedTypeException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInfoIteratorIterator;
-use stdClass;
+use MongoDB\Model\IndexInput;
 
 class Collection
 {
@@ -286,33 +286,20 @@ class Collection
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
      * @param array $indexes List of index specifications
      * @return string[] The names of the created indexes
-     * @throws InvalidArgumentException if an index specification does not
-     *                                  contain a "key" document
-     * @throws UnexpectedTypeException if an index specification is not an array
-     *                                 or a "key" document is not an array or
-     *                                 object
+     * @throws InvalidArgumentException if an index specification is invalid
      */
     public function createIndexes(array $indexes)
     {
-        foreach ($indexes as &$index) {
+        foreach ($indexes as $i => $index) {
             if ( ! is_array($index)) {
                 throw new UnexpectedTypeException($index, 'array');
             }
 
-            if ( ! isset($index['key'])) {
-                throw new InvalidArgumentException('Required "key" document is missing from index specification');
+            if ( ! isset($index['ns'])) {
+                $index['ns'] = $this->ns;
             }
 
-            if ( ! is_array($index['key']) && ! is_object($index['key'])) {
-                throw new UnexpectedTypeException($index['key'], 'array or object');
-            }
-
-            $index['key'] = (object) $index['key'];
-            $index['ns'] = $this->ns;
-
-            if ( ! isset($index['name'])) {
-                $index['name'] = $this->generateIndexName($index['key']);
-            }
+            $indexes[$i] = new IndexInput($index);
         }
 
         $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
@@ -327,7 +314,7 @@ class Collection
             $this->createIndexesLegacy($server, $indexes);
         }
 
-        return array_map(function(array $index) { return $index['name']; }, $indexes);
+        return array_map(function(IndexInput $index) { return (string) $index; }, $indexes);
     }
 
     /**
@@ -1246,23 +1233,6 @@ class Collection
         }
 
         $server->executeBulkWrite($this->dbname . '.system.indexes', $bulk);
-    }
-
-    /**
-     * Generates an index name from its key specification.
-     *
-     * @param object $key
-     * @return string
-     */
-    private function generateIndexName(stdClass $key)
-    {
-        $name = '';
-
-        foreach ($key as $field => $type) {
-            $name .= ($name != '' ? '_' : '') . $field . '_' . $type;
-        }
-
-        return $name;
     }
 
     /**

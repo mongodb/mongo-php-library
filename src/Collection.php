@@ -290,6 +290,10 @@ class Collection
      */
     public function createIndexes(array $indexes)
     {
+        if (empty($indexes)) {
+            return array();
+        }
+
         foreach ($indexes as $i => $index) {
             if ( ! is_array($index)) {
                 throw new UnexpectedTypeException($index, 'array');

@@ -132,6 +132,11 @@ class CollectionFunctionalTest extends FunctionalTestCase
         });
     }
 
+    public function testCreateIndexesWithEmptyInputIsNop()
+    {
+        $this->assertSame(array(), $this->collection->createIndexes(array()));
+    }
+
     public function testDropIndex()
     {
         $this->assertSame('x_1', $this->collection->createIndex(array('x' => 1)));

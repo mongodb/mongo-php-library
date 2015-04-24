@@ -401,12 +401,15 @@ class Collection
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndex/
      * @param string $indexName
      * @return Cursor
-     * @throws InvalidArgumentException if "*" is specified, since dropIndexes()
-     *                                  should be used to drop multiple indexes
+     * @throws InvalidArgumentException if $indexName is an empty string or "*"
      */
     public function dropIndex($indexName)
     {
         $indexName = (string) $indexName;
+
+        if ($indexName === '') {
+            throw new InvalidArgumentException('Index name cannot be empty');
+        }
 
         if ($indexName === '*') {
             throw new InvalidArgumentException('dropIndexes() must be used to drop multiple indexes');

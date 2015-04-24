@@ -153,6 +153,16 @@ class CollectionFunctionalTest extends FunctionalTestCase
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
      */
+    public function testDropIndexShouldNotAllowEmptyIndexName()
+    {
+        $this->assertSame('x_1', $this->collection->createIndex(array('x' => 1)));
+        $this->assertIndexExists('x_1');
+        $this->collection->dropIndex('');
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     */
     public function testDropIndexShouldNotAllowWildcardCharacter()
     {
         $this->assertSame('x_1', $this->collection->createIndex(array('x' => 1)));

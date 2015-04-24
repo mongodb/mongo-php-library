@@ -84,8 +84,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
             $that->assertFalse($info->isTtl());
         });
 
-        $this->assertSame('t_1', $this->collection->createIndex(array('t' => 1), array('expireAfterSeconds' => 0)));
-        $this->assertIndexExists('t_1', function(IndexInfo $info) use ($that) {
+        $this->assertSame('my_ttl', $this->collection->createIndex(array('t' => 1), array('expireAfterSeconds' => 0, 'name' => 'my_ttl')));
+        $this->assertIndexExists('my_ttl', function(IndexInfo $info) use ($that) {
             $that->assertFalse($info->isSparse());
             $that->assertFalse($info->isUnique());
             $that->assertTrue($info->isTtl());
@@ -96,13 +96,13 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         $that = $this;
 
-        $expectedNames = array('x_1', 'y_-1_z_1', 'g_2dsphere_z_1', 't_1');
+        $expectedNames = array('x_1', 'y_-1_z_1', 'g_2dsphere_z_1', 'my_ttl');
 
         $indexes = array(
             array('key' => array('x' => 1), 'sparse' => true, 'unique' => true),
             array('key' => array('y' => -1, 'z' => 1)),
             array('key' => array('g' => '2dsphere', 'z' => 1)),
-            array('key' => array('t' => 1), 'expireAfterSeconds' => 0),
+            array('key' => array('t' => 1), 'expireAfterSeconds' => 0, 'name' => 'my_ttl'),
         );
 
         $this->assertSame($expectedNames, $this->collection->createIndexes($indexes));
@@ -125,7 +125,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             $that->assertFalse($info->isTtl());
         });
 
-        $this->assertIndexExists('t_1', function(IndexInfo $info) use ($that) {
+        $this->assertIndexExists('my_ttl', function(IndexInfo $info) use ($that) {
             $that->assertFalse($info->isSparse());
             $that->assertFalse($info->isUnique());
             $that->assertTrue($info->isTtl());

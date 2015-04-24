@@ -10,9 +10,11 @@ use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnexpectedTypeException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInfoIteratorIterator;
-use InvalidArgumentException;
+use stdClass;
 
 class Collection
 {
@@ -248,34 +250,84 @@ class Collection
     }
 
     /**
-     * Create a single index in the collection.
+     * Create a single index for the collection.
      *
      * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
-     * @param array|object $keys
-     * @param array        $options
+     * @see Collection::createIndexes()
+     * @param array|object $key     Document containing fields mapped to values,
+     *                              which denote order or an index type
+     * @param array        $options Index options
      * @return string The name of the created index
      */
-    public function createIndex($keys, array $options = array())
+    public function createIndex($key, array $options = array())
     {
-        // TODO
+        return current($this->createIndexes(array(array('key' => $key) + $options)));
     }
 
     /**
-     * Create multiple indexes in the collection.
+     * Create one or more indexes for the collection.
      *
-     * TODO: decide if $models should be an array of associative arrays, using
-     * createIndex()'s parameter names as keys, or tuples, using parameters in
-     * order (e.g. [keys, options]).
+     * Each element in the $indexes array must have a "key" document, which
+     * contains fields mapped to an order or type. Other options may follow.
+     * For example:
+     *
+     *     $indexes = [
+     *         // Create a unique index on the "username" field
+     *         [ 'key' => [ 'username' => 1 ], 'unique' => true ],
+     *         // Create a 2dsphere index on the "loc" field with a custom name
+     *         [ 'key' => [ 'loc' => '2dsphere' ], 'name' => 'geo' ],
+     *     ];
+     *
+     * If the "name" option is unspecified, a name will be generated from the
+     * "key" document.
      *
      * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
-     * @param array $models
+     * @param array $indexes List of index specifications
      * @return string[] The names of the created indexes
+     * @throws InvalidArgumentException if an index specification does not
+     *                                  contain a "key" document
+     * @throws UnexpectedTypeException if an index specification is not an array
+     *                                 or a "key" document is not an array or
+     *                                 object
      */
-    public function createIndexes(array $models)
+    public function createIndexes(array $indexes)
     {
-        // TODO
+        foreach ($indexes as &$index) {
+            if ( ! is_array($index)) {
+                throw new UnexpectedTypeException($index, 'array');
+            }
+
+            if ( ! isset($index['key'])) {
+                throw new InvalidArgumentException('Required "key" document is missing from index specification');
+            }
+
+            if ( ! is_array($index['key']) && ! is_object($index['key'])) {
+                throw new UnexpectedTypeException($index['key'], 'array or object');
+            }
+
+            $index['key'] = (object) $index['key'];
+            $index['ns'] = $this->ns;
+
+            if ( ! isset($index['name'])) {
+                $index['name'] = $this->generateIndexName($index['key']);
+            }
+        }
+
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $server = $this->manager->selectServer($readPreference);
+
+        $serverInfo = $server->getInfo();
+        $maxWireVersion = isset($serverInfo['maxWireVersion']) ? $serverInfo['maxWireVersion'] : 0;
+
+        if ($maxWireVersion >= 2) {
+            $this->createIndexesCommand($server, $indexes);
+        } else {
+            $this->createIndexesLegacy($server, $indexes);
+        }
+
+        return array_map(function(array $index) { return $index['name']; }, $indexes);
     }
 
     /**
@@ -1160,6 +1212,57 @@ class Collection
         $bulk  = new BulkWrite($options["ordered"]);
         $bulk->update($filter, $update, $options);
         return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+    }
+
+    /**
+     * Create one or more indexes for the collection using the createIndexes
+     * command.
+     *
+     * @param Server $server
+     * @param array  $indexes
+     */
+    private function createIndexesCommand(Server $server, array $indexes)
+    {
+        $command = new Command(array(
+            'createIndexes' => $this->collname,
+            'indexes' => $indexes,
+        ));
+        $server->executeCommand($this->dbname, $command);
+    }
+
+    /**
+     * Create one or more indexes for the collection by inserting into the
+     * "system.indexes" collection (MongoDB <2.6).
+     *
+     * @param Server $server
+     * @param array  $indexes
+     */
+    private function createIndexesLegacy(Server $server, array $indexes)
+    {
+        $bulk = new BulkWrite(true);
+
+        foreach ($indexes as $index) {
+            $bulk->insert($index);
+        }
+
+        $server->executeBulkWrite($this->dbname . '.system.indexes', $bulk);
+    }
+
+    /**
+     * Generates an index name from its key specification.
+     *
+     * @param object $key
+     * @return string
+     */
+    private function generateIndexName(stdClass $key)
+    {
+        $name = '';
+
+        foreach ($key as $field => $type) {
+            $name .= ($name != '' ? '_' : '') . $field . '_' . $type;
+        }
+
+        return $name;
     }
 
     /**

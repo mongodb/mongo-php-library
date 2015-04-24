@@ -2,13 +2,16 @@
 
 namespace MongoDB;
 
+use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Model\IndexInfoIterator;
+use MongoDB\Model\IndexInfoIteratorIterator;
 use InvalidArgumentException;
 
 class Collection
@@ -963,15 +966,23 @@ class Collection
     }
 
     /**
-     * Returns information for all indexes in the collection.
+     * Returns information for all indexes for the collection.
      *
      * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.getIndexes/
-     * @return Cursor
+     * @return IndexInfoIterator
      */
     public function listIndexes()
     {
-        // TODO
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $server = $this->manager->selectServer($readPreference);
+
+        $serverInfo = $server->getInfo();
+        $maxWireVersion = isset($serverInfo['maxWireVersion']) ? $serverInfo['maxWireVersion'] : 0;
+
+        return ($maxWireVersion >= 3)
+            ? $this->listIndexesCommand($server)
+            : $this->listIndexesLegacy($server);
     }
 
     /**
@@ -1149,5 +1160,38 @@ class Collection
         $bulk  = new BulkWrite($options["ordered"]);
         $bulk->update($filter, $update, $options);
         return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+    }
+
+    /**
+     * Returns information for all indexes for this collection using the
+     * listIndexes command.
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
+     * @param Server $server
+     * @return IndexInfoIteratorIterator
+     */
+    private function listIndexesCommand(Server $server)
+    {
+        $command = new Command(array('listIndexes' => $this->collname));
+        $cursor = $server->executeCommand($this->dbname, $command);
+        $cursor->setTypeMap(array('document' => 'array'));
+
+        return new IndexInfoIteratorIterator($cursor);
+    }
+
+    /**
+     * Returns information for all indexes for this collection by querying the
+     * "system.indexes" collection (MongoDB <2.8).
+     *
+     * @param Server $server
+     * @return IndexInfoIteratorIterator
+     */
+    private function listIndexesLegacy(Server $server)
+    {
+        $query = new Query(array('ns' => $this->ns));
+        $cursor = $server->executeQuery($this->dbname . '.system.indexes', $query);
+        $cursor->setTypeMap(array('document' => 'array'));
+
+        return new IndexInfoIteratorIterator($cursor);
     }
 }

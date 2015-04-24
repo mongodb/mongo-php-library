@@ -2,8 +2,8 @@
 
 namespace MongoDB\Model;
 
+use MongoDB\Exception\BadMethodCallException;
 use ArrayAccess;
-use BadMethodCallException;
 
 /**
  * Index information model class.
@@ -140,21 +140,21 @@ class IndexInfo implements ArrayAccess
      * Not supported.
      *
      * @see http://php.net/arrayaccess.offsetset
-     * @throws BadMethodCallException IndexInfo is read-only
+     * @throws BadMethodCallException IndexInfo is immutable
      */
     public function offsetSet($key, $value)
     {
-        throw new BadMethodCallException('IndexInfo is read-only');
+        throw new BadMethodCallException('IndexInfo is immutable');
     }
 
     /**
      * Not supported.
      *
      * @see http://php.net/arrayaccess.offsetunset
-     * @throws BadMethodCallException IndexInfo is read-only
+     * @throws BadMethodCallException IndexInfo is immutable
      */
     public function offsetUnset($key)
     {
-        throw new BadMethodCallException('IndexInfo is read-only');
+        throw new BadMethodCallException('IndexInfo is immutable');
     }
 }

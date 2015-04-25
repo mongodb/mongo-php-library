@@ -312,13 +312,9 @@ class Collection
         $serverInfo = $server->getInfo();
         $maxWireVersion = isset($serverInfo['maxWireVersion']) ? $serverInfo['maxWireVersion'] : 0;
 
-        if ($maxWireVersion >= 2) {
-            $this->createIndexesCommand($server, $indexes);
-        } else {
-            $this->createIndexesLegacy($server, $indexes);
-        }
-
-        return array_map(function(IndexInput $index) { return (string) $index; }, $indexes);
+        return ($maxWireVersion >= 2)
+            ? $this->createIndexesCommand($server, $indexes)
+            : $this->createIndexesLegacy($server, $indexes);
     }
 
     /**
@@ -1212,8 +1208,9 @@ class Collection
      * Create one or more indexes for the collection using the createIndexes
      * command.
      *
-     * @param Server $server
-     * @param array  $indexes
+     * @param Server       $server
+     * @param IndexInput[] $indexes
+     * @return string[] The names of the created indexes
      */
     private function createIndexesCommand(Server $server, array $indexes)
     {
@@ -1222,14 +1219,17 @@ class Collection
             'indexes' => $indexes,
         ));
         $server->executeCommand($this->dbname, $command);
+
+        return array_map(function(IndexInput $index) { return (string) $index; }, $indexes);
     }
 
     /**
      * Create one or more indexes for the collection by inserting into the
      * "system.indexes" collection (MongoDB <2.6).
      *
-     * @param Server $server
-     * @param array  $indexes
+     * @param Server       $server
+     * @param IndexInput[] $indexes
+     * @return string[] The names of the created indexes
      */
     private function createIndexesLegacy(Server $server, array $indexes)
     {
@@ -1240,6 +1240,8 @@ class Collection
         }
 
         $server->executeBulkWrite($this->dbname . '.system.indexes', $bulk);
+
+        return array_map(function(IndexInput $index) { return (string) $index; }, $indexes);
     }
 
     /**

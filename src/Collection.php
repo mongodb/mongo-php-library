@@ -309,10 +309,7 @@ class Collection
         $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
         $server = $this->manager->selectServer($readPreference);
 
-        $serverInfo = $server->getInfo();
-        $maxWireVersion = isset($serverInfo['maxWireVersion']) ? $serverInfo['maxWireVersion'] : 0;
-
-        return ($maxWireVersion >= 2)
+        return (FeatureDetection::isSupported($server, FeatureDetection::API_CREATEINDEXES_CMD))
             ? $this->createIndexesCommand($server, $indexes)
             : $this->createIndexesLegacy($server, $indexes);
     }
@@ -1019,10 +1016,7 @@ class Collection
         $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
         $server = $this->manager->selectServer($readPreference);
 
-        $serverInfo = $server->getInfo();
-        $maxWireVersion = isset($serverInfo['maxWireVersion']) ? $serverInfo['maxWireVersion'] : 0;
-
-        return ($maxWireVersion >= 3)
+        return (FeatureDetection::isSupported($server, FeatureDetection::API_LISTINDEXES_CMD))
             ? $this->listIndexesCommand($server)
             : $this->listIndexesLegacy($server);
     }

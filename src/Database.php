@@ -101,10 +101,7 @@ class Database
         $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
         $server = $this->manager->selectServer($readPreference);
 
-        $serverInfo = $server->getInfo();
-        $maxWireVersion = isset($serverInfo['maxWireVersion']) ? $serverInfo['maxWireVersion'] : 0;
-
-        return ($maxWireVersion >= 3)
+        return (FeatureDetection::isSupported($server, FeatureDetection::API_LISTCOLLECTIONS_CMD))
             ? $this->listCollectionsCommand($server, $options)
             : $this->listCollectionsLegacy($server, $options);
     }

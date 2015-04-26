@@ -7,6 +7,20 @@ use Iterator;
 use IteratorIterator;
 use Traversable;
 
+/**
+ * CollectionInfoIterator for legacy "system.namespaces" query results.
+ *
+ * This iterator may be used to wrap a Cursor returned for queries on the
+ * "system.namespaces" collection. It includes logic to filter out internal
+ * collections and modify the collection name to be consistent with results from
+ * the listCollections command.
+ *
+ * @internal
+ * @see MongoDB\Database::listCollections()
+ * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst
+ * @see http://docs.mongodb.org/manual/reference/command/listCollections/
+ * @see http://docs.mongodb.org/manual/reference/system-collections/
+ */
 class CollectionInfoLegacyIterator extends FilterIterator implements CollectionInfoIterator
 {
     /**
@@ -29,6 +43,8 @@ class CollectionInfoLegacyIterator extends FilterIterator implements CollectionI
     /**
      * Return the current element as a CollectionInfo instance.
      *
+     * @see CollectionInfoIterator::current()
+     * @see http://php.net/iterator.current
      * @return CollectionInfo
      */
     public function current()
@@ -48,7 +64,7 @@ class CollectionInfoLegacyIterator extends FilterIterator implements CollectionI
     /**
      * Filter out internal or invalid collections.
      *
-     * @see http://php.net/manual/en/filteriterator.accept.php
+     * @see http://php.net/filteriterator.accept
      * @return boolean
      */
     public function accept()

@@ -2,13 +2,19 @@
 
 namespace MongoDB;
 
+use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnexpectedTypeException;
+use MongoDB\Model\IndexInfoIterator;
+use MongoDB\Model\IndexInfoIteratorIterator;
+use MongoDB\Model\IndexInput;
 
 class Collection
 {
@@ -244,34 +250,68 @@ class Collection
     }
 
     /**
-     * Create a single index in the collection.
+     * Create a single index for the collection.
      *
      * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
-     * @param array|object $keys
-     * @param array        $options
+     * @see Collection::createIndexes()
+     * @param array|object $key     Document containing fields mapped to values,
+     *                              which denote order or an index type
+     * @param array        $options Index options
      * @return string The name of the created index
      */
-    public function createIndex($keys, array $options = array())
+    public function createIndex($key, array $options = array())
     {
-        // TODO
+        return current($this->createIndexes(array(array('key' => $key) + $options)));
     }
 
     /**
-     * Create multiple indexes in the collection.
+     * Create one or more indexes for the collection.
      *
-     * TODO: decide if $models should be an array of associative arrays, using
-     * createIndex()'s parameter names as keys, or tuples, using parameters in
-     * order (e.g. [keys, options]).
+     * Each element in the $indexes array must have a "key" document, which
+     * contains fields mapped to an order or type. Other options may follow.
+     * For example:
+     *
+     *     $indexes = [
+     *         // Create a unique index on the "username" field
+     *         [ 'key' => [ 'username' => 1 ], 'unique' => true ],
+     *         // Create a 2dsphere index on the "loc" field with a custom name
+     *         [ 'key' => [ 'loc' => '2dsphere' ], 'name' => 'geo' ],
+     *     ];
+     *
+     * If the "name" option is unspecified, a name will be generated from the
+     * "key" document.
      *
      * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
-     * @param array $models
+     * @param array $indexes List of index specifications
      * @return string[] The names of the created indexes
+     * @throws InvalidArgumentException if an index specification is invalid
      */
-    public function createIndexes(array $models)
+    public function createIndexes(array $indexes)
     {
-        // TODO
+        if (empty($indexes)) {
+            return array();
+        }
+
+        foreach ($indexes as $i => $index) {
+            if ( ! is_array($index)) {
+                throw new UnexpectedTypeException($index, 'array');
+            }
+
+            if ( ! isset($index['ns'])) {
+                $index['ns'] = $this->ns;
+            }
+
+            $indexes[$i] = new IndexInput($index);
+        }
+
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $server = $this->manager->selectServer($readPreference);
+
+        return (FeatureDetection::isSupported($server, FeatureDetection::API_CREATEINDEXES_CMD))
+            ? $this->createIndexesCommand($server, $indexes)
+            : $this->createIndexesLegacy($server, $indexes);
     }
 
     /**
@@ -354,11 +394,24 @@ class Collection
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndex/
      * @param string $indexName
      * @return Cursor
-     * @throws InvalidArgumentException if "*" is specified
+     * @throws InvalidArgumentException if $indexName is an empty string or "*"
      */
     public function dropIndex($indexName)
     {
-        // TODO
+        $indexName = (string) $indexName;
+
+        if ($indexName === '') {
+            throw new InvalidArgumentException('Index name cannot be empty');
+        }
+
+        if ($indexName === '*') {
+            throw new InvalidArgumentException('dropIndexes() must be used to drop multiple indexes');
+        }
+
+        $command = new Command(array('dropIndexes' => $this->collname, 'index' => $indexName));
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+
+        return $this->manager->executeCommand($this->dbname, $command, $readPreference);
     }
 
     /**
@@ -370,7 +423,10 @@ class Collection
      */
     public function dropIndexes()
     {
-        // TODO
+        $command = new Command(array('dropIndexes' => $this->collname, 'index' => '*'));
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+
+        return $this->manager->executeCommand($this->dbname, $command, $readPreference);
     }
 
     /**
@@ -949,15 +1005,20 @@ class Collection
     }
 
     /**
-     * Returns information for all indexes in the collection.
+     * Returns information for all indexes for the collection.
      *
      * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.getIndexes/
-     * @return Cursor
+     * @return IndexInfoIterator
      */
     public function listIndexes()
     {
-        // TODO
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $server = $this->manager->selectServer($readPreference);
+
+        return (FeatureDetection::isSupported($server, FeatureDetection::API_LISTINDEXES_CMD))
+            ? $this->listIndexesCommand($server)
+            : $this->listIndexesLegacy($server);
     }
 
     /**
@@ -1135,5 +1196,79 @@ class Collection
         $bulk  = new BulkWrite($options["ordered"]);
         $bulk->update($filter, $update, $options);
         return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+    }
+
+    /**
+     * Create one or more indexes for the collection using the createIndexes
+     * command.
+     *
+     * @param Server       $server
+     * @param IndexInput[] $indexes
+     * @return string[] The names of the created indexes
+     */
+    private function createIndexesCommand(Server $server, array $indexes)
+    {
+        $command = new Command(array(
+            'createIndexes' => $this->collname,
+            'indexes' => $indexes,
+        ));
+        $server->executeCommand($this->dbname, $command);
+
+        return array_map(function(IndexInput $index) { return (string) $index; }, $indexes);
+    }
+
+    /**
+     * Create one or more indexes for the collection by inserting into the
+     * "system.indexes" collection (MongoDB <2.6).
+     *
+     * @param Server       $server
+     * @param IndexInput[] $indexes
+     * @return string[] The names of the created indexes
+     */
+    private function createIndexesLegacy(Server $server, array $indexes)
+    {
+        $bulk = new BulkWrite(true);
+
+        foreach ($indexes as $index) {
+            // TODO: Remove this once PHPC-274 is resolved (see: PHPLIB-87)
+            $bulk->insert($index->bsonSerialize());
+        }
+
+        $server->executeBulkWrite($this->dbname . '.system.indexes', $bulk);
+
+        return array_map(function(IndexInput $index) { return (string) $index; }, $indexes);
+    }
+
+    /**
+     * Returns information for all indexes for this collection using the
+     * listIndexes command.
+     *
+     * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
+     * @param Server $server
+     * @return IndexInfoIteratorIterator
+     */
+    private function listIndexesCommand(Server $server)
+    {
+        $command = new Command(array('listIndexes' => $this->collname));
+        $cursor = $server->executeCommand($this->dbname, $command);
+        $cursor->setTypeMap(array('document' => 'array'));
+
+        return new IndexInfoIteratorIterator($cursor);
+    }
+
+    /**
+     * Returns information for all indexes for this collection by querying the
+     * "system.indexes" collection (MongoDB <2.8).
+     *
+     * @param Server $server
+     * @return IndexInfoIteratorIterator
+     */
+    private function listIndexesLegacy(Server $server)
+    {
+        $query = new Query(array('ns' => $this->ns));
+        $cursor = $server->executeQuery($this->dbname . '.system.indexes', $query);
+        $cursor->setTypeMap(array('document' => 'array'));
+
+        return new IndexInfoIteratorIterator($cursor);
     }
 }

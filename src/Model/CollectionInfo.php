@@ -2,10 +2,20 @@
 
 namespace MongoDB\Model;
 
+/**
+ * Collection information model class.
+ *
+ * This class models the collection information returned by the listCollections
+ * command or, for legacy servers, queries on the "system.namespaces"
+ * collection. It provides methods to access options for the collection.
+ *
+ * @api
+ * @see MongoDB\Database::listCollections()
+ * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst
+ */
 class CollectionInfo
 {
-    private $name;
-    private $options;
+    private $info;
 
     /**
     * Constructor.
@@ -14,8 +24,7 @@ class CollectionInfo
     */
     public function __construct(array $info)
     {
-        $this->name = (string) $info['name'];
-        $this->options = isset($info['options']) ? (array) $info['options'] : array();
+        $this->info = $info;
     }
 
     /**
@@ -25,7 +34,7 @@ class CollectionInfo
      */
     public function getName()
     {
-        return $this->name;
+        return (string) $this->info['name'];
     }
 
     /**
@@ -35,7 +44,7 @@ class CollectionInfo
      */
     public function getOptions()
     {
-        return $this->options;
+        return isset($this->info['options']) ? (array) $this->info['options'] : array();
     }
 
     /**
@@ -45,7 +54,7 @@ class CollectionInfo
      */
     public function isCapped()
     {
-        return isset($this->options['capped']) ? (boolean) $this->options['capped'] : false;
+        return ! empty($this->info['options']['capped']);
     }
 
     /**
@@ -55,7 +64,7 @@ class CollectionInfo
      */
     public function getCappedMax()
     {
-        return isset($this->options['max']) ? (integer) $this->options['max'] : null;
+        return isset($this->info['options']['max']) ? (integer) $this->info['options']['max'] : null;
     }
 
     /**
@@ -65,6 +74,6 @@ class CollectionInfo
      */
     public function getCappedSize()
     {
-        return isset($this->options['size']) ? (integer) $this->options['size'] : null;
+        return isset($this->info['options']['size']) ? (integer) $this->info['options']['size'] : null;
     }
 }

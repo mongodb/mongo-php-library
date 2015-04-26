@@ -101,10 +101,7 @@ class Database
         $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
         $server = $this->manager->selectServer($readPreference);
 
-        $serverInfo = $server->getInfo();
-        $maxWireVersion = isset($serverInfo['maxWireVersion']) ? $serverInfo['maxWireVersion'] : 0;
-
-        return ($maxWireVersion >= 3)
+        return (FeatureDetection::isSupported($server, FeatureDetection::API_LISTCOLLECTIONS_CMD))
             ? $this->listCollectionsCommand($server, $options)
             : $this->listCollectionsLegacy($server, $options);
     }
@@ -141,13 +138,14 @@ class Database
     {
         $command = new Command(array('listCollections' => 1) + $options);
         $cursor = $server->executeCommand($this->databaseName, $command);
+        $cursor->setTypeMap(array('document' => 'array'));
 
         return new CollectionInfoCommandIterator($cursor);
     }
 
     /**
-     * Returns information for all collections in this database by querying
-     * the "system.namespaces" collection (MongoDB <2.8).
+     * Returns information for all collections in this database by querying the
+     * "system.namespaces" collection (MongoDB <2.8).
      *
      * @param Server $server
      * @param array  $options
@@ -177,6 +175,7 @@ class Database
         $namespace = $this->databaseName . '.system.namespaces';
         $query = new Query($filter);
         $cursor = $server->executeQuery($namespace, $query);
+        $cursor->setTypeMap(array('document' => 'array'));
 
         return new CollectionInfoLegacyIterator($cursor);
     }

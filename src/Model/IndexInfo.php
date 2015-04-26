@@ -35,11 +35,11 @@ class IndexInfo implements ArrayAccess
     }
 
     /**
-     * Return the index key(s).
+     * Return the index key.
      *
      * @return array
      */
-    public function getKeys()
+    public function getKey()
     {
         return (array) $this->info['key'];
     }

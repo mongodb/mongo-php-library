@@ -7,10 +7,9 @@ use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Model\DatabaseInfoIterator;
 use MongoDB\Model\DatabaseInfoLegacyIterator;
-use stdClass;
-use UnexpectedValueException;
 
 class Client
 {

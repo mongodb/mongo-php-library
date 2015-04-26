@@ -1230,7 +1230,8 @@ class Collection
         $bulk = new BulkWrite(true);
 
         foreach ($indexes as $index) {
-            $bulk->insert($index);
+            // TODO: Remove this once PHPC-274 is resolved (see: PHPLIB-87)
+            $bulk->insert($index->bsonSerialize());
         }
 
         $server->executeBulkWrite($this->dbname . '.system.indexes', $bulk);

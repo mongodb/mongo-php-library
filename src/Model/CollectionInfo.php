@@ -76,4 +76,15 @@ class CollectionInfo
     {
         return isset($this->info['options']['size']) ? (integer) $this->info['options']['size'] : null;
     }
+
+    /**
+     * Return the collection info as an array.
+     *
+     * @see http://php.net/oop5.magic#language.oop5.magic.debuginfo
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return $this->info;
+    }
 }

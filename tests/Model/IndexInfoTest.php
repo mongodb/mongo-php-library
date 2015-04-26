@@ -83,4 +83,17 @@ class IndexInfoTest extends TestCase
         $this->assertTrue(isset($info['expireAfterSeconds']));
         $this->assertSame(100, $info['expireAfterSeconds']);
     }
+
+    public function testDebugInfo()
+    {
+        $expectedInfo = array(
+            'v' => 1,
+            'key' => array('x' => 1),
+            'name' => 'x_1',
+            'ns' => 'foo.bar',
+        );
+
+        $info = new IndexInfo($expectedInfo);
+        $this->assertSame($expectedInfo, $info->__debugInfo());
+    }
 }

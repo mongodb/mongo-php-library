@@ -157,4 +157,15 @@ class IndexInfo implements ArrayAccess
     {
         throw new BadMethodCallException('IndexInfo is immutable');
     }
+
+    /**
+     * Return the collection info as an array.
+     *
+     * @see http://php.net/oop5.magic#language.oop5.magic.debuginfo
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return $this->info;
+    }
 }

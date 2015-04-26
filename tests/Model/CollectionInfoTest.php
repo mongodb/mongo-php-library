@@ -39,4 +39,15 @@ class CollectionInfoTest extends TestCase
         $this->assertSame(100, $info->getCappedMax());
         $this->assertSame(1048576, $info->getCappedSize());
     }
+
+    public function testDebugInfo()
+    {
+        $expectedInfo = array(
+            'name' => 'foo',
+            'options' => array('capped' => true, 'size' => 1048576),
+        );
+
+        $info = new CollectionInfo($expectedInfo);
+        $this->assertSame($expectedInfo, $info->__debugInfo());
+    }
 }

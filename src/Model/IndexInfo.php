@@ -133,7 +133,7 @@ class IndexInfo implements ArrayAccess
      */
     public function offsetGet($key)
     {
-        return $this->data[$key];
+        return $this->info[$key];
     }
 
     /**

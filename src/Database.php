@@ -10,10 +10,10 @@ use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Model\CollectionInfoCommandIterator;
 use MongoDB\Model\CollectionInfoLegacyIterator;
-use InvalidArgumentException;
 
 class Database
 {

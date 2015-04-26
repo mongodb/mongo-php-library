@@ -163,7 +163,7 @@ class Collection
         foreach ($bulk as $n => $op) {
             foreach ($op as $opname => $args) {
                 if (!isset($args[0])) {
-                    throw new \InvalidArgumentException(sprintf("Missing argument#1 for '%s' (operation#%d)", $opname, $n));
+                    throw new InvalidArgumentException(sprintf("Missing argument#1 for '%s' (operation#%d)", $opname, $n));
                 }
 
                 switch ($opname) {
@@ -173,7 +173,7 @@ class Collection
 
                 case "updateMany":
                     if (!isset($args[1])) {
-                        throw new \InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
+                        throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
                     }
                     $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 0));
 
@@ -182,12 +182,12 @@ class Collection
 
                 case "updateOne":
                     if (!isset($args[1])) {
-                        throw new \InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
+                        throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
                     }
                     $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 1));
                     $firstKey = key($args[1]);
                     if (!isset($firstKey[0]) || $firstKey[0] != '$') {
-                        throw new \InvalidArgumentException("First key in \$update must be a \$operator");
+                        throw new InvalidArgumentException("First key in \$update must be a \$operator");
                     }
 
                     $bulk->update($args[0], $args[1], $options);
@@ -195,12 +195,12 @@ class Collection
 
                 case "replaceOne":
                     if (!isset($args[1])) {
-                        throw new \InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
+                        throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
                     }
                     $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 1));
                     $firstKey = key($args[1]);
                     if (isset($firstKey[0]) && $firstKey[0] == '$') {
-                        throw new \InvalidArgumentException("First key in \$update must NOT be a \$operator");
+                        throw new InvalidArgumentException("First key in \$update must NOT be a \$operator");
                     }
 
                     $bulk->update($args[0], $args[1], $options);
@@ -217,7 +217,7 @@ class Collection
                     break;
 
                 default:
-                    throw new \InvalidArgumentException(sprintf("Unknown operation type called '%s' (operation#%d)", $opname, $n));
+                    throw new InvalidArgumentException(sprintf("Unknown operation type called '%s' (operation#%d)", $opname, $n));
                 }
             }
         }
@@ -521,7 +521,7 @@ class Collection
     {
         $firstKey = key($replacement);
         if (isset($firstKey[0]) && $firstKey[0] == '$') {
-            throw new \InvalidArgumentException("First key in \$replacement must NOT be a \$operator");
+            throw new InvalidArgumentException("First key in \$replacement must NOT be a \$operator");
         }
 
         $options = array_merge($this->getFindOneAndReplaceOptions(), $options);
@@ -559,7 +559,7 @@ class Collection
     {
         $firstKey = key($update);
         if (!isset($firstKey[0]) || $firstKey[0] != '$') {
-            throw new \InvalidArgumentException("First key in \$update must be a \$operator");
+            throw new InvalidArgumentException("First key in \$update must be a \$operator");
         }
 
         $options = array_merge($this->getFindOneAndUpdateOptions(), $options);
@@ -1036,7 +1036,7 @@ class Collection
     {
         $firstKey = key($update);
         if (isset($firstKey[0]) && $firstKey[0] == '$') {
-            throw new \InvalidArgumentException("First key in \$update must NOT be a \$operator");
+            throw new InvalidArgumentException("First key in \$update must NOT be a \$operator");
         }
         $wr = $this->_update($filter, $update, $options);
 
@@ -1078,7 +1078,7 @@ class Collection
     {
         $firstKey = key($update);
         if (!isset($firstKey[0]) || $firstKey[0] != '$') {
-            throw new \InvalidArgumentException("First key in \$update must be a \$operator");
+            throw new InvalidArgumentException("First key in \$update must be a \$operator");
         }
         $wr = $this->_update($filter, $update, $options);
 
@@ -1134,10 +1134,10 @@ class Collection
     final protected function _generateCommandException($doc)
     {
         if ($doc["errmsg"]) {
-            return new Exception($doc["errmsg"]);
+            return new RuntimeException($doc["errmsg"]);
         }
         var_dump($doc);
-        return new \Exception("FIXME: Unknown error");
+        return new RuntimeException("FIXME: Unknown error");
     }
 
     /**

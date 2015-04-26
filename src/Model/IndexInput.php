@@ -3,6 +3,8 @@
 namespace MongoDB\Model;
 
 use BSON\Serializable;
+use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnexpectedTypeException;
 
 /**
  * Index input model class.

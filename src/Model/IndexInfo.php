@@ -35,11 +35,11 @@ class IndexInfo implements ArrayAccess
     }
 
     /**
-     * Return the index key(s).
+     * Return the index key.
      *
      * @return array
      */
-    public function getKeys()
+    public function getKey()
     {
         return (array) $this->info['key'];
     }
@@ -133,7 +133,7 @@ class IndexInfo implements ArrayAccess
      */
     public function offsetGet($key)
     {
-        return $this->data[$key];
+        return $this->info[$key];
     }
 
     /**

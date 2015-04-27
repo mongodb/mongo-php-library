@@ -41,27 +41,6 @@ class CollectionInfoLegacyIterator extends FilterIterator implements CollectionI
     }
 
     /**
-     * Return the current element as a CollectionInfo instance.
-     *
-     * @see CollectionInfoIterator::current()
-     * @see http://php.net/iterator.current
-     * @return CollectionInfo
-     */
-    public function current()
-    {
-        $info = parent::current();
-
-        // Trim the database prefix up to and including the first dot
-        $firstDot = strpos($info['name'], '.');
-
-        if ($firstDot !== false) {
-            $info['name'] = (string) substr($info['name'], $firstDot + 1);
-        }
-
-        return new CollectionInfo($info);
-    }
-
-    /**
      * Filter out internal or invalid collections.
      *
      * @see http://php.net/filteriterator.accept
@@ -91,5 +70,26 @@ class CollectionInfoLegacyIterator extends FilterIterator implements CollectionI
         }
 
         return true;
+    }
+
+    /**
+     * Return the current element as a CollectionInfo instance.
+     *
+     * @see CollectionInfoIterator::current()
+     * @see http://php.net/iterator.current
+     * @return CollectionInfo
+     */
+    public function current()
+    {
+        $info = parent::current();
+
+        // Trim the database prefix up to and including the first dot
+        $firstDot = strpos($info['name'], '.');
+
+        if ($firstDot !== false) {
+            $info['name'] = (string) substr($info['name'], $firstDot + 1);
+        }
+
+        return new CollectionInfo($info);
     }
 }

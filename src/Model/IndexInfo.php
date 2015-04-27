@@ -35,6 +35,17 @@ class IndexInfo implements ArrayAccess
     }
 
     /**
+     * Return the collection info as an array.
+     *
+     * @see http://php.net/oop5.magic#language.oop5.magic.debuginfo
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return $this->info;
+    }
+
+    /**
      * Return the index key.
      *
      * @return array
@@ -156,16 +167,5 @@ class IndexInfo implements ArrayAccess
     public function offsetUnset($key)
     {
         throw new BadMethodCallException('IndexInfo is immutable');
-    }
-
-    /**
-     * Return the collection info as an array.
-     *
-     * @see http://php.net/oop5.magic#language.oop5.magic.debuginfo
-     * @return array
-     */
-    public function __debugInfo()
-    {
-        return $this->info;
     }
 }

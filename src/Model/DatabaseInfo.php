@@ -27,6 +27,17 @@ class DatabaseInfo
     }
 
     /**
+     * Return the collection info as an array.
+     *
+     * @see http://php.net/oop5.magic#language.oop5.magic.debuginfo
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return $this->info;
+    }
+
+    /**
      * Return the database name.
      *
      * @return string
@@ -54,16 +65,5 @@ class DatabaseInfo
     public function isEmpty()
     {
         return (boolean) $this->info['empty'];
-    }
-
-    /**
-     * Return the collection info as an array.
-     *
-     * @see http://php.net/oop5.magic#language.oop5.magic.debuginfo
-     * @return array
-     */
-    public function __debugInfo()
-    {
-        return $this->info;
     }
 }

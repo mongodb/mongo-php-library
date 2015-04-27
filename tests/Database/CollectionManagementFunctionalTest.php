@@ -1,27 +1,15 @@
 <?php
 
-namespace MongoDB\Tests;
+namespace MongoDB\Tests\Database;
 
-use MongoDB\Client;
-use MongoDB\Database;
 use MongoDB\Model\CollectionInfo;
 use InvalidArgumentException;
 
 /**
- * Functional tests for the Database class.
+ * Functional tests for collection management methods.
  */
-class DatabaseFunctionalTest extends FunctionalTestCase
+class CollectionManagementFunctionalTest extends FunctionalTestCase
 {
-    private $database;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->database = new Database($this->manager, $this->getDatabaseName());
-        $this->database->drop();
-    }
-
     public function testCreateCollection()
     {
         $that = $this;
@@ -47,16 +35,6 @@ class DatabaseFunctionalTest extends FunctionalTestCase
             $that->assertEquals(100, $info->getCappedMax());
             $that->assertEquals(1048576, $info->getCappedSize());
         });
-    }
-
-    public function testDrop()
-    {
-        $writeResult = $this->manager->executeInsert($this->getNamespace(), array('x' => 1));
-        $this->assertEquals(1, $writeResult->getInsertedCount());
-
-        $commandResult = $this->database->drop();
-        $this->assertCommandSucceeded($commandResult);
-        $this->assertCollectionCount($this->getNamespace(), 0);
     }
 
     public function testDropCollection()

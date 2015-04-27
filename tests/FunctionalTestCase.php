@@ -15,7 +15,7 @@ abstract class FunctionalTestCase extends TestCase
         $this->manager = new Manager($this->getUri());
     }
 
-    public function assertCollectionCount($namespace, $count)
+    protected function assertCollectionCount($namespace, $count)
     {
         list($databaseName, $collectionName) = explode('.', $namespace, 2);
 
@@ -26,7 +26,7 @@ abstract class FunctionalTestCase extends TestCase
         $this->assertEquals($count, $document['n']);
     }
 
-    public function assertCommandSucceeded(Cursor $cursor)
+    protected function assertCommandSucceeded(Cursor $cursor)
     {
         $document = current($cursor->toArray());
         $this->assertArrayHasKey('ok', $document);

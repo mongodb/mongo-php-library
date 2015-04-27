@@ -28,6 +28,17 @@ class CollectionInfo
     }
 
     /**
+     * Return the collection info as an array.
+     *
+     * @see http://php.net/oop5.magic#language.oop5.magic.debuginfo
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return $this->info;
+    }
+
+    /**
      * Return the maximum number of documents to keep in the capped collection.
      *
      * @return integer|null
@@ -75,16 +86,5 @@ class CollectionInfo
     public function isCapped()
     {
         return ! empty($this->info['options']['capped']);
-    }
-
-    /**
-     * Return the collection info as an array.
-     *
-     * @see http://php.net/oop5.magic#language.oop5.magic.debuginfo
-     * @return array
-     */
-    public function __debugInfo()
-    {
-        return $this->info;
     }
 }

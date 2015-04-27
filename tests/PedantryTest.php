@@ -21,6 +21,13 @@ class PedantryTest extends \PHPUnit_Framework_TestCase
         $class = new ReflectionClass($className);
         $methods = $class->getMethods();
 
+        $methods = array_filter(
+            $methods,
+            function(ReflectionMethod $method) use ($class) {
+                return $method->getDeclaringClass() == $class;
+            }
+        );
+
         $getSortValue = function(ReflectionMethod $method) {
             if ($method->getModifiers() & ReflectionMethod::IS_PRIVATE) {
                 return '2' . $method->getName();

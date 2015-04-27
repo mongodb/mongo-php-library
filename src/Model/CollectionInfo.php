@@ -28,6 +28,26 @@ class CollectionInfo
     }
 
     /**
+     * Return the maximum number of documents to keep in the capped collection.
+     *
+     * @return integer|null
+     */
+    public function getCappedMax()
+    {
+        return isset($this->info['options']['max']) ? (integer) $this->info['options']['max'] : null;
+    }
+
+    /**
+     * Return the maximum size (in bytes) of the capped collection.
+     *
+     * @return integer|null
+     */
+    public function getCappedSize()
+    {
+        return isset($this->info['options']['size']) ? (integer) $this->info['options']['size'] : null;
+    }
+
+    /**
      * Return the collection name.
      *
      * @return string
@@ -55,26 +75,6 @@ class CollectionInfo
     public function isCapped()
     {
         return ! empty($this->info['options']['capped']);
-    }
-
-    /**
-     * Return the maximum number of documents to keep in the capped collection.
-     *
-     * @return integer|null
-     */
-    public function getCappedMax()
-    {
-        return isset($this->info['options']['max']) ? (integer) $this->info['options']['max'] : null;
-    }
-
-    /**
-     * Return the maximum size (in bytes) of the capped collection.
-     *
-     * @return integer|null
-     */
-    public function getCappedSize()
-    {
-        return isset($this->info['options']['size']) ? (integer) $this->info['options']['size'] : null;
     }
 
     /**

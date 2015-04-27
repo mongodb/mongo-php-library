@@ -79,26 +79,6 @@ class Client
     }
 
     /**
-     * Select a database.
-     *
-     * If a write concern or read preference is not specified, the write concern
-     * or read preference of the Client will be applied, respectively.
-     *
-     * @param string         $databaseName   Name of the database to select
-     * @param WriteConcern   $writeConcern   Default write concern to apply
-     * @param ReadPreference $readPreference Default read preference to apply
-     * @return Database
-     */
-    public function selectDatabase($databaseName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
-    {
-        // TODO: inherit from Manager options once PHPC-196 is implemented
-        $writeConcern = $writeConcern ?: $this->writeConcern;
-        $readPreference = $readPreference ?: $this->readPreference;
-
-        return new Database($this->manager, $databaseName, $writeConcern, $readPreference);
-    }
-
-    /**
      * Select a collection.
      *
      * If a write concern or read preference is not specified, the write concern
@@ -118,5 +98,25 @@ class Client
         $readPreference = $readPreference ?: $this->readPreference;
 
         return new Collection($this->manager, $namespace, $writeConcern, $readPreference);
+    }
+
+    /**
+     * Select a database.
+     *
+     * If a write concern or read preference is not specified, the write concern
+     * or read preference of the Client will be applied, respectively.
+     *
+     * @param string         $databaseName   Name of the database to select
+     * @param WriteConcern   $writeConcern   Default write concern to apply
+     * @param ReadPreference $readPreference Default read preference to apply
+     * @return Database
+     */
+    public function selectDatabase($databaseName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
+    {
+        // TODO: inherit from Manager options once PHPC-196 is implemented
+        $writeConcern = $writeConcern ?: $this->writeConcern;
+        $readPreference = $readPreference ?: $this->readPreference;
+
+        return new Database($this->manager, $databaseName, $writeConcern, $readPreference);
     }
 }

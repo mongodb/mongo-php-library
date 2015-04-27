@@ -61,6 +61,16 @@ class IndexInput implements Serializable
     }
 
     /**
+     * Return the index name.
+     *
+     * @param string
+     */
+    public function __toString()
+    {
+        return $this->index['name'];
+    }
+
+    /**
      * Serialize the index information to BSON for index creation.
      *
      * @see MongoDB\Collection::createIndexes()
@@ -69,16 +79,6 @@ class IndexInput implements Serializable
     public function bsonSerialize()
     {
         return $this->index;
-    }
-
-    /**
-     * Return the index name.
-     *
-     * @param string
-     */
-    public function __toString()
-    {
-        return $this->index['name'];
     }
 
     /**

@@ -239,7 +239,7 @@ class Collection
     {
         $cmd = array(
             "count" => $this->collname,
-            "query" => $filter,
+            "query" => (object) $filter,
         ) + $options;
 
         $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
@@ -363,7 +363,7 @@ class Collection
         $cmd = array(
             "distinct" => $this->collname,
             "key"      => $fieldName,
-            "query"    => $filter,
+            "query"    => (object) $filter,
         ) + $options;
 
         $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());

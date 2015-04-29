@@ -1160,6 +1160,26 @@ class Collection
     }
 
     /**
+     * Internal helper for massaging findandmodify options
+     * @internal
+     */
+    final protected function _massageFindAndModifyOptions($options, $update = array())
+    {
+        $ret = array(
+            "sort"   => $options["sort"],
+            "new"    => isset($options["returnDocument"]) ? $options["returnDocument"] == self::FIND_ONE_AND_RETURN_AFTER : false,
+            "fields" => $options["projection"],
+            "upsert" => isset($options["upsert"]) ? $options["upsert"] : false,
+        );
+        if ($update) {
+            $ret["update"] = $update;
+        } else {
+            $ret["remove"] = true;
+        }
+        return $ret;
+    }
+
+    /**
      * Constructs the Query Wire Protocol field 'flags' based on $options
      * provided to other helpers
      *

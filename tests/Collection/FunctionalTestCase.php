@@ -21,6 +21,15 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         $this->dropCollectionIfItExists($this->collection);
     }
 
+    public function tearDown()
+    {
+        if ($this->hasFailed()) {
+            return;
+        }
+
+        $this->dropCollectionIfItExists($this->collection);
+    }
+
     /**
      * Drop the collection if it exists.
      *

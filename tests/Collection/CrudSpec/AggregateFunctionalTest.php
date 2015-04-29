@@ -55,5 +55,8 @@ class AggregateFunctionalTest extends FunctionalTestCase
         );
 
         $this->assertSame($expected, $outputCollection->find()->toArray());
+
+        // Manually clean up our output collection
+        $this->dropCollectionIfItExists($outputCollection);
     }
 }

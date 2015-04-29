@@ -15,7 +15,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     {
          $class = new ReflectionClass($this);
 
-         return sprintf('%s.%s', $class->getShortName(), $this->getName(false));
+         return sprintf('%s.%s', $class->getShortName(), hash('crc32b', $this->getName()));
     }
 
     /**

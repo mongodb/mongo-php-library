@@ -961,7 +961,7 @@ class Collection
      *
      * @see http://docs.mongodb.org/manual/reference/command/insert/
      *
-     * @param array $documents The documents to insert
+     * @param array[]|object[] $documents The documents to insert
      * @return InsertManyResult
      */
     public function insertMany(array $documents)
@@ -976,6 +976,8 @@ class Collection
 
             if ($insertedId !== null) {
                 $insertedIds[$i] = $insertedId;
+            } else {
+                $insertedIds[$i] = is_array($document) ? $document['_id'] : $document->_id;
             }
         }
 
@@ -989,17 +991,20 @@ class Collection
      *
      * @see http://docs.mongodb.org/manual/reference/command/insert/
      *
-     * @param array $document  The document to insert
-     * @param array $options   Additional options
+     * @param array|object $document The document to insert
      * @return InsertOneResult
      */
-    public function insertOne(array $document)
+    public function insertOne($document)
     {
         $options = array_merge($this->getWriteOptions());
 
         $bulk = new BulkWrite($options["ordered"]);
         $id    = $bulk->insert($document);
         $wr    = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+
+        if ($id === null) {
+            $id = is_array($document) ? $document['_id'] : $document->_id;
+        }
 
         return new InsertOneResult($wr, $id);
     }

@@ -1038,7 +1038,7 @@ class Collection
         if (isset($firstKey[0]) && $firstKey[0] == '$') {
             throw new InvalidArgumentException("First key in \$update must NOT be a \$operator");
         }
-        $wr = $this->_update($filter, $update, $options);
+        $wr = $this->_update($filter, $update, $options + array("multi" => false));
 
         return new UpdateResult($wr);
     }
@@ -1057,7 +1057,7 @@ class Collection
      */
     public function updateMany(array $filter, $update, array $options = array())
     {
-        $wr = $this->_update($filter, $update, $options + array("limit" => 0));
+        $wr = $this->_update($filter, $update, $options + array("multi" => true));
 
         return new UpdateResult($wr);
     }
@@ -1080,7 +1080,7 @@ class Collection
         if (!isset($firstKey[0]) || $firstKey[0] != '$') {
             throw new InvalidArgumentException("First key in \$update must be a \$operator");
         }
-        $wr = $this->_update($filter, $update, $options);
+        $wr = $this->_update($filter, $update, $options + array("multi" => false));
 
         return new UpdateResult($wr);
     }

@@ -497,7 +497,7 @@ class Collection
 
         $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
-            return $doc["value"];
+            return is_object($doc["value"]) ? (array) $doc["value"] : $doc["value"];
         }
 
         throw $this->_generateCommandException($doc);
@@ -534,7 +534,7 @@ class Collection
 
         $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
-            return $doc["value"];
+            return is_object($doc["value"]) ? (array) $doc["value"] : $doc["value"];
         }
 
         throw $this->_generateCommandException($doc);
@@ -572,7 +572,7 @@ class Collection
 
         $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
-            return $doc["value"];
+            return is_object($doc["value"]) ? (array) $doc["value"] : $doc["value"];
         }
 
         throw $this->_generateCommandException($doc);

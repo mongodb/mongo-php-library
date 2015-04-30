@@ -38,7 +38,8 @@ class UpdateResult
     /**
      * Return the number of documents that were modified.
      *
-     * This value is undefined if the write was not acknowledged.
+     * This value is undefined if the write was not acknowledged or if the write
+     * executed as a legacy operation instead of write command.
      *
      * @see UpdateResult::isAcknowledged()
      * @return integer

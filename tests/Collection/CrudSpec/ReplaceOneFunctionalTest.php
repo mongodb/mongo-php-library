@@ -9,11 +9,15 @@ namespace MongoDB\Tests\Collection\CrudSpec;
  */
 class ReplaceOneFunctionalTest extends FunctionalTestCase
 {
+    private $omitModifiedCount;
+
     public function setUp()
     {
         parent::setUp();
 
         $this->createFixtures(3);
+
+        $this->omitModifiedCount = version_compare($this->getServerVersion(), '2.6.0', '<');
     }
 
     public function testReplaceOneWhenManyDocumentsMatch()
@@ -23,7 +27,7 @@ class ReplaceOneFunctionalTest extends FunctionalTestCase
 
         $result = $this->collection->replaceOne($filter, $replacement);
         $this->assertSame(1, $result->getMatchedCount());
-        $this->assertSame(1, $result->getModifiedCount());
+        $this->omitModifiedCount or $this->assertSame(1, $result->getModifiedCount());
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -41,7 +45,7 @@ class ReplaceOneFunctionalTest extends FunctionalTestCase
 
         $result = $this->collection->replaceOne($filter, $replacement);
         $this->assertSame(1, $result->getMatchedCount());
-        $this->assertSame(1, $result->getModifiedCount());
+        $this->omitModifiedCount or $this->assertSame(1, $result->getModifiedCount());
 
         $expected = array(
             array('_id' => 1, 'x' => 111),
@@ -59,7 +63,7 @@ class ReplaceOneFunctionalTest extends FunctionalTestCase
 
         $result = $this->collection->replaceOne($filter, $replacement);
         $this->assertSame(0, $result->getMatchedCount());
-        $this->assertSame(0, $result->getModifiedCount());
+        $this->omitModifiedCount or $this->assertSame(0, $result->getModifiedCount());
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -78,7 +82,7 @@ class ReplaceOneFunctionalTest extends FunctionalTestCase
 
         $result = $this->collection->replaceOne($filter, $replacement, $options);
         $this->assertSame(0, $result->getMatchedCount());
-        $this->assertSame(0, $result->getModifiedCount());
+        $this->omitModifiedCount or $this->assertSame(0, $result->getModifiedCount());
         $this->assertSame(4, $result->getUpsertedId());
 
         $expected = array(
@@ -100,7 +104,7 @@ class ReplaceOneFunctionalTest extends FunctionalTestCase
 
         $result = $this->collection->replaceOne($filter, $replacement, $options);
         $this->assertSame(0, $result->getMatchedCount());
-        $this->assertSame(0, $result->getModifiedCount());
+        $this->omitModifiedCount or $this->assertSame(0, $result->getModifiedCount());
         $this->assertSame(4, $result->getUpsertedId());
 
         $expected = array(

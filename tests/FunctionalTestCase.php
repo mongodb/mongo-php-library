@@ -3,8 +3,9 @@
 namespace MongoDB\Tests;
 
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Manager;
 use MongoDB\Driver\Cursor;
+use MongoDB\Driver\Manager;
+use MongoDB\Driver\ReadPreference;
 
 abstract class FunctionalTestCase extends TestCase
 {
@@ -31,5 +32,18 @@ abstract class FunctionalTestCase extends TestCase
         $document = current($cursor->toArray());
         $this->assertArrayHasKey('ok', $document);
         $this->assertEquals(1, $document['ok']);
+    }
+
+    protected function getServerVersion(ReadPreference $readPreference = null)
+    {
+        $cursor = $this->manager->executeCommand(
+            $this->getDatabaseName(),
+            new Command(array('buildInfo' => 1)),
+            $readPreference ?: new ReadPreference(ReadPreference::RP_PRIMARY)
+        );
+
+        $document = current($cursor->toArray());
+
+        return $document['version'];
     }
 }

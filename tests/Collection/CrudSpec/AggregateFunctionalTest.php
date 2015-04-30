@@ -3,6 +3,8 @@
 namespace MongoDB\Tests\Collection\CrudSpec;
 
 use MongoDB\Collection;
+use MongoDB\FeatureDetection;
+use MongoDB\Driver\ReadPreference;
 
 /**
  * CRUD spec functional tests for aggregate().
@@ -39,6 +41,12 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
     public function testAggregateWithOut()
     {
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        if ( ! FeatureDetection::isSupported($server, FeatureDetection::API_AGGREGATE_CURSOR)) {
+            $this->markTestSkipped('$out aggregation pipeline operator is not supported');
+        }
+
         $outputCollection = new Collection($this->manager, $this->getNamespace() . '_output');
         $this->dropCollectionIfItExists($outputCollection);
 

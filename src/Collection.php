@@ -244,7 +244,7 @@ class Collection
 
         $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
-            return $doc["n"];
+            return (integer) $doc["n"];
         }
         throw $this->_generateCommandException($doc);
     }

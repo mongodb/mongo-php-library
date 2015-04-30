@@ -14,6 +14,7 @@ class FeatureDetection
     const API_LISTCOLLECTIONS_CMD = 3;
     const API_LISTINDEXES_CMD = 3;
     const API_CREATEINDEXES_CMD = 2;
+    const API_AGGREGATE_CURSOR = 2;
 
     /**
      * Return whether the server supports a particular feature.

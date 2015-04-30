@@ -33,7 +33,8 @@ class AggregateFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $cursor->toArray());
+        // Use iterator_to_array() here since aggregate() may return an ArrayIterator
+        $this->assertSame($expected, iterator_to_array($cursor));
     }
 
     public function testAggregateWithOut()

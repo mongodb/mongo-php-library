@@ -11,11 +11,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return string
      */
-    public function getCollectionName()
+    protected function getCollectionName()
     {
          $class = new ReflectionClass($this);
 
-         return sprintf('%s.%s', $class->getShortName(), $this->getName(false));
+         return sprintf('%s.%s', $class->getShortName(), hash('crc32b', $this->getName()));
     }
 
     /**
@@ -23,7 +23,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return string
      */
-    public function getDatabaseName()
+    protected function getDatabaseName()
     {
         return getenv('MONGODB_DATABASE') ?: 'phplib_test';
     }
@@ -33,7 +33,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return string
      */
-    public function getNamespace()
+    protected function getNamespace()
     {
          return sprintf('%s.%s', $this->getDatabaseName(), $this->getCollectionName());
     }
@@ -43,7 +43,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return string
      */
-    public function getUri()
+    protected function getUri()
     {
         return getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1:27017';
     }

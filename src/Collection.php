@@ -71,13 +71,13 @@ class Collection
 
     /**
      * Runs an aggregation framework pipeline
-     * NOTE: The return value of this method depends on your MongoDB server version
-     *       and possibly options.
-     *       MongoDB 2.6 (and later) will return a Cursor by default
-     *       MongoDB pre 2.6 will return an ArrayIterator
+     *
+     * Note: this method's return value depends on the MongoDB server version
+     * and the "useCursor" option. If "useCursor" is true, a Cursor will be
+     * returned; otherwise, an ArrayIterator is returned, which wraps the
+     * "result" array from the command response document.
      *
      * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-     * @see Collection::getAggregateOptions() for supported $options
      *
      * @param array $pipeline The pipeline to execute
      * @param array $options  Additional options
@@ -85,23 +85,61 @@ class Collection
      */
     public function aggregate(array $pipeline, array $options = array())
     {
-        $options = array_merge($this->getAggregateOptions(), $options);
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $server = $this->manager->selectServer($readPreference);
+
+        if (FeatureDetection::isSupported($server, FeatureDetection::API_AGGREGATE_CURSOR)) {
+            $options = array_merge(
+                array(
+                    /**
+                     * Enables writing to temporary files. When set to true, aggregation stages
+                     * can write data to the _tmp subdirectory in the dbPath directory. The
+                     * default is false.
+                     *
+                     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
+                     */
+                    'allowDiskUse' => false,
+                    /**
+                     * The number of documents to return per batch.
+                     *
+                     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
+                     */
+                    'batchSize' => 0,
+                    /**
+                     * The maximum amount of time to allow the query to run.
+                     *
+                     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
+                     */
+                    'maxTimeMS' => 0,
+                    /**
+                     * Indicates if the results should be provided as a cursor.
+                     *
+                     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
+                     */
+                    'useCursor' => true,
+                ),
+                $options
+            );
+        }
+
         $options = $this->_massageAggregateOptions($options);
-        $cmd = array(
-            "aggregate" => $this->collname,
-            "pipeline"  => $pipeline,
-        ) + $options;
+        $command = new Command(array(
+            'aggregate' => $this->collname,
+            'pipeline' => $pipeline,
+        ) + $options);
+        $cursor = $server->executeCommand($this->dbname, $command);
 
-        $cursor = $this->_runCommand($this->dbname, $cmd);
-
-        if (isset($cmd["cursor"]) && $cmd["cursor"]) {
+        if ( ! empty($options["cursor"])) {
             return $cursor;
         }
 
         $doc = current($cursor->toArray());
 
         if ($doc["ok"]) {
-            return new \ArrayIterator($doc["result"]);
+            return new \ArrayIterator(array_map(
+                function (\stdClass $document) { return (array) $document; },
+                $doc["result"]
+            ));
         }
 
         throw $this->_generateCommandException($doc);
@@ -239,12 +277,12 @@ class Collection
     {
         $cmd = array(
             "count" => $this->collname,
-            "query" => $filter,
+            "query" => (object) $filter,
         ) + $options;
 
         $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
-            return $doc["n"];
+            return (integer) $doc["n"];
         }
         throw $this->_generateCommandException($doc);
     }
@@ -363,7 +401,7 @@ class Collection
         $cmd = array(
             "distinct" => $this->collname,
             "key"      => $fieldName,
-            "query"    => $filter,
+            "query"    => (object) $filter,
         ) + $options;
 
         $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
@@ -497,7 +535,7 @@ class Collection
 
         $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
-            return $doc["value"];
+            return is_object($doc["value"]) ? (array) $doc["value"] : $doc["value"];
         }
 
         throw $this->_generateCommandException($doc);
@@ -534,7 +572,7 @@ class Collection
 
         $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
-            return $doc["value"];
+            return $this->_massageFindAndModifyResult($doc, $options);
         }
 
         throw $this->_generateCommandException($doc);
@@ -572,59 +610,10 @@ class Collection
 
         $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
-            return $doc["value"];
+            return $this->_massageFindAndModifyResult($doc, $options);
         }
 
         throw $this->_generateCommandException($doc);
-    }
-
-    /**
-     * Retrieves all aggregate options with their default values.
-     *
-     * @return array of Collection::aggregate() options
-     */
-    public function getAggregateOptions()
-    {
-        $opts = array(
-            /**
-             * Enables writing to temporary files. When set to true, aggregation stages
-             * can write data to the _tmp subdirectory in the dbPath directory. The
-             * default is false.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-             */
-            "allowDiskUse" => false,
-
-            /**
-             * The number of documents to return per batch.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-             */
-            "batchSize" => 0,
-
-            /**
-             * The maximum amount of time to allow the query to run.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-             */
-            "maxTimeMS" => 0,
-
-            /**
-             * Indicates if the results should be provided as a cursor.
-             *
-             * The default for this value depends on the version of the server.
-             * - Servers >= 2.6 will use a default of true.
-             * - Servers < 2.6 will use a default of false.
-             *
-             * As with any other property, this value can be changed.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-             */
-            "useCursor" => true,
-        );
-
-        /* FIXME: Add a version check for useCursor */
-        return $opts;
     }
 
     /**
@@ -961,7 +950,7 @@ class Collection
      *
      * @see http://docs.mongodb.org/manual/reference/command/insert/
      *
-     * @param array $documents The documents to insert
+     * @param array[]|object[] $documents The documents to insert
      * @return InsertManyResult
      */
     public function insertMany(array $documents)
@@ -976,6 +965,8 @@ class Collection
 
             if ($insertedId !== null) {
                 $insertedIds[$i] = $insertedId;
+            } else {
+                $insertedIds[$i] = is_array($document) ? $document['_id'] : $document->_id;
             }
         }
 
@@ -989,17 +980,20 @@ class Collection
      *
      * @see http://docs.mongodb.org/manual/reference/command/insert/
      *
-     * @param array $document  The document to insert
-     * @param array $options   Additional options
+     * @param array|object $document The document to insert
      * @return InsertOneResult
      */
-    public function insertOne(array $document)
+    public function insertOne($document)
     {
         $options = array_merge($this->getWriteOptions());
 
         $bulk = new BulkWrite($options["ordered"]);
         $id    = $bulk->insert($document);
         $wr    = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+
+        if ($id === null) {
+            $id = is_array($document) ? $document['_id'] : $document->_id;
+        }
 
         return new InsertOneResult($wr, $id);
     }
@@ -1038,7 +1032,7 @@ class Collection
         if (isset($firstKey[0]) && $firstKey[0] == '$') {
             throw new InvalidArgumentException("First key in \$update must NOT be a \$operator");
         }
-        $wr = $this->_update($filter, $update, $options);
+        $wr = $this->_update($filter, $update, $options + array("multi" => false));
 
         return new UpdateResult($wr);
     }
@@ -1057,7 +1051,7 @@ class Collection
      */
     public function updateMany(array $filter, $update, array $options = array())
     {
-        $wr = $this->_update($filter, $update, $options + array("limit" => 0));
+        $wr = $this->_update($filter, $update, $options + array("multi" => true));
 
         return new UpdateResult($wr);
     }
@@ -1080,7 +1074,7 @@ class Collection
         if (!isset($firstKey[0]) || $firstKey[0] != '$') {
             throw new InvalidArgumentException("First key in \$update must be a \$operator");
         }
-        $wr = $this->_update($filter, $update, $options);
+        $wr = $this->_update($filter, $update, $options + array("multi" => false));
 
         return new UpdateResult($wr);
     }
@@ -1146,12 +1140,64 @@ class Collection
      */
     protected function _massageAggregateOptions($options)
     {
-        if ($options["useCursor"]) {
-            $options["cursor"] = array("batchSize" => $options["batchSize"]);
+        if ( ! empty($options["useCursor"])) {
+            $options["cursor"] = isset($options["batchSize"])
+                ? array("batchSize" => (integer) $options["batchSize"])
+                : new stdClass;
         }
         unset($options["useCursor"], $options["batchSize"]);
 
         return $options;
+    }
+
+    /**
+     * Internal helper for massaging findandmodify options
+     * @internal
+     */
+    final protected function _massageFindAndModifyOptions($options, $update = array())
+    {
+        $ret = array(
+            "sort"   => $options["sort"],
+            "new"    => isset($options["returnDocument"]) ? $options["returnDocument"] == self::FIND_ONE_AND_RETURN_AFTER : false,
+            "fields" => $options["projection"],
+            "upsert" => isset($options["upsert"]) ? $options["upsert"] : false,
+        );
+        if ($update) {
+            $ret["update"] = $update;
+        } else {
+            $ret["remove"] = true;
+        }
+        return $ret;
+    }
+
+    /**
+     * Internal helper for massaging the findAndModify result.
+     *
+     * @internal
+     * @param array $result
+     * @param array $options
+     * @return array|null
+     */
+    final protected function _massageFindAndModifyResult(array $result, array $options)
+    {
+        if ($result['value'] === null) {
+            return null;
+        }
+
+        /* Prior to 3.0, findAndModify returns an empty document instead of null
+         * when an upsert is performed and the pre-modified document was
+         * requested.
+         */
+        if ($options['upsert'] && ! $options['new'] &&
+            isset($result['lastErrorObject']->updatedExisting) &&
+            ! $result['lastErrorObject']->updatedExisting) {
+
+            return null;
+        }
+
+        return is_object($result["value"])
+            ? (array) $result['value']
+            : $result['value'];
     }
 
     /**

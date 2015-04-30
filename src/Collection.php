@@ -534,7 +534,7 @@ class Collection
 
         $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
-            return is_object($doc["value"]) ? (array) $doc["value"] : $doc["value"];
+            return $this->_massageFindAndModifyResult($doc, $options);
         }
 
         throw $this->_generateCommandException($doc);
@@ -572,7 +572,7 @@ class Collection
 
         $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
         if ($doc["ok"]) {
-            return is_object($doc["value"]) ? (array) $doc["value"] : $doc["value"];
+            return $this->_massageFindAndModifyResult($doc, $options);
         }
 
         throw $this->_generateCommandException($doc);
@@ -1177,6 +1177,36 @@ class Collection
             $ret["remove"] = true;
         }
         return $ret;
+    }
+
+    /**
+     * Internal helper for massaging the findAndModify result.
+     *
+     * @internal
+     * @param array $result
+     * @param array $options
+     * @return array|null
+     */
+    final protected function _massageFindAndModifyResult(array $result, array $options)
+    {
+        if ($result['value'] === null) {
+            return null;
+        }
+
+        /* Prior to 3.0, findAndModify returns an empty document instead of null
+         * when an upsert is performed and the pre-modified document was
+         * requested.
+         */
+        if ($options['upsert'] && ! $options['new'] &&
+            isset($result['lastErrorObject']->updatedExisting) &&
+            ! $result['lastErrorObject']->updatedExisting) {
+
+            return null;
+        }
+
+        return is_object($result["value"])
+            ? (array) $result['value']
+            : $result['value'];
     }
 
     /**

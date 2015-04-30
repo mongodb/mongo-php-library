@@ -42,6 +42,16 @@ class Database
     }
 
     /**
+     * Return the database name.
+     *
+     * @param string
+     */
+    public function __toString()
+    {
+        return $this->databaseName;
+    }
+
+    /**
      * Create a new collection explicitly.
      *
      * @see http://docs.mongodb.org/manual/reference/command/create/
@@ -87,6 +97,16 @@ class Database
         $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
 
         return $this->manager->executeCommand($this->databaseName, $command, $readPreference);
+    }
+
+    /**
+     * Returns the database name.
+     *
+     * @return string
+     */
+    public function getDatabaseName()
+    {
+        return $this->databaseName;
     }
 
     /**

@@ -128,7 +128,8 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
     public function testFindOneAndReplaceWithUpsertWhenNoDocumentsMatchReturningDocumentBeforeModification()
     {
         $filter = array('_id' => 4);
-        $replacement = array('x' => 44);
+        // Server 2.4 and earlier requires any custom ID to also be in the replacement document
+        $replacement = array('_id' => 4, 'x' => 44);
         $options = array(
             'projection' => array('x' => 1, '_id' => 0),
             'sort' => array('x' => 1),
@@ -173,7 +174,8 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
     public function testFindOneAndReplaceWithUpsertWhenNoDocumentsMatchReturningDocumentAfterModification()
     {
         $filter = array('_id' => 4);
-        $replacement = array('x' => 44);
+        // Server 2.4 and earlier requires any custom ID to also be in the replacement document
+        $replacement = array('_id' => 4, 'x' => 44);
         $options = array(
             'projection' => array('x' => 1, '_id' => 0),
             'sort' => array('x' => 1),

@@ -94,7 +94,8 @@ class ReplaceOneFunctionalTest extends FunctionalTestCase
     public function testReplaceOneWithUpsertWhenNoDocumentsMatchWithoutAnIdSpecified()
     {
         $filter = array('_id' => 4);
-        $replacement = array('x' => 1);
+        // Server 2.4 and earlier requires any custom ID to also be in the replacement document
+        $replacement = array('_id' => 4, 'x' => 1);
         $options = array('upsert' => true);
 
         $result = $this->collection->replaceOne($filter, $replacement, $options);

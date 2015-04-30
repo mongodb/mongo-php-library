@@ -70,6 +70,16 @@ class Collection
     }
 
     /**
+     * Return the collection namespace.
+     *
+     * @param string
+     */
+    public function __toString()
+    {
+        return $this->ns;
+    }
+
+    /**
      * Runs an aggregation framework pipeline
      *
      * Note: this method's return value depends on the MongoDB server version
@@ -629,7 +639,7 @@ class Collection
     }
 
     /**
-     * Returns the CollectionName this object operates on
+     * Return the collection name.
      *
      * @return string
      */
@@ -677,7 +687,7 @@ class Collection
     }
 
     /**
-     * Returns the DatabaseName this object operates on
+     * Return the database name.
      *
      * @return string
      */
@@ -929,6 +939,17 @@ class Collection
              */
             "sort" => array(),
         );
+    }
+
+    /**
+     * Return the collection namespace.
+     *
+     * @see http://docs.mongodb.org/manual/faq/developers/#faq-dev-namespace
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->ns;
     }
 
     /**

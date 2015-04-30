@@ -27,6 +27,8 @@ install:
   - sudo apt-get install ${SERVER_PACKAGE}
 
 before_script:
+  - if dpkg --compare-versions ${SERVER_VERSION} le "2.4"; then export SERVER_SERVICE=mongodb; else export SERVER_SERVICE=mongod; fi
+  - if ! nc -z localhost 27017; then sudo service ${SERVER_SERVICE} start; fi
   - mongod --version
   - pecl install -f mongodb-${DRIVER_VERSION}
   - php --ri mongodb

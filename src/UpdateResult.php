@@ -50,6 +50,19 @@ class UpdateResult
     }
 
     /**
+     * Return the number of documents that were upserted.
+     *
+     * This value is undefined if the write was not acknowledged.
+     *
+     * @see UpdateResult::isAcknowledged()
+     * @return integer
+     */
+    public function getUpsertedCount()
+    {
+        return $this->writeResult->getUpsertedCount();
+    }
+
+    /**
      * Return the ID of the document inserted by an upsert operation.
      *
      * This value is undefined if an upsert did not take place.

@@ -223,7 +223,7 @@ class Collection
                     if (!isset($args[1])) {
                         throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
                     }
-                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 0));
+                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("multi" => true));
 
                     $bulk->update($args[0], $args[1], $options);
                     break;
@@ -232,7 +232,7 @@ class Collection
                     if (!isset($args[1])) {
                         throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
                     }
-                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 1));
+                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("multi" => false));
                     $firstKey = key($args[1]);
                     if (!isset($firstKey[0]) || $firstKey[0] != '$') {
                         throw new InvalidArgumentException("First key in \$update must be a \$operator");
@@ -245,7 +245,7 @@ class Collection
                     if (!isset($args[1])) {
                         throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
                     }
-                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 1));
+                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("multi" => false));
                     $firstKey = key($args[1]);
                     if (isset($firstKey[0]) && $firstKey[0] == '$') {
                         throw new InvalidArgumentException("First key in \$update must NOT be a \$operator");

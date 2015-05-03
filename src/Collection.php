@@ -198,17 +198,17 @@ class Collection
      *
      * @see Collection::getBulkOptions() for supported $options
      *
-     * @param array $bulk    Array of operations
+     * @param array $ops    Array of operations
      * @param array $options Additional options
      * @return WriteResult
      */
-    public function bulkWrite(array $bulk, array $options = array())
+    public function bulkWrite(array $ops, array $options = array())
     {
         $options = array_merge($this->getBulkOptions(), $options);
 
         $bulk = new BulkWrite($options["ordered"]);
 
-        foreach ($bulk as $n => $op) {
+        foreach ($ops as $n => $op) {
             foreach ($op as $opname => $args) {
                 if (!isset($args[0])) {
                     throw new InvalidArgumentException(sprintf("Missing argument#1 for '%s' (operation#%d)", $opname, $n));

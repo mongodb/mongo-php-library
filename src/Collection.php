@@ -232,6 +232,10 @@ class Collection
                         throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
                     }
                     $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("multi" => true));
+                    $firstKey = key($args[1]);
+                    if (!isset($firstKey[0]) || $firstKey[0] != '$') {
+                        throw new InvalidArgumentException("First key in \$update must be a \$operator");
+                    }
 
                     $bulk->update($args[0], $args[1], $options);
                     break;

@@ -207,6 +207,7 @@ class Collection
         $options = array_merge($this->getBulkOptions(), $options);
 
         $bulk = new BulkWrite($options["ordered"]);
+        $insertedIds = array();
 
         foreach ($ops as $n => $op) {
             foreach ($op as $opname => $args) {
@@ -216,7 +217,14 @@ class Collection
 
                 switch ($opname) {
                 case "insertOne":
-                    $bulk->insert($args[0]);
+                    $insertedId = $bulk->insert($args[0]);
+
+                    if ($insertedId !== null) {
+                        $insertedIds[$n] = $insertedId;
+                    } else {
+                        $insertedIds[$n] = is_array($args[0]) ? $args[0]['_id'] : $args[0]->_id;
+                    }
+
                     break;
 
                 case "updateMany":
@@ -269,7 +277,10 @@ class Collection
                 }
             }
         }
-        return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+
+        $writeResult = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+
+        return new BulkWriteResult($writeResult, $insertedIds);
     }
 
     /**

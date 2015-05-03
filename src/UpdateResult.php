@@ -2,7 +2,6 @@
 
 namespace MongoDB;
 
-use BSON\ObjectId;
 use MongoDB\Driver\WriteResult;
 
 /**
@@ -67,7 +66,7 @@ class UpdateResult
      *
      * This value is undefined if an upsert did not take place.
      *
-     * @return ObjectId|null
+     * @return mixed|null
      */
     public function getUpsertedId()
     {

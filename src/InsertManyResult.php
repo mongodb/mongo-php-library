@@ -18,7 +18,7 @@ class InsertManyResult
      * @param WriteResult $writeResult
      * @param mixed[]     $insertedIds
      */
-    public function __construct(WriteResult $writeResult, array $insertedIds = array())
+    public function __construct(WriteResult $writeResult, array $insertedIds)
     {
         $this->writeResult = $writeResult;
         $this->insertedIds = $insertedIds;

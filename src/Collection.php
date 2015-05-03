@@ -198,17 +198,18 @@ class Collection
      *
      * @see Collection::getBulkOptions() for supported $options
      *
-     * @param array $bulk    Array of operations
+     * @param array $ops    Array of operations
      * @param array $options Additional options
      * @return WriteResult
      */
-    public function bulkWrite(array $bulk, array $options = array())
+    public function bulkWrite(array $ops, array $options = array())
     {
         $options = array_merge($this->getBulkOptions(), $options);
 
         $bulk = new BulkWrite($options["ordered"]);
+        $insertedIds = array();
 
-        foreach ($bulk as $n => $op) {
+        foreach ($ops as $n => $op) {
             foreach ($op as $opname => $args) {
                 if (!isset($args[0])) {
                     throw new InvalidArgumentException(sprintf("Missing argument#1 for '%s' (operation#%d)", $opname, $n));
@@ -216,14 +217,25 @@ class Collection
 
                 switch ($opname) {
                 case "insertOne":
-                    $bulk->insert($args[0]);
+                    $insertedId = $bulk->insert($args[0]);
+
+                    if ($insertedId !== null) {
+                        $insertedIds[$n] = $insertedId;
+                    } else {
+                        $insertedIds[$n] = is_array($args[0]) ? $args[0]['_id'] : $args[0]->_id;
+                    }
+
                     break;
 
                 case "updateMany":
                     if (!isset($args[1])) {
                         throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
                     }
-                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 0));
+                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("multi" => true));
+                    $firstKey = key($args[1]);
+                    if (!isset($firstKey[0]) || $firstKey[0] != '$') {
+                        throw new InvalidArgumentException("First key in \$update must be a \$operator");
+                    }
 
                     $bulk->update($args[0], $args[1], $options);
                     break;
@@ -232,7 +244,7 @@ class Collection
                     if (!isset($args[1])) {
                         throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
                     }
-                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 1));
+                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("multi" => false));
                     $firstKey = key($args[1]);
                     if (!isset($firstKey[0]) || $firstKey[0] != '$') {
                         throw new InvalidArgumentException("First key in \$update must be a \$operator");
@@ -245,7 +257,7 @@ class Collection
                     if (!isset($args[1])) {
                         throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
                     }
-                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("limit" => 1));
+                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("multi" => false));
                     $firstKey = key($args[1]);
                     if (isset($firstKey[0]) && $firstKey[0] == '$') {
                         throw new InvalidArgumentException("First key in \$update must NOT be a \$operator");
@@ -269,7 +281,10 @@ class Collection
                 }
             }
         }
-        return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+
+        $writeResult = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+
+        return new BulkWriteResult($writeResult, $insertedIds);
     }
 
     /**

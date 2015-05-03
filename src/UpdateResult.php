@@ -2,7 +2,6 @@
 
 namespace MongoDB;
 
-use BSON\ObjectId;
 use MongoDB\Driver\WriteResult;
 
 /**
@@ -38,7 +37,8 @@ class UpdateResult
     /**
      * Return the number of documents that were modified.
      *
-     * This value is undefined if the write was not acknowledged.
+     * This value is undefined if the write was not acknowledged or if the write
+     * executed as a legacy operation instead of write command.
      *
      * @see UpdateResult::isAcknowledged()
      * @return integer
@@ -49,11 +49,24 @@ class UpdateResult
     }
 
     /**
+     * Return the number of documents that were upserted.
+     *
+     * This value is undefined if the write was not acknowledged.
+     *
+     * @see UpdateResult::isAcknowledged()
+     * @return integer
+     */
+    public function getUpsertedCount()
+    {
+        return $this->writeResult->getUpsertedCount();
+    }
+
+    /**
      * Return the ID of the document inserted by an upsert operation.
      *
      * This value is undefined if an upsert did not take place.
      *
-     * @return ObjectId|null
+     * @return mixed|null
      */
     public function getUpsertedId()
     {

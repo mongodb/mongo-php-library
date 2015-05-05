@@ -70,7 +70,6 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
 
         $collections = $this->database->listCollections($options);
         $this->assertInstanceOf('MongoDB\Model\CollectionInfoIterator', $collections);
-        $this->assertCount(1, $collections);
 
         foreach ($collections as $collection) {
             $this->assertInstanceOf('MongoDB\Model\CollectionInfo', $collection);

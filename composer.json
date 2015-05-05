@@ -12,9 +12,6 @@
     "require": {
         "ext-mongodb": ">=0.5.1"
     },
-    "require-dev": {
-        "fzaninotto/faker": "~1.0"
-    },
     "autoload": {
         "psr-4": { "MongoDB\\": "src/" }
     },

@@ -60,7 +60,7 @@ release/%: release-log/%
 docs: mkdocs apigen
 
 release-docs: docs
-	mkdocs gh-deploy --clean
+	mkdocs gh-deploy
 
 release-log/%:
 	@git log --pretty=format:"%ad  %an  <%ae>%n%x09* %s%n" --date short --no-merges --since="$$(git show -s --format=%ad `git rev-list --tags --max-count=1`)" > RELEASE-$(*)

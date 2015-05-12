@@ -50,7 +50,8 @@ release/%: release-log/%
 	@echo "    " git add RELEASE-$(*)
 	@echo "    " git commit -m \"Add $(*) release notes\"
 	@echo "    " git tag -a -m \"Release MongoDB library $(*)\" $(*)
-	@echo "    " git push --tags
+	@echo "    " git push REMOTE `git rev-parse --abbrev-ref HEAD`
+	@echo "    " git push REMOTE --tags
 	@echo "    " make release-docs
 
 docs: mkdocs apigen

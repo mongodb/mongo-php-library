@@ -53,6 +53,8 @@ docs: mkdocs apigen
 
 release-docs: docs
 	mkdocs gh-deploy
+	@echo "If origin is your local fork, you may need to run:"
+	@echo "    " git push REMOTE gh-pages:gh-pages
 
 release-log/%:
 	@git log --pretty=format:"%ad  %an  <%ae>%n%x09* %s%n" --date short --no-merges --since="$$(git show -s --format=%ad `git rev-list --tags --max-count=1`)" > RELEASE-$(*)

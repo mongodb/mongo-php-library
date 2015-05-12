@@ -2,6 +2,6 @@
 
 namespace MongoDB\Exception;
 
-class UnexpectedValueException extends \UnexpectedValueException implements Exception
+class UnexpectedValueException extends \MongoDB\Driver\Exception\UnexpectedValueException implements Exception
 {
 }

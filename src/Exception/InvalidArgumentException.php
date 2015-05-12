@@ -2,6 +2,6 @@
 
 namespace MongoDB\Exception;
 
-class InvalidArgumentException extends \InvalidArgumentException implements Exception
+class InvalidArgumentException extends \MongoDB\Driver\Exception\InvalidArgumentException implements Exception
 {
 }

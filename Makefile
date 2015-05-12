@@ -49,10 +49,6 @@ mkdocs:
 		exit 1; \
 	fi
 
-docs-api: apigen
-
-docs: mkdocs
-
 release/%: release-log/%
 	@echo "Please run:"
 	@echo "    " git add RELEASE-$(*)
@@ -61,8 +57,7 @@ release/%: release-log/%
 	@echo "    " git push --tags
 	@echo "    " make release-docs
 
-docs:
-	mkdocs build --clean
+docs: mkdocs apigen
 
 release-docs: docs
 	mkdocs gh-deploy --clean

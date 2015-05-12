@@ -1,20 +1,11 @@
 source:
-	- src
-	
-destination: api
-extensions:
-	- php
-	
-exclude:
-	- tests/
-	- vendor/
-	
-skipDocPath:
-	- * <mask>```
-	
+    - src
+
+destination: site/api
+
 charset:
-	- UTF-8
-	
+    - UTF-8
+
 main: MongoDB PHP library
 title: MongoDB PHP library
 baseUrl: http://10gen-labs.github.io/mongo-php-libraries-prototype
@@ -22,15 +13,11 @@ googleCseId: null
 googleAnalytics: null
 templateTheme: bootstrap
 templateConfig: null
-groups: auto
-	
-accessLevels:
-	- public
-	
-internal: false
-php: true
-sourceCode: true
-tree: true
+
 deprecated: false
+internal: false
 todo: false
+
+php: false
+tree: true
 download: false

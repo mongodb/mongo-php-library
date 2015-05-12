@@ -18,8 +18,6 @@ use MongoDB\Model\IndexInput;
 
 class Collection
 {
-    const VERSION = "0.1.0";
-
     /* {{{ consts & vars */
     const QUERY_FLAG_TAILABLE_CURSOR   = 0x02;
     const QUERY_FLAG_SLAVE_OKAY        = 0x04;

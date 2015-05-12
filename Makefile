@@ -68,4 +68,4 @@ release-docs: docs
 	mkdocs gh-deploy --clean
 
 release-log/%:
-	@git log --pretty=format:"%ad  %an  <%ae>%n%x09* %s%n" --date short --since="$$(git show -s --format=%ad `git rev-list --tags --max-count=1`)" > RELEASE-$(*)
+	@git log --pretty=format:"%ad  %an  <%ae>%n%x09* %s%n" --date short --no-merges --since="$$(git show -s --format=%ad `git rev-list --tags --max-count=1`)" > RELEASE-$(*)

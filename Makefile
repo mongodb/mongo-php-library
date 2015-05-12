@@ -43,12 +43,12 @@ apigen:
 mkdocs:
 	@command -v mkdocs >/dev/null 2>&1; \
 	if test $$? -eq 0; then \
-        mkdocs build --clean \
-    else \
+		mkdocs build --clean \
+	else \
 		echo "Cannot find mkdocs :("; \
 		echo "Aborting."; \
 		exit 1; \
-    fi
+	fi
 
 docs-api: apigen
 

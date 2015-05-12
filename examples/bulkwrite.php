@@ -1,20 +1,29 @@
 <?php
-require __DIR__ . "/" . "../vendor/autoload.php";
 
-function dumpWriteResults(MongoDB\WriteResult $result) {
-    printf("Inserted %d documents, upserted %d, updated %d and deleted %d\n",
-        $result->getInsertedCount(), $result->getUpsertedCount(),
-        $result->getModifiedCount(), $result->getDeletedCount()
+require_once __DIR__ . "/bootstrap.php";
+
+$manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
+$collection = new MongoDB\Collection($manager, "phplib_demo.bulkwrite");
+
+function dumpWriteResults(MongoDB\BulkWriteResult $result)
+{
+    printf("Inserted %d documents, upserted %d, updated %d, and deleted %d\n",
+        $result->getInsertedCount(),
+        $result->getUpsertedCount(),
+        $result->getModifiedCount(),
+        $result->getDeletedCount()
     );
 
     if ($result->getUpsertedCount()) {
         foreach ($result->getUpsertedIds() as $index => $id) {
-            printf("upsertedId[%d]: %s", $index, $id);
+            printf("upsertedId[%d]: %s\n", $index, $id);
         }
     }
 }
-function dumpCollection($collection) {
-    printf("\n---\nDumping all documents in: %s.%s\n",
+
+function dumpCollection($collection)
+{
+    printf("Dumping all documents in: %s.%s\n",
         $collection->getDatabaseName(),
         $collection->getCollectionName()
     );
@@ -26,9 +35,6 @@ function dumpCollection($collection) {
     printf("Found %d documents\n", $n);
 }
 
-
-$manager = new MongoDB\Manager("mongodb://localhost:27017");
-$collection = new MongoDB\Collection($manager, "crud.bulkWrite");
 $result = $collection->bulkWrite([
     [
         "insertOne" => [
@@ -61,8 +67,9 @@ $result = $collection->bulkWrite([
 ]);
 
 dumpWriteResults($result);
+echo "\n";
 dumpCollection($collection);
-
+echo "\n";
 
 $result = $collection->bulkWrite([
     [
@@ -84,9 +91,10 @@ $result = $collection->bulkWrite([
     ],
 ]);
 
-echo "\n\n";
 dumpWriteResults($result);
+echo "\n";
 dumpCollection($collection);
+echo "\n";
 
 $result = $collection->bulkWrite([
     [
@@ -96,7 +104,6 @@ $result = $collection->bulkWrite([
     ],
 ]);
 
-echo "\n\n";
 dumpWriteResults($result);
+echo "\n";
 dumpCollection($collection);
-

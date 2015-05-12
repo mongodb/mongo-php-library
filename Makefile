@@ -10,9 +10,7 @@ composer:
 	elif test -r composer.phar; then \
 		php composer.phar $(COMPOSER_ARGS); \
 	else \
-		echo "Cannot find composer :("; \
-		echo "Aborting."; \
-		exit 1; \
+		$(error Cannot find composer); \
 	fi
 
 test: composer
@@ -22,9 +20,7 @@ test: composer
 	elif test -r phpunit.phar; then \
 		php phpunit.phar $(PHPUNIT_ARGS); \
 	else \
-		echo "Cannot find phpunit :("; \
-		echo "Aborting."; \
-		exit 1; \
+		$(error Cannot find phpunit); \
 	fi
 
 apigen:
@@ -34,9 +30,7 @@ apigen:
 	elif test -r apigen.phar; then \
 		php apigen.phar generate; \
 	else \
-		echo "Cannot find apigen :("; \
-		echo "Aborting."; \
-		exit 1; \
+		$(error Cannot find agigen); \
 	fi
 
 mkdocs:
@@ -44,9 +38,7 @@ mkdocs:
 	if test $$? -eq 0; then \
 		mkdocs build --clean; \
 	else \
-		echo "Cannot find mkdocs :("; \
-		echo "Aborting."; \
-		exit 1; \
+		$(error Cannot find mkdocs); \
 	fi
 
 release/%: release-log/%

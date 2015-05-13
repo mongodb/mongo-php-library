@@ -13,7 +13,7 @@ examples uses the low-level `mongodb` PHP driver:
 $file = "http://media.mongodb.org/zips.json";
 $zips = file($file, FILE_IGNORE_NEW_LINES);
 
-$bulk = new MongoDB\Driver\BulkWrite());
+$bulk = new MongoDB\Driver\BulkWrite();
 
 foreach ($zips as $string) {
     $document = json_decode($string);

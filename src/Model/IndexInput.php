@@ -2,7 +2,7 @@
 
 namespace MongoDB\Model;
 
-use BSON\Serializable;
+use MongoDB\BSON\Serializable;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedTypeException;
 

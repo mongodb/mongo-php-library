@@ -87,7 +87,7 @@ class IndexInputTest extends TestCase
             'ns' => 'foo.bar',
         ));
 
-        $this->assertInstanceOf('BSON\Serializable', $indexInput);
+        $this->assertInstanceOf('MongoDB\BSON\Serializable', $indexInput);
         $this->assertEquals($expected, $indexInput->bsonSerialize());
     }
 }

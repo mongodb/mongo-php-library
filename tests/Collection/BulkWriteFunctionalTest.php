@@ -28,7 +28,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
         $insertedIds = $result->getInsertedIds();
         $this->assertSame(1, $insertedIds[0]);
-        $this->assertInstanceOf('BSON\ObjectId', $insertedIds[1]);
+        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $insertedIds[1]);
 
         $expected = array(
             array('_id' => $insertedIds[0], 'x' => 11),
@@ -58,7 +58,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
         $upsertedIds = $result->getUpsertedIds();
         $this->assertSame(5, $upsertedIds[2]);
-        $this->assertInstanceOf('BSON\ObjectId', $upsertedIds[3]);
+        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $upsertedIds[3]);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),

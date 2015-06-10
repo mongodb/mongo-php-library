@@ -2,7 +2,7 @@
 
 namespace MongoDB;
 
-use BSON\ObjectId;
+use MongoDB\BSON\ObjectId;
 use MongoDB\Driver\WriteResult;
 
 /**

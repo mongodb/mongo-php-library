@@ -16,6 +16,7 @@ use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInfoIteratorIterator;
 use MongoDB\Model\IndexInput;
 use MongoDB\Operation\Aggregate;
+use MongoDB\Operation\Distinct;
 use Traversable;
 
 class Collection
@@ -356,30 +357,20 @@ class Collection
     }
 
     /**
-     * Finds the distinct values for a specified field across the collection
+     * Finds the distinct values for a specified field across the collection.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/distinct/
-     * @see Collection::getDistinctOptions() for supported $options
-     *
-     * @param string $fieldName  The fieldname to use
-     * @param array $filter      The find query to execute
-     * @param array $options     Additional options
-     * @return integer
+     * @see Distinct::__construct() for supported options
+     * @param string $fieldName Field for which to return distinct values
+     * @param array  $filter    Query by which to filter documents
+     * @param array  $options   Command options
+     * @return mixed[]
      */
     public function distinct($fieldName, array $filter = array(), array $options = array())
     {
-        $options = array_merge($this->getDistinctOptions(), $options);
-        $cmd = array(
-            "distinct" => $this->collname,
-            "key"      => $fieldName,
-            "query"    => (object) $filter,
-        ) + $options;
+        $operation = new Distinct($this->dbname, $this->collname, $fieldName, $filter, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
-        if ($doc["ok"]) {
-            return $doc["values"];
-        }
-        throw $this->_generateCommandException($doc);
+        return $operation->execute($server);
     }
 
     /**
@@ -655,23 +646,6 @@ class Collection
     public function getDatabaseName()
     {
         return $this->dbname;
-    }
-
-    /**
-     * Retrieves all distinct options with their default values.
-     *
-     * @return array of Collection::distinct() options
-     */
-    public function getDistinctOptions()
-    {
-        return array(
-            /**
-             * The maximum amount of time to allow the query to run. The default is infinite.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/distinct/
-             */
-            "maxTimeMS" => 0,
-        );
     }
 
     /**

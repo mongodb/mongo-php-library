@@ -15,6 +15,8 @@ use MongoDB\Exception\UnexpectedTypeException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInfoIteratorIterator;
 use MongoDB\Model\IndexInput;
+use MongoDB\Operation\Aggregate;
+use Traversable;
 
 class Collection
 {
@@ -78,79 +80,25 @@ class Collection
     }
 
     /**
-     * Runs an aggregation framework pipeline
+     * Executes an aggregation framework pipeline on the collection.
      *
      * Note: this method's return value depends on the MongoDB server version
      * and the "useCursor" option. If "useCursor" is true, a Cursor will be
      * returned; otherwise, an ArrayIterator is returned, which wraps the
      * "result" array from the command response document.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-     *
-     * @param array $pipeline The pipeline to execute
-     * @param array $options  Additional options
-     * @return Iterator
+     * @see Aggregate::__construct() for supported options
+     * @param array $pipeline List of pipeline operations
+     * @param array $options  Command options
+     * @return Traversable
      */
     public function aggregate(array $pipeline, array $options = array())
     {
         $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
         $server = $this->manager->selectServer($readPreference);
+        $operation = new Aggregate($this->dbname, $this->collname, $pipeline, $options);
 
-        if (FeatureDetection::isSupported($server, FeatureDetection::API_AGGREGATE_CURSOR)) {
-            $options = array_merge(
-                array(
-                    /**
-                     * Enables writing to temporary files. When set to true, aggregation stages
-                     * can write data to the _tmp subdirectory in the dbPath directory. The
-                     * default is false.
-                     *
-                     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-                     */
-                    'allowDiskUse' => false,
-                    /**
-                     * The number of documents to return per batch.
-                     *
-                     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-                     */
-                    'batchSize' => 0,
-                    /**
-                     * The maximum amount of time to allow the query to run.
-                     *
-                     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-                     */
-                    'maxTimeMS' => 0,
-                    /**
-                     * Indicates if the results should be provided as a cursor.
-                     *
-                     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-                     */
-                    'useCursor' => true,
-                ),
-                $options
-            );
-        }
-
-        $options = $this->_massageAggregateOptions($options);
-        $command = new Command(array(
-            'aggregate' => $this->collname,
-            'pipeline' => $pipeline,
-        ) + $options);
-        $cursor = $server->executeCommand($this->dbname, $command);
-
-        if ( ! empty($options["cursor"])) {
-            return $cursor;
-        }
-
-        $doc = current($cursor->toArray());
-
-        if ($doc["ok"]) {
-            return new \ArrayIterator(array_map(
-                function (\stdClass $document) { return (array) $document; },
-                $doc["result"]
-            ));
-        }
-
-        throw $this->_generateCommandException($doc);
+        return $operation->execute($server);
     }
 
     /**
@@ -1166,22 +1114,6 @@ class Collection
         }
         var_dump($doc);
         return new RuntimeException("FIXME: Unknown error");
-    }
-
-    /**
-     * Internal helper for massaging aggregate options
-     * @internal
-     */
-    protected function _massageAggregateOptions($options)
-    {
-        if ( ! empty($options["useCursor"])) {
-            $options["cursor"] = isset($options["batchSize"])
-                ? array("batchSize" => (integer) $options["batchSize"])
-                : new stdClass;
-        }
-        unset($options["useCursor"], $options["batchSize"]);
-
-        return $options;
     }
 
     /**

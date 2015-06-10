@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Collection\CrudSpec;
 
 use MongoDB\Collection;
-use MongoDB\FeatureDetection;
 use MongoDB\Driver\ReadPreference;
 
 /**
@@ -13,6 +12,8 @@ use MongoDB\Driver\ReadPreference;
  */
 class AggregateFunctionalTest extends FunctionalTestCase
 {
+    private static $wireVersionForOutOperator = 2;
+
     public function setUp()
     {
         parent::setUp();
@@ -43,7 +44,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
     {
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! FeatureDetection::isSupported($server, FeatureDetection::API_AGGREGATE_CURSOR)) {
+        if ( ! \MongoDB\server_supports_feature($server, self::$wireVersionForOutOperator)) {
             $this->markTestSkipped('$out aggregation pipeline operator is not supported');
         }
 

@@ -16,6 +16,7 @@ use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInfoIteratorIterator;
 use MongoDB\Model\IndexInput;
 use MongoDB\Operation\Aggregate;
+use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Distinct;
 use Traversable;
 
@@ -262,8 +263,6 @@ class Collection
     /**
      * Create a single index for the collection.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
-     * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
      * @see Collection::createIndexes()
      * @param array|object $key     Document containing fields mapped to values,
      *                              which denote order or an index type
@@ -294,34 +293,16 @@ class Collection
      *
      * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
-     * @param array $indexes List of index specifications
+     * @param array[] $indexes List of index specifications
      * @return string[] The names of the created indexes
      * @throws InvalidArgumentException if an index specification is invalid
      */
     public function createIndexes(array $indexes)
     {
-        if (empty($indexes)) {
-            return array();
-        }
+        $operation = new CreateIndexes($this->dbname, $this->collname, $indexes);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        foreach ($indexes as $i => $index) {
-            if ( ! is_array($index)) {
-                throw new UnexpectedTypeException($index, 'array');
-            }
-
-            if ( ! isset($index['ns'])) {
-                $index['ns'] = $this->ns;
-            }
-
-            $indexes[$i] = new IndexInput($index);
-        }
-
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
-        $server = $this->manager->selectServer($readPreference);
-
-        return (FeatureDetection::isSupported($server, FeatureDetection::API_CREATEINDEXES_CMD))
-            ? $this->createIndexesCommand($server, $indexes)
-            : $this->createIndexesLegacy($server, $indexes);
+        return $operation->execute($server);
     }
 
     /**
@@ -1182,46 +1163,6 @@ class Collection
         $bulk  = new BulkWrite($options["ordered"]);
         $bulk->update($filter, $update, $options);
         return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
-    }
-
-    /**
-     * Create one or more indexes for the collection using the createIndexes
-     * command.
-     *
-     * @param Server       $server
-     * @param IndexInput[] $indexes
-     * @return string[] The names of the created indexes
-     */
-    private function createIndexesCommand(Server $server, array $indexes)
-    {
-        $command = new Command(array(
-            'createIndexes' => $this->collname,
-            'indexes' => $indexes,
-        ));
-        $server->executeCommand($this->dbname, $command);
-
-        return array_map(function(IndexInput $index) { return (string) $index; }, $indexes);
-    }
-
-    /**
-     * Create one or more indexes for the collection by inserting into the
-     * "system.indexes" collection (MongoDB <2.6).
-     *
-     * @param Server       $server
-     * @param IndexInput[] $indexes
-     * @return string[] The names of the created indexes
-     */
-    private function createIndexesLegacy(Server $server, array $indexes)
-    {
-        $bulk = new BulkWrite(true);
-
-        foreach ($indexes as $index) {
-            $bulk->insert($index);
-        }
-
-        $server->executeBulkWrite($this->dbname . '.system.indexes', $bulk);
-
-        return array_map(function(IndexInput $index) { return (string) $index; }, $indexes);
     }
 
     /**

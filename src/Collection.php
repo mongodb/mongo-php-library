@@ -17,6 +17,7 @@ use MongoDB\Model\IndexInfoIteratorIterator;
 use MongoDB\Model\IndexInput;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\CreateIndexes;
+use MongoDB\Operation\Count;
 use MongoDB\Operation\Distinct;
 use Traversable;
 
@@ -236,28 +237,19 @@ class Collection
     }
 
     /**
-     * Counts all documents matching $filter
-     * If no $filter provided, returns the numbers of documents in the collection
+     * Gets the number of documents matching the filter.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/count/
-     * @see Collection::getCountOptions() for supported $options
-     *
-     * @param array $filter   The find query to execute
-     * @param array $options  Additional options
+     * @see Count::__construct() for supported options
+     * @param array $filter  Query by which to filter documents
+     * @param array $options Command options
      * @return integer
      */
     public function count(array $filter = array(), array $options = array())
     {
-        $cmd = array(
-            "count" => $this->collname,
-            "query" => (object) $filter,
-        ) + $options;
+        $operation = new Count($this->dbname, $this->collname, $filter, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
-        if ($doc["ok"]) {
-            return (integer) $doc["n"];
-        }
-        throw $this->_generateCommandException($doc);
+        return $operation->execute($server);
     }
 
     /**
@@ -579,44 +571,6 @@ class Collection
     public function getCollectionName()
     {
         return $this->collname;
-    }
-
-    /**
-     * Retrieves all count options with their default values.
-     *
-     * @return array of Collection::count() options
-     */
-    public function getCountOptions()
-    {
-        return array(
-            /**
-             * The index to use.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/count/
-             */
-            "hint" => "", // string or document
-
-            /**
-             * The maximum number of documents to count.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/count/
-             */
-            "limit" => 0,
-
-            /**
-             * The maximum amount of time to allow the query to run.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/count/
-             */
-            "maxTimeMS" => 0,
-
-            /**
-             * The number of documents to skip before returning the documents.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/count/
-             */
-            "skip"  => 0,
-        );
     }
 
     /**

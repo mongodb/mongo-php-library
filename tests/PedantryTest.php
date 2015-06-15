@@ -62,6 +62,10 @@ class PedantryTest extends \PHPUnit_Framework_TestCase
         $files = new RegexIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($srcDir)), '/\.php$/i');
 
         foreach ($files as $file) {
+            if ($file->getFilename() === 'functions.php') {
+                continue;
+            }
+
             $classNames[][] = 'MongoDB\\' . str_replace(DIRECTORY_SEPARATOR, '\\', substr($file->getRealPath(), strlen($srcDir) + 1, -4));
         }
 

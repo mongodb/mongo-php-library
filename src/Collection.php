@@ -460,7 +460,7 @@ class Collection
      * @see FindOneAndDelete::__construct() for supported options
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Command options
-     * @return array|null
+     * @return object|null
      */
     public function findOneAndDelete($filter, array $options = array())
     {
@@ -482,7 +482,7 @@ class Collection
      * @param array|object $filter      Query by which to filter documents
      * @param array|object $replacement Replacement document
      * @param array        $options     Command options
-     * @return array|null
+     * @return object|null
      */
     public function findOneAndReplace($filter, $replacement, array $options = array())
     {
@@ -504,7 +504,7 @@ class Collection
      * @param array|object $filter  Query by which to filter documents
      * @param array|object $update  Update to apply to the matched document
      * @param array        $options Command options
-     * @return array|null
+     * @return object|null
      */
     public function findOneAndUpdate($filter, $update, array $options = array())
     {

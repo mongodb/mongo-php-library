@@ -113,7 +113,7 @@ class FindOneAndReplace implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return array|null
+     * @return object|null
      */
     public function execute(Server $server)
     {

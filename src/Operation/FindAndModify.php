@@ -113,7 +113,7 @@ class FindAndModify implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return array|null
+     * @return object|null
      */
     public function execute(Server $server)
     {
@@ -143,7 +143,7 @@ class FindAndModify implements Executable
             throw new UnexpectedValueException('findAndModify command did not return a "value" document');
         }
 
-        return (array) $result['value'];
+        return $result['value'];
     }
 
     /**

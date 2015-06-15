@@ -29,7 +29,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndUpdate($filter, $update, $options);
-        $this->assertSame(array('x' => 22), $document);
+        $this->assertEquals((object) array('x' => 22), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -51,7 +51,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndUpdate($filter, $update, $options);
-        $this->assertSame(array('x' => 23), $document);
+        $this->assertEquals((object) array('x' => 23), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -72,7 +72,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndUpdate($filter, $update, $options);
-        $this->assertSame(array('x' => 22), $document);
+        $this->assertEquals((object) array('x' => 22), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -94,7 +94,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndUpdate($filter, $update, $options);
-        $this->assertSame(array('x' => 23), $document);
+        $this->assertEquals((object) array('x' => 23), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -183,7 +183,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndUpdate($filter, $update, $options);
-        $this->assertSame(array('x' => 1), $document);
+        $this->assertEquals((object) array('x' => 1), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),

@@ -25,7 +25,7 @@ class FindOneAndDeleteFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndDelete($filter, $options);
-        $this->assertSame(array('x' => 22), $document);
+        $this->assertEquals((object) array('x' => 22), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -44,7 +44,7 @@ class FindOneAndDeleteFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndDelete($filter, $options);
-        $this->assertSame(array('x' => 22), $document);
+        $this->assertEquals((object) array('x' => 22), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),

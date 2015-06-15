@@ -50,7 +50,7 @@ class IndexInput implements Serializable
         }
 
         if ( ! isset($index['name'])) {
-            $index['name'] = $this->generateName($index['key']);
+            $index['name'] = \MongoDB\generate_index_name($index['key']);
         }
 
         if ( ! is_string($index['name'])) {
@@ -79,23 +79,5 @@ class IndexInput implements Serializable
     public function bsonSerialize()
     {
         return $this->index;
-    }
-
-    /**
-     * Generates an index name from its key specification.
-     *
-     * @param array|object $key Document containing fields mapped to values,
-     *                          which denote order or an index type
-     * @return string
-     */
-    private function generateName($key)
-    {
-        $name = '';
-
-        foreach ($key as $field => $type) {
-            $name .= ($name != '' ? '_' : '') . $field . '_' . $type;
-        }
-
-        return $name;
     }
 }

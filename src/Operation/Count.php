@@ -49,7 +49,7 @@ class Count implements Executable
     {
         if (isset($options['hint'])) {
             if (is_array($options['hint']) || is_object($options['hint'])) {
-                $options['hint'] = $this->generateIndexName($options['hint']);
+                $options['hint'] = \MongoDB\generate_index_name($options['hint']);
             }
 
             if ( ! is_string($options['hint'])) {
@@ -120,23 +120,5 @@ class Count implements Executable
         }
 
         return new Command($cmd);
-    }
-
-    /**
-     * Generates an index name from its key specification.
-     *
-     * @param array|object $key Document containing fields mapped to values,
-     *                          which denote order or an index type
-     * @return string
-     */
-    private function generateIndexName($key)
-    {
-        $name = '';
-
-        foreach ($key as $field => $type) {
-            $name .= ($name != '' ? '_' : '') . $field . '_' . $type;
-        }
-
-        return $name;
     }
 }

@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\Collection\CrudSpec;
 
 use MongoDB\Collection;
+use MongoDB\Operation\FindOneAndUpdate;
 
 /**
  * CRUD spec functional tests for findOneAndUpdate().
@@ -46,7 +47,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         $options = array(
             'projection' => array('x' => 1, '_id' => 0),
             'sort' => array('x' => 1),
-            'returnDocument' => Collection::FIND_ONE_AND_RETURN_AFTER,
+            'returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER,
         );
 
         $document = $this->collection->findOneAndUpdate($filter, $update, $options);
@@ -89,7 +90,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         $options = array(
             'projection' => array('x' => 1, '_id' => 0),
             'sort' => array('x' => 1),
-            'returnDocument' => Collection::FIND_ONE_AND_RETURN_AFTER,
+            'returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER,
         );
 
         $document = $this->collection->findOneAndUpdate($filter, $update, $options);
@@ -155,7 +156,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         $options = array(
             'projection' => array('x' => 1, '_id' => 0),
             'sort' => array('x' => 1),
-            'returnDocument' => Collection::FIND_ONE_AND_RETURN_AFTER,
+            'returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER,
         );
 
         $document = $this->collection->findOneAndUpdate($filter, $update, $options);
@@ -177,7 +178,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         $options = array(
             'projection' => array('x' => 1, '_id' => 0),
             'sort' => array('x' => 1),
-            'returnDocument' => Collection::FIND_ONE_AND_RETURN_AFTER,
+            'returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER,
             'upsert' => true,
         );
 

@@ -19,6 +19,9 @@ use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\Distinct;
+use MongoDB\Operation\FindOneAndDelete;
+use MongoDB\Operation\FindOneAndReplace;
+use MongoDB\Operation\FindOneAndUpdate;
 use Traversable;
 
 class Collection
@@ -452,103 +455,63 @@ class Collection
     /**
      * Finds a single document and deletes it, returning the original.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     * @see Collection::getFindOneAndDelete() for supported $options
+     * The document to return may be null.
      *
-     * @param array $filter   The $filter criteria to search for
-     * @param array $options  Additional options
-     * @return array The original document
+     * @see FindOneAndDelete::__construct() for supported options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array        $options Command options
+     * @return array|null
      */
-    public function findOneAndDelete(array $filter, array $options = array())
+    public function findOneAndDelete($filter, array $options = array())
     {
-        $options = array_merge($this->getFindOneAndDeleteOptions(), $options);
-        $options = $this->_massageFindAndModifyOptions($options);
-        $cmd = array(
-            "findandmodify" => $this->collname,
-            "query"         => $filter,
-        ) + $options;
+        $operation = new FindOneAndDelete($this->dbname, $this->collname, $filter, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
-        if ($doc["ok"]) {
-            return is_object($doc["value"]) ? (array) $doc["value"] : $doc["value"];
-        }
-
-        throw $this->_generateCommandException($doc);
+        return $operation->execute($server);
     }
 
     /**
-     * Finds a single document and replaces it, returning either the original or the replaced document
-     * By default, returns the original document.
-     * To return the new document set:
-     *     $options = array("returnDocument" => Collection::FIND_ONE_AND_RETURN_AFTER);
+     * Finds a single document and replaces it, returning either the original or
+     * the replaced document.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     * @see Collection::getFindOneAndReplace() for supported $options
+     * The document to return may be null. By default, the original document is
+     * returned. Specify FindOneAndReplace::RETURN_DOCUMENT_AFTER for the
+     * "returnDocument" option to return the updated document.
      *
-     * @param array $filter       The $filter criteria to search for
-     * @param array $replacement  The document to replace with
-     * @param array $options      Additional options
-     * @return array
+     * @see FindOneAndReplace::__construct() for supported options
+     * @param array|object $filter      Query by which to filter documents
+     * @param array|object $replacement Replacement document
+     * @param array        $options     Command options
+     * @return array|null
      */
-    public function findOneAndReplace(array $filter, array $replacement, array $options = array())
+    public function findOneAndReplace($filter, $replacement, array $options = array())
     {
-        $firstKey = key($replacement);
-        if (isset($firstKey[0]) && $firstKey[0] == '$') {
-            throw new InvalidArgumentException("First key in \$replacement must NOT be a \$operator");
-        }
+        $operation = new FindOneAndReplace($this->dbname, $this->collname, $filter, $replacement, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $options = array_merge($this->getFindOneAndReplaceOptions(), $options);
-        $options = $this->_massageFindAndModifyOptions($options, $replacement);
-
-        $cmd = array(
-            "findandmodify" => $this->collname,
-            "query"         => $filter,
-        ) + $options;
-
-        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
-        if ($doc["ok"]) {
-            return $this->_massageFindAndModifyResult($doc, $options);
-        }
-
-        throw $this->_generateCommandException($doc);
+        return $operation->execute($server);
     }
 
     /**
-     * Finds a single document and updates it, returning either the original or the updated document
-     * By default, returns the original document.
-     * To return the new document set:
-     *     $options = array("returnDocument" => Collection::FIND_ONE_AND_RETURN_AFTER);
+     * Finds a single document and updates it, returning either the original or
+     * the updated document.
      *
+     * The document to return may be null. By default, the original document is
+     * returned. Specify FindOneAndUpdate::RETURN_DOCUMENT_AFTER for the
+     * "returnDocument" option to return the updated document.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     * @see Collection::getFindOneAndUpdate() for supported $options
-     *
-     * @param array $filter   The $filter criteria to search for
-     * @param array $update   An array of update operators to apply to the document
-     * @param array $options  Additional options
-     * @return array
+     * @see FindOneAndReplace::__construct() for supported options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array|object $update  Update to apply to the matched document
+     * @param array        $options Command options
+     * @return array|null
      */
-    public function findOneAndUpdate(array $filter, array $update, array $options = array())
+    public function findOneAndUpdate($filter, $update, array $options = array())
     {
-        $firstKey = key($update);
-        if (!isset($firstKey[0]) || $firstKey[0] != '$') {
-            throw new InvalidArgumentException("First key in \$update must be a \$operator");
-        }
+        $operation = new FindOneAndUpdate($this->dbname, $this->collname, $filter, $update, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $options = array_merge($this->getFindOneAndUpdateOptions(), $options);
-        $options = $this->_massageFindAndModifyOptions($options, $update);
-
-        $cmd = array(
-            "findandmodify" => $this->collname,
-            "query"         => $filter,
-        ) + $options;
-
-        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
-        if ($doc["ok"]) {
-            return $this->_massageFindAndModifyResult($doc, $options);
-        }
-
-        throw $this->_generateCommandException($doc);
+        return $operation->execute($server);
     }
 
     /**
@@ -581,133 +544,6 @@ class Collection
     public function getDatabaseName()
     {
         return $this->dbname;
-    }
-
-    /**
-     * Retrieves all findOneDelete options with their default values.
-     *
-     * @return array of Collection::findOneAndDelete() options
-     */
-    public function getFindOneAndDeleteOptions()
-    {
-        return array(
-
-            /**
-             * The maximum amount of time to allow the query to run.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "maxTimeMS" => 0,
-
-            /**
-             * Limits the fields to return for all matching documents.
-             *
-             * @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results
-             */
-            "projection" => array(),
-
-            /**
-             * Determines which document the operation modifies if the query selects multiple documents.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "sort" => array(),
-        );
-    }
-
-    /**
-     * Retrieves all findOneAndReplace options with their default values.
-     *
-     * @return array of Collection::findOneAndReplace() options
-     */
-    public function getFindOneAndReplaceOptions()
-    {
-        return array(
-
-            /**
-             * The maximum amount of time to allow the query to run.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "maxTimeMS" => 0,
-
-            /**
-             * Limits the fields to return for all matching documents.
-             *
-             * @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results
-             */
-            "projection" => array(),
-
-            /**
-             * When ReturnDocument.After, returns the replaced or inserted document rather than the original.
-             * Defaults to ReturnDocument.Before.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "returnDocument" => self::FIND_ONE_AND_RETURN_BEFORE,
-
-            /**
-             * Determines which document the operation modifies if the query selects multiple documents.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "sort" => array(),
-
-            /**
-             * When true, findAndModify creates a new document if no document matches the query. The
-             * default is false.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "upsert" => false,
-        );
-    }
-
-    /**
-     * Retrieves all findOneAndUpdate options with their default values.
-     *
-     * @return array of Collection::findOneAndUpdate() options
-     */
-    public function getFindOneAndUpdateOptions()
-    {
-        return array(
-
-            /**
-             * The maximum amount of time to allow the query to run.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "maxTimeMS" => 0,
-
-            /**
-             * Limits the fields to return for all matching documents.
-             *
-             * @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results
-             */
-            "projection" => array(),
-
-            /**
-             * When ReturnDocument.After, returns the updated or inserted document rather than the original.
-             * Defaults to ReturnDocument.Before.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "returnDocument" => self::FIND_ONE_AND_RETURN_BEFORE,
-
-            /**
-             * Determines which document the operation modifies if the query selects multiple documents.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "sort" => array(),
-
-            /**
-             * When true, creates a new document if no document matches the query. The default is false.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "upsert" => false,
-        );
     }
 
     /**
@@ -1023,56 +859,6 @@ class Collection
         }
         var_dump($doc);
         return new RuntimeException("FIXME: Unknown error");
-    }
-
-    /**
-     * Internal helper for massaging findandmodify options
-     * @internal
-     */
-    final protected function _massageFindAndModifyOptions($options, $update = array())
-    {
-        $ret = array(
-            "sort"   => $options["sort"],
-            "new"    => isset($options["returnDocument"]) ? $options["returnDocument"] == self::FIND_ONE_AND_RETURN_AFTER : false,
-            "fields" => $options["projection"],
-            "upsert" => isset($options["upsert"]) ? $options["upsert"] : false,
-        );
-        if ($update) {
-            $ret["update"] = $update;
-        } else {
-            $ret["remove"] = true;
-        }
-        return $ret;
-    }
-
-    /**
-     * Internal helper for massaging the findAndModify result.
-     *
-     * @internal
-     * @param array $result
-     * @param array $options
-     * @return array|null
-     */
-    final protected function _massageFindAndModifyResult(array $result, array $options)
-    {
-        if ($result['value'] === null) {
-            return null;
-        }
-
-        /* Prior to 3.0, findAndModify returns an empty document instead of null
-         * when an upsert is performed and the pre-modified document was
-         * requested.
-         */
-        if ($options['upsert'] && ! $options['new'] &&
-            isset($result['lastErrorObject']->updatedExisting) &&
-            ! $result['lastErrorObject']->updatedExisting) {
-
-            return null;
-        }
-
-        return is_object($result["value"])
-            ? (array) $result['value']
-            : $result['value'];
     }
 
     /**

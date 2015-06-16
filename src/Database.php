@@ -12,6 +12,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CollectionInfoIterator;
+use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListCollections;
@@ -55,19 +56,17 @@ class Database
     /**
      * Create a new collection explicitly.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/create/
-     * @see http://docs.mongodb.org/manual/reference/method/db.createCollection/
+     * @see CreateCollection::__construct() for supported options
      * @param string $collectionName
      * @param array  $options
-     * @return Cursor
+     * @return object Command result document
      */
     public function createCollection($collectionName, array $options = array())
     {
-        $collectionName = (string) $collectionName;
-        $command = new Command(array('create' => $collectionName) + $options);
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $operation = new CreateCollection($this->databaseName, $collectionName, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return $this->manager->executeCommand($this->databaseName, $command, $readPreference);
+        return $operation->execute($server);
     }
 
     /**

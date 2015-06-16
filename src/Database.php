@@ -12,6 +12,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CollectionInfoIterator;
+use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListCollections;
 
 class Database
@@ -71,15 +72,14 @@ class Database
     /**
      * Drop this database.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/dropDatabase/
-     * @return Cursor
+     * @return object Command result document
      */
     public function drop()
     {
-        $command = new Command(array('dropDatabase' => 1));
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $operation = new DropDatabase($this->databaseName);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return $this->manager->executeCommand($this->databaseName, $command, $readPreference);
+        return $operation->execute($server);
     }
 
     /**

@@ -8,6 +8,7 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\DatabaseInfoIterator;
+use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListDatabases;
 
 class Client
@@ -36,17 +37,15 @@ class Client
     /**
      * Drop a database.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/dropDatabase/
      * @param string $databaseName
-     * @return Cursor
+     * @return object Command result document
      */
     public function dropDatabase($databaseName)
     {
-        $databaseName = (string) $databaseName;
-        $command = new Command(array('dropDatabase' => 1));
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $operation = new DropDatabase($databaseName);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return $this->manager->executeCommand($databaseName, $command, $readPreference);
+        return $operation->execute($server);
     }
 
     /**

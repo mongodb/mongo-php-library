@@ -12,8 +12,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CollectionInfoIterator;
-use MongoDB\Model\CollectionInfoCommandIterator;
-use MongoDB\Model\CollectionInfoLegacyIterator;
+use MongoDB\Operation\ListCollections;
 
 class Database
 {
@@ -112,18 +111,16 @@ class Database
     /**
      * Returns information for all collections in this database.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/listCollections/
+     * @see ListCollections::__construct() for supported options
      * @param array $options
      * @return CollectionInfoIterator
      */
     public function listCollections(array $options = array())
     {
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
-        $server = $this->manager->selectServer($readPreference);
+        $operation = new ListCollections($this->databaseName, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return (FeatureDetection::isSupported($server, FeatureDetection::API_LISTCOLLECTIONS_CMD))
-            ? $this->listCollectionsCommand($server, $options)
-            : $this->listCollectionsLegacy($server, $options);
+        return $operation->execute($server);
     }
 
     /**
@@ -144,59 +141,5 @@ class Database
         $readPreference = $readPreference ?: $this->readPreference;
 
         return new Collection($this->manager, $namespace, $writeConcern, $readPreference);
-    }
-
-    /**
-     * Returns information for all collections in this database using the
-     * listCollections command.
-     *
-     * @param Server $server
-     * @param array  $options
-     * @return CollectionInfoCommandIterator
-     */
-    private function listCollectionsCommand(Server $server, array $options = array())
-    {
-        $command = new Command(array('listCollections' => 1) + $options);
-        $cursor = $server->executeCommand($this->databaseName, $command);
-        $cursor->setTypeMap(array('document' => 'array'));
-
-        return new CollectionInfoCommandIterator($cursor);
-    }
-
-    /**
-     * Returns information for all collections in this database by querying the
-     * "system.namespaces" collection (MongoDB <2.8).
-     *
-     * @param Server $server
-     * @param array  $options
-     * @return CollectionInfoLegacyIterator
-     * @throws InvalidArgumentException if the filter option is neither an array
-     *                                  nor object, or if filter.name is not a
-     *                                  string.
-     */
-    private function listCollectionsLegacy(Server $server, array $options = array())
-    {
-        $filter = array_key_exists('filter', $options) ? $options['filter'] : array();
-
-        if ( ! is_array($filter) && ! is_object($filter)) {
-            throw new InvalidArgumentException(sprintf('Expected filter to be array or object, %s given', gettype($filter)));
-        }
-
-        if (array_key_exists('name', (array) $filter)) {
-            $filter = (array) $filter;
-
-            if ( ! is_string($filter['name'])) {
-                throw new InvalidArgumentException(sprintf('Filter "name" must be a string for MongoDB <2.8, %s given', gettype($filter['name'])));
-            }
-
-            $filter['name'] = $this->databaseName . '.' . $filter['name'];
-        }
-
-        $namespace = $this->databaseName . '.system.namespaces';
-        $query = new Query($filter);
-        $cursor = $server->executeQuery($namespace, $query);
-        $cursor->setTypeMap(array('document' => 'array'));
-
-        return new CollectionInfoLegacyIterator($cursor);
     }
 }

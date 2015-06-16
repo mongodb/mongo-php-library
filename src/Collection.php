@@ -13,7 +13,6 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedTypeException;
 use MongoDB\Model\IndexInfoIterator;
-use MongoDB\Model\IndexInfoIteratorIterator;
 use MongoDB\Model\IndexInput;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\CreateIndexes;
@@ -22,6 +21,7 @@ use MongoDB\Operation\Distinct;
 use MongoDB\Operation\FindOneAndDelete;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
+use MongoDB\Operation\ListIndexes;
 use Traversable;
 
 class Collection
@@ -728,18 +728,15 @@ class Collection
     /**
      * Returns information for all indexes for the collection.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
-     * @see http://docs.mongodb.org/manual/reference/method/db.collection.getIndexes/
+     * @see ListIndexes::__construct() for supported options
      * @return IndexInfoIterator
      */
-    public function listIndexes()
+    public function listIndexes(array $options = array())
     {
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
-        $server = $this->manager->selectServer($readPreference);
+        $operation = new ListIndexes($this->dbname, $this->collname, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return (FeatureDetection::isSupported($server, FeatureDetection::API_LISTINDEXES_CMD))
-            ? $this->listIndexesCommand($server)
-            : $this->listIndexesLegacy($server);
+        return $operation->execute($server);
     }
 
     /**
@@ -903,38 +900,5 @@ class Collection
         $bulk  = new BulkWrite($options["ordered"]);
         $bulk->update($filter, $update, $options);
         return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
-    }
-
-    /**
-     * Returns information for all indexes for this collection using the
-     * listIndexes command.
-     *
-     * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
-     * @param Server $server
-     * @return IndexInfoIteratorIterator
-     */
-    private function listIndexesCommand(Server $server)
-    {
-        $command = new Command(array('listIndexes' => $this->collname));
-        $cursor = $server->executeCommand($this->dbname, $command);
-        $cursor->setTypeMap(array('document' => 'array'));
-
-        return new IndexInfoIteratorIterator($cursor);
-    }
-
-    /**
-     * Returns information for all indexes for this collection by querying the
-     * "system.indexes" collection (MongoDB <2.8).
-     *
-     * @param Server $server
-     * @return IndexInfoIteratorIterator
-     */
-    private function listIndexesLegacy(Server $server)
-    {
-        $query = new Query(array('ns' => $this->ns));
-        $cursor = $server->executeQuery($this->dbname . '.system.indexes', $query);
-        $cursor->setTypeMap(array('document' => 'array'));
-
-        return new IndexInfoIteratorIterator($cursor);
     }
 }

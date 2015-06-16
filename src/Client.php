@@ -7,9 +7,8 @@ use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Model\DatabaseInfoIterator;
-use MongoDB\Model\DatabaseInfoLegacyIterator;
+use MongoDB\Operation\ListDatabases;
 
 class Client
 {
@@ -53,29 +52,15 @@ class Client
     /**
      * List databases.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/listDatabases/
+     * @see ListDatabases::__construct() for supported options
      * @return DatabaseInfoIterator
-     * @throws UnexpectedValueException if the command result is malformed
      */
-    public function listDatabases()
+    public function listDatabases(array $options = array())
     {
-        $command = new Command(array('listDatabases' => 1));
+        $operation = new ListDatabases($options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $cursor = $this->manager->executeCommand('admin', $command);
-        $cursor->setTypeMap(array('document' => 'array'));
-        $result = current($cursor->toArray());
-
-        if ( ! isset($result['databases']) || ! is_array($result['databases'])) {
-            throw new UnexpectedValueException('listDatabases command did not return a "databases" array');
-        }
-
-        /* Return an Iterator instead of an array in case listDatabases is
-         * eventually changed to return a command cursor, like the collection
-         * and index enumeration commands. This makes the "totalSize" command
-         * field inaccessible, but users can manually invoke the command if they
-         * need that value.
-         */
-        return new DatabaseInfoLegacyIterator($result['databases']);
+        return $operation->execute($server);
     }
 
     /**

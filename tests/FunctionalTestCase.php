@@ -27,9 +27,12 @@ abstract class FunctionalTestCase extends TestCase
         $this->assertEquals($count, $document['n']);
     }
 
-    protected function assertCommandSucceeded(Cursor $cursor)
+    protected function assertCommandSucceeded($document)
     {
-        $document = current($cursor->toArray());
+        if (is_object($document)) {
+            $document = get_object_vars($document);
+        }
+
         $this->assertArrayHasKey('ok', $document);
         $this->assertEquals(1, $document['ok']);
     }

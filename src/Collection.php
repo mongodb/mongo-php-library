@@ -19,6 +19,7 @@ use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\Distinct;
 use MongoDB\Operation\DropCollection;
+use MongoDB\Operation\DropIndexes;
 use MongoDB\Operation\FindOneAndDelete;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
@@ -366,43 +367,35 @@ class Collection
     /**
      * Drop a single index in the collection.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
-     * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndex/
-     * @param string $indexName
-     * @return Cursor
+     * @param string $indexName Index name
+     * @return object Command result document
      * @throws InvalidArgumentException if $indexName is an empty string or "*"
      */
     public function dropIndex($indexName)
     {
         $indexName = (string) $indexName;
 
-        if ($indexName === '') {
-            throw new InvalidArgumentException('Index name cannot be empty');
-        }
-
         if ($indexName === '*') {
             throw new InvalidArgumentException('dropIndexes() must be used to drop multiple indexes');
         }
 
-        $command = new Command(array('dropIndexes' => $this->collname, 'index' => $indexName));
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $operation = new DropIndexes($this->dbname, $this->collname, $indexName);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return $this->manager->executeCommand($this->dbname, $command, $readPreference);
+        return $operation->execute($server);
     }
 
     /**
      * Drop all indexes in the collection.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
-     * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndexes/
-     * @return Cursor
+     * @return object Command result document
      */
     public function dropIndexes()
     {
-        $command = new Command(array('dropIndexes' => $this->collname, 'index' => '*'));
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $operation = new DropIndexes($this->dbname, $this->collname, '*');
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return $this->manager->executeCommand($this->dbname, $command, $readPreference);
+        return $operation->execute($server);
     }
 
     /**

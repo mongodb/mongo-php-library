@@ -18,6 +18,7 @@ use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\Distinct;
+use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\FindOneAndDelete;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
@@ -352,15 +353,14 @@ class Collection
     /**
      * Drop this collection.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/drop/
-     * @return Cursor
+     * @return object Command result document
      */
     public function drop()
     {
-        $command = new Command(array('drop' => $this->collname));
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $operation = new DropCollection($this->dbname, $this->collname);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return $this->manager->executeCommand($this->dbname, $command, $readPreference);
+        return $operation->execute($server);
     }
 
     /**

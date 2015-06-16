@@ -43,9 +43,6 @@ class Collection
     //self::QUERY_FLAG_TAILABLE_CURSOR | self::QUERY_FLAG_AWAIT_DATA;
     const CURSOR_TYPE_TAILABLE_AWAIT = 0x22;
 
-    const FIND_ONE_AND_RETURN_BEFORE = 0x01;
-    const FIND_ONE_AND_RETURN_AFTER  = 0x02;
-
     protected $manager;
     protected $ns;
     protected $wc;
@@ -839,19 +836,6 @@ class Collection
     }
 
     /**
-     * Internal helper for throwing an exception with error message
-     * @internal
-     */
-    final protected function _generateCommandException($doc)
-    {
-        if ($doc["errmsg"]) {
-            return new RuntimeException($doc["errmsg"]);
-        }
-        var_dump($doc);
-        return new RuntimeException("FIXME: Unknown error");
-    }
-
-    /**
      * Constructs the Query Wire Protocol field 'flags' based on $options
      * provided to other helpers
      *
@@ -869,17 +853,6 @@ class Collection
         $flags |= $options["noCursorTimeout"] ? self::QUERY_FLAG_NO_CURSOR_TIMEOUT : 0;
 
         return $flags;
-    }
-
-    /**
-     * Internal helper for running a command
-     * @internal
-     */
-    final protected function _runCommand($dbname, array $cmd, ReadPreference $rp = null)
-    {
-        //var_dump(\BSON\toJSON(\BSON\fromArray($cmd)));
-        $command = new Command($cmd);
-        return $this->manager->executeCommand($dbname, $command, $rp);
     }
 
     /**

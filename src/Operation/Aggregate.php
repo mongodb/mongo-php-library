@@ -113,10 +113,12 @@ class Aggregate implements Executable
      */
     public function execute(Server $server)
     {
-        $command = $this->createCommand($server);
+        $isCursorSupported = \MongoDB\server_supports_feature($server, self::$wireVersionForCursor);
+
+        $command = $this->createCommand($server, $isCursorSupported);
         $cursor = $server->executeCommand($this->databaseName, $command);
 
-        if ($this->options['useCursor']) {
+        if ($isCursorSupported && $this->options['useCursor']) {
             return $cursor;
         }
 
@@ -139,10 +141,11 @@ class Aggregate implements Executable
     /**
      * Create the aggregate command.
      *
-     * @param Server $server
+     * @param Server  $server
+     * @param boolean $isCursorSupported
      * @return Command
      */
-    private function createCommand(Server $server)
+    private function createCommand(Server $server, $isCursorSupported)
     {
         $cmd = array(
             'aggregate' => $this->collectionName,
@@ -150,7 +153,7 @@ class Aggregate implements Executable
         );
 
         // Servers < 2.6 do not support any command options
-        if ( ! \MongoDB\server_supports_feature($server, self::$wireVersionForCursor)) {
+        if ( ! $isCursorSupported) {
             return new Command($cmd);
         }
 

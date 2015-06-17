@@ -91,11 +91,12 @@ class Count implements Executable
             throw new RuntimeException(isset($result['errmsg']) ? $result['errmsg'] : 'Unknown error');
         }
 
-        if ( ! isset($result['n']) || ! is_integer($result['n'])) {
-            throw new UnexpectedValueException('count command did not return an "n" integer');
+        // Older server versions may return a float
+        if ( ! isset($result['n']) || ! (is_integer($result['n']) || is_float($result['n']))) {
+            throw new UnexpectedValueException('count command did not return an "n" value');
         }
 
-        return $result['n'];
+        return (integer) $result['n'];
     }
 
     /**

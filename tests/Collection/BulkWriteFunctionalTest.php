@@ -35,7 +35,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             array('_id' => $insertedIds[1], 'x' => 22),
         );
 
-        $this->assertEquals($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testUpdates()
@@ -69,7 +69,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             array('_id' => $upsertedIds[3], 'x' => 67),
         );
 
-        $this->assertEquals($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testDeletes()
@@ -89,7 +89,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             array('_id' => 2, 'x' => 22),
         );
 
-        $this->assertEquals($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testMixedOrderedOperations()
@@ -123,7 +123,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             array('_id' => 4, 'x' => 44),
         );
 
-        $this->assertEquals($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     /**

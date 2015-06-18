@@ -32,8 +32,8 @@ class AggregateFunctionalTest extends FunctionalTestCase
         );
 
         $expected = array(
-            array('_id' => 2, 'x' => 22),
-            array('_id' => 3, 'x' => 33),
+            (object) array('_id' => 2, 'x' => 22),
+            (object) array('_id' => 3, 'x' => 33),
         );
 
         // Use iterator_to_array() here since aggregate() may return an ArrayIterator
@@ -64,7 +64,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertEquals($expected, $outputCollection->find()->toArray());
+        $this->assertSameDocuments($expected, $outputCollection->find());
 
         // Manually clean up our output collection
         $this->dropCollectionIfItExists($outputCollection);

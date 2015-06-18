@@ -28,7 +28,7 @@ class DeleteOneFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testDeleteOneWhenOneDocumentMatches()
@@ -43,7 +43,7 @@ class DeleteOneFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testDeleteOneWhenNoDocumentsMatch()
@@ -59,6 +59,6 @@ class DeleteOneFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 }

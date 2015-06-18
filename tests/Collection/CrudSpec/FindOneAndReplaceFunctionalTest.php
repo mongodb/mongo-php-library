@@ -37,7 +37,7 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndReplaceWhenManyDocumentsMatchReturningDocumentAfterModification()
@@ -59,7 +59,7 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndReplaceWhenOneDocumentMatchesReturningDocumentBeforeModification()
@@ -80,7 +80,7 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndReplaceWhenOneDocumentMatchesReturningDocumentAfterModification()
@@ -102,7 +102,7 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndReplaceWhenNoDocumentsMatchReturningDocumentBeforeModification()
@@ -123,7 +123,7 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndReplaceWithUpsertWhenNoDocumentsMatchReturningDocumentBeforeModification()
@@ -147,7 +147,7 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
             array('_id' => 4, 'x' => 44),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndReplaceWhenNoDocumentsMatchReturningDocumentAfterModification()
@@ -169,7 +169,7 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndReplaceWithUpsertWhenNoDocumentsMatchReturningDocumentAfterModification()
@@ -194,6 +194,6 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
             array('_id' => 4, 'x' => 44),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 }

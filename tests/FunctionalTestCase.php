@@ -38,6 +38,12 @@ abstract class FunctionalTestCase extends TestCase
         $this->assertEquals(1, $document['ok']);
     }
 
+    protected function assertSameDocuments(array $expected, $cursor)
+    {
+        $cursor->setTypeMap(array('document' => 'array'));
+        $this->assertEquals($expected, iterator_to_array($cursor));
+    }
+
     protected function getServerVersion(ReadPreference $readPreference = null)
     {
         $cursor = $this->manager->executeCommand(

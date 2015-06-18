@@ -24,7 +24,7 @@ class FindFunctionalTest extends FunctionalTestCase
             array('_id' => 1, 'x' => 11),
         );
 
-        $this->assertSame($expected, $this->collection->find($filter)->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find($filter));
     }
 
     public function testFindWithFilterSortSkipAndLimit()
@@ -40,7 +40,7 @@ class FindFunctionalTest extends FunctionalTestCase
             array('_id' => 5, 'x' => 55),
         );
 
-        $this->assertSame($expected, $this->collection->find($filter, $options)->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find($filter, $options));
     }
 
     public function testFindWithLimitSortAndBatchSize()
@@ -59,6 +59,6 @@ class FindFunctionalTest extends FunctionalTestCase
             array('_id' => 4, 'x' => 44),
         );
 
-        $this->assertSame($expected, $this->collection->find($filter, $options)->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find($filter, $options));
     }
 }

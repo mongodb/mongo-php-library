@@ -85,7 +85,10 @@ class IndexManagementFunctionalTest extends FunctionalTestCase
         });
     }
 
-    public function testCreateIndexesWithEmptyInputIsNop()
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     */
+    public function testCreateIndexesRequiresAtLeastOneIndex()
     {
         $this->assertSame(array(), $this->collection->createIndexes(array()));
     }

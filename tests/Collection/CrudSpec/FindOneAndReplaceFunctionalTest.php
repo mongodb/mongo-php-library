@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\Collection\CrudSpec;
 
 use MongoDB\Collection;
+use MongoDB\Operation\FindOneAndReplace;
 
 /**
  * CRUD spec functional tests for findOneAndReplace().
@@ -28,7 +29,7 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndReplace($filter, $replacement, $options);
-        $this->assertSame(array('x' => 22), $document);
+        $this->assertEquals((object) array('x' => 22), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -46,11 +47,11 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
         $options = array(
             'projection' => array('x' => 1, '_id' => 0),
             'sort' => array('x' => 1),
-            'returnDocument' => Collection::FIND_ONE_AND_RETURN_AFTER,
+            'returnDocument' => FindOneAndReplace::RETURN_DOCUMENT_AFTER,
         );
 
         $document = $this->collection->findOneAndReplace($filter, $replacement, $options);
-        $this->assertSame(array('x' => 32), $document);
+        $this->assertEquals((object) array('x' => 32), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -71,7 +72,7 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndReplace($filter, $replacement, $options);
-        $this->assertSame(array('x' => 22), $document);
+        $this->assertEquals((object) array('x' => 22), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -89,11 +90,11 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
         $options = array(
             'projection' => array('x' => 1, '_id' => 0),
             'sort' => array('x' => 1),
-            'returnDocument' => Collection::FIND_ONE_AND_RETURN_AFTER,
+            'returnDocument' => FindOneAndReplace::RETURN_DOCUMENT_AFTER,
         );
 
         $document = $this->collection->findOneAndReplace($filter, $replacement, $options);
-        $this->assertSame(array('x' => 32), $document);
+        $this->assertEquals((object) array('x' => 32), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -156,7 +157,7 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
         $options = array(
             'projection' => array('x' => 1, '_id' => 0),
             'sort' => array('x' => 1),
-            'returnDocument' => Collection::FIND_ONE_AND_RETURN_AFTER,
+            'returnDocument' => FindOneAndReplace::RETURN_DOCUMENT_AFTER,
         );
 
         $document = $this->collection->findOneAndReplace($filter, $replacement, $options);
@@ -179,12 +180,12 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
         $options = array(
             'projection' => array('x' => 1, '_id' => 0),
             'sort' => array('x' => 1),
-            'returnDocument' => Collection::FIND_ONE_AND_RETURN_AFTER,
+            'returnDocument' => FindOneAndReplace::RETURN_DOCUMENT_AFTER,
             'upsert' => true,
         );
 
         $document = $this->collection->findOneAndReplace($filter, $replacement, $options);
-        $this->assertSame(array('x' => 44), $document);
+        $this->assertEquals((object) array('x' => 44), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),

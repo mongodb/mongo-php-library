@@ -21,15 +21,19 @@ abstract class FunctionalTestCase extends TestCase
         list($databaseName, $collectionName) = explode('.', $namespace, 2);
 
         $cursor = $this->manager->executeCommand($databaseName, new Command(array('count' => $collectionName)));
-
+        $cursor->setTypeMap(array('document' => 'array'));
         $document = current($cursor->toArray());
+
         $this->assertArrayHasKey('n', $document);
         $this->assertEquals($count, $document['n']);
     }
 
-    protected function assertCommandSucceeded(Cursor $cursor)
+    protected function assertCommandSucceeded($document)
     {
-        $document = current($cursor->toArray());
+        if (is_object($document)) {
+            $document = get_object_vars($document);
+        }
+
         $this->assertArrayHasKey('ok', $document);
         $this->assertEquals(1, $document['ok']);
     }
@@ -42,6 +46,7 @@ abstract class FunctionalTestCase extends TestCase
             $readPreference ?: new ReadPreference(ReadPreference::RP_PRIMARY)
         );
 
+        $cursor->setTypeMap(array('document' => 'array'));
         $document = current($cursor->toArray());
 
         return $document['version'];

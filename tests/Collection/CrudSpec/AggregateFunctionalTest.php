@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Collection\CrudSpec;
 
 use MongoDB\Collection;
-use MongoDB\FeatureDetection;
 use MongoDB\Driver\ReadPreference;
 
 /**
@@ -13,6 +12,8 @@ use MongoDB\Driver\ReadPreference;
  */
 class AggregateFunctionalTest extends FunctionalTestCase
 {
+    private static $wireVersionForOutOperator = 2;
+
     public function setUp()
     {
         parent::setUp();
@@ -36,14 +37,14 @@ class AggregateFunctionalTest extends FunctionalTestCase
         );
 
         // Use iterator_to_array() here since aggregate() may return an ArrayIterator
-        $this->assertSame($expected, iterator_to_array($cursor));
+        $this->assertEquals($expected, iterator_to_array($cursor));
     }
 
     public function testAggregateWithOut()
     {
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! FeatureDetection::isSupported($server, FeatureDetection::API_AGGREGATE_CURSOR)) {
+        if ( ! \MongoDB\server_supports_feature($server, self::$wireVersionForOutOperator)) {
             $this->markTestSkipped('$out aggregation pipeline operator is not supported');
         }
 
@@ -63,7 +64,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $outputCollection->find()->toArray());
+        $this->assertEquals($expected, $outputCollection->find()->toArray());
 
         // Manually clean up our output collection
         $this->dropCollectionIfItExists($outputCollection);

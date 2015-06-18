@@ -13,8 +13,18 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedTypeException;
 use MongoDB\Model\IndexInfoIterator;
-use MongoDB\Model\IndexInfoIteratorIterator;
 use MongoDB\Model\IndexInput;
+use MongoDB\Operation\Aggregate;
+use MongoDB\Operation\CreateIndexes;
+use MongoDB\Operation\Count;
+use MongoDB\Operation\Distinct;
+use MongoDB\Operation\DropCollection;
+use MongoDB\Operation\DropIndexes;
+use MongoDB\Operation\FindOneAndDelete;
+use MongoDB\Operation\FindOneAndReplace;
+use MongoDB\Operation\FindOneAndUpdate;
+use MongoDB\Operation\ListIndexes;
+use Traversable;
 
 class Collection
 {
@@ -32,9 +42,6 @@ class Collection
     const CURSOR_TYPE_TAILABLE       = self::QUERY_FLAG_TAILABLE_CURSOR;
     //self::QUERY_FLAG_TAILABLE_CURSOR | self::QUERY_FLAG_AWAIT_DATA;
     const CURSOR_TYPE_TAILABLE_AWAIT = 0x22;
-
-    const FIND_ONE_AND_RETURN_BEFORE = 0x01;
-    const FIND_ONE_AND_RETURN_AFTER  = 0x02;
 
     protected $manager;
     protected $ns;
@@ -78,79 +85,25 @@ class Collection
     }
 
     /**
-     * Runs an aggregation framework pipeline
+     * Executes an aggregation framework pipeline on the collection.
      *
      * Note: this method's return value depends on the MongoDB server version
      * and the "useCursor" option. If "useCursor" is true, a Cursor will be
      * returned; otherwise, an ArrayIterator is returned, which wraps the
      * "result" array from the command response document.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-     *
-     * @param array $pipeline The pipeline to execute
-     * @param array $options  Additional options
-     * @return Iterator
+     * @see Aggregate::__construct() for supported options
+     * @param array $pipeline List of pipeline operations
+     * @param array $options  Command options
+     * @return Traversable
      */
     public function aggregate(array $pipeline, array $options = array())
     {
         $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
         $server = $this->manager->selectServer($readPreference);
+        $operation = new Aggregate($this->dbname, $this->collname, $pipeline, $options);
 
-        if (FeatureDetection::isSupported($server, FeatureDetection::API_AGGREGATE_CURSOR)) {
-            $options = array_merge(
-                array(
-                    /**
-                     * Enables writing to temporary files. When set to true, aggregation stages
-                     * can write data to the _tmp subdirectory in the dbPath directory. The
-                     * default is false.
-                     *
-                     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-                     */
-                    'allowDiskUse' => false,
-                    /**
-                     * The number of documents to return per batch.
-                     *
-                     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-                     */
-                    'batchSize' => 0,
-                    /**
-                     * The maximum amount of time to allow the query to run.
-                     *
-                     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-                     */
-                    'maxTimeMS' => 0,
-                    /**
-                     * Indicates if the results should be provided as a cursor.
-                     *
-                     * @see http://docs.mongodb.org/manual/reference/command/aggregate/
-                     */
-                    'useCursor' => true,
-                ),
-                $options
-            );
-        }
-
-        $options = $this->_massageAggregateOptions($options);
-        $command = new Command(array(
-            'aggregate' => $this->collname,
-            'pipeline' => $pipeline,
-        ) + $options);
-        $cursor = $server->executeCommand($this->dbname, $command);
-
-        if ( ! empty($options["cursor"])) {
-            return $cursor;
-        }
-
-        $doc = current($cursor->toArray());
-
-        if ($doc["ok"]) {
-            return new \ArrayIterator(array_map(
-                function (\stdClass $document) { return (array) $document; },
-                $doc["result"]
-            ));
-        }
-
-        throw $this->_generateCommandException($doc);
+        return $operation->execute($server);
     }
 
     /**
@@ -286,35 +239,24 @@ class Collection
     }
 
     /**
-     * Counts all documents matching $filter
-     * If no $filter provided, returns the numbers of documents in the collection
+     * Gets the number of documents matching the filter.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/count/
-     * @see Collection::getCountOptions() for supported $options
-     *
-     * @param array $filter   The find query to execute
-     * @param array $options  Additional options
+     * @see Count::__construct() for supported options
+     * @param array $filter  Query by which to filter documents
+     * @param array $options Command options
      * @return integer
      */
     public function count(array $filter = array(), array $options = array())
     {
-        $cmd = array(
-            "count" => $this->collname,
-            "query" => (object) $filter,
-        ) + $options;
+        $operation = new Count($this->dbname, $this->collname, $filter, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
-        if ($doc["ok"]) {
-            return (integer) $doc["n"];
-        }
-        throw $this->_generateCommandException($doc);
+        return $operation->execute($server);
     }
 
     /**
      * Create a single index for the collection.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
-     * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
      * @see Collection::createIndexes()
      * @param array|object $key     Document containing fields mapped to values,
      *                              which denote order or an index type
@@ -345,34 +287,16 @@ class Collection
      *
      * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
-     * @param array $indexes List of index specifications
+     * @param array[] $indexes List of index specifications
      * @return string[] The names of the created indexes
      * @throws InvalidArgumentException if an index specification is invalid
      */
     public function createIndexes(array $indexes)
     {
-        if (empty($indexes)) {
-            return array();
-        }
+        $operation = new CreateIndexes($this->dbname, $this->collname, $indexes);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        foreach ($indexes as $i => $index) {
-            if ( ! is_array($index)) {
-                throw new UnexpectedTypeException($index, 'array');
-            }
-
-            if ( ! isset($index['ns'])) {
-                $index['ns'] = $this->ns;
-            }
-
-            $indexes[$i] = new IndexInput($index);
-        }
-
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
-        $server = $this->manager->selectServer($readPreference);
-
-        return (FeatureDetection::isSupported($server, FeatureDetection::API_CREATEINDEXES_CMD))
-            ? $this->createIndexesCommand($server, $indexes)
-            : $this->createIndexesLegacy($server, $indexes);
+        return $operation->execute($server);
     }
 
     /**
@@ -408,86 +332,67 @@ class Collection
     }
 
     /**
-     * Finds the distinct values for a specified field across the collection
+     * Finds the distinct values for a specified field across the collection.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/distinct/
-     * @see Collection::getDistinctOptions() for supported $options
-     *
-     * @param string $fieldName  The fieldname to use
-     * @param array $filter      The find query to execute
-     * @param array $options     Additional options
-     * @return integer
+     * @see Distinct::__construct() for supported options
+     * @param string $fieldName Field for which to return distinct values
+     * @param array  $filter    Query by which to filter documents
+     * @param array  $options   Command options
+     * @return mixed[]
      */
     public function distinct($fieldName, array $filter = array(), array $options = array())
     {
-        $options = array_merge($this->getDistinctOptions(), $options);
-        $cmd = array(
-            "distinct" => $this->collname,
-            "key"      => $fieldName,
-            "query"    => (object) $filter,
-        ) + $options;
+        $operation = new Distinct($this->dbname, $this->collname, $fieldName, $filter, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
-        if ($doc["ok"]) {
-            return $doc["values"];
-        }
-        throw $this->_generateCommandException($doc);
+        return $operation->execute($server);
     }
 
     /**
      * Drop this collection.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/drop/
-     * @return Cursor
+     * @return object Command result document
      */
     public function drop()
     {
-        $command = new Command(array('drop' => $this->collname));
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $operation = new DropCollection($this->dbname, $this->collname);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return $this->manager->executeCommand($this->dbname, $command, $readPreference);
+        return $operation->execute($server);
     }
 
     /**
      * Drop a single index in the collection.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
-     * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndex/
-     * @param string $indexName
-     * @return Cursor
+     * @param string $indexName Index name
+     * @return object Command result document
      * @throws InvalidArgumentException if $indexName is an empty string or "*"
      */
     public function dropIndex($indexName)
     {
         $indexName = (string) $indexName;
 
-        if ($indexName === '') {
-            throw new InvalidArgumentException('Index name cannot be empty');
-        }
-
         if ($indexName === '*') {
             throw new InvalidArgumentException('dropIndexes() must be used to drop multiple indexes');
         }
 
-        $command = new Command(array('dropIndexes' => $this->collname, 'index' => $indexName));
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $operation = new DropIndexes($this->dbname, $this->collname, $indexName);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return $this->manager->executeCommand($this->dbname, $command, $readPreference);
+        return $operation->execute($server);
     }
 
     /**
      * Drop all indexes in the collection.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
-     * @see http://docs.mongodb.org/manual/reference/method/db.collection.dropIndexes/
-     * @return Cursor
+     * @return object Command result document
      */
     public function dropIndexes()
     {
-        $command = new Command(array('dropIndexes' => $this->collname, 'index' => '*'));
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $operation = new DropIndexes($this->dbname, $this->collname, '*');
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return $this->manager->executeCommand($this->dbname, $command, $readPreference);
+        return $operation->execute($server);
     }
 
     /**
@@ -540,103 +445,63 @@ class Collection
     /**
      * Finds a single document and deletes it, returning the original.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     * @see Collection::getFindOneAndDelete() for supported $options
+     * The document to return may be null.
      *
-     * @param array $filter   The $filter criteria to search for
-     * @param array $options  Additional options
-     * @return array The original document
+     * @see FindOneAndDelete::__construct() for supported options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array        $options Command options
+     * @return object|null
      */
-    public function findOneAndDelete(array $filter, array $options = array())
+    public function findOneAndDelete($filter, array $options = array())
     {
-        $options = array_merge($this->getFindOneAndDeleteOptions(), $options);
-        $options = $this->_massageFindAndModifyOptions($options);
-        $cmd = array(
-            "findandmodify" => $this->collname,
-            "query"         => $filter,
-        ) + $options;
+        $operation = new FindOneAndDelete($this->dbname, $this->collname, $filter, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
-        if ($doc["ok"]) {
-            return is_object($doc["value"]) ? (array) $doc["value"] : $doc["value"];
-        }
-
-        throw $this->_generateCommandException($doc);
+        return $operation->execute($server);
     }
 
     /**
-     * Finds a single document and replaces it, returning either the original or the replaced document
-     * By default, returns the original document.
-     * To return the new document set:
-     *     $options = array("returnDocument" => Collection::FIND_ONE_AND_RETURN_AFTER);
+     * Finds a single document and replaces it, returning either the original or
+     * the replaced document.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     * @see Collection::getFindOneAndReplace() for supported $options
+     * The document to return may be null. By default, the original document is
+     * returned. Specify FindOneAndReplace::RETURN_DOCUMENT_AFTER for the
+     * "returnDocument" option to return the updated document.
      *
-     * @param array $filter       The $filter criteria to search for
-     * @param array $replacement  The document to replace with
-     * @param array $options      Additional options
-     * @return array
+     * @see FindOneAndReplace::__construct() for supported options
+     * @param array|object $filter      Query by which to filter documents
+     * @param array|object $replacement Replacement document
+     * @param array        $options     Command options
+     * @return object|null
      */
-    public function findOneAndReplace(array $filter, array $replacement, array $options = array())
+    public function findOneAndReplace($filter, $replacement, array $options = array())
     {
-        $firstKey = key($replacement);
-        if (isset($firstKey[0]) && $firstKey[0] == '$') {
-            throw new InvalidArgumentException("First key in \$replacement must NOT be a \$operator");
-        }
+        $operation = new FindOneAndReplace($this->dbname, $this->collname, $filter, $replacement, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $options = array_merge($this->getFindOneAndReplaceOptions(), $options);
-        $options = $this->_massageFindAndModifyOptions($options, $replacement);
-
-        $cmd = array(
-            "findandmodify" => $this->collname,
-            "query"         => $filter,
-        ) + $options;
-
-        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
-        if ($doc["ok"]) {
-            return $this->_massageFindAndModifyResult($doc, $options);
-        }
-
-        throw $this->_generateCommandException($doc);
+        return $operation->execute($server);
     }
 
     /**
-     * Finds a single document and updates it, returning either the original or the updated document
-     * By default, returns the original document.
-     * To return the new document set:
-     *     $options = array("returnDocument" => Collection::FIND_ONE_AND_RETURN_AFTER);
+     * Finds a single document and updates it, returning either the original or
+     * the updated document.
      *
+     * The document to return may be null. By default, the original document is
+     * returned. Specify FindOneAndUpdate::RETURN_DOCUMENT_AFTER for the
+     * "returnDocument" option to return the updated document.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-     * @see Collection::getFindOneAndUpdate() for supported $options
-     *
-     * @param array $filter   The $filter criteria to search for
-     * @param array $update   An array of update operators to apply to the document
-     * @param array $options  Additional options
-     * @return array
+     * @see FindOneAndReplace::__construct() for supported options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array|object $update  Update to apply to the matched document
+     * @param array        $options Command options
+     * @return object|null
      */
-    public function findOneAndUpdate(array $filter, array $update, array $options = array())
+    public function findOneAndUpdate($filter, $update, array $options = array())
     {
-        $firstKey = key($update);
-        if (!isset($firstKey[0]) || $firstKey[0] != '$') {
-            throw new InvalidArgumentException("First key in \$update must be a \$operator");
-        }
+        $operation = new FindOneAndUpdate($this->dbname, $this->collname, $filter, $update, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $options = array_merge($this->getFindOneAndUpdateOptions(), $options);
-        $options = $this->_massageFindAndModifyOptions($options, $update);
-
-        $cmd = array(
-            "findandmodify" => $this->collname,
-            "query"         => $filter,
-        ) + $options;
-
-        $doc = current($this->_runCommand($this->dbname, $cmd)->toArray());
-        if ($doc["ok"]) {
-            return $this->_massageFindAndModifyResult($doc, $options);
-        }
-
-        throw $this->_generateCommandException($doc);
+        return $operation->execute($server);
     }
 
     /**
@@ -662,44 +527,6 @@ class Collection
     }
 
     /**
-     * Retrieves all count options with their default values.
-     *
-     * @return array of Collection::count() options
-     */
-    public function getCountOptions()
-    {
-        return array(
-            /**
-             * The index to use.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/count/
-             */
-            "hint" => "", // string or document
-
-            /**
-             * The maximum number of documents to count.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/count/
-             */
-            "limit" => 0,
-
-            /**
-             * The maximum amount of time to allow the query to run.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/count/
-             */
-            "maxTimeMS" => 0,
-
-            /**
-             * The number of documents to skip before returning the documents.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/count/
-             */
-            "skip"  => 0,
-        );
-    }
-
-    /**
      * Return the database name.
      *
      * @return string
@@ -707,150 +534,6 @@ class Collection
     public function getDatabaseName()
     {
         return $this->dbname;
-    }
-
-    /**
-     * Retrieves all distinct options with their default values.
-     *
-     * @return array of Collection::distinct() options
-     */
-    public function getDistinctOptions()
-    {
-        return array(
-            /**
-             * The maximum amount of time to allow the query to run. The default is infinite.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/distinct/
-             */
-            "maxTimeMS" => 0,
-        );
-    }
-
-    /**
-     * Retrieves all findOneDelete options with their default values.
-     *
-     * @return array of Collection::findOneAndDelete() options
-     */
-    public function getFindOneAndDeleteOptions()
-    {
-        return array(
-
-            /**
-             * The maximum amount of time to allow the query to run.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "maxTimeMS" => 0,
-
-            /**
-             * Limits the fields to return for all matching documents.
-             *
-             * @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results
-             */
-            "projection" => array(),
-
-            /**
-             * Determines which document the operation modifies if the query selects multiple documents.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "sort" => array(),
-        );
-    }
-
-    /**
-     * Retrieves all findOneAndReplace options with their default values.
-     *
-     * @return array of Collection::findOneAndReplace() options
-     */
-    public function getFindOneAndReplaceOptions()
-    {
-        return array(
-
-            /**
-             * The maximum amount of time to allow the query to run.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "maxTimeMS" => 0,
-
-            /**
-             * Limits the fields to return for all matching documents.
-             *
-             * @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results
-             */
-            "projection" => array(),
-
-            /**
-             * When ReturnDocument.After, returns the replaced or inserted document rather than the original.
-             * Defaults to ReturnDocument.Before.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "returnDocument" => self::FIND_ONE_AND_RETURN_BEFORE,
-
-            /**
-             * Determines which document the operation modifies if the query selects multiple documents.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "sort" => array(),
-
-            /**
-             * When true, findAndModify creates a new document if no document matches the query. The
-             * default is false.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "upsert" => false,
-        );
-    }
-
-    /**
-     * Retrieves all findOneAndUpdate options with their default values.
-     *
-     * @return array of Collection::findOneAndUpdate() options
-     */
-    public function getFindOneAndUpdateOptions()
-    {
-        return array(
-
-            /**
-             * The maximum amount of time to allow the query to run.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "maxTimeMS" => 0,
-
-            /**
-             * Limits the fields to return for all matching documents.
-             *
-             * @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results
-             */
-            "projection" => array(),
-
-            /**
-             * When ReturnDocument.After, returns the updated or inserted document rather than the original.
-             * Defaults to ReturnDocument.Before.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "returnDocument" => self::FIND_ONE_AND_RETURN_BEFORE,
-
-            /**
-             * Determines which document the operation modifies if the query selects multiple documents.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "sort" => array(),
-
-            /**
-             * When true, creates a new document if no document matches the query. The default is false.
-             *
-             * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
-             */
-            "upsert" => false,
-        );
     }
 
     /**
@@ -1035,18 +718,15 @@ class Collection
     /**
      * Returns information for all indexes for the collection.
      *
-     * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
-     * @see http://docs.mongodb.org/manual/reference/method/db.collection.getIndexes/
+     * @see ListIndexes::__construct() for supported options
      * @return IndexInfoIterator
      */
-    public function listIndexes()
+    public function listIndexes(array $options = array())
     {
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
-        $server = $this->manager->selectServer($readPreference);
+        $operation = new ListIndexes($this->dbname, $this->collname, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return (FeatureDetection::isSupported($server, FeatureDetection::API_LISTINDEXES_CMD))
-            ? $this->listIndexesCommand($server)
-            : $this->listIndexesLegacy($server);
+        return $operation->execute($server);
     }
 
     /**
@@ -1156,85 +836,6 @@ class Collection
     }
 
     /**
-     * Internal helper for throwing an exception with error message
-     * @internal
-     */
-    final protected function _generateCommandException($doc)
-    {
-        if ($doc["errmsg"]) {
-            return new RuntimeException($doc["errmsg"]);
-        }
-        var_dump($doc);
-        return new RuntimeException("FIXME: Unknown error");
-    }
-
-    /**
-     * Internal helper for massaging aggregate options
-     * @internal
-     */
-    protected function _massageAggregateOptions($options)
-    {
-        if ( ! empty($options["useCursor"])) {
-            $options["cursor"] = isset($options["batchSize"])
-                ? array("batchSize" => (integer) $options["batchSize"])
-                : new stdClass;
-        }
-        unset($options["useCursor"], $options["batchSize"]);
-
-        return $options;
-    }
-
-    /**
-     * Internal helper for massaging findandmodify options
-     * @internal
-     */
-    final protected function _massageFindAndModifyOptions($options, $update = array())
-    {
-        $ret = array(
-            "sort"   => $options["sort"],
-            "new"    => isset($options["returnDocument"]) ? $options["returnDocument"] == self::FIND_ONE_AND_RETURN_AFTER : false,
-            "fields" => $options["projection"],
-            "upsert" => isset($options["upsert"]) ? $options["upsert"] : false,
-        );
-        if ($update) {
-            $ret["update"] = $update;
-        } else {
-            $ret["remove"] = true;
-        }
-        return $ret;
-    }
-
-    /**
-     * Internal helper for massaging the findAndModify result.
-     *
-     * @internal
-     * @param array $result
-     * @param array $options
-     * @return array|null
-     */
-    final protected function _massageFindAndModifyResult(array $result, array $options)
-    {
-        if ($result['value'] === null) {
-            return null;
-        }
-
-        /* Prior to 3.0, findAndModify returns an empty document instead of null
-         * when an upsert is performed and the pre-modified document was
-         * requested.
-         */
-        if ($options['upsert'] && ! $options['new'] &&
-            isset($result['lastErrorObject']->updatedExisting) &&
-            ! $result['lastErrorObject']->updatedExisting) {
-
-            return null;
-        }
-
-        return is_object($result["value"])
-            ? (array) $result['value']
-            : $result['value'];
-    }
-
-    /**
      * Constructs the Query Wire Protocol field 'flags' based on $options
      * provided to other helpers
      *
@@ -1255,17 +856,6 @@ class Collection
     }
 
     /**
-     * Internal helper for running a command
-     * @internal
-     */
-    final protected function _runCommand($dbname, array $cmd, ReadPreference $rp = null)
-    {
-        //var_dump(\BSON\toJSON(\BSON\fromArray($cmd)));
-        $command = new Command($cmd);
-        return $this->manager->executeCommand($dbname, $command, $rp);
-    }
-
-    /**
      * Internal helper for replacing/updating one/many documents
      * @internal
      */
@@ -1276,78 +866,5 @@ class Collection
         $bulk  = new BulkWrite($options["ordered"]);
         $bulk->update($filter, $update, $options);
         return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
-    }
-
-    /**
-     * Create one or more indexes for the collection using the createIndexes
-     * command.
-     *
-     * @param Server       $server
-     * @param IndexInput[] $indexes
-     * @return string[] The names of the created indexes
-     */
-    private function createIndexesCommand(Server $server, array $indexes)
-    {
-        $command = new Command(array(
-            'createIndexes' => $this->collname,
-            'indexes' => $indexes,
-        ));
-        $server->executeCommand($this->dbname, $command);
-
-        return array_map(function(IndexInput $index) { return (string) $index; }, $indexes);
-    }
-
-    /**
-     * Create one or more indexes for the collection by inserting into the
-     * "system.indexes" collection (MongoDB <2.6).
-     *
-     * @param Server       $server
-     * @param IndexInput[] $indexes
-     * @return string[] The names of the created indexes
-     */
-    private function createIndexesLegacy(Server $server, array $indexes)
-    {
-        $bulk = new BulkWrite(true);
-
-        foreach ($indexes as $index) {
-            $bulk->insert($index);
-        }
-
-        $server->executeBulkWrite($this->dbname . '.system.indexes', $bulk);
-
-        return array_map(function(IndexInput $index) { return (string) $index; }, $indexes);
-    }
-
-    /**
-     * Returns information for all indexes for this collection using the
-     * listIndexes command.
-     *
-     * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
-     * @param Server $server
-     * @return IndexInfoIteratorIterator
-     */
-    private function listIndexesCommand(Server $server)
-    {
-        $command = new Command(array('listIndexes' => $this->collname));
-        $cursor = $server->executeCommand($this->dbname, $command);
-        $cursor->setTypeMap(array('document' => 'array'));
-
-        return new IndexInfoIteratorIterator($cursor);
-    }
-
-    /**
-     * Returns information for all indexes for this collection by querying the
-     * "system.indexes" collection (MongoDB <2.8).
-     *
-     * @param Server $server
-     * @return IndexInfoIteratorIterator
-     */
-    private function listIndexesLegacy(Server $server)
-    {
-        $query = new Query(array('ns' => $this->ns));
-        $cursor = $server->executeQuery($this->dbname . '.system.indexes', $query);
-        $cursor->setTypeMap(array('document' => 'array'));
-
-        return new IndexInfoIteratorIterator($cursor);
     }
 }

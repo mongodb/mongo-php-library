@@ -62,6 +62,7 @@ class Distinct implements Executable
     public function execute(Server $server)
     {
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
+        $cursor->setTypeMap(array('document' => 'array'));
         $result = current($cursor->toArray());
 
         if (empty($result['ok'])) {

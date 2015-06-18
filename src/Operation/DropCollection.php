@@ -41,6 +41,7 @@ class DropCollection implements Executable
     public function execute(Server $server)
     {
         $cursor = $server->executeCommand($this->databaseName, new Command(array('drop' => $this->collectionName)));
+        $cursor->setTypeMap(array('document' => 'array'));
         $result = current($cursor->toArray());
 
         if (empty($result['ok'])) {

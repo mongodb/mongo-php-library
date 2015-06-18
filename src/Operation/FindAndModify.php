@@ -140,11 +140,11 @@ class FindAndModify implements Executable
             return null;
         }
 
-        if ( ! is_object($result['value'])) {
+        if ( ! is_array($result['value'])) {
             throw new UnexpectedValueException('findAndModify command did not return a "value" document');
         }
 
-        return $result['value'];
+        return (object) $result['value'];
     }
 
     /**

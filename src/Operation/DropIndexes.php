@@ -56,10 +56,14 @@ class DropIndexes implements Executable
         );
 
         $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
+        $cursor->setTypeMap(array('document' => 'stdClass'));
         $result = current($cursor->toArray());
 
-        if (empty($result['ok'])) {
-            throw new RuntimeException(isset($result['errmsg']) ? $result['errmsg'] : 'Unknown error');
+        // TODO: Remove this once PHPC-318 is implemented
+        is_array($result) and $result = (object) $result;
+
+        if (empty($result->ok)) {
+            throw new RuntimeException(isset($result->errmsg) ? $result->errmsg : 'Unknown error');
         }
 
         return $result;

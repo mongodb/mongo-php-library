@@ -118,14 +118,17 @@ class FindAndModify implements Executable
     public function execute(Server $server)
     {
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
-        $cursor->setTypeMap(array('document' => 'array'));
+        $cursor->setTypeMap(array('document' => 'stdClass'));
         $result = current($cursor->toArray());
 
-        if (empty($result['ok'])) {
-            throw new RuntimeException(isset($result['errmsg']) ? $result['errmsg'] : 'Unknown error');
+        // TODO: Remove this once PHPC-318 is implemented
+        is_array($result) and $result = (object) $result;
+
+        if (empty($result->ok)) {
+            throw new RuntimeException(isset($result->errmsg) ? $result->errmsg : 'Unknown error');
         }
 
-        if ( ! isset($result['value'])) {
+        if ( ! isset($result->value)) {
             return null;
         }
 
@@ -134,17 +137,17 @@ class FindAndModify implements Executable
          * requested.
          */
         if ($this->options['upsert'] && ! $this->options['new'] &&
-            isset($result['lastErrorObject']->updatedExisting) &&
-            ! $result['lastErrorObject']->updatedExisting) {
+            isset($result->lastErrorObject->updatedExisting) &&
+            ! $result->lastErrorObject->updatedExisting) {
 
             return null;
         }
 
-        if ( ! is_array($result['value'])) {
+        if ( ! is_object($result->value)) {
             throw new UnexpectedValueException('findAndModify command did not return a "value" document');
         }
 
-        return (object) $result['value'];
+        return $result->value;
     }
 
     /**

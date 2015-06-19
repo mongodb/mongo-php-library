@@ -62,18 +62,21 @@ class Distinct implements Executable
     public function execute(Server $server)
     {
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
-        $cursor->setTypeMap(array('document' => 'array'));
+        $cursor->setTypeMap(array('document' => 'stdClass'));
         $result = current($cursor->toArray());
 
-        if (empty($result['ok'])) {
-            throw new RuntimeException(isset($result['errmsg']) ? $result['errmsg'] : 'Unknown error');
+        // TODO: Remove this once PHPC-318 is implemented
+        is_array($result) and $result = (object) $result;
+
+        if (empty($result->ok)) {
+            throw new RuntimeException(isset($result->errmsg) ? $result->errmsg : 'Unknown error');
         }
 
-        if ( ! isset($result['values']) || ! is_array($result['values'])) {
+        if ( ! isset($result->values) || ! is_array($result->values)) {
             throw new UnexpectedValueException('distinct command did not return a "values" array');
         }
 
-        return $result['values'];
+        return $result->values;
     }
 
     /**

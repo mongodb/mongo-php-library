@@ -32,12 +32,11 @@ class AggregateFunctionalTest extends FunctionalTestCase
         );
 
         $expected = array(
-            (object) array('_id' => 2, 'x' => 22),
-            (object) array('_id' => 3, 'x' => 33),
+            array('_id' => 2, 'x' => 22),
+            array('_id' => 3, 'x' => 33),
         );
 
-        // Use iterator_to_array() here since aggregate() may return an ArrayIterator
-        $this->assertEquals($expected, iterator_to_array($cursor));
+        $this->assertSameDocuments($expected, $cursor);
     }
 
     public function testAggregateWithOut()

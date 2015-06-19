@@ -27,7 +27,7 @@ class DeleteManyFunctionalTest extends FunctionalTestCase
             array('_id' => 1, 'x' => 11),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testDeleteManyWhenNoDocumentsMatch()
@@ -43,6 +43,6 @@ class DeleteManyFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 }

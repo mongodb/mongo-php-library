@@ -36,8 +36,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        // Use iterator_to_array() here since aggregate() may return an ArrayIterator
-        $this->assertEquals($expected, iterator_to_array($cursor));
+        $this->assertSameDocuments($expected, $cursor);
     }
 
     public function testAggregateWithOut()
@@ -64,7 +63,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertEquals($expected, $outputCollection->find()->toArray());
+        $this->assertSameDocuments($expected, $outputCollection->find());
 
         // Manually clean up our output collection
         $this->dropCollectionIfItExists($outputCollection);

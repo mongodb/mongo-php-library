@@ -25,14 +25,14 @@ class FindOneAndDeleteFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndDelete($filter, $options);
-        $this->assertEquals((object) array('x' => 22), $document);
+        $this->assertSameDocument(array('x' => 22), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndDeleteWhenOneDocumentMatches()
@@ -44,14 +44,14 @@ class FindOneAndDeleteFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndDelete($filter, $options);
-        $this->assertEquals((object) array('x' => 22), $document);
+        $this->assertSameDocument(array('x' => 22), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndDeleteWhenNoDocumentsMatch()
@@ -71,6 +71,6 @@ class FindOneAndDeleteFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 }

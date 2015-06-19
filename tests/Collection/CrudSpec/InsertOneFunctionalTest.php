@@ -29,6 +29,6 @@ class InsertOneFunctionalTest extends FunctionalTestCase
             array('_id' => 2, 'x' => 22),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 }

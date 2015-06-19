@@ -35,7 +35,7 @@ class UpdateOneFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testUpdateOneWhenOneDocumentMatches()
@@ -53,7 +53,7 @@ class UpdateOneFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testUpdateOneWhenNoDocumentsMatch()
@@ -71,7 +71,7 @@ class UpdateOneFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testUpdateOneWithUpsertWhenNoDocumentsMatch()
@@ -92,6 +92,6 @@ class UpdateOneFunctionalTest extends FunctionalTestCase
             array('_id' => 4, 'x' => 1),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 }

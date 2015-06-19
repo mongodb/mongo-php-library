@@ -6,6 +6,8 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
+use stdClass;
+use Traversable;
 
 abstract class FunctionalTestCase extends TestCase
 {
@@ -36,6 +38,34 @@ abstract class FunctionalTestCase extends TestCase
 
         $this->assertArrayHasKey('ok', $document);
         $this->assertEquals(1, $document['ok']);
+    }
+
+    protected function assertSameDocument($expectedDocument, $actualDocument)
+    {
+        $this->assertEquals(
+            ($expectedDocument instanceof stdClass) ? (array) $expectedDocument : $expectedDocument,
+            ($actualDocument instanceof stdClass) ? (array) $actualDocument : $actualDocument
+        );
+    }
+
+    protected function assertSameDocuments(array $expectedDocuments, $actualDocuments)
+    {
+        if ($actualDocuments instanceof Traversable) {
+            $actualDocuments = iterator_to_array($actualDocuments);
+        }
+
+        if ( ! is_array($actualDocuments)) {
+            throw new InvalidArgumentException('$actualDocuments is not an array or Traversable');
+        }
+
+        $normalizeRootDocuments = function($document) {
+            return ($document instanceof stdClass) ? (array) $document : $document;
+        };
+
+        $this->assertEquals(
+            array_map($normalizeRootDocuments, $expectedDocuments),
+            array_map($normalizeRootDocuments, $actualDocuments)
+        );
     }
 
     protected function getServerVersion(ReadPreference $readPreference = null)

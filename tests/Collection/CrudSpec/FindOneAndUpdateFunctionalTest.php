@@ -29,7 +29,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndUpdate($filter, $update, $options);
-        $this->assertEquals((object) array('x' => 22), $document);
+        $this->assertSameDocument(array('x' => 22), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -37,7 +37,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndUpdateWhenManyDocumentsMatchReturningDocumentAfterModification()
@@ -51,7 +51,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndUpdate($filter, $update, $options);
-        $this->assertEquals((object) array('x' => 23), $document);
+        $this->assertSameDocument(array('x' => 23), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -59,7 +59,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndUpdateWhenOneDocumentMatchesReturningDocumentBeforeModification()
@@ -72,7 +72,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndUpdate($filter, $update, $options);
-        $this->assertEquals((object) array('x' => 22), $document);
+        $this->assertSameDocument(array('x' => 22), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -80,7 +80,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndUpdateWhenOneDocumentMatchesReturningDocumentAfterModification()
@@ -94,7 +94,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndUpdate($filter, $update, $options);
-        $this->assertEquals((object) array('x' => 23), $document);
+        $this->assertSameDocument(array('x' => 23), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -102,7 +102,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndUpdateWhenNoDocumentsMatchReturningDocumentBeforeModification()
@@ -123,7 +123,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndUpdateWithUpsertWhenNoDocumentsMatchReturningDocumentBeforeModification()
@@ -146,7 +146,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
             array('_id' => 4, 'x' => 1),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndUpdateWhenNoDocumentsMatchReturningDocumentAfterModification()
@@ -168,7 +168,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
             array('_id' => 3, 'x' => 33),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndUpdateWithUpsertWhenNoDocumentsMatchReturningDocumentAfterModification()
@@ -183,7 +183,7 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
         );
 
         $document = $this->collection->findOneAndUpdate($filter, $update, $options);
-        $this->assertEquals((object) array('x' => 1), $document);
+        $this->assertSameDocument(array('x' => 1), $document);
 
         $expected = array(
             array('_id' => 1, 'x' => 11),
@@ -192,6 +192,6 @@ class FindOneAndUpdateFunctionalTest extends FunctionalTestCase
             array('_id' => 4, 'x' => 1),
         );
 
-        $this->assertSame($expected, $this->collection->find()->toArray());
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 }

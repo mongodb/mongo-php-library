@@ -856,17 +856,6 @@ class Collection
     }
 
     /**
-     * Internal helper for running a command
-     * @internal
-     */
-    final protected function _runCommand($dbname, array $cmd, ReadPreference $rp = null)
-    {
-        //var_dump(\MongoDB\BSON\toJSON(\MongoDB\BSON\fromArray($cmd)));
-        $command = new Command($cmd);
-        return $this->manager->executeCommand($dbname, $command, $rp);
-    }
-
-    /**
      * Internal helper for replacing/updating one/many documents
      * @internal
      */

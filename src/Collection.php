@@ -6,7 +6,6 @@ use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
-use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
@@ -20,6 +19,8 @@ use MongoDB\Operation\Count;
 use MongoDB\Operation\Distinct;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropIndexes;
+use MongoDB\Operation\Find;
+use MongoDB\Operation\FindOne;
 use MongoDB\Operation\FindOneAndDelete;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
@@ -29,20 +30,6 @@ use Traversable;
 class Collection
 {
     /* {{{ consts & vars */
-    const QUERY_FLAG_TAILABLE_CURSOR   = 0x02;
-    const QUERY_FLAG_SLAVE_OKAY        = 0x04;
-    const QUERY_FLAG_OPLOG_REPLY       = 0x08;
-    const QUERY_FLAG_NO_CURSOR_TIMEOUT = 0x10;
-    const QUERY_FLAG_AWAIT_DATA        = 0x20;
-    const QUERY_FLAG_EXHAUST           = 0x40;
-    const QUERY_FLAG_PARTIAL           = 0x80;
-
-
-    const CURSOR_TYPE_NON_TAILABLE   = 0x00;
-    const CURSOR_TYPE_TAILABLE       = self::QUERY_FLAG_TAILABLE_CURSOR;
-    //self::QUERY_FLAG_TAILABLE_CURSOR | self::QUERY_FLAG_AWAIT_DATA;
-    const CURSOR_TYPE_TAILABLE_AWAIT = 0x22;
-
     protected $manager;
     protected $ns;
     protected $wc;
@@ -396,50 +383,37 @@ class Collection
     }
 
     /**
-     * Performs a find (query) on the collection
+     * Finds documents matching the query.
      *
+     * @see Find::__construct() for supported options
      * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
-     * @see Collection::getFindOptions() for supported $options
-     *
-     * @param array $filter    The find query to execute
-     * @param array $options   Additional options
+     * @param array $filter  Query by which to filter documents
+     * @param array $options Additional options
      * @return Cursor
      */
     public function find(array $filter = array(), array $options = array())
     {
-        $options = array_merge($this->getFindOptions(), $options);
+        $operation = new Find($this->dbname, $this->collname, $filter, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $query = $this->_buildQuery($filter, $options);
-
-        $cursor = $this->manager->executeQuery($this->ns, $query, $this->rp);
-
-        return $cursor;
+        return $operation->execute($server);
     }
 
     /**
-     * Performs a find (query) on the collection, returning at most one result
+     * Finds a single document matching the query.
      *
+     * @see FindOne::__construct() for supported options
      * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
-     * @see Collection::getFindOptions() for supported $options
-     *
      * @param array $filter    The find query to execute
      * @param array $options   Additional options
-     * @return array|false     The matched document, or false on failure
+     * @return object|null
      */
     public function findOne(array $filter = array(), array $options = array())
     {
-        $options = array_merge($this->getFindOptions(), array("limit" => 1), $options);
+        $operation = new FindOne($this->dbname, $this->collname, $filter, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $query = $this->_buildQuery($filter, $options);
-
-        $cursor = $this->manager->executeQuery($this->ns, $query, $this->rp);
-
-        $array = iterator_to_array($cursor);
-        if ($array) {
-            return $array[0];
-        }
-
-        return false;
+        return $operation->execute($server);
     }
 
     /**
@@ -534,107 +508,6 @@ class Collection
     public function getDatabaseName()
     {
         return $this->dbname;
-    }
-
-    /**
-     * Retrieves all find options with their default values.
-     *
-     * @return array of Collection::find() options
-     */
-    public function getFindOptions()
-    {
-        return array(
-            /**
-             * Get partial results from a mongos if some shards are down (instead of throwing an error).
-             *
-             * @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
-             */
-            "allowPartialResults" => false,
-
-            /**
-             * The number of documents to return per batch.
-             *
-             * @see http://docs.mongodb.org/manual/reference/method/cursor.batchSize/
-             */
-            "batchSize" => 101,
-
-            /**
-             * Attaches a comment to the query. If $comment also exists
-             * in the modifiers document, the comment field overwrites $comment.
-             *
-             * @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
-             */
-            "comment" => "",
-
-            /**
-             * Indicates the type of cursor to use. This value includes both
-             * the tailable and awaitData options.
-             * The default is Collection::CURSOR_TYPE_NON_TAILABLE.
-             *
-             * @see http://docs.mongodb.org/manual/reference/operator/meta/comment/
-             */
-            "cursorType" => self::CURSOR_TYPE_NON_TAILABLE,
-
-            /**
-             * The maximum number of documents to return.
-             *
-             * @see http://docs.mongodb.org/manual/reference/method/cursor.limit/
-             */
-            "limit" => 0,
-
-            /**
-             * The maximum amount of time to allow the query to run. If $maxTimeMS also exists
-             * in the modifiers document, the maxTimeMS field overwrites $maxTimeMS.
-             *
-             * @see http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS/
-             */
-            "maxTimeMS" => 0,
-
-            /**
-             * Meta-operators modifying the output or behavior of a query.
-             *
-             * @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
-             */
-            "modifiers" => array(),
-
-            /**
-             * The server normally times out idle cursors after an inactivity period (10 minutes)
-             * to prevent excess memory use. Set this option to prevent that.
-             *
-             * @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
-             */
-            "noCursorTimeout" => false,
-
-            /**
-             * Internal replication use only - driver should not set
-             *
-             * @see http://docs.mongodb.org/meta-driver/latest/legacy/mongodb-wire-protocol/#op-query
-             * @internal
-             */
-            "oplogReplay" => false,
-
-            /**
-             * Limits the fields to return for all matching documents.
-             *
-             * @see http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/
-             */
-            "projection" => array(),
-
-            /**
-             * The number of documents to skip before returning.
-             *
-             * @see http://docs.mongodb.org/manual/reference/method/cursor.skip/
-             */
-            "skip" => 0,
-
-            /**
-             * The order in which to return matching documents. If $orderby also exists
-             * in the modifiers document, the sort field overwrites $orderby.
-             *
-             * @see http://docs.mongodb.org/manual/reference/method/cursor.sort/
-             */
-            "sort" => array(),
-        );
     }
 
     /**
@@ -794,35 +667,6 @@ class Collection
     }
 
     /**
-     * Helper to build a Query object
-     *
-     * @param array $filter the query document
-     * @param array $options query/protocol options
-     * @return Query
-     * @internal
-     */
-    final protected function _buildQuery($filter, $options)
-    {
-        if ($options["comment"]) {
-            $options["modifiers"]['$comment'] = $options["comment"];
-        }
-        if ($options["maxTimeMS"]) {
-            $options["modifiers"]['$maxTimeMS'] = $options["maxTimeMS"];
-        }
-        if ($options["sort"]) {
-            $options['$orderby'] = $options["sort"];
-        }
-
-        $flags = $this->_opQueryFlags($options);
-        $options["cursorFlags"] = $flags;
-
-
-        $query = new Query($filter, $options);
-
-        return $query;
-    }
-
-    /**
      * Internal helper for delete one/many documents
      * @internal
      */
@@ -833,26 +677,6 @@ class Collection
         $bulk  = new BulkWrite($options["ordered"]);
         $bulk->delete($filter, $options);
         return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
-    }
-
-    /**
-     * Constructs the Query Wire Protocol field 'flags' based on $options
-     * provided to other helpers
-     *
-     * @param array $options
-     * @return integer OP_QUERY Wire Protocol flags
-     * @internal
-     */
-    final protected function _opQueryFlags($options)
-    {
-        $flags = 0;
-
-        $flags |= $options["allowPartialResults"] ? self::QUERY_FLAG_PARTIAL : 0;
-        $flags |= $options["cursorType"] ? $options["cursorType"] : 0;
-        $flags |= $options["oplogReplay"] ? self::QUERY_FLAG_OPLOG_REPLY: 0;
-        $flags |= $options["noCursorTimeout"] ? self::QUERY_FLAG_NO_CURSOR_TIMEOUT : 0;
-
-        return $flags;
     }
 
     /**

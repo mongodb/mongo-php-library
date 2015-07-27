@@ -29,9 +29,9 @@ class CollectionFunctionalTest extends FunctionalTestCase
             'sort' => array('x' => -1),
         );
 
-        $expected = array('_id' => 3, 'x' => 33);
+        $expected = (object) array('_id' => 3, 'x' => 33);
 
-        $this->assertSame($expected, $this->collection->findOne($filter, $options));
+        $this->assertEquals($expected, $this->collection->findOne($filter, $options));
     }
 
     /**

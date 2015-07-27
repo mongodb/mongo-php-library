@@ -85,7 +85,7 @@ class ListCollections implements Executable
         }
 
         $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
-        $cursor->setTypeMap(array('document' => 'array'));
+        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
 
         return new CollectionInfoCommandIterator($cursor);
     }
@@ -115,7 +115,7 @@ class ListCollections implements Executable
             : array();
 
         $cursor = $server->executeQuery($this->databaseName . '.system.namespaces', new Query($filter, $options));
-        $cursor->setTypeMap(array('document' => 'array'));
+        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
 
         return new CollectionInfoLegacyIterator($cursor);
     }

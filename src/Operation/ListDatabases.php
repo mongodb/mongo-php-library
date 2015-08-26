@@ -55,7 +55,7 @@ class ListDatabases implements Executable
         }
 
         $cursor = $server->executeCommand('admin', new Command($cmd));
-        $cursor->setTypeMap(array('document' => 'array'));
+        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
         $result = current($cursor->toArray());
 
         if (empty($result['ok'])) {

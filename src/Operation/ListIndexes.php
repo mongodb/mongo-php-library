@@ -76,7 +76,7 @@ class ListIndexes implements Executable
         }
 
         $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
-        $cursor->setTypeMap(array('document' => 'array'));
+        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
 
         return new IndexInfoIteratorIterator($cursor);
     }
@@ -97,7 +97,7 @@ class ListIndexes implements Executable
             : array();
 
         $cursor = $server->executeQuery($this->databaseName . '.system.indexes', new Query($filter, $options));
-        $cursor->setTypeMap(array('document' => 'array'));
+        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
 
         return new IndexInfoIteratorIterator($cursor);
     }

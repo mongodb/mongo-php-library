@@ -16,6 +16,8 @@ use MongoDB\Model\IndexInput;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Count;
+use MongoDB\Operation\DeleteMany;
+use MongoDB\Operation\DeleteOne;
 use MongoDB\Operation\Distinct;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropIndexes;
@@ -289,35 +291,45 @@ class Collection
     }
 
     /**
-     * Deletes a document matching the $filter criteria.
-     * NOTE: Will delete ALL documents matching $filter
+     * Deletes all documents matching the filter.
      *
+     * @see DeleteMany::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/delete/
-     *
-     * @param array $filter The $filter criteria to delete
+     * @param array|object $filter  Query by which to delete documents
+     * @param array        $options Command options
      * @return DeleteResult
      */
-    public function deleteMany(array $filter)
+    public function deleteMany($filter, array $options = array())
     {
-        $wr = $this->_delete($filter, 0);
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
+        }
 
-        return new DeleteResult($wr);
+        $operation = new DeleteMany($this->dbname, $this->collname, $filter, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
     }
 
     /**
-     * Deletes a document matching the $filter criteria.
-     * NOTE: Will delete at most ONE document matching $filter
+     * Deletes at most one document matching the filter.
      *
+     * @see DeleteOne::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/delete/
-     *
-     * @param array $filter The $filter criteria to delete
+     * @param array|object $filter  Query by which to delete documents
+     * @param array        $options Command options
      * @return DeleteResult
      */
-    public function deleteOne(array $filter)
+    public function deleteOne($filter, array $options = array())
     {
-        $wr = $this->_delete($filter);
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
+        }
 
-        return new DeleteResult($wr);
+        $operation = new DeleteOne($this->dbname, $this->collname, $filter, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
     }
 
     /**
@@ -658,19 +670,6 @@ class Collection
         $wr = $this->_update($filter, $update, $options + array("multi" => false));
 
         return new UpdateResult($wr);
-    }
-
-    /**
-     * Internal helper for delete one/many documents
-     * @internal
-     */
-    final protected function _delete($filter, $limit = 1)
-    {
-        $options = array_merge($this->getWriteOptions(), array("limit" => $limit));
-
-        $bulk  = new BulkWrite($options["ordered"]);
-        $bulk->delete($filter, $options);
-        return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
     }
 
     /**

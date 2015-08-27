@@ -29,6 +29,9 @@ use MongoDB\Operation\FindOneAndUpdate;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListIndexes;
+use MongoDB\Operation\ReplaceOne;
+use MongoDB\Operation\UpdateMany;
+use MongoDB\Operation\UpdateOne;
 use Traversable;
 
 class Collection
@@ -609,79 +612,68 @@ class Collection
     }
 
     /**
-     * Replace one document
+     * Replaces at most one document matching the filter.
      *
+     * @see ReplaceOne::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @see Collection::getWriteOptions() for supported $options
-     *
-     * @param array $filter   The document to be replaced
-     * @param array $update   The document to replace with
-     * @param array $options  Additional options
+     * @param array|object $filter      Query by which to filter documents
+     * @param array|object $replacement Replacement document
+     * @param array        $options     Command options
      * @return UpdateResult
      */
-    public function replaceOne(array $filter, array $update, array $options = array())
+    public function replaceOne($filter, $replacement, array $options = array())
     {
-        $firstKey = key($update);
-        if (isset($firstKey[0]) && $firstKey[0] == '$') {
-            throw new InvalidArgumentException("First key in \$update must NOT be a \$operator");
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
         }
-        $wr = $this->_update($filter, $update, $options + array("multi" => false));
 
-        return new UpdateResult($wr);
+        $operation = new ReplaceOne($this->dbname, $this->collname, $filter, $replacement, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
     }
 
     /**
-     * Update one document
-     * NOTE: Will update ALL documents matching $filter
+     * Updates all documents matching the filter.
      *
+     * @see UpdateMany::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @see Collection::getWriteOptions() for supported $options
-     *
-     * @param array $filter   The document to be replaced
-     * @param array $update   An array of update operators to apply to the document
-     * @param array $options  Additional options
+     * @param array|object $filter      Query by which to filter documents
+     * @param array|object $replacement Update to apply to the matched documents
+     * @param array        $options     Command options
      * @return UpdateResult
      */
-    public function updateMany(array $filter, $update, array $options = array())
+    public function updateMany($filter, $update, array $options = array())
     {
-        $wr = $this->_update($filter, $update, $options + array("multi" => true));
-
-        return new UpdateResult($wr);
-    }
-
-    /**
-     * Update one document
-     * NOTE: Will update at most ONE document matching $filter
-     *
-     * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @see Collection::getWriteOptions() for supported $options
-     *
-     * @param array $filter   The document to be replaced
-     * @param array $update   An array of update operators to apply to the document
-     * @param array $options  Additional options
-     * @return UpdateResult
-     */
-    public function updateOne(array $filter, array $update, array $options = array())
-    {
-        $firstKey = key($update);
-        if (!isset($firstKey[0]) || $firstKey[0] != '$') {
-            throw new InvalidArgumentException("First key in \$update must be a \$operator");
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
         }
-        $wr = $this->_update($filter, $update, $options + array("multi" => false));
 
-        return new UpdateResult($wr);
+        $operation = new UpdateMany($this->dbname, $this->collname, $filter, $update, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
     }
 
     /**
-     * Internal helper for replacing/updating one/many documents
-     * @internal
+     * Updates at most one document matching the filter.
+     *
+     * @see ReplaceOne::__construct() for supported options
+     * @see http://docs.mongodb.org/manual/reference/command/update/
+     * @param array|object $filter      Query by which to filter documents
+     * @param array|object $replacement Update to apply to the matched document
+     * @param array        $options     Command options
+     * @return UpdateResult
      */
-    protected function _update($filter, $update, $options)
+    public function updateOne($filter, $update, array $options = array())
     {
-        $options = array_merge($this->getWriteOptions(), $options);
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
+        }
 
-        $bulk  = new BulkWrite($options["ordered"]);
-        $bulk->update($filter, $update, $options);
-        return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+        $operation = new UpdateOne($this->dbname, $this->collname, $filter, $update, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
     }
 }

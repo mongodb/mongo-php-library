@@ -24,6 +24,8 @@ use MongoDB\Operation\FindOne;
 use MongoDB\Operation\FindOneAndDelete;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
+use MongoDB\Operation\InsertMany;
+use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListIndexes;
 use Traversable;
 
@@ -539,56 +541,45 @@ class Collection
     }
 
     /**
-     * Inserts the provided documents
+     * Inserts multiple documents.
      *
+     * @see InsertMany::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/insert/
-     *
      * @param array[]|object[] $documents The documents to insert
+     * @param array            $options   Command options
      * @return InsertManyResult
      */
-    public function insertMany(array $documents)
+    public function insertMany(array $documents, array $options = array())
     {
-        $options = array_merge($this->getWriteOptions());
-
-        $bulk = new BulkWrite($options["ordered"]);
-        $insertedIds = array();
-
-        foreach ($documents as $i => $document) {
-            $insertedId = $bulk->insert($document);
-
-            if ($insertedId !== null) {
-                $insertedIds[$i] = $insertedId;
-            } else {
-                $insertedIds[$i] = is_array($document) ? $document['_id'] : $document->_id;
-            }
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
         }
 
-        $writeResult = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+        $operation = new InsertMany($this->dbname, $this->collname, $documents, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return new InsertManyResult($writeResult, $insertedIds);
+        return $operation->execute($server);
     }
 
     /**
-     * Inserts the provided document
+     * Inserts one document.
      *
+     * @see InsertOne::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/insert/
-     *
      * @param array|object $document The document to insert
+     * @param array        $options  Command options
      * @return InsertOneResult
      */
-    public function insertOne($document)
+    public function insertOne($document, array $options = array())
     {
-        $options = array_merge($this->getWriteOptions());
-
-        $bulk = new BulkWrite($options["ordered"]);
-        $id    = $bulk->insert($document);
-        $wr    = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
-
-        if ($id === null) {
-            $id = is_array($document) ? $document['_id'] : $document->_id;
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
         }
 
-        return new InsertOneResult($wr, $id);
+        $operation = new InsertOne($this->dbname, $this->collname, $document, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
     }
 
     /**

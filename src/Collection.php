@@ -422,6 +422,7 @@ class Collection
      * The document to return may be null.
      *
      * @see FindOneAndDelete::__construct() for supported options
+     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Command options
      * @return object|null
@@ -443,6 +444,7 @@ class Collection
      * "returnDocument" option to return the updated document.
      *
      * @see FindOneAndReplace::__construct() for supported options
+     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
      * @param array|object $filter      Query by which to filter documents
      * @param array|object $replacement Replacement document
      * @param array        $options     Command options
@@ -465,6 +467,7 @@ class Collection
      * "returnDocument" option to return the updated document.
      *
      * @see FindOneAndReplace::__construct() for supported options
+     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
      * @param array|object $filter  Query by which to filter documents
      * @param array|object $update  Update to apply to the matched document
      * @param array        $options Command options

@@ -95,9 +95,6 @@ class CreateCollection implements Executable
     /**
      * Execute the operation.
      *
-     * For servers < 2.6, this will actually perform an insert operation on the
-     * database's "system.indexes" collection.
-     *
      * @see Executable::execute()
      * @param Server $server
      * @return object Command result document

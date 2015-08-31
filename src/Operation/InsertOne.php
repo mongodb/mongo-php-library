@@ -3,7 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\InsertOneResult;
-use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentTypeException;
@@ -60,7 +60,7 @@ class InsertOne implements Executable
      */
     public function execute(Server $server)
     {
-        $bulk = new BulkWrite();
+        $bulk = new Bulk();
         $insertedId = $bulk->insert($this->document);
 
         if ($insertedId === null) {

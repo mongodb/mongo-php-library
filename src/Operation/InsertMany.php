@@ -3,7 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\InsertManyResult;
-use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
@@ -87,7 +87,7 @@ class InsertMany implements Executable
      */
     public function execute(Server $server)
     {
-        $bulk = new BulkWrite($this->options['ordered']);
+        $bulk = new Bulk($this->options['ordered']);
         $insertedIds = array();
 
         foreach ($this->documents as $i => $document) {

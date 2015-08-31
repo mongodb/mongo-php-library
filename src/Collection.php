@@ -2,7 +2,6 @@
 
 namespace MongoDB;
 
-use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
@@ -14,6 +13,7 @@ use MongoDB\Exception\UnexpectedTypeException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInput;
 use MongoDB\Operation\Aggregate;
+use MongoDB\Operation\BulkWrite;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\DeleteMany;
@@ -101,135 +101,23 @@ class Collection
     }
 
     /**
-     * Adds a full set of write operations into a bulk and executes it
+     * Executes multiple write operations.
      *
-     * The syntax of the $bulk array is:
-     *     $bulk = [
-     *         [
-     *             'METHOD' => [
-     *                 $document,
-     *                 $extraArgument1,
-     *                 $extraArgument2,
-     *             ],
-     *         ],
-     *         [
-     *             'METHOD' => [
-     *                 $document,
-     *                 $extraArgument1,
-     *                 $extraArgument2,
-     *             ],
-     *         ],
-     *     ]
-     *
-     *
-     * Where METHOD is one of
-     *     - 'insertOne'
-     *           Supports no $extraArgument
-     *     - 'updateMany'
-     *           Requires $extraArgument1, same as $update for Collection::updateMany()
-     *           Optional $extraArgument2, same as $options for Collection::updateMany()
-     *     - 'updateOne'
-     *           Requires $extraArgument1, same as $update for Collection::updateOne()
-     *           Optional $extraArgument2, same as $options for Collection::updateOne()
-     *     - 'replaceOne'
-     *           Requires $extraArgument1, same as $update for Collection::replaceOne()
-     *           Optional $extraArgument2, same as $options for Collection::replaceOne()
-     *     - 'deleteOne'
-     *           Supports no $extraArgument
-     *     - 'deleteMany'
-     *           Supports no $extraArgument
-     *
-     * @example Collection-bulkWrite.php Using Collection::bulkWrite()
-     *
-     * @see Collection::getBulkOptions() for supported $options
-     *
-     * @param array $ops    Array of operations
-     * @param array $options Additional options
-     * @return WriteResult
+     * @see BulkWrite::__construct() for supported options
+     * @param array[] $operations List of write operations
+     * @param array   $options    Command options
+     * @return BulkWriteResult
      */
-    public function bulkWrite(array $ops, array $options = array())
+    public function bulkWrite(array $operations, array $options = array())
     {
-        $options = array_merge($this->getBulkOptions(), $options);
-
-        $bulk = new BulkWrite($options["ordered"]);
-        $insertedIds = array();
-
-        foreach ($ops as $n => $op) {
-            foreach ($op as $opname => $args) {
-                if (!isset($args[0])) {
-                    throw new InvalidArgumentException(sprintf("Missing argument#1 for '%s' (operation#%d)", $opname, $n));
-                }
-
-                switch ($opname) {
-                case "insertOne":
-                    $insertedId = $bulk->insert($args[0]);
-
-                    if ($insertedId !== null) {
-                        $insertedIds[$n] = $insertedId;
-                    } else {
-                        $insertedIds[$n] = is_array($args[0]) ? $args[0]['_id'] : $args[0]->_id;
-                    }
-
-                    break;
-
-                case "updateMany":
-                    if (!isset($args[1])) {
-                        throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
-                    }
-                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("multi" => true));
-                    $firstKey = key($args[1]);
-                    if (!isset($firstKey[0]) || $firstKey[0] != '$') {
-                        throw new InvalidArgumentException("First key in \$update must be a \$operator");
-                    }
-
-                    $bulk->update($args[0], $args[1], $options);
-                    break;
-
-                case "updateOne":
-                    if (!isset($args[1])) {
-                        throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
-                    }
-                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("multi" => false));
-                    $firstKey = key($args[1]);
-                    if (!isset($firstKey[0]) || $firstKey[0] != '$') {
-                        throw new InvalidArgumentException("First key in \$update must be a \$operator");
-                    }
-
-                    $bulk->update($args[0], $args[1], $options);
-                    break;
-
-                case "replaceOne":
-                    if (!isset($args[1])) {
-                        throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
-                    }
-                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("multi" => false));
-                    $firstKey = key($args[1]);
-                    if (isset($firstKey[0]) && $firstKey[0] == '$') {
-                        throw new InvalidArgumentException("First key in \$update must NOT be a \$operator");
-                    }
-
-                    $bulk->update($args[0], $args[1], $options);
-                    break;
-
-                case "deleteOne":
-                    $options = array_merge($this->getWriteOptions(), isset($args[1]) ? $args[1] : array(), array("limit" => 1));
-                    $bulk->delete($args[0], $options);
-                    break;
-
-                case "deleteMany":
-                    $options = array_merge($this->getWriteOptions(), isset($args[1]) ? $args[1] : array(), array("limit" => 0));
-                    $bulk->delete($args[0], $options);
-                    break;
-
-                default:
-                    throw new InvalidArgumentException(sprintf("Unknown operation type called '%s' (operation#%d)", $opname, $n));
-                }
-            }
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
         }
 
-        $writeResult = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+        $operation = new BulkWrite($this->dbname, $this->collname, $operations, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return new BulkWriteResult($writeResult, $insertedIds);
+        return $operation->execute($server);
     }
 
     /**
@@ -499,18 +387,6 @@ class Collection
     }
 
     /**
-     * Retrieves all Bulk Write options with their default values.
-     *
-     * @return array of available Bulk Write options
-     */
-    public function getBulkOptions()
-    {
-        return array(
-            "ordered" => false,
-        );
-    }
-
-    /**
      * Return the collection name.
      *
      * @return string
@@ -539,20 +415,6 @@ class Collection
     public function getNamespace()
     {
         return $this->ns;
-    }
-
-    /**
-     * Retrieves all Write options with their default values.
-     *
-     * @return array of available Write options
-     */
-    public function getWriteOptions()
-    {
-        return array(
-            "ordered" => false,
-            "upsert"  => false,
-            "limit"   => 1,
-        );
     }
 
     /**

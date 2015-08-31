@@ -3,7 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\DeleteResult;
-use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
@@ -72,7 +72,7 @@ class Delete implements Executable
      */
     public function execute(Server $server)
     {
-        $bulk = new BulkWrite();
+        $bulk = new Bulk();
         $bulk->delete($this->filter, array('limit' => $this->limit));
 
         $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;

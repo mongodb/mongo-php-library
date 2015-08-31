@@ -1,0 +1,247 @@
+<?php
+
+namespace MongoDB\Operation;
+
+use MongoDB\BulkWriteResult;
+use MongoDB\Driver\BulkWrite as Bulk;
+use MongoDB\Driver\Server;
+use MongoDB\Driver\WriteConcern;
+use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\InvalidArgumentTypeException;
+
+/**
+ * Operation for executing multiple write operations.
+ *
+ * @api
+ * @see MongoDB\Collection::bulkWrite()
+ */
+class BulkWrite implements Executable
+{
+    const DELETE_MANY = 'deleteMany';
+    const DELETE_ONE  = 'deleteOne';
+    const INSERT_ONE  = 'insertOne';
+    const REPLACE_ONE = 'replaceOne';
+    const UPDATE_MANY = 'updateMany';
+    const UPDATE_ONE  = 'updateOne';
+
+    private $databaseName;
+    private $collectionName;
+    private $operations;
+    private $options;
+
+    /**
+     * Constructs a bulk write operation.
+     *
+     * Example array structure for all supported operation types:
+     *
+     *  [
+     *    [ 'deleteOne'  => [ $filter ] ],
+     *    [ 'deleteMany' => [ $filter ] ],
+     *    [ 'insertOne'  => [ $document ] ],
+     *    [ 'replaceOne' => [ $filter, $replacement, $options ] ],
+     *    [ 'updateMany' => [ $filter, $update, $options ] ],
+     *    [ 'updateOne'  => [ $filter, $update, $options ] ],
+     *  ]
+     *
+     * Arguments correspond to the respective Operation classes; however, the
+     * writeConcern option is specified for the top-level bulk write operation
+     * instead of each individual operations.
+     *
+     * Supported options for replaceOne, updateMany, and updateOne operations:
+     *
+     *  * upsert (boolean): When true, a new document is created if no document
+     *    matches the query. The default is false.
+     *
+     * Supported options for the bulk write operation:
+     *
+     *  * ordered (boolean): If true, when an insert fails, return without
+     *    performing the remaining writes. If false, when a write fails,
+     *    continue with the remaining writes, if any. The default is true.
+     *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
+     *
+     * @param string  $databaseName   Database name
+     * @param string  $collectionName Collection name
+     * @param array[] $operations     List of write operations
+     * @param array   $options        Command options
+     * @throws InvalidArgumentException
+     */
+    public function __construct($databaseName, $collectionName, array $operations, array $options = array())
+    {
+        if (empty($operations)) {
+            throw new InvalidArgumentException('$operations is empty');
+        }
+
+        $expectedIndex = 0;
+
+        foreach ($operations as $i => $operation) {
+            if ($i !== $expectedIndex) {
+                throw new InvalidArgumentException(sprintf('$operations is not a list (unexpected index: "%s")', $i));
+            }
+
+            if ( ! is_array($operation)) {
+                throw new InvalidArgumentTypeException(sprintf('$operations[%d]', $i), $operation, 'array');
+            }
+
+            if (count($operation) !== 1) {
+                throw new InvalidArgumentException(sprintf('Expected one element in $operation[%d], actually: %d', $i, count($operation)));
+            }
+
+            $type = key($operation);
+            $args = current($operation);
+
+            if ( ! isset($args[0]) && ! array_key_exists(0, $args)) {
+                throw new InvalidArgumentException(sprintf('Missing first argument for $operations[%d]["%s"]', $i, $type));
+            }
+
+            if ( ! is_array($args[0]) && ! is_object($args[0])) {
+                throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][0]', $i, $type), $args[0], 'array or object');
+            }
+
+            switch ($type) {
+                case self::INSERT_ONE:
+                    break;
+
+                case self::DELETE_MANY:
+                case self::DELETE_ONE:
+                    $operations[$i][$type][1] = array('limit' => ($type === self::DELETE_ONE ? 1 : 0));
+
+                    break;
+
+                case self::REPLACE_ONE:
+                    if ( ! isset($args[1]) && ! array_key_exists(1, $args)) {
+                        throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
+                    }
+
+                    if ( ! is_array($args[1]) && ! is_object($args[1])) {
+                        throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
+                    }
+
+                    if (\MongoDB\is_first_key_operator($args[1])) {
+                        throw new InvalidArgumentException(sprintf('First key in $operations[%d]["%s"][1] is an update operator', $i, $type));
+                    }
+
+                    if ( ! isset($args[2])) {
+                        $args[2] = array();
+                    }
+
+                    if ( ! is_array($args[2])) {
+                        throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][2]', $i, $type), $args[2], 'array');
+                    }
+
+                    $args[2]['multi'] = false;
+                    $args[2] += array('upsert' => false);
+
+                    if ( ! is_bool($args[2]['upsert'])) {
+                        throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][2]["upsert"]', $i, $type), $args[2]['upsert'], 'boolean');
+                    }
+
+                    $operations[$i][$type][2] = $args[2];
+
+                    break;
+
+                case self::UPDATE_MANY:
+                case self::UPDATE_ONE:
+                    if ( ! isset($args[1]) && ! array_key_exists(1, $args)) {
+                        throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
+                    }
+
+                    if ( ! is_array($args[1]) && ! is_object($args[1])) {
+                        throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
+                    }
+
+                    if ( ! \MongoDB\is_first_key_operator($args[1])) {
+                        throw new InvalidArgumentException(sprintf('First key in $operations[%d]["%s"][1] is not an update operator', $i, $type));
+                    }
+
+                    if ( ! isset($args[2])) {
+                        $args[2] = array();
+                    }
+
+                    if ( ! is_array($args[2])) {
+                        throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][2]', $i, $type), $args[2], 'array');
+                    }
+
+                    $args[2]['multi'] = ($type === self::UPDATE_MANY);
+                    $args[2] += array('upsert' => false);
+
+                    if ( ! is_bool($args[2]['upsert'])) {
+                        throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][2]["upsert"]', $i, $type), $args[2]['upsert'], 'boolean');
+                    }
+
+                    $operations[$i][$type][2] = $args[2];
+
+                    break;
+
+                default:
+                    throw new InvalidArgumentException(sprintf('Unknown operation type "%s" in $operations[%d]', $type, $i));
+            }
+
+            $expectedIndex += 1;
+        }
+
+        $options += array(
+            'ordered' => true,
+        );
+
+        if ( ! is_bool($options['ordered'])) {
+            throw new InvalidArgumentTypeException('"ordered" option', $options['ordered'], 'boolean');
+        }
+
+        if (array_key_exists('writeConcern', $options) && ! $options['writeConcern'] instanceof WriteConcern) {
+            throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+        }
+
+        $this->databaseName = (string) $databaseName;
+        $this->collectionName = (string) $collectionName;
+        $this->operations = $operations;
+        $this->options = $options;
+    }
+
+    /**
+     * Execute the operation.
+     *
+     * @see Executable::execute()
+     * @param Server $server
+     * @return BulkWriteResult
+     */
+    public function execute(Server $server)
+    {
+        $bulk = new Bulk($this->options['ordered']);
+        $insertedIds = array();
+
+        foreach ($this->operations as $i => $operation) {
+            $type = key($operation);
+            $args = current($operation);
+
+            switch ($type) {
+                case self::DELETE_MANY:
+                case self::DELETE_ONE:
+                    $bulk->delete($args[0], $args[1]);
+                    break;
+
+                case self::INSERT_ONE:
+                    $insertedId = $bulk->insert($args[0]);
+
+                    if ($insertedId !== null) {
+                        $insertedIds[$i] = $insertedId;
+                    } else {
+                        // TODO: This may be removed if PHPC-382 is implemented
+                        $insertedIds[$i] = is_array($args[0]) ? $args[0]['_id'] : $args[0]->_id;
+                    }
+
+                    break;
+
+                case self::REPLACE_ONE:
+                case self::UPDATE_MANY:
+                case self::UPDATE_ONE:
+                    $bulk->update($args[0], $args[1], $args[2]);
+            }
+        }
+
+        $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;
+        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $writeConcern);
+
+        return new BulkWriteResult($writeResult, $insertedIds);
+    }
+}

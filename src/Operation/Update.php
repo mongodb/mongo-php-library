@@ -3,7 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\UpdateResult;
-use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
@@ -100,7 +100,7 @@ class Update implements Executable
             'upsert' => $this->options['upsert'],
         );
 
-        $bulk = new BulkWrite();
+        $bulk = new Bulk();
         $bulk->update($this->filter, $this->update, $options);
 
         $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;

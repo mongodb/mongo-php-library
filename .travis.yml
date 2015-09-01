@@ -25,6 +25,7 @@ before_install:
 install:
   - if dpkg --compare-versions ${SERVER_VERSION} le "2.4"; then export SERVER_PACKAGE=mongodb-10gen-enterprise; else export SERVER_PACKAGE=mongodb-enterprise; fi
   - sudo apt-get install ${SERVER_PACKAGE}
+  - sudo apt-get -y install gdb
 
 before_script:
   - if dpkg --compare-versions ${SERVER_VERSION} le "2.4"; then export SERVER_SERVICE=mongodb; else export SERVER_SERVICE=mongod; fi
@@ -33,3 +34,10 @@ before_script:
   - pecl install -f mongodb-${DRIVER_VERSION}
   - php --ri mongodb
   - composer install --dev --no-interaction --prefer-source
+  - ulimit -c
+  - ulimit -c unlimited -S
+
+script:
+  - phpunit --debug || RESULT=$?
+  - for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb `php -r 'echo PHP_BINARY;'` core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done;
+  - if [[ ${RESULT} != 0 ]]; then exit $RESULT ; fi;

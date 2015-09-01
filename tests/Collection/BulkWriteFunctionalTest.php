@@ -128,7 +128,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Unknown operation type called 'foo' (operation#0)
+     * @expectedExceptionMessage Unknown operation type "foo" in $operations[0]
      */
     public function testUnknownOperation()
     {
@@ -139,7 +139,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessageRegExp /Missing argument#\d+ for '\w+' \(operation#\d+\)/
+     * @expectedExceptionMessageRegExp /Missing (first|second) argument for \$operations\[\d+\]\["\w+\"]/
      * @dataProvider provideOpsWithMissingArguments
      */
     public function testMissingArguments(array $ops)
@@ -164,7 +164,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage First key in $update must be a $operator
+     * @expectedExceptionMessage First key in $operations[0]["updateOne"][1] is not an update operator
      */
     public function testUpdateOneRequiresUpdateOperators()
     {
@@ -175,7 +175,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage First key in $update must be a $operator
+     * @expectedExceptionMessage First key in $operations[0]["updateMany"][1] is not an update operator
      */
     public function testUpdateManyRequiresUpdateOperators()
     {
@@ -186,7 +186,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage First key in $update must NOT be a $operator
+     * @expectedExceptionMessage First key in $operations[0]["replaceOne"][1] is an update operator
      */
     public function testReplaceOneRequiresReplacementDocument()
     {

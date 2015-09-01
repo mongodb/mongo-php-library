@@ -4,7 +4,6 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
-use MongoDB\Driver\BulkWrite;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\RuntimeException;
 use MongoDB\Exception\UnexpectedTypeException;
@@ -95,9 +94,6 @@ class CreateCollection implements Executable
 
     /**
      * Execute the operation.
-     *
-     * For servers < 2.6, this will actually perform an insert operation on the
-     * database's "system.indexes" collection.
      *
      * @see Executable::execute()
      * @param Server $server

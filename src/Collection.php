@@ -2,7 +2,6 @@
 
 namespace MongoDB;
 
-use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
@@ -14,8 +13,11 @@ use MongoDB\Exception\UnexpectedTypeException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInput;
 use MongoDB\Operation\Aggregate;
+use MongoDB\Operation\BulkWrite;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Count;
+use MongoDB\Operation\DeleteMany;
+use MongoDB\Operation\DeleteOne;
 use MongoDB\Operation\Distinct;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropIndexes;
@@ -24,7 +26,12 @@ use MongoDB\Operation\FindOne;
 use MongoDB\Operation\FindOneAndDelete;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
+use MongoDB\Operation\InsertMany;
+use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListIndexes;
+use MongoDB\Operation\ReplaceOne;
+use MongoDB\Operation\UpdateMany;
+use MongoDB\Operation\UpdateOne;
 use Traversable;
 
 class Collection
@@ -94,135 +101,23 @@ class Collection
     }
 
     /**
-     * Adds a full set of write operations into a bulk and executes it
+     * Executes multiple write operations.
      *
-     * The syntax of the $bulk array is:
-     *     $bulk = [
-     *         [
-     *             'METHOD' => [
-     *                 $document,
-     *                 $extraArgument1,
-     *                 $extraArgument2,
-     *             ],
-     *         ],
-     *         [
-     *             'METHOD' => [
-     *                 $document,
-     *                 $extraArgument1,
-     *                 $extraArgument2,
-     *             ],
-     *         ],
-     *     ]
-     *
-     *
-     * Where METHOD is one of
-     *     - 'insertOne'
-     *           Supports no $extraArgument
-     *     - 'updateMany'
-     *           Requires $extraArgument1, same as $update for Collection::updateMany()
-     *           Optional $extraArgument2, same as $options for Collection::updateMany()
-     *     - 'updateOne'
-     *           Requires $extraArgument1, same as $update for Collection::updateOne()
-     *           Optional $extraArgument2, same as $options for Collection::updateOne()
-     *     - 'replaceOne'
-     *           Requires $extraArgument1, same as $update for Collection::replaceOne()
-     *           Optional $extraArgument2, same as $options for Collection::replaceOne()
-     *     - 'deleteOne'
-     *           Supports no $extraArgument
-     *     - 'deleteMany'
-     *           Supports no $extraArgument
-     *
-     * @example Collection-bulkWrite.php Using Collection::bulkWrite()
-     *
-     * @see Collection::getBulkOptions() for supported $options
-     *
-     * @param array $ops    Array of operations
-     * @param array $options Additional options
-     * @return WriteResult
+     * @see BulkWrite::__construct() for supported options
+     * @param array[] $operations List of write operations
+     * @param array   $options    Command options
+     * @return BulkWriteResult
      */
-    public function bulkWrite(array $ops, array $options = array())
+    public function bulkWrite(array $operations, array $options = array())
     {
-        $options = array_merge($this->getBulkOptions(), $options);
-
-        $bulk = new BulkWrite($options["ordered"]);
-        $insertedIds = array();
-
-        foreach ($ops as $n => $op) {
-            foreach ($op as $opname => $args) {
-                if (!isset($args[0])) {
-                    throw new InvalidArgumentException(sprintf("Missing argument#1 for '%s' (operation#%d)", $opname, $n));
-                }
-
-                switch ($opname) {
-                case "insertOne":
-                    $insertedId = $bulk->insert($args[0]);
-
-                    if ($insertedId !== null) {
-                        $insertedIds[$n] = $insertedId;
-                    } else {
-                        $insertedIds[$n] = is_array($args[0]) ? $args[0]['_id'] : $args[0]->_id;
-                    }
-
-                    break;
-
-                case "updateMany":
-                    if (!isset($args[1])) {
-                        throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
-                    }
-                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("multi" => true));
-                    $firstKey = key($args[1]);
-                    if (!isset($firstKey[0]) || $firstKey[0] != '$') {
-                        throw new InvalidArgumentException("First key in \$update must be a \$operator");
-                    }
-
-                    $bulk->update($args[0], $args[1], $options);
-                    break;
-
-                case "updateOne":
-                    if (!isset($args[1])) {
-                        throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
-                    }
-                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("multi" => false));
-                    $firstKey = key($args[1]);
-                    if (!isset($firstKey[0]) || $firstKey[0] != '$') {
-                        throw new InvalidArgumentException("First key in \$update must be a \$operator");
-                    }
-
-                    $bulk->update($args[0], $args[1], $options);
-                    break;
-
-                case "replaceOne":
-                    if (!isset($args[1])) {
-                        throw new InvalidArgumentException(sprintf("Missing argument#2 for '%s' (operation#%d)", $opname, $n));
-                    }
-                    $options = array_merge($this->getWriteOptions(), isset($args[2]) ? $args[2] : array(), array("multi" => false));
-                    $firstKey = key($args[1]);
-                    if (isset($firstKey[0]) && $firstKey[0] == '$') {
-                        throw new InvalidArgumentException("First key in \$update must NOT be a \$operator");
-                    }
-
-                    $bulk->update($args[0], $args[1], $options);
-                    break;
-
-                case "deleteOne":
-                    $options = array_merge($this->getWriteOptions(), isset($args[1]) ? $args[1] : array(), array("limit" => 1));
-                    $bulk->delete($args[0], $options);
-                    break;
-
-                case "deleteMany":
-                    $options = array_merge($this->getWriteOptions(), isset($args[1]) ? $args[1] : array(), array("limit" => 0));
-                    $bulk->delete($args[0], $options);
-                    break;
-
-                default:
-                    throw new InvalidArgumentException(sprintf("Unknown operation type called '%s' (operation#%d)", $opname, $n));
-                }
-            }
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
         }
 
-        $writeResult = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+        $operation = new BulkWrite($this->dbname, $this->collname, $operations, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return new BulkWriteResult($writeResult, $insertedIds);
+        return $operation->execute($server);
     }
 
     /**
@@ -287,35 +182,45 @@ class Collection
     }
 
     /**
-     * Deletes a document matching the $filter criteria.
-     * NOTE: Will delete ALL documents matching $filter
+     * Deletes all documents matching the filter.
      *
+     * @see DeleteMany::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/delete/
-     *
-     * @param array $filter The $filter criteria to delete
+     * @param array|object $filter  Query by which to delete documents
+     * @param array        $options Command options
      * @return DeleteResult
      */
-    public function deleteMany(array $filter)
+    public function deleteMany($filter, array $options = array())
     {
-        $wr = $this->_delete($filter, 0);
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
+        }
 
-        return new DeleteResult($wr);
+        $operation = new DeleteMany($this->dbname, $this->collname, $filter, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
     }
 
     /**
-     * Deletes a document matching the $filter criteria.
-     * NOTE: Will delete at most ONE document matching $filter
+     * Deletes at most one document matching the filter.
      *
+     * @see DeleteOne::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/delete/
-     *
-     * @param array $filter The $filter criteria to delete
+     * @param array|object $filter  Query by which to delete documents
+     * @param array        $options Command options
      * @return DeleteResult
      */
-    public function deleteOne(array $filter)
+    public function deleteOne($filter, array $options = array())
     {
-        $wr = $this->_delete($filter);
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
+        }
 
-        return new DeleteResult($wr);
+        $operation = new DeleteOne($this->dbname, $this->collname, $filter, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
     }
 
     /**
@@ -422,6 +327,7 @@ class Collection
      * The document to return may be null.
      *
      * @see FindOneAndDelete::__construct() for supported options
+     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Command options
      * @return object|null
@@ -443,6 +349,7 @@ class Collection
      * "returnDocument" option to return the updated document.
      *
      * @see FindOneAndReplace::__construct() for supported options
+     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
      * @param array|object $filter      Query by which to filter documents
      * @param array|object $replacement Replacement document
      * @param array        $options     Command options
@@ -465,6 +372,7 @@ class Collection
      * "returnDocument" option to return the updated document.
      *
      * @see FindOneAndReplace::__construct() for supported options
+     * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
      * @param array|object $filter  Query by which to filter documents
      * @param array|object $update  Update to apply to the matched document
      * @param array        $options Command options
@@ -476,18 +384,6 @@ class Collection
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
-    }
-
-    /**
-     * Retrieves all Bulk Write options with their default values.
-     *
-     * @return array of available Bulk Write options
-     */
-    public function getBulkOptions()
-    {
-        return array(
-            "ordered" => false,
-        );
     }
 
     /**
@@ -522,70 +418,45 @@ class Collection
     }
 
     /**
-     * Retrieves all Write options with their default values.
+     * Inserts multiple documents.
      *
-     * @return array of available Write options
-     */
-    public function getWriteOptions()
-    {
-        return array(
-            "ordered" => false,
-            "upsert"  => false,
-            "limit"   => 1,
-        );
-    }
-
-    /**
-     * Inserts the provided documents
-     *
+     * @see InsertMany::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/insert/
-     *
      * @param array[]|object[] $documents The documents to insert
+     * @param array            $options   Command options
      * @return InsertManyResult
      */
-    public function insertMany(array $documents)
+    public function insertMany(array $documents, array $options = array())
     {
-        $options = array_merge($this->getWriteOptions());
-
-        $bulk = new BulkWrite($options["ordered"]);
-        $insertedIds = array();
-
-        foreach ($documents as $i => $document) {
-            $insertedId = $bulk->insert($document);
-
-            if ($insertedId !== null) {
-                $insertedIds[$i] = $insertedId;
-            } else {
-                $insertedIds[$i] = is_array($document) ? $document['_id'] : $document->_id;
-            }
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
         }
 
-        $writeResult = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+        $operation = new InsertMany($this->dbname, $this->collname, $documents, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        return new InsertManyResult($writeResult, $insertedIds);
+        return $operation->execute($server);
     }
 
     /**
-     * Inserts the provided document
+     * Inserts one document.
      *
+     * @see InsertOne::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/insert/
-     *
      * @param array|object $document The document to insert
+     * @param array        $options  Command options
      * @return InsertOneResult
      */
-    public function insertOne($document)
+    public function insertOne($document, array $options = array())
     {
-        $options = array_merge($this->getWriteOptions());
-
-        $bulk = new BulkWrite($options["ordered"]);
-        $id    = $bulk->insert($document);
-        $wr    = $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
-
-        if ($id === null) {
-            $id = is_array($document) ? $document['_id'] : $document->_id;
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
         }
 
-        return new InsertOneResult($wr, $id);
+        $operation = new InsertOne($this->dbname, $this->collname, $document, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
     }
 
     /**
@@ -603,92 +474,68 @@ class Collection
     }
 
     /**
-     * Replace one document
+     * Replaces at most one document matching the filter.
      *
+     * @see ReplaceOne::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @see Collection::getWriteOptions() for supported $options
-     *
-     * @param array $filter   The document to be replaced
-     * @param array $update   The document to replace with
-     * @param array $options  Additional options
+     * @param array|object $filter      Query by which to filter documents
+     * @param array|object $replacement Replacement document
+     * @param array        $options     Command options
      * @return UpdateResult
      */
-    public function replaceOne(array $filter, array $update, array $options = array())
+    public function replaceOne($filter, $replacement, array $options = array())
     {
-        $firstKey = key($update);
-        if (isset($firstKey[0]) && $firstKey[0] == '$') {
-            throw new InvalidArgumentException("First key in \$update must NOT be a \$operator");
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
         }
-        $wr = $this->_update($filter, $update, $options + array("multi" => false));
 
-        return new UpdateResult($wr);
+        $operation = new ReplaceOne($this->dbname, $this->collname, $filter, $replacement, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
     }
 
     /**
-     * Update one document
-     * NOTE: Will update ALL documents matching $filter
+     * Updates all documents matching the filter.
      *
+     * @see UpdateMany::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @see Collection::getWriteOptions() for supported $options
-     *
-     * @param array $filter   The document to be replaced
-     * @param array $update   An array of update operators to apply to the document
-     * @param array $options  Additional options
+     * @param array|object $filter      Query by which to filter documents
+     * @param array|object $replacement Update to apply to the matched documents
+     * @param array        $options     Command options
      * @return UpdateResult
      */
-    public function updateMany(array $filter, $update, array $options = array())
+    public function updateMany($filter, $update, array $options = array())
     {
-        $wr = $this->_update($filter, $update, $options + array("multi" => true));
-
-        return new UpdateResult($wr);
-    }
-
-    /**
-     * Update one document
-     * NOTE: Will update at most ONE document matching $filter
-     *
-     * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @see Collection::getWriteOptions() for supported $options
-     *
-     * @param array $filter   The document to be replaced
-     * @param array $update   An array of update operators to apply to the document
-     * @param array $options  Additional options
-     * @return UpdateResult
-     */
-    public function updateOne(array $filter, array $update, array $options = array())
-    {
-        $firstKey = key($update);
-        if (!isset($firstKey[0]) || $firstKey[0] != '$') {
-            throw new InvalidArgumentException("First key in \$update must be a \$operator");
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
         }
-        $wr = $this->_update($filter, $update, $options + array("multi" => false));
 
-        return new UpdateResult($wr);
+        $operation = new UpdateMany($this->dbname, $this->collname, $filter, $update, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
     }
 
     /**
-     * Internal helper for delete one/many documents
-     * @internal
+     * Updates at most one document matching the filter.
+     *
+     * @see ReplaceOne::__construct() for supported options
+     * @see http://docs.mongodb.org/manual/reference/command/update/
+     * @param array|object $filter      Query by which to filter documents
+     * @param array|object $replacement Update to apply to the matched document
+     * @param array        $options     Command options
+     * @return UpdateResult
      */
-    final protected function _delete($filter, $limit = 1)
+    public function updateOne($filter, $update, array $options = array())
     {
-        $options = array_merge($this->getWriteOptions(), array("limit" => $limit));
+        if ( ! isset($options['writeConcern']) && isset($this->wc)) {
+            $options['writeConcern'] = $this->wc;
+        }
 
-        $bulk  = new BulkWrite($options["ordered"]);
-        $bulk->delete($filter, $options);
-        return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
-    }
+        $operation = new UpdateOne($this->dbname, $this->collname, $filter, $update, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-    /**
-     * Internal helper for replacing/updating one/many documents
-     * @internal
-     */
-    protected function _update($filter, $update, $options)
-    {
-        $options = array_merge($this->getWriteOptions(), $options);
-
-        $bulk  = new BulkWrite($options["ordered"]);
-        $bulk->update($filter, $update, $options);
-        return $this->manager->executeBulkWrite($this->ns, $bulk, $this->wc);
+        return $operation->execute($server);
     }
 }

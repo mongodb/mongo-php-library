@@ -4,7 +4,7 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
-use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\RuntimeException;
 use MongoDB\Exception\UnexpectedTypeException;
@@ -108,7 +108,7 @@ class CreateIndexes implements Executable
      */
     private function executeLegacy(Server $server)
     {
-        $bulk = new BulkWrite(true);
+        $bulk = new Bulk(true);
 
         foreach ($this->indexes as $index) {
             $bulk->insert($index);

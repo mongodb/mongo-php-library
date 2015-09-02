@@ -85,19 +85,18 @@ class Count implements Executable
     public function execute(Server $server)
     {
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
-        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
         $result = current($cursor->toArray());
 
-        if (empty($result['ok'])) {
-            throw new RuntimeException(isset($result['errmsg']) ? $result['errmsg'] : 'Unknown error');
+        if (empty($result->ok)) {
+            throw new RuntimeException(isset($result->errmsg) ? $result->errmsg : 'Unknown error');
         }
 
         // Older server versions may return a float
-        if ( ! isset($result['n']) || ! (is_integer($result['n']) || is_float($result['n']))) {
-            throw new UnexpectedValueException('count command did not return an "n" value');
+        if ( ! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {
+            throw new UnexpectedValueException('count command did not return a numeric "n" value');
         }
 
-        return (integer) $result['n'];
+        return (integer) $result->n;
     }
 
     /**

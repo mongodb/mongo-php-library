@@ -91,11 +91,10 @@ class CreateIndexes implements Executable
         ));
 
         $cursor = $server->executeCommand($this->databaseName, $command);
-        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
         $result = current($cursor->toArray());
 
-        if (empty($result['ok'])) {
-            throw new RuntimeException(isset($result['errmsg']) ? $result['errmsg'] : 'Unknown error');
+        if (empty($result->ok)) {
+            throw new RuntimeException(isset($result->errmsg) ? $result->errmsg : 'Unknown error');
         }
     }
 

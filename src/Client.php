@@ -14,8 +14,6 @@ use MongoDB\Operation\ListDatabases;
 class Client
 {
     private $manager;
-    private $readPreference;
-    private $writeConcern;
 
     /**
      * Constructs a new Client instance.
@@ -77,9 +75,8 @@ class Client
     public function selectCollection($databaseName, $collectionName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
     {
         $namespace = $databaseName . '.' . $collectionName;
-        // TODO: inherit from Manager options once PHPC-196 is implemented
-        $writeConcern = $writeConcern ?: $this->writeConcern;
-        $readPreference = $readPreference ?: $this->readPreference;
+        $writeConcern = $writeConcern ?: $this->manager->getWriteConcern();
+        $readPreference = $readPreference ?: $this->manager->getReadPreference();
 
         return new Collection($this->manager, $namespace, $writeConcern, $readPreference);
     }
@@ -97,9 +94,8 @@ class Client
      */
     public function selectDatabase($databaseName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
     {
-        // TODO: inherit from Manager options once PHPC-196 is implemented
-        $writeConcern = $writeConcern ?: $this->writeConcern;
-        $readPreference = $readPreference ?: $this->readPreference;
+        $writeConcern = $writeConcern ?: $this->manager->getWriteConcern();
+        $readPreference = $readPreference ?: $this->manager->getReadPreference();
 
         return new Database($this->manager, $databaseName, $writeConcern, $readPreference);
     }

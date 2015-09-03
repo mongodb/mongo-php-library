@@ -28,6 +28,7 @@ install:
   - sudo apt-get -y install gdb
 
 before_script:
+  - phpenv config-rm xdebug.ini
   - if dpkg --compare-versions ${SERVER_VERSION} le "2.4"; then export SERVER_SERVICE=mongodb; else export SERVER_SERVICE=mongod; fi
   - if ! nc -z localhost 27017; then sudo service ${SERVER_SERVICE} start; fi
   - mongod --version

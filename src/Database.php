@@ -34,9 +34,14 @@ class Database
      * @param string         $databaseName   Database name
      * @param WriteConcern   $writeConcern   Default write concern to apply
      * @param ReadPreference $readPreference Default read preference to apply
+     * @throws InvalidArgumentException if $databaseName is invalid
      */
     public function __construct(Manager $manager, $databaseName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
     {
+        if (strlen($databaseName) < 1) {
+            throw new InvalidArgumentException('$databaseName is invalid: ' . $databaseName);
+        }
+
         $this->manager = $manager;
         $this->databaseName = (string) $databaseName;
         $this->writeConcern = $writeConcern;

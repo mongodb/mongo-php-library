@@ -326,4 +326,33 @@ class BulkWriteTest extends TestCase
             array(BulkWrite::UPDATE_ONE => array(array('x' => 1), array('$set' => array('x' => 1)), array('upsert' => $upsert))),
         ));
     }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @dataProvider provideInvalidConstructorOptions
+     */
+    public function testConstructorOptionTypeChecks(array $options)
+    {
+        new BulkWrite(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            array(array(BulkWrite::INSERT_ONE => array(array('x' => 1)))),
+            $options
+        );
+    }
+
+    public function provideInvalidConstructorOptions()
+    {
+        $options = array();
+
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = array('ordered' => $value);
+        }
+
+        foreach ($this->getInvalidWriteConcernValues() as $value) {
+            $options[][] = array('writeConcern' => $value);
+        }
+
+        return $options;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Collection;
 
+use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
 
 /**
@@ -9,6 +10,47 @@ use MongoDB\Driver\BulkWrite;
  */
 class CollectionFunctionalTest extends FunctionalTestCase
 {
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @dataProvider provideInvalidNamespaceValues
+     */
+    public function testConstructorNamespaceArgument($namespace)
+    {
+        // TODO: Move to unit test once ManagerInterface can be mocked (PHPC-378)
+        new Collection($this->manager, $namespace);
+    }
+
+    public function provideInvalidNamespaceValues()
+    {
+        return array(
+            array(null),
+            array(''),
+            array('db_collection'),
+            array('db'),
+            array('.collection'),
+        );
+    }
+
+    public function testToString()
+    {
+        $this->assertEquals($this->getNamespace(), (string) $this->collection);
+    }
+
+    public function getGetCollectionName()
+    {
+        $this->assertEquals($this->getCollectionName(), $this->collection->getCollectionName());
+    }
+
+    public function getGetDatabaseName()
+    {
+        $this->assertEquals($this->getDatabaseName(), $this->collection->getDatabaseName());
+    }
+
+    public function testGetNamespace()
+    {
+        $this->assertEquals($this->getNamespace(), $this->collection->getNamespace());
+    }
+
     public function testDrop()
     {
         $writeResult = $this->collection->insertOne(array('x' => 1));

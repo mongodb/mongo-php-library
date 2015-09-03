@@ -52,14 +52,22 @@ class Collection
      * @param string         $namespace      Collection namespace (e.g. "db.collection")
      * @param WriteConcern   $writeConcern   Default write concern to apply
      * @param ReadPreference $readPreference Default read preference to apply
+     * @throws InvalidArgumentException if $namespace is invalid
      */
     public function __construct(Manager $manager, $namespace, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
     {
+        $parts = explode('.', $namespace, 2);
+
+        if (count($parts) != 2 || strlen($parts[0]) == 0 || strlen($parts[1]) == 0) {
+            throw new InvalidArgumentException('$namespace is invalid: ' . $namespace);
+        }
+
+        $this->databaseName = $parts[0];
+        $this->collectionName = $parts[1];
+
         $this->manager = $manager;
         $this->writeConcern = $writeConcern;
         $this->readPreference = $readPreference;
-
-        list($this->databaseName, $this->collectionName) = explode(".", $namespace, 2);
     }
 
     /**

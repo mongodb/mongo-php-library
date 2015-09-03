@@ -32,11 +32,11 @@ class Distinct implements Executable
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
      *
-     * @param string $databaseName   Database name
-     * @param string $collectionName Collection name
-     * @param string $fieldName      Field for which to return distinct values
-     * @param array  $filter         Query by which to filter documents
-     * @param array  $options        Command options
+     * @param string       $databaseName   Database name
+     * @param string       $collectionName Collection name
+     * @param string       $fieldName      Field for which to return distinct values
+     * @param array|object $filter         Query by which to filter documents
+     * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
     public function __construct($databaseName, $collectionName, $fieldName, $filter = array(), array $options = array())

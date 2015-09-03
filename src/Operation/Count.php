@@ -39,10 +39,10 @@ class Count implements Executable
      *  * skip (integer): The number of documents to skip before returning the
      *    documents.
      *
-     * @param string $databaseName   Database name
-     * @param string $collectionName Collection name
-     * @param array  $filter         Query by which to filter documents
-     * @param array  $options        Command options
+     * @param string       $databaseName   Database name
+     * @param string       $collectionName Collection name
+     * @param array|object $filter         Query by which to filter documents
+     * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
     public function __construct($databaseName, $collectionName, $filter = array(), array $options = array())

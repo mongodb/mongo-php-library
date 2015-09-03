@@ -45,8 +45,12 @@ class Count implements Executable
      * @param array  $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, array $filter = array(), array $options = array())
+    public function __construct($databaseName, $collectionName, $filter = array(), array $options = array())
     {
+        if ( ! is_array($filter) && ! is_object($filter)) {
+            throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
+        }
+
         if (isset($options['hint'])) {
             if (is_array($options['hint']) || is_object($options['hint'])) {
                 $options['hint'] = \MongoDB\generate_index_name($options['hint']);

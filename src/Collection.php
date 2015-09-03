@@ -124,11 +124,11 @@ class Collection
      * Gets the number of documents matching the filter.
      *
      * @see Count::__construct() for supported options
-     * @param array $filter  Query by which to filter documents
-     * @param array $options Command options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array        $options Command options
      * @return integer
      */
-    public function count(array $filter = array(), array $options = array())
+    public function count($filter = array(), array $options = array())
     {
         $operation = new Count($this->dbname, $this->collname, $filter, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));

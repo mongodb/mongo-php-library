@@ -8,6 +8,7 @@ class InsertManyTest extends TestCase
 {
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessage $documents is empty
      */
     public function testConstructorDocumentsMustNotBeEmpty()
     {
@@ -16,6 +17,7 @@ class InsertManyTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessage $documents is not a list (unexpected index: "1")
      */
     public function testConstructorDocumentsMustBeAList()
     {
@@ -24,27 +26,35 @@ class InsertManyTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @dataProvider provideInvalidDocumentArguments
+     * @expectedExceptionMessageRegExp /Expected \$documents\[0\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorDocumentsElementType($document)
+    public function testConstructorDocumentsArgumentElementTypeChecks($document)
     {
         new InsertMany($this->getDatabaseName(), $this->getCollectionName(), array($document));
     }
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @dataProvider provideInvalidBooleanArguments
+     * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorOrderedOptionType($ordered)
+    public function testConstructorOptionTypeChecks(array $options)
     {
-        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), array(array('x' => 1)), array('ordered' => $ordered));
+        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), array(array('x' => 1)), $options);
     }
 
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     */
-    public function testConstructorWriteConcernOptionType()
+    public function provideInvalidConstructorOptions()
     {
-        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), array(array('x' => 1)), array('writeConcern' => null));
+        $options = array();
+
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = array('ordered' => $value);
+        }
+
+        foreach ($this->getInvalidWriteConcernValues() as $value) {
+            $options[][] = array('writeConcern' => $value);
+        }
+
+        return $options;
     }
 }

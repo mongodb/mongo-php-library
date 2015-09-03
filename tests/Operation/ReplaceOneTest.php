@@ -8,24 +8,25 @@ class ReplaceOneTest extends TestCase
 {
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @dataProvider provideInvalidDocumentArguments
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorFilterArgumentType($filter)
+    public function testConstructorFilterArgumentTypeCheck($filter)
     {
         new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), $filter, array('y' => 1));
     }
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @dataProvider provideInvalidDocumentArguments
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorReplacementArgumentType($replacement)
+    public function testConstructorReplacementArgumentTypeCheck($replacement)
     {
         new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), $replacement);
     }
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessage First key in $replacement argument is an update operator
      */
     public function testConstructorReplacementArgumentRequiresNoOperators()
     {

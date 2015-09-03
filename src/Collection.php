@@ -228,11 +228,11 @@ class Collection
      *
      * @see Distinct::__construct() for supported options
      * @param string $fieldName Field for which to return distinct values
-     * @param array  $filter    Query by which to filter documents
-     * @param array  $options   Command options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array        $options Command options
      * @return mixed[]
      */
-    public function distinct($fieldName, array $filter = array(), array $options = array())
+    public function distinct($fieldName, $filter = array(), array $options = array())
     {
         $operation = new Distinct($this->dbname, $this->collname, $fieldName, $filter, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));

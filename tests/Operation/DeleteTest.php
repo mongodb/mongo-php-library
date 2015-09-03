@@ -8,27 +8,45 @@ class DeleteTest extends TestCase
 {
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @dataProvider provideInvalidDocumentArguments
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorFilterArgumentType($filter)
+    public function testConstructorFilterArgumentTypeCheck($filter)
     {
         new Delete($this->getDatabaseName(), $this->getCollectionName(), $filter, 0);
     }
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @dataProvider provideInvalidDocumentArguments
+     * @expectedExceptionMessage $limit must be 0 or 1
+     * @dataProvider provideInvalidLimitValues
      */
-    public function testConstructorLimitArgumentMustBeOneOrZero()
+    public function testConstructorLimitArgumentMustBeOneOrZero($limit)
     {
-        new Delete($this->getDatabaseName(), $this->getCollectionName(), array(), 2);
+        new Delete($this->getDatabaseName(), $this->getCollectionName(), array(), $limit);
+    }
+
+    public function provideInvalidLimitValues()
+    {
+        return $this->wrapValuesForDataProvider(array_merge($this->getInvalidIntegerValues(), array(-1, 2)));
     }
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorWriteConcernOptionType()
+    public function testConstructorOptionTypeChecks(array $options)
     {
-        new Delete($this->getDatabaseName(), $this->getCollectionName(), array(), 1, array('writeConcern' => null));
+        new Delete($this->getDatabaseName(), $this->getCollectionName(), array(), 1, $options);
+    }
+
+    public function provideInvalidConstructorOptions()
+    {
+        $options = array();
+
+        foreach ($this->getInvalidWriteConcernValues() as $value) {
+            $options[][] = array('writeConcern' => $value);
+        }
+
+        return $options;
     }
 }

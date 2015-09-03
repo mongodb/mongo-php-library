@@ -2,17 +2,17 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\Operation\InsertOne;
+use MongoDB\Operation\Distinct;
 
-class InsertOneTest extends TestCase
+class DistinctTest extends TestCase
 {
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorDocumentArgumentTypeCheck($document)
+    public function testConstructorFilterArgumentTypeCheck($filter)
     {
-        new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
+        new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', $filter);
     }
 
     /**
@@ -21,15 +21,15 @@ class InsertOneTest extends TestCase
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        new InsertOne($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), $options);
+        new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', array(), $options);
     }
 
     public function provideInvalidConstructorOptions()
     {
         $options = array();
 
-        foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = array('writeConcern' => $value);
+        foreach ($this->getInvalidIntegerValues() as $value) {
+            $options[][] = array('maxTimeMS' => $value);
         }
 
         return $options;

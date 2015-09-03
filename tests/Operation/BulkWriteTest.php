@@ -64,10 +64,10 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["insertOne"\]\[0\] to have type "[\w ]+" but found "[\w ]+"/
-     * @dataProvider provideInvalidDocumentArguments
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["insertOne"\]\[0\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testInsertOneDocumentArgumentType($document)
+    public function testInsertOneDocumentArgumentTypeCheck($document)
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
             array(BulkWrite::INSERT_ONE => array($document)),
@@ -87,10 +87,10 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["deleteMany"\]\[0\] to have type "[\w ]+" but found "[\w ]+"/
-     * @dataProvider provideInvalidDocumentArguments
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["deleteMany"\]\[0\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testDeleteManyFilterArgumentType($document)
+    public function testDeleteManyFilterArgumentTypeCheck($document)
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
             array(BulkWrite::DELETE_MANY => array($document)),
@@ -110,10 +110,10 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["deleteOne"\]\[0\] to have type "[\w ]+" but found "[\w ]+"/
-     * @dataProvider provideInvalidDocumentArguments
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["deleteOne"\]\[0\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testDeleteOneFilterArgumentType($document)
+    public function testDeleteOneFilterArgumentTypeCheck($document)
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
             array(BulkWrite::DELETE_ONE => array($document)),
@@ -133,10 +133,10 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["replaceOne"\]\[0\] to have type "[\w ]+" but found "[\w ]+"/
-     * @dataProvider provideInvalidDocumentArguments
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["replaceOne"\]\[0\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testReplaceOneFilterArgumentType($filter)
+    public function testReplaceOneFilterArgumentTypeCheck($filter)
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
             array(BulkWrite::REPLACE_ONE => array($filter, array('y' => 1))),
@@ -156,10 +156,10 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["replaceOne"\]\[1\] to have type "[\w ]+" but found "[\w ]+"/
-     * @dataProvider provideInvalidDocumentArguments
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["replaceOne"\]\[1\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testReplaceOneReplacementArgumentType($replacement)
+    public function testReplaceOneReplacementArgumentTypeCheck($replacement)
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
             array(BulkWrite::REPLACE_ONE => array(array('x' => 1), $replacement)),
@@ -179,10 +179,10 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["replaceOne"\]\[2\]\["upsert"\] to have type "[\w ]+" but found "[\w ]+"/
-     * @dataProvider provideInvalidBooleanArguments
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["replaceOne"\]\[2\]\["upsert"\] to have type "boolean" but found "[\w ]+"/
+     * @dataProvider provideInvalidBooleanValues
      */
-    public function testReplaceOneUpsertOptionType($upsert)
+    public function testReplaceOneUpsertOptionTypeCheck($upsert)
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
             array(BulkWrite::REPLACE_ONE => array(array('x' => 1), array('y' => 1), array('upsert' => $upsert))),
@@ -202,10 +202,10 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateMany"\]\[0\] to have type "[\w ]+" but found "[\w ]+"/
-     * @dataProvider provideInvalidDocumentArguments
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateMany"\]\[0\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testUpdateManyFilterArgumentType($filter)
+    public function testUpdateManyFilterArgumentTypeCheck($filter)
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
             array(BulkWrite::UPDATE_MANY => array($filter, array('$set' => array('x' => 1)))),
@@ -225,10 +225,10 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateMany"\]\[1\] to have type "[\w ]+" but found "[\w ]+"/
-     * @dataProvider provideInvalidDocumentArguments
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateMany"\]\[1\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testUpdateManyUpdateArgumentType($update)
+    public function testUpdateManyUpdateArgumentTypeCheck($update)
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
             array(BulkWrite::UPDATE_MANY => array(array('x' => 1), $update)),
@@ -248,10 +248,10 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateMany"\]\[2\]\["upsert"\] to have type "[\w ]+" but found "[\w ]+"/
-     * @dataProvider provideInvalidBooleanArguments
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateMany"\]\[2\]\["upsert"\] to have type "boolean" but found "[\w ]+"/
+     * @dataProvider provideInvalidBooleanValues
      */
-    public function testUpdateManyUpsertOptionType($upsert)
+    public function testUpdateManyUpsertOptionTypeCheck($upsert)
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
             array(BulkWrite::UPDATE_MANY => array(array('x' => 1), array('$set' => array('x' => 1)), array('upsert' => $upsert))),
@@ -271,10 +271,10 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateOne"\]\[0\] to have type "[\w ]+" but found "[\w ]+"/
-     * @dataProvider provideInvalidDocumentArguments
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateOne"\]\[0\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testUpdateOneFilterArgumentType($filter)
+    public function testUpdateOneFilterArgumentTypeCheck($filter)
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
             array(BulkWrite::UPDATE_ONE => array($filter, array('$set' => array('x' => 1)))),
@@ -294,10 +294,10 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateOne"\]\[1\] to have type "[\w ]+" but found "[\w ]+"/
-     * @dataProvider provideInvalidDocumentArguments
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateOne"\]\[1\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testUpdateOneUpdateArgumentType($update)
+    public function testUpdateOneUpdateArgumentTypeCheck($update)
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
             array(BulkWrite::UPDATE_ONE => array(array('x' => 1), $update)),
@@ -317,13 +317,42 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateOne"\]\[2\]\["upsert"\] to have type "[\w ]+" but found "[\w ]+"/
-     * @dataProvider provideInvalidBooleanArguments
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateOne"\]\[2\]\["upsert"\] to have type "boolean" but found "[\w ]+"/
+     * @dataProvider provideInvalidBooleanValues
      */
-    public function testUpdateOneUpsertOptionType($upsert)
+    public function testUpdateOneUpsertOptionTypeCheck($upsert)
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
             array(BulkWrite::UPDATE_ONE => array(array('x' => 1), array('$set' => array('x' => 1)), array('upsert' => $upsert))),
         ));
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @dataProvider provideInvalidConstructorOptions
+     */
+    public function testConstructorOptionTypeChecks(array $options)
+    {
+        new BulkWrite(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            array(array(BulkWrite::INSERT_ONE => array(array('x' => 1)))),
+            $options
+        );
+    }
+
+    public function provideInvalidConstructorOptions()
+    {
+        $options = array();
+
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = array('ordered' => $value);
+        }
+
+        foreach ($this->getInvalidWriteConcernValues() as $value) {
+            $options[][] = array('writeConcern' => $value);
+        }
+
+        return $options;
     }
 }

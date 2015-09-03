@@ -39,8 +39,12 @@ class Distinct implements Executable
      * @param array  $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $fieldName, array $filter = array(), array $options = array())
+    public function __construct($databaseName, $collectionName, $fieldName, $filter = array(), array $options = array())
     {
+        if ( ! is_array($filter) && ! is_object($filter)) {
+            throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
+        }
+
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }

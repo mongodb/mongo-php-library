@@ -8,45 +8,49 @@ class UpdateTest extends TestCase
 {
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @dataProvider provideInvalidDocumentArguments
+     * @expectedExceptionMessageRegExp /Expected \$filter to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorFilterArgumentType($filter)
+    public function testConstructorFilterArgumentTypeCheck($filter)
     {
         new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, array('$set' => array('x' => 1)));
     }
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @dataProvider provideInvalidDocumentArguments
+     * @expectedExceptionMessageRegExp /Expected \$update to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorUpdateArgumentType($update)
+    public function testConstructorUpdateArgumentTypeCheck($update)
     {
         new Update($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), $update);
     }
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @dataProvider provideInvalidBooleanArguments
+     * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorMultiOptionType($multi)
+    public function testConstructorOptionTypeChecks(array $options)
     {
-        new Update($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), array('y' => 1), array('multi' => $multi));
+        new Update($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), array('y' => 1), $options);
     }
 
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     * @dataProvider provideInvalidBooleanArguments
-     */
-    public function testConstructorUpsertOptionType($upsert)
+    public function provideInvalidConstructorOptions()
     {
-        new Update($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), array('y' => 1), array('upsert' => $upsert));
-    }
+        $options = array();
 
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
-     */
-    public function testConstructorWriteConcernOptionType()
-    {
-        new Update($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), array('y' => 1), array('writeConcern' => null));
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = array('multi' => $value);
+        }
+
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = array('upsert' => $value);
+        }
+
+        foreach ($this->getInvalidWriteConcernValues() as $value) {
+            $options[][] = array('writeConcern' => $value);
+        }
+
+        return $options;
     }
 }

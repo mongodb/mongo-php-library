@@ -10,24 +10,43 @@ use stdClass;
  */
 abstract class TestCase extends BaseTestCase
 {
-    public function provideInvalidDocumentArguments()
+    public function provideInvalidDocumentValues()
     {
-        return array(
-            array(null),
-            array(123),
-            array('foo'),
-            array(true),
-        );
+        return $this->wrapValuesForDataProvider($this->getInvalidDocumentValues());
     }
 
-    public function provideInvalidBooleanArguments()
+    public function provideInvalidBooleanValues()
     {
-        return array(
-            array(null),
-            array(123),
-            array('foo'),
-            array(array()),
-            array(new stdClass()),
-        );
+        return $this->wrapValuesForDataProvider($this->getInvalidBooleanValues());
+    }
+
+    protected function getInvalidBooleanValues()
+    {
+        return array(123, 3.14, 'foo', array(), new stdClass);
+    }
+
+    protected function getInvalidDocumentValues()
+    {
+        return array(123, 3.14, 'foo', true);
+    }
+
+    protected function getInvalidIntegerValues()
+    {
+        return array(3.14, 'foo', true, array(), new stdClass);
+    }
+
+    protected function getInvalidStringValues()
+    {
+        return array(123, 3.14, true, array(), new stdClass);
+    }
+
+    protected function getInvalidWriteConcernValues()
+    {
+        return array(123, 3.14, 'foo', true, array(), new stdClass);
+    }
+
+    protected function wrapValuesForDataProvider(array $values)
+    {
+        return array_map(function($value) { return array($value); }, $values);
     }
 }

@@ -59,6 +59,24 @@ class Aggregate implements Executable
      */
     public function __construct($databaseName, $collectionName, array $pipeline, array $options = array())
     {
+        if (empty($pipeline)) {
+            throw new InvalidArgumentException('$pipeline is empty');
+        }
+
+        $expectedIndex = 0;
+
+        foreach ($pipeline as $i => $operation) {
+            if ($i !== $expectedIndex) {
+                throw new InvalidArgumentException(sprintf('$pipeline is not a list (unexpected index: "%s")', $i));
+            }
+
+            if ( ! is_array($operation) && ! is_object($operation)) {
+                throw new InvalidArgumentTypeException(sprintf('$pipeline[%d]', $i), $operation, 'array or object');
+            }
+
+            $expectedIndex += 1;
+        }
+
         $options += array(
             'allowDiskUse' => false,
             'useCursor' => true,
@@ -82,20 +100,6 @@ class Aggregate implements Executable
 
         if (isset($options['batchSize']) && ! $options['useCursor']) {
             throw new InvalidArgumentException('"batchSize" option should not be used if "useCursor" is false');
-        }
-
-        $expectedIndex = 0;
-
-        foreach ($pipeline as $i => $op) {
-            if ($i !== $expectedIndex) {
-                throw new InvalidArgumentException(sprintf('$pipeline is not a list (unexpected index: "%s")', $i));
-            }
-
-            if ( ! is_array($op) && ! is_object($op)) {
-                throw new InvalidArgumentTypeException(sprintf('$pipeline[%d]', $i), $op, 'array or object');
-            }
-
-            $expectedIndex += 1;
         }
 
         $this->databaseName = (string) $databaseName;

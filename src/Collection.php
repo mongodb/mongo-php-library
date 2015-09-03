@@ -292,11 +292,11 @@ class Collection
      *
      * @see Find::__construct() for supported options
      * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
-     * @param array $filter  Query by which to filter documents
-     * @param array $options Additional options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array        $options Additional options
      * @return Cursor
      */
-    public function find(array $filter = array(), array $options = array())
+    public function find($filter = array(), array $options = array())
     {
         $operation = new Find($this->dbname, $this->collname, $filter, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
@@ -309,11 +309,11 @@ class Collection
      *
      * @see FindOne::__construct() for supported options
      * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
-     * @param array $filter    The find query to execute
-     * @param array $options   Additional options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array        $options Additional options
      * @return object|null
      */
-    public function findOne(array $filter = array(), array $options = array())
+    public function findOne($filter = array(), array $options = array())
     {
         $operation = new FindOne($this->dbname, $this->collname, $filter, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));

@@ -188,7 +188,7 @@ class BulkWrite implements Executable
             throw new InvalidArgumentTypeException('"ordered" option', $options['ordered'], 'boolean');
         }
 
-        if (array_key_exists('writeConcern', $options) && ! $options['writeConcern'] instanceof WriteConcern) {
+        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
             throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 

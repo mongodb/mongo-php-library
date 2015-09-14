@@ -41,7 +41,7 @@ class InsertOne implements Executable
             throw new InvalidArgumentTypeException('$document', $document, 'array or object');
         }
 
-        if (array_key_exists('writeConcern', $options) && ! $options['writeConcern'] instanceof WriteConcern) {
+        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
             throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 

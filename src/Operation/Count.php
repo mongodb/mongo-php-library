@@ -3,6 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentTypeException;
@@ -35,6 +36,8 @@ class Count implements Executable
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
+     *
+     *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
      *  * skip (integer): The number of documents to skip before returning the
      *    documents.
@@ -69,6 +72,10 @@ class Count implements Executable
             throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
+        if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
+            throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+        }
+
         if (isset($options['skip']) && ! is_integer($options['skip'])) {
             throw new InvalidArgumentTypeException('"skip" option', $options['skip'], 'integer');
         }
@@ -88,7 +95,9 @@ class Count implements Executable
      */
     public function execute(Server $server)
     {
-        $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
+        $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
+
+        $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $readPreference);
         $result = current($cursor->toArray());
 
         if (empty($result->ok)) {

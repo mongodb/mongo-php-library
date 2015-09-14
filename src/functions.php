@@ -35,6 +35,29 @@ function is_first_key_operator($document)
 }
 
 /**
+ * Return whether the aggregation pipeline ends with an $out operator.
+ *
+ * This is used for determining whether the aggregation pipeline msut be
+ * executed against a primary server.
+ *
+ * @internal
+ * @param array $pipeline List of pipeline operations
+ * @return boolean
+ */
+function is_last_pipeline_operator_out(array $pipeline)
+{
+    $lastOp = end($pipeline);
+
+    if ($lastOp === false) {
+        return false;
+    }
+
+    $lastOp = (array) $lastOp;
+
+    return key($lastOp) === '$out';
+}
+
+/**
  * Returns a ReadPreference corresponding to the Manager's read preference.
  *
  * @internal

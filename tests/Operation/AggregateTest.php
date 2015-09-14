@@ -49,6 +49,10 @@ class AggregateTest extends TestCase
             $options[][] = array('maxTimeMS' => $value);
         }
 
+        foreach ($this->getInvalidReadPreferenceValues() as $value) {
+            $options[][] = array('readPreference' => $value);
+        }
+
         foreach ($this->getInvalidBooleanValues() as $value) {
             $options[][] = array('useCursor' => $value);
         }

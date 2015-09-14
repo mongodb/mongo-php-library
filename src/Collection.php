@@ -95,9 +95,16 @@ class Collection
      */
     public function aggregate(array $pipeline, array $options = array())
     {
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
-        $server = $this->manager->selectServer($readPreference);
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
+        if (\MongoDB\is_last_pipeline_operator_out($pipeline)) {
+            $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
+        }
+
         $operation = new Aggregate($this->databaseName, $this->collectionName, $pipeline, $options);
+        $server = $this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
     }
@@ -132,8 +139,12 @@ class Collection
      */
     public function count($filter = array(), array $options = array())
     {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
         $operation = new Count($this->databaseName, $this->collectionName, $filter, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = $this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
     }
@@ -236,8 +247,12 @@ class Collection
      */
     public function distinct($fieldName, $filter = array(), array $options = array())
     {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
         $operation = new Distinct($this->databaseName, $this->collectionName, $fieldName, $filter, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = $this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
     }
@@ -300,8 +315,12 @@ class Collection
      */
     public function find($filter = array(), array $options = array())
     {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
         $operation = new Find($this->databaseName, $this->collectionName, $filter, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = $this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
     }
@@ -317,8 +336,12 @@ class Collection
      */
     public function findOne($filter = array(), array $options = array())
     {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
         $operation = new FindOne($this->databaseName, $this->collectionName, $filter, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = $this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
     }

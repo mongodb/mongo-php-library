@@ -119,7 +119,7 @@ class Collection
      */
     public function bulkWrite(array $operations, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -205,7 +205,7 @@ class Collection
      */
     public function deleteMany($filter, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -226,7 +226,7 @@ class Collection
      */
     public function deleteOne($filter, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -453,7 +453,7 @@ class Collection
      */
     public function insertMany(array $documents, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -474,7 +474,7 @@ class Collection
      */
     public function insertOne($document, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -510,7 +510,7 @@ class Collection
      */
     public function replaceOne($filter, $replacement, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -532,7 +532,7 @@ class Collection
      */
     public function updateMany($filter, $update, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -554,7 +554,7 @@ class Collection
      */
     public function updateOne($filter, $update, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 

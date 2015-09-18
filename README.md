@@ -22,7 +22,7 @@ extension, see:
 
 ## Documentation
 
- - http://10gen-labs.github.io/mongo-php-library-prototype/
+ - http://mongodb-labs.github.io/mongo-php-library-prototype/
 
 # Installation
 

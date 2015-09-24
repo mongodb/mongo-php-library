@@ -10,6 +10,7 @@
         { "name": "Derick Rethans", "email": "github@derickrethans.nl" }
     ],
     "require": {
+        "php": ">=5.4",
         "ext-mongodb": "^1.0.0"
     },
     "autoload": {

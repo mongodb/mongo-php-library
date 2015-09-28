@@ -4,6 +4,7 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\RuntimeException;
 
 /**
@@ -40,7 +41,16 @@ class DropCollection implements Executable
      */
     public function execute(Server $server)
     {
-        $cursor = $server->executeCommand($this->databaseName, new Command(array('drop' => $this->collectionName)));
+        try {
+            $cursor = $server->executeCommand($this->databaseName, new Command(array('drop' => $this->collectionName)));
+        } catch (DriverRuntimeException $e) {
+            if ($e->getMessage() === 'ns not found') {
+                $result = (object) ['ok' => 0, 'errmsg' => 'ns not found'];
+            }
+
+            throw $e;
+        }
+
         $result = current($cursor->toArray());
 
         if (empty($result->ok)) {

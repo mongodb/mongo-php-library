@@ -59,6 +59,7 @@ class ClientFunctionalTest extends FunctionalTestCase
      * the given name is found, it will be passed to the callback, which may
      * perform additional assertions.
      *
+     * @param string $databaseName
      * @param callable $callback
      */
     private function assertDatabaseExists($databaseName, $callback = null)
@@ -78,7 +79,7 @@ class ClientFunctionalTest extends FunctionalTestCase
             }
         }
 
-        $this->assertNotNull($foundDatabase, sprintf('Found %s database on the server', $databaseName));
+        $this->assertNotNull($foundDatabase, sprintf('Database %s does not exist on the server', $databaseName));
 
         if ($callback !== null) {
             call_user_func($callback, $foundDatabase);

@@ -45,7 +45,7 @@ class DropCollection implements Executable
             $cursor = $server->executeCommand($this->databaseName, new Command(array('drop' => $this->collectionName)));
         } catch (DriverRuntimeException $e) {
             if ($e->getMessage() === 'ns not found') {
-                $result = (object) ['ok' => 0, 'errmsg' => 'ns not found'];
+                return (object) ['ok' => 0, 'errmsg' => 'ns not found'];
             }
 
             throw $e;

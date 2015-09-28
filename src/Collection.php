@@ -66,8 +66,8 @@ class Collection
         $this->collectionName = $parts[1];
 
         $this->manager = $manager;
-        $this->writeConcern = $writeConcern;
-        $this->readPreference = $readPreference;
+        $this->writeConcern = $writeConcern ?: \MongoDB\get_manager_write_concern($this->manager);
+        $this->readPreference = $readPreference ?: \MongoDB\get_manager_read_preference($this->manager);
     }
 
     /**
@@ -95,9 +95,16 @@ class Collection
      */
     public function aggregate(array $pipeline, array $options = array())
     {
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
-        $server = $this->manager->selectServer($readPreference);
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
+        if (\MongoDB\is_last_pipeline_operator_out($pipeline)) {
+            $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
+        }
+
         $operation = new Aggregate($this->databaseName, $this->collectionName, $pipeline, $options);
+        $server = $this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
     }
@@ -112,7 +119,7 @@ class Collection
      */
     public function bulkWrite(array $operations, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -132,8 +139,12 @@ class Collection
      */
     public function count($filter = array(), array $options = array())
     {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
         $operation = new Count($this->databaseName, $this->collectionName, $filter, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = $this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
     }
@@ -194,7 +205,7 @@ class Collection
      */
     public function deleteMany($filter, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -215,7 +226,7 @@ class Collection
      */
     public function deleteOne($filter, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -236,8 +247,12 @@ class Collection
      */
     public function distinct($fieldName, $filter = array(), array $options = array())
     {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
         $operation = new Distinct($this->databaseName, $this->collectionName, $fieldName, $filter, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = $this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
     }
@@ -300,8 +315,12 @@ class Collection
      */
     public function find($filter = array(), array $options = array())
     {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
         $operation = new Find($this->databaseName, $this->collectionName, $filter, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = $this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
     }
@@ -317,8 +336,12 @@ class Collection
      */
     public function findOne($filter = array(), array $options = array())
     {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
         $operation = new FindOne($this->databaseName, $this->collectionName, $filter, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = $this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
     }
@@ -430,7 +453,7 @@ class Collection
      */
     public function insertMany(array $documents, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -451,7 +474,7 @@ class Collection
      */
     public function insertOne($document, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -487,7 +510,7 @@ class Collection
      */
     public function replaceOne($filter, $replacement, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -509,7 +532,7 @@ class Collection
      */
     public function updateMany($filter, $update, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -531,7 +554,7 @@ class Collection
      */
     public function updateOne($filter, $update, array $options = array())
     {
-        if ( ! isset($options['writeConcern']) && isset($this->writeConcern)) {
+        if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }
 

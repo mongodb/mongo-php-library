@@ -40,6 +40,11 @@ abstract class TestCase extends BaseTestCase
         return array(123, 3.14, true, array(), new stdClass);
     }
 
+    protected function getInvalidReadPreferenceValues()
+    {
+        return array(123, 3.14, 'foo', true, array(), new stdClass);
+    }
+
     protected function getInvalidWriteConcernValues()
     {
         return array(123, 3.14, 'foo', true, array(), new stdClass);

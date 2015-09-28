@@ -3,6 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Query;
+use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentTypeException;
@@ -63,6 +64,8 @@ class Find implements Executable
      *
      *  * projection (document): Limits the fields to return for the matching
      *    document.
+     *
+     *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
      *  * skip (integer): The number of documents to skip before returning.
      *
@@ -130,6 +133,10 @@ class Find implements Executable
             throw new InvalidArgumentTypeException('"projection" option', $options['projection'], 'array or object');
         }
 
+        if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
+            throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+        }
+
         if (isset($options['skip']) && ! is_integer($options['skip'])) {
             throw new InvalidArgumentTypeException('"skip" option', $options['skip'], 'integer');
         }
@@ -153,7 +160,9 @@ class Find implements Executable
      */
     public function execute(Server $server)
     {
-        return $server->executeQuery($this->databaseName . '.' . $this->collectionName, $this->createQuery());
+        $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
+
+        return $server->executeQuery($this->databaseName . '.' . $this->collectionName, $this->createQuery(), $readPreference);
     }
 
     /**

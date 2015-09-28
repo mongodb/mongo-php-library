@@ -52,7 +52,7 @@ class Delete implements Executable
             throw new InvalidArgumentException('$limit must be 0 or 1');
         }
 
-        if (array_key_exists('writeConcern', $options) && ! $options['writeConcern'] instanceof WriteConcern) {
+        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
             throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 

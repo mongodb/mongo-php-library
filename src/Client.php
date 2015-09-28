@@ -75,8 +75,8 @@ class Client
     public function selectCollection($databaseName, $collectionName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
     {
         $namespace = $databaseName . '.' . $collectionName;
-        $writeConcern = $writeConcern ?: $this->manager->getWriteConcern();
-        $readPreference = $readPreference ?: $this->manager->getReadPreference();
+        $writeConcern = $writeConcern ?: \MongoDB\get_manager_write_concern($this->manager);
+        $readPreference = $readPreference ?: \MongoDB\get_manager_read_preference($this->manager);
 
         return new Collection($this->manager, $namespace, $writeConcern, $readPreference);
     }
@@ -94,8 +94,8 @@ class Client
      */
     public function selectDatabase($databaseName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
     {
-        $writeConcern = $writeConcern ?: $this->manager->getWriteConcern();
-        $readPreference = $readPreference ?: $this->manager->getReadPreference();
+        $writeConcern = $writeConcern ?: \MongoDB\get_manager_write_concern($this->manager);
+        $readPreference = $readPreference ?: \MongoDB\get_manager_read_preference($this->manager);
 
         return new Database($this->manager, $databaseName, $writeConcern, $readPreference);
     }

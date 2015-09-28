@@ -40,6 +40,10 @@ class CountTest extends TestCase
             $options[][] = array('maxTimeMS' => $value);
         }
 
+        foreach ($this->getInvalidReadPreferenceValues() as $value) {
+            $options[][] = array('readPreference' => $value);
+        }
+
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = array('skip' => $value);
         }

@@ -3,6 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentTypeException;
@@ -32,6 +33,8 @@ class Distinct implements Executable
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
      *
+     *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
+     *
      * @param string       $databaseName   Database name
      * @param string       $collectionName Collection name
      * @param string       $fieldName      Field for which to return distinct values
@@ -47,6 +50,10 @@ class Distinct implements Executable
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        }
+
+        if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
+            throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
         $this->databaseName = (string) $databaseName;
@@ -65,7 +72,9 @@ class Distinct implements Executable
      */
     public function execute(Server $server)
     {
-        $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
+        $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
+
+        $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $readPreference);
         $result = current($cursor->toArray());
 
         if (empty($result->ok)) {

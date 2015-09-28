@@ -3,6 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentTypeException;
@@ -41,6 +42,8 @@ class Aggregate implements Executable
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
+     *
+     *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
      *  * useCursor (boolean): Indicates whether the command will request that
      *    the server provide results using a cursor. The default is true.
@@ -94,6 +97,10 @@ class Aggregate implements Executable
             throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
+        if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
+            throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+        }
+
         if ( ! is_bool($options['useCursor'])) {
             throw new InvalidArgumentTypeException('"useCursor" option', $options['useCursor'], 'boolean');
         }
@@ -118,9 +125,10 @@ class Aggregate implements Executable
     public function execute(Server $server)
     {
         $isCursorSupported = \MongoDB\server_supports_feature($server, self::$wireVersionForCursor);
+        $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
 
         $command = $this->createCommand($server, $isCursorSupported);
-        $cursor = $server->executeCommand($this->databaseName, $command);
+        $cursor = $server->executeCommand($this->databaseName, $command, $readPreference);
 
         if ($isCursorSupported && $this->options['useCursor']) {
             return $cursor;

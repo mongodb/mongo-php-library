@@ -32,6 +32,10 @@ class DistinctTest extends TestCase
             $options[][] = array('maxTimeMS' => $value);
         }
 
+        foreach ($this->getInvalidReadPreferenceValues() as $value) {
+            $options[][] = array('readPreference' => $value);
+        }
+
         return $options;
     }
 }

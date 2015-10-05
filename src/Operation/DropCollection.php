@@ -17,6 +17,7 @@ use MongoDB\Exception\RuntimeException;
  */
 class DropCollection implements Executable
 {
+    private static $errorMessageNamespaceNotFound = 'ns not found';
     private $databaseName;
     private $collectionName;
 
@@ -44,7 +45,11 @@ class DropCollection implements Executable
         try {
             $cursor = $server->executeCommand($this->databaseName, new Command(array('drop' => $this->collectionName)));
         } catch (DriverRuntimeException $e) {
-            if ($e->getMessage() === 'ns not found') {
+            /* The server may return an error if the collection does not exist.
+             * Check for an error message (unfortunately, there isn't a code)
+             * and NOP instead of throwing.
+             */
+            if ($e->getMessage() === self::$errorMessageNamespaceNotFound) {
                 return (object) ['ok' => 0, 'errmsg' => 'ns not found'];
             }
 

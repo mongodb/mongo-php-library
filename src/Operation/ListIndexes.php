@@ -5,8 +5,10 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInfoIteratorIterator;
+use EmptyIterator;
 
 /**
  * Operation for the listIndexes command.
@@ -17,6 +19,8 @@ use MongoDB\Model\IndexInfoIteratorIterator;
  */
 class ListIndexes implements Executable
 {
+    private static $errorCodeDatabaseNotFound = 60;
+    private static $errorCodeNamespaceNotFound = 26;
     private static $wireVersionForCommand = 3;
 
     private $databaseName;
@@ -75,7 +79,20 @@ class ListIndexes implements Executable
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
         }
 
-        $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
+        try {
+            $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
+        } catch (RuntimeException $e) {
+            /* The server may return an error if the collection does not exist.
+             * Check for possible error codes (see: SERVER-20463) and return an
+             * empty iterator instead of throwing.
+             */
+            if ($e->getCode() === self::$errorCodeNamespaceNotFound || $e->getCode() === self::$errorCodeDatabaseNotFound) {
+                return new IndexInfoIteratorIterator(new EmptyIterator);
+            }
+
+            throw $e;
+        }
+
         $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
 
         return new IndexInfoIteratorIterator($cursor);

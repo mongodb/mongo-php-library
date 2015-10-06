@@ -17,6 +17,9 @@
         "psr-4": { "MongoDB\\": "src/" },
         "files": [ "src/functions.php" ]
     },
+    "autoload-dev": {
+        "psr-4": { "MongoDB\\Tests\\": "tests/" }
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "0.3.x-dev"

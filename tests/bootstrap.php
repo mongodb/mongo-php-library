@@ -9,5 +9,3 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
 } else {
     throw new Exception('Can\'t find autoload.php. Did you install dependencies with Composer?');
 }
-
-$loader->addPsr4('MongoDB\\Tests\\', __DIR__);

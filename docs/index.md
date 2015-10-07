@@ -30,7 +30,7 @@ The preferred method of installing this library is with
 [Composer](https://getcomposer.org/) by running the following from your project
 root:
 
-    $ composer require "mongodb/mongodb=^0.2.0"
+    $ composer require "mongodb/mongodb=^1.0.0@alpha"
 
 ## Generated API Docs
 

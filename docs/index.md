@@ -20,11 +20,14 @@ extension, see:
 
 # Installation
 
-As a high-level abstraction for the driver, this library naturally requires that
-the [`mongodb` extension be installed](http://10gen-labs.github.io/mongo-php-driver-prototype/#installation):
+Since this library is only a high-level abstraction for the driver, it requires
+that the [`mongodb` extension be installed](http://10gen-labs.github.io/mongo-php-driver-prototype/#installation):
 
-    $ pecl install mongodb-alpha
+    $ pecl install mongodb-beta
     $ echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+
+Instructions for installing the `mongodb` extension on HHVM may be found in the
+[HHVM driver's README](https://github.com/mongodb-labs/mongo-hhvm-driver-prototype/blob/master/README.rst).
 
 The preferred method of installing this library is with
 [Composer](https://getcomposer.org/) by running the following from your project

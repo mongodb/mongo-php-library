@@ -1,3 +1,5 @@
+RELEASE 1.0.0-alpha1
+-------------
 2015-10-06  Jeremy Mikola  <jmikola@gmail.com>
 	* Use "autoload-dev" for loading test classes
 

@@ -33,7 +33,7 @@ before_script:
   - mongod --version
   - pecl install -f mongodb-${DRIVER_VERSION}
   - php --ri mongodb
-  - composer install --dev --no-interaction --prefer-source
+  - composer install --no-interaction --prefer-source
   - ulimit -c
   - ulimit -c unlimited -S
 

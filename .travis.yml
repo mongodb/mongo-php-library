@@ -1,9 +1,7 @@
 language: php
 
 php:
-  - 5.4
-  - 5.5
-  - 5.6
+  - hhvm
 
 env:
   global:
@@ -11,10 +9,41 @@ env:
     - MONGO_REPO_URI="http://repo.mongodb.com/apt/ubuntu"
     - MONGO_REPO_TYPE="precise/mongodb-enterprise/"
     - SOURCES_LOC="/etc/apt/sources.list.d/mongodb.list"
+    - HHVM_BUCKET="https://s3.amazonaws.com/drivers.mongodb.org/hhvm"
   matrix:
-    - DRIVER_VERSION=beta SERVER_VERSION=2.4
-    - DRIVER_VERSION=beta SERVER_VERSION=2.6
-    - DRIVER_VERSION=beta SERVER_VERSION=3.0
+    - SERVER_VERSION=2.4 PECL_VERSION=beta
+    - SERVER_VERSION=2.6 PECL_VERSION=beta
+    - SERVER_VERSION=3.0 PECL_VERSION=beta
+    - SERVER_VERSION=2.4 HHVM_VERSION=hhvm-mongodb-1.0alpha1.tgz
+    - SERVER_VERSION=2.6 HHVM_VERSION=hhvm-mongodb-1.0alpha1.tgz
+    - SERVER_VERSION=3.0 HHVM_VERSION=hhvm-mongodb-1.0alpha1.tgz
+
+matrix:
+  exclude:
+    - php: 5.4
+      env: SERVER_VERSION=2.4 HHVM_VERSION=hhvm-mongodb-1.0alpha1.tgz
+    - php: 5.4
+      env: SERVER_VERSION=2.6 HHVM_VERSION=hhvm-mongodb-1.0alpha1.tgz
+    - php: 5.4
+      env: SERVER_VERSION=3.0 HHVM_VERSION=hhvm-mongodb-1.0alpha1.tgz
+    - php: 5.5
+      env: SERVER_VERSION=2.4 HHVM_VERSION=hhvm-mongodb-1.0alpha1.tgz
+    - php: 5.5
+      env: SERVER_VERSION=2.6 HHVM_VERSION=hhvm-mongodb-1.0alpha1.tgz
+    - php: 5.5
+      env: SERVER_VERSION=3.0 HHVM_VERSION=hhvm-mongodb-1.0alpha1.tgz
+    - php: 5.6
+      env: SERVER_VERSION=2.4 HHVM_VERSION=hhvm-mongodb-1.0alpha1.tgz
+    - php: 5.6
+      env: SERVER_VERSION=2.6 HHVM_VERSION=hhvm-mongodb-1.0alpha1.tgz
+    - php: 5.6
+      env: SERVER_VERSION=3.0 HHVM_VERSION=hhvm-mongodb-1.0alpha1.tgz
+    - php: hhvm
+      env: SERVER_VERSION=2.4 PECL_VERSION=beta
+    - php: hhvm
+      env: SERVER_VERSION=2.6 PECL_VERSION=beta
+    - php: hhvm
+      env: SERVER_VERSION=3.0 PECL_VERSION=beta
 
 before_install:
   - sudo apt-key adv --keyserver ${KEY_SERVER} --recv 7F0CEB10
@@ -23,16 +52,16 @@ before_install:
 
 install:
   - if dpkg --compare-versions ${SERVER_VERSION} le "2.4"; then export SERVER_PACKAGE=mongodb-10gen-enterprise; else export SERVER_PACKAGE=mongodb-enterprise; fi
-  - sudo apt-get install ${SERVER_PACKAGE}
-  - sudo apt-get -y install gdb
+  - sudo apt-get install ${SERVER_PACKAGE} -y
+  - sudo apt-get install gdb -y
+  - if [[ "$TRAVIS_PHP_VERSION" != "hhvm" ]]; then pecl install -f mongodb-${PECL_VERSION}; fi;
+  - if [[ "$TRAVIS_PHP_VERSION" = "hhvm" ]]; then .travis/build_hhvm.sh ${HHVM_BUCKET}/${HHVM_VERSION}; fi;
 
 before_script:
-  - phpenv config-rm xdebug.ini
   - if dpkg --compare-versions ${SERVER_VERSION} le "2.4"; then export SERVER_SERVICE=mongodb; else export SERVER_SERVICE=mongod; fi
   - if ! nc -z localhost 27017; then sudo service ${SERVER_SERVICE} start; fi
   - mongod --version
-  - pecl install -f mongodb-${DRIVER_VERSION}
-  - php --ri mongodb
+  - php -r 'echo phpversion("mongodb");'
   - composer install --no-interaction --prefer-source
   - ulimit -c
   - ulimit -c unlimited -S

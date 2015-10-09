@@ -20,6 +20,11 @@ abstract class TestCase extends BaseTestCase
         return $this->wrapValuesForDataProvider($this->getInvalidBooleanValues());
     }
 
+    protected function getInvalidArrayValues()
+    {
+        return array(123, 3.14, 'foo', true, new stdClass);
+    }
+
     protected function getInvalidBooleanValues()
     {
         return array(123, 3.14, 'foo', array(), new stdClass);

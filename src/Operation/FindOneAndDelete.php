@@ -44,28 +44,23 @@ class FindOneAndDelete implements Executable
             throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
         }
 
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
-        }
-
         if (isset($options['projection']) && ! is_array($options['projection']) && ! is_object($options['projection'])) {
             throw new InvalidArgumentTypeException('"projection" option', $options['projection'], 'array or object');
         }
 
-        if (isset($options['sort']) && ! is_array($options['sort']) && ! is_object($options['sort'])) {
-            throw new InvalidArgumentTypeException('"sort" option', $options['sort'], 'array or object');
+        if (isset($options['projection'])) {
+            $options['fields'] = $options['projection'];
         }
+
+        unset($options['projection']);
 
         $this->findAndModify = new FindAndModify(
             $databaseName,
             $collectionName,
             array(
-                'fields' => isset($options['projection']) ? $options['projection'] : null,
-                'maxTimeMS' => isset($options['maxTimeMS']) ? $options['maxTimeMS'] : null,
                 'query' => $filter,
                 'remove' => true,
-                'sort' => isset($options['sort']) ? $options['sort'] : null,
-            )
+            ) + $options
         );
     }
 

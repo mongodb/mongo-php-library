@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Collection\CrudSpec;
 
 use MongoDB\Collection;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Operation\DropCollection;
 
 /**
  * CRUD spec functional tests for aggregate().
@@ -48,7 +49,8 @@ class AggregateFunctionalTest extends FunctionalTestCase
         }
 
         $outputCollection = new Collection($this->manager, $this->getNamespace() . '_output');
-        $this->dropCollectionIfItExists($outputCollection);
+        $operation = new DropCollection($this->getDatabaseName(), $outputCollection->getCollectionName());
+        $operation->execute($this->getPrimaryServer());
 
         $this->collection->aggregate(
             array(
@@ -66,6 +68,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $outputCollection->find());
 
         // Manually clean up our output collection
-        $this->dropCollectionIfItExists($outputCollection);
+        $operation = new DropCollection($this->getDatabaseName(), $outputCollection->getCollectionName());
+        $operation->execute($this->getPrimaryServer());
     }
 }

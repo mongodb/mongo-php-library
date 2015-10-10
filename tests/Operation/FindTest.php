@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Operation\Find;
-use stdClass;
 
 class FindTest extends TestCase
 {

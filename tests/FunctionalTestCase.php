@@ -68,6 +68,11 @@ abstract class FunctionalTestCase extends TestCase
         );
     }
 
+    protected function getPrimaryServer()
+    {
+        return $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+    }
+
     protected function getServerVersion(ReadPreference $readPreference = null)
     {
         $cursor = $this->manager->executeCommand(

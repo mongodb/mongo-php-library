@@ -68,10 +68,6 @@ class FindOneAndUpdate implements Executable
             'upsert' => false,
         );
 
-        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
-        }
-
         if (isset($options['projection']) && ! is_array($options['projection']) && ! is_object($options['projection'])) {
             throw new InvalidArgumentTypeException('"projection" option', $options['projection'], 'array or object');
         }
@@ -85,26 +81,21 @@ class FindOneAndUpdate implements Executable
             throw new InvalidArgumentException('Invalid value for "returnDocument" option: ' . $options['returnDocument']);
         }
 
-        if (isset($options['sort']) && ! is_array($options['sort']) && ! is_object($options['sort'])) {
-            throw new InvalidArgumentTypeException('"sort" option', $options['sort'], 'array or object');
+        if (isset($options['projection'])) {
+            $options['fields'] = $options['projection'];
         }
 
-        if ( ! is_bool($options['upsert'])) {
-            throw new InvalidArgumentTypeException('"upsert" option', $options['upsert'], 'boolean');
-        }
+        $options['new'] = $options['returnDocument'] === self::RETURN_DOCUMENT_AFTER;
+
+        unset($options['projection'], $options['returnDocument']);
 
         $this->findAndModify = new FindAndModify(
             $databaseName,
             $collectionName,
             array(
-                'fields' => isset($options['projection']) ? $options['projection'] : null,
-                'maxTimeMS' => isset($options['maxTimeMS']) ? $options['maxTimeMS'] : null,
-                'new' => $options['returnDocument'] === self::RETURN_DOCUMENT_AFTER,
                 'query' => $filter,
-                'sort' => isset($options['sort']) ? $options['sort'] : null,
                 'update' => $update,
-                'upsert' => $options['upsert'],
-            )
+            ) + $options
         );
     }
 

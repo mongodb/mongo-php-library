@@ -3,6 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Server;
+use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * Operation for finding a single document with the find command.
@@ -15,6 +16,7 @@ use MongoDB\Driver\Server;
 class FindOne implements Executable
 {
     private $find;
+    private $options;
 
     /**
      * Constructs a find command for finding a single document.
@@ -42,6 +44,8 @@ class FindOne implements Executable
      *    "$orderby" also exists in the modifiers document, this option will
      *    take precedence.
      *
+     *  * typeMap (array): Type map for BSON deserialization.
+     *
      * @param string       $databaseName   Database name
      * @param string       $collectionName Collection name
      * @param array|object $filter         Query by which to filter documents
@@ -50,12 +54,18 @@ class FindOne implements Executable
      */
     public function __construct($databaseName, $collectionName, $filter, array $options = array())
     {
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw new InvalidArgumentTypeException('"typeMap" option', $options['typeMap'], 'array');
+        }
+
         $this->find = new Find(
             $databaseName,
             $collectionName,
             $filter,
             array('limit' => -1) + $options
         );
+
+        $this->options = $options;
     }
 
     /**
@@ -68,6 +78,11 @@ class FindOne implements Executable
     public function execute(Server $server)
     {
         $cursor = $this->find->execute($server);
+
+        if (isset($this->options['typeMap'])) {
+            $cursor->setTypeMap($this->options['typeMap']);
+        }
+
         $document = current($cursor->toArray());
 
         return ($document === false) ? null : $document;

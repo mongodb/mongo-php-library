@@ -27,6 +27,9 @@ class DropDatabaseFunctionalTest extends FunctionalTestCase
     {
         $server = $this->getPrimaryServer();
 
+        $operation = new DropDatabase($this->getDatabaseName());
+        $operation->execute($server);
+
         $this->assertDatabaseDoesNotExist($server, $this->getDatabaseName());
 
         $operation = new DropDatabase($this->getDatabaseName());

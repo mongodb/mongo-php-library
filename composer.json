@@ -11,7 +11,8 @@
     ],
     "require": {
         "php": ">=5.4",
-        "ext-mongodb": "^1.0.0"
+        "ext-mongodb": "^1.0.0",
+        "ext-hash": "*"
     },
     "autoload": {
         "psr-4": { "MongoDB\\": "src/" },

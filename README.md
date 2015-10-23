@@ -2,9 +2,9 @@ MongoDB library for PHP
 =======================
 
 This library provides a high-level abstraction around the lower-level drivers for
-[PHP](https://github.com/10gen-labs/mongo-php-driver-prototype) and
-[HHVM](https://github.com/10gen-labs/mongo-hhvm-driver-prototype) (i.e. the
-`mongodb` extension).
+[PHP](https://github.com/mongodb/mongo-php-driver) and
+[HHVM](https://github.com/mongodb/mongo-hhvm-driver) (i.e. the `mongodb`
+extension).
 
 While the extension provides a limited API for executing commands, queries, and
 write operations, this library implements an API similar to that of the
@@ -22,12 +22,12 @@ extension, see:
 
 ## Documentation
 
- - http://mongodb-labs.github.io/mongo-php-library-prototype/
+ - http://mongodb.github.io/mongo-php-library/
 
 # Installation
 
 As a high-level abstraction for the driver, this library naturally requires that
-the [`mongodb` extension be installed](http://10gen-labs.github.io/mongo-php-driver-prototype/#installation):
+the [`mongodb` extension be installed](http://mongodb.github.io/mongo-php-driver/#installation):
 
     $ pecl install mongodb-alpha
     $ echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`

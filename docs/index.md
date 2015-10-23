@@ -1,8 +1,8 @@
 # MongoDB PHP Library
 
 This library provides a high-level abstraction around the lower-level
-[PHP driver](https://github.com/10gen-labs/mongo-php-driver-prototype) (i.e. the
-`mongodb` extension).
+[PHP driver](https://github.com/mongodb/mongo-php-driver) (i.e. the `mongodb`
+extension).
 
 While the extension provides a limited API for executing commands, queries, and
 write operations, this library implements an API similar to that of the
@@ -21,13 +21,13 @@ extension, see:
 # Installation
 
 Since this library is only a high-level abstraction for the driver, it requires
-that the [`mongodb` extension be installed](http://10gen-labs.github.io/mongo-php-driver-prototype/#installation):
+that the [`mongodb` extension be installed](http://mongodb.github.io/mongo-php-driver/#installation):
 
     $ pecl install mongodb-beta
     $ echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 Instructions for installing the `mongodb` extension on HHVM may be found in the
-[HHVM driver's README](https://github.com/mongodb-labs/mongo-hhvm-driver-prototype/blob/master/README.rst).
+[HHVM driver's README](https://github.com/mongodb/mongo-hhvm-driver/blob/master/README.rst).
 
 The preferred method of installing this library is with
 [Composer](https://getcomposer.org/) by running the following from your project

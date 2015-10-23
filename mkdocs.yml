@@ -1,5 +1,5 @@
 site_name: "MongoDB PHP library"
-repo_url: https://github.com/10gen-labs/mongo-php-library-prototype
+repo_url: https://github.com/mongodb/mongo-php-library
 theme: spacelab
 pages:
     - [index.md, Home]

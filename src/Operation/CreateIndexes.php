@@ -107,7 +107,7 @@ class CreateIndexes implements Executable
      */
     private function executeLegacy(Server $server)
     {
-        $bulk = new Bulk(true);
+        $bulk = new Bulk(['ordered' => true]);
 
         foreach ($this->indexes as $index) {
             $bulk->insert($index);

@@ -12,9 +12,9 @@ env:
     - MONGO_REPO_TYPE="precise/mongodb-enterprise/"
     - SOURCES_LOC="/etc/apt/sources.list.d/mongodb.list"
   matrix:
-    - DRIVER_VERSION=beta SERVER_VERSION=2.4
-    - DRIVER_VERSION=beta SERVER_VERSION=2.6
-    - DRIVER_VERSION=beta SERVER_VERSION=3.0
+    - DRIVER_VERSION=1.0 SERVER_VERSION=2.4
+    - DRIVER_VERSION=1.0 SERVER_VERSION=2.6
+    - DRIVER_VERSION=1.0 SERVER_VERSION=3.0
 
 before_install:
   - sudo apt-key adv --keyserver ${KEY_SERVER} --recv 7F0CEB10

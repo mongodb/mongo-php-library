@@ -44,8 +44,8 @@ class Database
 
         $this->manager = $manager;
         $this->databaseName = (string) $databaseName;
-        $this->writeConcern = $writeConcern ?: \MongoDB\get_manager_write_concern($this->manager);
-        $this->readPreference = $readPreference ?: \MongoDB\get_manager_read_preference($this->manager);
+        $this->writeConcern = $writeConcern ?: $this->manager->getWriteConcern();
+        $this->readPreference = $readPreference ?: $this->manager->getReadPreference();
     }
 
     /**

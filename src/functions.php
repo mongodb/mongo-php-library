@@ -2,12 +2,8 @@
 
 namespace MongoDB;
 
-use MongoDB\Driver\Manager;
-use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
-use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentTypeException;
-use ReflectionClass;
 
 /**
  * Return whether the first key in the document starts with a "$" character.
@@ -55,69 +51,6 @@ function is_last_pipeline_operator_out(array $pipeline)
     $lastOp = (array) $lastOp;
 
     return key($lastOp) === '$out';
-}
-
-/**
- * Returns a ReadPreference corresponding to the Manager's read preference.
- *
- * @internal
- * @todo this function can be removed once PHPC-417 is implemented
- * @param Manager $manager
- * @return ReadPreference
- */
-function get_manager_read_preference(Manager $manager)
-{
-    $rp = $manager->getReadPreference();
-
-    if ($rp instanceof ReadPreference) {
-        return $rp;
-    }
-
-    $args = array(
-        $rp['mode'],
-    );
-
-    if (isset($rp['tags'])) {
-        $args[] = $rp['tags'];
-    }
-
-    $rc = new ReflectionClass('MongoDB\Driver\ReadPreference');
-
-    return $rc->newInstanceArgs($args);
-}
-
-/**
- * Returns a WriteConcern corresponding to the Manager's write concern.
- *
- * @internal
- * @todo this function can be removed once PHPC-417 is implemented
- * @param Manager $manager
- * @return WriteConcern
- */
-function get_manager_write_concern(Manager $manager)
-{
-    $wc = $manager->getWriteConcern();
-
-    if ($wc instanceof WriteConcern) {
-        return $wc;
-    }
-
-    $args = array(
-        isset($wc['w']) ? $wc['w'] : -2,
-        $wc['wtimeout'],
-    );
-
-    if (isset($wc['journal'])) {
-        $args[] = $wc['journal'];
-
-        if (isset($wc['fsync'])) {
-            $args[] = $wc['fsync'];
-        }
-    }
-
-    $rc = new ReflectionClass('MongoDB\Driver\WriteConcern');
-
-    return $rc->newInstanceArgs($args);
 }
 
 /**

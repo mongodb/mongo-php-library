@@ -4,16 +4,19 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\Server;
 use MongoDB\Operation\DropDatabase;
+use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListDatabases;
 
 class DropDatabaseFunctionalTest extends FunctionalTestCase
 {
     public function testDropExistingDatabase()
     {
-        $writeResult = $this->manager->executeInsert($this->getNamespace(), array('x' => 1));
+        $server = $this->getPrimaryServer();
+
+        $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1]);
+        $writeResult = $insertOne->execute($server);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $server = $this->getPrimaryServer();
         $operation = new DropDatabase($this->getDatabaseName());
         $operation->execute($server);
 

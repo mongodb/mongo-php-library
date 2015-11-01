@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\Server;
 use MongoDB\Operation\DropDatabase;
+use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListCollections;
 
 class ListCollectionsFunctionalTest extends FunctionalTestCase
@@ -15,7 +16,8 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
         $operation = new DropDatabase($this->getDatabaseName());
         $operation->execute($server);
 
-        $writeResult = $this->manager->executeInsert($this->getNamespace(), ['x' => 1]);
+        $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1]);
+        $writeResult = $insertOne->execute($server);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
         $operation = new ListCollections($this->getDatabaseName(), ['filter' => ['name' => $this->getCollectionName()]]);

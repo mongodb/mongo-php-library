@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Database;
 
+use MongoDB\Driver\BulkWrite;
 use MongoDB\Model\CollectionInfo;
 use InvalidArgumentException;
 
@@ -39,7 +40,10 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
 
     public function testDropCollection()
     {
-        $writeResult = $this->manager->executeInsert($this->getNamespace(), array('x' => 1));
+        $bulkWrite = new BulkWrite();
+        $bulkWrite->insert(['x' => 1]);
+
+        $writeResult = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
         $commandResult = $this->database->dropCollection($this->getCollectionName());

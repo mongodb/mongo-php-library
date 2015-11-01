@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\Database;
 
 use MongoDB\Database;
+use MongoDB\Driver\BulkWrite;
 
 /**
  * Functional tests for the Database class.
@@ -39,7 +40,10 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 
     public function testDrop()
     {
-        $writeResult = $this->manager->executeInsert($this->getNamespace(), array('x' => 1));
+        $bulkWrite = new BulkWrite();
+        $bulkWrite->insert(['x' => 1]);
+
+        $writeResult = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
         $commandResult = $this->database->drop();

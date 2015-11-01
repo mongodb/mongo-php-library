@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\Server;
 use MongoDB\Operation\DropCollection;
+use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListIndexes;
 
 class ListIndexesFunctionalTest extends FunctionalTestCase
@@ -15,7 +16,8 @@ class ListIndexesFunctionalTest extends FunctionalTestCase
         $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
         $operation->execute($server);
 
-        $writeResult = $this->manager->executeInsert($this->getNamespace(), ['x' => 1]);
+        $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1]);
+        $writeResult = $insertOne->execute($server);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
         $operation = new ListIndexes($this->getDatabaseName(), $this->getCollectionName());

@@ -22,8 +22,8 @@ abstract class FunctionalTestCase extends TestCase
     {
         list($databaseName, $collectionName) = explode('.', $namespace, 2);
 
-        $cursor = $this->manager->executeCommand($databaseName, new Command(array('count' => $collectionName)));
-        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
+        $cursor = $this->manager->executeCommand($databaseName, new Command(['count' => $collectionName]));
+        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
         $document = current($cursor->toArray());
 
         $this->assertArrayHasKey('n', $document);
@@ -77,11 +77,11 @@ abstract class FunctionalTestCase extends TestCase
     {
         $cursor = $this->manager->executeCommand(
             $this->getDatabaseName(),
-            new Command(array('buildInfo' => 1)),
+            new Command(['buildInfo' => 1]),
             $readPreference ?: new ReadPreference(ReadPreference::RP_PRIMARY)
         );
 
-        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
+        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
         $document = current($cursor->toArray());
 
         return $document['version'];

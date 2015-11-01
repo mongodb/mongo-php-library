@@ -13,7 +13,7 @@ class UpdateTest extends TestCase
      */
     public function testConstructorFilterArgumentTypeCheck($filter)
     {
-        new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, array('$set' => array('x' => 1)));
+        new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, ['$set' => ['x' => 1]]);
     }
 
     /**
@@ -23,7 +23,7 @@ class UpdateTest extends TestCase
      */
     public function testConstructorUpdateArgumentTypeCheck($update)
     {
-        new Update($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), $update);
+        new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update);
     }
 
     /**
@@ -32,23 +32,23 @@ class UpdateTest extends TestCase
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        new Update($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), array('y' => 1), $options);
+        new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['y' => 1], $options);
     }
 
     public function provideInvalidConstructorOptions()
     {
-        $options = array();
+        $options = [];
 
         foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = array('multi' => $value);
+            $options[][] = ['multi' => $value];
         }
 
         foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = array('upsert' => $value);
+            $options[][] = ['upsert' => $value];
         }
 
         foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = array('writeConcern' => $value);
+            $options[][] = ['writeConcern' => $value];
         }
 
         return $options;

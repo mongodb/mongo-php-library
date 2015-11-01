@@ -22,41 +22,41 @@ abstract class TestCase extends BaseTestCase
 
     protected function getInvalidArrayValues()
     {
-        return array(123, 3.14, 'foo', true, new stdClass);
+        return [123, 3.14, 'foo', true, new stdClass];
     }
 
     protected function getInvalidBooleanValues()
     {
-        return array(123, 3.14, 'foo', array(), new stdClass);
+        return [123, 3.14, 'foo', [], new stdClass];
     }
 
     protected function getInvalidDocumentValues()
     {
-        return array(123, 3.14, 'foo', true);
+        return [123, 3.14, 'foo', true];
     }
 
     protected function getInvalidIntegerValues()
     {
-        return array(3.14, 'foo', true, array(), new stdClass);
+        return [3.14, 'foo', true, [], new stdClass];
     }
 
     protected function getInvalidStringValues()
     {
-        return array(123, 3.14, true, array(), new stdClass);
+        return [123, 3.14, true, [], new stdClass];
     }
 
     protected function getInvalidReadPreferenceValues()
     {
-        return array(123, 3.14, 'foo', true, array(), new stdClass);
+        return [123, 3.14, 'foo', true, [], new stdClass];
     }
 
     protected function getInvalidWriteConcernValues()
     {
-        return array(123, 3.14, 'foo', true, array(), new stdClass);
+        return [123, 3.14, 'foo', true, [], new stdClass];
     }
 
     protected function wrapValuesForDataProvider(array $values)
     {
-        return array_map(function($value) { return array($value); }, $values);
+        return array_map(function($value) { return [$value]; }, $values);
     }
 }

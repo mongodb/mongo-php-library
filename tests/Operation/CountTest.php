@@ -21,31 +21,31 @@ class CountTest extends TestCase
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        new Count($this->getDatabaseName(), $this->getCollectionName(), array(), $options);
+        new Count($this->getDatabaseName(), $this->getCollectionName(), [], $options);
     }
 
     public function provideInvalidConstructorOptions()
     {
-        $options = array();
+        $options = [];
 
         foreach ($this->getInvalidHintValues() as $value) {
-            $options[][] = array('hint' => $value);
+            $options[][] = ['hint' => $value];
         }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = array('limit' => $value);
+            $options[][] = ['limit' => $value];
         }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = array('maxTimeMS' => $value);
+            $options[][] = ['maxTimeMS' => $value];
         }
 
         foreach ($this->getInvalidReadPreferenceValues() as $value) {
-            $options[][] = array('readPreference' => $value);
+            $options[][] = ['readPreference' => $value];
         }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = array('skip' => $value);
+            $options[][] = ['skip' => $value];
         }
 
         return $options;
@@ -53,6 +53,6 @@ class CountTest extends TestCase
 
     private function getInvalidHintValues()
     {
-        return array(123, 3.14, true);
+        return [123, 3.14, true];
     }
 }

@@ -21,15 +21,15 @@ class InsertOneTest extends TestCase
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        new InsertOne($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), $options);
+        new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $options);
     }
 
     public function provideInvalidConstructorOptions()
     {
-        $options = array();
+        $options = [];
 
         foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = array('writeConcern' => $value);
+            $options[][] = ['writeConcern' => $value];
         }
 
         return $options;

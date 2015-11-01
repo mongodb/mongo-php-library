@@ -12,7 +12,7 @@ class UpdateManyTest extends TestCase
      */
     public function testConstructorFilterArgumentTypeCheck($filter)
     {
-        new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), $filter, array('$set' => array('x' => 1)));
+        new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), $filter, ['$set' => ['x' => 1]]);
     }
 
     /**
@@ -21,7 +21,7 @@ class UpdateManyTest extends TestCase
      */
     public function testConstructorUpdateArgumentTypeCheck($update)
     {
-        new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), $update);
+        new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update);
     }
 
     /**
@@ -30,6 +30,6 @@ class UpdateManyTest extends TestCase
      */
     public function testConstructorUpdateArgumentRequiresOperators()
     {
-        new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), array('y' => 1));
+        new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['y' => 1]);
     }
 }

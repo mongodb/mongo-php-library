@@ -42,7 +42,7 @@ class Distinct implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $fieldName, $filter = array(), array $options = array())
+    public function __construct($databaseName, $collectionName, $fieldName, $filter = [], array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
             throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
@@ -95,10 +95,10 @@ class Distinct implements Executable
      */
     private function createCommand()
     {
-        $cmd = array(
+        $cmd = [
             'distinct' => $this->collectionName,
             'key' => $this->fieldName,
-        );
+        ];
 
         if ( ! empty($this->filter)) {
             $cmd['query'] = (object) $this->filter;

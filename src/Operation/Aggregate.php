@@ -60,7 +60,7 @@ class Aggregate implements Executable
      * @param array  $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, array $pipeline, array $options = array())
+    public function __construct($databaseName, $collectionName, array $pipeline, array $options = [])
     {
         if (empty($pipeline)) {
             throw new InvalidArgumentException('$pipeline is empty');
@@ -80,10 +80,10 @@ class Aggregate implements Executable
             $expectedIndex += 1;
         }
 
-        $options += array(
+        $options += [
             'allowDiskUse' => false,
             'useCursor' => true,
-        );
+        ];
 
         if ( ! is_bool($options['allowDiskUse'])) {
             throw new InvalidArgumentTypeException('"allowDiskUse" option', $options['allowDiskUse'], 'boolean');
@@ -156,10 +156,10 @@ class Aggregate implements Executable
      */
     private function createCommand(Server $server, $isCursorSupported)
     {
-        $cmd = array(
+        $cmd = [
             'aggregate' => $this->collectionName,
             'pipeline' => $this->pipeline,
-        );
+        ];
 
         // Servers < 2.6 do not support any command options
         if ( ! $isCursorSupported) {
@@ -174,7 +174,7 @@ class Aggregate implements Executable
 
         if ($this->options['useCursor']) {
             $cmd['cursor'] = isset($this->options["batchSize"])
-                ? array('batchSize' => $this->options["batchSize"])
+                ? ['batchSize' => $this->options["batchSize"]]
                 : new stdClass;
         }
 

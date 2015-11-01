@@ -35,7 +35,7 @@ class InsertOne implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $document, array $options = array())
+    public function __construct($databaseName, $collectionName, $document, array $options = [])
     {
         if ( ! is_array($document) && ! is_object($document)) {
             throw new InvalidArgumentTypeException('$document', $document, 'array or object');

@@ -23,15 +23,15 @@ class CountFunctionalTest extends FunctionalTestCase
 
     public function testCountWithFilter()
     {
-        $filter = array('_id' => array('$gt' => 1));
+        $filter = ['_id' => ['$gt' => 1]];
 
         $this->assertSame(2, $this->collection->count($filter));
     }
 
     public function testCountWithSkipAndLimit()
     {
-        $filter = array();
-        $options = array('skip' => 1, 'limit' => 3);
+        $filter = [];
+        $options = ['skip' => 1, 'limit' => 3];
 
         $this->assertSame(2, $this->collection->count($filter, $options));
     }

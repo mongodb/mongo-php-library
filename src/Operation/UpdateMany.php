@@ -35,7 +35,7 @@ class UpdateMany implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $filter, $update, array $options = array())
+    public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
         if ( ! is_array($update) && ! is_object($update)) {
             throw new InvalidArgumentTypeException('$update', $update, 'array or object');
@@ -50,7 +50,7 @@ class UpdateMany implements Executable
             $collectionName,
             $filter,
             $update,
-            array('multi' => true) + $options
+            ['multi' => true] + $options
         );
     }
 

@@ -18,16 +18,16 @@ class InsertOneFunctionalTest extends FunctionalTestCase
 
     public function testInsertOneWithANonexistentDocument()
     {
-        $document = array('_id' => 2, 'x' => 22);
+        $document = ['_id' => 2, 'x' => 22];
 
         $result = $this->collection->insertOne($document);
         $this->assertSame(1, $result->getInsertedCount());
         $this->assertSame(2, $result->getInsertedId());
 
-        $expected = array(
-            array('_id' => 1, 'x' => 11),
-            array('_id' => 2, 'x' => 22),
-        );
+        $expected = [
+            ['_id' => 1, 'x' => 11],
+            ['_id' => 2, 'x' => 22],
+        ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
     }

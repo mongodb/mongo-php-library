@@ -30,7 +30,7 @@ class DeleteMany implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $filter, array $options = array())
+    public function __construct($databaseName, $collectionName, $filter, array $options = [])
     {
         $this->delete = new Delete($databaseName, $collectionName, $filter, 0, $options);
     }

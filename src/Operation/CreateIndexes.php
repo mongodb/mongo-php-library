@@ -24,7 +24,7 @@ class CreateIndexes implements Executable
 
     private $databaseName;
     private $collectionName;
-    private $indexes = array();
+    private $indexes = [];
 
     /**
      * Constructs a createIndexes command.
@@ -85,10 +85,10 @@ class CreateIndexes implements Executable
      */
     private function executeCommand(Server $server)
     {
-        $command = new Command(array(
+        $command = new Command([
             'createIndexes' => $this->collectionName,
             'indexes' => $this->indexes,
-        ));
+        ]);
 
         $cursor = $server->executeCommand($this->databaseName, $command);
         $result = current($cursor->toArray());

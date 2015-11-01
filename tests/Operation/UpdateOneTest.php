@@ -12,7 +12,7 @@ class UpdateOneTest extends TestCase
      */
     public function testConstructorFilterArgumentTypeCheck($filter)
     {
-        new UpdateOne($this->getDatabaseName(), $this->getCollectionName(), $filter, array('$set' => array('x' => 1)));
+        new UpdateOne($this->getDatabaseName(), $this->getCollectionName(), $filter, ['$set' => ['x' => 1]]);
     }
 
     /**
@@ -21,7 +21,7 @@ class UpdateOneTest extends TestCase
      */
     public function testConstructorUpdateArgumentTypeCheck($update)
     {
-        new UpdateOne($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), $update);
+        new UpdateOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update);
     }
 
     /**
@@ -30,6 +30,6 @@ class UpdateOneTest extends TestCase
      */
     public function testConstructorUpdateArgumentRequiresOperators()
     {
-        new UpdateOne($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), array('y' => 1));
+        new UpdateOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['y' => 1]);
     }
 }

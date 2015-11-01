@@ -21,59 +21,59 @@ class FindTest extends TestCase
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        new Find($this->getDatabaseName(), $this->getCollectionName(), array(), $options);
+        new Find($this->getDatabaseName(), $this->getCollectionName(), [], $options);
     }
 
     public function provideInvalidConstructorOptions()
     {
-        $options = array();
+        $options = [];
 
         foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = array('allowPartialResults' => $value);
+            $options[][] = ['allowPartialResults' => $value];
         }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = array('batchSize' => $value);
+            $options[][] = ['batchSize' => $value];
         }
 
         foreach ($this->getInvalidStringValues() as $value) {
-            $options[][] = array('comment' => $value);
+            $options[][] = ['comment' => $value];
         }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = array('cursorType' => $value);
+            $options[][] = ['cursorType' => $value];
         }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = array('limit' => $value);
+            $options[][] = ['limit' => $value];
         }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = array('maxTimeMS' => $value);
+            $options[][] = ['maxTimeMS' => $value];
         }
 
         foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = array('modifiers' => $value);
+            $options[][] = ['modifiers' => $value];
         }
 
         foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = array('oplogReplay' => $value);
+            $options[][] = ['oplogReplay' => $value];
         }
 
         foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = array('projection' => $value);
+            $options[][] = ['projection' => $value];
         }
 
         foreach ($this->getInvalidReadPreferenceValues() as $value) {
-            $options[][] = array('readPreference' => $value);
+            $options[][] = ['readPreference' => $value];
         }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = array('skip' => $value);
+            $options[][] = ['skip' => $value];
         }
 
         foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = array('sort' => $value);
+            $options[][] = ['sort' => $value];
         }
 
         return $options;
@@ -85,11 +85,11 @@ class FindTest extends TestCase
      */
     public function testConstructorCursorTypeOption($cursorType)
     {
-        new Find($this->getDatabaseName(), $this->getCollectionName(), array(), array('cursorType' => $cursorType));
+        new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['cursorType' => $cursorType]);
     }
 
     public function provideInvalidConstructorCursorTypeOptions()
     {
-        return $this->wrapValuesForDataProvider(array(-1, 0, 4));
+        return $this->wrapValuesForDataProvider([-1, 0, 4]);
     }
 }

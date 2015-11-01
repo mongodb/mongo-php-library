@@ -61,11 +61,11 @@ class FindAndModify implements Executable
      */
     public function __construct($databaseName, $collectionName, array $options)
     {
-        $options += array(
+        $options += [
             'new' => false,
             'remove' => false,
             'upsert' => false,
-        );
+        ];
 
         if (isset($options['fields']) && ! is_array($options['fields']) && ! is_object($options['fields'])) {
             throw new InvalidArgumentTypeException('"fields" option', $options['fields'], 'array or object');
@@ -153,9 +153,7 @@ class FindAndModify implements Executable
      */
     private function createCommand()
     {
-        $cmd = array(
-            'findAndModify' => $this->collectionName,
-        );
+        $cmd = ['findAndModify' => $this->collectionName];
 
         if ($this->options['remove']) {
             $cmd['remove'] = true;
@@ -164,7 +162,7 @@ class FindAndModify implements Executable
             $cmd['upsert'] = $this->options['upsert'];
         }
 
-        foreach (array('fields', 'query', 'sort', 'update') as $option) {
+        foreach (['fields', 'query', 'sort', 'update'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = (object) $this->options[$option];
             }

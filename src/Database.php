@@ -66,7 +66,7 @@ class Database
      * @param array  $options
      * @return object Command result document
      */
-    public function createCollection($collectionName, array $options = array())
+    public function createCollection($collectionName, array $options = [])
     {
         $operation = new CreateCollection($this->databaseName, $collectionName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
@@ -118,7 +118,7 @@ class Database
      * @param array $options
      * @return CollectionInfoIterator
      */
-    public function listCollections(array $options = array())
+    public function listCollections(array $options = [])
     {
         $operation = new ListCollections($this->databaseName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));

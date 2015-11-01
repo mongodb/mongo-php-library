@@ -18,20 +18,20 @@ class InsertManyFunctionalTest extends FunctionalTestCase
 
     public function testInsertManyWithNonexistentDocuments()
     {
-        $documents = array(
-            array('_id' => 2, 'x' => 22),
-            array('_id' => 3, 'x' => 33),
-        );
+        $documents = [
+            ['_id' => 2, 'x' => 22],
+            ['_id' => 3, 'x' => 33],
+        ];
 
         $result = $this->collection->insertMany($documents);
         $this->assertSame(2, $result->getInsertedCount());
-        $this->assertSame(array(2, 3), $result->getInsertedIds());
+        $this->assertSame([2, 3], $result->getInsertedIds());
 
-        $expected = array(
-            array('_id' => 1, 'x' => 11),
-            array('_id' => 2, 'x' => 22),
-            array('_id' => 3, 'x' => 33),
-        );
+        $expected = [
+            ['_id' => 1, 'x' => 11],
+            ['_id' => 2, 'x' => 22],
+            ['_id' => 3, 'x' => 33],
+        ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
     }

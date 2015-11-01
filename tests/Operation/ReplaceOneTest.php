@@ -12,7 +12,7 @@ class ReplaceOneTest extends TestCase
      */
     public function testConstructorFilterArgumentTypeCheck($filter)
     {
-        new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), $filter, array('y' => 1));
+        new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), $filter, ['y' => 1]);
     }
 
     /**
@@ -21,7 +21,7 @@ class ReplaceOneTest extends TestCase
      */
     public function testConstructorReplacementArgumentTypeCheck($replacement)
     {
-        new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), $replacement);
+        new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $replacement);
     }
 
     /**
@@ -30,6 +30,6 @@ class ReplaceOneTest extends TestCase
      */
     public function testConstructorReplacementArgumentRequiresNoOperators()
     {
-        new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), array('x' => 1), array('$set' => array('x' => 1)));
+        new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['$set' => ['x' => 1]]);
     }
 }

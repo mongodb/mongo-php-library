@@ -18,13 +18,13 @@ class DistinctFunctionalTest extends FunctionalTestCase
 
     public function testDistinctWithoutFilter()
     {
-        $this->assertSame(array(11, 22, 33), $this->collection->distinct('x'));
+        $this->assertSame([11, 22, 33], $this->collection->distinct('x'));
     }
 
     public function testDistinctWithFilter()
     {
-        $filter = array('_id' => array('$gt' => 1));
+        $filter = ['_id' => ['$gt' => 1]];
 
-        $this->assertSame(array(22, 33), $this->collection->distinct('x', $filter));
+        $this->assertSame([22, 33], $this->collection->distinct('x', $filter));
     }
 }

@@ -12,7 +12,7 @@ class IndexInputTest extends TestCase
      */
     public function testConstructorShouldRequireKey()
     {
-        new IndexInput(array());
+        new IndexInput([]);
     }
 
     /**
@@ -20,7 +20,7 @@ class IndexInputTest extends TestCase
      */
     public function testConstructorShouldRequireKeyToBeArrayOrObject()
     {
-        new IndexInput(array('key' => 'foo'));
+        new IndexInput(['key' => 'foo']);
     }
 
     /**
@@ -28,7 +28,7 @@ class IndexInputTest extends TestCase
      */
     public function testConstructorShouldRequireKeyOrderToBeScalar()
     {
-        new IndexInput(array('key' => array('x' => array())));
+        new IndexInput(['key' => ['x' => []]]);
     }
 
     /**
@@ -36,7 +36,7 @@ class IndexInputTest extends TestCase
      */
     public function testConstructorShouldRequireNamespace()
     {
-        new IndexInput(array('key' => array('x' => 1)));
+        new IndexInput(['key' => ['x' => 1]]);
     }
 
     /**
@@ -44,7 +44,7 @@ class IndexInputTest extends TestCase
      */
     public function testConstructorShouldRequireNamespaceToBeString()
     {
-        new IndexInput(array('key' => array('x' => 1), 'ns' => 1));
+        new IndexInput(['key' => ['x' => 1], 'ns' => 1]);
     }
 
     /**
@@ -52,7 +52,7 @@ class IndexInputTest extends TestCase
      */
     public function testConstructorShouldRequireNameToBeString()
     {
-        new IndexInput(array('key' => array('x' => 1), 'ns' => 'foo.bar', 'name' => 1));
+        new IndexInput(['key' => ['x' => 1], 'ns' => 'foo.bar', 'name' => 1]);
     }
 
     /**
@@ -60,32 +60,32 @@ class IndexInputTest extends TestCase
      */
     public function testNameGeneration($expectedName, array $key)
     {
-        $this->assertSame($expectedName, (string) new IndexInput(array('key' => $key, 'ns' => 'foo.bar')));
+        $this->assertSame($expectedName, (string) new IndexInput(['key' => $key, 'ns' => 'foo.bar']));
     }
 
     public function provideExpectedNameAndKey()
     {
-        return array(
-            array('x_1', array('x' => 1)),
-            array('x_1_y_-1', array('x' => 1, 'y' => -1)),
-            array('loc_2dsphere', array('loc' => '2dsphere')),
-            array('loc_2dsphere_x_1', array('loc' => '2dsphere', 'x' => 1)),
-            array('doc_text', array('doc' => 'text')),
-        );
+        return [
+            ['x_1', ['x' => 1]],
+            ['x_1_y_-1', ['x' => 1, 'y' => -1]],
+            ['loc_2dsphere', ['loc' => '2dsphere']],
+            ['loc_2dsphere_x_1', ['loc' => '2dsphere', 'x' => 1]],
+            ['doc_text', ['doc' => 'text']],
+        ];
     }
 
     public function testBsonSerialization()
     {
-        $expected = array(
-            'key' => array('x' => 1),
+        $expected = [
+            'key' => ['x' => 1],
             'ns' => 'foo.bar',
             'name' => 'x_1',
-        );
+        ];
 
-        $indexInput = new IndexInput(array(
-            'key' => array('x' => 1),
+        $indexInput = new IndexInput([
+            'key' => ['x' => 1],
             'ns' => 'foo.bar',
-        ));
+        ]);
 
         $this->assertInstanceOf('MongoDB\BSON\Serializable', $indexInput);
         $this->assertEquals($expected, $indexInput->bsonSerialize());

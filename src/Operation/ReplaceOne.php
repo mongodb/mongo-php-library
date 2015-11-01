@@ -35,7 +35,7 @@ class ReplaceOne implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $filter, $replacement, array $options = array())
+    public function __construct($databaseName, $collectionName, $filter, $replacement, array $options = [])
     {
         if ( ! is_array($replacement) && ! is_object($replacement)) {
             throw new InvalidArgumentTypeException('$replacement', $replacement, 'array or object');
@@ -50,7 +50,7 @@ class ReplaceOne implements Executable
             $collectionName,
             $filter,
             $replacement,
-            array('multi' => false) + $options
+            ['multi' => false] + $options
         );
     }
 

@@ -23,11 +23,11 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
         });
 
         $cappedCollectionName = $this->getCollectionName() . '.capped';
-        $cappedCollectionOptions = array(
+        $cappedCollectionOptions = [
             'capped' => true,
             'max' => 100,
             'size' => 1048576,
-        );
+        ];
 
         $commandResult = $this->database->createCollection($cappedCollectionName, $cappedCollectionOptions);
         $this->assertCommandSucceeded($commandResult);
@@ -70,7 +70,7 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
         $this->assertCommandSucceeded($commandResult);
 
         $collectionName = $this->getCollectionName();
-        $options = array('filter' => array('name' => $collectionName));
+        $options = ['filter' => ['name' => $collectionName]];
 
         $collections = $this->database->listCollections($options);
         $this->assertInstanceOf('MongoDB\Model\CollectionInfoIterator', $collections);

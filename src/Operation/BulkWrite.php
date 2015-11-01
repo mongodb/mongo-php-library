@@ -66,7 +66,7 @@ class BulkWrite implements Executable
      * @param array   $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, array $operations, array $options = array())
+    public function __construct($databaseName, $collectionName, array $operations, array $options = [])
     {
         if (empty($operations)) {
             throw new InvalidArgumentException('$operations is empty');
@@ -104,7 +104,7 @@ class BulkWrite implements Executable
 
                 case self::DELETE_MANY:
                 case self::DELETE_ONE:
-                    $operations[$i][$type][1] = array('limit' => ($type === self::DELETE_ONE ? 1 : 0));
+                    $operations[$i][$type][1] = ['limit' => ($type === self::DELETE_ONE ? 1 : 0)];
 
                     break;
 
@@ -122,7 +122,7 @@ class BulkWrite implements Executable
                     }
 
                     if ( ! isset($args[2])) {
-                        $args[2] = array();
+                        $args[2] = [];
                     }
 
                     if ( ! is_array($args[2])) {
@@ -130,7 +130,7 @@ class BulkWrite implements Executable
                     }
 
                     $args[2]['multi'] = false;
-                    $args[2] += array('upsert' => false);
+                    $args[2] += ['upsert' => false];
 
                     if ( ! is_bool($args[2]['upsert'])) {
                         throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][2]["upsert"]', $i, $type), $args[2]['upsert'], 'boolean');
@@ -155,7 +155,7 @@ class BulkWrite implements Executable
                     }
 
                     if ( ! isset($args[2])) {
-                        $args[2] = array();
+                        $args[2] = [];
                     }
 
                     if ( ! is_array($args[2])) {
@@ -163,7 +163,7 @@ class BulkWrite implements Executable
                     }
 
                     $args[2]['multi'] = ($type === self::UPDATE_MANY);
-                    $args[2] += array('upsert' => false);
+                    $args[2] += ['upsert' => false];
 
                     if ( ! is_bool($args[2]['upsert'])) {
                         throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][2]["upsert"]', $i, $type), $args[2]['upsert'], 'boolean');
@@ -180,9 +180,7 @@ class BulkWrite implements Executable
             $expectedIndex += 1;
         }
 
-        $options += array(
-            'ordered' => true,
-        );
+        $options += ['ordered' => true];
 
         if ( ! is_bool($options['ordered'])) {
             throw new InvalidArgumentTypeException('"ordered" option', $options['ordered'], 'boolean');
@@ -208,7 +206,7 @@ class BulkWrite implements Executable
     public function execute(Server $server)
     {
         $bulk = new Bulk(['ordered' => $this->options['ordered']]);
-        $insertedIds = array();
+        $insertedIds = [];
 
         foreach ($this->operations as $i => $operation) {
             $type = key($operation);

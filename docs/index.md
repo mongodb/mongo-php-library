@@ -23,7 +23,7 @@ extension, see:
 Since this library is only a high-level abstraction for the driver, it requires
 that the [`mongodb` extension be installed](http://mongodb.github.io/mongo-php-driver/#installation):
 
-    $ pecl install mongodb-beta
+    $ pecl install mongodb
     $ echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 Instructions for installing the `mongodb` extension on HHVM may be found in the
@@ -33,7 +33,7 @@ The preferred method of installing this library is with
 [Composer](https://getcomposer.org/) by running the following from your project
 root:
 
-    $ composer require "mongodb/mongodb=^1.0.0@alpha"
+    $ composer require "mongodb/mongodb=^1.0.0@beta"
 
 ## Generated API Docs
 

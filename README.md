@@ -29,14 +29,14 @@ extension, see:
 As a high-level abstraction for the driver, this library naturally requires that
 the [`mongodb` extension be installed](http://mongodb.github.io/mongo-php-driver/#installation):
 
-    $ pecl install mongodb-alpha
+    $ pecl install mongodb
     $ echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 The preferred method of installing this library is with
 [Composer](https://getcomposer.org/) by running the following from your project
 root:
 
-    $ composer require "mongodb/mongodb=0.3.x-dev"
+    $ composer require "mongodb/mongodb@beta"
 
 ## Reporting Issues
 

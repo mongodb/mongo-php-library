@@ -4,16 +4,19 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\Server;
 use MongoDB\Operation\DropCollection;
+use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListCollections;
 
 class DropCollectionFunctionalTest extends FunctionalTestCase
 {
     public function testDropExistingCollection()
     {
-        $writeResult = $this->manager->executeInsert($this->getNamespace(), array('x' => 1));
+        $server = $this->getPrimaryServer();
+
+        $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1]);
+        $writeResult = $insertOne->execute($server);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $server = $this->getPrimaryServer();
         $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
         $operation->execute($server);
 

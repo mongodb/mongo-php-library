@@ -45,7 +45,7 @@ class FindOneFunctionalTest extends FunctionalTestCase
      */
     private function createFixtures($n)
     {
-        $bulkWrite = new BulkWrite(true);
+        $bulkWrite = new BulkWrite(['ordered' => true]);
 
         for ($i = 1; $i <= $n; $i++) {
             $bulkWrite->insert([

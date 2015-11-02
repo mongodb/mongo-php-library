@@ -207,7 +207,7 @@ class BulkWrite implements Executable
      */
     public function execute(Server $server)
     {
-        $bulk = new Bulk($this->options['ordered']);
+        $bulk = new Bulk(['ordered' => $this->options['ordered']]);
         $insertedIds = array();
 
         foreach ($this->operations as $i => $operation) {

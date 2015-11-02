@@ -3,6 +3,7 @@
 namespace MongoDB\Tests;
 
 use MongoDB\Client;
+use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Command;
 use MongoDB\Model\DatabaseInfo;
 
@@ -23,7 +24,10 @@ class ClientFunctionalTest extends FunctionalTestCase
 
     public function testDropDatabase()
     {
-        $writeResult = $this->manager->executeInsert($this->getNamespace(), array('x' => 1));
+        $bulkWrite = new BulkWrite();
+        $bulkWrite->insert(['x' => 1]);
+
+        $writeResult = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
         $commandResult = $this->client->dropDatabase($this->getDatabaseName());
@@ -33,7 +37,10 @@ class ClientFunctionalTest extends FunctionalTestCase
 
     public function testListDatabases()
     {
-        $writeResult = $this->manager->executeInsert($this->getNamespace(), array('x' => 1));
+        $bulkWrite = new BulkWrite();
+        $bulkWrite->insert(['x' => 1]);
+
+        $writeResult = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
         $databases = $this->client->listDatabases();

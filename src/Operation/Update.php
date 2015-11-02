@@ -48,7 +48,7 @@ class Update implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $filter, $update, array $options = array())
+    public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
             throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
@@ -58,10 +58,10 @@ class Update implements Executable
             throw new InvalidArgumentTypeException('$update', $filter, 'array or object');
         }
 
-        $options += array(
+        $options += [
             'multi' => false,
             'upsert' => false,
-        );
+        ];
 
         if ( ! is_bool($options['multi'])) {
             throw new InvalidArgumentTypeException('"multi" option', $options['multi'], 'boolean');
@@ -95,10 +95,10 @@ class Update implements Executable
      */
     public function execute(Server $server)
     {
-        $options = array(
+        $options = [
             'multi' => $this->options['multi'],
             'upsert' => $this->options['upsert'],
-        );
+        ];
 
         $bulk = new Bulk();
         $bulk->update($this->filter, $this->update, $options);

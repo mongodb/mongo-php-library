@@ -22,12 +22,12 @@ class DeleteTest extends TestCase
      */
     public function testConstructorLimitArgumentMustBeOneOrZero($limit)
     {
-        new Delete($this->getDatabaseName(), $this->getCollectionName(), array(), $limit);
+        new Delete($this->getDatabaseName(), $this->getCollectionName(), [], $limit);
     }
 
     public function provideInvalidLimitValues()
     {
-        return $this->wrapValuesForDataProvider(array_merge($this->getInvalidIntegerValues(), array(-1, 2)));
+        return $this->wrapValuesForDataProvider(array_merge($this->getInvalidIntegerValues(), [-1, 2]));
     }
 
     /**
@@ -36,15 +36,15 @@ class DeleteTest extends TestCase
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        new Delete($this->getDatabaseName(), $this->getCollectionName(), array(), 1, $options);
+        new Delete($this->getDatabaseName(), $this->getCollectionName(), [], 1, $options);
     }
 
     public function provideInvalidConstructorOptions()
     {
-        $options = array();
+        $options = [];
 
         foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = array('writeConcern' => $value);
+            $options[][] = ['writeConcern' => $value];
         }
 
         return $options;

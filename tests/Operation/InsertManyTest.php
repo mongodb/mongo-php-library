@@ -12,7 +12,7 @@ class InsertManyTest extends TestCase
      */
     public function testConstructorDocumentsMustNotBeEmpty()
     {
-        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), array());
+        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), []);
     }
 
     /**
@@ -21,7 +21,7 @@ class InsertManyTest extends TestCase
      */
     public function testConstructorDocumentsMustBeAList()
     {
-        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), array(1 => array('x' => 1)));
+        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [1 => ['x' => 1]]);
     }
 
     /**
@@ -31,7 +31,7 @@ class InsertManyTest extends TestCase
      */
     public function testConstructorDocumentsArgumentElementTypeChecks($document)
     {
-        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), array($document));
+        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [$document]);
     }
 
     /**
@@ -40,19 +40,19 @@ class InsertManyTest extends TestCase
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), array(array('x' => 1)), $options);
+        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [['x' => 1]], $options);
     }
 
     public function provideInvalidConstructorOptions()
     {
-        $options = array();
+        $options = [];
 
         foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = array('ordered' => $value);
+            $options[][] = ['ordered' => $value];
         }
 
         foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = array('writeConcern' => $value);
+            $options[][] = ['writeConcern' => $value];
         }
 
         return $options;

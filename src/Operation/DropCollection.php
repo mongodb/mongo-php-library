@@ -43,7 +43,7 @@ class DropCollection implements Executable
     public function execute(Server $server)
     {
         try {
-            $cursor = $server->executeCommand($this->databaseName, new Command(array('drop' => $this->collectionName)));
+            $cursor = $server->executeCommand($this->databaseName, new Command(['drop' => $this->collectionName]));
         } catch (DriverRuntimeException $e) {
             /* The server may return an error if the collection does not exist.
              * Check for an error message (unfortunately, there isn't a code)

@@ -27,7 +27,7 @@ class Client
      * @param array  $options       Additional connection string options
      * @param array  $driverOptions Driver-specific options
      */
-    public function __construct($uri, array $options = array(), array $driverOptions = array())
+    public function __construct($uri, array $options = [], array $driverOptions = [])
     {
         $this->manager = new Manager($uri, $options, $driverOptions);
     }
@@ -52,7 +52,7 @@ class Client
      * @see ListDatabases::__construct() for supported options
      * @return DatabaseInfoIterator
      */
-    public function listDatabases(array $options = array())
+    public function listDatabases(array $options = [])
     {
         $operation = new ListDatabases($options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));

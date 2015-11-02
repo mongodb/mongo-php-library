@@ -12,7 +12,7 @@ class AggregateTest extends TestCase
      */
     public function testConstructorPipelineArgumentMustNotBeEmpty()
     {
-        new Aggregate($this->getDatabaseName(), $this->getCollectionName(), array());
+        new Aggregate($this->getDatabaseName(), $this->getCollectionName(), []);
     }
 
     /**
@@ -21,7 +21,7 @@ class AggregateTest extends TestCase
      */
     public function testConstructorPipelineArgumentMustBeAList()
     {
-        new Aggregate($this->getDatabaseName(), $this->getCollectionName(), array(1 => array('$match' => array('x' => 1))));
+        new Aggregate($this->getDatabaseName(), $this->getCollectionName(), [1 => ['$match' => ['x' => 1]]]);
     }
 
     /**
@@ -30,31 +30,31 @@ class AggregateTest extends TestCase
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        new Aggregate($this->getDatabaseName(), $this->getCollectionName(), array(array('$match' => array('x' => 1))), $options);
+        new Aggregate($this->getDatabaseName(), $this->getCollectionName(), [['$match' => ['x' => 1]]], $options);
     }
 
     public function provideInvalidConstructorOptions()
     {
-        $options = array();
+        $options = [];
 
         foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = array('allowDiskUse' => $value);
+            $options[][] = ['allowDiskUse' => $value];
         }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = array('batchSize' => $value);
+            $options[][] = ['batchSize' => $value];
         }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = array('maxTimeMS' => $value);
+            $options[][] = ['maxTimeMS' => $value];
         }
 
         foreach ($this->getInvalidReadPreferenceValues() as $value) {
-            $options[][] = array('readPreference' => $value);
+            $options[][] = ['readPreference' => $value];
         }
 
         foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = array('useCursor' => $value);
+            $options[][] = ['useCursor' => $value];
         }
 
         return $options;
@@ -69,8 +69,8 @@ class AggregateTest extends TestCase
         new Aggregate(
             $this->getDatabaseName(),
             $this->getCollectionName(),
-            array(array('$match' => array('x' => 1))),
-            array('batchSize' => 100, 'useCursor' => false)
+            [['$match' => ['x' => 1]]],
+            ['batchSize' => 100, 'useCursor' => false]
         );
     }
 }

@@ -25,17 +25,17 @@ class AggregateFunctionalTest extends FunctionalTestCase
     public function testAggregateWithMultipleStages()
     {
         $cursor = $this->collection->aggregate(
-            array(
-                array('$sort' => array('x' => 1)),
-                array('$match' => array('_id' => array('$gt' => 1))),
-            ),
-            array('batchSize' => 2)
+            [
+                ['$sort' => ['x' => 1]],
+                ['$match' => ['_id' => ['$gt' => 1]]],
+            ],
+            ['batchSize' => 2]
         );
 
-        $expected = array(
-            array('_id' => 2, 'x' => 22),
-            array('_id' => 3, 'x' => 33),
-        );
+        $expected = [
+            ['_id' => 2, 'x' => 22],
+            ['_id' => 3, 'x' => 33],
+        ];
 
         $this->assertSameDocuments($expected, $cursor);
     }
@@ -53,17 +53,17 @@ class AggregateFunctionalTest extends FunctionalTestCase
         $operation->execute($this->getPrimaryServer());
 
         $this->collection->aggregate(
-            array(
-                array('$sort' => array('x' => 1)),
-                array('$match' => array('_id' => array('$gt' => 1))),
-                array('$out' => $outputCollection->getCollectionName()),
-            )
+            [
+                ['$sort' => ['x' => 1]],
+                ['$match' => ['_id' => ['$gt' => 1]]],
+                ['$out' => $outputCollection->getCollectionName()],
+            ]
         );
 
-        $expected = array(
-            array('_id' => 2, 'x' => 22),
-            array('_id' => 3, 'x' => 33),
-        );
+        $expected = [
+            ['_id' => 2, 'x' => 22],
+            ['_id' => 3, 'x' => 33],
+        ];
 
         $this->assertSameDocuments($expected, $outputCollection->find());
 

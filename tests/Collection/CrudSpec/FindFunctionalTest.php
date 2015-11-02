@@ -18,46 +18,46 @@ class FindFunctionalTest extends FunctionalTestCase
 
     public function testFindWithFilter()
     {
-        $filter = array('_id' => 1);
+        $filter = ['_id' => 1];
 
-        $expected = array(
-            array('_id' => 1, 'x' => 11),
-        );
+        $expected = [
+            ['_id' => 1, 'x' => 11],
+        ];
 
         $this->assertSameDocuments($expected, $this->collection->find($filter));
     }
 
     public function testFindWithFilterSortSkipAndLimit()
     {
-        $filter = array('_id' => array('$gt' => 2));
-        $options = array(
-            'sort' => array('_id' => 1),
+        $filter = ['_id' => ['$gt' => 2]];
+        $options = [
+            'sort' => ['_id' => 1],
             'skip' => 2,
             'limit' => 2,
-        );
+        ];
 
-        $expected = array(
-            array('_id' => 5, 'x' => 55),
-        );
+        $expected = [
+            ['_id' => 5, 'x' => 55],
+        ];
 
         $this->assertSameDocuments($expected, $this->collection->find($filter, $options));
     }
 
     public function testFindWithLimitSortAndBatchSize()
     {
-        $filter = array();
-        $options = array(
-            'sort' => array('_id' => 1),
+        $filter = [];
+        $options = [
+            'sort' => ['_id' => 1],
             'limit' => 4,
             'batchSize' => 2,
-        );
+        ];
 
-        $expected = array(
-            array('_id' => 1, 'x' => 11),
-            array('_id' => 2, 'x' => 22),
-            array('_id' => 3, 'x' => 33),
-            array('_id' => 4, 'x' => 44),
-        );
+        $expected = [
+            ['_id' => 1, 'x' => 11],
+            ['_id' => 2, 'x' => 22],
+            ['_id' => 3, 'x' => 33],
+            ['_id' => 4, 'x' => 44],
+        ];
 
         $this->assertSameDocuments($expected, $this->collection->find($filter, $options));
     }

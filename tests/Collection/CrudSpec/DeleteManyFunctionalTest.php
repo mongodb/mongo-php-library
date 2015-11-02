@@ -18,30 +18,30 @@ class DeleteManyFunctionalTest extends FunctionalTestCase
 
     public function testDeleteManyWhenManyDocumentsMatch()
     {
-        $filter = array('_id' => array('$gt' => 1));
+        $filter = ['_id' => ['$gt' => 1]];
 
         $result = $this->collection->deleteMany($filter);
         $this->assertSame(2, $result->getDeletedCount());
 
-        $expected = array(
-            array('_id' => 1, 'x' => 11),
-        );
+        $expected = [
+            ['_id' => 1, 'x' => 11],
+        ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testDeleteManyWhenNoDocumentsMatch()
     {
-        $filter = array('_id' => 4);
+        $filter = ['_id' => 4];
 
         $result = $this->collection->deleteMany($filter);
         $this->assertSame(0, $result->getDeletedCount());
 
-        $expected = array(
-            array('_id' => 1, 'x' => 11),
-            array('_id' => 2, 'x' => 22),
-            array('_id' => 3, 'x' => 33),
-        );
+        $expected = [
+            ['_id' => 1, 'x' => 11],
+            ['_id' => 2, 'x' => 22],
+            ['_id' => 3, 'x' => 33],
+        ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
     }

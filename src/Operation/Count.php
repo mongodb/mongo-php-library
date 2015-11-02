@@ -48,7 +48,7 @@ class Count implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $filter = array(), array $options = array())
+    public function __construct($databaseName, $collectionName, $filter = [], array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
             throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
@@ -119,15 +119,13 @@ class Count implements Executable
      */
     private function createCommand()
     {
-        $cmd = array(
-            'count' => $this->collectionName,
-        );
+        $cmd = ['count' => $this->collectionName];
 
         if ( ! empty($this->filter)) {
             $cmd['query'] = (object) $this->filter;
         }
 
-        foreach (array('hint', 'limit', 'maxTimeMS', 'skip') as $option) {
+        foreach (['hint', 'limit', 'maxTimeMS', 'skip'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }

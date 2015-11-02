@@ -50,10 +50,10 @@ class DropIndexes implements Executable
      */
     public function execute(Server $server)
     {
-        $cmd = array(
+        $cmd = [
             'dropIndexes' => $this->collectionName,
             'index' => $this->indexName,
-        );
+        ];
 
         $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
         $result = current($cursor->toArray());

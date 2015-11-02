@@ -37,7 +37,7 @@ class ListCollections implements Executable
      * @param string $databaseName Database name
      * @param array  $options      Command options
      */
-    public function __construct($databaseName, array $options = array())
+    public function __construct($databaseName, array $options = [])
     {
         if (isset($options['filter']) && ! is_array($options['filter']) && ! is_object($options['filter'])) {
             throw new InvalidArgumentTypeException('"filter" option', $options['filter'], 'array or object');
@@ -74,7 +74,7 @@ class ListCollections implements Executable
      */
     private function executeCommand(Server $server)
     {
-        $cmd = array('listCollections' => 1);
+        $cmd = ['listCollections' => 1];
 
         if ( ! empty($this->options['filter'])) {
             $cmd['filter'] = (object) $this->options['filter'];
@@ -85,7 +85,7 @@ class ListCollections implements Executable
         }
 
         $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
-        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
+        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
 
         return new CollectionInfoCommandIterator($cursor);
     }
@@ -100,7 +100,7 @@ class ListCollections implements Executable
      */
     private function executeLegacy(Server $server)
     {
-        $filter = empty($this->options['filter']) ? array() : (array) $this->options['filter'];
+        $filter = empty($this->options['filter']) ? [] : (array) $this->options['filter'];
 
         if (array_key_exists('name', $filter)) {
             if ( ! is_string($filter['name'])) {
@@ -111,11 +111,11 @@ class ListCollections implements Executable
         }
 
         $options = isset($this->options['maxTimeMS'])
-            ? array('modifiers' => array('$maxTimeMS' => $this->options['maxTimeMS']))
-            : array();
+            ? ['modifiers' => ['$maxTimeMS' => $this->options['maxTimeMS']]]
+            : [];
 
         $cursor = $server->executeQuery($this->databaseName . '.system.namespaces', new Query($filter, $options));
-        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
+        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
 
         return new CollectionInfoLegacyIterator($cursor);
     }

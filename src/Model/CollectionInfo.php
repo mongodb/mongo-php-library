@@ -75,7 +75,7 @@ class CollectionInfo
      */
     public function getOptions()
     {
-        return isset($this->info['options']) ? (array) $this->info['options'] : array();
+        return isset($this->info['options']) ? (array) $this->info['options'] : [];
     }
 
     /**

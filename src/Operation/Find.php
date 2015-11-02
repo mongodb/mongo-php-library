@@ -79,7 +79,7 @@ class Find implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $filter, array $options = array())
+    public function __construct($databaseName, $collectionName, $filter, array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
             throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
@@ -172,7 +172,7 @@ class Find implements Executable
      */
     private function createQuery()
     {
-        $options = array();
+        $options = [];
 
         if ( ! empty($this->options['allowPartialResults'])) {
             $options['partial'] = true;
@@ -188,13 +188,13 @@ class Find implements Executable
             }
         }
 
-        foreach (array('batchSize', 'limit', 'skip', 'sort', 'noCursorTimeout', 'oplogReplay', 'projection') as $option) {
+        foreach (['batchSize', 'limit', 'skip', 'sort', 'noCursorTimeout', 'oplogReplay', 'projection'] as $option) {
             if (isset($this->options[$option])) {
                 $options[$option] = $this->options[$option];
             }
         }
 
-        $modifiers = empty($this->options['modifiers']) ? array() : (array) $this->options['modifiers'];
+        $modifiers = empty($this->options['modifiers']) ? [] : (array) $this->options['modifiers'];
 
         if (isset($options['comment'])) {
             $modifiers['$comment'] = $options['comment'];

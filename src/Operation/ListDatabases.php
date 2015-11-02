@@ -30,7 +30,7 @@ class ListDatabases implements Executable
      *
      * @param array $options Command options
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
@@ -48,14 +48,14 @@ class ListDatabases implements Executable
      */
     public function execute(Server $server)
     {
-        $cmd = array('listDatabases' => 1);
+        $cmd = ['listDatabases' => 1];
 
         if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
         }
 
         $cursor = $server->executeCommand('admin', new Command($cmd));
-        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
+        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
         $result = current($cursor->toArray());
 
         if (empty($result['ok'])) {

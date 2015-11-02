@@ -18,58 +18,58 @@ class FindOneAndDeleteFunctionalTest extends FunctionalTestCase
 
     public function testFindOneAndDeleteWhenManyDocumentsMatch()
     {
-        $filter = array('_id' => array('$gt' => 1));
-        $options = array(
-            'projection' => array('x' => 1, '_id' => 0),
-            'sort' => array('x' => 1),
-        );
+        $filter = ['_id' => ['$gt' => 1]];
+        $options = [
+            'projection' => ['x' => 1, '_id' => 0],
+            'sort' => ['x' => 1],
+        ];
 
         $document = $this->collection->findOneAndDelete($filter, $options);
-        $this->assertSameDocument(array('x' => 22), $document);
+        $this->assertSameDocument(['x' => 22], $document);
 
-        $expected = array(
-            array('_id' => 1, 'x' => 11),
-            array('_id' => 3, 'x' => 33),
-        );
+        $expected = [
+            ['_id' => 1, 'x' => 11],
+            ['_id' => 3, 'x' => 33],
+        ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndDeleteWhenOneDocumentMatches()
     {
-        $filter = array('_id' => 2);
-        $options = array(
-            'projection' => array('x' => 1, '_id' => 0),
-            'sort' => array('x' => 1),
-        );
+        $filter = ['_id' => 2];
+        $options = [
+            'projection' => ['x' => 1, '_id' => 0],
+            'sort' => ['x' => 1],
+        ];
 
         $document = $this->collection->findOneAndDelete($filter, $options);
-        $this->assertSameDocument(array('x' => 22), $document);
+        $this->assertSameDocument(['x' => 22], $document);
 
-        $expected = array(
-            array('_id' => 1, 'x' => 11),
-            array('_id' => 3, 'x' => 33),
-        );
+        $expected = [
+            ['_id' => 1, 'x' => 11],
+            ['_id' => 3, 'x' => 33],
+        ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     public function testFindOneAndDeleteWhenNoDocumentsMatch()
     {
-        $filter = array('_id' => 4);
-        $options = array(
-            'projection' => array('x' => 1, '_id' => 0),
-            'sort' => array('x' => 1),
-        );
+        $filter = ['_id' => 4];
+        $options = [
+            'projection' => ['x' => 1, '_id' => 0],
+            'sort' => ['x' => 1],
+        ];
 
         $document = $this->collection->findOneAndDelete($filter, $options);
         $this->assertNull($document);
 
-        $expected = array(
-            array('_id' => 1, 'x' => 11),
-            array('_id' => 2, 'x' => 22),
-            array('_id' => 3, 'x' => 33),
-        );
+        $expected = [
+            ['_id' => 1, 'x' => 11],
+            ['_id' => 2, 'x' => 22],
+            ['_id' => 3, 'x' => 33],
+        ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
     }

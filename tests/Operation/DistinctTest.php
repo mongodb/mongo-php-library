@@ -21,19 +21,19 @@ class DistinctTest extends TestCase
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', array(), $options);
+        new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', [], $options);
     }
 
     public function provideInvalidConstructorOptions()
     {
-        $options = array();
+        $options = [];
 
         foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = array('maxTimeMS' => $value);
+            $options[][] = ['maxTimeMS' => $value];
         }
 
         foreach ($this->getInvalidReadPreferenceValues() as $value) {
-            $options[][] = array('readPreference' => $value);
+            $options[][] = ['readPreference' => $value];
         }
 
         return $options;

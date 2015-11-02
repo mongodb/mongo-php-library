@@ -49,7 +49,7 @@ class FindOneAndUpdate implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $filter, $update, array $options = array())
+    public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
             throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
@@ -63,10 +63,10 @@ class FindOneAndUpdate implements Executable
             throw new InvalidArgumentException('First key in $update argument is not an update operator');
         }
 
-        $options += array(
+        $options += [
             'returnDocument' => self::RETURN_DOCUMENT_BEFORE,
             'upsert' => false,
-        );
+        ];
 
         if (isset($options['projection']) && ! is_array($options['projection']) && ! is_object($options['projection'])) {
             throw new InvalidArgumentTypeException('"projection" option', $options['projection'], 'array or object');
@@ -92,10 +92,7 @@ class FindOneAndUpdate implements Executable
         $this->findAndModify = new FindAndModify(
             $databaseName,
             $collectionName,
-            array(
-                'query' => $filter,
-                'update' => $update,
-            ) + $options
+            ['query' => $filter, 'update' => $update] + $options
         );
     }
 

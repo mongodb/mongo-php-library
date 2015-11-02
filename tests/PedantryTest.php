@@ -56,7 +56,7 @@ class PedantryTest extends \PHPUnit_Framework_TestCase
 
     public function provideProjectClassNames()
     {
-        $classNames = array();
+        $classNames = [];
         $srcDir = realpath(__DIR__ . '/../src/');
 
         $files = new RegexIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($srcDir)), '/\.php$/i');

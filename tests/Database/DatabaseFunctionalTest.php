@@ -22,10 +22,10 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 
     public function provideInvalidDatabaseValues()
     {
-        return array(
-            array(null),
-            array(''),
-        );
+        return [
+            [null],
+            [''],
+        ];
     }
 
     public function testToString()

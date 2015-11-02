@@ -38,7 +38,7 @@ class FindOneAndDelete implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $filter, array $options = array())
+    public function __construct($databaseName, $collectionName, $filter, array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
             throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
@@ -57,10 +57,7 @@ class FindOneAndDelete implements Executable
         $this->findAndModify = new FindAndModify(
             $databaseName,
             $collectionName,
-            array(
-                'query' => $filter,
-                'remove' => true,
-            ) + $options
+            ['query' => $filter, 'remove' => true] + $options
         );
     }
 

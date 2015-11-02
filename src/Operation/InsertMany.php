@@ -40,7 +40,7 @@ class InsertMany implements Executable
      * @param array            $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, array $documents, array $options = array())
+    public function __construct($databaseName, $collectionName, array $documents, array $options = [])
     {
         if (empty($documents)) {
             throw new InvalidArgumentException('$documents is empty');
@@ -60,9 +60,7 @@ class InsertMany implements Executable
             $expectedIndex += 1;
         }
 
-        $options += array(
-            'ordered' => true,
-        );
+        $options += ['ordered' => true];
 
         if ( ! is_bool($options['ordered'])) {
             throw new InvalidArgumentTypeException('"ordered" option', $options['ordered'], 'boolean');
@@ -88,7 +86,7 @@ class InsertMany implements Executable
     public function execute(Server $server)
     {
         $bulk = new Bulk(['ordered' => $this->options['ordered']]);
-        $insertedIds = array();
+        $insertedIds = [];
 
         foreach ($this->documents as $i => $document) {
             $insertedId = $bulk->insert($document);

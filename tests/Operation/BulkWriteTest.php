@@ -12,7 +12,7 @@ class BulkWriteTest extends TestCase
      */
     public function testOperationsMustNotBeEmpty()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array());
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), []);
     }
 
     /**
@@ -21,9 +21,9 @@ class BulkWriteTest extends TestCase
      */
     public function testOperationsMustBeAList()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            1 => array(BulkWrite::INSERT_ONE => array(array('x' => 1))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            1 => [BulkWrite::INSERT_ONE => [['x' => 1]]],
+        ]);
     }
 
     /**
@@ -32,12 +32,12 @@ class BulkWriteTest extends TestCase
      */
     public function testMultipleOperationsInOneElement()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(
-                BulkWrite::INSERT_ONE => array(array('x' => 1)),
-                BulkWrite::DELETE_ONE => array(array('x' => 1)),
-            ),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [
+                BulkWrite::INSERT_ONE => [['x' => 1]],
+                BulkWrite::DELETE_ONE => [['x' => 1]],
+            ],
+        ]);
     }
 
     /**
@@ -46,9 +46,9 @@ class BulkWriteTest extends TestCase
      */
     public function testUnknownOperation()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array('foo' => array(array('_id' => 1))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            ['foo' => [['_id' => 1]]],
+        ]);
     }
 
     /**
@@ -57,9 +57,9 @@ class BulkWriteTest extends TestCase
      */
     public function testInsertOneDocumentArgumentMissing()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::INSERT_ONE => array()),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::INSERT_ONE => []],
+        ]);
     }
 
     /**
@@ -69,9 +69,9 @@ class BulkWriteTest extends TestCase
      */
     public function testInsertOneDocumentArgumentTypeCheck($document)
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::INSERT_ONE => array($document)),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::INSERT_ONE => [$document]],
+        ]);
     }
 
     /**
@@ -80,9 +80,9 @@ class BulkWriteTest extends TestCase
      */
     public function testDeleteManyFilterArgumentMissing()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::DELETE_MANY => array()),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::DELETE_MANY => []],
+        ]);
     }
 
     /**
@@ -92,9 +92,9 @@ class BulkWriteTest extends TestCase
      */
     public function testDeleteManyFilterArgumentTypeCheck($document)
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::DELETE_MANY => array($document)),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::DELETE_MANY => [$document]],
+        ]);
     }
 
     /**
@@ -103,9 +103,9 @@ class BulkWriteTest extends TestCase
      */
     public function testDeleteOneFilterArgumentMissing()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::DELETE_ONE => array()),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::DELETE_ONE => []],
+        ]);
     }
 
     /**
@@ -115,9 +115,9 @@ class BulkWriteTest extends TestCase
      */
     public function testDeleteOneFilterArgumentTypeCheck($document)
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::DELETE_ONE => array($document)),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::DELETE_ONE => [$document]],
+        ]);
     }
 
     /**
@@ -126,9 +126,9 @@ class BulkWriteTest extends TestCase
      */
     public function testReplaceOneFilterArgumentMissing()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::REPLACE_ONE => array()),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::REPLACE_ONE => []],
+        ]);
     }
 
     /**
@@ -138,9 +138,9 @@ class BulkWriteTest extends TestCase
      */
     public function testReplaceOneFilterArgumentTypeCheck($filter)
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::REPLACE_ONE => array($filter, array('y' => 1))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::REPLACE_ONE => [$filter, ['y' => 1]]],
+        ]);
     }
 
     /**
@@ -149,9 +149,9 @@ class BulkWriteTest extends TestCase
      */
     public function testReplaceOneReplacementArgumentMissing()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::REPLACE_ONE => array(array('x' => 1))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::REPLACE_ONE => [['x' => 1]]],
+        ]);
     }
 
     /**
@@ -161,9 +161,9 @@ class BulkWriteTest extends TestCase
      */
     public function testReplaceOneReplacementArgumentTypeCheck($replacement)
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::REPLACE_ONE => array(array('x' => 1), $replacement)),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::REPLACE_ONE => [['x' => 1], $replacement]],
+        ]);
     }
 
     /**
@@ -172,9 +172,9 @@ class BulkWriteTest extends TestCase
      */
     public function testReplaceOneReplacementArgumentRequiresNoOperators()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::REPLACE_ONE => array(array('_id' => 1), array('$inc' => array('x' => 1)))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::REPLACE_ONE => [['_id' => 1], ['$inc' => ['x' => 1]]]],
+        ]);
     }
 
     /**
@@ -184,9 +184,9 @@ class BulkWriteTest extends TestCase
      */
     public function testReplaceOneUpsertOptionTypeCheck($upsert)
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::REPLACE_ONE => array(array('x' => 1), array('y' => 1), array('upsert' => $upsert))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::REPLACE_ONE => [['x' => 1], ['y' => 1], ['upsert' => $upsert]]],
+        ]);
     }
 
     /**
@@ -195,9 +195,9 @@ class BulkWriteTest extends TestCase
      */
     public function testUpdateManyFilterArgumentMissing()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::UPDATE_MANY => array()),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_MANY => []],
+        ]);
     }
 
     /**
@@ -207,9 +207,9 @@ class BulkWriteTest extends TestCase
      */
     public function testUpdateManyFilterArgumentTypeCheck($filter)
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::UPDATE_MANY => array($filter, array('$set' => array('x' => 1)))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_MANY => [$filter, ['$set' => ['x' => 1]]]],
+        ]);
     }
 
     /**
@@ -218,9 +218,9 @@ class BulkWriteTest extends TestCase
      */
     public function testUpdateManyUpdateArgumentMissing()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::UPDATE_MANY => array(array('x' => 1))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_MANY => [['x' => 1]]],
+        ]);
     }
 
     /**
@@ -230,9 +230,9 @@ class BulkWriteTest extends TestCase
      */
     public function testUpdateManyUpdateArgumentTypeCheck($update)
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::UPDATE_MANY => array(array('x' => 1), $update)),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_MANY => [['x' => 1], $update]],
+        ]);
     }
 
     /**
@@ -241,9 +241,9 @@ class BulkWriteTest extends TestCase
      */
     public function testUpdateManyUpdateArgumentRequiresOperators()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::UPDATE_MANY => array(array('_id' => array('$gt' => 1)), array('x' => 1))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_MANY => [['_id' => ['$gt' => 1]], ['x' => 1]]],
+        ]);
     }
 
     /**
@@ -253,9 +253,9 @@ class BulkWriteTest extends TestCase
      */
     public function testUpdateManyUpsertOptionTypeCheck($upsert)
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::UPDATE_MANY => array(array('x' => 1), array('$set' => array('x' => 1)), array('upsert' => $upsert))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_MANY => [['x' => 1], ['$set' => ['x' => 1]], ['upsert' => $upsert]]],
+        ]);
     }
 
     /**
@@ -264,9 +264,9 @@ class BulkWriteTest extends TestCase
      */
     public function testUpdateOneFilterArgumentMissing()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::UPDATE_ONE => array()),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_ONE => []],
+        ]);
     }
 
     /**
@@ -276,9 +276,9 @@ class BulkWriteTest extends TestCase
      */
     public function testUpdateOneFilterArgumentTypeCheck($filter)
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::UPDATE_ONE => array($filter, array('$set' => array('x' => 1)))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_ONE => [$filter, ['$set' => ['x' => 1]]]],
+        ]);
     }
 
     /**
@@ -287,9 +287,9 @@ class BulkWriteTest extends TestCase
      */
     public function testUpdateOneUpdateArgumentMissing()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::UPDATE_ONE => array(array('x' => 1))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_ONE => [['x' => 1]]],
+        ]);
     }
 
     /**
@@ -299,9 +299,9 @@ class BulkWriteTest extends TestCase
      */
     public function testUpdateOneUpdateArgumentTypeCheck($update)
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::UPDATE_ONE => array(array('x' => 1), $update)),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_ONE => [['x' => 1], $update]],
+        ]);
     }
 
     /**
@@ -310,9 +310,9 @@ class BulkWriteTest extends TestCase
      */
     public function testUpdateOneUpdateArgumentRequiresOperators()
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::UPDATE_ONE => array(array('_id' => 1), array('x' => 1))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_ONE => [['_id' => 1], ['x' => 1]]],
+        ]);
     }
 
     /**
@@ -322,9 +322,9 @@ class BulkWriteTest extends TestCase
      */
     public function testUpdateOneUpsertOptionTypeCheck($upsert)
     {
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), array(
-            array(BulkWrite::UPDATE_ONE => array(array('x' => 1), array('$set' => array('x' => 1)), array('upsert' => $upsert))),
-        ));
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_ONE => [['x' => 1], ['$set' => ['x' => 1]], ['upsert' => $upsert]]],
+        ]);
     }
 
     /**
@@ -336,21 +336,21 @@ class BulkWriteTest extends TestCase
         new BulkWrite(
             $this->getDatabaseName(),
             $this->getCollectionName(),
-            array(array(BulkWrite::INSERT_ONE => array(array('x' => 1)))),
+            [[BulkWrite::INSERT_ONE => [['x' => 1]]]],
             $options
         );
     }
 
     public function provideInvalidConstructorOptions()
     {
-        $options = array();
+        $options = [];
 
         foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = array('ordered' => $value);
+            $options[][] = ['ordered' => $value];
         }
 
         foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = array('writeConcern' => $value);
+            $options[][] = ['writeConcern' => $value];
         }
 
         return $options;

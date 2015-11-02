@@ -93,7 +93,7 @@ class Collection
      * @param array $options  Command options
      * @return Traversable
      */
-    public function aggregate(array $pipeline, array $options = array())
+    public function aggregate(array $pipeline, array $options = [])
     {
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
@@ -117,7 +117,7 @@ class Collection
      * @param array   $options    Command options
      * @return BulkWriteResult
      */
-    public function bulkWrite(array $operations, array $options = array())
+    public function bulkWrite(array $operations, array $options = [])
     {
         if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
@@ -137,7 +137,7 @@ class Collection
      * @param array        $options Command options
      * @return integer
      */
-    public function count($filter = array(), array $options = array())
+    public function count($filter = [], array $options = [])
     {
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
@@ -158,9 +158,9 @@ class Collection
      * @param array        $options Index options
      * @return string The name of the created index
      */
-    public function createIndex($key, array $options = array())
+    public function createIndex($key, array $options = [])
     {
-        return current($this->createIndexes(array(array('key' => $key) + $options)));
+        return current($this->createIndexes([['key' => $key] + $options]));
     }
 
     /**
@@ -203,7 +203,7 @@ class Collection
      * @param array        $options Command options
      * @return DeleteResult
      */
-    public function deleteMany($filter, array $options = array())
+    public function deleteMany($filter, array $options = [])
     {
         if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
@@ -224,7 +224,7 @@ class Collection
      * @param array        $options Command options
      * @return DeleteResult
      */
-    public function deleteOne($filter, array $options = array())
+    public function deleteOne($filter, array $options = [])
     {
         if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
@@ -245,7 +245,7 @@ class Collection
      * @param array        $options Command options
      * @return mixed[]
      */
-    public function distinct($fieldName, $filter = array(), array $options = array())
+    public function distinct($fieldName, $filter = [], array $options = [])
     {
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
@@ -313,7 +313,7 @@ class Collection
      * @param array        $options Additional options
      * @return Cursor
      */
-    public function find($filter = array(), array $options = array())
+    public function find($filter = [], array $options = [])
     {
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
@@ -334,7 +334,7 @@ class Collection
      * @param array        $options Additional options
      * @return object|null
      */
-    public function findOne($filter = array(), array $options = array())
+    public function findOne($filter = [], array $options = [])
     {
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
@@ -357,7 +357,7 @@ class Collection
      * @param array        $options Command options
      * @return object|null
      */
-    public function findOneAndDelete($filter, array $options = array())
+    public function findOneAndDelete($filter, array $options = [])
     {
         $operation = new FindOneAndDelete($this->databaseName, $this->collectionName, $filter, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
@@ -380,7 +380,7 @@ class Collection
      * @param array        $options     Command options
      * @return object|null
      */
-    public function findOneAndReplace($filter, $replacement, array $options = array())
+    public function findOneAndReplace($filter, $replacement, array $options = [])
     {
         $operation = new FindOneAndReplace($this->databaseName, $this->collectionName, $filter, $replacement, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
@@ -403,7 +403,7 @@ class Collection
      * @param array        $options Command options
      * @return object|null
      */
-    public function findOneAndUpdate($filter, $update, array $options = array())
+    public function findOneAndUpdate($filter, $update, array $options = [])
     {
         $operation = new FindOneAndUpdate($this->databaseName, $this->collectionName, $filter, $update, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
@@ -451,7 +451,7 @@ class Collection
      * @param array            $options   Command options
      * @return InsertManyResult
      */
-    public function insertMany(array $documents, array $options = array())
+    public function insertMany(array $documents, array $options = [])
     {
         if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
@@ -472,7 +472,7 @@ class Collection
      * @param array        $options  Command options
      * @return InsertOneResult
      */
-    public function insertOne($document, array $options = array())
+    public function insertOne($document, array $options = [])
     {
         if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
@@ -490,7 +490,7 @@ class Collection
      * @see ListIndexes::__construct() for supported options
      * @return IndexInfoIterator
      */
-    public function listIndexes(array $options = array())
+    public function listIndexes(array $options = [])
     {
         $operation = new ListIndexes($this->databaseName, $this->collectionName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
@@ -508,7 +508,7 @@ class Collection
      * @param array        $options     Command options
      * @return UpdateResult
      */
-    public function replaceOne($filter, $replacement, array $options = array())
+    public function replaceOne($filter, $replacement, array $options = [])
     {
         if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
@@ -530,7 +530,7 @@ class Collection
      * @param array        $options     Command options
      * @return UpdateResult
      */
-    public function updateMany($filter, $update, array $options = array())
+    public function updateMany($filter, $update, array $options = [])
     {
         if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
@@ -552,7 +552,7 @@ class Collection
      * @param array        $options     Command options
      * @return UpdateResult
      */
-    public function updateOne($filter, $update, array $options = array())
+    public function updateOne($filter, $update, array $options = [])
     {
         if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;

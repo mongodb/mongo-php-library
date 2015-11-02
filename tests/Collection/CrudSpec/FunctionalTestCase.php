@@ -20,10 +20,10 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         $bulkWrite = new BulkWrite(['ordered' => true]);
 
         for ($i = 1; $i <= $n; $i++) {
-            $bulkWrite->insert(array(
+            $bulkWrite->insert([
                 '_id' => $i,
                 'x' => (integer) ($i . $i),
-            ));
+            ]);
         }
 
         $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);

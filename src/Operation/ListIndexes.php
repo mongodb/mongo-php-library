@@ -39,7 +39,7 @@ class ListIndexes implements Executable
      * @param string $collectionName Collection name
      * @param array  $options        Command options
      */
-    public function __construct($databaseName, $collectionName, array $options = array())
+    public function __construct($databaseName, $collectionName, array $options = [])
     {
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
@@ -73,7 +73,7 @@ class ListIndexes implements Executable
      */
     private function executeCommand(Server $server)
     {
-        $cmd = array('listIndexes' => $this->collectionName);
+        $cmd = ['listIndexes' => $this->collectionName];
 
         if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
@@ -93,7 +93,7 @@ class ListIndexes implements Executable
             throw $e;
         }
 
-        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
+        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
 
         return new IndexInfoIteratorIterator($cursor);
     }
@@ -107,14 +107,14 @@ class ListIndexes implements Executable
      */
     private function executeLegacy(Server $server)
     {
-        $filter = array('ns' => $this->databaseName . '.' . $this->collectionName);
+        $filter = ['ns' => $this->databaseName . '.' . $this->collectionName];
 
         $options = isset($this->options['maxTimeMS'])
-            ? array('modifiers' => array('$maxTimeMS' => $this->options['maxTimeMS']))
-            : array();
+            ? ['modifiers' => ['$maxTimeMS' => $this->options['maxTimeMS']]]
+            : [];
 
         $cursor = $server->executeQuery($this->databaseName . '.system.indexes', new Query($filter, $options));
-        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array'));
+        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
 
         return new IndexInfoIteratorIterator($cursor);
     }

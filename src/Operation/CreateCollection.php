@@ -23,7 +23,7 @@ class CreateCollection implements Executable
 
     private $databaseName;
     private $collectionName;
-    private $options = array();
+    private $options = [];
 
     /**
      * Constructs a create command.
@@ -57,7 +57,7 @@ class CreateCollection implements Executable
      * @param array  $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, array $options = array())
+    public function __construct($databaseName, $collectionName, array $options = [])
     {
         if (isset($options['autoIndexId']) && ! is_bool($options['autoIndexId'])) {
             throw new InvalidArgumentTypeException('"autoIndexId" option', $options['autoIndexId'], 'boolean');
@@ -118,9 +118,9 @@ class CreateCollection implements Executable
      */
     private function createCommand()
     {
-        $cmd = array('create' => $this->collectionName);
+        $cmd = ['create' => $this->collectionName];
 
-        foreach (array('autoIndexId', 'capped', 'flags', 'max', 'maxTimeMS', 'size') as $option) {
+        foreach (['autoIndexId', 'capped', 'flags', 'max', 'maxTimeMS', 'size'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }

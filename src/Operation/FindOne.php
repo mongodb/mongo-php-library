@@ -52,7 +52,7 @@ class FindOne implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $filter, array $options = array())
+    public function __construct($databaseName, $collectionName, $filter, array $options = [])
     {
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
             throw new InvalidArgumentTypeException('"typeMap" option', $options['typeMap'], 'array');
@@ -62,7 +62,7 @@ class FindOne implements Executable
             $databaseName,
             $collectionName,
             $filter,
-            array('limit' => -1) + $options
+            ['limit' => -1] + $options
         );
 
         $this->options = $options;

@@ -42,7 +42,7 @@ class Delete implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $filter, $limit, array $options = array())
+    public function __construct($databaseName, $collectionName, $filter, $limit, array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
             throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
@@ -73,7 +73,7 @@ class Delete implements Executable
     public function execute(Server $server)
     {
         $bulk = new Bulk();
-        $bulk->delete($this->filter, array('limit' => $this->limit));
+        $bulk->delete($this->filter, ['limit' => $this->limit]);
 
         $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;
         $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $writeConcern);

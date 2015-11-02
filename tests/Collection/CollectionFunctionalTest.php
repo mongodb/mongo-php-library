@@ -22,13 +22,13 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
     public function provideInvalidNamespaceValues()
     {
-        return array(
-            array(null),
-            array(''),
-            array('db_collection'),
-            array('db'),
-            array('.collection'),
-        );
+        return [
+            [null],
+            [''],
+            ['db_collection'],
+            ['db'],
+            ['.collection'],
+        ];
     }
 
     public function testToString()
@@ -53,7 +53,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
     public function testDrop()
     {
-        $writeResult = $this->collection->insertOne(array('x' => 1));
+        $writeResult = $this->collection->insertOne(['x' => 1]);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
         $commandResult = $this->collection->drop();
@@ -65,13 +65,13 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         $this->createFixtures(5);
 
-        $filter = array('_id' => array('$lt' => 5));
-        $options = array(
+        $filter = ['_id' => ['$lt' => 5]];
+        $options = [
             'skip' => 1,
-            'sort' => array('x' => -1),
-        );
+            'sort' => ['x' => -1],
+        ];
 
-        $expected = (object) array('_id' => 3, 'x' => 33);
+        $expected = (object) ['_id' => 3, 'x' => 33];
 
         $this->assertEquals($expected, $this->collection->findOne($filter, $options));
     }
@@ -86,10 +86,10 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $bulkWrite = new BulkWrite(['ordered' => true]);
 
         for ($i = 1; $i <= $n; $i++) {
-            $bulkWrite->insert(array(
+            $bulkWrite->insert([
                 '_id' => $i,
                 'x' => (integer) ($i . $i),
-            ));
+            ]);
         }
 
         $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);

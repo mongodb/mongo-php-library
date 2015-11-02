@@ -16,28 +16,28 @@ class IndexManagementFunctionalTest extends FunctionalTestCase
     {
         $that = $this;
 
-        $this->assertSame('x_1', $this->collection->createIndex(array('x' => 1), array('sparse' => true, 'unique' => true)));
+        $this->assertSame('x_1', $this->collection->createIndex(['x' => 1], ['sparse' => true, 'unique' => true]));
         $this->assertIndexExists('x_1', function(IndexInfo $info) use ($that) {
             $that->assertTrue($info->isSparse());
             $that->assertTrue($info->isUnique());
             $that->assertFalse($info->isTtl());
         });
 
-        $this->assertSame('y_-1_z_1', $this->collection->createIndex(array('y' => -1, 'z' => 1)));
+        $this->assertSame('y_-1_z_1', $this->collection->createIndex(['y' => -1, 'z' => 1]));
         $this->assertIndexExists('y_-1_z_1', function(IndexInfo $info) use ($that) {
             $that->assertFalse($info->isSparse());
             $that->assertFalse($info->isUnique());
             $that->assertFalse($info->isTtl());
         });
 
-        $this->assertSame('g_2dsphere_z_1', $this->collection->createIndex(array('g' => '2dsphere', 'z' => 1)));
+        $this->assertSame('g_2dsphere_z_1', $this->collection->createIndex(['g' => '2dsphere', 'z' => 1]));
         $this->assertIndexExists('g_2dsphere_z_1', function(IndexInfo $info) use ($that) {
             $that->assertFalse($info->isSparse());
             $that->assertFalse($info->isUnique());
             $that->assertFalse($info->isTtl());
         });
 
-        $this->assertSame('my_ttl', $this->collection->createIndex(array('t' => 1), array('expireAfterSeconds' => 0, 'name' => 'my_ttl')));
+        $this->assertSame('my_ttl', $this->collection->createIndex(['t' => 1], ['expireAfterSeconds' => 0, 'name' => 'my_ttl']));
         $this->assertIndexExists('my_ttl', function(IndexInfo $info) use ($that) {
             $that->assertFalse($info->isSparse());
             $that->assertFalse($info->isUnique());
@@ -49,14 +49,14 @@ class IndexManagementFunctionalTest extends FunctionalTestCase
     {
         $that = $this;
 
-        $expectedNames = array('x_1', 'y_-1_z_1', 'g_2dsphere_z_1', 'my_ttl');
+        $expectedNames = ['x_1', 'y_-1_z_1', 'g_2dsphere_z_1', 'my_ttl'];
 
-        $indexes = array(
-            array('key' => array('x' => 1), 'sparse' => true, 'unique' => true),
-            array('key' => array('y' => -1, 'z' => 1)),
-            array('key' => array('g' => '2dsphere', 'z' => 1)),
-            array('key' => array('t' => 1), 'expireAfterSeconds' => 0, 'name' => 'my_ttl'),
-        );
+        $indexes = [
+            ['key' => ['x' => 1], 'sparse' => true, 'unique' => true],
+            ['key' => ['y' => -1, 'z' => 1]],
+            ['key' => ['g' => '2dsphere', 'z' => 1]],
+            ['key' => ['t' => 1], 'expireAfterSeconds' => 0, 'name' => 'my_ttl'],
+        ];
 
         $this->assertSame($expectedNames, $this->collection->createIndexes($indexes));
 
@@ -90,12 +90,12 @@ class IndexManagementFunctionalTest extends FunctionalTestCase
      */
     public function testCreateIndexesRequiresAtLeastOneIndex()
     {
-        $this->assertSame(array(), $this->collection->createIndexes(array()));
+        $this->assertSame([], $this->collection->createIndexes([]));
     }
 
     public function testDropIndex()
     {
-        $this->assertSame('x_1', $this->collection->createIndex(array('x' => 1)));
+        $this->assertSame('x_1', $this->collection->createIndex(['x' => 1]));
         $this->assertIndexExists('x_1');
         $this->assertCommandSucceeded($this->collection->dropIndex('x_1'));
 
@@ -111,7 +111,7 @@ class IndexManagementFunctionalTest extends FunctionalTestCase
      */
     public function testDropIndexShouldNotAllowEmptyIndexName()
     {
-        $this->assertSame('x_1', $this->collection->createIndex(array('x' => 1)));
+        $this->assertSame('x_1', $this->collection->createIndex(['x' => 1]));
         $this->assertIndexExists('x_1');
         $this->collection->dropIndex('');
     }
@@ -121,15 +121,15 @@ class IndexManagementFunctionalTest extends FunctionalTestCase
      */
     public function testDropIndexShouldNotAllowWildcardCharacter()
     {
-        $this->assertSame('x_1', $this->collection->createIndex(array('x' => 1)));
+        $this->assertSame('x_1', $this->collection->createIndex(['x' => 1]));
         $this->assertIndexExists('x_1');
         $this->collection->dropIndex('*');
     }
 
     public function testDropIndexes()
     {
-        $this->assertSame('x_1', $this->collection->createIndex(array('x' => 1)));
-        $this->assertSame('y_1', $this->collection->createIndex(array('y' => 1)));
+        $this->assertSame('x_1', $this->collection->createIndex(['x' => 1]));
+        $this->assertSame('y_1', $this->collection->createIndex(['y' => 1]));
         $this->assertIndexExists('x_1');
         $this->assertIndexExists('y_1');
         $this->assertCommandSucceeded($this->collection->dropIndexes());
@@ -147,7 +147,7 @@ class IndexManagementFunctionalTest extends FunctionalTestCase
 
     public function testListIndexes()
     {
-        $this->assertSame('x_1', $this->collection->createIndex(array('x' => 1)));
+        $this->assertSame('x_1', $this->collection->createIndex(['x' => 1]));
 
         $indexes = $this->collection->listIndexes();
         $this->assertInstanceOf('MongoDB\Model\IndexInfoIterator', $indexes);

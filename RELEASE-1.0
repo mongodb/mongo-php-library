@@ -1,5 +1,61 @@
+RELEASE 1.0.0-beta1
+-------------------
+2015-11-02  Jeremy Mikola  <jmikola@gmail.com>
+	* Update install docs for PHPC stable and PHPLIB beta
+
+2015-11-01  Jeremy Mikola  <jmikola@gmail.com>
+	* Shorthand array syntax
+
+2015-11-01  Jeremy Mikola  <jmikola@gmail.com>
+	* Test with mongodb-1.0 on Travis CI
+
+2015-11-01  Jeremy Mikola  <jmikola@gmail.com>
+	* MongoDB\Manager no longer has single write methods
+
+2015-11-01  Jeremy Mikola  <jmikola@gmail.com>
+	* MongoDB\Driver\BulkWrite now takes an options array
+
+2015-11-01  Jeremy Mikola  <jmikola@gmail.com>
+	* Remove helper functions now that Manager RP/WC getters exist
+
+2015-10-23  Jeremy Mikola  <jmikola@gmail.com>
+	* Update more GitHub URLs
+
+2015-10-23  Jeremy Mikola  <jmikola@gmail.com>
+	* Update GitHub URLs in docs
+
+2015-10-09  Jeremy Mikola  <jmikola@gmail.com>
+	* Ensure database is dropped before asserting it doesn't exist
+
+2015-10-09  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-133: Support typeMap option in FindOne
+
+2015-10-09  Jeremy Mikola  <jmikola@gmail.com>
+	* Functional test for aggregate command failure
+
+2015-10-09  Jeremy Mikola  <jmikola@gmail.com>
+	* Remove redundant option validation from FindAndModify children
+
+2015-10-09  Jeremy Mikola  <jmikola@gmail.com>
+	* Remove unnecessary use statement
+
+2015-10-09  Jeremy Mikola  <jmikola@gmail.com>
+	* Refactor functional tests to use DropCollection
+
+2015-10-07  Jeremy Mikola  <jmikola@gmail.com>
+	* Update extension installation docs for PHP and HHVM
+
+2015-10-07  Jeremy Mikola  <jmikola@gmail.com>
+	* Update installation instructions in docs
+
+2015-10-07  Jeremy Mikola  <jmikola@gmail.com>
+	* Consolidate release notes by minor version
+
+2015-10-07  Jeremy Mikola  <jmikola@gmail.com>
+	* Add 1.0.0-alpha1 release notes
+
 RELEASE 1.0.0-alpha1
--------------
+--------------------
 2015-10-06  Jeremy Mikola  <jmikola@gmail.com>
 	* Use "autoload-dev" for loading test classes
 

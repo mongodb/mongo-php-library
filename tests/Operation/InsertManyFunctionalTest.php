@@ -2,6 +2,8 @@
 
 namespace MongoDB\Tests\Collection;
 
+use MongoDB\InsertManyResult;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\InsertMany;
 
 class InsertManyFunctionalTest extends FunctionalTestCase
@@ -32,5 +34,36 @@ class InsertManyFunctionalTest extends FunctionalTestCase
         ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
+    }
+
+    public function testUnacknowledgedWriteConcern()
+    {
+        $documents = [['x' => 11]];
+        $options = ['writeConcern' => new WriteConcern(0)];
+
+        $operation = new InsertMany($this->getDatabaseName(), $this->getCollectionName(), $documents, $options);
+        $result = $operation->execute($this->getPrimaryServer());
+
+        $this->assertFalse($result->isAcknowledged());
+
+        return $result;
+    }
+
+    /**
+     * @depends testUnacknowledgedWriteConcern
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessageRegExp /[\w:\\]+ should not be called for an unacknowledged write result/
+     */
+    public function testUnacknowledgedWriteConcernAccessesInsertedCount(InsertManyResult $result)
+    {
+        $result->getInsertedCount();
+    }
+
+    /**
+     * @depends testUnacknowledgedWriteConcern
+     */
+    public function testUnacknowledgedWriteConcernAccessesInsertedId(InsertManyResult $result)
+    {
+        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $result->getInsertedIds()[0]);
     }
 }

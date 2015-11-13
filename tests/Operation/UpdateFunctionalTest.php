@@ -2,7 +2,9 @@
 
 namespace MongoDB\Tests\Collection;
 
+use MongoDB\UpdateResult;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\Update;
 
 class UpdateFunctionalTest extends FunctionalTestCase
@@ -119,6 +121,59 @@ class UpdateFunctionalTest extends FunctionalTestCase
         ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
+    }
+
+    public function testUnacknowledgedWriteConcern()
+    {
+        $filter = ['_id' => 1];
+        $update = ['$set' => ['x' => 1]];
+        $options = ['writeConcern' => new WriteConcern(0)];
+        $operation = new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, $update, $options);
+        $result = $operation->execute($this->getPrimaryServer());
+
+        $this->assertFalse($result->isAcknowledged());
+
+        return $result;
+    }
+
+    /**
+     * @depends testUnacknowledgedWriteConcern
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessageRegExp /[\w:\\]+ should not be called for an unacknowledged write result/
+     */
+    public function testUnacknowledgedWriteConcernAccessesMatchedCount(UpdateResult $result)
+    {
+        $result->getMatchedCount();
+    }
+
+    /**
+     * @depends testUnacknowledgedWriteConcern
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessageRegExp /[\w:\\]+ should not be called for an unacknowledged write result/
+     */
+    public function testUnacknowledgedWriteConcernAccessesModifiedCount(UpdateResult $result)
+    {
+        $result->getModifiedCount();
+    }
+
+    /**
+     * @depends testUnacknowledgedWriteConcern
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessageRegExp /[\w:\\]+ should not be called for an unacknowledged write result/
+     */
+    public function testUnacknowledgedWriteConcernAccessesUpsertedCount(UpdateResult $result)
+    {
+        $result->getUpsertedCount();
+    }
+
+    /**
+     * @depends testUnacknowledgedWriteConcern
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessageRegExp /[\w:\\]+ should not be called for an unacknowledged write result/
+     */
+    public function testUnacknowledgedWriteConcernAccessesUpsertedId(UpdateResult $result)
+    {
+        $result->getUpsertedId();
     }
 
     /**

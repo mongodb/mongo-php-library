@@ -2,7 +2,9 @@
 
 namespace MongoDB\Tests\Collection;
 
+use MongoDB\BulkWriteResult;
 use MongoDB\Driver\BulkWrite as Bulk;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\BulkWrite;
 
 class BulkWriteFunctionalTest extends FunctionalTestCase
@@ -133,6 +135,78 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
+    }
+
+    public function testUnacknowledgedWriteConcern()
+    {
+        $ops = [['insertOne' => [['_id' => 1]]]];
+        $options = ['writeConcern' => new WriteConcern(0)];
+        $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops, $options);
+        $result = $operation->execute($this->getPrimaryServer());
+
+        $this->assertFalse($result->isAcknowledged());
+
+        return $result;
+    }
+
+    /**
+     * @depends testUnacknowledgedWriteConcern
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessageRegExp /[\w:\\]+ should not be called for an unacknowledged write result/
+     */
+    public function testUnacknowledgedWriteConcernAccessesDeletedCount(BulkWriteResult $result)
+    {
+        $result->getDeletedCount();
+    }
+
+    /**
+     * @depends testUnacknowledgedWriteConcern
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessageRegExp /[\w:\\]+ should not be called for an unacknowledged write result/
+     */
+    public function testUnacknowledgedWriteConcernAccessesInsertCount(BulkWriteResult $result)
+    {
+        $result->getInsertedCount();
+    }
+
+    /**
+     * @depends testUnacknowledgedWriteConcern
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessageRegExp /[\w:\\]+ should not be called for an unacknowledged write result/
+     */
+    public function testUnacknowledgedWriteConcernAccessesMatchedCount(BulkWriteResult $result)
+    {
+        $result->getMatchedCount();
+    }
+
+    /**
+     * @depends testUnacknowledgedWriteConcern
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessageRegExp /[\w:\\]+ should not be called for an unacknowledged write result/
+     */
+    public function testUnacknowledgedWriteConcernAccessesModifiedCount(BulkWriteResult $result)
+    {
+        $result->getModifiedCount();
+    }
+
+    /**
+     * @depends testUnacknowledgedWriteConcern
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessageRegExp /[\w:\\]+ should not be called for an unacknowledged write result/
+     */
+    public function testUnacknowledgedWriteConcernAccessesUpsertedCount(BulkWriteResult $result)
+    {
+        $result->getUpsertedCount();
+    }
+
+    /**
+     * @depends testUnacknowledgedWriteConcern
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessageRegExp /[\w:\\]+ should not be called for an unacknowledged write result/
+     */
+    public function testUnacknowledgedWriteConcernAccessesUpsertedIds(BulkWriteResult $result)
+    {
+        $result->getUpsertedIds();
     }
 
     /**

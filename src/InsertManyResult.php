@@ -3,14 +3,16 @@
 namespace MongoDB;
 
 use MongoDB\Driver\WriteResult;
+use MongoDB\Exception\BadMethodCallException;
 
 /**
- * Result class for a multi-document write operation.
+ * Result class for a multi-document insert operation.
  */
 class InsertManyResult
 {
     private $writeResult;
     private $insertedIds;
+    private $isAcknowledged;
 
     /**
      * Constructor.
@@ -22,28 +24,35 @@ class InsertManyResult
     {
         $this->writeResult = $writeResult;
         $this->insertedIds = $insertedIds;
+        $this->isAcknowledged = $writeResult->isAcknowledged();
     }
 
     /**
      * Return the number of documents that were inserted.
      *
-     * This value is undefined if the write was not acknowledged.
+     * This method should only be called if the write was acknowledged.
      *
      * @see InsertManyResult::isAcknowledged()
      * @return integer
+     * @throws BadMethodCallException is the write result is unacknowledged
      */
     public function getInsertedCount()
     {
-        return $this->writeResult->getInsertedCount();
+        if ($this->isAcknowledged) {
+            return $this->writeResult->getInsertedCount();
+        }
+
+        throw BadMethodCallException::unacknowledgedWriteResultAccess(__METHOD__);
     }
 
     /**
      * Return a map of the inserted documents' IDs.
      *
-     * The index of each ID in the map corresponds to the document's position
-     * in bulk operation. If the document had an ID prior to insertion (i.e. the
-     * driver did not generate an ID), this will contain its "_id" field value.
-     * Any driver-generated ID will be an MongoDB\Driver\ObjectID instance.
+     * The index of each ID in the map corresponds to the document's position in
+     * the bulk operation. If the document had an ID prior to insertion (i.e.
+     * the driver did not generate an ID), this will contain its "_id" field
+     * value. Any driver-generated ID will be an MongoDB\Driver\ObjectID
+     * instance.
      *
      * @return mixed[]
      */

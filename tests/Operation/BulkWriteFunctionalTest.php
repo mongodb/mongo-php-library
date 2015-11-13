@@ -2,7 +2,8 @@
 
 namespace MongoDB\Tests\Collection;
 
-use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\BulkWrite as Bulk;
+use MongoDB\Operation\BulkWrite;
 
 class BulkWriteFunctionalTest extends FunctionalTestCase
 {
@@ -22,7 +23,9 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             ['insertOne' => [['x' => 22]]],
         ];
 
-        $result = $this->collection->bulkWrite($ops);
+        $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
+        $result = $operation->execute($this->getPrimaryServer());
+
         $this->assertInstanceOf('MongoDB\BulkWriteResult', $result);
         $this->assertSame(2, $result->getInsertedCount());
 
@@ -50,7 +53,9 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             ['updateMany' => [['x' => ['$gt' => 50]], ['$inc' => ['x' => 1]]]],
         ];
 
-        $result = $this->collection->bulkWrite($ops);
+        $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
+        $result = $operation->execute($this->getPrimaryServer());
+
         $this->assertInstanceOf('MongoDB\BulkWriteResult', $result);
         $this->assertSame(5, $result->getMatchedCount());
         $this->omitModifiedCount or $this->assertSame(5, $result->getModifiedCount());
@@ -81,7 +86,9 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             ['deleteMany' => [['_id' => ['$gt' => 2]]]],
         ];
 
-        $result = $this->collection->bulkWrite($ops);
+        $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
+        $result = $operation->execute($this->getPrimaryServer());
+
         $this->assertInstanceOf('MongoDB\BulkWriteResult', $result);
         $this->assertSame(3, $result->getDeletedCount());
 
@@ -104,7 +111,9 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             ['replaceOne' => [['_id' => 4], ['_id' => 4, 'x' => 44], ['upsert' => true]]],
         ];
 
-        $result = $this->collection->bulkWrite($ops);
+        $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
+        $result = $operation->execute($this->getPrimaryServer());
+
         $this->assertInstanceOf('MongoDB\BulkWriteResult', $result);
 
         $this->assertSame(1, $result->getInsertedCount());
@@ -132,7 +141,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
      */
     public function testUnknownOperation()
     {
-        $this->collection->bulkWrite([
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             ['foo' => [['_id' => 1]]],
         ]);
     }
@@ -144,7 +153,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
      */
     public function testMissingArguments(array $ops)
     {
-        $this->collection->bulkWrite($ops);
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
     }
 
     public function provideOpsWithMissingArguments()
@@ -168,7 +177,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
      */
     public function testUpdateOneRequiresUpdateOperators()
     {
-        $this->collection->bulkWrite([
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             ['updateOne' => [['_id' => 1], ['x' => 1]]],
         ]);
     }
@@ -179,7 +188,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
      */
     public function testUpdateManyRequiresUpdateOperators()
     {
-        $this->collection->bulkWrite([
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             ['updateMany' => [['_id' => ['$gt' => 1]], ['x' => 1]]],
         ]);
     }
@@ -190,7 +199,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
      */
     public function testReplaceOneRequiresReplacementDocument()
     {
-        $this->collection->bulkWrite([
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             ['replaceOne' => [['_id' => 1], ['$inc' => ['x' => 1]]]],
         ]);
     }
@@ -202,7 +211,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
      */
     private function createFixtures($n)
     {
-        $bulkWrite = new BulkWrite(['ordered' => true]);
+        $bulkWrite = new Bulk(['ordered' => true]);
 
         for ($i = 1; $i <= $n; $i++) {
             $bulkWrite->insert([

@@ -3,6 +3,7 @@
 namespace MongoDB;
 
 use MongoDB\Driver\WriteResult;
+use MongoDB\Exception\BadMethodCallException;
 
 /**
  * Result class for a single-document insert operation.
@@ -11,6 +12,7 @@ class InsertOneResult
 {
     private $writeResult;
     private $insertedId;
+    private $isAcknowledged;
 
     /**
      * Constructor.
@@ -22,19 +24,25 @@ class InsertOneResult
     {
         $this->writeResult = $writeResult;
         $this->insertedId = $insertedId;
+        $this->isAcknowledged = $writeResult->isAcknowledged();
     }
 
     /**
      * Return the number of documents that were inserted.
      *
-     * This value is undefined if the write was not acknowledged.
+     * This method should only be called if the write was acknowledged.
      *
      * @see InsertOneResult::isAcknowledged()
      * @return integer
+     * @throws BadMethodCallException is the write result is unacknowledged
      */
     public function getInsertedCount()
     {
-        return $this->writeResult->getInsertedCount();
+        if ($this->isAcknowledged) {
+            return $this->writeResult->getInsertedCount();
+        }
+
+        throw BadMethodCallException::unacknowledgedWriteResultAccess(__METHOD__);
     }
 
     /**
@@ -56,6 +64,10 @@ class InsertOneResult
      *
      * If the insert was not acknowledged, other fields from the WriteResult
      * (e.g. insertedCount) will be undefined.
+     *
+     * If the insert was not acknowledged, other fields from the WriteResult
+     * (e.g. insertedCount) will be undefined and their getter methods should
+     * not be invoked.
      *
      * @return boolean
      */

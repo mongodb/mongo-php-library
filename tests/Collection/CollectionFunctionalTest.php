@@ -61,6 +61,15 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertCollectionCount($this->getNamespace(), 0);
     }
 
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @todo Move this to a unit test once Manager can be mocked
+     */
+    public function testDropIndexShouldNotAllowWildcardCharacter()
+    {
+        $this->collection->dropIndex('*');
+    }
+
     public function testFindOne()
     {
         $this->createFixtures(5);

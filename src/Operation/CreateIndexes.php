@@ -5,6 +5,7 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\BulkWrite as Bulk;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\RuntimeException;
 use MongoDB\Exception\UnexpectedTypeException;
@@ -113,6 +114,6 @@ class CreateIndexes implements Executable
             $bulk->insert($index);
         }
 
-        $server->executeBulkWrite($this->databaseName . '.system.indexes', $bulk);
+        $server->executeBulkWrite($this->databaseName . '.system.indexes', $bulk, new WriteConcern(1));
     }
 }

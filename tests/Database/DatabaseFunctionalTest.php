@@ -109,4 +109,37 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
+
+    public function testWithOptionsInheritsReadPreferenceAndWriteConcern()
+    {
+        $databaseOptions = [
+            'readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY_PREFERRED),
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+        ];
+
+        $database = new Database($this->manager, $this->getDatabaseName(), $databaseOptions);
+        $clone = $database->withOptions();
+        $debug = $clone->__debugInfo();
+
+        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
+        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
+    }
+
+    public function testWithOptionsPassesReadPreferenceAndWriteConcern()
+    {
+        $databaseOptions = [
+            'readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY_PREFERRED),
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+        ];
+
+        $clone = $this->database->withOptions($databaseOptions);
+        $debug = $clone->__debugInfo();
+
+        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
+        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
+    }
 }

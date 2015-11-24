@@ -189,4 +189,33 @@ class Database
 
         return new Collection($this->manager, $this->databaseName . '.' . $collectionName, $options);
     }
+
+    /**
+     * Get a clone of this database with different options.
+     *
+     * Supported options:
+     *
+     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
+     *    preference to use for database operations and selected collections.
+     *    Defaults to this Database's read preference.
+     *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
+     *    to use for database operations and selected collections. Defaults to
+     *    this Database's write concern.
+     *
+     * @param array $options Database constructor options
+     * @return Database
+     */
+    public function withOptions(array $options = [])
+    {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
+        if ( ! isset($options['writeConcern'])) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        return new Database($this->manager, $this->databaseName, $options);
+    }
 }

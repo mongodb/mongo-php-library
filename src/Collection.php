@@ -598,4 +598,33 @@ class Collection
 
         return $operation->execute($server);
     }
+
+    /**
+     * Get a clone of this collection with different options.
+     *
+     * Supported options:
+     *
+     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
+     *    preference to use for collection operations. Defaults to this
+     *    Collection's read preference.
+     *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
+     *    to use for collection operations. Defaults to this Collection's write
+     *    concern.
+     *
+     * @param array $options Collection constructor options
+     * @return Collection
+     */
+    public function withOptions(array $options = [])
+    {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
+        if ( ! isset($options['writeConcern'])) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        return new Collection($this->manager, $this->databaseName . '.' . $this->collectionName, $options);
+    }
 }

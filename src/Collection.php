@@ -9,6 +9,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\InvalidArgumentTypeException;
 use MongoDB\Exception\UnexpectedTypeException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInput;
@@ -48,13 +49,22 @@ class Collection
      * This class provides methods for collection-specific operations, such as
      * CRUD (i.e. create, read, update, and delete) and index management.
      *
-     * @param Manager        $manager        Manager instance from the driver
-     * @param string         $namespace      Collection namespace (e.g. "db.collection")
-     * @param WriteConcern   $writeConcern   Default write concern to apply
-     * @param ReadPreference $readPreference Default read preference to apply
-     * @throws InvalidArgumentException if $namespace is invalid
+     * Supported options:
+     *
+     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
+     *    preference to use for collection operations. Defaults to the Manager's
+     *    read preference.
+     *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
+     *    to use for collection operations. Defaults to the Manager's write
+     *    concern.
+     *
+     * @param Manager $manager   Manager instance from the driver
+     * @param string  $namespace Collection namespace (e.g. "db.collection")
+     * @param array   $options   Collection options
+     * @throws InvalidArgumentException
      */
-    public function __construct(Manager $manager, $namespace, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
+    public function __construct(Manager $manager, $namespace, array $options = [])
     {
         $parts = explode('.', $namespace, 2);
 
@@ -65,13 +75,21 @@ class Collection
         $this->databaseName = $parts[0];
         $this->collectionName = $parts[1];
 
+        if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
+            throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+        }
+
+        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
+            throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+        }
+
         $this->manager = $manager;
-        $this->writeConcern = $writeConcern ?: $this->manager->getWriteConcern();
-        $this->readPreference = $readPreference ?: $this->manager->getReadPreference();
+        $this->readPreference = isset($options['readPreference']) ? $options['readPreference'] : $this->manager->getReadPreference();
+        $this->writeConcern = isset($options['writeConcern']) ? $options['writeConcern'] : $this->manager->getWriteConcern();
     }
 
     /**
-     * Return the collection namespace.
+     * Return the collection namespace (e.g. "db.collection").
      *
      * @param string
      */

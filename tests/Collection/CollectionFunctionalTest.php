@@ -31,6 +31,30 @@ class CollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @dataProvider provideInvalidConstructorOptions
+     */
+    public function testConstructorOptionTypeChecks(array $options)
+    {
+        new Collection($this->manager, $this->getNamespace(), $options);
+    }
+
+    public function provideInvalidConstructorOptions()
+    {
+        $options = [];
+
+        foreach ($this->getInvalidReadPreferenceValues() as $value) {
+            $options[][] = ['readPreference' => $value];
+        }
+
+        foreach ($this->getInvalidWriteConcernValues() as $value) {
+            $options[][] = ['writeConcern' => $value];
+        }
+
+        return $options;
+    }
+
     public function testToString()
     {
         $this->assertEquals($this->getNamespace(), (string) $this->collection);

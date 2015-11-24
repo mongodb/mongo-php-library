@@ -28,6 +28,30 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         ];
     }
 
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @dataProvider provideInvalidConstructorOptions
+     */
+    public function testConstructorOptionTypeChecks(array $options)
+    {
+        new Database($this->manager, $this->getDatabaseName(), $options);
+    }
+
+    public function provideInvalidConstructorOptions()
+    {
+        $options = [];
+
+        foreach ($this->getInvalidReadPreferenceValues() as $value) {
+            $options[][] = ['readPreference' => $value];
+        }
+
+        foreach ($this->getInvalidWriteConcernValues() as $value) {
+            $options[][] = ['writeConcern' => $value];
+        }
+
+        return $options;
+    }
+
     public function testToString()
     {
         $this->assertEquals($this->getDatabaseName(), (string) $this->database);

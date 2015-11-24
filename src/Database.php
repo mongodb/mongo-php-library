@@ -11,6 +11,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\InvalidArgumentTypeException;
 use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DropCollection;
@@ -30,22 +31,39 @@ class Database
      * This class provides methods for database-specific operations and serves
      * as a gateway for accessing collections.
      *
-     * @param Manager        $manager        Manager instance from the driver
-     * @param string         $databaseName   Database name
-     * @param WriteConcern   $writeConcern   Default write concern to apply
-     * @param ReadPreference $readPreference Default read preference to apply
-     * @throws InvalidArgumentException if $databaseName is invalid
+     * Supported options:
+     *
+     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
+     *    preference to use for database operations and selected collections.
+     *    Defaults to the Manager's read preference.
+     *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
+     *    to use for database operations and selected collections. Defaults to
+     *    the Manager's write concern.
+     *
+     * @param Manager $manager      Manager instance from the driver
+     * @param string  $databaseName Database name
+     * @param array   $options      Database options
+     * @throws InvalidArgumentException
      */
-    public function __construct(Manager $manager, $databaseName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
+    public function __construct(Manager $manager, $databaseName, array $options = [])
     {
         if (strlen($databaseName) < 1) {
             throw new InvalidArgumentException('$databaseName is invalid: ' . $databaseName);
         }
 
+        if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
+            throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+        }
+
+        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
+            throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+        }
+
         $this->manager = $manager;
         $this->databaseName = (string) $databaseName;
-        $this->writeConcern = $writeConcern ?: $this->manager->getWriteConcern();
-        $this->readPreference = $readPreference ?: $this->manager->getReadPreference();
+        $this->readPreference = isset($options['readPreference']) ? $options['readPreference'] : $this->manager->getReadPreference();
+        $this->writeConcern = isset($options['writeConcern']) ? $options['writeConcern'] : $this->manager->getWriteConcern();
     }
 
     /**
@@ -129,20 +147,30 @@ class Database
     /**
      * Select a collection within this database.
      *
-     * If a write concern or read preference is not specified, the write concern
-     * or read preference of the Database will be applied, respectively.
+     * Supported options:
      *
-     * @param string         $collectionName Name of the collection to select
-     * @param WriteConcern   $writeConcern   Default write concern to apply
-     * @param ReadPreference $readPreference Default read preference to apply
+     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
+     *    preference to use for collection operations. Defaults to the
+     *    Database's read preference.
+     *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
+     *    to use for collection operations. Defaults to the Database's write
+     *    concern.
+     *
+     * @param string $collectionName Name of the collection to select
+     * @param array  $options        Collection constructor options
      * @return Collection
      */
-    public function selectCollection($collectionName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
+    public function selectCollection($collectionName, array $options = [])
     {
-        $namespace = $this->databaseName . '.' . $collectionName;
-        $writeConcern = $writeConcern ?: $this->writeConcern;
-        $readPreference = $readPreference ?: $this->readPreference;
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
 
-        return new Collection($this->manager, $namespace, $writeConcern, $readPreference);
+        if ( ! isset($options['writeConcern'])) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        return new Collection($this->manager, $this->databaseName . '.' . $collectionName, $options);
     }
 }

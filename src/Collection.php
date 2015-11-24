@@ -89,6 +89,23 @@ class Collection
     }
 
     /**
+     * Return internal properties for debugging purposes.
+     *
+     * @see http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
+     * @param array
+     */
+    public function __debugInfo()
+    {
+        return [
+            'collectionName' => $this->collectionName,
+            'databaseName' => $this->databaseName,
+            'manager' => $this->manager,
+            'readPreference' => $this->readPreference,
+            'writeConcern' => $this->writeConcern,
+        ];
+    }
+
+    /**
      * Return the collection namespace (e.g. "db.collection").
      *
      * @param string

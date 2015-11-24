@@ -4,6 +4,8 @@ namespace MongoDB\Tests\Database;
 
 use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\WriteConcern;
 
 /**
  * Functional tests for the Database class.
@@ -73,5 +75,38 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $commandResult = $this->database->drop();
         $this->assertCommandSucceeded($commandResult);
         $this->assertCollectionCount($this->getNamespace(), 0);
+    }
+
+    public function testSelectCollectionInheritsReadPreferenceAndWriteConcern()
+    {
+        $databaseOptions = [
+            'readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY_PREFERRED),
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+        ];
+
+        $database = new Database($this->manager, $this->getDatabaseName(), $databaseOptions);
+        $collection = $database->selectCollection($this->getCollectionName());
+        $debug = $collection->__debugInfo();
+
+        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
+        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
+    }
+
+    public function testSelectCollectionPassesReadPreferenceAndWriteConcern()
+    {
+        $collectionOptions = [
+            'readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY_PREFERRED),
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+        ];
+
+        $collection = $this->database->selectCollection($this->getCollectionName(), $collectionOptions);
+        $debug = $collection->__debugInfo();
+
+        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
+        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 }

@@ -35,6 +35,20 @@ class Client
     }
 
     /**
+     * Return internal properties for debugging purposes.
+     *
+     * @see http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
+     * @param array
+     */
+    public function __debugInfo()
+    {
+        return [
+            'manager' => $this->manager,
+            'uri' => $this->uri,
+        ];
+    }
+
+    /**
      * Return the connection string (i.e. URI).
      *
      * @param string

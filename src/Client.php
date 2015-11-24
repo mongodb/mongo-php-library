@@ -14,6 +14,7 @@ use MongoDB\Operation\ListDatabases;
 class Client
 {
     private $manager;
+    private $uri;
 
     /**
      * Constructs a new Client instance.
@@ -30,6 +31,17 @@ class Client
     public function __construct($uri, array $options = [], array $driverOptions = [])
     {
         $this->manager = new Manager($uri, $options, $driverOptions);
+        $this->uri = (string) $uri;
+    }
+
+    /**
+     * Return the connection string (i.e. URI).
+     *
+     * @param string
+     */
+    public function __toString()
+    {
+        return $this->uri;
     }
 
     /**

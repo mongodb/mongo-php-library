@@ -45,16 +45,6 @@ abstract class TestCase extends BaseTestCase
         return [123, 3.14, true, [], new stdClass];
     }
 
-    protected function getInvalidReadPreferenceValues()
-    {
-        return [123, 3.14, 'foo', true, [], new stdClass];
-    }
-
-    protected function getInvalidWriteConcernValues()
-    {
-        return [123, 3.14, 'foo', true, [], new stdClass];
-    }
-
     protected function wrapValuesForDataProvider(array $values)
     {
         return array_map(function($value) { return [$value]; }, $values);

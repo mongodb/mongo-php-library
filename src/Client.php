@@ -35,6 +35,20 @@ class Client
     }
 
     /**
+     * Return internal properties for debugging purposes.
+     *
+     * @see http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
+     * @param array
+     */
+    public function __debugInfo()
+    {
+        return [
+            'manager' => $this->manager,
+            'uri' => $this->uri,
+        ];
+    }
+
+    /**
      * Return the connection string (i.e. URI).
      *
      * @param string
@@ -75,40 +89,45 @@ class Client
     /**
      * Select a collection.
      *
-     * If a write concern or read preference is not specified, the write concern
-     * or read preference of the Client will be applied, respectively.
+     * Supported options:
      *
-     * @param string         $databaseName   Name of the database containing the collection
-     * @param string         $collectionName Name of the collection to select
-     * @param WriteConcern   $writeConcern   Default write concern to apply
-     * @param ReadPreference $readPreference Default read preference to apply
+     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
+     *    preference to use for collection operations. Defaults to the Client's
+     *    read preference.
+     *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
+     *    to use for collection operations. Defaults to the Client's write
+     *    concern.
+     *
+     * @param string $databaseName   Name of the database containing the collection
+     * @param string $collectionName Name of the collection to select
+     * @param array  $options        Collection constructor options
      * @return Collection
      */
-    public function selectCollection($databaseName, $collectionName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
+    public function selectCollection($databaseName, $collectionName, array $options = [])
     {
-        $namespace = $databaseName . '.' . $collectionName;
-        $writeConcern = $writeConcern ?: $this->manager->getWriteConcern();
-        $readPreference = $readPreference ?: $this->manager->getReadPreference();
-
-        return new Collection($this->manager, $namespace, $writeConcern, $readPreference);
+        return new Collection($this->manager, $databaseName . '.' . $collectionName, $options);
     }
 
     /**
      * Select a database.
      *
-     * If a write concern or read preference is not specified, the write concern
-     * or read preference of the Client will be applied, respectively.
+     * Supported options:
      *
-     * @param string         $databaseName   Name of the database to select
-     * @param WriteConcern   $writeConcern   Default write concern to apply
-     * @param ReadPreference $readPreference Default read preference to apply
+     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
+     *    preference to use for database operations and selected collections.
+     *    Defaults to the Client's read preference.
+     *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
+     *    to use for database operations and selected collections. Defaults to
+     *    the Client's write concern.
+     *
+     * @param string $databaseName Name of the database to select
+     * @param array  $options      Database constructor options
      * @return Database
      */
-    public function selectDatabase($databaseName, WriteConcern $writeConcern = null, ReadPreference $readPreference = null)
+    public function selectDatabase($databaseName, array $options = [])
     {
-        $writeConcern = $writeConcern ?: $this->manager->getWriteConcern();
-        $readPreference = $readPreference ?: $this->manager->getReadPreference();
-
-        return new Database($this->manager, $databaseName, $writeConcern, $readPreference);
+        return new Database($this->manager, $databaseName, $options);
     }
 }

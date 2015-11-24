@@ -3,6 +3,7 @@
 namespace MongoDB\Tests;
 
 use ReflectionClass;
+use stdClass;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
@@ -26,6 +27,16 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected function getDatabaseName()
     {
         return getenv('MONGODB_DATABASE') ?: 'phplib_test';
+    }
+
+    protected function getInvalidReadPreferenceValues()
+    {
+        return [123, 3.14, 'foo', true, [], new stdClass];
+    }
+
+    protected function getInvalidWriteConcernValues()
+    {
+        return [123, 3.14, 'foo', true, [], new stdClass];
     }
 
     /**

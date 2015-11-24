@@ -4,6 +4,8 @@ namespace MongoDB\Tests\Collection;
 
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\WriteConcern;
 
 /**
  * Functional tests for the Collection class.
@@ -29,6 +31,30 @@ class CollectionFunctionalTest extends FunctionalTestCase
             ['db'],
             ['.collection'],
         ];
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @dataProvider provideInvalidConstructorOptions
+     */
+    public function testConstructorOptionTypeChecks(array $options)
+    {
+        new Collection($this->manager, $this->getNamespace(), $options);
+    }
+
+    public function provideInvalidConstructorOptions()
+    {
+        $options = [];
+
+        foreach ($this->getInvalidReadPreferenceValues() as $value) {
+            $options[][] = ['readPreference' => $value];
+        }
+
+        foreach ($this->getInvalidWriteConcernValues() as $value) {
+            $options[][] = ['writeConcern' => $value];
+        }
+
+        return $options;
     }
 
     public function testToString()
@@ -83,6 +109,39 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $expected = (object) ['_id' => 3, 'x' => 33];
 
         $this->assertEquals($expected, $this->collection->findOne($filter, $options));
+    }
+
+    public function testWithOptionsInheritsReadPreferenceAndWriteConcern()
+    {
+        $collectionOptions = [
+            'readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY_PREFERRED),
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+        ];
+
+        $collection = new Collection($this->manager, $this->getNamespace(), $collectionOptions);
+        $clone = $collection->withOptions();
+        $debug = $clone->__debugInfo();
+
+        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
+        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
+    }
+
+    public function testWithOptionsPassesReadPreferenceAndWriteConcern()
+    {
+        $collectionOptions = [
+            'readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY_PREFERRED),
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+        ];
+
+        $clone = $this->collection->withOptions($collectionOptions);
+        $debug = $clone->__debugInfo();
+
+        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
+        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
     /**

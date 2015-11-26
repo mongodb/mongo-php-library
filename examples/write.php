@@ -11,7 +11,7 @@ $hannes = [
     "citizen" => "Iceland",
 ];
 $hayley = [
-    "name"    => "Hayley",
+    "name"    => "Bayley",
     "nick"    => "Ninja",
     "citizen" => "USA",
 ];
@@ -55,7 +55,7 @@ try {
         ["citizen" => "Iceland"],
         ["comment" => "Excellent query"]
     );
-    echo "Searching for citizen => Iceland, verify Hayley is now Icelandic\n";
+    echo "Searching for citizen => Iceland, verify Bayley is now Icelandic\n";
     foreach($cursor as $document) {
         var_dump($document);
     }

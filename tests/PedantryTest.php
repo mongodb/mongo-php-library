@@ -66,6 +66,11 @@ class PedantryTest extends \PHPUnit_Framework_TestCase
                 continue;
             }
 
+            /* autoload.php added downstream (e.g. Fedora) */
+            if ($file->getFilename() === 'autoload.php') {
+                continue;
+            }
+
             $classNames[][] = 'MongoDB\\' . str_replace(DIRECTORY_SEPARATOR, '\\', substr($file->getRealPath(), strlen($srcDir) + 1, -4));
         }
 

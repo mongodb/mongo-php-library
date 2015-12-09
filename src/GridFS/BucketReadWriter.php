@@ -38,4 +38,30 @@ class BucketReadWriter
         $gridFsStream = new GridFsUpload($this->bucket, $filename, $options);
         return $gridFsStream->uploadFromStream($source);
     }
+    /**
+     * Opens a Stream for reading the contents of a file specified by ID.
+     *
+     * @param ObjectId $id
+     * @return Stream
+     */
+    public function openDownloadStream(\MongoDB\BSON\ObjectId $id)
+    {
+        $options = [
+            'bucket' => $this->bucket
+            ];
+        $context = stream_context_create(['gridfs' => $options]);
+        return fopen(sprintf('gridfs://%s/%s', $this->bucket->getDatabaseName(), $id), 'r', false, $context);
+    }
+      /**
+       * Downloads the contents of the stored file specified by id and writes
+       * the contents to the destination Stream.
+       * @param ObjectId  $id           GridFS File Id
+       * @param Stream    $destination  Destination Stream
+       */
+    public function downloadToStream(\MongoDB\BSON\ObjectId $id, $destination)
+    {
+        $gridFsStream = new GridFsDownload($this->bucket, $id);
+        $gridFsStream->downloadToStream($destination);
+    }
+
 }

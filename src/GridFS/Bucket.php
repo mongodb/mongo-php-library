@@ -22,7 +22,6 @@ class Bucket
     private $options;
     private $filesCollection;
     private $chunksCollection;
-    private $indexChecker;
     private $ensuredIndexes = false;
     /**
      * Constructs a GridFS bucket.
@@ -86,42 +85,6 @@ class Bucket
         );
     }
     /**
-     * Opens a Stream for reading the contents of a file specified by ID.
-     *
-     * @param ObjectId $id
-     * @return Stream
-     */
-    public function openDownloadStream(ObjectId $id)
-    {
-        fopen('gridfs://$this->databaseName/$id', 'r');
-    }
-      /**
-       * Downloads the contents of the stored file specified by id and writes
-       * the contents to the destination Stream.
-       * @param ObjectId  $id           GridFS File Id
-       * @param Stream    $destination  Destination Stream
-       */
-    public function downloadToStream(ObjectId $id, $destination)
-    {
-        $result = $this->filesCollection->findOne(['_id' => $id]);
-        if ($result == null) {
-            return;
-        }
-        if ($result->length == 0){
-            return;
-        }
-
-        $n=0;
-        $results = $this->chunksCollection->find(['files_id' => $result->_id]);
-        foreach ($results as $chunk) {
-            if ($chunk->n != $n) {
-                return;
-            }
-            fwrite($destination, $chunk->data);
-            $n++;
-        }
-    }
-    /**
      * Return the chunkSizeBytes option for this Bucket.
      *
      * @return integer
@@ -130,6 +93,7 @@ class Bucket
     {
         return $this->options['chunkSizeBytes'];
     }
+
     public function getDatabaseName()
     {
         return $this->databaseName;
@@ -138,9 +102,14 @@ class Bucket
     {
         return $this->filesCollection;
     }
+
     public function getChunksCollection()
     {
         return $this->chunksCollection;
+    }
+    public function getBucketName()
+    {
+        return $this->options['bucketName'];
     }
     public function find($filter, array $options =[])
     {
@@ -168,7 +137,6 @@ class Bucket
         $this->ensureChunksIndex();
         $this->ensuredIndexes = true;
     }
-
     private function ensureChunksIndex()
     {
         foreach ($this->chunksCollection->listIndexes() as $index) {
@@ -178,7 +146,6 @@ class Bucket
         }
         $this->chunksCollection->createIndex(['files_id' => 1, 'n' => 1], ['unique' => true]);
     }
-
     private function ensureFilesIndex()
     {
         foreach ($this->filesCollection->listIndexes() as $index) {
@@ -188,7 +155,6 @@ class Bucket
         }
         $this->filesCollection->createIndex(['filename' => 1, 'uploadDate' => 1]);
     }
-
     private function isFilesCollectionEmpty()
     {
         return null === $this->filesCollection->findOne([], [
@@ -196,11 +162,11 @@ class Bucket
             'projection' => ['_id' => 1],
         ]);
     }
-
     public function delete(ObjectId $id)
     {
         $options = ['writeConcern' => $this->writeConcern];
         $this->chunksCollection->deleteMany(['file_id' => $id], $options);
+
         $this->filesCollection->deleteOne(['_id' => $id], $options);
     }
 }

@@ -19,7 +19,7 @@ class GridFsDownload extends GridFsStream
     private $bufferFresh=true;
     private $bufferEmpty=true;
     /**
-     * Constructs a GridFS upload stream
+     * Constructs a GridFS download stream
      *
      * Supported options:
      *
@@ -45,7 +45,6 @@ class GridFsDownload extends GridFsStream
     {
         $this->file = $bucket->getFilesCollection()->findOne(['_id' => $objectId]);
         if (is_null($this->file)) {
-            //MUST RAISE AN ERROR ! (WHICH ONE I DON'T)
           throw new \MongoDB\Exception\GridFSFileNotFoundException($objectId, $bucket->getBucketName(), $bucket->getDatabaseName());
         }
         if ($this->file->length > 0) {

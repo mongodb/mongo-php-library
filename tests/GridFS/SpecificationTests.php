@@ -75,12 +75,12 @@ class SpecificationTests extends FunctionalTestCase
                     $test['assert']['result'] = $result;
                 }
                 if ($testResult == "void") {
-                    $test['assert']['result'] = null;
+                    $fixedAssert['result'] = null;
                 }
                 $this->assertEquals($result, $fixedAssert['result']);
             }
             if (isset($test['assert']['data'])) {
-                $this->runCommands($fixedAssert, $result);
+                $this->runCommands($fixedAssert['data'], $result);
                 $this->collectionsEqual($this->collections['expected.files'],$this->bucket->getFilesCollection());
                 if(isset($this->collections['expected.chunks'])) {
                     $this->collectionsEqual($this->collections['expected.chunks'],$this->bucket->getChunksCollection());
@@ -91,7 +91,7 @@ class SpecificationTests extends FunctionalTestCase
 
     public function provideSpecificationTests()
     {
-        $testPath=getcwd().'/tests/GridFS/Specification/tests/download.json';
+        $testPath=getcwd().'/tests/GridFS/Specification/tests/delete.json';
 
         $testArgs = [];
         foreach(glob($testPath) as $filename) {
@@ -148,22 +148,22 @@ class SpecificationTests extends FunctionalTestCase
 
     public function runCommands($cmds, $result)
     {
-        $cmds = $this->fixTypes($cmds, true);
-        foreach($cmds as $cmd) {
+        foreach($cmds as $cmd){
             foreach($cmd as $key => $value) {
                 if(isset($this->commands[$key])) {
                     $cmdName = $key;
                     $collectionName = $value;
-
-                    foreach($cmd['documents'] as $docIndex => $doc) {
-                        foreach($doc as $docKey => $docVal){
-                            if(is_string($docVal)) {
-                                if($docVal == '*result') {
-                                    $doc[$docKey] = $result;
+                    if(isset($cmd['documents'])){
+                        foreach($cmd['documents'] as $docIndex => $doc) {
+                            foreach($doc as $docKey => $docVal){
+                                if(is_string($docVal)) {
+                                    if($docVal == '*result') {
+                                        $doc[$docKey] = $result;
+                                    }
                                 }
                             }
+                            $cmd['documents'][$docIndex] = $doc;
                         }
-                        $cmd['documents'][$docIndex] = $doc;
                     }
                     $collection = new Collection($this->manager, sprintf("%s.%s", $this->getDatabaseName(), $collectionName));
                     $this->commands[$key]($collection, $this->fixTypes($cmd, true));
@@ -171,6 +171,7 @@ class SpecificationTests extends FunctionalTestCase
                 }
             }
         }
+
     }
 
     public function initializeDatabases($data, $test)
@@ -186,12 +187,15 @@ class SpecificationTests extends FunctionalTestCase
             $filesCollection->insertMany($data['files']);
             $expectedFilesCollection = new Collection($this->manager, sprintf("%s.%s", $this->getDatabaseName(), "expected.files"));
             $expectedFilesCollection->insertMany($data['files']);
+            $this->collections['expected.files'] = $expectedFilesCollection;
         }
         if (isset($data['chunks']) && count($data['chunks']) > 0) {
             $chunksCollection = new Collection($this->manager, sprintf("%s.%s", $this->getDatabaseName(), "fs.chunks"));
             $chunksCollection->insertMany($data['chunks']);
             $expectedChunksCollection = new Collection($this->manager, sprintf("%s.%s", $this->getDatabaseName(), "expected.chunks"));
             $expectedChunksCollection->insertMany($data['chunks']);
+            $this->collections['expected.chunks'] = $expectedChunksCollection;
+
         }
         if(isset($test['arrange'])) {
             foreach($test['arrange']['data'] as $cmd) {
@@ -203,9 +207,7 @@ class SpecificationTests extends FunctionalTestCase
                 }
             }
         }
-
     }
-
     public function uploadCommand($args)
     {
         $args = $this->fixTypes($args, false);
@@ -230,7 +232,8 @@ class SpecificationTests extends FunctionalTestCase
     }
     function deleteCommand($args)
     {
-
+        $args = $this->fixTypes($args, false);
+        $this->bucketReadWriter->delete($args['id']);
     }
     function download_by_nameCommand($args)
     {

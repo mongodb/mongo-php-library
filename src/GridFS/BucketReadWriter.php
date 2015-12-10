@@ -63,5 +63,25 @@ class BucketReadWriter
         $gridFsStream = new GridFsDownload($this->bucket, $id);
         $gridFsStream->downloadToStream($destination);
     }
+    /**
+    * Delete a file from the GridFS bucket. If the file collection entry is not found, still attempts to delete orphaned chunks
+    *
+    * @param ObjectId    $id     file id
+    * @throws GridFSFileNotFoundException
+    */
+    public function delete(\MongoDB\BSON\ObjectId $id)
+    {
+        $options =[];
+        $writeConcern = $this->bucket->getWriteConcern();
+        if(!is_null($writeConcern)) {
+            $options['writeConcern'] = $writeConcern;
+        }
+        $file = $this->bucket->getFilesCollection()->findOne(['_id' => $id]);
+        $this->bucket->getChunksCollection()->deleteMany(['files_id' => $id], $options);
+        if (is_null($file)) {
+            throw new \MongoDB\Exception\GridFSFileNotFoundException($id, $this->bucket->getDatabaseName(), $this->bucket->getBucketName());
+        }
 
+        $this->bucket->getFilesCollection()->deleteOne(['_id' => $id], $options);
+    }
 }

@@ -111,21 +111,30 @@ class Bucket
     {
         return $this->options['bucketName'];
     }
+    public function getReadConcern()
+    {
+      if(isset($this->options['readPreference'])) {
+        return $this->options['readPreference'];
+      } else{
+        return null;
+      }
+    }
+    public function getWriteConcern()
+    {
+      if(isset($this->options['writeConcern'])) {
+        return $this->options['writeConcern'];
+      } else{
+        return null;
+      }
+    }
+
     public function find($filter, array $options =[])
     {
         //add proper validation for the filter and for the options
             return $this->filesCollection->find($filter);
     }
 
-    public function chunkInsert($toUpload) {
-        $this->chunksCollection->insertOne($toUpload);
-    }
-
-    public function fileInsert($toUpload) {
-        $this->filesCollection->insertOne($toUpload);
-    }
-
-    public function ensureIndexes()
+    private function ensureIndexes()
     {
         if ($this->ensuredIndexes) {
             return;
@@ -161,12 +170,5 @@ class Bucket
             'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
             'projection' => ['_id' => 1],
         ]);
-    }
-    public function delete(ObjectId $id)
-    {
-        $options = ['writeConcern' => $this->writeConcern];
-        $this->chunksCollection->deleteMany(['file_id' => $id], $options);
-
-        $this->filesCollection->deleteOne(['_id' => $id], $options);
     }
 }

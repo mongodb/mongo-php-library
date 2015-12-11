@@ -15,7 +15,6 @@ namespace MongoDB\Model;
 class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
 {
     private $databases;
-    private $index = 0;
 
     /**
      * Constructor.

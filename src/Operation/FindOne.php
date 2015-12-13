@@ -62,7 +62,7 @@ class FindOne implements Executable
             $databaseName,
             $collectionName,
             $filter,
-            ['limit' => -1] + $options
+            ['limit' => 1] + $options
         );
 
         $this->options = $options;

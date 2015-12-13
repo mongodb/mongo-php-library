@@ -28,7 +28,7 @@ class Client
      * @param array  $options       Additional connection string options
      * @param array  $driverOptions Driver-specific options
      */
-    public function __construct($uri = 'mongodb://localhost:27017', array $options = [], array $driverOptions = [])
+    public function __construct($uri = 'mongodb://127.0.0.1:27017', array $options = [], array $driverOptions = [])
     {
         $this->manager = new Manager($uri, $options, $driverOptions);
         $this->uri = (string) $uri;

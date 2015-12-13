@@ -26,6 +26,9 @@ class FindOneAndReplace implements Executable
      *
      * Supported options:
      *
+     *  * bypassDocumentValidation (boolean): If true, allows the write to opt
+     *    out of document level validation.
+     *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
      *

@@ -19,6 +19,10 @@ class FindAndModifyTest extends TestCase
     {
         $options = [];
 
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = ['bypassDocumentValidation' => $value];
+        }
+
         foreach ($this->getInvalidDocumentValues() as $value) {
             $options[][] = ['fields' => $value];
         }

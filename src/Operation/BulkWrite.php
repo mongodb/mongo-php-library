@@ -24,6 +24,8 @@ class BulkWrite implements Executable
     const UPDATE_MANY = 'updateMany';
     const UPDATE_ONE  = 'updateOne';
 
+    private static $wireVersionForDocumentLevelValidation = 4;
+
     private $databaseName;
     private $collectionName;
     private $operations;
@@ -53,6 +55,9 @@ class BulkWrite implements Executable
      *    matches the query. The default is false.
      *
      * Supported options for the bulk write operation:
+     *
+     *  * bypassDocumentValidation (boolean): If true, allows the write to opt
+     *    out of document level validation.
      *
      *  * ordered (boolean): If true, when an insert fails, return without
      *    performing the remaining writes. If false, when a write fails,
@@ -182,6 +187,10 @@ class BulkWrite implements Executable
 
         $options += ['ordered' => true];
 
+        if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
+            throw new InvalidArgumentTypeException('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+        }
+
         if ( ! is_bool($options['ordered'])) {
             throw new InvalidArgumentTypeException('"ordered" option', $options['ordered'], 'boolean');
         }
@@ -205,7 +214,13 @@ class BulkWrite implements Executable
      */
     public function execute(Server $server)
     {
-        $bulk = new Bulk(['ordered' => $this->options['ordered']]);
+        $options = ['ordered' => $this->options['ordered']];
+
+        if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+            $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
+        }
+
+        $bulk = new Bulk($options);
         $insertedIds = [];
 
         foreach ($this->operations as $i => $operation) {

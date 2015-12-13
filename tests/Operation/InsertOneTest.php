@@ -28,6 +28,10 @@ class InsertOneTest extends TestCase
     {
         $options = [];
 
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = ['bypassDocumentValidation' => $value];
+        }
+
         foreach ($this->getInvalidWriteConcernValues() as $value) {
             $options[][] = ['writeConcern' => $value];
         }

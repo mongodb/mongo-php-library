@@ -15,7 +15,7 @@ class ClientTest extends TestCase
     {
         $client = new Client();
 
-        $this->assertEquals('mongodb://localhost:27017', (string) $client);
+        $this->assertEquals('mongodb://127.0.0.1:27017', (string) $client);
     }
 
     public function testToString()

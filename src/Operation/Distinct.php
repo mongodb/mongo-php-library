@@ -105,7 +105,7 @@ class Distinct implements Executable
         }
 
         if (isset($this->options['maxTimeMS'])) {
-            $cmd[$option] = $this->options['maxTimeMS'];
+            $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
         }
 
         return new Command($cmd);

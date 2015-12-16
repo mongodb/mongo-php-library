@@ -7,6 +7,11 @@ use stdClass;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
+    public function provideInvalidDocumentValues()
+    {
+        return $this->wrapValuesForDataProvider($this->getInvalidDocumentValues());
+    }
+
     /**
      * Return the test collection name.
      *
@@ -29,11 +34,71 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         return getenv('MONGODB_DATABASE') ?: 'phplib_test';
     }
 
+    /**
+     * Return a list of invalid array values.
+     *
+     * @return array
+     */
+    protected function getInvalidArrayValues()
+    {
+        return [123, 3.14, 'foo', true, new stdClass];
+    }
+
+    /**
+     * Return a list of invalid boolean values.
+     *
+     * @return array
+     */
+    protected function getInvalidBooleanValues()
+    {
+        return [123, 3.14, 'foo', [], new stdClass];
+    }
+
+    /**
+     * Return a list of invalid document values.
+     *
+     * @return array
+     */
+    protected function getInvalidDocumentValues()
+    {
+        return [123, 3.14, 'foo', true];
+    }
+
+    /**
+     * Return a list of invalid integer values.
+     *
+     * @return array
+     */
+    protected function getInvalidIntegerValues()
+    {
+        return [3.14, 'foo', true, [], new stdClass];
+    }
+
+    /**
+     * Return a list of invalid ReadPreference values.
+     *
+     * @return array
+     */
     protected function getInvalidReadPreferenceValues()
     {
         return [123, 3.14, 'foo', true, [], new stdClass];
     }
 
+    /**
+     * Return a list of invalid string values.
+     *
+     * @return array
+     */
+    protected function getInvalidStringValues()
+    {
+        return [123, 3.14, true, [], new stdClass];
+    }
+
+    /**
+     * Return a list of invalid WriteConcern values.
+     *
+     * @return array
+     */
     protected function getInvalidWriteConcernValues()
     {
         return [123, 3.14, 'foo', true, [], new stdClass];
@@ -57,5 +122,16 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected function getUri()
     {
         return getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1:27017';
+    }
+
+    /**
+     * Wrap a list of values for use as a single-argument data provider.
+     *
+     * @param array $values List of values
+     * @return array
+     */
+    protected function wrapValuesForDataProvider(array $values)
+    {
+        return array_map(function($value) { return [$value]; }, $values);
     }
 }

@@ -93,6 +93,32 @@ class Database
     }
 
     /**
+     * Execute a command on this database.
+     *
+     * @param array|object        $command        Command document
+     * @param ReadPreference|null $readPreference Read preference
+     * @return Cursor
+     */
+    public function command($command, ReadPreference $readPreference = null)
+    {
+        if ( ! is_array($command) && ! is_object($command)) {
+            throw new InvalidArgumentTypeException('$command', $command, 'array or object');
+        }
+
+        if ( ! $command instanceof Command) {
+            $command = new Command($command);
+        }
+
+        if ( ! isset($readPreference)) {
+            $readPreference = $this->readPreference;
+        }
+
+        $server = $this->manager->selectServer($readPreference);
+
+        return $server->executeCommand($this->databaseName, $command);
+    }
+
+    /**
      * Create a new collection explicitly.
      *
      * @see CreateCollection::__construct() for supported options

@@ -341,6 +341,11 @@ class BulkWriteTest extends TestCase
         );
     }
 
+    public function provideInvalidBooleanValues()
+    {
+        return $this->wrapValuesForDataProvider($this->getInvalidBooleanValues());
+    }
+
     public function provideInvalidConstructorOptions()
     {
         $options = [];

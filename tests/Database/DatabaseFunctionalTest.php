@@ -64,6 +64,29 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertEquals($this->getDatabaseName(), $this->database->getDatabaseName());
     }
 
+    public function testCommand()
+    {
+        $command = ['isMaster' => 1];
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $cursor = $this->database->command($command, $readPreference);
+
+        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+        $commandResult = current($cursor->toArray());
+
+        $this->assertCommandSucceeded($commandResult);
+        $this->assertTrue(isset($commandResult->ismaster));
+        $this->assertTrue($commandResult->ismaster);
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @dataProvider provideInvalidDocumentValues
+     */
+    public function testCommandCommandArgumentTypeCheck($command)
+    {
+        $this->database->command($command);
+    }
+
     public function testDrop()
     {
         $bulkWrite = new BulkWrite();

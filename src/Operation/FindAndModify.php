@@ -6,7 +6,6 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentTypeException;
-use MongoDB\Exception\RuntimeException;
 use MongoDB\Exception\UnexpectedValueException;
 
 /**
@@ -119,10 +118,6 @@ class FindAndModify implements Executable
     {
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
         $result = current($cursor->toArray());
-
-        if (empty($result->ok)) {
-            throw new RuntimeException(isset($result->errmsg) ? $result->errmsg : 'Unknown error');
-        }
 
         if ( ! isset($result->value)) {
             return null;

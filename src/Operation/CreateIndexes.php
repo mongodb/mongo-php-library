@@ -7,7 +7,6 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\RuntimeException;
 use MongoDB\Exception\UnexpectedTypeException;
 use MongoDB\Model\IndexInput;
 
@@ -92,11 +91,8 @@ class CreateIndexes implements Executable
         ]);
 
         $cursor = $server->executeCommand($this->databaseName, $command);
-        $result = current($cursor->toArray());
 
-        if (empty($result->ok)) {
-            throw new RuntimeException(isset($result->errmsg) ? $result->errmsg : 'Unknown error');
-        }
+        return current($cursor->toArray());
     }
 
     /**

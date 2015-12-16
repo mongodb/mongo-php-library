@@ -7,7 +7,6 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentTypeException;
-use MongoDB\Exception\RuntimeException;
 use MongoDB\Exception\UnexpectedValueException;
 
 /**
@@ -99,10 +98,6 @@ class Count implements Executable
 
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $readPreference);
         $result = current($cursor->toArray());
-
-        if (empty($result->ok)) {
-            throw new RuntimeException(isset($result->errmsg) ? $result->errmsg : 'Unknown error');
-        }
 
         // Older server versions may return a float
         if ( ! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {

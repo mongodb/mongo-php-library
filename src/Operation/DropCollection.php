@@ -49,7 +49,7 @@ class DropCollection implements Executable
              * and NOP instead of throwing.
              */
             if ($e->getMessage() === self::$errorMessageNamespaceNotFound) {
-                return (object) ['ok' => 0, 'errmsg' => 'ns not found'];
+                return (object) ['ok' => 0, 'errmsg' => self::$errorMessageNamespaceNotFound];
             }
 
             throw $e;

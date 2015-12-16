@@ -162,6 +162,31 @@ class Database
     }
 
     /**
+     * This is the method to issue database commands.
+     *
+     * @param array|object $command A database command to send
+     * @param ReadPreference|null $readPreference Default read preference to apply
+     * @return Cursor
+     */
+    public function executeCommand($command, ReadPreference $readPreference = null)
+    {
+        if ( ! is_array($command) && ! is_object($command)) {
+            throw new InvalidArgumentTypeException('"command" parameter', $command, 'array or object');
+        }
+
+        if ( ! $command instanceof Command) {
+            $command = new Command($command);
+        }
+
+        if ( ! isset($readPreference)) {
+            $readPreference = $this->readPreference;
+        }
+
+        $server = $this->manager->selectServer($readPreference);
+        return $server->executeCommand($this->databaseName, $command);
+    }
+
+    /**
      * Returns the database name.
      *
      * @return string

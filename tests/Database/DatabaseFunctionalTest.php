@@ -6,6 +6,7 @@ use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Command;
 
 /**
  * Functional tests for the Database class.
@@ -98,6 +99,19 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $commandResult = $this->database->drop();
         $this->assertCommandSucceeded($commandResult);
         $this->assertCollectionCount($this->getNamespace(), 0);
+    }
+
+    public function testCommand()
+    {
+        $command = new Command(['isMaster' => 1]);
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $cursor = $this->database->executeCommand($command, $readPreference);
+        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
+        $document = current($cursor->toArray());
+        $this->assertCommandSucceeded($document);
+        $this->assertArrayHasKey('ismaster', $document);
+        $this->assertTrue($document['ismaster']);
     }
 
     public function testSelectCollectionInheritsReadPreferenceAndWriteConcern()

@@ -4,7 +4,6 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
-use MongoDB\Exception\RuntimeException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Model\DatabaseInfoIterator;
 use MongoDB\Model\DatabaseInfoLegacyIterator;
@@ -57,10 +56,6 @@ class ListDatabases implements Executable
         $cursor = $server->executeCommand('admin', new Command($cmd));
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
         $result = current($cursor->toArray());
-
-        if (empty($result['ok'])) {
-            throw new RuntimeException(isset($result['errmsg']) ? $result['errmsg'] : 'Unknown error');
-        }
 
         if ( ! isset($result['databases']) || ! is_array($result['databases'])) {
             throw new UnexpectedValueException('listDatabases command did not return a "databases" array');

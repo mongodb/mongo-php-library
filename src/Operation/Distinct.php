@@ -7,7 +7,6 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentTypeException;
-use MongoDB\Exception\RuntimeException;
 use MongoDB\Exception\UnexpectedValueException;
 
 /**
@@ -76,10 +75,6 @@ class Distinct implements Executable
 
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $readPreference);
         $result = current($cursor->toArray());
-
-        if (empty($result->ok)) {
-            throw new RuntimeException(isset($result->errmsg) ? $result->errmsg : 'Unknown error');
-        }
 
         if ( ! isset($result->values) || ! is_array($result->values)) {
             throw new UnexpectedValueException('distinct command did not return a "values" array');

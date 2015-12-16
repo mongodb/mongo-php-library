@@ -7,7 +7,6 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentTypeException;
-use MongoDB\Exception\RuntimeException;
 use MongoDB\Exception\UnexpectedValueException;
 use ArrayIterator;
 use stdClass;
@@ -135,10 +134,6 @@ class Aggregate implements Executable
         }
 
         $result = current($cursor->toArray());
-
-        if (empty($result->ok)) {
-            throw new RuntimeException(isset($result->errmsg) ? $result->errmsg : 'Unknown error');
-        }
 
         if ( ! isset($result->result) || ! is_array($result->result)) {
             throw new UnexpectedValueException('aggregate command did not return a "result" array');

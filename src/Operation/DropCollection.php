@@ -4,8 +4,7 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
-use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
-use MongoDB\Exception\RuntimeException;
+use MongoDB\Driver\Exception\RuntimeException;
 
 /**
  * Operation for the drop command.
@@ -44,24 +43,18 @@ class DropCollection implements Executable
     {
         try {
             $cursor = $server->executeCommand($this->databaseName, new Command(['drop' => $this->collectionName]));
-        } catch (DriverRuntimeException $e) {
+        } catch (RuntimeException $e) {
             /* The server may return an error if the collection does not exist.
              * Check for an error message (unfortunately, there isn't a code)
              * and NOP instead of throwing.
              */
             if ($e->getMessage() === self::$errorMessageNamespaceNotFound) {
-                return (object) ['ok' => 0, 'errmsg' => 'ns not found'];
+                return (object) ['ok' => 0, 'errmsg' => self::$errorMessageNamespaceNotFound];
             }
 
             throw $e;
         }
 
-        $result = current($cursor->toArray());
-
-        if (empty($result->ok)) {
-            throw new RuntimeException(isset($result->errmsg) ? $result->errmsg : 'Unknown error');
-        }
-
-        return $result;
+        return current($cursor->toArray());
     }
 }

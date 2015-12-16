@@ -5,7 +5,6 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\RuntimeException;
 use MongoDB\Exception\UnexpectedTypeException;
 use MongoDB\Model\IndexInput;
 
@@ -102,13 +101,8 @@ class CreateCollection implements Executable
     public function execute(Server $server)
     {
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
-        $result = current($cursor->toArray());
 
-        if (empty($result->ok)) {
-            throw new RuntimeException(isset($result->errmsg) ? $result->errmsg : 'Unknown error');
-        }
-
-        return $result;
+        return current($cursor->toArray());
     }
 
     /**

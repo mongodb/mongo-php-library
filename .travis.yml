@@ -32,6 +32,7 @@ before_script:
   - if ! nc -z localhost 27017; then sudo service ${SERVER_SERVICE} start; fi
   - mongod --version
   - pecl install -f mongodb-${DRIVER_VERSION}
+  - if [ "$(php -v | grep 'PHP 5.4')" ]; then echo 'extension = mongodb.so' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
   - php --ri mongodb
   - composer install --dev --no-interaction --prefer-source
   - ulimit -c

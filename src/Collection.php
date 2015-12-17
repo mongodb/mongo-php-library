@@ -5,6 +5,7 @@ namespace MongoDB;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
@@ -42,6 +43,7 @@ class Collection
     private $collectionName;
     private $databaseName;
     private $manager;
+    private $readConcern;
     private $readPreference;
     private $writeConcern;
 
@@ -52,6 +54,9 @@ class Collection
      * CRUD (i.e. create, read, update, and delete) and index management.
      *
      * Supported options:
+     *
+     *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
+     *    use for collection operations. Defaults to the Manager's read concern.
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): The default read
      *    preference to use for collection operations. Defaults to the Manager's
@@ -77,6 +82,10 @@ class Collection
         $this->databaseName = $parts[0];
         $this->collectionName = $parts[1];
 
+        if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
+            throw new InvalidArgumentTypeException('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+        }
+
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
             throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
@@ -86,6 +95,7 @@ class Collection
         }
 
         $this->manager = $manager;
+        $this->readConcern = isset($options['readConcern']) ? $options['readConcern'] : $this->manager->getReadConcern();
         $this->readPreference = isset($options['readPreference']) ? $options['readPreference'] : $this->manager->getReadPreference();
         $this->writeConcern = isset($options['writeConcern']) ? $options['writeConcern'] : $this->manager->getWriteConcern();
     }
@@ -102,6 +112,7 @@ class Collection
             'collectionName' => $this->collectionName,
             'databaseName' => $this->databaseName,
             'manager' => $this->manager,
+            'readConcern' => $this->readConcern,
             'readPreference' => $this->readPreference,
             'writeConcern' => $this->writeConcern,
         ];
@@ -621,6 +632,10 @@ class Collection
      *
      * Supported options:
      *
+     *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
+     *    use for collection operations. Defaults to this Collection's read
+     *    concern.
+     *
      *  * readPreference (MongoDB\Driver\ReadPreference): The default read
      *    preference to use for collection operations. Defaults to this
      *    Collection's read preference.
@@ -634,6 +649,10 @@ class Collection
      */
     public function withOptions(array $options = [])
     {
+        if ( ! isset($options['readConcern'])) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }

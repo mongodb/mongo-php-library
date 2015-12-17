@@ -23,6 +23,9 @@ class UpdateOne implements Executable
      *
      * Supported options:
      *
+     *  * bypassDocumentValidation (boolean): If true, allows the write to opt
+     *    out of document level validation.
+     *
      *  * upsert (boolean): When true, a new document is created if no document
      *    matches the query. The default is false.
      *

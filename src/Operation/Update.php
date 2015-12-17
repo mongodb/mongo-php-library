@@ -20,6 +20,8 @@ use MongoDB\Exception\InvalidArgumentTypeException;
  */
 class Update implements Executable
 {
+    private static $wireVersionForDocumentLevelValidation = 4;
+
     private $databaseName;
     private $collectionName;
     private $filter;
@@ -30,6 +32,9 @@ class Update implements Executable
      * Constructs a update command.
      *
      * Supported options:
+     *
+     *  * bypassDocumentValidation (boolean): If true, allows the write to opt
+     *    out of document level validation.
      *
      *  * multi (boolean): When true, updates all documents matching the query.
      *    This option cannot be true if the $update argument is a replacement
@@ -63,6 +68,10 @@ class Update implements Executable
             'upsert' => false,
         ];
 
+        if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
+            throw new InvalidArgumentTypeException('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+        }
+
         if ( ! is_bool($options['multi'])) {
             throw new InvalidArgumentTypeException('"multi" option', $options['multi'], 'boolean');
         }
@@ -95,13 +104,19 @@ class Update implements Executable
      */
     public function execute(Server $server)
     {
-        $options = [
+        $updateOptions = [
             'multi' => $this->options['multi'],
             'upsert' => $this->options['upsert'],
         ];
 
-        $bulk = new Bulk();
-        $bulk->update($this->filter, $this->update, $options);
+        $bulkOptions = [];
+
+        if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+            $bulkOptions['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
+        }
+
+        $bulk = new Bulk($bulkOptions);
+        $bulk->update($this->filter, $this->update, $updateOptions);
 
         $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;
         $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $writeConcern);

@@ -40,6 +40,10 @@ class UpdateTest extends TestCase
         $options = [];
 
         foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = ['bypassDocumentValidation' => $value];
+        }
+
+        foreach ($this->getInvalidBooleanValues() as $value) {
             $options[][] = ['multi' => $value];
         }
 

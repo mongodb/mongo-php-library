@@ -17,6 +17,8 @@ use MongoDB\Exception\InvalidArgumentTypeException;
  */
 class InsertOne implements Executable
 {
+    private static $wireVersionForDocumentLevelValidation = 4;
+
     private $databaseName;
     private $collectionName;
     private $document;
@@ -26,6 +28,9 @@ class InsertOne implements Executable
      * Constructs an insert command.
      *
      * Supported options:
+     *
+     *  * bypassDocumentValidation (boolean): If true, allows the write to opt
+     *    out of document level validation.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
@@ -39,6 +44,10 @@ class InsertOne implements Executable
     {
         if ( ! is_array($document) && ! is_object($document)) {
             throw new InvalidArgumentTypeException('$document', $document, 'array or object');
+        }
+
+        if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
+            throw new InvalidArgumentTypeException('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
@@ -60,7 +69,13 @@ class InsertOne implements Executable
      */
     public function execute(Server $server)
     {
-        $bulk = new Bulk();
+        $options = [];
+
+        if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+            $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
+        }
+
+        $bulk = new Bulk($options);
         $insertedId = $bulk->insert($this->document);
 
         if ($insertedId === null) {

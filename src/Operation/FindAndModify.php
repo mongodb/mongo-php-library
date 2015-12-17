@@ -19,6 +19,8 @@ use MongoDB\Exception\UnexpectedValueException;
  */
 class FindAndModify implements Executable
 {
+    private static $wireVersionForDocumentLevelValidation = 4;
+
     private $databaseName;
     private $collectionName;
     private $options;
@@ -27,6 +29,9 @@ class FindAndModify implements Executable
      * Constructs a findAndModify command.
      *
      * Supported options:
+     *
+     *  * bypassDocumentValidation (boolean): If true, allows the write to opt
+     *    out of document level validation.
      *
      *  * fields (document): Limits the fields to return for the matching
      *    document.
@@ -65,6 +70,10 @@ class FindAndModify implements Executable
             'remove' => false,
             'upsert' => false,
         ];
+
+        if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
+            throw new InvalidArgumentTypeException('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+        }
 
         if (isset($options['fields']) && ! is_array($options['fields']) && ! is_object($options['fields'])) {
             throw new InvalidArgumentTypeException('"fields" option', $options['fields'], 'array or object');
@@ -116,7 +125,7 @@ class FindAndModify implements Executable
      */
     public function execute(Server $server)
     {
-        $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
+        $cursor = $server->executeCommand($this->databaseName, $this->createCommand($server));
         $result = current($cursor->toArray());
 
         if ( ! isset($result->value)) {
@@ -144,9 +153,10 @@ class FindAndModify implements Executable
     /**
      * Create the findAndModify command.
      *
+     * @param Server $server
      * @return Command
      */
-    private function createCommand()
+    private function createCommand(Server $server)
     {
         $cmd = ['findAndModify' => $this->collectionName];
 
@@ -165,6 +175,10 @@ class FindAndModify implements Executable
 
         if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
+        }
+
+        if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+            $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 
         return new Command($cmd);

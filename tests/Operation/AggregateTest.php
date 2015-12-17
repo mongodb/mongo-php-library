@@ -45,6 +45,10 @@ class AggregateTest extends TestCase
             $options[][] = ['batchSize' => $value];
         }
 
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = ['bypassDocumentValidation' => $value];
+        }
+
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['maxTimeMS' => $value];
         }

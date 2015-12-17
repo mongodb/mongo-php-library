@@ -22,6 +22,7 @@ use Traversable;
 class Aggregate implements Executable
 {
     private static $wireVersionForCursor = 2;
+    private static $wireVersionForDocumentLevelValidation = 4;
 
     private $databaseName;
     private $collectionName;
@@ -38,6 +39,13 @@ class Aggregate implements Executable
      *    in the dbPath directory. The default is false.
      *
      *  * batchSize (integer): The number of documents to return per batch.
+     *
+     *  * bypassDocumentValidation (boolean): If true, allows the write to opt
+     *    out of document level validation. This only applies when the $out
+     *    stage is specified.
+     *
+     *    For servers < 3.2, this option is ignored as document level validation
+     *    is not available.
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
@@ -90,6 +98,10 @@ class Aggregate implements Executable
 
         if (isset($options['batchSize']) && ! is_integer($options['batchSize'])) {
             throw new InvalidArgumentTypeException('"batchSize" option', $options['batchSize'], 'integer');
+        }
+
+        if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
+            throw new InvalidArgumentTypeException('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
@@ -162,6 +174,10 @@ class Aggregate implements Executable
         }
 
         $cmd['allowDiskUse'] = $this->options['allowDiskUse'];
+
+        if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+            $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
+        }
 
         if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];

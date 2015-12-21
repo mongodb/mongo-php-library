@@ -40,12 +40,17 @@ class GridFsDownload extends GridFsStream
      */
     public function __construct(
         Bucket $bucket,
-        ObjectId $objectId
+        $objectId,
+        $file = null
         )
     {
-        $this->file = $bucket->getFilesCollection()->findOne(['_id' => $objectId]);
-        if (is_null($this->file)) {
-          throw new \MongoDB\Exception\GridFSFileNotFoundException($objectId, $bucket->getBucketName(), $bucket->getDatabaseName());
+        if(!is_null($file)) {
+            $this->file = $file;
+        } else {
+            $this->file = $bucket->getFilesCollection()->findOne(['_id' => $objectId]);
+            if (is_null($this->file)) {
+              throw new \MongoDB\Exception\GridFSFileNotFoundException($objectId, $bucket->getBucketName(), $bucket->getDatabaseName());
+            }
         }
         if ($this->file->length > 0) {
             $cursor = $bucket->getChunksCollection()->find(['files_id' => $this->file->_id], ['sort' => ['n' => 1]]);

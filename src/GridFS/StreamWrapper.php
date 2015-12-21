@@ -72,9 +72,15 @@ class StreamWrapper
         $this->gridFsStream = new GridFsUpload($this->bucket, $this->identifier, $options);
         return true;
     }
+
     public function openReadStream() {
-        $objectId = new \MongoDB\BSON\ObjectId($this->identifier);
-        $this->gridFsStream = new GridFsDownload($this->bucket, $objectId);
+        $context = stream_context_get_options($this->context);
+        if(isset($context['gridfs']['file'])){
+            $this->gridFsStream = new GridFsDownload($this->bucket, null, $context['gridfs']['file']);
+        } else {
+            $objectId = new \MongoDB\BSON\ObjectId($this->identifier);
+            $this->gridFsStream = new GridFsDownload($this->bucket, $objectId);
+        }
         return true;
     }
 }

@@ -84,4 +84,33 @@ class BucketReadWriter
 
         $this->bucket->getFilesCollection()->deleteOne(['_id' => $id], $options);
     }
+    /**
+    * Open a stream to download a file from the GridFS bucket. Searches for the file by the specified name then returns a stream to the specified file
+    * @param string    $filename     name of the file to download
+    * @param int       $revision     the revision of the file to download
+    * @throws GridFSFileNotFoundException
+    */
+    public function openDownloadStreamByName($filename, $revision = -1)
+    {
+        $file = $this->bucket->findFileRevision($filename, $revision);
+        $options = ['bucket' => $this->bucket,
+                    'file' => $file
+                ];
+        $context = stream_context_create(['gridfs' => $options]);
+        return fopen(sprintf('gridfs://%s/%s', $this->bucket->getDatabaseName(), $filename), 'r', false, $context);
+    }
+    /**
+    * Download a file from the GridFS bucket by name. Searches for the file by the specified name then loads data into the stream
+    *
+    * @param string    $filename     name of the file to download
+    * @param int       $revision     the revision of the file to download
+    * @throws GridFSFileNotFoundException
+    */
+    public function downloadToStreamByName($filename, $destination, $revision=-1)
+    {
+        $file = $this->bucket->findFileRevision($filename, $revision);
+        $gridFsStream = new GridFsDownload($this->bucket, null, $file);
+        $gridFsStream->downloadToStream($destination);
+    }
+
 }

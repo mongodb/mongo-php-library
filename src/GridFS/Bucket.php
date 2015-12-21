@@ -128,12 +128,6 @@ class Bucket
       }
     }
 
-    public function find($filter, array $options =[])
-    {
-        //add proper validation for the filter and for the options
-            return $this->filesCollection->find($filter);
-    }
-
     private function ensureIndexes()
     {
         if ($this->ensuredIndexes) {

@@ -91,7 +91,7 @@ class SpecificationTests extends FunctionalTestCase
 
     public function provideSpecificationTests()
     {
-        $testPath=getcwd().'/tests/GridFS/Specification/tests/delete.json';
+        $testPath=getcwd().'/tests/GridFS/Specification/tests/download_by_name.json';
 
         $testArgs = [];
         foreach(glob($testPath) as $filename) {
@@ -237,6 +237,19 @@ class SpecificationTests extends FunctionalTestCase
     }
     function download_by_nameCommand($args)
     {
+        $args = $this->fixTypes($args, false);
+        $streamWrapper = new \MongoDB\GridFS\StreamWrapper();
+        $streamWrapper->register($this->manager);
+        $stream = fopen('php://temp', 'w+');
+        if(isset($args['options']['revision'])) {
+            $this->bucketReadWriter->downloadToStreamByName($args['filename'], $stream, $args['options']['revision']);
+        } else {
+            $this->bucketReadWriter->downloadToStreamByName($args['filename'], $stream);
+        }
+        rewind($stream);
+        $result = stream_get_contents($stream);
+        fclose($stream);
+        return $result;
 
     }
 }

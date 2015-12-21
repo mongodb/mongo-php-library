@@ -171,4 +171,19 @@ class Bucket
             'projection' => ['_id' => 1],
         ]);
     }
+    public function findFileRevision($filename, $revision)
+    {
+        if ($revision < 0) {
+            $skip = abs($revision) -1;
+            $sortOrder = -1;
+        } else {
+            $skip = $revision;
+            $sortOrder = 1;
+        }
+        $file = $this->filesCollection->findOne(["filename"=> $filename], ["sort" => ["uploadDate"=> $sortOrder], "limit"=>1, "skip" => $skip]);
+        if(is_null($file)) {
+            throw new \MongoDB\Exception\GridFSFileNotFoundException($filename, $this->getBucketName(), $this->getDatabaseName());;
+        }
+        return $file;
+    }
 }

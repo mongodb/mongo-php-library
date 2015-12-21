@@ -112,5 +112,14 @@ class BucketReadWriter
         $gridFsStream = new GridFsDownload($this->bucket, null, $file);
         $gridFsStream->downloadToStream($destination);
     }
-
+    /**
+    * Find files from the GridFS bucket files collection.
+    *
+    * @param array    $filter     filter to find by
+    * @param array    $options    options to
+    */
+    public function find($filter, array $options =[])
+    {
+        return $this->bucket->getFilesCollection()->find($filter, $options);
+    }
 }

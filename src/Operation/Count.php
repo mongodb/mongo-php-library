@@ -3,6 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
@@ -18,6 +19,8 @@ use MongoDB\Exception\UnexpectedValueException;
  */
 class Count implements Executable
 {
+    private static $wireVersionForReadConcern = 4;
+
     private $databaseName;
     private $collectionName;
     private $filter;
@@ -35,6 +38,11 @@ class Count implements Executable
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
+     *
+     *  * readConcern (MongoDB\Driver\ReadConcern): Read concern.
+     *
+     *    For servers < 3.2, this option is ignored as read concern is not
+     *    available.
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
@@ -71,6 +79,10 @@ class Count implements Executable
             throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
+        if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
+            throw new InvalidArgumentTypeException('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+        }
+
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
             throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
@@ -96,7 +108,7 @@ class Count implements Executable
     {
         $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
 
-        $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $readPreference);
+        $cursor = $server->executeCommand($this->databaseName, $this->createCommand($server), $readPreference);
         $result = current($cursor->toArray());
 
         // Older server versions may return a float
@@ -110,9 +122,10 @@ class Count implements Executable
     /**
      * Create the count command.
      *
+     * @param Server $server
      * @return Command
      */
-    private function createCommand()
+    private function createCommand(Server $server)
     {
         $cmd = ['count' => $this->collectionName];
 
@@ -124,6 +137,10 @@ class Count implements Executable
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }
+        }
+
+        if (isset($this->options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+            $cmd['readConcern'] = \MongoDB\read_concern_as_document($this->options['readConcern']);
         }
 
         return new Command($cmd);

@@ -143,11 +143,20 @@ class Collection
      */
     public function aggregate(array $pipeline, array $options = [])
     {
+        $hasOutStage = \MongoDB\is_last_pipeline_operator_out($pipeline);
+
+        /* A "majority" read concern is not compatible with the $out stage, so
+         * avoid providing the Collection's read concern if it would conflict.
+         */
+        if ( ! isset($options['readConcern']) && ! ($hasOutStage && $this->readConcern->getLevel() === ReadConcern::MAJORITY)) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }
 
-        if (\MongoDB\is_last_pipeline_operator_out($pipeline)) {
+        if ($hasOutStage) {
             $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
         }
 
@@ -187,6 +196,10 @@ class Collection
      */
     public function count($filter = [], array $options = [])
     {
+        if ( ! isset($options['readConcern'])) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }
@@ -295,6 +308,10 @@ class Collection
      */
     public function distinct($fieldName, $filter = [], array $options = [])
     {
+        if ( ! isset($options['readConcern'])) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }
@@ -363,6 +380,10 @@ class Collection
      */
     public function find($filter = [], array $options = [])
     {
+        if ( ! isset($options['readConcern'])) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }
@@ -384,6 +405,10 @@ class Collection
      */
     public function findOne($filter = [], array $options = [])
     {
+        if ( ! isset($options['readConcern'])) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }

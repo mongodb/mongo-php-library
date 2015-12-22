@@ -2,8 +2,10 @@
 
 namespace MongoDB;
 
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentTypeException;
+use stdClass;
 
 /**
  * Return whether the first key in the document starts with a "$" character.
@@ -79,6 +81,25 @@ function generate_index_name($document)
     }
 
     return $name;
+}
+
+/**
+ * Converts a ReadConcern instance to a stdClass for use in a BSON document.
+ *
+ * @internal
+ * @see https://jira.mongodb.org/browse/PHPC-498
+ * @param ReadConcern $readConcern Read concern
+ * @return stdClass
+ */
+function read_concern_as_document(ReadConcern $readConcern)
+{
+    $document = [];
+
+    if ($readConcern->getLevel() !== null) {
+        $document['level'] = $readConcern->getLevel();
+    }
+
+    return (object) $document;
 }
 
 /**

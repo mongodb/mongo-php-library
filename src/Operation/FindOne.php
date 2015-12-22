@@ -36,6 +36,11 @@ class FindOne implements Executable
      *  * projection (document): Limits the fields to return for the matching
      *    document.
      *
+     *  * readConcern (MongoDB\Driver\ReadConcern): Read concern.
+     *
+     *    For servers < 3.2, this option is ignored as read concern is not
+     *    available.
+     *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
      *  * skip (integer): The number of documents to skip before returning.

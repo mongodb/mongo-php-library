@@ -3,6 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Query;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
@@ -64,6 +65,11 @@ class Find implements Executable
      *
      *  * projection (document): Limits the fields to return for the matching
      *    document.
+     *
+     *  * readConcern (MongoDB\Driver\ReadConcern): Read concern.
+     *
+     *    For servers < 3.2, this option is ignored as read concern is not
+     *    available.
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
@@ -133,6 +139,10 @@ class Find implements Executable
             throw new InvalidArgumentTypeException('"projection" option', $options['projection'], 'array or object');
         }
 
+        if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
+            throw new InvalidArgumentTypeException('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+        }
+
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
             throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
@@ -188,7 +198,7 @@ class Find implements Executable
             }
         }
 
-        foreach (['batchSize', 'limit', 'skip', 'sort', 'noCursorTimeout', 'oplogReplay', 'projection'] as $option) {
+        foreach (['batchSize', 'limit', 'skip', 'sort', 'noCursorTimeout', 'oplogReplay', 'projection', 'readConcern'] as $option) {
             if (isset($this->options[$option])) {
                 $options[$option] = $this->options[$option];
             }

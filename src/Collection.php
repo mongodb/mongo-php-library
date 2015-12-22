@@ -37,6 +37,8 @@ use Traversable;
 
 class Collection
 {
+    private static $wireVersionForFindAndModifyWriteConcern = 4;
+
     private $collectionName;
     private $databaseName;
     private $manager;
@@ -394,8 +396,13 @@ class Collection
      */
     public function findOneAndDelete($filter, array $options = [])
     {
-        $operation = new FindOneAndDelete($this->databaseName, $this->collectionName, $filter, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new FindOneAndDelete($this->databaseName, $this->collectionName, $filter, $options);
 
         return $operation->execute($server);
     }
@@ -417,8 +424,13 @@ class Collection
      */
     public function findOneAndReplace($filter, $replacement, array $options = [])
     {
-        $operation = new FindOneAndReplace($this->databaseName, $this->collectionName, $filter, $replacement, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new FindOneAndReplace($this->databaseName, $this->collectionName, $filter, $replacement, $options);
 
         return $operation->execute($server);
     }
@@ -440,8 +452,13 @@ class Collection
      */
     public function findOneAndUpdate($filter, $update, array $options = [])
     {
-        $operation = new FindOneAndUpdate($this->databaseName, $this->collectionName, $filter, $update, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new FindOneAndUpdate($this->databaseName, $this->collectionName, $filter, $update, $options);
 
         return $operation->execute($server);
     }

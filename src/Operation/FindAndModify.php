@@ -4,6 +4,7 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentTypeException;
 use MongoDB\Exception\UnexpectedValueException;
@@ -20,6 +21,7 @@ use MongoDB\Exception\UnexpectedValueException;
 class FindAndModify implements Executable
 {
     private static $wireVersionForDocumentLevelValidation = 4;
+    private static $wireVersionForWriteConcern = 4;
 
     private $databaseName;
     private $collectionName;
@@ -57,6 +59,9 @@ class FindAndModify implements Executable
      *  * upsert (boolean): When true, a new document is created if no document
      *    matches the query. This option is ignored for remove operations. The
      *    default is false.
+     *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern. This option
+     *    is only supported for server versions >= 3.2.
      *
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
@@ -101,6 +106,10 @@ class FindAndModify implements Executable
 
         if (isset($options['update']) && ! is_array($options['update']) && ! is_object($options['update'])) {
             throw new InvalidArgumentTypeException('"update" option', $options['update'], 'array or object');
+        }
+
+        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
+            throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         if ( ! is_bool($options['upsert'])) {
@@ -179,6 +188,10 @@ class FindAndModify implements Executable
 
         if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
+        }
+
+        if (isset($this->options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWriteConcern)) {
+            $cmd['writeConcern'] = $this->options['writeConcern'];
         }
 
         return new Command($cmd);

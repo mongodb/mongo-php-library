@@ -4,6 +4,7 @@ php:
   - 5.4
   - 5.5
   - 5.6
+  - 7.0
 
 env:
   global:
@@ -12,12 +13,14 @@ env:
     - MONGO_REPO_TYPE="precise/mongodb-enterprise/"
     - SOURCES_LOC="/etc/apt/sources.list.d/mongodb.list"
   matrix:
-    - DRIVER_VERSION=1.1.0 SERVER_VERSION=2.4
-    - DRIVER_VERSION=1.1.0 SERVER_VERSION=2.6
-    - DRIVER_VERSION=1.1.0 SERVER_VERSION=3.0
+    - DRIVER_VERSION=1.1.1 SERVER_VERSION=2.4
+    - DRIVER_VERSION=1.1.1 SERVER_VERSION=2.6
+    - DRIVER_VERSION=1.1.1 SERVER_VERSION=3.0
+    - DRIVER_VERSION=1.1.1 SERVER_VERSION=3.2
 
 before_install:
   - sudo apt-key adv --keyserver ${KEY_SERVER} --recv 7F0CEB10
+  - sudo apt-key adv --keyserver ${KEY_SERVER} --recv EA312927
   - echo "deb ${MONGO_REPO_URI} ${MONGO_REPO_TYPE}${SERVER_VERSION} multiverse" | sudo tee ${SOURCES_LOC}
   - sudo apt-get update -qq
 

@@ -7,7 +7,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\UnexpectedTypeException;
+use MongoDB\Exception\InvalidArgumentTypeException;
 use MongoDB\Model\IndexInput;
 
 /**
@@ -40,9 +40,15 @@ class CreateIndexes implements Executable
             throw new InvalidArgumentException('$indexes is empty');
         }
 
-        foreach ($indexes as $index) {
+        $expectedIndex = 0;
+
+        foreach ($indexes as $i => $index) {
+            if ($i !== $expectedIndex) {
+                throw new InvalidArgumentException(sprintf('$indexes is not a list (unexpected index: "%s")', $i));
+            }
+
             if ( ! is_array($index)) {
-                throw new UnexpectedTypeException($index, 'array');
+                throw new InvalidArgumentTypeException(sprintf('$index[%d]', $i), $index, 'array');
             }
 
             if ( ! isset($index['ns'])) {
@@ -50,6 +56,8 @@ class CreateIndexes implements Executable
             }
 
             $this->indexes[] = new IndexInput($index);
+
+            $expectedIndex += 1;
         }
 
         $this->databaseName = (string) $databaseName;

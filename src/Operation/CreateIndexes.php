@@ -7,7 +7,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\UnexpectedTypeException;
+use MongoDB\Exception\InvalidArgumentTypeException;
 use MongoDB\Model\IndexInput;
 
 /**
@@ -42,7 +42,7 @@ class CreateIndexes implements Executable
 
         foreach ($indexes as $index) {
             if ( ! is_array($index)) {
-                throw new UnexpectedTypeException($index, 'array');
+                throw new InvalidArgumentTypeException(sprintf('$index[%d]', $i), $index, 'array');
             }
 
             if ( ! isset($index['ns'])) {

@@ -8,6 +8,7 @@ class CreateIndexesTest extends TestCase
 {
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessage $indexes is empty
      */
     public function testCreateIndexesRequiresAtLeastOneIndex()
     {

@@ -4,6 +4,7 @@ namespace MongoDB\Tests;
 
 use MongoDB\Model\IndexInput;
 use MongoDB\Tests\TestCase;
+use stdClass;
 
 class IndexInputTest extends TestCase
 {
@@ -16,7 +17,7 @@ class IndexInputTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\UnexpectedTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
      */
     public function testConstructorShouldRequireKeyToBeArrayOrObject()
     {
@@ -24,11 +25,17 @@ class IndexInputTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\UnexpectedTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @dataProvider provideInvalidFieldOrderValues
      */
-    public function testConstructorShouldRequireKeyOrderToBeScalar()
+    public function testConstructorShouldRequireKeyFieldOrderToBeNumericOrString($order)
     {
-        new IndexInput(['key' => ['x' => []]]);
+        new IndexInput(['key' => ['x' => $order]]);
+    }
+
+    public function provideInvalidFieldOrderValues()
+    {
+        return $this->wrapValuesForDataProvider([true, [], new stdClass]);
     }
 
     /**
@@ -40,7 +47,7 @@ class IndexInputTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\UnexpectedTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
      */
     public function testConstructorShouldRequireNamespaceToBeString()
     {
@@ -48,7 +55,7 @@ class IndexInputTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\UnexpectedTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
      */
     public function testConstructorShouldRequireNameToBeString()
     {

@@ -68,8 +68,11 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     public function testCommand()
     {
         $command = ['isMaster' => 1];
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
-        $cursor = $this->database->command($command, $readPreference);
+        $options = [
+            'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
+        ];
+
+        $cursor = $this->database->command($command, $options);
 
         $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
         $commandResult = current($cursor->toArray());
@@ -77,6 +80,25 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertCommandSucceeded($commandResult);
         $this->assertTrue(isset($commandResult->ismaster));
         $this->assertTrue($commandResult->ismaster);
+    }
+
+    public function testCommandAppliesTypeMapToCursor()
+    {
+        $command = ['isMaster' => 1];
+        $options = [
+            'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
+            'typeMap' => ['root' => 'array'],
+        ];
+
+        $cursor = $this->database->command($command, $options);
+
+        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+        $commandResult = current($cursor->toArray());
+
+        $this->assertCommandSucceeded($commandResult);
+        $this->assertInternalType('array', $commandResult);
+        $this->assertTrue(isset($commandResult['ismaster']));
+        $this->assertTrue($commandResult['ismaster']);
     }
 
     /**

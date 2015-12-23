@@ -3,7 +3,6 @@
 namespace MongoDB;
 
 use MongoDB\Collection;
-use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
@@ -15,6 +14,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentTypeException;
 use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\CreateCollection;
+use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListCollections;
@@ -116,27 +116,22 @@ class Database
     /**
      * Execute a command on this database.
      *
-     * @param array|object        $command        Command document
-     * @param ReadPreference|null $readPreference Read preference
+     * @see DatabaseCommand::__construct() for supported options
+     * @param array|object $command Command document
+     * @param array        $options Options for command execution
      * @return Cursor
+     * @throws InvalidArgumentException
      */
-    public function command($command, ReadPreference $readPreference = null)
+    public function command($command, array $options = [])
     {
-        if ( ! is_array($command) && ! is_object($command)) {
-            throw new InvalidArgumentTypeException('$command', $command, 'array or object');
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
         }
 
-        if ( ! $command instanceof Command) {
-            $command = new Command($command);
-        }
+        $operation = new DatabaseCommand($this->databaseName, $command, $options);
+        $server = $this->manager->selectServer($options['readPreference']);
 
-        if ( ! isset($readPreference)) {
-            $readPreference = $this->readPreference;
-        }
-
-        $server = $this->manager->selectServer($readPreference);
-
-        return $server->executeCommand($this->databaseName, $command);
+        return $operation->execute($server);
     }
 
     /**

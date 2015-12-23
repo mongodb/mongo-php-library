@@ -45,6 +45,9 @@ class FindOneAndReplace implements Executable
      *  * upsert (boolean): When true, a new document is created if no document
      *    matches the query. The default is false.
      *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern. This option
+     *    is only supported for server versions >= 3.2.
+     *
      * @param string       $databaseName   Database name
      * @param string       $collectionName Collection name
      * @param array|object $filter         Query by which to filter documents

@@ -32,6 +32,9 @@ class FindOneAndDelete implements Executable
      *  * sort (document): Determines which document the operation modifies if
      *    the query selects multiple documents.
      *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern. This option
+     *    is only supported for server versions >= 3.2.
+     *
      * @param string       $databaseName   Database name
      * @param string       $collectionName Collection name
      * @param array|object $filter         Query by which to filter documents

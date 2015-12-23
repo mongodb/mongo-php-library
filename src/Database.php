@@ -7,6 +7,7 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
@@ -22,6 +23,7 @@ class Database
 {
     private $databaseName;
     private $manager;
+    private $readConcern;
     private $readPreference;
     private $writeConcern;
 
@@ -32,6 +34,10 @@ class Database
      * as a gateway for accessing collections.
      *
      * Supported options:
+     *
+     *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
+     *    use for database operations and selected collections. Defaults to the
+     *    Manager's read concern.
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): The default read
      *    preference to use for database operations and selected collections.
@@ -52,6 +58,10 @@ class Database
             throw new InvalidArgumentException('$databaseName is invalid: ' . $databaseName);
         }
 
+        if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
+            throw new InvalidArgumentTypeException('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+        }
+
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
             throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
@@ -62,6 +72,7 @@ class Database
 
         $this->manager = $manager;
         $this->databaseName = (string) $databaseName;
+        $this->readConcern = isset($options['readConcern']) ? $options['readConcern'] : $this->manager->getReadConcern();
         $this->readPreference = isset($options['readPreference']) ? $options['readPreference'] : $this->manager->getReadPreference();
         $this->writeConcern = isset($options['writeConcern']) ? $options['writeConcern'] : $this->manager->getWriteConcern();
     }
@@ -77,6 +88,7 @@ class Database
         return [
             'databaseName' => $this->databaseName,
             'manager' => $this->manager,
+            'readConcern' => $this->readConcern,
             'readPreference' => $this->readPreference,
             'writeConcern' => $this->writeConcern,
         ];
@@ -191,6 +203,10 @@ class Database
      *
      * Supported options:
      *
+     *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
+     *    use for collection operations. Defaults to the Database's read
+     *    concern.
+     *
      *  * readPreference (MongoDB\Driver\ReadPreference): The default read
      *    preference to use for collection operations. Defaults to the
      *    Database's read preference.
@@ -205,6 +221,10 @@ class Database
      */
     public function selectCollection($collectionName, array $options = [])
     {
+        if ( ! isset($options['readConcern'])) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }
@@ -221,6 +241,10 @@ class Database
      *
      * Supported options:
      *
+     *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
+     *    use for database operations and selected collections. Defaults to this
+     *    Database's read concern.
+     *
      *  * readPreference (MongoDB\Driver\ReadPreference): The default read
      *    preference to use for database operations and selected collections.
      *    Defaults to this Database's read preference.
@@ -234,6 +258,10 @@ class Database
      */
     public function withOptions(array $options = [])
     {
+        if ( ! isset($options['readConcern'])) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }

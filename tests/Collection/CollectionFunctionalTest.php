@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Collection;
 
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 
@@ -114,6 +115,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     public function testWithOptionsInheritsReadPreferenceAndWriteConcern()
     {
         $collectionOptions = [
+            'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY_PREFERRED),
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];
@@ -122,6 +124,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $clone = $collection->withOptions();
         $debug = $clone->__debugInfo();
 
+        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
@@ -131,6 +135,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     public function testWithOptionsPassesReadPreferenceAndWriteConcern()
     {
         $collectionOptions = [
+            'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY_PREFERRED),
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];
@@ -138,6 +143,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $clone = $this->collection->withOptions($collectionOptions);
         $debug = $clone->__debugInfo();
 
+        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);

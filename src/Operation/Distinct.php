@@ -3,6 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
@@ -18,6 +19,8 @@ use MongoDB\Exception\UnexpectedValueException;
  */
 class Distinct implements Executable
 {
+    private static $wireVersionForReadConcern = 4;
+
     private $databaseName;
     private $collectionName;
     private $fieldName;
@@ -31,6 +34,11 @@ class Distinct implements Executable
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
+     *
+     *  * readConcern (MongoDB\Driver\ReadConcern): Read concern.
+     *
+     *    For servers < 3.2, this option is ignored as read concern is not
+     *    available.
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
@@ -49,6 +57,10 @@ class Distinct implements Executable
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        }
+
+        if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
+            throw new InvalidArgumentTypeException('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
         }
 
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
@@ -73,7 +85,7 @@ class Distinct implements Executable
     {
         $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
 
-        $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $readPreference);
+        $cursor = $server->executeCommand($this->databaseName, $this->createCommand($server), $readPreference);
         $result = current($cursor->toArray());
 
         if ( ! isset($result->values) || ! is_array($result->values)) {
@@ -86,9 +98,10 @@ class Distinct implements Executable
     /**
      * Create the distinct command.
      *
+     * @param Server $server
      * @return Command
      */
-    private function createCommand()
+    private function createCommand(Server $server)
     {
         $cmd = [
             'distinct' => $this->collectionName,
@@ -101,6 +114,10 @@ class Distinct implements Executable
 
         if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
+        }
+
+        if (isset($this->options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+            $cmd['readConcern'] = \MongoDB\read_concern_as_document($this->options['readConcern']);
         }
 
         return new Command($cmd);

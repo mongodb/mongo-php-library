@@ -64,6 +64,10 @@ class FindTest extends TestCase
             $options[][] = ['projection' => $value];
         }
 
+        foreach ($this->getInvalidReadConcernValues() as $value) {
+            $options[][] = ['readConcern' => $value];
+        }
+
         foreach ($this->getInvalidReadPreferenceValues() as $value) {
             $options[][] = ['readPreference' => $value];
         }

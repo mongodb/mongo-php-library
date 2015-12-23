@@ -3,6 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
@@ -23,6 +24,7 @@ class Aggregate implements Executable
 {
     private static $wireVersionForCursor = 2;
     private static $wireVersionForDocumentLevelValidation = 4;
+    private static $wireVersionForReadConcern = 4;
 
     private $databaseName;
     private $collectionName;
@@ -49,6 +51,12 @@ class Aggregate implements Executable
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
+     *
+     *  * readConcern (MongoDB\Driver\ReadConcern): Read concern. Note that a
+     *    "majority" read concern is not compatible with the $out stage.
+     *
+     *    For servers < 3.2, this option is ignored as read concern is not
+     *    available.
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
@@ -106,6 +114,10 @@ class Aggregate implements Executable
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        }
+
+        if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
+            throw new InvalidArgumentTypeException('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
         }
 
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
@@ -181,6 +193,10 @@ class Aggregate implements Executable
 
         if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
+        }
+
+        if (isset($this->options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+            $cmd['readConcern'] = \MongoDB\read_concern_as_document($this->options['readConcern']);
         }
 
         if ($this->options['useCursor']) {

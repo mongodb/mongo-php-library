@@ -53,6 +53,10 @@ class AggregateTest extends TestCase
             $options[][] = ['maxTimeMS' => $value];
         }
 
+        foreach ($this->getInvalidReadConcernValues() as $value) {
+            $options[][] = ['readConcern' => $value];
+        }
+
         foreach ($this->getInvalidReadPreferenceValues() as $value) {
             $options[][] = ['readPreference' => $value];
         }

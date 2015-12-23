@@ -2,6 +2,9 @@
 
 namespace MongoDB\Tests;
 
+use MongoDB\Driver\ReadConcern;
+use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\WriteConcern;
 use ReflectionClass;
 use stdClass;
 
@@ -79,9 +82,19 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return array
      */
+    protected function getInvalidReadConcernValues()
+    {
+        return [123, 3.14, 'foo', true, [], new stdClass, new ReadPreference(ReadPreference::RP_PRIMARY), new WriteConcern(1)];
+    }
+
+    /**
+     * Return a list of invalid ReadPreference values.
+     *
+     * @return array
+     */
     protected function getInvalidReadPreferenceValues()
     {
-        return [123, 3.14, 'foo', true, [], new stdClass];
+        return [123, 3.14, 'foo', true, [], new stdClass, new ReadConcern, new WriteConcern(1)];
     }
 
     /**
@@ -101,7 +114,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function getInvalidWriteConcernValues()
     {
-        return [123, 3.14, 'foo', true, [], new stdClass];
+        return [123, 3.14, 'foo', true, [], new stdClass, new ReadConcern, new ReadPreference(ReadPreference::RP_PRIMARY)];
     }
 
     /**

@@ -15,6 +15,7 @@ class Client
 {
     private $manager;
     private $uri;
+    private $typeMap;
 
     /**
      * Constructs a new Client instance.
@@ -23,15 +24,29 @@ class Client
      * cluster of servers. It serves as a gateway for accessing individual
      * databases and collections.
      *
+     * Supported driver-specific options:
+     *
+     *  * typeMap (array): Default type map for cursors and BSON documents.
+     *
+     * Other options are documented in MongoDB\Driver\Manager::__construct().
+     *
      * @see http://docs.mongodb.org/manual/reference/connection-string/
+     * @see http://php.net/manual/en/mongodb-driver-manager.construct.php
+     * @see http://php.net/manual/en/mongodb.persistence.php#mongodb.persistence.typemaps
      * @param string $uri           MongoDB connection string
-     * @param array  $options       Additional connection string options
+     * @param array  $uriOptions    Additional connection string options
      * @param array  $driverOptions Driver-specific options
+     * @throws InvalidArgumentException
      */
-    public function __construct($uri = 'mongodb://localhost:27017', array $options = [], array $driverOptions = [])
+    public function __construct($uri = 'mongodb://localhost:27017', array $uriOptions = [], array $driverOptions = [])
     {
-        $this->manager = new Manager($uri, $options, $driverOptions);
+        if (isset($driverOptions['typeMap']) && ! is_array($driverOptions['typeMap'])) {
+            throw new InvalidArgumentTypeException('"typeMap" driver option', $driverOptions['typeMap'], 'array');
+        }
+
+        $this->manager = new Manager($uri, $uriOptions, $driverOptions);
         $this->uri = (string) $uri;
+        $this->typeMap = isset($driverOptions['typeMap']) ? $driverOptions['typeMap'] : null;
     }
 
     /**
@@ -45,6 +60,7 @@ class Client
         return [
             'manager' => $this->manager,
             'uri' => $this->uri,
+            'typeMap' => $this->typeMap,
         ];
     }
 
@@ -97,28 +113,23 @@ class Client
      */
     public function selectCollection($databaseName, $collectionName, array $options = [])
     {
+        $options += ['typeMap' => $this->typeMap];
+
         return new Collection($this->manager, $databaseName . '.' . $collectionName, $options);
     }
 
     /**
      * Select a database.
      *
-     * Supported options:
-     *
-     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
-     *    preference to use for database operations and selected collections.
-     *    Defaults to the Client's read preference.
-     *
-     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
-     *    to use for database operations and selected collections. Defaults to
-     *    the Client's write concern.
-     *
+     * @see Database::__construct() for supported options
      * @param string $databaseName Name of the database to select
      * @param array  $options      Database constructor options
      * @return Database
      */
     public function selectDatabase($databaseName, array $options = [])
     {
+        $options += ['typeMap' => $this->typeMap];
+
         return new Database($this->manager, $databaseName, $options);
     }
 }

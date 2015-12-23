@@ -45,6 +45,7 @@ class Collection
     private $manager;
     private $readConcern;
     private $readPreference;
+    private $typeMap;
     private $writeConcern;
 
     /**
@@ -61,6 +62,8 @@ class Collection
      *  * readPreference (MongoDB\Driver\ReadPreference): The default read
      *    preference to use for collection operations. Defaults to the Manager's
      *    read preference.
+     *
+     *  * typeMap (array): Default type map for cursors and BSON documents.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
      *    to use for collection operations. Defaults to the Manager's write
@@ -90,6 +93,10 @@ class Collection
             throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw new InvalidArgumentTypeException('"typeMap" option', $options['typeMap'], 'array');
+        }
+
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
             throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
@@ -97,6 +104,7 @@ class Collection
         $this->manager = $manager;
         $this->readConcern = isset($options['readConcern']) ? $options['readConcern'] : $this->manager->getReadConcern();
         $this->readPreference = isset($options['readPreference']) ? $options['readPreference'] : $this->manager->getReadPreference();
+        $this->typeMap = isset($options['typeMap']) ? $options['typeMap'] : null;
         $this->writeConcern = isset($options['writeConcern']) ? $options['writeConcern'] : $this->manager->getWriteConcern();
     }
 
@@ -114,6 +122,7 @@ class Collection
             'manager' => $this->manager,
             'readConcern' => $this->readConcern,
             'readPreference' => $this->readPreference,
+            'typeMap' => $this->typeMap,
             'writeConcern' => $this->writeConcern,
         ];
     }
@@ -664,6 +673,7 @@ class Collection
         $options += [
             'readConcern' => $this->readConcern,
             'readPreference' => $this->readPreference,
+            'typeMap' => $this->typeMap,
             'writeConcern' => $this->writeConcern,
         ];
 

@@ -201,37 +201,18 @@ class Database
     /**
      * Select a collection within this database.
      *
-     * Supported options:
-     *
-     *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
-     *    use for collection operations. Defaults to the Database's read
-     *    concern.
-     *
-     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
-     *    preference to use for collection operations. Defaults to the
-     *    Database's read preference.
-     *
-     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
-     *    to use for collection operations. Defaults to the Database's write
-     *    concern.
-     *
+     * @see Collection::__construct() for supported options
      * @param string $collectionName Name of the collection to select
      * @param array  $options        Collection constructor options
      * @return Collection
      */
     public function selectCollection($collectionName, array $options = [])
     {
-        if ( ! isset($options['readConcern'])) {
-            $options['readConcern'] = $this->readConcern;
-        }
-
-        if ( ! isset($options['readPreference'])) {
-            $options['readPreference'] = $this->readPreference;
-        }
-
-        if ( ! isset($options['writeConcern'])) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options += [
+            'readConcern' => $this->readConcern,
+            'readPreference' => $this->readPreference,
+            'writeConcern' => $this->writeConcern,
+        ];
 
         return new Collection($this->manager, $this->databaseName . '.' . $collectionName, $options);
     }
@@ -239,36 +220,17 @@ class Database
     /**
      * Get a clone of this database with different options.
      *
-     * Supported options:
-     *
-     *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
-     *    use for database operations and selected collections. Defaults to this
-     *    Database's read concern.
-     *
-     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
-     *    preference to use for database operations and selected collections.
-     *    Defaults to this Database's read preference.
-     *
-     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
-     *    to use for database operations and selected collections. Defaults to
-     *    this Database's write concern.
-     *
+     * @see Database::__construct() for supported options
      * @param array $options Database constructor options
      * @return Database
      */
     public function withOptions(array $options = [])
     {
-        if ( ! isset($options['readConcern'])) {
-            $options['readConcern'] = $this->readConcern;
-        }
-
-        if ( ! isset($options['readPreference'])) {
-            $options['readPreference'] = $this->readPreference;
-        }
-
-        if ( ! isset($options['writeConcern'])) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options += [
+            'readConcern' => $this->readConcern,
+            'readPreference' => $this->readPreference,
+            'writeConcern' => $this->writeConcern,
+        ];
 
         return new Database($this->manager, $this->databaseName, $options);
     }

@@ -89,16 +89,7 @@ class Client
     /**
      * Select a collection.
      *
-     * Supported options:
-     *
-     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
-     *    preference to use for collection operations. Defaults to the Client's
-     *    read preference.
-     *
-     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
-     *    to use for collection operations. Defaults to the Client's write
-     *    concern.
-     *
+     * @see Collection::__construct() for supported options
      * @param string $databaseName   Name of the database containing the collection
      * @param string $collectionName Name of the collection to select
      * @param array  $options        Collection constructor options

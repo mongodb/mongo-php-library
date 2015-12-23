@@ -655,36 +655,17 @@ class Collection
     /**
      * Get a clone of this collection with different options.
      *
-     * Supported options:
-     *
-     *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
-     *    use for collection operations. Defaults to this Collection's read
-     *    concern.
-     *
-     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
-     *    preference to use for collection operations. Defaults to this
-     *    Collection's read preference.
-     *
-     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
-     *    to use for collection operations. Defaults to this Collection's write
-     *    concern.
-     *
+     * @see Collection::__construct() for supported options
      * @param array $options Collection constructor options
      * @return Collection
      */
     public function withOptions(array $options = [])
     {
-        if ( ! isset($options['readConcern'])) {
-            $options['readConcern'] = $this->readConcern;
-        }
-
-        if ( ! isset($options['readPreference'])) {
-            $options['readPreference'] = $this->readPreference;
-        }
-
-        if ( ! isset($options['writeConcern'])) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options += [
+            'readConcern' => $this->readConcern,
+            'readPreference' => $this->readPreference,
+            'writeConcern' => $this->writeConcern,
+        ];
 
         return new Collection($this->manager, $this->databaseName . '.' . $this->collectionName, $options);
     }

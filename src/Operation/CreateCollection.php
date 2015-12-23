@@ -5,8 +5,7 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\UnexpectedTypeException;
-use MongoDB\Model\IndexInput;
+use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * Operation for the create command.
@@ -40,6 +39,9 @@ class CreateCollection implements Executable
      *    bitwise combination USE_POWER_OF_2_SIZES and NO_PADDING. The default
      *    is USE_POWER_OF_2_SIZES.
      *
+     *  * indexOptionDefaults (document): Default configuration for indexes when
+     *    creating the collection.
+     *
      *  * max (integer): The maximum number of documents allowed in the capped
      *    collection. The size option takes precedence over this limit.
      *
@@ -68,6 +70,10 @@ class CreateCollection implements Executable
 
         if (isset($options['flags']) && ! is_integer($options['flags'])) {
             throw new InvalidArgumentTypeException('"flags" option', $options['flags'], 'integer');
+        }
+
+        if (isset($options['indexOptionDefaults']) && ! is_array($options['indexOptionDefaults']) && ! is_object($options['indexOptionDefaults'])) {
+            throw new InvalidArgumentTypeException('"indexOptionDefaults" option', $options['indexOptionDefaults'], 'array or object');
         }
 
         if (isset($options['max']) && ! is_integer($options['max'])) {
@@ -118,6 +124,10 @@ class CreateCollection implements Executable
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }
+        }
+
+        if ( ! empty($this->options['indexOptionDefaults'])) {
+            $cmd['indexOptionDefaults'] = (object) $this->options['indexOptionDefaults'];
         }
 
         if ( ! empty($this->options['storageEngine'])) {

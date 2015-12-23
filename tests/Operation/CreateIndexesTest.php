@@ -16,7 +16,16 @@ class CreateIndexesTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\UnexpectedTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessage $indexes is not a list (unexpected index: "1")
+     */
+    public function testConstructorIndexesArgumentMustBeAList()
+    {
+        new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [1 => ['key' => ['x' => 1]]]);
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
      * @dataProvider provideInvalidIndexSpecificationTypes
      */
     public function testCreateIndexesRequiresIndexSpecificationsToBeAnArray($index)

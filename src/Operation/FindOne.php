@@ -59,10 +59,6 @@ class FindOne implements Executable
      */
     public function __construct($databaseName, $collectionName, $filter, array $options = [])
     {
-        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
-            throw new InvalidArgumentTypeException('"typeMap" option', $options['typeMap'], 'array');
-        }
-
         $this->find = new Find(
             $databaseName,
             $collectionName,
@@ -83,11 +79,6 @@ class FindOne implements Executable
     public function execute(Server $server)
     {
         $cursor = $this->find->execute($server);
-
-        if (isset($this->options['typeMap'])) {
-            $cursor->setTypeMap($this->options['typeMap']);
-        }
-
         $document = current($cursor->toArray());
 
         return ($document === false) ? null : $document;

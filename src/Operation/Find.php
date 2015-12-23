@@ -79,6 +79,9 @@ class Find implements Executable
      *    "$orderby" also exists in the modifiers document, this option will
      *    take precedence.
      *
+     *  * typeMap (array): Type map for BSON deserialization. This will be
+     *    applied to the returned Cursor (it is not sent to the server).
+     *
      * @param string       $databaseName   Database name
      * @param string       $collectionName Collection name
      * @param array|object $filter         Query by which to filter documents
@@ -155,6 +158,10 @@ class Find implements Executable
             throw new InvalidArgumentTypeException('"sort" option', $options['sort'], 'array or object');
         }
 
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw new InvalidArgumentTypeException('"typeMap" option', $options['typeMap'], 'array');
+        }
+
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->filter = $filter;
@@ -172,7 +179,13 @@ class Find implements Executable
     {
         $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
 
-        return $server->executeQuery($this->databaseName . '.' . $this->collectionName, $this->createQuery(), $readPreference);
+        $cursor = $server->executeQuery($this->databaseName . '.' . $this->collectionName, $this->createQuery(), $readPreference);
+
+        if (isset($this->options['typeMap'])) {
+            $cursor->setTypeMap($this->options['typeMap']);
+        }
+
+        return $cursor;
     }
 
     /**

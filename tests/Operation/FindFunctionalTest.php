@@ -3,46 +3,31 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
-use MongoDB\Operation\Aggregate;
+use MongoDB\Operation\Find;
 
-class AggregateFunctionalTest extends FunctionalTestCase
+class FindFunctionalTest extends FunctionalTestCase
 {
-    private static $wireVersionForCursor = 2;
-
     /**
-     * @expectedException MongoDB\Driver\Exception\RuntimeException
-     */
-    public function testUnrecognizedPipelineState()
-    {
-        $operation = new Aggregate($this->getDatabaseName(), $this->getCollectionName(), [['$foo' => 1]]);
-        $operation->execute($this->getPrimaryServer());
-    }
-
-    /**
-     * @dataProvider provideTypeMapOptionsAndExpectedDocument
+     * @dataProvider provideTypeMapOptionsAndExpectedDocuments
      */
     public function testTypeMapOption(array $typeMap, array $expectedDocuments)
     {
-        if ( ! \MongoDB\server_supports_feature($this->getPrimaryServer(), self::$wireVersionForCursor)) {
-            $this->markTestSkipped('Command cursor is not supported');
-        }
-
         $this->createFixtures(3);
 
-        $pipeline = [['$match' => ['_id' => ['$ne' => 2]]]];
-        $operation = new Aggregate($this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['typeMap' => $typeMap]);
+        $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['typeMap' => $typeMap]);
         $cursor = $operation->execute($this->getPrimaryServer());
 
         $this->assertEquals($expectedDocuments, $cursor->toArray());
     }
 
-    public function provideTypeMapOptionsAndExpectedDocument()
+    public function provideTypeMapOptionsAndExpectedDocuments()
     {
         return [
             [
                 ['root' => 'array', 'document' => 'array'],
                 [
                     ['_id' => 1, 'x' => ['foo' => 'bar']],
+                    ['_id' => 2, 'x' => ['foo' => 'bar']],
                     ['_id' => 3, 'x' => ['foo' => 'bar']],
                 ],
             ],
@@ -50,6 +35,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 ['root' => 'object', 'document' => 'array'],
                 [
                     (object) ['_id' => 1, 'x' => ['foo' => 'bar']],
+                    (object) ['_id' => 2, 'x' => ['foo' => 'bar']],
                     (object) ['_id' => 3, 'x' => ['foo' => 'bar']],
                 ],
             ],
@@ -57,6 +43,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 ['root' => 'array', 'document' => 'stdClass'],
                 [
                     ['_id' => 1, 'x' => (object) ['foo' => 'bar']],
+                    ['_id' => 2, 'x' => (object) ['foo' => 'bar']],
                     ['_id' => 3, 'x' => (object) ['foo' => 'bar']],
                 ],
             ],

@@ -60,6 +60,12 @@ class Aggregate implements Executable
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
+     *  * typeMap (array): Type map for BSON deserialization. This will be
+     *    applied to the returned Cursor (it is not sent to the server).
+     *
+     *    This is not supported for inline aggregation results (i.e. useCursor
+     *    option is false or the server versions < 2.6).
+     *
      *  * useCursor (boolean): Indicates whether the command will request that
      *    the server provide results using a cursor. The default is true.
      *
@@ -124,12 +130,20 @@ class Aggregate implements Executable
             throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw new InvalidArgumentTypeException('"typeMap" option', $options['typeMap'], 'array');
+        }
+
         if ( ! is_bool($options['useCursor'])) {
             throw new InvalidArgumentTypeException('"useCursor" option', $options['useCursor'], 'boolean');
         }
 
         if (isset($options['batchSize']) && ! $options['useCursor']) {
             throw new InvalidArgumentException('"batchSize" option should not be used if "useCursor" is false');
+        }
+
+        if (isset($options['typeMap']) && ! $options['useCursor']) {
+            throw new InvalidArgumentException('"typeMap" option should not be used if "useCursor" is false');
         }
 
         $this->databaseName = (string) $databaseName;
@@ -154,6 +168,13 @@ class Aggregate implements Executable
         $cursor = $server->executeCommand($this->databaseName, $command, $readPreference);
 
         if ($isCursorSupported && $this->options['useCursor']) {
+            /* The type map can only be applied to command cursors until
+             * https://jira.mongodb.org/browse/PHPC-314 is implemented.
+             */
+            if (isset($this->options['typeMap'])) {
+                $cursor->setTypeMap($this->options['typeMap']);
+            }
+
             return $cursor;
         }
 

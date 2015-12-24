@@ -647,9 +647,9 @@ class Collection
      *
      * @see UpdateMany::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @param array|object $filter      Query by which to filter documents
-     * @param array|object $replacement Update to apply to the matched documents
-     * @param array        $options     Command options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array|object $update  Update to apply to the matched documents
+     * @param array        $options Command options
      * @return UpdateResult
      */
     public function updateMany($filter, $update, array $options = [])
@@ -669,9 +669,9 @@ class Collection
      *
      * @see ReplaceOne::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @param array|object $filter      Query by which to filter documents
-     * @param array|object $replacement Update to apply to the matched document
-     * @param array        $options     Command options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array|object $update  Update to apply to the matched document
+     * @param array        $options Command options
      * @return UpdateResult
      */
     public function updateOne($filter, $update, array $options = [])

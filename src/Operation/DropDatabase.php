@@ -20,8 +20,7 @@ class DropDatabase implements Executable
     /**
      * Constructs a dropDatabase command.
      *
-     * @param string $databaseName   Database name
-     * @param string $collectionName Collection name
+     * @param string $databaseName Database name
      */
     public function __construct($databaseName)
     {

@@ -126,11 +126,11 @@ class CreateCollection implements Executable
             }
         }
 
-        if ( ! empty($this->options['indexOptionDefaults'])) {
+        if (isset($this->options['indexOptionDefaults'])) {
             $cmd['indexOptionDefaults'] = (object) $this->options['indexOptionDefaults'];
         }
 
-        if ( ! empty($this->options['storageEngine'])) {
+        if (isset($this->options['storageEngine'])) {
             $cmd['storageEngine'] = (object) $this->options['storageEngine'];
         }
 

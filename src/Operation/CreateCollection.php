@@ -52,7 +52,14 @@ class CreateCollection implements Executable
      *
      *  * storageEngine (document): Storage engine options.
      *
+     *  * validationAction (string): Validation action.
+     *
+     *  * validationLevel (string): Validation level.
+     *
+     *  * validator (document): Validation rules or expressions.
+     *
      * @see http://source.wiredtiger.com/2.4.1/struct_w_t___s_e_s_s_i_o_n.html#a358ca4141d59c345f401c58501276bbb
+     * @see https://docs.mongodb.org/manual/core/document-validation/
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
      * @param array  $options        Command options
@@ -92,6 +99,18 @@ class CreateCollection implements Executable
             throw new InvalidArgumentTypeException('"storageEngine" option', $options['storageEngine'], 'array or object');
         }
 
+        if (isset($options['validationAction']) && ! is_string($options['validationAction'])) {
+            throw new InvalidArgumentTypeException('"validationAction" option', $options['validationAction'], 'string');
+        }
+
+        if (isset($options['validationLevel']) && ! is_string($options['validationLevel'])) {
+            throw new InvalidArgumentTypeException('"validationLevel" option', $options['validationLevel'], 'string');
+        }
+
+        if (isset($options['validator']) && ! is_array($options['validator']) && ! is_object($options['validator'])) {
+            throw new InvalidArgumentTypeException('"validator" option', $options['validator'], 'array or object');
+        }
+
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->options = $options;
@@ -120,18 +139,22 @@ class CreateCollection implements Executable
     {
         $cmd = ['create' => $this->collectionName];
 
-        foreach (['autoIndexId', 'capped', 'flags', 'max', 'maxTimeMS', 'size'] as $option) {
+        foreach (['autoIndexId', 'capped', 'flags', 'max', 'maxTimeMS', 'size', 'validationAction', 'validationLevel'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }
         }
 
-        if ( ! empty($this->options['indexOptionDefaults'])) {
+        if (isset($this->options['indexOptionDefaults'])) {
             $cmd['indexOptionDefaults'] = (object) $this->options['indexOptionDefaults'];
         }
 
-        if ( ! empty($this->options['storageEngine'])) {
+        if (isset($this->options['storageEngine'])) {
             $cmd['storageEngine'] = (object) $this->options['storageEngine'];
+        }
+
+        if (isset($this->options['validator'])) {
+            $cmd['validator'] = (object) $this->options['validator'];
         }
 
         return new Command($cmd);

@@ -45,6 +45,7 @@ class Collection
     private $manager;
     private $readConcern;
     private $readPreference;
+    private $typeMap;
     private $writeConcern;
 
     /**
@@ -61,6 +62,8 @@ class Collection
      *  * readPreference (MongoDB\Driver\ReadPreference): The default read
      *    preference to use for collection operations. Defaults to the Manager's
      *    read preference.
+     *
+     *  * typeMap (array): Default type map for cursors and BSON documents.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
      *    to use for collection operations. Defaults to the Manager's write
@@ -90,6 +93,10 @@ class Collection
             throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw new InvalidArgumentTypeException('"typeMap" option', $options['typeMap'], 'array');
+        }
+
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
             throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
@@ -97,6 +104,7 @@ class Collection
         $this->manager = $manager;
         $this->readConcern = isset($options['readConcern']) ? $options['readConcern'] : $this->manager->getReadConcern();
         $this->readPreference = isset($options['readPreference']) ? $options['readPreference'] : $this->manager->getReadPreference();
+        $this->typeMap = isset($options['typeMap']) ? $options['typeMap'] : null;
         $this->writeConcern = isset($options['writeConcern']) ? $options['writeConcern'] : $this->manager->getWriteConcern();
     }
 
@@ -114,6 +122,7 @@ class Collection
             'manager' => $this->manager,
             'readConcern' => $this->readConcern,
             'readPreference' => $this->readPreference,
+            'typeMap' => $this->typeMap,
             'writeConcern' => $this->writeConcern,
         ];
     }
@@ -135,6 +144,10 @@ class Collection
      * and the "useCursor" option. If "useCursor" is true, a Cursor will be
      * returned; otherwise, an ArrayIterator is returned, which wraps the
      * "result" array from the command response document.
+     *
+     * Note: BSON deserialization of inline aggregation results (i.e. not using
+     * a command cursor) does not yet support a custom type map
+     * (depends on: https://jira.mongodb.org/browse/PHPC-314).
      *
      * @see Aggregate::__construct() for supported options
      * @param array $pipeline List of pipeline operations
@@ -158,6 +171,10 @@ class Collection
 
         if ($hasOutStage) {
             $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
+        }
+
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
         }
 
         $operation = new Aggregate($this->databaseName, $this->collectionName, $pipeline, $options);
@@ -388,6 +405,10 @@ class Collection
             $options['readPreference'] = $this->readPreference;
         }
 
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
         $operation = new Find($this->databaseName, $this->collectionName, $filter, $options);
         $server = $this->manager->selectServer($options['readPreference']);
 
@@ -413,6 +434,10 @@ class Collection
             $options['readPreference'] = $this->readPreference;
         }
 
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
         $operation = new FindOne($this->databaseName, $this->collectionName, $filter, $options);
         $server = $this->manager->selectServer($options['readPreference']);
 
@@ -423,6 +448,9 @@ class Collection
      * Finds a single document and deletes it, returning the original.
      *
      * The document to return may be null.
+     *
+     * Note: BSON deserialization of the returned document does not yet support
+     * a custom type map (depends on: https://jira.mongodb.org/browse/PHPC-314).
      *
      * @see FindOneAndDelete::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
@@ -451,6 +479,9 @@ class Collection
      * returned. Specify FindOneAndReplace::RETURN_DOCUMENT_AFTER for the
      * "returnDocument" option to return the updated document.
      *
+     * Note: BSON deserialization of the returned document does not yet support
+     * a custom type map (depends on: https://jira.mongodb.org/browse/PHPC-314).
+     *
      * @see FindOneAndReplace::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
      * @param array|object $filter      Query by which to filter documents
@@ -478,6 +509,9 @@ class Collection
      * The document to return may be null. By default, the original document is
      * returned. Specify FindOneAndUpdate::RETURN_DOCUMENT_AFTER for the
      * "returnDocument" option to return the updated document.
+     *
+     * Note: BSON deserialization of the returned document does not yet support
+     * a custom type map (depends on: https://jira.mongodb.org/browse/PHPC-314).
      *
      * @see FindOneAndReplace::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
@@ -613,9 +647,9 @@ class Collection
      *
      * @see UpdateMany::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @param array|object $filter      Query by which to filter documents
-     * @param array|object $replacement Update to apply to the matched documents
-     * @param array        $options     Command options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array|object $update  Update to apply to the matched documents
+     * @param array        $options Command options
      * @return UpdateResult
      */
     public function updateMany($filter, $update, array $options = [])
@@ -635,9 +669,9 @@ class Collection
      *
      * @see ReplaceOne::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/update/
-     * @param array|object $filter      Query by which to filter documents
-     * @param array|object $replacement Update to apply to the matched document
-     * @param array        $options     Command options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array|object $update  Update to apply to the matched document
+     * @param array        $options Command options
      * @return UpdateResult
      */
     public function updateOne($filter, $update, array $options = [])
@@ -655,36 +689,18 @@ class Collection
     /**
      * Get a clone of this collection with different options.
      *
-     * Supported options:
-     *
-     *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
-     *    use for collection operations. Defaults to this Collection's read
-     *    concern.
-     *
-     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
-     *    preference to use for collection operations. Defaults to this
-     *    Collection's read preference.
-     *
-     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
-     *    to use for collection operations. Defaults to this Collection's write
-     *    concern.
-     *
+     * @see Collection::__construct() for supported options
      * @param array $options Collection constructor options
      * @return Collection
      */
     public function withOptions(array $options = [])
     {
-        if ( ! isset($options['readConcern'])) {
-            $options['readConcern'] = $this->readConcern;
-        }
-
-        if ( ! isset($options['readPreference'])) {
-            $options['readPreference'] = $this->readPreference;
-        }
-
-        if ( ! isset($options['writeConcern'])) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options += [
+            'readConcern' => $this->readConcern,
+            'readPreference' => $this->readPreference,
+            'typeMap' => $this->typeMap,
+            'writeConcern' => $this->writeConcern,
+        ];
 
         return new Collection($this->manager, $this->databaseName . '.' . $this->collectionName, $options);
     }

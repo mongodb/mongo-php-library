@@ -117,6 +117,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $collectionOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY_PREFERRED),
+            'typeMap' => ['root' => 'array'],
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];
 
@@ -128,6 +129,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
+        $this->assertInternalType('array', $debug['typeMap']);
+        $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
@@ -137,6 +140,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $collectionOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY_PREFERRED),
+            'typeMap' => ['root' => 'array'],
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];
 
@@ -147,6 +151,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
+        $this->assertInternalType('array', $debug['typeMap']);
+        $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }

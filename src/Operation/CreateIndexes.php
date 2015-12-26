@@ -108,7 +108,6 @@ class CreateIndexes implements Executable
      * "system.indexes" collection (MongoDB <2.6).
      *
      * @param Server $server
-     * @param IndexInput[] $indexes
      */
     private function executeLegacy(Server $server)
     {

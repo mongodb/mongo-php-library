@@ -80,6 +80,10 @@ class FindTest extends TestCase
             $options[][] = ['sort' => $value];
         }
 
+        foreach ($this->getInvalidArrayValues() as $value) {
+            $options[][] = ['typeMap' => $value];
+        }
+
         return $options;
     }
 

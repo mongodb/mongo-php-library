@@ -3,7 +3,6 @@
 namespace MongoDB;
 
 use MongoDB\Collection;
-use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
@@ -15,6 +14,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentTypeException;
 use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\CreateCollection;
+use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListCollections;
@@ -25,6 +25,7 @@ class Database
     private $manager;
     private $readConcern;
     private $readPreference;
+    private $typeMap;
     private $writeConcern;
 
     /**
@@ -42,6 +43,8 @@ class Database
      *  * readPreference (MongoDB\Driver\ReadPreference): The default read
      *    preference to use for database operations and selected collections.
      *    Defaults to the Manager's read preference.
+     *
+     *  * typeMap (array): Default type map for cursors and BSON documents.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
      *    to use for database operations and selected collections. Defaults to
@@ -66,6 +69,10 @@ class Database
             throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw new InvalidArgumentTypeException('"typeMap" option', $options['typeMap'], 'array');
+        }
+
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
             throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
@@ -74,6 +81,7 @@ class Database
         $this->databaseName = (string) $databaseName;
         $this->readConcern = isset($options['readConcern']) ? $options['readConcern'] : $this->manager->getReadConcern();
         $this->readPreference = isset($options['readPreference']) ? $options['readPreference'] : $this->manager->getReadPreference();
+        $this->typeMap = isset($options['typeMap']) ? $options['typeMap'] : null;
         $this->writeConcern = isset($options['writeConcern']) ? $options['writeConcern'] : $this->manager->getWriteConcern();
     }
 
@@ -90,6 +98,7 @@ class Database
             'manager' => $this->manager,
             'readConcern' => $this->readConcern,
             'readPreference' => $this->readPreference,
+            'typeMap' => $this->typeMap,
             'writeConcern' => $this->writeConcern,
         ];
     }
@@ -107,27 +116,22 @@ class Database
     /**
      * Execute a command on this database.
      *
-     * @param array|object        $command        Command document
-     * @param ReadPreference|null $readPreference Read preference
+     * @see DatabaseCommand::__construct() for supported options
+     * @param array|object $command Command document
+     * @param array        $options Options for command execution
      * @return Cursor
+     * @throws InvalidArgumentException
      */
-    public function command($command, ReadPreference $readPreference = null)
+    public function command($command, array $options = [])
     {
-        if ( ! is_array($command) && ! is_object($command)) {
-            throw new InvalidArgumentTypeException('$command', $command, 'array or object');
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
         }
 
-        if ( ! $command instanceof Command) {
-            $command = new Command($command);
-        }
+        $operation = new DatabaseCommand($this->databaseName, $command, $options);
+        $server = $this->manager->selectServer($options['readPreference']);
 
-        if ( ! isset($readPreference)) {
-            $readPreference = $this->readPreference;
-        }
-
-        $server = $this->manager->selectServer($readPreference);
-
-        return $server->executeCommand($this->databaseName, $command);
+        return $operation->execute($server);
     }
 
     /**
@@ -201,37 +205,19 @@ class Database
     /**
      * Select a collection within this database.
      *
-     * Supported options:
-     *
-     *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
-     *    use for collection operations. Defaults to the Database's read
-     *    concern.
-     *
-     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
-     *    preference to use for collection operations. Defaults to the
-     *    Database's read preference.
-     *
-     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
-     *    to use for collection operations. Defaults to the Database's write
-     *    concern.
-     *
+     * @see Collection::__construct() for supported options
      * @param string $collectionName Name of the collection to select
      * @param array  $options        Collection constructor options
      * @return Collection
      */
     public function selectCollection($collectionName, array $options = [])
     {
-        if ( ! isset($options['readConcern'])) {
-            $options['readConcern'] = $this->readConcern;
-        }
-
-        if ( ! isset($options['readPreference'])) {
-            $options['readPreference'] = $this->readPreference;
-        }
-
-        if ( ! isset($options['writeConcern'])) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options += [
+            'readConcern' => $this->readConcern,
+            'readPreference' => $this->readPreference,
+            'typeMap' => $this->typeMap,
+            'writeConcern' => $this->writeConcern,
+        ];
 
         return new Collection($this->manager, $this->databaseName . '.' . $collectionName, $options);
     }
@@ -239,36 +225,18 @@ class Database
     /**
      * Get a clone of this database with different options.
      *
-     * Supported options:
-     *
-     *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
-     *    use for database operations and selected collections. Defaults to this
-     *    Database's read concern.
-     *
-     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
-     *    preference to use for database operations and selected collections.
-     *    Defaults to this Database's read preference.
-     *
-     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
-     *    to use for database operations and selected collections. Defaults to
-     *    this Database's write concern.
-     *
+     * @see Database::__construct() for supported options
      * @param array $options Database constructor options
      * @return Database
      */
     public function withOptions(array $options = [])
     {
-        if ( ! isset($options['readConcern'])) {
-            $options['readConcern'] = $this->readConcern;
-        }
-
-        if ( ! isset($options['readPreference'])) {
-            $options['readPreference'] = $this->readPreference;
-        }
-
-        if ( ! isset($options['writeConcern'])) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options += [
+            'readConcern' => $this->readConcern,
+            'readPreference' => $this->readPreference,
+            'typeMap' => $this->typeMap,
+            'writeConcern' => $this->writeConcern,
+        ];
 
         return new Database($this->manager, $this->databaseName, $options);
     }

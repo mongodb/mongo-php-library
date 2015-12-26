@@ -61,6 +61,10 @@ class AggregateTest extends TestCase
             $options[][] = ['readPreference' => $value];
         }
 
+        foreach ($this->getInvalidArrayValues() as $value) {
+            $options[][] = ['typeMap' => $value];
+        }
+
         foreach ($this->getInvalidBooleanValues() as $value) {
             $options[][] = ['useCursor' => $value];
         }
@@ -79,6 +83,20 @@ class AggregateTest extends TestCase
             $this->getCollectionName(),
             [['$match' => ['x' => 1]]],
             ['batchSize' => 100, 'useCursor' => false]
+        );
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessage "typeMap" option should not be used if "useCursor" is false
+     */
+    public function testConstructorTypeMapOptionRequiresUseCursor()
+    {
+        new Aggregate(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [['$match' => ['x' => 1]]],
+            ['typeMap' => ['root' => 'array'], 'useCursor' => false]
         );
     }
 }

@@ -19,10 +19,8 @@ use MongoDB\Exception\UnexpectedValueException;
 class Bucket
 {
     private $databaseName;
+    private $collectionsWrapper;
     private $options;
-    private $filesCollection;
-    private $chunksCollection;
-    private $ensuredIndexes = false;
     /**
      * Constructs a GridFS bucket.
      *
@@ -50,122 +48,124 @@ class Bucket
             'bucketName' => 'fs',
             'chunkSizeBytes' => 261120,
         ];
-        if (isset($options['bucketName']) && ! is_string($options['bucketName'])) {
-            throw new InvalidArgumentTypeException('"bucketName" option', $options['bucketName'], 'string');
-        }
-        if (isset($options['chunkSizeBytes']) && ! is_integer($options['chunkSizeBytes'])) {
-            throw new InvalidArgumentTypeException('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
-        }
-        if (isset($options['readPreference'])) {
-            if (! $options['readPreference'] instanceof ReadPreference) {
-                throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
-            } else {
-                $collectionOptions['readPreference'] = $options['readPreference'];
-            }
-        }
-        if (isset($options['writeConcern'])) {
-            if (! $options['writeConcern'] instanceof WriteConcern) {
-                throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
-            } else {
-                $collectionOptions['writeConcern'] = $options['writeConcern'];
-            }
-        }
         $this->databaseName = (string) $databaseName;
         $this->options = $options;
+        $this->collectionsWrapper = new GridFSCollectionsWrapper($manager, $databaseName, $options);
+    }
 
-        $this->filesCollection = new Collection(
-            $manager,
-            sprintf('%s.%s.files', $this->databaseName, $options['bucketName']),
-            $collectionOptions
-        );
-        $this->chunksCollection = new Collection(
-            $manager,
-            sprintf('%s.%s.chunks', $this->databaseName, $options['bucketName']),
-            $collectionOptions
-        );
+    /**
+     * Opens a Stream for writing the contents of a file.
+     *
+     * @param string   $filename     file to upload
+     * @param array    $options      Stream Options
+     * @return Stream  uploadStream
+     */
+    public function openUploadStream($filename, array $options = [])
+    {
+        $options+= ['chunkSizeBytes' => $this->options['chunkSizeBytes']];
+        $streamOptions = [
+            'collectionsWrapper' => $this->collectionsWrapper,
+            'uploadOptions' => $options
+            ];
+        $context = stream_context_create(['gridfs' => $streamOptions]);
+        return fopen(sprintf('gridfs://%s/%s', $this->databaseName, $filename), 'w', false, $context);
     }
     /**
-     * Return the chunkSizeBytes option for this Bucket.
+     * Upload a file to this bucket by specifying the source stream file
      *
-     * @return integer
+     * @param String   $filename    Filename To Insert
+     * @param Stream   $source      Source Stream
+     * @param array    $options     Stream Options
+     * @return ObjectId
      */
-    public function getChunkSizeBytes()
+    public function uploadFromStream($filename, $source, array $options = [])
     {
-        return $this->options['chunkSizeBytes'];
+        $options['chunkSizeBytes'] = $this->options['chunkSizeBytes'];
+        $gridFsStream = new GridFsUpload($this->collectionsWrapper, $filename, $options);
+        return $gridFsStream->uploadFromStream($source);
+    }
+    /**
+     * Opens a Stream for reading the contents of a file specified by ID.
+     *
+     * @param ObjectId $id
+     * @return Stream
+     */
+    public function openDownloadStream(\MongoDB\BSON\ObjectId $id)
+    {
+        $options = [
+            'collectionsWrapper' => $this->collectionsWrapper
+            ];
+        $context = stream_context_create(['gridfs' => $options]);
+        return fopen(sprintf('gridfs://%s/%s', $this->databaseName, $id), 'r', false, $context);
+    }
+      /**
+       * Downloads the contents of the stored file specified by id and writes
+       * the contents to the destination Stream.
+       * @param ObjectId  $id           GridFS File Id
+       * @param Stream    $destination  Destination Stream
+       */
+    public function downloadToStream(\MongoDB\BSON\ObjectId $id, $destination)
+    {
+        $gridFsStream = new GridFsDownload($this->collectionsWrapper, $id);
+        $gridFsStream->downloadToStream($destination);
+    }
+    /**
+    * Delete a file from the GridFS bucket. If the file collection entry is not found, still attempts to delete orphaned chunks
+    *
+    * @param ObjectId    $id     file id
+    * @throws GridFSFileNotFoundException
+    */
+    public function delete(\MongoDB\BSON\ObjectId $id)
+    {
+        $file = $this->collectionsWrapper->getFilesCollection()->findOne(['_id' => $id]);
+        $this->collectionsWrapper->getChunksCollection()->deleteMany(['files_id' => $id]);
+        if (is_null($file)) {
+            throw new \MongoDB\Exception\GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+        }
+
+        $this->collectionsWrapper->getFilesCollection()->deleteOne(['_id' => $id]);
+    }
+    /**
+    * Open a stream to download a file from the GridFS bucket. Searches for the file by the specified name then returns a stream to the specified file
+    * @param string    $filename     name of the file to download
+    * @param int       $revision     the revision of the file to download
+    * @throws GridFSFileNotFoundException
+    */
+    public function openDownloadStreamByName($filename, $revision = -1)
+    {
+        $file = $this->bucket->findFileRevision($filename, $revision);
+        $options = ['bucket' => $this->bucket,
+                    'file' => $file
+                ];
+        $context = stream_context_create(['gridfs' => $options]);
+        return fopen(sprintf('gridfs://%s/%s', $this->bucket->getDatabaseName(), $filename), 'r', false, $context);
+    }
+    /**
+    * Download a file from the GridFS bucket by name. Searches for the file by the specified name then loads data into the stream
+    *
+    * @param string    $filename     name of the file to download
+    * @param int       $revision     the revision of the file to download
+    * @throws GridFSFileNotFoundException
+    */
+    public function downloadToStreamByName($filename, $destination, $revision=-1)
+    {
+        $file = $this->findFileRevision($filename, $revision);
+        $gridFsStream = new GridFsDownload($this->collectionsWrapper, null, $file);
+        $gridFsStream->downloadToStream($destination);
+    }
+    /**
+    * Find files from the GridFS bucket files collection.
+    *
+    * @param array    $filter     filter to find by
+    * @param array    $options    options to
+    */
+    public function find($filter, array $options =[])
+    {
+        return $this->collectionsWrapper->getFilesCollection()->find($filter, $options);
     }
 
-    public function getDatabaseName()
-    {
-        return $this->databaseName;
-    }
-    public function getFilesCollection()
-    {
-        return $this->filesCollection;
-    }
 
-    public function getChunksCollection()
-    {
-        return $this->chunksCollection;
-    }
-    public function getBucketName()
-    {
-        return $this->options['bucketName'];
-    }
-    public function getReadConcern()
-    {
-      if(isset($this->options['readPreference'])) {
-        return $this->options['readPreference'];
-      } else{
-        return null;
-      }
-    }
-    public function getWriteConcern()
-    {
-      if(isset($this->options['writeConcern'])) {
-        return $this->options['writeConcern'];
-      } else{
-        return null;
-      }
-    }
-
-    private function ensureIndexes()
-    {
-        if ($this->ensuredIndexes) {
-            return;
-        }
-        if ( ! $this->isFilesCollectionEmpty()) {
-            return;
-        }
-        $this->ensureFilesIndex();
-        $this->ensureChunksIndex();
-        $this->ensuredIndexes = true;
-    }
-    private function ensureChunksIndex()
-    {
-        foreach ($this->chunksCollection->listIndexes() as $index) {
-            if ($index->isUnique() && $index->getKey() === ['files_id' => 1, 'n' => 1]) {
-                return;
-            }
-        }
-        $this->chunksCollection->createIndex(['files_id' => 1, 'n' => 1], ['unique' => true]);
-    }
-    private function ensureFilesIndex()
-    {
-        foreach ($this->filesCollection->listIndexes() as $index) {
-            if ($index->getKey() === ['filename' => 1, 'uploadDate' => 1]) {
-                return;
-            }
-        }
-        $this->filesCollection->createIndex(['filename' => 1, 'uploadDate' => 1]);
-    }
-    private function isFilesCollectionEmpty()
-    {
-        return null === $this->filesCollection->findOne([], [
-            'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
-            'projection' => ['_id' => 1],
-        ]);
-    }
-    public function findFileRevision($filename, $revision)
+    private function findFileRevision($filename, $revision)
     {
         if ($revision < 0) {
             $skip = abs($revision) -1;
@@ -174,10 +174,15 @@ class Bucket
             $skip = $revision;
             $sortOrder = 1;
         }
-        $file = $this->filesCollection->findOne(["filename"=> $filename], ["sort" => ["uploadDate"=> $sortOrder], "limit"=>1, "skip" => $skip]);
+        $filesCollection = $this->collectionsWrapper->getFilesCollection();
+        $file = $filesCollection->findOne(["filename"=> $filename], ["sort" => ["uploadDate"=> $sortOrder], "limit"=>1, "skip" => $skip]);
         if(is_null($file)) {
-            throw new \MongoDB\Exception\GridFSFileNotFoundException($filename, $this->getBucketName(), $this->getDatabaseName());;
+            throw new \MongoDB\Exception\GridFSFileNotFoundException($filename, $filesCollection->getNameSpace());
         }
         return $file;
+    }
+    public function getCollectionsWrapper()
+    {
+        return $this->collectionsWrapper;
     }
 }

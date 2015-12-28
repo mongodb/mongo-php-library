@@ -9,7 +9,7 @@ use MongoDB\BSON\ObjectId;
  *
  * @api
  */
-class GridFsDownload extends GridFsStream
+class GridFsDownload
 {
     private $chunksIterator;
     private $bytesSeen=0;
@@ -18,46 +18,41 @@ class GridFsDownload extends GridFsStream
     private $firstCheck=true;
     private $bufferFresh=true;
     private $bufferEmpty=true;
+    private $collectionsWrapper;
+    private $chunkOffset = 0;
+    private $buffer;
+    private $file;
     /**
      * Constructs a GridFS download stream
      *
-     * Supported options:
      *
-     *  * contentType (string): DEPRECATED content type to be stored with the file.
-     *    This information should now be added to the metadata
-     *
-     *  * aliases (array of strings): DEPRECATED An array of aliases.
-     *    Applications wishing to store aliases should add an aliases field to the
-     *    metadata document instead.
-     *
-     *  * metadata (array or object): User data for the 'metadata' field of the files
-     *    collection document.
-     *
-     *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
-     *
-     * @param array                  $options          File options
+     * @param GridFSCollectionsWrapper $collectionsWrapper   File options
+     * @param \MongoDB\BSON\ObjectId   $options              File options
+     * @param array                    $options              File options
      * @throws FileNotFoundException
      */
     public function __construct(
-        Bucket $bucket,
+        GridFSCollectionsWrapper $collectionsWrapper,
         $objectId,
         $file = null
         )
     {
+        $this->collectionsWrapper = $collectionsWrapper;
+
         if(!is_null($file)) {
             $this->file = $file;
         } else {
-            $this->file = $bucket->getFilesCollection()->findOne(['_id' => $objectId]);
+            $this->file = $collectionsWrapper->getFilesCollection()->findOne(['_id' => $objectId]);
             if (is_null($this->file)) {
-              throw new \MongoDB\Exception\GridFSFileNotFoundException($objectId, $bucket->getBucketName(), $bucket->getDatabaseName());
+              throw new \MongoDB\Exception\GridFSFileNotFoundException($objectId, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
             }
         }
-        if ($this->file->length > 0) {
-            $cursor = $bucket->getChunksCollection()->find(['files_id' => $this->file->_id], ['sort' => ['n' => 1]]);
+        if ($this->file->length >= 0) {
+            $cursor = $this->collectionsWrapper->getChunksCollection()->find(['files_id' => $this->file->_id], ['sort' => ['n' => 1]]);
             $this->chunksIterator = new \IteratorIterator($cursor);
             $this->numChunks = ceil($this->file->length / $this->file->chunkSize);
         }
-        parent::__construct($bucket);
+        $this->buffer = fopen('php://temp', 'w+');
     }
     /**
     * Reads data from a stream into GridFS
@@ -104,7 +99,7 @@ class GridFsDownload extends GridFsStream
 
     private function advanceChunks()
     {
-        if($this->n >= $this->numChunks) {
+        if($this->chunkOffset >= $this->numChunks) {
             $this->iteratorEmpty=true;
             return false;
         }
@@ -117,22 +112,22 @@ class GridFsDownload extends GridFsStream
         if (!$this->chunksIterator->valid()) {
             throw new \MongoDB\Exception\GridFSCorruptFileException();
         }
-        if ($this->chunksIterator->current()->n != $this->n) {
+        if ($this->chunksIterator->current()->n != $this->chunkOffset) {
             throw new \MongoDB\Exception\GridFSCorruptFileException();
         }
         $chunkSizeIs = strlen($this->chunksIterator->current()->data->getData());
-        if ($this->n == $this->numChunks - 1) {
+        if ($this->chunkOffset == $this->numChunks - 1) {
             $chunkSizeShouldBe = $this->file->length - $this->bytesSeen;
             if($chunkSizeShouldBe != $chunkSizeIs) {
                 throw new \MongoDB\Exception\GridFSCorruptFileException();
             }
-        } else if ($this->n < $this->numChunks - 1) {
+        } else if ($this->chunkOffset < $this->numChunks - 1) {
             if($chunkSizeIs != $this->file->chunkSize) {
                 throw new \MongoDB\Exception\GridFSCorruptFileException();
             }
         }
         $this->bytesSeen+= $chunkSizeIs;
-        $this->n++;
+        $this->chunkOffset++;
         return true;
     }
     public function close()

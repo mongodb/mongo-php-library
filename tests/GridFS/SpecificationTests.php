@@ -45,7 +45,6 @@ class SpecificationTests extends FunctionalTestCase
                 $options =[];
             }
             $this->bucket = new \MongoDB\GridFS\Bucket($this->manager, $this->getDatabaseName(), $this->fixTypes($options,false));
-            $this->bucketReadWriter = new \MongoDB\GridFS\BucketReadWriter($this->bucket);
             $func = $test['act']['operation'] . "Command";
             $error = null;
             try {
@@ -53,37 +52,35 @@ class SpecificationTests extends FunctionalTestCase
             } catch(\MongoDB\Exception\Exception $e) {
                 $error = $e;
             }
-
             $errors = ['FileNotFound' =>  '\MongoDB\Exception\GridFSFileNotFoundException',
                         'ChunkIsMissing' => '\MongoDB\Exception\GridFSCorruptFileException',
                         'ExtraChunk' => '\MongoDB\Exception\GridFSCorruptFileException',
                         'ChunkIsWrongSize' => '\MongoDB\Exception\GridFSCorruptFileException',
                         'RevisionNotFound' => '\MongoDB\Exception\GridFSFileNotFoundException'
                 ];
-
             if (!isset($test['assert']['error'])) {
                 $this->assertNull($error);
-
             } else {
                 $shouldError = $test['assert']['error'];
                 $this->assertTrue($error instanceof $errors[$shouldError]);
             }
-            $fixedAssert = $this->fixTypes($test['assert'], false);
             if (isset($test['assert']['result'])) {
-                $testResult = $test['assert']['result'];
-                if ($testResult == "&result") {
+                    $testResult = $test['assert']['result'];
+                if ($testResult == '&result') {
                     $test['assert']['result'] = $result;
                 }
                 if ($testResult == "void") {
-                    $fixedAssert['result'] = null;
+                    $test['assert']['result'] = null;
                 }
-                $this->assertEquals($result, $fixedAssert['result']);
+                $fixedAssertFalse = $this->fixTypes($test['assert'], false);
+                $this->assertEquals($result, $fixedAssertFalse['result']);
             }
+            $fixedAssertTrue = $this->fixTypes($test['assert'], true);
             if (isset($test['assert']['data'])) {
-                $this->runCommands($fixedAssert['data'], $result);
-                $this->collectionsEqual($this->collections['expected.files'],$this->bucket->getFilesCollection());
+                $this->runCommands($fixedAssertTrue['data'], $result);
+                $this->collectionsEqual($this->collections['expected.files'],$this->bucket->getCollectionsWrapper()->getFilesCollection());
                 if(isset($this->collections['expected.chunks'])) {
-                    $this->collectionsEqual($this->collections['expected.chunks'],$this->bucket->getChunksCollection());
+                    $this->collectionsEqual($this->collections['expected.chunks'],$this->bucket->getCollectionsWrapper()->getChunksCollection());
                 }
             }
         }
@@ -91,8 +88,7 @@ class SpecificationTests extends FunctionalTestCase
 
     public function provideSpecificationTests()
     {
-        $testPath=getcwd().'/tests/GridFS/Specification/tests/download_by_name.json';
-
+        $testPath= __DIR__.'/Specification/tests/*.json';
         $testArgs = [];
         foreach(glob($testPath) as $filename) {
             $fileContents = file_get_contents($filename);
@@ -214,7 +210,7 @@ class SpecificationTests extends FunctionalTestCase
         $stream = fopen('php://temp', 'w+');
         fwrite($stream, $args['source']);
         rewind($stream);
-        $result = $this->bucketReadWriter->uploadFromStream($args['filename'], $stream, $args['options']);
+        $result = $this->bucket->uploadFromStream($args['filename'], $stream, $args['options']);
         fclose($stream);
         return $result;
     }
@@ -224,7 +220,7 @@ class SpecificationTests extends FunctionalTestCase
         $streamWrapper = new \MongoDB\GridFS\StreamWrapper();
         $streamWrapper->register($this->manager);
         $stream = fopen('php://temp', 'w+');
-        $this->bucketReadWriter->downloadToStream($args['id'], $stream);
+        $this->bucket->downloadToStream($args['id'], $stream);
         rewind($stream);
         $result = stream_get_contents($stream);
         fclose($stream);
@@ -233,7 +229,7 @@ class SpecificationTests extends FunctionalTestCase
     function deleteCommand($args)
     {
         $args = $this->fixTypes($args, false);
-        $this->bucketReadWriter->delete($args['id']);
+        $this->bucket->delete($args['id']);
     }
     function download_by_nameCommand($args)
     {
@@ -242,9 +238,9 @@ class SpecificationTests extends FunctionalTestCase
         $streamWrapper->register($this->manager);
         $stream = fopen('php://temp', 'w+');
         if(isset($args['options']['revision'])) {
-            $this->bucketReadWriter->downloadToStreamByName($args['filename'], $stream, $args['options']['revision']);
+            $this->bucket->downloadToStreamByName($args['filename'], $stream, $args['options']['revision']);
         } else {
-            $this->bucketReadWriter->downloadToStreamByName($args['filename'], $stream);
+            $this->bucket->downloadToStreamByName($args['filename'], $stream);
         }
         rewind($stream);
         $result = stream_get_contents($stream);

@@ -21,7 +21,7 @@ class StreamWrapper
     private $protocol = 'gridfs';
     private $mode;
     private $gridFsStream;
-    private $bucket;
+    private $collectionsWrapper;
 
     /**
      * Register the GridFS stream wrapper.
@@ -58,7 +58,7 @@ class StreamWrapper
     {
         $this->initProtocol($path);
         $context = stream_context_get_options($this->context);
-        $this->bucket =$context['gridfs']['bucket'];
+        $this->collectionsWrapper =$context['gridfs']['collectionsWrapper'];
         $this->mode = $mode;
         switch ($this->mode) {
             case 'w' : return $this ->openWriteStream();
@@ -69,17 +69,17 @@ class StreamWrapper
     public function openWriteStream() {
         $context = stream_context_get_options($this->context);
         $options =$context['gridfs']['uploadOptions'];
-        $this->gridFsStream = new GridFsUpload($this->bucket, $this->identifier, $options);
+        $this->gridFsStream = new GridFsUpload($this->collectionsWrapper, $this->identifier, $options);
         return true;
     }
 
     public function openReadStream() {
         $context = stream_context_get_options($this->context);
         if(isset($context['gridfs']['file'])){
-            $this->gridFsStream = new GridFsDownload($this->bucket, null, $context['gridfs']['file']);
+            $this->gridFsStream = new GridFsDownload($this->collectionsWrapper, null, $context['gridfs']['file']);
         } else {
             $objectId = new \MongoDB\BSON\ObjectId($this->identifier);
-            $this->gridFsStream = new GridFsDownload($this->bucket, $objectId);
+            $this->gridFsStream = new GridFsDownload($this->collectionsWrapper, $objectId);
         }
         return true;
     }

@@ -11,12 +11,17 @@ use MongoDB\BSON;
  *
  * @api
  */
-class GridFsUpload extends GridFsStream
+class GridFsUpload
 {
     private $ctx;
-    private $bufferLength;
+    private $bufferLength = 0;
     private $indexChecker;
-    private $length=0;
+    private $length = 0;
+    private $collectionsWrapper;
+    private $chunkOffset = 0;
+    private $chunkSize;
+    private $buffer;
+    private $file;
     /**
      * Constructs a GridFS upload stream
      *
@@ -34,26 +39,28 @@ class GridFsUpload extends GridFsStream
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
-     * @param \MongoDB\Collection    $filesCollection  Files Collection
-     * @param \MongoDB\Collection    $chunksCollection Chunks Collection
-     * @param int32                  $chunkSizeBytes   Size of chunk
-     * @param string                 $filename         Filename to insert
-     * @param array                  $options          File options
+     *  * chunkSizeBytes: size of each chunk
+     *
+     * @param GridFSCollectionsWrapper $collectionsWrapper  Files Collection
+     * @param string                   $filename            Filename to insert
+     * @param array                    $options             File options
      * @throws InvalidArgumentException
      */
     public function __construct(
-        Bucket $bucket,
+        GridFsCollectionsWrapper $collectionsWrapper,
         $filename,
         array $options=[]
         )
     {
-        $this->bufferLength = 0;
         $this->ctx = hash_init('md5');
+        $this->collectionsWrapper = $collectionsWrapper;
+        $this->buffer = fopen('php://temp', 'w+');
+        $this->chunkSize = $options['chunkSizeBytes'];
 
         $uploadDate = time();
         $objectId = new \MongoDB\BSON\ObjectId();
         $main_file = [
-            "chunkSize" => $bucket->getChunkSizeBytes(),
+            "chunkSize" => $this->chunkSize,
             "filename" => $filename,
             "uploadDate" => $uploadDate,
             "_id" => $objectId
@@ -83,7 +90,7 @@ class GridFsUpload extends GridFsStream
             }
         }
         $this->file = array_merge($main_file, $fileOptions);
-        parent::__construct($bucket);
+
     }
     /**
     * Reads data from a stream into GridFS
@@ -93,8 +100,6 @@ class GridFsUpload extends GridFsStream
     */
     public function uploadFromStream($source)
     {
-        $this->bucket->ensureIndexes();
-
         if (!is_resource($source) || get_resource_type($source) != "stream") {
             throw new UnexpectedTypeException('stream', $source);
         } else{
@@ -103,7 +108,7 @@ class GridFsUpload extends GridFsStream
      //       throw new InvalidArgumentException("stream not readable");
             //issue being that php's is_readable reports native streams as not readable like php://temp
         }
-        while ($data = fread($source, $this->bucket->getChunkSizeBytes())) {
+        while ($data = fread($source, $this->chunkSize)) {
             $this->insertChunk($data);
         }
         return $this->fileCollectionInsert();
@@ -116,17 +121,15 @@ class GridFsUpload extends GridFsStream
     */
     public function insertChunks($toWrite)
     {
-        $this->bucket->ensureIndexes();
-
         $readBytes = 0;
         while($readBytes != strlen($toWrite)) {
-            $addToBuffer = substr($toWrite, $readBytes, $this->bucket->getChunkSizeBytes() - $this->bufferLength);
+            $addToBuffer = substr($toWrite, $readBytes, $this->chunkSize - $this->bufferLength);
             fwrite($this->buffer, $addToBuffer);
             $readBytes += strlen($addToBuffer);
             $this->bufferLength += strlen($addToBuffer);
-            if($this->bufferLength == $this->bucket->getChunkSizeBytes()) {
+            if($this->bufferLength == $this->chunkSize) {
                 rewind($this->buffer);
-                $this->insertChunk(fread($this->buffer, $this->bucket->getChunkSizeBytes()));
+                $this->insertChunk(stream_get_contents($this->buffer));
                 ftruncate($this->buffer,0);
                 $this->bufferLength = 0;
             }
@@ -140,30 +143,28 @@ class GridFsUpload extends GridFsStream
     public function close()
     {
         rewind($this->buffer);
-        $cached = fread($this->buffer, $this->bucket->getChunkSizeBytes());
+        $cached = stream_get_contents($this->buffer);
 
         if(strlen($cached) > 0) {
-            insertChunk($cached);
+            $this->insertChunk($cached);
         }
-
         fclose($this->buffer);
-
         $this->fileCollectionInsert();
     }
     private function insertChunk($data)
     {
-        $toUpload = ["files_id" => $this->file['_id'], "n" => $this->n, "data" => new \MongoDB\BSON\Binary($data, \MongoDB\BSON\Binary::TYPE_GENERIC)];
+        $toUpload = ["files_id" => $this->file['_id'], "n" => $this->chunkOffset, "data" => new \MongoDB\BSON\Binary($data, \MongoDB\BSON\Binary::TYPE_GENERIC)];
         hash_update($this->ctx, $data);
-        $this->bucket->chunkInsert($toUpload);
+        $this->collectionsWrapper->chunkInsert($toUpload);
         $this->length += strlen($data);
-        $this->n++;
+        $this->chunkOffset++;
     }
 
     private function fileCollectionInsert()
     {
         $md5 = hash_final($this->ctx);
         $this->file = array_merge($this->file, ['length' => $this->length, 'md5' => $md5]);
-        $this->bucket->fileInsert($this->file);
+        $this->collectionsWrapper->fileInsert($this->file);
         return $this->file['_id'];
     }
 }

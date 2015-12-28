@@ -1,3 +1,137 @@
+RELEASE 1.0.0-beta2
+-------------------
+2015-12-25  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-135: Support validator options for CreateCollection
+
+2015-12-25  Jeremy Mikola  <jmikola@gmail.com>
+	* Don't use empty() to check for empty documents
+
+2015-12-24  Jeremy Mikola  <jmikola@gmail.com>
+	* Clean up some doc block typos
+
+2015-12-23  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-138: Support typeMap option for aggregate and find operations
+
+2015-12-23  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-138: Support typeMap option for Database::command()
+
+2015-12-23  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-138: Support typeMap option for core classes
+
+2015-12-23  Jeremy Mikola  <jmikola@gmail.com>
+	* Refactor option handling for Client, Database, and Collection
+
+2015-12-23  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-132: Add MongoDB 3.2 to Travis CI build matrix
+
+2015-12-23  Jeremy Mikola  <jmikola@gmail.com>
+	* Add PHP 7 to Travis CI build matrix
+
+2015-12-23  Jeremy Mikola  <jmikola@gmail.com>
+	* CreateIndexes can require that $indexes be a list
+
+2015-12-23  Jeremy Mikola  <jmikola@gmail.com>
+	* Use InvalidArgumentTypeException for index option validation
+
+2015-12-23  Jeremy Mikola  <jmikola@gmail.com>
+	* Remove unnecessary use statement
+
+2015-12-23  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-121: Support indexOptionDefaults option for CreateCollection
+
+2015-12-22  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-130: Support readConcern option on read operations
+
+2015-12-17  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-130: Support readConcern option for Database and Collection
+
+2015-12-22  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-129: Support writeConcern option for findAndModify
+
+2015-12-17  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-132: Bump ext-mongodb dependency to >=1.1.0
+
+2015-12-13  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-125: Support bypassDocumentValidation option on write commands
+
+2015-12-16  Jeremy Mikola  <jmikola@gmail.com>
+	* Manually register mongodb.so for PHP 5.4 builds on Travis
+
+2015-12-16  Jeremy Mikola  <jmikola@gmail.com>
+	* Use explicit version when installing driver extension
+
+2015-12-16  Jeremy Mikola  <jmikola@gmail.com>
+	* Use private constant in lieu of hard-coded string
+
+2015-12-16  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-122: Checking "ok" field in command results is redundant
+
+2015-11-14  Anton Tuyakhov  <atuyakhov@gmail.com>
+	* PHPLIB-153: Add Database::command() helper
+
+2015-12-16  Jeremy Mikola  <jmikola@gmail.com>
+	* Move invalid data providers to base TestCase class
+
+2015-12-13  Anton Tuyakhov  <atuyakhov@gmail.com>
+	* Fix distinct maxTimeMS option
+
+2015-12-14  Jeremy Mikola  <jmikola@gmail.com>
+	* Revert "PHPLIB-151: Use IPv4 localhost address for default URI"
+
+2015-12-13  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-152: Use 1 instead of -1 for FindOne limit
+
+2015-12-13  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-151: Use IPv4 localhost address for default URI
+
+2015-12-11  Jeremy Mikola  <jmikola@gmail.com>
+	* Remove unused property
+
+2015-11-02  Remi Collet  <fedora@famillecollet.com>
+	* PedantryTest can ignore autoload.php added by downstream
+
+2015-12-02  Jeremy Mikola  <jmikola@gmail.com>
+	* Update package install instructions in readme
+
+2015-12-02  Jeremy Mikola  <jmikola@gmail.com>
+	* Update dev branch alias
+
+2015-11-25  Hannes Magnusson  <bjori@php.net>
+	* Its a bit creepy seeing my family in bug reports
+
+2015-11-24  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-49: withOptions() clone method for Database and Collection
+
+2015-11-24  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-145: __debugInfo for Client, Database, and Collection
+
+2015-11-24  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-144: Use arrays to take Database and Collection options
+
+2015-11-24  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-143: Default URI for Client constructor
+
+2015-11-24  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-90: Client::__toString() should return connection URI
+
+2015-11-18  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-85: Legacy index creation should use {w:1}
+
+2015-11-18  Jeremy Mikola  <jmikola@gmail.com>
+	* Split IndexManagementFunctionalTest into Operation tests
+
+2015-11-13  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-68: Throw when accessing fields in unacknowledged write result
+
+2015-11-13  Jeremy Mikola  <jmikola@gmail.com>
+	* Functional tests for Delete, Insert, and Update operations
+
+2015-11-13  Jeremy Mikola  <jmikola@gmail.com>
+	* Convert bulk write Collection functional test to Operation
+
+2015-11-02  Jeremy Mikola  <jmikola@gmail.com>
+	* Add 1.0.0-beta1 release notes
+
 RELEASE 1.0.0-beta1
 -------------------
 2015-11-02  Jeremy Mikola  <jmikola@gmail.com>

@@ -9,7 +9,6 @@ use MongoDB\BSON;
 /**
  * GridFsupload abstracts the processes of inserting into a GridFSBucket
  *
- * @api
  */
 class GridFsUpload
 {
@@ -56,8 +55,8 @@ class GridFsUpload
         $this->collectionsWrapper = $collectionsWrapper;
         $this->buffer = fopen('php://temp', 'w+');
         $this->chunkSize = $options['chunkSizeBytes'];
-
-        $uploadDate = time();
+        $time = $this->millitime();
+        $uploadDate = new \MongoDB\BSON\UTCDateTime($time);
         $objectId = new \MongoDB\BSON\ObjectId();
         $main_file = [
             "chunkSize" => $this->chunkSize,
@@ -151,6 +150,14 @@ class GridFsUpload
         fclose($this->buffer);
         $this->fileCollectionInsert();
     }
+    public function getSize()
+    {
+        return $this->length;
+    }
+    public function getId()
+    {
+        return $this->file["_id"];
+    }
     private function insertChunk($data)
     {
         $toUpload = ["files_id" => $this->file['_id'], "n" => $this->chunkOffset, "data" => new \MongoDB\BSON\Binary($data, \MongoDB\BSON\Binary::TYPE_GENERIC)];
@@ -166,5 +173,11 @@ class GridFsUpload
         $this->file = array_merge($this->file, ['length' => $this->length, 'md5' => $md5]);
         $this->collectionsWrapper->fileInsert($this->file);
         return $this->file['_id'];
+    }
+    //from: http://stackoverflow.com/questions/3656713/how-to-get-current-time-in-milliseconds-in-php
+    private function millitime() {
+      $microtime = microtime();
+      $comps = explode(' ', $microtime);
+      return sprintf('%d%03d', $comps[1], $comps[0] * 1000);
     }
 }

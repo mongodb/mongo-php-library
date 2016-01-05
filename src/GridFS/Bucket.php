@@ -43,10 +43,9 @@ class Bucket
      */
     public function __construct(Manager $manager, $databaseName, array $options = [])
     {
-        $collectionOptions = [];
         $options += [
-            'bucketName' => 'fs',
             'chunkSizeBytes' => 261120,
+            'bucketName' => 'fs'
         ];
         $this->databaseName = (string) $databaseName;
         $this->options = $options;
@@ -80,7 +79,7 @@ class Bucket
      */
     public function uploadFromStream($filename, $source, array $options = [])
     {
-        $options['chunkSizeBytes'] = $this->options['chunkSizeBytes'];
+        $options+= ['chunkSizeBytes' => $this->options['chunkSizeBytes']];
         $gridFsStream = new GridFsUpload($this->collectionsWrapper, $filename, $options);
         return $gridFsStream->uploadFromStream($source);
     }
@@ -92,11 +91,11 @@ class Bucket
      */
     public function openDownloadStream(\MongoDB\BSON\ObjectId $id)
     {
-        $options = [
-            'collectionsWrapper' => $this->collectionsWrapper
-            ];
-        $context = stream_context_create(['gridfs' => $options]);
-        return fopen(sprintf('gridfs://%s/%s', $this->databaseName, $id), 'r', false, $context);
+        $file = $this->collectionsWrapper->getFilesCollection()->findOne(['_id' => $id]);
+        if (is_null($file)) {
+            throw new \MongoDB\Exception\GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+        }
+        return $this->openDownloadStreamByFile($file);
     }
       /**
        * Downloads the contents of the stored file specified by id and writes
@@ -106,7 +105,11 @@ class Bucket
        */
     public function downloadToStream(\MongoDB\BSON\ObjectId $id, $destination)
     {
-        $gridFsStream = new GridFsDownload($this->collectionsWrapper, $id);
+        $file = $this->collectionsWrapper->getFilesCollection()->findOne(['_id' => $id]);
+        if (is_null($file)) {
+            throw new \MongoDB\Exception\GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+        }
+        $gridFsStream = new GridFsDownload($this->collectionsWrapper, $file);
         $gridFsStream->downloadToStream($destination);
     }
     /**
@@ -122,7 +125,6 @@ class Bucket
         if (is_null($file)) {
             throw new \MongoDB\Exception\GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
         }
-
         $this->collectionsWrapper->getFilesCollection()->deleteOne(['_id' => $id]);
     }
     /**
@@ -133,12 +135,8 @@ class Bucket
     */
     public function openDownloadStreamByName($filename, $revision = -1)
     {
-        $file = $this->bucket->findFileRevision($filename, $revision);
-        $options = ['bucket' => $this->bucket,
-                    'file' => $file
-                ];
-        $context = stream_context_create(['gridfs' => $options]);
-        return fopen(sprintf('gridfs://%s/%s', $this->bucket->getDatabaseName(), $filename), 'r', false, $context);
+        $file = $this->findFileRevision($filename, $revision);
+        return $this->openDownloadStreamByFile($file);
     }
     /**
     * Download a file from the GridFS bucket by name. Searches for the file by the specified name then loads data into the stream
@@ -150,7 +148,7 @@ class Bucket
     public function downloadToStreamByName($filename, $destination, $revision=-1)
     {
         $file = $this->findFileRevision($filename, $revision);
-        $gridFsStream = new GridFsDownload($this->collectionsWrapper, null, $file);
+        $gridFsStream = new GridFsDownload($this->collectionsWrapper, $file);
         $gridFsStream->downloadToStream($destination);
     }
     /**
@@ -163,8 +161,25 @@ class Bucket
     {
         return $this->collectionsWrapper->getFilesCollection()->find($filter, $options);
     }
-
-
+    public function getCollectionsWrapper()
+    {
+        return $this->collectionsWrapper;
+    }
+    public function getDatabaseName(){
+        return $this->databaseName;
+    }
+    private function openDownloadStreamByFile($file)
+    {
+        $options = ['collectionsWrapper' => $this->collectionsWrapper,
+                    'file' => $file
+                ];
+        $context = stream_context_create(['gridfs' => $options]);
+        //db/prefix/(filter criteria as BSON}
+        // find criteria being MongoDB\BSON\fromPHP(['_id' => $file['_id']])
+        // stream wrapper can explode('/', 3), which returns array of db, prefix, and BSON blob
+        // MongoDB\BSON\toPHP(bson blob) yields find() criteria
+        return fopen(sprintf('gridfs://%s/%s', $this->databaseName, $file->filename), 'r', false, $context);
+    }
     private function findFileRevision($filename, $revision)
     {
         if ($revision < 0) {
@@ -180,9 +195,5 @@ class Bucket
             throw new \MongoDB\Exception\GridFSFileNotFoundException($filename, $filesCollection->getNameSpace());
         }
         return $file;
-    }
-    public function getCollectionsWrapper()
-    {
-        return $this->collectionsWrapper;
     }
 }

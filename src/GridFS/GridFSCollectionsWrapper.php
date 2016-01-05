@@ -14,8 +14,9 @@ use MongoDB\Exception\UnexpectedValueException;
 /**
  * Bucket abstracts the GridFS files and chunks collections.
  *
- * @api
  */
+
+//rename to context options
 class GridFSCollectionsWrapper
 {
     private $filesCollection;
@@ -44,9 +45,13 @@ class GridFSCollectionsWrapper
     public function __construct(Manager $manager, $databaseName, $options)
     {
         $collectionOptions = [];
-        $options += [
-            'bucketName' => 'fs',
-        ];
+
+        if (isset($options['bucketName']) && ! is_string($options['bucketName'])) {
+            throw new InvalidArgumentTypeException('"bucketName" option', $options['bucketName'], 'string');
+        }
+        if (isset($options['chunkSizeBytes']) && ! is_integer($options['chunkSizeBytes'])) {
+            throw new InvalidArgumentTypeException('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
+        }
         if (isset($options['readPreference'])) {
             if (! $options['readPreference'] instanceof ReadPreference) {
                 throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');

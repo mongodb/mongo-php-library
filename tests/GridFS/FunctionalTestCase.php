@@ -12,7 +12,7 @@ use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 abstract class FunctionalTestCase extends BaseFunctionalTestCase
 {
     protected $bucket;
-    protected $bucketReadWriter;
+    protected $collectionsWrapper;
 
     public function setUp()
     {
@@ -24,17 +24,17 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         $streamWrapper = new \MongoDB\GridFS\StreamWrapper();
         $streamWrapper->register($this->manager);
         $this->bucket = new \MongoDB\GridFS\Bucket($this->manager, $this->getDatabaseName());
-        $this->bucketReadWriter = new \MongoDB\GridFS\BucketReadWriter($this->bucket);
+        $this->collectionsWrapper = $this->bucket->getCollectionsWrapper();
     }
 
     public function tearDown()
     {
-        if ($this->hasFailed()) {
-            return;
-        }
        foreach(['fs.files', 'fs.chunks'] as $collection){
             $col = new Collection($this->manager, sprintf("%s.%s",$this->getDatabaseName(), $collection));
             $col->drop();
+        }
+        if ($this->hasFailed()) {
+            return;
         }
     }
 }

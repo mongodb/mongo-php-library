@@ -37,7 +37,11 @@ class GridFsDownload
     {
         $this->collectionsWrapper = $collectionsWrapper;
         $this->file = $file;
-        $cursor = $this->collectionsWrapper->getChunksCollection()->find(['files_id' => $this->file->_id], ['sort' => ['n' => 1]]);
+        try{
+            $cursor = $this->collectionsWrapper->getChunksCollection()->find(['files_id' => $this->file->_id], ['sort' => ['n' => 1]]);
+        } catch(\MongoDB\Exception $e){
+            throw new \MongoDB\Exception\GridFSCorruptFileException();
+        }
         $this->chunksIterator = new \IteratorIterator($cursor);
         if ($this->file->length >= 0) {
             $this->numChunks = ceil($this->file->length / $this->file->chunkSize);
@@ -95,6 +99,10 @@ class GridFsDownload
     public function getId()
     {
         return $this->file->_id;
+    }
+    public function getFile()
+    {
+        return $this->file;
     }
     private function advanceChunks()
     {

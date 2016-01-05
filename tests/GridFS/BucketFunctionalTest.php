@@ -201,6 +201,12 @@ class BucketFunctionalTest extends FunctionalTestCase
                                                         ['$set'=> ['chunkSize' => 100.00]]);
         $this->assertEquals("data", stream_get_contents($this->bucket->openDownloadStream($id)));
     }
+    public function testBigInsert()
+    {
+        $testPath= __DIR__."/BigInsertTest.txt";
+        $testStream = fopen($testPath, "r");
+        $id = $this->bucket->uploadFromStream("BigInsertTest", $testStream);
+    }
     private function generateStream($input)
     {
         $stream = fopen('php://temp', 'w+');

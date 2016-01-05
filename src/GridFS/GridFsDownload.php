@@ -5,9 +5,8 @@ use MongoDB\Collection;
 use MongoDB\Exception\RuntimeException;
 use MongoDB\BSON\ObjectId;
 /**
- * GridFsupload abstracts the processes of inserting into a GridFSBucket
+ * GridFSDownload abstracts the processes of downloading from a GridFSBucket
  *
- * @api
  */
 class GridFsDownload
 {
@@ -33,24 +32,17 @@ class GridFsDownload
      */
     public function __construct(
         GridFSCollectionsWrapper $collectionsWrapper,
-        $objectId,
-        $file = null
+        $file
         )
     {
         $this->collectionsWrapper = $collectionsWrapper;
-
-        if(!is_null($file)) {
-            $this->file = $file;
-        } else {
-            $this->file = $collectionsWrapper->getFilesCollection()->findOne(['_id' => $objectId]);
-            if (is_null($this->file)) {
-              throw new \MongoDB\Exception\GridFSFileNotFoundException($objectId, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
-            }
-        }
+        $this->file = $file;
+        $cursor = $this->collectionsWrapper->getChunksCollection()->find(['files_id' => $this->file->_id], ['sort' => ['n' => 1]]);
+        $this->chunksIterator = new \IteratorIterator($cursor);
         if ($this->file->length >= 0) {
-            $cursor = $this->collectionsWrapper->getChunksCollection()->find(['files_id' => $this->file->_id], ['sort' => ['n' => 1]]);
-            $this->chunksIterator = new \IteratorIterator($cursor);
             $this->numChunks = ceil($this->file->length / $this->file->chunkSize);
+        } else {
+            $this->numChunks = 0;
         }
         $this->buffer = fopen('php://temp', 'w+');
     }
@@ -88,15 +80,22 @@ class GridFsDownload
 
         while(strlen($output) < $numToRead && $this->advanceChunks()) {
             $bytesLeft = $numToRead - strlen($output);
-            $output .= substr($this->chunksIterator->current()->data, 0, $bytesLeft);
+            $output .= substr($this->chunksIterator->current()->data->getData(), 0, $bytesLeft);
         }
-        if ($bytesLeft < strlen($this->chunksIterator->current()->data)) {
-            fwrite($this->buffer, substr($this->chunksIterator->current()->data, $bytesLeft));
+        if ($this->file->length > 0 && $bytesLeft < strlen($this->chunksIterator->current()->data->getData())) {
+            fwrite($this->buffer, substr($this->chunksIterator->current()->data->getData(), $bytesLeft));
             $this->bufferEmpty=false;
         }
         return $output;
     }
-
+    public function getSize()
+    {
+        return $this->file->length;
+    }
+    public function getId()
+    {
+        return $this->file->_id;
+    }
     private function advanceChunks()
     {
         if($this->chunkOffset >= $this->numChunks) {

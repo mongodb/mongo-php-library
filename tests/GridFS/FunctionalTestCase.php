@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\GridFS;
 
 use MongoDB\GridFS;
+use MongoDB\Collection;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 
 /**
@@ -16,6 +17,10 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     public function setUp()
     {
         parent::setUp();
+       foreach(['fs.files', 'fs.chunks'] as $collection){
+            $col = new Collection($this->manager, sprintf("%s.%s",$this->getDatabaseName(), $collection));
+            $col->drop();
+        }
         $streamWrapper = new \MongoDB\GridFS\StreamWrapper();
         $streamWrapper->register($this->manager);
         $this->bucket = new \MongoDB\GridFS\Bucket($this->manager, $this->getDatabaseName());
@@ -27,7 +32,9 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         if ($this->hasFailed()) {
             return;
         }
-        //$this->database = new \MongoDB\Database($this->manager, $this->getDatabaseName());
-     //   $this->database->drop();
+       foreach(['fs.files', 'fs.chunks'] as $collection){
+            $col = new Collection($this->manager, sprintf("%s.%s",$this->getDatabaseName(), $collection));
+            $col->drop();
+        }
     }
 }

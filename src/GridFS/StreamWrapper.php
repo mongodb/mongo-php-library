@@ -33,26 +33,29 @@ class StreamWrapper
         }
         stream_wrapper_register('gridfs', get_called_class(), STREAM_IS_URL);
     }
-    private function initProtocol($path)
-    {
-        $parsed_path = parse_url($path);
-        $this->databaseName = $parsed_path["host"];
-        $this->identifier = substr($parsed_path["path"], 1);
-    }
     public function stream_write($data)
     {
         $this->gridFsStream->insertChunks($data);
         return strlen($data);
     }
-    public function stream_read($count) {
+    public function stream_read($count)
+    {
         return $this->gridFsStream->downloadNumBytes($count);
     }
-    public function stream_eof() {
+    public function stream_eof()
+    {
         return $this->gridFsStream->isEOF();
     }
-    public function stream_close() {
+    public function stream_close()
+    {
         $this->gridFsStream->close();
-
+    }
+    public function stream_stat()
+    {
+        $stat = $this->getStatTemplate();
+        $stat[7] = $stat['size'] = $this->gridFsStream->getSize();
+        $stat[2] = $stat['mode'] = $this->mode;
+        return $stat;
     }
     public function stream_open($path, $mode, $options, &$openedPath)
     {
@@ -75,12 +78,37 @@ class StreamWrapper
 
     public function openReadStream() {
         $context = stream_context_get_options($this->context);
-        if(isset($context['gridfs']['file'])){
-            $this->gridFsStream = new GridFsDownload($this->collectionsWrapper, null, $context['gridfs']['file']);
-        } else {
-            $objectId = new \MongoDB\BSON\ObjectId($this->identifier);
-            $this->gridFsStream = new GridFsDownload($this->collectionsWrapper, $objectId);
-        }
+        $this->gridFsStream = new GridFsDownload($this->collectionsWrapper, $context['gridfs']['file']);
         return true;
+    }
+
+    /**
+    * Gets a URL stat template with default values
+    * from https://github.com/aws/aws-sdk-php/blob/master/src/S3/StreamWrapper.php
+    * @return array
+    */
+    private function getStatTemplate()
+    {
+        return [
+            0  => 0,  'dev'     => 0,
+            1  => 0,  'ino'     => 0,
+            2  => 0,  'mode'    => 0,
+            3  => 0,  'nlink'   => 0,
+            4  => 0,  'uid'     => 0,
+            5  => 0,  'gid'     => 0,
+            6  => -1, 'rdev'    => -1,
+            7  => 0,  'size'    => 0,
+            8  => 0,  'atime'   => 0,
+            9  => 0,  'mtime'   => 0,
+            10 => 0,  'ctime'   => 0,
+            11 => -1, 'blksize' => -1,
+            12 => -1, 'blocks'  => -1,
+        ];
+    }
+    private function initProtocol($path)
+    {
+        $parsed_path = parse_url($path);
+        $this->databaseName = $parsed_path["host"];
+        $this->identifier = substr($parsed_path["path"], 1);
     }
 }

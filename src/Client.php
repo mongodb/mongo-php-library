@@ -40,6 +40,14 @@ class Client
      */
     public function __construct($uri = 'mongodb://localhost:27017', array $uriOptions = [], array $driverOptions = [])
     {
+        $driverOptions += [
+            'typeMap' => [
+                'array' => 'MongoDB\Model\BSONArray',
+                'document' => 'MongoDB\Model\BSONDocument',
+                'root' => 'MongoDB\Model\BSONDocument',
+            ],
+        ];
+
         if (isset($driverOptions['typeMap']) && ! is_array($driverOptions['typeMap'])) {
             throw new InvalidArgumentTypeException('"typeMap" driver option', $driverOptions['typeMap'], 'array');
         }

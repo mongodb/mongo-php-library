@@ -54,7 +54,10 @@ class GridFsUpload
         $this->ctx = hash_init('md5');
         $this->collectionsWrapper = $collectionsWrapper;
         $this->buffer = fopen('php://temp', 'w+');
+
+        $options +=['chunkSizeBytes' => 261120];
         $this->chunkSize = $options['chunkSizeBytes'];
+
         $time = $this->millitime();
         $uploadDate = new \MongoDB\BSON\UTCDateTime($time);
         $objectId = new \MongoDB\BSON\ObjectId();
@@ -157,6 +160,18 @@ class GridFsUpload
     public function getId()
     {
         return $this->file["_id"];
+    }
+    public function getLength()
+    {
+        return $this->length;
+    }
+    public function getChunkSize()
+    {
+        return $this->chunkSize;
+    }
+    public function getFile()
+    {
+        return $this->file;
     }
     private function insertChunk($data)
     {

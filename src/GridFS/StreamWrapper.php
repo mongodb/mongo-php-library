@@ -22,6 +22,7 @@ class StreamWrapper
     private $mode;
     private $gridFsStream;
     private $collectionsWrapper;
+    public $id;
 
     /**
      * Register the GridFS stream wrapper.
@@ -54,7 +55,6 @@ class StreamWrapper
     {
         $stat = $this->getStatTemplate();
         $stat[7] = $stat['size'] = $this->gridFsStream->getSize();
-        $stat[2] = $stat['mode'] = $this->mode;
         return $stat;
     }
     public function stream_open($path, $mode, $options, &$openedPath)
@@ -73,12 +73,14 @@ class StreamWrapper
         $context = stream_context_get_options($this->context);
         $options =$context['gridfs']['uploadOptions'];
         $this->gridFsStream = new GridFsUpload($this->collectionsWrapper, $this->identifier, $options);
+        $this->id = $this->gridFsStream->getId();
         return true;
     }
 
     public function openReadStream() {
         $context = stream_context_get_options($this->context);
         $this->gridFsStream = new GridFsDownload($this->collectionsWrapper, $context['gridfs']['file']);
+        $this->id = $this->gridFsStream->getId();
         return true;
     }
 

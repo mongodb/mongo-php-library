@@ -26,15 +26,17 @@ class GridFsDownload
      *
      *
      * @param GridFSCollectionsWrapper $collectionsWrapper   File options
-     * @param \MongoDB\BSON\ObjectId   $options              File options
-     * @param array                    $options              File options
-     * @throws FileNotFoundException
+     * @param \stdClass                $file                 GridFS file to use
+     * @throws GridFSCorruptFileException
      */
     public function __construct(
         GridFSCollectionsWrapper $collectionsWrapper,
         $file
         )
     {
+        if(!($file instanceof \stdClass)){
+            throw new \MongoDB\Exception\InvalidArgumentTypeException('"file"', $file, 'stdClass');
+        }
         $this->collectionsWrapper = $collectionsWrapper;
         $this->file = $file;
         try{
@@ -81,12 +83,11 @@ class GridFsDownload
         $this->bufferEmpty=true;
 
         $bytesLeft = $numToRead - strlen($output);
-
         while(strlen($output) < $numToRead && $this->advanceChunks()) {
             $bytesLeft = $numToRead - strlen($output);
             $output .= substr($this->chunksIterator->current()->data->getData(), 0, $bytesLeft);
         }
-        if ($this->file->length > 0 && $bytesLeft < strlen($this->chunksIterator->current()->data->getData())) {
+        if (!$this->iteratorEmpty && $this->file->length > 0 && $bytesLeft < strlen($this->chunksIterator->current()->data->getData())) {
             fwrite($this->buffer, substr($this->chunksIterator->current()->data->getData(), $bytesLeft));
             $this->bufferEmpty=false;
         }

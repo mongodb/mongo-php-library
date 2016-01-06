@@ -161,6 +161,16 @@ class Bucket
     {
         return $this->collectionsWrapper->getFilesCollection()->find($filter, $options);
     }
+
+    public function getIdFromStream($stream)
+    {
+        $metadata = stream_get_meta_data($stream);
+        if(isset($metadata["wrapper_data"]->id)){
+            return $metadata["wrapper_data"]->id;
+        }
+        return null;
+    }
+
     public function getCollectionsWrapper()
     {
         return $this->collectionsWrapper;

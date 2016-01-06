@@ -21,6 +21,7 @@ class GridFsUpload
     private $chunkSize;
     private $buffer;
     private $file;
+    private $isClosed = false;
     /**
      * Constructs a GridFS upload stream
      *
@@ -123,6 +124,9 @@ class GridFsUpload
     */
     public function insertChunks($toWrite)
     {
+        if($this->isClosed){
+            return;
+        }
         $readBytes = 0;
         while($readBytes != strlen($toWrite)) {
             $addToBuffer = substr($toWrite, $readBytes, $this->chunkSize - $this->bufferLength);
@@ -144,6 +148,9 @@ class GridFsUpload
     */
     public function close()
     {
+        if($this->isClosed){
+            return;
+        }
         rewind($this->buffer);
         $cached = stream_get_contents($this->buffer);
 
@@ -152,6 +159,7 @@ class GridFsUpload
         }
         fclose($this->buffer);
         $this->fileCollectionInsert();
+        $this->isClosed = true;
     }
     public function getSize()
     {
@@ -175,22 +183,43 @@ class GridFsUpload
     }
     public function isEOF()
     {
-        return false;
+        return $this->isClosed;
+    }
+    private function abort()
+    {
+        $this->collectionsWrapper->getChunksCollection()->deleteMany(["files_id"=> $this->file["_id"]]);
+        $this->collectionsWrapper->getFilesCollection()->deleteOne(["_id"=> $this->file['_id']]);
+        $this->isClosed = true;
     }
     private function insertChunk($data)
     {
+        if($this->isClosed){
+            return;
+        }
         $toUpload = ["files_id" => $this->file['_id'], "n" => $this->chunkOffset, "data" => new \MongoDB\BSON\Binary($data, \MongoDB\BSON\Binary::TYPE_GENERIC)];
         hash_update($this->ctx, $data);
-        $this->collectionsWrapper->chunkInsert($toUpload);
+        try{
+            $this->collectionsWrapper->chunkInsert($toUpload);
+        } catch (\MongoDB\Exception $e){
+            $this->abort();
+            throw $e;
+        }
         $this->length += strlen($data);
         $this->chunkOffset++;
     }
-
     private function fileCollectionInsert()
     {
+        if($this->isClosed){
+            return;
+        }
         $md5 = hash_final($this->ctx);
         $this->file = array_merge($this->file, ['length' => $this->length, 'md5' => $md5]);
-        $this->collectionsWrapper->fileInsert($this->file);
+        try{
+            $this->collectionsWrapper->fileInsert($this->file);
+        } catch (\MongoDB\Exception $e){
+            $this->abort();
+            throw $e;
+        }
         return $this->file['_id'];
     }
     //from: http://stackoverflow.com/questions/3656713/how-to-get-current-time-in-milliseconds-in-php

@@ -163,7 +163,11 @@ class Bucket
     {
         return $this->collectionsWrapper->getFilesCollection()->find($filter, $options);
     }
-
+    /**
+    * Gets the id of the GridFs file associated with $stream
+    *
+    * @param resource     $stream  wrapped gridFsStream
+    */
     public function getIdFromStream($stream)
     {
         $metadata = stream_get_meta_data($stream);
@@ -172,7 +176,23 @@ class Bucket
         }
         return null;
     }
-
+    /**
+    * Gets the id of the GridFs file associated with $stream
+    *
+    * @param \MongoDB\BSON\ObjectId     $id             id of the file to rename
+    * @param string                     $newFilename    new name for the file
+    * @throws \MongoDB\Exception\GridFSFileNotFoundException
+    */
+    public function rename(\MongoDB\BSON\ObjectId $id, $newFilename)
+    {
+        $filesCollection = $this->collectionsWrapper->getFilesCollection();
+        $file = $filesCollection->findOne(["_id" => $id]);
+        if (is_null($file)) {
+            throw new \MongoDB\Exception\GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+        }
+        $file->filename = $newFilename;
+        $filesCollection->replaceOne(["_id"=> $id], $file);
+    }
     public function getCollectionsWrapper()
     {
         return $this->collectionsWrapper;

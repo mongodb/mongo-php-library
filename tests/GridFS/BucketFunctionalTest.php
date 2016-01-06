@@ -220,6 +220,24 @@ class BucketFunctionalTest extends FunctionalTestCase
         fclose($download);
         $this->assertTrue($id instanceof \MongoDB\BSON\ObjectId);
     }
+    public function testRename()
+    {
+        $id = $this->bucket->uploadFromStream("first_name", $this->generateStream("testing"));
+        $this->assertEquals("testing", stream_get_contents($this->bucket->openDownloadStream($id)));
+
+        $this->bucket->rename($id, "second_name");
+
+        $error = null;
+        try{
+            $this->bucket->openDownloadStreamByName("first_name");
+        } catch(\MongoDB\Exception\Exception $e) {
+            $error = $e;
+        }
+        $fileNotFound = '\MongoDB\Exception\GridFSFileNotFoundException';
+        $this->assertTrue($error instanceof $fileNotFound);
+
+        $this->assertEquals("testing", stream_get_contents($this->bucket->openDownloadStreamByName("second_name")));
+    }
     /**
      *@dataProvider provideInsertChunks
      */

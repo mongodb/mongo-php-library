@@ -186,10 +186,6 @@ class Bucket
                     'file' => $file
                 ];
         $context = stream_context_create(['gridfs' => $options]);
-        //db/prefix/(filter criteria as BSON}
-        // find criteria being MongoDB\BSON\fromPHP(['_id' => $file['_id']])
-        // stream wrapper can explode('/', 3), which returns array of db, prefix, and BSON blob
-        // MongoDB\BSON\toPHP(bson blob) yields find() criteria
         return fopen(sprintf('gridfs://%s/%s', $this->databaseName, $file->filename), 'r', false, $context);
     }
     private function findFileRevision($filename, $revision)

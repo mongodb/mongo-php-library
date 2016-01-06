@@ -10,35 +10,6 @@ use MongoDB\GridFS;
 class GridFsStreamTest extends FunctionalTestCase
 {
 
-/*    public function testConstructorOptionTypeChecks(array $options)
-    {
-        new \MongoDB\GridFS\Bucket($this->manager, $this->getDatabaseName(), $options);
-    }
-
-    public function provideInvalidConstructorOptions()
-    {
-        $options = [];
-        $invalidBucketNames = [123, 3.14, true, [], new \stdClass];
-        $invalidChunkSizes = ['foo', 3.14, true, [], new \stdClass];
-
-
-        foreach ($this->getInvalidReadPreferenceValues() as $value) {
-            $options[][] = ['readPreference' => $value];
-        }
-
-        foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = ['writeConcern' => $value];
-        }
-        foreach ($invalidBucketNames as $value) {
-            $options[][] = ['bucketName' => $value];
-        }
-        foreach ($invalidChunkSizes as $value) {
-            $options[][] = ['chunkSizeBytes' => $value];
-        }
-
-        return $options;
-    }
-*/
     public function testBasic()
     {
         $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test");
@@ -177,31 +148,122 @@ class GridFsStreamTest extends FunctionalTestCase
         $this->assertEquals($data, stream_get_contents($stream));
     }
 
-    public function provideInsertChunks()
+    public function testMultiChunkFile()
     {
-        $dataVals = [];
-        $testArgs[][] = "hello world";
-        $testArgs[][] = "1234567890";
-        $testArgs[][] = "~!@#$%^&*()_+";
-        for($j=0; $j<10; $j++){
-            $randomTest = "";
-            for($i=0; $i<100; $i++){
-                $randomTest .= chr(rand(0, 256));
-            }
-            $testArgs[][] = $randomTest;
+        $toUpload="";
+        for($i=0; $i<255*1024+1000; $i++){
+            $toUpload .= "a";
         }
-        $utf8="";
-        for($i=0; $i<256; $i++){
-            $utf8 .= chr($i);
-        }
-        $testArgs[][]=$utf8;
-        return $testArgs;
+        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test");
+        $upload->insertChunks($toUpload);
+        $upload->close();
+
+        $this->assertEquals(1, $this->collectionsWrapper->getFilesCollection()->count());
+        $this->assertEquals(2, $this->collectionsWrapper->getChunksCollection()->count());
+
+        $download = $this->bucket->openDownloadStream($upload->getId());
+        $this->assertEquals($toUpload, stream_get_contents($download));
     }
-    private function generateStream($input)
+    /**
+     *@dataProvider provideInsertChunks
+     */
+    public function testSmallChunks($data)
     {
-        $stream = fopen('php://temp', 'w+');
-        fwrite($stream, $input);
-        rewind($stream);
-        return $stream;
+        $options = ["chunkSizeBytes"=>1];
+        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test", $options);
+        $upload->insertChunks($data);
+        $upload->close();
+
+        $this->assertEquals(strlen($data), $this->collectionsWrapper->getChunksCollection()->count());
+        $this->assertEquals(1, $this->collectionsWrapper->getFilesCollection()->count());
+
+        $stream = $this->bucket->openDownloadStream($upload->getId());
+        $this->assertEquals($data, stream_get_contents($stream));
+    }
+    public function testMultipleReads()
+    {
+        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test", ["chunkSizeBytes"=>3]);
+        $upload->insertChunks("hello world");
+        $upload->close();
+        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$upload->getId()]);
+        $download = new \MongoDB\GridFS\GridFsDownload($this->collectionsWrapper, $file);
+        $this->assertEquals("he", $download->downloadNumBytes(2));
+        $this->assertEquals("ll", $download->downloadNumBytes(2));
+        $this->assertEquals("o ", $download->downloadNumBytes(2));
+        $this->assertEquals("wo", $download->downloadNumBytes(2));
+        $this->assertEquals("rl", $download->downloadNumBytes(2));
+        $this->assertEquals("d", $download->downloadNumBytes(2));
+        $this->assertEquals("", $download->downloadNumBytes(2));
+        $this->assertEquals("", $download->downloadNumBytes(2));
+        $download->close();
+    }
+    /**
+     *@dataProvider provideInsertChunks
+     */
+    public function testProvidedMultipleReads($data)
+    {
+        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test", ["chunkSizeBytes"=>rand(1, 5)]);
+        $upload->insertChunks($data);
+        $upload->close();
+        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$upload->getId()]);
+        $download = new \MongoDB\GridFS\GridFsDownload($this->collectionsWrapper, $file);
+
+        $readPos = 0;
+        while($readPos < strlen($data)){
+            $numToRead = rand(1, strlen($data) - $readPos);
+            $expected = substr($data, $readPos, $numToRead);
+            $actual = $download->downloadNumBytes($numToRead);
+            $this->assertEquals($expected,$actual);
+            $readPos+= $numToRead;
+        }
+        $actual = $download->downloadNumBytes(5);
+        $expected = "";
+        $this->assertEquals($expected,$actual);
+        $download->close();
+    }
+    /**
+     * @expectedException \MongoDB\Exception\InvalidArgumentTypeException
+     * @dataProvider provideInvalidUploadConstructorOptions
+     */
+    public function testUploadConstructorOptionTypeChecks(array $options)
+    {
+        new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper,"test", $options);
+    }
+
+    public function provideInvalidUploadConstructorOptions()
+    {
+        $options = [];
+        $invalidContentType = [123, 3.14, true, [], new \stdClass];
+        $invalidAliases = ['foo', 3.14, true, [12, 34], new \stdClass];
+        $invalidMetadata = ['foo', 3.14, true];
+
+        foreach ($invalidContentType as $value) {
+            $options[][] = ['contentType' => $value];
+        }
+        foreach ($invalidAliases as $value) {
+            $options[][] = ['aliases' => $value];
+        }
+        foreach ($invalidMetadata as $value) {
+            $options[][] = ['metadata' => $value];
+        }
+        return $options;
+    }
+    /**
+     * @expectedException \MongoDB\Exception\InvalidArgumentTypeException
+     * @dataProvider provideInvalidDownloadConstructorFile
+     */
+    public function testDownloadConstructorFileCheck($file)
+    {
+        $download = new \MongoDB\GridFS\GridFsDownload($this->collectionsWrapper, $file);
+    }
+    public function provideInvalidDownloadConstructorFile()
+    {
+        $files = [];
+        $invalidFiles = [123, 3.14, true, []];
+
+        foreach ($invalidFiles as $value) {
+            $files[][] = $value;
+        }
+        return $files;
     }
 }

@@ -73,14 +73,14 @@ class GridFsUpload
             if (is_string($options['contentType'])) {
                 $fileOptions['contentType'] = $options['contentType'];
             } else {
-                throw new InvalidArgumentTypeException('"contentType" option', $options['contentType'], 'string');
+                throw new \MongoDB\Exception\InvalidArgumentTypeException('"contentType" option', $options['contentType'], 'string');
             }
         }
         if (isset($options['aliases'])) {
             if (\MongoDB\is_string_array($options['aliases'])) {
                 $fileOptions['aliases'] = $options['aliases'];
             } else {
-                throw new InvalidArgumentTypeException('"aliases" option', $options['aliases'], 'array of strings');
+                throw new \MongoDB\Exception\InvalidArgumentTypeException('"aliases" option', $options['aliases'], 'array of strings');
             }
         }
 
@@ -88,7 +88,7 @@ class GridFsUpload
             if (is_array($options['metadata']) || is_object($options['metadata'])) {
                 $fileOptions['metadata'] = $options['metadata'];
             } else {
-                throw new InvalidArgumentTypeException('"metadata" option', $options['metadata'], 'object or array');
+                throw new \MongoDB\Exception\InvalidArgumentTypeException('"metadata" option', $options['metadata'], 'object or array');
             }
         }
         $this->file = array_merge($main_file, $fileOptions);
@@ -172,6 +172,10 @@ class GridFsUpload
     public function getFile()
     {
         return $this->file;
+    }
+    public function isEOF()
+    {
+        return false;
     }
     private function insertChunk($data)
     {

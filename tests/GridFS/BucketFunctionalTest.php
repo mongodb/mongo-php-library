@@ -114,20 +114,20 @@ class BucketFunctionalTest extends FunctionalTestCase
     public function testGetLastVersion()
     {
         $idOne = $this->bucket->uploadFromStream("test",$this->generateStream("foo"));
-        //$streamTwo = $this->bucket->openUploadStream("test");
-        //fwrite($streamTwo, "bar");
+        $streamTwo = $this->bucket->openUploadStream("test");
+        fwrite($streamTwo, "bar");
         //echo "Calling FSTAT\n";
         //$stat = fstat($streamTwo);
-        //$idTwo = $stat['uid'];
+        $idTwo = $this->bucket->getIdFromStream($streamTwo);
         //var_dump
         //var_dump($idTwo);
-        //fclose($streamTwo);
+        fclose($streamTwo);
 
         $idThree = $this->bucket->uploadFromStream("test",$this->generateStream("baz"));
         $this->assertEquals("baz", stream_get_contents($this->bucket->openDownloadStreamByName("test")));
         $this->bucket->delete($idThree);
-        //$this->assertEquals("bar", stream_get_contents($this->bucket->openDownloadStreamByName("test")));
-        //$this->bucket->delete($idTwo);
+        $this->assertEquals("bar", stream_get_contents($this->bucket->openDownloadStreamByName("test")));
+        $this->bucket->delete($idTwo);
         $this->assertEquals("foo", stream_get_contents($this->bucket->openDownloadStreamByName("test")));
         $this->bucket->delete($idOne);
         $error = null;
@@ -206,6 +206,42 @@ class BucketFunctionalTest extends FunctionalTestCase
         $testPath= __DIR__."/BigInsertTest.txt";
         $testStream = fopen($testPath, "r");
         $id = $this->bucket->uploadFromStream("BigInsertTest", $testStream);
+    }
+    public function testGetIdFromStream()
+    {
+        $upload = $this->bucket->openUploadStream("test");
+        $id = $this->bucket->getIdFromStream($upload);
+        fclose($upload);
+        $this->assertTrue($id instanceof \MongoDB\BSON\ObjectId);
+
+        $download = $this->bucket->openDownloadStream($id);
+        $id=null;
+        $id = $this->bucket->getIdFromStream($download);
+        fclose($download);
+        $this->assertTrue($id instanceof \MongoDB\BSON\ObjectId);
+    }
+    /**
+     *@dataProvider provideInsertChunks
+     */
+    public function testProvidedMultipleReads($data)
+    {
+        $upload = $this->bucket->openUploadStream("test", ["chunkSizeBytes"=>rand(1, 5)]);
+        fwrite($upload,$data);
+        $id = $this->bucket->getIdFromStream($upload);
+        fclose($upload);
+        $download = $this->bucket->openDownloadStream($id);
+        $readPos = 0;
+        while($readPos < strlen($data)){
+            $numToRead = rand(1, strlen($data) - $readPos);
+            $expected = substr($data, $readPos, $numToRead);
+            $actual = fread($download, $numToRead);
+            $this->assertEquals($expected,$actual);
+            $readPos+= $numToRead;
+        }
+        $actual = fread($download, 5);
+        $expected = "";
+        $this->assertEquals($expected,$actual);
+        fclose($download);
     }
     private function generateStream($input)
     {

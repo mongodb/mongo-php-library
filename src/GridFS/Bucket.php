@@ -21,6 +21,7 @@ class Bucket
     private $databaseName;
     private $collectionsWrapper;
     private $options;
+    private static $streamWrapper;
     /**
      * Constructs a GridFS bucket.
      *
@@ -50,6 +51,7 @@ class Bucket
         $this->databaseName = (string) $databaseName;
         $this->options = $options;
         $this->collectionsWrapper = new GridFSCollectionsWrapper($manager, $databaseName, $options);
+        $this->registerStreamWrapper($manager);
     }
 
     /**
@@ -205,5 +207,13 @@ class Bucket
             throw new \MongoDB\Exception\GridFSFileNotFoundException($filename, $filesCollection->getNameSpace());
         }
         return $file;
+    }
+    private function registerStreamWrapper($manager)
+    {
+        if(isset(Bucket::$streamWrapper)){
+            return;
+        }
+        Bucket::$streamWrapper = new \MongoDB\GridFS\StreamWrapper();
+        Bucket::$streamWrapper->register($manager);
     }
 }

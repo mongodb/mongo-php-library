@@ -21,8 +21,6 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
             $col = new Collection($this->manager, sprintf("%s.%s",$this->getDatabaseName(), $collection));
             $col->drop();
         }
-        $streamWrapper = new \MongoDB\GridFS\StreamWrapper();
-        $streamWrapper->register($this->manager);
         $this->bucket = new \MongoDB\GridFS\Bucket($this->manager, $this->getDatabaseName());
         $this->collectionsWrapper = $this->bucket->getCollectionsWrapper();
     }

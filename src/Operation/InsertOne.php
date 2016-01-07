@@ -79,8 +79,7 @@ class InsertOne implements Executable
         $insertedId = $bulk->insert($this->document);
 
         if ($insertedId === null) {
-            // TODO: This may be removed if PHPC-382 is implemented
-            $insertedId = is_array($this->document) ? $this->document['_id'] : $this->document->_id;
+            $insertedId = \MongoDB\extract_id_from_inserted_document($this->document);
         }
 
         $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;

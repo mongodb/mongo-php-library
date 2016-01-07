@@ -239,8 +239,7 @@ class BulkWrite implements Executable
                     if ($insertedId !== null) {
                         $insertedIds[$i] = $insertedId;
                     } else {
-                        // TODO: This may be removed if PHPC-382 is implemented
-                        $insertedIds[$i] = is_array($args[0]) ? $args[0]['_id'] : $args[0]->_id;
+                        $insertedIds[$i] = \MongoDB\extract_id_from_inserted_document($args[0]);
                     }
 
                     break;

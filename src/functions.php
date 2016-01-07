@@ -2,10 +2,60 @@
 
 namespace MongoDB;
 
+use MongoDB\BSON\Serializable;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentTypeException;
 use stdClass;
+
+/**
+ * Extracts an ID from an inserted document.
+ *
+ * This function is used when BulkWrite::insert() does not return a generated
+ * ID, which means that the ID should be fetched from an array offset, public
+ * property, or in the data returned by bsonSerialize().
+ *
+ * @internal
+ * @see https://jira.mongodb.org/browse/PHPC-382
+ * @param array|object $document Inserted document
+ * @return mixed
+ */
+function extract_id_from_inserted_document($document)
+{
+    if ($document instanceof Serializable) {
+        return extract_id_from_inserted_document($document->bsonSerialize());
+    }
+
+    return is_array($document) ? $document['_id'] : $document->_id;
+}
+
+/**
+ * Generate an index name from a key specification.
+ *
+ * @internal
+ * @param array|object $document Document containing fields mapped to values,
+ *                               which denote order or an index type
+ * @return string
+ * @throws InvalidArgumentTypeException
+ */
+function generate_index_name($document)
+{
+    if (is_object($document)) {
+        $document = get_object_vars($document);
+    }
+
+    if ( ! is_array($document)) {
+        throw new InvalidArgumentTypeException('$document', $document, 'array or object');
+    }
+
+    $name = '';
+
+    foreach ($document as $field => $type) {
+        $name .= ($name != '' ? '_' : '') . $field . '_' . $type;
+    }
+
+    return $name;
+}
 
 /**
  * Return whether the first key in the document starts with a "$" character.
@@ -53,34 +103,6 @@ function is_last_pipeline_operator_out(array $pipeline)
     $lastOp = (array) $lastOp;
 
     return key($lastOp) === '$out';
-}
-
-/**
- * Generate an index name from a key specification.
- *
- * @internal
- * @param array|object $document Document containing fields mapped to values,
- *                               which denote order or an index type
- * @return string
- * @throws InvalidArgumentTypeException
- */
-function generate_index_name($document)
-{
-    if (is_object($document)) {
-        $document = get_object_vars($document);
-    }
-
-    if ( ! is_array($document)) {
-        throw new InvalidArgumentTypeException('$document', $document, 'array or object');
-    }
-
-    $name = '';
-
-    foreach ($document as $field => $type) {
-        $name .= ($name != '' ? '_' : '') . $field . '_' . $type;
-    }
-
-    return $name;
 }
 
 /**

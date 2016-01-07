@@ -64,9 +64,9 @@ class FindOneAndUpdate implements Executable
             throw InvalidArgumentException::invalidType('$update', $update, 'array or object');
         }
 
-      //  if ( ! \MongoDB\is_first_key_operator($update)) {
-       //     throw new InvalidArgumentException('First key in $update argument is not an update operator');
-       // }
+        if ( ! \MongoDB\is_first_key_operator($update)) {
+            throw new InvalidArgumentException('First key in $update argument is not an update operator');
+        }
 
         $options += [
             'returnDocument' => self::RETURN_DOCUMENT_BEFORE,

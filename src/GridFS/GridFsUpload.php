@@ -107,11 +107,8 @@ class GridFsUpload
             throw new UnexpectedTypeException('stream', $source);
         } else{
             $streamMetadata = stream_get_meta_data($source);
-        } if (!is_readable($streamMetadata['uri'])) {
-     //       throw new InvalidArgumentException("stream not readable");
-            //issue being that php's is_readable reports native streams as not readable like php://temp
-        }
-        while ($data = fread($source, $this->chunkSize)) {
+
+        while ($data = $this->readChunk($source)) {
             $this->insertChunk($data);
         }
         return $this->fileCollectionInsert();
@@ -198,12 +195,7 @@ class GridFsUpload
         }
         $toUpload = ["files_id" => $this->file['_id'], "n" => $this->chunkOffset, "data" => new \MongoDB\BSON\Binary($data, \MongoDB\BSON\Binary::TYPE_GENERIC)];
         hash_update($this->ctx, $data);
-        try{
-            $this->collectionsWrapper->chunkInsert($toUpload);
-        } catch (\MongoDB\Exception $e){
-            $this->abort();
-            throw $e;
-        }
+        $this->collectionsWrapper->chunkInsert($toUpload);
         $this->length += strlen($data);
         $this->chunkOffset++;
     }
@@ -214,12 +206,7 @@ class GridFsUpload
         }
         $md5 = hash_final($this->ctx);
         $this->file = array_merge($this->file, ['length' => $this->length, 'md5' => $md5]);
-        try{
-            $this->collectionsWrapper->fileInsert($this->file);
-        } catch (\MongoDB\Exception $e){
-            $this->abort();
-            throw $e;
-        }
+        $this->collectionsWrapper->fileInsert($this->file);
         return $this->file['_id'];
     }
     //from: http://stackoverflow.com/questions/3656713/how-to-get-current-time-in-milliseconds-in-php
@@ -227,5 +214,17 @@ class GridFsUpload
       $microtime = microtime();
       $comps = explode(' ', $microtime);
       return sprintf('%d%03d', $comps[1], $comps[0] * 1000);
+    }
+
+    private function readChunk($source)
+    {
+        $data;
+        try{
+            $data = fread($source, $this->chunkSize);
+        } catch(Exception $e) {
+            $this->abort();
+            throw $e;
+        }
+        return $data;
     }
 }

@@ -2,11 +2,12 @@
 namespace MongoDB\GridFS;
 
 use MongoDB\Collection;
-use MongoDB\Exception\RuntimeException;
-use MongoDB\BSON\ObjectId;
+use \MongoDB\Exception\GridFSCorruptFileException;
+use \MongoDB\Exception\InvalidArgumentTypeException;
+
 /**
+ * @internal
  * GridFSDownload abstracts the processes of downloading from a GridFSBucket
- *
  */
 class GridFsDownload
 {
@@ -27,7 +28,7 @@ class GridFsDownload
      *
      * @param GridFSCollectionsWrapper $collectionsWrapper   File options
      * @param \stdClass                $file                 GridFS file to use
-     * @throws GridFSCorruptFileException
+     * @throws GridFSCorruptFileException, InvalidArgumentTypeException
      */
     public function __construct(
         GridFSCollectionsWrapper $collectionsWrapper,
@@ -52,19 +53,12 @@ class GridFsDownload
         }
         $this->buffer = fopen('php://temp', 'w+');
     }
-    /**
-    * Reads data from a stream into GridFS
-    *
-    * @param Stream   $source   Source Stream
-    * @return ObjectId
-    */
     public function downloadToStream($destination)
     {
         while($this->advanceChunks()) {
             fwrite($destination, $this->chunksIterator->current()->data->getData());
         }
     }
-
     public function downloadNumBytes($numToRead) {
         $output = "";
         if ($this->bufferFresh) {

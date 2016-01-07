@@ -1,18 +1,13 @@
 <?php
 namespace MongoDB\GridFS;
 
-use MongoDB\Driver\Server;
 use MongoDB\Collection;
-use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
-use MongoDB\Exception\RuntimeException;
-use MongoDB\Exception\UnexpectedValueException;
 
 /**
  * Stream wrapper for reading and writing a GridFS file.
  *
  * @internal
- * @see MongoDB\GridFS\Bucket::openUploadStream()
+ * @see MongoDB\GridFS\Bucket::openUploadStream(), MongoDB\GridFS\Bucket::openDownloadStream()
  */
 class StreamWrapper
 {

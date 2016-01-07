@@ -2,13 +2,11 @@
 namespace MongoDB\GridFS;
 
 use MongoDB\Collection;
-use MongoDB\Exception\RuntimeException;
-use MongoDB\Exception\UnexpectedTypeException;
-use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\InvalidArgumentTypeException;
 use MongoDB\BSON;
 /**
+ * @internal
  * GridFsupload abstracts the processes of inserting into a GridFSBucket
- *
  */
 class GridFsUpload
 {
@@ -44,7 +42,7 @@ class GridFsUpload
      * @param GridFSCollectionsWrapper $collectionsWrapper  Files Collection
      * @param string                   $filename            Filename to insert
      * @param array                    $options             File options
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentTypeException
      */
     public function __construct(
         GridFsCollectionsWrapper $collectionsWrapper,

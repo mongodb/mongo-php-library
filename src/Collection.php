@@ -152,7 +152,7 @@ class Collection
      * @see Aggregate::__construct() for supported options
      * @param array $pipeline List of pipeline operations
      * @param array $options  Command options
-     * @return Traversable
+     * @return Cursor
      */
     public function aggregate(array $pipeline, array $options = [])
     {

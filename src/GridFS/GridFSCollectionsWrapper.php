@@ -2,21 +2,14 @@
 namespace MongoDB\GridFS;
 
 use MongoDB\Collection;
-use MongoDB\Database;
-use MongoDB\BSON\ObjectId;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Manager;
-use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentTypeException;
-use MongoDB\Exception\RuntimeException;
-use MongoDB\Exception\UnexpectedValueException;
 /**
- * Bucket abstracts the GridFS files and chunks collections.
- *
+ * @internal
+ * GridFSCollectionsWrapper abstracts the GridFS files and chunks collections.
  */
-
-//rename to context options
 class GridFSCollectionsWrapper
 {
     private $filesCollection;

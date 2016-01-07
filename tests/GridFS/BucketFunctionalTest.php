@@ -93,6 +93,37 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertEquals(255 * 1024, $raw->chunkSize);
         $this->assertTrue(is_string($raw->md5));
     }
+    public function testCorruptChunk()
+    {
+        $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("foobar"));
+
+        $this->collectionsWrapper->getChunksCollection()->updateOne(['files_id' => $id],
+                    ['$set' => ['data' => new \MongoDB\BSON\Binary('foo', \MongoDB\BSON\Binary::TYPE_GENERIC)]]);
+        $error = null;
+        try{
+            $download = $this->bucket->openDownloadStream($id);
+            stream_get_contents($download);
+        } catch(\MongoDB\Exception\Exception $e) {
+            $error = $e;
+        }
+        $corruptFileError = '\MongoDB\Exception\GridFSCOrruptFileException';
+        $this->assertTrue($error instanceof $corruptFileError);
+    }
+    public function testErrorsOnMissingChunk()
+    {
+        $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("hello world,abcdefghijklmnopqrstuv123456789"), ["chunkSizeBytes" => 1]);
+
+        $this->collectionsWrapper->getChunksCollection()->deleteOne(['files_id' => $id, 'n' => 7]);
+        $error = null;
+        try{
+            $download = $this->bucket->openDownloadStream($id);
+            stream_get_contents($download);
+        } catch(\MongoDB\Exception\Exception $e) {
+            $error = $e;
+        }
+        $corruptFileError = '\MongoDB\Exception\GridFSCOrruptFileException';
+        $this->assertTrue($error instanceof $corruptFileError);
+    }
     public function testUploadEnsureIndexes()
     {
         $chunks = $this->bucket->getCollectionsWrapper()->getChunksCollection();

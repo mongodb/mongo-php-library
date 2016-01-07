@@ -107,7 +107,7 @@ class GridFsUpload
             throw new UnexpectedTypeException('stream', $source);
         } else{
             $streamMetadata = stream_get_meta_data($source);
-
+        }
         while ($data = $this->readChunk($source)) {
             $this->insertChunk($data);
         }

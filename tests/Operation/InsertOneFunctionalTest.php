@@ -4,14 +4,16 @@ namespace MongoDB\Tests\Collection;
 
 use MongoDB\InsertOneResult;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertOne;
 
 class InsertOneFunctionalTest extends FunctionalTestCase
 {
-    public function testInsertOneWithExistingId()
+    /**
+     * @dataProvider provideDocumentWithExistingId
+     */
+    public function testInsertOneWithExistingId($document)
     {
-        $document = ['_id' => 'foo', 'x' => 11];
-
         $operation = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
         $result = $operation->execute($this->getPrimaryServer());
 
@@ -24,6 +26,15 @@ class InsertOneFunctionalTest extends FunctionalTestCase
         ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
+    }
+
+    public function provideDocumentWithExistingId()
+    {
+        return [
+            [['_id' => 'foo', 'x' => 11]],
+            [(object) ['_id' => 'foo', 'x' => 11]],
+            [new BSONDocument(['_id' => 'foo', 'x' => 11])],
+        ];
     }
 
     public function testInsertOneWithGeneratedId()

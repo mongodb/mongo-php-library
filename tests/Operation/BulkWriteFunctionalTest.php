@@ -5,6 +5,7 @@ namespace MongoDB\Tests\Collection;
 use MongoDB\BulkWriteResult;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\BulkWrite;
 
 class BulkWriteFunctionalTest extends FunctionalTestCase
@@ -23,21 +24,27 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $ops = [
             ['insertOne' => [['_id' => 1, 'x' => 11]]],
             ['insertOne' => [['x' => 22]]],
+            ['insertOne' => [(object) ['_id' => 'foo', 'x' => 33]]],
+            ['insertOne' => [new BSONDocument(['_id' => 'bar', 'x' => 44])]],
         ];
 
         $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
         $result = $operation->execute($this->getPrimaryServer());
 
         $this->assertInstanceOf('MongoDB\BulkWriteResult', $result);
-        $this->assertSame(2, $result->getInsertedCount());
+        $this->assertSame(4, $result->getInsertedCount());
 
         $insertedIds = $result->getInsertedIds();
         $this->assertSame(1, $insertedIds[0]);
         $this->assertInstanceOf('MongoDB\BSON\ObjectId', $insertedIds[1]);
+        $this->assertSame('foo', $insertedIds[2]);
+        $this->assertSame('bar', $insertedIds[3]);
 
         $expected = [
-            ['_id' => $insertedIds[0], 'x' => 11],
+            ['_id' => 1, 'x' => 11],
             ['_id' => $insertedIds[1], 'x' => 22],
+            ['_id' => 'foo', 'x' => 33],
+            ['_id' => 'bar', 'x' => 44],
         ];
 
         $this->assertSameDocuments($expected, $this->collection->find());

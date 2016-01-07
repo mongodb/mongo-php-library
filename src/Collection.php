@@ -11,7 +11,6 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentTypeException;
-use MongoDB\Exception\UnexpectedTypeException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInput;
 use MongoDB\Operation\Aggregate;

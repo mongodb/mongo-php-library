@@ -8,6 +8,34 @@ use MongoDB\Exception\InvalidArgumentTypeException;
 use stdClass;
 
 /**
+ * Generate an index name from a key specification.
+ *
+ * @internal
+ * @param array|object $document Document containing fields mapped to values,
+ *                               which denote order or an index type
+ * @return string
+ * @throws InvalidArgumentTypeException
+ */
+function generate_index_name($document)
+{
+    if (is_object($document)) {
+        $document = get_object_vars($document);
+    }
+
+    if ( ! is_array($document)) {
+        throw new InvalidArgumentTypeException('$document', $document, 'array or object');
+    }
+
+    $name = '';
+
+    foreach ($document as $field => $type) {
+        $name .= ($name != '' ? '_' : '') . $field . '_' . $type;
+    }
+
+    return $name;
+}
+
+/**
  * Return whether the first key in the document starts with a "$" character.
  *
  * This is used for differentiating update and replacement documents.
@@ -53,34 +81,6 @@ function is_last_pipeline_operator_out(array $pipeline)
     $lastOp = (array) $lastOp;
 
     return key($lastOp) === '$out';
-}
-
-/**
- * Generate an index name from a key specification.
- *
- * @internal
- * @param array|object $document Document containing fields mapped to values,
- *                               which denote order or an index type
- * @return string
- * @throws InvalidArgumentTypeException
- */
-function generate_index_name($document)
-{
-    if (is_object($document)) {
-        $document = get_object_vars($document);
-    }
-
-    if ( ! is_array($document)) {
-        throw new InvalidArgumentTypeException('$document', $document, 'array or object');
-    }
-
-    $name = '';
-
-    foreach ($document as $field => $type) {
-        $name .= ($name != '' ? '_' : '') . $field . '_' . $type;
-    }
-
-    return $name;
 }
 
 /**

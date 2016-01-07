@@ -6,6 +6,9 @@ class BadMethodCallException extends \BadMethodCallException implements Exceptio
 {
     /**
      * Thrown when accessing a result field on an unacknowledged write result.
+     *
+     * @param string $method Method name
+     * @return self
      */
     public static function unacknowledgedWriteResultAccess($method)
     {

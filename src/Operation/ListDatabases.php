@@ -4,6 +4,7 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Model\DatabaseInfoIterator;
 use MongoDB\Model\DatabaseInfoLegacyIterator;
@@ -28,11 +29,12 @@ class ListDatabases implements Executable
      *    run.
      *
      * @param array $options Command options
+     * @throws InvalidArgumentException
      */
     public function __construct(array $options = [])
     {
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
         $this->options = $options;

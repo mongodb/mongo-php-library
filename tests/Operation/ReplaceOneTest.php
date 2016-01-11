@@ -7,7 +7,7 @@ use MongoDB\Operation\ReplaceOne;
 class ReplaceOneTest extends TestCase
 {
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testConstructorFilterArgumentTypeCheck($filter)
@@ -16,7 +16,7 @@ class ReplaceOneTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testConstructorReplacementArgumentTypeCheck($replacement)

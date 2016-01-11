@@ -6,7 +6,6 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * Operation for executing a database command.
@@ -42,15 +41,15 @@ class DatabaseCommand implements Executable
     public function __construct($databaseName, $command, array $options = [])
     {
         if ( ! is_array($command) && ! is_object($command)) {
-            throw new InvalidArgumentTypeException('$command', $command, 'array or object');
+            throw InvalidArgumentException::invalidType('$command', $command, 'array or object');
         }
 
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
-            throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
-            throw new InvalidArgumentTypeException('"typeMap" option', $options['typeMap'], 'array');
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
         $this->databaseName = (string) $databaseName;

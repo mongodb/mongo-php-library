@@ -7,7 +7,6 @@ use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * Operation for the delete command.
@@ -45,7 +44,7 @@ class Delete implements Executable
     public function __construct($databaseName, $collectionName, $filter, $limit, array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
-            throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
         if ($limit !== 0 && $limit !== 1) {
@@ -53,7 +52,7 @@ class Delete implements Executable
         }
 
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->databaseName = (string) $databaseName;

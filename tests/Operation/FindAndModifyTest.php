@@ -7,7 +7,7 @@ use MongoDB\Operation\FindAndModify;
 class FindAndModifyTest extends TestCase
 {
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)

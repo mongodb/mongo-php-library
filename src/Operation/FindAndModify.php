@@ -6,7 +6,6 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 use MongoDB\Exception\UnexpectedValueException;
 
 /**
@@ -77,43 +76,43 @@ class FindAndModify implements Executable
         ];
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
-            throw new InvalidArgumentTypeException('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
         if (isset($options['fields']) && ! is_array($options['fields']) && ! is_object($options['fields'])) {
-            throw new InvalidArgumentTypeException('"fields" option', $options['fields'], 'array or object');
+            throw InvalidArgumentException::invalidType('"fields" option', $options['fields'], 'array or object');
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
         if ( ! is_bool($options['new'])) {
-            throw new InvalidArgumentTypeException('"new" option', $options['new'], 'boolean');
+            throw InvalidArgumentException::invalidType('"new" option', $options['new'], 'boolean');
         }
 
         if (isset($options['query']) && ! is_array($options['query']) && ! is_object($options['query'])) {
-            throw new InvalidArgumentTypeException('"query" option', $options['query'], 'array or object');
+            throw InvalidArgumentException::invalidType('"query" option', $options['query'], 'array or object');
         }
 
         if ( ! is_bool($options['remove'])) {
-            throw new InvalidArgumentTypeException('"remove" option', $options['remove'], 'boolean');
+            throw InvalidArgumentException::invalidType('"remove" option', $options['remove'], 'boolean');
         }
 
         if (isset($options['sort']) && ! is_array($options['sort']) && ! is_object($options['sort'])) {
-            throw new InvalidArgumentTypeException('"sort" option', $options['sort'], 'array or object');
+            throw InvalidArgumentException::invalidType('"sort" option', $options['sort'], 'array or object');
         }
 
         if (isset($options['update']) && ! is_array($options['update']) && ! is_object($options['update'])) {
-            throw new InvalidArgumentTypeException('"update" option', $options['update'], 'array or object');
+            throw InvalidArgumentException::invalidType('"update" option', $options['update'], 'array or object');
         }
 
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         if ( ! is_bool($options['upsert'])) {
-            throw new InvalidArgumentTypeException('"upsert" option', $options['upsert'], 'boolean');
+            throw InvalidArgumentException::invalidType('"upsert" option', $options['upsert'], 'boolean');
         }
 
         if ( ! (isset($options['update']) xor $options['remove'])) {

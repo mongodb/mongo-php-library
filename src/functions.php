@@ -5,7 +5,7 @@ namespace MongoDB;
 use MongoDB\BSON\Serializable;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\Server;
-use MongoDB\Exception\InvalidArgumentTypeException;
+use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
 
 /**
@@ -36,7 +36,7 @@ function extract_id_from_inserted_document($document)
  * @param array|object $document Document containing fields mapped to values,
  *                               which denote order or an index type
  * @return string
- * @throws InvalidArgumentTypeException
+ * @throws InvalidArgumentException
  */
 function generate_index_name($document)
 {
@@ -45,7 +45,7 @@ function generate_index_name($document)
     }
 
     if ( ! is_array($document)) {
-        throw new InvalidArgumentTypeException('$document', $document, 'array or object');
+        throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
     }
 
     $name = '';
@@ -65,7 +65,7 @@ function generate_index_name($document)
  * @internal
  * @param array|object $document Update or replacement document
  * @return boolean
- * @throws InvalidArgumentTypeException
+ * @throws InvalidArgumentException
  */
 function is_first_key_operator($document)
 {
@@ -74,7 +74,7 @@ function is_first_key_operator($document)
     }
 
     if ( ! is_array($document)) {
-        throw new InvalidArgumentTypeException('$document', $document, 'array or object');
+        throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
     }
 
     $firstKey = (string) key($document);

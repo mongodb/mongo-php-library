@@ -4,7 +4,6 @@ namespace MongoDB\Model;
 
 use MongoDB\BSON\Serializable;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * Index input model class.
@@ -24,6 +23,7 @@ class IndexInput implements Serializable
     * Constructor.
     *
     * @param array $index Index specification
+    * @throws InvalidArgumentException
     */
     public function __construct(array $index)
     {
@@ -32,12 +32,12 @@ class IndexInput implements Serializable
         }
 
         if ( ! is_array($index['key']) && ! is_object($index['key'])) {
-            throw new InvalidArgumentTypeException('"key" option', $index['key'], 'array or object');
+            throw InvalidArgumentException::invalidType('"key" option', $index['key'], 'array or object');
         }
 
         foreach ($index['key'] as $fieldName => $order) {
             if ( ! is_int($order) && ! is_float($order) && ! is_string($order)) {
-                throw new InvalidArgumentTypeException(sprintf('order value for "%s" field within "key" option', $fieldName), $order, 'numeric or string');
+                throw InvalidArgumentException::invalidType(sprintf('order value for "%s" field within "key" option', $fieldName), $order, 'numeric or string');
             }
         }
 
@@ -46,7 +46,7 @@ class IndexInput implements Serializable
         }
 
         if ( ! is_string($index['ns'])) {
-            throw new InvalidArgumentTypeException('"ns" option', $index['ns'], 'string');
+            throw InvalidArgumentException::invalidType('"ns" option', $index['ns'], 'string');
         }
 
         if ( ! isset($index['name'])) {
@@ -54,7 +54,7 @@ class IndexInput implements Serializable
         }
 
         if ( ! is_string($index['name'])) {
-            throw new InvalidArgumentTypeException('"name" option', $index['name'], 'string');
+            throw InvalidArgumentException::invalidType('"name" option', $index['name'], 'string');
         }
 
         $this->index = $index;

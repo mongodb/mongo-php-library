@@ -5,7 +5,6 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * Operation for updating a document with the findAndModify command.
@@ -58,11 +57,11 @@ class FindOneAndUpdate implements Executable
     public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
-            throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
         if ( ! is_array($update) && ! is_object($update)) {
-            throw new InvalidArgumentTypeException('$update', $update, 'array or object');
+            throw InvalidArgumentException::invalidType('$update', $update, 'array or object');
         }
 
         if ( ! \MongoDB\is_first_key_operator($update)) {
@@ -75,11 +74,11 @@ class FindOneAndUpdate implements Executable
         ];
 
         if (isset($options['projection']) && ! is_array($options['projection']) && ! is_object($options['projection'])) {
-            throw new InvalidArgumentTypeException('"projection" option', $options['projection'], 'array or object');
+            throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
         }
 
         if ( ! is_integer($options['returnDocument'])) {
-            throw new InvalidArgumentTypeException('"returnDocument" option', $options['returnDocument'], 'integer');
+            throw InvalidArgumentException::invalidType('"returnDocument" option', $options['returnDocument'], 'integer');
         }
 
         if ($options['returnDocument'] !== self::RETURN_DOCUMENT_AFTER &&

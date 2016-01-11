@@ -7,7 +7,6 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 use MongoDB\Exception\UnexpectedValueException;
 
 /**
@@ -52,19 +51,19 @@ class Distinct implements Executable
     public function __construct($databaseName, $collectionName, $fieldName, $filter = [], array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
-            throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
-            throw new InvalidArgumentTypeException('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
         }
 
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
-            throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
         $this->databaseName = (string) $databaseName;

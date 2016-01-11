@@ -5,7 +5,6 @@ namespace MongoDB\Operation;
 use MongoDB\UpdateResult;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * Operation for replacing a single document with the update command.
@@ -41,7 +40,7 @@ class ReplaceOne implements Executable
     public function __construct($databaseName, $collectionName, $filter, $replacement, array $options = [])
     {
         if ( ! is_array($replacement) && ! is_object($replacement)) {
-            throw new InvalidArgumentTypeException('$replacement', $replacement, 'array or object');
+            throw InvalidArgumentException::invalidType('$replacement', $replacement, 'array or object');
         }
 
         if (\MongoDB\is_first_key_operator($replacement)) {

@@ -63,7 +63,7 @@ class BulkWriteTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["insertOne"\]\[0\] to have type "array or object" but found "[\w ]+"/
      * @dataProvider provideInvalidDocumentValues
      */
@@ -86,7 +86,7 @@ class BulkWriteTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["deleteMany"\]\[0\] to have type "array or object" but found "[\w ]+"/
      * @dataProvider provideInvalidDocumentValues
      */
@@ -109,7 +109,7 @@ class BulkWriteTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["deleteOne"\]\[0\] to have type "array or object" but found "[\w ]+"/
      * @dataProvider provideInvalidDocumentValues
      */
@@ -132,7 +132,7 @@ class BulkWriteTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["replaceOne"\]\[0\] to have type "array or object" but found "[\w ]+"/
      * @dataProvider provideInvalidDocumentValues
      */
@@ -155,7 +155,7 @@ class BulkWriteTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["replaceOne"\]\[1\] to have type "array or object" but found "[\w ]+"/
      * @dataProvider provideInvalidDocumentValues
      */
@@ -178,7 +178,7 @@ class BulkWriteTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["replaceOne"\]\[2\]\["upsert"\] to have type "boolean" but found "[\w ]+"/
      * @dataProvider provideInvalidBooleanValues
      */
@@ -201,7 +201,7 @@ class BulkWriteTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateMany"\]\[0\] to have type "array or object" but found "[\w ]+"/
      * @dataProvider provideInvalidDocumentValues
      */
@@ -224,7 +224,7 @@ class BulkWriteTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateMany"\]\[1\] to have type "array or object" but found "[\w ]+"/
      * @dataProvider provideInvalidDocumentValues
      */
@@ -247,7 +247,7 @@ class BulkWriteTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateMany"\]\[2\]\["upsert"\] to have type "boolean" but found "[\w ]+"/
      * @dataProvider provideInvalidBooleanValues
      */
@@ -270,7 +270,7 @@ class BulkWriteTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateOne"\]\[0\] to have type "array or object" but found "[\w ]+"/
      * @dataProvider provideInvalidDocumentValues
      */
@@ -293,7 +293,7 @@ class BulkWriteTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateOne"\]\[1\] to have type "array or object" but found "[\w ]+"/
      * @dataProvider provideInvalidDocumentValues
      */
@@ -316,7 +316,7 @@ class BulkWriteTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateOne"\]\[2\]\["upsert"\] to have type "boolean" but found "[\w ]+"/
      * @dataProvider provideInvalidBooleanValues
      */
@@ -328,7 +328,7 @@ class BulkWriteTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)

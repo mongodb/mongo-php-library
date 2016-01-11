@@ -5,7 +5,6 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * Operation for the create command.
@@ -68,47 +67,47 @@ class CreateCollection implements Executable
     public function __construct($databaseName, $collectionName, array $options = [])
     {
         if (isset($options['autoIndexId']) && ! is_bool($options['autoIndexId'])) {
-            throw new InvalidArgumentTypeException('"autoIndexId" option', $options['autoIndexId'], 'boolean');
+            throw InvalidArgumentException::invalidType('"autoIndexId" option', $options['autoIndexId'], 'boolean');
         }
 
         if (isset($options['capped']) && ! is_bool($options['capped'])) {
-            throw new InvalidArgumentTypeException('"capped" option', $options['capped'], 'boolean');
+            throw InvalidArgumentException::invalidType('"capped" option', $options['capped'], 'boolean');
         }
 
         if (isset($options['flags']) && ! is_integer($options['flags'])) {
-            throw new InvalidArgumentTypeException('"flags" option', $options['flags'], 'integer');
+            throw InvalidArgumentException::invalidType('"flags" option', $options['flags'], 'integer');
         }
 
         if (isset($options['indexOptionDefaults']) && ! is_array($options['indexOptionDefaults']) && ! is_object($options['indexOptionDefaults'])) {
-            throw new InvalidArgumentTypeException('"indexOptionDefaults" option', $options['indexOptionDefaults'], 'array or object');
+            throw InvalidArgumentException::invalidType('"indexOptionDefaults" option', $options['indexOptionDefaults'], 'array or object');
         }
 
         if (isset($options['max']) && ! is_integer($options['max'])) {
-            throw new InvalidArgumentTypeException('"max" option', $options['max'], 'integer');
+            throw InvalidArgumentException::invalidType('"max" option', $options['max'], 'integer');
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
         if (isset($options['size']) && ! is_integer($options['size'])) {
-            throw new InvalidArgumentTypeException('"size" option', $options['size'], 'integer');
+            throw InvalidArgumentException::invalidType('"size" option', $options['size'], 'integer');
         }
 
         if (isset($options['storageEngine']) && ! is_array($options['storageEngine']) && ! is_object($options['storageEngine'])) {
-            throw new InvalidArgumentTypeException('"storageEngine" option', $options['storageEngine'], 'array or object');
+            throw InvalidArgumentException::invalidType('"storageEngine" option', $options['storageEngine'], 'array or object');
         }
 
         if (isset($options['validationAction']) && ! is_string($options['validationAction'])) {
-            throw new InvalidArgumentTypeException('"validationAction" option', $options['validationAction'], 'string');
+            throw InvalidArgumentException::invalidType('"validationAction" option', $options['validationAction'], 'string');
         }
 
         if (isset($options['validationLevel']) && ! is_string($options['validationLevel'])) {
-            throw new InvalidArgumentTypeException('"validationLevel" option', $options['validationLevel'], 'string');
+            throw InvalidArgumentException::invalidType('"validationLevel" option', $options['validationLevel'], 'string');
         }
 
         if (isset($options['validator']) && ! is_array($options['validator']) && ! is_object($options['validator'])) {
-            throw new InvalidArgumentTypeException('"validator" option', $options['validator'], 'array or object');
+            throw InvalidArgumentException::invalidType('"validator" option', $options['validator'], 'array or object');
         }
 
         $this->databaseName = (string) $databaseName;

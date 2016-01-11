@@ -3,7 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Server;
-use MongoDB\Exception\InvalidArgumentTypeException;
+use MongoDB\Exception\InvalidArgumentException;
 
 /**
  * Operation for finding a single document with the find command.

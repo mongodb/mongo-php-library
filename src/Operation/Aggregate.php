@@ -7,7 +7,6 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 use MongoDB\Exception\UnexpectedValueException;
 use ArrayIterator;
 use stdClass;
@@ -95,7 +94,7 @@ class Aggregate implements Executable
             }
 
             if ( ! is_array($operation) && ! is_object($operation)) {
-                throw new InvalidArgumentTypeException(sprintf('$pipeline[%d]', $i), $operation, 'array or object');
+                throw InvalidArgumentException::invalidType(sprintf('$pipeline[%d]', $i), $operation, 'array or object');
             }
 
             $expectedIndex += 1;
@@ -107,35 +106,35 @@ class Aggregate implements Executable
         ];
 
         if ( ! is_bool($options['allowDiskUse'])) {
-            throw new InvalidArgumentTypeException('"allowDiskUse" option', $options['allowDiskUse'], 'boolean');
+            throw InvalidArgumentException::invalidType('"allowDiskUse" option', $options['allowDiskUse'], 'boolean');
         }
 
         if (isset($options['batchSize']) && ! is_integer($options['batchSize'])) {
-            throw new InvalidArgumentTypeException('"batchSize" option', $options['batchSize'], 'integer');
+            throw InvalidArgumentException::invalidType('"batchSize" option', $options['batchSize'], 'integer');
         }
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
-            throw new InvalidArgumentTypeException('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
-            throw new InvalidArgumentTypeException('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
         }
 
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
-            throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
-            throw new InvalidArgumentTypeException('"typeMap" option', $options['typeMap'], 'array');
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
         if ( ! is_bool($options['useCursor'])) {
-            throw new InvalidArgumentTypeException('"useCursor" option', $options['useCursor'], 'boolean');
+            throw InvalidArgumentException::invalidType('"useCursor" option', $options['useCursor'], 'boolean');
         }
 
         if (isset($options['batchSize']) && ! $options['useCursor']) {

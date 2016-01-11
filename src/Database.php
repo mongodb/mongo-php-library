@@ -11,7 +11,6 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
@@ -62,19 +61,19 @@ class Database
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
-            throw new InvalidArgumentTypeException('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
         }
 
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
-            throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
-            throw new InvalidArgumentTypeException('"typeMap" option', $options['typeMap'], 'array');
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->manager = $manager;

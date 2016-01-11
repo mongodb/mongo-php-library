@@ -35,7 +35,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)

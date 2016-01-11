@@ -6,6 +6,7 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\RuntimeException;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CollectionInfoCommandIterator;
 use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Model\CollectionInfoLegacyIterator;
@@ -36,15 +37,16 @@ class ListCollections implements Executable
      *
      * @param string $databaseName Database name
      * @param array  $options      Command options
+     * @throws InvalidArgumentException
      */
     public function __construct($databaseName, array $options = [])
     {
         if (isset($options['filter']) && ! is_array($options['filter']) && ! is_object($options['filter'])) {
-            throw new InvalidArgumentTypeException('"filter" option', $options['filter'], 'array or object');
+            throw InvalidArgumentException::invalidType('"filter" option', $options['filter'], 'array or object');
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
         $this->databaseName = (string) $databaseName;
@@ -104,7 +106,7 @@ class ListCollections implements Executable
 
         if (array_key_exists('name', $filter)) {
             if ( ! is_string($filter['name'])) {
-                throw new InvalidArgumentTypeException('filter name for MongoDB <3.0', $filter['name'], 'string');
+                throw InvalidArgumentException::invalidType('filter name for MongoDB <3.0', $filter['name'], 'string');
             }
 
             $filter['name'] = $this->databaseName . '.' . $filter['name'];

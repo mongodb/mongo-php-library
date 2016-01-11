@@ -7,7 +7,6 @@ use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * Operation for inserting multiple documents with the insert command.
@@ -59,7 +58,7 @@ class InsertMany implements Executable
             }
 
             if ( ! is_array($document) && ! is_object($document)) {
-                throw new InvalidArgumentTypeException(sprintf('$documents[%d]', $i), $document, 'array or object');
+                throw InvalidArgumentException::invalidType(sprintf('$documents[%d]', $i), $document, 'array or object');
             }
 
             $expectedIndex += 1;
@@ -68,15 +67,15 @@ class InsertMany implements Executable
         $options += ['ordered' => true];
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
-            throw new InvalidArgumentTypeException('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
         if ( ! is_bool($options['ordered'])) {
-            throw new InvalidArgumentTypeException('"ordered" option', $options['ordered'], 'boolean');
+            throw InvalidArgumentException::invalidType('"ordered" option', $options['ordered'], 'boolean');
         }
 
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->databaseName = (string) $databaseName;

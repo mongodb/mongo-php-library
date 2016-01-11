@@ -7,7 +7,7 @@ use MongoDB\Operation\FindOneAndReplace;
 class FindOneAndReplaceTest extends TestCase
 {
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testConstructorFilterArgumentTypeCheck($filter)
@@ -16,7 +16,7 @@ class FindOneAndReplaceTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testConstructorReplacementArgumentTypeCheck($replacement)
@@ -34,7 +34,7 @@ class FindOneAndReplaceTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)

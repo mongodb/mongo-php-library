@@ -7,7 +7,7 @@ use MongoDB\Operation\Update;
 class UpdateTest extends TestCase
 {
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$filter to have type "array or object" but found "[\w ]+"/
      * @dataProvider provideInvalidDocumentValues
      */
@@ -17,7 +17,7 @@ class UpdateTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$update to have type "array or object" but found "[\w ]+"/
      * @dataProvider provideInvalidDocumentValues
      */
@@ -27,7 +27,7 @@ class UpdateTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)

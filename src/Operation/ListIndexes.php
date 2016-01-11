@@ -6,6 +6,7 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Exception\RuntimeException;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInfoIteratorIterator;
 use EmptyIterator;
@@ -38,11 +39,12 @@ class ListIndexes implements Executable
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
      * @param array  $options        Command options
+     * @throws InvalidArgumentException
      */
     public function __construct($databaseName, $collectionName, array $options = [])
     {
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
         $this->databaseName = (string) $databaseName;

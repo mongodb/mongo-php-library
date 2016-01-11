@@ -234,9 +234,13 @@ class BucketFunctionalTest extends FunctionalTestCase
     }
     public function testBigInsert()
     {
-        $testPath= __DIR__."/BigInsertTest.txt";
-        $testStream = fopen($testPath, "r");
-        $id = $this->bucket->uploadFromStream("BigInsertTest", $testStream);
+        for ($tmpStream = tmpfile(), $i = 0; $i < 20; $i++) {
+            fwrite($tmpStream, str_repeat('a', 1048576));
+        }
+
+        fseek($tmpStream, 0);
+        $this->bucket->uploadFromStream("BigInsertTest", $tmpStream);
+        fclose($tmpStream);
     }
     public function testGetIdFromStream()
     {

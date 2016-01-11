@@ -19,6 +19,26 @@ class ClientTest extends TestCase
         $this->assertEquals('mongodb://localhost:27017', (string) $client);
     }
 
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @dataProvider provideInvalidConstructorDriverOptions
+     */
+    public function testConstructorDriverOptionTypeChecks(array $driverOptions)
+    {
+        new Client($this->getUri(), [], $driverOptions);
+    }
+
+    public function provideInvalidConstructorDriverOptions()
+    {
+        $options = [];
+
+        foreach ($this->getInvalidArrayValues() as $value) {
+            $options[][] = ['typeMap' => $value];
+        }
+
+        return $options;
+    }
+
     public function testToString()
     {
         $client = new Client($this->getUri());

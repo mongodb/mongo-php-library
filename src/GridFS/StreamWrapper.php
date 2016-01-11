@@ -1,23 +1,41 @@
 <?php
-namespace MongoDB\GridFS;
 
-use MongoDB\Collection;
+namespace MongoDB\GridFS;
 
 /**
  * Stream wrapper for reading and writing a GridFS file.
  *
  * @internal
- * @see MongoDB\GridFS\Bucket::openUploadStream(), MongoDB\GridFS\Bucket::openDownloadStream()
+ * @see Bucket::openUploadStream()
+ * @see Bucket::openDownloadStream()
  */
 class StreamWrapper
 {
     public $context;
-    private $filename;
-    private $protocol = 'gridfs';
-    private $mode;
-    private $gridFsStream;
-    private $collectionsWrapper;
     public $id;
+
+    private $collectionsWrapper;
+    private $gridFSStream;
+    private $mode;
+
+    public function openReadStream()
+    {
+        $context = stream_context_get_options($this->context);
+        $this->gridFSStream = new GridFSDownload($this->collectionsWrapper, $context['gridfs']['file']);
+        $this->id = $this->gridFSStream->getId();
+
+        return true;
+    }
+
+    public function openWriteStream()
+    {
+        $context = stream_context_get_options($this->context);
+        $options = $context['gridfs']['uploadOptions'];
+        $this->gridFSStream = new GridFSUpload($this->collectionsWrapper, $this->identifier, $options);
+        $this->id = $this->gridFSStream->getId();
+
+        return true;
+    }
 
     /**
      * Register the GridFS stream wrapper.
@@ -27,63 +45,59 @@ class StreamWrapper
         if (in_array('gridfs', stream_get_wrappers())) {
             stream_wrapper_unregister('gridfs');
         }
-        stream_wrapper_register('gridfs', get_called_class(), STREAM_IS_URL);
+
+        stream_wrapper_register('gridfs', get_called_class(), \STREAM_IS_URL);
     }
-    public function stream_write($data)
-    {
-        $this->gridFsStream->insertChunks($data);
-        return strlen($data);
-    }
-    public function stream_read($count)
-    {
-        return $this->gridFsStream->downloadNumBytes($count);
-    }
-    public function stream_eof()
-    {
-        return $this->gridFsStream->isEOF();
-    }
+
     public function stream_close()
     {
-        $this->gridFsStream->close();
+        $this->gridFSStream->close();
     }
-    public function stream_stat()
+
+    public function stream_eof()
     {
-        $stat = $this->getStatTemplate();
-        $stat[7] = $stat['size'] = $this->gridFsStream->getSize();
-        return $stat;
+        return $this->gridFSStream->isEOF();
     }
+
     public function stream_open($path, $mode, $options, &$openedPath)
     {
         $this->initProtocol($path);
         $context = stream_context_get_options($this->context);
-        $this->collectionsWrapper =$context['gridfs']['collectionsWrapper'];
+        $this->collectionsWrapper = $context['gridfs']['collectionsWrapper'];
         $this->mode = $mode;
+
         switch ($this->mode) {
-            case 'w' : return $this ->openWriteStream();
-            case 'r' : return $this ->openReadStream();
-            default: return false;
+            case 'r': return $this->openReadStream();
+            case 'w': return $this->openWriteStream();
+            default:  return false;
         }
     }
-    public function openWriteStream() {
-        $context = stream_context_get_options($this->context);
-        $options =$context['gridfs']['uploadOptions'];
-        $this->gridFsStream = new GridFsUpload($this->collectionsWrapper, $this->identifier, $options);
-        $this->id = $this->gridFsStream->getId();
-        return true;
+
+    public function stream_read($count)
+    {
+        return $this->gridFSStream->downloadNumBytes($count);
     }
 
-    public function openReadStream() {
-        $context = stream_context_get_options($this->context);
-        $this->gridFsStream = new GridFsDownload($this->collectionsWrapper, $context['gridfs']['file']);
-        $this->id = $this->gridFsStream->getId();
-        return true;
+    public function stream_stat()
+    {
+        $stat = $this->getStatTemplate();
+        $stat[7] = $stat['size'] = $this->gridFSStream->getSize();
+
+        return $stat;
+    }
+
+    public function stream_write($data)
+    {
+        $this->gridFSStream->insertChunks($data);
+
+        return strlen($data);
     }
 
     /**
-    * Gets a URL stat template with default values
-    * from https://github.com/aws/aws-sdk-php/blob/master/src/S3/StreamWrapper.php
-    * @return array
-    */
+     * Gets a URL stat template with default values
+     * from https://github.com/aws/aws-sdk-php/blob/master/src/S3/StreamWrapper.php
+     * @return array
+     */
     private function getStatTemplate()
     {
         return [
@@ -102,10 +116,10 @@ class StreamWrapper
             12 => -1, 'blocks'  => -1,
         ];
     }
+
     private function initProtocol($path)
     {
         $parsed_path = parse_url($path);
-        $this->databaseName = $parsed_path["host"];
-        $this->identifier = substr($parsed_path["path"], 1);
+        $this->identifier = substr($parsed_path['path'], 1);
     }
 }

@@ -44,6 +44,10 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     {
         $options = [];
 
+        foreach ($this->getInvalidReadConcernValues() as $value) {
+            $options[][] = ['readConcern' => $value];
+        }
+
         foreach ($this->getInvalidReadPreferenceValues() as $value) {
             $options[][] = ['readPreference' => $value];
         }

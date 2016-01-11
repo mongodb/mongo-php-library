@@ -7,12 +7,12 @@ use MongoDB\GridFS;
 /**
  * Functional tests for the Bucket class.
  */
-class GridFsStreamTest extends FunctionalTestCase
+class GridFSStreamTest extends FunctionalTestCase
 {
 
     public function testBasic()
     {
-        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test");
+        $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test");
         $upload->insertChunks("hello world");
         $id = $upload->getId();
         $upload->close();
@@ -22,7 +22,7 @@ class GridFsStreamTest extends FunctionalTestCase
 
         $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$id]);
 
-        $download = new \MongoDB\GridFS\GridFsDownload($this->collectionsWrapper, $file);
+        $download = new \MongoDB\GridFS\GridFSDownload($this->collectionsWrapper, $file);
         $stream = fopen('php://temp', 'w+');
         $download->downloadToStream($stream);
         rewind($stream);
@@ -31,7 +31,7 @@ class GridFsStreamTest extends FunctionalTestCase
         fclose($stream);
 
         #make sure it's still there!
-        $download = new \MongoDB\GridFS\GridFsDownload($this->collectionsWrapper, $file);
+        $download = new \MongoDB\GridFS\GridFSDownload($this->collectionsWrapper, $file);
         $stream = fopen('php://temp', 'w+');
         $download->downloadToStream($stream);
         rewind($stream);
@@ -39,7 +39,7 @@ class GridFsStreamTest extends FunctionalTestCase
         $this->assertEquals("hello world", $contents);
         fclose($stream);
 
-        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test");
+        $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test");
         $id = $upload->getId();
         $upload->close();
 
@@ -47,7 +47,7 @@ class GridFsStreamTest extends FunctionalTestCase
         $this->assertEquals(1, $this->collectionsWrapper->getChunksCollection()->count());
 
         $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$id]);
-        $download = new \MongoDB\GridFS\GridFsDownload($this->collectionsWrapper, $file);
+        $download = new \MongoDB\GridFS\GridFSDownload($this->collectionsWrapper, $file);
         $stream = fopen('php://temp', 'w+');
         $download->downloadToStream($stream);
         rewind($stream);
@@ -58,7 +58,7 @@ class GridFsStreamTest extends FunctionalTestCase
 
     public function testMd5()
     {
-        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test");
+        $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test");
         $upload->insertChunks("hello world\n");
         $id = $upload->getId();
         $upload->close();
@@ -68,7 +68,7 @@ class GridFsStreamTest extends FunctionalTestCase
     }
     public function testUploadDefaultOpts()
     {
-        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test");
+        $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test");
 
         $this->assertTrue($upload->getId() instanceof \MongoDB\BSON\ObjectId);
         $this->assertTrue($upload->getFile()["uploadDate"] instanceof \MongoDB\BSON\UTCDateTime);
@@ -89,7 +89,7 @@ class GridFsStreamTest extends FunctionalTestCase
                  "aliases" => ["foo", "bar"],
                  "metadata" => ["foo" => 1, "bar" => 2]
                  ];
-        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test", $options);
+        $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test", $options);
         $this->assertEquals($upload->getChunkSize(), 1);
         $this->assertEquals($upload->getFile()["contentType"], "text/html");
         $this->assertEquals($upload->getFile()["aliases"], ["foo", "bar"]);
@@ -97,11 +97,11 @@ class GridFsStreamTest extends FunctionalTestCase
     }
     public function testDownloadDefaultOpts()
     {
-        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test");
+        $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test");
         $upload->close();
 
         $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id" => $upload->getId()]);
-        $download = new \MongoDB\GridFS\GridFsDownload($this->collectionsWrapper, $file);
+        $download = new \MongoDB\GridFS\GridFSDownload($this->collectionsWrapper, $file);
         $download->close();
 
         $this->assertEquals($upload->getId(), $download->getId());
@@ -120,12 +120,12 @@ class GridFsStreamTest extends FunctionalTestCase
                  "aliases" => ["foo", "bar"],
                  "metadata" => ["foo" => 1, "bar" => 2]
                  ];
-        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test", $options);
+        $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test", $options);
         $upload->insertChunks("hello world");
         $upload->close();
 
         $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id" => $upload->getId()]);
-        $download = new \MongoDB\GridFS\GridFsDownload($this->collectionsWrapper, $file);
+        $download = new \MongoDB\GridFS\GridFSDownload($this->collectionsWrapper, $file);
 
         $this->assertEquals("test", $download->getFile()->filename);
         $this->assertEquals($upload->getId(), $download->getId());
@@ -141,7 +141,7 @@ class GridFsStreamTest extends FunctionalTestCase
      */
     public function testInsertChunks($data)
     {
-        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test");
+        $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test");
         $upload->insertChunks($data);
         $upload->close();
         $stream = $this->bucket->openDownloadStream($upload->getId());
@@ -154,7 +154,7 @@ class GridFsStreamTest extends FunctionalTestCase
         for($i=0; $i<255*1024+1000; $i++){
             $toUpload .= "a";
         }
-        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test");
+        $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test");
         $upload->insertChunks($toUpload);
         $upload->close();
 
@@ -170,7 +170,7 @@ class GridFsStreamTest extends FunctionalTestCase
     public function testSmallChunks($data)
     {
         $options = ["chunkSizeBytes"=>1];
-        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test", $options);
+        $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test", $options);
         $upload->insertChunks($data);
         $upload->close();
 
@@ -182,11 +182,11 @@ class GridFsStreamTest extends FunctionalTestCase
     }
     public function testMultipleReads()
     {
-        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test", ["chunkSizeBytes"=>3]);
+        $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test", ["chunkSizeBytes"=>3]);
         $upload->insertChunks("hello world");
         $upload->close();
         $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$upload->getId()]);
-        $download = new \MongoDB\GridFS\GridFsDownload($this->collectionsWrapper, $file);
+        $download = new \MongoDB\GridFS\GridFSDownload($this->collectionsWrapper, $file);
         $this->assertEquals("he", $download->downloadNumBytes(2));
         $this->assertEquals("ll", $download->downloadNumBytes(2));
         $this->assertEquals("o ", $download->downloadNumBytes(2));
@@ -202,11 +202,11 @@ class GridFsStreamTest extends FunctionalTestCase
      */
     public function testProvidedMultipleReads($data)
     {
-        $upload = new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper, "test", ["chunkSizeBytes"=>rand(1, 5)]);
+        $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test", ["chunkSizeBytes"=>rand(1, 5)]);
         $upload->insertChunks($data);
         $upload->close();
         $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$upload->getId()]);
-        $download = new \MongoDB\GridFS\GridFsDownload($this->collectionsWrapper, $file);
+        $download = new \MongoDB\GridFS\GridFSDownload($this->collectionsWrapper, $file);
 
         $readPos = 0;
         while($readPos < strlen($data)){
@@ -227,7 +227,7 @@ class GridFsStreamTest extends FunctionalTestCase
      */
     public function testUploadConstructorOptionTypeChecks(array $options)
     {
-        new \MongoDB\GridFS\GridFsUpload($this->collectionsWrapper,"test", $options);
+        new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper,"test", $options);
     }
 
     public function provideInvalidUploadConstructorOptions()
@@ -247,23 +247,5 @@ class GridFsStreamTest extends FunctionalTestCase
             $options[][] = ['metadata' => $value];
         }
         return $options;
-    }
-    /**
-     * @expectedException \MongoDB\Exception\InvalidArgumentTypeException
-     * @dataProvider provideInvalidDownloadConstructorFile
-     */
-    public function testDownloadConstructorFileCheck($file)
-    {
-        $download = new \MongoDB\GridFS\GridFsDownload($this->collectionsWrapper, $file);
-    }
-    public function provideInvalidDownloadConstructorFile()
-    {
-        $files = [];
-        $invalidFiles = [123, 3.14, true, []];
-
-        foreach ($invalidFiles as $value) {
-            $files[][] = $value;
-        }
-        return $files;
     }
 }

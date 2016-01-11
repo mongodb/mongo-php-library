@@ -7,8 +7,6 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\RuntimeException;
-use MongoDB\Exception\UnexpectedValueException;
 
 /**
  * Operation for the find command.

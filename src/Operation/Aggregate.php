@@ -157,6 +157,7 @@ class Aggregate implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return Traversable
+     * @throws UnexpectedValueException if the command response was malformed
      */
     public function execute(Server $server)
     {

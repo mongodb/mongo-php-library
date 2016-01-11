@@ -5,7 +5,6 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\Server;
-use MongoDB\Exception\RuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CollectionInfoCommandIterator;
 use MongoDB\Model\CollectionInfoIterator;

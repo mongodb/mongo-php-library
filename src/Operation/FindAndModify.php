@@ -130,6 +130,7 @@ class FindAndModify implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return object|null
+     * @throws UnexpectedValueException if the command response was malformed
      */
     public function execute(Server $server)
     {

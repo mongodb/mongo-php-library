@@ -79,6 +79,7 @@ class Distinct implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return mixed[]
+     * @throws UnexpectedValueException if the command response was malformed
      */
     public function execute(Server $server)
     {

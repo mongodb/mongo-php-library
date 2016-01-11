@@ -102,6 +102,7 @@ class Count implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return integer
+     * @throws UnexpectedValueException if the command response was malformed
      */
     public function execute(Server $server)
     {

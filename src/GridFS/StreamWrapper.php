@@ -12,11 +12,16 @@ namespace MongoDB\GridFS;
 class StreamWrapper
 {
     public $context;
-    public $id;
 
     private $collectionsWrapper;
     private $gridFSStream;
+    private $id;
     private $mode;
+
+    public function getId()
+    {
+        return $this->id;
+    }
 
     public function openReadStream()
     {

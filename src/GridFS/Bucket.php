@@ -183,8 +183,8 @@ class Bucket
     {
         $metadata = stream_get_meta_data($stream);
 
-        if (isset($metadata['wrapper_data']->id)) {
-            return $metadata['wrapper_data']->id;
+        if ($metadata['wrapper_data'] instanceof StreamWrapper) {
+            return $metadata['wrapper_data']->getId();
         }
 
         return;

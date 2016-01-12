@@ -96,4 +96,50 @@ class IndexInfoTest extends TestCase
         $info = new IndexInfo($expectedInfo);
         $this->assertSame($expectedInfo, $info->__debugInfo());
     }
+
+    public function testImplementsArrayAccess()
+    {
+        $info = new IndexInfo([
+            'v' => 1,
+            'key' => ['x' => 1],
+            'name' => 'x_1',
+            'ns' => 'foo.bar',
+        ]);
+
+        $this->assertInstanceOf('ArrayAccess', $info);
+        $this->assertTrue(isset($info['name']));
+        $this->assertSame('x_1', $info['name']);
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessage MongoDB\Model\IndexInfo is immutable
+     */
+    public function testOffsetSetCannotBeCalled()
+    {
+        $info = new IndexInfo([
+            'v' => 1,
+            'key' => ['x' => 1],
+            'name' => 'x_1',
+            'ns' => 'foo.bar',
+        ]);
+
+        $info['v'] = 2;
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessage MongoDB\Model\IndexInfo is immutable
+     */
+    public function testOffsetUnsetCannotBeCalled()
+    {
+        $info = new IndexInfo([
+            'v' => 1,
+            'key' => ['x' => 1],
+            'name' => 'x_1',
+            'ns' => 'foo.bar',
+        ]);
+
+        unset($info['v']);
+    }
 }

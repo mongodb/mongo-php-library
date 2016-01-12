@@ -25,7 +25,7 @@ class InsertManyTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$documents\[0\] to have type "array or object" but found "[\w ]+"/
      * @dataProvider provideInvalidDocumentValues
      */
@@ -35,7 +35,7 @@ class InsertManyTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)

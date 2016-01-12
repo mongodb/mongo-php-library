@@ -6,7 +6,7 @@ use MongoDB\InsertOneResult;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Exception\InvalidArgumentTypeException;
+use MongoDB\Exception\InvalidArgumentException;
 
 /**
  * Operation for inserting a single document with the insert command.
@@ -43,15 +43,15 @@ class InsertOne implements Executable
     public function __construct($databaseName, $collectionName, $document, array $options = [])
     {
         if ( ! is_array($document) && ! is_object($document)) {
-            throw new InvalidArgumentTypeException('$document', $document, 'array or object');
+            throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
         }
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
-            throw new InvalidArgumentTypeException('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->databaseName = (string) $databaseName;

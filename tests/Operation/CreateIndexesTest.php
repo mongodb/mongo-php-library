@@ -25,7 +25,7 @@ class CreateIndexesTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidIndexSpecificationTypes
      */
     public function testCreateIndexesRequiresIndexSpecificationsToBeAnArray($index)

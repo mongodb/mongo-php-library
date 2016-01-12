@@ -35,7 +35,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
@@ -47,8 +47,16 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         $options = [];
 
+        foreach ($this->getInvalidReadConcernValues() as $value) {
+            $options[][] = ['readConcern' => $value];
+        }
+
         foreach ($this->getInvalidReadPreferenceValues() as $value) {
             $options[][] = ['readPreference' => $value];
+        }
+
+        foreach ($this->getInvalidArrayValues() as $value) {
+            $options[][] = ['typeMap' => $value];
         }
 
         foreach ($this->getInvalidWriteConcernValues() as $value) {

@@ -7,7 +7,6 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 use MongoDB\Exception\UnexpectedValueException;
 
 /**
@@ -58,7 +57,7 @@ class Count implements Executable
     public function __construct($databaseName, $collectionName, $filter = [], array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
-            throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
         if (isset($options['hint'])) {
@@ -67,28 +66,28 @@ class Count implements Executable
             }
 
             if ( ! is_string($options['hint'])) {
-                throw new InvalidArgumentTypeException('"hint" option', $options['hint'], 'string or array or object');
+                throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], 'string or array or object');
             }
         }
 
         if (isset($options['limit']) && ! is_integer($options['limit'])) {
-            throw new InvalidArgumentTypeException('"limit" option', $options['limit'], 'integer');
+            throw InvalidArgumentException::invalidType('"limit" option', $options['limit'], 'integer');
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
-            throw new InvalidArgumentTypeException('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
         }
 
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
-            throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
         if (isset($options['skip']) && ! is_integer($options['skip'])) {
-            throw new InvalidArgumentTypeException('"skip" option', $options['skip'], 'integer');
+            throw InvalidArgumentException::invalidType('"skip" option', $options['skip'], 'integer');
         }
 
         $this->databaseName = (string) $databaseName;
@@ -103,6 +102,7 @@ class Count implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return integer
+     * @throws UnexpectedValueException if the command response was malformed
      */
     public function execute(Server $server)
     {

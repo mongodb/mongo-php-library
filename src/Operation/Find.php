@@ -7,9 +7,6 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
-use MongoDB\Exception\RuntimeException;
-use MongoDB\Exception\UnexpectedValueException;
 
 /**
  * Operation for the find command.
@@ -91,24 +88,24 @@ class Find implements Executable
     public function __construct($databaseName, $collectionName, $filter, array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
-            throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
         if (isset($options['allowPartialResults']) && ! is_bool($options['allowPartialResults'])) {
-            throw new InvalidArgumentTypeException('"allowPartialResults" option', $options['allowPartialResults'], 'boolean');
+            throw InvalidArgumentException::invalidType('"allowPartialResults" option', $options['allowPartialResults'], 'boolean');
         }
 
         if (isset($options['batchSize']) && ! is_integer($options['batchSize'])) {
-            throw new InvalidArgumentTypeException('"batchSize" option', $options['batchSize'], 'integer');
+            throw InvalidArgumentException::invalidType('"batchSize" option', $options['batchSize'], 'integer');
         }
 
         if (isset($options['comment']) && ! is_string($options['comment'])) {
-            throw new InvalidArgumentTypeException('"comment" option', $options['comment'], 'comment');
+            throw InvalidArgumentException::invalidType('"comment" option', $options['comment'], 'comment');
         }
 
         if (isset($options['cursorType'])) {
             if ( ! is_integer($options['cursorType'])) {
-                throw new InvalidArgumentTypeException('"cursorType" option', $options['cursorType'], 'integer');
+                throw InvalidArgumentException::invalidType('"cursorType" option', $options['cursorType'], 'integer');
             }
 
             if ($options['cursorType'] !== self::NON_TAILABLE &&
@@ -119,47 +116,47 @@ class Find implements Executable
         }
 
         if (isset($options['limit']) && ! is_integer($options['limit'])) {
-            throw new InvalidArgumentTypeException('"limit" option', $options['limit'], 'integer');
+            throw InvalidArgumentException::invalidType('"limit" option', $options['limit'], 'integer');
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
-            throw new InvalidArgumentTypeException('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
         if (isset($options['modifiers']) && ! is_array($options['modifiers']) && ! is_object($options['modifiers'])) {
-            throw new InvalidArgumentTypeException('"modifiers" option', $options['modifiers'], 'array or object');
+            throw InvalidArgumentException::invalidType('"modifiers" option', $options['modifiers'], 'array or object');
         }
 
         if (isset($options['noCursorTimeout']) && ! is_bool($options['noCursorTimeout'])) {
-            throw new InvalidArgumentTypeException('"noCursorTimeout" option', $options['noCursorTimeout'], 'boolean');
+            throw InvalidArgumentException::invalidType('"noCursorTimeout" option', $options['noCursorTimeout'], 'boolean');
         }
 
         if (isset($options['oplogReplay']) && ! is_bool($options['oplogReplay'])) {
-            throw new InvalidArgumentTypeException('"oplogReplay" option', $options['oplogReplay'], 'boolean');
+            throw InvalidArgumentException::invalidType('"oplogReplay" option', $options['oplogReplay'], 'boolean');
         }
 
         if (isset($options['projection']) && ! is_array($options['projection']) && ! is_object($options['projection'])) {
-            throw new InvalidArgumentTypeException('"projection" option', $options['projection'], 'array or object');
+            throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
-            throw new InvalidArgumentTypeException('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
         }
 
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
-            throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
         if (isset($options['skip']) && ! is_integer($options['skip'])) {
-            throw new InvalidArgumentTypeException('"skip" option', $options['skip'], 'integer');
+            throw InvalidArgumentException::invalidType('"skip" option', $options['skip'], 'integer');
         }
 
         if (isset($options['sort']) && ! is_array($options['sort']) && ! is_object($options['sort'])) {
-            throw new InvalidArgumentTypeException('"sort" option', $options['sort'], 'array or object');
+            throw InvalidArgumentException::invalidType('"sort" option', $options['sort'], 'array or object');
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
-            throw new InvalidArgumentTypeException('"typeMap" option', $options['typeMap'], 'array');
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
         $this->databaseName = (string) $databaseName;

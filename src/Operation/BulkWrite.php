@@ -7,7 +7,6 @@ use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * Operation for executing multiple write operations.
@@ -85,7 +84,7 @@ class BulkWrite implements Executable
             }
 
             if ( ! is_array($operation)) {
-                throw new InvalidArgumentTypeException(sprintf('$operations[%d]', $i), $operation, 'array');
+                throw InvalidArgumentException::invalidType(sprintf('$operations[%d]', $i), $operation, 'array');
             }
 
             if (count($operation) !== 1) {
@@ -100,7 +99,7 @@ class BulkWrite implements Executable
             }
 
             if ( ! is_array($args[0]) && ! is_object($args[0])) {
-                throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][0]', $i, $type), $args[0], 'array or object');
+                throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][0]', $i, $type), $args[0], 'array or object');
             }
 
             switch ($type) {
@@ -119,7 +118,7 @@ class BulkWrite implements Executable
                     }
 
                     if ( ! is_array($args[1]) && ! is_object($args[1])) {
-                        throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
+                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
                     }
 
                     if (\MongoDB\is_first_key_operator($args[1])) {
@@ -131,14 +130,14 @@ class BulkWrite implements Executable
                     }
 
                     if ( ! is_array($args[2])) {
-                        throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][2]', $i, $type), $args[2], 'array');
+                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]', $i, $type), $args[2], 'array');
                     }
 
                     $args[2]['multi'] = false;
                     $args[2] += ['upsert' => false];
 
                     if ( ! is_bool($args[2]['upsert'])) {
-                        throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][2]["upsert"]', $i, $type), $args[2]['upsert'], 'boolean');
+                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["upsert"]', $i, $type), $args[2]['upsert'], 'boolean');
                     }
 
                     $operations[$i][$type][2] = $args[2];
@@ -152,7 +151,7 @@ class BulkWrite implements Executable
                     }
 
                     if ( ! is_array($args[1]) && ! is_object($args[1])) {
-                        throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
+                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
                     }
 
                     if ( ! \MongoDB\is_first_key_operator($args[1])) {
@@ -164,14 +163,14 @@ class BulkWrite implements Executable
                     }
 
                     if ( ! is_array($args[2])) {
-                        throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][2]', $i, $type), $args[2], 'array');
+                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]', $i, $type), $args[2], 'array');
                     }
 
                     $args[2]['multi'] = ($type === self::UPDATE_MANY);
                     $args[2] += ['upsert' => false];
 
                     if ( ! is_bool($args[2]['upsert'])) {
-                        throw new InvalidArgumentTypeException(sprintf('$operations[%d]["%s"][2]["upsert"]', $i, $type), $args[2]['upsert'], 'boolean');
+                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["upsert"]', $i, $type), $args[2]['upsert'], 'boolean');
                     }
 
                     $operations[$i][$type][2] = $args[2];
@@ -188,15 +187,15 @@ class BulkWrite implements Executable
         $options += ['ordered' => true];
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
-            throw new InvalidArgumentTypeException('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
         if ( ! is_bool($options['ordered'])) {
-            throw new InvalidArgumentTypeException('"ordered" option', $options['ordered'], 'boolean');
+            throw InvalidArgumentException::invalidType('"ordered" option', $options['ordered'], 'boolean');
         }
 
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->databaseName = (string) $databaseName;

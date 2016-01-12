@@ -17,7 +17,7 @@ class IndexInputTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      */
     public function testConstructorShouldRequireKeyToBeArrayOrObject()
     {
@@ -25,7 +25,7 @@ class IndexInputTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidFieldOrderValues
      */
     public function testConstructorShouldRequireKeyFieldOrderToBeNumericOrString($order)
@@ -47,7 +47,7 @@ class IndexInputTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      */
     public function testConstructorShouldRequireNamespaceToBeString()
     {
@@ -55,7 +55,7 @@ class IndexInputTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      */
     public function testConstructorShouldRequireNameToBeString()
     {

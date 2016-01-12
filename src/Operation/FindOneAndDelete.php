@@ -5,7 +5,6 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * Operation for deleting a document with the findAndModify command.
@@ -44,11 +43,11 @@ class FindOneAndDelete implements Executable
     public function __construct($databaseName, $collectionName, $filter, array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
-            throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
         if (isset($options['projection']) && ! is_array($options['projection']) && ! is_object($options['projection'])) {
-            throw new InvalidArgumentTypeException('"projection" option', $options['projection'], 'array or object');
+            throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
         }
 
         if (isset($options['projection'])) {

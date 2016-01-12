@@ -7,7 +7,6 @@ use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * Operation for the update command.
@@ -56,11 +55,11 @@ class Update implements Executable
     public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
-            throw new InvalidArgumentTypeException('$filter', $filter, 'array or object');
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
         if ( ! is_array($update) && ! is_object($update)) {
-            throw new InvalidArgumentTypeException('$update', $filter, 'array or object');
+            throw InvalidArgumentException::invalidType('$update', $filter, 'array or object');
         }
 
         $options += [
@@ -69,11 +68,11 @@ class Update implements Executable
         ];
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
-            throw new InvalidArgumentTypeException('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
         if ( ! is_bool($options['multi'])) {
-            throw new InvalidArgumentTypeException('"multi" option', $options['multi'], 'boolean');
+            throw InvalidArgumentException::invalidType('"multi" option', $options['multi'], 'boolean');
         }
 
         if ($options['multi'] && ! \MongoDB\is_first_key_operator($update)) {
@@ -81,11 +80,11 @@ class Update implements Executable
         }
 
         if ( ! is_bool($options['upsert'])) {
-            throw new InvalidArgumentTypeException('"upsert" option', $options['upsert'], 'boolean');
+            throw InvalidArgumentException::invalidType('"upsert" option', $options['upsert'], 'boolean');
         }
 
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->databaseName = (string) $databaseName;

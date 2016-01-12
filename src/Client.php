@@ -7,6 +7,7 @@ use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\DatabaseInfoIterator;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListDatabases;
@@ -49,7 +50,7 @@ class Client
         ];
 
         if (isset($driverOptions['typeMap']) && ! is_array($driverOptions['typeMap'])) {
-            throw new InvalidArgumentTypeException('"typeMap" driver option', $driverOptions['typeMap'], 'array');
+            throw InvalidArgumentException::invalidType('"typeMap" driver option', $driverOptions['typeMap'], 'array');
         }
 
         $this->manager = new Manager($uri, $uriOptions, $driverOptions);

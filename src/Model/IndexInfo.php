@@ -151,21 +151,21 @@ class IndexInfo implements ArrayAccess
      * Not supported.
      *
      * @see http://php.net/arrayaccess.offsetset
-     * @throws BadMethodCallException IndexInfo is immutable
+     * @throws BadMethodCallException
      */
     public function offsetSet($key, $value)
     {
-        throw new BadMethodCallException('IndexInfo is immutable');
+        throw BadMethodCallException::classIsImmutable(__CLASS__);
     }
 
     /**
      * Not supported.
      *
      * @see http://php.net/arrayaccess.offsetunset
-     * @throws BadMethodCallException IndexInfo is immutable
+     * @throws BadMethodCallException
      */
     public function offsetUnset($key)
     {
-        throw new BadMethodCallException('IndexInfo is immutable');
+        throw BadMethodCallException::classIsImmutable(__CLASS__);
     }
 }

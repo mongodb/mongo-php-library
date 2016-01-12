@@ -5,7 +5,6 @@ namespace MongoDB\Operation;
 use MongoDB\UpdateResult;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * Operation for updating a single document with the update command.
@@ -41,7 +40,7 @@ class UpdateOne implements Executable
     public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
         if ( ! is_array($update) && ! is_object($update)) {
-            throw new InvalidArgumentTypeException('$update', $update, 'array or object');
+            throw InvalidArgumentException::invalidType('$update', $update, 'array or object');
         }
 
         if ( ! \MongoDB\is_first_key_operator($update)) {

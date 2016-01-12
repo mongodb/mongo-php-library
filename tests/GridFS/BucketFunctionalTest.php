@@ -176,25 +176,25 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->bucket->uploadFromStream("test",$this->generateStream("bar"));
         $this->bucket->uploadFromStream("test",$this->generateStream("baz"));
 
-        $this->assertEquals("foo", stream_get_contents($this->bucket->openDownloadStreamByName("test", 0)));
-        $this->assertEquals("bar", stream_get_contents($this->bucket->openDownloadStreamByName("test", 1)));
-        $this->assertEquals("baz", stream_get_contents($this->bucket->openDownloadStreamByName("test", 2)));
+        $this->assertEquals("foo", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => 0])));
+        $this->assertEquals("bar", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => 1])));
+        $this->assertEquals("baz", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => 2])));
 
-        $this->assertEquals("baz", stream_get_contents($this->bucket->openDownloadStreamByName("test", -1)));
-        $this->assertEquals("bar", stream_get_contents($this->bucket->openDownloadStreamByName("test", -2)));
-        $this->assertEquals("foo", stream_get_contents($this->bucket->openDownloadStreamByName("test", -3)));
+        $this->assertEquals("baz", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => -1])));
+        $this->assertEquals("bar", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => -2])));
+        $this->assertEquals("foo", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => -3])));
 
         $fileNotFound = '\MongoDB\Exception\GridFSFileNotFoundException';
         $error = null;
         try{
-            $this->bucket->openDownloadStreamByName("test", 3);
+            $this->bucket->openDownloadStreamByName("test", ['revision' => 3]);
         } catch(\MongoDB\Exception\Exception $e) {
             $error = $e;
         }
         $this->assertTrue($error instanceof $fileNotFound);
         $error = null;
         try{
-            $this->bucket->openDownloadStreamByName("test", -4);
+            $this->bucket->openDownloadStreamByName("test", ['revision' => -4]);
         } catch(\MongoDB\Exception\Exception $e) {
             $error = $e;
         }
@@ -234,9 +234,13 @@ class BucketFunctionalTest extends FunctionalTestCase
     }
     public function testBigInsert()
     {
-        $testPath= __DIR__."/BigInsertTest.txt";
-        $testStream = fopen($testPath, "r");
-        $id = $this->bucket->uploadFromStream("BigInsertTest", $testStream);
+        for ($tmpStream = tmpfile(), $i = 0; $i < 20; $i++) {
+            fwrite($tmpStream, str_repeat('a', 1048576));
+        }
+
+        fseek($tmpStream, 0);
+        $this->bucket->uploadFromStream("BigInsertTest", $tmpStream);
+        fclose($tmpStream);
     }
     public function testGetIdFromStream()
     {

@@ -10,7 +10,7 @@ use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * GridFSCollectionsWrapper abstracts the GridFS files and chunks collections.
- * 
+ *
  * @internal
  */
 class GridFSCollectionsWrapper
@@ -33,6 +33,11 @@ class GridFSCollectionsWrapper
     {
         $this->filesCollection = new Collection($manager, sprintf('%s.%s.files', $databaseName, $bucketName), $collectionOptions);
         $this->chunksCollection = new Collection($manager, sprintf('%s.%s.chunks', $databaseName, $bucketName), $collectionOptions);
+    }
+
+    public function dropCollections(){
+        $this->filesCollection-> drop();
+        $this->chunksCollection->drop();
     }
 
     public function getChunksCollection()

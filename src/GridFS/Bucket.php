@@ -151,6 +151,16 @@ class Bucket
     }
 
     /**
+    * Drops the files and chunks collection associated with GridFS this bucket
+    *
+    */
+
+    public function drop()
+    {
+        $this->collectionsWrapper->dropCollections();
+    }
+
+    /**
      * Find files from the GridFS bucket's files collection.
      *
      * @see Find::__construct() for supported options

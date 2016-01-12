@@ -273,6 +273,13 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $this->assertEquals("testing", stream_get_contents($this->bucket->openDownloadStreamByName("second_name")));
     }
+    public function testDrop()
+    {
+        $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("hello world"));
+        $this->bucket->drop();
+        $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("hello world"));
+        $this->assertEquals(1, $this->collectionsWrapper->getFilesCollection()->count());
+    }
     /**
      *@dataProvider provideInsertChunks
      */

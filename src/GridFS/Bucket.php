@@ -87,13 +87,13 @@ class Bucket
     public function delete(ObjectId $id)
     {
         $file = $this->collectionsWrapper->getFilesCollection()->findOne(['_id' => $id]);
+        $this->collectionsWrapper->getFilesCollection()->deleteOne(['_id' => $id]);
         $this->collectionsWrapper->getChunksCollection()->deleteMany(['files_id' => $id]);
 
         if ($file === null) {
             throw new GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
         }
 
-        $this->collectionsWrapper->getFilesCollection()->deleteOne(['_id' => $id]);
     }
 
     /**

@@ -279,14 +279,10 @@ class Bucket
     public function rename(ObjectId $id, $newFilename)
     {
         $filesCollection = $this->collectionsWrapper->getFilesCollection();
-        $file = $filesCollection->findOne(['_id' => $id]);
-
-        if ($file === null) {
+        $result = $filesCollection->updateOne(['_id' => $id], ['$set' => ['filename' => $newFilename]]);
+        if($result->getModifiedCount() == 0) {
             throw new GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
         }
-
-        $file->filename = $newFilename;
-        $filesCollection->replaceOne(['_id' => $id], $file);
     }
 
     /**

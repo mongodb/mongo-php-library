@@ -7,7 +7,10 @@ use MongoDB\Driver\Server;
 /**
  * Executable interface for operation classes.
  *
- * @api
+ * This interface is reserved for internal use until PHPC-378 is implemented,
+ * since execute() should ultimately be changed to use ServerInterface.
+ *
+ * @internal
  */
 interface Executable
 {

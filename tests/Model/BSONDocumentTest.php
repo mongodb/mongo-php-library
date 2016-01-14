@@ -7,6 +7,13 @@ use ArrayObject;
 
 class BSONDocumentTest extends TestCase
 {
+    public function testConstructorDefaultsToPropertyAccess()
+    {
+        $document = new BSONDocument(['foo' => 'bar']);
+        $this->assertEquals(ArrayObject::ARRAY_AS_PROPS, $document->getFlags());
+        $this->assertSame('bar', $document->foo);
+    }
+
     public function testBsonSerializeCastsToObject()
     {
         $data = [0 => 'foo', 2 => 'bar'];

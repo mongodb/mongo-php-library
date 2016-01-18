@@ -17,6 +17,19 @@ use ArrayObject;
 class BSONDocument extends ArrayObject implements Serializable, Unserializable
 {
     /**
+     * Constructor.
+     *
+     * This overrides the parent constructor to allow property access of entries
+     * by default.
+     *
+     * @see http://php.net/arrayobject.construct
+     */
+    public function __construct($input = [], $flags = ArrayObject::ARRAY_AS_PROPS, $iterator_class = 'ArrayIterator')
+    {
+        parent::__construct($input, $flags, $iterator_class);
+    }
+
+    /**
      * Serialize the document to BSON.
      *
      * @see http://php.net/mongodb-bson-serializable.bsonserialize
@@ -35,6 +48,6 @@ class BSONDocument extends ArrayObject implements Serializable, Unserializable
      */
     public function bsonUnserialize(array $data)
     {
-        self::__construct($data, ArrayObject::ARRAY_AS_PROPS);
+        parent::__construct($data, ArrayObject::ARRAY_AS_PROPS);
     }
 }

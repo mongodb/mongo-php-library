@@ -103,6 +103,23 @@ class Database
     }
 
     /**
+     * Select a collection within this database.
+     *
+     * Note: collections whose names contain special characters (e.g. ".") may
+     * be selected with complex syntax (e.g. $database->{"system.profile"}) or
+     * {@link selectCollection()}.
+     *
+     * @see http://php.net/oop5.overloading#object.get
+     * @see http://php.net/types.string#language.types.string.parsing.complex
+     * @param string $collectionName Name of the collection to select
+     * @return Collection
+     */
+    public function __get($collectionName)
+    {
+        return $this->selectCollection($collectionName);
+    }
+
+    /**
      * Return the database name.
      *
      * @param string

@@ -97,6 +97,19 @@ class ClientTest extends TestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
+    public function testGetSelectsDatabaseAndInheritsOptions()
+    {
+        $uriOptions = ['w' => WriteConcern::MAJORITY];
+
+        $client = new Client($this->getUri(), $uriOptions);
+        $database = $client->{$this->getDatabaseName()};
+        $debug = $database->__debugInfo();
+
+        $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
+        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
+    }
+
     public function testSelectDatabaseInheritsOptions()
     {
         $this->markTestSkipped('Depends on https://jira.mongodb.org/browse/PHPC-523');

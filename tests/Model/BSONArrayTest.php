@@ -14,4 +14,13 @@ class BSONArrayTest extends TestCase
         $this->assertSame($data, $array->getArrayCopy());
         $this->assertSame(['foo', 'bar'], $array->bsonSerialize());
     }
+
+    public function testSetState()
+    {
+        $data = ['foo', 'bar'];
+
+        $array = BSONArray::__set_state($data);
+        $this->assertInstanceOf('MongoDB\Model\BSONArray', $array);
+        $this->assertSame($data, $array->getArrayCopy());
+    }
 }

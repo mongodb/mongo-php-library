@@ -74,6 +74,23 @@ class Client
     }
 
     /**
+     * Select a database.
+     *
+     * Note: collections whose names contain special characters (e.g. "-") may
+     * be selected with complex syntax (e.g. $client->{"that-database"}) or
+     * {@link selectDatabase()}.
+     *
+     * @see http://php.net/oop5.overloading#object.get
+     * @see http://php.net/types.string#language.types.string.parsing.complex
+     * @param string $databaseName Name of the database to select
+     * @return Database
+     */
+    public function __get($databaseName)
+    {
+        return $this->selectDatabase($databaseName);
+    }
+
+    /**
      * Return the connection string (i.e. URI).
      *
      * @param string

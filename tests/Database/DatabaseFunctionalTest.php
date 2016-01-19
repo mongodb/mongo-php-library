@@ -131,6 +131,20 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertCollectionCount($this->getNamespace(), 0);
     }
 
+    public function testGetSelectsCollectionAndInheritsOptions()
+    {
+        $databaseOptions = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+
+        $database = new Database($this->manager, $this->getDatabaseName(), $databaseOptions);
+        $collection = $database->{$this->getCollectionName()};
+        $debug = $collection->__debugInfo();
+
+        $this->assertSame($this->getCollectionName(), $debug['collectionName']);
+        $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
+        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
+    }
+
     public function testSelectCollectionInheritsOptions()
     {
         $databaseOptions = [

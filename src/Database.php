@@ -144,6 +144,10 @@ class Database
             $options['readPreference'] = $this->readPreference;
         }
 
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
         $operation = new DatabaseCommand($this->databaseName, $command, $options);
         $server = $this->manager->selectServer($options['readPreference']);
 

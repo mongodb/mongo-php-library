@@ -30,6 +30,22 @@ class BSONDocument extends ArrayObject implements Serializable, Unserializable
     }
 
     /**
+     * Factory method for var_export().
+     *
+     * @see http://php.net/oop5.magic#object.set-state
+     * @see http://php.net/var-export
+     * @param array $properties
+     * @return self
+     */
+    public static function __set_state(array $properties)
+    {
+        $document = new static;
+        $document->exchangeArray($properties);
+
+        return $document;
+    }
+
+    /**
      * Serialize the document to BSON.
      *
      * @see http://php.net/mongodb-bson-serializable.bsonserialize

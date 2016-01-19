@@ -22,4 +22,13 @@ class BSONDocumentTest extends TestCase
         $this->assertSame($data, $document->getArrayCopy());
         $this->assertEquals((object) [0 => 'foo', 2 => 'bar'], $document->bsonSerialize());
     }
+
+    public function testSetState()
+    {
+        $data = ['foo' => 'bar'];
+
+        $document = BSONDocument::__set_state($data);
+        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $document);
+        $this->assertSame($data, $document->getArrayCopy());
+    }
 }

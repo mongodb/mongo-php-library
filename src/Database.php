@@ -20,6 +20,12 @@ use MongoDB\Operation\ListCollections;
 
 class Database
 {
+    private static $defaultTypeMap = [
+        'array' => 'MongoDB\Model\BSONArray',
+        'document' => 'MongoDB\Model\BSONDocument',
+        'root' => 'MongoDB\Model\BSONDocument',
+    ];
+
     private $databaseName;
     private $manager;
     private $readConcern;
@@ -80,7 +86,7 @@ class Database
         $this->databaseName = (string) $databaseName;
         $this->readConcern = isset($options['readConcern']) ? $options['readConcern'] : $this->manager->getReadConcern();
         $this->readPreference = isset($options['readPreference']) ? $options['readPreference'] : $this->manager->getReadPreference();
-        $this->typeMap = isset($options['typeMap']) ? $options['typeMap'] : null;
+        $this->typeMap = isset($options['typeMap']) ? $options['typeMap'] : self::$defaultTypeMap;
         $this->writeConcern = isset($options['writeConcern']) ? $options['writeConcern'] : $this->manager->getWriteConcern();
     }
 

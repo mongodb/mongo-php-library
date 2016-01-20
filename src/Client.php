@@ -14,6 +14,12 @@ use MongoDB\Operation\ListDatabases;
 
 class Client
 {
+    private static $defaultTypeMap = [
+        'array' => 'MongoDB\Model\BSONArray',
+        'document' => 'MongoDB\Model\BSONDocument',
+        'root' => 'MongoDB\Model\BSONDocument',
+    ];
+
     private $manager;
     private $uri;
     private $typeMap;
@@ -41,13 +47,7 @@ class Client
      */
     public function __construct($uri = 'mongodb://localhost:27017', array $uriOptions = [], array $driverOptions = [])
     {
-        $driverOptions += [
-            'typeMap' => [
-                'array' => 'MongoDB\Model\BSONArray',
-                'document' => 'MongoDB\Model\BSONDocument',
-                'root' => 'MongoDB\Model\BSONDocument',
-            ],
-        ];
+        $driverOptions += ['typeMap' => self::$defaultTypeMap];
 
         if (isset($driverOptions['typeMap']) && ! is_array($driverOptions['typeMap'])) {
             throw InvalidArgumentException::invalidType('"typeMap" driver option', $driverOptions['typeMap'], 'array');

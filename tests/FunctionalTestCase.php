@@ -32,9 +32,7 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function assertCommandSucceeded($document)
     {
-        if (is_object($document)) {
-            $document = get_object_vars($document);
-        }
+        $document = is_object($document) ? (array) $document : $document;
 
         $this->assertArrayHasKey('ok', $document);
         $this->assertEquals(1, $document['ok']);
@@ -43,8 +41,8 @@ abstract class FunctionalTestCase extends TestCase
     protected function assertSameDocument($expectedDocument, $actualDocument)
     {
         $this->assertEquals(
-            ($expectedDocument instanceof stdClass) ? (array) $expectedDocument : $expectedDocument,
-            ($actualDocument instanceof stdClass) ? (array) $actualDocument : $actualDocument
+            is_object($expectedDocument) ? (array) $expectedDocument : $expectedDocument,
+            is_object($actualDocument) ? (array) $actualDocument : $actualDocument
         );
     }
 
@@ -59,7 +57,7 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         $normalizeRootDocuments = function($document) {
-            return ($document instanceof stdClass) ? (array) $document : $document;
+            return is_object($document) ? (array) $document : $document;
         };
 
         $this->assertEquals(

@@ -2,25 +2,17 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\Operation\DropIndexes;
+use MongoDB\Operation\DropDatabase;
 
-class DropIndexesTest extends TestCase
+class DropDatabaseTest extends TestCase
 {
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     */
-    public function testDropIndexShouldNotAllowEmptyIndexName()
-    {
-        new DropIndexes($this->getDatabaseName(), $this->getCollectionName(), '');
-    }
-
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        new DropIndexes($this->getDatabaseName(), $this->getCollectionName(), '*', $options);
+        new DropDatabase($this->getDatabaseName(), $options);
     }
 
     public function provideInvalidConstructorOptions()

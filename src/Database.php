@@ -20,6 +20,12 @@ use MongoDB\Operation\ListCollections;
 
 class Database
 {
+    private static $defaultTypeMap = [
+        'array' => 'MongoDB\Model\BSONArray',
+        'document' => 'MongoDB\Model\BSONDocument',
+        'root' => 'MongoDB\Model\BSONDocument',
+    ];
+
     private $databaseName;
     private $manager;
     private $readConcern;
@@ -80,7 +86,7 @@ class Database
         $this->databaseName = (string) $databaseName;
         $this->readConcern = isset($options['readConcern']) ? $options['readConcern'] : $this->manager->getReadConcern();
         $this->readPreference = isset($options['readPreference']) ? $options['readPreference'] : $this->manager->getReadPreference();
-        $this->typeMap = isset($options['typeMap']) ? $options['typeMap'] : null;
+        $this->typeMap = isset($options['typeMap']) ? $options['typeMap'] : self::$defaultTypeMap;
         $this->writeConcern = isset($options['writeConcern']) ? $options['writeConcern'] : $this->manager->getWriteConcern();
     }
 
@@ -144,6 +150,10 @@ class Database
             $options['readPreference'] = $this->readPreference;
         }
 
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
         $operation = new DatabaseCommand($this->databaseName, $command, $options);
         $server = $this->manager->selectServer($options['readPreference']);
 
@@ -169,11 +179,17 @@ class Database
     /**
      * Drop this database.
      *
-     * @return object Command result document
+     * @see DropDatabase::__construct() for supported options
+     * @param array $options Additional options
+     * @return array|object Command result document
      */
-    public function drop()
+    public function drop(array $options = [])
     {
-        $operation = new DropDatabase($this->databaseName);
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        $operation = new DropDatabase($this->databaseName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -182,12 +198,18 @@ class Database
     /**
      * Drop a collection within this database.
      *
-     * @param string $collectionName
-     * @return object Command result document
+     * @see DropCollection::__construct() for supported options
+     * @param string $collectionName Collection name
+     * @param array  $options        Additional options
+     * @return array|object Command result document
      */
-    public function dropCollection($collectionName)
+    public function dropCollection($collectionName, array $options = [])
     {
-        $operation = new DropCollection($this->databaseName, $collectionName);
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        $operation = new DropCollection($this->databaseName, $collectionName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);

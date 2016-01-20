@@ -115,9 +115,9 @@ class CollectionFunctionalTest extends FunctionalTestCase
             'sort' => ['x' => -1],
         ];
 
-        $expected = (object) ['_id' => 3, 'x' => 33];
+        $expected = ['_id' => 3, 'x' => 33];
 
-        $this->assertEquals($expected, $this->collection->findOne($filter, $options));
+        $this->assertSameDocument($expected, $this->collection->findOne($filter, $options));
     }
 
     public function testWithOptionsInheritsReadPreferenceAndWriteConcern()

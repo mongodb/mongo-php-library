@@ -4,6 +4,7 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
+use MongoDB\Exception\InvalidArgumentException;
 
 /**
  * Operation for the dropDatabase command.
@@ -16,15 +17,22 @@ use MongoDB\Driver\Server;
 class DropDatabase implements Executable
 {
     private $databaseName;
+    private $options;
 
     /**
      * Constructs a dropDatabase command.
      *
      * @param string $databaseName Database name
+     * @param array  $options      Command options
      */
-    public function __construct($databaseName)
+    public function __construct($databaseName, array $options = [])
     {
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        }
+
         $this->databaseName = (string) $databaseName;
+        $this->options = $options;
     }
 
     /**
@@ -32,11 +40,15 @@ class DropDatabase implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return object Command result document
+     * @return array|object Command result document
      */
     public function execute(Server $server)
     {
         $cursor = $server->executeCommand($this->databaseName, new Command(['dropDatabase' => 1]));
+
+        if (isset($this->options['typeMap'])) {
+            $cursor->setTypeMap($this->options['typeMap']);
+        }
 
         return current($cursor->toArray());
     }

@@ -147,7 +147,7 @@ class Client
     {
         $options += ['typeMap' => $this->typeMap];
 
-        return new Collection($this->manager, $databaseName . '.' . $collectionName, $options);
+        return new Collection($this->manager, $databaseName, $collectionName, $options);
     }
 
     /**

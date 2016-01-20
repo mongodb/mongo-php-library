@@ -15,7 +15,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 {
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @dataProvider provideInvalidDatabaseValues
+     * @dataProvider provideInvalidDatabaseNames
      */
     public function testConstructorDatabaseNameArgument($databaseName)
     {
@@ -23,7 +23,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         new Database($this->manager, $databaseName);
     }
 
-    public function provideInvalidDatabaseValues()
+    public function provideInvalidDatabaseNames()
     {
         return [
             [null],

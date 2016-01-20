@@ -72,21 +72,21 @@ class Collection
      *    to use for collection operations. Defaults to the Manager's write
      *    concern.
      *
-     * @param Manager $manager   Manager instance from the driver
-     * @param string  $namespace Collection namespace (e.g. "db.collection")
-     * @param array   $options   Collection options
+     * @param Manager $manager        Manager instance from the driver
+     * @param string  $databaseName   Database name
+     * @param string  $collectionName Collection name
+     * @param array   $options        Collection options
      * @throws InvalidArgumentException
      */
-    public function __construct(Manager $manager, $namespace, array $options = [])
+    public function __construct(Manager $manager, $databaseName, $collectionName, array $options = [])
     {
-        $parts = explode('.', $namespace, 2);
-
-        if (count($parts) != 2 || strlen($parts[0]) == 0 || strlen($parts[1]) == 0) {
-            throw new InvalidArgumentException('$namespace is invalid: ' . $namespace);
+        if (strlen($databaseName) < 1) {
+            throw new InvalidArgumentException('$databaseName is invalid: ' . $databaseName);
         }
 
-        $this->databaseName = $parts[0];
-        $this->collectionName = $parts[1];
+        if (strlen($collectionName) < 1) {
+            throw new InvalidArgumentException('$collectionName is invalid: ' . $collectionName);
+        }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
             throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
@@ -105,6 +105,8 @@ class Collection
         }
 
         $this->manager = $manager;
+        $this->databaseName = (string) $databaseName;
+        $this->collectionName = (string) $collectionName;
         $this->readConcern = isset($options['readConcern']) ? $options['readConcern'] : $this->manager->getReadConcern();
         $this->readPreference = isset($options['readPreference']) ? $options['readPreference'] : $this->manager->getReadPreference();
         $this->typeMap = isset($options['typeMap']) ? $options['typeMap'] : self::$defaultTypeMap;
@@ -133,6 +135,7 @@ class Collection
     /**
      * Return the collection namespace (e.g. "db.collection").
      *
+     * @see https://docs.mongodb.org/manual/faq/developers/#faq-dev-namespace
      * @param string
      */
     public function __toString()
@@ -723,6 +726,6 @@ class Collection
             'writeConcern' => $this->writeConcern,
         ];
 
-        return new Collection($this->manager, $this->databaseName . '.' . $this->collectionName, $options);
+        return new Collection($this->manager, $this->databaseName, $this->collectionName, $options);
     }
 }

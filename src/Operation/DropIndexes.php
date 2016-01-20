@@ -18,6 +18,7 @@ class DropIndexes implements Executable
     private $databaseName;
     private $collectionName;
     private $indexName;
+    private $options;
 
     /**
      * Constructs a dropIndexes command.
@@ -25,9 +26,10 @@ class DropIndexes implements Executable
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
      * @param string $indexName      Index name (use "*" to drop all indexes)
+     * @param array  $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, $indexName)
+    public function __construct($databaseName, $collectionName, $indexName, array $options = [])
     {
         $indexName = (string) $indexName;
 
@@ -35,9 +37,14 @@ class DropIndexes implements Executable
             throw new InvalidArgumentException('$indexName cannot be empty');
         }
 
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        }
+
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->indexName = $indexName;
+        $this->options = $options;
     }
 
     /**
@@ -45,7 +52,7 @@ class DropIndexes implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return object Command result document
+     * @return array|object Command result document
      */
     public function execute(Server $server)
     {
@@ -55,6 +62,10 @@ class DropIndexes implements Executable
         ];
 
         $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
+
+        if (isset($this->options['typeMap'])) {
+            $cursor->setTypeMap($this->options['typeMap']);
+        }
 
         return current($cursor->toArray());
     }

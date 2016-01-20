@@ -173,11 +173,17 @@ class Database
     /**
      * Drop this database.
      *
-     * @return object Command result document
+     * @see DropDatabase::__construct() for supported options
+     * @param array $options Additional options
+     * @return array|object Command result document
      */
-    public function drop()
+    public function drop(array $options = [])
     {
-        $operation = new DropDatabase($this->databaseName);
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        $operation = new DropDatabase($this->databaseName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -186,12 +192,18 @@ class Database
     /**
      * Drop a collection within this database.
      *
-     * @param string $collectionName
-     * @return object Command result document
+     * @see DropCollection::__construct() for supported options
+     * @param string $collectionName Collection name
+     * @param array  $options        Additional options
+     * @return array|object Command result document
      */
-    public function dropCollection($collectionName)
+    public function dropCollection($collectionName, array $options = [])
     {
-        $operation = new DropCollection($this->databaseName, $collectionName);
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        $operation = new DropCollection($this->databaseName, $collectionName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);

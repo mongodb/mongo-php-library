@@ -103,12 +103,18 @@ class Client
     /**
      * Drop a database.
      *
-     * @param string $databaseName
-     * @return object Command result document
+     * @see DropDatabase::__construct() for supported options
+     * @param string $databaseName Database name
+     * @param array  $options      Additional options
+     * @return array|object Command result document
      */
-    public function dropDatabase($databaseName)
+    public function dropDatabase($databaseName, array $options = [])
     {
-        $operation = new DropDatabase($databaseName);
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        $operation = new DropDatabase($databaseName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);

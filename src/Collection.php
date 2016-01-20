@@ -340,11 +340,17 @@ class Collection
     /**
      * Drop this collection.
      *
-     * @return object Command result document
+     * @see DropCollection::__construct() for supported options
+     * @param array $options Additional options
+     * @return array|object Command result document
      */
-    public function drop()
+    public function drop(array $options = [])
     {
-        $operation = new DropCollection($this->databaseName, $this->collectionName);
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        $operation = new DropCollection($this->databaseName, $this->collectionName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -353,11 +359,13 @@ class Collection
     /**
      * Drop a single index in the collection.
      *
+     * @see DropIndexes::__construct() for supported options
      * @param string $indexName Index name
-     * @return object Command result document
+     * @param array  $options   Additional options
+     * @return array|object Command result document
      * @throws InvalidArgumentException if $indexName is an empty string or "*"
      */
-    public function dropIndex($indexName)
+    public function dropIndex($indexName, array $options = [])
     {
         $indexName = (string) $indexName;
 
@@ -365,7 +373,11 @@ class Collection
             throw new InvalidArgumentException('dropIndexes() must be used to drop multiple indexes');
         }
 
-        $operation = new DropIndexes($this->databaseName, $this->collectionName, $indexName);
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        $operation = new DropIndexes($this->databaseName, $this->collectionName, $indexName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
@@ -374,11 +386,17 @@ class Collection
     /**
      * Drop all indexes in the collection.
      *
-     * @return object Command result document
+     * @see DropIndexes::__construct() for supported options
+     * @param array $options Additional options
+     * @return array|object Command result document
      */
-    public function dropIndexes()
+    public function dropIndexes(array $options = [])
     {
-        $operation = new DropIndexes($this->databaseName, $this->collectionName, '*');
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        $operation = new DropIndexes($this->databaseName, $this->collectionName, '*', $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);

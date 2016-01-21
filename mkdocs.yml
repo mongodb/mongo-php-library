@@ -1,9 +1,19 @@
 site_name: "MongoDB PHP library"
+site_url: http://mongodb.github.io/mongo-php-library
 repo_url: https://github.com/mongodb/mongo-php-library
-theme: spacelab
+
+theme: readthedocs
+
 pages:
-    - [index.md, Home]
-    - [usage.md, Usage]
-    - [data.md, Example data]
-extra_javascript:
-    - pretty.js
+    - 'Home': 'index.md'
+    - 'Getting Started': 'getting-started.md'
+    - 'Example Data': 'example-data.md'
+    - Classes:
+        - 'Client': 'classes/client.md'
+        - 'Database': 'classes/database.md'
+        - 'Collection': 'classes/collection.md'
+
+markdown_extensions:
+    - smarty
+    - toc:
+        permalink: true

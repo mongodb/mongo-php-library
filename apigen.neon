@@ -8,7 +8,7 @@ charset:
 
 main: MongoDB PHP library
 title: MongoDB PHP library
-baseUrl: http://mongodb.github.io/mongo-php-library
+baseUrl: http://mongodb.github.io/mongo-php-library/api
 googleCseId: null
 googleAnalytics: null
 templateTheme: bootstrap

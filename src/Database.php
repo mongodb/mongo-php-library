@@ -170,6 +170,10 @@ class Database
      */
     public function createCollection($collectionName, array $options = [])
     {
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
         $operation = new CreateCollection($this->databaseName, $collectionName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 

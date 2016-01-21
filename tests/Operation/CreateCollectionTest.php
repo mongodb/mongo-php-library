@@ -51,6 +51,10 @@ class CreateCollectionTest extends TestCase
             $options[][] = ['storageEngine' => $value];
         }
 
+        foreach ($this->getInvalidArrayValues() as $value) {
+            $options[][] = ['typeMap' => $value];
+        }
+
         foreach ($this->getInvalidStringValues() as $value) {
             $options[][] = ['validationAction' => $value];
         }

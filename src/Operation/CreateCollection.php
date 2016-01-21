@@ -51,6 +51,9 @@ class CreateCollection implements Executable
      *
      *  * storageEngine (document): Storage engine options.
      *
+     *  * typeMap (array): Type map for BSON deserialization. This will only be
+     *    used for the returned command result document.
+     *
      *  * validationAction (string): Validation action.
      *
      *  * validationLevel (string): Validation level.
@@ -98,6 +101,10 @@ class CreateCollection implements Executable
             throw InvalidArgumentException::invalidType('"storageEngine" option', $options['storageEngine'], 'array or object');
         }
 
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        }
+
         if (isset($options['validationAction']) && ! is_string($options['validationAction'])) {
             throw InvalidArgumentException::invalidType('"validationAction" option', $options['validationAction'], 'string');
         }
@@ -125,6 +132,10 @@ class CreateCollection implements Executable
     public function execute(Server $server)
     {
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
+
+        if (isset($this->options['typeMap'])) {
+            $cursor->setTypeMap($this->options['typeMap']);
+        }
 
         return current($cursor->toArray());
     }

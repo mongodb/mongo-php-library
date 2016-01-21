@@ -1,3 +1,86 @@
+RELEASE 1.0.0
+-------------
+2016-01-21  Jeremy Mikola  <jmikola@gmail.com>
+	* Rewrite documentation for 1.0.0
+
+2016-01-21  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-164: CreateCollection should use type map
+
+2016-01-20  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-165: Take explicit db/coll name args in Collection ctor
+
+2016-01-20  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-74: Use Client's default type map for Database and Collection
+
+2016-01-20  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-164: Drop operations should use type map
+
+2016-01-19  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-164: Database::command() should use type map
+
+2016-01-18  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-162: Support database and collection selection via __get()
+
+2016-01-18  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-163: __set_state() for BSON array and document models
+
+2016-01-14  Jeremy Mikola  <jmikola@gmail.com>
+	* BSONDocument should allow property access by default
+
+2016-01-14  Jeremy Mikola  <jmikola@gmail.com>
+	* Tests for BSON array and document serialize methods
+
+2016-01-12  Jeremy Mikola  <jmikola@gmail.com>
+	* Executable interface is internal
+
+2016-01-11  Jeremy Mikola  <jmikola@gmail.com>
+	* Unit tests for ListDatabases and ListIndexes options
+
+2016-01-11  Jeremy Mikola  <jmikola@gmail.com>
+	* Test for invalid typeMap options
+
+2016-01-11  Jeremy Mikola  <jmikola@gmail.com>
+	* Test for invalid ReadConcern options
+
+2016-01-10  Jeremy Mikola  <jmikola@gmail.com>
+	* Clean up exception docs and use statements
+
+2016-01-10  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-141: Replace InvalidArgumentTypeException with a factory method
+
+2016-01-07  Jeremy Mikola  <jmikola@gmail.com>
+	* Remove unused exception classes
+
+2016-01-07  Jeremy Mikola  <jmikola@gmail.com>
+	* Unit test for IndexInfo's ArrayAccess implementation
+
+2016-01-07  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-141: Static method for immutable BadMethodCallException
+
+2016-01-07  Jeremy Mikola  <jmikola@gmail.com>
+	* Add missing doc block info
+
+2016-01-07  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-157: Improve _id extraction for Serializable objects
+
+2016-01-07  Jeremy Mikola  <jmikola@gmail.com>
+	* Re-order functions.php alphabetically
+
+2016-01-07  Jeremy Mikola  <jmikola@gmail.com>
+	* Test with mongodb-1.1.2 on Travis CI
+
+2016-01-05  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-74: Use array and document classes in default type map
+
+2015-12-28  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-74: Model classes for BSON array and document
+
+2015-12-28  Jeremy Mikola  <jmikola@gmail.com>
+	* Update IndexInput::bsonSerialize() doc block
+
+2015-12-28  Jeremy Mikola  <jmikola@gmail.com>
+	* Add 1.0.0-beta2 release notes
+
 RELEASE 1.0.0-beta2
 -------------------
 2015-12-25  Jeremy Mikola  <jmikola@gmail.com>

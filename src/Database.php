@@ -257,7 +257,7 @@ class Database
             'writeConcern' => $this->writeConcern,
         ];
 
-        return new Collection($this->manager, $this->databaseName . '.' . $collectionName, $options);
+        return new Collection($this->manager, $this->databaseName, $collectionName, $options);
     }
 
     /**

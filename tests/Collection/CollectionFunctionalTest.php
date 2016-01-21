@@ -15,22 +15,29 @@ class CollectionFunctionalTest extends FunctionalTestCase
 {
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @dataProvider provideInvalidNamespaceValues
+     * @dataProvider provideInvalidDatabaseAndCollectionNames
      */
-    public function testConstructorNamespaceArgument($namespace)
+    public function testConstructorDatabaseNameArgument($databaseName)
     {
         // TODO: Move to unit test once ManagerInterface can be mocked (PHPC-378)
-        new Collection($this->manager, $namespace);
+        new Collection($this->manager, $databaseName, $this->getCollectionName());
     }
 
-    public function provideInvalidNamespaceValues()
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @dataProvider provideInvalidDatabaseAndCollectionNames
+     */
+    public function testConstructorCollectionNameArgument($collectionName)
+    {
+        // TODO: Move to unit test once ManagerInterface can be mocked (PHPC-378)
+        new Collection($this->manager, $this->getDatabaseName(), $collectionName);
+    }
+
+    public function provideInvalidDatabaseAndCollectionNames()
     {
         return [
             [null],
             [''],
-            ['db_collection'],
-            ['db'],
-            ['.collection'],
         ];
     }
 
@@ -40,7 +47,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        new Collection($this->manager, $this->getNamespace(), $options);
+        new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $options);
     }
 
     public function provideInvalidConstructorOptions()
@@ -129,7 +136,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];
 
-        $collection = new Collection($this->manager, $this->getNamespace(), $collectionOptions);
+        $collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $collectionOptions);
         $clone = $collection->withOptions();
         $debug = $clone->__debugInfo();
 

@@ -17,7 +17,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     {
         parent::setUp();
 
-        $this->collection = new Collection($this->manager, $this->getNamespace());
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
         $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
         $operation->execute($this->getPrimaryServer());
     }

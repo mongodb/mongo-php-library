@@ -48,7 +48,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('$out aggregation pipeline operator is not supported');
         }
 
-        $outputCollection = new Collection($this->manager, $this->getNamespace() . '_output');
+        $outputCollection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName() . '_output');
         $operation = new DropCollection($this->getDatabaseName(), $outputCollection->getCollectionName());
         $operation->execute($this->getPrimaryServer());
 

@@ -198,11 +198,11 @@ class Find implements Executable
             $options['partial'] = true;
         }
 
-        if (isset($options['cursorType'])) {
-            if ($options['cursorType'] === self::TAILABLE) {
+        if (isset($this->options['cursorType'])) {
+            if ($this->options['cursorType'] === self::TAILABLE) {
                 $options['tailable'] = true;
             }
-            if ($options['cursorType'] === self::TAILABLE_AWAIT) {
+            if ($this->options['cursorType'] === self::TAILABLE_AWAIT) {
                 $options['tailable'] = true;
                 $options['awaitData'] = true;
             }
@@ -216,11 +216,11 @@ class Find implements Executable
 
         $modifiers = empty($this->options['modifiers']) ? [] : (array) $this->options['modifiers'];
 
-        if (isset($options['comment'])) {
+        if (isset($this->options['comment'])) {
             $modifiers['$comment'] = $options['comment'];
         }
 
-        if (isset($options['maxTimeMS'])) {
+        if (isset($this->options['maxTimeMS'])) {
             $modifiers['$maxTimeMS'] = $options['maxTimeMS'];
         }
 

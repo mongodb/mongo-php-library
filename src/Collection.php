@@ -179,7 +179,7 @@ class Collection
             $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
         }
 
-        if ( ! isset($options['typeMap'])) {
+        if ( ! isset($options['typeMap']) && ( ! isset($options['useCursor']) || $options['useCursor'])) {
             $options['typeMap'] = $this->typeMap;
         }
 

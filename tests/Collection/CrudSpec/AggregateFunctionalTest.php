@@ -71,4 +71,25 @@ class AggregateFunctionalTest extends FunctionalTestCase
         $operation = new DropCollection($this->getDatabaseName(), $outputCollection->getCollectionName());
         $operation->execute($this->getPrimaryServer());
     }
+
+    public function testAggregateWithoutCursorDoesNotApplyTypemap()
+    {
+        $pipeline = [
+            ['$group' => [
+                '_id' => null,
+                'count' => ['$sum' => 1]
+            ]]
+        ];
+        $options = ['useCursor' => false];
+        $result = $this->collection->aggregate($pipeline, $options);
+
+        $expected = [
+            [
+                '_id' => null,
+                'count' => 3,
+            ],
+        ];
+
+        $this->assertSameDocuments($expected, $result);
+    }
 }

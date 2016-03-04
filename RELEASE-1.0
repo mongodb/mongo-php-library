@@ -1,3 +1,17 @@
+RELEASE 1.0.1
+-------------
+2016-02-16  minenok  <minenok@tutu.ru>
+	* PHPLIB-180: Fix option merging for Find operation
+
+2016-01-30  Andreas Braun  <git@alcaeus.org>
+	* PHPLIB-179: Don't apply typeMap if useCursor is false
+
+2016-01-21  Jeremy Mikola  <jmikola@gmail.com>
+	* Update README install instructions for 1.0.0
+
+2016-01-21  Jeremy Mikola  <jmikola@gmail.com>
+	* Allow ext-mongodb 1.1.0
+
 RELEASE 1.0.0
 -------------
 2016-01-21  Jeremy Mikola  <jmikola@gmail.com>

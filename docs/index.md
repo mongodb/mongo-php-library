@@ -21,6 +21,7 @@ and HHVM*:
 
  * [Part One: History](http://derickrethans.nl/new-drivers.html)
  * [Part Two: Architecture](http://derickrethans.nl/new-drivers-part2.html)
+ * [Part Three: Cursor Behaviour](https://derickrethans.nl/new-drivers-part3-cursor.html)
 
 ## API Documentation
 

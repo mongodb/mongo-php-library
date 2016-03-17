@@ -18,7 +18,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     {
         parent::setUp();
        foreach(['fs.files', 'fs.chunks'] as $collection){
-            $col = new Collection($this->manager, sprintf("%s.%s",$this->getDatabaseName(), $collection));
+            $col = new Collection($this->manager, $this->getDatabaseName(), $collection);
             $col->drop();
         }
         $this->bucket = new \MongoDB\GridFS\Bucket($this->manager, $this->getDatabaseName());
@@ -28,7 +28,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     public function tearDown()
     {
        foreach(['fs.files', 'fs.chunks'] as $collection){
-            $col = new Collection($this->manager, sprintf("%s.%s",$this->getDatabaseName(), $collection));
+            $col = new Collection($this->manager, $this->getDatabaseName(), $collection);
             $col->drop();
         }
         if ($this->hasFailed()) {

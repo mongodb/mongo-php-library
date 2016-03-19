@@ -31,8 +31,8 @@ class GridFSCollectionsWrapper
      */
     public function __construct(Manager $manager, $databaseName, $bucketName, array $collectionOptions = [])
     {
-        $this->filesCollection = new Collection($manager, sprintf('%s.%s.files', $databaseName, $bucketName), $collectionOptions);
-        $this->chunksCollection = new Collection($manager, sprintf('%s.%s.chunks', $databaseName, $bucketName), $collectionOptions);
+        $this->filesCollection = new Collection($manager, $databaseName, sprintf('%s.files', $bucketName), $collectionOptions);
+        $this->chunksCollection = new Collection($manager, $databaseName, sprintf('%s.chunks', $bucketName), $collectionOptions);
     }
 
     public function dropCollections(){

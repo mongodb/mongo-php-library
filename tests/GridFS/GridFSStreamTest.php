@@ -222,7 +222,7 @@ class GridFSStreamTest extends FunctionalTestCase
         $download->close();
     }
     /**
-     * @expectedException \MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException \MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidUploadConstructorOptions
      */
     public function testUploadConstructorOptionTypeChecks(array $options)

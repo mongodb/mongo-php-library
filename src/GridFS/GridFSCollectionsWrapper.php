@@ -6,7 +6,6 @@ use MongoDB\Collection;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Exception\InvalidArgumentTypeException;
 
 /**
  * GridFSCollectionsWrapper abstracts the GridFS files and chunks collections.

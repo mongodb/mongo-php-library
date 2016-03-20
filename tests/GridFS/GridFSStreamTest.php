@@ -20,7 +20,7 @@ class GridFSStreamTest extends FunctionalTestCase
         $this->assertEquals(1, $this->collectionsWrapper->getFilesCollection()->count());
         $this->assertEquals(1, $this->collectionsWrapper->getChunksCollection()->count());
 
-        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$id]);
+        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$id], ['typeMap' => ['root' => 'stdClass']]);
 
         $download = new \MongoDB\GridFS\GridFSDownload($this->collectionsWrapper, $file);
         $stream = fopen('php://temp', 'w+');
@@ -46,7 +46,7 @@ class GridFSStreamTest extends FunctionalTestCase
         $this->assertEquals(2, $this->collectionsWrapper->getFilesCollection()->count());
         $this->assertEquals(1, $this->collectionsWrapper->getChunksCollection()->count());
 
-        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$id]);
+        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$id], ['typeMap' => ['root' => 'stdClass']]);
         $download = new \MongoDB\GridFS\GridFSDownload($this->collectionsWrapper, $file);
         $stream = fopen('php://temp', 'w+');
         $download->downloadToStream($stream);
@@ -100,7 +100,7 @@ class GridFSStreamTest extends FunctionalTestCase
         $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test");
         $upload->close();
 
-        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id" => $upload->getId()]);
+        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id" => $upload->getId()], ['typeMap' => ['root' => 'stdClass']]);
         $download = new \MongoDB\GridFS\GridFSDownload($this->collectionsWrapper, $file);
         $download->close();
 
@@ -124,7 +124,7 @@ class GridFSStreamTest extends FunctionalTestCase
         $upload->insertChunks("hello world");
         $upload->close();
 
-        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id" => $upload->getId()]);
+        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id" => $upload->getId()], ['typeMap' => ['root' => 'stdClass']]);
         $download = new \MongoDB\GridFS\GridFSDownload($this->collectionsWrapper, $file);
 
         $this->assertEquals("test", $download->getFile()->filename);
@@ -185,7 +185,7 @@ class GridFSStreamTest extends FunctionalTestCase
         $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test", ["chunkSizeBytes"=>3]);
         $upload->insertChunks("hello world");
         $upload->close();
-        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$upload->getId()]);
+        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$upload->getId()], ['typeMap' => ['root' => 'stdClass']]);
         $download = new \MongoDB\GridFS\GridFSDownload($this->collectionsWrapper, $file);
         $this->assertEquals("he", $download->downloadNumBytes(2));
         $this->assertEquals("ll", $download->downloadNumBytes(2));
@@ -205,7 +205,7 @@ class GridFSStreamTest extends FunctionalTestCase
         $upload = new \MongoDB\GridFS\GridFSUpload($this->collectionsWrapper, "test", ["chunkSizeBytes"=>rand(1, 5)]);
         $upload->insertChunks($data);
         $upload->close();
-        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$upload->getId()]);
+        $file = $this->collectionsWrapper->getFilesCollection()->findOne(["_id"=>$upload->getId()], ['typeMap' => ['root' => 'stdClass']]);
         $download = new \MongoDB\GridFS\GridFSDownload($this->collectionsWrapper, $file);
 
         $readPos = 0;
@@ -222,7 +222,7 @@ class GridFSStreamTest extends FunctionalTestCase
         $download->close();
     }
     /**
-     * @expectedException \MongoDB\Exception\InvalidArgumentTypeException
+     * @expectedException \MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidUploadConstructorOptions
      */
     public function testUploadConstructorOptionTypeChecks(array $options)

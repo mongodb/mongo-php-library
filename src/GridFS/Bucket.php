@@ -6,7 +6,7 @@ use MongoDB\BSON\ObjectId;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Exception\GridFSFileNotFoundException;
-use MongoDB\Exception\InvalidArgumentTypeException;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Find;
 
 /**
@@ -51,19 +51,19 @@ class Bucket
         ];
 
         if (isset($options['bucketName']) && ! is_string($options['bucketName'])) {
-            throw new InvalidArgumentTypeException('"bucketName" option', $options['bucketName'], 'string');
+            throw InvalidArgumentException::invalidType('"bucketName" option', $options['bucketName'], 'string');
         }
 
         if (isset($options['chunkSizeBytes']) && ! is_integer($options['chunkSizeBytes'])) {
-            throw new InvalidArgumentTypeException('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
+            throw InvalidArgumentException::invalidType('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
         }
 
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
-            throw new InvalidArgumentTypeException('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw new InvalidArgumentTypeException('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->databaseName = (string) $databaseName;

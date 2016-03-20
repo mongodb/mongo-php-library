@@ -6,7 +6,7 @@ use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\Exception\Exception;
-use MongoDB\Exception\InvalidArgumentTypeException;
+use MongoDB\Exception\InvalidArgumentException;
 
 /**
  * GridFSUpload abstracts the process of writing a GridFS file.
@@ -47,22 +47,22 @@ class GridFSUpload
      * @param GridFSCollectionsWrapper $collectionsWrapper GridFS collections wrapper
      * @param string                   $filename           File name
      * @param array                    $options            Upload options
-     * @throws InvalidArgumentTypeException
+     * @throws InvalidArgumentException
      */
     public function __construct(GridFSCollectionsWrapper $collectionsWrapper, $filename, array $options = [])
     {
         $options += ['chunkSizeBytes' => 261120];
 
         if (isset($options['aliases']) && ! \MongoDB\is_string_array($options['aliases'])) {
-            throw new InvalidArgumentTypeException('"aliases" option', $options['aliases'], 'array of strings');
+            throw InvalidArgumentException::invalidType('"aliases" option', $options['aliases'], 'array of strings');
         }
 
         if (isset($options['contentType']) && ! is_string($options['contentType'])) {
-            throw new InvalidArgumentTypeException('"contentType" option', $options['contentType'], 'string');
+            throw InvalidArgumentException::invalidType('"contentType" option', $options['contentType'], 'string');
         }
 
         if (isset($options['metadata']) && ! is_array($options['metadata']) && ! is_object($options['metadata'])) {
-            throw new InvalidArgumentTypeException('"metadata" option', $options['metadata'], 'array or object');
+            throw InvalidArgumentException::invalidType('"metadata" option', $options['metadata'], 'array or object');
         }
 
         $this->chunkSize = $options['chunkSizeBytes'];
@@ -175,7 +175,7 @@ class GridFSUpload
     public function uploadFromStream($source)
     {
         if ( ! is_resource($source) || get_resource_type($source) != "stream") {
-            throw new InvalidArgumentTypeException('$stream', $source, 'resource');
+            throw InvalidArgumentException::invalidType('$source', $source, 'resource');
         }
 
         $streamMetadata = stream_get_meta_data($source);

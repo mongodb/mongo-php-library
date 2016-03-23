@@ -446,7 +446,7 @@ class Collection
      * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
-     * @return object|null
+     * @return array|object|null
      */
     public function findOne($filter = [], array $options = [])
     {

@@ -580,7 +580,7 @@ class Collection
     /**
      * Return the collection namespace.
      *
-     * @see http://docs.mongodb.org/manual/faq/developers/#faq-dev-namespace
+     * @see https://docs.mongodb.org/manual/reference/glossary/#term-namespace
      * @return string
      */
     public function getNamespace()
@@ -691,7 +691,7 @@ class Collection
     /**
      * Updates at most one document matching the filter.
      *
-     * @see ReplaceOne::__construct() for supported options
+     * @see UpdateOne::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/update/
      * @param array|object $filter  Query by which to filter documents
      * @param array|object $update  Update to apply to the matched document

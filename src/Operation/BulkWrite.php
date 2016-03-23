@@ -36,8 +36,8 @@ class BulkWrite implements Executable
      * Example array structure for all supported operation types:
      *
      *  [
-     *    [ 'deleteOne'  => [ $filter ] ],
      *    [ 'deleteMany' => [ $filter ] ],
+     *    [ 'deleteOne'  => [ $filter ] ],
      *    [ 'insertOne'  => [ $document ] ],
      *    [ 'replaceOne' => [ $filter, $replacement, $options ] ],
      *    [ 'updateMany' => [ $filter, $update, $options ] ],
@@ -46,7 +46,7 @@ class BulkWrite implements Executable
      *
      * Arguments correspond to the respective Operation classes; however, the
      * writeConcern option is specified for the top-level bulk write operation
-     * instead of each individual operations.
+     * instead of each individual operation.
      *
      * Supported options for replaceOne, updateMany, and updateOne operations:
      *

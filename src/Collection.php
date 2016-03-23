@@ -471,7 +471,7 @@ class Collection
     /**
      * Finds a single document and deletes it, returning the original.
      *
-     * The document to return may be null.
+     * The document to return may be null if no document matched the filter.
      *
      * Note: BSON deserialization of the returned document does not yet support
      * a custom type map (depends on: https://jira.mongodb.org/browse/PHPC-314).
@@ -499,9 +499,10 @@ class Collection
      * Finds a single document and replaces it, returning either the original or
      * the replaced document.
      *
-     * The document to return may be null. By default, the original document is
-     * returned. Specify FindOneAndReplace::RETURN_DOCUMENT_AFTER for the
-     * "returnDocument" option to return the updated document.
+     * The document to return may be null if no document matched the filter. By
+     * default, the original document is returned. Specify
+     * FindOneAndReplace::RETURN_DOCUMENT_AFTER for the "returnDocument" option
+     * to return the updated document.
      *
      * Note: BSON deserialization of the returned document does not yet support
      * a custom type map (depends on: https://jira.mongodb.org/browse/PHPC-314).
@@ -530,9 +531,10 @@ class Collection
      * Finds a single document and updates it, returning either the original or
      * the updated document.
      *
-     * The document to return may be null. By default, the original document is
-     * returned. Specify FindOneAndUpdate::RETURN_DOCUMENT_AFTER for the
-     * "returnDocument" option to return the updated document.
+     * The document to return may be null if no document matched the filter. By
+     * default, the original document is returned. Specify
+     * FindOneAndUpdate::RETURN_DOCUMENT_AFTER for the "returnDocument" option
+     * to return the updated document.
      *
      * Note: BSON deserialization of the returned document does not yet support
      * a custom type map (depends on: https://jira.mongodb.org/browse/PHPC-314).

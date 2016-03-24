@@ -10,6 +10,7 @@ pages:
     - 'Upgrade Guide': 'upgrade-guide.md'
     - Tutorial:
         - 'CRUD Operations': 'tutorial/crud.md'
+        - 'Database Commands': 'tutorial/commands.md'
         - 'Indexes': 'tutorial/indexes.md'
         - 'Example Data': 'tutorial/example-data.md'
     - Classes:

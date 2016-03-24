@@ -57,6 +57,7 @@ writeConcern (MongoDB\Driver\WriteConcern)
 ### See Also
 
  * [MongoDB\Collection::withOptions()](#withoptions)
+ * [MongoDB\Database::selectCollection()](database.md#selectcollection)
 
 ---
 
@@ -411,6 +412,7 @@ object(MongoDB\Model\BSONDocument)#11 (1) {
 
 ### See Also
 
+ * [MongoDB\Database::dropCollection()](database.md#dropcollection)
  * [MongoDB Manual: drop command](https://docs.mongodb.org/manual/reference/command/drop/)
 
 ---

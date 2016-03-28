@@ -9,6 +9,7 @@ pages:
     - 'Getting Started': 'getting-started.md'
     - 'Upgrade Guide': 'upgrade-guide.md'
     - Tutorial:
+        - 'BSON Conversion': 'tutorial/bson.md'
         - 'CRUD Operations': 'tutorial/crud.md'
         - 'Database Commands': 'tutorial/commands.md'
         - 'Indexes': 'tutorial/indexes.md'

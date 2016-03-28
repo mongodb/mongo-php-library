@@ -75,8 +75,12 @@ returned; otherwise, an ArrayIterator is returned, which wraps the "result"
 array from the command response document.
 
 **Note:** BSON deserialization of inline aggregation results (i.e. not using a
-command cursor) does not yet support a custom type map. Support is pending new
-functionality in the driver.
+command cursor) does not yet support a "typeMap" options; however, classes
+implementing [MongoDB\BSON\Persistable][persistable] will still be deserialized
+according to the [Persistence][persistence] specification.
+
+[persistable]: http://php.net/mongodb-bson-persistable
+[persistence]: http://php.net/manual/en/mongodb.persistence.deserialization.php
 
 ### Supported Options
 
@@ -595,7 +599,9 @@ Finds a single document and deletes it, returning the original. The document to
 return may be null if no document matched the filter.
 
 **Note:** BSON deserialization of the returned document does not yet support a
-custom type map. Support is pending new functionality in the driver.
+"typeMap" option; however, classes implementing
+[MongoDB\BSON\Persistable][persistable] will still be deserialized according to
+the [Persistence][persistence] specification.
 
 ### Supported Options
 
@@ -635,7 +641,9 @@ default, the original document is returned. Specify
 "returnDocument" option to return the updated document.
 
 **Note:** BSON deserialization of the returned document does not yet support a
-custom type map. Support is pending new functionality in the driver.
+"typeMap" option; however, classes implementing
+[MongoDB\BSON\Persistable][persistable] will still be deserialized according to
+the [Persistence][persistence] specification.
 
 ### Supported Options
 
@@ -688,7 +696,9 @@ default, the original document is returned. Specify
 "returnDocument" option to return the updated document.
 
 **Note:** BSON deserialization of the returned document does not yet support a
-custom type map. Support is pending new functionality in the driver.
+"typeMap" option; however, classes implementing
+[MongoDB\BSON\Persistable][persistable] will still be deserialized according to
+the [Persistence][persistence] specification.
 
 ### Supported Options
 

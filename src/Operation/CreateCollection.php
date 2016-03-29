@@ -35,8 +35,9 @@ class CreateCollection implements Executable
      *    the size option must also be specified. The default is false.
      *
      *  * flags (integer): Options for the MMAPv1 storage engine only. Must be a
-     *    bitwise combination USE_POWER_OF_2_SIZES and NO_PADDING. The default
-     *    is USE_POWER_OF_2_SIZES.
+     *    bitwise combination CreateCollection::USE_POWER_OF_2_SIZES and
+     *    CreateCollection::NO_PADDING. The default is
+     *    CreateCollection::USE_POWER_OF_2_SIZES.
      *
      *  * indexOptionDefaults (document): Default configuration for indexes when
      *    creating the collection.
@@ -127,7 +128,7 @@ class CreateCollection implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return object Command result document
+     * @return array|object Command result document
      */
     public function execute(Server $server)
     {

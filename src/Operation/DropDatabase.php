@@ -22,6 +22,11 @@ class DropDatabase implements Executable
     /**
      * Constructs a dropDatabase command.
      *
+     * Supported options:
+     *
+     *  * typeMap (array): Type map for BSON deserialization. This will be used
+     *    for the returned command result document.
+     *
      * @param string $databaseName Database name
      * @param array  $options      Command options
      */

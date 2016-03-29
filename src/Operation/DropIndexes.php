@@ -23,6 +23,11 @@ class DropIndexes implements Executable
     /**
      * Constructs a dropIndexes command.
      *
+     * Supported options:
+     *
+     *  * typeMap (array): Type map for BSON deserialization. This will be used
+     *    for the returned command result document.
+     *
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
      * @param string $indexName      Index name (use "*" to drop all indexes)

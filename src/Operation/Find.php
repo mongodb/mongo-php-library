@@ -2,6 +2,7 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;

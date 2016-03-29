@@ -35,8 +35,10 @@ class FindOneAndUpdate implements Executable
      *    document.
      *
      *  * returnDocument (enum): Whether to return the document before or after
-     *    the update is applied. Must be either RETURN_DOCUMENT_BEFORE or
-     *    RETURN_DOCUMENT_AFTER. The default is RETURN_DOCUMENT_BEFORE.
+     *    the update is applied. Must be either
+     *    FindOneAndUpdate::RETURN_DOCUMENT_BEFORE or
+     *    FindOneAndUpdate::RETURN_DOCUMENT_AFTER. The default is
+     *    FindOneAndUpdate::RETURN_DOCUMENT_BEFORE.
      *
      *  * sort (document): Determines which document the operation modifies if
      *    the query selects multiple documents.

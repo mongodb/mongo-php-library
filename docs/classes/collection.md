@@ -131,6 +131,7 @@ useCursor (boolean)
 ### See Also
 
  * [MongoDB Manual: aggregate command](http://docs.mongodb.org/manual/reference/command/aggregate/)
+ * [MongoDB Manual: Aggregation Pipeline](https://docs.mongodb.org/manual/core/aggregation-pipeline/)
 
 ---
 

@@ -159,3 +159,48 @@ The above example would output something similar to:
 10025: NEW YORK, NY
 90201: BELL GARDENS, CA
 ```
+
+## Aggregation
+
+The [Aggregation Framework][aggregation] may be used to issue complex queries
+that filter, transform, and group collection data. The [aggregate()][aggregate]
+method returns a [Traversable][traversable] object, which may be iterated
+upon to access the results of an aggregation pipeline.
+
+[aggregation]: https://docs.mongodb.org/manual/core/aggregation-pipeline/
+[aggregate]: ../classes/collection.md#aggregate
+[traversable]: http://php.net/traversable
+
+```
+<?php
+
+$collection = (new MongoDB\Client)->demo->zips;
+
+$cursor = $collection->aggregate([
+    ['$group' => ['_id' => '$state', 'count' => ['$sum' => 1]]],
+    ['$sort' => ['count' => -1]],
+    ['$limit' => 5],
+]);
+
+foreach ($cursor as $state) {
+    printf("%s has %d zip codes\n", $state['_id'], $state['count']);
+}
+```
+
+The above example would output something similar to:
+
+```
+TX has 1671 zip codes
+NY has 1595 zip codes
+CA has 1516 zip codes
+PA has 1458 zip codes
+IL has 1237 zip codes
+```
+
+**Note:** [aggregate()][aggregate] is documented as returning a
+[Traversable][traversable] object because the [aggregate][aggregate-cmd] command
+may return its results inline (i.e. a single result document's array field,
+which the library will package as a PHP iterator) or via a command cursor (i.e.
+[MongoDB\Driver\Cursor][cursor]).
+
+[aggregate-cmd]: (http://docs.mongodb.org/manual/reference/command/aggregate/)

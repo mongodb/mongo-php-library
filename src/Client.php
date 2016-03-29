@@ -76,7 +76,7 @@ class Client
     /**
      * Select a database.
      *
-     * Note: collections whose names contain special characters (e.g. "-") may
+     * Note: databases whose names contain special characters (e.g. "-") may
      * be selected with complex syntax (e.g. $client->{"that-database"}) or
      * {@link selectDatabase()}.
      *

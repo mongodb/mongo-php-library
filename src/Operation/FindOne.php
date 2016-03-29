@@ -74,7 +74,7 @@ class FindOne implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return object|null
+     * @return array|object|null
      */
     public function execute(Server $server)
     {

@@ -166,7 +166,7 @@ class Database
      * @see CreateCollection::__construct() for supported options
      * @param string $collectionName
      * @param array  $options
-     * @return object Command result document
+     * @return array|object Command result document
      */
     public function createCollection($collectionName, array $options = [])
     {

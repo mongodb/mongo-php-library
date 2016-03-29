@@ -35,8 +35,10 @@ class FindOneAndReplace implements Executable
      *    document.
      *
      *  * returnDocument (enum): Whether to return the document before or after
-     *    the update is applied. Must be either RETURN_DOCUMENT_BEFORE or
-     *    RETURN_DOCUMENT_AFTER. The default is RETURN_DOCUMENT_BEFORE.
+     *    the update is applied. Must be either
+     *    FindOneAndReplace::RETURN_DOCUMENT_BEFORE or
+     *    FindOneAndReplace::RETURN_DOCUMENT_AFTER. The default is
+     *    FindOneAndReplace::RETURN_DOCUMENT_BEFORE.
      *
      *  * sort (document): Determines which document the operation modifies if
      *    the query selects multiple documents.

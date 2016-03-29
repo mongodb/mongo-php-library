@@ -42,12 +42,12 @@ object(MongoDB\Model\BSONDocument)#2 (1) {
 
 ## Iterable Results as a Command Cursor
 
-Some commands, such as [aggregate][aggregate] with the "cursor" option, may
-return their results via an iterable command cursor. In this case, the returned
+Some commands, such as [listCollections][listcollections], return their results
+via an iterable command cursor. In this case, the returned
 [MongoDB\Driver\Cursor][cursor] may be iterated in the same manner as one might
 do with a [Collection::find()][find] query, like so:
 
-[aggregate]: http://docs.mongodb.org/manual/reference/command/aggregate/
+[listcollections]: http://docs.mongodb.org/manual/reference/command/listCollections/
 [find]: ../classes/collection.md#find
 
 ```
@@ -55,30 +55,28 @@ do with a [Collection::find()][find] query, like so:
 
 $database = (new MongoDB\Client)->demo;
 
-$cursor = $database->command([
-    'aggregate' => 'zips',
-    'pipeline' => [
-        ['$group' => ['_id' => '$state', 'count' => ['$sum' => 1]]],
-        ['$sort' => ['count' => -1]],
-        ['$limit' => 5],
-    ],
-    'cursor' => new \stdClass,
-]);
+$cursor = $database->command(['listCollections' => 1]);
 
-foreach ($cursor as $state) {
-    printf("%s has %d zip codes\n", $state['_id'], $state['count']);
+foreach ($cursor as $collection) {
+    echo $collection['name'], "\n";
 }
 ```
 
 The above example would output something similar to:
 
 ```
-TX has 1671 zip codes
-NY has 1595 zip codes
-CA has 1516 zip codes
-PA has 1458 zip codes
-IL has 1237 zip codes
+persons
+posts
+zips
 ```
+
+**Note:** at the protocol level, commands that support a cursor actually return
+a single result document with the essential ingredients for constructing the
+command cursor (i.e. the cursor's ID, namespace, and first batch of results);
+however, the driver's [executeCommand()][executecommand] method already detects
+such a result and constructs the iterable command cursor for us.
+
+[executecommand]: http://php.net/manual/en/mongodb-driver-manager.executecommand.php
 
 ## Specifying a Read Preference
 

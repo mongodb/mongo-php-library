@@ -157,6 +157,32 @@ insert or replace the document and handle the returned InsertResult or
 UpdateResult, respectively. This also helps avoid inadvertent and potentially
 dangerous [full-document replacements][replace].
 
+### Accessing IDs of Inserted Documents
+
+In the legacy driver, [MongoCollection::insert()][insert],
+[MongoCollection::batchInsert()][batchinsert], and
+[MongoCollection::save()][save] (when inserting) would modify their input
+argument by injecting an "_id" key containing the generated ObjectId (i.e.
+[MongoId][mongoid] object). This behavior was a bit of a hack, as it did not
+rely on the argument being [passed by reference][byref]; it directly modified
+memory through the extension API and could not be implemented in PHP userland.
+As such, it is no longer done in the new driver and library.
+
+[insert]: http://php.net/manual/en/mongocollection.insert.php
+[batchinsert]: http://php.net/manual/en/mongocollection.batchinsert.php
+[mongoid]: http://php.net/manual/en/class.mongoid.php
+[byref]: http://php.net/manual/en/language.references.pass.php
+
+IDs of inserted documents (whether generated or not) may be accessed through the
+result objects returned by the write methods:
+
+ * MongoDB\InsertOneResult::getInsertedId() for [insertOne()][insertone]
+ * MongoDB\InsertManyResult::getInsertedIds() for [insertMany()][insertmany]
+ * MongoDB\BulkWriteResult::getInsertedIds() for [bulkWrite()][bulkwrite]
+
+[insertmany]: classes/collection.md#insertmany
+[bulkwrite]: classes/collection.md#bulkwrite
+
 ### MongoWriteBatch
 
 The legacy driver's [MongoWriteBatch][batch] classes have been replaced with a
@@ -165,4 +191,3 @@ allowed bulk operations of the same time, the new method allows operations to be
 mixed (e.g. inserts, updates, and deletes).
 
 [batch]: http://php.net/manual/en/class.mongowritebatch.php
-[bulkwrite]: classes/collection.md#bulkwrite

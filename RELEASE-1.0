@@ -1,3 +1,59 @@
+RELEASE 1.0.2
+-------------
+2016-03-30  Jeremy Mikola  <jmikola@gmail.com>
+	* Discuss how inserted IDs may be accessed in Upgrade Guide
+
+2016-03-30  Jeremy Mikola  <jmikola@gmail.com>
+	* Use reference-style links in Upgrade Guide
+
+2016-03-29  Nick Dresselhaus  <ndresselhaus@cirruspath.com>
+	* PHPLIB-189: Fix merging of comment and maxTimeMS options
+
+2016-03-29  Jeremy Mikola  <jmikola@gmail.com>
+	* Use listCollections for command cursor example, move aggregate to CRUD
+
+2016-03-28  Jeremy Mikola  <jmikola@gmail.com>
+	* Add query examples and create BSON tutorial page
+
+2016-03-28  Jeremy Mikola  <jmikola@gmail.com>
+	* Clarify that Persistable is supported in methods without "typeMap" option
+
+2016-03-24  Jeremy Mikola  <jmikola@gmail.com>
+	* Add Client API documentation
+
+2016-03-24  Jeremy Mikola  <jmikola@gmail.com>
+	* Fix typo in Client::__get() documentation
+
+2016-03-24  Jeremy Mikola  <jmikola@gmail.com>
+	* Split Database docs into API and tutorial
+
+2016-03-24  Jeremy Mikola  <jmikola@gmail.com>
+	* CreateCollection::execute() may return an array
+
+2016-03-23  Jeremy Mikola  <jmikola@gmail.com>
+	* Split Collection docs into API, tutorial, and upgrade guide
+
+2016-03-23  Jeremy Mikola  <jmikola@gmail.com>
+	* Specify when findAndModify operations may return null
+
+2016-03-23  Jeremy Mikola  <jmikola@gmail.com>
+	* Misc doc block updates for Collection operations
+
+2016-03-23  Jeremy Mikola  <jmikola@gmail.com>
+	* Document typeMap option for DropDatabase and DropIndexes
+
+2016-03-23  Jeremy Mikola  <jmikola@gmail.com>
+	* Specify classes for returnDocument option constants
+
+2016-03-23  Jeremy Mikola  <jmikola@gmail.com>
+	* FindOne::execute() may return an array
+
+2016-03-14  Jeremy Mikola  <jmikola@gmail.com>
+	* Remove branch alias for 1.0.x
+
+2016-03-04  Jeremy Mikola  <jmikola@gmail.com>
+	* Add 1.0.1 release notes
+
 RELEASE 1.0.1
 -------------
 2016-02-16  minenok  <minenok@tutu.ru>

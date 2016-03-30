@@ -83,7 +83,9 @@ between [updating specific fields][update] and
 [MongoDB\Collection][collection] does not yet have a helper method for the
 [group][group] command; however, that is planned in [PHPLIB-177][jira-group].
 The following example demonstrates how to execute a group command using
-[Database::command()](classes/database.md#command):
+[Database::command()][command]:
+
+[command]: classes/database.md#command
 
 ```php
 <?php
@@ -108,7 +110,7 @@ $resultDocument = $cursor->toArray()[0];
 [MongoDB\Collection][collection] does not yet have a helper method for the
 [mapReduce][mapReduce] command; however, that is planned in
 [PHPLIB-53][jira-mapreduce]. The following example demonstrates how to execute a
-mapReduce command using [Database::command()](classes/database.md#command):
+mapReduce command using [Database::command()][command]:
 
 ```php
 <?php
@@ -139,8 +141,11 @@ with [DBRef][dbref] objects; however, that is planned in
 
 [MongoCollection::save()][save], which was syntactic sugar for an insert or
 upsert operation, has been removed in favor of explicitly using
-[insertOne()](classes/collection.md#insertone) or
-[replaceOne()](classes/collection.md#replaceone) (with the "upsert" option).
+[insertOne()][insertone] or [replaceOne()][replaceone] (with the "upsert"
+option).
+
+[insertone]: classes/collection.md#insertone
+[replaceone]: classes/collection.md#replaceone
 
 ![save() flowchart](img/save-flowchart.png)
 
@@ -152,11 +157,37 @@ insert or replace the document and handle the returned InsertResult or
 UpdateResult, respectively. This also helps avoid inadvertent and potentially
 dangerous [full-document replacements][replace].
 
+### Accessing IDs of Inserted Documents
+
+In the legacy driver, [MongoCollection::insert()][insert],
+[MongoCollection::batchInsert()][batchinsert], and
+[MongoCollection::save()][save] (when inserting) would modify their input
+argument by injecting an "_id" key containing the generated ObjectId (i.e.
+[MongoId][mongoid] object). This behavior was a bit of a hack, as it did not
+rely on the argument being [passed by reference][byref]; it directly modified
+memory through the extension API and could not be implemented in PHP userland.
+As such, it is no longer done in the new driver and library.
+
+[insert]: http://php.net/manual/en/mongocollection.insert.php
+[batchinsert]: http://php.net/manual/en/mongocollection.batchinsert.php
+[mongoid]: http://php.net/manual/en/class.mongoid.php
+[byref]: http://php.net/manual/en/language.references.pass.php
+
+IDs of inserted documents (whether generated or not) may be accessed through the
+result objects returned by the write methods:
+
+ * MongoDB\InsertOneResult::getInsertedId() for [insertOne()][insertone]
+ * MongoDB\InsertManyResult::getInsertedIds() for [insertMany()][insertmany]
+ * MongoDB\BulkWriteResult::getInsertedIds() for [bulkWrite()][bulkwrite]
+
+[insertmany]: classes/collection.md#insertmany
+[bulkwrite]: classes/collection.md#bulkwrite
+
 ### MongoWriteBatch
 
 The legacy driver's [MongoWriteBatch][batch] classes have been replaced with a
-general-purpose [bulkWrite()](classes/collection.md#bulkwrite) method. Whereas
-the legacy driver only allowed bulk operations of the same time, the new method
-allows operations to be mixed (e.g. inserts, updates, and deletes).
+general-purpose [bulkWrite()][bulkwrite] method. Whereas the legacy driver only
+allowed bulk operations of the same time, the new method allows operations to be
+mixed (e.g. inserts, updates, and deletes).
 
 [batch]: http://php.net/manual/en/class.mongowritebatch.php

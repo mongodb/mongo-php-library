@@ -2,6 +2,8 @@
 
 namespace MongoDB\Tests\GridFS;
 
+use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\GridFS\Bucket;
 
 /**
@@ -9,6 +11,15 @@ use MongoDB\GridFS\Bucket;
  */
 class BucketFunctionalTest extends FunctionalTestCase
 {
+    public function testValidConstructorOptions()
+    {
+        new Bucket($this->manager, $this->getDatabaseName(), [
+            'bucketName' => 'test',
+            'chunkSizeBytes' => 8192,
+            'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY, 1000),
+        ]);
+    }
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException

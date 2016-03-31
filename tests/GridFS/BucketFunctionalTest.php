@@ -9,7 +9,22 @@ use MongoDB\GridFS;
  */
 class BucketFunctionalTest extends FunctionalTestCase
 {
-
+    /**
+     * @covers MongoDB\GridFS\Bucket::__construct
+     */
+    public function testValidConstructorOptions()
+    {
+        $options = [
+            'bucketName' => 'test',
+            'chunkSizeBytes' => 8192,
+            'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_PRIMARY),
+            'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000)
+        ];
+        $dbname = $this->getDatabaseName();
+        $object = new \MongoDB\GridFS\Bucket($this->manager, $dbname, $options);
+        $this->assertEquals($dbname, $object->getDatabaseName());
+    }
+    
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions

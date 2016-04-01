@@ -2,13 +2,24 @@
 
 namespace MongoDB\Tests\GridFS;
 
-use MongoDB\GridFS;
+use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\WriteConcern;
+use MongoDB\GridFS\Bucket;
 
 /**
  * Functional tests for the Bucket class.
  */
 class BucketFunctionalTest extends FunctionalTestCase
 {
+    public function testValidConstructorOptions()
+    {
+        new Bucket($this->manager, $this->getDatabaseName(), [
+            'bucketName' => 'test',
+            'chunkSizeBytes' => 8192,
+            'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY, 1000),
+        ]);
+    }
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
@@ -16,15 +27,20 @@ class BucketFunctionalTest extends FunctionalTestCase
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        new \MongoDB\GridFS\Bucket($this->manager, $this->getDatabaseName(), $options);
+        new Bucket($this->manager, $this->getDatabaseName(), $options);
     }
 
     public function provideInvalidConstructorOptions()
     {
         $options = [];
-        $invalidBucketNames = [123, 3.14, true, [], new \stdClass];
-        $invalidChunkSizes = ['foo', 3.14, true, [], new \stdClass];
 
+        foreach ($this->getInvalidStringValues() as $value) {
+            $options[][] = ['bucketName' => $value];
+        }
+
+        foreach ($this->getInvalidIntegerValues() as $value) {
+            $options[][] = ['chunkSizeBytes' => $value];
+        }
 
         foreach ($this->getInvalidReadPreferenceValues() as $value) {
             $options[][] = ['readPreference' => $value];
@@ -32,12 +48,6 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         foreach ($this->getInvalidWriteConcernValues() as $value) {
             $options[][] = ['writeConcern' => $value];
-        }
-        foreach ($invalidBucketNames as $value) {
-            $options[][] = ['bucketName' => $value];
-        }
-        foreach ($invalidChunkSizes as $value) {
-            $options[][] = ['chunkSizeBytes' => $value];
         }
 
         return $options;

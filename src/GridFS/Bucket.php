@@ -5,6 +5,8 @@ namespace MongoDB\GridFS;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
+use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\GridFSFileNotFoundException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Find;

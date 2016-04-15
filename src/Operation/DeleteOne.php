@@ -15,6 +15,9 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class DeleteOne implements Executable
 {
+    /**
+     * @var Delete
+     */
     private $delete;
 
     /**

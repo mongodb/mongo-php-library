@@ -21,13 +21,39 @@ use Traversable;
  */
 class Aggregate implements Executable
 {
+    /**
+     * @var integer
+     */
     private static $wireVersionForCursor = 2;
+
+    /**
+     * @var integer
+     */
     private static $wireVersionForDocumentLevelValidation = 4;
+
+    /**
+     * @var integer
+     */
     private static $wireVersionForReadConcern = 4;
 
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var string
+     */
     private $collectionName;
+
+    /**
+     * @var array
+     */
     private $pipeline;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**

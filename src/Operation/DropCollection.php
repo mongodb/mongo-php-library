@@ -19,8 +19,19 @@ class DropCollection implements Executable
 {
     private static $errorMessageNamespaceNotFound = 'ns not found';
 
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var string
+     */
     private $collectionName;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**

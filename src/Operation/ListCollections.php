@@ -19,9 +19,19 @@ use MongoDB\Model\CollectionInfoLegacyIterator;
  */
 class ListCollections implements Executable
 {
+    /**
+     * @var integer
+     */
     private static $wireVersionForCommand = 3;
 
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**

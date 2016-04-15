@@ -15,9 +15,24 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class DropIndexes implements Executable
 {
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var string
+     */
     private $collectionName;
+
+    /**
+     * @var string
+     */
     private $indexName;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**

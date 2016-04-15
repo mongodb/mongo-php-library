@@ -36,19 +36,50 @@ use Traversable;
 
 class Collection
 {
+    /**
+     * @var array
+     */
     private static $defaultTypeMap = [
         'array' => 'MongoDB\Model\BSONArray',
         'document' => 'MongoDB\Model\BSONDocument',
         'root' => 'MongoDB\Model\BSONDocument',
     ];
+
     private static $wireVersionForFindAndModifyWriteConcern = 4;
 
+    /**
+     * @var string
+     */
     private $collectionName;
+
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var Manager
+     */
     private $manager;
+
+    /**
+     * @var ReadConcern
+     */
     private $readConcern;
+
+    /**
+     * @var ReadPreference
+     */
     private $readPreference;
+
+    /**
+     * @var array
+     */
     private $typeMap;
+
+    /**
+     * @var WriteConcern
+     */
     private $writeConcern;
 
     /**
@@ -117,7 +148,7 @@ class Collection
      * Return internal properties for debugging purposes.
      *
      * @see http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
-     * @param array
+     * @return array
      */
     public function __debugInfo()
     {
@@ -136,7 +167,7 @@ class Collection
      * Return the collection namespace (e.g. "db.collection").
      *
      * @see https://docs.mongodb.org/manual/faq/developers/#faq-dev-namespace
-     * @param string
+     * @return string
      */
     public function __toString()
     {

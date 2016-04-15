@@ -10,8 +10,19 @@ use MongoDB\Exception\BadMethodCallException;
  */
 class BulkWriteResult
 {
+    /**
+     * @var WriteResult
+     */
     private $writeResult;
+
+    /**
+     * @var array
+     */
     private $insertedIds;
+
+    /**
+     * @var boolean
+     */
     private $isAcknowledged;
 
     /**

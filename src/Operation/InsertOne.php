@@ -17,11 +17,29 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class InsertOne implements Executable
 {
+    /**
+     * @var integer
+     */
     private static $wireVersionForDocumentLevelValidation = 4;
 
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var string
+     */
     private $collectionName;
+
+    /**
+     * @var mixed
+     */
     private $document;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**

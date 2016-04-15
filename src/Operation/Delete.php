@@ -19,10 +19,29 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class Delete implements Executable
 {
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var string
+     */
     private $collectionName;
+
+    /**
+     * @var mixed
+     */
     private $filter;
+
+    /**
+     * @var integer
+     */
     private $limit;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**

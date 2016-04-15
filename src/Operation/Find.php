@@ -23,9 +23,24 @@ class Find implements Executable
     const TAILABLE = 2;
     const TAILABLE_AWAIT = 3;
 
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var string
+     */
     private $collectionName;
+
+    /**
+     * @var mixed
+     */
     private $filter;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**

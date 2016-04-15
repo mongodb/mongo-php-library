@@ -20,12 +20,34 @@ use EmptyIterator;
  */
 class ListIndexes implements Executable
 {
+    /**
+     * @var integer
+     */
     private static $errorCodeDatabaseNotFound = 60;
+
+    /**
+     * @var integer
+     */
     private static $errorCodeNamespaceNotFound = 26;
+
+    /**
+     * @var integer
+     */
     private static $wireVersionForCommand = 3;
 
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var string
+     */
     private $collectionName;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**

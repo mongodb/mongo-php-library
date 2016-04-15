@@ -11,18 +11,42 @@ namespace MongoDB\GridFS;
  */
 class StreamWrapper
 {
+    /**
+     * @var resource
+     */
     public $context;
 
+    /**
+     * @var mixed
+     */
     private $collectionsWrapper;
+
+    /**
+     * @var mixed
+     */
     private $gridFSStream;
+
+    /**
+     * @var mixed
+     */
     private $id;
+
+    /**
+     * @var mixed
+     */
     private $mode;
 
+    /**
+     * @return mixed
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return boolean
+     */
     public function openReadStream()
     {
         $context = stream_context_get_options($this->context);
@@ -32,6 +56,9 @@ class StreamWrapper
         return true;
     }
 
+    /**
+     * @return boolean
+     */
     public function openWriteStream()
     {
         $context = stream_context_get_options($this->context);
@@ -59,11 +86,21 @@ class StreamWrapper
         $this->gridFSStream->close();
     }
 
+    /**
+     * @return mixed
+     */
     public function stream_eof()
     {
         return $this->gridFSStream->isEOF();
     }
 
+    /**
+     * @param string $path
+     * @param mixed  $mode
+     * @param array  $options
+     * @param string $openedPath
+     * @return boolean
+     */
     public function stream_open($path, $mode, $options, &$openedPath)
     {
         $this->initProtocol($path);
@@ -78,11 +115,18 @@ class StreamWrapper
         }
     }
 
+    /**
+     * @param integer $count
+     * @return mixed
+     */
     public function stream_read($count)
     {
         return $this->gridFSStream->downloadNumBytes($count);
     }
 
+    /**
+     * @return array
+     */
     public function stream_stat()
     {
         $stat = $this->getStatTemplate();
@@ -91,6 +135,10 @@ class StreamWrapper
         return $stat;
     }
 
+    /**
+     * @param string $data
+     * @return integer
+     */
     public function stream_write($data)
     {
         $this->gridFSStream->insertChunks($data);
@@ -122,6 +170,9 @@ class StreamWrapper
         ];
     }
 
+    /**
+     * @param string $path
+     */
     private function initProtocol($path)
     {
         $parsed_path = parse_url($path);

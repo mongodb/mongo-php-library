@@ -1,7 +1,6 @@
 *.swp
 !.gitignore
 composer.phar
-composer.lock
 /vendor/
 php.ini
 phpunit.xml

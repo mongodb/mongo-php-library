@@ -2,6 +2,8 @@
 
 namespace MongoDB\Tests\Collection;
 
+use MongoDB\Model\BSONDocument;
+use MongoDB\Operation\ReplaceOne;
 use MongoDB\UpdateResult;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
@@ -174,6 +176,81 @@ class UpdateFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesUpsertedId(UpdateResult $result)
     {
         $result->getUpsertedId();
+    }
+
+    public function testReplaceOneReferenceExtraField()
+    {
+        $this->createFixtures(3);
+
+        $filter = ['x' => 11];
+        $replacement = ['test' => ['$ref' => 'collection', '$id' => 2, 'type' => 'test']];
+
+        $operation = new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), $filter, $replacement);
+        $result = $operation->execute($this->getPrimaryServer());
+
+        $this->assertInstanceOf('MongoDB\UpdateResult', $result);
+        $this->assertSame(1, $result->getMatchedCount());
+        $this->omitModifiedCount or $this->assertSame(1, $result->getModifiedCount());
+        $this->assertSame(0, $result->getUpsertedCount());
+        $this->assertNull($result->getUpsertedId());
+
+        $expected = [
+            ['_id' => 1, 'test' => new BSONDocument(['$ref' => 'collection', '$id' => 2, 'type' => 'test'])],
+            ['_id' => 2, 'x' => 22],
+            ['_id' => 3, 'x' => 33],
+        ];
+
+        $this->assertSameDocuments($expected, $this->collection->find());
+    }
+
+    public function testReplaceOneReferenceExtraFieldBeforeRef()
+    {
+        $this->createFixtures(3);
+
+        $filter = ['x' => 11];
+        $replacement = ['test' => ['type' => 'test', '$ref' => 'collection', '$id' => 2]];
+
+        $operation = new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), $filter, $replacement);
+        $result = $operation->execute($this->getPrimaryServer());
+
+        $this->assertInstanceOf('MongoDB\UpdateResult', $result);
+        $this->assertSame(1, $result->getMatchedCount());
+        $this->omitModifiedCount or $this->assertSame(1, $result->getModifiedCount());
+        $this->assertSame(0, $result->getUpsertedCount());
+        $this->assertNull($result->getUpsertedId());
+
+        $expected = [
+            ['_id' => 1, 'test' => new BSONDocument(['type' => 'test', '$ref' => 'collection', '$id' => 2])],
+            ['_id' => 2, 'x' => 22],
+            ['_id' => 3, 'x' => 33],
+        ];
+
+        $this->assertSameDocuments($expected, $this->collection->find());
+    }
+
+    public function testUpdateOneReferenceExtraFieldBeforeRef()
+    {
+        $this->createFixtures(3);
+
+        $filter = ['x' => 11];
+        $update = ['$set' => ['test' => ['type' => 'test', '$ref' => 'collection', '$id' => 2]]];
+
+        $operation = new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, $update);
+        $result = $operation->execute($this->getPrimaryServer());
+
+        $this->assertInstanceOf('MongoDB\UpdateResult', $result);
+        $this->assertSame(1, $result->getMatchedCount());
+        $this->omitModifiedCount or $this->assertSame(1, $result->getModifiedCount());
+        $this->assertSame(0, $result->getUpsertedCount());
+        $this->assertNull($result->getUpsertedId());
+
+        $expected = [
+            ['_id' => 1, 'x' => 11, 'test' => new BSONDocument(['type' => 'test', '$ref' => 'collection', '$id' => 2])],
+            ['_id' => 2, 'x' => 22],
+            ['_id' => 3, 'x' => 33],
+        ];
+
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     /**

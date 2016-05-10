@@ -3,7 +3,7 @@
 namespace MongoDB\GridFS;
 
 use MongoDB\Driver\Exception\Exception;
-use MongoDB\Exception\GridFSCorruptFileException;
+use MongoDB\GridFS\Exception\CorruptFileException;
 use stdClass;
 
 /**
@@ -30,7 +30,7 @@ class GridFSDownload
      *
      * @param GridFSCollectionsWrapper $collectionsWrapper GridFS collections wrapper
      * @param stdClass                 $file               GridFS file document
-     * @throws GridFSCorruptFileException
+     * @throws CorruptFileException
      */
     public function __construct(GridFSCollectionsWrapper $collectionsWrapper, stdClass $file)
     {
@@ -43,8 +43,8 @@ class GridFSDownload
                 ['sort' => ['n' => 1]]
             );
         } catch (Exception $e) {
-            // TODO: Why do we replace a driver exception with GridFSCorruptFileException here?
-            throw new GridFSCorruptFileException();
+            // TODO: Why do we replace a driver exception with CorruptFileException here?
+            throw new CorruptFileException();
         }
 
         $this->chunksIterator = new \IteratorIterator($cursor);
@@ -138,11 +138,11 @@ class GridFSDownload
         }
 
         if ( ! $this->chunksIterator->valid()) {
-            throw new GridFSCorruptFileException();
+            throw CorruptFileException::missingChunk($this->chunkOffset);
         }
 
         if ($this->chunksIterator->current()->n != $this->chunkOffset) {
-            throw new GridFSCorruptFileException();
+            throw CorruptFileException::unexpectedIndex($this->chunksIterator->current()->n, $this->chunkOffset);
         }
 
         $actualChunkSize = strlen($this->chunksIterator->current()->data->getData());
@@ -152,7 +152,7 @@ class GridFSDownload
             : $this->file->chunkSize;
 
         if ($actualChunkSize != $expectedChunkSize) {
-            throw new GridFSCorruptFileException();
+            throw CorruptFileException::unexpectedSize($actualChunkSize, $expectedChunkSize);
         }
 
         $this->bytesSeen += $actualChunkSize;

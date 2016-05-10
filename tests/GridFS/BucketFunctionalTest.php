@@ -73,7 +73,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         } catch(\MongoDB\Exception\Exception $e) {
             $error = $e;
         }
-        $fileNotFound = '\MongoDB\Exception\GridFSFileNotFoundException';
+        $fileNotFound = '\MongoDB\GridFS\Exception\FileNotFoundException';
         $this->assertTrue($error instanceof $fileNotFound);
         $this->assertEquals(0, $this->bucket->getCollectionsWrapper()->getFilesCollection()->count());
         $this->assertEquals(0, $this->bucket->getCollectionsWrapper()->getChunksCollection()->count());
@@ -116,7 +116,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         } catch(\MongoDB\Exception\Exception $e) {
             $error = $e;
         }
-        $corruptFileError = '\MongoDB\Exception\GridFSCOrruptFileException';
+        $corruptFileError = '\MongoDB\GridFS\Exception\CorruptFileException';
         $this->assertTrue($error instanceof $corruptFileError);
     }
     public function testErrorsOnMissingChunk()
@@ -131,7 +131,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         } catch(\MongoDB\Exception\Exception $e) {
             $error = $e;
         }
-        $corruptFileError = '\MongoDB\Exception\GridFSCOrruptFileException';
+        $corruptFileError = '\MongoDB\GridFS\Exception\CorruptFileException';
         $this->assertTrue($error instanceof $corruptFileError);
     }
     public function testUploadEnsureIndexes()
@@ -177,7 +177,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         } catch(\MongoDB\Exception\Exception $e) {
             $error = $e;
         }
-        $fileNotFound = '\MongoDB\Exception\GridFSFileNotFoundException';
+        $fileNotFound = '\MongoDB\GridFS\Exception\FileNotFoundException';
         $this->assertTrue($error instanceof $fileNotFound);
     }
     public function testGetVersion()
@@ -194,7 +194,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertEquals("bar", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => -2])));
         $this->assertEquals("foo", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => -3])));
 
-        $fileNotFound = '\MongoDB\Exception\GridFSFileNotFoundException';
+        $fileNotFound = '\MongoDB\GridFS\Exception\FileNotFoundException';
         $error = null;
         try{
             $this->bucket->openDownloadStreamByName("test", ['revision' => 3]);
@@ -278,7 +278,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         } catch(\MongoDB\Exception\Exception $e) {
             $error = $e;
         }
-        $fileNotFound = '\MongoDB\Exception\GridFSFileNotFoundException';
+        $fileNotFound = '\MongoDB\GridFS\Exception\FileNotFoundException';
         $this->assertTrue($error instanceof $fileNotFound);
 
         $this->assertEquals("testing", stream_get_contents($this->bucket->openDownloadStreamByName("second_name")));

@@ -52,11 +52,11 @@ class SpecificationTests extends FunctionalTestCase
             } catch(\MongoDB\Exception\Exception $e) {
                 $error = $e;
             }
-            $errors = ['FileNotFound' =>  '\MongoDB\Exception\GridFSFileNotFoundException',
-                        'ChunkIsMissing' => '\MongoDB\Exception\GridFSCorruptFileException',
-                        'ExtraChunk' => '\MongoDB\Exception\GridFSCorruptFileException',
-                        'ChunkIsWrongSize' => '\MongoDB\Exception\GridFSCorruptFileException',
-                        'RevisionNotFound' => '\MongoDB\Exception\GridFSFileNotFoundException'
+            $errors = ['FileNotFound' =>  '\MongoDB\GridFS\Exception\FileNotFoundException',
+                        'ChunkIsMissing' => '\MongoDB\GridFS\Exception\CorruptFileException',
+                        'ExtraChunk' => '\MongoDB\GridFS\Exception\CorruptFileException',
+                        'ChunkIsWrongSize' => '\MongoDB\GridFS\Exception\CorruptFileException',
+                        'RevisionNotFound' => '\MongoDB\GridFS\Exception\FileNotFoundException'
                 ];
             if (!isset($test['assert']['error'])) {
                 $this->assertNull($error);

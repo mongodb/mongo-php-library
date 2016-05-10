@@ -7,8 +7,8 @@ use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Exception\GridFSFileNotFoundException;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\GridFS\Exception\FileNotFoundException;
 use MongoDB\Operation\Find;
 
 /**
@@ -84,7 +84,7 @@ class Bucket
      * attempt to delete orphaned chunks.
      *
      * @param ObjectId $id ObjectId of the file
-     * @throws GridFSFileNotFoundException
+     * @throws FileNotFoundException
      */
     public function delete(ObjectId $id)
     {
@@ -93,7 +93,7 @@ class Bucket
         $this->collectionsWrapper->getChunksCollection()->deleteMany(['files_id' => $id]);
 
         if ($file === null) {
-            throw new GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+            throw FileNotFoundException::byId($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
         }
 
     }
@@ -103,7 +103,7 @@ class Bucket
      *
      * @param ObjectId $id          ObjectId of the file
      * @param resource $destination Writable Stream
-     * @throws GridFSFileNotFoundException
+     * @throws FileNotFoundException
      */
     public function downloadToStream(ObjectId $id, $destination)
     {
@@ -113,7 +113,7 @@ class Bucket
         );
 
         if ($file === null) {
-            throw new GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+            throw FileNotFoundException::byId($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
         }
 
         $gridFsStream = new GridFSDownload($this->collectionsWrapper, $file);
@@ -142,7 +142,7 @@ class Bucket
      * @param string   $filename    File name
      * @param resource $destination Writable Stream
      * @param array    $options     Download options
-     * @throws GridFSFileNotFoundException
+     * @throws FileNotFoundException
      */
     public function downloadToStreamByName($filename, $destination, array $options = [])
     {
@@ -207,7 +207,7 @@ class Bucket
      *
      * @param ObjectId $id ObjectId of the file
      * @return resource
-     * @throws GridFSFileNotFoundException
+     * @throws FileNotFoundException
      */
     public function openDownloadStream(ObjectId $id)
     {
@@ -217,7 +217,7 @@ class Bucket
         );
 
         if ($file === null) {
-            throw new GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+            throw FileNotFoundException::byId($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
         }
 
         return $this->openDownloadStreamByFile($file);
@@ -245,7 +245,7 @@ class Bucket
      * @param string $filename File name
      * @param array  $options  Download options
      * @return resource
-     * @throws GridFSFileNotFoundException
+     * @throws FileNotFoundException
      */
     public function openDownloadStreamByName($filename, array $options = [])
     {
@@ -293,7 +293,7 @@ class Bucket
         $filesCollection = $this->collectionsWrapper->getFilesCollection();
         $result = $filesCollection->updateOne(['_id' => $id], ['$set' => ['filename' => $newFilename]]);
         if($result->getModifiedCount() == 0) {
-            throw new GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+            throw FileNotFoundException::byId($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
         }
     }
 
@@ -339,7 +339,7 @@ class Bucket
         );
 
         if ($file === null) {
-            throw new GridFSFileNotFoundException($filename, $filesCollection->getNameSpace());
+            throw FileNotFoundException::byFilenameAndRevision($filename, $revision, $filesCollection->getNameSpace());
         }
 
         return $file;

@@ -62,7 +62,7 @@ class Client
      * Return internal properties for debugging purposes.
      *
      * @see http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
-     * @param array
+     * @return array
      */
     public function __debugInfo()
     {
@@ -93,7 +93,7 @@ class Client
     /**
      * Return the connection string (i.e. URI).
      *
-     * @param string
+     * @return string
      */
     public function __toString()
     {

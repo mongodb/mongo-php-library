@@ -94,7 +94,7 @@ class Database
      * Return internal properties for debugging purposes.
      *
      * @see http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
-     * @param array
+     * @return array
      */
     public function __debugInfo()
     {
@@ -128,7 +128,7 @@ class Database
     /**
      * Return the database name.
      *
-     * @param string
+     * @return string
      */
     public function __toString()
     {

@@ -99,7 +99,9 @@ class CreateIndexes implements Executable
      * Create one or more indexes for the collection using the createIndexes
      * command.
      *
-     * @return Server $server
+     * @param Server $server
+     *
+     * @return mixed
      */
     private function executeCommand(Server $server)
     {

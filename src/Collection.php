@@ -34,7 +34,7 @@ use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
 use Traversable;
 
-class Collection
+class Collection implements CollectionInterface
 {
     private static $defaultTypeMap = [
         'array' => 'MongoDB\Model\BSONArray',

@@ -117,7 +117,7 @@ class Collection
      * Return internal properties for debugging purposes.
      *
      * @see http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
-     * @param array
+     * @return array
      */
     public function __debugInfo()
     {
@@ -136,7 +136,7 @@ class Collection
      * Return the collection namespace (e.g. "db.collection").
      *
      * @see https://docs.mongodb.org/manual/faq/developers/#faq-dev-namespace
-     * @param string
+     * @return string
      */
     public function __toString()
     {

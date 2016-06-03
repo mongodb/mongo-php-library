@@ -136,7 +136,7 @@ $collection = (new MongoDB\Client)->demo->zips;
 
 $document = $collection->findOne(
     ['_id' => '10011'],
-    ['projection' => ['pop => 1']]
+    ['projection' => ['pop' => 1]]
 );
 
 var_dump($document);

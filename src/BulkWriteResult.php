@@ -69,8 +69,7 @@ class BulkWriteResult
      * The index of each ID in the map corresponds to the document's position in
      * the bulk operation. If the document had an ID prior to insertion (i.e.
      * the driver did not generate an ID), this will contain its "_id" field
-     * value. Any driver-generated ID will be an MongoDB\Driver\ObjectID
-     * instance.
+     * value. Any driver-generated ID will be an MongoDB\BSON\ObjectID instance.
      *
      * @return mixed[]
      */
@@ -142,7 +141,7 @@ class BulkWriteResult
      * The index of each ID in the map corresponds to the document's position
      * in bulk operation. If the document had an ID prior to upserting (i.e. the
      * server did not need to generate an ID), this will contain its "_id". Any
-     * server-generated ID will be an MongoDB\Driver\ObjectID instance.
+     * server-generated ID will be an MongoDB\BSON\ObjectID instance.
      *
      * This method should only be called if the write was acknowledged.
      *

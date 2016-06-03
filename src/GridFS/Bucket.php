@@ -20,6 +20,7 @@ use MongoDB\Operation\Find;
 class Bucket
 {
     private static $streamWrapper;
+    private static $defaultChunkSizeBytes = 261120;
 
     private $collectionsWrapper;
     private $databaseName;
@@ -49,7 +50,7 @@ class Bucket
     {
         $options += [
             'bucketName' => 'fs',
-            'chunkSizeBytes' => 261120,
+            'chunkSizeBytes' => self::$defaultChunkSizeBytes,
         ];
 
         if (isset($options['bucketName']) && ! is_string($options['bucketName'])) {

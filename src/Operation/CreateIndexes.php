@@ -97,9 +97,7 @@ class CreateIndexes implements Executable
             'indexes' => $this->indexes,
         ]);
 
-        $cursor = $server->executeCommand($this->databaseName, $command);
-
-        return current($cursor->toArray());
+        $server->executeCommand($this->databaseName, $command);
     }
 
     /**

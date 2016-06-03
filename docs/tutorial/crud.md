@@ -28,6 +28,21 @@ This page covers the following common use cases:
    documents at a time
  * [Aggregating](#aggregating-documents) documents
 
+Note that the use of arrays to express documents in the following examples was
+done for simplicity. The driver will also accept instances of stdClass or
+[MongoDB\BSON\Serializable][serializable]) for these arguments (e.g. query
+filters, inserted documents, update documents).
+
+[serializable]: http://php.net/mongodb-bson-serializable
+
+Documents destined for database storage (e.g. insert documents, replacement
+documents, embedded documents included in an update operation) may also be
+instances of [MongoDB\BSON\Persistable][persistable]. See
+[Persistable Classes][persistable-classes] for more information.
+
+[persistable]: http://php.net/mongodb-bson-persistable
+[persistable-classes]: bson.md#persistable-classes
+
 ## Finding One Document
 
 The [findOne()][findone] method returns the first matched document, or null if

@@ -15,6 +15,9 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class UpdateOne implements Executable
 {
+    /**
+     * @var Update
+     */
     private $update;
 
     /**

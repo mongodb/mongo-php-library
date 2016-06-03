@@ -15,15 +15,49 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class GridFSUpload
 {
+    /**
+     * @var resource
+     */
     private $buffer;
+
+    /**
+     * @var integer
+     */
     private $bufferLength = 0;
+
+    /**
+     * @var integer
+     */
     private $chunkOffset = 0;
+
+    /**
+     * @var integer
+     */
     private $chunkSize;
+
+    /**
+     * @var GridFSCollectionsWrapper
+     */
     private $collectionsWrapper;
+
+    /**
+     * @var resource
+     */
     private $ctx;
+
+    /**
+     * @var array
+     */
     private $file;
-    private $indexChecker;
+
+    /**
+     * @var boolean
+     */
     private $isClosed = false;
+
+    /**
+     * @var integer
+     */
     private $length = 0;
 
     /**
@@ -100,26 +134,41 @@ class GridFSUpload
         $this->isClosed = true;
     }
 
+    /**
+     * @return integer
+     */
     public function getChunkSize()
     {
         return $this->chunkSize;
     }
 
+    /**
+     * @return array
+     */
     public function getFile()
     {
         return $this->file;
     }
 
+    /**
+     * @return mixed
+     */
     public function getId()
     {
         return $this->file['_id'];
     }
 
+    /**
+     * @return integer
+     */
     public function getLength()
     {
         return $this->length;
     }
 
+    /**
+     * @return integer
+     */
     public function getSize()
     {
         return $this->length;
@@ -194,7 +243,11 @@ class GridFSUpload
         $this->isClosed = true;
     }
 
-    // From: http://stackoverflow.com/questions/3656713/how-to-get-current-time-in-milliseconds-in-php
+    /**
+     * From: http://stackoverflow.com/questions/3656713/how-to-get-current-time-in-milliseconds-in-php
+     *
+     * @return UTCDateTime
+     */
     private function createUploadDate()
     {
         $parts = explode(' ', microtime());
@@ -203,6 +256,9 @@ class GridFSUpload
         return new UTCDateTime($milliseconds);
     }
 
+    /**
+     * @return mixed
+     */
     private function fileCollectionInsert()
     {
         if ($this->isClosed) {
@@ -220,6 +276,9 @@ class GridFSUpload
         return $this->file['_id'];
     }
 
+    /**
+     * @param string $data
+     */
     private function insertChunk($data)
     {
         if ($this->isClosed) {
@@ -240,6 +299,11 @@ class GridFSUpload
         $this->chunkOffset++;
     }
 
+    /**
+     * @param resource $source
+     * @return string
+     * @throws Exception
+     */
     private function readChunk($source)
     {
         try {

@@ -13,16 +13,59 @@ use stdClass;
  */
 class GridFSDownload
 {
+    /**
+     * @var resource
+     */
     private $buffer;
+
+    /**
+     * @var boolean
+     */
     private $bufferEmpty = true;
+
+    /**
+     * @var boolean
+     */
     private $bufferFresh = true;
+
+    /**
+     * @var integer
+     */
     private $bytesSeen = 0;
+
+    /**
+     * @var integer
+     */
     private $chunkOffset = 0;
+
+    /**
+     * @var \IteratorIterator
+     */
     private $chunksIterator;
+
+    /**
+     * @var GridFSCollectionsWrapper
+     */
     private $collectionsWrapper;
+
+    /**
+     * @var object
+     */
     private $file;
+
+    /**
+     * @var boolean
+     */
     private $firstCheck = true;
+
+    /**
+     * @var boolean
+     */
     private $iteratorEmpty = false;
+
+    /**
+     * @var mixed
+     */
     private $numChunks;
 
     /**
@@ -57,6 +100,10 @@ class GridFSDownload
         fclose($this->buffer);
     }
 
+    /**
+     * @param mixed $numToRead
+     * @return string
+     */
     public function downloadNumBytes($numToRead)
     {
         $output = "";
@@ -94,6 +141,9 @@ class GridFSDownload
         return $output;
     }
 
+    /**
+     * @param string $destination
+     */
     public function downloadToStream($destination)
     {
         while ($this->advanceChunks()) {
@@ -102,26 +152,41 @@ class GridFSDownload
         }
     }
 
+    /**
+     * @return object
+     */
     public function getFile()
     {
         return $this->file;
     }
 
+    /**
+     * @return mixed
+     */
     public function getId()
     {
         return $this->file->_id;
     }
 
+    /**
+     * @return integer
+     */
     public function getSize()
     {
         return $this->file->length;
     }
 
+    /**
+     * @return boolean
+     */
     public function isEOF()
     {
         return ($this->iteratorEmpty && $this->bufferEmpty);
     }
 
+    /**
+     * @return boolean
+     */
     private function advanceChunks()
     {
         if ($this->chunkOffset >= $this->numChunks) {

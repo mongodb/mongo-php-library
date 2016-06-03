@@ -15,7 +15,14 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class FindOne implements Executable
 {
+    /**
+     * @var Find
+     */
     private $find;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**

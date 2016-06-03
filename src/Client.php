@@ -14,14 +14,28 @@ use MongoDB\Operation\ListDatabases;
 
 class Client
 {
+    /**
+     * @var array
+     */
     private static $defaultTypeMap = [
         'array' => 'MongoDB\Model\BSONArray',
         'document' => 'MongoDB\Model\BSONDocument',
         'root' => 'MongoDB\Model\BSONDocument',
     ];
 
+    /**
+     * @var Manager
+     */
     private $manager;
+
+    /**
+     * @var string
+     */
     private $uri;
+
+    /**
+     * @var array
+     */
     private $typeMap;
 
     /**

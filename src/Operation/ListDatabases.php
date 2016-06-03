@@ -18,6 +18,9 @@ use MongoDB\Model\DatabaseInfoLegacyIterator;
  */
 class ListDatabases implements Executable
 {
+    /**
+     * @var array
+     */
     private $options;
 
     /**

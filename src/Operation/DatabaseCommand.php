@@ -15,8 +15,19 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class DatabaseCommand implements Executable
 {
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var mixed
+     */
     private $command;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**

@@ -19,10 +19,24 @@ use MongoDB\Operation\Find;
  */
 class Bucket
 {
+    /**
+     * @var StreamWrapper
+     */
     private static $streamWrapper;
 
+    /**
+     * @var GridFSCollectionsWrapper
+     */
     private $collectionsWrapper;
+
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**
@@ -318,6 +332,11 @@ class Bucket
         return $gridFsStream->uploadFromStream($source);
     }
 
+    /**
+     * @param string  $filename
+     * @param integer $revision
+     * @return mixed
+     */
     private function findFileRevision($filename, $revision)
     {
         if ($revision < 0) {
@@ -345,6 +364,10 @@ class Bucket
         return $file;
     }
 
+    /**
+     * @param string $file
+     * @return resource
+     */
     private function openDownloadStreamByFile($file)
     {
         $options = [
@@ -357,6 +380,9 @@ class Bucket
         return fopen(sprintf('gridfs://%s/%s', $this->databaseName, $file->filename), 'r', false, $context);
     }
 
+    /**
+     * @param Manager $manager
+     */
     private function registerStreamWrapper(Manager $manager)
     {
         if (isset(self::$streamWrapper)) {

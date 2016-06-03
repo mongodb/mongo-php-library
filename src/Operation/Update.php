@@ -19,12 +19,34 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class Update implements Executable
 {
+    /**
+     * @var integer
+     */
     private static $wireVersionForDocumentLevelValidation = 4;
 
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var string
+     */
     private $collectionName;
+
+    /**
+     * @var mixed
+     */
     private $filter;
+
+    /**
+     * @var mixed
+     */
     private $update;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**

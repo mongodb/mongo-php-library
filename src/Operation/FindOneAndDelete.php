@@ -15,6 +15,9 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class FindOneAndDelete implements Executable
 {
+    /**
+     * @var FindAndModify
+     */
     private $findAndModify;
 
     /**

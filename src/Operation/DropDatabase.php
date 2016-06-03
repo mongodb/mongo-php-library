@@ -16,7 +16,14 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class DropDatabase implements Executable
 {
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**

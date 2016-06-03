@@ -10,7 +10,14 @@ use MongoDB\Exception\BadMethodCallException;
  */
 class DeleteResult
 {
+    /**
+     * @var WriteResult
+     */
     private $writeResult;
+
+    /**
+     * @var boolean
+     */
     private $isAcknowledged;
 
     /**

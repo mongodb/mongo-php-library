@@ -20,17 +20,43 @@ use MongoDB\Operation\ListCollections;
 
 class Database
 {
+    /**
+     * @var array
+     */
     private static $defaultTypeMap = [
         'array' => 'MongoDB\Model\BSONArray',
         'document' => 'MongoDB\Model\BSONDocument',
         'root' => 'MongoDB\Model\BSONDocument',
     ];
 
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var Manager
+     */
     private $manager;
+
+    /**
+     * @var ReadConcern
+     */
     private $readConcern;
+
+    /**
+     * @var ReadPreference
+     */
     private $readPreference;
+
+    /**
+     * @var array
+     */
     private $typeMap;
+
+    /**
+     * @var WriteConcern
+     */
     private $writeConcern;
 
     /**

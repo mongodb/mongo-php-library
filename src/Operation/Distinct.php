@@ -18,12 +18,34 @@ use MongoDB\Exception\UnexpectedValueException;
  */
 class Distinct implements Executable
 {
+    /**
+     * @var integer
+     */
     private static $wireVersionForReadConcern = 4;
 
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var string
+     */
     private $collectionName;
+
+    /**
+     * @var string
+     */
     private $fieldName;
+
+    /**
+     * @var mixed
+     */
     private $filter;
+
+    /**
+     * @var array
+     */
     private $options;
 
     /**

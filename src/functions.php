@@ -141,6 +141,10 @@ function server_supports_feature(Server $server, $feature)
     return ($minWireVersion <= $feature && $maxWireVersion >= $feature);
 }
 
+/**
+ * @param mixed $input
+ * @return boolean
+ */
 function is_string_array($input) {
     if (!is_array($input)){
         return false;
@@ -152,4 +156,3 @@ function is_string_array($input) {
     }
     return true;
 }
-

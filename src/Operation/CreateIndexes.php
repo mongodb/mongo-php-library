@@ -21,8 +21,19 @@ class CreateIndexes implements Executable
 {
     private static $wireVersionForCommand = 2;
 
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var string
+     */
     private $collectionName;
+
+    /**
+     * @var array
+     */
     private $indexes = [];
 
     /**
@@ -89,6 +100,8 @@ class CreateIndexes implements Executable
      * command.
      *
      * @param Server $server
+     *
+     * @return mixed
      */
     private function executeCommand(Server $server)
     {

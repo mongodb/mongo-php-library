@@ -36,19 +36,50 @@ use Traversable;
 
 class Collection
 {
+    /**
+     * @var array
+     */
     private static $defaultTypeMap = [
         'array' => 'MongoDB\Model\BSONArray',
         'document' => 'MongoDB\Model\BSONDocument',
         'root' => 'MongoDB\Model\BSONDocument',
     ];
+
     private static $wireVersionForFindAndModifyWriteConcern = 4;
 
+    /**
+     * @var string
+     */
     private $collectionName;
+
+    /**
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * @var Manager
+     */
     private $manager;
+
+    /**
+     * @var ReadConcern
+     */
     private $readConcern;
+
+    /**
+     * @var ReadPreference
+     */
     private $readPreference;
+
+    /**
+     * @var array
+     */
     private $typeMap;
+
+    /**
+     * @var WriteConcern
+     */
     private $writeConcern;
 
     /**

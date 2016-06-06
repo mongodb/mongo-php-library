@@ -161,7 +161,7 @@ class SpecificationTests extends FunctionalTestCase
                             $cmd['documents'][$docIndex] = $doc;
                         }
                     }
-                    $collection = new Collection($this->manager, sprintf("%s.%s", $this->getDatabaseName(), $collectionName));
+                    $collection = new Collection($this->manager, $this->getDatabaseName(), $collectionName);
                     $this->commands[$key]($collection, $this->fixTypes($cmd, true));
                     $this->collections[$collectionName] = $collection;
                 }
@@ -175,20 +175,20 @@ class SpecificationTests extends FunctionalTestCase
         $collectionsToDrop = ['fs.files','fs.chunks','expected.files','expected.chunks'];
         $data = $this->fixTypes($data, true);
         foreach ($collectionsToDrop as $collectionName) {
-            $collection = new Collection($this->manager, sprintf("%s.%s", $this->getDatabaseName(), $collectionName));
+            $collection = new Collection($this->manager, $this->getDatabaseName(), $collectionName);
             $collection->drop();
         }
         if (isset($data['files']) && count($data['files']) > 0) {
-            $filesCollection = new Collection($this->manager, sprintf("%s.%s", $this->getDatabaseName(), "fs.files"));
+            $filesCollection = new Collection($this->manager, $this->getDatabaseName(), "fs.files");
             $filesCollection->insertMany($data['files']);
-            $expectedFilesCollection = new Collection($this->manager, sprintf("%s.%s", $this->getDatabaseName(), "expected.files"));
+            $expectedFilesCollection = new Collection($this->manager, $this->getDatabaseName(), "expected.files");
             $expectedFilesCollection->insertMany($data['files']);
             $this->collections['expected.files'] = $expectedFilesCollection;
         }
         if (isset($data['chunks']) && count($data['chunks']) > 0) {
-            $chunksCollection = new Collection($this->manager, sprintf("%s.%s", $this->getDatabaseName(), "fs.chunks"));
+            $chunksCollection = new Collection($this->manager, $this->getDatabaseName(), "fs.chunks");
             $chunksCollection->insertMany($data['chunks']);
-            $expectedChunksCollection = new Collection($this->manager, sprintf("%s.%s", $this->getDatabaseName(), "expected.chunks"));
+            $expectedChunksCollection = new Collection($this->manager, $this->getDatabaseName(), "expected.chunks");
             $expectedChunksCollection->insertMany($data['chunks']);
             $this->collections['expected.chunks'] = $expectedChunksCollection;
 
@@ -197,7 +197,7 @@ class SpecificationTests extends FunctionalTestCase
             foreach($test['arrange']['data'] as $cmd) {
                 foreach($cmd as $key => $value) {
                     if(isset($this->commands[$key])) {
-                        $collection = new Collection($this->manager, sprintf("%s.%s", $this->getDatabaseName(), $cmd[$key]));
+                        $collection = new Collection($this->manager, $this->getDatabaseName(), $cmd[$key]);
                         $this->commands[$key]($collection,$this->fixTypes($cmd, true));
                     }
                 }

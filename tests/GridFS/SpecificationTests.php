@@ -233,8 +233,8 @@ class SpecificationTests extends FunctionalTestCase
     {
         $args = $this->fixTypes($args, false);
         $stream = fopen('php://temp', 'w+');
-        if(isset($args['options']['revision'])) {
-            $this->bucket->downloadToStreamByName($args['filename'], $stream, $args['options']['revision']);
+        if(isset($args['options'])) {
+            $this->bucket->downloadToStreamByName($args['filename'], $stream, $args['options']);
         } else {
             $this->bucket->downloadToStreamByName($args['filename'], $stream);
         }

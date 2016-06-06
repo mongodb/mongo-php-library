@@ -217,8 +217,6 @@ class SpecificationTests extends FunctionalTestCase
     function downloadCommand($args)
     {
         $args = $this->fixTypes($args, false);
-        $streamWrapper = new \MongoDB\GridFS\StreamWrapper();
-        $streamWrapper->register($this->manager);
         $stream = fopen('php://temp', 'w+');
         $this->bucket->downloadToStream($args['id'], $stream);
         rewind($stream);
@@ -234,8 +232,6 @@ class SpecificationTests extends FunctionalTestCase
     function download_by_nameCommand($args)
     {
         $args = $this->fixTypes($args, false);
-        $streamWrapper = new \MongoDB\GridFS\StreamWrapper();
-        $streamWrapper->register($this->manager);
         $stream = fopen('php://temp', 'w+');
         if(isset($args['options']['revision'])) {
             $this->bucket->downloadToStreamByName($args['filename'], $stream, $args['options']['revision']);

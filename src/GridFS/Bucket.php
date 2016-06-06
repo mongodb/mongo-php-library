@@ -354,7 +354,7 @@ class Bucket
 
         $context = stream_context_create(['gridfs' => $options]);
 
-        return fopen(sprintf('gridfs://%s/%s', $this->databaseName, $file->filename), 'r', false, $context);
+        return fopen(sprintf('gridfs://%s/%s', $this->databaseName, isset($file->filename) ? $file->filename : ''), 'r', false, $context);
     }
 
     private function registerStreamWrapper(Manager $manager)

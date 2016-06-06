@@ -12,7 +12,7 @@ use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 abstract class FunctionalTestCase extends BaseFunctionalTestCase
 {
     protected $bucket;
-    protected $collectionsWrapper;
+    protected $collectionWrapper;
 
     public function setUp()
     {
@@ -22,7 +22,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
             $col->drop();
         }
         $this->bucket = new \MongoDB\GridFS\Bucket($this->manager, $this->getDatabaseName());
-        $this->collectionsWrapper = $this->bucket->getCollectionsWrapper();
+        $this->collectionWrapper = $this->bucket->getCollectionWrapper();
     }
 
     public function tearDown()

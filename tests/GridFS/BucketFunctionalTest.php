@@ -63,8 +63,8 @@ class BucketFunctionalTest extends FunctionalTestCase
         $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("hello world"));
         $contents = stream_get_contents($this->bucket->openDownloadStream($id));
         $this->assertEquals("hello world", $contents);
-        $this->assertEquals(1, $this->bucket->getCollectionsWrapper()->getFilesCollection()->count());
-        $this->assertEquals(1, $this->bucket->getCollectionsWrapper()->getChunksCollection()->count());
+        $this->assertEquals(1, $this->bucket->getCollectionWrapper()->getFilesCollection()->count());
+        $this->assertEquals(1, $this->bucket->getCollectionWrapper()->getChunksCollection()->count());
 
         $this->bucket->delete($id);
         $error=null;
@@ -75,17 +75,17 @@ class BucketFunctionalTest extends FunctionalTestCase
         }
         $fileNotFound = '\MongoDB\GridFS\Exception\FileNotFoundException';
         $this->assertTrue($error instanceof $fileNotFound);
-        $this->assertEquals(0, $this->bucket->getCollectionsWrapper()->getFilesCollection()->count());
-        $this->assertEquals(0, $this->bucket->getCollectionsWrapper()->getChunksCollection()->count());
+        $this->assertEquals(0, $this->bucket->getCollectionWrapper()->getFilesCollection()->count());
+        $this->assertEquals(0, $this->bucket->getCollectionWrapper()->getChunksCollection()->count());
     }
     public function testMultiChunkDelete()
     {
         $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("hello"), ['chunkSizeBytes'=>1]);
-        $this->assertEquals(1, $this->bucket->getCollectionsWrapper()->getFilesCollection()->count());
-        $this->assertEquals(5, $this->bucket->getCollectionsWrapper()->getChunksCollection()->count());
+        $this->assertEquals(1, $this->bucket->getCollectionWrapper()->getFilesCollection()->count());
+        $this->assertEquals(5, $this->bucket->getCollectionWrapper()->getChunksCollection()->count());
         $this->bucket->delete($id);
-        $this->assertEquals(0, $this->bucket->getCollectionsWrapper()->getFilesCollection()->count());
-        $this->assertEquals(0, $this->bucket->getCollectionsWrapper()->getChunksCollection()->count());
+        $this->assertEquals(0, $this->bucket->getCollectionWrapper()->getFilesCollection()->count());
+        $this->assertEquals(0, $this->bucket->getCollectionWrapper()->getChunksCollection()->count());
     }
 
     public function testEmptyFile()
@@ -93,10 +93,10 @@ class BucketFunctionalTest extends FunctionalTestCase
         $id = $this->bucket->uploadFromStream("test_filename",$this->generateStream(""));
         $contents = stream_get_contents($this->bucket->openDownloadStream($id));
         $this->assertEquals("", $contents);
-        $this->assertEquals(1, $this->bucket->getCollectionsWrapper()->getFilesCollection()->count());
-        $this->assertEquals(0, $this->bucket->getCollectionsWrapper()->getChunksCollection()->count());
+        $this->assertEquals(1, $this->bucket->getCollectionWrapper()->getFilesCollection()->count());
+        $this->assertEquals(0, $this->bucket->getCollectionWrapper()->getChunksCollection()->count());
 
-        $raw = $this->bucket->getCollectionsWrapper()->getFilesCollection()->findOne();
+        $raw = $this->bucket->getCollectionWrapper()->getFilesCollection()->findOne();
         $this->assertEquals(0, $raw->length);
         $this->assertEquals($id, $raw->_id);
         $this->assertTrue($raw->uploadDate instanceof \MongoDB\BSON\UTCDateTime);
@@ -107,7 +107,7 @@ class BucketFunctionalTest extends FunctionalTestCase
     {
         $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("foobar"));
 
-        $this->collectionsWrapper->getChunksCollection()->updateOne(['files_id' => $id],
+        $this->collectionWrapper->getChunksCollection()->updateOne(['files_id' => $id],
                     ['$set' => ['data' => new \MongoDB\BSON\Binary('foo', \MongoDB\BSON\Binary::TYPE_GENERIC)]]);
         $error = null;
         try{
@@ -123,7 +123,7 @@ class BucketFunctionalTest extends FunctionalTestCase
     {
         $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("hello world,abcdefghijklmnopqrstuv123456789"), ["chunkSizeBytes" => 1]);
 
-        $this->collectionsWrapper->getChunksCollection()->deleteOne(['files_id' => $id, 'n' => 7]);
+        $this->collectionWrapper->getChunksCollection()->deleteOne(['files_id' => $id, 'n' => 7]);
         $error = null;
         try{
             $download = $this->bucket->openDownloadStream($id);
@@ -136,8 +136,8 @@ class BucketFunctionalTest extends FunctionalTestCase
     }
     public function testUploadEnsureIndexes()
     {
-        $chunks = $this->bucket->getCollectionsWrapper()->getChunksCollection();
-        $files = $this->bucket->getCollectionsWrapper()->getFilesCollection();
+        $chunks = $this->bucket->getCollectionWrapper()->getChunksCollection();
+        $files = $this->bucket->getCollectionWrapper()->getFilesCollection();
         $this->bucket->uploadFromStream("filename", $this->generateStream("junk"));
 
         $chunksIndexed = false;
@@ -238,7 +238,7 @@ class BucketFunctionalTest extends FunctionalTestCase
     public function testGridInNonIntChunksize()
     {
         $id = $this->bucket->uploadFromStream("f",$this->generateStream("data"));
-        $this->bucket->getCollectionsWrapper()->getFilesCollection()->updateOne(["filename"=>"f"],
+        $this->bucket->getCollectionWrapper()->getFilesCollection()->updateOne(["filename"=>"f"],
                                                         ['$set'=> ['chunkSize' => 100.00]]);
         $this->assertEquals("data", stream_get_contents($this->bucket->openDownloadStream($id)));
     }
@@ -288,7 +288,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("hello world"));
         $this->bucket->drop();
         $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("hello world"));
-        $this->assertEquals(1, $this->collectionsWrapper->getFilesCollection()->count());
+        $this->assertEquals(1, $this->collectionWrapper->getFilesCollection()->count());
     }
     /**
      *@dataProvider provideInsertChunks

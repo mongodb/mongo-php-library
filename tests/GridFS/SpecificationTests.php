@@ -78,9 +78,9 @@ class SpecificationTests extends FunctionalTestCase
             $fixedAssertTrue = $this->fixTypes($test['assert'], true);
             if (isset($test['assert']['data'])) {
                 $this->runCommands($fixedAssertTrue['data'], $result);
-                $this->collectionsEqual($this->collections['expected.files'],$this->bucket->getCollectionsWrapper()->getFilesCollection());
+                $this->collectionsEqual($this->collections['expected.files'],$this->bucket->getCollectionWrapper()->getFilesCollection());
                 if(isset($this->collections['expected.chunks'])) {
-                    $this->collectionsEqual($this->collections['expected.chunks'],$this->bucket->getCollectionsWrapper()->getChunksCollection());
+                    $this->collectionsEqual($this->collections['expected.chunks'],$this->bucket->getCollectionWrapper()->getChunksCollection());
                 }
             }
         }

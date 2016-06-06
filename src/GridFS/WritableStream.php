@@ -5,16 +5,18 @@ namespace MongoDB\GridFS;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\Driver\Exception\Exception;
+use MongoDB\Driver\Exception\Exception as DriverException;
 use MongoDB\Exception\InvalidArgumentException;
 
 /**
- * GridFSUpload abstracts the process of writing a GridFS file.
+ * WritableStream abstracts the process of writing a GridFS file.
  *
  * @internal
  */
-class GridFSUpload
+class WritableStream
 {
+    private static $defaultChunkSizeBytes = 261120;
+
     private $buffer;
     private $bufferLength = 0;
     private $chunkOffset = 0;
@@ -22,14 +24,15 @@ class GridFSUpload
     private $collectionWrapper;
     private $ctx;
     private $file;
-    private $indexChecker;
     private $isClosed = false;
     private $length = 0;
 
     /**
-     * Constructs a GridFS upload stream.
+     * Constructs a writable GridFS stream.
      *
      * Supported options:
+     *
+     *  * _id (mixed): File document identifier. Defaults to a new ObjectId.
      *
      *  * aliases (array of strings): DEPRECATED An array of aliases. 
      *    Applications wishing to store aliases should add an aliases field to
@@ -51,10 +54,17 @@ class GridFSUpload
      */
     public function __construct(CollectionWrapper $collectionWrapper, $filename, array $options = [])
     {
-        $options += ['chunkSizeBytes' => 261120];
+        $options += [
+            '_id' => new ObjectId,
+            'chunkSizeBytes' => self::$defaultChunkSizeBytes,
+        ];
 
         if (isset($options['aliases']) && ! \MongoDB\is_string_array($options['aliases'])) {
             throw InvalidArgumentException::invalidType('"aliases" option', $options['aliases'], 'array of strings');
+        }
+
+        if (isset($options['chunkSizeBytes']) && ! is_integer($options['chunkSizeBytes'])) {
+            throw InvalidArgumentException::invalidType('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
         }
 
         if (isset($options['contentType']) && ! is_string($options['contentType'])) {
@@ -71,10 +81,11 @@ class GridFSUpload
         $this->ctx = hash_init('md5');
 
         $this->file = [
-            '_id' => new ObjectId(),
+            '_id' => $options['_id'],
             'chunkSize' => $this->chunkSize,
             'filename' => (string) $filename,
-            'uploadDate' => $this->createUploadDate(),
+            // TODO: This is necessary until PHPC-536 is implemented
+            'uploadDate' => new UTCDateTime(floor(microtime(true) * 1000)),
         ] + array_intersect_key($options, ['aliases' => 1, 'contentType' => 1, 'metadata' => 1]);
     }
 
@@ -133,7 +144,7 @@ class GridFSUpload
      * reset.
      *
      * @param string $toWrite Binary data to write
-     * @return int
+     * @return integer
      */
     public function insertChunks($toWrite)
     {
@@ -171,14 +182,13 @@ class GridFSUpload
      *
      * @param resource $source Readable stream
      * @return ObjectId
+     * @throws InvalidArgumentException
      */
     public function uploadFromStream($source)
     {
         if ( ! is_resource($source) || get_resource_type($source) != "stream") {
             throw InvalidArgumentException::invalidType('$source', $source, 'resource');
         }
-
-        $streamMetadata = stream_get_meta_data($source);
 
         while ($data = $this->readChunk($source)) {
             $this->insertChunk($data);
@@ -189,18 +199,8 @@ class GridFSUpload
 
     private function abort()
     {
-        $this->collectionWrapper->getChunksCollection()->deleteMany(['files_id' => $this->file['_id']]);
-        $this->collectionWrapper->getFilesCollection()->deleteOne(['_id' => $this->file['_id']]);
+        $this->collectionWrapper->deleteChunksByFilesId($this->file['_id']);
         $this->isClosed = true;
-    }
-
-    // From: http://stackoverflow.com/questions/3656713/how-to-get-current-time-in-milliseconds-in-php
-    private function createUploadDate()
-    {
-        $parts = explode(' ', microtime());
-        $milliseconds = sprintf('%d%03d', $parts[1], $parts[0] * 1000);
-
-        return new UTCDateTime($milliseconds);
     }
 
     private function fileCollectionInsert()
@@ -244,7 +244,7 @@ class GridFSUpload
     {
         try {
             $data = fread($source, $this->chunkSize);
-        } catch (Exception $e) {
+        } catch (DriverException $e) {
             $this->abort();
             throw $e;
         }

@@ -11,96 +11,130 @@ namespace MongoDB\GridFS;
  */
 class StreamWrapper
 {
+    /**
+     * @var resource|null Stream context (set by PHP)
+     */
     public $context;
 
-    private $collectionsWrapper;
-    private $gridFSStream;
-    private $id;
     private $mode;
+    private $protocol;
+    private $stream;
 
     public function getId()
     {
-        return $this->id;
-    }
-
-    public function openReadStream()
-    {
-        $context = stream_context_get_options($this->context);
-        $this->gridFSStream = new GridFSDownload($this->collectionWrapper, $context['gridfs']['file']);
-        $this->id = $this->gridFSStream->getId();
-
-        return true;
-    }
-
-    public function openWriteStream()
-    {
-        $context = stream_context_get_options($this->context);
-        $options = $context['gridfs']['uploadOptions'];
-        $this->gridFSStream = new GridFSUpload($this->collectionWrapper, $this->identifier, $options);
-        $this->id = $this->gridFSStream->getId();
-
-        return true;
+        return $this->stream->getId();
     }
 
     /**
      * Register the GridFS stream wrapper.
+     *
+     * @param string $protocol Protocol to use for stream_wrapper_register()
      */
-    public static function register()
+    public static function register($protocol = 'gridfs')
     {
-        if (in_array('gridfs', stream_get_wrappers())) {
-            stream_wrapper_unregister('gridfs');
+        if (in_array($protocol, stream_get_wrappers())) {
+            stream_wrapper_unregister($protocol);
         }
 
-        stream_wrapper_register('gridfs', get_called_class(), \STREAM_IS_URL);
+        stream_wrapper_register($protocol, get_called_class(), \STREAM_IS_URL);
     }
 
+    /**
+     * Closes the stream.
+     *
+     * @see http://php.net/manual/en/streamwrapper.stream-close.php
+     */
     public function stream_close()
     {
-        $this->gridFSStream->close();
+        $this->stream->close();
     }
 
+    /**
+     * Returns whether the file pointer is at the end of the stream.
+     *
+     * @see http://php.net/manual/en/streamwrapper.stream-eof.php
+     * @return boolean
+     */
     public function stream_eof()
     {
-        return $this->gridFSStream->isEOF();
+        return $this->stream->isEOF();
     }
 
+    /**
+     * Opens the stream.
+     *
+     * @see http://php.net/manual/en/streamwrapper.stream-open.php
+     * @param string  $path       Path to the file resource
+     * @param string  $mode       Mode used to open the file (only "r" and "w" are supported)
+     * @param integer $options    Additional flags set by the streams API
+     * @param string  $openedPath Not used
+     */
     public function stream_open($path, $mode, $options, &$openedPath)
     {
         $this->initProtocol($path);
-        $context = stream_context_get_options($this->context);
-        $this->collectionWrapper = $context['gridfs']['collectionWrapper'];
         $this->mode = $mode;
 
-        switch ($this->mode) {
-            case 'r': return $this->openReadStream();
-            case 'w': return $this->openWriteStream();
-            default:  return false;
+        if ($mode === 'r') {
+            return $this->initReadableStream();
         }
+
+        if ($mode === 'w') {
+            return $this->initWritableStream();
+        }
+
+        return false;
     }
 
+    /**
+     * Read bytes from the stream.
+     *
+     * Note: this method may return a string smaller than the requested length
+     * if data is not available to be read.
+     * 
+     * @see http://php.net/manual/en/streamwrapper.stream-read.php
+     * @param integer $count Number of bytes to read
+     * @return string 
+     */
     public function stream_read($count)
     {
-        return $this->gridFSStream->downloadNumBytes($count);
+        // TODO: Ensure that $this->stream is a ReadableStream
+        return $this->stream->downloadNumBytes($count);
     }
 
+    /**
+     * Return information about the stream.
+     *
+     * @see http://php.net/manual/en/streamwrapper.stream-stat.php
+     * @return array
+     */
     public function stream_stat()
     {
         $stat = $this->getStatTemplate();
-        $stat[7] = $stat['size'] = $this->gridFSStream->getSize();
+
+        $stat[2] = $stat['mode'] = $this->mode;
+        $stat[7] = $stat['size'] = $this->stream->getSize();
 
         return $stat;
     }
 
+    /**
+     * Write bytes to the stream.
+     *
+     * @see http://php.net/manual/en/streamwrapper.stream-write.php
+     * @param string $data Data to write
+     * @return integer The number of bytes successfully stored
+     */
     public function stream_write($data)
     {
-        $this->gridFSStream->insertChunks($data);
+        // TODO: Ensure that $this->stream is a WritableStream
+        $this->stream->insertChunks($data);
 
         return strlen($data);
     }
 
     /**
-     * Gets a URL stat template with default values
-     * from https://github.com/aws/aws-sdk-php/blob/master/src/S3/StreamWrapper.php
+     * Returns a stat template with default values.
+     *
      * @return array
      */
     private function getStatTemplate()
@@ -122,9 +156,52 @@ class StreamWrapper
         ];
     }
 
+    /**
+     * Initialize the protocol from the given path.
+     *
+     * @see StreamWrapper::stream_open()
+     * @param string $path
+     */
     private function initProtocol($path)
     {
-        $parsed_path = parse_url($path);
-        $this->identifier = substr($parsed_path['path'], 1);
+        $parts = explode('://', $path, 2);
+        $this->protocol = $parts[0] ?: 'gridfs';
+    }
+
+    /**
+     * Initialize the internal stream for reading.
+     *
+     * @see StreamWrapper::stream_open()
+     * @return boolean
+     */
+    private function initReadableStream()
+    {
+        $context = stream_context_get_options($this->context);
+
+        $this->stream = new ReadableStream(
+            $context[$this->protocol]['collectionWrapper'],
+            $context[$this->protocol]['file']
+        );
+
+        return true;
+    }
+
+    /**
+     * Initialize the internal stream for writing.
+     *
+     * @see StreamWrapper::stream_open()
+     * @return boolean
+     */
+    private function initWritableStream()
+    {
+        $context = stream_context_get_options($this->context);
+
+        $this->stream = new WritableStream(
+            $context[$this->protocol]['collectionWrapper'],
+            $context[$this->protocol]['filename'],
+            $context[$this->protocol]['options']
+        );
+
+        return true;
     }
 }

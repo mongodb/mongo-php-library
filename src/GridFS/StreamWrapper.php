@@ -26,7 +26,7 @@ class StreamWrapper
     public function openReadStream()
     {
         $context = stream_context_get_options($this->context);
-        $this->gridFSStream = new GridFSDownload($this->collectionsWrapper, $context['gridfs']['file']);
+        $this->gridFSStream = new GridFSDownload($this->collectionWrapper, $context['gridfs']['file']);
         $this->id = $this->gridFSStream->getId();
 
         return true;
@@ -36,7 +36,7 @@ class StreamWrapper
     {
         $context = stream_context_get_options($this->context);
         $options = $context['gridfs']['uploadOptions'];
-        $this->gridFSStream = new GridFSUpload($this->collectionsWrapper, $this->identifier, $options);
+        $this->gridFSStream = new GridFSUpload($this->collectionWrapper, $this->identifier, $options);
         $this->id = $this->gridFSStream->getId();
 
         return true;
@@ -68,7 +68,7 @@ class StreamWrapper
     {
         $this->initProtocol($path);
         $context = stream_context_get_options($this->context);
-        $this->collectionsWrapper = $context['gridfs']['collectionsWrapper'];
+        $this->collectionWrapper = $context['gridfs']['collectionWrapper'];
         $this->mode = $mode;
 
         switch ($this->mode) {

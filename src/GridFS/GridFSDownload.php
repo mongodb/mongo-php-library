@@ -19,7 +19,7 @@ class GridFSDownload
     private $bytesSeen = 0;
     private $chunkOffset = 0;
     private $chunksIterator;
-    private $collectionsWrapper;
+    private $collectionWrapper;
     private $file;
     private $firstCheck = true;
     private $iteratorEmpty = false;
@@ -28,17 +28,17 @@ class GridFSDownload
     /**
      * Constructs a GridFS download stream.
      *
-     * @param GridFSCollectionsWrapper $collectionsWrapper GridFS collections wrapper
-     * @param stdClass                 $file               GridFS file document
+     * @param CollectionWrapper $collectionWrapper GridFS collection wrapper
+     * @param stdClass          $file               GridFS file document
      * @throws CorruptFileException
      */
-    public function __construct(GridFSCollectionsWrapper $collectionsWrapper, stdClass $file)
+    public function __construct(CollectionWrapper $collectionWrapper, stdClass $file)
     {
-        $this->collectionsWrapper = $collectionsWrapper;
+        $this->collectionWrapper = $collectionWrapper;
         $this->file = $file;
 
         try {
-            $cursor = $this->collectionsWrapper->getChunksCollection()->find(
+            $cursor = $this->collectionWrapper->getChunksCollection()->find(
                 ['files_id' => $this->file->_id],
                 ['sort' => ['n' => 1]]
             );

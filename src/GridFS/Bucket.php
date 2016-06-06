@@ -22,7 +22,7 @@ class Bucket
     private static $streamWrapper;
     private static $defaultChunkSizeBytes = 261120;
 
-    private $collectionsWrapper;
+    private $collectionWrapper;
     private $databaseName;
     private $options;
 
@@ -74,7 +74,7 @@ class Bucket
 
         $collectionOptions = array_intersect_key($options, ['readPreference' => 1, 'writeConcern' => 1]);
 
-        $this->collectionsWrapper = new GridFSCollectionsWrapper($manager, $databaseName, $options['bucketName'], $collectionOptions);
+        $this->collectionWrapper = new CollectionWrapper($manager, $databaseName, $options['bucketName'], $collectionOptions);
         $this->registerStreamWrapper($manager);
     }
 
@@ -89,12 +89,12 @@ class Bucket
      */
     public function delete(ObjectId $id)
     {
-        $file = $this->collectionsWrapper->getFilesCollection()->findOne(['_id' => $id]);
-        $this->collectionsWrapper->getFilesCollection()->deleteOne(['_id' => $id]);
-        $this->collectionsWrapper->getChunksCollection()->deleteMany(['files_id' => $id]);
+        $file = $this->collectionWrapper->getFilesCollection()->findOne(['_id' => $id]);
+        $this->collectionWrapper->getFilesCollection()->deleteOne(['_id' => $id]);
+        $this->collectionWrapper->getChunksCollection()->deleteMany(['files_id' => $id]);
 
         if ($file === null) {
-            throw FileNotFoundException::byId($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+            throw FileNotFoundException::byId($id, $this->collectionWrapper->getFilesCollection()->getNameSpace());
         }
 
     }
@@ -108,16 +108,16 @@ class Bucket
      */
     public function downloadToStream(ObjectId $id, $destination)
     {
-        $file = $this->collectionsWrapper->getFilesCollection()->findOne(
+        $file = $this->collectionWrapper->getFilesCollection()->findOne(
             ['_id' => $id],
             ['typeMap' => ['root' => 'stdClass']]
         );
 
         if ($file === null) {
-            throw FileNotFoundException::byId($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+            throw FileNotFoundException::byId($id, $this->collectionWrapper->getFilesCollection()->getNameSpace());
         }
 
-        $gridFsStream = new GridFSDownload($this->collectionsWrapper, $file);
+        $gridFsStream = new GridFSDownload($this->collectionWrapper, $file);
         $gridFsStream->downloadToStream($destination);
     }
 
@@ -149,7 +149,7 @@ class Bucket
     {
         $options += ['revision' => -1];
         $file = $this->findFileRevision($filename, $options['revision']);
-        $gridFsStream = new GridFSDownload($this->collectionsWrapper, $file);
+        $gridFsStream = new GridFSDownload($this->collectionWrapper, $file);
         $gridFsStream->downloadToStream($destination);
     }
 
@@ -160,7 +160,7 @@ class Bucket
 
     public function drop()
     {
-        $this->collectionsWrapper->dropCollections();
+        $this->collectionWrapper->dropCollections();
     }
 
     /**
@@ -173,12 +173,12 @@ class Bucket
      */
     public function find($filter, array $options = [])
     {
-        return $this->collectionsWrapper->getFilesCollection()->find($filter, $options);
+        return $this->collectionWrapper->getFilesCollection()->find($filter, $options);
     }
 
     public function getCollectionsWrapper()
     {
-        return $this->collectionsWrapper;
+        return $this->collectionWrapper;
     }
 
     public function getDatabaseName()
@@ -212,13 +212,13 @@ class Bucket
      */
     public function openDownloadStream(ObjectId $id)
     {
-        $file = $this->collectionsWrapper->getFilesCollection()->findOne(
+        $file = $this->collectionWrapper->getFilesCollection()->findOne(
             ['_id' => $id],
             ['typeMap' => ['root' => 'stdClass']]
         );
 
         if ($file === null) {
-            throw FileNotFoundException::byId($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+            throw FileNotFoundException::byId($id, $this->collectionWrapper->getFilesCollection()->getNameSpace());
         }
 
         return $this->openDownloadStreamByFile($file);
@@ -273,7 +273,7 @@ class Bucket
         $options += ['chunkSizeBytes' => $this->options['chunkSizeBytes']];
 
         $streamOptions = [
-            'collectionsWrapper' => $this->collectionsWrapper,
+            'collectionWrapper' => $this->collectionWrapper,
             'uploadOptions' => $options,
         ];
 
@@ -291,10 +291,10 @@ class Bucket
      */
     public function rename(ObjectId $id, $newFilename)
     {
-        $filesCollection = $this->collectionsWrapper->getFilesCollection();
+        $filesCollection = $this->collectionWrapper->getFilesCollection();
         $result = $filesCollection->updateOne(['_id' => $id], ['$set' => ['filename' => $newFilename]]);
         if($result->getModifiedCount() == 0) {
-            throw FileNotFoundException::byId($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+            throw FileNotFoundException::byId($id, $this->collectionWrapper->getFilesCollection()->getNameSpace());
         }
     }
 
@@ -314,7 +314,7 @@ class Bucket
     public function uploadFromStream($filename, $source, array $options = [])
     {
         $options += ['chunkSizeBytes' => $this->options['chunkSizeBytes']];
-        $gridFsStream = new GridFSUpload($this->collectionsWrapper, $filename, $options);
+        $gridFsStream = new GridFSUpload($this->collectionWrapper, $filename, $options);
 
         return $gridFsStream->uploadFromStream($source);
     }
@@ -329,7 +329,7 @@ class Bucket
             $sortOrder = 1;
         }
 
-        $filesCollection = $this->collectionsWrapper->getFilesCollection();
+        $filesCollection = $this->collectionWrapper->getFilesCollection();
         $file = $filesCollection->findOne(
             ['filename' => $filename],
             [
@@ -349,7 +349,7 @@ class Bucket
     private function openDownloadStreamByFile($file)
     {
         $options = [
-            'collectionsWrapper' => $this->collectionsWrapper,
+            'collectionWrapper' => $this->collectionWrapper,
             'file' => $file,
         ];
 

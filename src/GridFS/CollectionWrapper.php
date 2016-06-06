@@ -5,14 +5,13 @@ namespace MongoDB\GridFS;
 use MongoDB\Collection;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\WriteConcern;
 
 /**
- * GridFSCollectionsWrapper abstracts the GridFS files and chunks collections.
+ * CollectionWrapper abstracts the GridFS files and chunks collections.
  *
  * @internal
  */
-class GridFSCollectionsWrapper
+class CollectionWrapper
 {
     private $chunksCollection;
     private $ensuredIndexes = false;
@@ -34,8 +33,9 @@ class GridFSCollectionsWrapper
         $this->chunksCollection = new Collection($manager, $databaseName, sprintf('%s.chunks', $bucketName), $collectionOptions);
     }
 
-    public function dropCollections(){
-        $this->filesCollection-> drop();
+    public function dropCollections()
+    {
+        $this->filesCollection->drop();
         $this->chunksCollection->drop();
     }
 

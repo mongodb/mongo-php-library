@@ -19,7 +19,7 @@ class GridFSUpload
     private $bufferLength = 0;
     private $chunkOffset = 0;
     private $chunkSize;
-    private $collectionsWrapper;
+    private $collectionWrapper;
     private $ctx;
     private $file;
     private $indexChecker;
@@ -44,12 +44,12 @@ class GridFSUpload
      *  * metadata (document): User data for the "metadata" field of the files
      *    collection document.
      *
-     * @param GridFSCollectionsWrapper $collectionsWrapper GridFS collections wrapper
-     * @param string                   $filename           File name
-     * @param array                    $options            Upload options
+     * @param CollectionWrapper $collectionWrapper GridFS collection wrapper
+     * @param string            $filename          File name
+     * @param array             $options           Upload options
      * @throws InvalidArgumentException
      */
-    public function __construct(GridFSCollectionsWrapper $collectionsWrapper, $filename, array $options = [])
+    public function __construct(CollectionWrapper $collectionWrapper, $filename, array $options = [])
     {
         $options += ['chunkSizeBytes' => 261120];
 
@@ -66,7 +66,7 @@ class GridFSUpload
         }
 
         $this->chunkSize = $options['chunkSizeBytes'];
-        $this->collectionsWrapper = $collectionsWrapper;
+        $this->collectionWrapper = $collectionWrapper;
         $this->buffer = fopen('php://temp', 'w+');
         $this->ctx = hash_init('md5');
 
@@ -189,8 +189,8 @@ class GridFSUpload
 
     private function abort()
     {
-        $this->collectionsWrapper->getChunksCollection()->deleteMany(['files_id' => $this->file['_id']]);
-        $this->collectionsWrapper->getFilesCollection()->deleteOne(['_id' => $this->file['_id']]);
+        $this->collectionWrapper->getChunksCollection()->deleteMany(['files_id' => $this->file['_id']]);
+        $this->collectionWrapper->getFilesCollection()->deleteOne(['_id' => $this->file['_id']]);
         $this->isClosed = true;
     }
 
@@ -215,7 +215,7 @@ class GridFSUpload
         $this->file['length'] = $this->length;
         $this->file['md5'] = $md5;
 
-        $this->collectionsWrapper->insertFile($this->file);
+        $this->collectionWrapper->insertFile($this->file);
 
         return $this->file['_id'];
     }
@@ -235,7 +235,7 @@ class GridFSUpload
 
         hash_update($this->ctx, $data);
 
-        $this->collectionsWrapper->insertChunk($toUpload);
+        $this->collectionWrapper->insertChunk($toUpload);
         $this->length += strlen($data);
         $this->chunkOffset++;
     }

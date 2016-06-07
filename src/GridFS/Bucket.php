@@ -136,7 +136,7 @@ class Bucket
      *  * -2 = the second most recent revision
      *  * -1 = the most recent revision
      *
-     * @param string   $filename    File name
+     * @param string   $filename    Filename
      * @param resource $destination Writable Stream
      * @param array    $options     Download options
      * @throws FileNotFoundException
@@ -242,7 +242,7 @@ class Bucket
      *  * -2 = the second most recent revision
      *  * -1 = the most recent revision
      *
-     * @param string $filename File name
+     * @param string $filename Filename
      * @param array  $options  Download options
      * @return resource
      * @throws FileNotFoundException
@@ -268,7 +268,7 @@ class Bucket
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to the
      *    bucket's chunk size.
      *
-     * @param string $filename File name
+     * @param string $filename Filename
      * @param array  $options  Upload options
      * @return resource
      */
@@ -292,7 +292,7 @@ class Bucket
      * Renames the GridFS file with the specified ID.
      *
      * @param mixed  $id          File ID
-     * @param string $newFilename New file name
+     * @param string $newFilename New filename
      * @throws FileNotFoundException
      */
     public function rename($id, $newFilename)
@@ -325,7 +325,7 @@ class Bucket
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to the
      *    bucket's chunk size.
      *
-     * @param string   $filename File name
+     * @param string   $filename Filename
      * @param resource $source   Readable stream
      * @param array    $options  Stream options
      * @return ObjectId ID of the newly created GridFS file

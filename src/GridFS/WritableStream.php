@@ -48,7 +48,7 @@ class WritableStream
      *    collection document.
      *
      * @param CollectionWrapper $collectionWrapper GridFS collection wrapper
-     * @param string            $filename          File name
+     * @param string            $filename          Filename
      * @param array             $options           Upload options
      * @throws InvalidArgumentException
      */

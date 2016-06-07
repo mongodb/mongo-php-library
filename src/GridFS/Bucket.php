@@ -7,9 +7,10 @@ use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Exception\GridFSFileNotFoundException;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\GridFS\Exception\FileNotFoundException;
 use MongoDB\Operation\Find;
+use stdClass;
 
 /**
  * Bucket provides a public API for interacting with the GridFS files and chunks
@@ -19,9 +20,10 @@ use MongoDB\Operation\Find;
  */
 class Bucket
 {
-    private static $streamWrapper;
+    private static $defaultChunkSizeBytes = 261120;
+    private static $streamWrapperProtocol = 'gridfs';
 
-    private $collectionsWrapper;
+    private $collectionWrapper;
     private $databaseName;
     private $options;
 
@@ -49,7 +51,7 @@ class Bucket
     {
         $options += [
             'bucketName' => 'fs',
-            'chunkSizeBytes' => 261120,
+            'chunkSizeBytes' => self::$defaultChunkSizeBytes,
         ];
 
         if (isset($options['bucketName']) && ! is_string($options['bucketName'])) {
@@ -73,8 +75,8 @@ class Bucket
 
         $collectionOptions = array_intersect_key($options, ['readPreference' => 1, 'writeConcern' => 1]);
 
-        $this->collectionsWrapper = new GridFSCollectionsWrapper($manager, $databaseName, $options['bucketName'], $collectionOptions);
-        $this->registerStreamWrapper($manager);
+        $this->collectionWrapper = new CollectionWrapper($manager, $databaseName, $options['bucketName'], $collectionOptions);
+        $this->registerStreamWrapper();
     }
 
     /**
@@ -84,18 +86,16 @@ class Bucket
      * attempt to delete orphaned chunks.
      *
      * @param ObjectId $id ObjectId of the file
-     * @throws GridFSFileNotFoundException
+     * @throws FileNotFoundException
      */
     public function delete(ObjectId $id)
     {
-        $file = $this->collectionsWrapper->getFilesCollection()->findOne(['_id' => $id]);
-        $this->collectionsWrapper->getFilesCollection()->deleteOne(['_id' => $id]);
-        $this->collectionsWrapper->getChunksCollection()->deleteMany(['files_id' => $id]);
+        $file = $this->collectionWrapper->findFileById($id);
+        $this->collectionWrapper->deleteFileAndChunksById($id);
 
         if ($file === null) {
-            throw new GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+            throw FileNotFoundException::byId($id, $this->getFilesNamespace());
         }
-
     }
 
     /**
@@ -103,21 +103,18 @@ class Bucket
      *
      * @param ObjectId $id          ObjectId of the file
      * @param resource $destination Writable Stream
-     * @throws GridFSFileNotFoundException
+     * @throws FileNotFoundException
      */
     public function downloadToStream(ObjectId $id, $destination)
     {
-        $file = $this->collectionsWrapper->getFilesCollection()->findOne(
-            ['_id' => $id],
-            ['typeMap' => ['root' => 'stdClass']]
-        );
+        $file = $this->collectionWrapper->findFileById($id);
 
         if ($file === null) {
-            throw new GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+            throw FileNotFoundException::byId($id, $this->getFilesNamespace());
         }
 
-        $gridFsStream = new GridFSDownload($this->collectionsWrapper, $file);
-        $gridFsStream->downloadToStream($destination);
+        $stream = new ReadableStream($this->collectionWrapper, $file);
+        $stream ->downloadToStream($destination);
     }
 
     /**
@@ -142,28 +139,34 @@ class Bucket
      * @param string   $filename    File name
      * @param resource $destination Writable Stream
      * @param array    $options     Download options
-     * @throws GridFSFileNotFoundException
+     * @throws FileNotFoundException
      */
     public function downloadToStreamByName($filename, $destination, array $options = [])
     {
         $options += ['revision' => -1];
-        $file = $this->findFileRevision($filename, $options['revision']);
-        $gridFsStream = new GridFSDownload($this->collectionsWrapper, $file);
-        $gridFsStream->downloadToStream($destination);
+
+        $file = $this->collectionWrapper->findFileByFilenameAndRevision($filename, $options['revision']);
+
+        if ($file === null) {
+            throw FileNotFoundException::byFilenameAndRevision($filename, $options['revision'], $this->getFilesNamespace());
+        }
+
+        $stream = new ReadableStream($this->collectionWrapper, $file);
+        $stream->downloadToStream($destination);
     }
 
     /**
-    * Drops the files and chunks collection associated with GridFS this bucket
-    *
-    */
-
+     * Drops the files and chunks collections associated with this GridFS
+     * bucket.
+     */
     public function drop()
     {
-        $this->collectionsWrapper->dropCollections();
+        $this->collectionWrapper->dropCollections();
     }
 
     /**
-     * Find files from the GridFS bucket's files collection.
+     * Finds documents from the GridFS bucket's files collection matching the
+     * query.
      *
      * @see Find::__construct() for supported options
      * @param array|object $filter  Query by which to filter documents
@@ -172,12 +175,12 @@ class Bucket
      */
     public function find($filter, array $options = [])
     {
-        return $this->collectionsWrapper->getFilesCollection()->find($filter, $options);
+        return $this->collectionWrapper->findFiles($filter, $options);
     }
 
-    public function getCollectionsWrapper()
+    public function getCollectionWrapper()
     {
-        return $this->collectionsWrapper;
+        return $this->collectionWrapper;
     }
 
     public function getDatabaseName()
@@ -199,7 +202,7 @@ class Bucket
             return $metadata['wrapper_data']->getId();
         }
 
-        return;
+        // TODO: Throw if we cannot access the ID
     }
 
     /**
@@ -207,17 +210,14 @@ class Bucket
      *
      * @param ObjectId $id ObjectId of the file
      * @return resource
-     * @throws GridFSFileNotFoundException
+     * @throws FileNotFoundException
      */
     public function openDownloadStream(ObjectId $id)
     {
-        $file = $this->collectionsWrapper->getFilesCollection()->findOne(
-            ['_id' => $id],
-            ['typeMap' => ['root' => 'stdClass']]
-        );
+        $file = $this->collectionWrapper->findFileById($id);
 
         if ($file === null) {
-            throw new GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+            throw FileNotFoundException::byId($id, $this->getFilesNamespace());
         }
 
         return $this->openDownloadStreamByFile($file);
@@ -245,12 +245,17 @@ class Bucket
      * @param string $filename File name
      * @param array  $options  Download options
      * @return resource
-     * @throws GridFSFileNotFoundException
+     * @throws FileNotFoundException
      */
     public function openDownloadStreamByName($filename, array $options = [])
     {
         $options += ['revision' => -1];
-        $file = $this->findFileRevision($filename, $options['revision']);
+
+        $file = $this->collectionWrapper->findFileByFilenameAndRevision($filename, $options['revision']);
+
+        if ($file === null) {
+            throw FileNotFoundException::byFilenameAndRevision($filename, $options['revision'], $this->getFilesNamespace());
+        }
 
         return $this->openDownloadStreamByFile($file);
     }
@@ -264,21 +269,23 @@ class Bucket
      *    bucket's chunk size.
      *
      * @param string $filename File name
-     * @param array  $options  Stream options
+     * @param array  $options  Upload options
      * @return resource
      */
     public function openUploadStream($filename, array $options = [])
     {
         $options += ['chunkSizeBytes' => $this->options['chunkSizeBytes']];
 
-        $streamOptions = [
-            'collectionsWrapper' => $this->collectionsWrapper,
-            'uploadOptions' => $options,
-        ];
+        $path = $this->createPathForUpload();
+        $context = stream_context_create([
+            self::$streamWrapperProtocol => [
+                'collectionWrapper' => $this->collectionWrapper,
+                'filename' => $filename,
+                'options' => $options,
+            ],
+        ]);
 
-        $context = stream_context_create(['gridfs' => $streamOptions]);
-
-        return fopen(sprintf('gridfs://%s/%s', $this->databaseName, $filename), 'w', false, $context);
+        return fopen($path, 'w', false, $context);
     }
 
     /**
@@ -286,14 +293,27 @@ class Bucket
      *
      * @param ObjectId $id          ID of the file to rename
      * @param string   $newFilename New file name
-     * @throws GridFSFileNotFoundException
+     * @throws FileNotFoundException
      */
     public function rename(ObjectId $id, $newFilename)
     {
-        $filesCollection = $this->collectionsWrapper->getFilesCollection();
-        $result = $filesCollection->updateOne(['_id' => $id], ['$set' => ['filename' => $newFilename]]);
-        if($result->getModifiedCount() == 0) {
-            throw new GridFSFileNotFoundException($id, $this->collectionsWrapper->getFilesCollection()->getNameSpace());
+        $updateResult = $this->collectionWrapper->updateFilenameForId($id, $newFilename);
+
+        if ($updateResult->getModifiedCount() === 1) {
+            return;
+        }
+
+        /* If the update resulted in no modification, it's possible that the
+         * file did not exist, in which case we must raise an error. Checking
+         * the write result's matched count will be most efficient, but fall
+         * back to a findOne operation if necessary (i.e. legacy writes).
+         */
+        $found = $updateResult->getMatchedCount() !== null
+            ? $updateResult->getMatchedCount() === 1
+            : $this->collectionWrapper->findFileById($id) !== null;
+
+        if ( ! $found) {
+            throw FileNotFoundException::byId($id, $this->getFilesNamespace());
         }
     }
 
@@ -309,61 +329,93 @@ class Bucket
      * @param resource $source   Readable stream
      * @param array    $options  Stream options
      * @return ObjectId
+     * @throws InvalidArgumentException
      */
     public function uploadFromStream($filename, $source, array $options = [])
     {
         $options += ['chunkSizeBytes' => $this->options['chunkSizeBytes']];
-        $gridFsStream = new GridFSUpload($this->collectionsWrapper, $filename, $options);
 
-        return $gridFsStream->uploadFromStream($source);
+        $stream = new WritableStream($this->collectionWrapper, $filename, $options);
+
+        return $stream->uploadFromStream($source);
     }
 
-    private function findFileRevision($filename, $revision)
+    /**
+     * Creates a path for an existing GridFS file.
+     *
+     * @param stdClass $file GridFS file document
+     * @return string
+     */
+    private function createPathForFile(stdClass $file)
     {
-        if ($revision < 0) {
-            $skip = abs($revision) - 1;
-            $sortOrder = -1;
+        if ( ! is_object($file->_id) || method_exists($file->_id, '__toString')) {
+            $id = (string) $file->_id;
         } else {
-            $skip = $revision;
-            $sortOrder = 1;
+            $id = \MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP(['_id' => $file->_id]));
         }
 
-        $filesCollection = $this->collectionsWrapper->getFilesCollection();
-        $file = $filesCollection->findOne(
-            ['filename' => $filename],
-            [
-                'skip' => $skip,
-                'sort' => ['uploadDate' => $sortOrder],
-                'typeMap' => ['root' => 'stdClass'],
-            ]
+        return sprintf(
+            '%s://%s/%s.files/%s',
+            self::$streamWrapperProtocol,
+            urlencode($this->databaseName),
+            urlencode($this->options['bucketName']),
+            urlencode($id)
         );
-
-        if ($file === null) {
-            throw new GridFSFileNotFoundException($filename, $filesCollection->getNameSpace());
-        }
-
-        return $file;
     }
 
-    private function openDownloadStreamByFile($file)
+    /**
+     * Creates a path for a new GridFS file, which does not yet have an ID.
+     *
+     * @return string
+     */
+    private function createPathForUpload()
     {
-        $options = [
-            'collectionsWrapper' => $this->collectionsWrapper,
-            'file' => $file,
-        ];
-
-        $context = stream_context_create(['gridfs' => $options]);
-
-        return fopen(sprintf('gridfs://%s/%s', $this->databaseName, $file->filename), 'r', false, $context);
+        return sprintf(
+            '%s://%s/%s.files',
+            self::$streamWrapperProtocol,
+            urlencode($this->databaseName),
+            urlencode($this->options['bucketName'])
+        );
     }
 
-    private function registerStreamWrapper(Manager $manager)
+    /**
+     * Returns the names of the files collection.
+     *
+     * @return string
+     */
+    private function getFilesNamespace()
     {
-        if (isset(self::$streamWrapper)) {
+        return sprintf('%s.%s.files', $this->databaseName, $this->options['bucketName']);
+    }
+
+    /**
+     * Opens a readable stream for the GridFS file.
+     *
+     * @param stdClass $file GridFS file document
+     * @return resource
+     */
+    private function openDownloadStreamByFile(stdClass $file)
+    {
+        $path = $this->createPathForFile($file);
+        $context = stream_context_create([
+            self::$streamWrapperProtocol => [
+                'collectionWrapper' => $this->collectionWrapper,
+                'file' => $file,
+            ],
+        ]);
+
+        return fopen($path, 'r', false, $context);
+    }
+
+    /**
+     * Registers the GridFS stream wrapper if it is not already registered.
+     */
+    private function registerStreamWrapper()
+    {
+        if (in_array(self::$streamWrapperProtocol, stream_get_wrappers())) {
             return;
         }
 
-        self::$streamWrapper = new StreamWrapper();
-        self::$streamWrapper->register($manager);
+        StreamWrapper::register(self::$streamWrapperProtocol);
     }
 }

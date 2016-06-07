@@ -3,53 +3,41 @@
 namespace MongoDB\GridFS;
 
 use MongoDB\Driver\Exception\Exception;
-use MongoDB\Exception\GridFSCorruptFileException;
+use MongoDB\GridFS\Exception\CorruptFileException;
 use stdClass;
 
 /**
- * GridFSDownload abstracts the process of reading a GridFS file.
+ * ReadableStream abstracts the process of reading a GridFS file.
  *
  * @internal
  */
-class GridFSDownload
+class ReadableStream
 {
     private $buffer;
-    private $bufferEmpty = true;
-    private $bufferFresh = true;
+    private $bufferEmpty;
+    private $bufferFresh;
     private $bytesSeen = 0;
     private $chunkOffset = 0;
     private $chunksIterator;
-    private $collectionsWrapper;
     private $file;
     private $firstCheck = true;
     private $iteratorEmpty = false;
     private $numChunks;
 
     /**
-     * Constructs a GridFS download stream.
+     * Constructs a readable GridFS stream.
      *
-     * @param GridFSCollectionsWrapper $collectionsWrapper GridFS collections wrapper
-     * @param stdClass                 $file               GridFS file document
-     * @throws GridFSCorruptFileException
+     * @param CollectionWrapper $collectionWrapper GridFS collection wrapper
+     * @param stdClass          $file              GridFS file document
+     * @throws CorruptFileException
      */
-    public function __construct(GridFSCollectionsWrapper $collectionsWrapper, stdClass $file)
+    public function __construct(CollectionWrapper $collectionWrapper, stdClass $file)
     {
-        $this->collectionsWrapper = $collectionsWrapper;
         $this->file = $file;
 
-        try {
-            $cursor = $this->collectionsWrapper->getChunksCollection()->find(
-                ['files_id' => $this->file->_id],
-                ['sort' => ['n' => 1]]
-            );
-        } catch (Exception $e) {
-            // TODO: Why do we replace a driver exception with GridFSCorruptFileException here?
-            throw new GridFSCorruptFileException();
-        }
-
-        $this->chunksIterator = new \IteratorIterator($cursor);
+        $this->chunksIterator = $collectionWrapper->getChunksIteratorByFilesId($this->file->_id);
         $this->numChunks = ($file->length >= 0) ? ceil($file->length / $file->chunkSize) : 0;
-        $this->buffer = fopen('php://temp', 'w+');
+        $this->initEmptyBuffer();
     }
 
     public function close()
@@ -57,32 +45,35 @@ class GridFSDownload
         fclose($this->buffer);
     }
 
-    public function downloadNumBytes($numToRead)
+    /**
+     * Read bytes from the stream.
+     *
+     * Note: this method may return a string smaller than the requested length
+     * if data is not available to be read.
+     * 
+     * @param integer $numBytes Number of bytes to read
+     * @return string 
+     */
+    public function downloadNumBytes($numBytes)
     {
-        $output = "";
-
         if ($this->bufferFresh) {
             rewind($this->buffer);
             $this->bufferFresh = false;
         }
 
         // TODO: Should we be checking for fread errors here?
-        $output = fread($this->buffer, $numToRead);
+        $output = fread($this->buffer, $numBytes);
 
-        if (strlen($output) == $numToRead) {
+        if (strlen($output) == $numBytes) {
             return $output;
         }
 
-        fclose($this->buffer);
-        $this->buffer = fopen("php://temp", "w+");
+        $this->initEmptyBuffer();
 
-        $this->bufferFresh = true;
-        $this->bufferEmpty = true;
+        $bytesLeft = $numBytes - strlen($output);
 
-        $bytesLeft = $numToRead - strlen($output);
-
-        while (strlen($output) < $numToRead && $this->advanceChunks()) {
-            $bytesLeft = $numToRead - strlen($output);
+        while (strlen($output) < $numBytes && $this->advanceChunks()) {
+            $bytesLeft = $numBytes - strlen($output);
             $output .= substr($this->chunksIterator->current()->data->getData(), 0, $bytesLeft);
         }
 
@@ -94,8 +85,18 @@ class GridFSDownload
         return $output;
     }
 
+    /**
+     * Writes the contents of this GridFS file to a writable stream.
+     *
+     * @param resource $destination Writable stream
+     * @throws InvalidArgumentException
+     */
     public function downloadToStream($destination)
     {
+        if ( ! is_resource($destination) || get_resource_type($destination) != "stream") {
+            throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
+        }
+
         while ($this->advanceChunks()) {
             // TODO: Should we be checking for fwrite errors here?
             fwrite($destination, $this->chunksIterator->current()->data->getData());
@@ -138,11 +139,11 @@ class GridFSDownload
         }
 
         if ( ! $this->chunksIterator->valid()) {
-            throw new GridFSCorruptFileException();
+            throw CorruptFileException::missingChunk($this->chunkOffset);
         }
 
         if ($this->chunksIterator->current()->n != $this->chunkOffset) {
-            throw new GridFSCorruptFileException();
+            throw CorruptFileException::unexpectedIndex($this->chunksIterator->current()->n, $this->chunkOffset);
         }
 
         $actualChunkSize = strlen($this->chunksIterator->current()->data->getData());
@@ -152,12 +153,23 @@ class GridFSDownload
             : $this->file->chunkSize;
 
         if ($actualChunkSize != $expectedChunkSize) {
-            throw new GridFSCorruptFileException();
+            throw CorruptFileException::unexpectedSize($actualChunkSize, $expectedChunkSize);
         }
 
         $this->bytesSeen += $actualChunkSize;
         $this->chunkOffset++;
 
         return true;
+    }
+
+    private function initEmptyBuffer()
+    {
+        if (isset($this->buffer)) {
+            fclose($this->buffer);
+        }
+
+        $this->buffer = fopen("php://temp", "w+");
+        $this->bufferEmpty = true;
+        $this->bufferFresh = true;
     }
 }

@@ -85,10 +85,10 @@ class Bucket
      * If the files collection document is not found, this method will still
      * attempt to delete orphaned chunks.
      *
-     * @param ObjectId $id ObjectId of the file
+     * @param mixed $id File ID
      * @throws FileNotFoundException
      */
-    public function delete(ObjectId $id)
+    public function delete($id)
     {
         $file = $this->collectionWrapper->findFileById($id);
         $this->collectionWrapper->deleteFileAndChunksById($id);
@@ -101,11 +101,11 @@ class Bucket
     /**
      * Writes the contents of a GridFS file to a writable stream.
      *
-     * @param ObjectId $id          ObjectId of the file
+     * @param mixed    $id          File ID
      * @param resource $destination Writable Stream
      * @throws FileNotFoundException
      */
-    public function downloadToStream(ObjectId $id, $destination)
+    public function downloadToStream($id, $destination)
     {
         $file = $this->collectionWrapper->findFileById($id);
 
@@ -208,11 +208,11 @@ class Bucket
     /**
      * Opens a readable stream for reading a GridFS file.
      *
-     * @param ObjectId $id ObjectId of the file
+     * @param mixed $id File ID
      * @return resource
      * @throws FileNotFoundException
      */
-    public function openDownloadStream(ObjectId $id)
+    public function openDownloadStream($id)
     {
         $file = $this->collectionWrapper->findFileById($id);
 
@@ -291,11 +291,11 @@ class Bucket
     /**
      * Renames the GridFS file with the specified ID.
      *
-     * @param ObjectId $id          ID of the file to rename
-     * @param string   $newFilename New file name
+     * @param mixed  $id          File ID
+     * @param string $newFilename New file name
      * @throws FileNotFoundException
      */
-    public function rename(ObjectId $id, $newFilename)
+    public function rename($id, $newFilename)
     {
         $updateResult = $this->collectionWrapper->updateFilenameForId($id, $newFilename);
 
@@ -328,7 +328,7 @@ class Bucket
      * @param string   $filename File name
      * @param resource $source   Readable stream
      * @param array    $options  Stream options
-     * @return ObjectId
+     * @return ObjectId ID of the newly created GridFS file
      * @throws InvalidArgumentException
      */
     public function uploadFromStream($filename, $source, array $options = [])

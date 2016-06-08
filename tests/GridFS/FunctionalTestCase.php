@@ -2,8 +2,8 @@
 
 namespace MongoDB\Tests\GridFS;
 
-use MongoDB\GridFS;
 use MongoDB\Collection;
+use MongoDB\GridFS\Bucket;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 
 /**
@@ -12,28 +12,44 @@ use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 abstract class FunctionalTestCase extends BaseFunctionalTestCase
 {
     protected $bucket;
-    protected $collectionWrapper;
+    protected $chunksCollection;
+    protected $filesCollection;
 
     public function setUp()
     {
         parent::setUp();
-       foreach(['fs.files', 'fs.chunks'] as $collection){
-            $col = new Collection($this->manager, $this->getDatabaseName(), $collection);
-            $col->drop();
-        }
-        $this->bucket = new \MongoDB\GridFS\Bucket($this->manager, $this->getDatabaseName());
-        $this->collectionWrapper = $this->bucket->getCollectionWrapper();
+
+        $this->bucket = new Bucket($this->manager, $this->getDatabaseName());
+        $this->bucket->drop();
+
+        $this->chunksCollection = new Collection($this->manager, $this->getDatabaseName(), 'fs.chunks');
+        $this->filesCollection = new Collection($this->manager, $this->getDatabaseName(), 'fs.files');
     }
 
-    public function tearDown()
+    /**
+     * Rewinds a stream and asserts its contents.
+     *
+     * @param string   $expectedContents
+     * @param resource $stream
+     */
+    protected function assertStreamContents($expectedContents, $stream)
     {
-       foreach(['fs.files', 'fs.chunks'] as $collection){
-            $col = new Collection($this->manager, $this->getDatabaseName(), $collection);
-            $col->drop();
-        }
-        if ($this->hasFailed()) {
-            return;
-        }
+        $this->assertEquals($expectedContents, stream_get_contents($stream, -1,.0));
+    }
+
+    /**
+     * Creates an in-memory stream with the given data.
+     *
+     * @param string $data
+     * @return resource
+     */
+    protected function createStream($data = '')
+    {
+        $stream = fopen('php://temp', 'w+b');
+        fwrite($stream, $data);
+        rewind($stream);
+
+        return $stream;
     }
 
     public function provideInsertChunks()

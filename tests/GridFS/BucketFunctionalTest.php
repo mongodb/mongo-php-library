@@ -2,9 +2,14 @@
 
 namespace MongoDB\Tests\GridFS;
 
+use MongoDB\BSON\Binary;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\GridFS\Bucket;
+use MongoDB\GridFS\Exception\FileNotFoundException;
+use MongoDB\Model\IndexInfo;
+use MongoDB\Operation\ListCollections;
+use MongoDB\Operation\ListIndexes;
 
 /**
  * Functional tests for the Bucket class.
@@ -53,271 +58,445 @@ class BucketFunctionalTest extends FunctionalTestCase
         return $options;
     }
 
+    /**
+     * @dataProvider provideInputDataAndExpectedChunks
+     */
+    public function testDelete($input, $expectedChunks)
+    {
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream($input));
+
+        $this->assertCollectionCount($this->filesCollection, 1);
+        $this->assertCollectionCount($this->chunksCollection, $expectedChunks);
+
+        $this->bucket->delete($id);
+
+        $this->assertCollectionCount($this->filesCollection, 0);
+        $this->assertCollectionCount($this->chunksCollection, 0);
+    }
+
+    public function provideInputDataAndExpectedChunks()
+    {
+        return [
+            ['', 0],
+            ['foobar', 1],
+            [str_repeat('a', 261120), 1],
+            [str_repeat('a', 261121), 2],
+            [str_repeat('a', 522240), 2],
+            [str_repeat('a', 522241), 3],
+            [str_repeat('foobar', 43520), 1],
+            [str_repeat('foobar', 43521), 2],
+            [str_repeat('foobar', 87040), 2],
+            [str_repeat('foobar', 87041), 3],
+        ];
+    }
+
+    /**
+     * @expectedException MongoDB\GridFS\Exception\FileNotFoundException
+     */
+    public function testDeleteShouldRequireFileToExist()
+    {
+        $this->bucket->delete('nonexistent-id');
+    }
+
+    /**
+     * @dataProvider provideInputDataAndExpectedChunks
+     */
+    public function testDeleteStillRemovesChunksIfFileDoesNotExist($input, $expectedChunks)
+    {
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream($input));
+
+        $this->assertCollectionCount($this->filesCollection, 1);
+        $this->assertCollectionCount($this->chunksCollection, $expectedChunks);
+
+        $this->filesCollection->deleteOne(['_id' => $id]);
+
+        try {
+            $this->bucket->delete($id);
+            $this->fail('FileNotFoundException was not thrown');
+        } catch (FileNotFoundException $e) {}
+
+        $this->assertCollectionCount($this->chunksCollection, 0);
+    }
+
+    /**
+     * @expectedException MongoDB\GridFS\Exception\CorruptFileException
+     */
+    public function testDownloadingFileWithMissingChunk()
+    {
+        $id = $this->bucket->uploadFromStream("filename", $this->createStream("foobar"));
+
+        $this->chunksCollection->deleteOne(['files_id' => $id, 'n' => 0]);
+
+        stream_get_contents($this->bucket->openDownloadStream($id));
+    }
+
+    /**
+     * @expectedException MongoDB\GridFS\Exception\CorruptFileException
+     */
+    public function testDownloadingFileWithUnexpectedChunkIndex()
+    {
+        $id = $this->bucket->uploadFromStream("filename", $this->createStream("foobar"));
+
+        $this->chunksCollection->updateOne(
+            ['files_id' => $id, 'n' => 0],
+            ['$set' => ['n' => 1]]
+        );
+
+        stream_get_contents($this->bucket->openDownloadStream($id));
+    }
+
+    /**
+     * @expectedException MongoDB\GridFS\Exception\CorruptFileException
+     */
+    public function testDownloadingFileWithUnexpectedChunkSize()
+    {
+        $id = $this->bucket->uploadFromStream("filename", $this->createStream("foobar"));
+
+        $this->chunksCollection->updateOne(
+            ['files_id' => $id, 'n' => 0],
+            ['$set' => ['data' => new Binary('fooba', Binary::TYPE_GENERIC)]]
+        );
+
+        stream_get_contents($this->bucket->openDownloadStream($id));
+    }
+
+    /**
+     * @dataProvider provideInputDataAndExpectedChunks
+     */
+    public function testDownloadToStream($input)
+    {
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream($input));
+        $destination = $this->createStream();
+        $this->bucket->downloadToStream($id, $destination);
+
+        $this->assertStreamContents($input, $destination);
+    }
+
+    /**
+     * @expectedException MongoDB\GridFS\Exception\FileNotFoundException
+     */
+    public function testDownloadToStreamShouldRequireFileToExist()
+    {
+        $this->bucket->downloadToStream('nonexistent-id', $this->createStream());
+    }
+
+    public function testDrop()
+    {
+        $this->bucket->uploadFromStream('filename', $this->createStream('foobar'));
+
+        $this->assertCollectionCount($this->filesCollection, 1);
+        $this->assertCollectionCount($this->chunksCollection, 1);
+
+        $this->bucket->drop();
+
+        $this->assertCollectionDoesNotExist($this->filesCollection->getCollectionName());
+        $this->assertCollectionDoesNotExist($this->chunksCollection->getCollectionName());
+    }
+
+    public function testFind()
+    {
+        $this->bucket->uploadFromStream('a', $this->createStream('foo'));
+        $this->bucket->uploadFromStream('b', $this->createStream('foobar'));
+        $this->bucket->uploadFromStream('c', $this->createStream('foobarbaz'));
+
+        $cursor = $this->bucket->find(
+            ['length' => ['$lte' => 6]],
+            [
+                'projection' => [
+                    'filename' => 1,
+                    'length' => 1,
+                    '_id' => 0,
+                ],
+                'sort' => ['length' => -1],
+            ]
+        );
+
+        $expected = [
+            ['filename' => 'b', 'length' => 6],
+            ['filename' => 'a', 'length' => 3],
+        ];
+
+        $this->assertSameDocuments($expected, $cursor);
+    }
+
     public function testGetDatabaseName()
     {
         $this->assertEquals($this->getDatabaseName(), $this->bucket->getDatabaseName());
     }
 
-    public function testBasicOperations()
-    {
-        $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("hello world"));
-        $contents = stream_get_contents($this->bucket->openDownloadStream($id));
-        $this->assertEquals("hello world", $contents);
-        $this->assertEquals(1, $this->bucket->getCollectionWrapper()->getFilesCollection()->count());
-        $this->assertEquals(1, $this->bucket->getCollectionWrapper()->getChunksCollection()->count());
-
-        $this->bucket->delete($id);
-        $error=null;
-        try{
-            $this->bucket->openDownloadStream($id);
-        } catch(\MongoDB\Exception\Exception $e) {
-            $error = $e;
-        }
-        $fileNotFound = '\MongoDB\GridFS\Exception\FileNotFoundException';
-        $this->assertTrue($error instanceof $fileNotFound);
-        $this->assertEquals(0, $this->bucket->getCollectionWrapper()->getFilesCollection()->count());
-        $this->assertEquals(0, $this->bucket->getCollectionWrapper()->getChunksCollection()->count());
-    }
-    public function testMultiChunkDelete()
-    {
-        $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("hello"), ['chunkSizeBytes'=>1]);
-        $this->assertEquals(1, $this->bucket->getCollectionWrapper()->getFilesCollection()->count());
-        $this->assertEquals(5, $this->bucket->getCollectionWrapper()->getChunksCollection()->count());
-        $this->bucket->delete($id);
-        $this->assertEquals(0, $this->bucket->getCollectionWrapper()->getFilesCollection()->count());
-        $this->assertEquals(0, $this->bucket->getCollectionWrapper()->getChunksCollection()->count());
-    }
-
-    public function testEmptyFile()
-    {
-        $id = $this->bucket->uploadFromStream("test_filename",$this->generateStream(""));
-        $contents = stream_get_contents($this->bucket->openDownloadStream($id));
-        $this->assertEquals("", $contents);
-        $this->assertEquals(1, $this->bucket->getCollectionWrapper()->getFilesCollection()->count());
-        $this->assertEquals(0, $this->bucket->getCollectionWrapper()->getChunksCollection()->count());
-
-        $raw = $this->bucket->getCollectionWrapper()->getFilesCollection()->findOne();
-        $this->assertEquals(0, $raw->length);
-        $this->assertEquals($id, $raw->_id);
-        $this->assertTrue($raw->uploadDate instanceof \MongoDB\BSON\UTCDateTime);
-        $this->assertEquals(255 * 1024, $raw->chunkSize);
-        $this->assertTrue(is_string($raw->md5));
-    }
-    public function testCorruptChunk()
-    {
-        $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("foobar"));
-
-        $this->collectionWrapper->getChunksCollection()->updateOne(['files_id' => $id],
-                    ['$set' => ['data' => new \MongoDB\BSON\Binary('foo', \MongoDB\BSON\Binary::TYPE_GENERIC)]]);
-        $error = null;
-        try{
-            $download = $this->bucket->openDownloadStream($id);
-            stream_get_contents($download);
-        } catch(\MongoDB\Exception\Exception $e) {
-            $error = $e;
-        }
-        $corruptFileError = '\MongoDB\GridFS\Exception\CorruptFileException';
-        $this->assertTrue($error instanceof $corruptFileError);
-    }
-    public function testErrorsOnMissingChunk()
-    {
-        $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("hello world,abcdefghijklmnopqrstuv123456789"), ["chunkSizeBytes" => 1]);
-
-        $this->collectionWrapper->getChunksCollection()->deleteOne(['files_id' => $id, 'n' => 7]);
-        $error = null;
-        try{
-            $download = $this->bucket->openDownloadStream($id);
-            stream_get_contents($download);
-        } catch(\MongoDB\Exception\Exception $e) {
-            $error = $e;
-        }
-        $corruptFileError = '\MongoDB\GridFS\Exception\CorruptFileException';
-        $this->assertTrue($error instanceof $corruptFileError);
-    }
-    public function testUploadEnsureIndexes()
-    {
-        $chunks = $this->bucket->getCollectionWrapper()->getChunksCollection();
-        $files = $this->bucket->getCollectionWrapper()->getFilesCollection();
-        $this->bucket->uploadFromStream("filename", $this->generateStream("junk"));
-
-        $chunksIndexed = false;
-        foreach($chunks->listIndexes() as $index) {
-            $chunksIndexed = $chunksIndexed || ($index->isUnique() && $index->getKey() === ['files_id' => 1, 'n' => 1]);
-        }
-        $this->assertTrue($chunksIndexed);
-
-        $filesIndexed = false;
-        foreach($files->listIndexes() as $index) {
-            $filesIndexed = $filesIndexed || ($index->getKey() === ['filename' => 1, 'uploadDate' => 1]);
-        }
-        $this->assertTrue($filesIndexed);
-    }
-    public function testGetLastVersion()
-    {
-        $idOne = $this->bucket->uploadFromStream("test",$this->generateStream("foo"));
-        $streamTwo = $this->bucket->openUploadStream("test");
-        fwrite($streamTwo, "bar");
-        //echo "Calling FSTAT\n";
-        //$stat = fstat($streamTwo);
-        $idTwo = $this->bucket->getIdFromStream($streamTwo);
-        //var_dump
-        //var_dump($idTwo);
-        fclose($streamTwo);
-
-        $idThree = $this->bucket->uploadFromStream("test",$this->generateStream("baz"));
-        $this->assertEquals("baz", stream_get_contents($this->bucket->openDownloadStreamByName("test")));
-        $this->bucket->delete($idThree);
-        $this->assertEquals("bar", stream_get_contents($this->bucket->openDownloadStreamByName("test")));
-        $this->bucket->delete($idTwo);
-        $this->assertEquals("foo", stream_get_contents($this->bucket->openDownloadStreamByName("test")));
-        $this->bucket->delete($idOne);
-        $error = null;
-        try{
-            $this->bucket->openDownloadStreamByName("test");
-        } catch(\MongoDB\Exception\Exception $e) {
-            $error = $e;
-        }
-        $fileNotFound = '\MongoDB\GridFS\Exception\FileNotFoundException';
-        $this->assertTrue($error instanceof $fileNotFound);
-    }
-    public function testGetVersion()
-    {
-        $this->bucket->uploadFromStream("test",$this->generateStream("foo"));
-        $this->bucket->uploadFromStream("test",$this->generateStream("bar"));
-        $this->bucket->uploadFromStream("test",$this->generateStream("baz"));
-
-        $this->assertEquals("foo", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => 0])));
-        $this->assertEquals("bar", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => 1])));
-        $this->assertEquals("baz", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => 2])));
-
-        $this->assertEquals("baz", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => -1])));
-        $this->assertEquals("bar", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => -2])));
-        $this->assertEquals("foo", stream_get_contents($this->bucket->openDownloadStreamByName("test", ['revision' => -3])));
-
-        $fileNotFound = '\MongoDB\GridFS\Exception\FileNotFoundException';
-        $error = null;
-        try{
-            $this->bucket->openDownloadStreamByName("test", ['revision' => 3]);
-        } catch(\MongoDB\Exception\Exception $e) {
-            $error = $e;
-        }
-        $this->assertTrue($error instanceof $fileNotFound);
-        $error = null;
-        try{
-            $this->bucket->openDownloadStreamByName("test", ['revision' => -4]);
-        } catch(\MongoDB\Exception\Exception $e) {
-            $error = $e;
-        }
-        $this->assertTrue($error instanceof $fileNotFound);
-    }
-    public function testGridfsFind()
-    {
-        $this->bucket->uploadFromStream("two",$this->generateStream("test2"));
-        usleep(5000);
-        $this->bucket->uploadFromStream("two",$this->generateStream("test2+"));
-        usleep(5000);
-        $this->bucket->uploadFromStream("one",$this->generateStream("test1"));
-        usleep(5000);
-        $this->bucket->uploadFromStream("two",$this->generateStream("test2++"));
-        $cursor = $this->bucket->find(["filename" => "two"]);
-        $count = count($cursor->toArray());
-        $this->assertEquals(3, $count);
-        $cursor = $this->bucket->find([]);
-        $count = count($cursor->toArray());
-        $this->assertEquals(4, $count);
-
-        $cursor = $this->bucket->find([], ["noCursorTimeout"=>false, "sort"=>["uploadDate"=> -1], "skip"=>1, "limit"=>2]);
-        $outputs = ["test1", "test2+"];
-        $i=0;
-        foreach($cursor as $file){
-            $contents = stream_get_contents($this->bucket->openDownloadStream($file->_id));
-            $this->assertEquals($outputs[$i], $contents);
-            $i++;
-        }
-    }
-    public function testGridInNonIntChunksize()
-    {
-        $id = $this->bucket->uploadFromStream("f",$this->generateStream("data"));
-        $this->bucket->getCollectionWrapper()->getFilesCollection()->updateOne(["filename"=>"f"],
-                                                        ['$set'=> ['chunkSize' => 100.00]]);
-        $this->assertEquals("data", stream_get_contents($this->bucket->openDownloadStream($id)));
-    }
-    public function testBigInsert()
-    {
-        for ($tmpStream = tmpfile(), $i = 0; $i < 20; $i++) {
-            fwrite($tmpStream, str_repeat('a', 1048576));
-        }
-
-        fseek($tmpStream, 0);
-        $this->bucket->uploadFromStream("BigInsertTest", $tmpStream);
-        fclose($tmpStream);
-    }
     public function testGetIdFromStream()
     {
-        $upload = $this->bucket->openUploadStream("test");
-        $id = $this->bucket->getIdFromStream($upload);
-        fclose($upload);
-        $this->assertTrue($id instanceof \MongoDB\BSON\ObjectId);
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream('foobar'));
+        $stream = $this->bucket->openDownloadStream($id);
 
-        $download = $this->bucket->openDownloadStream($id);
-        $id=null;
-        $id = $this->bucket->getIdFromStream($download);
-        fclose($download);
-        $this->assertTrue($id instanceof \MongoDB\BSON\ObjectId);
+        $this->assertEquals($id, $this->bucket->getIdFromStream($stream));
     }
+
+    /**
+     * @dataProvider provideInputDataAndExpectedChunks
+     */
+    public function testOpenDownloadStream($input)
+    {
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream($input));
+
+        $this->assertStreamContents($input, $this->bucket->openDownloadStream($id));
+    }
+
+    /**
+     * @dataProvider provideInputDataAndExpectedChunks
+     */
+    public function testOpenDownloadStreamAndMultipleReadOperations($input)
+    {
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream($input));
+        $stream = $this->bucket->openDownloadStream($id);
+        $buffer = '';
+
+        while (strlen($buffer) < strlen($input)) {
+            $expectedReadLength = min(4096, strlen($input) - strlen($buffer));
+            $buffer .= $read = fread($stream, 4096);
+
+            $this->assertInternalType('string', $read);
+            $this->assertEquals($expectedReadLength, strlen($read));
+        }
+
+        $this->assertTrue(fclose($stream));
+        $this->assertEquals($input, $buffer);
+    }
+
+    /**
+     * @expectedException MongoDB\GridFS\Exception\FileNotFoundException
+     */
+    public function testOpenDownloadStreamShouldRequireFileToExist()
+    {
+        $this->bucket->openDownloadStream('nonexistent-id');
+    }
+
+    /**
+     * @expectedException MongoDB\GridFS\Exception\FileNotFoundException
+     */
+    public function testOpenDownloadStreamByNameShouldRequireFilenameToExist()
+    {
+        $this->bucket->openDownloadStream('nonexistent-filename');
+    }
+
+    public function testOpenDownloadStreamByName()
+    {
+        $this->bucket->uploadFromStream('filename', $this->createStream('foo'));
+        $this->bucket->uploadFromStream('filename', $this->createStream('bar'));
+        $this->bucket->uploadFromStream('filename', $this->createStream('baz'));
+
+        $this->assertStreamContents('baz', $this->bucket->openDownloadStreamByName('filename'));
+        $this->assertStreamContents('foo', $this->bucket->openDownloadStreamByName('filename', ['revision' => -3]));
+        $this->assertStreamContents('bar', $this->bucket->openDownloadStreamByName('filename', ['revision' => -2]));
+        $this->assertStreamContents('baz', $this->bucket->openDownloadStreamByName('filename', ['revision' => -1]));
+        $this->assertStreamContents('foo', $this->bucket->openDownloadStreamByName('filename', ['revision' => 0]));
+        $this->assertStreamContents('bar', $this->bucket->openDownloadStreamByName('filename', ['revision' => 1]));
+        $this->assertStreamContents('baz', $this->bucket->openDownloadStreamByName('filename', ['revision' => 2]));
+    }
+
+    /**
+     * @expectedException MongoDB\GridFS\Exception\FileNotFoundException
+     * @dataProvider provideNonexistentFilenameAndRevision
+     */
+    public function testOpenDownloadStreamByNameShouldRequireFilenameAndRevisionToExist($filename, $revision)
+    {
+        $this->bucket->uploadFromStream('filename', $this->createStream('foo'));
+        $this->bucket->uploadFromStream('filename', $this->createStream('bar'));
+
+        $this->bucket->openDownloadStream($filename, ['revision' => $revision]);
+    }
+
+    public function provideNonexistentFilenameAndRevision()
+    {
+        return [
+            ['filename', 2],
+            ['filename', -3],
+            ['nonexistent-filename', 0],
+            ['nonexistent-filename', -1],
+        ];
+    }
+
+    public function testOpenUploadStream()
+    {
+        $stream = $this->bucket->openUploadStream('filename');
+
+        fwrite($stream, 'foobar');
+        fclose($stream);
+
+        $this->assertStreamContents('foobar', $this->bucket->openDownloadStreamByName('filename'));
+    }
+
+    /**
+     * @dataProvider provideInputDataAndExpectedChunks
+     */
+    public function testOpenUploadStreamAndMultipleWriteOperations($input)
+    {
+        $stream = $this->bucket->openUploadStream('filename');
+        $offset = 0;
+
+        while ($offset < strlen($input)) {
+            $expectedWriteLength = min(4096, strlen($input) - $offset);
+            $writeLength = fwrite($stream, substr($input, $offset, 4096));
+            $offset += $writeLength;
+
+            $this->assertEquals($expectedWriteLength, $writeLength);
+        }
+
+        $this->assertTrue(fclose($stream));
+        $this->assertStreamContents($input, $this->bucket->openDownloadStreamByName('filename'));
+    }
+
     public function testRename()
     {
-        $id = $this->bucket->uploadFromStream("first_name", $this->generateStream("testing"));
-        $this->assertEquals("testing", stream_get_contents($this->bucket->openDownloadStream($id)));
+        $id = $this->bucket->uploadFromStream('a', $this->createStream('foo'));
+        $this->bucket->rename($id, 'b');
 
-        $this->bucket->rename($id, "second_name");
+        $fileDocument = $this->filesCollection->findOne(
+            ['_id' => $id],
+            ['projection' => ['filename' => 1, '_id' => 0]]
+        );
 
-        $error = null;
-        try{
-            $this->bucket->openDownloadStreamByName("first_name");
-        } catch(\MongoDB\Exception\Exception $e) {
-            $error = $e;
-        }
-        $fileNotFound = '\MongoDB\GridFS\Exception\FileNotFoundException';
-        $this->assertTrue($error instanceof $fileNotFound);
-
-        $this->assertEquals("testing", stream_get_contents($this->bucket->openDownloadStreamByName("second_name")));
+        $this->assertSameDocument(['filename' => 'b'], $fileDocument);
+        $this->assertStreamContents('foo', $this->bucket->openDownloadStreamByName('b'));
     }
-    public function testDrop()
+
+    public function testRenameShouldNotRequireFileToBeModified()
     {
-        $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("hello world"));
-        $this->bucket->drop();
-        $id = $this->bucket->uploadFromStream("test_filename", $this->generateStream("hello world"));
-        $this->assertEquals(1, $this->collectionWrapper->getFilesCollection()->count());
+        $id = $this->bucket->uploadFromStream('a', $this->createStream('foo'));
+        $this->bucket->rename($id, 'a');
+
+        $fileDocument = $this->filesCollection->findOne(
+            ['_id' => $id],
+            ['projection' => ['filename' => 1, '_id' => 0]]
+        );
+
+        $this->assertSameDocument(['filename' => 'a'], $fileDocument);
+        $this->assertStreamContents('foo', $this->bucket->openDownloadStreamByName('a'));
     }
+
     /**
-     *@dataProvider provideInsertChunks
+     * @expectedException MongoDB\GridFS\Exception\FileNotFoundException
      */
-    public function testProvidedMultipleReads($data)
+    public function testRenameShouldRequireFileToExist()
     {
-        $upload = $this->bucket->openUploadStream("test", ["chunkSizeBytes"=>rand(1, 5)]);
-        fwrite($upload,$data);
-        $id = $this->bucket->getIdFromStream($upload);
-        fclose($upload);
-        $download = $this->bucket->openDownloadStream($id);
-        $readPos = 0;
-        while($readPos < strlen($data)){
-            $numToRead = rand(1, strlen($data) - $readPos);
-            $expected = substr($data, $readPos, $numToRead);
-            $actual = fread($download, $numToRead);
-            $this->assertEquals($expected,$actual);
-            $readPos+= $numToRead;
-        }
-        $actual = fread($download, 5);
-        $expected = "";
-        $this->assertEquals($expected,$actual);
-        fclose($download);
+        $this->bucket->rename('nonexistent-id', 'b');
     }
-    private function generateStream($input)
+
+    public function testUploadFromStream()
     {
-        $stream = fopen('php://temp', 'w+');
-        fwrite($stream, $input);
-        rewind($stream);
-        return $stream;
+        $options = [
+            '_id' => 'custom-id',
+            'chunkSizeBytes' => 2,
+            'metadata' => ['foo' => 'bar'],
+        ];
+
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream('foobar'), $options);
+
+        $this->assertCollectionCount($this->filesCollection, 1);
+        $this->assertCollectionCount($this->chunksCollection, 3);
+        $this->assertSame('custom-id', $id);
+
+        $fileDocument = $this->filesCollection->findOne(['_id' => $id]);
+
+        $this->assertSameDocument(['foo' => 'bar'], $fileDocument['metadata']);
+    }
+
+    public function testUploadingAnEmptyFile()
+    {
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream(''));
+        $destination = $this->createStream();
+        $this->bucket->downloadToStream($id, $destination);
+
+        $this->assertStreamContents('', $destination);
+        $this->assertCollectionCount($this->filesCollection, 1);
+        $this->assertCollectionCount($this->chunksCollection, 0);
+
+        $fileDocument = $this->filesCollection->findOne(
+            ['_id' => $id],
+            [
+                'projection' => [
+                    'length' => 1,
+                    'md5' => 1,
+                    '_id' => 0,
+                ],
+            ]
+        );
+
+        $expected = [
+            'length' => 0,
+            'md5' => 'd41d8cd98f00b204e9800998ecf8427e',
+        ];
+
+        $this->assertSameDocument($expected, $fileDocument);
+    }
+
+    public function testUploadingFirstFileCreatesIndexes()
+    {
+        $this->bucket->uploadFromStream('filename', $this->createStream('foo'));
+
+        $this->assertIndexExists($this->filesCollection->getCollectionName(), 'filename_1_uploadDate_1');
+        $this->assertIndexExists($this->chunksCollection->getCollectionName(), 'files_id_1_n_1', function(IndexInfo $info) {
+            $this->assertTrue($info->isUnique());
+        });
+    }
+
+    /**
+     * Asserts that a collection with the given name does not exist on the
+     * server.
+     *
+     * @param string $collectionName
+     */
+    private function assertCollectionDoesNotExist($collectionName)
+    {
+        $operation = new ListCollections($this->getDatabaseName());
+        $collections = $operation->execute($this->getPrimaryServer());
+
+        $foundCollection = null;
+
+        foreach ($collections as $collection) {
+            if ($collection->getName() === $collectionName) {
+                $foundCollection = $collection;
+                break;
+            }
+        }
+
+        $this->assertNull($foundCollection, sprintf('Collection %s exists', $collectionName));
+    }
+
+    /**
+     * Asserts that an index with the given name exists for the collection.
+     *
+     * An optional $callback may be provided, which should take an IndexInfo
+     * argument as its first and only parameter. If an IndexInfo matching the
+     * given name is found, it will be passed to the callback, which may perform
+     * additional assertions.
+     *
+     * @param string   $collectionName
+     * @param string   $indexName
+     * @param callable $callback
+     */
+    private function assertIndexExists($collectionName, $indexName, $callback = null)
+    {
+        if ($callback !== null && ! is_callable($callback)) {
+            throw new InvalidArgumentException('$callback is not a callable');
+        }
+
+        $operation = new ListIndexes($this->getDatabaseName(), $collectionName);
+        $indexes = $operation->execute($this->getPrimaryServer());
+
+        $foundIndex = null;
+
+        foreach ($indexes as $index) {
+            if ($index->getName() === $indexName) {
+                $foundIndex = $index;
+                break;
+            }
+        }
+
+        $this->assertNotNull($foundIndex, sprintf('Index %s does not exist', $indexName));
+
+        if ($callback !== null) {
+            call_user_func($callback, $foundIndex);
+        }
     }
 }

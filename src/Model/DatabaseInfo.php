@@ -17,10 +17,10 @@ class DatabaseInfo
     private $info;
 
     /**
-    * Constructor.
-    *
-    * @param array $info Database info
-    */
+     * Constructor.
+     *
+     * @param array $info Database info
+     */
     public function __construct(array $info)
     {
         $this->info = $info;

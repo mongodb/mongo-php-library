@@ -25,10 +25,10 @@ class IndexInfo implements ArrayAccess
     private $info;
 
     /**
-    * Constructor.
-    *
-    * @param array $info Index info
-    */
+     * Constructor.
+     *
+     * @param array $info Index info
+     */
     public function __construct(array $info)
     {
         $this->info = $info;

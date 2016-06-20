@@ -18,10 +18,10 @@ class CollectionInfo
     private $info;
 
     /**
-    * Constructor.
-    *
-    * @param array $info Collection info
-    */
+     * Constructor.
+     *
+     * @param array $info Collection info
+     */
     public function __construct(array $info)
     {
         $this->info = $info;

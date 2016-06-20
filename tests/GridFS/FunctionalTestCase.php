@@ -55,26 +55,4 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
 
         return $stream;
     }
-
-    public function provideInsertChunks()
-    {
-        $dataVals = [];
-        $testArgs[][] = "hello world";
-        $testArgs[][] = "1234567890";
-        $testArgs[][] = "~!@#$%^&*()_+";
-        for($j=0; $j<30; $j++){
-            $randomTest = "";
-            for($i=0; $i<100; $i++){
-                $randomTest .= chr(rand(0, 256));
-            }
-            $testArgs[][] = $randomTest;
-        }
-        $utf8="";
-        for($i=0; $i<256; $i++){
-            $utf8 .= chr($i);
-        }
-        $testArgs[][]=$utf8;
-        return $testArgs;
-    }
-
 }

@@ -20,11 +20,11 @@ class IndexInput implements Serializable
     private $index;
 
     /**
-    * Constructor.
-    *
-    * @param array $index Index specification
-    * @throws InvalidArgumentException
-    */
+     * Constructor.
+     *
+     * @param array $index Index specification
+     * @throws InvalidArgumentException
+     */
     public function __construct(array $index)
     {
         if ( ! isset($index['key'])) {

@@ -3,6 +3,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
@@ -62,7 +63,7 @@ class DatabaseCommand implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return integer
+     * @return Cursor
      */
     public function execute(Server $server)
     {

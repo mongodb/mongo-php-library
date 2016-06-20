@@ -2,8 +2,8 @@
 
 namespace MongoDB\Tests\GridFS;
 
-use MongoDB\GridFS;
 use MongoDB\Collection;
+use MongoDB\GridFS\Bucket;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 
 /**
@@ -12,49 +12,47 @@ use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 abstract class FunctionalTestCase extends BaseFunctionalTestCase
 {
     protected $bucket;
-    protected $collectionWrapper;
+    protected $chunksCollection;
+    protected $filesCollection;
 
     public function setUp()
     {
         parent::setUp();
-       foreach(['fs.files', 'fs.chunks'] as $collection){
-            $col = new Collection($this->manager, $this->getDatabaseName(), $collection);
-            $col->drop();
-        }
-        $this->bucket = new \MongoDB\GridFS\Bucket($this->manager, $this->getDatabaseName());
-        $this->collectionWrapper = $this->bucket->getCollectionWrapper();
+
+        $this->bucket = new Bucket($this->manager, $this->getDatabaseName());
+        $this->bucket->drop();
+
+        $this->chunksCollection = new Collection($this->manager, $this->getDatabaseName(), 'fs.chunks');
+        $this->filesCollection = new Collection($this->manager, $this->getDatabaseName(), 'fs.files');
     }
 
-    public function tearDown()
+    /**
+     * Asserts that a variable is a stream containing the expected data.
+     *
+     * Note: this will seek to the beginning of the stream before reading.
+     *
+     * @param string   $expectedContents
+     * @param resource $stream
+     */
+    protected function assertStreamContents($expectedContents, $stream)
     {
-       foreach(['fs.files', 'fs.chunks'] as $collection){
-            $col = new Collection($this->manager, $this->getDatabaseName(), $collection);
-            $col->drop();
-        }
-        if ($this->hasFailed()) {
-            return;
-        }
+        $this->assertInternalType('resource', $stream);
+        $this->assertSame('stream', get_resource_type($stream));
+        $this->assertEquals($expectedContents, stream_get_contents($stream, -1,.0));
     }
 
-    public function provideInsertChunks()
+    /**
+     * Creates an in-memory stream with the given data.
+     *
+     * @param string $data
+     * @return resource
+     */
+    protected function createStream($data = '')
     {
-        $dataVals = [];
-        $testArgs[][] = "hello world";
-        $testArgs[][] = "1234567890";
-        $testArgs[][] = "~!@#$%^&*()_+";
-        for($j=0; $j<30; $j++){
-            $randomTest = "";
-            for($i=0; $i<100; $i++){
-                $randomTest .= chr(rand(0, 256));
-            }
-            $testArgs[][] = $randomTest;
-        }
-        $utf8="";
-        for($i=0; $i<256; $i++){
-            $utf8 .= chr($i);
-        }
-        $testArgs[][]=$utf8;
-        return $testArgs;
-    }
+        $stream = fopen('php://temp', 'w+b');
+        fwrite($stream, $data);
+        rewind($stream);
 
+        return $stream;
+    }
 }

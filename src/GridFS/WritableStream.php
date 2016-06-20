@@ -90,6 +90,21 @@ class WritableStream
     }
 
     /**
+     * Return internal properties for debugging purposes.
+     *
+     * @see http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return [
+            'bucketName' => $this->collectionWrapper->getBucketName(),
+            'databaseName' => $this->collectionWrapper->getDatabaseName(),
+            'file' => $this->file,
+        ];
+    }
+
+    /**
      * Closes an active stream and flushes all buffered data to GridFS.
      */
     public function close()
@@ -111,26 +126,23 @@ class WritableStream
         $this->isClosed = true;
     }
 
-    public function getChunkSize()
-    {
-        return $this->chunkSize;
-    }
-
-    public function getFile()
-    {
-        return $this->file;
-    }
-
+    /**
+     * Return the stream's ID (i.e. file document identifier).
+     *
+     * @return integer
+     */
     public function getId()
     {
         return $this->file['_id'];
     }
 
-    public function getLength()
-    {
-        return $this->length;
-    }
-
+    /**
+     * Return the stream's size in bytes.
+     *
+     * Note: this value will increase as more data is written to the stream.
+     *
+     * @return integer
+     */
     public function getSize()
     {
         return $this->length;

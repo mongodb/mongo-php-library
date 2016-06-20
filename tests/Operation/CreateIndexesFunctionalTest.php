@@ -165,6 +165,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
      * given name is found, it will be passed to the callback, which may perform
      * additional assertions.
      *
+     * @param string   $indexName
      * @param callable $callback
      */
     private function assertIndexExists($indexName, $callback = null)
@@ -185,7 +186,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
             }
         }
 
-        $this->assertNotNull($foundIndex, sprintf('Found %s index for the collection', $indexName));
+        $this->assertNotNull($foundIndex, sprintf('Index %s does not exist', $indexName));
 
         if ($callback !== null) {
             call_user_func($callback, $foundIndex);

@@ -265,8 +265,13 @@ class Bucket
      *
      * Supported options:
      *
+     *  * _id (mixed): File document identifier. Defaults to a new ObjectId.
+     *
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to the
      *    bucket's chunk size.
+     *
+     *  * metadata (document): User data for the "metadata" field of the files
+     *    collection document.
      *
      * @param string $filename Filename
      * @param array  $options  Upload options
@@ -322,8 +327,13 @@ class Bucket
      *
      * Supported options:
      *
+     *  * _id (mixed): File document identifier. Defaults to a new ObjectId.
+     *
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to the
      *    bucket's chunk size.
+     *
+     *  * metadata (document): User data for the "metadata" field of the files
+     *    collection document.
      *
      * @param string   $filename Filename
      * @param resource $source   Readable stream

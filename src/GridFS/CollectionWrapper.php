@@ -17,7 +17,9 @@ use stdClass;
  */
 class CollectionWrapper
 {
+    private $bucketName;
     private $chunksCollection;
+    private $databaseName;
     private $checkedIndexes = false;
     private $filesCollection;
 
@@ -33,6 +35,9 @@ class CollectionWrapper
      */
     public function __construct(Manager $manager, $databaseName, $bucketName, array $collectionOptions = [])
     {
+        $this->databaseName = (string) $databaseName;
+        $this->bucketName = (string) $bucketName;
+
         $this->filesCollection = new Collection($manager, $databaseName, sprintf('%s.files', $bucketName), $collectionOptions);
         $this->chunksCollection = new Collection($manager, $databaseName, sprintf('%s.chunks', $bucketName), $collectionOptions);
     }
@@ -135,10 +140,14 @@ class CollectionWrapper
         return $this->filesCollection->find($filter, $options);
     }
 
-    // TODO: Remove this
-    public function getChunksCollection()
+    /**
+     * Return the bucket name.
+     *
+     * @return string
+     */
+    public function getBucketName()
     {
-        return $this->chunksCollection;
+        return $this->bucketName;
     }
 
     /**
@@ -160,10 +169,14 @@ class CollectionWrapper
         return new IteratorIterator($cursor);
     }
 
-    // TODO: Remove this
-    public function getFilesCollection()
+    /**
+     * Return the database name.
+     *
+     * @return string
+     */
+    public function getDatabaseName()
     {
-        return $this->filesCollection;
+        return $this->databaseName;
     }
 
     /**

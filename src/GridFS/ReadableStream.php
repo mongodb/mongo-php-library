@@ -20,6 +20,7 @@ class ReadableStream
     private $chunkSize;
     private $chunkOffset = 0;
     private $chunksIterator;
+    private $collectionWrapper;
     private $firstCheck = true;
     private $id;
     private $iteratorEmpty = false;
@@ -52,8 +53,26 @@ class ReadableStream
         $this->length = $file->length;
 
         $this->chunksIterator = $collectionWrapper->getChunksIteratorByFilesId($this->id);
+        $this->collectionWrapper = $collectionWrapper;
         $this->numChunks = ceil($this->length / $this->chunkSize);
         $this->initEmptyBuffer();
+    }
+
+    /**
+     * Return internal properties for debugging purposes.
+     *
+     * @see http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return [
+            'bucketName' => $this->collectionWrapper->getBucketName(),
+            'databaseName' => $this->collectionWrapper->getDatabaseName(),
+            'id' => $this->id,
+            'chunkSize' => $this->chunkSize,
+            'length' => $this->length,
+        ];
     }
 
     public function close()
@@ -129,7 +148,7 @@ class ReadableStream
     }
 
     /**
-     * Return the ID of the GridFS file document for this stream.
+     * Return the stream's ID (i.e. file document identifier).
      *
      * @return integer
      */
@@ -139,7 +158,7 @@ class ReadableStream
     }
 
     /**
-     * Return the stream size in bytes.
+     * Return the stream's size in bytes.
      *
      * @return integer
      */

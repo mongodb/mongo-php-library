@@ -77,9 +77,10 @@ function is_first_key_operator($document)
         throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
     }
 
+    reset($document);
     $firstKey = (string) key($document);
 
-    return (isset($firstKey[0]) && $firstKey[0] == '$');
+    return (isset($firstKey[0]) && $firstKey[0] === '$');
 }
 
 /**

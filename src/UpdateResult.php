@@ -96,7 +96,7 @@ class UpdateResult
     {
         if ($this->isAcknowledged) {
             foreach ($this->writeResult->getUpsertedIds() as $id) {
-               return $id;
+                return $id;
             }
 
             return null;

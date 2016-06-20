@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\GridFS;
 
 use MongoDB\BSON\Binary;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\GridFS\Bucket;
@@ -21,6 +22,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         new Bucket($this->manager, $this->getDatabaseName(), [
             'bucketName' => 'test',
             'chunkSizeBytes' => 8192,
+            'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY, 1000),
         ]);
@@ -45,6 +47,10 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['chunkSizeBytes' => $value];
+        }
+
+        foreach ($this->getInvalidReadConcernValues() as $value) {
+            $options[][] = ['readConcern' => $value];
         }
 
         foreach ($this->getInvalidReadPreferenceValues() as $value) {

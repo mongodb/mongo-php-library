@@ -5,6 +5,7 @@ namespace MongoDB\GridFS;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
@@ -38,6 +39,8 @@ class Bucket
      *  * chunkSizeBytes (integer): The chunk size in bytes. Defaults to
      *    261120 (i.e. 255 KiB).
      *
+     *  * readConcern (MongoDB\Driver\ReadConcern): Read concern.
+     *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
@@ -62,6 +65,10 @@ class Bucket
             throw InvalidArgumentException::invalidType('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
         }
 
+        if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
+            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+        }
+
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
             throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
@@ -73,7 +80,7 @@ class Bucket
         $this->databaseName = (string) $databaseName;
         $this->options = $options;
 
-        $collectionOptions = array_intersect_key($options, ['readPreference' => 1, 'writeConcern' => 1]);
+        $collectionOptions = array_intersect_key($options, ['readConcern' => 1, 'readPreference' => 1, 'writeConcern' => 1]);
 
         $this->collectionWrapper = new CollectionWrapper($manager, $databaseName, $options['bucketName'], $collectionOptions);
         $this->registerStreamWrapper();

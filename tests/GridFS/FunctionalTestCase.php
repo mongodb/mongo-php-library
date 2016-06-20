@@ -27,13 +27,17 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     }
 
     /**
-     * Rewinds a stream and asserts its contents.
+     * Asserts that a variable is a stream containing the expected data.
+     *
+     * Note: this will seek to the beginning of the stream before reading.
      *
      * @param string   $expectedContents
      * @param resource $stream
      */
     protected function assertStreamContents($expectedContents, $stream)
     {
+        $this->assertInternalType('resource', $stream);
+        $this->assertSame('stream', get_resource_type($stream));
         $this->assertEquals($expectedContents, stream_get_contents($stream, -1,.0));
     }
 

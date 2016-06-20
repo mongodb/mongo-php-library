@@ -2,7 +2,7 @@
 
 namespace MongoDB\GridFS;
 
-use MongoDB\Driver\Exception\Exception;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Exception\CorruptFileException;
 use stdClass;
 
@@ -68,10 +68,19 @@ class ReadableStream
      * if data is not available to be read.
      * 
      * @param integer $numBytes Number of bytes to read
-     * @return string 
+     * @return string
+     * @throws InvalidArgumentException if $numBytes is negative
      */
     public function downloadNumBytes($numBytes)
     {
+        if ($numBytes < 0) {
+            throw new InvalidArgumentException(sprintf('$numBytes must be >= zero; given: %d', $numBytes));
+        }
+
+        if ($numBytes == 0) {
+            return '';
+        }
+
         if ($this->bufferFresh) {
             rewind($this->buffer);
             $this->bufferFresh = false;

@@ -17,11 +17,13 @@ class ReadableStream
     private $bufferEmpty;
     private $bufferFresh;
     private $bytesSeen = 0;
+    private $chunkSize;
     private $chunkOffset = 0;
     private $chunksIterator;
-    private $file;
     private $firstCheck = true;
+    private $id;
     private $iteratorEmpty = false;
+    private $length;
     private $numChunks;
 
     /**
@@ -33,10 +35,24 @@ class ReadableStream
      */
     public function __construct(CollectionWrapper $collectionWrapper, stdClass $file)
     {
-        $this->file = $file;
+        if ( ! isset($file->chunkSize) || ! is_integer($file->chunkSize) || $file->chunkSize < 1) {
+            throw new CorruptFileException('file.chunkSize is not an integer >= 1');
+        }
 
-        $this->chunksIterator = $collectionWrapper->getChunksIteratorByFilesId($this->file->_id);
-        $this->numChunks = ($file->length >= 0) ? ceil($file->length / $file->chunkSize) : 0;
+        if ( ! isset($file->length) || ! is_integer($file->length) || $file->length < 0) {
+            throw new CorruptFileException('file.length is not an integer > 0');
+        }
+
+        if ( ! isset($file->_id) && ! array_key_exists('_id', (array) $file)) {
+            throw new CorruptFileException('file._id does not exist');
+        }
+
+        $this->id = $file->_id;
+        $this->chunkSize = $file->chunkSize;
+        $this->length = $file->length;
+
+        $this->chunksIterator = $collectionWrapper->getChunksIteratorByFilesId($this->id);
+        $this->numChunks = ceil($this->length / $this->chunkSize);
         $this->initEmptyBuffer();
     }
 
@@ -77,7 +93,7 @@ class ReadableStream
             $output .= substr($this->chunksIterator->current()->data->getData(), 0, $bytesLeft);
         }
 
-        if ( ! $this->iteratorEmpty && $this->file->length > 0 && $bytesLeft < strlen($this->chunksIterator->current()->data->getData())) {
+        if ( ! $this->iteratorEmpty && $this->length > 0 && $bytesLeft < strlen($this->chunksIterator->current()->data->getData())) {
             fwrite($this->buffer, substr($this->chunksIterator->current()->data->getData(), $bytesLeft));
             $this->bufferEmpty = false;
         }
@@ -103,19 +119,24 @@ class ReadableStream
         }
     }
 
-    public function getFile()
-    {
-        return $this->file;
-    }
-
+    /**
+     * Return the ID of the GridFS file document for this stream.
+     *
+     * @return integer
+     */
     public function getId()
     {
-        return $this->file->_id;
+        return $this->id;
     }
 
+    /**
+     * Return the stream size in bytes.
+     *
+     * @return integer
+     */
     public function getSize()
     {
-        return $this->file->length;
+        return $this->length;
     }
 
     public function isEOF()
@@ -149,8 +170,8 @@ class ReadableStream
         $actualChunkSize = strlen($this->chunksIterator->current()->data->getData());
 
         $expectedChunkSize = ($this->chunkOffset == $this->numChunks - 1)
-            ? ($this->file->length - $this->bytesSeen)
-            : $this->file->chunkSize;
+            ? ($this->length - $this->bytesSeen)
+            : $this->chunkSize;
 
         if ($actualChunkSize != $expectedChunkSize) {
             throw CorruptFileException::unexpectedSize($actualChunkSize, $expectedChunkSize);

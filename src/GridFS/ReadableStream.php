@@ -130,24 +130,6 @@ class ReadableStream
     }
 
     /**
-     * Writes the contents of this GridFS file to a writable stream.
-     *
-     * @param resource $destination Writable stream
-     * @throws InvalidArgumentException
-     */
-    public function downloadToStream($destination)
-    {
-        if ( ! is_resource($destination) || get_resource_type($destination) != "stream") {
-            throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
-        }
-
-        while ($this->advanceChunks()) {
-            // TODO: Should we be checking for fwrite errors here?
-            fwrite($destination, $this->chunksIterator->current()->data->getData());
-        }
-    }
-
-    /**
      * Return the stream's ID (i.e. file document identifier).
      *
      * @return integer

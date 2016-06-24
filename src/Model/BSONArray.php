@@ -5,6 +5,7 @@ namespace MongoDB\Model;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Unserializable;
 use ArrayObject;
+use JsonSerializable;
 
 /**
  * Model class for a BSON array.
@@ -14,7 +15,7 @@ use ArrayObject;
  *
  * @api
  */
-class BSONArray extends ArrayObject implements Serializable, Unserializable
+class BSONArray extends ArrayObject implements JsonSerializable, Serializable, Unserializable
 {
     /**
      * Factory method for var_export().
@@ -55,5 +56,19 @@ class BSONArray extends ArrayObject implements Serializable, Unserializable
     public function bsonUnserialize(array $data)
     {
         self::__construct($data);
+    }
+
+    /**
+     * Serialize the array to JSON.
+     *
+     * The array data will be numerically reindexed to ensure that it is stored
+     * as a JSON array.
+     *
+     * @see http://php.net/jsonserializable.jsonserialize
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return array_values($this->getArrayCopy());
     }
 }

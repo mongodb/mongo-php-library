@@ -5,6 +5,7 @@ namespace MongoDB\Model;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Unserializable;
 use ArrayObject;
+use JsonSerializable;
 
 /**
  * Model class for a BSON document.
@@ -14,7 +15,7 @@ use ArrayObject;
  *
  * @api
  */
-class BSONDocument extends ArrayObject implements Serializable, Unserializable
+class BSONDocument extends ArrayObject implements JsonSerializable, Serializable, Unserializable
 {
     /**
      * Constructor.
@@ -65,5 +66,16 @@ class BSONDocument extends ArrayObject implements Serializable, Unserializable
     public function bsonUnserialize(array $data)
     {
         parent::__construct($data, ArrayObject::ARRAY_AS_PROPS);
+    }
+
+    /**
+     * Serialize the array to JSON.
+     *
+     * @see http://php.net/jsonserializable.jsonserialize
+     * @return object
+     */
+    public function jsonSerialize()
+    {
+        return (object) $this->getArrayCopy();
     }
 }

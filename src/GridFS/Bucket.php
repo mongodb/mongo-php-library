@@ -104,17 +104,15 @@ class Bucket
      * @param mixed    $id          File ID
      * @param resource $destination Writable Stream
      * @throws FileNotFoundException
+     * @throws InvalidArgumentException if $destination is not a stream
      */
     public function downloadToStream($id, $destination)
     {
-        $file = $this->collectionWrapper->findFileById($id);
-
-        if ($file === null) {
-            throw FileNotFoundException::byId($id, $this->getFilesNamespace());
+        if ( ! is_resource($destination) || get_resource_type($destination) != "stream") {
+            throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
         }
 
-        $stream = new ReadableStream($this->collectionWrapper, $file);
-        $stream ->downloadToStream($destination);
+        stream_copy_to_stream($this->openDownloadStream($id), $destination);
     }
 
     /**
@@ -140,19 +138,15 @@ class Bucket
      * @param resource $destination Writable Stream
      * @param array    $options     Download options
      * @throws FileNotFoundException
+     * @throws InvalidArgumentException if $destination is not a stream
      */
     public function downloadToStreamByName($filename, $destination, array $options = [])
     {
-        $options += ['revision' => -1];
-
-        $file = $this->collectionWrapper->findFileByFilenameAndRevision($filename, $options['revision']);
-
-        if ($file === null) {
-            throw FileNotFoundException::byFilenameAndRevision($filename, $options['revision'], $this->getFilesNamespace());
+        if ( ! is_resource($destination) || get_resource_type($destination) != "stream") {
+            throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
         }
 
-        $stream = new ReadableStream($this->collectionWrapper, $file);
-        $stream->downloadToStream($destination);
+        stream_copy_to_stream($this->openDownloadStreamByName($filename, $options), $destination);
     }
 
     /**
@@ -339,15 +333,18 @@ class Bucket
      * @param resource $source   Readable stream
      * @param array    $options  Stream options
      * @return ObjectId ID of the newly created GridFS file
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException if $source is not a stream
      */
     public function uploadFromStream($filename, $source, array $options = [])
     {
-        $options += ['chunkSizeBytes' => $this->options['chunkSizeBytes']];
+        if ( ! is_resource($source) || get_resource_type($source) != "stream") {
+            throw InvalidArgumentException::invalidType('$source', $source, 'resource');
+        }
 
-        $stream = new WritableStream($this->collectionWrapper, $filename, $options);
+        $destination = $this->openUploadStream($filename, $options);
+        stream_copy_to_stream($source, $destination);
 
-        return $stream->uploadFromStream($source);
+        return $this->getIdFromStream($destination);
     }
 
     /**

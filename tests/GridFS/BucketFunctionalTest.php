@@ -173,11 +173,92 @@ class BucketFunctionalTest extends FunctionalTestCase
     }
 
     /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @dataProvider provideInvalidStreamValues
+     */
+    public function testDownloadToStreamShouldRequireDestinationStream($destination)
+    {
+        $this->bucket->downloadToStream('id', $destination);
+    }
+
+    public function provideInvalidStreamValues()
+    {
+        return $this->wrapValuesForDataProvider([null, 123, 'foo', [], hash_init('md5')]);
+    }
+
+    /**
      * @expectedException MongoDB\GridFS\Exception\FileNotFoundException
      */
     public function testDownloadToStreamShouldRequireFileToExist()
     {
         $this->bucket->downloadToStream('nonexistent-id', $this->createStream());
+    }
+
+    public function testDownloadToStreamByName()
+    {
+        $this->bucket->uploadFromStream('filename', $this->createStream('foo'));
+        $this->bucket->uploadFromStream('filename', $this->createStream('bar'));
+        $this->bucket->uploadFromStream('filename', $this->createStream('baz'));
+
+        $destination = $this->createStream();
+        $this->bucket->downloadToStreamByName('filename', $destination);
+        $this->assertStreamContents('baz', $destination);
+
+        $destination = $this->createStream();
+        $this->bucket->downloadToStreamByName('filename', $destination, ['revision' => -3]);
+        $this->assertStreamContents('foo', $destination);
+
+        $destination = $this->createStream();
+        $this->bucket->downloadToStreamByName('filename', $destination, ['revision' => -2]);
+        $this->assertStreamContents('bar', $destination);
+
+        $destination = $this->createStream();
+        $this->bucket->downloadToStreamByName('filename', $destination, ['revision' => -1]);
+        $this->assertStreamContents('baz', $destination);
+
+        $destination = $this->createStream();
+        $this->bucket->downloadToStreamByName('filename', $destination, ['revision' => 0]);
+        $this->assertStreamContents('foo', $destination);
+
+        $destination = $this->createStream();
+        $this->bucket->downloadToStreamByName('filename', $destination, ['revision' => 1]);
+        $this->assertStreamContents('bar', $destination);
+
+        $destination = $this->createStream();
+        $this->bucket->downloadToStreamByName('filename', $destination, ['revision' => 2]);
+        $this->assertStreamContents('baz', $destination);
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @dataProvider provideInvalidStreamValues
+     */
+    public function testDownloadToStreamByNameShouldRequireDestinationStream($destination)
+    {
+        $this->bucket->downloadToStreamByName('filename', $destination);
+    }
+
+    /**
+     * @expectedException MongoDB\GridFS\Exception\FileNotFoundException
+     * @dataProvider provideNonexistentFilenameAndRevision
+     */
+    public function testDownloadToStreamByNameShouldRequireFilenameAndRevisionToExist($filename, $revision)
+    {
+        $this->bucket->uploadFromStream('filename', $this->createStream('foo'));
+        $this->bucket->uploadFromStream('filename', $this->createStream('bar'));
+
+        $destination = $this->createStream();
+        $this->bucket->downloadToStreamByName($filename, $destination, ['revision' => $revision]);
+    }
+
+    public function provideNonexistentFilenameAndRevision()
+    {
+        return [
+            ['filename', 2],
+            ['filename', -3],
+            ['nonexistent-filename', 0],
+            ['nonexistent-filename', -1],
+        ];
     }
 
     public function testDrop()
@@ -306,16 +387,6 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->bucket->openDownloadStream($filename, ['revision' => $revision]);
     }
 
-    public function provideNonexistentFilenameAndRevision()
-    {
-        return [
-            ['filename', 2],
-            ['filename', -3],
-            ['nonexistent-filename', 0],
-            ['nonexistent-filename', -1],
-        ];
-    }
-
     public function testOpenUploadStream()
     {
         $stream = $this->bucket->openUploadStream('filename');
@@ -399,6 +470,15 @@ class BucketFunctionalTest extends FunctionalTestCase
         $fileDocument = $this->filesCollection->findOne(['_id' => $id]);
 
         $this->assertSameDocument(['foo' => 'bar'], $fileDocument['metadata']);
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @dataProvider provideInvalidStreamValues
+     */
+    public function testUploadFromStreamShouldRequireSourceStream($source)
+    {
+        $this->bucket->uploadFromStream('filename', $source);
     }
 
     public function testUploadingAnEmptyFile()

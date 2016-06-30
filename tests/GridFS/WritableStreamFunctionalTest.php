@@ -80,21 +80,4 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
             [str_repeat('foobar', 87041), '95e78f624f8e745bcfd2d11691fa601e'],
         ];
     }
-
-    /**
-     * @dataProvider provideInputDataAndExpectedMD5
-     */
-    public function testUploadFromStreamCalculatesMD5($input, $expectedMD5)
-    {
-        $stream = new WritableStream($this->collectionWrapper, 'filename');
-        $stream->uploadFromStream($this->createStream($input));
-        //$stream->close();
-
-        $fileDocument = $this->filesCollection->findOne(
-            ['_id' => $stream->getId()],
-            ['projection' => ['md5' => 1, '_id' => 0]]
-        );
-
-        $this->assertSameDocument(['md5' => $expectedMD5], $fileDocument);
-    }
 }

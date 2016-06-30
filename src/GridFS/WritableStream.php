@@ -189,26 +189,6 @@ class WritableStream
         return $this->isClosed;
     }
 
-    /**
-     * Writes the contents of a readable stream to a GridFS file.
-     *
-     * @param resource $source Readable stream
-     * @return ObjectId
-     * @throws InvalidArgumentException
-     */
-    public function uploadFromStream($source)
-    {
-        if ( ! is_resource($source) || get_resource_type($source) != "stream") {
-            throw InvalidArgumentException::invalidType('$source', $source, 'resource');
-        }
-
-        while ($data = $this->readChunk($source)) {
-            $this->insertChunk($data);
-        }
-
-        return $this->fileCollectionInsert();
-    }
-
     private function abort()
     {
         $this->collectionWrapper->deleteChunksByFilesId($this->file['_id']);

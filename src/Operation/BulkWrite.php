@@ -2,11 +2,13 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\Bulk\InsertOneInput;
 use MongoDB\BulkWriteResult;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Bulk\BulkInputInterface;
 
 /**
  * Operation for executing multiple write operations.
@@ -24,9 +26,21 @@ class BulkWrite implements Executable
     const UPDATE_ONE  = 'updateOne';
 
     private static $wireVersionForDocumentLevelValidation = 4;
+    private static $operationTypesMap = [
+        self::DELETE_MANY => 'MongoDB\Bulk\DeleteManyInput',
+        self::DELETE_ONE  => 'MongoDB\Bulk\DeleteOneInput',
+        self::INSERT_ONE  => 'MongoDB\Bulk\InsertOneInput',
+        self::REPLACE_ONE => 'MongoDB\Bulk\ReplaceOneInput',
+        self::UPDATE_MANY => 'MongoDB\Bulk\UpdateManyInput',
+        self::UPDATE_ONE  => 'MongoDB\Bulk\UpdateOneInput',
+    ];
 
     private $databaseName;
     private $collectionName;
+
+    /**
+     * @var BulkInputInterface[]
+     */
     private $operations;
     private $options;
 
@@ -82,9 +96,14 @@ class BulkWrite implements Executable
             if ($i !== $expectedIndex) {
                 throw new InvalidArgumentException(sprintf('$operations is not a list (unexpected index: "%s")', $i));
             }
+            
+            if ($operation instanceof BulkInputInterface) {
+                $expectedIndex += 1;
+                continue;
+            }
 
             if ( ! is_array($operation)) {
-                throw InvalidArgumentException::invalidType(sprintf('$operations[%d]', $i), $operation, 'array');
+                throw InvalidArgumentException::invalidType(sprintf('$operations[%d]', $i), $operation, 'array or MongoDB\Bulk\BulkInputInterface instance');
             }
 
             if (count($operation) !== 1) {
@@ -94,93 +113,15 @@ class BulkWrite implements Executable
             $type = key($operation);
             $args = current($operation);
 
-            if ( ! isset($args[0]) && ! array_key_exists(0, $args)) {
-                throw new InvalidArgumentException(sprintf('Missing first argument for $operations[%d]["%s"]', $i, $type));
+
+            if ( ! array_key_exists($type, self::$operationTypesMap)) {
+                throw new InvalidArgumentException(sprintf('Unknown operation type "%s" in $operations[%d]', $type, $i));
             }
 
-            if ( ! is_array($args[0]) && ! is_object($args[0])) {
-                throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][0]', $i, $type), $args[0], 'array or object');
-            }
-
-            switch ($type) {
-                case self::INSERT_ONE:
-                    break;
-
-                case self::DELETE_MANY:
-                case self::DELETE_ONE:
-                    $operations[$i][$type][1] = ['limit' => ($type === self::DELETE_ONE ? 1 : 0)];
-
-                    break;
-
-                case self::REPLACE_ONE:
-                    if ( ! isset($args[1]) && ! array_key_exists(1, $args)) {
-                        throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
-                    }
-
-                    if ( ! is_array($args[1]) && ! is_object($args[1])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
-                    }
-
-                    if (\MongoDB\is_first_key_operator($args[1])) {
-                        throw new InvalidArgumentException(sprintf('First key in $operations[%d]["%s"][1] is an update operator', $i, $type));
-                    }
-
-                    if ( ! isset($args[2])) {
-                        $args[2] = [];
-                    }
-
-                    if ( ! is_array($args[2])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]', $i, $type), $args[2], 'array');
-                    }
-
-                    $args[2]['multi'] = false;
-                    $args[2] += ['upsert' => false];
-
-                    if ( ! is_bool($args[2]['upsert'])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["upsert"]', $i, $type), $args[2]['upsert'], 'boolean');
-                    }
-
-                    $operations[$i][$type][2] = $args[2];
-
-                    break;
-
-                case self::UPDATE_MANY:
-                case self::UPDATE_ONE:
-                    if ( ! isset($args[1]) && ! array_key_exists(1, $args)) {
-                        throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
-                    }
-
-                    if ( ! is_array($args[1]) && ! is_object($args[1])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
-                    }
-
-                    if ( ! \MongoDB\is_first_key_operator($args[1])) {
-                        throw new InvalidArgumentException(sprintf('First key in $operations[%d]["%s"][1] is not an update operator', $i, $type));
-                    }
-
-                    if ( ! isset($args[2])) {
-                        $args[2] = [];
-                    }
-
-                    if ( ! is_array($args[2])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]', $i, $type), $args[2], 'array');
-                    }
-
-                    $args[2]['multi'] = ($type === self::UPDATE_MANY);
-                    $args[2] += ['upsert' => false];
-
-                    if ( ! is_bool($args[2]['upsert'])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["upsert"]', $i, $type), $args[2]['upsert'], 'boolean');
-                    }
-
-                    $operations[$i][$type][2] = $args[2];
-
-                    break;
-
-                default:
-                    throw new InvalidArgumentException(sprintf('Unknown operation type "%s" in $operations[%d]', $type, $i));
-            }
-
+            $inputClass = self::$operationTypesMap[$type];
+            $reflection = new \ReflectionClass($inputClass);
+            $operations[$i] = $reflection->newInstanceArgs($args);
+            
             $expectedIndex += 1;
         }
 
@@ -223,31 +164,18 @@ class BulkWrite implements Executable
         $insertedIds = [];
 
         foreach ($this->operations as $i => $operation) {
-            $type = key($operation);
-            $args = current($operation);
-
-            switch ($type) {
-                case self::DELETE_MANY:
-                case self::DELETE_ONE:
-                    $bulk->delete($args[0], $args[1]);
-                    break;
-
-                case self::INSERT_ONE:
-                    $insertedId = $bulk->insert($args[0]);
-
-                    if ($insertedId !== null) {
-                        $insertedIds[$i] = $insertedId;
-                    } else {
-                        $insertedIds[$i] = \MongoDB\extract_id_from_inserted_document($args[0]);
-                    }
-
-                    break;
-
-                case self::REPLACE_ONE:
-                case self::UPDATE_MANY:
-                case self::UPDATE_ONE:
-                    $bulk->update($args[0], $args[1], $args[2]);
+            if ($operation instanceof InsertOneInput) {
+                $insertedId = $operation->addToBulk($bulk);
+                if ($insertedId !== null) {
+                    $insertedIds[$i] = $insertedId;
+                } else {
+                    $insertedIds[$i] = \MongoDB\extract_id_from_inserted_document($operation->getDocument());
+                }
+                
+                continue;
             }
+            
+            $operation->addToBulk($bulk);
         }
 
         $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;

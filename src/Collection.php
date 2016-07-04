@@ -2,6 +2,7 @@
 
 namespace MongoDB;
 
+use MongoDB\Bulk\BulkBuilder;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
@@ -191,12 +192,20 @@ class Collection
      * Executes multiple write operations.
      *
      * @see BulkWrite::__construct() for supported options
-     * @param array[] $operations List of write operations
+     * @param array[]|BulkBuilder $operations List of write operations
      * @param array   $options    Command options
      * @return BulkWriteResult
      */
-    public function bulkWrite(array $operations, array $options = [])
+    public function bulkWrite($operations, array $options = [])
     {
+        if ( ! is_array($operations) && ! ($operations instanceof BulkBuilder)) {
+            throw InvalidArgumentException::invalidType('$operations', $operations, 'array or MongoDB\Bulk\BulkBuilder instance');
+        }
+
+        if ($operations instanceof  BulkBuilder) {
+            $operations = $operations->getOperations();
+        }
+
         if ( ! isset($options['writeConcern'])) {
             $options['writeConcern'] = $this->writeConcern;
         }

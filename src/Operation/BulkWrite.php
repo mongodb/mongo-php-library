@@ -120,7 +120,16 @@ class BulkWrite implements Executable
 
             $inputClass = self::$operationTypesMap[$type];
             $reflection = new \ReflectionClass($inputClass);
-            $operations[$i] = $reflection->newInstanceArgs($args);
+            try {
+                $operations[$i] = $reflection->newInstanceArgs($args);
+            } catch(InvalidArgumentException $e) {
+                throw new InvalidArgumentException(sprintf(
+                    'Exception during parsing "$operations[%d]": "%s"',
+                    $i,
+                    $e->getMessage()
+                ));
+            }
+
             
             $expectedIndex += 1;
         }

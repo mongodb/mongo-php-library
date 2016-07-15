@@ -3,7 +3,7 @@
 The MongoDB PHP Library and underlying [mongodb extension][ext-mongodb] have
 notable API differences from the legacy [mongo extension][ext-mongo]. This page
 will attempt to summarize those differences for the benefit of those upgrading 
-rom the legacy driver.
+from the legacy driver.
 
 Additionally, a community-developed [mongo-php-adapter][adapter] library exists,
 which implements the [mongo extension][ext-mongo] API using this library and the

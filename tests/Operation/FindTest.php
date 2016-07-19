@@ -44,6 +44,10 @@ class FindTest extends TestCase
             $options[][] = ['cursorType' => $value];
         }
 
+        foreach ($this->getInvalidHintValues() as $value) {
+            $options[][] = ['hint' => $value];
+        }
+
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['limit' => $value];
         }
@@ -99,5 +103,10 @@ class FindTest extends TestCase
     public function provideInvalidConstructorCursorTypeOptions()
     {
         return $this->wrapValuesForDataProvider([-1, 0, 4]);
+    }
+
+    private function getInvalidHintValues()
+    {
+        return [123, 3.14, true];
     }
 }

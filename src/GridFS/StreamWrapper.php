@@ -57,6 +57,10 @@ class StreamWrapper
      */
     public function stream_eof()
     {
+        if ( ! $this->stream instanceof ReadableStream) {
+            return false;
+        }
+
         return $this->stream->isEOF();
     }
 
@@ -93,11 +97,14 @@ class StreamWrapper
      * 
      * @see http://php.net/manual/en/streamwrapper.stream-read.php
      * @param integer $count Number of bytes to read
-     * @return string 
+     * @return string
      */
     public function stream_read($count)
     {
-        // TODO: Ensure that $this->stream is a ReadableStream
+        if ( ! $this->stream instanceof ReadableStream) {
+            return '';
+        }
+
         return $this->stream->downloadNumBytes($count);
     }
 
@@ -122,13 +129,15 @@ class StreamWrapper
      *
      * @see http://php.net/manual/en/streamwrapper.stream-write.php
      * @param string $data Data to write
-     * @return integer The number of bytes successfully stored
+     * @return integer The number of bytes written
      */
     public function stream_write($data)
     {
-        // TODO: Ensure that $this->stream is a WritableStream
-        $this->stream->insertChunks($data);
+        if ( ! $this->stream instanceof WritableStream) {
+            return 0;
+        }
 
+        $this->stream->insertChunks($data);
         return strlen($data);
     }
 

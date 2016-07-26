@@ -184,11 +184,6 @@ class WritableStream
         return $readBytes;
     }
 
-    public function isEOF()
-    {
-        return $this->isClosed;
-    }
-
     private function abort()
     {
         $this->collectionWrapper->deleteChunksByFilesId($this->file['_id']);

@@ -125,7 +125,7 @@ class BucketFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @expectedException MongoDB\GridFS\Exception\CorruptFileException
+     * @expectedException PHPUnit_Framework_Error_Warning
      */
     public function testDownloadingFileWithMissingChunk()
     {
@@ -137,7 +137,7 @@ class BucketFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @expectedException MongoDB\GridFS\Exception\CorruptFileException
+     * @expectedException PHPUnit_Framework_Error_Warning
      */
     public function testDownloadingFileWithUnexpectedChunkIndex()
     {
@@ -152,7 +152,7 @@ class BucketFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @expectedException MongoDB\GridFS\Exception\CorruptFileException
+     * @expectedException PHPUnit_Framework_Error_Warning
      */
     public function testDownloadingFileWithUnexpectedChunkSize()
     {

@@ -2,6 +2,8 @@
 
 namespace MongoDB\GridFS;
 
+use Exception;
+
 /**
  * Stream wrapper for reading and writing a GridFS file.
  *
@@ -105,7 +107,12 @@ class StreamWrapper
             return '';
         }
 
-        return $this->stream->downloadNumBytes($count);
+        try {
+            return $this->stream->downloadNumBytes($count);
+        } catch (Exception $e) {
+            trigger_error(sprintf('%s: %s', get_class($e), $e->getMessage()), \E_USER_WARNING);
+            return false;
+        }
     }
 
     /**
@@ -137,8 +144,12 @@ class StreamWrapper
             return 0;
         }
 
-        $this->stream->insertChunks($data);
-        return strlen($data);
+        try {
+            return $this->stream->insertChunks($data);
+        } catch (Exception $e) {
+            trigger_error(sprintf('%s: %s', get_class($e), $e->getMessage()), \E_USER_WARNING);
+            return false;
+        }
     }
 
     /**

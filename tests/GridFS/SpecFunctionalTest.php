@@ -6,9 +6,9 @@ use MongoDB\Collection;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\Exception\RuntimeException;
 use MongoDB\Operation\BulkWrite;
 use DateTime;
+use Exception;
 use IteratorIterator;
 use LogicException;
 use MultipleIterator;
@@ -50,7 +50,7 @@ class SpecFunctionalTest extends FunctionalTestCase
 
         try {
             $result = $this->executeAct($test['act']);
-        } catch (RuntimeException $e) {
+        } catch (Exception $e) {
             $result = $e;
         }
 
@@ -333,7 +333,10 @@ class SpecFunctionalTest extends FunctionalTestCase
 
             case 'ChunkIsMissing':
             case 'ChunkIsWrongSize':
-                return 'MongoDB\GridFS\Exception\CorruptFileException';
+                /* Although ReadableStream throws a CorruptFileException, the
+                 * stream wrapper will convert it to a PHP error of type
+                 * E_USER_WARNING. */
+                return 'PHPUnit_Framework_Error_Warning';
 
             default:
                 throw new LogicException('Unsupported error: ' . $error);

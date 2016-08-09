@@ -1,0 +1,69 @@
+=================================
+MongoDB\\Collection::deleteMany()
+=================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::deleteMany($filter, $options)
+
+   Deletes all documents that match the filter criteria.
+
+   .. code-block:: php
+
+      function deleteMany($filter, array $options = []): MongoDB\DeleteResult
+
+   :phpmethod:`MongoDB\\Collection::deleteMany` has the following
+   parameters:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-deleteMany-param.rst
+   
+   :phpmethod:`MongoDB\\Collection::deleteMany` supports the following
+   options:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-deleteMany-option.rst
+
+Output
+------
+
+Returns a ``MongoDB\DeleteResult`` object.
+
+Example
+-------
+
+The following operation deletes all of the documents in the ``users``
+collection that have ``ny`` as the value for the ``state`` field:
+
+.. code-block:: php
+
+   <?php
+
+   $collection = (new MongoDB\Client)->demo->users;
+   $collection->drop();
+
+   $collection->insertOne(['name' => 'Bob', 'state' => 'ny']);
+   $collection->insertOne(['name' => 'Alice', 'state' => 'ny']);
+   $deleteResult = $collection->deleteMany(['state' => 'ny']);
+
+   printf("Deleted %d document(s)\n", $deleteResult->getDeletedCount());
+
+The output would then resemble::
+
+   Deleted 2 document(s)
+
+
+.. seealso::
+   
+   - :phpmethod:`MongoDB\\Collection::bulkWrite`
+   - :phpmethod:`MongoDB\\Collection::deleteOne`
+   - :doc:`/tutorial/crud`
+   - :manual:`delete command reference </reference/command/delete`
+     in the MongoDB manual

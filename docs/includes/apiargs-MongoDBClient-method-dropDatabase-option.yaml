@@ -1,0 +1,8 @@
+arg_name: option
+interface: phpmethod
+operation: MongoDB\\Client::dropDatabase
+source:
+  file: apiargs-common-option.yaml
+  ref: typeMap
+position: 1
+...

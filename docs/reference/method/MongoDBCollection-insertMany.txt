@@ -1,0 +1,97 @@
+=================================
+MongoDB\\Collection::insertMany()
+=================================
+
+.. default-domain:: mongodb
+                    
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+              
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::insertMany
+   
+   Inserts one document.
+   
+   .. code-block:: php
+                   
+      function insertMany(array $documents, array $options = []): MongoDB\InsertManyResult
+
+   ``insertMany()`` supports the following parameters:
+   
+   .. include:: /includes/apiargs/MongoDBCollection-method-insertMany-param.rst
+
+   The ``$options`` parameter supports the following options:
+                
+   .. include:: /includes/apiargs/MongoDBCollection-method-insertMany-option.rst
+
+Output
+------
+
+Returns a ``MongoDB\InsertManyResult`` object.
+
+Example
+-------
+
+.. start-crud-include
+
+The following operation inserts two documents into the ``users``
+collection in the ``example`` database:
+
+.. code-block:: php
+                
+   <?php
+   
+   $database = new MongoDB\Client;
+
+   $collection = $database->selectCollection('users','restaurants');
+
+   $newUsers = $collection->insertMany(
+       [
+         [
+           'username' => 'admin',
+           'email' => 'admin@example.com',
+           'name' => 'Admin User'
+         ],
+         [
+           'username' => 'test',
+           'email' => 'test@example.com',
+           'name' => 'Test User'
+   
+         ],
+       ]
+   );
+
+   printf("Inserted %d document(s)\n", $newUsers->getInsertedCount());
+   var_dump($newUsers->getInsertedIds());
+
+The output would resemble::
+
+   Inserted 2 document(s)
+   array(2) {
+     [0]=>
+     object(MongoDB\BSON\ObjectID)#11 (1) {
+       ["oid"]=>
+       string(24) "579a25921f417dd1e5518141"
+     }
+     [1]=>
+     object(MongoDB\BSON\ObjectID)#12 (1) {
+       ["oid"]=>
+       string(24) "579a25921f417dd1e5518142"
+     }
+   }
+
+.. end-crud-include  
+
+.. seealso::
+   
+   - :phpmethod:`MongoDB\\Collection::bulkWrite`
+   - :phpmethod:`MongoDB\\Collection::insertOne`
+   - :doc:`/tutorial/crud`
+   - :manual:`insert </reference/command/insert>` command reference
+     in the MongoDB manual

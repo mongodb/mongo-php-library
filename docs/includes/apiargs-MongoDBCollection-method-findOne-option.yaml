@@ -1,0 +1,56 @@
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: projection
+operation: MongoDB\\Collection::findOne
+position: 1
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: sort
+operation: MongoDB\\Collection::findOne
+position: 2
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: skip
+operation: MongoDB\\Collection::findOne
+position: 3
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: comment
+operation: MongoDB\\Collection::findOne
+position: 4
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: modifiers
+operation: MongoDB\\Collection::findOne
+position: 5
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: maxTimeMS
+operation: MongoDB\\Collection::findOne
+position: 6
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: readConcern
+operation: MongoDB\\Collection::findOne
+position: 7
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: readPreference
+pre: |
+  For use with MongoDB 3.0 and earlier.
+operation: MongoDB\\Collection::findOne
+position: 8
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: typeMap
+operation: MongoDB\\Collection::findOne
+position: 9
+...

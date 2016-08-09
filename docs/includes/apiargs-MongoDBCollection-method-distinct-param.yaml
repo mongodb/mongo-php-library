@@ -1,0 +1,22 @@
+arg_name: param
+name: $fieldName
+type: string
+description: |
+  The field for which to return distinct values.
+interface: phpmethod
+operation: MongoDB\\Collection::distinct
+optional: false
+position: 1
+---
+source:
+  file: apiargs-common-param.yaml
+  ref: $filter
+position: 2
+optional: true
+---
+source:
+  ref: $options
+  file: apiargs-common-param.yaml
+operation: MongoDB\\Collection::count
+position: 3
+...

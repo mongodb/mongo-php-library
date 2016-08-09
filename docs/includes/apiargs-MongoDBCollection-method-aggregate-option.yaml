@@ -1,0 +1,73 @@
+arg_name: option
+name: allowDiskUse
+type: boolean
+description: |
+  Enables writing to temporary files. When set to true, aggregation
+  stages can write data to the ``_tmp`` sub-directory in the dbPath
+  directory. The default is ``false``.
+interface: phpmethod
+operation: MongoDB\\Collection::aggregate
+optional: true
+position: 1
+---
+arg_name: option
+name: batchSize
+type: integer
+description: |
+  The number of documents to return per batch
+interface: phpmethod
+operation: MongoDB\\Collection::aggregate
+optional: true
+position: 2
+---
+source:
+  ref: bypassDocumentValidation
+  file: apiargs-common-option.yaml
+operation: MongoDB\\Collection::aggregate
+position: 5
+---
+source:
+  ref: maxTimeMS
+  file: apiargs-common-option.yaml
+operation: MongoDB\\Collection::aggregate
+position: 4
+---
+source:
+  ref: readConcern
+  file: apiargs-common-option.yaml
+operation: MongoDB\\Collection::selectDatabase
+replacement:
+  resource: "aggregation"
+position: 5
+---
+source:
+  ref: readPreference
+  file: apiargs-common-option.yaml
+operation: MongoDB\\Collection::selectDatabase
+replacement:
+  resource: "aggregation"
+position: 6
+---
+source:
+  ref: typeMap
+  file: apiargs-common-option.yaml
+operation: MongoDB\\Collection::selectDatabase
+position: 7
+---
+arg_name: param
+name: useCursor
+type: boolean
+description: |
+  Indicates whether the command will request that the server provide
+  results using a cursor. The default is ``true``.
+
+  For MongoDB version 2.6 or later, ``useCursor`` allows users to turn
+  off cursors if necessary to aid in mongod/mongos upgrades.
+
+  ``useCursor`` is ignored for MongoDB versions prior to 2.6 as
+  aggregation cursors are not available pre-2.6.
+interface: phpmethod
+operation: MongoDB\\Collection::aggregate
+optional: true
+position: 8  
+...

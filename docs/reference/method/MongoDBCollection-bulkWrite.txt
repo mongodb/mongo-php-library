@@ -1,0 +1,44 @@
+================================
+MongoDB\\Collection::bulkWrite()
+================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::bulkWrite($operations, $options)
+
+   Executes multiple write operations.
+
+   .. code-block:: php
+
+      function bulkWrite(array $operations, array $options = []): MongoDB\BulkWriteResult
+
+   :phpmethod:`MongoDB\\Collection::bulkWrite` has the following
+   parameters:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-bulkWrite-param.rst
+   
+   :phpmethod:`MongoDB\\Collection::bulkWrite` supports the following
+   options:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-bulkWrite-option.rst
+
+.. todo: add output and examples
+
+.. seealso::
+   
+   - :phpmethod:`deleteMany <MongoDB\\Collection::deleteMany>`
+   - :phpmethod:`deleteOne <MongoDB\\Collection::deleteOne>` 
+   - :phpmethod:`insertOne <MongoDB\\Collection::insertOne>`
+   - :phpmethod:`replaceOne <MongoDB\\Collection::replaceOne>`
+   - :phpmethod:`updateMany <MongoDB\\Collection::updateMany>`
+   - :phpmethod:`updateOne <MongoDB\\Collection::updateOne>`
+   - :doc:`/tutorial/crud`

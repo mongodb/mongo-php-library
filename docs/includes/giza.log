@@ -1,0 +1,21 @@
+WARNING:giza.content.changelog.tasks:changelog generation is not configured.
+WARNING:giza.content.inheritance.apiargs:too many field types returning one at random.
+WARNING:giza.content.inheritance.apiargs:too many field types returning one at random.
+WARNING:giza.content.inheritance.apiargs:too many field types returning one at random.
+WARNING:giza.content.inheritance.apiargs:too many field types returning one at random.
+WARNING:giza.content.inheritance.apiargs:too many field types returning one at random.
+WARNING:giza.content.inheritance.apiargs:too many field types returning one at random.
+WARNING:giza.content.sphinx:source/index.txt:66: WARNING: toctree contains reference to nonexisting document u'.. /getting-started'
+WARNING:giza.content.sphinx:source/includes/apiargs/MongoDBCollection-method-createIndex-option.rst:81: WARNING: Inline literal start-string without end-string.
+WARNING:giza.content.sphinx:source/includes/apiargs/MongoDBCollection-method-createIndex-option.rst:155: WARNING: Inline literal start-string without end-string.
+WARNING:giza.content.sphinx:source/upgrade.txt:None: WARNING: image file not readable: img/save-flowchart.png
+WARNING:giza.content.sphinx:source/upgrade.txt:119: WARNING: undefined label: /reference/class/database.md#command (if the link has no caption the label must precede a section header)
+WARNING:giza.content.sphinx:WARNING: logo file '.static/logo-mongodb.png' does not exist
+WARNING:giza.content.changelog.tasks:changelog generation is not configured.
+WARNING:giza.content.inheritance.apiargs:too many field types returning one at random.
+WARNING:giza.content.inheritance.apiargs:too many field types returning one at random.
+WARNING:giza.content.inheritance.apiargs:too many field types returning one at random.
+WARNING:giza.content.inheritance.apiargs:too many field types returning one at random.
+WARNING:giza.content.inheritance.apiargs:too many field types returning one at random.
+WARNING:giza.content.inheritance.apiargs:too many field types returning one at random.
+WARNING:giza.content.sphinx:WARNING: logo file '.static/logo-mongodb.png' does not exist

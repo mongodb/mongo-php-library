@@ -1,0 +1,39 @@
+============================
+MongoDB\\Collection::count()
+============================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::count($filter, $options)
+
+   Counts the number of documents that match filter criteria.
+
+   .. code-block:: php
+
+      function count($filter = [], array $options = []): integer
+
+   :phpmethod:`MongoDB\\Collection::count` has the following
+   parameters:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-count-param.rst
+   
+   :phpmethod:`MongoDB\\Collection::count` supports the following
+   options:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-count-option.rst
+
+.. todo: add output and examples
+
+.. seealso::
+   
+   - :manual:`count command reference </reference/command/count>`
+     in the MongoDB manual.

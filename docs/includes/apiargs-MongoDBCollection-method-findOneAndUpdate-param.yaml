@@ -1,0 +1,27 @@
+source:
+  ref: $filter
+  file: apiargs-common-param.yaml
+operation: MongoDB\\Collection::findOneAndUpdate
+replacement:
+  verb: "query"
+optional: false
+position: 1
+---
+arg_name: param
+name: $update
+type: array|object
+description: |
+  Specifies the field and value combinations to update and any
+  relevant update operators. ``$update`` uses MongoDB's
+  :method:`update operators </reference/operator/update>`.
+interface: phpmethod
+operation: MongoDB\\Collection::findOneAndUpdate
+optional: false
+position: 2
+---
+source:
+  ref: $options
+  file: apiargs-common-param.yaml
+operation: MongoDB\\Collection::findOneAndUpdate
+position: 3
+...

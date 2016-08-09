@@ -1,0 +1,83 @@
+=========================
+MongoDB\\Collection Class
+=========================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpclass:: MongoDB\\Collection
+
+   Provides methods for common operations on collections and documents,
+   including CRUD operations and index management.
+   
+   You can construct collections directly using the PHP extension's
+   ``Manager`` class, select a collection from the |php-library|'s
+   :phpclass:`MongoDB\\Client` or :phpclass:`MongoDB\\Database`
+   classes, or create a collection from an existing collection using the
+   :phpmethod:`withOptions <MongoDB\\Collection::withOptions>` clone method.
+    
+   :phpclass:`MongoDB\\Collection` supports the :php:`readConcern
+   <mongodb-driver-readconcern>`, :php:`readPreference
+   <mongodb-driver-readpreference>`, :php:`typeMap
+   <mongodb.persistence.php#mongodb.persistence.typemaps>`, and
+   :php:`writeConcern <mongodb-driver-writeconcern>` options.
+   If you omit an option, the collection inherits the value from the
+   Manager constructor argument or the Database object used to select
+   the collection.
+
+   Operations within the ``Collection`` class
+   inherit the Collection's options.
+   
+   The :phpmethod:`MongoDB\\Collection::aggregate` method (when not
+   using a cursor), :phpmethod:`MongoDB\\Collection::distinct`, and
+   :manual:`findAndModify </reference/command/findAndModify>` helpers do not
+   support a ``typeMap`` option due to a driver limitation.
+   :phpmethod:`MongoDB\\Collection::aggregate`,
+   :phpmethod:`MongoDB\\Collection::distinct`,
+   :phpmethod:`MongoDB\\Collection::findOneAndReplace`,
+   :phpmethod:`MongoDB\\Collection::findOneAndUpdate`, and
+   :phpmethod:`MongoDB\\Collection::findOneAndDelete`
+   return BSON documents as `stdClass` objects and arrays as arrays.
+
+
+Methods
+-------
+
+.. toctree::
+   :titlesonly:
+
+   /reference/method/MongoDBCollection__construct
+   /reference/method/MongoDBCollection-aggregate
+   /reference/method/MongoDBCollection-bulkWrite
+   /reference/method/MongoDBCollection-count
+   /reference/method/MongoDBCollection-createIndex
+   /reference/method/MongoDBCollection-createIndexes
+   /reference/method/MongoDBCollection-deleteMany
+   /reference/method/MongoDBCollection-deleteOne
+   /reference/method/MongoDBCollection-distinct
+   /reference/method/MongoDBCollection-drop
+   /reference/method/MongoDBCollection-dropIndex
+   /reference/method/MongoDBCollection-dropIndexes
+   /reference/method/MongoDBCollection-find
+   /reference/method/MongoDBCollection-findOne
+   /reference/method/MongoDBCollection-findOneAndDelete
+   /reference/method/MongoDBCollection-findOneAndReplace
+   /reference/method/MongoDBCollection-findOneAndUpdate
+   /reference/method/MongoDBCollection-getCollectionName
+   /reference/method/MongoDBCollection-getDatabaseName
+   /reference/method/MongoDBCollection-getNamespace
+   /reference/method/MongoDBCollection-insertMany
+   /reference/method/MongoDBCollection-insertOne
+   /reference/method/MongoDBCollection-listIndexes
+   /reference/method/MongoDBCollection-replaceOne
+   /reference/method/MongoDBCollection-updateMany
+   /reference/method/MongoDBCollection-updateOne
+   /reference/method/MongoDBCollection-withOptions

@@ -1,0 +1,14 @@
+source:
+  ref: $filter
+  file: apiargs-common-param.yaml
+operation: MongoDB\\Collection::deleteMany
+replacement:
+  verb: "delete"
+position: 1
+---
+source:
+  ref: $options
+  file: apiargs-common-param.yaml
+operation: MongoDB\\Collection::deleteMany
+position: 2
+...

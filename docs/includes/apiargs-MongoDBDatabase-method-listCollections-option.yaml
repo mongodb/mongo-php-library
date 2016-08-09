@@ -1,0 +1,24 @@
+source:
+  file: apiargs-common-option.yaml
+  ref: readConcern
+operation: MongoDB\\Database::listCollections
+position: 1
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: readPreference
+operation: MongoDB\\Database::listCollections
+position: 2
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: typeMap
+operation: MongoDB\\Database::listCollections
+position: 3
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: writeConcern
+operation: MongoDB\\Database::listCollections
+position: 4
+...

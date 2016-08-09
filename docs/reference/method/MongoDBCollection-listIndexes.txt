@@ -1,0 +1,112 @@
+==================================
+MongoDB\\Collection::listIndexes()
+==================================
+
+.. default-domain:: mongodb
+
+.. contents::
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::listIndexes($options)
+
+   Returns information for all indexes for the collection.
+   
+   .. code-block:: php
+
+      function listIndexes(array $options = []): MongoDB\Model\IndexInfoIterator
+
+   :phpmethod:`MongoDB\\Collection::listIndexes` supports the
+   following parameter:
+   
+   .. include:: /includes/apiargs/MongoDBCollection-method-listIndexes-param.rst
+   
+   The ``$options`` parameter supports the following options:
+   
+   .. include:: /includes/apiargs/MongoDBCollection-method-listIndexes-option.rst
+
+Output
+------
+
+Elements in the returned iterator are ``MongoDB\Model\IndexInfo``
+objects.
+
+                
+Example
+-------
+
+The following lists information about the indexes on the collection
+assigned to the ``$collection`` variable
+
+.. code-block:: php
+
+   <?php
+   
+   $database = new MongoDB\Client;
+
+   $collection = $database->selectCollection('example','restaurants');
+
+   $indexes = $collection->listIndexes();
+
+   foreach ($indexes as $index) {
+      var_dump($index);
+   }
+
+The output would then resemble::
+
+   object(MongoDB\Model\IndexInfo)#8 (4) {
+     ["v"]=>
+     int(1)
+     ["key"]=>
+     array(1) {
+       ["_id"]=>
+       int(1)
+     }
+     ["name"]=>
+     string(4) "_id_"
+     ["ns"]=>
+     string(19) "example.restaurants"
+   }
+   object(MongoDB\Model\IndexInfo)#12 (4) {
+     ["v"]=>
+     int(1)
+     ["key"]=>
+     array(1) {
+       ["cuisine"]=>
+       float(-1)
+     }
+     ["name"]=>
+     string(10) "cuisine_-1"
+     ["ns"]=>
+     string(19) "example.restaurants"
+   }
+   object(MongoDB\Model\IndexInfo)#8 (4) {
+     ["v"]=>
+     int(1)
+     ["key"]=>
+     array(1) {
+       ["borough"]=>
+       float(1)
+     }
+     ["name"]=>
+     string(9) "borough_1"
+     ["ns"]=>
+     string(19) "example.restaurants"
+   }
+
+
+.. seealso::
+
+   - :doc:`/tutorial/indexes`
+
+   - :manual:`listIndexes command </reference/command/listIndexes>` in the MongoDB manual.
+   
+   - :manual:`Index documentation </core/indexes>` in the MongoDB manual.
+   
+   - `MongoDB Specification: Enumerating Collections
+     <https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst>`_

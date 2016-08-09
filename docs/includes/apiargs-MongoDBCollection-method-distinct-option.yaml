@@ -1,0 +1,21 @@
+source:
+  ref: maxTimeMS
+  file: apiargs-common-option.yaml
+operation: MongoDB\\Collection::distinct
+position: 1
+---
+source:
+  ref: readConcern
+  file: apiargs-common-option.yaml
+operation: MongoDB\\Collection::distinct
+replacement:
+  resource: "distinct"
+position: 2
+---
+source:
+  ref: readPreference
+  file: apiargs-common-option.yaml
+replacement:
+  resource: "distinct"
+position: 3
+...

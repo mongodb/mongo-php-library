@@ -1,0 +1,109 @@
+=================================
+MongoDB\\Collection::updateMany()
+=================================
+
+.. default-domain:: mongodb
+                    
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+              
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::updateMany
+   
+   Updates all documents that match the filter criteria.
+   
+   .. code-block:: php
+                   
+      function updateMany($filter, $update, array $options = []): MongoDB\UpdateResult
+
+   ``updateMany()`` supports the following parameters:
+   
+   .. include:: /includes/apiargs/MongoDBCollection-method-updateMany-param.rst
+
+   The ``$options`` parameter supports the following options:
+                
+   .. include:: /includes/apiargs/MongoDBCollection-method-updateMany-option.rst
+                
+Output
+------
+
+Returns a ``MongoDB\UpdateResult`` object.
+
+Examples
+--------
+
+The following operation adds a an ``active`` field to all of the documents
+with ``borough: Queens`` with value ``true``:
+
+.. code-block:: php
+                
+   $database = new MongoDB\Client;
+
+   $collection = $database->selectCollection('example','restaurants');
+
+   $update = $collection->updateMany(
+          [   'borough' => 'Queens'],
+          [
+              '$set' => [
+                   'active' => 'True'
+              ]
+          ]
+      );
+
+   
+
+   var_dump($update);
+
+The output would then resemble::
+  
+   object(MongoDB\UpdateResult)#13 (2) {
+     ["writeResult":"MongoDB\UpdateResult":private]=>
+     object(MongoDB\Driver\WriteResult)#12 (9) {
+       ["nInserted"]=>
+       int(0)
+       ["nMatched"]=>
+       int(5656)
+       ["nModified"]=>
+       int(5656)
+       ["nRemoved"]=>
+       int(0)
+       ["nUpserted"]=>
+       int(0)
+       ["upsertedIds"]=>
+       array(0) {
+       }
+       ["writeErrors"]=>
+       array(0) {
+       }
+       ["writeConcernError"]=>
+       NULL
+       ["writeConcern"]=>
+       array(4) {
+         ["w"]=>
+         NULL
+         ["wmajority"]=>
+         bool(false)
+         ["wtimeout"]=>
+         int(0)
+         ["journal"]=>
+         NULL
+       }
+     }
+     ["isAcknowledged":"MongoDB\UpdateResult":private]=>
+     bool(true)
+   }
+   
+.. seealso::
+   
+   - :phpmethod:`MongoDB\\Collection::bulkWrite`
+   - :phpmethod:`MongoDB\\Collection::replaceOne`
+   - :phpmethod:`MongoDB\\Collection::updateOne`
+   - :doc:`/tutorial/crud`
+   - :manual:`update </reference/command/update>` command reference
+     in the MongoDB manual.

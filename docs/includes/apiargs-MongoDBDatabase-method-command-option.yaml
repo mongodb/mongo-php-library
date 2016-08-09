@@ -1,0 +1,12 @@
+source:
+  file: apiargs-common-option.yaml
+  ref: readPreference
+operation: MongoDB\\Database::command
+position: 1
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: typeMap
+operation: MongoDB\\Database::command
+position: 2
+...

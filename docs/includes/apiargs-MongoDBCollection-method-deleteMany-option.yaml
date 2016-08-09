@@ -1,0 +1,8 @@
+source:
+  ref: writeConcern
+  file: apiargs-common-option.yaml
+operation: MongoDB\\Collection::deleteMany
+replacement:
+  resource: "delete"
+position: 1
+...

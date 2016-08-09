@@ -1,0 +1,89 @@
+=======================================
+MongoDB\\Collection::findOneAndDelete()
+=======================================
+
+.. default-domain:: mongodb
+                    
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+              
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::findOneAndDelete
+   
+   Finds a single document and deletes it.
+   
+   .. code-block:: php
+                   
+      function findOneAndDelete($filter = [], array $options = []): object|null
+
+   ``findOne()`` supports the following parameters:
+   
+   .. include:: /includes/apiargs/MongoDBCollection-method-findOneAndDelete-param.rst
+
+   The ``$options`` parameter supports the following options:
+                
+   .. include:: /includes/apiargs/MongoDBCollection-method-findOneAndDelete-option.rst
+
+   .. include:: /includes/extracts/bson-deserialization-findOneAndDelete.rst
+                 
+Output
+------
+
+Returns the document that was deleted. If no document matched the
+filter, the returned document is ``null``.
+
+Examples
+--------
+
+The following example deletes the document with ``restaurant_id`` of
+``40375376`` from the ``restaurants`` collection in the ``example``
+database:
+
+.. code-block:: php
+   
+   <?php
+   
+   $database = new MongoDB\Client;
+
+   $collection = $database->selectCollection('example','restaurants');
+
+   $deletedRestaurant = $collection->findOneAndDelete(
+       [ 'restaurant_id' => '40375376' ],
+       [ 'projection' => [ 'name' => 1, 
+                           'borough' => 1, 
+                           'restaurant_id' => 1
+                         ] 
+       ]
+   );
+
+The output would resemble:
+
+.. code-block:: none
+                
+   object(stdClass)#14 (4) {
+     ["_id"]=>
+     object(MongoDB\BSON\ObjectID)#11 (1) {
+       ["oid"]=>
+       string(24) "576023c6b02fa9281da3fad9"
+     }
+     ["borough"]=>
+     string(9) "Manhattan"
+     ["name"]=>
+     string(15) "Agra Restaurant"
+     ["restaurant_id"]=>
+     string(8) "40375376"
+   }   
+  
+
+.. seealso::
+   
+   - :phpmethod:`MongoDB\\Collection::findOneAndUpdate`
+   - :phpmethod:`MongoDB\\Collection::findOneAndReplace`
+   - :manual:`findAndModify </reference/command/findAndModify>`
+     command reference in the MongoDB manual

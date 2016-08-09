@@ -1,0 +1,18 @@
+source:
+  file: apiargs-MongoDBCollection-method-construct-param.yaml
+  ref: $manager
+operation: MongoDB\\Database::__construct
+position: 1
+---
+source:
+  ref: $databaseName
+  file: apiargs-common-param.yaml
+operation: MongoDB\\Database::__construct
+position: 2
+---
+source:
+  ref: $options
+  file: apiargs-common-param.yaml
+operation: MongoDB\\Database::__construct
+position: 2
+...

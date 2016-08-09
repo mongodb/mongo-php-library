@@ -1,0 +1,6 @@
+source:
+  file: apiargs-common-option.yaml
+  ref: typeMap
+operation: MongoDB\\Collection::drop
+position: 1
+...

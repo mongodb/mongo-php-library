@@ -1,0 +1,76 @@
+================================
+MongoDB\\Collection::dropIndex()
+================================
+
+.. default-domain:: mongodb
+                    
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::dropIndex($indexName, $options)
+   
+   Drops an index from the collection.
+   
+   .. code-block:: php
+      
+      function dropIndex($indexName, array $options = []): array|object
+
+   ``dropIndex()`` supports the following parameters:
+   
+   .. include:: /includes/apiargs/MongoDBCollection-method-dropIndex-param.rst
+   
+   The ``$options`` parameter supports the following option:
+                
+   .. include:: /includes/apiargs/MongoDBCollection-method-dropIndex-option.rst
+
+Output
+------
+
+Returns the command result document as an array or object, depending
+on the ``typeMap`` specification.
+
+Example
+-------
+
+The following drops an indexes with name ``borough_1`` from the
+``restaurants`` collection in the ``example`` database:
+
+.. code-block:: php
+
+   <?php
+
+   $database = new MongoDB\Client;
+
+   $collection = $database->selectCollection('example','restaurants');
+
+   $index = $collection->dropIndex( "borough_1" );
+
+   
+   var_dump($index);
+
+                
+The output would resemble the following::
+  
+   object(MongoDB\Model\BSONDocument)#9 (1) {
+     ["storage":"ArrayObject":private]=>
+     array(2) {
+       ["nIndexesWas"]=>
+       int(2)
+       ["ok"]=>
+       float(1)
+     }
+   }
+
+.. seealso::
+   
+   - :phpmethod:`MongoDB\\Collection::dropIndexes`
+   - :doc:`/tutorial/indexes`
+   - :manual:`dropIndexes </reference/command/dropIndexes>` command
+     references in the MongoDB manual.
+   - :manual:`Index documentation </indexes>`

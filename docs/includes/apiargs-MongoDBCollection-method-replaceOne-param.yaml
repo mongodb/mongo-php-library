@@ -1,0 +1,25 @@
+source:
+  ref: $filter
+  file: apiargs-common-param.yaml
+operation: MongoDB\\Collection::replaceOne
+replacement:
+  verb: "query"
+optional: false
+position: 1
+---
+arg_name: param
+name: $replacement
+type: array
+description: |
+  The document to replace.
+interface: phpmethod
+operation: MongoDB\\Collection::replaceOne
+optional: false
+position: 2
+---
+source:
+  ref: $options
+  file: apiargs-common-param.yaml
+operation: MongoDB\\Collection::replaceOne
+position: 3
+...

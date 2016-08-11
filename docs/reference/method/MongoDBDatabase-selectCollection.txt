@@ -1,0 +1,140 @@
+=====================================
+MongoDB\\Database::selectCollection()
+=====================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Database::selectCollection
+
+   Selects a collection within the database. The collection inherits
+   options such as read preference and type map from the Database object
+   unless otherwise specified in the ``$options`` parameter.
+   
+   .. code-block:: php
+   
+      function selectCollection($collectionName, array $options = []): MongoDB\Collection
+   
+   :phpmethod:`MongoDB\\Database::selectCollection` has the following
+   parameters:
+   
+   .. include:: /includes/apiargs/MongoDBDatabase-method-selectCollection-param.rst
+   
+   The ``$options`` parameter accepts the following options:
+   
+   .. include:: /includes/apiargs/MongoDBDatabase-method-selectCollection-option.rst
+
+Output
+------
+
+Returns a :phpclass:`MongoDB\\Collection` object.
+
+Example
+-------
+
+The following example selects the ``users`` collection in the ``demo``
+database with a custom read preference:
+
+.. code-block:: php
+
+   $db = (new MongoDB\Client)->demo;
+
+   $users = $db->selectCollection(
+      'users',
+      [ 
+         'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),
+      ]
+   );
+   
+   
+   var_dump($users);
+
+The output would then resemble::
+
+   object(MongoDB\Collection)#8 (7) {
+     ["collectionName"]=>
+     string(5) "users"
+     ["databaseName"]=>
+     string(4) "demo"
+     ["manager"]=>
+     object(MongoDB\Driver\Manager)#2 (2) {
+       ["uri"]=>
+       string(25) "mongodb://localhost:27017"
+       ["cluster"]=>
+       array(1) {
+         [0]=>
+         array(11) {
+           ["host"]=>
+           string(9) "localhost"
+           ["port"]=>
+           int(27017)
+           ["type"]=>
+           int(0)
+           ["is_primary"]=>
+           bool(false)
+           ["is_secondary"]=>
+           bool(false)
+           ["is_arbiter"]=>
+           bool(false)
+           ["is_hidden"]=>
+           bool(false)
+           ["is_passive"]=>
+           bool(false)
+           ["tags"]=>
+           array(0) {
+           }
+           ["last_is_master"]=>
+           array(0) {
+           }
+           ["round_trip_time"]=>
+           int(-1)
+         }
+       }
+     }
+     ["readConcern"]=>
+     object(MongoDB\Driver\ReadConcern)#5 (1) {
+       ["level"]=>
+       NULL
+     }
+     ["readPreference"]=>
+     object(MongoDB\Driver\ReadPreference)#3 (2) {
+       ["mode"]=>
+       int(2)
+       ["tags"]=>
+       array(0) {
+       }
+     }
+     ["typeMap"]=>
+     array(3) {
+       ["array"]=>
+       string(23) "MongoDB\Model\BSONArray"
+       ["document"]=>
+       string(26) "MongoDB\Model\BSONDocument"
+       ["root"]=>
+       string(26) "MongoDB\Model\BSONDocument"
+     }
+     ["writeConcern"]=>
+     object(MongoDB\Driver\WriteConcern)#7 (4) {
+       ["w"]=>
+       NULL
+       ["wmajority"]=>
+       bool(false)
+       ["wtimeout"]=>
+       int(0)
+       ["journal"]=>
+       NULL
+     }
+   }   
+
+.. seealso::
+
+   - :phpmethod:`MongoDB\\Collection::__construct`
+   - :phpmethod:`MongoDB\\Database::__get`

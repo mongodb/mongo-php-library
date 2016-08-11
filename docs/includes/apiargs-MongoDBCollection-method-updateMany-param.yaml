@@ -1,0 +1,22 @@
+source:
+  ref: $filter
+  file: apiargs-common-param.yaml
+operation: MongoDB\\Collection::updateMany
+replacement:
+  verb: "query"
+optional: false
+position: 1
+---
+source:
+  file: apiargs-MongoDBCollection-method-findOneAndUpdate-param.yaml
+  ref: $update
+operation: MongoDB\\Collection::updateMany
+optional: false
+position: 2
+---
+source:
+  ref: $options
+  file: apiargs-common-param.yaml
+operation: MongoDB\\Collection::updateMany
+position: 3
+...

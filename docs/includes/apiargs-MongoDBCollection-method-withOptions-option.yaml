@@ -1,0 +1,32 @@
+source:
+  file: apiargs-common-option.yaml
+  ref: readConcern
+operation: MongoDB\\Collection::withOptions
+description: |
+  The default read concern to use for collection operations. Defaults
+  to the original Collection's specified read concern.
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: readPreference
+operation: MongoDB\\Collection::withOptions
+description: |
+  The default read preference to use for collection operations.
+  Defaults to the original Collection's read preference.
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: typeMap
+operation: MongoDB\\Collection::withOptions
+description: |
+  Default type map for cursors and BSON documents. Defaults to the
+  original Collection's type map value.
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: writeConcern
+operation: MongoDB\\Collection::withOptions
+description: |
+  The default write concern to use for collection operations. Defaults
+  to the original Collection's specified write concern.
+...

@@ -1,0 +1,71 @@
+=================================
+MongoDB\\Client::selectDatabase()
+=================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Client::selectDatabase($databaseName, $options)
+
+   Selects a database on the :program:`mongod` instance to which your
+   application is connected.
+   
+   .. code-block:: php
+
+      function selectDatabase($databaseName array $options = []): MongoDB\Database
+
+   :phpmethod:`MongoDB\\Client::selectDatabase` has the following parameters:
+
+   .. include:: /includes/apiargs/MongoDBClient-method-selectDatabase-param.rst
+
+   The following table describes the options that
+   :phpmethod:`MongoDB\\Client::selectDatabase` can accept.
+
+   .. include:: /includes/apiargs/MongoDBClient-method-selectDatabase-option.rst
+
+Output
+------
+
+Returns a :phpclass:`MongoDB\\Database` object.
+
+Example
+-------
+
+The following example selects the ``demo`` database:
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client;
+
+   $db = $client->selectDatabase('demo');
+
+The following examples selects the ``demo`` database with a custom read
+preference:
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client;
+
+   $db = $client->selectDatabase(
+       'demo',
+       [
+           'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),
+       ]
+   );
+
+.. seealso::
+
+   - :phpmethod:`Collection::__construct`
+   - :phpmethod:`MongoDB\\Client::__get`

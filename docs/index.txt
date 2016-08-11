@@ -1,0 +1,74 @@
+===================
+MongoDB PHP Library
+===================
+
+.. default-domain:: mongodb
+
+The |php-library| provides a high-level abstraction
+around the lower-level `PHP Driver <https://php.net/mongodb>`_, also
+known as the ``mongodb`` extension.
+
+While the ``mongodb`` extension provides a limited API for executing
+commands, queries, and write operations, the |php-library|
+implements an API similar to that of the `legacy PHP driver
+<http://php.net/manual/en/book.mongo.php>`_. The library contains
+abstractions for client, database, and collection objects, and provides
+methods for CRUD operations and common commands such as index and
+collection management.
+
+If you are developing a PHP application with MongoDB, you should consider
+using this library, or another high-level abstraction, instead of the
+extension alone.
+
+For additional information about the MongoDB PHP Library and the
+``mongodb`` extension, see the `Architecture Overview
+<http://php.net/manual/en/mongodb.overview.php>`_ article in the
+extension documentation. `Derick Rethans <http://derickrethans.nl/>`_
+has also written a series of blog posts entitled *New MongoDB Drivers
+for PHP and HHVM*:
+
+- `Part One: History <https://derickrethans.nl/new-drivers.html>`_
+
+- `Part Two: Architecture
+  <https://derickrethans.nl/new-drivers-part2.html>`_
+
+- `Part Three: Cursor Behaviour
+  <https://derickrethans.nl/new-drivers-part3-cursor.html>`_
+
+API Reference
+-------------
+
+Generated API reference documentation for the library is available at:
+`http://mongodb.github.io/mongo-php-library/api
+<http://mongodb.github.io/mongo-php-library/api>`_
+
+New to MongoDB?
+---------------
+
+If you are a new MongoDB user, these links should help you become more familiar
+with MongoDB and introduce some of the concepts and terms you will encounter in
+this documentation:
+
+- `Introduction to CRUD operations in MongoDB
+  <http://docs.mongodb.org/manual/core/crud-introduction/>`_
+
+- `What is a MongoDB document?
+  <http://docs.mongodb.org/manual/core/document/>`_
+
+- `MongoDB's *dot notation* for accessing document properties
+  <http://docs.mongodb.org/manual/core/document/#dot-notation>`_
+
+- `ObjectId: MongoDB's document identifier
+  <http://docs.mongodb.org/manual/reference/object-id/>`_
+
+.. class:: hidden
+
+   .. toctree::
+      :titlesonly:
+      
+      Installation </tutorial/install-php-library>
+      /tutorial
+      /upgrade
+      /reference
+
+.. /getting-started

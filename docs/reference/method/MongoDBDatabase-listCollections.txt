@@ -1,0 +1,85 @@
+====================================
+MongoDB\\Database::listCollections()
+====================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Database::listCollections
+
+   Returns information for all collections in this database.
+
+   .. code-block:: php
+   
+      function listCollections(array $options=[]): MongoDB\Model\CollectionInfoIterator
+
+   :phpmethod:`MongoDB\\Database::listCollections` has the following
+   parameters:
+   
+   .. include:: /includes/apiargs/MongoDBDatabase-method-listCollections-param.rst
+   
+   The ``$options`` parameter accepts the following options:
+   
+   .. include:: /includes/apiargs/MongoDBDatabase-method-listCollections-option.rst
+
+Output
+------
+
+Returns information for all collections in the database. The elements
+in the returned iterator are ``MongoDB\Model\CollectionInfo`` objects.
+
+Example
+-------
+
+The following example lists all of the collections in the ``example``
+database:
+
+.. code-block:: php
+
+   <?php
+   
+   $database = (new MongoDB\Client)->example;
+
+   foreach ($database->listCollections() as $collectionInfo) {
+       var_dump($collectionInfo);
+   }
+
+The output would then resemble::
+
+   object(MongoDB\Model\CollectionInfo)#3 (2) {
+     ["name"]=>
+     string(11) "restaurants"
+     ["options"]=>
+     array(0) {
+     }
+   }
+   object(MongoDB\Model\CollectionInfo)#11 (2) {
+     ["name"]=>
+     string(5) "users"
+     ["options"]=>
+     array(0) {
+     }
+   }
+   object(MongoDB\Model\CollectionInfo)#3 (2) {
+     ["name"]=>
+     string(6) "restos"
+     ["options"]=>
+     array(0) {
+     }
+   }
+   
+.. seealso::
+
+   - :manual:`listCollections </reference/command/listCollections`
+     command reference in the MongoDB manual.
+   
+   - MongoDB Specification `Enumerating Collections 
+     <https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst>`_

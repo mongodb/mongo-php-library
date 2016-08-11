@@ -1,0 +1,68 @@
+=========================
+MongoDB\\Database::drop()
+=========================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Database::drop
+
+   Drops the database.
+   
+   .. code-block:: php
+   
+      function dropCollection($collectionName, array $options = []): array|object
+   
+   :phpmethod:`MongoDB\\Database::drop` has the following
+   parameters:
+   
+   .. include:: /includes/apiargs/MongoDBDatabase-method-drop-param.rst
+   
+   The ``$options`` parameter accepts the following options:
+   
+   .. include:: /includes/apiargs/MongoDBDatabase-method-drop-option.rst
+
+Output
+------
+
+Returns the command result document as an array.
+
+Example
+-------
+
+The following example drops the ``demo`` database:
+
+.. code-block:: php
+
+   $db = (new MongoDB\Client)->demo;
+
+   $result = $db->drop();
+   
+   
+   var_dump($result);
+
+The output would then resemble::
+
+   object(MongoDB\Model\BSONDocument)#8 (1) {
+     ["storage":"ArrayObject":private]=>
+     array(2) {
+       ["dropped"]=>
+       string(4) "demo"
+       ["ok"]=>
+       float(1)
+     }
+   }
+
+.. seealso::
+
+   - :phpmethod:`MongoDB\\Client::dropDatabase`
+   - :manual:`dropDatabase </reference/command/dropDatabase>` command
+     reference in the MongoDB manual

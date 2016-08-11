@@ -1,0 +1,46 @@
+arg_name: param
+name: $databaseName
+type: string
+description: |
+  The name of the database{{select}}.
+interface: phpmethod
+operation: selectCollection
+optional: false
+replacement:
+  select: " to select"
+position: 1
+---
+arg_name: param
+name: $collectionName
+type: string
+description: |
+  The name of the collection{{select}}.
+interface: phpmethod
+operation: selectCollection
+optional: false
+replacement:
+  select: " to select"
+position: 2
+---
+arg_name: param
+name: $options
+type: array
+description: |
+  An array specifying the desired options.
+interface: phpmethod
+operation: selectCollection
+optional: true
+position: 3
+---
+arg_name: param
+name: $filter
+type: array|object
+description: |
+  The filter criteria that specifies the documents to {{verb}}.
+interface: phpmethod
+operation: count
+optional: false
+position: 4
+replacement:
+  verb: "count"
+...

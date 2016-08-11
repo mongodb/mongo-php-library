@@ -1,0 +1,49 @@
+==================================
+MongoDB\\Collection::withOptions()
+==================================
+
+.. default-domain:: mongodb
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::withOptions($options)
+
+   Returns a clone of the collection, but with different options.
+   
+   .. code-block:: php
+
+      function withOptions(array $options = []): MongoDB\Collection
+
+   :phpmethod:`MongoDB\\Collection::withOptions` supports the
+   following parameter:
+   
+   .. include:: /includes/apiargs/MongoDBCollection-method-withOptions-param.rst
+   
+   The ``$options`` parameter supports the following options:
+   
+   .. include:: /includes/apiargs/MongoDBCollection-method-withOptions-option.rst
+
+Example
+-------
+
+The following example creates a new collection based on the
+``restaurants`` collection in the ``example`` database with a custom
+read preference:
+
+.. code-block:: php
+
+   <?php
+   
+   $database = new MongoDB\Client;
+
+   $sourceCollection = $database->selectCollection('example','restaurants');
+
+   $newCollection = $sourceCollection->withOptions([ 
+   	'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),
+   ]);
+
+
+.. seealso::
+
+   - :phpmethod:`MongoDB\\Collection::__construct`

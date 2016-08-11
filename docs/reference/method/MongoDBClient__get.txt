@@ -1,0 +1,63 @@
+========================
+MongoDB\\Client::__get()
+========================
+
+.. default-domain:: mongodb
+
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Client::__get($databaseName)
+
+   Select a MongoDB database.
+
+   .. code-block:: php
+
+      function __get($databaseName): MongoDB\Database
+
+   :phpmethod:`MongoDB\\Client::__get` has the following parameters:
+
+   .. include:: /includes/apiargs/MongoDBClient-method-get-param.rst
+
+Behavior
+--------
+
+The selected database inherits options such as read preference and
+type mapping from the :phpclass:`Client <MongoDB\\Client>` object.
+If you wish to override any options, use the 
+:phpmethod:`MongoDB\\Client::selectDatabase` method.
+
+.. note::
+   
+   To select databases whose names contain special characters, such as
+   ``-``, use complex syntax, as in ``$client->{'that-database'}``.
+   
+   Alternatively, :phpmethod:`MongoDB\\Client::selectDatabase` supports
+   selecting databases whose names contain special characters.
+
+Examples
+--------
+
+The following example selects the ``demo`` and ``another-app``
+databases:
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client;
+
+   $demo = $client->demo;
+   $anotherApp = $client->{'another-app'};
+
+.. seealso::
+
+   - :phpmethod:`MongoDB\\Client::selectDatabase`
+   - :php:`Property Overloading <oop5.overloading>` in the PHP Manual.

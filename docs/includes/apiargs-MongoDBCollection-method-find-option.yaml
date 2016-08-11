@@ -1,0 +1,167 @@
+name: sort
+type: array|object
+optional: true
+description: |
+   The sort specification for the ordering of the results.
+arg_name: field
+operation: MongoDB\\Collection::find
+interface: phpmethod
+position: 2
+---
+name: projection
+type: array|object
+optional: true
+description: |
+   The :ref:`projection specification <projections>` to determine
+   which fields to include in the returned documents. See
+   :manual:`Project Fields to Return from Query
+   </tutorial/project-fields-from-query-results>` in the MongoDB
+   manual.   
+arg_name: field
+operation: MongoDB\\Collection::find
+interface: phpmethod
+position: 1
+---
+name: skip
+type: integer
+optional: true
+description: |
+   Number of documents to skip. Defaults to 0.
+arg_name: field
+operation: MongoDB\\Collection::find
+interface: phpmethod
+position: 3
+---
+name: limit
+type: integer
+optional: true
+description: |
+   The maximum number of documents to return. If unspecified,
+   then defaults to no limit. A limit of 0 is equivalent to setting no
+   limit.
+arg_name: field
+operation: MongoDB\\Collection::find
+interface: phpmethod
+position: 4
+---
+name: batchSize
+type: integer
+optional: true
+description: |
+   The number of documents to return in the first batch.
+   Defaults to 101. A batchSize of 0 means that the cursor will be
+   established, but no documents will be returned in the first batch.
+
+   Unlike the previous wire protocol version, a batchSize of 1 for
+   the :dbcommand:`find` command does not close the cursor.
+arg_name: field
+operation: MongoDB\\Collection::find
+interface: phpmethod
+position: 5
+---
+name: comment
+type: string
+optional: true
+description: |
+   A comment to attach to the query to help interpret and trace query
+   :dbcommand:`profile` data.
+arg_name: field
+operation: MongoDB\\Collection::find
+interface: phpmethod
+position: 6
+---
+arg_name: option
+name: cursorType
+type: integer
+description: |
+  Indicates the type of cursor to use. The cursor types are
+  ``MongoDB\Operation\Find`` class constants. 
+  
+  Must be either
+  ``NON_TAILABLE``, ``TAILABLE``, or ``TAILABLE_AWAIT``. The default is
+  ``NON_TAILABLE``.
+interface: phpmethod
+operation: MongoDB\\Collection::find
+optional: true
+position: 7
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: maxTimeMS
+operation: MongoDB\\Collection::find
+position: 8
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: readConcern
+operation: MongoDB\\Collection::find
+position: 9
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: readPreference
+pre: |
+  For use with MongoDB 3.0 and earlier.
+operation: MongoDB\\Collection::find
+position: 10
+---
+name: oplogReplay
+type: boolean
+optional: true
+description: |
+  Internal use for replica sets. To use oplogReplay, you must include
+  the following condition in the filter:
+
+  .. code-block:: javascript
+
+     { ts: { $gte: <timestamp> } }
+     
+  The :php:`MongoDB\\BSON\\Timestamp <class.mongodb-bson-timestamp>`
+  class reference describes how to represent MongoDB's BSON
+  timestamp type with PHP.
+arg_name: field
+operation: MongoDB\\Collection::find
+interface: phpmethod
+position: 11
+---
+name: noCursorTimeout
+type: boolean
+optional: true
+description: |
+   Prevents the server from timing out idle cursors after an inactivity
+   period (10 minutes).
+arg_name: field
+operation: MongoDB\\Collection::find
+interface: phpmethod
+position: 12
+---
+name: allowPartialResults
+type: boolean
+optional: true
+description: |
+   For queries against a sharded collection, returns partial results from
+   the :program:`mongos` if some shards are unavailable instead of
+   throwing an error.
+arg_name: field
+operation: MongoDB\\Collection::find
+interface: phpmethod
+position: 13
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: typeMap
+operation: MongoDB\\Collection::find
+position: 14
+---
+arg_name: option
+name: modifiers
+type: array
+description: |
+  Meta-operators that modify the output or behavior of a query.
+  :manual:`Cursor Methods </reference/method/js-cursor`> describes the
+  query modification methods available in MongoDB.
+interface: phpmethod
+operation: MongoDB\\Collection::find
+optional: true
+position: 15
+...

@@ -1,0 +1,16 @@
+arg_name: param
+name: $documents
+type: array
+description: |
+  The documents to insert into the collection.
+interface: phpmethod
+operation: MongoDB\\Collection::insertMany
+optional: false
+position: 1
+---
+source:
+  file: apiargs-common-param.yaml
+  ref: $options
+operation: MongoDB\\Collection::insertMany
+position: 2
+...

@@ -1,0 +1,76 @@
+===========================
+MongoDB\\Collection::drop()
+===========================
+
+.. default-domain:: mongodb
+                   
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::drop
+               
+   Drops the collection.
+   
+   .. code-block:: php
+                   
+      function drop(array $options = []): array|object
+      
+   ``drop()`` supports the following parameter:
+   
+   .. include:: /includes/apiargs/MongoDBCollection-method-drop-param.rst
+      
+   The ``$options`` parameter supports the following option:
+   
+   .. include:: /includes/apiargs/MongoDBCollection-method-drop-option.rst
+      
+Output
+------
+
+Returns the command result document as an array or object, depending
+on the ``typeMap`` specification.
+
+Example
+-------
+
+The following operation drops the ``restaurants`` collection in the
+``example`` database:
+
+.. code-block:: php
+
+   <?php
+   
+   $database = new MongoDB\Client;
+
+   $collection = $database->selectCollection('example','restaurants');
+
+   $output = $collection->drop();
+
+   
+   var_dump($output);
+
+The output would resemble::
+                
+   object(MongoDB\Model\BSONDocument)#9 (1) {
+     ["storage":"ArrayObject":private]=>
+     array(3) {
+       ["ns"]=>
+       string(19) "example.restaurants"
+       ["nIndexesWas"]=>
+       int(3)
+       ["ok"]=>
+       float(1)
+     }
+   }
+
+.. seealso::
+   
+   - :phpmethod:`MongoDB\\Database::dropCollection`
+   - :manual:`drop </reference/command/drop>` command reference in
+     the MongoDB manual.
+

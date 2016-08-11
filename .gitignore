@@ -7,3 +7,5 @@ php.ini
 phpunit.xml
 apigen.phar
 site
+.DS_Store
+*giza.log

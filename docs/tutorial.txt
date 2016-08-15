@@ -1,0 +1,10 @@
+Tutorials
+=========
+
+.. default-domain:: mongodb
+
+.. toctree::
+
+   /tutorial/crud
+   /tutorial/commands
+   /tutorial/indexes

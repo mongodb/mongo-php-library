@@ -1,0 +1,14 @@
+source:
+  ref: $filter
+  file: apiargs-common-param.yaml
+operation: MongoDB\\Collection::find
+replacement:
+  verb: "query"
+position: 1
+---
+source:
+  ref: $options
+  file: apiargs-common-param.yaml
+operation: MongoDB\\Collection::find
+position: 2
+...

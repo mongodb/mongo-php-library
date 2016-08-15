@@ -1,0 +1,70 @@
+===============================
+MongoDB\\Client::dropDatabase()
+===============================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Client::dropDatabase($databaseName, $options)
+
+   Drop a MongoDB database.
+
+   .. code-block:: php
+
+      function dropDatabase($databaseName, array $options [])
+
+   :phpmethod:`MongoDB\\Client::dropDatabase` has the following parameters:
+
+   .. include:: /includes/apiargs/MongoDBClient-method-dropDatabase-param.rst
+
+   ``dropDatabase`` supports the following values for the ``$options`` array:
+
+   .. include:: /includes/apiargs/MongoDBClient-method-dropDatabase-option.rst
+
+Output
+------
+
+Returns an array or object containing the result document.
+
+Example
+-------
+
+The following example drops the ``demo`` database:
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client;
+
+   $result = $client->dropDatabase('demo');
+
+   var_dump($result);
+
+The ``dropDatabase`` operation would return an object similar to:
+
+.. code-block:: php
+
+   object(MongoDB\Model\BSONDocument)#8 (1) {
+     ["storage":"ArrayObject":private]=>
+     array(2) {
+       ["dropped"]=>
+       string(4) "demo"
+       ["ok"]=>
+       float(1)
+     }
+   }
+
+.. seealso::
+
+   - :phpmethod:`MongoDB\\Client::drop`
+   - :manual:`dropDatabase() command reference
+     </reference/command/dropDatabase>` in the MongoDB manual.

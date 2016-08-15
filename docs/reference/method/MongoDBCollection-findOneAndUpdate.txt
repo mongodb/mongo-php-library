@@ -1,0 +1,73 @@
+=======================================
+MongoDB\\Collection::findOneAndUpdate()
+=======================================
+
+.. default-domain:: mongodb
+                    
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+              
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::findOneAndUpdate
+   
+   Finds a single document matching the query and updates it.
+   
+   .. code-block:: php
+                   
+      function findOneAndUpdate($filter, $update, array $options = []): object|null
+
+   ``findOneAndUpdate()`` supports the following parameters:
+   
+   .. include:: /includes/apiargs/MongoDBCollection-method-findOneAndUpdate-param.rst
+
+   The ``$options`` parameter supports the following options:
+                
+   .. include:: /includes/apiargs/MongoDBCollection-method-findOneAndUpdate-option.rst
+
+   .. include:: /includes/extracts/bson-deserialization-findOneAndUpdate.rst
+                
+Output
+------
+
+Returns either the original or the updated document, depending on the
+specified value for the ``returnDocument`` option. By default, the
+original document is returned.
+
+Examples
+--------
+
+The following operation updates the building number of the restaurant
+with ``restaurant_id : 40361708`` in the ``restaurants`` collection in
+the ``example`` database to ``761``:
+
+.. code-block:: php
+                
+   <?php 
+   
+   $database = new MongoDB\Client;
+
+   $collection = $database->selectCollection('example','restaurants');
+
+   $updateRestaurant = $collection->findOneAndUpdate(
+       [ 'restaurant_id' => '40361708' ],
+       [ '$set' => ['address.building' => '761']],
+       [ 'returnDocument' => MongoDB\Operation\FindOneAndUpdate::RETURN_DOCUMENT_AFTER ]
+   );
+
+   
+   var_dump($updateRestaurant)
+                
+
+
+.. seealso::
+   
+   - :phpmethod:`MongoDB\\Collection::findOneAndDelete`
+   - :phpmethod:`MongoDB\\Collection::findOneAndReplace`
+   - :manual:`findAndModify </reference/command/findAndModify>` command reference
+     in the MongoDB manual

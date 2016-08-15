@@ -1,0 +1,8 @@
+source:
+  ref: $options
+  file: apiargs-common-param.yaml
+arg_name: param
+interface: phpmethod
+operation: MongoDB\\Client::listDatabases
+position: 1
+...

@@ -1,0 +1,38 @@
+========================================
+MongoDB\\Collection::getCollectionName()
+========================================
+
+.. default-domain:: mongodb
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::getCollectionName()
+
+   Returns the name of the current collection.
+   
+   .. code-block:: php
+
+      function getCollectionName(): string
+
+Example
+-------
+
+The following returns the name of the collection assigned to the
+``$collection`` variable
+
+.. code-block:: php
+
+   <?php
+   
+   $collection = (new MongoDB\Client)->demo->zips;   
+   echo $collection->getCollectionName();
+
+The ``$collection`` variable uses the :phpmethod:`constructor
+<MongoDB\\Collection::__construct>` method to select the ``zips``
+collection in the ``demo`` database, as such, the printed output would
+resemble:
+
+.. code-block:: none
+
+   zips

@@ -1,0 +1,48 @@
+================================
+MongoDB\\Database::withOptions()
+================================
+
+.. default-domain:: mongodb
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Database::withOptions
+
+   Returns a clone of the Database object, but with different options.
+   
+   .. code-block:: php
+
+      function withOptions(array $options = []): MongoDB\Database
+
+   :phpmethod:`MongoDB\\Database::withOptions` supports the
+   following parameter:
+   
+   .. include:: /includes/apiargs/MongoDBCollection-method-withOptions-param.rst
+   
+   The ``$options`` parameter supports the following options:
+   
+   .. include:: /includes/apiargs/MongoDBCollection-method-withOptions-option.rst
+
+Example
+-------
+
+The following example clones the ``$newDb`` Database object with read
+preference ``RP_SECONDARY``.
+
+.. code-block:: php
+
+   <?php
+   
+   $database = new MongoDB\Client;
+
+   $newDb = $database->withOptions('sample','restaurants');
+
+   $newCollection = $sourceCollection->withOptions([ 
+       'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),
+   ]);
+   
+
+.. seealso::
+
+   - :phpmethod:`MongoDB\\Collection::__construct`

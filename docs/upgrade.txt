@@ -13,8 +13,8 @@ Upgrade Guide
 The MongoDB PHP Library and underlying :php:`mongodb
 extension <mongodb>` have notable API differences from
 the legacy :php:`mongo extension <mongo>`. This page will
-summarizes those differences for the benefit of those
-upgrading rom the legacy driver.
+summarize those differences for the benefit of those
+upgrading from the legacy driver.
 
 Additionally, a community-developed
 `mongo-php-adapter <https://github.com/alcaeus/mongo-php-adapter>`__

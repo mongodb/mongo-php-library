@@ -70,5 +70,6 @@ this documentation:
       /tutorial
       /upgrade
       /reference
+      API <http://mongodb.github.io/mongo-php-library/api/>
 
 .. /getting-started

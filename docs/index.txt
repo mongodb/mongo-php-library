@@ -35,13 +35,6 @@ for PHP and HHVM*:
 - `Part Three: Cursor Behaviour
   <https://derickrethans.nl/new-drivers-part3-cursor.html>`_
 
-API Reference
--------------
-
-Generated API reference documentation for the library is available at:
-`http://mongodb.github.io/mongo-php-library/api
-<http://mongodb.github.io/mongo-php-library/api>`_
-
 New to MongoDB?
 ---------------
 

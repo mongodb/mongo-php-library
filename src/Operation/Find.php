@@ -45,6 +45,9 @@ class Find implements Executable
      *    NON_TAILABLE, TAILABLE, or TAILABLE_AWAIT. The default is
      *    NON_TAILABLE.
      *
+     *  * hint (string|document): The index to use. If a document, it will be
+     *    interpretted as an index specification and a name will be generated.
+     *
      *  * limit (integer): The maximum number of documents to return.
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
@@ -113,6 +116,16 @@ class Find implements Executable
                 $options['cursorType'] !== self::TAILABLE &&
                 $options['cursorType'] !== self::TAILABLE_AWAIT) {
                 throw new InvalidArgumentException('Invalid value for "cursorType" option: ' . $options['cursorType']);
+            }
+        }
+
+        if (isset($options['hint'])) {
+            if (is_array($options['hint']) || is_object($options['hint'])) {
+                $options['hint'] = \MongoDB\generate_index_name($options['hint']);
+            }
+
+            if ( ! is_string($options['hint'])) {
+                throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], 'string or array or object');
             }
         }
 
@@ -219,6 +232,10 @@ class Find implements Executable
 
         if (isset($this->options['comment'])) {
             $modifiers['$comment'] = $this->options['comment'];
+        }
+
+        if (isset($this->options['hint'])) {
+            $modifiers['$hint'] = $this->options['hint'];
         }
 
         if (isset($this->options['maxTimeMS'])) {

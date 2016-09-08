@@ -21,6 +21,7 @@ use stdClass;
  */
 class Bucket
 {
+    private static $defaultBucketName = 'fs';
     private static $defaultChunkSizeBytes = 261120;
     private static $streamWrapperProtocol = 'gridfs';
 
@@ -54,7 +55,7 @@ class Bucket
     public function __construct(Manager $manager, $databaseName, array $options = [])
     {
         $options += [
-            'bucketName' => 'fs',
+            'bucketName' => self::$defaultBucketName,
             'chunkSizeBytes' => self::$defaultChunkSizeBytes,
         ];
 

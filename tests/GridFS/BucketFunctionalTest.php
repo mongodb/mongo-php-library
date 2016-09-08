@@ -306,6 +306,18 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $cursor);
     }
 
+    public function testGetBucketNameWithCustomValue()
+    {
+        $bucket = new Bucket($this->manager, $this->getDatabaseName(), ['bucketName' => 'custom_fs']);
+
+        $this->assertEquals('custom_fs', $bucket->getBucketName());
+    }
+
+    public function testGetBucketNameWithDefaultValue()
+    {
+        $this->assertEquals('fs', $this->bucket->getBucketName());
+    }
+
     public function testGetDatabaseName()
     {
         $this->assertEquals($this->getDatabaseName(), $this->bucket->getDatabaseName());

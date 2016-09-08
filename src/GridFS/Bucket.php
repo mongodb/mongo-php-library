@@ -179,11 +179,6 @@ class Bucket
         return $this->collectionWrapper->findFiles($filter, $options);
     }
 
-    public function getCollectionWrapper()
-    {
-        return $this->collectionWrapper;
-    }
-
     public function getDatabaseName()
     {
         return $this->databaseName;

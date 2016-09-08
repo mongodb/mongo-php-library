@@ -218,20 +218,44 @@ class Bucket
     }
 
     /**
-     * Gets the ID of the GridFS file associated with a stream.
+     * Gets the file document of the GridFS file associated with a stream.
      *
      * @param resource $stream GridFS stream
-     * @return mixed
+     * @return stdClass
+     * @throws InvalidArgumentException
      */
-    public function getIdFromStream($stream)
+    public function getFileDocumentForStream($stream)
     {
-        $metadata = stream_get_meta_data($stream);
-
-        if ($metadata['wrapper_data'] instanceof StreamWrapper) {
-            return $metadata['wrapper_data']->getId();
+        if ( ! is_resource($stream) || get_resource_type($stream) != "stream") {
+            throw InvalidArgumentException::invalidType('$stream', $stream, 'resource');
         }
 
-        // TODO: Throw if we cannot access the ID
+        $metadata = stream_get_meta_data($stream);
+
+        if (!$metadata['wrapper_data'] instanceof StreamWrapper) {
+            throw InvalidArgumentException::invalidType('$stream wrapper data', $metadata['wrapper_data'], 'MongoDB\Driver\GridFS\StreamWrapper');
+        }
+
+        return $metadata['wrapper_data']->getFile();
+    }
+
+    /**
+     * Gets the file document's ID of the GridFS file associated with a stream.
+     *
+     * @param resource $stream GridFS stream
+     * @return stdClass
+     * @throws CorruptFileException
+     * @throws InvalidArgumentException
+     */
+    public function getFileIdForStream($stream)
+    {
+        $file = $this->getFileDocumentForStream($stream);
+
+        if ( ! isset($file->_id) && ! property_exists($file, '_id')) {
+            throw new CorruptFileException('file._id does not exist');
+        }
+
+        return $file->_id;
     }
 
     /**
@@ -379,7 +403,7 @@ class Bucket
         $destination = $this->openUploadStream($filename, $options);
         stream_copy_to_stream($source, $destination);
 
-        return $this->getIdFromStream($destination);
+        return $this->getFileIdForStream($destination);
     }
 
     /**

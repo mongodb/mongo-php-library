@@ -62,7 +62,7 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
         $stream->close();
 
         $fileDocument = $this->filesCollection->findOne(
-            ['_id' => $stream->getId()],
+            ['_id' => $stream->getFile()->_id],
             ['projection' => ['md5' => 1, '_id' => 0]]
         );
 

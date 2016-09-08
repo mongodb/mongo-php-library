@@ -22,9 +22,14 @@ class StreamWrapper
     private $protocol;
     private $stream;
 
-    public function getId()
+    /**
+     * Return the stream's file document.
+     *
+     * @return stdClass
+     */
+    public function getFile()
     {
-        return $this->stream->getId();
+        return $this->stream->getFile();
     }
 
     /**

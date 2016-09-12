@@ -127,7 +127,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertSameDocument($expected, $this->collection->findOne($filter, $options));
     }
 
-    public function testWithOptionsInheritsReadPreferenceAndWriteConcern()
+    public function testWithOptionsInheritsOptions()
     {
         $collectionOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
@@ -150,7 +150,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    public function testWithOptionsPassesReadPreferenceAndWriteConcern()
+    public function testWithOptionsPassesOptions()
     {
         $collectionOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),

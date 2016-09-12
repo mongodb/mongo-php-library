@@ -21,12 +21,14 @@ use stdClass;
  */
 class Bucket
 {
+    private static $defaultBucketName = 'fs';
     private static $defaultChunkSizeBytes = 261120;
     private static $streamWrapperProtocol = 'gridfs';
 
     private $collectionWrapper;
     private $databaseName;
-    private $options;
+    private $bucketName;
+    private $chunkSizeBytes;
 
     /**
      * Constructs a GridFS bucket.
@@ -53,7 +55,7 @@ class Bucket
     public function __construct(Manager $manager, $databaseName, array $options = [])
     {
         $options += [
-            'bucketName' => 'fs',
+            'bucketName' => self::$defaultBucketName,
             'chunkSizeBytes' => self::$defaultChunkSizeBytes,
         ];
 
@@ -78,12 +80,28 @@ class Bucket
         }
 
         $this->databaseName = (string) $databaseName;
-        $this->options = $options;
+        $this->bucketName = $options['bucketName'];
+        $this->chunkSizeBytes = $options['chunkSizeBytes'];
 
         $collectionOptions = array_intersect_key($options, ['readConcern' => 1, 'readPreference' => 1, 'writeConcern' => 1]);
 
         $this->collectionWrapper = new CollectionWrapper($manager, $databaseName, $options['bucketName'], $collectionOptions);
         $this->registerStreamWrapper();
+    }
+
+    /**
+     * Return internal properties for debugging purposes.
+     *
+     * @see http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return [
+            'bucketName' => $this->bucketName,
+            'databaseName' => $this->databaseName,
+            'chunkSizeBytes' => $this->chunkSizeBytes,
+        ];
     }
 
     /**
@@ -179,11 +197,21 @@ class Bucket
         return $this->collectionWrapper->findFiles($filter, $options);
     }
 
-    public function getCollectionWrapper()
+    /**
+     * Return the bucket name.
+     *
+     * @return string
+     */
+    public function getBucketName()
     {
-        return $this->collectionWrapper;
+        return $this->bucketName;
     }
 
+    /**
+     * Return the database name.
+     *
+     * @return string
+     */
     public function getDatabaseName()
     {
         return $this->databaseName;
@@ -280,7 +308,7 @@ class Bucket
      */
     public function openUploadStream($filename, array $options = [])
     {
-        $options += ['chunkSizeBytes' => $this->options['chunkSizeBytes']];
+        $options += ['chunkSizeBytes' => $this->chunkSizeBytes];
 
         $path = $this->createPathForUpload();
         $context = stream_context_create([
@@ -372,7 +400,7 @@ class Bucket
             '%s://%s/%s.files/%s',
             self::$streamWrapperProtocol,
             urlencode($this->databaseName),
-            urlencode($this->options['bucketName']),
+            urlencode($this->bucketName),
             urlencode($id)
         );
     }
@@ -388,7 +416,7 @@ class Bucket
             '%s://%s/%s.files',
             self::$streamWrapperProtocol,
             urlencode($this->databaseName),
-            urlencode($this->options['bucketName'])
+            urlencode($this->bucketName)
         );
     }
 
@@ -399,7 +427,7 @@ class Bucket
      */
     private function getFilesNamespace()
     {
-        return sprintf('%s.%s.files', $this->databaseName, $this->options['bucketName']);
+        return sprintf('%s.%s.files', $this->databaseName, $this->bucketName);
     }
 
     /**

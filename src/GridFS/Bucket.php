@@ -27,8 +27,12 @@ class Bucket
 
     private $collectionWrapper;
     private $databaseName;
+    private $manager;
     private $bucketName;
     private $chunkSizeBytes;
+    private $readConcern;
+    private $readPreference;
+    private $writeConcern;
 
     /**
      * Constructs a GridFS bucket.
@@ -79,9 +83,13 @@ class Bucket
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
+        $this->manager = $manager;
         $this->databaseName = (string) $databaseName;
         $this->bucketName = $options['bucketName'];
         $this->chunkSizeBytes = $options['chunkSizeBytes'];
+        $this->readConcern = isset($options['readConcern']) ? $options['readConcern'] : $this->manager->getReadConcern();
+        $this->readPreference = isset($options['readPreference']) ? $options['readPreference'] : $this->manager->getReadPreference();
+        $this->writeConcern = isset($options['writeConcern']) ? $options['writeConcern'] : $this->manager->getWriteConcern();
 
         $collectionOptions = array_intersect_key($options, ['readConcern' => 1, 'readPreference' => 1, 'writeConcern' => 1]);
 
@@ -100,7 +108,11 @@ class Bucket
         return [
             'bucketName' => $this->bucketName,
             'databaseName' => $this->databaseName,
+            'manager' => $this->manager,
             'chunkSizeBytes' => $this->chunkSizeBytes,
+            'readConcern' => $this->readConcern,
+            'readPreference' => $this->readPreference,
+            'writeConcern' => $this->writeConcern,
         ];
     }
 

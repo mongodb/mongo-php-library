@@ -190,6 +190,55 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
+    public function testSelectGridFSBucketInheritsOptions()
+    {
+        $databaseOptions = [
+            'readConcern' => new ReadConcern(ReadConcern::LOCAL),
+            'readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY_PREFERRED),
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+        ];
+
+        $database = new Database($this->manager, $this->getDatabaseName(), $databaseOptions);
+        $bucket = $database->selectGridFSBucket();
+        $debug = $bucket->__debugInfo();
+
+        $this->assertSame($this->manager, $debug['manager']);
+        $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
+        $this->assertSame('fs', $debug['bucketName']);
+        $this->assertSame(261120, $debug['chunkSizeBytes']);
+        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
+        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
+        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
+    }
+
+    public function testSelectGridFSBucketPassesOptions()
+    {
+        $bucketOptions = [
+            'bucketName' => 'custom_fs',
+            'chunkSizeBytes' => 8192,
+            'readConcern' => new ReadConcern(ReadConcern::LOCAL),
+            'readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY_PREFERRED),
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+        ];
+
+        $database = new Database($this->manager, $this->getDatabaseName());
+        $bucket = $database->selectGridFSBucket($bucketOptions);
+        $debug = $bucket->__debugInfo();
+
+        $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
+        $this->assertSame('custom_fs', $debug['bucketName']);
+        $this->assertSame(8192, $debug['chunkSizeBytes']);
+        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
+        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
+        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
+    }
+
     public function testWithOptionsInheritsOptions()
     {
         $databaseOptions = [

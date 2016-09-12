@@ -323,12 +323,63 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertEquals($this->getDatabaseName(), $this->bucket->getDatabaseName());
     }
 
-    public function testGetIdFromStream()
+    public function testGetFileDocumentForStreamWithReadableStream()
+    {
+        $metadata = ['foo' => 'bar'];
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream('foobar'), ['metadata' => $metadata]);
+        $stream = $this->bucket->openDownloadStream($id);
+
+        $fileDocument = $this->bucket->getFileDocumentForStream($stream);
+
+        $this->assertEquals($id, $fileDocument->_id);
+        $this->assertSame('filename', $fileDocument->filename);
+        $this->assertSame(6, $fileDocument->length);
+        $this->assertSameDocument($metadata, $fileDocument->metadata);
+    }
+
+    public function testGetFileDocumentForStreamWithWritableStream()
+    {
+        $metadata = ['foo' => 'bar'];
+        $stream = $this->bucket->openUploadStream('filename', ['_id' => 1, 'metadata' => $metadata]);
+
+        $fileDocument = $this->bucket->getFileDocumentForStream($stream);
+
+        $this->assertEquals(1, $fileDocument->_id);
+        $this->assertSame('filename', $fileDocument->filename);
+        $this->assertSameDocument($metadata, $fileDocument->metadata);
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @dataProvider provideInvalidStreamValues
+     */
+    public function testGetFileDocumentForStreamShouldRequireStreamResource($stream)
+    {
+        $this->bucket->getFileDocumentForStream($stream);
+    }
+
+    public function testGetFileIdForStreamWithReadableStream()
     {
         $id = $this->bucket->uploadFromStream('filename', $this->createStream('foobar'));
         $stream = $this->bucket->openDownloadStream($id);
 
-        $this->assertEquals($id, $this->bucket->getIdFromStream($stream));
+        $this->assertEquals($id, $this->bucket->getFileIdForStream($stream));
+    }
+
+    public function testGetFileIdForStreamWithWritableStream()
+    {
+        $stream = $this->bucket->openUploadStream('filename', ['_id' => 1]);
+
+        $this->assertEquals(1, $this->bucket->getFileIdForStream($stream));
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @dataProvider provideInvalidStreamValues
+     */
+    public function testGetFileIdForStreamShouldRequireStreamResource($stream)
+    {
+        $this->bucket->getFileIdForStream($stream);
     }
 
     /**

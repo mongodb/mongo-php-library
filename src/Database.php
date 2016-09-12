@@ -267,14 +267,12 @@ class Database
      * Select a GridFS bucket within this database.
      *
      * @see Bucket::__construct() for supported options
-     * @param string $bucketName Name of the bucket to select (defaults to 'fs')
-     * @param array  $options    Bucket constructor options
+     * @param array $options Bucket constructor options
      * @return Bucket
      */
-    public function selectGridFSBucket($bucketName = 'fs', array $options = [])
+    public function selectGridFSBucket(array $options = [])
     {
         $options += [
-            'bucketName' => $bucketName,
             'readConcern' => $this->readConcern,
             'readPreference' => $this->readPreference,
             'writeConcern' => $this->writeConcern,

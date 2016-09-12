@@ -139,8 +139,9 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $collection = $database->{$this->getCollectionName()};
         $debug = $collection->__debugInfo();
 
-        $this->assertSame($this->getCollectionName(), $debug['collectionName']);
+        $this->assertSame($this->manager, $debug['manager']);
         $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
+        $this->assertSame($this->getCollectionName(), $debug['collectionName']);
         $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
@@ -158,6 +159,9 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $collection = $database->selectCollection($this->getCollectionName());
         $debug = $collection->__debugInfo();
 
+        $this->assertSame($this->manager, $debug['manager']);
+        $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
+        $this->assertSame($this->getCollectionName(), $debug['collectionName']);
         $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
@@ -252,6 +256,8 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $clone = $database->withOptions();
         $debug = $clone->__debugInfo();
 
+        $this->assertSame($this->manager, $debug['manager']);
+        $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
         $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);

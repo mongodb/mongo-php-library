@@ -140,6 +140,9 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $clone = $collection->withOptions();
         $debug = $clone->__debugInfo();
 
+        $this->assertSame($this->manager, $debug['manager']);
+        $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
+        $this->assertSame($this->getCollectionName(), $debug['collectionName']);
         $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);

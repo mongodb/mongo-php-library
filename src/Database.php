@@ -9,6 +9,7 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\GridFS\Bucket;
 use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
@@ -260,6 +261,26 @@ class Database
         ];
 
         return new Collection($this->manager, $this->databaseName, $collectionName, $options);
+    }
+
+    /**
+     * Select a GridFS bucket within this database.
+     *
+     * @see Bucket::__construct() for supported options
+     * @param string $bucketName Name of the bucket to select (defaults to 'fs')
+     * @param array  $options    Bucket constructor options
+     * @return Bucket
+     */
+    public function selectGridFSBucket($bucketName = 'fs', array $options = [])
+    {
+        $options += [
+            'bucketName' => $bucketName,
+            'readConcern' => $this->readConcern,
+            'readPreference' => $this->readPreference,
+            'writeConcern' => $this->writeConcern,
+        ];
+
+        return new Bucket($this->manager, $this->databaseName, $options);
     }
 
     /**

@@ -10,7 +10,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for the dropIndexes command.
  *
  * @api
- * @see MongoDB\Collection::dropIndexes()
+ * @see \MongoDB\Collection::dropIndexes()
  * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
  */
 class DropIndexes implements Executable

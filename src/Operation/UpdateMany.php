@@ -10,7 +10,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for updating multiple documents with the update command.
  *
  * @api
- * @see MongoDB\Collection::updateMany()
+ * @see \MongoDB\Collection::updateMany()
  * @see http://docs.mongodb.org/manual/reference/command/update/
  */
 class UpdateMany implements Executable

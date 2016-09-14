@@ -10,8 +10,8 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for the dropDatabase command.
  *
  * @api
- * @see MongoDB\Client::dropDatabase()
- * @see MongoDB\Database::drop()
+ * @see \MongoDB\Client::dropDatabase()
+ * @see \MongoDB\Database::drop()
  * @see http://docs.mongodb.org/manual/reference/command/dropDatabase/
  */
 class DropDatabase implements Executable

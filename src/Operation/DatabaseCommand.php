@@ -12,7 +12,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for executing a database command.
  *
  * @api
- * @see MongoDB\Database::command()
+ * @see \MongoDB\Database::command()
  */
 class DatabaseCommand implements Executable
 {

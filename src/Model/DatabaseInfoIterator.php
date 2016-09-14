@@ -10,7 +10,7 @@ use Iterator;
  * This iterator is used for enumerating databases on a server.
  *
  * @api
- * @see MongoDB\Client::listDatabases()
+ * @see \MongoDB\Client::listDatabases()
  */
 interface DatabaseInfoIterator extends Iterator
 {

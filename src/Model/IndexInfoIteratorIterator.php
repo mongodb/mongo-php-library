@@ -12,7 +12,7 @@ use IteratorIterator;
  * collection.
  *
  * @internal
- * @see MongoDB\Collection::listIndexes()
+ * @see \MongoDB\Collection::listIndexes()
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst
  * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
  * @see http://docs.mongodb.org/manual/reference/system-collections/

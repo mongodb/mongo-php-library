@@ -13,7 +13,7 @@ use MongoDB\Exception\UnexpectedValueException;
  * Operation for the distinct command.
  *
  * @api
- * @see MongoDB\Collection::distinct()
+ * @see \MongoDB\Collection::distinct()
  * @see http://docs.mongodb.org/manual/reference/command/distinct/
  */
 class Distinct implements Executable

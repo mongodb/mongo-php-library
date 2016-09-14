@@ -11,7 +11,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * This class is used to validate user input for index creation.
  *
  * @internal
- * @see MongoDB\Collection::createIndexes()
+ * @see \MongoDB\Collection::createIndexes()
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst
  * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
  */
@@ -73,7 +73,7 @@ class IndexInput implements Serializable
     /**
      * Serialize the index information to BSON for index creation.
      *
-     * @see MongoDB\Collection::createIndexes()
+     * @see \MongoDB\Collection::createIndexes()
      * @see http://php.net/mongodb-bson-serializable.bsonserialize
      * @return array
      */

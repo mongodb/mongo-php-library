@@ -10,7 +10,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for deleting a single document with the delete command.
  *
  * @api
- * @see MongoDB\Collection::deleteOne()
+ * @see \MongoDB\Collection::deleteOne()
  * @see http://docs.mongodb.org/manual/reference/command/delete/
  */
 class DeleteOne implements Executable

@@ -14,7 +14,7 @@ use MongoDB\Model\CollectionInfoLegacyIterator;
  * Operation for the listCollections command.
  *
  * @api
- * @see MongoDB\Database::listCollections()
+ * @see \MongoDB\Database::listCollections()
  * @see http://docs.mongodb.org/manual/reference/command/listCollections/
  */
 class ListCollections implements Executable

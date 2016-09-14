@@ -12,7 +12,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for inserting multiple documents with the insert command.
  *
  * @api
- * @see MongoDB\Collection::insertMany()
+ * @see \MongoDB\Collection::insertMany()
  * @see http://docs.mongodb.org/manual/reference/command/insert/
  */
 class InsertMany implements Executable

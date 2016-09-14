@@ -11,8 +11,8 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for the drop command.
  *
  * @api
- * @see MongoDB\Collection::drop()
- * @see MongoDB\Database::dropCollection()
+ * @see \MongoDB\Collection::drop()
+ * @see \MongoDB\Database::dropCollection()
  * @see http://docs.mongodb.org/manual/reference/command/drop/
  */
 class DropCollection implements Executable

@@ -13,7 +13,7 @@ use MongoDB\Exception\UnexpectedValueException;
  * Operation for the count command.
  *
  * @api
- * @see MongoDB\Collection::count()
+ * @see \MongoDB\Collection::count()
  * @see http://docs.mongodb.org/manual/reference/command/count/
  */
 class Count implements Executable

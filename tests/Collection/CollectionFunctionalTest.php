@@ -127,7 +127,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertSameDocument($expected, $this->collection->findOne($filter, $options));
     }
 
-    public function testWithOptionsInheritsReadPreferenceAndWriteConcern()
+    public function testWithOptionsInheritsOptions()
     {
         $collectionOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
@@ -140,6 +140,9 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $clone = $collection->withOptions();
         $debug = $clone->__debugInfo();
 
+        $this->assertSame($this->manager, $debug['manager']);
+        $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
+        $this->assertSame($this->getCollectionName(), $debug['collectionName']);
         $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
@@ -150,7 +153,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    public function testWithOptionsPassesReadPreferenceAndWriteConcern()
+    public function testWithOptionsPassesOptions()
     {
         $collectionOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),

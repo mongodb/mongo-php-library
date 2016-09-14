@@ -10,7 +10,7 @@ use Iterator;
  * This iterator is used for enumerating collections in a database.
  *
  * @api
- * @see MongoDB\Database::listCollections()
+ * @see \MongoDB\Database::listCollections()
  */
 interface CollectionInfoIterator extends Iterator
 {

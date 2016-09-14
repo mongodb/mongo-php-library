@@ -13,8 +13,8 @@ use MongoDB\Model\IndexInput;
  * Operation for the createIndexes command.
  *
  * @api
- * @see MongoDB\Collection::createIndex()
- * @see MongoDB\Collection::createIndexes()
+ * @see \MongoDB\Collection::createIndex()
+ * @see \MongoDB\Collection::createIndexes()
  * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
  */
 class CreateIndexes implements Executable

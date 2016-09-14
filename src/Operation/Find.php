@@ -13,7 +13,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for the find command.
  *
  * @api
- * @see MongoDB\Collection::find()
+ * @see \MongoDB\Collection::find()
  * @see http://docs.mongodb.org/manual/tutorial/query-documents/
  * @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
  */

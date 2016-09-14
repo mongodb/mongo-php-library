@@ -9,7 +9,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for finding a single document with the find command.
  *
  * @api
- * @see MongoDB\Collection::findOne()
+ * @see \MongoDB\Collection::findOne()
  * @see http://docs.mongodb.org/manual/tutorial/query-documents/
  * @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
  */

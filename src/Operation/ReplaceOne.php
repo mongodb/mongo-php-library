@@ -10,7 +10,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for replacing a single document with the update command.
  *
  * @api
- * @see MongoDB\Collection::replaceOne()
+ * @see \MongoDB\Collection::replaceOne()
  * @see http://docs.mongodb.org/manual/reference/command/update/
  */
 class ReplaceOne implements Executable

@@ -9,7 +9,7 @@ namespace MongoDB\Model;
  * command's single-document result.
  *
  * @internal
- * @see MongoDB\Client::listDatabases()
+ * @see \MongoDB\Client::listDatabases()
  * @see http://docs.mongodb.org/manual/reference/command/listDatabases/
  */
 class DatabaseInfoLegacyIterator implements DatabaseInfoIterator

@@ -10,7 +10,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for deleting a document with the findAndModify command.
  *
  * @api
- * @see MongoDB\Collection::findOneAndDelete()
+ * @see \MongoDB\Collection::findOneAndDelete()
  * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
  */
 class FindOneAndDelete implements Executable

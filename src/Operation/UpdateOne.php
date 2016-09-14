@@ -10,7 +10,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for updating a single document with the update command.
  *
  * @api
- * @see MongoDB\Collection::updateOne()
+ * @see \MongoDB\Collection::updateOne()
  * @see http://docs.mongodb.org/manual/reference/command/update/
  */
 class UpdateOne implements Executable

@@ -10,7 +10,7 @@ use Iterator;
  * This iterator is used for enumerating indexes in a collection.
  *
  * @api
- * @see MongoDB\Collection::listIndexes()
+ * @see \MongoDB\Collection::listIndexes()
  */
 interface IndexInfoIterator extends Iterator
 {

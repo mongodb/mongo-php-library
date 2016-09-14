@@ -13,7 +13,7 @@ use MongoDB\Model\DatabaseInfoLegacyIterator;
  * Operation for the ListDatabases command.
  *
  * @api
- * @see MongoDB\Client::listDatabases()
+ * @see \MongoDB\Client::listDatabases()
  * @see http://docs.mongodb.org/manual/reference/command/ListDatabases/
  */
 class ListDatabases implements Executable

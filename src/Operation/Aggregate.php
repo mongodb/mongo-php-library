@@ -16,7 +16,7 @@ use Traversable;
  * Operation for the aggregate command.
  *
  * @api
- * @see MongoDB\Collection::aggregate()
+ * @see \MongoDB\Collection::aggregate()
  * @see http://docs.mongodb.org/manual/reference/command/aggregate/
  */
 class Aggregate implements Executable

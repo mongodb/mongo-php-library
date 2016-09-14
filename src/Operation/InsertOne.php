@@ -12,7 +12,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for inserting a single document with the insert command.
  *
  * @api
- * @see MongoDB\Collection::insertOne()
+ * @see \MongoDB\Collection::insertOne()
  * @see http://docs.mongodb.org/manual/reference/command/insert/
  */
 class InsertOne implements Executable

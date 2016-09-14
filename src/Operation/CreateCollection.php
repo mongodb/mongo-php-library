@@ -10,7 +10,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for the create command.
  *
  * @api
- * @see MongoDB\Database::createCollection()
+ * @see \MongoDB\Database::createCollection()
  * @see http://docs.mongodb.org/manual/reference/command/create/
  */
 class CreateCollection implements Executable

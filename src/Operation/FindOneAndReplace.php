@@ -10,7 +10,7 @@ use MongoDB\Exception\InvalidArgumentException;
  * Operation for replacing a document with the findAndModify command.
  *
  * @api
- * @see MongoDB\Collection::findOneAndReplace()
+ * @see \MongoDB\Collection::findOneAndReplace()
  * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
  */
 class FindOneAndReplace implements Executable

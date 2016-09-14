@@ -10,7 +10,7 @@ namespace MongoDB\Model;
  * collection. It provides methods to access options for the collection.
  *
  * @api
- * @see MongoDB\Database::listCollections()
+ * @see \MongoDB\Database::listCollections()
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst
  */
 class CollectionInfo

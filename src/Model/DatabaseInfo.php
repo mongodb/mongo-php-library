@@ -9,7 +9,7 @@ namespace MongoDB\Model;
  * command. It provides methods to access common database properties.
  *
  * @api
- * @see MongoDB\Client::listDatabases()
+ * @see \MongoDB\Client::listDatabases()
  * @see http://docs.mongodb.org/manual/reference/command/listDatabases/
  */
 class DatabaseInfo

@@ -15,7 +15,7 @@ use EmptyIterator;
  * Operation for the listIndexes command.
  *
  * @api
- * @see MongoDB\Collection::listIndexes()
+ * @see \MongoDB\Collection::listIndexes()
  * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
  */
 class ListIndexes implements Executable

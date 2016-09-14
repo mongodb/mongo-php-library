@@ -16,7 +16,7 @@ use Traversable;
  * the listCollections command.
  *
  * @internal
- * @see MongoDB\Database::listCollections()
+ * @see \MongoDB\Database::listCollections()
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst
  * @see http://docs.mongodb.org/manual/reference/command/listCollections/
  * @see http://docs.mongodb.org/manual/reference/system-collections/

@@ -191,7 +191,7 @@ class FindAndModify implements Executable
         }
 
         if (isset($this->options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWriteConcern)) {
-            $cmd['writeConcern'] = $this->options['writeConcern'];
+            $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
         }
 
         return new Command($cmd);

@@ -50,9 +50,12 @@ class Client
             throw InvalidArgumentException::invalidType('"typeMap" driver option', $driverOptions['typeMap'], 'array');
         }
 
-        $this->manager = new Manager($uri, $uriOptions, $driverOptions);
         $this->uri = (string) $uri;
         $this->typeMap = isset($driverOptions['typeMap']) ? $driverOptions['typeMap'] : null;
+
+        unset($driverOptions['typeMap']);
+
+        $this->manager = new Manager($uri, $uriOptions, $driverOptions);
     }
 
     /**

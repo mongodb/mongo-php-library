@@ -5,6 +5,7 @@ namespace MongoDB;
 use MongoDB\BSON\Serializable;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
 
@@ -139,4 +140,31 @@ function server_supports_feature(Server $server, $feature)
     $minWireVersion = isset($info['minWireVersion']) ? (integer) $info['minWireVersion'] : 0;
 
     return ($minWireVersion <= $feature && $maxWireVersion >= $feature);
+}
+
+/**
+ * Converts a WriteConcern instance to a stdClass for use in a BSON document.
+ *
+ * @internal
+ * @see https://jira.mongodb.org/browse/PHPC-498
+ * @param WriteConcern $writeConcern Write concern
+ * @return stdClass
+ */
+function write_concern_as_document(WriteConcern $writeConcern)
+{
+    $document = [];
+
+    if ($writeConcern->getW() !== null) {
+        $document['w'] = $writeConcern->getW();
+    }
+
+    if ($writeConcern->getJournal() !== null) {
+        $document['j'] = $writeConcern->getJournal();
+    }
+
+    if ($writeConcern->getWtimeout() !== 0) {
+        $document['wtimeout'] = $writeConcern->getWtimeout();
+    }
+
+    return (object) $document;
 }

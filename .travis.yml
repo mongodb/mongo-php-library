@@ -18,6 +18,7 @@ env:
     - DRIVER_VERSION=stable SERVER_VERSION=3.2
 
 matrix:
+  fast_finish: true
   include:
     - php: 5.6
       env: DRIVER_VERSION=1.1.0 SERVER_VERSION=3.2

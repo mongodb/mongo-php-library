@@ -1,3 +1,51 @@
+RELEASE 1.0.3
+-------------
+2016-09-22  Jeremy Mikola  <jmikola@gmail.com>
+	* Allow Travis to fast-finish
+
+2016-09-22  Jeremy Mikola  <jmikola@gmail.com>
+	* Revise Travis build matrix
+
+2016-09-22  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-193: Do not pass typeMap Client option to Manager
+
+2016-09-22  Jeremy Mikola  <jmikola@gmail.com>
+	* PHPLIB-219: Fix BSON serialization of findAndModify write concern
+
+2016-06-20  Jeremy Mikola  <jmikola@gmail.com>
+	* Fix indentation
+
+2016-06-20  Jeremy Mikola  <jmikola@gmail.com>
+	* Fix DatabaseCommand::execute() return type hint
+
+2016-06-20  Jeremy Mikola  <jmikola@gmail.com>
+	* Fix doc block spacing
+
+2016-06-20  Jeremy Mikola  <jmikola@gmail.com>
+	* Remove unnecessary use statements
+
+2016-06-03  Jeremy Mikola  <jmikola@gmail.com>
+	* CreateIndexes::executeCommand() need not return anything
+
+2016-05-23  corpsee  <poisoncorpsee@gmail.com>
+	* Fixed return annotation in doc blocks
+
+2016-05-23  Jesper Wallin  <jesper@ifconfig.se>
+	* Fix typo in query projection example
+
+2016-06-02  Derick Rethans  <github@derickrethans.nl>
+	* Fixed documentation to point to the right BSON namespace for ObjectID
+
+2016-06-03  Jeremy Mikola  <jmikola@gmail.com>
+	* Note that non-arrays may also be used as documents
+
+2016-06-02  Jeremy Mikola  <jmikola@gmail.com>
+	* Add write method examples to CRUD tutorial
+
+2016-03-30  Jeremy Mikola  <jmikola@gmail.com>
+	* Add 1.0.2 release notes
+
+
 RELEASE 1.0.2
 -------------
 2016-03-30  Jeremy Mikola  <jmikola@gmail.com>

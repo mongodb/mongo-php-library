@@ -13,10 +13,28 @@ env:
     - MONGO_REPO_TYPE="precise/mongodb-enterprise/"
     - SOURCES_LOC="/etc/apt/sources.list.d/mongodb.list"
   matrix:
-    - DRIVER_VERSION=1.1.2 SERVER_VERSION=2.4
-    - DRIVER_VERSION=1.1.2 SERVER_VERSION=2.6
-    - DRIVER_VERSION=1.1.2 SERVER_VERSION=3.0
-    - DRIVER_VERSION=1.1.2 SERVER_VERSION=3.2
+    - DRIVER_VERSION=stable SERVER_VERSION=2.6
+    - DRIVER_VERSION=stable SERVER_VERSION=3.0
+    - DRIVER_VERSION=stable SERVER_VERSION=3.2
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 5.6
+      env: DRIVER_VERSION=1.1.0 SERVER_VERSION=3.2
+    - php: 7.0
+      env: DRIVER_VERSION=stable SERVER_VERSION=2.4
+    - php: 7.0
+      env: DRIVER_VERSION=devel SERVER_VERSION=3.2
+  exclude:
+    - php: 5.4
+      env: DRIVER_VERSION=stable SERVER_VERSION=2.6
+    - php: 5.4
+      env: DRIVER_VERSION=stable SERVER_VERSION=3.0
+    - php: 5.5
+      env: DRIVER_VERSION=stable SERVER_VERSION=2.6
+    - php: 5.5
+      env: DRIVER_VERSION=stable SERVER_VERSION=3.0
 
 before_install:
   - sudo apt-key adv --keyserver ${KEY_SERVER} --recv 7F0CEB10

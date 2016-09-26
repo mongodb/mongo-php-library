@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\DropIndexes;
 use MongoDB\Operation\ListIndexes;

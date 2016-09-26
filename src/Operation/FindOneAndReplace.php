@@ -2,7 +2,6 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 

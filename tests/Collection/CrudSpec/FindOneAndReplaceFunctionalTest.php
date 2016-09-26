@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\Collection\CrudSpec;
 
-use MongoDB\Collection;
 use MongoDB\Operation\FindOneAndReplace;
 
 /**

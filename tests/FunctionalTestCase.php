@@ -6,6 +6,7 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Model\BSONDocument;
 use InvalidArgumentException;
 use stdClass;
 use Traversable;
@@ -42,8 +43,8 @@ abstract class FunctionalTestCase extends TestCase
     protected function assertSameDocument($expectedDocument, $actualDocument)
     {
         $this->assertEquals(
-            is_object($expectedDocument) ? (array) $expectedDocument : $expectedDocument,
-            is_object($actualDocument) ? (array) $actualDocument : $actualDocument
+            $this->normalizeBSON($expectedDocument),
+            $this->normalizeBSON($actualDocument)
         );
     }
 
@@ -58,7 +59,7 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         $normalizeRootDocuments = function($document) {
-            return is_object($document) ? (array) $document : $document;
+            return $this->normalizeBSON($document);
         };
 
         $this->assertEquals(
@@ -84,5 +85,49 @@ abstract class FunctionalTestCase extends TestCase
         $document = current($cursor->toArray());
 
         return $document['version'];
+    }
+
+    /**
+     * Normalizes a BSON document or array for use with assertEquals().
+     *
+     * The argument will be converted to a BSONArray or BSONDocument based on
+     * its type and keys. Document fields will be sorted alphabetically. Each
+     * value within the array or document will then be normalized recursively.
+     *
+     * @param array|object $bson
+     * @return BSONDocument|BSONArray
+     * @throws InvalidArgumentException if $bson is not an array or object
+     */
+    private function normalizeBSON($bson)
+    {
+        if ( ! is_array($bson) && ! is_object($bson)) {
+            throw new InvalidArgumentException('$bson is not an array or object');
+        }
+
+        if ($bson instanceof BSONArray || (is_array($bson) && $bson === array_values($bson))) {
+            if ( ! $bson instanceof BSONArray) {
+                $bson = new BSONArray($bson);
+            }
+        } else {
+            if ( ! $bson instanceof BSONDocument) {
+                $bson = new BSONDocument((array) $bson);
+            }
+
+            $bson->ksort();
+        }
+
+        foreach ($bson as $key => $value) {
+            if ($value instanceof BSONArray || (is_array($value) && $value === array_values($value))) {
+                $bson[$key] = $this->normalizeBSON($value);
+                continue;
+            }
+
+            if ($value instanceof stdClass || $value instanceof BSONDocument || is_array($value)) {
+                $bson[$key] = $this->normalizeBSON($value);
+                continue;
+            }
+        }
+
+        return $bson;
     }
 }

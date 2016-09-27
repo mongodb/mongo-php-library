@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\Driver\Server;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListCollections;

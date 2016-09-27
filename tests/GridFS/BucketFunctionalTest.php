@@ -331,7 +331,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $fileDocument = $this->bucket->getFileDocumentForStream($stream);
 
-        $this->assertEquals($id, $fileDocument->_id);
+        $this->assertSameObjectID($id, $fileDocument->_id);
         $this->assertSame('filename', $fileDocument->filename);
         $this->assertSame(6, $fileDocument->length);
         $this->assertSameDocument($metadata, $fileDocument->metadata);
@@ -363,7 +363,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $id = $this->bucket->uploadFromStream('filename', $this->createStream('foobar'));
         $stream = $this->bucket->openDownloadStream($id);
 
-        $this->assertEquals($id, $this->bucket->getFileIdForStream($stream));
+        $this->assertSameObjectID($id, $this->bucket->getFileIdForStream($stream));
     }
 
     public function testGetFileIdForStreamWithWritableStream()

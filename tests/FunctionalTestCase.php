@@ -40,11 +40,18 @@ abstract class FunctionalTestCase extends TestCase
         $this->assertEquals(1, $document['ok']);
     }
 
+    protected function assertSameObjectID($expectedObjectID, $actualObjectID)
+    {
+        $this->assertInstanceOf('MongoDB\BSON\ObjectID', $expectedObjectID);
+        $this->assertInstanceOf('MongoDB\BSON\ObjectID', $actualObjectID);
+        $this->assertEquals((string) $expectedObjectID, (string) $actualObjectID);
+    }
+
     protected function assertSameDocument($expectedDocument, $actualDocument)
     {
         $this->assertEquals(
-            $this->normalizeBSON($expectedDocument),
-            $this->normalizeBSON($actualDocument)
+            \MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP($this->normalizeBSON($expectedDocument))),
+            \MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP($this->normalizeBSON($actualDocument)))
         );
     }
 
@@ -59,7 +66,7 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         $normalizeRootDocuments = function($document) {
-            return $this->normalizeBSON($document);
+            return \MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP($this->normalizeBSON($document)));
         };
 
         $this->assertEquals(

@@ -6,6 +6,7 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
+use InvalidArgumentException;
 use stdClass;
 use Traversable;
 

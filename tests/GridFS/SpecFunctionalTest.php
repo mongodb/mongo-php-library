@@ -154,7 +154,7 @@ class SpecFunctionalTest extends FunctionalTestCase
             if (isset($value['$date'])) {
                 // TODO: This is necessary until PHPC-536 is implemented
                 $milliseconds = floor((new DateTime($value['$date']))->format('U.u') * 1000);
-                $value = new UTCDateTime($milliseconds);
+                $value = new UTCDateTime((int) $milliseconds);
                 return;
             }
 

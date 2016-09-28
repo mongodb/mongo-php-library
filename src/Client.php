@@ -42,7 +42,7 @@ class Client
      * @param array  $driverOptions Driver-specific options
      * @throws InvalidArgumentException
      */
-    public function __construct($uri = 'mongodb://localhost:27017', array $uriOptions = [], array $driverOptions = [])
+    public function __construct($uri = 'mongodb://127.0.0.1/', array $uriOptions = [], array $driverOptions = [])
     {
         $driverOptions += ['typeMap' => self::$defaultTypeMap];
 

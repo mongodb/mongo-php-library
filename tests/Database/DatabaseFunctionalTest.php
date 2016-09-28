@@ -63,6 +63,11 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         return $options;
     }
 
+    public function testGetManager()
+    {
+        $this->assertSame($this->manager, $this->database->getManager());
+    }
+
     public function testToString()
     {
         $this->assertEquals($this->getDatabaseName(), (string) $this->database);

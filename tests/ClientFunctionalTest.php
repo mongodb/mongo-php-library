@@ -22,6 +22,11 @@ class ClientFunctionalTest extends FunctionalTestCase
         $this->client->dropDatabase($this->getDatabaseName());
     }
 
+    public function testGetManager()
+    {
+        $this->assertInstanceOf('MongoDB\Driver\Manager', $this->client->getManager());
+    }
+
     public function testDropDatabase()
     {
         $bulkWrite = new BulkWrite();

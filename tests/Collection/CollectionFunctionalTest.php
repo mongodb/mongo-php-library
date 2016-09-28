@@ -73,6 +73,11 @@ class CollectionFunctionalTest extends FunctionalTestCase
         return $options;
     }
 
+    public function testGetManager()
+    {
+        $this->assertSame($this->manager, $this->collection->getManager());
+    }
+
     public function testToString()
     {
         $this->assertEquals($this->getNamespace(), (string) $this->collection);

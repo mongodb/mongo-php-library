@@ -97,21 +97,19 @@ class SpecFunctionalTest extends FunctionalTestCase
         foreach ($mi as $documents) {
             list($expectedDocument, $actualDocument) = $documents;
 
-            array_walk($expectedDocument, function(&$value) use ($actualResult) {
-                if ($value === '*result') {
-                    $value = $actualResult;
-                }
-            });
-
-            array_walk($expectedDocument, function(&$value, $key) use ($actualDocument) {
+            foreach ($expectedDocument as $key => $value) {
                 if ( ! is_string($value)) {
-                    return;
+                    continue;
+                }
+
+                if ($value === '*result') {
+                    $expectedDocument[$key] = $actualResult;
                 }
 
                 if ( ! strncmp($value, '*actual_', 8)) {
-                    $value = $actualDocument[$key];
+                    $expectedDocument[$key] = $actualDocument[$key];
                 }
-            });
+            }
 
             $this->assertSameDocument($expectedDocument, $actualDocument);
         }
@@ -154,7 +152,7 @@ class SpecFunctionalTest extends FunctionalTestCase
             if (isset($value['$date'])) {
                 // TODO: This is necessary until PHPC-536 is implemented
                 $milliseconds = floor((new DateTime($value['$date']))->format('U.u') * 1000);
-                $value = new UTCDateTime($milliseconds);
+                $value = new UTCDateTime((int) $milliseconds);
                 return;
             }
 

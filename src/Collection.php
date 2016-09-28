@@ -577,6 +577,16 @@ class Collection
     }
 
     /**
+     * Return the Manager.
+     *
+     * @return Manager
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
      * Return the collection namespace.
      *
      * @see https://docs.mongodb.org/manual/reference/glossary/#term-namespace

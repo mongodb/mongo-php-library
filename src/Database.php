@@ -219,6 +219,16 @@ class Database
     }
 
     /**
+     * Return the manager.
+     *
+     * @return Manager
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
      * Returns the database name.
      *
      * @return string

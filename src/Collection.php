@@ -557,6 +557,16 @@ class Collection
     }
 
     /**
+     * Return the manager.
+     *
+     * @return Manager
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
      * Return the collection name.
      *
      * @return string

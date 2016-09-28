@@ -91,6 +91,16 @@ class Client
     }
 
     /**
+     * Return the manager.
+     *
+     * @return Manager
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
      * Return the connection string (i.e. URI).
      *
      * @return string

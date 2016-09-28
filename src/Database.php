@@ -229,6 +229,16 @@ class Database
     }
 
     /**
+     * Return the Manager.
+     *
+     * @return Manager
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
      * Returns information for all collections in this database.
      *
      * @see ListCollections::__construct() for supported options

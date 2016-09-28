@@ -121,6 +121,16 @@ class Client
     }
 
     /**
+     * Return the Manager.
+     *
+     * @return Manager
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
      * List databases.
      *
      * @see ListDatabases::__construct() for supported options

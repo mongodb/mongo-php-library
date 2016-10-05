@@ -66,8 +66,9 @@ class FindAndModify implements Executable
      *    matches the query. This option is ignored for remove operations. The
      *    default is false.
      *
-     *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern. This option
-     *    is only supported for server versions >= 3.2.
+     *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
+     *
+     *    This is not supported for server versions < 3.2.
      *
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
@@ -206,6 +207,10 @@ class FindAndModify implements Executable
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 
+        /* In the future, we should throw an exception if the "writeConcern"
+         * option is specified and not supported by the server (see: SPEC-494).
+         * For BC in 1.x, we will silently omit it for incompatible servers.
+         */
         if (isset($this->options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWriteConcern)) {
             $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
         }

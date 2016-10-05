@@ -6,6 +6,7 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
@@ -26,6 +27,7 @@ class Aggregate implements Executable
     private static $wireVersionForCursor = 2;
     private static $wireVersionForDocumentLevelValidation = 4;
     private static $wireVersionForReadConcern = 4;
+    private static $wireVersionForWriteConcern = 5;
 
     private $databaseName;
     private $collectionName;
@@ -80,6 +82,12 @@ class Aggregate implements Executable
      *
      *    For servers >= 2.6, this option allows users to turn off cursors if
      *    necessary to aid in mongod/mongos upgrades.
+     *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern. This only
+     *    applies when the $out stage is specified.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
      *
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
@@ -148,6 +156,10 @@ class Aggregate implements Executable
             throw InvalidArgumentException::invalidType('"useCursor" option', $options['useCursor'], 'boolean');
         }
 
+        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+        }
+
         if (isset($options['batchSize']) && ! $options['useCursor']) {
             throw new InvalidArgumentException('"batchSize" option should not be used if "useCursor" is false');
         }
@@ -169,12 +181,16 @@ class Aggregate implements Executable
      * @param Server $server
      * @return Traversable
      * @throws UnexpectedValueException if the command response was malformed
-     * @throws UnsupportedException if collation is used and unsupported
+     * @throws UnsupportedException if collation or write concern is used and unsupported
      */
     public function execute(Server $server)
     {
         if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
             throw UnsupportedException::collationNotSupported();
+        }
+
+        if (isset($this->options['writeConcern']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForWriteConcern)) {
+            throw UnsupportedException::writeConcernNotSupported();
         }
 
         $isCursorSupported = \MongoDB\server_supports_feature($server, self::$wireVersionForCursor);
@@ -238,6 +254,10 @@ class Aggregate implements Executable
 
         if (isset($this->options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
             $cmd['readConcern'] = \MongoDB\read_concern_as_document($this->options['readConcern']);
+        }
+
+        if (isset($this->options['writeConcern'])) {
+            $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
         }
 
         if ($this->options['useCursor']) {

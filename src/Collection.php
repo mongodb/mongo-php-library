@@ -39,6 +39,7 @@ class Collection
         'root' => 'MongoDB\Model\BSONDocument',
     ];
     private static $wireVersionForFindAndModifyWriteConcern = 4;
+    private static $wireVersionForWritableCommandWriteConcern = 5;
 
     private $collectionName;
     private $databaseName;
@@ -180,8 +181,13 @@ class Collection
             $options['typeMap'] = $this->typeMap;
         }
 
-        $operation = new Aggregate($this->databaseName, $this->collectionName, $pipeline, $options);
         $server = $this->manager->selectServer($options['readPreference']);
+
+        if ($hasOutStage && ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new Aggregate($this->databaseName, $this->collectionName, $pipeline, $options);
 
         return $operation->execute($server);
     }
@@ -234,6 +240,7 @@ class Collection
      * Create a single index for the collection.
      *
      * @see Collection::createIndexes()
+     * @see CreateIndexes::__construct() for supported command options
      * @param array|object $key     Document containing fields mapped to values,
      *                              which denote order or an index type
      * @param array        $options Index options
@@ -241,7 +248,10 @@ class Collection
      */
     public function createIndex($key, array $options = [])
     {
-        return current($this->createIndexes([['key' => $key] + $options]));
+        $indexOptions = array_diff_key($options, ['writeConcern' => 1]);
+        $commandOptions = array_intersect_key($options, ['writeConcern' => 1]);
+
+        return current($this->createIndexes([['key' => $key] + $indexOptions], $commandOptions));
     }
 
     /**
@@ -263,14 +273,21 @@ class Collection
      *
      * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
      * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
+     * @see CreateIndexes::__construct() for supported command options
      * @param array[] $indexes List of index specifications
+     * @param array   $options Command options
      * @return string[] The names of the created indexes
      * @throws InvalidArgumentException if an index specification is invalid
      */
-    public function createIndexes(array $indexes)
+    public function createIndexes(array $indexes, array $options = [])
     {
-        $operation = new CreateIndexes($this->databaseName, $this->collectionName, $indexes);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new CreateIndexes($this->databaseName, $this->collectionName, $indexes, $options);
 
         return $operation->execute($server);
     }
@@ -355,8 +372,13 @@ class Collection
             $options['typeMap'] = $this->typeMap;
         }
 
-        $operation = new DropCollection($this->databaseName, $this->collectionName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new DropCollection($this->databaseName, $this->collectionName, $options);
 
         return $operation->execute($server);
     }
@@ -382,8 +404,13 @@ class Collection
             $options['typeMap'] = $this->typeMap;
         }
 
-        $operation = new DropIndexes($this->databaseName, $this->collectionName, $indexName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new DropIndexes($this->databaseName, $this->collectionName, $indexName, $options);
 
         return $operation->execute($server);
     }
@@ -401,8 +428,13 @@ class Collection
             $options['typeMap'] = $this->typeMap;
         }
 
-        $operation = new DropIndexes($this->databaseName, $this->collectionName, '*', $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new DropIndexes($this->databaseName, $this->collectionName, '*', $options);
 
         return $operation->execute($server);
     }

@@ -17,6 +17,26 @@ class CreateIndexesTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @dataProvider provideInvalidConstructorOptions
+     */
+    public function testConstructorOptionTypeChecks(array $options)
+    {
+        new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => ['x' => 1]]], $options);
+    }
+
+    public function provideInvalidConstructorOptions()
+    {
+        $options = [];
+
+        foreach ($this->getInvalidWriteConcernValues() as $value) {
+            $options[][] = ['writeConcern' => $value];
+        }
+
+        return $options;
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessage $indexes is empty
      */
     public function testConstructorRequiresAtLeastOneIndex()

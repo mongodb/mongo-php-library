@@ -24,6 +24,7 @@ class Database
         'document' => 'MongoDB\Model\BSONDocument',
         'root' => 'MongoDB\Model\BSONDocument',
     ];
+    private static $wireVersionForWritableCommandWriteConcern = 5;
 
     private $databaseName;
     private $manager;
@@ -173,8 +174,13 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $operation = new CreateCollection($this->databaseName, $collectionName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new CreateCollection($this->databaseName, $collectionName, $options);
 
         return $operation->execute($server);
     }
@@ -192,8 +198,13 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $operation = new DropDatabase($this->databaseName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new DropDatabase($this->databaseName, $options);
 
         return $operation->execute($server);
     }
@@ -212,8 +223,13 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $operation = new DropCollection($this->databaseName, $collectionName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new DropCollection($this->databaseName, $collectionName, $options);
 
         return $operation->execute($server);
     }

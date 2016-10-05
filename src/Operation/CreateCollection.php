@@ -4,6 +4,7 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
@@ -20,6 +21,7 @@ class CreateCollection implements Executable
     const NO_PADDING = 2;
 
     private static $wireVersionForCollation = 5;
+    private static $wireVersionForWriteConcern = 5;
 
     private $databaseName;
     private $collectionName;
@@ -68,6 +70,11 @@ class CreateCollection implements Executable
      *  * validationLevel (string): Validation level.
      *
      *  * validator (document): Validation rules or expressions.
+     *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
      *
      * @see http://source.wiredtiger.com/2.4.1/struct_w_t___s_e_s_s_i_o_n.html#a358ca4141d59c345f401c58501276bbb
      * @see https://docs.mongodb.org/manual/core/document-validation/
@@ -130,6 +137,10 @@ class CreateCollection implements Executable
             throw InvalidArgumentException::invalidType('"validator" option', $options['validator'], 'array or object');
         }
 
+        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+        }
+
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->options = $options;
@@ -141,12 +152,16 @@ class CreateCollection implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return array|object Command result document
-     * @throws UnsupportedException if collation is used and unsupported
+     * @throws UnsupportedException if collation or write concern is used and unsupported
      */
     public function execute(Server $server)
     {
         if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
             throw UnsupportedException::collationNotSupported();
+        }
+
+        if (isset($this->options['writeConcern']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForWriteConcern)) {
+            throw UnsupportedException::writeConcernNotSupported();
         }
 
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
@@ -177,6 +192,10 @@ class CreateCollection implements Executable
             if (isset($this->options[$option])) {
                 $cmd[$option] = (object) $this->options[$option];
             }
+        }
+
+        if (isset($this->options['writeConcern'])) {
+            $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
         }
 
         return new Command($cmd);

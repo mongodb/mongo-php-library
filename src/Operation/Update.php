@@ -7,6 +7,7 @@ use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 
 /**
  * Operation for the update command.
@@ -19,6 +20,7 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class Update implements Executable
 {
+    private static $wireVersionForCollation = 5;
     private static $wireVersionForDocumentLevelValidation = 4;
 
     private $databaseName;
@@ -34,6 +36,11 @@ class Update implements Executable
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to opt
      *    out of document level validation.
+     *
+     *  * collation (document): Collation specification.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
      *
      *  * multi (boolean): When true, updates all documents matching the query.
      *    This option cannot be true if the $update argument is a replacement
@@ -71,6 +78,10 @@ class Update implements Executable
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
+        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
+            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
+        }
+
         if ( ! is_bool($options['multi'])) {
             throw InvalidArgumentException::invalidType('"multi" option', $options['multi'], 'boolean');
         }
@@ -100,13 +111,22 @@ class Update implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return UpdateResult
+     * @throws UnsupportedException if collation is used and unsupported
      */
     public function execute(Server $server)
     {
+        if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
+            throw UnsupportedException::collationNotSupported();
+        }
+
         $updateOptions = [
             'multi' => $this->options['multi'],
             'upsert' => $this->options['upsert'],
         ];
+
+        if (isset($this->options['collation'])) {
+            $updateOptions['collation'] = (object) $this->options['collation'];
+        }
 
         $bulkOptions = [];
 

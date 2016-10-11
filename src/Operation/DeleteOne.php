@@ -5,6 +5,7 @@ namespace MongoDB\Operation;
 use MongoDB\DeleteResult;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 
 /**
  * Operation for deleting a single document with the delete command.
@@ -21,6 +22,11 @@ class DeleteOne implements Executable
      * Constructs a delete command.
      *
      * Supported options:
+     *
+     *  * collation (document): Collation specification.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
@@ -41,6 +47,7 @@ class DeleteOne implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return DeleteResult
+     * @throws UnsupportedException if collation is used and unsupported
      */
     public function execute(Server $server)
     {

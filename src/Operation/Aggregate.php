@@ -8,6 +8,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
+use MongoDB\Exception\UnsupportedException;
 use ArrayIterator;
 use stdClass;
 use Traversable;
@@ -21,6 +22,7 @@ use Traversable;
  */
 class Aggregate implements Executable
 {
+    private static $wireVersionForCollation = 5;
     private static $wireVersionForCursor = 2;
     private static $wireVersionForDocumentLevelValidation = 4;
     private static $wireVersionForReadConcern = 4;
@@ -47,6 +49,11 @@ class Aggregate implements Executable
      *
      *    For servers < 3.2, this option is ignored as document level validation
      *    is not available.
+     *
+     *  * collation (document): Collation specification.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
@@ -117,6 +124,10 @@ class Aggregate implements Executable
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
+        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
+            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
+        }
+
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
@@ -158,9 +169,14 @@ class Aggregate implements Executable
      * @param Server $server
      * @return Traversable
      * @throws UnexpectedValueException if the command response was malformed
+     * @throws UnsupportedException if collation is used and unsupported
      */
     public function execute(Server $server)
     {
+        if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
+            throw UnsupportedException::collationNotSupported();
+        }
+
         $isCursorSupported = \MongoDB\server_supports_feature($server, self::$wireVersionForCursor);
         $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
 
@@ -210,6 +226,10 @@ class Aggregate implements Executable
 
         if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
+        }
+
+        if (isset($this->options['collation'])) {
+            $cmd['collation'] = (object) $this->options['collation'];
         }
 
         if (isset($this->options['maxTimeMS'])) {

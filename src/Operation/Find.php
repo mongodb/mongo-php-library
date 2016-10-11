@@ -8,6 +8,7 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 
 /**
  * Operation for the find command.
@@ -23,6 +24,8 @@ class Find implements Executable
     const TAILABLE = 2;
     const TAILABLE_AWAIT = 3;
 
+    private static $wireVersionForCollation = 5;
+
     private $databaseName;
     private $collectionName;
     private $filter;
@@ -37,6 +40,11 @@ class Find implements Executable
      *    some shards are inaccessible (instead of throwing an error).
      *
      *  * batchSize (integer): The number of documents to return per batch.
+     *
+     *  * collation (document): Collation specification.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
      *
      *  * comment (string): Attaches a comment to the query. If "$comment" also
      *    exists in the modifiers document, this option will take precedence.
@@ -98,6 +106,10 @@ class Find implements Executable
 
         if (isset($options['batchSize']) && ! is_integer($options['batchSize'])) {
             throw InvalidArgumentException::invalidType('"batchSize" option', $options['batchSize'], 'integer');
+        }
+
+        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
+            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
         }
 
         if (isset($options['comment']) && ! is_string($options['comment'])) {
@@ -175,6 +187,10 @@ class Find implements Executable
      */
     public function execute(Server $server)
     {
+        if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
+            throw UnsupportedException::collationNotSupported();
+        }
+
         $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
 
         $cursor = $server->executeQuery($this->databaseName . '.' . $this->collectionName, $this->createQuery(), $readPreference);
@@ -213,6 +229,10 @@ class Find implements Executable
             if (isset($this->options[$option])) {
                 $options[$option] = $this->options[$option];
             }
+        }
+
+        if (isset($this->options['collation'])) {
+            $options['collation'] = (object) $this->options['collation'];
         }
 
         $modifiers = empty($this->options['modifiers']) ? [] : (array) $this->options['modifiers'];

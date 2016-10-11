@@ -7,6 +7,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\IndexInput;
 
 /**
@@ -19,11 +20,13 @@ use MongoDB\Model\IndexInput;
  */
 class CreateIndexes implements Executable
 {
+    private static $wireVersionForCollation = 5;
     private static $wireVersionForCommand = 2;
 
     private $databaseName;
     private $collectionName;
     private $indexes = [];
+    private $isCollationUsed = false;
 
     /**
      * Constructs a createIndexes command.
@@ -54,6 +57,10 @@ class CreateIndexes implements Executable
                 $index['ns'] = $databaseName . '.' . $collectionName;
             }
 
+            if (isset($index['collation'])) {
+                $this->isCollationUsed = true;
+            }
+
             $this->indexes[] = new IndexInput($index);
 
             $expectedIndex += 1;
@@ -72,9 +79,14 @@ class CreateIndexes implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return string[] The names of the created indexes
+     * @throws UnsupportedException if collation is used and unsupported
      */
     public function execute(Server $server)
     {
+        if ($this->isCollationUsed && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
+            throw UnsupportedException::collationNotSupported();
+        }
+
         if (\MongoDB\server_supports_feature($server, self::$wireVersionForCommand)) {
             $this->executeCommand($server);
         } else {

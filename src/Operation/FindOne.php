@@ -4,6 +4,7 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 
 /**
  * Operation for finding a single document with the find command.
@@ -22,6 +23,11 @@ class FindOne implements Executable
      * Constructs a find command for finding a single document.
      *
      * Supported options:
+     *
+     *  * collation (document): Collation specification.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
      *
      *  * comment (string): Attaches a comment to the query. If "$comment" also
      *    exists in the modifiers document, this option will take precedence.
@@ -75,6 +81,7 @@ class FindOne implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return array|object|null
+     * @throws UnsupportedException if collation is used and unsupported
      */
     public function execute(Server $server)
     {

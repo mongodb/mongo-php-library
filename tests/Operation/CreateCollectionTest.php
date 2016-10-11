@@ -27,6 +27,10 @@ class CreateCollectionTest extends TestCase
             $options[][] = ['capped' => $value];
         }
 
+        foreach ($this->getInvalidDocumentValues() as $value) {
+            $options[][] = ['collation' => $value];
+        }
+
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['flags' => $value];
         }

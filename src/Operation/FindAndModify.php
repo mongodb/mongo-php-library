@@ -7,6 +7,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
+use MongoDB\Exception\UnsupportedException;
 
 /**
  * Operation for the findAndModify command.
@@ -19,6 +20,7 @@ use MongoDB\Exception\UnexpectedValueException;
  */
 class FindAndModify implements Executable
 {
+    private static $wireVersionForCollation = 5;
     private static $wireVersionForDocumentLevelValidation = 4;
     private static $wireVersionForWriteConcern = 4;
 
@@ -30,6 +32,11 @@ class FindAndModify implements Executable
      * Constructs a findAndModify command.
      *
      * Supported options:
+     *
+     *  * collation (document): Collation specification.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to opt
      *    out of document level validation.
@@ -77,6 +84,10 @@ class FindAndModify implements Executable
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+        }
+
+        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
+            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
         }
 
         if (isset($options['fields']) && ! is_array($options['fields']) && ! is_object($options['fields'])) {
@@ -134,6 +145,10 @@ class FindAndModify implements Executable
      */
     public function execute(Server $server)
     {
+        if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
+            throw UnsupportedException::collationNotSupported();
+        }
+
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand($server));
         $result = current($cursor->toArray());
 
@@ -176,7 +191,7 @@ class FindAndModify implements Executable
             $cmd['upsert'] = $this->options['upsert'];
         }
 
-        foreach (['fields', 'query', 'sort', 'update'] as $option) {
+        foreach (['collation', 'fields', 'query', 'sort', 'update'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = (object) $this->options[$option];
             }

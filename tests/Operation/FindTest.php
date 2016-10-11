@@ -36,6 +36,10 @@ class FindTest extends TestCase
             $options[][] = ['batchSize' => $value];
         }
 
+        foreach ($this->getInvalidDocumentValues() as $value) {
+            $options[][] = ['collation' => $value];
+        }
+
         foreach ($this->getInvalidStringValues() as $value) {
             $options[][] = ['comment' => $value];
         }

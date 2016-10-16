@@ -99,6 +99,23 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["deleteMany"\]\[1\]\["collation"\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
+     */
+    public function testDeleteManyCollationOptionTypeCheck($collation)
+    {
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::DELETE_MANY => [['x' => 1], ['collation' => $collation]]],
+        ]);
+    }
+
+    public function provideInvalidDocumentValues()
+    {
+        return $this->wrapValuesForDataProvider($this->getInvalidDocumentValues());
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessage Missing first argument for $operations[0]["deleteOne"]
      */
     public function testDeleteOneFilterArgumentMissing()
@@ -117,6 +134,18 @@ class BulkWriteTest extends TestCase
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::DELETE_ONE => [$document]],
+        ]);
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["deleteOne"\]\[1\]\["collation"\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
+     */
+    public function testDeleteOneCollationOptionTypeCheck($collation)
+    {
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::DELETE_ONE => [['x' => 1], ['collation' => $collation]]],
         ]);
     }
 
@@ -179,6 +208,18 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["replaceOne"\]\[2\]\["collation"\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
+     */
+    public function testReplaceOneCollationOptionTypeCheck($collation)
+    {
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::REPLACE_ONE => [['x' => 1], ['y' => 1], ['collation' => $collation]]],
+        ]);
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["replaceOne"\]\[2\]\["upsert"\] to have type "boolean" but found "[\w ]+"/
      * @dataProvider provideInvalidBooleanValues
      */
@@ -187,6 +228,11 @@ class BulkWriteTest extends TestCase
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::REPLACE_ONE => [['x' => 1], ['y' => 1], ['upsert' => $upsert]]],
         ]);
+    }
+
+    public function provideInvalidBooleanValues()
+    {
+        return $this->wrapValuesForDataProvider($this->getInvalidBooleanValues());
     }
 
     /**
@@ -243,6 +289,18 @@ class BulkWriteTest extends TestCase
     {
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::UPDATE_MANY => [['_id' => ['$gt' => 1]], ['x' => 1]]],
+        ]);
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateMany"\]\[2\]\["collation"\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
+     */
+    public function testUpdateManyCollationOptionTypeCheck($collation)
+    {
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_MANY => [['x' => 1], ['$set' => ['x' => 1]], ['collation' => $collation]]],
         ]);
     }
 
@@ -317,6 +375,18 @@ class BulkWriteTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateOne"\]\[2\]\["collation"\] to have type "array or object" but found "[\w ]+"/
+     * @dataProvider provideInvalidDocumentValues
+     */
+    public function testUpdateOneCollationOptionTypeCheck($collation)
+    {
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_ONE => [['x' => 1], ['$set' => ['x' => 1]], ['collation' => $collation]]],
+        ]);
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateOne"\]\[2\]\["upsert"\] to have type "boolean" but found "[\w ]+"/
      * @dataProvider provideInvalidBooleanValues
      */
@@ -339,11 +409,6 @@ class BulkWriteTest extends TestCase
             [[BulkWrite::INSERT_ONE => [['x' => 1]]]],
             $options
         );
-    }
-
-    public function provideInvalidBooleanValues()
-    {
-        return $this->wrapValuesForDataProvider($this->getInvalidBooleanValues());
     }
 
     public function provideInvalidConstructorOptions()

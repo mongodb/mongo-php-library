@@ -5,6 +5,7 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 
 /**
  * Operation for the create command.
@@ -17,6 +18,8 @@ class CreateCollection implements Executable
 {
     const USE_POWER_OF_2_SIZES = 1;
     const NO_PADDING = 2;
+
+    private static $wireVersionForCollation = 5;
 
     private $databaseName;
     private $collectionName;
@@ -33,6 +36,11 @@ class CreateCollection implements Executable
      *
      *  * capped (boolean): Specify true to create a capped collection. If set,
      *    the size option must also be specified. The default is false.
+     *
+     *  * collation (document): Collation specification.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
      *
      *  * flags (integer): Options for the MMAPv1 storage engine only. Must be a
      *    bitwise combination CreateCollection::USE_POWER_OF_2_SIZES and
@@ -76,6 +84,10 @@ class CreateCollection implements Executable
 
         if (isset($options['capped']) && ! is_bool($options['capped'])) {
             throw InvalidArgumentException::invalidType('"capped" option', $options['capped'], 'boolean');
+        }
+
+        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
+            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
         }
 
         if (isset($options['flags']) && ! is_integer($options['flags'])) {
@@ -129,9 +141,14 @@ class CreateCollection implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return array|object Command result document
+     * @throws UnsupportedException if collation is used and unsupported
      */
     public function execute(Server $server)
     {
+        if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
+            throw UnsupportedException::collationNotSupported();
+        }
+
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
 
         if (isset($this->options['typeMap'])) {
@@ -156,16 +173,10 @@ class CreateCollection implements Executable
             }
         }
 
-        if (isset($this->options['indexOptionDefaults'])) {
-            $cmd['indexOptionDefaults'] = (object) $this->options['indexOptionDefaults'];
-        }
-
-        if (isset($this->options['storageEngine'])) {
-            $cmd['storageEngine'] = (object) $this->options['storageEngine'];
-        }
-
-        if (isset($this->options['validator'])) {
-            $cmd['validator'] = (object) $this->options['validator'];
+        foreach (['collation', 'indexOptionDefaults', 'storageEngine', 'validator'] as $option) {
+            if (isset($this->options[$option])) {
+                $cmd[$option] = (object) $this->options[$option];
+            }
         }
 
         return new Command($cmd);

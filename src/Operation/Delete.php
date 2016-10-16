@@ -7,6 +7,7 @@ use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 
 /**
  * Operation for the delete command.
@@ -19,6 +20,8 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class Delete implements Executable
 {
+    private static $wireVersionForCollation = 5;
+
     private $databaseName;
     private $collectionName;
     private $filter;
@@ -29,6 +32,11 @@ class Delete implements Executable
      * Constructs a delete command.
      *
      * Supported options:
+     *
+     *  * collation (document): Collation specification.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
@@ -51,6 +59,10 @@ class Delete implements Executable
             throw new InvalidArgumentException('$limit must be 0 or 1');
         }
 
+        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
+            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
+        }
+
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
@@ -71,8 +83,18 @@ class Delete implements Executable
      */
     public function execute(Server $server)
     {
+        if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
+            throw UnsupportedException::collationNotSupported();
+        }
+
+        $deleteOptions = ['limit' => $this->limit];
+
+        if (isset($this->options['collation'])) {
+            $deleteOptions['collation'] = (object) $this->options['collation'];
+        }
+
         $bulk = new Bulk();
-        $bulk->delete($this->filter, ['limit' => $this->limit]);
+        $bulk->delete($this->filter, $deleteOptions);
 
         $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;
         $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $writeConcern);

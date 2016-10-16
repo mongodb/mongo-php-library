@@ -43,6 +43,10 @@ class DeleteTest extends TestCase
     {
         $options = [];
 
+        foreach ($this->getInvalidDocumentValues() as $value) {
+            $options[][] = ['collation' => $value];
+        }
+
         foreach ($this->getInvalidWriteConcernValues() as $value) {
             $options[][] = ['writeConcern' => $value];
         }

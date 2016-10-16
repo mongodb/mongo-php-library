@@ -28,6 +28,10 @@ class CountTest extends TestCase
     {
         $options = [];
 
+        foreach ($this->getInvalidDocumentValues() as $value) {
+            $options[][] = ['collation' => $value];
+        }
+
         foreach ($this->getInvalidHintValues() as $value) {
             $options[][] = ['hint' => $value];
         }

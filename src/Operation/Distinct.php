@@ -8,6 +8,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
+use MongoDB\Exception\UnsupportedException;
 
 /**
  * Operation for the distinct command.
@@ -18,6 +19,7 @@ use MongoDB\Exception\UnexpectedValueException;
  */
 class Distinct implements Executable
 {
+    private static $wireVersionForCollation = 5;
     private static $wireVersionForReadConcern = 4;
 
     private $databaseName;
@@ -30,6 +32,11 @@ class Distinct implements Executable
      * Constructs a distinct command.
      *
      * Supported options:
+     *
+     *  * collation (document): Collation specification.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
@@ -52,6 +59,10 @@ class Distinct implements Executable
     {
         if ( ! is_array($filter) && ! is_object($filter)) {
             throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
+        }
+
+        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
+            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
@@ -83,6 +94,10 @@ class Distinct implements Executable
      */
     public function execute(Server $server)
     {
+        if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
+            throw UnsupportedException::collationNotSupported();
+        }
+
         $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
 
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand($server), $readPreference);
@@ -110,6 +125,10 @@ class Distinct implements Executable
 
         if ( ! empty($this->filter)) {
             $cmd['query'] = (object) $this->filter;
+        }
+
+        if (isset($this->options['collation'])) {
+            $cmd['collation'] = (object) $this->options['collation'];
         }
 
         if (isset($this->options['maxTimeMS'])) {

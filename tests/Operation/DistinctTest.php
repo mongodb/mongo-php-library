@@ -28,6 +28,10 @@ class DistinctTest extends TestCase
     {
         $options = [];
 
+        foreach ($this->getInvalidDocumentValues() as $value) {
+            $options[][] = ['collation' => $value];
+        }
+
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['maxTimeMS' => $value];
         }

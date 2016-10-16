@@ -24,6 +24,10 @@ class FindAndModifyTest extends TestCase
         }
 
         foreach ($this->getInvalidDocumentValues() as $value) {
+            $options[][] = ['collation' => $value];
+        }
+
+        foreach ($this->getInvalidDocumentValues() as $value) {
             $options[][] = ['fields' => $value];
         }
 

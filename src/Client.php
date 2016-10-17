@@ -16,6 +16,7 @@ class Client
         'document' => 'MongoDB\Model\BSONDocument',
         'root' => 'MongoDB\Model\BSONDocument',
     ];
+    private static $wireVersionForWritableCommandWriteConcern = 5;
 
     private $manager;
     private $uri;
@@ -114,8 +115,13 @@ class Client
             $options['typeMap'] = $this->typeMap;
         }
 
-        $operation = new DropDatabase($databaseName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new DropDatabase($databaseName, $options);
 
         return $operation->execute($server);
     }

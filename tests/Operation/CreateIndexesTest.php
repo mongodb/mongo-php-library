@@ -8,15 +8,6 @@ class CreateIndexesTest extends TestCase
 {
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage $indexes is empty
-     */
-    public function testCreateIndexesRequiresAtLeastOneIndex()
-    {
-        new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), []);
-    }
-
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessage $indexes is not a list (unexpected index: "1")
      */
     public function testConstructorIndexesArgumentMustBeAList()
@@ -26,9 +17,38 @@ class CreateIndexesTest extends TestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @dataProvider provideInvalidConstructorOptions
+     */
+    public function testConstructorOptionTypeChecks(array $options)
+    {
+        new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => ['x' => 1]]], $options);
+    }
+
+    public function provideInvalidConstructorOptions()
+    {
+        $options = [];
+
+        foreach ($this->getInvalidWriteConcernValues() as $value) {
+            $options[][] = ['writeConcern' => $value];
+        }
+
+        return $options;
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessage $indexes is empty
+     */
+    public function testConstructorRequiresAtLeastOneIndex()
+    {
+        new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), []);
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidIndexSpecificationTypes
      */
-    public function testCreateIndexesRequiresIndexSpecificationsToBeAnArray($index)
+    public function testConstructorRequiresIndexSpecificationsToBeAnArray($index)
     {
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [$index]);
     }

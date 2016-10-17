@@ -22,21 +22,31 @@ class CreateIndexes implements Executable
 {
     private static $wireVersionForCollation = 5;
     private static $wireVersionForCommand = 2;
+    private static $wireVersionForWriteConcern = 5;
 
     private $databaseName;
     private $collectionName;
     private $indexes = [];
     private $isCollationUsed = false;
+    private $options = [];
 
     /**
      * Constructs a createIndexes command.
      *
+     * Supported options:
+     *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
+     *
      * @param string  $databaseName   Database name
      * @param string  $collectionName Collection name
      * @param array[] $indexes        List of index specifications
+     * @param array   $options        Command options
      * @throws InvalidArgumentException
      */
-    public function __construct($databaseName, $collectionName, array $indexes)
+    public function __construct($databaseName, $collectionName, array $indexes, array $options = [])
     {
         if (empty($indexes)) {
             throw new InvalidArgumentException('$indexes is empty');
@@ -66,8 +76,13 @@ class CreateIndexes implements Executable
             $expectedIndex += 1;
         }
 
+        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+        }
+
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
+        $this->options = $options;
     }
 
     /**
@@ -79,12 +94,16 @@ class CreateIndexes implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return string[] The names of the created indexes
-     * @throws UnsupportedException if collation is used and unsupported
+     * @throws UnsupportedException if collation or write concern is used and unsupported
      */
     public function execute(Server $server)
     {
         if ($this->isCollationUsed && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
             throw UnsupportedException::collationNotSupported();
+        }
+
+        if (isset($this->options['writeConcern']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForWriteConcern)) {
+            throw UnsupportedException::writeConcernNotSupported();
         }
 
         if (\MongoDB\server_supports_feature($server, self::$wireVersionForCommand)) {
@@ -104,12 +123,16 @@ class CreateIndexes implements Executable
      */
     private function executeCommand(Server $server)
     {
-        $command = new Command([
+        $cmd = [
             'createIndexes' => $this->collectionName,
             'indexes' => $this->indexes,
-        ]);
+        ];
 
-        $server->executeCommand($this->databaseName, $command);
+        if (isset($this->options['writeConcern'])) {
+            $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
+        }
+
+        $server->executeCommand($this->databaseName,  new Command($cmd));
     }
 
     /**

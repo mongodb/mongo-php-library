@@ -23,6 +23,10 @@ class DropDatabaseTest extends TestCase
             $options[][] = ['typeMap' => $value];
         }
 
+        foreach ($this->getInvalidWriteConcernValues() as $value) {
+            $options[][] = ['writeConcern' => $value];
+        }
+
         return $options;
     }
 }

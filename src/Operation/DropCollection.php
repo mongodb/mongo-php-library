@@ -4,6 +4,7 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 
@@ -18,6 +19,7 @@ use MongoDB\Exception\InvalidArgumentException;
 class DropCollection implements Executable
 {
     private static $errorMessageNamespaceNotFound = 'ns not found';
+    private static $wireVersionForWriteConcern = 5;
 
     private $databaseName;
     private $collectionName;
@@ -31,6 +33,11 @@ class DropCollection implements Executable
      *  * typeMap (array): Type map for BSON deserialization. This will be used
      *    for the returned command result document.
      *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
+     *
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
      * @param array  $options        Command options
@@ -39,6 +46,10 @@ class DropCollection implements Executable
     {
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        }
+
+        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->databaseName = (string) $databaseName;
@@ -52,11 +63,16 @@ class DropCollection implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return array|object Command result document
+     * @throws UnsupportedException if writeConcern is used and unsupported
      */
     public function execute(Server $server)
     {
+        if (isset($this->options['writeConcern']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForWriteConcern)) {
+            throw UnsupportedException::writeConcernNotSupported();
+        }
+
         try {
-            $cursor = $server->executeCommand($this->databaseName, new Command(['drop' => $this->collectionName]));
+            $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
         } catch (RuntimeException $e) {
             /* The server may return an error if the collection does not exist.
              * Check for an error message (unfortunately, there isn't a code)
@@ -74,5 +90,21 @@ class DropCollection implements Executable
         }
 
         return current($cursor->toArray());
+    }
+
+    /**
+     * Create the drop command.
+     *
+     * @return Command
+     */
+    private function createCommand()
+    {
+        $cmd = ['drop' => $this->collectionName];
+
+        if (isset($this->options['writeConcern'])) {
+            $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
+        }
+
+        return new Command($cmd);
     }
 }

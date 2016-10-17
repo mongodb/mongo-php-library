@@ -71,6 +71,10 @@ class CreateCollectionTest extends TestCase
             $options[][] = ['validator' => $value];
         }
 
+        foreach ($this->getInvalidWriteConcernValues() as $value) {
+            $options[][] = ['writeConcern' => $value];
+        }
+
         return $options;
     }
 }

@@ -4,6 +4,7 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 
 /**
@@ -16,6 +17,8 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class DropDatabase implements Executable
 {
+    private static $wireVersionForWriteConcern = 5;
+
     private $databaseName;
     private $options;
 
@@ -27,6 +30,11 @@ class DropDatabase implements Executable
      *  * typeMap (array): Type map for BSON deserialization. This will be used
      *    for the returned command result document.
      *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
+     *
+     *    This is not supported for server versions < 3.4 and will result in an
+     *    exception at execution time if used.
+     *
      * @param string $databaseName Database name
      * @param array  $options      Command options
      */
@@ -34,6 +42,10 @@ class DropDatabase implements Executable
     {
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        }
+
+        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
         $this->databaseName = (string) $databaseName;
@@ -46,15 +58,36 @@ class DropDatabase implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return array|object Command result document
+     * @throws UnsupportedException if writeConcern is used and unsupported
      */
     public function execute(Server $server)
     {
-        $cursor = $server->executeCommand($this->databaseName, new Command(['dropDatabase' => 1]));
+        if (isset($this->options['writeConcern']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForWriteConcern)) {
+            throw UnsupportedException::writeConcernNotSupported();
+        }
+
+        $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
         }
 
         return current($cursor->toArray());
+    }
+
+    /**
+     * Create the dropDatabase command.
+     *
+     * @return Command
+     */
+    private function createCommand()
+    {
+        $cmd = ['dropDatabase' => 1];
+
+        if (isset($this->options['writeConcern'])) {
+            $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
+        }
+
+        return new Command($cmd);
     }
 }

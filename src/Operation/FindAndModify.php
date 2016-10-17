@@ -142,6 +142,7 @@ class FindAndModify implements Executable
      * @param Server $server
      * @return object|null
      * @throws UnexpectedValueException if the command response was malformed
+     * @throws UnsupportedException if collation is used and unsupported
      */
     public function execute(Server $server)
     {

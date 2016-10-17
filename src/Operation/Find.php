@@ -184,6 +184,7 @@ class Find implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return Cursor
+     * @throws UnsupportedException if collation is used and unsupported
      */
     public function execute(Server $server)
     {

@@ -44,6 +44,36 @@ By default, the PHPUnit script relies on the `php` interpreter for your shell
 $ hhvm vendor/bin/phpunit
 ```
 
+## Documentation
+
+Documentation for the library lives in the `docs/` directory and is built with
+tools in the related
+[mongodb/docs-php-library](https://github.com/mongodb/docs-php-library)
+repository. The tools repository is already configured to reference our sources.
+
+That said, any changes to the documentation should be tested locally before
+committing. Follow the following steps to build the docs locally with the tools
+repository:
+
+ * Clone the
+   [mongodb/docs-php-library](https://github.com/mongodb/docs-php-library) tools
+   repository.
+ * Install [giza](https://pypi.python.org/pypi/giza/), as noted in the tools
+   README.
+ * Comment out the following `assets` entry in `config/build_conf.yaml`:
+   ```
+   - branch: master
+      path: build/php-library # this is where we'll put the source docs (from the driver repo)
+      repository: https://github.com/mongodb/mongo-php-library.git
+   ```
+
+ * Create a symlink so that `build/php-library` points to your working copy of
+   the [mongodb/mongo-php-library](https://github.com/mongodb/mongo-php-library)
+   repository.
+ * Build the documentation with `gize make html`. You can suppress informational
+   log messages via the `--level warning` option.
+ * Generated documentation may be found in the `build/master/html` directory.
+
 ## Releasing
 
 The follow steps outline the release process for a maintenance branch (e.g.

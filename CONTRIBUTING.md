@@ -70,7 +70,7 @@ repository:
  * Create a symlink so that `build/php-library` points to your working copy of
    the [mongodb/mongo-php-library](https://github.com/mongodb/mongo-php-library)
    repository.
- * Build the documentation with `gize make html`. You can suppress informational
+ * Build the documentation with `giza make html`. You can suppress informational
    log messages via the `--level warning` option.
  * Generated documentation may be found in the `build/master/html` directory.
 

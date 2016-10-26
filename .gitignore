@@ -5,5 +5,3 @@ composer.lock
 /vendor/
 php.ini
 phpunit.xml
-apigen.phar
-site

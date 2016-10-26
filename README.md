@@ -22,12 +22,12 @@ extension, see:
 
 ## Documentation
 
- - http://mongodb.github.io/mongo-php-library/
+ - https://docs.mongodb.com/php-library/
 
 # Installation
 
 As a high-level abstraction for the driver, this library naturally requires that
-the [`mongodb` extension be installed](http://mongodb.github.io/mongo-php-driver/#installation):
+the [`mongodb` extension be installed](http://php.net/manual/en/mongodb.installation.php):
 
     $ pecl install mongodb
     $ echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`

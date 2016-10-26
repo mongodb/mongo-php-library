@@ -1,9 +1,8 @@
-*.swp
-!.gitignore
+# Composer
 composer.phar
 composer.lock
-/vendor/
-php.ini
+vendor/
+
+# PHPUnit
+phpunit.phar
 phpunit.xml
-apigen.phar
-site

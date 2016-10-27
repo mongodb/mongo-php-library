@@ -2,24 +2,24 @@ arg_name: param
 name: $databaseName
 type: string
 description: |
-  The name of the database{{select}}.
+  The name of the database{{action}}.
 interface: phpmethod
 operation: selectCollection
 optional: false
 replacement:
-  select: " to select"
+  action: ""
 position: 1
 ---
 arg_name: param
 name: $collectionName
 type: string
 description: |
-  The name of the collection{{select}}.
+  The name of the collection{{action}}.
 interface: phpmethod
 operation: selectCollection
 optional: false
 replacement:
-  select: " to select"
+  action: ""
 position: 2
 ---
 arg_name: param

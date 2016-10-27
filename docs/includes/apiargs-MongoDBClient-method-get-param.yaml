@@ -3,4 +3,6 @@ source:
   ref: $databaseName
 operation: MongoDB\\Client::__get
 position: 1
+replacement:
+  action: " to select"
 ...

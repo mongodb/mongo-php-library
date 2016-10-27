@@ -3,12 +3,16 @@ source:
   ref: $databaseName
 operation: MongoDB\\Client::selectCollection
 position: 1
+replacement:
+  action: " containing the collection to select"
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $collectionName
 operation: MongoDB\\Client::selectCollection
 position: 2
+replacement:
+  action: " to select"
 ---
 source:
   file: apiargs-common-param.yaml

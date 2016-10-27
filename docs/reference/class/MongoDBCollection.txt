@@ -75,6 +75,7 @@ Methods
    /reference/method/MongoDBCollection-findOneAndUpdate
    /reference/method/MongoDBCollection-getCollectionName
    /reference/method/MongoDBCollection-getDatabaseName
+   /reference/method/MongoDBCollection-getManager
    /reference/method/MongoDBCollection-getNamespace
    /reference/method/MongoDBCollection-insertMany
    /reference/method/MongoDBCollection-insertOne

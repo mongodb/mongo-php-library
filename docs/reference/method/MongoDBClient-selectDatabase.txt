@@ -13,28 +13,32 @@ MongoDB\\Client::selectDatabase()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::selectDatabase($databaseName, $options)
+.. phpmethod:: MongoDB\\Client::selectDatabase()
 
-   Selects a database on the :program:`mongod` instance to which your
-   application is connected.
-   
+   Selects a database on the server.
+
    .. code-block:: php
 
-      function selectDatabase($databaseName array $options = []): MongoDB\Database
+      function selectDatabase($databaseName, array $options = []): MongoDB\Database
 
-   :phpmethod:`MongoDB\\Client::selectDatabase` has the following parameters:
+   :phpmethod:`MongoDB\\Client::selectDatabase()` has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBClient-method-selectDatabase-param.rst
 
-   The following table describes the options that
-   :phpmethod:`MongoDB\\Client::selectDatabase` can accept.
+   The ``$options`` parameter supports the following options:
 
    .. include:: /includes/apiargs/MongoDBClient-method-selectDatabase-option.rst
 
-Output
-------
+   :returns:
 
-Returns a :phpclass:`MongoDB\\Database` object.
+      A :phpclass:`MongoDB\\Database` object.
+
+Behavior
+--------
+
+The selected database inherits options such as read preference and type mapping
+from the :phpclass:`Client <MongoDB\\Client>` object. Options may be overridden
+via the ``$options`` parameter.
 
 Example
 -------
@@ -67,5 +71,5 @@ preference:
 
 .. seealso::
 
-   - :phpmethod:`Collection::__construct`
-   - :phpmethod:`MongoDB\\Client::__get`
+   - :phpmethod:`MongoDB\\Client::__get()`
+   - :phpmethod:`MongoDB\\Database::__construct()`

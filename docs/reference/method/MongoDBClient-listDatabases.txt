@@ -13,28 +13,27 @@ MongoDB\\Client::listDatabases()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::listDatabases($options)
+.. phpmethod:: MongoDB\\Client::listDatabases()
 
-   Lists the available databases.
+   Returns information for all databases on the server.
 
    .. code-block:: php
 
       function listDatabases(array $options = []): MongoDB\Model\DatabaseInfoIterator
 
-   :phpmethod:`MongoDB\\Client::listDatabases` has the following parameters:
+   :phpmethod:`MongoDB\\Client::listDatabases()` has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBClient-method-listDatabases-param.rst
 
-   ``listDatabases`` supports the following values for the ``$options`` array:
+   The ``$options`` parameter supports the following options:
 
    .. include:: /includes/apiargs/MongoDBClient-method-listDatabases-option.rst
 
-Output
-------
+   :returns:
 
-Information for all databases on the :program:`mongod`, replica set,
-or sharded cluster to which you are connected. The returned elements are
-``MongoDB\Model\DatabaseInfo`` objects.
+      A traversable :phpclass:`MongoDB\\Model\DatabaseInfoIterator`, which
+      contains an :phpclass:`MongoDB\\Model\DatabaseInfo` object for each
+      database on the server.
 
 Example
 -------
@@ -51,9 +50,7 @@ The following example lists all databases on the server:
        var_dump($databaseInfo);
    }
 
-The above example would output something similar to:
-
-.. code-block:: php
+The output would then resemble::
 
    object(MongoDB\Model\DatabaseInfo)#4 (3) {
      ["name"]=>
@@ -74,5 +71,5 @@ The above example would output something similar to:
 
 .. seealso::
 
-   :manual:`listDatabases() command reference in the MongoDB
-   manual </reference/command/listDatabases>`
+   - :manual:`listDatabases </reference/command/listDatabases>` command
+     reference in the MongoDB manual

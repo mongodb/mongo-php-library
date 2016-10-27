@@ -1,7 +1,6 @@
 source:
-  ref: $databaseName
   file: apiargs-common-param.yaml
-arg_name: param
-interface: phpmethod
+  ref: $databaseName
 operation: MongoDB\\Client::__get
+position: 1
 ...

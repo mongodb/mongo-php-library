@@ -2,11 +2,11 @@ arg_name: param
 name: $uri
 type: string
 description: |
-  The URI of the standalone, replica set, or sharded cluster to which to connect. Refer
-  to the :manual:`MongoDB connection string reference </reference/connection-string>`
-  for formatting.
-  
-  Defaults to ``mongodb://localhost:27017`` if unspecified.
+  The URI of the standalone, replica set, or sharded cluster to which to
+  connect. Refer to the :manual:`MongoDB connection string reference
+  </reference/connection-string>` for formatting.
+
+  Defaults to ``mongodb://127.0.0.1:27017`` if unspecified.
 interface: phpmethod
 operation: MongoDB\\Client::__construct
 optional: true
@@ -16,15 +16,14 @@ arg_name: param
 name: $uriOptions
 type: array
 description: |
-  Specifies additional URI options, such as authentication credentials
-  or query string parameters. The options specified in ``$uriOptions``
-  take precedence over any analogous options present in the
-  ``$uri`` string.
+  Specifies additional URI options, such as authentication credentials or query
+  string parameters. The options specified in ``$uriOptions`` take precedence
+  over any analogous options present in the ``$uri`` string.
 post: |
   Refer to the :php:`MongoDB\\Driver\\Manager::__construct()
-  <mongodb-driver-manager.construct>` extension reference and
-  :manual:`MongoDB connection string </reference/connection-string>`
-  documentation for valid options.
+  <mongodb-driver-manager.construct>` extension reference and :manual:`MongoDB
+  connection string </reference/connection-string>` documentation for valid
+  options.
 interface: phpmethod
 operation: MongoDB\\Client::__construct
 optional: true
@@ -34,12 +33,11 @@ arg_name: param
 name: $driverOptions
 type: array
 description: |
-  Specify driver-specific options. In addition to any
-  options supported by the :php:`extension <mongodb-driver-manager>`,
-  the |php-library| allows you to specify a default ``typeMap`` to
-  apply to the cursors it creates. Refer to the driver's
-  :php:`Persistence documentation <mongodb-persistence>` for more
-  about type maps.
+  Specify driver-specific options, such as SSL options. In addition to any
+  options supported by the :php:`extension <mongodb-driver-manager>`, the
+  |php-library| allows you to specify a default :php:`type map
+  <manual/en/mongodb.persistence.deserialization.php#mongodb.persistence.typemaps>`
+  to apply to the cursors it creates.
 interface: phpmethod
 operation: MongoDB\\Client::__construct
 optional: true

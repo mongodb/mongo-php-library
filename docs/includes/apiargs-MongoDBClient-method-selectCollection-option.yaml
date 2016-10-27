@@ -2,14 +2,14 @@ source:
   file: apiargs-common-option.yaml
   ref: readConcern
 replacement:
-  resource: "database"
+  resource: "collection"
   parent: "client"
 ---
 source:
   file: apiargs-common-option.yaml
   ref: readPreference
 replacement:
-  resource: "database"
+  resource: "collection"
   parent: "client"
 ---
 source:
@@ -22,6 +22,6 @@ source:
   file: apiargs-common-option.yaml
   ref: writeConcern
 replacement:
-  resource: "database"
+  resource: "collection"
   parent: "client"
 ...

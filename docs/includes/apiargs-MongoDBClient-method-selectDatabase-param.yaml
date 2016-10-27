@@ -1,12 +1,12 @@
 source:
-  ref: $databaseName
   file: apiargs-common-param.yaml
+  ref: $databaseName
 operation: MongoDB\\Client::selectDatabase
 position: 1
 ---
 source:
-  ref: $options
   file: apiargs-common-param.yaml
+  ref: $options
 operation: MongoDB\\Client::selectDatabase
 position: 2
 ...

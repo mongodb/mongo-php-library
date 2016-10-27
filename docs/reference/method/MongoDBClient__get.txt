@@ -4,7 +4,6 @@ MongoDB\\Client::__get()
 
 .. default-domain:: mongodb
 
-
 .. contents:: On this page
    :local:
    :backlinks: none
@@ -14,39 +13,43 @@ MongoDB\\Client::__get()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::__get($databaseName)
+.. phpmethod:: MongoDB\\Client::__get()
 
-   Select a MongoDB database.
+   Selects a database on the server. This :php:`magic method <oop5.magic>` is
+   an alias for the :phpmethod:`selectDatabase()
+   <MongoDB\\Client::selectDatabase>` method.
 
    .. code-block:: php
 
       function __get($databaseName): MongoDB\Database
 
-   :phpmethod:`MongoDB\\Client::__get` has the following parameters:
+   :phpmethod:`MongoDB\\Client::__get()` has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBClient-method-get-param.rst
+
+   :returns:
+
+      A :phpclass:`MongoDB\\Database` object.
 
 Behavior
 --------
 
-The selected database inherits options such as read preference and
-type mapping from the :phpclass:`Client <MongoDB\\Client>` object.
-If you wish to override any options, use the 
-:phpmethod:`MongoDB\\Client::selectDatabase` method.
+The selected database inherits options such as read preference and type mapping
+from the :phpclass:`Client <MongoDB\\Client>` object. If you wish to override
+any options, use the :phpmethod:`MongoDB\\Client::selectDatabase` method.
 
 .. note::
-   
+
    To select databases whose names contain special characters, such as
    ``-``, use complex syntax, as in ``$client->{'that-database'}``.
-   
-   Alternatively, :phpmethod:`MongoDB\\Client::selectDatabase` supports
+
+   Alternatively, :phpmethod:`MongoDB\\Client::selectDatabase()` supports
    selecting databases whose names contain special characters.
 
 Examples
 --------
 
-The following example selects the ``demo`` and ``another-app``
-databases:
+The following example selects the ``demo`` and ``another-app`` databases:
 
 .. code-block:: php
 
@@ -59,5 +62,6 @@ databases:
 
 .. seealso::
 
-   - :phpmethod:`MongoDB\\Client::selectDatabase`
-   - :php:`Property Overloading <oop5.overloading>` in the PHP Manual.
+   - :phpmethod:`MongoDB\\Client::selectDatabase()`
+   - :phpmethod:`MongoDB\\Database::__construct()`
+   - :php:`Property Overloading <oop5.overloading>` in the PHP Manual

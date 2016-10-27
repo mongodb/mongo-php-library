@@ -2,19 +2,20 @@ arg_name: option
 name: readConcern
 type: :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
 description: |
-  The default read concern to use for {{resource}} operations. Defaults
-  to the Client's specified read concern.
+  The default read concern to use for {{resource}} operations. Defaults to the
+  {{parent}}'s read concern.
 interface: phpmethod
 operation: selectCollection
 optional: true
 position: 1
 replacement:
   resource: "collection"
+  parent: "client"
 ---
 arg_name: option
 description: |
-  The default read preference to use for {{resource}} operations.
-  Defaults to the {{parent}}'s read preference.
+  The default read preference to use for {{resource}} operations. Defaults to
+  the {{parent}}'s read preference.
 interface: phpmethod
 name: readPreference
 operation: selectCollection
@@ -23,7 +24,7 @@ position: 2
 type: :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
 replacement:
   resource: "collection"
-  parent: "Client"
+  parent: "client"
 ---
 arg_name: option
 description: |
@@ -36,21 +37,21 @@ optional: true
 position: 3
 type: array
 replacement:
-  parent: "Client"
+  parent: "client"
 ---
 arg_name: option
 name: writeConcern
 type: :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
 description: |
   The default write concern to use for {{resource}} operations. Defaults
-  to the {{parent}}'s specified write concern.
+  to the {{parent}}'s write concern.
 interface: phpmethod
 operation: selectCollection
 optional: true
 position: 4
 replacement:
   resource: "collection"
-  parent: "Client"
+  parent: "client"
 ---
 arg_name: option
 name: maxTimeMS

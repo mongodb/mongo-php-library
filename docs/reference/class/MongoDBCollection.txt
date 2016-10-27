@@ -17,35 +17,37 @@ Definition
 
    Provides methods for common operations on collections and documents,
    including CRUD operations and index management.
-   
+
    You can construct collections directly using the PHP extension's
-   ``Manager`` class, select a collection from the |php-library|'s
-   :phpclass:`MongoDB\\Client` or :phpclass:`MongoDB\\Database`
-   classes, or create a collection from an existing collection using the
-   :phpmethod:`withOptions <MongoDB\\Collection::withOptions>` clone method.
-    
+   :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` class, select
+   a collection from the |php-library|'s :phpclass:`MongoDB\\Client` or
+   :phpclass:`MongoDB\\Database` classes, or create a collection from an
+   existing collection using the
+   :phpmethod:`withOptions() <MongoDB\\Collection::withOptions>` clone method.
+
    :phpclass:`MongoDB\\Collection` supports the :php:`readConcern
    <mongodb-driver-readconcern>`, :php:`readPreference
    <mongodb-driver-readpreference>`, :php:`typeMap
-   <mongodb.persistence.php#mongodb.persistence.typemaps>`, and
-   :php:`writeConcern <mongodb-driver-writeconcern>` options.
+   <manual/en/mongodb.persistence.deserialization.php#mongodb.persistence.typemaps>`,
+   and :php:`writeConcern <mongodb-driver-writeconcern>` options.
    If you omit an option, the collection inherits the value from the
    Manager constructor argument or the Database object used to select
    the collection.
 
-   Operations within the ``Collection`` class
-   inherit the Collection's options.
-   
-   The :phpmethod:`MongoDB\\Collection::aggregate` method (when not
-   using a cursor), :phpmethod:`MongoDB\\Collection::distinct`, and
+   Operations within the :phpclass:`MongoDB\\Collection` class inherit the
+   Collection's options.
+
+   The :manual:`aggregate </reference/command/aggregate>` (when not using a
+   cursor), :manual:`distinct </reference/command/distinct>`, and
    :manual:`findAndModify </reference/command/findAndModify>` helpers do not
-   support a ``typeMap`` option due to a driver limitation.
-   :phpmethod:`MongoDB\\Collection::aggregate`,
-   :phpmethod:`MongoDB\\Collection::distinct`,
-   :phpmethod:`MongoDB\\Collection::findOneAndReplace`,
-   :phpmethod:`MongoDB\\Collection::findOneAndUpdate`, and
-   :phpmethod:`MongoDB\\Collection::findOneAndDelete`
-   return BSON documents as `stdClass` objects and arrays as arrays.
+   support a ``typeMap`` option due to a driver limitation. The
+   :phpmethod:`aggregate() <MongoDB\\Collection::aggregate>`,
+   :phpmethod:`distinct() <MongoDB\\Collection::distinct>`,
+   :phpmethod:`findOneAndReplace() <MongoDB\\Collection::findOneAndReplace>`,
+   :phpmethod:`findOneAndUpdate() <MongoDB\\Collection::findOneAndUpdate>`, and
+   :phpmethod:`findOneAndDelete() <MongoDB\\Collection::findOneAndDelete>`
+   methods return BSON documents as `stdClass` objects and BSON arrays as
+   arrays.
 
 
 Methods

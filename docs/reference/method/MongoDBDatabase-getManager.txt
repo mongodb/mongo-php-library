@@ -17,7 +17,7 @@ Definition
 
    Accessor for the
    :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` used by this
-   :phpclass:`Client <MongoDB\\Database>`.
+   :phpclass:`Database <MongoDB\\Database>`.
 
    .. code-block:: php
 

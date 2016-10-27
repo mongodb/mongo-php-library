@@ -4,7 +4,6 @@ MongoDB\\Database::__get()
 
 .. default-domain:: mongodb
 
-
 .. contents:: On this page
    :local:
    :backlinks: none
@@ -14,33 +13,37 @@ MongoDB\\Database::__get()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::__get($collectionName)
+.. phpmethod:: MongoDB\\Database::__get()
 
-   Select a collection from the database.
+   Select a collection within the database.
 
    .. code-block:: php
 
       function __get($collectionName): MongoDB\Collection
 
-   :phpmethod:`MongoDB\\Database::__get` has the following parameters:
+   :phpmethod:`MongoDB\\Database::__get()` has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBDatabase-method-get-param.rst
+
+   :returns:
+
+      A :phpclass:`MongoDB\\Collection` object.
 
 Behavior
 --------
 
-The selected database inherits options such as read preference and
-type mapping from the :phpclass:`Database  <MongoDB\\Database>` object.
-If you wish to override any options, use the 
-:phpmethod:`MongoDB\\Database::selectCollection` method.
+The selected collection inherits options such as read preference and type
+mapping from the :phpclass:`Database <MongoDB\\Database>` object. If you wish to
+override any options, use the :phpmethod:`MongoDB\\Database::selectCollection`
+method.
 
 .. note::
-   
+
    To select collections whose names contain special characters, such as
    ``.``, use complex syntax, as in ``$database->{'that.database'}``.
-   
+
    Alternatively, :phpmethod:`MongoDB\\Database::selectCollection` supports
-   selecting databases whose names contain special characters.
+   selecting collections whose names contain special characters.
 
 Examples
 --------
@@ -59,5 +62,6 @@ collections from the ``demo`` database:
 
 .. seealso::
 
-   - :phpmethod:`MongoDB\\Database::selectCollection`
-   - :php:`Property Overloading <oop5.overloading>` in the PHP Manual.
+   - :phpmethod:`MongoDB\\Database::selectCollection()`
+   - :phpmethod:`MongoDB\\Client::selectCollection()`
+   - :php:`Property Overloading <oop5.overloading>` in the PHP Manual

@@ -1,6 +1,9 @@
 source:
   file: apiargs-common-option.yaml
   ref: typeMap
-operation: MongoDB\\Database::dropCollection
+operation: MongoDB\\Database::drop
 position: 1
+description: |
+  Type map for BSON deserialization. This will be used for the returned command
+  result document. Defaults to the database's type map.
 ...

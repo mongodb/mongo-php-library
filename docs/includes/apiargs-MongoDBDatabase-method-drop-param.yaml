@@ -1,14 +1,6 @@
 source:
   file: apiargs-common-param.yaml
-  ref: $collectionName
-operation: MongoDB\\Database::dropCollection
-position: 1
-optional: false
----
-source:
-  file: apiargs-common-param.yaml
   ref: $options
-operation: MongoDB\\Database::dropCollection
-position: 2
-optional: true
+operation: MongoDB\\Database::drop
+position: 1
 ...

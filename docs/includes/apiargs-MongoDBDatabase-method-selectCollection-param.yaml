@@ -3,7 +3,8 @@ source:
   ref: $collectionName
 operation: MongoDB\\Database::selectCollection
 position: 1
-optional: false
+replacement:
+  action: " to select"
 ---
 source:
   file: apiargs-common-param.yaml

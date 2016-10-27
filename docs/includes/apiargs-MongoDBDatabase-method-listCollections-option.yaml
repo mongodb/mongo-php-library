@@ -1,24 +1,16 @@
-source:
-  file: apiargs-common-option.yaml
-  ref: readConcern
+arg_name: option
+name: filter
+type: array|object
+description: |
+  Query by which to filter collections.
+interface: phpmethod
 operation: MongoDB\\Database::listCollections
+optional: true
 position: 1
 ---
 source:
   file: apiargs-common-option.yaml
-  ref: readPreference
+  ref: maxTimeMS
 operation: MongoDB\\Database::listCollections
 position: 2
----
-source:
-  file: apiargs-common-option.yaml
-  ref: typeMap
-operation: MongoDB\\Database::listCollections
-position: 3
----
-source:
-  file: apiargs-common-option.yaml
-  ref: writeConcern
-operation: MongoDB\\Database::listCollections
-position: 4
 ...

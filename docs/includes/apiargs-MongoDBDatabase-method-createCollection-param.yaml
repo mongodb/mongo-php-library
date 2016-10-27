@@ -3,12 +3,12 @@ source:
   ref: $collectionName
 operation: MongoDB\\Database::createCollection
 position: 1
-optional: false
+replacement:
+  action: " to create"
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $options
 operation: MongoDB\\Database::createCollection
 position: 2
-optional: true
 ...

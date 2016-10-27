@@ -44,8 +44,8 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBDatabase__get
    /reference/method/MongoDBDatabase__construct
+   /reference/method/MongoDBDatabase__get
    /reference/method/MongoDBDatabase-command
    /reference/method/MongoDBDatabase-createCollection
    /reference/method/MongoDBDatabase-drop

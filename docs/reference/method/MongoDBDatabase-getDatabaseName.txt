@@ -13,26 +13,26 @@ MongoDB\\Database::getDatabaseName()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Database::getDatabaseName
+.. phpmethod:: MongoDB\\Database::getDatabaseName()
 
-   Drops the database.
-   
+   Returns the name of this database.
+
    .. code-block:: php
-   
+
       function getDatabaseName(): string
 
-Output
-------
+   :returns:
 
-Returns the name of the database as a string.
+      The name of this database as a string.
 
 Example
 -------
 
-The following example gets the name of the database from the ``$db``
-variable:
+The following example prints the name of a database object:
 
 .. code-block:: php
+
+   <?php
 
    $db = (new MongoDB\Client)->demo;
 

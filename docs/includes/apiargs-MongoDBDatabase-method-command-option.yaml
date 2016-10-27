@@ -3,10 +3,18 @@ source:
   ref: readPreference
 operation: MongoDB\\Database::command
 position: 1
+description: |
+  The read preference to use when executing the command. This may be used when
+  issuing the command to a replica set or shard cluster to ensure that the
+  driver sets the wire protocol accordingly or adds the read preference to the
+  command document, respectively. Defaults to the Database's read preference.
 ---
 source:
   file: apiargs-common-option.yaml
   ref: typeMap
 operation: MongoDB\\Database::command
 position: 2
+description: |
+  Type map for BSON deserialization. This will be applied to the returned
+  cursor. Defaults to the database's type map.
 ...

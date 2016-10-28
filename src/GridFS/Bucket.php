@@ -2,7 +2,6 @@
 
 namespace MongoDB\GridFS;
 
-use MongoDB\BSON\ObjectId;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
@@ -256,7 +255,7 @@ class Bucket
      * Gets the file document's ID of the GridFS file associated with a stream.
      *
      * @param resource $stream GridFS stream
-     * @return stdClass
+     * @return mixed
      * @throws CorruptFileException
      * @throws InvalidArgumentException
      */
@@ -404,7 +403,7 @@ class Bucket
      * @param string   $filename Filename
      * @param resource $source   Readable stream
      * @param array    $options  Stream options
-     * @return ObjectId ID of the newly created GridFS file
+     * @return mixed ID of the newly created GridFS file
      * @throws InvalidArgumentException if $source is not a stream
      */
     public function uploadFromStream($filename, $source, array $options = [])

@@ -1,4 +1,15 @@
 arg_name: param
+name: $manager
+type: :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>`
+description: |
+  The :php:`Manager <mongodb-driver-manager>` instance from the driver. The
+  manager maintains connections between the driver and your MongoDB instances.
+interface: phpmethod
+operation: ~
+optional: false
+position: 1
+---
+arg_name: param
 name: $databaseName
 type: string
 description: |

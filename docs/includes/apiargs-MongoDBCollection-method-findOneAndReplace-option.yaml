@@ -22,10 +22,18 @@ source:
 operation: MongoDB\\Collection::findOneAndReplace
 position: 4
 ---
-source:
-  file: apiargs-MongoDBCollection-method-findOneAndUpdate-option.yaml
-  ref: returnDocument
-operation: MongoDB\\Collection::findOneAndReplace
+arg_name: option
+name: returnDocument
+type: integer
+description: |
+  Specifies whether to return the document before the replacementi applied, or
+  after. ``returnDocument`` supports the following values:
+
+  - ``MongoDB\Operation\FindOneAndReplace::RETURN_DOCUMENT_BEFORE`` (*default*)
+  - ``MongoDB\Operation\FindOneAndReplace::RETURN_DOCUMENT_AFTER``
+interface: phpmethod
+operation: MongoDB\Collection::findOneAndUpdate
+optional: true
 position: 5
 ---
 source:

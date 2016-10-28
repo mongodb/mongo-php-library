@@ -1,6 +1,6 @@
 source:
-  ref: bypassDocumentValidation
   file: apiargs-common-option.yaml
+  ref: bypassDocumentValidation
 operation: MongoDB\\Collection::bulkWrite
 position: 1
 ---
@@ -8,23 +8,24 @@ arg_name: option
 name: ordered
 type: boolean
 description: |
-  If ``true``: when an insert fails, the operation returns without performing the
-  remaining writes. 
-  
-  If ``false``: when a write fails, the operation will continue with the
-  remaining writes, if any. 
-  
+  If ``true``: when a single write fails, the operation returns without
+  performing the remaining writes.
+
+  If ``false``: when a single write fails, the operation will continue with the
+  remaining writes, if any.
+
   The default is ``true``.
-optional: true
 interface: phpmethod
 operation: MongoDB\\Collection::bulkWrite
+optional: true
 position: 2
 ---
 source:
-  ref: writeConcern
   file: apiargs-common-option.yaml
+  ref: writeConcern
 operation: MongoDB\\Collection::bulkWrite
 replacement:
   resource: "write"
+  parent: "collection"
 position: 3
 ...

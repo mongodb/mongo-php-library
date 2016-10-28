@@ -13,37 +13,35 @@ MongoDB\\Collection::deleteOne()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::deleteOne($filter, $options)
+.. phpmethod:: MongoDB\\Collection::deleteOne()
 
-   Deletes at most one document that matches the filter criteria. If
-   multiple documents match the filter criteria,
-   :phpmethod:`MongoDB\\Collection::deleteOne` deletes the :term:`first
-   <natural order>` matching document.
+   Deletes at most one document that matches the filter criteria. If multiple
+   documents match the filter criteria, only the :term:`first <natural order>`
+   matching document will be deleted.
 
    .. code-block:: php
 
       function deleteOne($filter, array $options = []): MongoDB\DeleteResult
 
-   :phpmethod:`MongoDB\\Collection::deleteMany` has the following
-   parameters:
+   :phpmethod:`MongoDB\\Collection::deleteOne()` has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-deleteOne-param.rst
-   
-   :phpmethod:`MongoDB\\Collection::deleteMany` supports the following
-   options:
+
+   The ``$options`` parameter supports the following options:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-deleteOne-option.rst
 
-Output
-------
+   :returns:
 
-Returns a ``MongoDB\DeleteResult`` object.
+      A :phpclass:`MongoDB\\DeleteResult` object, which encapsulates a
+      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
+      object.
 
 Example
 -------
 
-The following operation deletes the first documents in the ``users``
-collection that has ``ny`` as the value for the ``state`` field:
+The following example deletes one document in the ``users`` collection that has
+has ``"ny"`` as the value for the ``state`` field:
 
 .. code-block:: php
 
@@ -63,9 +61,9 @@ The output would then resemble::
    Deleted 1 document(s)
 
 .. seealso::
-   
-   - :phpmethod:`MongoDB\\Collection::bulkWrite`
-   - :phpmethod:`MongoDB\\Collection::deleteMany`
+
+   - :phpmethod:`MongoDB\\Collection::deleteMany()`
+   - :phpmethod:`MongoDB\\Collection::bulkWrite()`
    - :doc:`/tutorial/crud`
    - :manual:`delete command reference </reference/command/delete`
      in the MongoDB manual

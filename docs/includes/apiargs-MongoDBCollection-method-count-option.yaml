@@ -1,12 +1,12 @@
 arg_name: option
 name: hint
-type: string or array|object
+type: string|array|object
 description: |
-  The index to use. If you specify a document, it is interpreted as
-  an index specification and a name will be generated.
-optional: true
+  The index to use. If you specify a document, it is interpreted as an index
+  specification and a name will be generated.
 interface: phpmethod
 operation: MongoDB\\Collection::count
+optional: true
 position: 1
 ---
 arg_name: option
@@ -14,14 +14,14 @@ name: limit
 type: integer
 description: |
   The maximum number of documents to return.
-optional: true
 interface: phpmethod
 operation: MongoDB\\Collection::count
+optional: true
 position: 2
 ---
 source:
-  ref: maxTimeMS
   file: apiargs-common-option.yaml
+  ref: maxTimeMS
 operation: MongoDB\\Collection::count
 position: 3
 ---
@@ -31,6 +31,7 @@ source:
 operation: MongoDB\\Collection::count
 replacement:
   resource: "count"
+  parent: "collection"
 position: 4
 ---
 source:
@@ -38,6 +39,7 @@ source:
   file: apiargs-common-option.yaml
 replacement:
   resource: "count"
+  parent: "collection"
 position: 5
 ---
 arg_name: option
@@ -45,8 +47,8 @@ name: skip
 type: integer
 description: |
   The number of documents to skip before returning the documents.
-optional: true
 interface: phpmethod
 operation: MongoDB\\Collection::count
+optional: true
 position: 6
 ...

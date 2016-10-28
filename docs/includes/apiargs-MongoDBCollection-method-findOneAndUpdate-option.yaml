@@ -26,16 +26,14 @@ arg_name: option
 name: returnDocument
 type: integer
 description: |
-  Specifies whether to return the document before the {{event}}, or
+  Specifies whether to return the document before the update is applied, or
   after. ``returnDocument`` supports the following values:
-  
-  - ``MongoDB\Operation\FindOneAndReplace::RETURN_DOCUMENT_BEFORE`` (*default*)
-  - ``MongoDB\Operation\FindOneAndReplace::RETURN_DOCUMENT_AFTER``
-optional: true
-replacement:
-  event: "update is applied"
+
+  - ``MongoDB\Operation\FindOneAndUpdate::RETURN_DOCUMENT_BEFORE`` (*default*)
+  - ``MongoDB\Operation\FindOneAndUpdate::RETURN_DOCUMENT_AFTER``
 interface: phpmethod
 operation: MongoDB\Collection::findOneAndUpdate
+optional: true
 position: 5
 ---
 source:

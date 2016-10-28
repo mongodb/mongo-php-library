@@ -4,46 +4,51 @@ MongoDB\\Collection::withOptions()
 
 .. default-domain:: mongodb
 
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::withOptions($options)
+.. phpmethod:: MongoDB\\Collection::withOptions()
 
-   Returns a clone of the collection, but with different options.
-   
+   Returns a clone of the Collection object, but with different options.
+
    .. code-block:: php
 
       function withOptions(array $options = []): MongoDB\Collection
 
-   :phpmethod:`MongoDB\\Collection::withOptions` supports the
-   following parameter:
-   
+   :phpmethod:`MongoDB\\Collection::withOptions()` has the following parameters:
+
    .. include:: /includes/apiargs/MongoDBCollection-method-withOptions-param.rst
-   
+
    The ``$options`` parameter supports the following options:
-   
+
    .. include:: /includes/apiargs/MongoDBCollection-method-withOptions-option.rst
+
+   :returns:
+
+      A :phpclass:`MongoDB\\Collection` object.
 
 Example
 -------
 
-The following example creates a new collection based on the
-``restaurants`` collection in the ``example`` database with a custom
-read preference:
+The following example clones an existing Collection object with a new read
+preference:
 
 .. code-block:: php
 
    <?php
-   
-   $database = new MongoDB\Client;
 
-   $sourceCollection = $database->selectCollection('example','restaurants');
+   $collection = (new MongoDB\Client)->selectCollect('demo', 'restaurants');
 
-   $newCollection = $sourceCollection->withOptions([ 
-   	'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),
+   $newCollection = $sourceCollection->withOptions([
+       'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),
    ]);
-
 
 .. seealso::
 
-   - :phpmethod:`MongoDB\\Collection::__construct`
+   - :phpmethod:`MongoDB\\Collection::__construct()`

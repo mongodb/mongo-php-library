@@ -1,12 +1,12 @@
 source:
-  ref: $filter
   file: apiargs-common-param.yaml
+  ref: $filter
 operation: MongoDB\\Collection::count
 position: 1
 ---
 source:
-  ref: $options
   file: apiargs-common-param.yaml
+  ref: $options
 operation: MongoDB\\Collection::count
 position: 2
 ...

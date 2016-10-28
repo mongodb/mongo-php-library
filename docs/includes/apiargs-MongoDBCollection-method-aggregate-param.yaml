@@ -2,15 +2,15 @@ arg_name: param
 name: $pipeline
 type: array
 description: |
-  Specifies an :manual:`aggregation pipeline </core/aggregation-pipeline>` operation.
+  Specifies an :manual:`aggregation pipeline </core/aggregation-pipeline>`
+  operation.
 interface: phpmethod
 operation: MongoDB\\Collection::aggregate
-optional: true
 position: 1
 ---
 source:
-  ref: $options
   file: apiargs-common-param.yaml
+  ref: $options
 operation: MongoDB\\Collection::aggregate
 position: 2
 ...

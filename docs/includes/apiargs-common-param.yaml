@@ -15,7 +15,7 @@ type: string
 description: |
   The name of the database{{action}}.
 interface: phpmethod
-operation: selectCollection
+operation: ~
 optional: false
 replacement:
   action: ""
@@ -27,7 +27,7 @@ type: string
 description: |
   The name of the collection{{action}}.
 interface: phpmethod
-operation: selectCollection
+operation: ~
 optional: false
 replacement:
   action: ""
@@ -39,7 +39,7 @@ type: array
 description: |
   An array specifying the desired options.
 interface: phpmethod
-operation: selectCollection
+operation: ~
 optional: true
 position: 3
 ---
@@ -49,7 +49,7 @@ type: array|object
 description: |
   The filter criteria that specifies the documents to {{verb}}.
 interface: phpmethod
-operation: count
+operation: ~
 optional: false
 position: 4
 replacement:

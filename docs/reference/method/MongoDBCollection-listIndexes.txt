@@ -4,7 +4,7 @@ MongoDB\\Collection::listIndexes()
 
 .. default-domain:: mongodb
 
-.. contents::
+.. contents:: On this page
    :local:
    :backlinks: none
    :depth: 1
@@ -13,47 +13,41 @@ MongoDB\\Collection::listIndexes()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::listIndexes($options)
+.. phpmethod:: MongoDB\\Collection::listIndexes()
 
-   Returns information for all indexes for the collection.
-   
+   Returns information for all indexes for this collection.
+
    .. code-block:: php
 
       function listIndexes(array $options = []): MongoDB\Model\IndexInfoIterator
 
-   :phpmethod:`MongoDB\\Collection::listIndexes` supports the
-   following parameter:
-   
+   :phpmethod:`MongoDB\\Collection::listIndexes()` has the following parameters:
+
    .. include:: /includes/apiargs/MongoDBCollection-method-listIndexes-param.rst
-   
+
    The ``$options`` parameter supports the following options:
-   
+
    .. include:: /includes/apiargs/MongoDBCollection-method-listIndexes-option.rst
 
-Output
-------
+   :returns:
 
-Elements in the returned iterator are ``MongoDB\Model\IndexInfo``
-objects.
+      A traversable :phpclass:`MongoDB\\Model\IndexInfoIterator`, which
+      contains an :phpclass:`MongoDB\\Model\IndexInfo` object for each index for
+      the collection.
 
-                
 Example
 -------
 
-The following lists information about the indexes on the collection
-assigned to the ``$collection`` variable
+The following example lists all of the indexes for the ``restaurants``
+collection in the ``example`` database:
 
 .. code-block:: php
 
    <?php
-   
-   $database = new MongoDB\Client;
 
-   $collection = $database->selectCollection('example','restaurants');
+   $collection = (new MongoDB\Client)->example->restaurants;
 
-   $indexes = $collection->listIndexes();
-
-   foreach ($indexes as $index) {
+   foreach ($collection->listIndexes() as $index) {
       var_dump($index);
    }
 
@@ -99,14 +93,12 @@ The output would then resemble::
      string(19) "example.restaurants"
    }
 
-
 .. seealso::
 
    - :doc:`/tutorial/indexes`
-
-   - :manual:`listIndexes command </reference/command/listIndexes>` in the MongoDB manual.
-   
-   - :manual:`Index documentation </core/indexes>` in the MongoDB manual.
-   
-   - `MongoDB Specification: Enumerating Collections
+   - :manual:`listIndexes </reference/command/listIndexes>` command reference in
+     the MongoDB manual
+   - :manual:`Index documentation </core/indexes>` in the MongoDB manual
+   - `Enumerating Collections
      <https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst>`_
+     specification

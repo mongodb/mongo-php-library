@@ -3,50 +3,76 @@ MongoDB\\Collection::insertOne()
 ================================
 
 .. default-domain:: mongodb
-                    
+
 .. contents:: On this page
    :local:
    :backlinks: none
    :depth: 1
    :class: singlecol
 
-              
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::insertOne
-   
-   Inserts one document.
-   
+.. phpmethod:: MongoDB\\Collection::insertOne()
+
+   Insert one document.
+
    .. code-block:: php
-                   
+
       function insertOne($document, array $options = []): MongoDB\InsertOneResult
 
-   ``insertOne()`` supports the following parameters:
-   
+   :phpmethod:`MongoDB\\Collection::insertOne()` has the following parameters:
+
    .. include:: /includes/apiargs/MongoDBCollection-method-insertOne-param.rst
 
    The ``$options`` parameter supports the following options:
-                
+
    .. include:: /includes/apiargs/MongoDBCollection-method-insertOne-option.rst
 
-Output
-------
+   :returns:
 
-Returns a ``MongoDB\InsertOneResult`` object.
+      A :phpclass:`MongoDB\\InsertOneResult` object, which encapsulates a
+      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
+      object.
 
 Example
 -------
 
-The following operation inserts a document into the ``users``
-collection in the ``example`` database:
+.. start-crud-include
 
-.. include:: /includes/example-insertOne.rst
+The following operation inserts a document into the ``users`` collection in the
+``example`` database:
+
+.. code-block:: php
+
+   <?php
+
+   $collection = (new MongoDB\Client)->example->users;
+
+   $insertOneResult = $collection->insertOne([
+       'username' => 'admin',
+       'email' => 'admin@example.com',
+       'name' => 'Admin User',
+   ]);
+
+   printf("Inserted %d document(s)\n", $insertOneResult->getInsertedCount());
+
+   var_dump($insertOneResult->getInsertedId());
+
+The output would then resemble::
+
+   Inserted 1 document(s)
+   object(MongoDB\BSON\ObjectID)#11 (1) {
+     ["oid"]=>
+     string(24) "579a25921f417dd1e5518141"
+   }
+
+.. end-crud-include
 
 .. seealso::
-   
-   - :phpmethod:`MongoDB\\Collection::bulkWrite`
-   - :phpmethod:`MongoDB\\Collection::insertMany`
+
+   - :phpmethod:`MongoDB\\Collection::insertMany()`
+   - :phpmethod:`MongoDB\\Collection::bulkWrite()`
    - :doc:`/tutorial/crud`
-   - :manual:`insert </reference/command/insert>` command reference
-     in the MongoDB manual
+   - :manual:`insert </reference/command/insert>` command reference in the
+     MongoDB manual

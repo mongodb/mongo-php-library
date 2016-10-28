@@ -13,7 +13,7 @@ MongoDB\\Collection::deleteMany()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::deleteMany($filter, $options)
+.. phpmethod:: MongoDB\\Collection::deleteMany()
 
    Deletes all documents that match the filter criteria.
 
@@ -21,26 +21,25 @@ Definition
 
       function deleteMany($filter, array $options = []): MongoDB\DeleteResult
 
-   :phpmethod:`MongoDB\\Collection::deleteMany` has the following
-   parameters:
+   :phpmethod:`MongoDB\\Collection::deleteMany()` has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-deleteMany-param.rst
-   
-   :phpmethod:`MongoDB\\Collection::deleteMany` supports the following
-   options:
+
+   The ``$options`` parameter supports the following options:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-deleteMany-option.rst
 
-Output
-------
+   :returns:
 
-Returns a ``MongoDB\DeleteResult`` object.
+      A :phpclass:`MongoDB\\DeleteResult` object, which encapsulates a
+      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
+      object.
 
 Example
 -------
 
-The following operation deletes all of the documents in the ``users``
-collection that have ``ny`` as the value for the ``state`` field:
+The following example deletes all of the documents in the ``users`` collection
+that have ``"ny"`` as the value for the ``state`` field:
 
 .. code-block:: php
 
@@ -59,11 +58,10 @@ The output would then resemble::
 
    Deleted 2 document(s)
 
-
 .. seealso::
-   
-   - :phpmethod:`MongoDB\\Collection::bulkWrite`
-   - :phpmethod:`MongoDB\\Collection::deleteOne`
+
+   - :phpmethod:`MongoDB\\Collection::deleteOne()`
+   - :phpmethod:`MongoDB\\Collection::bulkWrite()`
    - :doc:`/tutorial/crud`
-   - :manual:`delete command reference </reference/command/delete`
-     in the MongoDB manual
+   - :manual:`delete </reference/command/delete` command reference in the
+     MongoDB manual

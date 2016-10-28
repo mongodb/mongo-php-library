@@ -13,27 +13,29 @@ MongoDB\\Collection::count()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::count($filter, $options)
+.. phpmethod:: MongoDB\\Collection::count()
 
-   Counts the number of documents that match filter criteria.
+   Count the number of documents that match the filter criteria.
 
    .. code-block:: php
 
       function count($filter = [], array $options = []): integer
 
-   :phpmethod:`MongoDB\\Collection::count` has the following
-   parameters:
+   :phpmethod:`MongoDB\\Collection::count()` has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-count-param.rst
-   
-   :phpmethod:`MongoDB\\Collection::count` supports the following
-   options:
+
+   The ``$options`` parameter supports the following options:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-count-option.rst
+
+   :returns:
+
+      The number of documents matching the filter criteria.
 
 .. todo: add output and examples
 
 .. seealso::
-   
-   - :manual:`count command reference </reference/command/count>`
-     in the MongoDB manual.
+
+   - :manual:`count </reference/command/count>` command reference in the MongoDB
+     manual

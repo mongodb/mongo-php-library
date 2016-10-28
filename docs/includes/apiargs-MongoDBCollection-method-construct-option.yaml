@@ -1,0 +1,49 @@
+source:
+  file: apiargs-common-option.yaml
+  ref: readConcern
+operation: MongoDB\\Collection::__construct
+position: 1
+replacement:
+  resource: "collection"
+  parent: "manager"
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: readPreference
+operation: MongoDB\\Collection::__construct
+position: 2
+replacement:
+  resource: "collection"
+  parent: "manager"
+---
+arg_name: option
+name: typeMap
+type: array
+description: |
+  Default :php:`type map
+  <manual/en/mongodb.persistence.deserialization.php#mongodb.persistence.typemaps>`
+  to apply to cursors. The type map determines how BSON documents are converted
+  to PHP values which determines. The |php-library| uses the following type map
+  by default:
+
+  .. code-block:: php
+
+     [
+         'array' => 'MongoDB\Model\BSONArray',
+         'document' => 'MongoDB\Model\BSONDocument',
+         'root' => 'MongoDB\Model\BSONDocument',
+     ]
+interface: phpmethod
+operation: MongoDB\\Collection::__construct
+optional: true
+position: 3
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: writeConcern
+operation: MongoDB\\Collection::__construct
+position: 4
+replacement:
+  resource: "collection"
+  parent: "manager"
+...

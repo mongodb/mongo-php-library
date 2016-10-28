@@ -3,71 +3,69 @@ MongoDB\\Collection::find()
 ===========================
 
 .. default-domain:: mongodb
-                    
+
 .. contents:: On this page
    :local:
    :backlinks: none
    :depth: 1
    :class: singlecol
 
-              
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::find
-               
+.. phpmethod:: MongoDB\\Collection::find()
+
    Finds documents matching the query.
-   
+
    .. code-block:: php
-                   
+
       function find($filter = [], array $options = []): MongoDB\Driver\Cursor
 
-   ``find()`` supports the following parameters:
-   
+   :phpmethod:`MongoDB\\Collection::find()` has the following parameters:
+
    .. include:: /includes/apiargs/MongoDBCollection-method-find-param.rst
 
    The ``$options`` parameter supports the following options:
-                
+
    .. include:: /includes/apiargs/MongoDBCollection-method-find-option.rst
 
-                
-Output
-------
+   :returns:
 
-Returns a ``MongoDB\Driver\Cursor`` object.
+      A :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` object.
 
 Examples
 --------
 
-The following example finds restaurants based on the ``cuisine`` and
-``borough`` fields and uses a :manual:`projection
-</tutorial/project-fields-from-query-results>` to limit the fields
-that are returned. It also limits the results to 5 documents.
+The following example finds restaurants based on the ``cuisine`` and ``borough``
+fields and uses a :manual:`projection
+</tutorial/project-fields-from-query-results>` to limit the fields that are
+returned. It also limits the results to 5 documents.
 
 .. code-block:: php
-                
-   $database = new MongoDB\Client;
 
-   $collection = $database->selectCollection('example','restaurants');
+   $collection = (new MongoDB\Client)->example->restaurants;
 
-   $restaurants = $collection->find(
-       [ 'cuisine' => 'Italian', 'borough' => 'Manhattan' ],
-       [ 'limit' => 5, 
-         'projection' => [
-           'name' => 1, 'borough' => 1, 'cuisine' => 1,
-         ],
+   $cursor = $collection->find(
+       [
+           'cuisine' => 'Italian',
+           'borough' => 'Manhattan',
+       ],
+       [
+           'limit' => 5,
+           'projection' => [
+               'name' => 1,
+               'borough' => 1,
+               'cuisine' => 1,
+           ],
        ]
    );
 
-   
-   foreach ($restaurants as $restaurant) {
+   foreach ($cursor as $restaurant) {
       var_dump($restaurant);
    };
 
-The output would resemble:
+The output would then resemble::
 
-.. code-block:: none
-                
    object(MongoDB\Model\BSONDocument)#10 (1) {
      ["storage":"ArrayObject":private]=>
      array(4) {
@@ -150,7 +148,7 @@ The output would resemble:
    }
 
 .. seealso::
-   
-   - :phpmethod:`MongoDB\\Collection::findOne`
-   - :manual:`find </reference/command/find>` command reference
-     in the MongoDB manual
+
+   - :phpmethod:`MongoDB\\Collection::findOne()`
+   - :manual:`find </reference/command/find>` command reference in the MongoDB
+     manual

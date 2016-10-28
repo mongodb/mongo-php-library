@@ -3,14 +3,13 @@ name: $key
 type: array|object
 description: |
   Specifies the field or fields to index and the index order.
-  
-  For example, the following specifies a descending index
-  on the ``username`` field:
-  
-  .. code-block:: php
-  
-     $key = [ 'username' => -1 ];
 
+  For example, the following specifies a descending index on the ``username``
+  field:
+
+  .. code-block:: php
+
+     [ 'username' => -1 ]
 operation: MongoDB\\Collection::createIndex
 interface: phpmethod
 optional: false

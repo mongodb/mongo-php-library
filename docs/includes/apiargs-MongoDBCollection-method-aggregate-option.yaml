@@ -2,9 +2,9 @@ arg_name: option
 name: allowDiskUse
 type: boolean
 description: |
-  Enables writing to temporary files. When set to true, aggregation
-  stages can write data to the ``_tmp`` sub-directory in the dbPath
-  directory. The default is ``false``.
+  Enables writing to temporary files. When set to ``true``, aggregation stages
+  can write data to the ``_tmp`` sub-directory in the dbPath directory.
+  The default is ``false``.
 interface: phpmethod
 operation: MongoDB\\Collection::aggregate
 optional: true
@@ -21,53 +21,63 @@ optional: true
 position: 2
 ---
 source:
-  ref: bypassDocumentValidation
   file: apiargs-common-option.yaml
+  ref: bypassDocumentValidation
 operation: MongoDB\\Collection::aggregate
-position: 5
+position: 3
 ---
 source:
-  ref: maxTimeMS
   file: apiargs-common-option.yaml
+  ref: maxTimeMS
 operation: MongoDB\\Collection::aggregate
 position: 4
 ---
 source:
+  file: apiargs-common-option.yaml
   ref: readConcern
-  file: apiargs-common-option.yaml
-operation: MongoDB\\Collection::selectDatabase
-replacement:
-  resource: "aggregation"
+operation: MongoDB\\Collection::aggregate
 position: 5
----
-source:
-  ref: readPreference
-  file: apiargs-common-option.yaml
-operation: MongoDB\\Collection::selectDatabase
 replacement:
   resource: "aggregation"
-position: 6
+  parent: "collection"
 ---
 source:
-  ref: typeMap
   file: apiargs-common-option.yaml
-operation: MongoDB\\Collection::selectDatabase
+  ref: readPreference
+operation: MongoDB\\Collection::aggregate
+position: 6
+replacement:
+  resource: "aggregation"
+  parent: "collection"
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: typeMap
+operation: MongoDB\\Collection::aggregate
 position: 7
+description: |
+  Type map for BSON deserialization. This will be applied to the returned
+  cursor. Defaults to the collections's type map.
+
+  .. note::
+
+     This is not supported for inline aggregation results (i.e. ``useCursor``
+     option is ``false`` or the server version is < 2.6).
 ---
 arg_name: param
 name: useCursor
 type: boolean
 description: |
-  Indicates whether the command will request that the server provide
-  results using a cursor. The default is ``true``.
+  Indicates whether the command will request that the server provide results
+  using a cursor. The default is ``true``.
 
-  For MongoDB version 2.6 or later, ``useCursor`` allows users to turn
-  off cursors if necessary to aid in mongod/mongos upgrades.
+  For MongoDB version 2.6 or later, ``useCursor`` allows users to turn off
+  cursors if necessary to aid in replica set or shard cluster upgrades.
 
-  ``useCursor`` is ignored for MongoDB versions prior to 2.6 as
-  aggregation cursors are not available pre-2.6.
+  ``useCursor`` is ignored for MongoDB versions prior to 2.6 as aggregation
+  cursors are not available.
 interface: phpmethod
 operation: MongoDB\\Collection::aggregate
 optional: true
-position: 8  
+position: 8
 ...

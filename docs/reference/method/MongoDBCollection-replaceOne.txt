@@ -3,54 +3,54 @@ MongoDB\\Collection::replaceOne()
 =================================
 
 .. default-domain:: mongodb
-                    
+
 .. contents:: On this page
    :local:
    :backlinks: none
    :depth: 1
    :class: singlecol
 
-              
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::replaceOne
-   
-   Replaces at most one document that matches the filter.
-   
+.. phpmethod:: MongoDB\\Collection::replaceOne()
+
+   Replace at most one document that matches the filter criteria. If multiple
+   documents match the filter criteria, only the :term:`first <natural order>`
+   matching document will be replaced.
+
    .. code-block:: php
-                   
+
       function replaceOne($filter, $replacement, array $options = []): MongoDB\UpdateResult
 
-   ``replaceOne()`` supports the following parameters:
-   
+   :phpmethod:`MongoDB\\Collection::replaceOne()` has the following parameters:
+
    .. include:: /includes/apiargs/MongoDBCollection-method-replaceOne-param.rst
 
    The ``$options`` parameter supports the following options:
-                
+
    .. include:: /includes/apiargs/MongoDBCollection-method-replaceOne-option.rst
 
-Output
-------
+   :returns:
 
-Returns a ``MongoDB\UpdateResult`` object.
+      A :phpclass:`MongoDB\\UpdateResult` object, which encapsulates a
+      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
+      object.
 
 Example
 -------
 
-The following operation replaces the document with ``restaurant_id``
-``40356068`` in the ``restaurants`` collection in the ``example`` database:
+The following example replaces the document with ``restaurant_id`` of
+``"40356068"`` in the ``restaurants`` collection in the ``example`` database:
 
 .. code-block:: php
-                
+
    <?php
-   
-   $database = new MongoDB\Client;
 
-   $collection = $database->selectCollection('users','restaurants');
+   $collection = (new MongoDB\Client)->example->restaurants;
 
-   $replacement = $collection->replaceOne(
-       [   'restaurant_id' => '40356068'],
+   $updateResult = $collection->replaceOne(
+       [ 'restaurant_id' => '40356068' ],
        [
            'name' => 'New Restaurant',
            'restaurant_id' => '99988877',
@@ -60,55 +60,19 @@ The following operation replaces the document with ``restaurant_id``
        ]
    );
 
-   
-   var_dump($replacement);
+   printf("Matched %d document(s)\n", $updateResult->getMatchedCount());
+   printf("Modified %d document(s)\n", $updateResult->getModifiedCount());
 
-The output would resemble:
+The output would then resemble::
 
-.. code-block:: none
-                
-   object(MongoDB\UpdateResult)#13 (2) {
-     ["writeResult":"MongoDB\UpdateResult":private]=>
-     object(MongoDB\Driver\WriteResult)#12 (9) {
-       ["nInserted"]=>
-       int(0)
-       ["nMatched"]=>
-       int(1)
-       ["nModified"]=>
-       int(1)
-       ["nRemoved"]=>
-       int(0)
-       ["nUpserted"]=>
-       int(0)
-       ["upsertedIds"]=>
-       array(0) {
-       }
-       ["writeErrors"]=>
-       array(0) {
-       }
-       ["writeConcernError"]=>
-       NULL
-       ["writeConcern"]=>
-       array(4) {
-         ["w"]=>
-         NULL
-         ["wmajority"]=>
-         bool(false)
-         ["wtimeout"]=>
-         int(0)
-         ["journal"]=>
-         NULL
-       }
-     }
-     ["isAcknowledged":"MongoDB\UpdateResult":private]=>
-     bool(true)
-   }
+   Matched 1 document(s)
+   Modified 1 document(s)
 
 .. seealso::
-   
-   - :phpmethod:`MongoDB\\Collection::bulkWrite`
-   - :phpmethod:`MongoDB\\Collection::updateMany`
-   - :phpmethod:`MongoDB\\Collection::updateOne`
+
+   - :phpmethod:`MongoDB\\Collection::updateMany()`
+   - :phpmethod:`MongoDB\\Collection::updateOne()`
+   - :phpmethod:`MongoDB\\Collection::bulkWrite()`
    - :doc:`/tutorial/crud`
-   - :manual:`update </reference/command/update>` command reference
-     in the MongoDB manual
+   - :manual:`update </reference/command/update>` command reference in the
+     MongoDB manual

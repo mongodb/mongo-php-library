@@ -41,9 +41,9 @@ position: 4
 arg_name: option
 name: name
 type: string
-description: |  
-  Specifies the name for the index. By default, MongoDB creates index
-  names based on the key.
+description: |
+  Specifies the name for the index. By default, MongoDB creates index names
+  based on the key.
 interface: phpmethod
 operation: MongoDB\\Collection::createIndex
 optional: true
@@ -52,7 +52,7 @@ position: 5
 arg_name: option
 name: background
 type: string
-description: |  
+description: |
   Instructs MongoDB to build the index :manual:`as a background
   </core/index-creation>` process.
 interface: phpmethod
@@ -64,36 +64,20 @@ arg_name: option
 name: 2dsphereIndexVersion
 type: integer
 description: |
-  Specifies the :manual:`version of a 2dsphere </core/2dsphere>` index
-  to create.
+  Specifies the :manual:`version of a 2dsphere </core/2dsphere>` index to
+  create.
 
-  MongoDB 2.6 introduced version 2 of 2dsphere indexes. Version 2 is
-  the default version of 2dsphere indexes created in MongoDB 2.6 and
-  later series. ``2dsphereIndexVersion`` enables you to overrride the
-  default version 2.
+  MongoDB 2.6 introduced version 2 of 2dsphere indexes. Version 2 is the default
+  version of 2dsphere indexes created in MongoDB 2.6 and later versions.
+  ``2dsphereIndexVersion`` enables you to overrride the default version 2.
 interface: phpmethod
 operation: MongoDB\\Collection::createIndex
 optional: true
 position: 7
 ---
-arg_name: option
-name: socketTimeoutMS
-type: integer
-description: |
-  Specifies the time limit, in milliseconds, for socket
-  communication. If the :program:`mongod` does not respond within the
-  timeout period, a ``MongoCursorTimeoutException`` is thrown and
-  there will be no way to determine if the server actually handled the
-  write or not. Specify ``-1`` to block indefinitely. The default value
-  is 30000 (30 seconds).
-interface: phpmethod
-operation: MongoDB\\Collection::createIndex
-optional: true
-position: 8
----
 source:
   ref: maxTimeMS
   file: apiargs-common-option.yaml
 operation: MongoDB\\Collection::createIndex
-position: 9
+position: 8
 ...

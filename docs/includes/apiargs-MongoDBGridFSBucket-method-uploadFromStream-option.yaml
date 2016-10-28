@@ -1,0 +1,32 @@
+arg_name: option
+name: _id
+type: mixed
+description: |
+  Value to use as the file document identifier. Defaults to a new
+  :php:`MongoDB\\BSON\\ObjectID <class.mongodb-bson-objectid>` object.
+interface: phpmethod
+operation: MongoDB\\GridFS\\Bucket::uploadFromStream
+optional: true
+position: 1
+---
+arg_name: option
+name: chunkSizeBytes
+type: integer
+description: |
+  The chunk size in bytes. Defaults to the bucket's ``chunkSizeBytes`` option.
+interface: phpmethod
+operation: MongoDB\\GridFS\\Bucket::uploadFromStream
+optional: true
+position: 2
+---
+arg_name: option
+name: metadata
+type: array|object
+description: |
+  User data for the ``metadata`` field of the file document. If not specified,
+  the ``metadata`` field will not be set on the file document.
+interface: phpmethod
+operation: MongoDB\\GridFS\\Bucket::uploadFromStream
+optional: true
+position: 3
+...

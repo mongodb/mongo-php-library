@@ -1,0 +1,20 @@
+arg_name: param
+name: $id
+type: mixed
+description: |
+  The ``_id`` of the file to download.
+interface: phpmethod
+operation: MongoDB\\GridFS\\Bucket::downloadToStream
+optional: false
+position: 1
+---
+arg_name: param
+name: $destination
+type: resource
+description: |
+  Writable stream where the GridFS file's contents will be written.
+interface: phpmethod
+operation: MongoDB\\GridFS\\Bucket::downloadToStream
+optional: false
+position: 2
+...

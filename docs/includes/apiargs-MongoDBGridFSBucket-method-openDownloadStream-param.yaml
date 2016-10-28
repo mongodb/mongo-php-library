@@ -1,0 +1,10 @@
+arg_name: param
+name: $id
+type: mixed
+description: |
+  The ``_id`` of the file to download.
+interface: phpmethod
+operation: MongoDB\\GridFS\\Bucket::openDownloadStream
+optional: false
+position: 1
+...

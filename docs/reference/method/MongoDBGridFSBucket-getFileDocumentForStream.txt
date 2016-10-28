@@ -1,0 +1,37 @@
+===================================================
+MongoDB\\GridFS\\Bucket::getFileDocumentForStream()
+===================================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\GridFS\\Bucket::getFileDocumentForStream()
+
+   Gets the file document of the GridFS file associated with a stream.
+
+   .. code-block:: php
+
+      function getFileDocumentForStream($stream): object
+
+   :phpmethod:`MongoDB\\GridFS\\Bucket::getFileDocumentForStream()` has the
+   following parameters:
+
+   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-getFileDocumentForStream-param.rst
+
+   :returns:
+
+      The metadata document associated with the GridFS stream.
+
+.. todo: add examples
+
+.. seealso::
+
+   - :phpmethod:`MongoDB\\GridFS\\Bucket::getFileIdForStream()`

@@ -1,0 +1,10 @@
+arg_name: param
+name: $stream
+type: resource
+description: |
+  The GridFS stream resource.
+interface: phpmethod
+operation: MongoDB\\GridFS\\Bucket::getFileIdForStream
+optional: false
+position: 1
+...

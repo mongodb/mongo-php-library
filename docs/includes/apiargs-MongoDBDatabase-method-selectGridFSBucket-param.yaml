@@ -1,0 +1,6 @@
+source:
+  file: apiargs-common-param.yaml
+  ref: $options
+operation: MongoDB\\Database::selectGridFSBucket
+position: 1
+...

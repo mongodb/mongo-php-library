@@ -11,3 +11,4 @@ Reference
    /reference/class/MongoDBClient
    /reference/class/MongoDBDatabase
    /reference/class/MongoDBCollection
+   /reference/class/MongoDBGridFSBucket

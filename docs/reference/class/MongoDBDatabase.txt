@@ -54,5 +54,6 @@ Methods
    /reference/method/MongoDBDatabase-getManager
    /reference/method/MongoDBDatabase-listCollections
    /reference/method/MongoDBDatabase-selectCollection
+   /reference/method/MongoDBDatabase-selectGridFSBucket
    /reference/method/MongoDBDatabase-withOptions
 

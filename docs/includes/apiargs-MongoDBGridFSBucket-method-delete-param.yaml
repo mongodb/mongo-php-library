@@ -1,0 +1,10 @@
+arg_name: param
+name: $id
+type: mixed
+description: |
+  The ``_id`` of the file to delete.
+interface: phpmethod
+operation: MongoDB\\GridFS\\Bucket::delete
+optional: false
+position: 1
+...

@@ -8,11 +8,9 @@ use MongoDB\Exception\BadMethodCallException;
 /**
  * Result class for a single-document insert operation.
  */
-class InsertOneResult
+class InsertOneResult extends Result
 {
-    private $writeResult;
     private $insertedId;
-    private $isAcknowledged;
 
     /**
      * Constructor.
@@ -22,9 +20,9 @@ class InsertOneResult
      */
     public function __construct(WriteResult $writeResult, $insertedId)
     {
-        $this->writeResult = $writeResult;
+        parent::__construct($writeResult);
+
         $this->insertedId = $insertedId;
-        $this->isAcknowledged = $writeResult->isAcknowledged();
     }
 
     /**
@@ -57,22 +55,5 @@ class InsertOneResult
     public function getInsertedId()
     {
         return $this->insertedId;
-    }
-
-    /**
-     * Return whether this insert was acknowledged by the server.
-     *
-     * If the insert was not acknowledged, other fields from the WriteResult
-     * (e.g. insertedCount) will be undefined.
-     *
-     * If the insert was not acknowledged, other fields from the WriteResult
-     * (e.g. insertedCount) will be undefined and their getter methods should
-     * not be invoked.
-     *
-     * @return boolean
-     */
-    public function isAcknowledged()
-    {
-        return $this->writeResult->isAcknowledged();
     }
 }

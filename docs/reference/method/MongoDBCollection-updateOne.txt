@@ -23,7 +23,7 @@ Definition
 
       function updateOne($filter, $update, array $options = []): MongoDB\UpdateResult
 
-   :phpmethod:`MongoDB\\Collection::updateOne()` has the following parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-updateOne-param.rst
 

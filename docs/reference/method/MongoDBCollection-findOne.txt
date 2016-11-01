@@ -21,7 +21,7 @@ Definition
 
       function findOne($filter = [], array $options = []): array|object|null
 
-   :phpmethod:`MongoDB\\Collection::findOne()` has the following parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-findOne-param.rst
 

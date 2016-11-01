@@ -21,7 +21,7 @@ Definition
 
       function insertOne($document, array $options = []): MongoDB\InsertOneResult
 
-   :phpmethod:`MongoDB\\Collection::insertOne()` has the following parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-insertOne-param.rst
 

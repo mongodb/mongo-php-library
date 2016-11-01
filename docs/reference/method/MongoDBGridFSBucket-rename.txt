@@ -21,7 +21,7 @@ Definition
 
       function rename($id, $newFilename): void
 
-   :phpmethod:`MongoDB\\GridFS\\Bucket::rename()` has the following parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBGridFSBucket-method-rename-param.rst
 

@@ -21,7 +21,7 @@ Definition
 
       function __construct($uri = 'mongodb://127.0.0.1/', array $uriOptions = [], array $driverOptions = [])
 
-   :phpmethod:`MongoDB\\Client::__construct()` has the following parameters:
+   This constructor has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBClient-method-construct-param.rst
 

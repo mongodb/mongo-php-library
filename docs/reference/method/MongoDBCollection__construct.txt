@@ -21,7 +21,7 @@ Definition
 
       function __construct(MongoDB\Driver\Manager $manager, $databaseName, $collectionName, array $options = [])
 
-   :phpmethod:`MongoDB\\Collection::__construct` has the following parameters:
+   This constructor has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-construct-param.rst
 

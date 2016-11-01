@@ -23,7 +23,7 @@ Definition
 
       function deleteOne($filter, array $options = []): MongoDB\DeleteResult
 
-   :phpmethod:`MongoDB\\Collection::deleteOne()` has the following parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-deleteOne-param.rst
 

@@ -21,8 +21,7 @@ Definition
 
       function openDownloadStream($id): resource
 
-   :phpmethod:`MongoDB\\GridFS\\Bucket::openDownloadStream()` has the following
-   parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBGridFSBucket-method-openDownloadStream-param.rst
 

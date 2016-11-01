@@ -21,7 +21,7 @@ Definition
 
       function dropDatabase($databaseName, array $options []): array|object
 
-   :phpmethod:`MongoDB\\Client::dropDatabase()` has the following parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBClient-method-dropDatabase-param.rst
 

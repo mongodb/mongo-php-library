@@ -21,7 +21,7 @@ Definition
 
       function withOptions(array $options = []): MongoDB\Database
 
-   :phpmethod:`MongoDB\\Database::withOptions()` has the following parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBDatabase-method-withOptions-param.rst
 

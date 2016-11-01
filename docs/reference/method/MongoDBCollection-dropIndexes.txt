@@ -22,7 +22,7 @@ Definition
 
       function dropIndexes(array $options = []): array|object
 
-   :phpmethod:`MongoDB\\Collection::dropIndexes()` has the following parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-dropIndex-param.rst
 

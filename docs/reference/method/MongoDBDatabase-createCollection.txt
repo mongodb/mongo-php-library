@@ -33,8 +33,7 @@ Definition
    :manual:`document validation criteria </core/document-validation>`,
    or configure your storage engine or indexing options.
 
-   :phpmethod:`MongoDB\\Database::createCollection()` has the following
-   parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBDatabase-method-createCollection-param.rst
 

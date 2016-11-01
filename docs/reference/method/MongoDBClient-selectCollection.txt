@@ -21,7 +21,7 @@ Definition
 
       function selectCollection($databaseName, $collectionName, array $options = []): MongoDB\Collection
 
-   :phpmethod:`MongoDB\\Client::selectCollection()` has the following parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBClient-method-selectCollection-param.rst
 

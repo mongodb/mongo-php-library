@@ -21,8 +21,7 @@ Definition
 
       function openDownloadStreamByName($filename, array $options = []): resource
 
-   :phpmethod:`MongoDB\\GridFS\\Bucket::openDownloadStreamByName()` has the
-   following parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBGridFSBucket-method-openDownloadStreamByName-param.rst
 

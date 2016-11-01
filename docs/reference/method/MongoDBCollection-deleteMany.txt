@@ -21,7 +21,7 @@ Definition
 
       function deleteMany($filter, array $options = []): MongoDB\DeleteResult
 
-   :phpmethod:`MongoDB\\Collection::deleteMany()` has the following parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-deleteMany-param.rst
 

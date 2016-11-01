@@ -21,7 +21,7 @@ Definition
 
       function updateMany($filter, $update, array $options = []): MongoDB\UpdateResult
 
-   :phpmethod:`MongoDB\\Collection::updateMany()` has the following parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-updateMany-param.rst
 

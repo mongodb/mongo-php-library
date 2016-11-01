@@ -13,35 +13,37 @@ MongoDB\\Client::selectCollection()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::selectCollection($databaseName, $collectionName, $options)
+.. phpmethod:: MongoDB\\Client::selectCollection()
 
-   Selects a collection on the :program:`mongod` to which your application
-   is connected.
-   
+   Selects a collection on the server.
+
    .. code-block:: php
 
-      function selectCollection($databaseName, $collectionName, array $options = [])
+      function selectCollection($databaseName, $collectionName, array $options = []): MongoDB\Collection
 
-   :phpmethod:`MongoDB\\Client::selectCollection` has the following parameters:
+   This method has the following parameters:
 
-   .. include:: /includes/apiargs/common-param.rst
+   .. include:: /includes/apiargs/MongoDBClient-method-selectCollection-param.rst
 
-   The following table describes the options that
-   :phpmethod:`MongoDB\\Client::selectCollection` can accept.
+   The ``$options`` parameter supports the following options:
 
-   .. include:: /includes/apiargs/common-option.rst
+   .. include:: /includes/apiargs/MongoDBClient-method-selectCollection-option.rst
 
-Output
-------
+   :returns:
 
-Returns a :phpclass:`MongoDB\\Collection` object.
+      A :phpclass:`MongoDB\\Collection` object.
+
+Behavior
+--------
+
+The selected collection inherits options such as read preference and type
+mapping from the :phpclass:`Client <MongoDB\\Client>` object. Options may be
+overridden via the ``$options`` parameter.
 
 Example
 -------
 
-
-The following example selects the ``users`` collection in the ``demo``
-database:
+The following example selects the ``users`` collection in the ``demo`` database:
 
 .. code-block:: php
 
@@ -51,10 +53,12 @@ database:
 
    $collection = $client->selectCollection('demo', 'users');
 
-The following examples selects the ``users`` collection in the ``demo``
-database with a custom read preference:
+The following example selects the ``users`` collection in the ``demo`` database
+with a custom read preference:
 
 .. code-block:: php
+
+   <?php
 
    $client = new MongoDB\Client;
 
@@ -65,8 +69,8 @@ database with a custom read preference:
            'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),
        ]
    );
-         
+
 .. seealso::
 
-   - :phpmethod:`Collection::__construct`
-   - :phpmethod:`MongoDB\\Client::__get`
+   - :phpmethod:`MongoDB\\Collection::__construct()`
+   - :phpmethod:`MongoDB\\Database::selectCollection()`

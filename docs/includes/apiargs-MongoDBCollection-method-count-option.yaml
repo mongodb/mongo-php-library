@@ -1,52 +1,44 @@
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: collation
+---
 arg_name: option
 name: hint
-type: string or array|object
+type: string|array|object
 description: |
-  The index to use. If you specify a document, it is interpreted as
-  an index specification and a name will be generated.
-optional: true
+  The index to use. If you specify a document, it is interpreted as an index
+  specification from which a name will be derived.
 interface: phpmethod
-operation: MongoDB\\Collection::count
-position: 1
+operation: ~
+optional: true
 ---
 arg_name: option
 name: limit
 type: integer
 description: |
-  The maximum number of documents to return.
-optional: true
+  The maximum number of matching documents to return.
 interface: phpmethod
-operation: MongoDB\\Collection::count
-position: 2
+operation: ~
+optional: true
 ---
 source:
+  file: apiargs-common-option.yaml
   ref: maxTimeMS
-  file: apiargs-common-option.yaml
-operation: MongoDB\\Collection::count
-position: 3
 ---
 source:
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: readConcern
-  file: apiargs-common-option.yaml
-operation: MongoDB\\Collection::count
-replacement:
-  resource: "count"
-position: 4
 ---
 source:
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: readPreference
-  file: apiargs-common-option.yaml
-replacement:
-  resource: "count"
-position: 5
 ---
 arg_name: option
 name: skip
 type: integer
 description: |
-  The number of documents to skip before returning the documents.
-optional: true
+  The number of matching documents to skip before returning results.
 interface: phpmethod
-operation: MongoDB\\Collection::count
-position: 6
+operation: ~
+optional: true
 ...

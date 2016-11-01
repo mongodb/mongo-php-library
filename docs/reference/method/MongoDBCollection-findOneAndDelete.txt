@@ -3,69 +3,66 @@ MongoDB\\Collection::findOneAndDelete()
 =======================================
 
 .. default-domain:: mongodb
-                    
+
 .. contents:: On this page
    :local:
    :backlinks: none
    :depth: 1
    :class: singlecol
 
-              
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::findOneAndDelete
-   
-   Finds a single document and deletes it.
-   
+.. phpmethod:: MongoDB\\Collection::findOneAndDelete()
+
+   Finds a single document matching the query and deletes it.
+
    .. code-block:: php
-                   
+
       function findOneAndDelete($filter = [], array $options = []): object|null
 
-   ``findOne()`` supports the following parameters:
-   
+   This method has the following parameters:
+
    .. include:: /includes/apiargs/MongoDBCollection-method-findOneAndDelete-param.rst
 
    The ``$options`` parameter supports the following options:
-                
+
    .. include:: /includes/apiargs/MongoDBCollection-method-findOneAndDelete-option.rst
 
    .. include:: /includes/extracts/bson-deserialization-findOneAndDelete.rst
-                 
-Output
-------
 
-Returns the document that was deleted. If no document matched the
-filter, the returned document is ``null``.
+   :returns:
+
+      An object for the document that was deleted, or ``null`` if no document
+      matched the query.
 
 Examples
 --------
 
-The following example deletes the document with ``restaurant_id`` of
-``40375376`` from the ``restaurants`` collection in the ``example``
-database:
+The following example finds and deletes the document with ``restaurant_id`` of
+``"40375376"`` from the ``restaurants`` collection in the ``example`` database:
 
 .. code-block:: php
-   
-   <?php
-   
-   $database = new MongoDB\Client;
 
-   $collection = $database->selectCollection('example','restaurants');
+   <?php
+
+   $collection = (new MongoDB\Client)->example->restaurants;
 
    $deletedRestaurant = $collection->findOneAndDelete(
        [ 'restaurant_id' => '40375376' ],
-       [ 'projection' => [ 'name' => 1, 
-                           'borough' => 1, 
-                           'restaurant_id' => 1
-                         ] 
+       [
+           'projection' => [
+               'name' => 1,
+               'borough' => 1,
+               'restaurant_id' => 1,
+           ],
        ]
    );
 
-The output would resemble:
+   var_dump($deletedRestaurant);
 
-.. code-block:: none
-                
+The output would then resemble::
+
    object(stdClass)#14 (4) {
      ["_id"]=>
      object(MongoDB\BSON\ObjectID)#11 (1) {
@@ -78,12 +75,11 @@ The output would resemble:
      string(15) "Agra Restaurant"
      ["restaurant_id"]=>
      string(8) "40375376"
-   }   
-  
+   }
 
 .. seealso::
-   
-   - :phpmethod:`MongoDB\\Collection::findOneAndUpdate`
-   - :phpmethod:`MongoDB\\Collection::findOneAndReplace`
-   - :manual:`findAndModify </reference/command/findAndModify>`
-     command reference in the MongoDB manual
+
+   - :phpmethod:`MongoDB\\Collection::findOneAndReplace()`
+   - :phpmethod:`MongoDB\\Collection::findOneAndUpdate()`
+   - :manual:`findAndModify </reference/command/findAndModify>` command
+     reference in the MongoDB manual

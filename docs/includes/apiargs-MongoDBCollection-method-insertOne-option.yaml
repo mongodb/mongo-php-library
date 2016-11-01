@@ -1,12 +1,8 @@
 source:
-  file: apiargs-common-option.yaml
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: bypassDocumentValidation
-operation: MongoDB\\Collection::insertOne
-position: 1
 ---
 source:
-  file: apiargs-common-option.yaml
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: writeConcern
-operation: MongoDB\\Collection::insertOne
-position: 2
 ...

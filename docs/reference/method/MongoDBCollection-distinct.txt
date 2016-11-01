@@ -21,18 +21,17 @@ Definition
 
       function distinct($fieldName, $filter = [], array $options = []): mixed[]
 
-   ``distinct`` has the following parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-distinct-param.rst
-   
+
    The ``$options`` parameter supports the following options:
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-distinct-option.rst                
+   .. include:: /includes/apiargs/MongoDBCollection-method-distinct-option.rst
 
-Output
-------
+   :returns:
 
-Returns an array of the distinct values.
+      An array of the distinct values.
 
 Examples
 --------
@@ -40,24 +39,21 @@ Examples
 Return Distinct Values for a Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following example identifies the distinct values for the
-``borough`` field in the ``restaurants`` collection in the
-``example`` database.
+The following example identifies the distinct values for the ``borough`` field
+in the ``restaurants`` collection in the ``example`` database.
 
 .. code-block:: php
-                
-   <?php
-   
-   $database = new MongoDB\Client;
 
-   $collection = $database->selectCollection('example','restaurants');
+   <?php
+
+   $collection = (new MongoDB\Client)->example->restaurants;
 
    $distinct = $collection->distinct('borough');
 
    var_dump($distinct);
 
-The output would resemble::
-            
+The output would then resemble::
+
    array(6) {
      [0]=>
      string(5) "Bronx"
@@ -72,30 +68,26 @@ The output would resemble::
      [5]=>
      string(13) "Staten Island"
    }
-  
-   
+
 Return Distinct Values Using a Filter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following example identifies the distinct values for the
-``cuisine`` field in the ``restaurants`` collection in the ``example``
-database for documents where the ``borough`` is ``Queens``:
+The following example identifies the distinct values for the ``cuisine`` field
+in the ``restaurants`` collection in the ``example`` database for documents
+where the ``borough`` is ``Queens``:
 
 .. code-block:: php
-                
+
    <?php
-   
-   $database = new MongoDB\Client;
 
-   $collection = $database->selectCollection('example','restaurants');
+   $collection = (new MongoDB\Client)->example->restaurants;
 
-   $distinct = $collection->distinct('cuisine', ['borough'=>'Queens']);
+   $distinct = $collection->distinct('cuisine', ['borough' => 'Queens']);
 
-   
-   var_dump($distinct);   
-                
+   var_dump($distinct);
+
 The output would then resemble::
-                
+
    array(75) {
      [0]=>
      string(6) "Afghan"
@@ -248,9 +240,8 @@ The output would then resemble::
      [74]=>
      string(29) "Vietnamese/Cambodian/Malaysia"
    }
-   
 
 .. seealso::
-   
-   - :manual:`distinct </reference/command/distinct>` command
-     reference in the MongoDB manual.
+
+   - :manual:`distinct </reference/command/distinct>` command reference in the
+     MongoDB manual

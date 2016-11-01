@@ -13,7 +13,7 @@ MongoDB\\Collection::bulkWrite()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::bulkWrite($operations, $options)
+.. phpmethod:: MongoDB\\Collection::bulkWrite()
 
    Executes multiple write operations.
 
@@ -21,24 +21,29 @@ Definition
 
       function bulkWrite(array $operations, array $options = []): MongoDB\BulkWriteResult
 
-   :phpmethod:`MongoDB\\Collection::bulkWrite` has the following
-   parameters:
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-bulkWrite-param.rst
-   
-   :phpmethod:`MongoDB\\Collection::bulkWrite` supports the following
-   options:
+
+   The ``$options`` parameter supports the following options:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-bulkWrite-option.rst
+
+   :returns:
+
+      A :phpclass:`MongoDB\\BulkWriteResult` object, which encapsulates a
+      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
+      object.
 
 .. todo: add output and examples
 
 .. seealso::
-   
-   - :phpmethod:`deleteMany <MongoDB\\Collection::deleteMany>`
-   - :phpmethod:`deleteOne <MongoDB\\Collection::deleteOne>` 
-   - :phpmethod:`insertOne <MongoDB\\Collection::insertOne>`
-   - :phpmethod:`replaceOne <MongoDB\\Collection::replaceOne>`
-   - :phpmethod:`updateMany <MongoDB\\Collection::updateMany>`
-   - :phpmethod:`updateOne <MongoDB\\Collection::updateOne>`
+
+   - :phpmethod:`MongoDB\\Collection::deleteMany()`
+   - :phpmethod:`MongoDB\\Collection::deleteOne()`
+   - :phpmethod:`MongoDB\\Collection::insertMany()`
+   - :phpmethod:`MongoDB\\Collection::insertOne()`
+   - :phpmethod:`MongoDB\\Collection::replaceOne()`
+   - :phpmethod:`MongoDB\\Collection::updateMany()`
+   - :phpmethod:`MongoDB\\Collection::updateOne()`
    - :doc:`/tutorial/crud`

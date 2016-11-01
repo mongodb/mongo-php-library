@@ -4,35 +4,47 @@ MongoDB\\Collection::getDatabaseName()
 
 .. default-domain:: mongodb
 
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
 Definition
 ----------
 
 .. phpmethod:: MongoDB\\Collection::getDatabaseName()
 
-   Returns the name of the current database.
-   
+   Returns the name of the database containing this collection.
+
    .. code-block:: php
 
       function getDatabaseName(): string
 
+   :returns:
+
+      The name of the database containing this collection as a string.
+
 Example
 -------
 
-The following returns the name of the database of the collection
-assigned to the ``$collection`` variable
+The following returns the database name for the ``zips`` collection in the
+``demo`` database.
 
 .. code-block:: php
 
    <?php
-   
-   $collection = (new MongoDB\Client)->demo->zips;   
+
+   $collection = (new MongoDB\Client)->demo->zips;
+
    echo $collection->getDatabaseName();
 
-The ``$collection`` variable uses the :phpmethod:`constructor
-<MongoDB\\Collection::__construct>` method to select the ``zips``
-collection in the ``demo`` database, as such, the printed output would
-resemble:
-
-.. code-block:: none
+The output would then resemble::
 
    demo
+
+.. seealso::
+
+   - :phpmethod:`MongoDB\\Collection::getCollectionName()`
+   - :phpmethod:`MongoDB\\Collection::getNamespace()`
+

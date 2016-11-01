@@ -1,24 +1,27 @@
 source:
   file: apiargs-common-option.yaml
   ref: readConcern
-operation: MongoDB\\Database::selectCollection
-position: 1
+replacement:
+  resource: "collection"
+  parent: "database"
 ---
 source:
   file: apiargs-common-option.yaml
   ref: readPreference
-operation: MongoDB\\Database::selectCollection
-position: 2
+replacement:
+  resource: "collection"
+  parent: "database"
 ---
 source:
   file: apiargs-common-option.yaml
   ref: typeMap
-operation: MongoDB\\Database::selectCollection
-position: 3
+replacement:
+  parent: "database"
 ---
 source:
   file: apiargs-common-option.yaml
   ref: writeConcern
-operation: MongoDB\\Database::selectCollection
-position: 4
+replacement:
+  resource: "collection"
+  parent: "database"
 ...

@@ -1,7 +1,4 @@
 source:
   file: apiargs-common-param.yaml
   ref: $options
-operation: MongoDB\\Database::listCollections
-position: 1
-optional: true
 ...

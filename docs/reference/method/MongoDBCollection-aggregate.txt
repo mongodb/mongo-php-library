@@ -13,7 +13,7 @@ MongoDB\\Collection::aggregate()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::aggregate($pipeline, $options)
+.. phpmethod:: MongoDB\\Collection::aggregate()
 
    Executes an :manual:`aggregation framework pipeline
    </core/aggregation-pipeline/>` operation on the collection.
@@ -21,46 +21,47 @@ Definition
    .. code-block:: php
 
       function aggregate(array $pipeline, array $options = []): Traversable
-      
-   :phpmethod:`MongoDB\\Collection::aggregate` has the following
-   parameters:
+
+   This method has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-aggregate-param.rst
-   
-   :phpmethod:`MongoDB\\Collection::aggregate` supports the following
-   options:
+
+   The ``$options`` parameter supports the following options:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-aggregate-option.rst
 
-.. _php-agg-method-output:
+   :returns:
 
-Output
-------
+      A :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` or
+      :php:`ArrayIterator <arrayiterator>` object. In both cases, the return
+      value will be :php:`Traversable <traversable>`.
 
-:phpmethod:`MongoDB\\Collection::aggregate`'s return value depends on
-the MongoDB server version and whether the ``useCursor`` option is
-specified. If ``useCursor`` is true,
-:phpmethod:`MongoDB\\Collection::aggregate` returns a
-``MongoDB\Driver\Cursor`` object. If ``useCursor`` is false,
-:phpmethod:`MongoDB\\Collection::aggregate` returns an
-``ArrayIterator`` that wraps the ``result`` array from the command
-response document.
+.. _php-agg-method-behavior:
+
+Behavior
+--------
+
+:phpmethod:`MongoDB\\Collection::aggregate()`'s return value depends on the
+MongoDB server version and whether the ``useCursor`` option is specified. If
+``useCursor`` is ``true``, a :php:`MongoDB\\Driver\\Cursor
+<class.mongodb-driver-cursor>` object is returned. If ``useCursor`` is
+``false``, an :php:`ArrayIterator <arrayiterator>` is returned that wraps the
+``result`` array from the command response document. In both cases, the return
+value will be :php:`Traversable <traversable>`.
 
 .. note::
 
-   BSON deserialization of inline aggregation results (i.e. not using a
-   command cursor) does not yet support a ``typeMap`` option. Classes
-   implementing :php:`MongoDB\\BSON\\Persistable
-   <mongodb-bson-persistable>` will still be deserialized according to
-   the :php:`Persistence <mongodb.persistence.deserialization>`
-   specification.
+   BSON deserialization of inline aggregation results (i.e. not using a command
+   cursor) does not yet support a ``typeMap`` option. Classes implementing
+   :php:`MongoDB\\BSON\\Persistable <mongodb-bson-persistable>` will still be
+   deserialized according to the
+   :php:`Persistence <mongodb.persistence.deserialization>` specification.
 
 .. todo: add examples
 
 .. seealso::
 
-   - :manual:`aggregate command reference
-     </reference/command/aggregate>` in the MongoDB manual and
-
+   - :manual:`aggregate </reference/command/aggregate>` command reference in the
+     MongoDB manual
    - :manual:`Aggregation Pipeline </core/aggregation-pipeline>`
-     documentation in the MongoDB Manual.
+     documentation in the MongoDB Manual

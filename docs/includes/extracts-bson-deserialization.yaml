@@ -3,19 +3,19 @@ source:
   file: extracts-bson-deserialization-base.yaml
   ref: _bson-deserialization
 replacement:
-  method: ":phpmethod:`MongoDB\\Collection::findOneAndDelete`"
+  method: ":phpmethod:`MongoDB\\Collection::findOneAndDelete()`"
 ---
 ref: bson-deserialization-findOneAndReplace
 source:
   file: extracts-bson-deserialization-base.yaml
   ref: _bson-deserialization
 replacement:
-  method: ":phpmethod:`MongoDB\\Collection::findOneAndReplace`"
+  method: ":phpmethod:`MongoDB\\Collection::findOneAndReplace()`"
 ---
 ref: bson-deserialization-findOneAndUpdate
 source:
   file: extracts-bson-deserialization-base.yaml
   ref: _bson-deserialization
 replacement:
-  method: ":phpmethod:`MongoDB\\Collection::findOneAndUpdate`"
+  method: ":phpmethod:`MongoDB\\Collection::findOneAndUpdate()`"
 ...

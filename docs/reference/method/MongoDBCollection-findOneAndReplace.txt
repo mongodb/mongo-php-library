@@ -3,50 +3,49 @@ MongoDB\\Collection::findOneAndReplace()
 ========================================
 
 .. default-domain:: mongodb
-                    
+
 .. contents:: On this page
    :local:
    :backlinks: none
    :depth: 1
    :class: singlecol
 
-              
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::findOneAndReplace
-   
+.. phpmethod:: MongoDB\\Collection::findOneAndReplace()
+
    Finds a single document matching the query and replaces it.
-   
+
    .. code-block:: php
-                   
+
       function findOneAndReplace($filter, $replacement, array $options = []): object|null
 
-   ``findOneAndReplace()`` supports the following parameters:
-   
+   This method has the following parameters:
+
    .. include:: /includes/apiargs/MongoDBCollection-method-findOneAndReplace-param.rst
 
    The ``$options`` parameter supports the following options:
-                
+
    .. include:: /includes/apiargs/MongoDBCollection-method-findOneAndReplace-option.rst
 
    .. include:: /includes/extracts/bson-deserialization-findOneAndReplace.rst
 
-Output
-------
+   :returns:
 
-By default, returns the original document. To return the *new*
-document, use the ``returnDocument`` option. If no document matched
-the query, returns ``null``.
+      An object for either the original or the replaced document, depending on
+      the specified value of the ``returnDocument`` option. By default, the
+      original document is returned. If no document matched the query, ``null``
+      is returned.
 
 Examples
 --------
 
-Consider the following document in the ``restaurants`` collection in
-the ``example`` database:
+Consider the following document in the ``restaurants`` collection in the
+``example`` database:
 
 .. code-block:: javascript
-                
+
    {
      "_id" : ObjectId("576023c7b02fa9281da4139e"),
      "address" : {
@@ -81,32 +80,31 @@ the ``example`` database:
      "restaurant_id" : "41220906"
    }
 
-The following operation replaces the document with ``restaurant_id :
-41220906`` with the new specified document:
+The following operation replaces the document with ``restaurant_id`` of
+``"41220906"`` with a new document:
 
 .. code-block:: php
-                
+
    <?php
-   
-   $collection = $database->selectCollection('example','restaurants');
 
-   $updateRestaurant = $collection->findOneAndReplace(
+   $collection = (new MongoDB\Client)->example->restaurants;
+
+   $replacedRestaurant = $collection->findOneAndReplace(
        [ 'restaurant_id' => '41220906' ],
-       [ 'Borough' => 'Staten Island', 
-         'cuisine' => 'Italian',
-         'grades' => [],
-         'name' => 'Staten Island Pastaria',
-         'restaurant_id' => '999999999',
+       [
+           'Borough' => 'Staten Island',
+           'cuisine' => 'Italian',
+           'grades' => [],
+           'name' => 'Staten Island Pastaria',
+           'restaurant_id' => '999999999',
        ],
-       [ 'returnDocument' => MongoDB\Operation\FindOneAndUpdate::RETURN_DOCUMENT_AFTER ]
-   );  
+       [ 'returnDocument' => MongoDB\Operation\FindOneAndReplace::RETURN_DOCUMENT_AFTER ]
+   );
 
-   
+   var_dump($replacedRestaurant)
 
-   var_dump($updateRestaurant)
-      
-The ``var_dump()`` output contains the new document, as in the following::
-   
+The output would then resemble::
+
    object(stdClass)#14 (6) {
      ["_id"]=>
      object(MongoDB\BSON\ObjectID)#11 (1) {
@@ -127,8 +125,8 @@ The ``var_dump()`` output contains the new document, as in the following::
    }
 
 .. seealso::
-   
-   - :phpmethod:`MongoDB\\Collection::findOneAndDelete`
-   - :phpmethod:`MongoDB\\Collection::findOneAndUpdate`
-   - :manual:`findAndModify </reference/command/findAndModify>`
-     command reference in the MongoDB manual
+
+   - :phpmethod:`MongoDB\\Collection::findOneAndDelete()`
+   - :phpmethod:`MongoDB\\Collection::findOneAndUpdate()`
+   - :manual:`findAndModify </reference/command/findAndModify>` command
+     reference in the MongoDB manual

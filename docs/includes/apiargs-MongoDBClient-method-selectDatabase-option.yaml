@@ -1,26 +1,27 @@
 source:
+  file: apiargs-common-option.yaml
   ref: readConcern
-  file: apiargs-common-option.yaml
-operation: MongoDB\\Client::selectDatabase
 replacement:
   resource: "database"
+  parent: "client"
 ---
 source:
+  file: apiargs-common-option.yaml
   ref: readPreference
-  file: apiargs-common-option.yaml
-operation: MongoDB\\Client::selectDatabase
 replacement:
   resource: "database"
+  parent: "client"
 ---
 source:
+  file: apiargs-common-option.yaml
   ref: typeMap
-  file: apiargs-common-option.yaml
-operation: MongoDB\\Client::selectDatabase
+replacement:
+  parent: "client"
 ---
 source:
-  ref: writeConcern
   file: apiargs-common-option.yaml
-operation: MongoDB\\Client::selectDatabase
+  ref: writeConcern
 replacement:
   resource: "database"
+  parent: "client"
 ...

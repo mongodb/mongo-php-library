@@ -72,7 +72,7 @@ class Aggregate implements Executable
      *    applied to the returned Cursor (it is not sent to the server).
      *
      *    This is not supported for inline aggregation results (i.e. useCursor
-     *    option is false or the server versions < 2.6).
+     *    option is false or the server version is < 2.6).
      *
      *  * useCursor (boolean): Indicates whether the command will request that
      *    the server provide results using a cursor. The default is true.

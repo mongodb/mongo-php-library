@@ -1,7 +1,6 @@
 source:
-  ref: $databaseName
   file: apiargs-common-param.yaml
-arg_name: param
-interface: phpmethod
-operation: MongoDB\\Client::__get
+  ref: $databaseName
+replacement:
+  action: " to select"
 ...

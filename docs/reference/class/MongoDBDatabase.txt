@@ -19,24 +19,22 @@ Definition
 
    Provides methods for common operations on a database,
    such as executing database commands and managing collections.
-   
+
    You can construct a database directly using the PHP extension's
-   ``Manager`` class or select a database from the |php-library|'s
-   :phpclass:`MongoDB\\Client`
-   class.
-   
+   :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` class or
+   select a database from the |php-library|'s :phpclass:`MongoDB\\Client` class.
+
    :phpclass:`MongoDB\\Database` supports the :php:`readConcern
    <mongodb-driver-readconcern>`, :php:`readPreference
    <mongodb-driver-readpreference>`, :php:`typeMap
-   <mongodb.persistence.php#mongodb.persistence.typemaps>`, and
-   :php:`writeConcern <mongodb-driver-writeconcern>` options.
+   <manual/en/mongodb.persistence.deserialization.php#mongodb.persistence.typemaps>`,
+   and :php:`writeConcern <mongodb-driver-writeconcern>` options.
    If you omit an option, the database inherits the value from the
    Manager constructor argument or the Client object used to select
    the database.
-   
-   Operations within the ``Database`` class
-   :phpmethod:`MongoDB\\Database::command` method
-   inherit the Database's options.
+
+   Operations within the :phpclass:`MongoDB\\Database` class inherit the
+   Database's options.
 
 .. _database-methods:
 
@@ -46,14 +44,16 @@ Methods
 .. toctree::
    :titlesonly:
 
-   /reference/method/MongoDBDatabase__get
    /reference/method/MongoDBDatabase__construct
+   /reference/method/MongoDBDatabase__get
    /reference/method/MongoDBDatabase-command
    /reference/method/MongoDBDatabase-createCollection
    /reference/method/MongoDBDatabase-drop
    /reference/method/MongoDBDatabase-dropCollection
-   /reference/method/MongoDBDatabase-getDatabaseName      
+   /reference/method/MongoDBDatabase-getDatabaseName
+   /reference/method/MongoDBDatabase-getManager
    /reference/method/MongoDBDatabase-listCollections
    /reference/method/MongoDBDatabase-selectCollection
+   /reference/method/MongoDBDatabase-selectGridFSBucket
    /reference/method/MongoDBDatabase-withOptions
 

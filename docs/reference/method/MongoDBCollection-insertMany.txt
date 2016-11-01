@@ -3,74 +3,70 @@ MongoDB\\Collection::insertMany()
 =================================
 
 .. default-domain:: mongodb
-                    
+
 .. contents:: On this page
    :local:
    :backlinks: none
    :depth: 1
    :class: singlecol
 
-              
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::insertMany
-   
-   Inserts one document.
-   
+.. phpmethod:: MongoDB\\Collection::insertMany()
+
+   Insert multiple documents.
+
    .. code-block:: php
-                   
+
       function insertMany(array $documents, array $options = []): MongoDB\InsertManyResult
 
-   ``insertMany()`` supports the following parameters:
-   
+   This method has the following parameters:
+
    .. include:: /includes/apiargs/MongoDBCollection-method-insertMany-param.rst
 
    The ``$options`` parameter supports the following options:
-                
+
    .. include:: /includes/apiargs/MongoDBCollection-method-insertMany-option.rst
 
-Output
-------
+   :returns:
 
-Returns a ``MongoDB\InsertManyResult`` object.
+      A :phpclass:`MongoDB\\InsertManyResult` object, which encapsulates a
+      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
+      object.
 
 Example
 -------
 
 .. start-crud-include
 
-The following operation inserts two documents into the ``users``
-collection in the ``example`` database:
+The following operation inserts two documents into the ``users`` collection
+in the ``example`` database:
 
 .. code-block:: php
-                
+
    <?php
-   
-   $database = new MongoDB\Client;
 
-   $collection = $database->selectCollection('users','restaurants');
+   $collection = (new MongoDB\Client)->example->users;
 
-   $newUsers = $collection->insertMany(
+   $insertManyResult = $collection->insertMany([
        [
-         [
            'username' => 'admin',
            'email' => 'admin@example.com',
-           'name' => 'Admin User'
-         ],
-         [
+           'name' => 'Admin User',
+       ],
+       [
            'username' => 'test',
            'email' => 'test@example.com',
-           'name' => 'Test User'
-   
-         ],
-       ]
-   );
+           'name' => 'Test User',
+       ],
+   ]);
 
-   printf("Inserted %d document(s)\n", $newUsers->getInsertedCount());
-   var_dump($newUsers->getInsertedIds());
+   printf("Inserted %d document(s)\n", $insertManyResult->getInsertedCount());
 
-The output would resemble::
+   var_dump($insertManyResult->getInsertedIds());
+
+The output would then resemble::
 
    Inserted 2 document(s)
    array(2) {
@@ -86,12 +82,12 @@ The output would resemble::
      }
    }
 
-.. end-crud-include  
+.. end-crud-include
 
 .. seealso::
-   
-   - :phpmethod:`MongoDB\\Collection::bulkWrite`
-   - :phpmethod:`MongoDB\\Collection::insertOne`
+
+   - :phpmethod:`MongoDB\\Collection::insertOne()`
+   - :phpmethod:`MongoDB\\Collection::bulkWrite()`
    - :doc:`/tutorial/crud`
-   - :manual:`insert </reference/command/insert>` command reference
-     in the MongoDB manual
+   - :manual:`insert </reference/command/insert>` command reference in the
+     MongoDB manual

@@ -1,24 +1,25 @@
 source:
   file: apiargs-common-option.yaml
   ref: readConcern
-operation: MongoDB\\Database::__construct
-position: 1
+replacement:
+  resource: "database"
+  parent: "manager"
 ---
 source:
   file: apiargs-common-option.yaml
   ref: readPreference
-operation: MongoDB\\Database::__construct
-position: 2
+replacement:
+  resource: "database"
+  parent: "manager"
 ---
 source:
-  file: apiargs-common-option.yaml
+  file: apiargs-MongoDBClient-method-construct-driverOptions.yaml
   ref: typeMap
-operation: MongoDB\\Database::__construct
-position: 3
 ---
 source:
   file: apiargs-common-option.yaml
   ref: writeConcern
-operation: MongoDB\\Database::__construct
-position: 4
+replacement:
+  resource: "database"
+  parent: "manager"
 ...

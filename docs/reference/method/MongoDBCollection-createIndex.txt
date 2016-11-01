@@ -9,99 +9,92 @@ MongoDBCollection::createIndex()
    :backlinks: none
    :depth: 1
    :class: singlecol
-                    
+
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::createIndex($key, $options)
-               
+.. phpmethod:: MongoDB\\Collection::createIndex()
+
    Create an index for the collection.
-   
+
    .. code-block:: php
-                   
+
       function createIndex($key, array $options = []): string
 
-   ``createIndex()`` accepts the following parameters:
-   
+   This method has the following parameters:
+
    .. include:: /includes/apiargs/MongoDBCollection-method-createIndex-param.rst
 
-   The ``$options`` parameter accepts all index options that your
-   MongoDB version supports. MongoDB 3.2 includes the following options:
-                
+   The ``$options`` parameter accepts all index options that your MongoDB
+   version supports. MongoDB includes the following options:
+
    .. include:: /includes/apiargs/MongoDBCollection-method-createIndex-option.rst
 
-   For a full list of the supported index creation options, refer to
-   the :manual:`createIndexes </reference/command/createIndexes>`
-   command reference in the MongoDB manual.
+   For a full list of the supported index creation options, refer to the
+   :manual:`createIndexes </reference/command/createIndexes>` command reference
+   in the MongoDB manual.
 
-Output
-------
+   :returns:
 
-Returns the name of the created index as a string.
-                
+      The name of the created index as a string.
+
 Examples
 --------
 
 Create a Compound Index
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-The following operation creates a :manual:`compound index
-</core/index-compound>` on the ``borough`` and ``cuisine`` fields
-in the ``restaurants`` collection.
+The following example creates a :manual:`compound index </core/index-compound>`
+on the ``borough`` and ``cuisine`` fields in the ``restaurants`` collection in
+the ``example`` database.
 
 .. code-block:: php
-                
+
    <?php
-   
-   $database = new MongoDB\Client;
 
-   $collection = $database->selectCollection('example','restaurants');
+   $collection = (new MongoDB\Client)->selectCollection('example', 'restaurants');
 
-   $keys = ['borough' => 1, 'cuisine' => 1];
+   $indexName = $collection->createIndex(['borough' => 1, 'cuisine' => 1]);
 
-   $indexString = $collection->createIndex($keys, ['name' => 'compound']);
+   var_dump($indexName);
 
-   var_dump($indexString);
+The output would then resemble::
 
-The output would resemble the following:
-
-.. code-block:: none
-                
-   string(8) "compound"
+   string(19) "borough_1_cuisine_1"
 
 Create a Partial Index
 ~~~~~~~~~~~~~~~~~~~~~~
 
-The following operation adds a :manual:`partial index
-</core/index-parital>` on the ``borough`` field in the ``restaurants``
-collection in the ``example`` database. The partial index indexes only
-fields where the ``borough`` field exists.
+The following example adds a :manual:`partial index </core/index-parital>` on
+the ``borough`` field in the ``restaurants`` collection in the ``example``
+database. The partial index indexes only documents where the ``borough`` field
+exists.
 
 .. code-block:: php
-                
+
    <?php
-   
-   $database = new MongoDB\Client;
 
-   $collection = $database->selectCollection('example','restaurants');
+   $collection = (new MongoDB\Client)->selectCollection('example, 'restaurants');
 
-   $indexString = $collection->createIndex(
-      ['borough' => 1], 
-      ['partialFilterExpression'=>
-         ['borough'=>
-            ['$exists'=>true]
-   ]]);
-   
-   var_dump($indexString);
+   $indexName = $collection->createIndex(
+      ['borough' => 1],
+      [
+          'partialFilterExpression' => [
+              'borough' => ['$exists' => true],
+          ],
+      ]
+   );
 
-The output would resemble::
-                
+   var_dump($indexName);
+
+The output would then resemble::
+
    string(9) "borough_1"
 
 .. seealso::
-   
-   - :phpmethod:`MongoDB\\Collection::createIndexes`
+
+   - :phpmethod:`MongoDB\\Collection::createIndexes()`
    - :doc:`/tutorial/indexes`
-   - :manual:`createIndexes </reference/command/createIndexes>` 
-     command reference in the MongoDB manual
-   - :manual:`Index documentation </indexes>`
+   - :manual:`createIndexes </reference/command/createIndexes>` command
+     reference in the MongoDB manual
+   - :manual:`Index </indexes>` documentation in the MongoDB Manual

@@ -1,8 +1,8 @@
 source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: collation
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: writeConcern
-  file: apiargs-common-option.yaml
-operation: MongoDB\\Collection::deleteOne
-replacement:
-  resource: "delete"
-position: 1
 ...

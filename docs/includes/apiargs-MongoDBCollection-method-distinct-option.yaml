@@ -1,21 +1,16 @@
 source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: collation
+---
+source:
+  file: apiargs-common-option.yaml
   ref: maxTimeMS
-  file: apiargs-common-option.yaml
-operation: MongoDB\\Collection::distinct
-position: 1
 ---
 source:
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: readConcern
-  file: apiargs-common-option.yaml
-operation: MongoDB\\Collection::distinct
-replacement:
-  resource: "distinct"
-position: 2
 ---
 source:
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: readPreference
-  file: apiargs-common-option.yaml
-replacement:
-  resource: "distinct"
-position: 3
 ...

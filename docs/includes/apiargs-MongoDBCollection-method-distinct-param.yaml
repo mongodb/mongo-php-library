@@ -4,19 +4,17 @@ type: string
 description: |
   The field for which to return distinct values.
 interface: phpmethod
-operation: MongoDB\\Collection::distinct
+operation: ~
 optional: false
-position: 1
 ---
 source:
-  file: apiargs-common-param.yaml
+  file: apiargs-MongoDBCollection-common-param.yaml
   ref: $filter
-position: 2
 optional: true
+replacement:
+  action: " from which to retrieve the distinct values"
 ---
 source:
-  ref: $options
   file: apiargs-common-param.yaml
-operation: MongoDB\\Collection::count
-position: 3
+  ref: $options
 ...

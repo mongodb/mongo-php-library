@@ -9,78 +9,71 @@ MongoDBCollection::createIndexes()
    :backlinks: none
    :depth: 1
    :class: singlecol
-                    
+
 Definition
 ----------
 
 .. phpmethod:: MongoDB\\Collection::createIndexes($indexes)
-               
+
    Create one or more indexes for the collection.
-   
+
    .. code-block:: php
 
-      function createIndexes(array $indexes): string[]
+      function createIndexes(array $indexes, array $options = []): string[]
 
-   ``createIndex()`` has one parameter: ``$indexes``, which is an array
-   or object.
-   Each element in the ``$indexes`` array|object must have a
-   "``key`` document" that specifies the fields to index and the
-   array direction or type. You can then specify index options as
-   additional key-value pairs in that element.
+   This method has the following parameters:
 
-   For example, the following ``$indexes`` parameter creates an ascending
-   unique index on the ``username`` field:
-   
-   .. code-block:: none
-                   
-      [ 'key' => ['username => 1 '], 'unique' => true ],
-   
-   The following ``$indexes`` parameter creates a 2dsphere index on the ``loc`` field and
-   specifies a custom index name:
-   
-   .. code-block:: none
-                   
-      [ 'key' => [ 'loc' => '2dsphere'], 'name' => 'geo_index' ],
-   
-   You can specify any index options that your MongoDB version
-   supports. MongoDB 3.2 includes the following options:
-                
-   .. include:: /includes/apiargs/MongoDBCollection-method-createIndex-option.rst
+   .. include:: /includes/apiargs/MongoDBCollection-method-createIndexes-param.rst
 
-   For a full list of the supported index creation options, refer to
-   the :manual:`createIndexes </reference/command/createIndexes>`
-   command reference in the MongoDB manual.
+   The ``$options`` parameter supports the following options:
 
-Output
-------
+   .. include:: /includes/apiargs/MongoDBCollection-method-createIndexes-option.rst
 
-Returns the name of the created indexes as an array of strings.
-                
+   :returns:
+
+      The names of the created indexes as an array of strings.
+
+``$indexes`` parameter
+----------------------
+
+The ``$indexes`` parameter is an array of index specification documents. Each
+element in ``$indexes`` must itself be an array or object with a ``key`` field,
+which corresponds to the ``$key`` parameter of :phpmethod:`createIndex()
+<MongoDB\\Collection::createIndex()>`. The array or object may include other
+fields that correspond to index options accepted by :phpmethod:`createIndex()
+<MongoDB\\Collection::createIndex()>` (excluding ``writeConcern``).
+
+For example, the following ``$indexes`` parameter creates two indexes. The first
+is an ascending unique index on the ``username`` field and the second is a
+2dsphere index on the ``loc`` field with a custom name::
+
+   [
+       [ 'key' => [ 'username' => 1 ], 'unique' => true ],
+       [ 'key' => [ 'loc' => '2dsphere' ], 'name' => 'geo_index' ],
+   ]
+
 Example
 -------
 
-The following creates two indexes on the ``restaurants`` collection in
-the ``example`` database. One index is a compound index on the
-``borough`` and ``cuisine`` fields and the other is 2dsphere index
-on the ``location`` field with a custom name.
+The following example creates two indexes on the ``restaurants`` collection in
+the ``example`` database. One index is a compound index on the ``borough`` and
+``cuisine`` fields and the other is 2dsphere index on the ``loc`` field with a
+custom name.
 
 .. code-block:: php
-                
+
    <?php
-   
-   $database = new MongoDB\Client;
 
-   $collection = $database->selectCollection('example','restaurants');
+   $collection = (new MongoDB\Client)->selectCollection('example', 'restaurants');
 
-   $index = $collection->createIndexes(
-       [ 
-           [ 'key' => [ 'borough' => 1, 'cuisine' => 1] ],
-           [ 'key' => [ 'location' => '2dsphere'], 'name' => 'geo_index'],
-       ]);
+   $indexNames = $collection->createIndexes([
+       [ 'key' => [ 'borough' => 1, 'cuisine' => 1] ],
+       [ 'key' => [ 'loc' => '2dsphere'], 'name' => 'geo_index' ],
+   ]);
 
-   var_dump($index);
+   var_dump($indexNames);
 
-The output would resemble the following::
+The output would then resemble::
 
    array(2) {
      [0]=>
@@ -90,9 +83,9 @@ The output would resemble the following::
    }
 
 .. seealso::
-   
-   - :phpmethod:`MongoDB\\Collection::createIndex`
+
+   - :phpmethod:`MongoDB\\Collection::createIndex()`
    - :doc:`/tutorial/indexes`
-   - :manual:`createIndexes </reference/command/createIndexes>` 
-     command reference in the MongoDB manual
-   - :manual:`Index documentation </indexes>`
+   - :manual:`createIndexes </reference/command/createIndexes>` command
+     reference in the MongoDB manual
+   - :manual:`Index </indexes>` documentation in the MongoDB Manual

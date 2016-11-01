@@ -3,7 +3,7 @@ MongoDB\\Collection::dropIndexes()
 ==================================
 
 .. default-domain:: mongodb
-                    
+
 .. contents:: On this page
    :local:
    :backlinks: none
@@ -13,49 +13,47 @@ MongoDB\\Collection::dropIndexes()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::dropIndexes($options)
-   
-   Drops **all indexes** in the collection.
-   
+.. phpmethod:: MongoDB\\Collection::dropIndexes()
+
+   Drop all indexes in the collection, except for the required index on the
+   ``_id`` field.
+
    .. code-block:: php
-      
+
       function dropIndexes(array $options = []): array|object
 
-   ``dropIndexes()`` supports the following parameters:
-   
+   This method has the following parameters:
+
    .. include:: /includes/apiargs/MongoDBCollection-method-dropIndex-param.rst
-   
-   The ``$options`` parameter supports the following option:
-                
+
+   The ``$options`` parameter supports the following options:
+
    .. include:: /includes/apiargs/MongoDBCollection-method-dropIndex-option.rst
 
-Output
-------
+   :returns:
 
-Returns the command result document as an array or object, depending
-on the ``typeMap`` specification.
+      An array or object with the result document of the :manual:`dropIndexes
+      </reference/command/dropIndexes>` command. The return type will depend on
+      the ``typeMap`` option.
 
 Example
 -------
 
-The following drops all indexes from the ``restaurants`` collection in
-the ``example`` database:
+The following drops all indexes from the ``restaurants`` collection in the
+``example`` database:
 
 .. code-block:: php
 
    <?php
 
-   $database = new MongoDB\Client;
+   $collection = (new MongoDB\Client)->example->restaurants;
 
-   $collection = $database->selectCollection('example','restaurants');
+   $result = $collection->dropIndexes();
 
-   $response = $collection->dropIndexes();
+   var_dump($result);
 
-   var_dump($response);
+The output would then resemble::
 
-                
-The output would resemble the following::
-  
    object(MongoDB\Model\BSONDocument)#9 (1) {
      ["storage":"ArrayObject":private]=>
      array(3) {
@@ -69,9 +67,9 @@ The output would resemble the following::
    }
 
 .. seealso::
-   
-   - :phpmethod:`MongoDB\\Collection::dropIndex`
+
+   - :phpmethod:`MongoDB\\Collection::dropIndex()`
    - :doc:`/tutorial/indexes`
-   - :manual:`dropIndexes </reference/command/dropIndexes>` command
-     references in the MongoDB manual.
-   - :manual:`Index documentation </indexes>`
+   - :manual:`dropIndexes </reference/command/dropIndexes>` command reference
+     in the MongoDB manual
+   - :manual:`Index documentation </indexes>` in the MongoDB manual

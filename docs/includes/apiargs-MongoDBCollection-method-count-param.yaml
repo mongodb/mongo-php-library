@@ -1,12 +1,11 @@
 source:
+  file: apiargs-MongoDBCollection-common-param.yaml
   ref: $filter
-  file: apiargs-common-param.yaml
-operation: MongoDB\\Collection::count
-position: 1
+optional: true
+replacement:
+  action: " to count"
 ---
 source:
-  ref: $options
   file: apiargs-common-param.yaml
-operation: MongoDB\\Collection::count
-position: 2
+  ref: $options
 ...

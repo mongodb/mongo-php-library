@@ -1,6 +1,4 @@
 source:
-  ref: maxTimeMS
   file: apiargs-common-option.yaml
-operation: MongoDB\\Collection::listIndexes
-position: 1
+  ref: maxTimeMS
 ...

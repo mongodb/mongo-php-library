@@ -4,7 +4,6 @@ MongoDB\\Client::__construct()
 
 .. default-domain:: mongodb
 
-
 .. contents:: On this page
    :local:
    :backlinks: none
@@ -14,26 +13,28 @@ MongoDB\\Client::__construct()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::__construct($uri, $uriOptions, $driverOptions)
+.. phpmethod:: MongoDB\\Client::__construct()
 
    Constructs a new :phpclass:`Client <MongoDB\\Client>` instance.
 
    .. code-block:: php
 
-      function __construct($uri = 'mongodb://localhost:27017', array $uriOptions = [], array $driverOptions = [])
+      function __construct($uri = 'mongodb://127.0.0.1/', array $uriOptions = [], array $driverOptions = [])
 
-   :phpmethod:`MongoDB\\Client::__construct` has the following parameters:
+   This constructor has the following parameters:
 
    .. include:: /includes/apiargs/MongoDBClient-method-construct-param.rst
+
+   The ``$driverOptions`` parameter supports the following options:
+
+   .. include:: /includes/apiargs/MongoDBClient-method-construct-driverOptions.rst
 
 Examples
 --------
 
-If you do not specify a ``$uri`` value, the driver connects to a
-standalone :program:`mongod` on ``localhost`` via port ``27017``. The
-following example demonstrates how to connect to a replica set
-with a custom
-read preference:
+If you do not specify a ``$uri`` value, the driver connects to a standalone
+:program:`mongod` on ``127.0.0.1`` via port ``27017``. The following example
+demonstrates how to connect to a replica set with a custom read preference:
 
 .. code-block:: php
 
@@ -42,15 +43,15 @@ read preference:
    $client = new MongoDB\Client(
        'mongodb://rs1.example.com,rs2.example.com/?replicaSet=myReplicaSet',
        [
-           'readPreference' => 'secondaryPreferred'
+           'readPreference' => 'secondaryPreferred',
        ]
    );
 
 By default, the |php-library| deserializes BSON documents and arrays
-as ``MongoDB\Model\BSONDocument`` and ``MongoDB\Model\BSONArray``
-objects, respectively. The following example demonstrates how to
-have the library unserialize everything as a PHP array, as was done
-in the legacy :php:`mongo extension <mongo>`.
+as :phpclass:`MongoDB\\Model\\BSONDocument` and
+:phpclass:`MongoDB\\Model\\BSONArray` objects, respectively. The following
+example demonstrates how to have the library unserialize everything as a PHP
+array, as was done in the legacy :php:`mongo extension <mongo>`.
 
 .. code-block:: php
 
@@ -59,8 +60,16 @@ in the legacy :php:`mongo extension <mongo>`.
    $client = new MongoDB\Client(
        null,
        [],
-       [ 'typeMap' => [
-           'root' => 'array', 'document' => 'array', 'array' => 'array'
-         ],
+       [
+           'typeMap' => [
+               'root' => 'array',
+               'document' => 'array',
+               'array' => 'array',
+           ],
        ]
    );
+
+.. seealso::
+
+   - :php:`MongoDB\\Driver\\Manager::__construct()
+     <mongodb-driver-manager.construct>`

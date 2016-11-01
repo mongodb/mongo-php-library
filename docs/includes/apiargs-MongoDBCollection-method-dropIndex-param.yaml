@@ -2,18 +2,14 @@ arg_name: param
 name: $indexName
 type: string
 description: |
-  The name of the index to drop. View the existing indexes on the
-  collection using the :phpmethod:`listIndexes
-  <MongoDB\\Collection::listIndexes>` method.
+  The name of the index to drop. View the existing indexes on the collection
+  using the :phpmethod:`listIndexes() <MongoDB\\Collection::listIndexes>`
+  method.
 interface: phpmethod
-operation: MongoDB\\Collection::dropIndex
+operation: ~
 optional: false
-position: 1
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $options
-interface: phpmethod
-operation: MongoDB\\Collection::dropIndex
-position: 2
 ...

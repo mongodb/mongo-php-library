@@ -33,12 +33,13 @@ The :phpmethod:`MongoDB\\Collection::insertOne` method inserts a single
 document into MongoDB and returns an instance of ``MongoDB\InsertOneResult``,
 which you can use to access the IDs of the inserted document.
 
-.. basic insertOne example:
+.. this uses the insertMany example from the method reference:
 
-.. include:: /includes/example-insertOne.rst
+.. include:: /reference/method/MongoDBCollection-insertOne.txt
+   :start-after: start-crud-include
+   :end-before: end-crud-include
 
-The output includes the ``insertedId`` property, which contains the
-ID of the inserted document.
+The output includes the ID of the inserted document.
 
 If you include an ``_id`` value when inserting a document, MongoDB checks
 to ensure that the ``_id`` value is unique for the collection. If the
@@ -324,8 +325,8 @@ collection data. The |php-library|\'s
 :phpmethod:`MongoDB\\Collection::aggregate` method returns a
 :php:`traversable <traversable>` object, which you can iterate upon to
 access the results of the aggregation operation. Refer to the
-:phpmethod:`MongoDB\\Collection::aggregate` method's :ref:`output
-reference <php-agg-method-output>` for more about the method's output.
+:phpmethod:`MongoDB\\Collection::aggregate` method's :ref:`behavior
+reference <php-agg-method-behavior>` for more about the method's output.
 
 The following example lists the 5 US states with the most zip codes
 associated with them:

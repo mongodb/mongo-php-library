@@ -1,17 +1,13 @@
 arg_name: param
 name: $command
-type: string
+type: array|object
 description: |
-  The name of the :manual:`database command </reference/command>`
-  to execute.
+  The :manual:`database command </reference/command>` document.
 interface: phpmethod
-operation: MongoDB\\Database::command
+operation: ~
 optional: false
-position: 1
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $options
-operation: MongoDB\\Database::command
-position: 2
 ...

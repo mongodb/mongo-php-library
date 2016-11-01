@@ -10,14 +10,11 @@ description: |
   .. code-block:: php
 
      [ 'username' => -1 ]
-operation: MongoDB\\Collection::createIndex
 interface: phpmethod
+operation: ~
 optional: false
-position: 1
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $options
-operation: MongoDB\\Collection::createIndex
-position: 2
 ...

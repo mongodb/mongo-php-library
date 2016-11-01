@@ -22,20 +22,16 @@ description: |
          [ 'updateMany' => [ $filter, $update, $options ] ],
          [ 'updateOne'  => [ $filter, $update, $options ] ],
      ]
-post: |
+
   Arguments correspond to the respective operation methods. However, the
   ``writeConcern`` option is specified as a top-level option to
   :phpmethod:`MongoDB\\Collection::bulkWrite()` instead of each individual
   operation.
 interface: phpmethod
-operation: MongoDB\\Collection::bulkWrite
+operation: ~
 optional: true
-position: 1
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $options
-operation: MongoDB\\Collection::bulkWrite
-interface: phpmethod
-position: 2
 ...

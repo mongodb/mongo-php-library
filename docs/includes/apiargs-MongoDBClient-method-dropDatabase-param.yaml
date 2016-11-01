@@ -1,14 +1,10 @@
 source:
   file: apiargs-common-param.yaml
   ref: $databaseName
-operation: MongoDB\\Client::dropDatabase
-position: 1
 replacement:
   action: " to drop"
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $options
-operation: MongoDB\\Client::dropDatabase
-position: 2
 ...

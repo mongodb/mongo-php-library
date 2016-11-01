@@ -4,13 +4,10 @@ type: array|object
 description: |
   The document to insert into the collection.
 interface: phpmethod
-operation: MongoDB\\Collection::insertOne
+operation: ~
 optional: false
-position: 1
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $options
-operation: MongoDB\\Collection::insertOne
-position: 2
 ...

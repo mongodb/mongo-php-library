@@ -5,9 +5,8 @@ description: |
   The bucket name, which will be used as a prefix for the files and chunks
   collections. Defaults to ``"fs"``.
 interface: phpmethod
-operation: MongoDB\\Database::selectGridFSBucket
+operation: ~
 optional: true
-position: 1
 ---
 arg_name: option
 name: chunkSizeBytes
@@ -15,15 +14,12 @@ type: integer
 description: |
   The chunk size in bytes. Defaults to ``261120`` (i.e. 255 KiB).
 interface: phpmethod
-operation: MongoDB\\Database::selectGridFSBucket
+operation: ~
 optional: true
-position: 2
 ---
 source:
   file: apiargs-common-option.yaml
   ref: readConcern
-operation: MongoDB\\Database::selectGridFSBucket
-position: 3
 replacement:
   resource: "bucket"
   parent: "database"
@@ -31,8 +27,6 @@ replacement:
 source:
   file: apiargs-common-option.yaml
   ref: readPreference
-operation: MongoDB\\Database::selectGridFSBucket
-position: 4
 replacement:
   resource: "bucket"
   parent: "database"
@@ -40,8 +34,6 @@ replacement:
 source:
   file: apiargs-common-option.yaml
   ref: writeConcern
-operation: MongoDB\\Database::selectGridFSBucket
-position: 5
 replacement:
   resource: "bucket"
   parent: "database"

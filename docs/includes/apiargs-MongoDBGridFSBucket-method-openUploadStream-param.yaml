@@ -1,16 +1,10 @@
-arg_name: param
-name: $filename
-type: string
-description: |
-  The ``filename`` of the file to create.
-interface: phpmethod
-operation: MongoDB\\GridFS\\Bucket::openUploadStream
-optional: false
-position: 1
+source:
+  file: apiargs-MongoDBGridFSBucket-common-param.yaml
+  ref: $filename
+replacement:
+  resource: " to create"
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $options
-operation: MongoDB\\GridFS\\Bucket::openUploadStream
-position: 2
 ...

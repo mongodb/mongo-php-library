@@ -6,11 +6,10 @@ description: |
   connect. Refer to the :manual:`MongoDB connection string reference
   </reference/connection-string>` for formatting.
 
-  Defaults to ``mongodb://127.0.0.1:27017`` if unspecified.
+  Defaults to ``"mongodb://127.0.0.1:27017"`` if unspecified.
 interface: phpmethod
-operation: MongoDB\\Client::__construct
+operation: ~
 optional: true
-position: 1
 ---
 arg_name: param
 name: $uriOptions
@@ -19,15 +18,14 @@ description: |
   Specifies additional URI options, such as authentication credentials or query
   string parameters. The options specified in ``$uriOptions`` take precedence
   over any analogous options present in the ``$uri`` string.
-post: |
+
   Refer to the :php:`MongoDB\\Driver\\Manager::__construct()
   <mongodb-driver-manager.construct>` extension reference and :manual:`MongoDB
-  connection string </reference/connection-string>` documentation for valid
+  connection string </reference/connection-string>` documentation for accepted
   options.
 interface: phpmethod
-operation: MongoDB\\Client::__construct
+operation: ~
 optional: true
-position: 2
 ---
 arg_name: param
 name: $driverOptions
@@ -39,7 +37,6 @@ description: |
   <manual/en/mongodb.persistence.deserialization.php#mongodb.persistence.typemaps>`
   to apply to the cursors it creates.
 interface: phpmethod
-operation: MongoDB\\Client::__construct
+operation: ~
 optional: true
-position: 3
 ...

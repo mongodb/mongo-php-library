@@ -1,8 +1,6 @@
 source:
   file: apiargs-common-param.yaml
   ref: $collectionName
-operation: MongoDB\\Database::__get
-position: 1
 replacement:
   action: " to select"
 ...

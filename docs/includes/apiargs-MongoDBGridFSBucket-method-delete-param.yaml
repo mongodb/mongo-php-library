@@ -1,10 +1,6 @@
-arg_name: param
-name: $id
-type: mixed
-description: |
-  The ``_id`` of the file to delete.
-interface: phpmethod
-operation: MongoDB\\GridFS\\Bucket::delete
-optional: false
-position: 1
+source:
+  file: apiargs-MongoDBGridFSBucket-common-param.yaml
+  ref: $id
+replacement:
+  resource: " to delete"
 ...

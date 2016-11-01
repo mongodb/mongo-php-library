@@ -1,18 +1,16 @@
 source:
-  file: apiargs-common-option.yaml
-  ref: bypassDocumentValidation
-operation: MongoDB\\Collection::updateOne
-position: 1
----
-source:
-  file: apiargs-common-option.yaml
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: upsert
-operation: MongoDB\\Collection::updateOne
-position: 2
 ---
 source:
-  file: apiargs-common-option.yaml
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: bypassDocumentValidation
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: collation
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: writeConcern
-operation: MongoDB\\Collection::updateOne
-position: 3
 ...

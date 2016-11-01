@@ -1,26 +1,19 @@
-arg_name: param
-name: $filename
-type: string
-description: |
-  The ``filename`` of the file to create.
-interface: phpmethod
-operation: MongoDB\\GridFS\\Bucket::uploadFromStream
-optional: false
-position: 1
+source:
+  file: apiargs-MongoDBGridFSBucket-common-param.yaml
+  ref: $filename
+replacement:
+  resource: " to create"
 ---
 arg_name: param
 name: $source
 type: resource
 description: |
-  Readable stream where the file's contents will be read.
+  Readable stream, from which the new GridFS file's contents will be read.
 interface: phpmethod
-operation: MongoDB\\GridFS\\Bucket::uploadFromStream
+operation: ~
 optional: false
-position: 2
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $options
-operation: MongoDB\\GridFS\\Bucket::uploadFromStream
-position: 3
 ...

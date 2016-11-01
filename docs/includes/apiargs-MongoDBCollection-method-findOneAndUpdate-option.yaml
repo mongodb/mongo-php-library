@@ -1,26 +1,22 @@
 source:
   file: apiargs-MongoDBCollection-method-find-option.yaml
   ref: projection
-operation: MongoDB\Collection::findOneAndUpdate
-position: 1
 ---
 source:
   file: apiargs-MongoDBCollection-method-find-option.yaml
   ref: sort
-operation: MongoDB\Collection::findOneAndUpdate
-position: 2
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: collation
 ---
 source:
   file: apiargs-common-option.yaml
   ref: maxTimeMS
-operation: MongoDB\Collection::findOneAndUpdate
-position: 3
 ---
 source:
-  file: apiargs-common-option.yaml
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: bypassDocumentValidation
-operation: MongoDB\Collection::findOneAndUpdate
-position: 4
 ---
 arg_name: option
 name: returnDocument
@@ -32,19 +28,17 @@ description: |
   - ``MongoDB\Operation\FindOneAndUpdate::RETURN_DOCUMENT_BEFORE`` (*default*)
   - ``MongoDB\Operation\FindOneAndUpdate::RETURN_DOCUMENT_AFTER``
 interface: phpmethod
-operation: MongoDB\Collection::findOneAndUpdate
+operation: ~
 optional: true
-position: 5
 ---
 source:
-  file: apiargs-common-option.yaml
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: upsert
-operation: MongoDB\\Collection::findOneAndUpdate
-position: 6
 ---
 source:
-  file: apiargs-common-option.yaml
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: writeConcern
-operation: MongoDB\Collection::findOneAndUpdate
-position: 7
+post: |
+  This is not supported for server versions prior to 3.2 and will be ignored if
+  used.
 ...

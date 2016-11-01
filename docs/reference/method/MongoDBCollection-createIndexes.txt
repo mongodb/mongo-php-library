@@ -19,36 +19,39 @@ Definition
 
    .. code-block:: php
 
-      function createIndexes(array $indexes): string[]
+      function createIndexes(array $indexes, array $options = []): string[]
 
-   ``createIndex()`` has one parameter, ``$indexes``, which is an array. Each
-   element in ``$indexes`` must itself be an array that specifies an index. The
-   specification array requires a ``key`` field, which corresponds to the
-   ``$key`` parameter of :phpmethod:`MongoDB\\Collection::createIndex()`, and
-   may have other fields that correspond to options of
-   :phpmethod:`MongoDB\\Collection::createIndex()`.
+   :phpmethod:`MongoDB\\Collection::createIndexes()` has the following
+   parameters:
 
-   For example, the following ``$indexes`` parameter creates two indexes. The
-   first is an ascending unique index on the ``username`` field and the second
-   is a 2dsphere index on the ``loc`` field with a custom name::
+   .. include:: /includes/apiargs/MongoDBCollection-method-createIndexes-param.rst
 
-      [
-          [ 'key' => [ 'username' => 1 ], 'unique' => true ],
-          [ 'key' => [ 'loc' => '2dsphere' ], 'name' => 'geo_index' ],
-      ]
+   The ``$options`` parameter supports the following options:
 
-   You can specify any index options that your MongoDB version
-   supports. MongoDB 3.2 includes the following options:
-
-   .. include:: /includes/apiargs/MongoDBCollection-method-createIndex-option.rst
-
-   For a full list of the supported index creation options, refer to the
-   :manual:`createIndexes </reference/command/createIndexes>` command reference
-   in the MongoDB manual.
+   .. include:: /includes/apiargs/MongoDBCollection-method-createIndexes-option.rst
 
    :returns:
 
       The names of the created indexes as an array of strings.
+
+``$indexes`` parameter
+----------------------
+
+The ``$indexes`` parameter is an array of index specification documents. Each
+element in ``$indexes`` must itself be an array or object with a ``key`` field,
+which corresponds to the ``$key`` parameter of :phpmethod:`createIndex()
+<MongoDB\\Collection::createIndex()>`. The array or object may include other
+fields that correspond to index options accepted by :phpmethod:`createIndex()
+<MongoDB\\Collection::createIndex()>` (excluding ``writeConcern``).
+
+For example, the following ``$indexes`` parameter creates two indexes. The first
+is an ascending unique index on the ``username`` field and the second is a
+2dsphere index on the ``loc`` field with a custom name::
+
+   [
+       [ 'key' => [ 'username' => 1 ], 'unique' => true ],
+       [ 'key' => [ 'loc' => '2dsphere' ], 'name' => 'geo_index' ],
+   ]
 
 Example
 -------

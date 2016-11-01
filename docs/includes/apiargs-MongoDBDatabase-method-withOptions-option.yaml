@@ -1,32 +1,27 @@
 source:
   file: apiargs-common-option.yaml
   ref: readConcern
-operation: MongoDB\\Database::withOptions
-description: |
-  The default read concern to use for database operations. Defaults to the
-  original Databases's read concern.
+replacement:
+  resource: "database"
+  parent: "original database"
 ---
 source:
   file: apiargs-common-option.yaml
   ref: readPreference
-operation: MongoDB\\Database::withOptions
-description: |
-  The default read preference to use for database operations. Defaults to the
-  original Database's read preference.
+replacement:
+  resource: "database"
+  parent: "original database"
 ---
 source:
   file: apiargs-common-option.yaml
   ref: typeMap
-operation: MongoDB\\Database::withOptions
-description: |
-  Default type map to use for converting BSON. Defaults to the original
-  Database's type map.
+replacement:
+  parent: "original database"
 ---
 source:
   file: apiargs-common-option.yaml
   ref: writeConcern
-operation: MongoDB\\Database::withOptions
-description: |
-  The default write concern to use for database operations. Defaults to the
-  original Database's write concern.
+replacement:
+  resource: "database"
+  parent: "original database"
 ...

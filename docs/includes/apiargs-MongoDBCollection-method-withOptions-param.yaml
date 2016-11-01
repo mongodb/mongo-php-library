@@ -1,6 +1,4 @@
 source:
-  ref: $options
   file: apiargs-common-param.yaml
-operation: MongoDB\\Collection::withOptions
-position: 1
+  ref: $options
 ...

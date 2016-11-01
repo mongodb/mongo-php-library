@@ -1,18 +1,12 @@
 source:
   file: apiargs-common-param.yaml
   ref: $manager
-operation: MongoDB\\Database::__construct
-position: 1
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $databaseName
-operation: MongoDB\\Database::__construct
-position: 2
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $options
-operation: MongoDB\\Collection::__construct
-position: 3
 ...

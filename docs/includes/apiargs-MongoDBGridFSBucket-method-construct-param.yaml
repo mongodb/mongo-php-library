@@ -1,18 +1,12 @@
 source:
   file: apiargs-common-param.yaml
   ref: $manager
-operation: MongoDB\\GridFS\\Bucket::__construct
-position: 1
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $databaseName
-operation: MongoDB\\GridFS\\Bucket::__construct
-position: 2
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $options
-operation: MongoDB\\GridFS\\Bucket::__construct
-position: 3
 ...

@@ -1,12 +1,8 @@
-arg_name: param
-name: $id
-type: mixed
-description: |
-  The ``_id`` of the file to rename.
-interface: phpmethod
-operation: MongoDB\\GridFS\\Bucket::rename
-optional: false
-position: 1
+source:
+  file: apiargs-MongoDBGridFSBucket-common-param.yaml
+  ref: $id
+replacement:
+  resource: " to rename"
 ---
 arg_name: param
 name: $newFilename
@@ -14,7 +10,6 @@ type: string
 description: |
   The new ``filename`` value.
 interface: phpmethod
-operation: MongoDB\\GridFS\\Bucket::rename
+operation: ~
 optional: false
-position: 2
 ...

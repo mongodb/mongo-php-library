@@ -1,5 +1,4 @@
 source:
   file: apiargs-common-option.yaml
   ref: maxTimeMS
-operation: MongoDB\\Client::listDatabases
 ...

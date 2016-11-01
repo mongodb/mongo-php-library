@@ -1,24 +1,23 @@
 source:
   file: apiargs-MongoDBCollection-method-find-option.yaml
   ref: projection
-operation: MongoDB\\Collection::findOneAndDelete
-position: 1
 ---
 source:
   file: apiargs-MongoDBCollection-method-find-option.yaml
   ref: sort
-operation: MongoDB\\Collection::findOneAndDelete
-position: 2
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: collation
 ---
 source:
   file: apiargs-common-option.yaml
   ref: maxTimeMS
-operation: MongoDB\\Collection::findOneAndDelete
-position: 3
 ---
 source:
-  file: apiargs-common-option.yaml
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: writeConcern
-operation: MongoDB\\Collection::findOneAndDelete
-position: 4
+post: |
+  This is not supported for server versions prior to 3.2 and will be ignored if
+  used.
 ...

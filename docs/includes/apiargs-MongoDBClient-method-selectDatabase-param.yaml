@@ -1,14 +1,10 @@
 source:
   file: apiargs-common-param.yaml
   ref: $databaseName
-operation: MongoDB\\Client::selectDatabase
-position: 1
 replacement:
   action: " to select"
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $options
-operation: MongoDB\\Client::selectDatabase
-position: 2
 ...

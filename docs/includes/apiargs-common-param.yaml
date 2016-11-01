@@ -7,7 +7,6 @@ description: |
 interface: phpmethod
 operation: ~
 optional: false
-position: 1
 ---
 arg_name: param
 name: $databaseName
@@ -19,7 +18,6 @@ operation: ~
 optional: false
 replacement:
   action: ""
-position: 1
 ---
 arg_name: param
 name: $collectionName
@@ -31,7 +29,6 @@ operation: ~
 optional: false
 replacement:
   action: ""
-position: 2
 ---
 arg_name: param
 name: $options
@@ -41,17 +38,4 @@ description: |
 interface: phpmethod
 operation: ~
 optional: true
-position: 3
----
-arg_name: param
-name: $filter
-type: array|object
-description: |
-  The filter criteria that specifies the documents to {{verb}}.
-interface: phpmethod
-operation: ~
-optional: false
-position: 4
-replacement:
-  verb: "count"
 ...

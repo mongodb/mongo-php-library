@@ -26,7 +26,7 @@ Definition
    .. include:: /includes/apiargs/MongoDBCollection-method-createIndex-param.rst
 
    The ``$options`` parameter accepts all index options that your MongoDB
-   version supports. MongoDB 3.2 includes the following options:
+   version supports. MongoDB includes the following options:
 
    .. include:: /includes/apiargs/MongoDBCollection-method-createIndex-option.rst
 

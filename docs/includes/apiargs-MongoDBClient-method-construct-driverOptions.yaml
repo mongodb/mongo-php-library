@@ -4,9 +4,8 @@ type: array
 description: |
   Default :php:`type map
   <manual/en/mongodb.persistence.deserialization.php#mongodb.persistence.typemaps>`
-  to apply to cursors. The type map determines how BSON documents are converted
-  to PHP values which determines. The |php-library| uses the following type map
-  by default:
+  to apply to cursors, which determines how BSON documents are converted to PHP
+  values. The |php-library| uses the following type map by default:
 
   .. code-block:: php
 
@@ -16,7 +15,6 @@ description: |
          'root' => 'MongoDB\Model\BSONDocument',
      ]
 interface: phpmethod
-operation: MongoDB\\Client::__construct
+operation: ~
 optional: true
-position: 1
 ...

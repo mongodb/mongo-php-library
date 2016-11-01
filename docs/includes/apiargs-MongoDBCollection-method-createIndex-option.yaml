@@ -4,9 +4,15 @@ type: boolean
 description: |
   Creates a :manual:`unique </core/index-unique>` index.
 interface: phpmethod
-operation: MongoDB\\Collection::createIndex
+operation: ~
 optional: true
-position: 1
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: collation
+pre: |
+  Specifies the :manual:`collation
+  </reference/bson-type-comparison-order/#collation>` for the index.
 ---
 arg_name: option
 name: partialFilterExpression
@@ -14,9 +20,8 @@ type: array|object
 description: |
   Creates a :manual:`partial </core/index-partial>` index.
 interface: phpmethod
-operation: MongoDB\\Collection::createIndex
+operation: ~
 optional: true
-position: 2
 ---
 arg_name: option
 name: sparse
@@ -24,9 +29,8 @@ type: boolean
 description: |
   Creates a :manual:`sparse </core/index-sparse>` index.
 interface: phpmethod
-operation: MongoDB\\Collection::createIndex
+operation: ~
 optional: true
-position: 3
 ---
 arg_name: option
 name: expireAfterSeconds
@@ -34,20 +38,18 @@ type: integer
 description: |
   Creates a :manual:`TTL </core/index-ttl>` index.
 interface: phpmethod
-operation: MongoDB\\Collection::createIndex
+operation: ~
 optional: true
-position: 4
 ---
 arg_name: option
 name: name
 type: string
 description: |
-  Specifies the name for the index. By default, MongoDB creates index names
-  based on the key.
+  A name that uniquely identifies the index. By default, MongoDB creates index
+  names based on the key.
 interface: phpmethod
-operation: MongoDB\\Collection::createIndex
+operation: ~
 optional: true
-position: 5
 ---
 arg_name: option
 name: background
@@ -56,9 +58,8 @@ description: |
   Instructs MongoDB to build the index :manual:`as a background
   </core/index-creation>` process.
 interface: phpmethod
-operation: MongoDB\\Collection::createIndex
+operation: ~
 optional: true
-position: 6
 ---
 arg_name: option
 name: 2dsphereIndexVersion
@@ -69,15 +70,15 @@ description: |
 
   MongoDB 2.6 introduced version 2 of 2dsphere indexes. Version 2 is the default
   version of 2dsphere indexes created in MongoDB 2.6 and later versions.
-  ``2dsphereIndexVersion`` enables you to overrride the default version 2.
+  ``2dsphereIndexVersion`` enables you to override the default version 2.
 interface: phpmethod
-operation: MongoDB\\Collection::createIndex
+operation: ~
 optional: true
-position: 7
 ---
 source:
-  ref: maxTimeMS
-  file: apiargs-common-option.yaml
-operation: MongoDB\\Collection::createIndex
-position: 8
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: writeConcern
+post: |
+  This is not supported for server versions prior to 3.4 and will result in an
+  exception at execution time if used.
 ...

@@ -11,9 +11,8 @@ description: |
 
   .. deprecated:: 3.2. The ``autoIndexId`` option will be removed in MongoDB 3.4.
 interface: phpmethod
-operation: MongoDB\\Database::createCollection
+operation: ~
 optional: true
-position: 1
 ---
 arg_name: option
 name: capped
@@ -22,9 +21,15 @@ description: |
   To create a capped collection, specify ``true``. If you specify ``true``, you
   must also set a maximum size in the ``size`` option.
 interface: phpmethod
-operation: MongoDB\\Database::createCollection
+operation: ~
 optional: true
-position: 3
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: collation
+pre: |
+  Specifies the :manual:`collation
+  </reference/bson-type-comparison-order/#collation>` for the collection.
 ---
 arg_name: option
 name: flags
@@ -48,9 +53,8 @@ description: |
      :manual:`db.createCollection()
      </reference/method/db.createCollection>` for more information.
 interface: phpmethod
-operation: MongoDB\\Database::createCollection
+operation: ~
 optional: true
-position: 4
 ---
 arg_name: option
 name: indexOptionDefaults
@@ -68,31 +72,26 @@ description: |
   and logged to the :term:`oplog` during replication to support replica sets
   with members that use different storage engines.
 interface: phpmethod
-operation: MongoDB\\Database::createCollection
+operation: ~
 optional: true
-position: 5
 ---
 arg_name: option
 name: max
 type: integer
 description: |
-   The maximum number of documents allowed in the capped collection. The
-   ``size`` option takes precedence over this limit. If a capped
-   collection reaches the ``size`` limit before it reaches the maximum
-   number of documents, MongoDB removes old documents. If you prefer to
-   use the ``max`` limit, ensure that the ``size`` limit, which is
-   required for a capped collection, is sufficient to contain the
-   maximum number of documents.
+  The maximum number of documents allowed in the capped collection. The ``size``
+  option takes precedence over this limit. If a capped collection reaches the
+  ``size`` limit before it reaches the maximum number of documents, MongoDB
+  removes old documents. If you prefer to use the ``max`` limit, ensure that the
+  ``size`` limit, which is required for a capped collection, is sufficient to
+  contain the maximum number of documents.
 interface: phpmethod
-operation: MongoDB\\Database::createCollection
+operation: ~
 optional: true
-position: 6
 ---
 source:
   file: apiargs-common-option.yaml
   ref: maxTimeMS
-operation: MongoDB\\Database::createCollection
-position: 7
 ---
 arg_name: option
 name: size
@@ -103,9 +102,8 @@ description: |
   make space for the new documents. The ``size`` option is required for capped
   collections and ignored for other collections.
 interface: phpmethod
-operation: MongoDB\\Database::createCollection
+operation: ~
 optional: true
-position: 8
 ---
 arg_name: option
 name: storageEngine
@@ -123,18 +121,14 @@ description: |
   validated and logged to the :term:`oplog` during replication to support
   replica sets with members that use different storage engines.
 interface: phpmethod
-operation: MongoDB\\Database::createCollection
+operation: ~
 optional: true
-position: 9
 ---
 source:
-  file: apiargs-common-option.yaml
+  file: apiargs-MongoDBDatabase-common-option.yaml
   ref: typeMap
-operation: MongoDB\\Database::createCollection
-position: 10
-description: |
-  Type map for BSON deserialization. This will be used for the returned command
-  result document. Defaults to the database's type map.
+post: |
+  This will be used for the returned command result document.
 ---
 arg_name: option
 name: validator
@@ -160,10 +154,9 @@ description: |
        ``local``, and ``config`` databases.
 
      - You cannot specify a validator for ``system.*`` collections.
-operation: MongoDB\\Database::createCollection
+operation: ~
 interface: phpmethod
 optional: true
-position: 11
 ---
 arg_name: option
 name: validationAction
@@ -194,9 +187,8 @@ description: |
         - Documents do not have to pass validation. If the document fails
           validation, the write operation logs the validation failure.
 interface: phpmethod
-operation: MongoDB\\Database::createCollection
+operation: ~
 optional: true
-position: 12
 ---
 arg_name: option
 name: validationLevel
@@ -226,7 +218,13 @@ description: |
           documents. Do not apply rules to updates on existing *invalid*
           documents.
 interface: phpmethod
-operation: MongoDB\\Database::createCollection
+operation: ~
 optional: true
-position: 13
+---
+source:
+  file: apiargs-MongoDBDatabase-common-option.yaml
+  ref: writeConcern
+post: |
+  This is not supported for server versions prior to 3.4 and will result in an
+  exception at execution time if used.
 ...

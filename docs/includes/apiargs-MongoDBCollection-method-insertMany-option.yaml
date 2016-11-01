@@ -1,18 +1,12 @@
 source:
-  file: apiargs-common-option.yaml
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: bypassDocumentValidation
-operation: MongoDB\\Collection::insertMany
-position: 1
 ---
 source:
   file: apiargs-MongoDBCollection-method-bulkWrite-option.yaml
   ref: ordered
-operation: MongoDB\\Collection::insertMany
-position: 2
 ---
 source:
-  file: apiargs-common-option.yaml
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: writeConcern
-operation: MongoDB\\Collection::insertMany
-position: 3
 ...

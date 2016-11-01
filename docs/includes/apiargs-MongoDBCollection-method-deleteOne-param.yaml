@@ -1,14 +1,11 @@
 source:
+  file: apiargs-MongoDBCollection-common-param.yaml
   ref: $filter
-  file: apiargs-common-param.yaml
-operation: MongoDB\\Collection::deleteOne
+optional: false
 replacement:
-  verb: "delete"
-position: 1
+  action: " to delete"
 ---
 source:
-  ref: $options
   file: apiargs-common-param.yaml
-operation: MongoDB\\Collection::deleteOne
-position: 2
+  ref: $options
 ...

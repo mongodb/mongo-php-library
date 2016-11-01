@@ -1,16 +1,10 @@
-arg_name: param
-name: $filename
-type: string
-description: |
-  The ``filename`` of the file to download.
-interface: phpmethod
-operation: MongoDB\\GridFS\\Bucket::openDownloadStreamByName
-optional: false
-position: 1
+source:
+  file: apiargs-MongoDBGridFSBucket-common-param.yaml
+  ref: $filename
+replacement:
+  resource: " to download"
 ---
 source:
   file: apiargs-common-param.yaml
   ref: $options
-operation: MongoDB\\GridFS\\Bucket::openDownloadStreamByName
-position: 2
 ...

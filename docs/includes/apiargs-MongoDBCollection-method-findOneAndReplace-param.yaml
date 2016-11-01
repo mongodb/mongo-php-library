@@ -1,25 +1,15 @@
 source:
+  file: apiargs-MongoDBCollection-common-param.yaml
   ref: $filter
-  file: apiargs-common-param.yaml
-operation: MongoDB\\Collection::findOneAndReplace
+optional: false
 replacement:
-  verb: "query"
-optional: false
-position: 1
----
-arg_name: param
-name: $replacement
-type: array|object
-description: |
-  The document to replace.
-interface: phpmethod
-operation: MongoDB\\Collection::findOneAndReplace
-optional: false
-position: 2
+  action: " to replace"
 ---
 source:
-  ref: $options
+  file: apiargs-MongoDBCollection-common-param.yaml
+  ref: $replacement
+---
+source:
   file: apiargs-common-param.yaml
-operation: MongoDB\\Collection::findOneAndReplace
-position: 3
+  ref: $options
 ...

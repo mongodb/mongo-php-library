@@ -27,7 +27,7 @@ Definition
 
    The ``$options`` parameter supports the following options:
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-find-option.rst
+   .. include:: /includes/apiargs/MongoDBGridFSBucket-method-find-option.rst
 
    :returns:
 

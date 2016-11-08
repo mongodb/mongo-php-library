@@ -11,8 +11,10 @@ description: |
   Any special characters in the URI components need to be encoded according to
   `RFC 3986 <http://www.faqs.org/rfcs/rfc3986.html>`_. This is particularly
   relevant to the username and password, which can often include special
-  characters such as ``@``, ``:``, or ``%``. The :php:`rawurlencode()
-  <rawurlencode>` function may be used to encode constituent parts of the URI.
+  characters such as ``@``, ``:``, or ``%``. When connecting via a Unix domain
+  socket, the socket path may contain special characters such as slashes and
+  must be encoded. The :php:`rawurlencode() <rawurlencode>` function may be used
+  to encode constituent parts of the URI.
 interface: phpmethod
 operation: ~
 optional: true

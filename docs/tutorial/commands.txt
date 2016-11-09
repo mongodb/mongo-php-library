@@ -13,11 +13,12 @@ Execute Database Commands
 Overview
 --------
 
-The |php-library| provides :ref:`helper methods <database-methods>`
-for common :manual:`database commands </reference/command>`. In
-addition, the |php-library| provides the
-:phpmethod:`MongoDB\\Database::command` method to run database commands
-with PHP that do not have helper methods.
+The |php-library| provides helper methods across the :phpclass:`Client
+<MongoDB\\Client>`, :phpclass:`Database <MongoDB\\Database>`, and
+:phpclass:`Collection <MongoDB\\Collection>` classes for common
+:manual:`database commands </reference/command>`. In addition, the
+:phpmethod:`MongoDB\\Database::command()` method may be used to run database
+commands that do not have a helper method.
 
 Execute Database Commands
 -------------------------
@@ -26,12 +27,10 @@ Basic Command
 ~~~~~~~~~~~~~
 
 To execute a command on a :program:`mongod` instance, use the
-:phpmethod:`MongoDB\\Database::command` method. For instance, the
-following operation uses the :dbcommand:`geoNear` HERE command to search for
-the three closest documents to longitude ``-74`` and latitude ``40`` in
-the ``restos`` collection in the ``example`` database:
-
-:readmode:`secondary`
+:phpmethod:`MongoDB\\Database::command()` method. For instance, the following
+operation uses the :manual:`geoNear </reference/command/geoNear>` command to
+search for the three closest documents to longitude ``-74`` and latitude ``40``
+in the ``restos`` collection in the ``example`` database:
 
 .. code-block:: php
 
@@ -39,249 +38,188 @@ the ``restos`` collection in the ``example`` database:
 
    $database = (new MongoDB\Client)->example;
 
-   $results = $database->command(
-       [
-           'geoNear' => 'restos',
-           'near' => [
-               'type' => 'Point',
-               'coordinates' => [-74.0, 40.0]
-           ],
-           'spherical' => 'true',
-           'num' => 3
-       ]
-   );
+   $cursor = $database->command([
+       'geoNear' => 'restos',
+       'near' => [
+           'type' => 'Point',
+           'coordinates' => [-74.0, 40.0],
+       ],
+       'spherical' => 'true',
+       'num' => 3,
+   ]);
+
+   $results = $cursor->toArray()[0];
 
    var_dump($results);
 
-The output would resemble::
-  
-  object(MongoDB\Driver\Cursor)#10 (2) {
-    ["cursor"]=>
-    array(17) {
-      ["stamp"]=>
-      int(0)
-      ["is_command"]=>
-      bool(true)
-      ["sent"]=>
-      bool(true)
-      ["done"]=>
-      bool(false)
-      ["end_of_event"]=>
-      bool(false)
-      ["in_exhaust"]=>
-      bool(false)
-      ["has_fields"]=>
-      bool(false)
-      ["query"]=>
-      object(stdClass)#3 (4) {
-        ["geoNear"]=>
-        string(6) "restos"
-        ["near"]=>
-        object(stdClass)#9 (2) {
-          ["type"]=>
-          string(5) "Point"
-          ["coordinates"]=>
-          array(2) {
-            [0]=>
-            float(-74)
-            [1]=>
-            float(40)
-          }
-        }
-        ["spherical"]=>
-        string(4) "true"
-        ["num"]=>
-        int(3)
-      }
-      ["fields"]=>
-      object(stdClass)#8 (0) {
-      }
-      ["read_preference"]=>
-      array(2) {
-        ["mode"]=>
-        int(1)
-        ["tags"]=>
-        array(0) {
-        }
-      }
-      ["flags"]=>
-      int(0)
-      ["skip"]=>
-      int(0)
-      ["limit"]=>
-      int(1)
-      ["count"]=>
-      int(1)
-      ["batch_size"]=>
-      int(0)
-      ["ns"]=>
-      string(12) "example.$cmd"
-      ["current_doc"]=>
-      object(stdClass)#24 (4) {
-        ["waitedMS"]=>
-        int(0)
-        ["results"]=>
-        array(3) {
-          [0]=>
-          object(stdClass)#14 (2) {
-            ["dis"]=>
-            float(66308.6190421)
-            ["obj"]=>
-            object(stdClass)#13 (5) {
-              ["_id"]=>
-              object(MongoDB\BSON\ObjectID)#11 (1) {
-                ["oid"]=>
-                string(24) "57506d62f57802807471dd28"
-              }
-              ["name"]=>
-              string(21) "XYZ Bagels Restaurant"
-              ["contact"]=>
-              object(stdClass)#12 (3) {
-                ["phone"]=>
-                string(12) "435-555-0190"
-                ["email"]=>
-                string(31) "XYZBagelsRestaurant@example.net"
-                ["location"]=>
-                array(2) {
-                  [0]=>
-                  float(-74.0707363)
-                  [1]=>
-                  float(40.5932157)
-                }
-              }
-              ["stars"]=>
-              int(4)
-              ["categories"]=>
-              array(3) {
-                [0]=>
-                string(6) "Bagels"
-                [1]=>
-                string(10) "Sandwiches"
-                [2]=>
-                string(6) "Coffee"
-              }
-            }
-          }
-          [1]=>
-          object(stdClass)#18 (2) {
-            ["dis"]=>
-            float(69014.6014737)
-            ["obj"]=>
-            object(stdClass)#17 (5) {
-              ["_id"]=>
-              object(MongoDB\BSON\ObjectID)#15 (1) {
-                ["oid"]=>
-                string(24) "57506d62f57802807471dd39"
-              }
-              ["name"]=>
-              string(20) "Green Feast Pizzeria"
-              ["contact"]=>
-              object(stdClass)#16 (3) {
-                ["phone"]=>
-                string(12) "840-555-0102"
-                ["email"]=>
-                string(30) "GreenFeastPizzeria@example.com"
-                ["location"]=>
-                array(2) {
-                  [0]=>
-                  float(-74.1220973)
-                  [1]=>
-                  float(40.6129407)
-                }
-              }
-              ["stars"]=>
-              int(2)
-              ["categories"]=>
-              array(2) {
-                [0]=>
-                string(5) "Pizza"
-                [1]=>
-                string(7) "Italian"
-              }
-            }
-          }
-          [2]=>
-          object(stdClass)#22 (2) {
-            ["dis"]=>
-            float(69975.5031089)
-            ["obj"]=>
-            object(stdClass)#21 (5) {
-              ["_id"]=>
-              object(MongoDB\BSON\ObjectID)#19 (1) {
-                ["oid"]=>
-                string(24) "57506d62f57802807471dd35"
-              }
-              ["name"]=>
-              string(14) "XYZ Coffee Bar"
-              ["contact"]=>
-              object(stdClass)#20 (3) {
-                ["phone"]=>
-                string(12) "644-555-0193"
-                ["email"]=>
-                string(24) "XYZCoffeeBar@example.net"
-                ["location"]=>
-                array(2) {
-                  [0]=>
-                  float(-74.0166091)
-                  [1]=>
-                  float(40.6284767)
-                }
-              }
-              ["stars"]=>
-              int(5)
-              ["categories"]=>
-              array(4) {
-                [0]=>
-                string(6) "Coffee"
-                [1]=>
-                string(4) "Cafe"
-                [2]=>
-                string(6) "Bakery"
-                [3]=>
-                string(10) "Chocolates"
-              }
-            }
-          }
-        }
-        ["stats"]=>
-        object(stdClass)#23 (5) {
-          ["nscanned"]=>
-          int(11)
-          ["objectsLoaded"]=>
-          int(10)
-          ["avgDistance"]=>
-          float(68432.9078749)
-          ["maxDistance"]=>
-          float(69975.5031089)
-          ["time"]=>
-          int(0)
-        }
-        ["ok"]=>
-        float(1)
-      }
-    }
-    ["server_id"]=>
-    int(1)
-  }
+The output would then resemble::
 
-Commands with Custom Read Preference  
+   object(MongoDB\Model\BSONDocument)#27 (1) {
+     ["storage":"ArrayObject":private]=>
+     array(4) {
+       ["waitedMS"]=>
+       int(0)
+       ["results"]=>
+       object(MongoDB\Model\BSONArray)#25 (1) {
+         ["storage":"ArrayObject":private]=>
+         array(3) {
+           [0]=>
+           object(MongoDB\Model\BSONDocument)#14 (1) {
+             ["storage":"ArrayObject":private]=>
+             array(2) {
+               ["dis"]=>
+               float(39463.618389163)
+               ["obj"]=>
+               object(MongoDB\Model\BSONDocument)#13 (1) {
+                 ["storage":"ArrayObject":private]=>
+                 array(3) {
+                   ["_id"]=>
+                   object(MongoDB\BSON\ObjectID)#3 (1) {
+                     ["oid"]=>
+                     string(24) "55cba2486c522cafdb059bed"
+                   }
+                   ["location"]=>
+                   object(MongoDB\Model\BSONDocument)#12 (1) {
+                     ["storage":"ArrayObject":private]=>
+                     array(2) {
+                       ["coordinates"]=>
+                       object(MongoDB\Model\BSONArray)#11 (1) {
+                         ["storage":"ArrayObject":private]=>
+                         array(2) {
+                           [0]=>
+                           float(-74.1641319)
+                           [1]=>
+                           float(39.6686512)
+                         }
+                       }
+                       ["type"]=>
+                       string(5) "Point"
+                     }
+                   }
+                   ["name"]=>
+                   string(32) "Soul Food Kitchen Seafood Heaven"
+                 }
+               }
+             }
+           }
+           [1]=>
+           object(MongoDB\Model\BSONDocument)#19 (1) {
+             ["storage":"ArrayObject":private]=>
+             array(2) {
+               ["dis"]=>
+               float(50686.851650416)
+               ["obj"]=>
+               object(MongoDB\Model\BSONDocument)#18 (1) {
+                 ["storage":"ArrayObject":private]=>
+                 array(3) {
+                   ["_id"]=>
+                   object(MongoDB\BSON\ObjectID)#15 (1) {
+                     ["oid"]=>
+                     string(24) "55cba2476c522cafdb0544df"
+                   }
+                   ["location"]=>
+                   object(MongoDB\Model\BSONDocument)#17 (1) {
+                     ["storage":"ArrayObject":private]=>
+                     array(2) {
+                       ["coordinates"]=>
+                       object(MongoDB\Model\BSONArray)#16 (1) {
+                         ["storage":"ArrayObject":private]=>
+                         array(2) {
+                           [0]=>
+                           float(-74.2566332)
+                           [1]=>
+                           float(40.4109872)
+                         }
+                       }
+                       ["type"]=>
+                       string(5) "Point"
+                     }
+                   }
+                   ["name"]=>
+                   string(20) "Seguine Bagel Bakery"
+                 }
+               }
+             }
+           }
+           [2]=>
+           object(MongoDB\Model\BSONDocument)#24 (1) {
+             ["storage":"ArrayObject":private]=>
+             array(2) {
+               ["dis"]=>
+               float(58398.379630263)
+               ["obj"]=>
+               object(MongoDB\Model\BSONDocument)#23 (1) {
+                 ["storage":"ArrayObject":private]=>
+                 array(3) {
+                   ["_id"]=>
+                   object(MongoDB\BSON\ObjectID)#20 (1) {
+                     ["oid"]=>
+                     string(24) "55cba2476c522cafdb053c92"
+                   }
+                   ["location"]=>
+                   object(MongoDB\Model\BSONDocument)#22 (1) {
+                     ["storage":"ArrayObject":private]=>
+                     array(2) {
+                       ["coordinates"]=>
+                       object(MongoDB\Model\BSONArray)#21 (1) {
+                         ["storage":"ArrayObject":private]=>
+                         array(2) {
+                           [0]=>
+                           float(-74.3731727)
+                           [1]=>
+                           float(40.4404759)
+                         }
+                       }
+                       ["type"]=>
+                       string(5) "Point"
+                     }
+                   }
+                   ["name"]=>
+                   string(17) "Water'S Edge Club"
+                 }
+               }
+             }
+           }
+         }
+       }
+       ["stats"]=>
+       object(MongoDB\Model\BSONDocument)#26 (1) {
+         ["storage":"ArrayObject":private]=>
+         array(5) {
+           ["nscanned"]=>
+           int(25139)
+           ["objectsLoaded"]=>
+           int(25134)
+           ["avgDistance"]=>
+           float(49516.283223281)
+           ["maxDistance"]=>
+           float(58398.379630263)
+           ["time"]=>
+           int(126)
+         }
+       }
+       ["ok"]=>
+       float(1)
+     }
+   }
+
+Commands with Custom Read Preference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Some commands, such as :manual:`createUser
-</reference/command/createUser/>`, may only be executed on a
-:term:`primary` replica set member or a :term:`standalone`.
+Some commands, such as :manual:`createUser </reference/command/createUser/>`,
+may only be executed on a :term:`primary` replica set member or a
+:term:`standalone`.
 
-The command helper methods in the
-|php-library|, such as :phpmethod:`MongoDB\\Database::drop`,
-know to apply their own :term:`read preference` if necessary. However,
-the :phpmethod:`MongoDB\\Database::command` method is a generic method and 
-defaults to the read preference of the
-Database object on which it is invoked. To execute commands that require
-specific read preference, specify the read preference in the ``$options``
-parameter of the method.
+The command helper methods in the |php-library|, such as
+:phpmethod:`MongoDB\\Database::drop()`, know to apply their own :term:`read
+preference` if necessary. However, the :phpmethod:`MongoDB\\Database::command()`
+method is a generic method and defaults to the read preference of the Database
+object on which it is invoked. To execute commands that require a specific read
+preference, specify the read preference in the ``$options`` parameter of the
+method.
 
-The following example adds a user to the ``demo`` database 
-and specifies a custom read preference:
+The following example adds a user to the ``demo`` database and specifies a
+custom read preference:
 
 .. code-block:: php
 
@@ -319,12 +257,11 @@ View Single Result Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The :phpmethod:`MongoDB\\Database::command()` method returns a
-:php:`MongoDB\\Driver\\Cursor <mongodb-driver-cursor>` object. 
+:php:`MongoDB\\Driver\\Cursor <mongodb-driver-cursor>` object.
 
-Many MongoDB commands return their responses as a single document in an
-array. To read the command response, you may either iterate on the
-cursor and access the first document, or access the first result in the
-array, as in the following:
+Many MongoDB commands return their responses as a single document. To read the
+command response, you may either iterate on the cursor and access the first
+document, or access the first result in the array, as in the following:
 
 .. code-block:: php
 
@@ -350,13 +287,12 @@ Iterate Results from a Cursor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some commands, such as :manual:`listCollections
-</reference/command/listCollections/>`,
-return their results via an iterable cursor. To view the results,
-iterate through the cursor. 
+</reference/command/listCollections/>`, return their results via an iterable
+cursor. To view the results, iterate through the cursor.
 
 The following example lists the collections in the ``demo`` database by
-iterating through the cursor returned by the ``listCollections`` command
-using a ``foreach`` loop:
+iterating through the cursor returned by the ``listCollections`` command using a
+``foreach`` loop:
 
 .. code-block:: php
 
@@ -370,8 +306,8 @@ using a ``foreach`` loop:
        echo $collection['name'], "\n";
    }
 
-The output would then be a list of the values for the ``name`` key,
-for instance::
+The output would then be a list of the values for the ``name`` key, for
+instance::
 
    persons
    posts
@@ -379,10 +315,11 @@ for instance::
 
 .. note::
 
-   At the *protocol* level, commands that support a cursor
-   return a single result document with the essential ingredients for
-   constructing the command cursor (i.e. the cursor's ID, namespace, and
-   the first batch of results). In the PHP driver implementation, the
-   :php:`executeCommand() <mongodb-driver-manager.executecommand>`
-   method detects the single result and constructs the iterable command
-   cursor, which is returned rather than the base result document.
+   At the *protocol* level, commands that support a cursor return a single
+   result document with the essential ingredients for constructing the command
+   cursor (i.e. the cursor's ID, namespace, and the first batch of results). In
+   the PHP driver implementation, the
+   :php:`MongoDB\Driver\Manager::executeCommand()
+   <mongodb-driver-manager.executecommand>` method detects such a result and
+   constructs the iterable command cursor, which is returned rather than the
+   base result document.

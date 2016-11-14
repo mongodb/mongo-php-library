@@ -31,8 +31,8 @@ Definition
 
    :returns:
 
-      A traversable :phpclass:`MongoDB\\Model\DatabaseInfoIterator`, which
-      contains an :phpclass:`MongoDB\\Model\DatabaseInfo` object for each
+      A traversable :phpclass:`MongoDB\\Model\\DatabaseInfoIterator`, which
+      contains an :phpclass:`MongoDB\\Model\\DatabaseInfo` object for each
       database on the server.
 
 Example

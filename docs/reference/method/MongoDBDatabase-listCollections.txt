@@ -31,8 +31,8 @@ Definition
 
    :returns:
 
-      A traversable :phpclass:`MongoDB\\Model\CollectionInfoIterator`, which
-      contains an :phpclass:`MongoDB\\Model\CollectionInfo` object for each
+      A traversable :phpclass:`MongoDB\\Model\\CollectionInfoIterator`, which
+      contains an :phpclass:`MongoDB\\Model\\CollectionInfo` object for each
       collection in the database.
 
 Example

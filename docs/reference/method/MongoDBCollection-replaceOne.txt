@@ -37,6 +37,13 @@ Return Values
 A :phpclass:`MongoDB\\UpdateResult` object, which encapsulates a
 :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>` object.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 Example
 -------
 

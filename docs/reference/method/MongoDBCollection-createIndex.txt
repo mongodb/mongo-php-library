@@ -39,6 +39,13 @@ Return Values
 
 The name of the created index as a string.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 Examples
 --------
 

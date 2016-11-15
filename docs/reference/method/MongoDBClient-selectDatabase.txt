@@ -34,6 +34,11 @@ Return Values
 
 A :phpclass:`MongoDB\\Database` object.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+
 Behavior
 --------
 

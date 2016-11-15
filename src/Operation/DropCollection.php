@@ -5,7 +5,7 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\RuntimeException;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
@@ -42,6 +42,7 @@ class DropCollection implements Executable
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
      * @param array  $options        Command options
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($databaseName, $collectionName, array $options = [])
     {
@@ -65,6 +66,7 @@ class DropCollection implements Executable
      * @param Server $server
      * @return array|object Command result document
      * @throws UnsupportedException if writeConcern is used and unsupported
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
@@ -74,7 +76,7 @@ class DropCollection implements Executable
 
         try {
             $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
-        } catch (RuntimeException $e) {
+        } catch (DriverRuntimeException $e) {
             /* The server may return an error if the collection does not exist.
              * Check for an error message (unfortunately, there isn't a code)
              * and NOP instead of throwing.

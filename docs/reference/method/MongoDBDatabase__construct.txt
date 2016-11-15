@@ -29,6 +29,11 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBDatabase-method-construct-option.rst
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+
 Behavior
 --------
 

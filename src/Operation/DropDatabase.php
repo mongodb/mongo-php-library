@@ -5,6 +5,7 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
@@ -38,6 +39,7 @@ class DropDatabase implements Executable
      *
      * @param string $databaseName Database name
      * @param array  $options      Command options
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($databaseName, array $options = [])
     {
@@ -60,6 +62,7 @@ class DropDatabase implements Executable
      * @param Server $server
      * @return array|object Command result document
      * @throws UnsupportedException if writeConcern is used and unsupported
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {

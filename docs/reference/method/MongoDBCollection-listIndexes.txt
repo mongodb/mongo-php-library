@@ -35,6 +35,12 @@ Return Values
 A traversable :phpclass:`MongoDB\\Model\\IndexInfoIterator`, which contains a
 :phpclass:`MongoDB\\Model\\IndexInfo` object for each index for the collection.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 Example
 -------
 

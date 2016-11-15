@@ -34,6 +34,13 @@ Return Values
 
 A :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` object.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 Examples
 --------
 

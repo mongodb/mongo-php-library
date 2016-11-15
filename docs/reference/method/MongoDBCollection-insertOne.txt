@@ -35,6 +35,12 @@ Return Values
 A :phpclass:`MongoDB\\InsertOneResult` object, which encapsulates a
 :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>` object.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 Example
 -------
 

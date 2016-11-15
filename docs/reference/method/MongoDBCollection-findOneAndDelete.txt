@@ -37,6 +37,14 @@ Return Values
 An object for the document that was deleted, or ``null`` if no document matched
 the query.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unexpectedvalueexception.rst
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 Examples
 --------
 

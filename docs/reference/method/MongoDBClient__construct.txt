@@ -29,6 +29,13 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBClient-method-construct-driverOptions.rst
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 Examples
 --------
 

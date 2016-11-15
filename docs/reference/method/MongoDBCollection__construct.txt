@@ -29,6 +29,11 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-construct-option.rst
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+
 Behavior
 --------
 

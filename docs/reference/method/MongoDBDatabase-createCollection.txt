@@ -53,6 +53,13 @@ Return Values
 An array or object with the result document of the :manual:`create
 </reference/command/create>` command.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 Example
 -------
 

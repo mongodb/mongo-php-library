@@ -7,6 +7,7 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
@@ -93,7 +94,7 @@ class Aggregate implements Executable
      * @param string $collectionName Collection name
      * @param array  $pipeline       List of pipeline operations
      * @param array  $options        Command options
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($databaseName, $collectionName, array $pipeline, array $options = [])
     {
@@ -182,6 +183,7 @@ class Aggregate implements Executable
      * @return Traversable
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if collation or write concern is used and unsupported
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {

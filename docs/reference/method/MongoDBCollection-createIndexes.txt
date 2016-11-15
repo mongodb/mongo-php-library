@@ -34,6 +34,13 @@ Return Values
 
 The names of the created indexes as an array of strings.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 ``$indexes`` parameter
 ----------------------
 

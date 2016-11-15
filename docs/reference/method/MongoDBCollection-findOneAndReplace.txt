@@ -38,6 +38,14 @@ An object for either the original or the replaced document, depending on the
 specified value of the ``returnDocument`` option. By default, the original
 document is returned. If no document matched the query, ``null`` is returned.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unexpectedvalueexception.rst
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 Examples
 --------
 

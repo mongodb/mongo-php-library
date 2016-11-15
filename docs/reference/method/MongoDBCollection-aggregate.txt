@@ -37,6 +37,14 @@ A :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` or
 :php:`ArrayIterator <arrayiterator>` object. In both cases, the return value
 will be :php:`Traversable <traversable>`.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unexpectedvalueexception.rst
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 .. _php-agg-method-behavior:
 
 Behavior

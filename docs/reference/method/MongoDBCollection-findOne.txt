@@ -29,11 +29,12 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-findOne-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      An array or object for the :term:`first document <natural order>` document
-      that matched the query, or ``null`` if no document matched the query. The
-      return type will depend on the ``typeMap`` option.
+An array or object for the :term:`first document <natural order>` document that
+matched the query, or ``null`` if no document matched the query. The return type
+will depend on the ``typeMap`` option.
 
 Examples
 --------

@@ -29,9 +29,10 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-createIndexes-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      The names of the created indexes as an array of strings.
+The names of the created indexes as an array of strings.
 
 ``$indexes`` parameter
 ----------------------

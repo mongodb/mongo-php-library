@@ -29,11 +29,12 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBClient-method-listDatabases-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A traversable :phpclass:`MongoDB\\Model\\DatabaseInfoIterator`, which
-      contains an :phpclass:`MongoDB\\Model\\DatabaseInfo` object for each
-      database on the server.
+A traversable :phpclass:`MongoDB\\Model\\DatabaseInfoIterator`, which contains
+a :phpclass:`MongoDB\\Model\\DatabaseInfo` object for each database on the
+server.
 
 Example
 -------

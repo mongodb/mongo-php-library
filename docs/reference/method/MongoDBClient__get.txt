@@ -27,9 +27,10 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBClient-method-get-param.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\Database` object.
+A :phpclass:`MongoDB\\Database` object.
 
 Behavior
 --------

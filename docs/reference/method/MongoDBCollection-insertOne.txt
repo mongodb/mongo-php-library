@@ -29,11 +29,11 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-insertOne-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\InsertOneResult` object, which encapsulates a
-      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
-      object.
+A :phpclass:`MongoDB\\InsertOneResult` object, which encapsulates a
+:php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>` object.
 
 Example
 -------

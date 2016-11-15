@@ -30,11 +30,12 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-dropIndex-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      An array or object with the result document of the :manual:`dropIndexes
-      </reference/command/dropIndexes>` command. The return type will depend on
-      the ``typeMap`` option.
+An array or object with the result document of the :manual:`dropIndexes
+</reference/command/dropIndexes>` command. The return type will depend on the
+``typeMap`` option.
 
 Example
 -------

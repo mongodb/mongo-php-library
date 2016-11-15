@@ -25,9 +25,10 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBGridFSBucket-method-openDownloadStream-param.rst
 
-   :returns:
+Return Values
+-------------
 
-      A readable stream resource.
+A readable stream resource.
 
 .. todo: add examples
 

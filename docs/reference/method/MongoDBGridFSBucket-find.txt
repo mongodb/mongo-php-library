@@ -29,9 +29,10 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBGridFSBucket-method-find-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` object.
+A :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` object.
 
 .. todo: add examples
 

@@ -30,11 +30,12 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-aggregate-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` or
-      :php:`ArrayIterator <arrayiterator>` object. In both cases, the return
-      value will be :php:`Traversable <traversable>`.
+A :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` or
+:php:`ArrayIterator <arrayiterator>` object. In both cases, the return value
+will be :php:`Traversable <traversable>`.
 
 .. _php-agg-method-behavior:
 

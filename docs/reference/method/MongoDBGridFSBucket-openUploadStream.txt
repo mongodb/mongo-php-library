@@ -29,9 +29,10 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBGridFSBucket-method-openUploadStream-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A writable stream resource.
+A writable stream resource.
 
 Behavior
 --------

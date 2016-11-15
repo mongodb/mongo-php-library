@@ -29,11 +29,11 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-insertMany-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\InsertManyResult` object, which encapsulates a
-      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
-      object.
+A :phpclass:`MongoDB\\InsertManyResult` object, which encapsulates a
+:php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>` object.
 
 Example
 -------

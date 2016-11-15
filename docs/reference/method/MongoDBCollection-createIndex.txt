@@ -34,9 +34,10 @@ Definition
    :manual:`createIndexes </reference/command/createIndexes>` command reference
    in the MongoDB manual.
 
-   :returns:
+Return Values
+-------------
 
-      The name of the created index as a string.
+The name of the created index as a string.
 
 Examples
 --------

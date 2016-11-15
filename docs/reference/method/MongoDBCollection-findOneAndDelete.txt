@@ -31,10 +31,11 @@ Definition
 
    .. include:: /includes/extracts/bson-deserialization-findOneAndDelete.rst
 
-   :returns:
+Return Values
+-------------
 
-      An object for the document that was deleted, or ``null`` if no document
-      matched the query.
+An object for the document that was deleted, or ``null`` if no document matched
+the query.
 
 Examples
 --------

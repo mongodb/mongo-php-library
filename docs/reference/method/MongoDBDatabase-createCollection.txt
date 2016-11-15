@@ -47,10 +47,11 @@ Definition
    :manual:`create </reference/command/create>` command reference in the MongoDB
    manual for compatibility considerations.
 
-   :returns:
+Return Values
+-------------
 
-      An array or object with the result document of the :manual:`create
-      </reference/command/create>` command.
+An array or object with the result document of the :manual:`create
+</reference/command/create>` command.
 
 Example
 -------

@@ -29,9 +29,10 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBDatabase-method-withOptions-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\Database` object.
+A :phpclass:`MongoDB\\Database` object.
 
 Example
 -------

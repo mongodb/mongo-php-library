@@ -21,9 +21,10 @@ Definition
 
       function getDatabaseName(): string
 
-   :returns:
+Return Values
+-------------
 
-      The name of this database as a string.
+The name of this database as a string.
 
 Example
 -------

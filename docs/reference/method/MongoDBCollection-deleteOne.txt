@@ -31,11 +31,11 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-deleteOne-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\DeleteResult` object, which encapsulates a
-      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
-      object.
+A :phpclass:`MongoDB\\DeleteResult` object, which encapsulates a
+:php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>` object.
 
 Example
 -------

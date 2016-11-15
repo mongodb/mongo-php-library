@@ -23,9 +23,10 @@ Definition
 
       function getManager(): MongoDB\Manager
 
-   :returns:
+Return Values
+-------------
 
-      A :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` object.
+A :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` object.
 
 See Also
 --------

@@ -29,9 +29,10 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBDatabase-method-selectGridFSBucket-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\GridFS\\Bucket` object.
+A :phpclass:`MongoDB\\GridFS\\Bucket` object.
 
 Behavior
 --------

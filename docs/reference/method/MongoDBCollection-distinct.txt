@@ -29,9 +29,10 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-distinct-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      An array of the distinct values.
+An array of the distinct values.
 
 Examples
 --------

@@ -22,9 +22,10 @@ Definition
 
       function getNamespace(): string
 
-   :returns:
+Return Values
+-------------
 
-      The namespace of this collection as a string.
+The namespace of this collection as a string.
 
 Example
 -------

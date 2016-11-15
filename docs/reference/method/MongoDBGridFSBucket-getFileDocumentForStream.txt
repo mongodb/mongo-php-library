@@ -25,9 +25,10 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBGridFSBucket-method-getFileDocumentForStream-param.rst
 
-   :returns:
+Return Values
+-------------
 
-      The metadata document associated with the GridFS stream.
+The metadata document associated with the GridFS stream.
 
 .. todo: add examples
 

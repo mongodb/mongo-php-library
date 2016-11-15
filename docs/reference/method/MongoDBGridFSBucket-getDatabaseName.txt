@@ -21,8 +21,9 @@ Definition
 
       function getDatabaseName(): string
 
-   :returns:
+Return Values
+-------------
 
-      The name of the database containing this bucket as a string.
+The name of the database containing this bucket as a string.
 
 .. todo: add examples

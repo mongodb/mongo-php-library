@@ -29,9 +29,10 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-count-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      The number of documents matching the filter criteria.
+The number of documents matching the filter criteria.
 
 .. todo: add output and examples
 

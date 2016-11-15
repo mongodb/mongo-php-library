@@ -31,12 +31,12 @@ Definition
 
    .. include:: /includes/extracts/bson-deserialization-findOneAndUpdate.rst
 
-   :returns:
+Return Values
+-------------
 
-      An object for either the original or the updated document, depending on
-      the specified value of the ``returnDocument`` option. By default, the
-      original document is returned. If no document matched the query, ``null``
-      is returned.
+An object for either the original or the updated document, depending on the
+specified value of the ``returnDocument`` option. By default, the original
+document is returned. If no document matched the query, ``null`` is returned.
 
 Examples
 --------

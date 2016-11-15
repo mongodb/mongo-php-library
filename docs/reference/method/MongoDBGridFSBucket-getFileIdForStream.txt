@@ -25,10 +25,11 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBGridFSBucket-method-getFileIdForStream-param.rst
 
-   :returns:
+Return Values
+-------------
 
-      The ``_id`` field of the metadata document associated with the GridFS
-      stream.
+The ``_id`` field of the metadata document associated with the GridFS
+stream.
 
 .. todo: add examples
 

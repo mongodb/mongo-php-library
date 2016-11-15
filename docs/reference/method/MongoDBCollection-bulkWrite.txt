@@ -29,11 +29,11 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-bulkWrite-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\BulkWriteResult` object, which encapsulates a
-      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
-      object.
+A :phpclass:`MongoDB\\BulkWriteResult` object, which encapsulates a
+:php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>` object.
 
 .. todo: add output and examples
 

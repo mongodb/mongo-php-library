@@ -29,9 +29,10 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBClient-method-selectCollection-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\Collection` object.
+A :phpclass:`MongoDB\\Collection` object.
 
 Behavior
 --------

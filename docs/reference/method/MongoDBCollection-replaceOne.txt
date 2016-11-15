@@ -68,11 +68,12 @@ The output would then resemble::
    Matched 1 document(s)
    Modified 1 document(s)
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::updateMany()`
-   - :phpmethod:`MongoDB\\Collection::updateOne()`
-   - :phpmethod:`MongoDB\\Collection::bulkWrite()`
-   - :doc:`/tutorial/crud`
-   - :manual:`update </reference/command/update>` command reference in the
-     MongoDB manual
+- :phpmethod:`MongoDB\\Collection::updateMany()`
+- :phpmethod:`MongoDB\\Collection::updateOne()`
+- :phpmethod:`MongoDB\\Collection::bulkWrite()`
+- :doc:`/tutorial/crud`
+- :manual:`update </reference/command/update>` command reference in the MongoDB
+  manual

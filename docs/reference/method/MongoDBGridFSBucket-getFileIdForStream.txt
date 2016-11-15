@@ -32,6 +32,7 @@ Definition
 
 .. todo: add examples
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\GridFS\\Bucket::getFileDocumentForStream()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getFileDocumentForStream()`

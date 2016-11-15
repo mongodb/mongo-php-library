@@ -37,13 +37,14 @@ Definition
 
 .. todo: add output and examples
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::deleteMany()`
-   - :phpmethod:`MongoDB\\Collection::deleteOne()`
-   - :phpmethod:`MongoDB\\Collection::insertMany()`
-   - :phpmethod:`MongoDB\\Collection::insertOne()`
-   - :phpmethod:`MongoDB\\Collection::replaceOne()`
-   - :phpmethod:`MongoDB\\Collection::updateMany()`
-   - :phpmethod:`MongoDB\\Collection::updateOne()`
-   - :doc:`/tutorial/crud`
+- :phpmethod:`MongoDB\\Collection::deleteMany()`
+- :phpmethod:`MongoDB\\Collection::deleteOne()`
+- :phpmethod:`MongoDB\\Collection::insertMany()`
+- :phpmethod:`MongoDB\\Collection::insertOne()`
+- :phpmethod:`MongoDB\\Collection::replaceOne()`
+- :phpmethod:`MongoDB\\Collection::updateMany()`
+- :phpmethod:`MongoDB\\Collection::updateOne()`
+- :doc:`/tutorial/crud`

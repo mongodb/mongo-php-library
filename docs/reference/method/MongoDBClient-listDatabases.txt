@@ -69,7 +69,8 @@ The output would then resemble::
      bool(false)
    }
 
-.. seealso::
+See Also
+--------
 
-   - :manual:`listDatabases </reference/command/listDatabases>` command
-     reference in the MongoDB manual
+- :manual:`listDatabases </reference/command/listDatabases>` command reference
+  in the MongoDB manual

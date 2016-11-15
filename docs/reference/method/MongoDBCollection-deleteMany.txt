@@ -58,10 +58,11 @@ The output would then resemble::
 
    Deleted 2 document(s)
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::deleteOne()`
-   - :phpmethod:`MongoDB\\Collection::bulkWrite()`
-   - :doc:`/tutorial/crud`
-   - :manual:`delete </reference/command/delete` command reference in the
-     MongoDB manual
+- :phpmethod:`MongoDB\\Collection::deleteOne()`
+- :phpmethod:`MongoDB\\Collection::bulkWrite()`
+- :doc:`/tutorial/crud`
+- :manual:`delete </reference/command/delete` command reference in the MongoDB
+  manual

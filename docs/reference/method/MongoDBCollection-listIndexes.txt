@@ -93,12 +93,13 @@ The output would then resemble::
      string(19) "example.restaurants"
    }
 
-.. seealso::
+See Also
+--------
 
-   - :doc:`/tutorial/indexes`
-   - :manual:`listIndexes </reference/command/listIndexes>` command reference in
-     the MongoDB manual
-   - :manual:`Index documentation </core/indexes>` in the MongoDB manual
-   - `Enumerating Collections
-     <https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst>`_
-     specification
+- :doc:`/tutorial/indexes`
+- :manual:`listIndexes </reference/command/listIndexes>` command reference in
+  the MongoDB manual
+- :manual:`Index documentation </core/indexes>` in the MongoDB manual
+- `Enumerating Collections
+  <https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst>`_
+  specification

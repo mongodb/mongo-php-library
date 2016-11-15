@@ -69,10 +69,11 @@ The output would then resemble::
 
 .. end-crud-include
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::insertMany()`
-   - :phpmethod:`MongoDB\\Collection::bulkWrite()`
-   - :doc:`/tutorial/crud`
-   - :manual:`insert </reference/command/insert>` command reference in the
-     MongoDB manual
+- :phpmethod:`MongoDB\\Collection::insertMany()`
+- :phpmethod:`MongoDB\\Collection::bulkWrite()`
+- :doc:`/tutorial/crud`
+- :manual:`insert </reference/command/insert>` command reference in the MongoDB
+  manual

@@ -70,7 +70,8 @@ with a custom read preference:
        ]
    );
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::__construct()`
-   - :phpmethod:`MongoDB\\Database::selectCollection()`
+- :phpmethod:`MongoDB\\Collection::__construct()`
+- :phpmethod:`MongoDB\\Database::selectCollection()`

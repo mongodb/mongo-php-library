@@ -43,7 +43,8 @@ The output would then resemble::
 
    zips
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::getDatabaseName()`
-   - :phpmethod:`MongoDB\\Collection::getNamespace()`
+- :phpmethod:`MongoDB\\Collection::getDatabaseName()`
+- :phpmethod:`MongoDB\\Collection::getNamespace()`

@@ -49,6 +49,7 @@ preference:
        'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),
    ]);
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::__construct()`
+- :phpmethod:`MongoDB\\Collection::__construct()`

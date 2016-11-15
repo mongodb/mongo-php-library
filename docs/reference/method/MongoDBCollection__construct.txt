@@ -40,9 +40,10 @@ options from that object.
 
 .. todo: add an example
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::withOptions()`
-   - :phpmethod:`MongoDB\\Client::selectCollection()`
-   - :phpmethod:`MongoDB\\Database::selectCollection()`
-   - :phpmethod:`MongoDB\\Database::__get()`
+- :phpmethod:`MongoDB\\Collection::withOptions()`
+- :phpmethod:`MongoDB\\Client::selectCollection()`
+- :phpmethod:`MongoDB\\Database::selectCollection()`
+- :phpmethod:`MongoDB\\Database::__get()`

@@ -59,9 +59,10 @@ value will be :php:`Traversable <traversable>`.
 
 .. todo: add examples
 
-.. seealso::
+See Also
+--------
 
-   - :manual:`aggregate </reference/command/aggregate>` command reference in the
-     MongoDB manual
-   - :manual:`Aggregation Pipeline </core/aggregation-pipeline>`
-     documentation in the MongoDB Manual
+- :manual:`aggregate </reference/command/aggregate>` command reference in the
+  MongoDB manual
+- :manual:`Aggregation Pipeline </core/aggregation-pipeline>` documentation in
+  the MongoDB Manual

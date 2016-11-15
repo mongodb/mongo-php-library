@@ -27,7 +27,8 @@ Definition
 
       A :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` object.
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::getManager()`
-   - :phpmethod:`MongoDB\\Database::getManager()`
+- :phpmethod:`MongoDB\\Collection::getManager()`
+- :phpmethod:`MongoDB\\Database::getManager()`

@@ -43,8 +43,9 @@ The output would then resemble::
 
    demo
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::getCollectionName()`
-   - :phpmethod:`MongoDB\\Collection::getNamespace()`
+- :phpmethod:`MongoDB\\Collection::getCollectionName()`
+- :phpmethod:`MongoDB\\Collection::getNamespace()`
 

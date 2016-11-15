@@ -60,10 +60,11 @@ The output would then resemble::
 
    Deleted 1 document(s)
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::deleteMany()`
-   - :phpmethod:`MongoDB\\Collection::bulkWrite()`
-   - :doc:`/tutorial/crud`
-   - :manual:`delete command reference </reference/command/delete`
-     in the MongoDB manual
+- :phpmethod:`MongoDB\\Collection::deleteMany()`
+- :phpmethod:`MongoDB\\Collection::bulkWrite()`
+- :doc:`/tutorial/crud`
+- :manual:`delete </reference/command/delete` command reference  in the MongoDB
+  manual

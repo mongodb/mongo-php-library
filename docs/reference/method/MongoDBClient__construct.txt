@@ -69,7 +69,8 @@ array, as was done in the legacy :php:`mongo extension <mongo>`.
        ]
    );
 
-.. seealso::
+See Also
+--------
 
-   - :php:`MongoDB\\Driver\\Manager::__construct()
-     <mongodb-driver-manager.construct>`
+- :php:`MongoDB\\Driver\\Manager::__construct()
+  <mongodb-driver-manager.construct>`

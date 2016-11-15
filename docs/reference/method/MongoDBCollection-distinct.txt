@@ -241,7 +241,8 @@ The output would then resemble::
      string(29) "Vietnamese/Cambodian/Malaysia"
    }
 
-.. seealso::
+See Also
+--------
 
-   - :manual:`distinct </reference/command/distinct>` command reference in the
-     MongoDB manual
+- :manual:`distinct </reference/command/distinct>` command reference in the
+  MongoDB manual

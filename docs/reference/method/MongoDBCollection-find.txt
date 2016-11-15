@@ -147,8 +147,9 @@ The output would then resemble::
      }
    }
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::findOne()`
-   - :manual:`find </reference/command/find>` command reference in the MongoDB
-     manual
+- :phpmethod:`MongoDB\\Collection::findOne()`
+- :manual:`find </reference/command/find>` command reference in the MongoDB
+  manual

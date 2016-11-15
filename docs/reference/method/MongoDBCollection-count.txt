@@ -35,7 +35,8 @@ Definition
 
 .. todo: add output and examples
 
-.. seealso::
+See Also
+--------
 
-   - :manual:`count </reference/command/count>` command reference in the MongoDB
-     manual
+- :manual:`count </reference/command/count>` command reference in the MongoDB
+  manual

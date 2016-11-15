@@ -77,9 +77,10 @@ The output would then resemble::
      string(8) "40375376"
    }
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::findOneAndReplace()`
-   - :phpmethod:`MongoDB\\Collection::findOneAndUpdate()`
-   - :manual:`findAndModify </reference/command/findAndModify>` command
-     reference in the MongoDB manual
+- :phpmethod:`MongoDB\\Collection::findOneAndReplace()`
+- :phpmethod:`MongoDB\\Collection::findOneAndUpdate()`
+- :manual:`findAndModify </reference/command/findAndModify>` command reference
+  in the MongoDB manual

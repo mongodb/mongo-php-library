@@ -31,6 +31,7 @@ Definition
 
 .. todo: add examples
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\GridFS\\Bucket::getFileIdForStream()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getFileIdForStream()`

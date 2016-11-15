@@ -60,8 +60,9 @@ The following example selects the ``demo`` and ``another-app`` databases:
    $demo = $client->demo;
    $anotherApp = $client->{'another-app'};
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Client::selectDatabase()`
-   - :phpmethod:`MongoDB\\Database::__construct()`
-   - :php:`Property Overloading <oop5.overloading>` in the PHP Manual
+- :phpmethod:`MongoDB\\Client::selectDatabase()`
+- :phpmethod:`MongoDB\\Database::__construct()`
+- :php:`Property Overloading <oop5.overloading>` in the PHP Manual

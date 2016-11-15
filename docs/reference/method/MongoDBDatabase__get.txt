@@ -60,8 +60,9 @@ collections from the ``demo`` database:
    $users = $db->users;
    $systemProfile = $db->{'system.profile'};
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Database::selectCollection()`
-   - :phpmethod:`MongoDB\\Client::selectCollection()`
-   - :php:`Property Overloading <oop5.overloading>` in the PHP Manual
+- :phpmethod:`MongoDB\\Database::selectCollection()`
+- :phpmethod:`MongoDB\\Client::selectCollection()`
+- :php:`Property Overloading <oop5.overloading>` in the PHP Manual

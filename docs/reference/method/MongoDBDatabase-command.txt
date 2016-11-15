@@ -138,11 +138,11 @@ The output would resemble::
      }
    }
 
-.. seealso::
+See Also
+--------
 
-   - :doc:`/tutorial/commands`
-   - :manual:`Database Commands </reference/command>` in the
-     MongoDB manual
-   - :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>`
-   - :php:`MongoDB\\Driver\\Manager::executeCommand()
-     <manual/en/mongodb-driver-manager.executecommand.php>`
+- :doc:`/tutorial/commands`
+- :manual:`Database Commands </reference/command>` in the MongoDB manual
+- :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>`
+- :php:`MongoDB\\Driver\\Manager::executeCommand()
+  <manual/en/mongodb-driver-manager.executecommand.php>`

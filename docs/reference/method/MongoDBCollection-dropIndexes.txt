@@ -66,10 +66,11 @@ The output would then resemble::
      }
    }
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::dropIndex()`
-   - :doc:`/tutorial/indexes`
-   - :manual:`dropIndexes </reference/command/dropIndexes>` command reference
-     in the MongoDB manual
-   - :manual:`Index documentation </indexes>` in the MongoDB manual
+- :phpmethod:`MongoDB\\Collection::dropIndex()`
+- :doc:`/tutorial/indexes`
+- :manual:`dropIndexes </reference/command/dropIndexes>` command reference in
+  the MongoDB manual
+- :manual:`Index documentation </indexes>` in the MongoDB manual

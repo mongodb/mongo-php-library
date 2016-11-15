@@ -35,6 +35,7 @@ Definition
 
 .. todo: add examples
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::find()`
+- :phpmethod:`MongoDB\\Collection::find()`

@@ -65,8 +65,9 @@ The output would then resemble::
      }
    }
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Database::dropCollection()`
-   - :manual:`drop </reference/command/drop>` command reference in the MongoDB
-     manual
+- :phpmethod:`MongoDB\\Database::dropCollection()`
+- :manual:`drop </reference/command/drop>` command reference in the MongoDB
+  manual

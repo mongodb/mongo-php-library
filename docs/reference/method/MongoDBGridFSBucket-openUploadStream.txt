@@ -41,6 +41,7 @@ metadata document will be created when the writable stream is closed.
 
 .. todo: add examples
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\GridFS\\Bucket::uploadFromStream()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::uploadFromStream()`

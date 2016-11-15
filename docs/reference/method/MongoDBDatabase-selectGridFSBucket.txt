@@ -68,6 +68,7 @@ database with a custom read preference:
        'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),
    ]);
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\GridFS\\Bucket::__construct()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::__construct()`

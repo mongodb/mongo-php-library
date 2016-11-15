@@ -110,10 +110,11 @@ The output would then resemble::
      }
    }
 
-.. seealso::
+See Also
+--------
 
-   - :manual:`listCollections </reference/command/listCollections` command
-     reference in the MongoDB manual
-   - `Enumerating Collections
-     <https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst>`_
-     specification
+- :manual:`listCollections </reference/command/listCollections` command
+  reference in the MongoDB manual
+- `Enumerating Collections
+  <https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst>`_
+  specification

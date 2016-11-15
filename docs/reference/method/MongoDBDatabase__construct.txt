@@ -37,8 +37,9 @@ the :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` object. If
 you select the Database from a :phpclass:`Client <MongoDB\\Client>` object, the
 Database inherits its options from that object.
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Database::withOptions()`
-   - :phpmethod:`MongoDB\\Client::selectDatabase()`
-   - :phpmethod:`MongoDB\\Client::__get()`
+- :phpmethod:`MongoDB\\Database::withOptions()`
+- :phpmethod:`MongoDB\\Client::selectDatabase()`
+- :phpmethod:`MongoDB\\Client::__get()`

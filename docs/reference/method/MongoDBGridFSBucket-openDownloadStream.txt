@@ -31,8 +31,9 @@ Definition
 
 .. todo: add examples
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\GridFS\\Bucket::downloadToStream()`
-   - :phpmethod:`MongoDB\\GridFS\\Bucket::downloadToStreamByName()`
-   - :phpmethod:`MongoDB\\GridFS\\Bucket::openDownloadStreamByName()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::downloadToStream()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::downloadToStreamByName()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::openDownloadStreamByName()`

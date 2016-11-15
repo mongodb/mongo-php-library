@@ -124,9 +124,10 @@ The output would then resemble::
      string(9) "999999999"
    }
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::findOneAndDelete()`
-   - :phpmethod:`MongoDB\\Collection::findOneAndUpdate()`
-   - :manual:`findAndModify </reference/command/findAndModify>` command
-     reference in the MongoDB manual
+- :phpmethod:`MongoDB\\Collection::findOneAndDelete()`
+- :phpmethod:`MongoDB\\Collection::findOneAndUpdate()`
+- :manual:`findAndModify </reference/command/findAndModify>` command reference
+  in the MongoDB manual

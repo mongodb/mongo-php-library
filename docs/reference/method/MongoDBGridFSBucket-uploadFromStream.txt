@@ -38,6 +38,7 @@ Definition
 
 .. todo: add examples
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\GridFS\\Bucket::openUploadStream()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::openUploadStream()`

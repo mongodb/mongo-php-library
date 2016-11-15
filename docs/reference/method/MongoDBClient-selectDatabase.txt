@@ -69,7 +69,8 @@ preference:
        ]
    );
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Client::__get()`
-   - :phpmethod:`MongoDB\\Database::__construct()`
+- :phpmethod:`MongoDB\\Client::__get()`
+- :phpmethod:`MongoDB\\Database::__construct()`

@@ -69,8 +69,9 @@ database with a custom read preference:
        ]
    );
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Database::__get()`
-   - :phpmethod:`MongoDB\\Client::selectCollection()`
-   - :phpmethod:`MongoDB\\Collection::__construct()`
+- :phpmethod:`MongoDB\\Database::__get()`
+- :phpmethod:`MongoDB\\Client::selectCollection()`
+- :phpmethod:`MongoDB\\Collection::__construct()`

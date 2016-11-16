@@ -13,4 +13,5 @@ Reference
    /reference/class/MongoDBCollection
    /reference/class/MongoDBGridFSBucket
    /reference/write-result-classes
+   /reference/enumeration-classes
    /reference/exception-classes

@@ -84,6 +84,10 @@ class UpdateResult
     /**
      * Return the ID of the document inserted by an upsert operation.
      *
+     * If the document had an ID prior to upserting (i.e. the server did not
+     * need to generate an ID), this will contain its "_id". Any
+     * server-generated ID will be a MongoDB\BSON\ObjectID instance.
+     *
      * This value is undefined (i.e. null) if an upsert did not take place.
      *
      * This method should only be called if the write was acknowledged.

@@ -12,4 +12,5 @@ Reference
    /reference/class/MongoDBDatabase
    /reference/class/MongoDBCollection
    /reference/class/MongoDBGridFSBucket
+   /reference/write-result-classes
    /reference/exception-classes

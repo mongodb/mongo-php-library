@@ -48,10 +48,11 @@ class InsertManyResult
     /**
      * Return a map of the inserted documents' IDs.
      *
-     * The index of each ID in the map corresponds to the document's position in
-     * the bulk operation. If the document had an ID prior to insertion (i.e.
-     * the driver did not generate an ID), this will contain its "_id" field
-     * value. Any driver-generated ID will be an MongoDB\BSON\ObjectID instance.
+     * The index of each ID in the map corresponds to each document's position
+     * in the bulk operation. If a document had an ID prior to inserting (i.e.
+     * the driver did not generate an ID), the index will contain its "_id"
+     * field value. Any driver-generated ID will be a MongoDB\BSON\ObjectID
+     * instance.
      *
      * @return mixed[]
      */

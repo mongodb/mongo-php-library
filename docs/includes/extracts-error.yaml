@@ -10,6 +10,12 @@ content: |
   <mongodb-driver-exception-runtimeexception>` for other errors at the driver
   level (e.g. connection errors).
 ---
+ref: error-badmethodcallexception-write-result
+content: |
+  :phpclass:`MongoDB\\Exception\\BadMethodCallException` if this method is
+  called and the write operation used an unacknowledged :manual:`write concern
+  </reference/write-concern>`.
+---
 ref: error-invalidargumentexception
 content: |
   :phpclass:`MongoDB\\Exception\\InvalidArgumentException` for errors related to

@@ -19,12 +19,36 @@ BSON spec, see `bsonspec.org <http://bsonspec.org/>`_.
 
 By default, the |php-library| returns BSON documents as
 :phpclass:`MongoDB\\Model\\BSONDocument` objects and BSON arrays as
-:phpclass:`MongoDB\\Model\\BSONArray` objects.
-:phpclass:`BSONDocument <MongoDB\\Model\\BSONDocument>` and
-:phpclass:`BSONArray <MongoDB\\Model\\BSONArray>` extend PHP's
-:php:`ArrayObject <arrayobject>` class and implement the driver's
-:php:`MongoDB\\BSON\\Serializable <mongodb-bson-serializable>` and
-:php:`MongoDB\\BSON\\Unserializable <mongodb-bson-unserializable>` interfaces.
+:phpclass:`MongoDB\\Model\\BSONArray` objects, respectively.
+
+BSON Classes
+------------
+
+.. phpclass:: MongoDB\\Model\\BSONArray
+
+   This class extends PHP's :php:`ArrayObject <arrayobject>` class. It also
+   implements PHP's :php:`JsonSerializable <jsonserializable>` interface and the
+   driver's :php:`MongoDB\\BSON\\Serializable <mongodb-bson-serializable>` and
+   :php:`MongoDB\\BSON\\Unserializable <mongodb-bson-unserializable>`
+   interfaces.
+
+   By default, the library will deserialize BSON arrays as instances of this
+   class. During BSON and JSON serialization, instances of this class will
+   serialize as an array type (:php:`array_values() <array_values>` is used
+   internally to numerically reindex the array).
+
+.. phpclass:: MongoDB\\Model\\BSONDocument
+
+   This class extends PHP's :php:`ArrayObject <arrayobject>` class. It also
+   implements PHP's :php:`JsonSerializable <jsonserializable>` interface and the
+   driver's :php:`MongoDB\\BSON\\Serializable <mongodb-bson-serializable>` and
+   :php:`MongoDB\\BSON\\Unserializable <mongodb-bson-unserializable>`
+   interfaces.
+
+   By default, the library will deserialize BSON documents as instances of this
+   class. During BSON and JSON serialization, instances of this class will
+   serialize as a document type (:php:`object casting
+   <types.type-juggling#language.types.typecasting>` is used internally).
 
 Type Maps
 ---------

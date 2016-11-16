@@ -39,6 +39,9 @@ Errors/Exceptions
 Examples
 --------
 
+Connecting to a Replica Set
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 If you do not specify a ``$uri`` value, the driver connects to a standalone
 :program:`mongod` on ``127.0.0.1`` via port ``27017``. The following example
 demonstrates how to connect to a replica set with a custom read preference:
@@ -53,6 +56,48 @@ demonstrates how to connect to a replica set with a custom read preference:
            'readPreference' => 'secondaryPreferred',
        ]
    );
+
+Connecting with SSL and Authentication
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following example demonstrates how to connect to a MongoDB replica set with
+SSL and authentication, as is used for `MongoDB Atlas
+<https://cloud.mongodb.com/?jmp=docs>`_:
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client(
+       'mongodb://myUsername:myPassword@rs1.example.com,rs2.example.com/?ssl=true&replicaSet=myReplicaSet&authSource=admin'
+   );
+
+Alternatively, the authentication credentials and URI parameters may be
+specified in the constructor's ``$uriOptions`` parameter:
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client(
+       'mongodb://rs1.example.com,rs2.example.com/'
+       [
+           'username' => 'myUsername',
+           'password' => 'myPassword',
+           'ssl' => true,
+           'replicaSet' => 'myReplicaSet',
+           'authSource' => 'admin',
+       ],
+   );
+
+The driver supports additional :php:`SSL options
+<mongodb-driver-manager.construct#mongodb-driver-manager.construct-driveroptions>`,
+which may be specified in the constructor's ``$driverOptions`` parameter. Those
+options are covered in the :php:`MongoDB\\Driver\\Manager::__construct()
+<mongodb-driver-manager.construct>` documentation.
+
+Specifying a Custom Type Map
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By default, the |php-library| deserializes BSON documents and arrays
 as :phpclass:`MongoDB\\Model\\BSONDocument` and

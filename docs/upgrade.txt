@@ -254,12 +254,12 @@ userland. As such, it is no longer done in the new driver and library.
 IDs of inserted documents (whether generated or not) may be accessed
 through the result objects returned by the write methods:
 
--  ``MongoDB\InsertOneResult::getInsertedId()`` for
-   :phpmethod:`MongoDB\\Collection::insertOne`
--  ``MongoDB\InsertManyResult::getInsertedIds()`` for
-   :phpmethod:`MongoDB\\Collection::insertMany`
--  ``MongoDB\BulkWriteResult::getInsertedIds()`` for
-   :phpmethod:`MongoDB\\Collection::bulkWrite`
+- :phpmethod:`MongoDB\\InsertOneResult::getInsertedId()` for
+  :phpmethod:`MongoDB\\Collection::insertOne()`
+- :phpmethod:`MongoDB\\InsertManyResult::getInsertedIds()` for
+  :phpmethod:`MongoDB\\Collection::insertMany()`
+- :phpmethod:`MongoDB\\BulkWriteResult::getInsertedIds()` for
+  :phpmethod:`MongoDB\\Collection::bulkWrite()`
 
 ``MongoWriteBatch``
 ~~~~~~~~~~~~~~~~~~~

@@ -25,7 +25,8 @@ type: array
 description: |
   Specifies additional URI options, such as authentication credentials or query
   string parameters. The options specified in ``$uriOptions`` take precedence
-  over any analogous options present in the ``$uri`` string.
+  over any analogous options present in the ``$uri`` string and do not need to
+  be encoded according to `RFC 3986 <http://www.faqs.org/rfcs/rfc3986.html>`_.
 
   Refer to the :php:`MongoDB\\Driver\\Manager::__construct()
   <mongodb-driver-manager.construct>` extension reference and :manual:`MongoDB

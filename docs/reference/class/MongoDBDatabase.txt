@@ -10,8 +10,6 @@ MongoDB\\Database Class
    :depth: 1
    :class: singlecol
 
-
-
 Definition
 ----------
 

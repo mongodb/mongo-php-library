@@ -13,27 +13,28 @@ BSON
 Overview
 --------
 
-MongoDB stores data records as BSON documents. BSON is a binary
-representation of :term:`JSON` documents, though it contains more data
-types than JSON. For the BSON spec, see `bsonspec.org <http://bsonspec.org/>`_.
+MongoDB stores data records as BSON documents. BSON is a binary representation
+of :term:`JSON` documents, though it contains more data types than JSON. For the
+BSON spec, see `bsonspec.org <http://bsonspec.org/>`_.
 
 By default, the |php-library| returns BSON documents as
-``MongoDB\Model\BSONDocument`` objects and BSON arrays as
-``MongoDB\Model\BSONArray`` objects. ``MongoDB\Model\BSONDocument`` and 
-``MongoDB\Model\BSONArray`` extend PHP's
-:php:`ArrayObject <arrayobject>` class and implement the MongoDB PHP
-driver's :php:`MongoDB\\BSON\\Serializable <mongodb-bson-serializable>`
-and :php:`MongoDB\\BSON\\Unserializable <mongodb-bson-unserializable>`
-interfaces.
+:phpclass:`MongoDB\\Model\\BSONDocument` objects and BSON arrays as
+:phpclass:`MongoDB\\Model\\BSONArray` objects.
+:phpclass:`BSONDocument <MongoDB\\Model\\BSONDocument>` and
+:phpclass:`BSONArray <MongoDB\\Model\\BSONArray>` extend PHP's
+:php:`ArrayObject <arrayobject>` class and implement the driver's
+:php:`MongoDB\\BSON\\Serializable <mongodb-bson-serializable>` and
+:php:`MongoDB\\BSON\\Unserializable <mongodb-bson-unserializable>` interfaces.
 
 Type Maps
 ---------
 
-Most methods that read data from MongoDB support a ``typeMap`` option,
-which allows control over how BSON is converted to PHP. Additionally,
+Most methods that read data from MongoDB support a ``typeMap`` option, which
+allows control over how BSON is converted to PHP. Additionally,
 the :phpclass:`MongoDB\\Client`, :phpclass:`MongoDB\\Database`, and
-:phpclass:`MongoDB\\Collection` classes accept a ``typeMap`` option,
-which applies to any supporting methods and selected classes by default.
+:phpclass:`MongoDB\\Collection` classes accept a ``typeMap`` option, which can
+be used to specify a default type map to apply to any supporting methods and
+selected classes (e.g. :phpmethod:`MongoDB\\Client::selectDatabase()`).
 
 The :phpclass:`MongoDB\\Client`, :phpclass:`MongoDB\\Database`, and
 :phpclass:`MongoDB\\Collection` classes use the following type map by
@@ -47,20 +48,28 @@ default:
        'root' => 'MongoDB\Model\BSONDocument',
    ]
 
-Serialization and deserialization of PHP variables into MongoDB
----------------------------------------------------------------
-
 ``Persistable`` Classes
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 
-The PHP driver's :php:`persistence <mongodb.persistence>` specification
-specifies how classes implementing :php:`MongoDB\\BSON\\Persistable
-<mongodb-bson-persistable>` are serialized and deserialized, and is
-analogous to PHP's :php:`Serializable interface <class.serializable>`.
+The driver's :php:`persistence specification <mongodb.persistence>` outlines how
+classes implementing its :php:`MongoDB\\BSON\\Persistable
+<mongodb-bson-persistable>` interface are serialized to and deserialized from
+BSON. The :php:`Persistable <mongodb-bson-persistable>` interface is analogous
+to PHP's :php:`Serializable interface <class.serializable>`.
 
-The PHP :php:`driver <mongodb>` automatically handles serialization and
-deserialization for classes implementing ``MongoDB\BSON\Persistable``
-without requiring the use of the ``typeMap`` option.
+The driver automatically handles serialization and deserialization for classes
+implementing the :php:`Persistable <mongodb-bson-persistable>` interface without
+requiring the use of the ``typeMap`` option. This is done by encoding the name
+of the PHP class in a special property within the BSON document.
+
+.. note::
+
+   When deserializing a PHP variable from BSON, the encoded class name of a
+   :php:`Persistable <mongodb-bson-persistable>` object will override any class
+   specified in the type map, but it will not override ``"array"`` and
+   ``"stdClass"`` or ``"object"``. This is discussed in the 
+   :php:`persistence specification <mongodb.persistence>` but it bears
+   repeating.
 
 Consider the following class definition:
 
@@ -78,12 +87,9 @@ Consider the following class definition:
        {
            $this->id = new MongoDB\BSON\ObjectID;
            $this->name = (string) $name;
-       
-           // Get current time in milliseconds since the epoch
-           $msec = floor(microtime(true) * 1000);
-           $this->createdAt = new MongoDB\BSON\UTCDateTime($msec);
+           $this->createdAt = new MongoDB\BSON\UTCDateTime;
        }
-       
+
        function bsonSerialize()
        {
            return [
@@ -92,7 +98,7 @@ Consider the following class definition:
                'createdAt' => $this->createdAt,
            ];
        }
-       
+
        function bsonUnserialize(array $data)
        {
            $this->id = $data['_id'];
@@ -101,7 +107,7 @@ Consider the following class definition:
        }
    }
 
-The following constructs a ``Person`` object, inserts it into the
+The following example constructs a ``Person`` object, inserts it into the
 database, and reads it back as an object of the same type:
 
 .. code-block:: php
@@ -149,51 +155,47 @@ The same document in the MongoDB shell might display as:
 .. note::
 
    :php:`MongoDB\\BSON\\Persistable <mongodb-bson-persistable>` may only be used
-   for root and embedded BSON documents. BSON arrays are not supported.
+   for root and embedded BSON documents. It may not be used for BSON arrays.
 
 Emulating the Legacy Driver
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------
 
-The legacy :php:`mongo extension <mongo>` returned both BSON
-documents and arrays as PHP arrays. While PHP arrays are convenient to
-work with, this behavior was problematic:
+The legacy :php:`mongo extension <mongo>` returned both BSON documents and
+arrays as PHP arrays. While PHP arrays are convenient to work with, this
+behavior was problematic:
 
--  Different BSON types could deserialize to the same PHP value (e.g.
-   ``{"0": "foo"}`` and ``["foo"]``), which made it impossible to infer
-   the original BSON type.
+- Different BSON types could deserialize to the same PHP value (e.g.
+  ``{"0": "foo"}`` and ``["foo"]``), which made it impossible to infer the
+  original BSON type.
 
--  Numerically-indexed PHP arrays would be serialized as BSON documents
-   if there was a gap in their key sequence. Such gaps were easily 
-   caused by unsetting a key to remove an element and
-   forgetting to reindex the array.
+- Numerically-indexed PHP arrays would be serialized as BSON documents if there
+  was a gap in their key sequence. Such gaps were easily caused by unsetting a
+  key to remove an element and forgetting to numerically reindex the array.
 
-The |php-library|'s ``MongoDB\Model\BSONDocument`` and ``MongoDB\Model\BSONArray``
-classes address these
-concerns by preserving the BSON type information during serialization
-and deserialization; however, some users may still prefer the legacy
-behavior. If desired, you can use the ``typeMap`` option to have
-the library return everything as a PHP array:
+The |php-library|'s :phpclass:`BSONDocument <MongoDB\\Model\\BSONDocument>` and
+:phpclass:`BSONArray <MongoDB\\Model\\BSONArray>` classes address these concerns
+by preserving the BSON type information during serialization and
+deserialization; however, some users may still prefer the legacy behavior. If
+desired, you can use the ``typeMap`` option to have the library return
+everything as a PHP array:
 
 .. code-block:: php
 
    <?php
 
    $client = new MongoDB\Client(
-       null,
+       'mongodb://127.0.0.1/',
        [],
-       ['typeMap' => [
-           'root' => 'array', 'document' => 'array', 'array' => 'array'
+       [
+           'typeMap' => [
+               'array' => 'array',
+               'document' => 'array',
+               'root' => 'array',
            ],
        ]
    );
 
-   $document = $client->demo->zips->findOne(
-       ['_id' => '94301'],
-       ['typeMap' => [
-            'root' => 'array', 'document' => 'array', 'array' => 'array'
-            ],
-       ]
-   );
+   $document = $client->demo->zips->findOne(['_id' => '94301']);
 
    var_dump($document);
 

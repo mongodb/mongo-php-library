@@ -15,26 +15,27 @@ Definition
 
 .. phpclass:: MongoDB\\Database
 
-   Provides methods for common operations on a database,
-   such as executing database commands and managing collections.
+   Provides methods for common operations on a database, such as executing
+   database commands and managing collections.
 
-   You can construct a database directly using the PHP extension's
+   You can construct a database directly using the driver's
    :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` class or
-   select a database from the |php-library|'s :phpclass:`MongoDB\\Client` class.
+   select a database from the library's :phpclass:`MongoDB\\Client` class. A
+   database may also be cloned from an existing :phpclass:`MongoDB\\Database`
+   object via the :phpmethod:`withOptions() <MongoDB\\Database::withOptions>`
+   method.
 
    :phpclass:`MongoDB\\Database` supports the :php:`readConcern
    <mongodb-driver-readconcern>`, :php:`readPreference
    <mongodb-driver-readpreference>`, :php:`typeMap
    <manual/en/mongodb.persistence.deserialization.php#mongodb.persistence.typemaps>`,
-   and :php:`writeConcern <mongodb-driver-writeconcern>` options.
-   If you omit an option, the database inherits the value from the
-   Manager constructor argument or the Client object used to select
-   the database.
+   and :php:`writeConcern <mongodb-driver-writeconcern>` options. If you omit an
+   option, the database inherits the value from the :php:`Manager
+   <mongodb-driver-manager>` constructor argument or the :phpclass:`Client
+   <MongoDB\\Client>` object used to select the database.
 
    Operations within the :phpclass:`MongoDB\\Database` class inherit the
    Database's options.
-
-.. _database-methods:
 
 Methods
 -------

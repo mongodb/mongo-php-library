@@ -25,7 +25,7 @@ Definition
    collection in a command, such as when inserting a document into a new
    collection. You may also explicitly create a collection with specific options
    using the :phpmethod:`MongoDB\\Database::createCollection()` method, or using
-   :manual:`db.createCollection() </reference/method/db.createCollection/>` in
+   :manual:`db.createCollection() </reference/method/db.createCollection>` in
    the :program:`mongo` shell.
 
    Explicitly creating collections enables you to create
@@ -96,4 +96,4 @@ See Also
 
 - :manual:`create </reference/command/create>` command reference in the MongoDB
   manual
-- :manual:`db.createCollection() </reference/method/db.createCollection/>`
+- :manual:`db.createCollection() </reference/method/db.createCollection>`

@@ -16,7 +16,7 @@ Definition
 .. phpmethod:: MongoDB\\Collection::aggregate()
 
    Executes an :manual:`aggregation framework pipeline
-   </core/aggregation-pipeline/>` operation on the collection.
+   </core/aggregation-pipeline>` operation on the collection.
 
    .. code-block:: php
 

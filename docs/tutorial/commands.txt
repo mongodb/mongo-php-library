@@ -206,8 +206,8 @@ The output would then resemble::
 Commands with Custom Read Preference
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Some commands, such as :manual:`createUser </reference/command/createUser/>`,
-may only be executed on a :term:`primary` replica set member or a
+Some commands, such as :manual:`createUser </reference/command/createUser>`, may
+only be executed on a :term:`primary` replica set member or a
 :term:`standalone`.
 
 The command helper methods in the |php-library|, such as
@@ -287,7 +287,7 @@ Iterate Results from a Cursor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some commands, such as :manual:`listCollections
-</reference/command/listCollections/>`, return their results via an iterable
+</reference/command/listCollections>`, return their results via an iterable
 cursor. To view the results, iterate through the cursor.
 
 The following example lists the collections in the ``demo`` database by

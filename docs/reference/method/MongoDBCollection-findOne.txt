@@ -29,11 +29,19 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-findOne-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      An array or object for the :term:`first document <natural order>` document
-      that matched the query, or ``null`` if no document matched the query. The
-      return type will depend on the ``typeMap`` option.
+An array or object for the :term:`first document <natural order>` document that
+matched the query, or ``null`` if no document matched the query. The return type
+will depend on the ``typeMap`` option.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
 
 Examples
 --------
@@ -82,8 +90,9 @@ The output would then resemble::
      }
    }
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::find()`
-   - :manual:`find </reference/command/find>` command reference in the MongoDB
-     manual
+- :phpmethod:`MongoDB\\Collection::find()`
+- :manual:`find </reference/command/find>` command reference in the MongoDB
+  manual

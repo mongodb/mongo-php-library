@@ -29,11 +29,19 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBClient-method-listDatabases-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A traversable :phpclass:`MongoDB\\Model\DatabaseInfoIterator`, which
-      contains an :phpclass:`MongoDB\\Model\DatabaseInfo` object for each
-      database on the server.
+A traversable :phpclass:`MongoDB\\Model\\DatabaseInfoIterator`, which contains
+a :phpclass:`MongoDB\\Model\\DatabaseInfo` object for each database on the
+server.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unexpectedvalueexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
 
 Example
 -------
@@ -69,7 +77,8 @@ The output would then resemble::
      bool(false)
    }
 
-.. seealso::
+See Also
+--------
 
-   - :manual:`listDatabases </reference/command/listDatabases>` command
-     reference in the MongoDB manual
+- :manual:`listDatabases </reference/command/listDatabases>` command reference
+  in the MongoDB manual

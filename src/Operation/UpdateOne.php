@@ -4,6 +4,7 @@ namespace MongoDB\Operation;
 
 use MongoDB\UpdateResult;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
@@ -41,7 +42,7 @@ class UpdateOne implements Executable
      * @param array|object $filter         Query by which to filter documents
      * @param array|object $update         Update to apply to the matched document
      * @param array        $options        Command options
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
@@ -69,6 +70,7 @@ class UpdateOne implements Executable
      * @param Server $server
      * @return UpdateResult
      * @throws UnsupportedException if collation is used and unsupported
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {

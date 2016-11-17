@@ -29,9 +29,15 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBDatabase-method-selectGridFSBucket-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\GridFS\\Bucket` object.
+A :phpclass:`MongoDB\\GridFS\\Bucket` object.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
 
 Behavior
 --------
@@ -68,6 +74,7 @@ database with a custom read preference:
        'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),
    ]);
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\GridFS\\Bucket::__construct()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::__construct()`

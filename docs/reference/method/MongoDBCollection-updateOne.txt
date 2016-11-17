@@ -31,11 +31,18 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-updateOne-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\UpdateResult` object, which encapsulates a
-      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
-      object.
+A :phpclass:`MongoDB\\UpdateResult` object, which encapsulates a
+:php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>` object.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
 
 Examples
 --------
@@ -60,11 +67,12 @@ The output would then resemble::
    Matched 1 document(s)
    Modified 1 document(s)
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::replaceOne()`
-   - :phpmethod:`MongoDB\\Collection::updateMany()`
-   - :phpmethod:`MongoDB\\Collection::bulkWrite()`
-   - :doc:`/tutorial/crud`
-   - :manual:`update </reference/command/update>` command reference in the
-     MongoDB manual
+- :phpmethod:`MongoDB\\Collection::replaceOne()`
+- :phpmethod:`MongoDB\\Collection::updateMany()`
+- :phpmethod:`MongoDB\\Collection::bulkWrite()`
+- :doc:`/tutorial/crud`
+- :manual:`update </reference/command/update>` command reference in the MongoDB
+  manual

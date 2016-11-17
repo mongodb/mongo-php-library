@@ -31,11 +31,18 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-deleteOne-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\DeleteResult` object, which encapsulates a
-      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
-      object.
+A :phpclass:`MongoDB\\DeleteResult` object, which encapsulates a
+:php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>` object.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
 
 Example
 -------
@@ -60,10 +67,11 @@ The output would then resemble::
 
    Deleted 1 document(s)
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::deleteMany()`
-   - :phpmethod:`MongoDB\\Collection::bulkWrite()`
-   - :doc:`/tutorial/crud`
-   - :manual:`delete command reference </reference/command/delete`
-     in the MongoDB manual
+- :phpmethod:`MongoDB\\Collection::deleteMany()`
+- :phpmethod:`MongoDB\\Collection::bulkWrite()`
+- :doc:`/tutorial/crud`
+- :manual:`delete </reference/command/delete` command reference  in the MongoDB
+  manual

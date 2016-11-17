@@ -29,13 +29,23 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-count-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      The number of documents matching the filter criteria.
+The number of documents matching the filter criteria.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unexpectedvalueexception.rst
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
 
 .. todo: add output and examples
 
-.. seealso::
+See Also
+--------
 
-   - :manual:`count </reference/command/count>` command reference in the MongoDB
-     manual
+- :manual:`count </reference/command/count>` command reference in the MongoDB
+  manual

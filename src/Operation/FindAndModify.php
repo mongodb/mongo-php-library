@@ -5,6 +5,7 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
@@ -73,7 +74,7 @@ class FindAndModify implements Executable
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
      * @param array  $options        Command options
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($databaseName, $collectionName, array $options)
     {
@@ -144,6 +145,7 @@ class FindAndModify implements Executable
      * @return object|null
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if collation is used and unsupported
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {

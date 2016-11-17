@@ -5,6 +5,7 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CollectionInfoCommandIterator;
 use MongoDB\Model\CollectionInfoIterator;
@@ -36,7 +37,7 @@ class ListCollections implements Executable
      *
      * @param string $databaseName Database name
      * @param array  $options      Command options
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($databaseName, array $options = [])
     {
@@ -58,6 +59,8 @@ class ListCollections implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return CollectionInfoIterator
+     * @throws InvalidArgumentException if filter.name is not a string for legacy execution
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
@@ -72,6 +75,7 @@ class ListCollections implements Executable
      *
      * @param Server $server
      * @return CollectionInfoCommandIterator
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     private function executeCommand(Server $server)
     {
@@ -97,7 +101,8 @@ class ListCollections implements Executable
      *
      * @param Server $server
      * @return CollectionInfoLegacyIterator
-     * @throws InvalidArgumentException if filter.name is not a string.
+     * @throws InvalidArgumentException if filter.name is not a string
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     private function executeLegacy(Server $server)
     {

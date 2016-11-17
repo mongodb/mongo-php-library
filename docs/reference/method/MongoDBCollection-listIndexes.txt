@@ -29,11 +29,17 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-listIndexes-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A traversable :phpclass:`MongoDB\\Model\IndexInfoIterator`, which
-      contains an :phpclass:`MongoDB\\Model\IndexInfo` object for each index for
-      the collection.
+A traversable :phpclass:`MongoDB\\Model\\IndexInfoIterator`, which contains a
+:phpclass:`MongoDB\\Model\\IndexInfo` object for each index for the collection.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
 
 Example
 -------
@@ -93,12 +99,13 @@ The output would then resemble::
      string(19) "example.restaurants"
    }
 
-.. seealso::
+See Also
+--------
 
-   - :doc:`/tutorial/indexes`
-   - :manual:`listIndexes </reference/command/listIndexes>` command reference in
-     the MongoDB manual
-   - :manual:`Index documentation </core/indexes>` in the MongoDB manual
-   - `Enumerating Collections
-     <https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst>`_
-     specification
+- :doc:`/tutorial/indexes`
+- :manual:`listIndexes </reference/command/listIndexes>` command reference in
+  the MongoDB manual
+- :manual:`Index documentation </core/indexes>` in the MongoDB manual
+- `Enumerating Collections
+  <https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst>`_
+  specification

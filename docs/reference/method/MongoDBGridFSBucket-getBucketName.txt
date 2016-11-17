@@ -21,8 +21,9 @@ Definition
 
       function getBucketName(): string
 
-   :returns:
+Return Values
+-------------
 
-      The name of this bucket as a string.
+The name of this bucket as a string.
 
 .. todo: add examples

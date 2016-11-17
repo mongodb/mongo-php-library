@@ -21,9 +21,10 @@ Definition
 
       function getCollectionName(): string
 
-   :returns:
+Return Values
+-------------
 
-      The name of this collection as a string.
+The name of this collection as a string.
 
 Example
 -------
@@ -43,7 +44,8 @@ The output would then resemble::
 
    zips
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::getDatabaseName()`
-   - :phpmethod:`MongoDB\\Collection::getNamespace()`
+- :phpmethod:`MongoDB\\Collection::getDatabaseName()`
+- :phpmethod:`MongoDB\\Collection::getNamespace()`

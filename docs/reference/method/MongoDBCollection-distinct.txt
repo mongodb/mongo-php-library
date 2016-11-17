@@ -29,9 +29,18 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-distinct-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      An array of the distinct values.
+An array of the distinct values.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unexpectedvalueexception.rst
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
 
 Examples
 --------
@@ -241,7 +250,8 @@ The output would then resemble::
      string(29) "Vietnamese/Cambodian/Malaysia"
    }
 
-.. seealso::
+See Also
+--------
 
-   - :manual:`distinct </reference/command/distinct>` command reference in the
-     MongoDB manual
+- :manual:`distinct </reference/command/distinct>` command reference in the
+  MongoDB manual

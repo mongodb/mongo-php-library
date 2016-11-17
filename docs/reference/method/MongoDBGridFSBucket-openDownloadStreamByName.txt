@@ -29,14 +29,16 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBGridFSBucket-method-openDownloadStreamByName-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A readable stream resource.
+A readable stream resource.
 
 .. todo: add examples
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\GridFS\\Bucket::downloadToStream()`
-   - :phpmethod:`MongoDB\\GridFS\\Bucket::downloadToStreamByName()`
-   - :phpmethod:`MongoDB\\GridFS\\Bucket::openDownloadStream()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::downloadToStream()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::downloadToStreamByName()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::openDownloadStream()`

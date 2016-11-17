@@ -29,9 +29,17 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-createIndexes-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      The names of the created indexes as an array of strings.
+The names of the created indexes as an array of strings.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
 
 ``$indexes`` parameter
 ----------------------
@@ -82,10 +90,11 @@ The output would then resemble::
      string(9) "geo_index"
    }
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::createIndex()`
-   - :doc:`/tutorial/indexes`
-   - :manual:`createIndexes </reference/command/createIndexes>` command
-     reference in the MongoDB manual
-   - :manual:`Index </indexes>` documentation in the MongoDB Manual
+- :phpmethod:`MongoDB\\Collection::createIndex()`
+- :doc:`/tutorial/indexes`
+- :manual:`createIndexes </reference/command/createIndexes>` command reference
+  in the MongoDB manual
+- :manual:`Index </indexes>` documentation in the MongoDB Manual

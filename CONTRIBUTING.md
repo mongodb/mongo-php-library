@@ -60,18 +60,10 @@ repository:
    repository.
  * Install [giza](https://pypi.python.org/pypi/giza/), as noted in the tools
    README.
- * Comment out the following `assets` entry in `config/build_conf.yaml`:
-   ```
-   - branch: master
-      path: build/php-library # this is where we'll put the source docs (from the driver repo)
-      repository: https://github.com/mongodb/mongo-php-library.git
-   ```
-
- * Create a symlink so that `build/php-library` points to your working copy of
-   the [mongodb/mongo-php-library](https://github.com/mongodb/mongo-php-library)
-   repository.
- * Build the documentation with `giza make html`. You can suppress informational
-   log messages via the `--level warning` option.
+ * Sync your working copy of the documentation to the `source/` directory with
+   `rsync -a --delete /path/to/mongo-php-library/docs/ source/`.
+ * Build the documentation with `giza make publish`. You can suppress
+   informational log messages with the `--level warning` option.
  * Generated documentation may be found in the `build/master/html` directory.
 
 ## Releasing

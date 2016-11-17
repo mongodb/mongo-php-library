@@ -39,6 +39,7 @@ the Bucket inherits its options from that object.
 
 .. todo: add an example
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Database::selectGridFSBucket()`
+- :phpmethod:`MongoDB\\Database::selectGridFSBucket()`

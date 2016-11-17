@@ -29,9 +29,15 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-withOptions-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\Collection` object.
+A :phpclass:`MongoDB\\Collection` object.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
 
 Example
 -------
@@ -49,6 +55,7 @@ preference:
        'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),
    ]);
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::__construct()`
+- :phpmethod:`MongoDB\\Collection::__construct()`

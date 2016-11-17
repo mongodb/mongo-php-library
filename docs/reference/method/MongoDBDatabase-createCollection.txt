@@ -25,7 +25,7 @@ Definition
    collection in a command, such as when inserting a document into a new
    collection. You may also explicitly create a collection with specific options
    using the :phpmethod:`MongoDB\\Database::createCollection()` method, or using
-   :manual:`db.createCollection() </reference/method/db.createCollection/>` in
+   :manual:`db.createCollection() </reference/method/db.createCollection>` in
    the :program:`mongo` shell.
 
    Explicitly creating collections enables you to create
@@ -47,10 +47,18 @@ Definition
    :manual:`create </reference/command/create>` command reference in the MongoDB
    manual for compatibility considerations.
 
-   :returns:
+Return Values
+-------------
 
-      An array or object with the result document of the :manual:`create
-      </reference/command/create>` command.
+An array or object with the result document of the :manual:`create
+</reference/command/create>` command.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
 
 Example
 -------
@@ -83,8 +91,9 @@ The output would then resemble::
      }
    }
 
-.. seealso::
+See Also
+--------
 
-   - :manual:`create </reference/command/create>` command reference in the MongoDB
-     manual
-   - :manual:`db.createCollection() </reference/method/db.createCollection/>`
+- :manual:`create </reference/command/create>` command reference in the MongoDB
+  manual
+- :manual:`db.createCollection() </reference/method/db.createCollection>`

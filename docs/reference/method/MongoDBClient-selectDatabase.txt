@@ -29,9 +29,15 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBClient-method-selectDatabase-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\Database` object.
+A :phpclass:`MongoDB\\Database` object.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
 
 Behavior
 --------
@@ -69,7 +75,8 @@ preference:
        ]
    );
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Client::__get()`
-   - :phpmethod:`MongoDB\\Database::__construct()`
+- :phpmethod:`MongoDB\\Client::__get()`
+- :phpmethod:`MongoDB\\Database::__construct()`

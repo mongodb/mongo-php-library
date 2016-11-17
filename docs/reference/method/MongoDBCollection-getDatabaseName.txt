@@ -21,9 +21,10 @@ Definition
 
       function getDatabaseName(): string
 
-   :returns:
+Return Values
+-------------
 
-      The name of the database containing this collection as a string.
+The name of the database containing this collection as a string.
 
 Example
 -------
@@ -43,8 +44,9 @@ The output would then resemble::
 
    demo
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::getCollectionName()`
-   - :phpmethod:`MongoDB\\Collection::getNamespace()`
+- :phpmethod:`MongoDB\\Collection::getCollectionName()`
+- :phpmethod:`MongoDB\\Collection::getNamespace()`
 

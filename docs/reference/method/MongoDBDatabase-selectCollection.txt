@@ -29,9 +29,15 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBDatabase-method-selectCollection-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\Collection` object.
+A :phpclass:`MongoDB\\Collection` object.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
 
 Behavior
 --------
@@ -69,8 +75,9 @@ database with a custom read preference:
        ]
    );
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Database::__get()`
-   - :phpmethod:`MongoDB\\Client::selectCollection()`
-   - :phpmethod:`MongoDB\\Collection::__construct()`
+- :phpmethod:`MongoDB\\Database::__get()`
+- :phpmethod:`MongoDB\\Client::selectCollection()`
+- :phpmethod:`MongoDB\\Collection::__construct()`

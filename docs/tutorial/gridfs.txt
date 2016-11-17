@@ -10,7 +10,7 @@ GridFS
    :depth: 1
    :class: singlecol
 
-:manual:`GridFS </core/gridfs/>` is a specification for storing and retrieving
+:manual:`GridFS </core/gridfs>` is a specification for storing and retrieving
 files in MongoDB. GridFS uses two collections to store files. One collection
 stores the file chunks (e.g. ``fs.chunks``), and the other stores file metadata
 (e.g. ``fs.files``). The :phpclass:`MongoDB\\GridFS\\Bucket` class provides an

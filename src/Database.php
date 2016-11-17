@@ -8,7 +8,9 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 use MongoDB\GridFS\Bucket;
 use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\CreateCollection;
@@ -58,7 +60,7 @@ class Database
      * @param Manager $manager      Manager instance from the driver
      * @param string  $databaseName Database name
      * @param array   $options      Database options
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct(Manager $manager, $databaseName, array $options = [])
     {
@@ -142,7 +144,8 @@ class Database
      * @param array|object $command Command document
      * @param array        $options Options for command execution
      * @return Cursor
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function command($command, array $options = [])
     {
@@ -167,6 +170,9 @@ class Database
      * @param string $collectionName
      * @param array  $options
      * @return array|object Command result document
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function createCollection($collectionName, array $options = [])
     {
@@ -191,6 +197,9 @@ class Database
      * @see DropDatabase::__construct() for supported options
      * @param array $options Additional options
      * @return array|object Command result document
+     * @throws UnsupportedException if options are unsupported on the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function drop(array $options = [])
     {
@@ -216,6 +225,9 @@ class Database
      * @param string $collectionName Collection name
      * @param array  $options        Additional options
      * @return array|object Command result document
+     * @throws UnsupportedException if options are unsupported on the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function dropCollection($collectionName, array $options = [])
     {
@@ -260,6 +272,8 @@ class Database
      * @see ListCollections::__construct() for supported options
      * @param array $options
      * @return CollectionInfoIterator
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function listCollections(array $options = [])
     {
@@ -276,6 +290,7 @@ class Database
      * @param string $collectionName Name of the collection to select
      * @param array  $options        Collection constructor options
      * @return Collection
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function selectCollection($collectionName, array $options = [])
     {
@@ -295,6 +310,7 @@ class Database
      * @see Bucket::__construct() for supported options
      * @param array $options Bucket constructor options
      * @return Bucket
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function selectGridFSBucket(array $options = [])
     {
@@ -313,6 +329,7 @@ class Database
      * @see Database::__construct() for supported options
      * @param array $options Database constructor options
      * @return Database
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function withOptions(array $options = [])
     {

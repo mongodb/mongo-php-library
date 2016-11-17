@@ -31,12 +31,20 @@ Definition
 
    .. include:: /includes/extracts/bson-deserialization-findOneAndReplace.rst
 
-   :returns:
+Return Values
+-------------
 
-      An object for either the original or the replaced document, depending on
-      the specified value of the ``returnDocument`` option. By default, the
-      original document is returned. If no document matched the query, ``null``
-      is returned.
+An object for either the original or the replaced document, depending on the
+specified value of the ``returnDocument`` option. By default, the original
+document is returned. If no document matched the query, ``null`` is returned.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unexpectedvalueexception.rst
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
 
 Examples
 --------
@@ -124,9 +132,10 @@ The output would then resemble::
      string(9) "999999999"
    }
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::findOneAndDelete()`
-   - :phpmethod:`MongoDB\\Collection::findOneAndUpdate()`
-   - :manual:`findAndModify </reference/command/findAndModify>` command
-     reference in the MongoDB manual
+- :phpmethod:`MongoDB\\Collection::findOneAndDelete()`
+- :phpmethod:`MongoDB\\Collection::findOneAndUpdate()`
+- :manual:`findAndModify </reference/command/findAndModify>` command reference
+  in the MongoDB manual

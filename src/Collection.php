@@ -7,7 +7,10 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnexpectedValueException;
+use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\BulkWrite;
@@ -74,7 +77,7 @@ class Collection
      * @param string  $databaseName   Database name
      * @param string  $collectionName Collection name
      * @param array   $options        Collection options
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct(Manager $manager, $databaseName, $collectionName, array $options = [])
     {
@@ -157,6 +160,10 @@ class Collection
      * @param array $pipeline List of pipeline operations
      * @param array $options  Command options
      * @return Traversable
+     * @throws UnexpectedValueException if the command response was malformed
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function aggregate(array $pipeline, array $options = [])
     {
@@ -199,6 +206,9 @@ class Collection
      * @param array[] $operations List of write operations
      * @param array   $options    Command options
      * @return BulkWriteResult
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function bulkWrite(array $operations, array $options = [])
     {
@@ -219,6 +229,10 @@ class Collection
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Command options
      * @return integer
+     * @throws UnexpectedValueException if the command response was malformed
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function count($filter = [], array $options = [])
     {
@@ -245,6 +259,9 @@ class Collection
      *                              which denote order or an index type
      * @param array        $options Index options
      * @return string The name of the created index
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function createIndex($key, array $options = [])
     {
@@ -277,7 +294,9 @@ class Collection
      * @param array[] $indexes List of index specifications
      * @param array   $options Command options
      * @return string[] The names of the created indexes
-     * @throws InvalidArgumentException if an index specification is invalid
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function createIndexes(array $indexes, array $options = [])
     {
@@ -300,6 +319,9 @@ class Collection
      * @param array|object $filter  Query by which to delete documents
      * @param array        $options Command options
      * @return DeleteResult
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function deleteMany($filter, array $options = [])
     {
@@ -321,6 +343,9 @@ class Collection
      * @param array|object $filter  Query by which to delete documents
      * @param array        $options Command options
      * @return DeleteResult
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function deleteOne($filter, array $options = [])
     {
@@ -342,6 +367,10 @@ class Collection
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Command options
      * @return mixed[]
+     * @throws UnexpectedValueException if the command response was malformed
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function distinct($fieldName, $filter = [], array $options = [])
     {
@@ -365,6 +394,9 @@ class Collection
      * @see DropCollection::__construct() for supported options
      * @param array $options Additional options
      * @return array|object Command result document
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function drop(array $options = [])
     {
@@ -390,7 +422,9 @@ class Collection
      * @param string $indexName Index name
      * @param array  $options   Additional options
      * @return array|object Command result document
-     * @throws InvalidArgumentException if $indexName is an empty string or "*"
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function dropIndex($indexName, array $options = [])
     {
@@ -421,6 +455,9 @@ class Collection
      * @see DropIndexes::__construct() for supported options
      * @param array $options Additional options
      * @return array|object Command result document
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function dropIndexes(array $options = [])
     {
@@ -447,6 +484,9 @@ class Collection
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
      * @return Cursor
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function find($filter = [], array $options = [])
     {
@@ -476,6 +516,9 @@ class Collection
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
      * @return array|object|null
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function findOne($filter = [], array $options = [])
     {
@@ -510,6 +553,10 @@ class Collection
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Command options
      * @return object|null
+     * @throws UnexpectedValueException if the command response was malformed
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function findOneAndDelete($filter, array $options = [])
     {
@@ -542,6 +589,10 @@ class Collection
      * @param array|object $replacement Replacement document
      * @param array        $options     Command options
      * @return object|null
+     * @throws UnexpectedValueException if the command response was malformed
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function findOneAndReplace($filter, $replacement, array $options = [])
     {
@@ -574,6 +625,10 @@ class Collection
      * @param array|object $update  Update to apply to the matched document
      * @param array        $options Command options
      * @return object|null
+     * @throws UnexpectedValueException if the command response was malformed
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function findOneAndUpdate($filter, $update, array $options = [])
     {
@@ -637,6 +692,8 @@ class Collection
      * @param array[]|object[] $documents The documents to insert
      * @param array            $options   Command options
      * @return InsertManyResult
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function insertMany(array $documents, array $options = [])
     {
@@ -658,6 +715,8 @@ class Collection
      * @param array|object $document The document to insert
      * @param array        $options  Command options
      * @return InsertOneResult
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function insertOne($document, array $options = [])
     {
@@ -676,6 +735,8 @@ class Collection
      *
      * @see ListIndexes::__construct() for supported options
      * @return IndexInfoIterator
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function listIndexes(array $options = [])
     {
@@ -694,6 +755,9 @@ class Collection
      * @param array|object $replacement Replacement document
      * @param array        $options     Command options
      * @return UpdateResult
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function replaceOne($filter, $replacement, array $options = [])
     {
@@ -716,6 +780,9 @@ class Collection
      * @param array|object $update  Update to apply to the matched documents
      * @param array        $options Command options
      * @return UpdateResult
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function updateMany($filter, $update, array $options = [])
     {
@@ -738,6 +805,9 @@ class Collection
      * @param array|object $update  Update to apply to the matched document
      * @param array        $options Command options
      * @return UpdateResult
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function updateOne($filter, $update, array $options = [])
     {
@@ -757,6 +827,7 @@ class Collection
      * @see Collection::__construct() for supported options
      * @param array $options Collection constructor options
      * @return Collection
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function withOptions(array $options = [])
     {

@@ -4,7 +4,11 @@ namespace MongoDB;
 
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
+use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnexpectedValueException;
+use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\DatabaseInfoIterator;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListDatabases;
@@ -41,7 +45,9 @@ class Client
      * @param string $uri           MongoDB connection string
      * @param array  $uriOptions    Additional connection string options
      * @param array  $driverOptions Driver-specific options
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverInvalidArgumentException for parameter/option parsing errors in the driver
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function __construct($uri = 'mongodb://127.0.0.1/', array $uriOptions = [], array $driverOptions = [])
     {
@@ -108,6 +114,9 @@ class Client
      * @param string $databaseName Database name
      * @param array  $options      Additional options
      * @return array|object Command result document
+     * @throws UnsupportedException if options are unsupported on the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function dropDatabase($databaseName, array $options = [])
     {
@@ -141,6 +150,9 @@ class Client
      *
      * @see ListDatabases::__construct() for supported options
      * @return DatabaseInfoIterator
+     * @throws UnexpectedValueException if the command response was malformed
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function listDatabases(array $options = [])
     {
@@ -158,6 +170,7 @@ class Client
      * @param string $collectionName Name of the collection to select
      * @param array  $options        Collection constructor options
      * @return Collection
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function selectCollection($databaseName, $collectionName, array $options = [])
     {
@@ -173,6 +186,7 @@ class Client
      * @param string $databaseName Name of the database to select
      * @param array  $options      Database constructor options
      * @return Database
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function selectDatabase($databaseName, array $options = [])
     {

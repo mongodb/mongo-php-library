@@ -6,6 +6,7 @@ use MongoDB\DeleteResult;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
@@ -47,7 +48,7 @@ class Delete implements Executable
      *                                     delete. Must be 0 or 1, for all or a
      *                                     single document, respectively.
      * @param array        $options        Command options
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($databaseName, $collectionName, $filter, $limit, array $options = [])
     {
@@ -80,6 +81,7 @@ class Delete implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return DeleteResult
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {

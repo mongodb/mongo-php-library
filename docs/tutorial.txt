@@ -9,3 +9,4 @@ Tutorials
    /tutorial/commands
    /tutorial/gridfs
    /tutorial/indexes
+   /tutorial/example-data

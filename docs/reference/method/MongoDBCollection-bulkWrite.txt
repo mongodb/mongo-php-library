@@ -29,21 +29,29 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-bulkWrite-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\BulkWriteResult` object, which encapsulates a
-      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
-      object.
+A :phpclass:`MongoDB\\BulkWriteResult` object, which encapsulates a
+:php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>` object.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
 
 .. todo: add output and examples
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::deleteMany()`
-   - :phpmethod:`MongoDB\\Collection::deleteOne()`
-   - :phpmethod:`MongoDB\\Collection::insertMany()`
-   - :phpmethod:`MongoDB\\Collection::insertOne()`
-   - :phpmethod:`MongoDB\\Collection::replaceOne()`
-   - :phpmethod:`MongoDB\\Collection::updateMany()`
-   - :phpmethod:`MongoDB\\Collection::updateOne()`
-   - :doc:`/tutorial/crud`
+- :phpmethod:`MongoDB\\Collection::deleteMany()`
+- :phpmethod:`MongoDB\\Collection::deleteOne()`
+- :phpmethod:`MongoDB\\Collection::insertMany()`
+- :phpmethod:`MongoDB\\Collection::insertOne()`
+- :phpmethod:`MongoDB\\Collection::replaceOne()`
+- :phpmethod:`MongoDB\\Collection::updateMany()`
+- :phpmethod:`MongoDB\\Collection::updateOne()`
+- :doc:`/tutorial/crud`

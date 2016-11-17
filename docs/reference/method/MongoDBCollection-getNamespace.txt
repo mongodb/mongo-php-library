@@ -22,9 +22,10 @@ Definition
 
       function getNamespace(): string
 
-   :returns:
+Return Values
+-------------
 
-      The namespace of this collection as a string.
+The namespace of this collection as a string.
 
 Example
 -------
@@ -44,7 +45,8 @@ The output would then resemble::
 
    demo.zips
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::getCollectionName()`
-   - :phpmethod:`MongoDB\\Collection::getDatabaseName()`
+- :phpmethod:`MongoDB\\Collection::getCollectionName()`
+- :phpmethod:`MongoDB\\Collection::getDatabaseName()`

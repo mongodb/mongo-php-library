@@ -29,15 +29,17 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBGridFSBucket-method-uploadFromStream-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      The ``_id`` field of the metadata document associated with the newly
-      created GridFS file. If the ``_id`` option is not specified, a new
-      :php:`MongoDB\\BSON\\ObjectID <class.mongodb-bson-objectid>` object will
-      be used by default.
+The ``_id`` field of the metadata document associated with the newly created
+GridFS file. If the ``_id`` option is not specified, a new
+:php:`MongoDB\\BSON\\ObjectID <class.mongodb-bson-objectid>` object will be used
+by default.
 
 .. todo: add examples
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\GridFS\\Bucket::openUploadStream()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::openUploadStream()`

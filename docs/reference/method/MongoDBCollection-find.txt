@@ -29,9 +29,17 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-find-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` object.
+A :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` object.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
 
 Examples
 --------
@@ -147,8 +155,9 @@ The output would then resemble::
      }
    }
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::findOne()`
-   - :manual:`find </reference/command/find>` command reference in the MongoDB
-     manual
+- :phpmethod:`MongoDB\\Collection::findOne()`
+- :manual:`find </reference/command/find>` command reference in the MongoDB
+  manual

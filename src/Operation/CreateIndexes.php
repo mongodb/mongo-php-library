@@ -6,6 +6,7 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\IndexInput;
@@ -44,7 +45,7 @@ class CreateIndexes implements Executable
      * @param string  $collectionName Collection name
      * @param array[] $indexes        List of index specifications
      * @param array   $options        Command options
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($databaseName, $collectionName, array $indexes, array $options = [])
     {
@@ -95,6 +96,7 @@ class CreateIndexes implements Executable
      * @param Server $server
      * @return string[] The names of the created indexes
      * @throws UnsupportedException if collation or write concern is used and unsupported
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
@@ -120,6 +122,7 @@ class CreateIndexes implements Executable
      * command.
      *
      * @param Server $server
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     private function executeCommand(Server $server)
     {
@@ -140,6 +143,7 @@ class CreateIndexes implements Executable
      * "system.indexes" collection (MongoDB <2.6).
      *
      * @param Server $server
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     private function executeLegacy(Server $server)
     {

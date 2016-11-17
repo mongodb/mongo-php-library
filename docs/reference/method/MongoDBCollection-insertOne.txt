@@ -29,11 +29,17 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-insertOne-option.rst
 
-   :returns:
+Return Values
+-------------
 
-      A :phpclass:`MongoDB\\InsertOneResult` object, which encapsulates a
-      :php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>`
-      object.
+A :phpclass:`MongoDB\\InsertOneResult` object, which encapsulates a
+:php:`MongoDB\\Driver\\WriteResult <class.mongodb-driver-writeresult>` object.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
 
 Example
 -------
@@ -69,10 +75,11 @@ The output would then resemble::
 
 .. end-crud-include
 
-.. seealso::
+See Also
+--------
 
-   - :phpmethod:`MongoDB\\Collection::insertMany()`
-   - :phpmethod:`MongoDB\\Collection::bulkWrite()`
-   - :doc:`/tutorial/crud`
-   - :manual:`insert </reference/command/insert>` command reference in the
-     MongoDB manual
+- :phpmethod:`MongoDB\\Collection::insertMany()`
+- :phpmethod:`MongoDB\\Collection::bulkWrite()`
+- :doc:`/tutorial/crud`
+- :manual:`insert </reference/command/insert>` command reference in the MongoDB
+  manual

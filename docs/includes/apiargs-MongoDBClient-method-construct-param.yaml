@@ -3,8 +3,8 @@ name: $uri
 type: string
 description: |
   The URI of the standalone, replica set, or sharded cluster to which to
-  connect. Refer to the :manual:`MongoDB connection string reference
-  </reference/connection-string>` for formatting.
+  connect. Refer to :manual:`Connection String URI Format
+  </reference/connection-string>` in the MongoDB manual for more information.
 
   Defaults to ``"mongodb://127.0.0.1:27017"`` if unspecified.
 

@@ -126,3 +126,5 @@ See Also
 
 - :php:`MongoDB\\Driver\\Manager::__construct()
   <mongodb-driver-manager.construct>`
+- :manual:`Connection String URI Format </reference/connection-string>` in the
+  MongoDB manual

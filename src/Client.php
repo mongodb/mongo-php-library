@@ -25,6 +25,7 @@ class Client
     private $manager;
     private $uri;
     private $typeMap;
+    private $writeConcern;
 
     /**
      * Constructs a new Client instance.
@@ -63,6 +64,7 @@ class Client
         unset($driverOptions['typeMap']);
 
         $this->manager = new Manager($uri, $uriOptions, $driverOptions);
+        $this->writeConcern = $this->manager->getWriteConcern();
     }
 
     /**
@@ -77,6 +79,7 @@ class Client
             'manager' => $this->manager,
             'uri' => $this->uri,
             'typeMap' => $this->typeMap,
+            'writeConcern' => $this->writeConcern,
         ];
     }
 

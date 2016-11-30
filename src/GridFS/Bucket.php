@@ -204,7 +204,7 @@ class Bucket
      * @param array        $options Additional options
      * @return Cursor
      */
-    public function find($filter, array $options = [])
+    public function find($filter = [], array $options = [])
     {
         return $this->collectionWrapper->findFiles($filter, $options);
     }

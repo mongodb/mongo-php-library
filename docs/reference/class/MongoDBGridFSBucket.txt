@@ -40,6 +40,7 @@ Methods
    /reference/method/MongoDBGridFSBucket-downloadToStreamByName
    /reference/method/MongoDBGridFSBucket-drop
    /reference/method/MongoDBGridFSBucket-find
+   /reference/method/MongoDBGridFSBucket-findOne
    /reference/method/MongoDBGridFSBucket-getBucketName
    /reference/method/MongoDBGridFSBucket-getDatabaseName
    /reference/method/MongoDBGridFSBucket-getFileDocumentForStream

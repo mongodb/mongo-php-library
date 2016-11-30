@@ -224,6 +224,20 @@ class Bucket
     }
 
     /**
+     * Finds a single document from the GridFS bucket's files collection
+     * matching the query.
+     *
+     * @see FindOne::__construct() for supported options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array        $options Additional options
+     * @return array|object|null
+     */
+    public function findOne($filter = [], array $options = [])
+    {
+        return $this->collectionWrapper->findOneFile($filter, $options);
+    }
+
+    /**
      * Return the bucket name.
      *
      * @return string

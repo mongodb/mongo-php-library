@@ -141,6 +141,18 @@ class CollectionWrapper
     }
 
     /**
+     * Finds a single document from the GridFS bucket's files collection.
+     *
+     * @param array|object $filter  Query by which to filter documents
+     * @param array        $options Additional options
+     * @return array|object|null
+     */
+    public function findOneFile($filter, array $options = [])
+    {
+        return $this->filesCollection->findOne($filter, $options);
+    }
+
+    /**
      * Return the bucket name.
      *
      * @return string

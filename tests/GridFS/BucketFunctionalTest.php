@@ -328,6 +328,28 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertInstanceOf('MongoDB\Model\BSONDocument', $fileDocument);
     }
 
+    public function testFindOne()
+    {
+        $this->bucket->uploadFromStream('a', $this->createStream('foo'));
+        $this->bucket->uploadFromStream('b', $this->createStream('foobar'));
+        $this->bucket->uploadFromStream('c', $this->createStream('foobarbaz'));
+
+        $fileDocument = $this->bucket->findOne(
+            ['length' => ['$lte' => 6]],
+            [
+                'projection' => [
+                    'filename' => 1,
+                    'length' => 1,
+                    '_id' => 0,
+                ],
+                'sort' => ['length' => -1],
+            ]
+        );
+
+        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $fileDocument);
+        $this->assertSameDocument(['filename' => 'b', 'length' => 6], $fileDocument);
+    }
+
     public function testGetBucketNameWithCustomValue()
     {
         $bucket = new Bucket($this->manager, $this->getDatabaseName(), ['bucketName' => 'custom_fs']);

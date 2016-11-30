@@ -41,6 +41,10 @@ function extract_id_from_inserted_document($document)
  */
 function generate_index_name($document)
 {
+    if ($document instanceof Serializable) {
+        $document = $document->bsonSerialize();
+    }
+
     if (is_object($document)) {
         $document = get_object_vars($document);
     }
@@ -70,6 +74,10 @@ function generate_index_name($document)
  */
 function is_first_key_operator($document)
 {
+    if ($document instanceof Serializable) {
+        $document = $document->bsonSerialize();
+    }
+
     if (is_object($document)) {
         $document = get_object_vars($document);
     }

@@ -32,9 +32,9 @@ Definition
 Return Values
 -------------
 
-An array or object for the :term:`first document <natural order>` document that
-matched the query, or ``null`` if no document matched the query. The return type
-will depend on the ``typeMap`` option.
+An array or object for the :term:`first document <natural order>` that matched
+the query, or ``null`` if no document matched the query. The return type will
+depend on the ``typeMap`` option.
 
 Errors/Exceptions
 -----------------

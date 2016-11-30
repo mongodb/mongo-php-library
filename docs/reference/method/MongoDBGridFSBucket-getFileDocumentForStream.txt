@@ -19,7 +19,7 @@ Definition
 
    .. code-block:: php
 
-      function getFileDocumentForStream($stream): object
+      function getFileDocumentForStream($stream): array|object
 
    This method has the following parameters:
 
@@ -28,7 +28,8 @@ Definition
 Return Values
 -------------
 
-The metadata document associated with the GridFS stream.
+The metadata document associated with the GridFS stream. The return type will
+depend on the bucket's ``typeMap`` option.
 
 .. todo: add examples
 

@@ -317,6 +317,7 @@ class Database
         $options += [
             'readConcern' => $this->readConcern,
             'readPreference' => $this->readPreference,
+            'typeMap' => $this->typeMap,
             'writeConcern' => $this->writeConcern,
         ];
 

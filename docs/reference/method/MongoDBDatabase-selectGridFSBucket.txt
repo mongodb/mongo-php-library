@@ -42,8 +42,8 @@ Errors/Exceptions
 Behavior
 --------
 
-The selected bucket inherits options such as read preference and write concern
-from the :phpclass:`Database <MongoDB\\Database>` object. Options may be
+The selected bucket inherits options such as read preference and type
+mapping from the :phpclass:`Database <MongoDB\\Database>` object. Options may be
 overridden via the ``$options`` parameter.
 
 Example

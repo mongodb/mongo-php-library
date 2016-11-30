@@ -68,8 +68,8 @@ class CollectionWrapper
      */
     public function dropCollections()
     {
-        $this->filesCollection->drop();
-        $this->chunksCollection->drop();
+        $this->filesCollection->drop(['typeMap' => []]);
+        $this->chunksCollection->drop(['typeMap' => []]);
     }
 
     /**
@@ -284,6 +284,7 @@ class CollectionWrapper
         return null === $this->filesCollection->findOne([], [
             'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
             'projection' => ['_id' => 1],
+            'typeMap' => [],
         ]);
     }
 }

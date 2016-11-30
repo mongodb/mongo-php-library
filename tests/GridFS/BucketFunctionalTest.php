@@ -57,6 +57,10 @@ class BucketFunctionalTest extends FunctionalTestCase
             $options[][] = ['readPreference' => $value];
         }
 
+        foreach ($this->getInvalidArrayValues() as $value) {
+            $options[][] = ['typeMap' => $value];
+        }
+
         foreach ($this->getInvalidWriteConcernValues() as $value) {
             $options[][] = ['writeConcern' => $value];
         }
@@ -314,6 +318,16 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $cursor);
     }
 
+    public function testFindUsesTypeMap()
+    {
+        $this->bucket->uploadFromStream('a', $this->createStream('foo'));
+
+        $cursor = $this->bucket->find();
+        $fileDocument = current($cursor->toArray());
+
+        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $fileDocument);
+    }
+
     public function testGetBucketNameWithCustomValue()
     {
         $bucket = new Bucket($this->manager, $this->getDatabaseName(), ['bucketName' => 'custom_fs']);
@@ -329,6 +343,18 @@ class BucketFunctionalTest extends FunctionalTestCase
     public function testGetDatabaseName()
     {
         $this->assertEquals($this->getDatabaseName(), $this->bucket->getDatabaseName());
+    }
+
+    public function testGetFileDocumentForStreamUsesTypeMap()
+    {
+        $metadata = ['foo' => 'bar'];
+        $stream = $this->bucket->openUploadStream('filename', ['_id' => 1, 'metadata' => $metadata]);
+
+        $fileDocument = $this->bucket->getFileDocumentForStream($stream);
+
+        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $fileDocument);
+        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $fileDocument['metadata']);
+        $this->assertSame(['foo' => 'bar'], $fileDocument['metadata']->getArrayCopy());
     }
 
     public function testGetFileDocumentForStreamWithReadableStream()
@@ -364,6 +390,16 @@ class BucketFunctionalTest extends FunctionalTestCase
     public function testGetFileDocumentForStreamShouldRequireStreamResource($stream)
     {
         $this->bucket->getFileDocumentForStream($stream);
+    }
+
+    public function testGetFileIdForStreamUsesTypeMap()
+    {
+        $stream = $this->bucket->openUploadStream('filename', ['_id' => ['x' => 1]]);
+
+        $id = $this->bucket->getFileIdForStream($stream);
+
+        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $id);
+        $this->assertSame(['x' => 1], $id->getArrayCopy());
     }
 
     public function testGetFileIdForStreamWithReadableStream()

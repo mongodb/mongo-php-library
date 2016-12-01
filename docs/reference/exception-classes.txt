@@ -89,7 +89,7 @@ MongoDB\\Exception\\UnsupportedException
 ----
 
 MongoDB\\GridFS\\Exception\\CorruptFileException
-----------------------------------------
+------------------------------------------------
 
 .. phpclass:: MongoDB\\GridFS\\Exception\\CorruptFileException
 
@@ -107,7 +107,7 @@ MongoDB\\GridFS\\Exception\\CorruptFileException
 ----
 
 MongoDB\\GridFS\\Exception\\FileNotFoundException
-----------------------------------------
+-------------------------------------------------
 
 .. phpclass:: MongoDB\\GridFS\\Exception\\FileNotFoundException
 

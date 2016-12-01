@@ -15,6 +15,16 @@ class UnsupportedException extends RuntimeException implements Exception
     }
 
     /**
+     * Thrown when a command's readConcern option is not supported by a server.
+     *
+     * @return self
+     */
+    public static function readConcernNotSupported()
+    {
+        return new static('Read concern is not supported by the server executing this command');
+    }
+
+    /**
      * Thrown when a command's writeConcern option is not supported by a server.
      *
      * @return self

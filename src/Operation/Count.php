@@ -48,8 +48,8 @@ class Count implements Executable
      *
      *  * readConcern (MongoDB\Driver\ReadConcern): Read concern.
      *
-     *    For servers < 3.2, this option is ignored as read concern is not
-     *    available.
+     *    This is not supported for server versions < 3.2 and will result in an
+     *    exception at execution time if used.
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
@@ -115,13 +115,17 @@ class Count implements Executable
      * @param Server $server
      * @return integer
      * @throws UnexpectedValueException if the command response was malformed
-     * @throws UnsupportedException if collation is used and unsupported
+     * @throws UnsupportedException if collation or read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
         if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
             throw UnsupportedException::collationNotSupported();
+        }
+
+        if (isset($this->options['readConcern']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+            throw UnsupportedException::readConcernNotSupported();
         }
 
         $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
@@ -161,7 +165,7 @@ class Count implements Executable
             }
         }
 
-        if (isset($this->options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if (isset($this->options['readConcern'])) {
             $cmd['readConcern'] = \MongoDB\read_concern_as_document($this->options['readConcern']);
         }
 

@@ -26,6 +26,7 @@ class Find implements Executable
     const TAILABLE_AWAIT = 3;
 
     private static $wireVersionForCollation = 5;
+    private static $wireVersionForReadConcern = 4;
 
     private $databaseName;
     private $collectionName;

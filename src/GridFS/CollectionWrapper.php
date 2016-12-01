@@ -68,8 +68,8 @@ class CollectionWrapper
      */
     public function dropCollections()
     {
-        $this->filesCollection->drop();
-        $this->chunksCollection->drop();
+        $this->filesCollection->drop(['typeMap' => []]);
+        $this->chunksCollection->drop(['typeMap' => []]);
     }
 
     /**
@@ -138,6 +138,18 @@ class CollectionWrapper
     public function findFiles($filter, array $options = [])
     {
         return $this->filesCollection->find($filter, $options);
+    }
+
+    /**
+     * Finds a single document from the GridFS bucket's files collection.
+     *
+     * @param array|object $filter  Query by which to filter documents
+     * @param array        $options Additional options
+     * @return array|object|null
+     */
+    public function findOneFile($filter, array $options = [])
+    {
+        return $this->filesCollection->findOne($filter, $options);
     }
 
     /**
@@ -284,6 +296,7 @@ class CollectionWrapper
         return null === $this->filesCollection->findOne([], [
             'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
             'projection' => ['_id' => 1],
+            'typeMap' => [],
         ]);
     }
 }

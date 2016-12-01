@@ -57,6 +57,10 @@ class BucketFunctionalTest extends FunctionalTestCase
             $options[][] = ['readPreference' => $value];
         }
 
+        foreach ($this->getInvalidArrayValues() as $value) {
+            $options[][] = ['typeMap' => $value];
+        }
+
         foreach ($this->getInvalidWriteConcernValues() as $value) {
             $options[][] = ['writeConcern' => $value];
         }
@@ -314,6 +318,38 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $cursor);
     }
 
+    public function testFindUsesTypeMap()
+    {
+        $this->bucket->uploadFromStream('a', $this->createStream('foo'));
+
+        $cursor = $this->bucket->find();
+        $fileDocument = current($cursor->toArray());
+
+        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $fileDocument);
+    }
+
+    public function testFindOne()
+    {
+        $this->bucket->uploadFromStream('a', $this->createStream('foo'));
+        $this->bucket->uploadFromStream('b', $this->createStream('foobar'));
+        $this->bucket->uploadFromStream('c', $this->createStream('foobarbaz'));
+
+        $fileDocument = $this->bucket->findOne(
+            ['length' => ['$lte' => 6]],
+            [
+                'projection' => [
+                    'filename' => 1,
+                    'length' => 1,
+                    '_id' => 0,
+                ],
+                'sort' => ['length' => -1],
+            ]
+        );
+
+        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $fileDocument);
+        $this->assertSameDocument(['filename' => 'b', 'length' => 6], $fileDocument);
+    }
+
     public function testGetBucketNameWithCustomValue()
     {
         $bucket = new Bucket($this->manager, $this->getDatabaseName(), ['bucketName' => 'custom_fs']);
@@ -329,6 +365,18 @@ class BucketFunctionalTest extends FunctionalTestCase
     public function testGetDatabaseName()
     {
         $this->assertEquals($this->getDatabaseName(), $this->bucket->getDatabaseName());
+    }
+
+    public function testGetFileDocumentForStreamUsesTypeMap()
+    {
+        $metadata = ['foo' => 'bar'];
+        $stream = $this->bucket->openUploadStream('filename', ['_id' => 1, 'metadata' => $metadata]);
+
+        $fileDocument = $this->bucket->getFileDocumentForStream($stream);
+
+        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $fileDocument);
+        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $fileDocument['metadata']);
+        $this->assertSame(['foo' => 'bar'], $fileDocument['metadata']->getArrayCopy());
     }
 
     public function testGetFileDocumentForStreamWithReadableStream()
@@ -364,6 +412,16 @@ class BucketFunctionalTest extends FunctionalTestCase
     public function testGetFileDocumentForStreamShouldRequireStreamResource($stream)
     {
         $this->bucket->getFileDocumentForStream($stream);
+    }
+
+    public function testGetFileIdForStreamUsesTypeMap()
+    {
+        $stream = $this->bucket->openUploadStream('filename', ['_id' => ['x' => 1]]);
+
+        $id = $this->bucket->getFileIdForStream($stream);
+
+        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $id);
+        $this->assertSame(['x' => 1], $id->getArrayCopy());
     }
 
     public function testGetFileIdForStreamWithReadableStream()

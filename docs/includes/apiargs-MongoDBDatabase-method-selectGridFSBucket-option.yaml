@@ -33,6 +33,12 @@ replacement:
 ---
 source:
   file: apiargs-common-option.yaml
+  ref: typeMap
+replacement:
+  parent: "database"
+---
+source:
+  file: apiargs-common-option.yaml
   ref: writeConcern
 replacement:
   resource: "bucket"

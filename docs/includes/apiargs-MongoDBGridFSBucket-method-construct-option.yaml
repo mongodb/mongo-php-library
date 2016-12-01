@@ -32,6 +32,10 @@ replacement:
   parent: "database"
 ---
 source:
+  file: apiargs-MongoDBClient-method-construct-driverOptions.yaml
+  ref: typeMap
+---
+source:
   file: apiargs-common-option.yaml
   ref: writeConcern
 replacement:

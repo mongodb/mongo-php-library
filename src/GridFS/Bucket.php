@@ -7,7 +7,9 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\GridFS\Exception\CorruptFileException;
 use MongoDB\GridFS\Exception\FileNotFoundException;
 use MongoDB\Operation\Find;
@@ -62,7 +64,7 @@ class Bucket
      * @param Manager $manager      Manager instance from the driver
      * @param string  $databaseName Database name
      * @param array   $options      Bucket options
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct(Manager $manager, $databaseName, array $options = [])
     {
@@ -137,7 +139,8 @@ class Bucket
      * attempt to delete orphaned chunks.
      *
      * @param mixed $id File ID
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException if no file could be selected
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function delete($id)
     {
@@ -154,8 +157,9 @@ class Bucket
      *
      * @param mixed    $id          File ID
      * @param resource $destination Writable Stream
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException if no file could be selected
      * @throws InvalidArgumentException if $destination is not a stream
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function downloadToStream($id, $destination)
     {
@@ -188,8 +192,9 @@ class Bucket
      * @param string   $filename    Filename
      * @param resource $destination Writable Stream
      * @param array    $options     Download options
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException if no file could be selected
      * @throws InvalidArgumentException if $destination is not a stream
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function downloadToStreamByName($filename, $destination, array $options = [])
     {
@@ -203,6 +208,8 @@ class Bucket
     /**
      * Drops the files and chunks collections associated with this GridFS
      * bucket.
+     *
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function drop()
     {
@@ -217,6 +224,9 @@ class Bucket
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
      * @return Cursor
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function find($filter = [], array $options = [])
     {
@@ -231,6 +241,9 @@ class Bucket
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
      * @return array|object|null
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function findOne($filter = [], array $options = [])
     {
@@ -262,7 +275,8 @@ class Bucket
      *
      * @param resource $stream GridFS stream
      * @return array|object
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException if $stream is not a GridFS stream
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function getFileDocumentForStream($stream)
     {
@@ -277,8 +291,9 @@ class Bucket
      *
      * @param resource $stream GridFS stream
      * @return mixed
-     * @throws CorruptFileException
-     * @throws InvalidArgumentException
+     * @throws CorruptFileException if the file "_id" field does not exist
+     * @throws InvalidArgumentException if $stream is not a GridFS stream
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function getFileIdForStream($stream)
     {
@@ -302,7 +317,8 @@ class Bucket
      *
      * @param mixed $id File ID
      * @return resource
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException if no file could be selected
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function openDownloadStream($id)
     {
@@ -337,7 +353,8 @@ class Bucket
      * @param string $filename Filename
      * @param array  $options  Download options
      * @return resource
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException if no file could be selected
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function openDownloadStreamByName($filename, array $options = [])
     {
@@ -390,7 +407,8 @@ class Bucket
      *
      * @param mixed  $id          File ID
      * @param string $newFilename New filename
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException if no file could be selected
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function rename($id, $newFilename)
     {
@@ -431,7 +449,8 @@ class Bucket
      * @param resource $source   Readable stream
      * @param array    $options  Stream options
      * @return mixed ID of the newly created GridFS file
-     * @throws InvalidArgumentException if $source is not a stream
+     * @throws InvalidArgumentException if $source is not a GridFS stream
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function uploadFromStream($filename, $source, array $options = [])
     {

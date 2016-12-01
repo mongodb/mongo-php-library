@@ -31,6 +31,13 @@ Return Values
 The ``_id`` field of the metadata document associated with the GridFS stream.
 The return type will depend on the bucket's ``typeMap`` option.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-gridfs-corruptfileexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 .. todo: add examples
 
 See Also

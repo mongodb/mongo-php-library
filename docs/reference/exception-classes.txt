@@ -77,8 +77,7 @@ MongoDB\\Exception\\UnsupportedException
    unintended document being deleted.
 
    This class extends the library's :phpclass:`RuntimeException
-   <MongoDB\\Exception\\RuntimeException>` class and implements the
-   library's :phpclass:`Exception <MongoDB\\Exception\\Exception>` interface.
+   <MongoDB\\Exception\\RuntimeException>` class.
 
    .. note::
 
@@ -86,6 +85,37 @@ MongoDB\\Exception\\UnsupportedException
       <MongoDB\\Exception\\InvalidArgumentException>`, which may be thrown when
       an operation's parameters and options are parsed during construction, the
       selected server is not known until an operation is executed.
+
+----
+
+MongoDB\\GridFS\\Exception\\CorruptFileException
+----------------------------------------
+
+.. phpclass:: MongoDB\\GridFS\\Exception\\CorruptFileException
+
+   This exception is thrown if a GridFS file's metadata or chunk documents
+   contain unexpected or invalid data.
+
+   When selecting a GridFS file, this may be thrown if a metadata field has an
+   incorrect type or its value is out of range (e.g. negative ``length``). When
+   reading a GridFS file, this may be thrown if a chunk's index is out of
+   sequence or its binary data's length out of range.
+
+   This class extends the library's :phpclass:`RuntimeException
+   <MongoDB\\Exception\\RuntimeException>` class.
+
+----
+
+MongoDB\\GridFS\\Exception\\FileNotFoundException
+----------------------------------------
+
+.. phpclass:: MongoDB\\GridFS\\Exception\\FileNotFoundException
+
+   This exception is thrown if no GridFS file was found for the selection
+   criteria (e.g. ``id``, ``filename``).
+
+   This class extends the library's :phpclass:`RuntimeException
+   <MongoDB\\Exception\\RuntimeException>` class.
 
 ----
 

@@ -37,6 +37,12 @@ GridFS file. If the ``_id`` option is not specified, a new
 :php:`MongoDB\\BSON\\ObjectID <class.mongodb-bson-objectid>` object will be used
 by default.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 .. todo: add examples
 
 See Also

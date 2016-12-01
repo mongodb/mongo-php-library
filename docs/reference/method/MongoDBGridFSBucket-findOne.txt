@@ -37,6 +37,13 @@ An array or object for the :term:`first document <natural order>` that matched
 the query, or ``null`` if no document matched the query. The return type will
 depend on the ``typeMap`` option.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 .. todo: add examples
 
 See Also

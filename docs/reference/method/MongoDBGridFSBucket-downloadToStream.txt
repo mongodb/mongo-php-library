@@ -28,6 +28,13 @@ Definition
 
 .. todo: add examples
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-gridfs-filenotfoundexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 See Also
 --------
 

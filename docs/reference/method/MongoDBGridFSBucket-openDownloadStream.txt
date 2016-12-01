@@ -30,6 +30,12 @@ Return Values
 
 A readable stream resource.
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-gridfs-filenotfoundexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 .. todo: add examples
 
 See Also

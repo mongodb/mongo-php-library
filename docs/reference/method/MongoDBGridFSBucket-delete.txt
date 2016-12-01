@@ -25,6 +25,12 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBGridFSBucket-method-delete-param.rst
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-gridfs-filenotfoundexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 Behavior
 --------
 

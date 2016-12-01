@@ -21,4 +21,9 @@ Definition
 
       function drop(): void
 
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
 .. todo: add examples

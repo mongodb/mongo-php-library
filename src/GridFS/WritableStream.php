@@ -5,7 +5,6 @@ namespace MongoDB\GridFS;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\Driver\Exception\Exception as DriverException;
 use MongoDB\Exception\InvalidArgumentException;
 
 /**
@@ -225,17 +224,5 @@ class WritableStream
         $this->collectionWrapper->insertChunk($toUpload);
         $this->length += strlen($data);
         $this->chunkOffset++;
-    }
-
-    private function readChunk($source)
-    {
-        try {
-            $data = fread($source, $this->chunkSize);
-        } catch (DriverException $e) {
-            $this->abort();
-            throw $e;
-        }
-
-        return $data;
     }
 }

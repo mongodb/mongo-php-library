@@ -39,6 +39,6 @@ source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: writeConcern
 post: |
-  This is not supported for server versions prior to 3.2 and will be ignored if
-  used.
+  This is not supported for server versions prior to 3.2 and will result in an
+  exception at execution time if used.
 ...

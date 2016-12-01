@@ -69,7 +69,8 @@ class FindAndModify implements Executable
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
-     *    This is not supported for server versions < 3.2.
+     *    This is not supported for server versions < 3.2 and will result in an
+     *    exception at execution time if used.
      *
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
@@ -144,13 +145,17 @@ class FindAndModify implements Executable
      * @param Server $server
      * @return object|null
      * @throws UnexpectedValueException if the command response was malformed
-     * @throws UnsupportedException if collation is used and unsupported
+     * @throws UnsupportedException if collation or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
         if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
             throw UnsupportedException::collationNotSupported();
+        }
+
+        if (isset($this->options['writeConcern']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForWriteConcern)) {
+            throw UnsupportedException::writeConcernNotSupported();
         }
 
         $cursor = $server->executeCommand($this->databaseName, $this->createCommand($server));
@@ -209,11 +214,7 @@ class FindAndModify implements Executable
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 
-        /* In the future, we should throw an exception if the "writeConcern"
-         * option is specified and not supported by the server (see: SPEC-494).
-         * For BC in 1.x, we will silently omit it for incompatible servers.
-         */
-        if (isset($this->options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWriteConcern)) {
+        if (isset($this->options['writeConcern'])) {
             $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
         }
 

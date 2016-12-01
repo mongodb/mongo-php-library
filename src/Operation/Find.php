@@ -214,10 +214,6 @@ class Find implements Executable
     {
         $options = [];
 
-        if ( ! empty($this->options['allowPartialResults'])) {
-            $options['partial'] = true;
-        }
-
         if (isset($this->options['cursorType'])) {
             if ($this->options['cursorType'] === self::TAILABLE) {
                 $options['tailable'] = true;
@@ -228,7 +224,7 @@ class Find implements Executable
             }
         }
 
-        foreach (['batchSize', 'limit', 'skip', 'sort', 'noCursorTimeout', 'oplogReplay', 'projection', 'readConcern'] as $option) {
+        foreach (['allowPartialResults', 'batchSize', 'comment', 'limit', 'maxTimeMS', 'noCursorTimeout', 'oplogReplay', 'projection', 'readConcern', 'skip', 'sort'] as $option) {
             if (isset($this->options[$option])) {
                 $options[$option] = $this->options[$option];
             }
@@ -239,14 +235,6 @@ class Find implements Executable
         }
 
         $modifiers = empty($this->options['modifiers']) ? [] : (array) $this->options['modifiers'];
-
-        if (isset($this->options['comment'])) {
-            $modifiers['$comment'] = $this->options['comment'];
-        }
-
-        if (isset($this->options['maxTimeMS'])) {
-            $modifiers['$maxTimeMS'] = $this->options['maxTimeMS'];
-        }
 
         if ( ! empty($modifiers)) {
             $options['modifiers'] = $modifiers;

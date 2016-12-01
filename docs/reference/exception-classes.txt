@@ -77,8 +77,7 @@ MongoDB\\Exception\\UnsupportedException
    unintended document being deleted.
 
    This class extends the library's :phpclass:`RuntimeException
-   <MongoDB\\Exception\\RuntimeException>` class and implements the
-   library's :phpclass:`Exception <MongoDB\\Exception\\Exception>` interface.
+   <MongoDB\\Exception\\RuntimeException>` class.
 
    .. note::
 

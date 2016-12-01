@@ -2,7 +2,7 @@
 
 namespace MongoDB\Exception;
 
-class UnsupportedException extends RuntimeException implements Exception
+class UnsupportedException extends RuntimeException
 {
     /**
      * Thrown when collations are not supported by a server.

@@ -64,8 +64,8 @@ class Aggregate implements Executable
      *  * readConcern (MongoDB\Driver\ReadConcern): Read concern. Note that a
      *    "majority" read concern is not compatible with the $out stage.
      *
-     *    For servers < 3.2, this option is ignored as read concern is not
-     *    available.
+     *    This is not supported for server versions < 3.2 and will result in an
+     *    exception at execution time if used.
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
@@ -182,13 +182,17 @@ class Aggregate implements Executable
      * @param Server $server
      * @return Traversable
      * @throws UnexpectedValueException if the command response was malformed
-     * @throws UnsupportedException if collation or write concern is used and unsupported
+     * @throws UnsupportedException if collation, read concern, or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
         if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
             throw UnsupportedException::collationNotSupported();
+        }
+
+        if (isset($this->options['readConcern']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+            throw UnsupportedException::readConcernNotSupported();
         }
 
         if (isset($this->options['writeConcern']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForWriteConcern)) {
@@ -254,7 +258,7 @@ class Aggregate implements Executable
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
         }
 
-        if (isset($this->options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if (isset($this->options['readConcern'])) {
             $cmd['readConcern'] = \MongoDB\read_concern_as_document($this->options['readConcern']);
         }
 

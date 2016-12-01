@@ -29,5 +29,6 @@ content: |
 ref: error-unsupportedexception
 content: |
   :phpclass:`MongoDB\\Exception\\UnsupportedException` if options are used and
-  not supported by the selected server (e.g. ``collation``, ``writeConcern``).
+  not supported by the selected server (e.g. ``collation``, ``readConcern``,
+  ``writeConcern``).
 ...

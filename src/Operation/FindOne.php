@@ -45,8 +45,8 @@ class FindOne implements Executable
      *
      *  * readConcern (MongoDB\Driver\ReadConcern): Read concern.
      *
-     *    For servers < 3.2, this option is ignored as read concern is not
-     *    available.
+     *    This is not supported for server versions < 3.2 and will result in an
+     *    exception at execution time if used.
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
@@ -82,7 +82,7 @@ class FindOne implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return array|object|null
-     * @throws UnsupportedException if collation is used and unsupported
+     * @throws UnsupportedException if collation or read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)

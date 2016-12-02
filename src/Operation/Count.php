@@ -130,7 +130,7 @@ class Count implements Executable
 
         $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
 
-        $cursor = $server->executeCommand($this->databaseName, $this->createCommand($server), $readPreference);
+        $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $readPreference);
         $result = current($cursor->toArray());
 
         // Older server versions may return a float
@@ -144,10 +144,9 @@ class Count implements Executable
     /**
      * Create the count command.
      *
-     * @param Server $server
      * @return Command
      */
-    private function createCommand(Server $server)
+    private function createCommand()
     {
         $cmd = ['count' => $this->collectionName];
 

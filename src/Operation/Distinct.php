@@ -120,10 +120,9 @@ class Distinct implements Executable
     /**
      * Create the distinct command.
      *
-     * @param Server $server
      * @return Command
      */
-    private function createCommand(Server $server)
+    private function createCommand()
     {
         $cmd = [
             'distinct' => $this->collectionName,
@@ -142,7 +141,7 @@ class Distinct implements Executable
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
         }
 
-        if (isset($this->options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if (isset($this->options['readConcern'])) {
             $cmd['readConcern'] = \MongoDB\read_concern_as_document($this->options['readConcern']);
         }
 

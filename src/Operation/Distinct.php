@@ -107,7 +107,7 @@ class Distinct implements Executable
 
         $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
 
-        $cursor = $server->executeCommand($this->databaseName, $this->createCommand($server), $readPreference);
+        $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $readPreference);
         $result = current($cursor->toArray());
 
         if ( ! isset($result->values) || ! is_array($result->values)) {

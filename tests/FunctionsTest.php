@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests;
 
+use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\WriteConcern;
@@ -11,6 +12,54 @@ use MongoDB\Driver\WriteConcern;
  */
 class FunctionsTest extends TestCase
 {
+    /**
+     * @dataProvider provideDocumentAndTypeMap
+     */
+    public function testApplyTypeMapToDocument($document, array $typeMap, $expectedDocument)
+    {
+        $this->assertEquals($expectedDocument, \MongoDB\apply_type_map_to_document($document, $typeMap));
+    }
+
+    public function provideDocumentAndTypeMap()
+    {
+        return [
+            [
+                [
+                    'x' => 1,
+                    'y' => (object) ['foo' => 'bar'],
+                    'z' => [1, 2, 3],
+                ],
+                [
+                    'root' => 'object',
+                    'document' => 'stdClass',
+                    'array' => 'array',
+                ],
+                (object) [
+                    'x' => 1,
+                    'y' => (object) ['foo' => 'bar'],
+                    'z' => [1, 2, 3],
+                ],
+            ],
+            [
+                [
+                    'x' => 1,
+                    'y' => (object) ['foo' => 'bar'],
+                    'z' => [1, 2, 3],
+                ],
+                [
+                    'root' => 'MongoDB\Model\BSONDocument',
+                    'document' => 'MongoDB\Model\BSONDocument',
+                    'array' => 'MongoDB\Model\BSONArray',
+                ],
+                new BSONDocument([
+                    'x' => 1,
+                    'y' => new BSONDocument(['foo' => 'bar']),
+                    'z' => new BSONArray([1, 2, 3]),
+                ]),
+            ],
+        ];
+    }
+
     /**
      * @dataProvider provideIndexSpecificationDocumentsAndGeneratedNames
      */

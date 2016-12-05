@@ -150,7 +150,7 @@ class StreamWrapper
         }
 
         try {
-            return $this->stream->insertChunks($data);
+            return $this->stream->writeBytes($data);
         } catch (Exception $e) {
             trigger_error(sprintf('%s: %s', get_class($e), $e->getMessage()), \E_USER_WARNING);
             return false;

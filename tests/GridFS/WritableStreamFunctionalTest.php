@@ -55,10 +55,10 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideInputDataAndExpectedMD5
      */
-    public function testInsertChunksCalculatesMD5($input, $expectedMD5)
+    public function testWriteBytesCalculatesMD5($input, $expectedMD5)
     {
         $stream = new WritableStream($this->collectionWrapper, 'filename');
-        $stream->insertChunks($input);
+        $stream->writeBytes($input);
         $stream->close();
 
         $fileDocument = $this->filesCollection->findOne(

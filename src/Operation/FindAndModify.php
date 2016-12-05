@@ -60,6 +60,8 @@ class FindAndModify implements Executable
      *  * sort (document): Determines which document the operation modifies if
      *    the query selects multiple documents.
      *
+     *  * typeMap (array): Type map for BSON deserialization.
+     *
      *  * update (document): Update or replacement to apply to the matched
      *    document. This option cannot be set if the remove option is true.
      *
@@ -117,6 +119,10 @@ class FindAndModify implements Executable
             throw InvalidArgumentException::invalidType('"sort" option', $options['sort'], 'array or object');
         }
 
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        }
+
         if (isset($options['update']) && ! is_array($options['update']) && ! is_object($options['update'])) {
             throw InvalidArgumentException::invalidType('"update" option', $options['update'], 'array or object');
         }
@@ -143,7 +149,7 @@ class FindAndModify implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return object|null
+     * @return array|object|null
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if collation or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -178,6 +184,10 @@ class FindAndModify implements Executable
 
         if ( ! is_object($result->value)) {
             throw new UnexpectedValueException('findAndModify command did not return a "value" document');
+        }
+
+        if (isset($this->options['typeMap'])) {
+            return \MongoDB\apply_type_map_to_document($result->value, $this->options['typeMap']);
         }
 
         return $result->value;

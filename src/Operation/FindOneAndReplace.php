@@ -49,6 +49,8 @@ class FindOneAndReplace implements Executable
      *  * sort (document): Determines which document the operation modifies if
      *    the query selects multiple documents.
      *
+     *  * typeMap (array): Type map for BSON deserialization.
+     *
      *  * upsert (boolean): When true, a new document is created if no document
      *    matches the query. The default is false.
      *
@@ -116,7 +118,7 @@ class FindOneAndReplace implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return object|null
+     * @return array|object|null
      * @throws UnsupportedException if collation or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

@@ -51,6 +51,10 @@ class FindAndModifyTest extends TestCase
             $options[][] = ['sort' => $value];
         }
 
+        foreach ($this->getInvalidArrayValues() as $value) {
+            $options[][] = ['typeMap' => $value];
+        }
+
         foreach ($this->getInvalidDocumentValues() as $value) {
             $options[][] = ['update' => $value];
         }

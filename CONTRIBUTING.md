@@ -78,15 +78,17 @@ HHVM.
 
 ### Transition JIRA issues and version
 
-Update the fix version field for all resolved issues with the corresponding ".x"
-fix version.
+All issues associated with the release version should be in the "Closed" state
+and have a resolution of "Fixed". Issues with other resolutions (e.g.
+"Duplicate", "Works as Designed") should be removed from the release version so
+that they do not appear in the release notes.
+
+Check the corresponding ".x" fix version to see if it contains any issues that
+are resolved as "Fixed" and should be included in this release version.
 
 Update the version's release date and status from the
 [Manage Versions](https://jira.mongodb.org/plugins/servlet/project-config/PHPLIB/versions)
 page.
-
-Transition all resolved issues for this version to the closed state. If changing
-the issues in bulk, be sure to allow email notifications.
 
 ### Update version info
 

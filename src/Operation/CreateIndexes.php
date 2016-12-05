@@ -135,7 +135,7 @@ class CreateIndexes implements Executable
             $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
         }
 
-        $server->executeCommand($this->databaseName,  new Command($cmd));
+        $server->executeCommand($this->databaseName, new Command($cmd));
     }
 
     /**

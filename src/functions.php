@@ -10,6 +10,28 @@ use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
 
 /**
+ * Applies a type map to a document.
+ *
+ * This function is used by operations where it is not possible to apply a type
+ * map to the cursor directly because the root document is a command response
+ * (e.g. findAndModify).
+ *
+ * @internal
+ * @param array|object $document Document to which the type map will be applied
+ * @param array        $typeMap  Type map for BSON deserialization.
+ * @return array|object
+ * @throws InvalidArgumentException
+ */
+function apply_type_map_to_document($document, array $typeMap)
+{
+    if ( ! is_array($document) && ! is_object($document)) {
+        throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
+    }
+
+    return \MongoDB\BSON\toPHP(\MongoDB\BSON\fromPHP($document), $typeMap);
+}
+
+/**
  * Extracts an ID from an inserted document.
  *
  * This function is used when BulkWrite::insert() does not return a generated

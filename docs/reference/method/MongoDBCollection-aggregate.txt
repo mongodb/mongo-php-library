@@ -58,14 +58,6 @@ MongoDB server version and whether the ``useCursor`` option is specified. If
 ``result`` array from the command response document. In both cases, the return
 value will be :php:`Traversable <traversable>`.
 
-.. note::
-
-   BSON deserialization of inline aggregation results (i.e. not using a command
-   cursor) does not yet support a ``typeMap`` option. Classes implementing
-   :php:`MongoDB\\BSON\\Persistable <mongodb-bson-persistable>` will still be
-   deserialized according to the
-   :php:`Persistence <mongodb.persistence.deserialization>` specification.
-
 .. todo: add examples
 
 See Also

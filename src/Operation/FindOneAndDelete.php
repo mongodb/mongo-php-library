@@ -37,6 +37,8 @@ class FindOneAndDelete implements Executable
      *  * sort (document): Determines which document the operation modifies if
      *    the query selects multiple documents.
      *
+     *  * typeMap (array): Type map for BSON deserialization.
+     *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
      *    This is not supported for server versions < 3.2 and will result in an
@@ -76,7 +78,7 @@ class FindOneAndDelete implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return object|null
+     * @return array|object|null
      * @throws UnsupportedException if collation or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

@@ -282,7 +282,7 @@ class Bucket
         $file = $this->getRawFileDocumentForStream($stream);
 
         // Filter the raw document through the specified type map
-        return \MongoDB\BSON\toPHP(\MongoDB\BSON\fromPHP($file), $this->typeMap);
+        return \MongoDB\apply_type_map_to_document($file, $this->typeMap);
     }
 
     /**
@@ -302,7 +302,7 @@ class Bucket
          * the root type so we can reliably access the ID.
          */
         $typeMap = ['root' => 'stdClass'] + $this->typeMap;
-        $file = \MongoDB\BSON\toPHP(\MongoDB\BSON\fromPHP($file), $typeMap);
+        $file = \MongoDB\apply_type_map_to_document($file, $typeMap);
 
         if ( ! isset($file->_id) && ! property_exists($file, '_id')) {
             throw new CorruptFileException('file._id does not exist');

@@ -49,11 +49,6 @@ source:
 source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: typeMap
-post: |
-  .. note::
-
-     This is not supported for inline aggregation results (i.e. ``useCursor``
-     option is ``false`` or the server version is < 2.6).
 ---
 arg_name: option
 name: useCursor

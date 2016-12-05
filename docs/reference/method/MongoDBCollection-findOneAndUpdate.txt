@@ -29,14 +29,13 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-findOneAndUpdate-option.rst
 
-   .. include:: /includes/extracts/bson-deserialization-findOneAndUpdate.rst
-
 Return Values
 -------------
 
-An object for either the original or the updated document, depending on the
-specified value of the ``returnDocument`` option. By default, the original
+An array or object for either the original or the updated document, depending on
+the specified value of the ``returnDocument`` option. By default, the original
 document is returned. If no document matched the query, ``null`` is returned.
+The return type will depend on the ``typeMap`` option.
 
 Errors/Exceptions
 -----------------

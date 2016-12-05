@@ -29,13 +29,11 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBCollection-method-findOneAndDelete-option.rst
 
-   .. include:: /includes/extracts/bson-deserialization-findOneAndDelete.rst
-
 Return Values
 -------------
 
-An object for the document that was deleted, or ``null`` if no document matched
-the query.
+An array or object for the document that was deleted, or ``null`` if no document
+matched the query. The return type will depend on the ``typeMap`` option.
 
 Errors/Exceptions
 -----------------

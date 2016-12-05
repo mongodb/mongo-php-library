@@ -153,10 +153,6 @@ class Collection
      * returned; otherwise, an ArrayIterator is returned, which wraps the
      * "result" array from the command response document.
      *
-     * Note: BSON deserialization of inline aggregation results (i.e. not using
-     * a command cursor) does not yet support a custom type map
-     * (depends on: https://jira.mongodb.org/browse/PHPC-314).
-     *
      * @see Aggregate::__construct() for supported options
      * @param array $pipeline List of pipeline operations
      * @param array $options  Command options
@@ -553,14 +549,11 @@ class Collection
      *
      * The document to return may be null if no document matched the filter.
      *
-     * Note: BSON deserialization of the returned document does not yet support
-     * a custom type map (depends on: https://jira.mongodb.org/browse/PHPC-314).
-     *
      * @see FindOneAndDelete::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Command options
-     * @return object|null
+     * @return array|object|null
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -572,6 +565,10 @@ class Collection
 
         if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
             $options['writeConcern'] = $this->writeConcern;
+        }
+
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
         }
 
         $operation = new FindOneAndDelete($this->databaseName, $this->collectionName, $filter, $options);
@@ -588,15 +585,12 @@ class Collection
      * FindOneAndReplace::RETURN_DOCUMENT_AFTER for the "returnDocument" option
      * to return the updated document.
      *
-     * Note: BSON deserialization of the returned document does not yet support
-     * a custom type map (depends on: https://jira.mongodb.org/browse/PHPC-314).
-     *
      * @see FindOneAndReplace::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
      * @param array|object $filter      Query by which to filter documents
      * @param array|object $replacement Replacement document
      * @param array        $options     Command options
-     * @return object|null
+     * @return array|object|null
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -608,6 +602,10 @@ class Collection
 
         if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
             $options['writeConcern'] = $this->writeConcern;
+        }
+
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
         }
 
         $operation = new FindOneAndReplace($this->databaseName, $this->collectionName, $filter, $replacement, $options);
@@ -624,15 +622,12 @@ class Collection
      * FindOneAndUpdate::RETURN_DOCUMENT_AFTER for the "returnDocument" option
      * to return the updated document.
      *
-     * Note: BSON deserialization of the returned document does not yet support
-     * a custom type map (depends on: https://jira.mongodb.org/browse/PHPC-314).
-     *
      * @see FindOneAndReplace::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
      * @param array|object $filter  Query by which to filter documents
      * @param array|object $update  Update to apply to the matched document
      * @param array        $options Command options
-     * @return object|null
+     * @return array|object|null
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -644,6 +639,10 @@ class Collection
 
         if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
             $options['writeConcern'] = $this->writeConcern;
+        }
+
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
         }
 
         $operation = new FindOneAndUpdate($this->databaseName, $this->collectionName, $filter, $update, $options);

@@ -153,10 +153,6 @@ class Collection
      * returned; otherwise, an ArrayIterator is returned, which wraps the
      * "result" array from the command response document.
      *
-     * Note: BSON deserialization of inline aggregation results (i.e. not using
-     * a command cursor) does not yet support a custom type map
-     * (depends on: https://jira.mongodb.org/browse/PHPC-314).
-     *
      * @see Aggregate::__construct() for supported options
      * @param array $pipeline List of pipeline operations
      * @param array $options  Command options

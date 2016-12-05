@@ -21,24 +21,27 @@ class AggregateFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocument
      */
-    public function testTypeMapOption(array $typeMap, array $expectedDocuments)
+    public function testTypeMapOption(array $typeMap = null, array $expectedDocuments)
     {
-        if ( ! \MongoDB\server_supports_feature($this->getPrimaryServer(), self::$wireVersionForCursor)) {
-            $this->markTestSkipped('Command cursor is not supported');
-        }
-
         $this->createFixtures(3);
 
         $pipeline = [['$match' => ['_id' => ['$ne' => 2]]]];
         $operation = new Aggregate($this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['typeMap' => $typeMap]);
-        $cursor = $operation->execute($this->getPrimaryServer());
+        $results = iterator_to_array($operation->execute($this->getPrimaryServer()));
 
-        $this->assertEquals($expectedDocuments, $cursor->toArray());
+        $this->assertEquals($expectedDocuments, $results);
     }
 
     public function provideTypeMapOptionsAndExpectedDocument()
     {
         return [
+            [
+                null,
+                [
+                    (object) ['_id' => 1, 'x' => (object) ['foo' => 'bar']],
+                    (object) ['_id' => 3, 'x' => (object) ['foo' => 'bar']],
+                ],
+            ],
             [
                 ['root' => 'array', 'document' => 'array'],
                 [

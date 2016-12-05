@@ -11,6 +11,7 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Model\TypeMapArrayIterator;
 use ArrayIterator;
 use stdClass;
 use Traversable;
@@ -71,9 +72,6 @@ class Aggregate implements Executable
      *
      *  * typeMap (array): Type map for BSON deserialization. This will be
      *    applied to the returned Cursor (it is not sent to the server).
-     *
-     *    This is not supported for inline aggregation results (i.e. useCursor
-     *    option is false or the server version is < 2.6).
      *
      *  * useCursor (boolean): Indicates whether the command will request that
      *    the server provide results using a cursor. The default is true.
@@ -206,9 +204,6 @@ class Aggregate implements Executable
         $cursor = $server->executeCommand($this->databaseName, $command, $readPreference);
 
         if ($isCursorSupported && $this->options['useCursor']) {
-            /* The type map can only be applied to command cursors until
-             * https://jira.mongodb.org/browse/PHPC-314 is implemented.
-             */
             if (isset($this->options['typeMap'])) {
                 $cursor->setTypeMap($this->options['typeMap']);
             }
@@ -220,6 +215,10 @@ class Aggregate implements Executable
 
         if ( ! isset($result->result) || ! is_array($result->result)) {
             throw new UnexpectedValueException('aggregate command did not return a "result" array');
+        }
+
+        if (isset($this->options['typeMap'])) {
+            return new TypeMapArrayIterator($result->result, $this->options['typeMap']);
         }
 
         return new ArrayIterator($result->result);

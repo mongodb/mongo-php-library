@@ -194,7 +194,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     public function provideInvalidStreamValues()
     {
-        return $this->wrapValuesForDataProvider([null, 123, 'foo', [], hash_init('md5')]);
+        return $this->wrapValuesForDataProvider($this->getInvalidStreamValues());
     }
 
     /**
@@ -407,11 +407,16 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @dataProvider provideInvalidStreamValues
+     * @dataProvider provideInvalidGridFSStreamValues
      */
-    public function testGetFileDocumentForStreamShouldRequireStreamResource($stream)
+    public function testGetFileDocumentForStreamShouldRequireGridFSStreamResource($stream)
     {
         $this->bucket->getFileDocumentForStream($stream);
+    }
+
+    public function provideInvalidGridFSStreamValues()
+    {
+        return $this->wrapValuesForDataProvider(array_merge($this->getInvalidStreamValues(), [$this->createStream()]));
     }
 
     public function testGetFileIdForStreamUsesTypeMap()
@@ -441,9 +446,9 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @dataProvider provideInvalidStreamValues
+     * @dataProvider provideInvalidGridFSStreamValues
      */
-    public function testGetFileIdForStreamShouldRequireStreamResource($stream)
+    public function testGetFileIdForStreamShouldRequireGridFSStreamResource($stream)
     {
         $this->bucket->getFileIdForStream($stream);
     }
@@ -713,5 +718,15 @@ class BucketFunctionalTest extends FunctionalTestCase
         if ($callback !== null) {
             call_user_func($callback, $foundIndex);
         }
+    }
+
+    /**
+     * Return a list of invalid stream values.
+     *
+     * @return array
+     */
+    private function getInvalidStreamValues()
+    {
+        return [null, 123, 'foo', [], hash_init('md5')];
     }
 }

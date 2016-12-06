@@ -197,7 +197,7 @@ class ReadableStream
             fclose($this->buffer);
         }
 
-        $this->buffer = fopen("php://temp", "w+");
+        $this->buffer = fopen("php://memory", "w+b");
         $this->bufferEmpty = true;
         $this->bufferFresh = true;
     }

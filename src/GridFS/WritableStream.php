@@ -76,7 +76,7 @@ class WritableStream
 
         $this->chunkSize = $options['chunkSizeBytes'];
         $this->collectionWrapper = $collectionWrapper;
-        $this->buffer = fopen('php://temp', 'w+');
+        $this->buffer = fopen('php://memory', 'w+b');
         $this->ctx = hash_init('md5');
 
         $this->file = [

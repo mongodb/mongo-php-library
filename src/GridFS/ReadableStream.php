@@ -75,7 +75,9 @@ class ReadableStream
 
     public function close()
     {
-        fclose($this->buffer);
+        if (is_resource($this->buffer)) {
+            @fclose($this->buffer);
+        }
     }
 
     /**

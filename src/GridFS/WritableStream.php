@@ -187,11 +187,6 @@ class WritableStream
 
     private function fileCollectionInsert()
     {
-        if ($this->isClosed) {
-            // TODO: Should this be an error condition? e.g. BadMethodCallException
-            return;
-        }
-
         $md5 = hash_final($this->ctx);
 
         $this->file['length'] = $this->length;
@@ -210,11 +205,6 @@ class WritableStream
 
     private function insertChunkFromBuffer()
     {
-        if ($this->isClosed) {
-            // TODO: Should this be an error condition? e.g. BadMethodCallException
-            return;
-        }
-
         if (strlen($this->buffer) == 0) {
             return;
         }

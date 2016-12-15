@@ -5,6 +5,7 @@ namespace MongoDB\GridFS;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\RuntimeException;
 
@@ -175,7 +176,12 @@ class WritableStream
 
     private function abort()
     {
-        $this->collectionWrapper->deleteChunksByFilesId($this->file['_id']);
+        try {
+            $this->collectionWrapper->deleteChunksByFilesId($this->file['_id']);
+        } catch (DriverRuntimeException $e) {
+            // We are already handling an error if abort() is called, so suppress this
+        }
+
         $this->isClosed = true;
     }
 
@@ -191,7 +197,13 @@ class WritableStream
         $this->file['length'] = $this->length;
         $this->file['md5'] = $md5;
 
-        $this->collectionWrapper->insertFile($this->file);
+        try {
+            $this->collectionWrapper->insertFile($this->file);
+        } catch (DriverRuntimeException $e) {
+            $this->abort();
+
+            throw $e;
+        }
 
         return $this->file['_id'];
     }
@@ -218,7 +230,14 @@ class WritableStream
 
         hash_update($this->ctx, $data);
 
-        $this->collectionWrapper->insertChunk($chunk);
+        try {
+            $this->collectionWrapper->insertChunk($chunk);
+        } catch (DriverRuntimeException $e) {
+            $this->abort();
+
+            throw $e;
+        }
+
         $this->length += strlen($data);
         $this->chunkOffset++;
     }

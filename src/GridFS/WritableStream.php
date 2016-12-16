@@ -67,6 +67,10 @@ class WritableStream
             throw InvalidArgumentException::invalidType('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
         }
 
+        if (isset($options['chunkSizeBytes']) && $options['chunkSizeBytes'] < 1) {
+            throw new InvalidArgumentException(sprintf('Expected "chunkSizeBytes" option to be >= 1, %d given', $options['chunkSizeBytes']));
+        }
+
         if (isset($options['contentType']) && ! is_string($options['contentType'])) {
             throw InvalidArgumentException::invalidType('"contentType" option', $options['contentType'], 'string');
         }

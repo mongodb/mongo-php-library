@@ -53,6 +53,15 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
     }
 
     /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Expected "chunkSizeBytes" option to be >= 1, 0 given
+     */
+    public function testConstructorShouldRequireChunkSizeBytesOptionToBePositive()
+    {
+        new WritableStream($this->collectionWrapper, 'filename', ['chunkSizeBytes' => 0]);
+    }
+
+    /**
      * @dataProvider provideInputDataAndExpectedMD5
      */
     public function testWriteBytesCalculatesMD5($input, $expectedMD5)

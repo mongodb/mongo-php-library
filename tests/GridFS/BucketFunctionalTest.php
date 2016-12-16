@@ -69,6 +69,15 @@ class BucketFunctionalTest extends FunctionalTestCase
     }
 
     /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Expected "chunkSizeBytes" option to be >= 1, 0 given
+     */
+    public function testConstructorShouldRequireChunkSizeBytesOptionToBePositive()
+    {
+        new Bucket($this->manager, $this->getDatabaseName(), ['chunkSizeBytes' => 0]);
+    }
+
+    /**
      * @dataProvider provideInputDataAndExpectedChunks
      */
     public function testDelete($input, $expectedChunks)

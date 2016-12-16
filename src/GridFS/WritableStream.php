@@ -5,7 +5,9 @@ namespace MongoDB\GridFS;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\RuntimeException;
 
 /**
  * WritableStream abstracts the process of writing a GridFS file.
@@ -16,8 +18,7 @@ class WritableStream
 {
     private static $defaultChunkSizeBytes = 261120;
 
-    private $buffer;
-    private $bufferLength = 0;
+    private $buffer = '';
     private $chunkOffset = 0;
     private $chunkSize;
     private $collectionWrapper;
@@ -66,6 +67,10 @@ class WritableStream
             throw InvalidArgumentException::invalidType('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
         }
 
+        if (isset($options['chunkSizeBytes']) && $options['chunkSizeBytes'] < 1) {
+            throw new InvalidArgumentException(sprintf('Expected "chunkSizeBytes" option to be >= 1, %d given', $options['chunkSizeBytes']));
+        }
+
         if (isset($options['contentType']) && ! is_string($options['contentType'])) {
             throw InvalidArgumentException::invalidType('"contentType" option', $options['contentType'], 'string');
         }
@@ -76,15 +81,13 @@ class WritableStream
 
         $this->chunkSize = $options['chunkSizeBytes'];
         $this->collectionWrapper = $collectionWrapper;
-        $this->buffer = fopen('php://memory', 'w+b');
         $this->ctx = hash_init('md5');
 
         $this->file = [
             '_id' => $options['_id'],
             'chunkSize' => $this->chunkSize,
             'filename' => (string) $filename,
-            // TODO: This is necessary until PHPC-536 is implemented
-            'uploadDate' => new UTCDateTime((int) floor(microtime(true) * 1000)),
+            'uploadDate' => new UTCDateTime,
         ] + array_intersect_key($options, ['aliases' => 1, 'contentType' => 1, 'metadata' => 1]);
     }
 
@@ -113,14 +116,10 @@ class WritableStream
             return;
         }
 
-        rewind($this->buffer);
-        $cached = stream_get_contents($this->buffer);
-
-        if (strlen($cached) > 0) {
-            $this->insertChunk($cached);
+        if (strlen($this->buffer) > 0) {
+            $this->insertChunkFromBuffer();
         }
 
-        fclose($this->buffer);
         $this->fileCollectionInsert();
         $this->isClosed = true;
     }
@@ -151,69 +150,72 @@ class WritableStream
      * Inserts binary data into GridFS via chunks.
      *
      * Data will be buffered internally until chunkSizeBytes are accumulated, at
-     * which point a chunk's worth of data will be inserted and the buffer
-     * reset.
+     * which point a chunk document will be inserted and the buffer reset.
      *
-     * @param string $toWrite Binary data to write
+     * @param string $data Binary data to write
      * @return integer
      */
-    public function insertChunks($toWrite)
+    public function writeBytes($data)
     {
         if ($this->isClosed) {
             // TODO: Should this be an error condition? e.g. BadMethodCallException
             return;
         }
 
-        $readBytes = 0;
+        $bytesRead = 0;
 
-        while ($readBytes != strlen($toWrite)) {
-            $addToBuffer = substr($toWrite, $readBytes, $this->chunkSize - $this->bufferLength);
-            fwrite($this->buffer, $addToBuffer);
-            $readBytes += strlen($addToBuffer);
-            $this->bufferLength += strlen($addToBuffer);
+        while ($bytesRead != strlen($data)) {
+            $initialBufferLength = strlen($this->buffer);
+            $this->buffer .= substr($data, $bytesRead, $this->chunkSize - $initialBufferLength);
+            $bytesRead += strlen($this->buffer) - $initialBufferLength;
 
-            if ($this->bufferLength == $this->chunkSize) {
-                rewind($this->buffer);
-                $this->insertChunk(stream_get_contents($this->buffer));
-                ftruncate($this->buffer, 0);
-                $this->bufferLength = 0;
+            if (strlen($this->buffer) == $this->chunkSize) {
+                $this->insertChunkFromBuffer();
             }
         }
 
-        return $readBytes;
+        return $bytesRead;
     }
 
     private function abort()
     {
-        $this->collectionWrapper->deleteChunksByFilesId($this->file['_id']);
+        try {
+            $this->collectionWrapper->deleteChunksByFilesId($this->file['_id']);
+        } catch (DriverRuntimeException $e) {
+            // We are already handling an error if abort() is called, so suppress this
+        }
+
         $this->isClosed = true;
     }
 
     private function fileCollectionInsert()
     {
-        if ($this->isClosed) {
-            // TODO: Should this be an error condition? e.g. BadMethodCallException
-            return;
-        }
-
         $md5 = hash_final($this->ctx);
 
         $this->file['length'] = $this->length;
         $this->file['md5'] = $md5;
 
-        $this->collectionWrapper->insertFile($this->file);
+        try {
+            $this->collectionWrapper->insertFile($this->file);
+        } catch (DriverRuntimeException $e) {
+            $this->abort();
+
+            throw $e;
+        }
 
         return $this->file['_id'];
     }
 
-    private function insertChunk($data)
+    private function insertChunkFromBuffer()
     {
-        if ($this->isClosed) {
-            // TODO: Should this be an error condition? e.g. BadMethodCallException
+        if (strlen($this->buffer) == 0) {
             return;
         }
 
-        $toUpload = [
+        $data = $this->buffer;
+        $this->buffer = '';
+
+        $chunk = [
             'files_id' => $this->file['_id'],
             'n' => $this->chunkOffset,
             'data' => new Binary($data, Binary::TYPE_GENERIC),
@@ -221,7 +223,14 @@ class WritableStream
 
         hash_update($this->ctx, $data);
 
-        $this->collectionWrapper->insertChunk($toUpload);
+        try {
+            $this->collectionWrapper->insertChunk($chunk);
+        } catch (DriverRuntimeException $e) {
+            $this->abort();
+
+            throw $e;
+        }
+
         $this->length += strlen($data);
         $this->chunkOffset++;
     }

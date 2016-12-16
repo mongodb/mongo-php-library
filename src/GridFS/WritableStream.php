@@ -87,8 +87,7 @@ class WritableStream
             '_id' => $options['_id'],
             'chunkSize' => $this->chunkSize,
             'filename' => (string) $filename,
-            // TODO: This is necessary until PHPC-536 is implemented
-            'uploadDate' => new UTCDateTime((int) floor(microtime(true) * 1000)),
+            'uploadDate' => new UTCDateTime,
         ] + array_intersect_key($options, ['aliases' => 1, 'contentType' => 1, 'metadata' => 1]);
     }
 

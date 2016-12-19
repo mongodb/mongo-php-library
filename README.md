@@ -36,7 +36,7 @@ The preferred method of installing this library is with
 [Composer](https://getcomposer.org/) by running the following from your project
 root:
 
-    $ composer require "mongodb/mongodb=^1.0.0"
+    $ composer require "mongodb/mongodb=^1.1.0"
 
 ## Reporting Issues
 

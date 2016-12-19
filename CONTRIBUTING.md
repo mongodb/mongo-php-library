@@ -142,7 +142,7 @@ https://jira.mongodb.org/secure/CreateIssue.jspa?pid=12483&issuetype=1
 
 This library may be installed or upgraded with:
 
-    composer require "mongodb/mongodb=^1.0.0"
+    composer require mongodb/mongodb
 
 Installation instructions for the PHP and HHVM driver may be found in the [PHP.net documentation](http://php.net/manual/en/mongodb.installation.php).
 ```

@@ -33,7 +33,7 @@ root:
 
 .. code-block:: sh
 
-   composer require "mongodb/mongodb=^1.0.0"
+   composer require mongodb/mongodb
 
 While not recommended, you may also manually install the package via
 the source tarballs attached to the `GitHub releases

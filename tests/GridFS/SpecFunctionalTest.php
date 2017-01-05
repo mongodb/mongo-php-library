@@ -202,7 +202,6 @@ class SpecFunctionalTest extends FunctionalTestCase
      * @param array $assert
      * @param mixed $actualResult
      * @return mixed
-     * @throws FileNotFoundException
      * @throws LogicException if the operation is unsupported
      */
     private function executeAssert(array $assert, $actualResult)
@@ -241,7 +240,6 @@ class SpecFunctionalTest extends FunctionalTestCase
      *
      * @param mixed $expectedResult
      * @param mixed $actualResult
-     * @param array $data
      * @throws LogicException if the result assertion is unsupported
      */
     private function executeAssertResult($expectedResult, $actualResult)

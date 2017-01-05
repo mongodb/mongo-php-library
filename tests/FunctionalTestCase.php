@@ -6,6 +6,7 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use InvalidArgumentException;
 use stdClass;

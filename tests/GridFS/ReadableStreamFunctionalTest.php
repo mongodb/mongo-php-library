@@ -74,12 +74,12 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideFileIdAndExpectedBytes
      */
-    public function testDownloadNumBytes($fileId, $numBytes, $expectedBytes)
+    public function testReadBytes($fileId, $length, $expectedBytes)
     {
         $fileDocument = $this->collectionWrapper->findFileById($fileId);
         $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
 
-        $this->assertSame($expectedBytes, $stream->downloadNumBytes($numBytes));
+        $this->assertSame($expectedBytes, $stream->readBytes($length));
     }
 
     public function provideFileIdAndExpectedBytes()
@@ -111,14 +111,14 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideFileIdAndExpectedBytes
      */
-    public function testDownloadNumBytesCalledMultipleTimes($fileId, $numBytes, $expectedBytes)
+    public function testReadBytesCalledMultipleTimes($fileId, $length, $expectedBytes)
     {
         $fileDocument = $this->collectionWrapper->findFileById($fileId);
         $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
 
-        for ($i = 0; $i < $numBytes; $i++) {
+        for ($i = 0; $i < $length; $i++) {
             $expectedByte = isset($expectedBytes[$i]) ? $expectedBytes[$i] : '';
-            $this->assertSame($expectedByte, $stream->downloadNumBytes(1));
+            $this->assertSame($expectedByte, $stream->readBytes(1));
         }
     }
 
@@ -126,35 +126,35 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
      * @expectedException MongoDB\GridFS\Exception\CorruptFileException
      * @expectedExceptionMessage Chunk not found for index "2"
      */
-    public function testDownloadNumBytesWithMissingChunk()
+    public function testReadBytesWithMissingChunk()
     {
         $this->chunksCollection->deleteOne(['files_id' => 'length-10', 'n' => 2]);
 
         $fileDocument = $this->collectionWrapper->findFileById('length-10');
         $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
 
-        $stream->downloadNumBytes(10);
+        $stream->readBytes(10);
     }
 
     /**
      * @expectedException MongoDB\GridFS\Exception\CorruptFileException
      * @expectedExceptionMessage Expected chunk to have index "1" but found "2"
      */
-    public function testDownloadNumBytesWithUnexpectedChunkIndex()
+    public function testReadBytesWithUnexpectedChunkIndex()
     {
         $this->chunksCollection->deleteOne(['files_id' => 'length-10', 'n' => 1]);
 
         $fileDocument = $this->collectionWrapper->findFileById('length-10');
         $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
 
-        $stream->downloadNumBytes(10);
+        $stream->readBytes(10);
     }
 
     /**
      * @expectedException MongoDB\GridFS\Exception\CorruptFileException
      * @expectedExceptionMessage Expected chunk to have size "2" but found "1"
      */
-    public function testDownloadNumBytesWithUnexpectedChunkSize()
+    public function testReadBytesWithUnexpectedChunkSize()
     {
         $this->chunksCollection->updateOne(
             ['files_id' => 'length-10', 'n' => 2],
@@ -164,17 +164,17 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         $fileDocument = $this->collectionWrapper->findFileById('length-10');
         $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
 
-        $stream->downloadNumBytes(10);
+        $stream->readBytes(10);
     }
 
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
      */
-    public function testDownloadNumBytesWithNegativeReadSize()
+    public function testReadBytesWithNegativeLength()
     {
         $fileDocument = $this->collectionWrapper->findFileById('length-0');
         $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
 
-        $stream->downloadNumBytes(-1);
+        $stream->readBytes(-1);
     }
 }

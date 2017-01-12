@@ -22,7 +22,6 @@ use MongoDB\UpdateResult;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
-use IteratorIterator;
 use stdClass;
 
 /**
@@ -85,6 +84,27 @@ class CollectionWrapper
     {
         $this->filesCollection->drop(['typeMap' => []]);
         $this->chunksCollection->drop(['typeMap' => []]);
+    }
+
+    /**
+     * Finds GridFS chunk documents for a given file ID and optional offset.
+     *
+     * @param mixed   $id        File ID
+     * @param integer $fromChunk Starting chunk (inclusive)
+     * @return Cursor
+     */
+    public function findChunksByFileId($id, $fromChunk = 0)
+    {
+        return $this->chunksCollection->find(
+            [
+                'files_id' => $id,
+                'n' => ['$gte' => $fromChunk],
+            ],
+            [
+                'sort' => ['n' => 1],
+                'typeMap' => ['root' => 'stdClass'],
+            ]
+        );
     }
 
     /**
@@ -175,25 +195,6 @@ class CollectionWrapper
     public function getBucketName()
     {
         return $this->bucketName;
-    }
-
-    /**
-     * Returns a chunks iterator for a given file ID.
-     *
-     * @param mixed $id
-     * @return IteratorIterator
-     */
-    public function getChunksIteratorByFilesId($id)
-    {
-        $cursor = $this->chunksCollection->find(
-            ['files_id' => $id],
-            [
-                'sort' => ['n' => 1],
-                'typeMap' => ['root' => 'stdClass'],
-            ]
-        );
-
-        return new IteratorIterator($cursor);
     }
 
     /**

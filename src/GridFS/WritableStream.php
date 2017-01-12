@@ -162,6 +162,21 @@ class WritableStream
     }
 
     /**
+     * Return the current position of the stream.
+     *
+     * This is the offset within the stream where the next byte would be
+     * written. Since seeking is not supported and writes are appended, this is
+     * always the end of the stream.
+     *
+     * @see WriteableStream::getSize()
+     * @return integer
+     */
+    public function tell()
+    {
+        return $this->getSize();
+    }
+
+    /**
      * Inserts binary data into GridFS via chunks.
      *
      * Data will be buffered internally until chunkSizeBytes are accumulated, at

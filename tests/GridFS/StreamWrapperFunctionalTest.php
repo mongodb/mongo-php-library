@@ -50,6 +50,32 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame('', fread($stream, 3));
     }
 
+    public function testReadableStreamSeek()
+    {
+        $stream = $this->bucket->openDownloadStream('length-10');
+
+        $this->assertSame(0, fseek($stream, 2, \SEEK_SET));
+        $this->assertSame('cde', fread($stream, 3));
+        $this->assertSame(0, fseek($stream, 10, \SEEK_SET));
+        $this->assertSame('', fread($stream, 3));
+        $this->assertSame(-1, fseek($stream, -1, \SEEK_SET));
+        $this->assertSame(-1, fseek($stream, 11, \SEEK_SET));
+
+        $this->assertSame(0, fseek($stream, -5, \SEEK_CUR));
+        $this->assertSame('fgh', fread($stream, 3));
+        $this->assertSame(0, fseek($stream, 1, \SEEK_CUR));
+        $this->assertSame('j', fread($stream, 3));
+        $this->assertSame(-1, fseek($stream, 1, \SEEK_CUR));
+        $this->assertSame(-1, fseek($stream, -11, \SEEK_CUR));
+
+        $this->assertSame(0, fseek($stream, 0, \SEEK_END));
+        $this->assertSame('', fread($stream, 3));
+        $this->assertSame(0, fseek($stream, -8, \SEEK_END));
+        $this->assertSame('cde', fread($stream, 3));
+        $this->assertSame(-1, fseek($stream, -11, \SEEK_END));
+        $this->assertSame(-1, fseek($stream, 1, \SEEK_END));
+    }
+
     public function testReadableStreamStat()
     {
         $stream = $this->bucket->openDownloadStream('length-10');
@@ -100,6 +126,25 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame('', fread($stream, 8192));
         $this->assertSame(6, fwrite($stream, 'foobar'));
         $this->assertSame('', fread($stream, 8192));
+    }
+
+    public function testWritableStreamSeek()
+    {
+        $stream = $this->bucket->openUploadStream('filename');
+
+        $this->assertSame(6, fwrite($stream, 'foobar'));
+
+        $this->assertSame(-1, fseek($stream, 0, \SEEK_SET));
+        $this->assertSame(-1, fseek($stream, 7, \SEEK_SET));
+        $this->assertSame(0, fseek($stream, 6, \SEEK_SET));
+
+        $this->assertSame(0, fseek($stream, 0, \SEEK_CUR));
+        $this->assertSame(-1, fseek($stream, -1, \SEEK_CUR));
+        $this->assertSame(-1, fseek($stream, 1, \SEEK_CUR));
+
+        $this->assertSame(0, fseek($stream, 0, \SEEK_END));
+        $this->assertSame(-1, fseek($stream, -1, \SEEK_END));
+        $this->assertSame(-1, fseek($stream, 1, \SEEK_END));
     }
 
     public function testWritableStreamStat()

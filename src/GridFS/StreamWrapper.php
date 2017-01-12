@@ -137,6 +137,40 @@ class StreamWrapper
     }
 
     /**
+     * Return the current position of the stream.
+     *
+     * @see http://php.net/manual/en/streamwrapper.stream-seek.php
+     * @param integer $offset Stream offset to seek to
+     * @param integer $whence One of SEEK_SET, SEEK_CUR, or SEEK_END
+     * @return boolean True if the position was updated and false otherwise
+     */
+    public function stream_seek($offset, $whence = \SEEK_SET)
+    {
+        $size = $this->stream->getSize();
+
+        if ($whence === \SEEK_CUR) {
+            $offset += $this->stream->tell();
+        }
+
+        if ($whence === \SEEK_END) {
+            $offset += $size;
+        }
+
+        // WritableStreams are always positioned at the end of the stream
+        if ($this->stream instanceof WritableStream) {
+            return $offset === $size;
+        }
+
+        if ($offset < 0 || $offset > $size) {
+            return false;
+        }
+
+        $this->stream->seek($offset);
+
+        return true;
+    }
+
+    /**
      * Return information about the stream.
      *
      * @see http://php.net/manual/en/streamwrapper.stream-stat.php
@@ -164,6 +198,17 @@ class StreamWrapper
         }
 
         return $stat;
+    }
+
+    /**
+     * Return the current position of the stream.
+     *
+     * @see http://php.net/manual/en/streamwrapper.stream-tell.php
+     * @return integer The current position of the stream
+     */
+    public function stream_tell()
+    {
+        return $this->stream->tell();
     }
 
     /**

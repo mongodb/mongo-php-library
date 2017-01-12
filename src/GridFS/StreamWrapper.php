@@ -150,6 +150,12 @@ class StreamWrapper
             : 0100222; // S_IFREG & S_IWUSR & S_IWGRP & S_IWOTH
         $stat[7] = $stat['size'] = $this->stream->getSize();
 
+        $file = $this->stream->getFile();
+
+        if (isset($file->chunkSize) && is_integer($file->chunkSize)) {
+            $stat[11] = $stat['blksize'] = $file->chunkSize;
+        }
+
         return $stat;
     }
 

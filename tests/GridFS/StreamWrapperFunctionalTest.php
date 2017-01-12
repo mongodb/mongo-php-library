@@ -58,6 +58,8 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame(0100444, $stat['mode']);
         $this->assertSame(10, $stat[7]);
         $this->assertSame(10, $stat['size']);
+        $this->assertSame(4, $stat[11]);
+        $this->assertSame(4, $stat['blksize']);
     }
 
     public function testReadableStreamWrite()
@@ -97,13 +99,15 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
 
     public function testWritableStreamStat()
     {
-        $stream = $this->bucket->openUploadStream('filename');
+        $stream = $this->bucket->openUploadStream('filename', ['chunkSizeBytes' => 1024]);
 
         $stat = fstat($stream);
         $this->assertSame(0100222, $stat[2]);
         $this->assertSame(0100222, $stat['mode']);
         $this->assertSame(0, $stat[7]);
         $this->assertSame(0, $stat['size']);
+        $this->assertSame(1024, $stat[11]);
+        $this->assertSame(1024, $stat['blksize']);
 
         $this->assertSame(6, fwrite($stream, 'foobar'));
 

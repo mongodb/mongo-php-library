@@ -56,6 +56,8 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $stat = fstat($stream);
         $this->assertSame(0100444, $stat[2]);
         $this->assertSame(0100444, $stat['mode']);
+        $this->assertSame(10, $stat[7]);
+        $this->assertSame(10, $stat['size']);
     }
 
     public function testReadableStreamWrite()
@@ -100,6 +102,14 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $stat = fstat($stream);
         $this->assertSame(0100222, $stat[2]);
         $this->assertSame(0100222, $stat['mode']);
+        $this->assertSame(0, $stat[7]);
+        $this->assertSame(0, $stat['size']);
+
+        $this->assertSame(6, fwrite($stream, 'foobar'));
+
+        $stat = fstat($stream);
+        $this->assertSame(6, $stat[7]);
+        $this->assertSame(6, $stat['size']);
     }
 
     public function testWritableStreamWrite()

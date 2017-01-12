@@ -61,6 +61,22 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
         new WritableStream($this->collectionWrapper, 'filename', ['chunkSizeBytes' => 0]);
     }
 
+    public function testWriteBytesAlwaysUpdatesFileSize()
+    {
+        $stream = new WritableStream($this->collectionWrapper, 'filename', ['chunkSizeBytes' => 1024]);
+
+        $this->assertSame(0, $stream->getSize());
+        $this->assertSame(512, $stream->writeBytes(str_repeat('a', 512)));
+        $this->assertSame(512, $stream->getSize());
+        $this->assertSame(512, $stream->writeBytes(str_repeat('a', 512)));
+        $this->assertSame(1024, $stream->getSize());
+        $this->assertSame(512, $stream->writeBytes(str_repeat('a', 512)));
+        $this->assertSame(1536, $stream->getSize());
+
+        $stream->close();
+        $this->assertSame(1536, $stream->getSize());
+    }
+
     /**
      * @dataProvider provideInputDataAndExpectedMD5
      */

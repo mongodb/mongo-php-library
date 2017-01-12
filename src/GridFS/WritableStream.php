@@ -158,7 +158,7 @@ class WritableStream
      */
     public function getSize()
     {
-        return $this->length;
+        return $this->length + strlen($this->buffer);
     }
 
     /**

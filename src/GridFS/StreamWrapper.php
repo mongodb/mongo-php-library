@@ -145,7 +145,9 @@ class StreamWrapper
     {
         $stat = $this->getStatTemplate();
 
-        $stat[2] = $stat['mode'] = $this->mode;
+        $stat[2] = $stat['mode'] = $this->stream instanceof ReadableStream
+            ? 0100444  // S_IFREG & S_IRUSR & S_IRGRP & S_IROTH
+            : 0100222; // S_IFREG & S_IWUSR & S_IWGRP & S_IWOTH
         $stat[7] = $stat['size'] = $this->stream->getSize();
 
         return $stat;

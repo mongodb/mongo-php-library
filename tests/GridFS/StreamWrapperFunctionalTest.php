@@ -49,6 +49,15 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame('', fread($stream, 3));
     }
 
+    public function testReadableStreamStat()
+    {
+        $stream = $this->bucket->openDownloadStream('length-10');
+
+        $stat = fstat($stream);
+        $this->assertSame(0100444, $stat[2]);
+        $this->assertSame(0100444, $stat['mode']);
+    }
+
     public function testReadableStreamWrite()
     {
         $stream = $this->bucket->openDownloadStream('length-10');
@@ -82,6 +91,15 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame('', fread($stream, 8192));
         $this->assertSame(6, fwrite($stream, 'foobar'));
         $this->assertSame('', fread($stream, 8192));
+    }
+
+    public function testWritableStreamStat()
+    {
+        $stream = $this->bucket->openUploadStream('filename');
+
+        $stat = fstat($stream);
+        $this->assertSame(0100222, $stat[2]);
+        $this->assertSame(0100222, $stat['mode']);
     }
 
     public function testWritableStreamWrite()

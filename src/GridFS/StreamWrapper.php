@@ -17,6 +17,7 @@
 
 namespace MongoDB\GridFS;
 
+use MongoDB\BSON\UTCDateTime;
 use Exception;
 
 /**
@@ -151,6 +152,12 @@ class StreamWrapper
         $stat[7] = $stat['size'] = $this->stream->getSize();
 
         $file = $this->stream->getFile();
+
+        if (isset($file->uploadDate) && $file->uploadDate instanceof UTCDateTime) {
+            $timestamp = $file->uploadDate->toDateTime()->getTimestamp();
+            $stat[9] = $stat['mtime'] = $timestamp;
+            $stat[10] = $stat['ctime'] = $timestamp;
+        }
 
         if (isset($file->chunkSize) && is_integer($file->chunkSize)) {
             $stat[11] = $stat['blksize'] = $file->chunkSize;

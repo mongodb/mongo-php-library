@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\GridFS;
 
 use MongoDB\BSON\Binary;
+use MongoDB\BSON\UTCDateTime;
 
 /**
  * Functional tests for the internal StreamWrapper class.
@@ -14,7 +15,7 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         parent::setUp();
 
         $this->filesCollection->insertMany([
-            ['_id' => 'length-10', 'length' => 10, 'chunkSize' => 4],
+            ['_id' => 'length-10', 'length' => 10, 'chunkSize' => 4, 'uploadDate' => new UTCDateTime('1484202200000')],
         ]);
 
         $this->chunksCollection->insertMany([
@@ -58,6 +59,10 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame(0100444, $stat['mode']);
         $this->assertSame(10, $stat[7]);
         $this->assertSame(10, $stat['size']);
+        $this->assertSame(1484202200, $stat[9]);
+        $this->assertSame(1484202200, $stat['mtime']);
+        $this->assertSame(1484202200, $stat[10]);
+        $this->assertSame(1484202200, $stat['ctime']);
         $this->assertSame(4, $stat[11]);
         $this->assertSame(4, $stat['blksize']);
     }
@@ -99,6 +104,7 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
 
     public function testWritableStreamStat()
     {
+        $currentTimestamp = time();
         $stream = $this->bucket->openUploadStream('filename', ['chunkSizeBytes' => 1024]);
 
         $stat = fstat($stream);
@@ -106,6 +112,10 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame(0100222, $stat['mode']);
         $this->assertSame(0, $stat[7]);
         $this->assertSame(0, $stat['size']);
+        $this->assertGreaterThanOrEqual($currentTimestamp, $stat[9]);
+        $this->assertGreaterThanOrEqual($currentTimestamp, $stat['mtime']);
+        $this->assertGreaterThanOrEqual($currentTimestamp, $stat[10]);
+        $this->assertGreaterThanOrEqual($currentTimestamp, $stat['ctime']);
         $this->assertSame(1024, $stat[11]);
         $this->assertSame(1024, $stat['blksize']);
 

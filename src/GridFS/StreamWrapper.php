@@ -119,17 +119,17 @@ class StreamWrapper
      * if data is not available to be read.
      * 
      * @see http://php.net/manual/en/streamwrapper.stream-read.php
-     * @param integer $count Number of bytes to read
+     * @param integer $length Number of bytes to read
      * @return string
      */
-    public function stream_read($count)
+    public function stream_read($length)
     {
         if ( ! $this->stream instanceof ReadableStream) {
             return '';
         }
 
         try {
-            return $this->stream->downloadNumBytes($count);
+            return $this->stream->readBytes($length);
         } catch (Exception $e) {
             trigger_error(sprintf('%s: %s', get_class($e), $e->getMessage()), \E_USER_WARNING);
             return false;

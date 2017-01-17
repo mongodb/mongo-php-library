@@ -5,7 +5,7 @@ MongoDB PHP Library
 .. default-domain:: mongodb
 
 The |php-library| provides a high-level abstraction around the lower-level
-`PHP Driver <https://php.net/mongodb>`_, also known as the ``mongodb``
+`PHP driver <https://php.net/mongodb>`_, also known as the ``mongodb``
 extension.
 
 While the ``mongodb`` extension provides a limited API for executing commands,
@@ -18,11 +18,11 @@ collection management.
 If you are developing a PHP application with MongoDB, you should consider using
 this library, or another high-level abstraction, instead of the extension alone.
 
-For additional information about the MongoDB PHP Library and the ``mongodb``
-extension, see the `Architecture Overview
-<http://php.net/manual/en/mongodb.overview.php>`_ article in the extension
-documentation. `Derick Rethans <http://derickrethans.nl/>`_ has also written a
-series of blog posts entitled *New MongoDB Drivers for PHP and HHVM*:
+For additional information about this library and the ``mongodb`` extension, see
+the `Architecture Overview <http://php.net/manual/en/mongodb.overview.php>`_
+article in the extension documentation. `Derick Rethans
+<http://derickrethans.nl/>`_ has also written a series of blog posts entitled
+*New MongoDB Drivers for PHP and HHVM*:
 
 - `Part One: History <https://derickrethans.nl/new-drivers.html>`_
 

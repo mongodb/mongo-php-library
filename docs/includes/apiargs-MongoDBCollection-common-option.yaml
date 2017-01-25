@@ -17,7 +17,7 @@ description: |
    and accent marks. When specifying collation, the ``locale`` field is
    mandatory; all other collation fields are optional. For descriptions of the
    fields, see :manual:`Collation Document
-   <reference/collation/#collation-document>`.
+   </reference/collation/#collation-document>`.
 
    If the collation is unspecified but the collection has a default collation,
    the operation uses the collation specified for the collection. If no

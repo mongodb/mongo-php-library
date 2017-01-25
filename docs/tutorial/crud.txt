@@ -92,6 +92,8 @@ The |php-library| provides the :phpmethod:`MongoDB\\Collection::findOne()` and
 :phpmethod:`MongoDB\\Collection::aggregate()` method for performing
 :manual:`aggregation operations </core/aggregation-pipeline>`.
 
+.. include:: /includes/extracts/note-bson-comparison.rst
+
 Find One Document
 ~~~~~~~~~~~~~~~~~
 
@@ -136,6 +138,16 @@ The output would then resemble::
        string(2) "CA"
      }
    }
+
+.. note::
+
+   The criteria in this example matched an ``_id`` with a string value of
+   ``"94301"``. The same criteria would not have matched a document with an
+   integer value of ``94301`` due to MongoDB's :manual:`comparison rules for
+   BSON types </reference/bson-type-comparison-order>`. Similarly, users should
+   use a :php:`MongoDB\\BSON\\ObjectID <class.mongodb-bson-objectid>` object
+   when matching an ``_id`` with an :manual:`ObjectId </reference/object-id/>`
+   value, as strings and ObjectIds are not directly comparable.
 
 .. seealso:: :phpmethod:`MongoDB\\Collection::findOne()`
 

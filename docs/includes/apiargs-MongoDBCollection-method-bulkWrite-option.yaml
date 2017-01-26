@@ -6,11 +6,11 @@ arg_name: option
 name: ordered
 type: boolean
 description: |
-  If ``true``: when a single write fails, the operation returns without
-  performing the remaining writes.
+  If ``true``: when a single write fails, the operation will stop without
+  performing the remaining writes and throw an exception.
 
   If ``false``: when a single write fails, the operation will continue with the
-  remaining writes, if any.
+  remaining writes, if any, and throw an exception.
 
   The default is ``true``.
 interface: phpmethod

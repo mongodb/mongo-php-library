@@ -40,7 +40,14 @@ Errors/Exceptions
 
 .. include:: /includes/extracts/error-unsupportedexception.rst
 .. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-bulkwriteexception.rst
 .. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+Behavior
+--------
+
+.. include:: /includes/extracts/bulkwriteexception-result.rst
+.. include:: /includes/extracts/bulkwriteexception-ordered.rst
 
 .. todo: add output and examples
 

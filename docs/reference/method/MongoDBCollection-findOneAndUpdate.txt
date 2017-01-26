@@ -68,7 +68,7 @@ setting its building number to ``"761"``:
        [ '$set' => [ 'address.building' => '761' ]],
        [
            'projection' => [ 'address' => 1 ],
-           'returnDocument' => MongoDB\Operation\FindOneAndUpdate::RETURN_DOCUMENT_AFTER
+           'returnDocument' => MongoDB\Operation\FindOneAndUpdate::RETURN_DOCUMENT_AFTER,
        ]
    );
 

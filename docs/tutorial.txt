@@ -7,6 +7,7 @@ Tutorials
 
    /tutorial/crud
    /tutorial/commands
+   /tutorial/decimal128
    /tutorial/gridfs
    /tutorial/indexes
    /tutorial/example-data

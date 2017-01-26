@@ -1,3 +1,11 @@
+ref: error-driver-bulkwriteexception
+content: |
+  :php:`MongoDB\\Driver\\Exception\\BulkWriteException
+  <mongodb-driver-exception-bulkwriteexception>` for errors related to the write
+  operation. Users should inspect the value returned by :php:`getWriteResult()
+  <mongodb-driver-writeexception.getwriteresult>` to determine the nature of the
+  error.
+---
 ref: error-driver-invalidargumentexception
 content: |
   :php:`MongoDB\\Driver\\Exception\\InvalidArgumentException

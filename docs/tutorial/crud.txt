@@ -331,6 +331,48 @@ The output would then resemble::
    10025: NEW YORK, NY
    90201: BELL GARDENS, CA
 
+Regular Expressions
+~~~~~~~~~~~~~~~~~~~
+
+Filter criteria may include regular expressions, either by using the
+:php:`MongoDB\\BSON\\Regex <mongodb-bson-regex>` class directory or the
+:query:`$regex` operator.
+
+The following example lists documents in the ``zips`` collection where the city
+name starts with "garden" and the state is Texas:
+
+.. code-block:: php
+
+   <?php
+
+   $collection = (new MongoDB\Client)->demo->zips;
+
+   $cursor = $collection->find([
+       'city' => new MongoDB\BSON\Regex('^garden', 'i'),
+       'state' => 'TX',
+   ]);
+
+   foreach ($cursor as $document) {
+      printf("%s: %s, %s\n", $document['_id'], $document['city'], $document['state']);
+   }
+
+The output would then resemble::
+
+   78266: GARDEN RIDGE, TX
+   79739: GARDEN CITY, TX
+   79758: GARDENDALE, TX
+
+An equivalent filter could be constructed using the :query:`$regex` operator:
+
+.. code-block:: php
+
+   [
+       'city' => ['$regex' => '^garden', '$options' => 'i'],
+       'state' => 'TX',
+   ]
+
+.. seealso:: :manual:`$regex </reference/operator/query/regex>` in the MongoDB manual
+
 Complex Queries with Aggregation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

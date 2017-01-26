@@ -187,7 +187,6 @@ class BucketFunctionalTest extends FunctionalTestCase
         $id = $this->bucket->uploadFromStream('filename', $this->createStream($input));
         $destination = $this->createStream();
         $this->bucket->downloadToStream($id, $destination);
-        rewind($destination);
 
         $this->assertStreamContents($input, $destination);
     }
@@ -222,37 +221,30 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $destination = $this->createStream();
         $this->bucket->downloadToStreamByName('filename', $destination);
-        rewind($destination);
         $this->assertStreamContents('baz', $destination);
 
         $destination = $this->createStream();
         $this->bucket->downloadToStreamByName('filename', $destination, ['revision' => -3]);
-        rewind($destination);
         $this->assertStreamContents('foo', $destination);
 
         $destination = $this->createStream();
         $this->bucket->downloadToStreamByName('filename', $destination, ['revision' => -2]);
-        rewind($destination);
         $this->assertStreamContents('bar', $destination);
 
         $destination = $this->createStream();
         $this->bucket->downloadToStreamByName('filename', $destination, ['revision' => -1]);
-        rewind($destination);
         $this->assertStreamContents('baz', $destination);
 
         $destination = $this->createStream();
         $this->bucket->downloadToStreamByName('filename', $destination, ['revision' => 0]);
-        rewind($destination);
         $this->assertStreamContents('foo', $destination);
 
         $destination = $this->createStream();
         $this->bucket->downloadToStreamByName('filename', $destination, ['revision' => 1]);
-        rewind($destination);
         $this->assertStreamContents('bar', $destination);
 
         $destination = $this->createStream();
         $this->bucket->downloadToStreamByName('filename', $destination, ['revision' => 2]);
-        rewind($destination);
         $this->assertStreamContents('baz', $destination);
     }
 

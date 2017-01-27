@@ -36,6 +36,16 @@ Errors/Exceptions
 .. include:: /includes/extracts/error-driver-invalidargumentexception.rst
 .. include:: /includes/extracts/error-driver-runtimeexception.rst
 
+Behavior
+--------
+
+A :php:`MongoDB\\Driver\\Manager <mongodb-driver-manager>` is constructed
+internally. Per the `Server Discovery and Monitoring
+<https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst#single-threaded-client-construction>`_
+specification, :php:`MongoDB\\Driver\\Manager::__construct()
+<mongodb-driver-manager.construct>` performs no I/O. Connections will be
+initialized on demand, when the first operation is executed.
+
 Examples
 --------
 
@@ -128,3 +138,6 @@ See Also
   <mongodb-driver-manager.construct>`
 - :manual:`Connection String URI Format </reference/connection-string>` in the
   MongoDB manual
+- `Server Discovery and Monitoring
+  <https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst#single-threaded-client-construction>`_
+  specification

@@ -89,7 +89,7 @@ To open a download stream and read from it:
    $stream = $bucket->openDownloadStream($fileId);
    $contents = stream_get_contents($stream);
 
-To download the file all at once and write it to an writable stream:
+To download the file all at once and write it to a writable stream:
 
 .. code-block:: php
 

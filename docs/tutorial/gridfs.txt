@@ -87,7 +87,7 @@ To open a download stream and read from it:
    $bucket = (new MongoDB\Client)->example->selectGridFSBucket();
 
    $stream = $bucket->openDownloadStream($fileId);
-   $contents = file_get_contents($stream);
+   $contents = stream_get_contents($stream);
 
 To download the file all at once and write it to an writable stream:
 
@@ -136,7 +136,7 @@ particular file:
    $bucket = (new MongoDB\Client)->example->selectGridFSBucket();
 
    $stream = $bucket->openDownloadStreamByName('my-file.txt', ['revision' => 0]);
-   $contents = file_get_contents($stream);
+   $contents = stream_get_contents($stream);
 
 Deleting Files
 --------------

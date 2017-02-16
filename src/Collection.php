@@ -470,7 +470,6 @@ class Collection
         }
 
         $operation = new FindOne($this->databaseName, $this->collectionName, $filter, $options);
-        $server = $this->manager->selectServer($options['readPreference']);
 
         return $operation->execute($server);
     }

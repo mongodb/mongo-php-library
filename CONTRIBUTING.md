@@ -95,6 +95,11 @@ page.
 The PHP library uses [semantic versioning](http://semver.org/). Do not break
 backwards compatibility in a non-major release or your users will kill you.
 
+Before proceeding, ensure that the `master` branch is up-to-date with all code
+changes in this maintenance branch. This is important because we will later
+merge the ensuing release commits up to master with `--strategy=ours`, which
+will ignore changes from the merged commits.
+
 A version constant may be added at a later date (see:
 [PHPLIB-131](https://jira.mongodb.org/browse/PHPLIB-131)). For now, there is
 nothing to update.
@@ -112,6 +117,17 @@ $ git tag -a -m "Release X.Y.Z" X.Y.Z
 ```
 $ git push --tags
 ```
+
+### Merge the maintenance branch up to master
+
+```
+$ git checkout master
+$ git merge vX.Y --strategy=ours
+$ git push
+```
+
+The `--strategy=ours` option ensures that all changes from the merged commits
+will be ignored.
 
 ### Publish release notes
 

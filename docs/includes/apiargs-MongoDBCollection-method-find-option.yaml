@@ -137,9 +137,9 @@ arg_name: option
 name: modifiers
 type: array|object
 description: |
-  Meta-operators that modify the output or behavior of a query. :manual:`Cursor
-  Methods </reference/method/js-cursor`> describes the query modification
-  methods available in MongoDB.
+  :manual:`Meta operators </reference/operator/query-modifier>` that modify the
+  output or behavior of a query. Use of these operators is deprecated in favor
+  of named options.
 interface: phpmethod
 operation: ~
 optional: true

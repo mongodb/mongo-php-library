@@ -76,8 +76,9 @@ class Find implements Executable
      *    run. If "$maxTimeMS" also exists in the modifiers document, this
      *    option will take precedence.
      *
-     *  * modifiers (document): Meta-operators modifying the output or behavior
-     *    of a query.
+     *  * modifiers (document): Meta operators that modify the output or
+     *    behavior of a query. Use of these operators is deprecated in favor of
+     *    named options.
      *
      *  * noCursorTimeout (boolean): The server normally times out idle cursors
      *    after an inactivity period (10 minutes) to prevent excess memory use.

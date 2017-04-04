@@ -22,9 +22,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function getCollectionName()
     {
-         $class = new ReflectionClass($this);
+        $class = new ReflectionClass($this);
 
-         return sprintf('%s.%s', $class->getShortName(), hash('crc32b', $this->getName()));
+        return sprintf('%s.%s', $class->getShortName(), hash('crc32b', $this->getName()));
     }
 
     /**

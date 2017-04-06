@@ -695,6 +695,16 @@ class Collection
     }
 
     /**
+     * Return the WriteConcern
+     * 
+     * @return WriteConcern
+     */
+    public function getWriteConcern()
+    {
+        return $this->writeConcern;
+    }
+
+    /**
      * Return the collection namespace.
      *
      * @see https://docs.mongodb.org/manual/reference/glossary/#term-namespace

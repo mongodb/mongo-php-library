@@ -151,6 +151,8 @@ The output would then resemble::
 
 .. seealso:: :phpmethod:`MongoDB\\Collection::findOne()`
 
+.. _php-find-many-documents:
+
 Find Many Documents
 ~~~~~~~~~~~~~~~~~~~
 
@@ -372,6 +374,8 @@ An equivalent filter could be constructed using the :query:`$regex` operator:
    ]
 
 .. seealso:: :manual:`$regex </reference/operator/query/regex>` in the MongoDB manual
+
+.. _php-aggregation:
 
 Complex Queries with Aggregation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

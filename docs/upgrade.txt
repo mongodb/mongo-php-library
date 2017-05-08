@@ -231,7 +231,7 @@ Accessing IDs of Inserted Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the legacy driver, :php:`MongoCollection::insert() <mongocollection.insert>`,
-:php:`MongoCollection::batchInsert() <mongocollection.batchinsert`, and
+:php:`MongoCollection::batchInsert() <mongocollection.batchinsert>`, and
 :php:`MongoCollection::save() <mongocollection.save>` (when inserting) would
 modify their input argument by injecting an ``_id`` key with a generated
 ObjectId (i.e. :php:`MongoId <class.mongoid>` object). This behavior was a bit

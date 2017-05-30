@@ -65,6 +65,10 @@ class PedantryTest extends \PHPUnit_Framework_TestCase
             if ($file->getFilename() === 'functions.php') {
                 continue;
             }
+            /* autoload.php added downstream (e.g. Fedora) */
+            if ($file->getFilename() === 'autoload.php') {
+                continue;
+            }
 
             /* autoload.php added downstream (e.g. Fedora) */
             if ($file->getFilename() === 'autoload.php') {

@@ -23,11 +23,9 @@ use MongoDB\Exception\BadMethodCallException;
 /**
  * Result class for a bulk write operation.
  */
-class BulkWriteResult
+class BulkWriteResult extends Result
 {
-    private $writeResult;
     private $insertedIds;
-    private $isAcknowledged;
 
     /**
      * Constructor.
@@ -37,9 +35,9 @@ class BulkWriteResult
      */
     public function __construct(WriteResult $writeResult, array $insertedIds)
     {
-        $this->writeResult = $writeResult;
+        parent::__construct($writeResult);
+
         $this->insertedIds = $insertedIds;
-        $this->isAcknowledged = $writeResult->isAcknowledged();
     }
 
     /**
@@ -172,18 +170,5 @@ class BulkWriteResult
         }
 
         throw BadMethodCallException::unacknowledgedWriteResultAccess(__METHOD__);
-    }
-
-    /**
-     * Return whether this update was acknowledged by the server.
-     *
-     * If the update was not acknowledged, other fields from the WriteResult
-     * (e.g. matchedCount) will be undefined.
-     *
-     * @return boolean
-     */
-    public function isAcknowledged()
-    {
-        return $this->isAcknowledged;
     }
 }

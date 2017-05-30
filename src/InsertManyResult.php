@@ -23,11 +23,9 @@ use MongoDB\Exception\BadMethodCallException;
 /**
  * Result class for a multi-document insert operation.
  */
-class InsertManyResult
+class InsertManyResult extends Result
 {
-    private $writeResult;
     private $insertedIds;
-    private $isAcknowledged;
 
     /**
      * Constructor.
@@ -37,9 +35,9 @@ class InsertManyResult
      */
     public function __construct(WriteResult $writeResult, array $insertedIds)
     {
-        $this->writeResult = $writeResult;
+        parent::__construct($writeResult);
+
         $this->insertedIds = $insertedIds;
-        $this->isAcknowledged = $writeResult->isAcknowledged();
     }
 
     /**
@@ -74,18 +72,5 @@ class InsertManyResult
     public function getInsertedIds()
     {
         return $this->insertedIds;
-    }
-
-    /**
-     * Return whether this insert result was acknowledged by the server.
-     *
-     * If the insert was not acknowledged, other fields from the WriteResult
-     * (e.g. insertedCount) will be undefined.
-     *
-     * @return boolean
-     */
-    public function isAcknowledged()
-    {
-        return $this->writeResult->isAcknowledged();
     }
 }

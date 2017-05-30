@@ -17,28 +17,13 @@
 
 namespace MongoDB;
 
-use MongoDB\Driver\WriteResult;
 use MongoDB\Exception\BadMethodCallException;
 
 /**
  * Result class for an update operation.
  */
-class UpdateResult
+class UpdateResult extends Result
 {
-    private $writeResult;
-    private $isAcknowledged;
-
-    /**
-     * Constructor.
-     *
-     * @param WriteResult $writeResult
-     */
-    public function __construct(WriteResult $writeResult)
-    {
-        $this->writeResult = $writeResult;
-        $this->isAcknowledged = $writeResult->isAcknowledged();
-    }
-
     /**
      * Return the number of documents that were matched by the filter.
      *
@@ -122,19 +107,5 @@ class UpdateResult
         }
 
         throw BadMethodCallException::unacknowledgedWriteResultAccess(__METHOD__);
-    }
-
-    /**
-     * Return whether this update was acknowledged by the server.
-     *
-     * If the update was not acknowledged, other fields from the WriteResult
-     * (e.g. matchedCount) will be undefined and their getter methods should not
-     * be invoked.
-     *
-     * @return boolean
-     */
-    public function isAcknowledged()
-    {
-        return $this->isAcknowledged;
     }
 }

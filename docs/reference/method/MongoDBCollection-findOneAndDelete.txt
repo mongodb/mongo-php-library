@@ -52,13 +52,13 @@ Examples
 --------
 
 The following example finds and deletes the document with ``restaurant_id`` of
-``"40375376"`` from the ``restaurants`` collection in the ``example`` database:
+``"40375376"`` from the ``restaurants`` collection in the ``test`` database:
 
 .. code-block:: php
 
    <?php
 
-   $collection = (new MongoDB\Client)->example->restaurants;
+   $collection = (new MongoDB\Client)->test->restaurants;
 
    $deletedRestaurant = $collection->findOneAndDelete(
        [ 'restaurant_id' => '40375376' ],

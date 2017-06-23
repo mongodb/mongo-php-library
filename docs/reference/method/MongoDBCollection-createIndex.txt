@@ -54,13 +54,13 @@ Create a Compound Index
 
 The following example creates a :manual:`compound index </core/index-compound>`
 on the ``borough`` and ``cuisine`` fields in the ``restaurants`` collection in
-the ``example`` database.
+the ``test`` database.
 
 .. code-block:: php
 
    <?php
 
-   $collection = (new MongoDB\Client)->selectCollection('example', 'restaurants');
+   $collection = (new MongoDB\Client)->selectCollection('test', 'restaurants');
 
    $indexName = $collection->createIndex(['borough' => 1, 'cuisine' => 1]);
 
@@ -74,7 +74,7 @@ Create a Partial Index
 ~~~~~~~~~~~~~~~~~~~~~~
 
 The following example adds a :manual:`partial index </core/index-parital>` on
-the ``borough`` field in the ``restaurants`` collection in the ``example``
+the ``borough`` field in the ``restaurants`` collection in the ``test``
 database. The partial index indexes only documents where the ``borough`` field
 exists.
 
@@ -82,7 +82,7 @@ exists.
 
    <?php
 
-   $collection = (new MongoDB\Client)->selectCollection('example, 'restaurants');
+   $collection = (new MongoDB\Client)->selectCollection('test, 'restaurants');
 
    $indexName = $collection->createIndex(
       ['borough' => 1],

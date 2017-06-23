@@ -49,24 +49,24 @@ overridden via the ``$options`` parameter.
 Example
 -------
 
-The following example selects the ``users`` collection in the ``demo`` database:
+The following example selects the ``users`` collection in the ``test`` database:
 
 .. code-block:: php
 
    <?php
 
-   $db = (new MongoDB\Client)->demo;
+   $db = (new MongoDB\Client)->test;
 
-   $collection = $db->selectCollection('demo', 'users');
+   $collection = $db->selectCollection('test', 'users');
 
-The following example selects the ``users`` collection in the ``demo``
+The following example selects the ``users`` collection in the ``test``
 database with a custom read preference:
 
 .. code-block:: php
 
    <?php
 
-   $db = (new MongoDB\Client)->demo;
+   $db = (new MongoDB\Client)->test;
 
    $users = $db->selectCollection(
        'users',

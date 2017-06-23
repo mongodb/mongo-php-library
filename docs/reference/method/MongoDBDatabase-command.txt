@@ -51,7 +51,7 @@ result document:
 
    <?php
 
-   $database = (new MongoDB\Client)->example;
+   $database = (new MongoDB\Client)->test;
 
    $cursor = $database->command(['isMaster' => 1]);
 
@@ -92,7 +92,7 @@ multiple result documents:
 
    <?php
 
-   $database = (new MongoDB\Client)->example;
+   $database = (new MongoDB\Client)->test;
 
    $cursor = $database->command(['isMaster' => 1]);
 

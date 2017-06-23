@@ -5,38 +5,41 @@ Example Data
 .. default-domain:: mongodb
 
 Some examples in this documentation use example data fixtures from
-`zips.json <http://media.mongodb.org/zips.json>`_. This is a dataset comprised
-of United States postal codes, populations, and geographic locations.
+`zips.json <https://media.mongodb.org/zips.json>`_ and
+`primer-dataset.json <https://raw.githubusercontent.com/mongodb/docs-assets/primer-dataset/primer-dataset.json>`_.
 
 Importing the dataset into MongoDB can be done in several ways. The following
-example uses the :php:`driver <mongodb>` directly:
+example imports the `zips.json` file into a `test.zips` collection:
+:php:`driver <mongodb>` directly:
 
 .. code-block:: php
 
    <?php
 
-   $file = 'http://media.mongodb.org/zips.json';
-   $zips = file($file, FILE_IGNORE_NEW_LINES);
+   $filename = 'https://media.mongodb.org/zips.json';
+   $lines = file($filename, FILE_IGNORE_NEW_LINES);
 
    $bulk = new MongoDB\Driver\BulkWrite;
 
-   foreach ($zips as $string) {
-       $document = json_decode($string);
+   foreach ($lines as $line) {
+       $bson = MongoDB\BSON\fromJSON($line);
+       $document = MongoDB\BSON\toPHP($bson);
        $bulk->insert($document);
    }
 
    $manager = new MongoDB\Driver\Manager('mongodb://127.0.0.1/');
 
-   $result = $manager->executeBulkWrite('demo.zips', $bulk);
+   $result = $manager->executeBulkWrite('test.zips', $bulk);
    printf("Inserted %d documents\n", $result->getInsertedCount());
 
 The output would then resemble::
 
    Inserted 29353 documents
 
-You may also import the dataset using :manual:`mongoimport
+You may also import the datasets using :manual:`mongoimport
 </reference/program/mongoimport>`, which is included with MongoDB:
 
 .. code-block:: none
 
-   $ mongoimport --db demo --collection zips --file zips.json --drop
+   $ mongoimport --db test --collection zips --file zips.json --drop
+   $ mongoimport --db test --collection restaurants --file primer-dataset.json --drop

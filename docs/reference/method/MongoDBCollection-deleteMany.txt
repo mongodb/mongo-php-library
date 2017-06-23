@@ -59,7 +59,7 @@ that have ``"ny"`` as the value for the ``state`` field:
 
    <?php
 
-   $collection = (new MongoDB\Client)->demo->users;
+   $collection = (new MongoDB\Client)->test->users;
    $collection->drop();
 
    $collection->insertOne(['name' => 'Bob', 'state' => 'ny']);

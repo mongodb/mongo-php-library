@@ -30,13 +30,13 @@ Example
 -------
 
 The following returns the collection name for the ``zips`` collection in the
-``demo`` database.
+``test`` database.
 
 .. code-block:: php
 
    <?php
 
-   $collection = (new MongoDB\Client)->demo->zips;
+   $collection = (new MongoDB\Client)->test->zips;
 
    echo $collection->getCollectionName();
 

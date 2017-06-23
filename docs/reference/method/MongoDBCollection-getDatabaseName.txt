@@ -30,19 +30,19 @@ Example
 -------
 
 The following returns the database name for the ``zips`` collection in the
-``demo`` database.
+``test`` database.
 
 .. code-block:: php
 
    <?php
 
-   $collection = (new MongoDB\Client)->demo->zips;
+   $collection = (new MongoDB\Client)->test->zips;
 
    echo $collection->getDatabaseName();
 
 The output would then resemble::
 
-   demo
+   test
 
 See Also
 --------

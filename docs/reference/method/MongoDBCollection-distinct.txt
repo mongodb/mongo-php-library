@@ -54,13 +54,13 @@ Return Distinct Values for a Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following example identifies the distinct values for the ``borough`` field
-in the ``restaurants`` collection in the ``example`` database.
+in the ``restaurants`` collection in the ``test`` database.
 
 .. code-block:: php
 
    <?php
 
-   $collection = (new MongoDB\Client)->example->restaurants;
+   $collection = (new MongoDB\Client)->test->restaurants;
 
    $distinct = $collection->distinct('borough');
 
@@ -87,14 +87,14 @@ Return Distinct Values Using a Filter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following example identifies the distinct values for the ``cuisine`` field
-in the ``restaurants`` collection in the ``example`` database for documents
-where the ``borough`` is ``Queens``:
+in the ``restaurants`` collection in the ``test`` database for documents where
+the ``borough`` is ``Queens``:
 
 .. code-block:: php
 
    <?php
 
-   $collection = (new MongoDB\Client)->example->restaurants;
+   $collection = (new MongoDB\Client)->test->restaurants;
 
    $distinct = $collection->distinct('cuisine', ['borough' => 'Queens']);
 

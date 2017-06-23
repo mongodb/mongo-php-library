@@ -35,10 +35,10 @@ The following example prints the name of a database object:
 
    <?php
 
-   $db = (new MongoDB\Client)->demo;
+   $db = (new MongoDB\Client)->test;
 
    echo $db->getDatabaseName();
 
 The output would then resemble::
 
-   demo
+   test

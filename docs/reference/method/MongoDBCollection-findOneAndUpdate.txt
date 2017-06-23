@@ -54,14 +54,14 @@ Examples
 --------
 
 The following operation updates the restaurant with ``restaurant_id`` of
-``"40361708"`` in the ``restaurants`` collection in the ``example`` database by
+``"40361708"`` in the ``restaurants`` collection in the ``test`` database by
 setting its building number to ``"761"``:
 
 .. code-block:: php
 
    <?php
 
-   $collection = (new MongoDB\Client)->example->restaurants;
+   $collection = (new MongoDB\Client)->test->restaurants;
 
    $updatedRestaurant = $collection->findOneAndUpdate(
        [ 'restaurant_id' => '40361708' ],

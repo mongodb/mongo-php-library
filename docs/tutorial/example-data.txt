@@ -9,7 +9,7 @@ Some examples in this documentation use example data fixtures from
 `primer-dataset.json <https://raw.githubusercontent.com/mongodb/docs-assets/primer-dataset/primer-dataset.json>`_.
 
 Importing the dataset into MongoDB can be done in several ways. The following
-example imports the `zips.json` file into a `demo.zips` collection:
+example imports the `zips.json` file into a `test.zips` collection:
 :php:`driver <mongodb>` directly:
 
 .. code-block:: php
@@ -29,7 +29,7 @@ example imports the `zips.json` file into a `demo.zips` collection:
 
    $manager = new MongoDB\Driver\Manager('mongodb://127.0.0.1/');
 
-   $result = $manager->executeBulkWrite('demo.zips', $bulk);
+   $result = $manager->executeBulkWrite('test.zips', $bulk);
    printf("Inserted %d documents\n", $result->getInsertedCount());
 
 The output would then resemble::
@@ -41,5 +41,5 @@ You may also import the datasets using :manual:`mongoimport
 
 .. code-block:: none
 
-   $ mongoimport --db demo --collection zips --file zips.json --drop
-   $ mongoimport --db demo --collection restaurants --file primer-dataset.json --drop
+   $ mongoimport --db test --collection zips --file zips.json --drop
+   $ mongoimport --db test --collection restaurants --file primer-dataset.json --drop

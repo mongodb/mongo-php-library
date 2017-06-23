@@ -30,13 +30,13 @@ To execute a command on a :program:`mongod` instance, use the
 :phpmethod:`MongoDB\\Database::command()` method. For instance, the following
 operation uses the :manual:`geoNear </reference/command/geoNear>` command to
 search for the three closest documents to longitude ``-74`` and latitude ``40``
-in the ``restos`` collection in the ``example`` database:
+in the ``restos`` collection in the ``test`` database:
 
 .. code-block:: php
 
    <?php
 
-   $database = (new MongoDB\Client)->example;
+   $database = (new MongoDB\Client)->test;
 
    $cursor = $database->command([
        'geoNear' => 'restos',
@@ -218,14 +218,14 @@ object on which it is invoked. To execute commands that require a specific read
 preference, specify the read preference in the ``$options`` parameter of the
 method.
 
-The following example adds a user to the ``demo`` database and specifies a
+The following example adds a user to the ``test`` database and specifies a
 custom read preference:
 
 .. code-block:: php
 
    <?php
 
-   $db = (new MongoDB\Client)->demo;
+   $db = (new MongoDB\Client)->test;
 
    $cursor = $db->command(
        [
@@ -267,7 +267,7 @@ document, or access the first result in the array, as in the following:
 
    <?php
 
-   $database = (new MongoDB\Client)->demo;
+   $database = (new MongoDB\Client)->test;
 
    $cursor = $database->command(['ping' => 1]);
 
@@ -290,7 +290,7 @@ Some commands, such as :manual:`listCollections
 </reference/command/listCollections>`, return their results via an iterable
 cursor. To view the results, iterate through the cursor.
 
-The following example lists the collections in the ``demo`` database by
+The following example lists the collections in the ``test`` database by
 iterating through the cursor returned by the ``listCollections`` command using a
 ``foreach`` loop:
 
@@ -298,7 +298,7 @@ iterating through the cursor returned by the ``listCollections`` command using a
 
    <?php
 
-   $database = (new MongoDB\Client)->demo;
+   $database = (new MongoDB\Client)->test;
 
    $cursor = $database->command(['listCollections' => 1]);
 

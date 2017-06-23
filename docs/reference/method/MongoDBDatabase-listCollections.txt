@@ -39,13 +39,13 @@ database.
 Example
 -------
 
-The following example lists all of the collections in the ``example`` database:
+The following example lists all of the collections in the ``test`` database:
 
 .. code-block:: php
 
    <?php
 
-   $database = (new MongoDB\Client)->example;
+   $database = (new MongoDB\Client)->test;
 
    foreach ($database->listCollections() as $collectionInfo) {
        var_dump($collectionInfo);
@@ -76,13 +76,13 @@ The output would then resemble::
    }
 
 The following example lists all collections whose name starts with ``"rest"``
-in the ``example`` database:
+in the ``test`` database:
 
 .. code-block:: php
 
    <?php
 
-   $database = (new MongoDB\Client)->example;
+   $database = (new MongoDB\Client)->test;
 
    $collections = $database->listCollections([
        'filter' => [

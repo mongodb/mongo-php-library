@@ -36,7 +36,7 @@ field of a collection named ``inventory``:
 
    <?php
 
-   $collection = (new MongoDB\Client)->demo->inventory;
+   $collection = (new MongoDB\Client)->test->inventory;
 
    $collection->insertOne([
        '_id' => 1,

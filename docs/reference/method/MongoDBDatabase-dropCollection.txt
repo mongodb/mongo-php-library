@@ -46,13 +46,13 @@ Errors/Exceptions
 Example
 -------
 
-The following example drops the ``users`` collection in the ``demo`` database:
+The following example drops the ``users`` collection in the ``test`` database:
 
 .. code-block:: php
 
    <?php
 
-   $db = (new MongoDB\Client)->demo;
+   $db = (new MongoDB\Client)->test;
 
    $result = $db->dropCollection('users');
 
@@ -64,7 +64,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(3) {
        ["ns"]=>
-       string(10) "demo.users"
+       string(10) "test.users"
        ["nIndexesWas"]=>
        int(1)
        ["ok"]=>

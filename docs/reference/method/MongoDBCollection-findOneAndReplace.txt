@@ -117,23 +117,29 @@ The following operation replaces the document with ``restaurant_id`` of
 
 The output would then resemble::
 
-   object(stdClass)#14 (6) {
-     ["_id"]=>
-     object(MongoDB\BSON\ObjectID)#11 (1) {
-       ["oid"]=>
-       string(24) "576023c7b02fa9281da4139e"
+   object(MongoDB\Model\BSONDocument)#18 (1) {
+     ["storage":"ArrayObject":private]=>
+     array(6) {
+       ["_id"]=>
+       object(MongoDB\BSON\ObjectID)#11 (1) {
+         ["oid"]=>
+         string(24) "594d5ef380a846852a4b5837"
+       }
+       ["Borough"]=>
+       string(13) "Staten Island"
+       ["cuisine"]=>
+       string(7) "Italian"
+       ["grades"]=>
+       object(MongoDB\Model\BSONArray)#17 (1) {
+         ["storage":"ArrayObject":private]=>
+         array(0) {
+         }
+       }
+       ["name"]=>
+       string(22) "Staten Island Pastaria"
+       ["restaurant_id"]=>
+       string(9) "999999999"
      }
-     ["borough"]=>
-     string(13) "Staten Island"
-     ["cuisine"]=>
-     string(7) "Italian"
-     ["grades"]=>
-     array(0) {
-     }
-     ["name"]=>
-     string(22) "Staten Island Pastaria"
-     ["restaurant_id"]=>
-     string(9) "999999999"
    }
 
 See Also

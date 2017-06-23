@@ -75,18 +75,21 @@ The following example finds and deletes the document with ``restaurant_id`` of
 
 The output would then resemble::
 
-   object(stdClass)#14 (4) {
-     ["_id"]=>
-     object(MongoDB\BSON\ObjectID)#11 (1) {
-       ["oid"]=>
-       string(24) "576023c6b02fa9281da3fad9"
+   object(MongoDB\Model\BSONDocument)#17 (1) {
+     ["storage":"ArrayObject":private]=>
+     array(4) {
+       ["_id"]=>
+       object(MongoDB\BSON\ObjectID)#11 (1) {
+         ["oid"]=>
+         string(24) "594d5ef280a846852a4b3f70"
+       }
+       ["borough"]=>
+       string(9) "Manhattan"
+       ["name"]=>
+       string(15) "Agra Restaurant"
+       ["restaurant_id"]=>
+       string(8) "40375376"
      }
-     ["borough"]=>
-     string(9) "Manhattan"
-     ["name"]=>
-     string(15) "Agra Restaurant"
-     ["restaurant_id"]=>
-     string(8) "40375376"
    }
 
 See Also

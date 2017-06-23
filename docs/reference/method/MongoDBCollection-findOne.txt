@@ -51,6 +51,28 @@ Behavior
 Examples
 --------
 
+Matching BSON Types in Query Criteria
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the following example, documents in the ``restaurants`` collection use an
+:manual:`ObjectId </reference/object-id/>` for their identifier (the default)
+and documents in the ``zips`` collection use a string. Since ObjectID is a
+special BSON type, the query criteria for selecting a restaurant must use the
+:php:`MongoDB\\BSON\\ObjectID <class.mongodb-bson-objectid>` class.
+
+.. code-block:: php
+
+   $database = (new MongoDB\Client)->test;
+
+   $zip = $database->zips->findOne(['_id' => '10036']);
+
+   $restaurant = $database->restaurants->findOne([
+       '_id' => new MongoDB\BSON\ObjectID('594d5ef280a846852a4b3f70'),
+   ])
+
+Projecting Fields
+~~~~~~~~~~~~~~~~~
+
 The following example finds a restaurant based on the ``cuisine`` and
 ``borough`` fields and uses a :manual:`projection
 </tutorial/project-fields-from-query-results>` to limit the fields that are

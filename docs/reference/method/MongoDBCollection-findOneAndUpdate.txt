@@ -72,7 +72,7 @@ setting its building number to ``"761"``:
        ]
    );
 
-   var_dump($updatedRestaurant)
+   var_dump($updatedRestaurant);
 
 The output would then resemble::
 

@@ -49,7 +49,7 @@ via the ``$options`` parameter.
 Example
 -------
 
-The following example selects the ``demo`` database:
+The following example selects the ``test`` database:
 
 .. code-block:: php
 
@@ -57,9 +57,9 @@ The following example selects the ``demo`` database:
 
    $client = new MongoDB\Client;
 
-   $db = $client->selectDatabase('demo');
+   $db = $client->selectDatabase('test');
 
-The following examples selects the ``demo`` database with a custom read
+The following examples selects the ``test`` database with a custom read
 preference:
 
 .. code-block:: php
@@ -69,7 +69,7 @@ preference:
    $client = new MongoDB\Client;
 
    $db = $client->selectDatabase(
-       'demo',
+       'test',
        [
            'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),
        ]

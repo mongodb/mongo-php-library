@@ -49,7 +49,7 @@ overridden via the ``$options`` parameter.
 Example
 -------
 
-The following example selects the ``users`` collection in the ``demo`` database:
+The following example selects the ``users`` collection in the ``test`` database:
 
 .. code-block:: php
 
@@ -57,9 +57,9 @@ The following example selects the ``users`` collection in the ``demo`` database:
 
    $client = new MongoDB\Client;
 
-   $collection = $client->selectCollection('demo', 'users');
+   $collection = $client->selectCollection('test', 'users');
 
-The following example selects the ``users`` collection in the ``demo`` database
+The following example selects the ``users`` collection in the ``test`` database
 with a custom read preference:
 
 .. code-block:: php
@@ -69,7 +69,7 @@ with a custom read preference:
    $client = new MongoDB\Client;
 
    $collection = $client->selectCollection(
-       'demo',
+       'test',
        'users',
        [
            'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),

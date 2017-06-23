@@ -50,7 +50,7 @@ To open an upload stream and write to it:
 
    <?php
 
-   $bucket = (new MongoDB\Client)->example->selectGridFSBucket();
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
 
    $stream = $bucket->openUploadStream('my-file.txt');
 
@@ -64,7 +64,7 @@ To upload the entire contents of a readable stream in one call:
 
    <?php
 
-   $bucket = (new MongoDB\Client)->example->selectGridFSBucket();
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
 
    $file = fopen('/path/to/my-file.txt', 'rb');
    $bucket->uploadFromStream('my-file.txt', $file);
@@ -84,7 +84,7 @@ To open a download stream and read from it:
    // In practice, $fileId denotes the _id of an existing file in GridFS
    $fileId = new MongoDB\BSON\ObjectId;
 
-   $bucket = (new MongoDB\Client)->example->selectGridFSBucket();
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
 
    $stream = $bucket->openDownloadStream($fileId);
    $contents = stream_get_contents($stream);
@@ -98,7 +98,7 @@ To download the file all at once and write it to a writable stream:
    // In practice, $fileId denotes the _id of an existing file in GridFS
    $fileId = new MongoDB\BSON\ObjectId;
 
-   $bucket = (new MongoDB\Client)->example->selectGridFSBucket();
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
 
    $file = fopen('/path/to/my-output-file.txt', 'wb');
 
@@ -133,7 +133,7 @@ particular file:
 
    <?php
 
-   $bucket = (new MongoDB\Client)->example->selectGridFSBucket();
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
 
    $stream = $bucket->openDownloadStreamByName('my-file.txt', ['revision' => 0]);
    $contents = stream_get_contents($stream);
@@ -150,7 +150,7 @@ You can delete a GridFS file by its ``_id``.
    // In practice, $fileId denotes the _id of an existing file in GridFS
    $fileId = new MongoDB\BSON\ObjectId;
 
-   $bucket = (new MongoDB\Client)->example->selectGridFSBucket();
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
 
    $bucket->delete($fileId);
 
@@ -165,7 +165,7 @@ about the GridFS files.
 
    <?php
 
-   $bucket = (new MongoDB\Client)->example->selectGridFSBucket();
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
 
    $cursor = $bucket->find(['filename' => 'my-file.txt']);
 
@@ -183,7 +183,7 @@ the file document for an existing readable or writable GridFS stream.
    // In practice, $fileId denotes the _id of an existing file in GridFS
    $fileId = new MongoDB\BSON\ObjectId;
 
-   $bucket = (new MongoDB\Client)->example->selectGridFSBucket();
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
 
    $stream = $bucket->openDownloadStream($fileId);
    $metadata = $bucket->getFileDocumentForStream($stream);
@@ -208,7 +208,7 @@ convenience for accessing the ``_id`` property of the object returned by
 
    <?php
 
-   $bucket = (new MongoDB\Client)->example->selectGridFSBucket();
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
 
    $stream = $bucket->openDownloadStreamByName('my-file.txt');
    $fileId = $bucket->getFileIdForStream($stream);

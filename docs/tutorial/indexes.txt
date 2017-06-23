@@ -37,7 +37,7 @@ the :phpmethod:`createIndex() <MongoDB\\Collection::createIndex>` method:
 
    <?php
 
-   $collection = (new MongoDB\Client)->demo->zips;
+   $collection = (new MongoDB\Client)->test->zips;
 
    $result = $collection->createIndex(['state' => 1]);
 
@@ -59,13 +59,13 @@ about the indexes in a collection. The
 information about each index. Refer to the method reference for more details.
 
 The following example lists all indexes in the ``zips`` collection in the
-``demo`` database:
+``test`` database:
 
 .. code-block:: php
 
    <?php
 
-   $collection = (new MongoDB\Client)->demo->zips;
+   $collection = (new MongoDB\Client)->test->zips;
 
    foreach ($collection->listIndexes() as $indexInfo) {
        var_dump($indexInfo);
@@ -84,7 +84,7 @@ The output would resemble::
      ["name"]=>
      string(4) "_id_"
      ["ns"]=>
-     string(9) "demo.zips"
+     string(9) "test.zips"
    }
    object(MongoDB\Model\IndexInfo)#13 (4) {
      ["v"]=>
@@ -97,7 +97,7 @@ The output would resemble::
      ["name"]=>
      string(7) "state_1"
      ["ns"]=>
-     string(9) "demo.zips"
+     string(9) "test.zips"
    }
 
 Drop Indexes
@@ -114,7 +114,7 @@ The following example drops a single index by its name, ``state_1``:
 
    <?php
 
-   $collection = (new MongoDB\Client)->demo->zips;
+   $collection = (new MongoDB\Client)->test->zips;
 
    $result = $collection->dropIndex('state_1');
 

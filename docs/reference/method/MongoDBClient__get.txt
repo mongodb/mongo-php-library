@@ -50,7 +50,7 @@ any options, use the :phpmethod:`MongoDB\\Client::selectDatabase` method.
 Examples
 --------
 
-The following example selects the ``demo`` and ``another-app`` databases:
+The following example selects the ``test`` and ``another-app`` databases:
 
 .. code-block:: php
 
@@ -58,7 +58,7 @@ The following example selects the ``demo`` and ``another-app`` databases:
 
    $client = new MongoDB\Client;
 
-   $demo = $client->demo;
+   $test = $client->test;
    $anotherApp = $client->{'another-app'};
 
 See Also

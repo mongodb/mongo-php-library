@@ -54,13 +54,13 @@ Example
 .. start-crud-include
 
 The following operation inserts two documents into the ``users`` collection
-in the ``example`` database:
+in the ``test`` database:
 
 .. code-block:: php
 
    <?php
 
-   $collection = (new MongoDB\Client)->example->users;
+   $collection = (new MongoDB\Client)->test->users;
 
    $insertManyResult = $collection->insertMany([
        [

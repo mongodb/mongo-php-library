@@ -49,7 +49,7 @@ preference:
 
    <?php
 
-   $collection = (new MongoDB\Client)->selectCollect('demo', 'restaurants');
+   $collection = (new MongoDB\Client)->selectCollection('test', 'restaurants');
 
    $newCollection = $sourceCollection->withOptions([
        'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),

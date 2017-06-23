@@ -138,7 +138,7 @@ database, and reads it back as an object of the same type:
 
    <?php
 
-   $collection = (new MongoDB\Client)->demo->persons;
+   $collection = (new MongoDB\Client)->test->persons;
 
    $result = $collection->insertOne(new Person('Bob'));
 
@@ -219,7 +219,7 @@ everything as a PHP array:
        ]
    );
 
-   $document = $client->demo->zips->findOne(['_id' => '94301']);
+   $document = $client->test->zips->findOne(['_id' => '94301']);
 
    var_dump($document);
 

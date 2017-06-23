@@ -46,13 +46,13 @@ Errors/Exceptions
 Example
 -------
 
-The following example drops the ``demo`` database:
+The following example drops the ``test`` database:
 
 .. code-block:: php
 
    <?php
 
-   $db = (new MongoDB\Client)->demo;
+   $db = (new MongoDB\Client)->test;
 
    $result = $db->drop();
 
@@ -64,7 +64,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(2) {
        ["dropped"]=>
-       string(4) "demo"
+       string(4) "test"
        ["ok"]=>
        float(1)
      }

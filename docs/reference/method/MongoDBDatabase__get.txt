@@ -50,13 +50,13 @@ Examples
 --------
 
 The following example selects the ``users`` and ``system.profile``
-collections from the ``demo`` database:
+collections from the ``test`` database:
 
 .. code-block:: php
 
    <?php
 
-   $db = (new MongoDB\Client)->demo;
+   $db = (new MongoDB\Client)->test;
 
    $users = $db->users;
    $systemProfile = $db->{'system.profile'};

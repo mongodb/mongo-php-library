@@ -68,7 +68,7 @@ special BSON type, the query criteria for selecting a restaurant must use the
 
    $restaurant = $database->restaurants->findOne([
        '_id' => new MongoDB\BSON\ObjectID('594d5ef280a846852a4b3f70'),
-   ])
+   ]);
 
 Projecting Fields
 ~~~~~~~~~~~~~~~~~

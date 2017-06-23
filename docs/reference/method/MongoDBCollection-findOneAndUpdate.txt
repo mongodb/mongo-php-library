@@ -72,31 +72,40 @@ setting its building number to ``"761"``:
        ]
    );
 
-   var_dump($updatedRestaurant)
+   var_dump($updatedRestaurant);
 
 The output would then resemble::
 
-   object(stdClass)#16 (2) {
-     ["_id"]=>
-     object(MongoDB\BSON\ObjectID)#10 (1) {
-       ["oid"]=>
-       string(24) "5813a08d29032c6e72d566a7"
-     }
-     ["address"]=>
-     object(stdClass)#15 (4) {
-       ["building"]=>
-       string(3) "761"
-       ["coord"]=>
-       array(2) {
-         [0]=>
-         float(-73.9925306)
-         [1]=>
-         float(40.7309346)
+   object(MongoDB\Model\BSONDocument)#20 (1) {
+     ["storage":"ArrayObject":private]=>
+     array(2) {
+       ["_id"]=>
+       object(MongoDB\BSON\ObjectID)#12 (1) {
+         ["oid"]=>
+         string(24) "594d5ef280a846852a4b3dee"
        }
-       ["street"]=>
-       string(8) "Broadway"
-       ["zipcode"]=>
-       string(5) "10003"
+       ["address"]=>
+       object(MongoDB\Model\BSONDocument)#19 (1) {
+         ["storage":"ArrayObject":private]=>
+         array(4) {
+           ["building"]=>
+           string(3) "761"
+           ["coord"]=>
+           object(MongoDB\Model\BSONArray)#18 (1) {
+             ["storage":"ArrayObject":private]=>
+             array(2) {
+               [0]=>
+               float(-73.9925306)
+               [1]=>
+               float(40.7309346)
+             }
+           }
+           ["street"]=>
+           string(8) "Broadway"
+           ["zipcode"]=>
+           string(5) "10003"
+         }
+       }
      }
    }
 

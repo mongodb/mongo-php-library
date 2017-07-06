@@ -1,6 +1,6 @@
-============================
-MongoDB\\GridFS\Bucket Class
-============================
+=============================
+MongoDB\\GridFS\\Bucket Class
+=============================
 
 .. default-domain:: mongodb
 

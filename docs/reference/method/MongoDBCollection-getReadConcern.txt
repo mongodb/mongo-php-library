@@ -1,0 +1,50 @@
+========================================
+MongoDB\\Collection::getReadConcern()
+========================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::getReadConcern()
+
+   Accessor for the
+   :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>` used by this
+   :phpclass:`Collection <MongoDB\\Collection>`.
+
+   Returns the default read concern of this collection.
+
+   .. code-block:: php
+
+      function getReadConcern(): MongoDB\Driver\ReadConcern
+
+Return Values
+-------------
+
+A :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>` object.
+
+Example
+-------
+
+.. code-block:: php
+
+   <?php
+
+   $readConcern = new MongoDB\Driver\ReadConcern(MongoDB\Driver\ReadConcern::MAJORITY);
+   $collection = (new MongoDB\Client)->test->selectCollection('test', ['readConcern' => $readConcern]);
+
+   $collection->getReadConcern() === $readConcern; // true
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Client::getReadConcern()`
+- :phpmethod:`MongoDB\\Database::getReadConcern()`
+- :phpmethod:`MongoDB\\GridFS\Bucket::getReadConcern()`

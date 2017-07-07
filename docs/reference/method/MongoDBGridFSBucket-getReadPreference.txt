@@ -1,0 +1,50 @@
+========================================
+MongoDB\\GridFS\Bucket::getReadPreference()
+========================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\GridFS\Bucket::getReadPreference()
+
+   Accessor for the
+   :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>` used by this
+   :phpclass:`Bucket <MongoDB\\GridFS\Bucket>`.
+
+   Returns the default read preference of this bucket.
+
+   .. code-block:: php
+
+      function getReadPreference(): MongoDB\Driver\ReadPreference
+
+Return Values
+-------------
+
+A :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>` object.
+
+Example
+-------
+
+.. code-block:: php
+
+   <?php
+
+   $readPreference = new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_PRIMARY);
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket(['readPreference' => $readPreference]);
+
+   $bucket->getReadPreference() === $readPreference; // true
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Client::getReadPreference()`
+- :phpmethod:`MongoDB\\Collection::getReadPreference()`
+- :phpmethod:`MongoDB\\Database::getReadPreference()`

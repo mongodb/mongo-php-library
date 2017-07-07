@@ -1,0 +1,59 @@
+========================================
+MongoDB\\Client::getReadPreference()
+========================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Client::getReadPreference()
+
+   Accessor for the
+   :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>` used by this
+   :phpclass:`Client <MongoDB\\Client>`.
+
+   Returns the default read preference of this client.
+
+   .. code-block:: php
+
+      function getReadPreference(): MongoDB\Driver\ReadPreference
+
+Return Values
+-------------
+
+A :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>` object.
+
+Example
+-------
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client(
+       'test',
+       [
+           'readPreference' => MongoDB\Driver\ReadPreference::RP_PRIMARY,
+           'readPreferenceTags' => ['foo' => 'bar', 'spam' => 'egg'],
+           'maxStalenessSeconds' => 150,
+       ]
+   );
+
+   $readPreference = $client->getReadPreference();
+
+   MongoDB\Driver\ReadPreference::RP_PRIMARY === $readPreference->getMode(); // true
+   ['foo' => 'bar', 'spam' => 'egg'] === $readPreference->getTags(); // true
+   150 = $readPreference->getMaxStalenessSeconds(); // true
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::getReadPreference()`
+- :phpmethod:`MongoDB\\Database::getReadPreference()`

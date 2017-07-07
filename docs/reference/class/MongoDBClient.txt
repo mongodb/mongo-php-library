@@ -32,6 +32,10 @@ Methods
    /reference/method/MongoDBClient__get
    /reference/method/MongoDBClient-dropDatabase
    /reference/method/MongoDBClient-getManager
+   /reference/method/MongoDBClient-getReadConcern
+   /reference/method/MongoDBClient-getReadPreference
+   /reference/method/MongoDBClient-getTypeMap
+   /reference/method/MongoDBClient-getWriteConcern
    /reference/method/MongoDBClient-listDatabases
    /reference/method/MongoDBClient-selectCollection
    /reference/method/MongoDBClient-selectDatabase

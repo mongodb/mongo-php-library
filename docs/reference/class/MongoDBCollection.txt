@@ -80,6 +80,10 @@ Methods
    /reference/method/MongoDBCollection-getDatabaseName
    /reference/method/MongoDBCollection-getManager
    /reference/method/MongoDBCollection-getNamespace
+   /reference/method/MongoDBCollection-getReadConcern
+   /reference/method/MongoDBCollection-getReadPreference
+   /reference/method/MongoDBCollection-getTypeMap
+   /reference/method/MongoDBCollection-getWriteConcern
    /reference/method/MongoDBCollection-insertMany
    /reference/method/MongoDBCollection-insertOne
    /reference/method/MongoDBCollection-listIndexes

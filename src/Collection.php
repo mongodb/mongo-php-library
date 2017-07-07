@@ -706,6 +706,46 @@ class Collection
     }
 
     /**
+     * Return the collection default ReadConcern
+     *
+     * @return ReadConcern
+     */
+    public function getReadConcern()
+    {
+        return $this->readConcern;
+    }
+
+    /**
+     * Return the collection default ReadPreference
+     *
+     * @return ReadPreference
+     */
+    public function getReadPreference()
+    {
+        return $this->readPreference;
+    }
+
+    /**
+     * Return the collection default type map
+     *
+     * @return array
+     */
+    public function getTypeMap()
+    {
+        return $this->typeMap;
+    }
+
+    /**
+     * Return the collection default WriteConcern
+     *
+     * @return WriteConcern
+     */
+    public function getWriteConcern()
+    {
+        return $this->writeConcern;
+    }
+
+    /**
      * Inserts multiple documents.
      *
      * @see InsertMany::__construct() for supported options

@@ -164,6 +164,46 @@ class Client
     }
 
     /**
+     * Return the client default ReadConcern
+     *
+     * @return \MongoDB\Driver\ReadConcern
+     */
+    public function getReadConcern()
+    {
+        return $this->manager->getReadConcern();
+    }
+
+    /**
+     * Return the client default ReadPreference
+     *
+     * @return ReadPreference
+     */
+    public function getReadPreference()
+    {
+        return $this->manager->getReadPreference();
+    }
+
+    /**
+     * Return the client default type map
+     *
+     * @return array
+     */
+    public function getTypeMap()
+    {
+        return $this->typeMap;
+    }
+
+    /**
+     * Return the client default WriteConcern
+     *
+     * @return \MongoDB\Driver\WriteConcern
+     */
+    public function getWriteConcern()
+    {
+        return $this->writeConcern;
+    }
+
+    /**
      * List databases.
      *
      * @see ListDatabases::__construct() for supported options

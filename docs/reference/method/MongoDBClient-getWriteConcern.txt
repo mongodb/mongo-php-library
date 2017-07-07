@@ -1,0 +1,50 @@
+========================================
+MongoDB\\Client::getWriteConcern()
+========================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Client::getWriteConcern()
+
+   Accessor for the
+   :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>` used by this
+   :phpclass:`Client <MongoDB\\Client>`.
+
+   Returns the default write concern of this client.
+
+   .. code-block:: php
+
+      function getWriteConcern(): MongoDB\Driver\WriteConcern
+
+Return Values
+-------------
+
+A :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>` object.
+
+Example
+-------
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client('mongodb://127.0.0.1', ['w' => 1, 'wTimeoutMS' => 100, 'journal' => true]);
+   $writeConcern = $client->getWriteConcern();
+   1 === $writeConcern->getW(); // true
+   100 === $writeConcern->getWtimeout(); // true
+   $writeConcern->getJournal(); // true
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::getWriteConcern()`
+- :phpmethod:`MongoDB\\Database::getWriteConcern()`

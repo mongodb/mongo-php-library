@@ -712,16 +712,8 @@ class Collection
      * @param array $options
      * @return InsertOneResult
      */
-    public function insert(&$document, $options = []){
-        $rs = $this->insertOne($document, $options);
-
-        $id = $rs->getInsertedId();
-        if(!empty($id)){
-            if(is_array($document)) $document['_id'] = $id;
-            if(is_object($document)) $document->_id = $id;
-        }
-
-        return $rs;
+    public function insert($document, $options = []){
+        return $this->insertOne($document, $options);
     }
 
     /**

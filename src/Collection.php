@@ -707,6 +707,24 @@ class Collection
     }
 
     /**
+     * insert single record compatible with legacy mongo extension
+     * @param array|object $document
+     * @param array $options
+     * @return InsertOneResult
+     */
+    public function insert(&$document, $options = []){
+        $rs = $this->insertOne($document, $options);
+
+        $id = $rs->getInsertedId();
+        if(!empty($id)){
+            if(is_array($document)) $document['_id'] = $id;
+            if(is_object($document)) $document->_id = $id;
+        }
+
+        return $rs;
+    }
+
+    /**
      * Inserts multiple documents.
      *
      * @see InsertMany::__construct() for supported options
@@ -769,6 +787,16 @@ class Collection
     }
 
     /**
+     * delete records compatible with legacy mongo extension
+     * @param array $filter
+     * @param array $options
+     * @return DeleteResult
+     */
+    public function remove($filter = [], $options = []){
+        return $this->deleteMany($filter, $options);
+    }
+
+    /**
      * Replaces at most one document matching the filter.
      *
      * @see ReplaceOne::__construct() for supported options
@@ -791,6 +819,17 @@ class Collection
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
+    }
+
+    /**
+     * update records compatible with legacy mongo extension
+     * @param array|object $filter
+     * @param array|object $update
+     * @param array $options
+     * @return UpdateResult
+     */
+    public function update($filter, $update, $options = []){
+        return $this->updateMany($filter, $update, $options);
     }
 
     /**
@@ -863,44 +902,4 @@ class Collection
         return new Collection($this->manager, $this->databaseName, $this->collectionName, $options);
     }
 
-    /********** COMPATIBILITY WITH LEGACY VERSIONS ***********/
-
-    /**
-     * delete records compatible with legacy mongo extension
-     * @param array $filter
-     * @param array $options
-     * @return DeleteResult
-     */
-    public function remove($filter = [], $options = []){
-        return $this->deleteMany($filter, $options);
-    }
-
-    /**
-     * insert single record compatible with legacy mongo extension
-     * @param array|object $document
-     * @param array $options
-     * @return InsertOneResult
-     */
-    public function insert(&$document, $options = []){
-        $rs = $this->insertOne($document, $options);
-
-        $id = $rs->getInsertedId();
-        if(!empty($id)){
-            if(is_array($document)) $document['_id'] = $id;
-            if(is_object($document)) $document->_id = $id;
-        }
-
-        return $rs;
-    }
-
-    /**
-     * update records compatible with legacy mongo extension
-     * @param array|object $filter
-     * @param array|object $update
-     * @param array $options
-     * @return UpdateResult
-     */
-    public function update($filter, $update, $options = []){
-        return $this->updateOne($filter, $update, $options);
-    }
 }

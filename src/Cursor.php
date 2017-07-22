@@ -49,16 +49,18 @@ class Cursor implements \IteratorAggregate {
     }
 
     /**
-     * @return Driver\Cursor
+     * count number of records in the cursor
+     * @return int
      */
-    public function getOriginalCursor(){
-        if(null === $this->_originalCursor){
-            $operation = new Find($this->_collection->getDatabaseName(), $this->_collection->getCollectionName(), $this->_filter, $this->_options);
-            $server = $this->_collection->getManager()->selectServer($this->_options['readPreference']);
-            $this->_originalCursor = $operation->execute($server);
-        }
+    public function count(){
+        return $this->_collection->count($this->_filter, $this->_options);
+    }
 
-        return $this->_originalCursor;
+    /**
+     * @return Driver\CursorId
+     */
+    public final function getId(){
+        return $this->getOriginalCursor()->getId();
     }
 
     /**
@@ -70,50 +72,16 @@ class Cursor implements \IteratorAggregate {
     }
 
     /**
-     * count number of records in the cursor
-     * @return int
+     * @return Driver\Cursor
      */
-    public function count(){
-        return $this->_collection->count($this->_filter, $this->_options);
-    }
+    public function getOriginalCursor(){
+        if(null === $this->_originalCursor){
+            $operation = new Find($this->_collection->getDatabaseName(), $this->_collection->getCollectionName(), $this->_filter, $this->_options);
+            $server = $this->_collection->getManager()->selectServer($this->_options['readPreference']);
+            $this->_originalCursor = $operation->execute($server);
+        }
 
-    /**
-     * sort cursor by $sort field
-     * @param $sort
-     * @return $this
-     */
-    public function sort($sort){
-        $this->_options["sort"] = $sort;
-        return $this;
-    }
-
-    /**
-     * limit cursor by $limit
-     * @param $limit
-     * @return $this
-     */
-    public function limit($limit){
-        $this->_options["limit"] = $limit;
-        return $this;
-    }
-
-    /**
-     * skip $skip records
-     * @param $skip
-     * @return $this
-     */
-    public function skip($skip){
-        $this->_options["skip"] = $skip;
-        return $this;
-    }
-
-    /** original cursor methods */
-
-    /**
-     * @return Driver\CursorId
-     */
-    public final function getId(){
-        return $this->getOriginalCursor()->getId();
+        return $this->_originalCursor;
     }
 
     /**
@@ -131,10 +99,40 @@ class Cursor implements \IteratorAggregate {
     }
 
     /**
+     * limit cursor by $limit
+     * @param $limit
+     * @return $this
+     */
+    public function limit($limit){
+        $this->_options["limit"] = $limit;
+        return $this;
+    }
+
+    /**
      * @param array $typeMap
      */
     public final function setTypeMap(array $typeMap){
         $this->getOriginalCursor()->setTypeMap($typeMap);
+    }
+
+    /**
+     * skip $skip records
+     * @param $skip
+     * @return $this
+     */
+    public function skip($skip){
+        $this->_options["skip"] = $skip;
+        return $this;
+    }
+
+    /**
+     * sort cursor by $sort field
+     * @param $sort
+     * @return $this
+     */
+    public function sort($sort){
+        $this->_options["sort"] = $sort;
+        return $this;
     }
 
     /**
@@ -146,3 +144,4 @@ class Cursor implements \IteratorAggregate {
 }
 
 ?>
+

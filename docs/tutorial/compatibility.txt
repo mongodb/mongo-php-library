@@ -32,5 +32,5 @@ Some useful methods from legacy mongo driver added for compatibility. They can b
 
    // legacy dml methods can be used as well
    $col->insert($dataObject, $options); // same as `insertOne`
-   $col->update($filters, $dataObject, $options); // same as `updateOne`
+   $col->update($filters, $dataObject, $options); // same as `updateMany`
    $col->remove($filters, $options); // same as `deleteMany`

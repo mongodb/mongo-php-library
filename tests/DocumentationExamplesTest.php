@@ -935,9 +935,15 @@ class DocumentationExamplesTest extends FunctionalTestCase
         return 'inventory';
     }
 
-    private function assertCursorCount($count, Cursor $cursor)
+    private function assertCursorCount($count, $cursor)
     {
-        $this->assertCount($count, $cursor->toArray());
+        if($cursor instanceof Cursor || $cursor instanceof \MongoDB\Cursor){
+            $this->assertCount($count, $cursor->toArray());
+        }
+        else{
+            $type = get_class($cursor);
+            throw new \TypeError("Argument 2 passed to MongoDB\Tests\DocumentationExamplesTest::assertCursorCount() must be an instance of MongoDB\Driver\Cursor or MongoDB\Cursor, instance of $type given");
+        }
     }
 
     private function assertInventoryCount($count)

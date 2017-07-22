@@ -499,7 +499,7 @@ class Collection
      * @see http://docs.mongodb.org/manual/core/read-operations-introduction/
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
-     * @return Cursor
+     * @return \MongoDB\Cursor
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -520,9 +520,10 @@ class Collection
             $options['typeMap'] = $this->typeMap;
         }
 
-        $operation = new Find($this->databaseName, $this->collectionName, $filter, $options);
+        //$operation = new Find($this->databaseName, $this->collectionName, $filter, $options);
+        //return $operation->execute($server);
 
-        return $operation->execute($server);
+        return new \MongoDB\Cursor($this, $filter, $options);
     }
 
     /**
@@ -706,6 +707,16 @@ class Collection
     }
 
     /**
+     * insert single record compatible with legacy mongo extension
+     * @param array|object $document
+     * @param array $options
+     * @return InsertOneResult
+     */
+    public function insert($document, $options = []){
+        return $this->insertOne($document, $options);
+    }
+
+    /**
      * Inserts multiple documents.
      *
      * @see InsertMany::__construct() for supported options
@@ -768,6 +779,16 @@ class Collection
     }
 
     /**
+     * delete records compatible with legacy mongo extension
+     * @param array $filter
+     * @param array $options
+     * @return DeleteResult
+     */
+    public function remove($filter = [], $options = []){
+        return $this->deleteMany($filter, $options);
+    }
+
+    /**
      * Replaces at most one document matching the filter.
      *
      * @see ReplaceOne::__construct() for supported options
@@ -790,6 +811,17 @@ class Collection
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
+    }
+
+    /**
+     * update records compatible with legacy mongo extension
+     * @param array|object $filter
+     * @param array|object $update
+     * @param array $options
+     * @return UpdateResult
+     */
+    public function update($filter, $update, $options = []){
+        return $this->updateMany($filter, $update, $options);
     }
 
     /**
@@ -861,4 +893,5 @@ class Collection
 
         return new Collection($this->manager, $this->databaseName, $this->collectionName, $options);
     }
+
 }

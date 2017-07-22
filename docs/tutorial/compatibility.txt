@@ -1,0 +1,36 @@
+============
+Example Data
+============
+
+.. default-domain:: mongodb
+
+Some useful methods from legacy mongo driver added for compatibility. They can be used as follows:
+
+.. code-block:: php
+
+   <?php
+
+   $mongo = new MongoDB\Client("mongodb://127.0.0.1:27017/admin");
+   $col = $mongo->myDatabase->myCollection;
+
+   // retrieve cursor
+   $cursor = $col->find();
+
+   // get total count
+   $count = $cursor->count();
+
+   // sort data
+   $cursor->sort(['sort_no': 1]);
+
+   // limit number of records, and change offset by skip method
+   $cursor->limit(30)->skip(10);
+
+   // cursor can be used as iterator to fetch data
+   foreach($data as $row){
+        print_r($row);
+   }
+
+   // legacy dml methods can be used as well
+   $col->insert($dataObject, $options); // same as `insertOne`
+   $col->update($filters, $dataObject, $options); // same as `updateMany`
+   $col->remove($filters, $options); // same as `deleteMany`

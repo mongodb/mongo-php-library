@@ -6,3 +6,6 @@ vendor/
 # PHPUnit
 phpunit.phar
 phpunit.xml
+
+# Phpstorm
+.idea/

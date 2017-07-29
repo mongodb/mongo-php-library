@@ -28,7 +28,7 @@ method.
 
 The bucket can be constructed with various options:
 
- - ``bucketName`` determines the prefix for the buckey's metadata and chunk
+ - ``bucketName`` determines the prefix for the bucket's metadata and chunk
    collections. The default value is ``"fs"``.
  - ``chunkSizeBytes`` determines the size of each chunk. GridFS divides the
    file into chunks of this length, except for the last, which is only as large

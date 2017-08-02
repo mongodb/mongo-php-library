@@ -551,6 +551,7 @@ class Bucket
         if ( ! isset ($metadata['wrapper_data']) || ! $metadata['wrapper_data'] instanceof StreamWrapper) {
             throw InvalidArgumentException::invalidType('$stream wrapper data', isset($metadata['wrapper_data']) ? $metadata['wrapper_data'] : null, 'MongoDB\Driver\GridFS\StreamWrapper');
         }
+        $metadata['wrapper_data']->stream_close();
 
         return $metadata['wrapper_data']->getFile();
     }

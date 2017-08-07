@@ -4,6 +4,9 @@ type: boolean
 description: |
    If ``true``, allows the write operation to circumvent document level
    validation. Defaults to ``false``.
+
+   This option is available in MongoDB 3.2+ and is ignored for older server
+   versions, which do not support document level validation.
 interface: phpmethod
 operation: ~
 optional: true

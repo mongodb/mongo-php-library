@@ -19,7 +19,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @dataProvider provideTypeMapOptionsAndExpectedDocument
+     * @dataProvider provideTypeMapOptionsAndExpectedDocuments
      */
     public function testTypeMapOption(array $typeMap = null, array $expectedDocuments)
     {
@@ -32,7 +32,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expectedDocuments, $results);
     }
 
-    public function provideTypeMapOptionsAndExpectedDocument()
+    public function provideTypeMapOptionsAndExpectedDocuments()
     {
         return [
             [

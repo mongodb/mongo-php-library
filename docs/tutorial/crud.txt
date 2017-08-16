@@ -375,6 +375,21 @@ An equivalent filter could be constructed using the :query:`$regex` operator:
 
 .. seealso:: :manual:`$regex </reference/operator/query/regex>` in the MongoDB manual
 
+Although MongoDB's regular expression syntax is not exactly the same as PHP's
+:php:`PCRE <manual/en/book.pcre.php>` syntax, :php:`preg_quote() <preg_quote>`
+may be used to escape special characters that should be matched as-is. The
+following example finds restaurants whose name starts with "(Library)":
+
+.. code-block:: php
+
+   <?php
+
+   $collection = (new MongoDB\Client)->test->restaurants;
+
+   $cursor = $collection->find([
+       'name' => new MongoDB\BSON\Regex('^' . preg_quote('(Library)')),
+   ]);
+
 .. _php-aggregation:
 
 Complex Queries with Aggregation

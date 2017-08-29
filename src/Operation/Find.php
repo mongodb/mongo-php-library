@@ -190,6 +190,10 @@ class Find implements Executable
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
+        if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
+            unset($options['readConcern']);
+        }
+
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->filter = $filter;

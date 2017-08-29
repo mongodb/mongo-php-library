@@ -5,9 +5,29 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\FindAndModify;
+use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 class FindAndModifyFunctionalTest extends FunctionalTestCase
 {
+    public function testDefaultWriteConcernIsOmitted()
+    {
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new FindAndModify(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    ['remove' => true, 'writeConcern' => $this->createDefaultWriteConcern()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('writeConcern', $command);
+            }
+        );
+    }
+
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocument
      */

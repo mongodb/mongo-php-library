@@ -6,7 +6,9 @@ use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\DropIndexes;
 use MongoDB\Operation\ListIndexes;
+use MongoDB\Tests\CommandObserver;
 use InvalidArgumentException;
+use stdClass;
 
 class CreateIndexesFunctionalTest extends FunctionalTestCase
 {
@@ -155,6 +157,32 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
             $this->assertFalse($info->isUnique());
             $this->assertFalse($info->isTtl());
         });
+    }
+
+    public function testDefaultWriteConcernIsOmitted()
+    {
+        /* Earlier server versions do not support the createIndexes command. Per
+         * the Index Management specification, inserts on system.indexes must
+         * use the write concern {w:1}. */
+        if (version_compare($this->getServerVersion(), '2.6.0', '<')) {
+            $this->markTestSkipped('createIndexes command is not supported');
+        }
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new CreateIndexes(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [['key' => ['x' => 1]]],
+                    ['writeConcern' => $this->createDefaultWriteConcern()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('writeConcern', $command);
+            }
+        );
     }
 
     /**

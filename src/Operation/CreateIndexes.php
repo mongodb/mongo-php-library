@@ -96,6 +96,10 @@ class CreateIndexes implements Executable
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
 
+        if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
+            unset($options['writeConcern']);
+        }
+
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->options = $options;

@@ -1,0 +1,58 @@
+========================================
+MongoDB\\Database::getTypeMap()
+========================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Database::getTypeMap()
+
+   Accessor for the type map used by this :phpclass:`Database <MongoDB\\Database>`.
+
+   .. code-block:: php
+
+      function getTypeMap(): array
+
+Return Values
+-------------
+
+A type map array.
+
+Example
+-------
+
+.. code-block:: php
+
+   <?php
+
+   $typeMap = ['root' => 'array', 'document' => 'array', 'array' => 'array'];
+   $database = (new MongoDB\Client)->selectDatabase('test', ['typeMap' => $typeMap]);
+
+   $database->getTypeMap() === $typeMap; //true
+   var_dump($database->getTypeMap());
+
+The output will be as follows:
+
+   array(3) {
+     ["root"]=>
+     string(5) "array"
+     ["document"]=>
+     string(5) "array"
+     ["array"]=>
+     string(5) "array"
+   }
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Client::getTypeMap()`
+- :phpmethod:`MongoDB\\Collection::getTypeMap()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getTypeMap()`

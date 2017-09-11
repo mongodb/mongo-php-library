@@ -1,0 +1,50 @@
+========================================
+MongoDB\\GridFS\Bucket::getWriteConcern()
+========================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\GridFS\Bucket::getWriteConcern()
+
+   Accessor for the
+   :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>` used by this
+   :phpclass:`Bucket <MongoDB\\GridFS\Bucket>`.
+
+   Returns the default write concern of this bucket.
+
+   .. code-block:: php
+
+      function getWriteConcern(): MongoDB\Driver\WriteConcern
+
+Return Values
+-------------
+
+A :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>` object.
+
+Example
+-------
+
+.. code-block:: php
+
+   <?php
+
+   $writeConcern = new MongoDB\Driver\WriteConcern(2);
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket(['writeConcern' => $writeConcern]);
+
+   $bucket->getWriteConcern() === $writeConcern; // true
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Client::getWriteConcern()`
+- :phpmethod:`MongoDB\\Collection::getWriteConcern()`
+- :phpmethod:`MongoDB\\Database::getWriteConcern()`

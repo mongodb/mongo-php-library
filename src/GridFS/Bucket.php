@@ -331,6 +331,46 @@ class Bucket
     }
 
     /**
+     * Return the bucket default ReadConcern
+     *
+     * @return ReadConcern
+     */
+    public function getReadConcern()
+    {
+        return $this->readConcern;
+    }
+
+    /**
+     * Return the bucket default ReadPreference
+     *
+     * @return ReadPreference
+     */
+    public function getReadPreference()
+    {
+        return $this->readPreference;
+    }
+
+    /**
+     * Return the bucket default type map
+     *
+     * @return array
+     */
+    public function getTypeMap()
+    {
+        return $this->typeMap;
+    }
+
+    /**
+     * Return the bucket default WriteConcern
+     *
+     * @return WriteConcern
+     */
+    public function getWriteConcern()
+    {
+        return $this->writeConcern;
+    }
+
+    /**
      * Opens a readable stream for reading a GridFS file.
      *
      * @param mixed $id File ID

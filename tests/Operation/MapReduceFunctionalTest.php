@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\BSON\Javascript;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\MapReduce;
 
@@ -110,6 +111,9 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $cursor = $operation->execute($this->getPrimaryServer());
 
         $this->assertEquals($expectedDocuments, iterator_to_array($cursor));
+
+        $operation = new DropCollection($this->getDatabaseName(), $out);
+        $operation->execute($this->getPrimaryServer());
     }
 
     /**

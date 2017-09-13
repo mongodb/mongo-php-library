@@ -1,0 +1,57 @@
+==================================
+MongoDB\\Client::getWriteConcern()
+==================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Client::getWriteConcern()
+
+   Returns the write concern for this client.
+
+   .. code-block:: php
+
+      function getWriteConcern(): MongoDB\Driver\WriteConcern
+
+Return Values
+-------------
+
+A :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+object.
+
+Example
+-------
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client('mongodb://127.0.0.1/', [
+       'journal' => true,
+   ]);
+
+   var_dump($client->getWriteConcern());
+
+The output would then resemble::
+
+   object(MongoDB\Driver\WriteConcern)#4 (1) {
+     ["j"]=>
+     bool(true)
+   }
+
+See Also
+--------
+
+- :manual:`Write Concern </reference/read-concern>` in the MongoDB manual
+- :php:`MongoDB\\Driver\\WriteConcern::isDefault() <mongodb-driver-writeconcern.isdefault>`
+- :phpmethod:`MongoDB\\Collection::getWriteConcern()`
+- :phpmethod:`MongoDB\\Database::getWriteConcern()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getWriteConcern()`

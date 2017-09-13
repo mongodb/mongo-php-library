@@ -1,0 +1,57 @@
+=========================================
+MongoDB\\GridFS\\Bucket::getReadConcern()
+=========================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\GridFS\\Bucket::getReadConcern()
+
+   Returns the read concern for this GridFS bucket.
+
+   .. code-block:: php
+
+      function getReadConcern(): MongoDB\Driver\ReadConcern
+
+Return Values
+-------------
+
+A :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>` object.
+
+Example
+-------
+
+.. code-block:: php
+
+   <?php
+
+   $database = (new MongoDB\Client)->selectDatabase('test');
+   $bucket = $database->selectGridFSBucket([
+      'readConcern' => new MongoDB\Driver\ReadConcern(MongoDB\Driver\ReadConcern::MAJORITY),
+   ]);
+
+   var_dump($bucket->getReadConcern());
+
+The output would then resemble::
+
+   object(MongoDB\Driver\ReadConcern)#3 (1) {
+     ["level"]=>
+     string(8) "majority"
+   }
+
+See Also
+--------
+
+- :manual:`Read Concern </reference/read-concern>` in the MongoDB manual
+- :php:`MongoDB\\Driver\\ReadConcern::isDefault() <mongodb-driver-readconcern.isdefault>`
+- :phpmethod:`MongoDB\\Client::getReadConcern()`
+- :phpmethod:`MongoDB\\Collection::getReadConcern()`
+- :phpmethod:`MongoDB\\Database::getReadConcern()`

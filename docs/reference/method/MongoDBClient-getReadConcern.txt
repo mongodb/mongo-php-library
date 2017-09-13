@@ -1,0 +1,56 @@
+=================================
+MongoDB\\Client::getReadConcern()
+=================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Client::getReadConcern()
+
+   Returns the read concern for this client.
+
+   .. code-block:: php
+
+      function getReadConcern(): MongoDB\Driver\ReadConcern
+
+Return Values
+-------------
+
+A :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>` object.
+
+Example
+-------
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client('mongodb://127.0.0.1/', [
+       'readConcernLevel' => 'majority',
+   ]);
+
+   var_dump($client->getReadConcern());
+
+The output would then resemble::
+
+   object(MongoDB\Driver\ReadConcern)#5 (1) {
+     ["level"]=>
+     string(8) "majority"
+   }
+
+See Also
+--------
+
+- :manual:`Read Concern </reference/read-concern>` in the MongoDB manual
+- :php:`MongoDB\\Driver\\ReadConcern::isDefault() <mongodb-driver-readconcern.isdefault>`
+- :phpmethod:`MongoDB\\Collection::getReadConcern()`
+- :phpmethod:`MongoDB\\Database::getReadConcern()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getReadConcern()`

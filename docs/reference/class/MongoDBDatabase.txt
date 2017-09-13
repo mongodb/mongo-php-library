@@ -51,6 +51,10 @@ Methods
    /reference/method/MongoDBDatabase-dropCollection
    /reference/method/MongoDBDatabase-getDatabaseName
    /reference/method/MongoDBDatabase-getManager
+   /reference/method/MongoDBDatabase-getReadConcern
+   /reference/method/MongoDBDatabase-getReadPreference
+   /reference/method/MongoDBDatabase-getTypeMap
+   /reference/method/MongoDBDatabase-getWriteConcern
    /reference/method/MongoDBDatabase-listCollections
    /reference/method/MongoDBDatabase-selectCollection
    /reference/method/MongoDBDatabase-selectGridFSBucket

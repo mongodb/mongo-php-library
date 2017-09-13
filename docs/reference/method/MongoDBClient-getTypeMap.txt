@@ -1,0 +1,63 @@
+=============================
+MongoDB\\Client::getTypeMap()
+=============================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Client::getTypeMap()
+
+   Returns the type map for this client.
+
+   .. code-block:: php
+
+      function getTypeMap(): array
+
+Return Values
+-------------
+
+A :ref:`type map <php-type-map>` array.
+
+Example
+-------
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client('mongodb://127.0.0.1/', [], [
+       'typeMap' => [
+           'root' => 'array',
+           'document' => 'array',
+           'array' => 'array',
+       ],
+   ]);
+
+   var_dump($client->getTypeMap());
+
+The output would then resemble::
+
+   array(3) {
+     ["root"]=>
+     string(5) "array"
+     ["document"]=>
+     string(5) "array"
+     ["array"]=>
+     string(5) "array"
+   }
+
+See Also
+--------
+
+- :doc:`/reference/bson`
+- :phpmethod:`MongoDB\\Collection::getTypeMap()`
+- :phpmethod:`MongoDB\\Database::getTypeMap()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getTypeMap()`

@@ -1,6 +1,6 @@
-========================================
-MongoDB\\GridFS\Bucket::getReadPreference()
-========================================
+============================================
+MongoDB\\GridFS\\Bucket::getReadPreference()
+============================================
 
 .. default-domain:: mongodb
 
@@ -13,13 +13,9 @@ MongoDB\\GridFS\Bucket::getReadPreference()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\Bucket::getReadPreference()
+.. phpmethod:: MongoDB\\GridFS\\Bucket::getReadPreference()
 
-   Accessor for the
-   :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>` used by this
-   :phpclass:`Bucket <MongoDB\\GridFS\Bucket>`.
-
-   Returns the default read preference of this bucket.
+   Returns the read preference for this GridFS bucket.
 
    .. code-block:: php
 
@@ -28,7 +24,8 @@ Definition
 Return Values
 -------------
 
-A :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>` object.
+A :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+object.
 
 Example
 -------
@@ -37,14 +34,24 @@ Example
 
    <?php
 
-   $readPreference = new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_PRIMARY);
-   $bucket = (new MongoDB\Client)->test->selectGridFSBucket(['readPreference' => $readPreference]);
+   $database = (new MongoDB\Client)->selectDatabase('test');
+   $bucket = $database->selectGridFSBucket([
+      'readPreference' => new MongoDB\Driver\ReadPreference('primaryPreferred'),
+   ]);
 
-   $bucket->getReadPreference() === $readPreference; // true
+   var_dump($bucket->getReadPreference());
+
+The output would then resemble::
+
+   object(MongoDB\Driver\ReadPreference)#3 (1) {
+     ["mode"]=>
+     string(16) "primaryPreferred"
+   }
 
 See Also
 --------
 
+- :manual:`Read Preference </reference/read-preference>` in the MongoDB manual
 - :phpmethod:`MongoDB\\Client::getReadPreference()`
 - :phpmethod:`MongoDB\\Collection::getReadPreference()`
 - :phpmethod:`MongoDB\\Database::getReadPreference()`

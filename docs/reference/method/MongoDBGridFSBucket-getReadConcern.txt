@@ -1,6 +1,6 @@
-========================================
-MongoDB\\GridFS\Bucket::getReadConcern()
-========================================
+=========================================
+MongoDB\\GridFS\\Bucket::getReadConcern()
+=========================================
 
 .. default-domain:: mongodb
 
@@ -13,13 +13,9 @@ MongoDB\\GridFS\Bucket::getReadConcern()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\Bucket::getReadConcern()
+.. phpmethod:: MongoDB\\GridFS\\Bucket::getReadConcern()
 
-   Accessor for the
-   :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>` used by this
-   :phpclass:`Bucket <MongoDB\\GridFS\Bucket>`.
-
-   Returns the default read concern of this bucket.
+   Returns the read concern for this GridFS bucket.
 
    .. code-block:: php
 
@@ -37,14 +33,25 @@ Example
 
    <?php
 
-   $readConcern = new MongoDB\Driver\ReadConcern(MongoDB\Driver\ReadConcern::MAJORITY);
-   $bucket = (new MongoDB\Client)->test->selectGridFSBucket(['readConcern' => $readConcern]);
+   $database = (new MongoDB\Client)->selectDatabase('test');
+   $bucket = $database->selectGridFSBucket([
+      'readConcern' => new MongoDB\Driver\ReadConcern(MongoDB\Driver\ReadConcern::MAJORITY),
+   ]);
 
-   $bucket->getReadConcern() === $readConcern; // true
+   var_dump($bucket->getReadConcern());
+
+The output would then resemble::
+
+   object(MongoDB\Driver\ReadConcern)#3 (1) {
+     ["level"]=>
+     string(8) "majority"
+   }
 
 See Also
 --------
 
+- :manual:`Read Concern </reference/read-concern>` in the MongoDB manual
+- :php:`MongoDB\\Driver\\ReadConcern::isDefault() <mongodb-driver-readconcern.isdefault>`
 - :phpmethod:`MongoDB\\Client::getReadConcern()`
 - :phpmethod:`MongoDB\\Collection::getReadConcern()`
 - :phpmethod:`MongoDB\\Database::getReadConcern()`

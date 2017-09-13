@@ -282,8 +282,9 @@ class Database
     }
 
     /**
-     * Return the database default ReadConcern
+     * Return the read concern for this database.
      *
+     * @see http://php.net/manual/en/mongodb-driver-readconcern.isdefault.php
      * @return ReadConcern
      */
     public function getReadConcern()
@@ -292,7 +293,7 @@ class Database
     }
 
     /**
-     * Return the database default ReadPreference
+     * Return the read preference for this database.
      *
      * @return ReadPreference
      */
@@ -302,7 +303,7 @@ class Database
     }
 
     /**
-     * Return the database default type map
+     * Return the type map for this database.
      *
      * @return array
      */
@@ -312,8 +313,9 @@ class Database
     }
 
     /**
-     * Return the database default WriteConcern
+     * Return the write concern for this database.
      *
+     * @see http://php.net/manual/en/mongodb-driver-writeconcern.isdefault.php
      * @return WriteConcern
      */
     public function getWriteConcern()

@@ -331,8 +331,9 @@ class Bucket
     }
 
     /**
-     * Return the bucket default ReadConcern
+     * Return the read concern for this GridFS bucket.
      *
+     * @see http://php.net/manual/en/mongodb-driver-readconcern.isdefault.php
      * @return ReadConcern
      */
     public function getReadConcern()
@@ -341,7 +342,7 @@ class Bucket
     }
 
     /**
-     * Return the bucket default ReadPreference
+     * Return the read preference for this GridFS bucket.
      *
      * @return ReadPreference
      */
@@ -351,7 +352,7 @@ class Bucket
     }
 
     /**
-     * Return the bucket default type map
+     * Return the type map for this GridFS bucket.
      *
      * @return array
      */
@@ -361,8 +362,9 @@ class Bucket
     }
 
     /**
-     * Return the bucket default WriteConcern
+     * Return the write concern for this GridFS bucket.
      *
+     * @see http://php.net/manual/en/mongodb-driver-writeconcern.isdefault.php
      * @return WriteConcern
      */
     public function getWriteConcern()

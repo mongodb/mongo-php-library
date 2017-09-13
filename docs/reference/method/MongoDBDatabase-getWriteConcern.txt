@@ -1,6 +1,6 @@
-========================================
+====================================
 MongoDB\\Database::getWriteConcern()
-========================================
+====================================
 
 .. default-domain:: mongodb
 
@@ -15,11 +15,7 @@ Definition
 
 .. phpmethod:: MongoDB\\Database::getWriteConcern()
 
-   Accessor for the
-   :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>` used by this
-   :phpclass:`Database <MongoDB\\Database>`.
-
-   Returns the default write concern of this database.
+   Returns the write concern for this database.
 
    .. code-block:: php
 
@@ -28,7 +24,8 @@ Definition
 Return Values
 -------------
 
-A :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>` object.
+A :php:`MongoDB\\Driver\\WriteConcern <class.mongodb-driver-writeconcern>`
+object.
 
 Example
 -------
@@ -37,14 +34,26 @@ Example
 
    <?php
 
-   $writeConcern = new MongoDB\Driver\WriteConcern(2);
-   $database = (new MongoDB\Client)->selectDatabase('test', ['writeConcern' => $writeConcern]);
+   $database = (new MongoDB\Client)->selectDatabase('test', [
+      'writeConcern' => new MongoDB\Driver\WriteConcern(1, 0, true),
+   ]);
 
-   $database->getWriteConcern() === $writeConcern; // true
+   var_dump($database->getWriteConcern());
+
+The output would then resemble::
+
+   object(MongoDB\Driver\WriteConcern)#5 (2) {
+     ["w"]=>
+     int(1)
+     ["j"]=>
+     bool(true)
+   }
 
 See Also
 --------
 
+- :manual:`Write Concern </reference/read-concern>` in the MongoDB manual
+- :php:`MongoDB\\Driver\\WriteConcern::isDefault() <mongodb-driver-writeconcern.isdefault>`
 - :phpmethod:`MongoDB\\Client::getWriteConcern()`
 - :phpmethod:`MongoDB\\Collection::getWriteConcern()`
 - :phpmethod:`MongoDB\\GridFS\\Bucket::getWriteConcern()`

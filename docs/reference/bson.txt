@@ -50,6 +50,8 @@ BSON Classes
    serialize as a document type (:php:`object casting
    <types.type-juggling#language.types.typecasting>` is used internally).
 
+.. _php-type-map:
+
 Type Maps
 ---------
 

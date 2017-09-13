@@ -1,6 +1,6 @@
-========================================
+===============================
 MongoDB\\Database::getTypeMap()
-========================================
+===============================
 
 .. default-domain:: mongodb
 
@@ -15,7 +15,7 @@ Definition
 
 .. phpmethod:: MongoDB\\Database::getTypeMap()
 
-   Accessor for the type map used by this :phpclass:`Database <MongoDB\\Database>`.
+   Returns the type map for this database.
 
    .. code-block:: php
 
@@ -24,7 +24,7 @@ Definition
 Return Values
 -------------
 
-A type map array.
+A :ref:`type map <php-type-map>` array.
 
 Example
 -------
@@ -33,13 +33,17 @@ Example
 
    <?php
 
-   $typeMap = ['root' => 'array', 'document' => 'array', 'array' => 'array'];
-   $database = (new MongoDB\Client)->selectDatabase('test', ['typeMap' => $typeMap]);
+   $database = (new MongoDB\Client)->selectDatabase('test', [
+       'typeMap' => [
+           'root' => 'array',
+           'document' => 'array',
+           'array' => 'array',
+       ],
+   ]);
 
-   $database->getTypeMap() === $typeMap; //true
    var_dump($database->getTypeMap());
 
-The output will be as follows:
+The output would then resemble::
 
    array(3) {
      ["root"]=>
@@ -53,6 +57,7 @@ The output will be as follows:
 See Also
 --------
 
+- :doc:`/reference/bson`
 - :phpmethod:`MongoDB\\Client::getTypeMap()`
 - :phpmethod:`MongoDB\\Collection::getTypeMap()`
 - :phpmethod:`MongoDB\\GridFS\\Bucket::getTypeMap()`

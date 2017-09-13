@@ -18,7 +18,9 @@
 namespace MongoDB;
 
 use MongoDB\Driver\Manager;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentException;
@@ -164,9 +166,10 @@ class Client
     }
 
     /**
-     * Return the client default ReadConcern
+     * Return the read concern for this client.
      *
-     * @return \MongoDB\Driver\ReadConcern
+     * @see http://php.net/manual/en/mongodb-driver-readconcern.isdefault.php
+     * @return ReadConcern
      */
     public function getReadConcern()
     {
@@ -174,7 +177,7 @@ class Client
     }
 
     /**
-     * Return the client default ReadPreference
+     * Return the read preference for this client.
      *
      * @return ReadPreference
      */
@@ -184,7 +187,7 @@ class Client
     }
 
     /**
-     * Return the client default type map
+     * Return the type map for this client.
      *
      * @return array
      */
@@ -194,9 +197,10 @@ class Client
     }
 
     /**
-     * Return the client default WriteConcern
+     * Return the write concern for this client.
      *
-     * @return \MongoDB\Driver\WriteConcern
+     * @see http://php.net/manual/en/mongodb-driver-writeconcern.isdefault.php
+     * @return WriteConcern
      */
     public function getWriteConcern()
     {

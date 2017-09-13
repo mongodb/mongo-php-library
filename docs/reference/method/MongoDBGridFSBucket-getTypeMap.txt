@@ -1,6 +1,6 @@
-========================================
-MongoDB\\GridFS\Bucket::getTypeMap()
-========================================
+=====================================
+MongoDB\\GridFS\\Bucket::getTypeMap()
+=====================================
 
 .. default-domain:: mongodb
 
@@ -13,9 +13,9 @@ MongoDB\\GridFS\Bucket::getTypeMap()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\GridFS\Bucket::getTypeMap()
+.. phpmethod:: MongoDB\\GridFS\\Bucket::getTypeMap()
 
-   Accessor for the type map used by this :phpclass:`Bucket <MongoDB\\GridFS\Bucket>`.
+   Returns the type map for this GridFS bucket.
 
    .. code-block:: php
 
@@ -24,7 +24,7 @@ Definition
 Return Values
 -------------
 
-A type map array.
+A :ref:`type map <php-type-map>` array.
 
 Example
 -------
@@ -33,13 +33,18 @@ Example
 
    <?php
 
-   $typeMap = ['root' => 'array', 'document' => 'array', 'array' => 'array'];
-   $bucket = (new MongoDB\Client)->test->selectGridFSBucket(['typeMap' => $typeMap]);
+   $database = (new MongoDB\Client)->selectDatabase('test');
+   $bucket = $database->selectGridFSBucket([
+       'typeMap' => [
+           'root' => 'array',
+           'document' => 'array',
+           'array' => 'array',
+       ],
+   ]);
 
-   $bucket->getTypeMap() === $typeMap; //true
    var_dump($bucket->getTypeMap());
 
-The output will be as follows:
+The output would then resemble::
 
    array(3) {
      ["root"]=>
@@ -53,6 +58,7 @@ The output will be as follows:
 See Also
 --------
 
+- :doc:`/reference/bson`
 - :phpmethod:`MongoDB\\Client::getTypeMap()`
 - :phpmethod:`MongoDB\\Collection::getTypeMap()`
 - :phpmethod:`MongoDB\\Database::getTypeMap()`

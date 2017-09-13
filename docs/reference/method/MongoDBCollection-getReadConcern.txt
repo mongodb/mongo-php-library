@@ -1,6 +1,6 @@
-========================================
+=====================================
 MongoDB\\Collection::getReadConcern()
-========================================
+=====================================
 
 .. default-domain:: mongodb
 
@@ -15,11 +15,7 @@ Definition
 
 .. phpmethod:: MongoDB\\Collection::getReadConcern()
 
-   Accessor for the
-   :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>` used by this
-   :phpclass:`Collection <MongoDB\\Collection>`.
-
-   Returns the default read concern of this collection.
+   Returns the read concern for this collection.
 
    .. code-block:: php
 
@@ -37,14 +33,24 @@ Example
 
    <?php
 
-   $readConcern = new MongoDB\Driver\ReadConcern(MongoDB\Driver\ReadConcern::MAJORITY);
-   $collection = (new MongoDB\Client)->test->selectCollection('test', ['readConcern' => $readConcern]);
+   $collection = (new MongoDB\Client)->selectCollection('test', 'users', [
+      'readConcern' => new MongoDB\Driver\ReadConcern(MongoDB\Driver\ReadConcern::MAJORITY),
+   ]);
 
-   $collection->getReadConcern() === $readConcern; // true
+   var_dump($collection->getReadConcern());
+
+The output would then resemble::
+
+   object(MongoDB\Driver\ReadConcern)#5 (1) {
+     ["level"]=>
+     string(8) "majority"
+   }
 
 See Also
 --------
 
+- :manual:`Read Concern </reference/read-concern>` in the MongoDB manual
+- :php:`MongoDB\\Driver\\ReadConcern::isDefault() <mongodb-driver-readconcern.isdefault>`
 - :phpmethod:`MongoDB\\Client::getReadConcern()`
 - :phpmethod:`MongoDB\\Database::getReadConcern()`
-- :phpmethod:`MongoDB\\GridFS\Bucket::getReadConcern()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getReadConcern()`

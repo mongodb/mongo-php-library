@@ -706,8 +706,9 @@ class Collection
     }
 
     /**
-     * Return the collection default ReadConcern
+     * Return the read concern for this collection.
      *
+     * @see http://php.net/manual/en/mongodb-driver-readconcern.isdefault.php
      * @return ReadConcern
      */
     public function getReadConcern()
@@ -716,7 +717,7 @@ class Collection
     }
 
     /**
-     * Return the collection default ReadPreference
+     * Return the read preference for this collection.
      *
      * @return ReadPreference
      */
@@ -726,7 +727,7 @@ class Collection
     }
 
     /**
-     * Return the collection default type map
+     * Return the type map for this collection.
      *
      * @return array
      */
@@ -736,8 +737,9 @@ class Collection
     }
 
     /**
-     * Return the collection default WriteConcern
+     * Return the write concern for this collection.
      *
+     * @see http://php.net/manual/en/mongodb-driver-writeconcern.isdefault.php
      * @return WriteConcern
      */
     public function getWriteConcern()

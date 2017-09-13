@@ -1,6 +1,6 @@
-========================================
+======================================
 MongoDB\\Database::getReadPreference()
-========================================
+======================================
 
 .. default-domain:: mongodb
 
@@ -15,11 +15,7 @@ Definition
 
 .. phpmethod:: MongoDB\\Database::getReadPreference()
 
-   Accessor for the
-   :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>` used by this
-   :phpclass:`Database <MongoDB\\Database>`.
-
-   Returns the default read preference of this database.
+   Returns the read preference for this database.
 
    .. code-block:: php
 
@@ -28,7 +24,8 @@ Definition
 Return Values
 -------------
 
-A :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>` object.
+A :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+object.
 
 Example
 -------
@@ -37,17 +34,23 @@ Example
 
    <?php
 
-   $readPreference = new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_PRIMARY);
-   $database = (new MongoDB\Client)->selectDatabase(
-       'test',
-       ['readPreference' => $readPreference]
-   );
+   $database = (new MongoDB\Client)->selectDatabase('test', [
+       'readPreference' => new MongoDB\Driver\ReadPreference('primaryPreferred'),
+   ]);
 
-   $database->getReadPreference() === $readPreference; // true
+   var_dump($database->getReadPreference());
+
+The output would then resemble::
+
+   object(MongoDB\Driver\ReadPreference)#5 (1) {
+     ["mode"]=>
+     string(16) "primaryPreferred"
+   }
 
 See Also
 --------
 
+- :manual:`Read Preference </reference/read-preference>` in the MongoDB manual
 - :phpmethod:`MongoDB\\Client::getReadPreference()`
 - :phpmethod:`MongoDB\\Collection::getReadPreference()`
 - :phpmethod:`MongoDB\\GridFS\\Bucket::getReadPreference()`

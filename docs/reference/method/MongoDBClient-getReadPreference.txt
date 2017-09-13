@@ -1,6 +1,6 @@
-========================================
+====================================
 MongoDB\\Client::getReadPreference()
-========================================
+====================================
 
 .. default-domain:: mongodb
 
@@ -15,11 +15,7 @@ Definition
 
 .. phpmethod:: MongoDB\\Client::getReadPreference()
 
-   Accessor for the
-   :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>` used by this
-   :phpclass:`Client <MongoDB\\Client>`.
-
-   Returns the default read preference of this client.
+   Returns the read preference for this client.
 
    .. code-block:: php
 
@@ -28,7 +24,8 @@ Definition
 Return Values
 -------------
 
-A :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>` object.
+A :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+object.
 
 Example
 -------
@@ -37,23 +34,23 @@ Example
 
    <?php
 
-   $client = new MongoDB\Client(
-       'test',
-       [
-           'readPreference' => MongoDB\Driver\ReadPreference::RP_PRIMARY,
-           'readPreferenceTags' => ['foo' => 'bar', 'spam' => 'egg'],
-           'maxStalenessSeconds' => 150,
-       ]
-   );
+   $client = new MongoDB\Client('mongodb://127.0.0.1/', [
+       'readPreference' => 'primaryPreferred',
+   ]);
 
-   $readPreference = $client->getReadPreference();
+   var_dump($client->getReadPreference());
 
-   MongoDB\Driver\ReadPreference::RP_PRIMARY === $readPreference->getMode(); // true
-   ['foo' => 'bar', 'spam' => 'egg'] === $readPreference->getTags(); // true
-   150 = $readPreference->getMaxStalenessSeconds(); // true
+The output would then resemble::
+
+   object(MongoDB\Driver\ReadPreference)#5 (1) {
+     ["mode"]=>
+     string(16) "primaryPreferred"
+   }
 
 See Also
 --------
 
+- :manual:`Read Preference </reference/read-preference>` in the MongoDB manual
 - :phpmethod:`MongoDB\\Collection::getReadPreference()`
 - :phpmethod:`MongoDB\\Database::getReadPreference()`
+- :phpmethod:`MongoDB\\GridFS\\Bucket::getReadPreference()`

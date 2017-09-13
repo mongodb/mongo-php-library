@@ -74,6 +74,19 @@ default:
        'root' => 'MongoDB\Model\BSONDocument',
    ]
 
+The type map above will convert BSON documents and arrays to
+:phpclass:`MongoDB\\Model\\BSONDocument` and
+:phpclass:`MongoDB\\Model\\BSONArray` objects, respectively. The ``root`` and
+``document`` keys are used to distinguish the top-level BSON document from
+embedded documents, respectively.
+
+A type map may specify any class that implements
+:php:`MongoDB\\BSON\\Unserializable <mongodb-bson-unserializable>` as well as
+``"array"``, ``"stdClass``", and ``"object"`` (``"stdClass``" and ``"object"``
+are aliases of one another).
+
+.. seealso:: :php:`Deserialization from BSON <manual/en/mongodb.persistence.deserialization.php>` in the PHP manual
+
 ``Persistable`` Classes
 -----------------------
 

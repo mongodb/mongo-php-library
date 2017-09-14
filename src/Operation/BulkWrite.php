@@ -311,14 +311,7 @@ class BulkWrite implements Executable
                     break;
 
                 case self::INSERT_ONE:
-                    $insertedId = $bulk->insert($args[0]);
-
-                    if ($insertedId !== null) {
-                        $insertedIds[$i] = $insertedId;
-                    } else {
-                        $insertedIds[$i] = \MongoDB\extract_id_from_inserted_document($args[0]);
-                    }
-
+                    $insertedIds[$i] = $bulk->insert($args[0]);
                     break;
 
                 case self::REPLACE_ONE:

@@ -102,10 +102,6 @@ class InsertOne implements Executable
         $bulk = new Bulk($options);
         $insertedId = $bulk->insert($this->document);
 
-        if ($insertedId === null) {
-            $insertedId = \MongoDB\extract_id_from_inserted_document($this->document);
-        }
-
         $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;
         $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $writeConcern);
 

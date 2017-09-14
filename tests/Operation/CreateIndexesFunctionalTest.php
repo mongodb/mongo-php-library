@@ -164,7 +164,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
         /* Earlier server versions do not support the createIndexes command. Per
          * the Index Management specification, inserts on system.indexes must
          * use the write concern {w:1}. */
-        if (version_compare($this->getServerVersion(), '2.6.0', '<')) {
+        if ( ! \MongoDB\server_supports_feature($this->getPrimaryServer(), self::$wireVersionForCommand)) {
             $this->markTestSkipped('createIndexes command is not supported');
         }
 

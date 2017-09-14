@@ -9,8 +9,6 @@ use stdClass;
 
 class AggregateFunctionalTest extends FunctionalTestCase
 {
-    private static $wireVersionForCursor = 2;
-
     public function testDefaultReadConcernIsOmitted()
     {
         (new CommandObserver)->observe(

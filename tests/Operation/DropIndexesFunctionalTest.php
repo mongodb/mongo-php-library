@@ -5,10 +5,34 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\DropIndexes;
 use MongoDB\Operation\ListIndexes;
+use MongoDB\Tests\CommandObserver;
 use InvalidArgumentException;
+use stdClass;
 
 class DropIndexesFunctionalTest extends FunctionalTestCase
 {
+    public function testDefaultWriteConcernIsOmitted()
+    {
+        $operation = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => ['x' => 1]]]);
+        $operation->execute($this->getPrimaryServer());
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new DropIndexes(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    'x_1',
+                    ['writeConcern' => $this->createDefaultWriteConcern()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('writeConcern', $command);
+            }
+        );
+    }
+
     public function testDropOneIndexByName()
     {
         $indexes = [['key' => ['x' => 1]]];

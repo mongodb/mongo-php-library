@@ -6,9 +6,28 @@ use MongoDB\Driver\Server;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListDatabases;
+use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 class DropDatabaseFunctionalTest extends FunctionalTestCase
 {
+    public function testDefaultWriteConcernIsOmitted()
+    {
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new DropDatabase(
+                    $this->getDatabaseName(),
+                    ['writeConcern' => $this->createDefaultWriteConcern()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('writeConcern', $command);
+            }
+        );
+    }
+
     public function testDropExistingDatabase()
     {
         $server = $this->getPrimaryServer();

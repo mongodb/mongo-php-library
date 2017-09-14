@@ -117,6 +117,10 @@ class Count implements Executable
             throw InvalidArgumentException::invalidType('"skip" option', $options['skip'], 'integer');
         }
 
+        if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
+            unset($options['readConcern']);
+        }
+
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->filter = $filter;

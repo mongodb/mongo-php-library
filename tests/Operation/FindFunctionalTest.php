@@ -4,9 +4,30 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Operation\Find;
+use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 class FindFunctionalTest extends FunctionalTestCase
 {
+    public function testDefaultReadConcernIsOmitted()
+    {
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new Find(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [],
+                    ['readConcern' => $this->createDefaultReadConcern()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('readConcern', $command);
+            }
+        );
+    }
+
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocuments
      */

@@ -4,12 +4,66 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\BSON\Javascript;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\MapReduce;
+use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 class MapReduceFunctionalTest extends FunctionalTestCase
 {
+    public function testDefaultReadConcernIsOmitted()
+    {
+        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName());
+        $operation->execute($this->getPrimaryServer());
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new MapReduce(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    new Javascript('function() { emit(this.x, this.y); }'),
+                    new Javascript('function(key, values) { return Array.sum(values); }'),
+                    ['inline' => 1],
+                    ['readConcern' => $this->createDefaultReadConcern()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('readConcern', $command);
+            }
+        );
+    }
+
+    public function testDefaultWriteConcernIsOmitted()
+    {
+        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName());
+        $operation->execute($this->getPrimaryServer());
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new MapReduce(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    new Javascript('function() { emit(this.x, this.y); }'),
+                    new Javascript('function(key, values) { return Array.sum(values); }'),
+                    $this->getCollectionName() . '.output',
+                    ['writeConcern' => $this->createDefaultWriteConcern()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('writeConcern', $command);
+            }
+        );
+
+        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName() . '.output');
+        $operation->execute($this->getPrimaryServer());
+    }
+
     public function testResult()
     {
         $this->createFixtures(3);

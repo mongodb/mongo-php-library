@@ -4,10 +4,54 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Operation\Aggregate;
+use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 class AggregateFunctionalTest extends FunctionalTestCase
 {
     private static $wireVersionForCursor = 2;
+
+    public function testDefaultReadConcernIsOmitted()
+    {
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new Aggregate(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [['$match' => ['x' => 1]]],
+                    ['readConcern' => $this->createDefaultReadConcern()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('readConcern', $command);
+            }
+        );
+    }
+
+    public function testDefaultWriteConcernIsOmitted()
+    {
+        if (version_compare($this->getServerVersion(), '2.6.0', '<')) {
+            $this->markTestSkipped('$out pipeline operator is not supported');
+        }
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new Aggregate(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [['$out' => $this->getCollectionName() . '.output']],
+                    ['writeConcern' => $this->createDefaultWriteConcern()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('writeConcern', $command);
+            }
+        );
+    }
 
     /**
      * @expectedException MongoDB\Driver\Exception\RuntimeException

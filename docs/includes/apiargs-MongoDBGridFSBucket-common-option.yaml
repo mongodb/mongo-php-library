@@ -3,7 +3,7 @@ name: _id
 type: mixed
 description: |
   Value to use as the file document identifier. Defaults to a new
-  :php:`MongoDB\\BSON\\ObjectID <class.mongodb-bson-objectid>` object.
+  :php:`MongoDB\\BSON\\ObjectId <class.mongodb-bson-objectid>` object.
 interface: phpmethod
 operation: ~
 optional: true

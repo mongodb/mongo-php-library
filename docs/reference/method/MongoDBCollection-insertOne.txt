@@ -74,7 +74,7 @@ The following operation inserts a document into the ``users`` collection in the
 The output would then resemble::
 
    Inserted 1 document(s)
-   object(MongoDB\BSON\ObjectID)#11 (1) {
+   object(MongoDB\BSON\ObjectId)#11 (1) {
      ["oid"]=>
      string(24) "579a25921f417dd1e5518141"
    }

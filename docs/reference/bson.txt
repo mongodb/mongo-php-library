@@ -124,7 +124,7 @@ Consider the following class definition:
        
        public function __construct($name)
        {
-           $this->id = new MongoDB\BSON\ObjectID;
+           $this->id = new MongoDB\BSON\ObjectId;
            $this->name = (string) $name;
            $this->createdAt = new MongoDB\BSON\UTCDateTime;
        }
@@ -167,7 +167,7 @@ The output would then resemble:
 
    object(Person)#18 (3) {
      ["id":"Person":private]=>
-     object(MongoDB\BSON\ObjectID)#15 (1) {
+     object(MongoDB\BSON\ObjectId)#15 (1) {
        ["oid"]=>
        string(24) "56fad2c36118fd2e9820cfc1"
      }

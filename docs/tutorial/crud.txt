@@ -145,7 +145,7 @@ The output would then resemble::
    ``"94301"``. The same criteria would not have matched a document with an
    integer value of ``94301`` due to MongoDB's :manual:`comparison rules for
    BSON types </reference/bson-type-comparison-order>`. Similarly, users should
-   use a :php:`MongoDB\\BSON\\ObjectID <class.mongodb-bson-objectid>` object
+   use a :php:`MongoDB\\BSON\\ObjectId <class.mongodb-bson-objectid>` object
    when matching an ``_id`` with an :manual:`ObjectId </reference/object-id/>`
    value, as strings and ObjectIds are not directly comparable.
 
@@ -237,7 +237,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(4) {
        ["_id"]=>
-       object(MongoDB\BSON\ObjectID)#8 (1) {
+       object(MongoDB\BSON\ObjectId)#8 (1) {
          ["oid"]=>
          string(24) "576023c6b02fa9281da3f983"
        }
@@ -253,7 +253,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(4) {
        ["_id"]=>
-       object(MongoDB\BSON\ObjectID)#12 (1) {
+       object(MongoDB\BSON\ObjectId)#12 (1) {
          ["oid"]=>
          string(24) "576023c6b02fa9281da3f98d"
        }
@@ -269,7 +269,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(4) {
        ["_id"]=>
-       object(MongoDB\BSON\ObjectID)#10 (1) {
+       object(MongoDB\BSON\ObjectId)#10 (1) {
          ["oid"]=>
          string(24) "576023c6b02fa9281da3f99b"
        }
@@ -285,7 +285,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(4) {
        ["_id"]=>
-       object(MongoDB\BSON\ObjectID)#13 (1) {
+       object(MongoDB\BSON\ObjectId)#13 (1) {
          ["oid"]=>
          string(24) "576023c6b02fa9281da3f9a8"
        }
@@ -658,7 +658,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(3) {
        ["_id"]=>
-       object(MongoDB\BSON\ObjectID)#15 (1) {
+       object(MongoDB\BSON\ObjectId)#15 (1) {
          ["oid"]=>
          string(24) "57509c4406d7241dad86e7c3"
        }

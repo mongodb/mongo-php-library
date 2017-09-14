@@ -83,7 +83,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(4) {
        ["_id"]=>
-       object(MongoDB\BSON\ObjectID)#8 (1) {
+       object(MongoDB\BSON\ObjectId)#8 (1) {
          ["oid"]=>
          string(24) "576023c6b02fa9281da3f983"
        }
@@ -99,7 +99,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(4) {
        ["_id"]=>
-       object(MongoDB\BSON\ObjectID)#12 (1) {
+       object(MongoDB\BSON\ObjectId)#12 (1) {
          ["oid"]=>
          string(24) "576023c6b02fa9281da3f98d"
        }
@@ -115,7 +115,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(4) {
        ["_id"]=>
-       object(MongoDB\BSON\ObjectID)#10 (1) {
+       object(MongoDB\BSON\ObjectId)#10 (1) {
          ["oid"]=>
          string(24) "576023c6b02fa9281da3f99b"
        }
@@ -131,7 +131,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(4) {
        ["_id"]=>
-       object(MongoDB\BSON\ObjectID)#13 (1) {
+       object(MongoDB\BSON\ObjectId)#13 (1) {
          ["oid"]=>
          string(24) "576023c6b02fa9281da3f9a8"
        }
@@ -147,7 +147,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(4) {
        ["_id"]=>
-       object(MongoDB\BSON\ObjectID)#8 (1) {
+       object(MongoDB\BSON\ObjectId)#8 (1) {
          ["oid"]=>
          string(24) "576023c6b02fa9281da3f9b4"
        }

@@ -29,7 +29,7 @@ upserted, ``null`` will be returned.
 
 If the document had an ID prior to upserting (i.e. the server did not need to
 generate an ID), this will contain its ``_id`` field value. Any server-generated
-ID will be a :php:`MongoDB\\BSON\\ObjectID <class.mongodb-bson-objectid>`
+ID will be a :php:`MongoDB\\BSON\\ObjectId <class.mongodb-bson-objectid>`
 instance.
 
 Errors/Exceptions

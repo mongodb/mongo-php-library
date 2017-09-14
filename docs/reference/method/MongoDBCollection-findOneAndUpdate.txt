@@ -80,7 +80,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(2) {
        ["_id"]=>
-       object(MongoDB\BSON\ObjectID)#12 (1) {
+       object(MongoDB\BSON\ObjectId)#12 (1) {
          ["oid"]=>
          string(24) "594d5ef280a846852a4b3dee"
        }

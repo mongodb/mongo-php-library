@@ -32,5 +32,5 @@ A map of IDs (i.e. ``_id`` field values) for the inserted documents.
 The index of each ID in the map corresponds to each document's position in the
 bulk operation. If a document had an ID prior to inserting (i.e. the driver did
 not generate an ID), the index will contain its ``_id`` field value. Any
-driver-generated ID will be a :php:`MongoDB\\BSON\\ObjectID
+driver-generated ID will be a :php:`MongoDB\\BSON\\ObjectId
 <class.mongodb-bson-objectid>` instance.

@@ -3,7 +3,7 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\BSON\Javascript;
-use MongoDB\BSON\ObjectID;
+use MongoDB\BSON\ObjectId;
 use MongoDB\Operation\MapReduce;
 use stdClass;
 
@@ -104,6 +104,6 @@ class MapReduceTest extends TestCase
 
     private function getInvalidJavascriptValues()
     {
-        return [123, 3.14, 'foo', true, [], new stdClass, new ObjectID];
+        return [123, 3.14, 'foo', true, [], new stdClass, new ObjectId];
     }
 }

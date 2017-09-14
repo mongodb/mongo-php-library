@@ -53,6 +53,22 @@ class AggregateFunctionalTest extends FunctionalTestCase
         );
     }
 
+    public function testEmptyPipelineReturnsAllDocuments()
+    {
+        $this->createFixtures(3);
+
+        $operation = new Aggregate($this->getDatabaseName(), $this->getCollectionName(), []);
+        $results = iterator_to_array($operation->execute($this->getPrimaryServer()));
+
+        $expectedDocuments = [
+            (object) ['_id' => 1, 'x' => (object) ['foo' => 'bar']],
+            (object) ['_id' => 2, 'x' => (object) ['foo' => 'bar']],
+            (object) ['_id' => 3, 'x' => (object) ['foo' => 'bar']],
+        ];
+
+        $this->assertEquals($expectedDocuments, $results);
+    }
+
     /**
      * @expectedException MongoDB\Driver\Exception\RuntimeException
      */

@@ -111,10 +111,6 @@ class Aggregate implements Executable
      */
     public function __construct($databaseName, $collectionName, array $pipeline, array $options = [])
     {
-        if (empty($pipeline)) {
-            throw new InvalidArgumentException('$pipeline is empty');
-        }
-
         $expectedIndex = 0;
 
         foreach ($pipeline as $i => $operation) {

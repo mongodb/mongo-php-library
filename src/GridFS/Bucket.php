@@ -279,6 +279,16 @@ class Bucket
     }
 
     /**
+     * Return the chunk size in bytes.
+     *
+     * @return integer
+     */
+    public function getChunkSizeBytes()
+    {
+        return $this->chunkSizeBytes;
+    }
+
+    /**
      * Return the database name.
      *
      * @return string

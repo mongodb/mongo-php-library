@@ -42,6 +42,7 @@ Methods
    /reference/method/MongoDBGridFSBucket-find
    /reference/method/MongoDBGridFSBucket-findOne
    /reference/method/MongoDBGridFSBucket-getBucketName
+   /reference/method/MongoDBGridFSBucket-getChunkSizeBytes
    /reference/method/MongoDBGridFSBucket-getDatabaseName
    /reference/method/MongoDBGridFSBucket-getFileDocumentForStream
    /reference/method/MongoDBGridFSBucket-getFileIdForStream

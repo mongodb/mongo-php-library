@@ -6,8 +6,13 @@ arg_name: option
 name: hint
 type: string|array|object
 description: |
-  The index to use. If you specify a document, it is interpreted as an index
-  specification from which a name will be derived.
+  The index to use. Specify either the index name as a string or the index key
+  pattern as a document. If specified, then the query system will only consider
+  plans using the hinted index.
+
+  .. versionchanged:: 1.2
+     If a document is provided, it is passed to the command as-is. Previously,
+     the library would convert the key pattern to an index name.
 interface: phpmethod
 operation: ~
 optional: true

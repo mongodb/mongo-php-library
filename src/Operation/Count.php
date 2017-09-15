@@ -53,8 +53,9 @@ class Count implements Executable
      *    This is not supported for server versions < 3.4 and will result in an
      *    exception at execution time if used.
      *
-     *  * hint (string|document): The index to use. If a document, it will be
-     *    interpretted as an index specification and a name will be generated.
+     *  * hint (string|document): The index to use. Specify either the index
+     *    name as a string or the index key pattern as a document. If specified,
+     *    then the query system will only consider plans using the hinted index.
      *
      *  * limit (integer): The maximum number of documents to count.
      *
@@ -87,14 +88,8 @@ class Count implements Executable
             throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
         }
 
-        if (isset($options['hint'])) {
-            if (is_array($options['hint']) || is_object($options['hint'])) {
-                $options['hint'] = \MongoDB\generate_index_name($options['hint']);
-            }
-
-            if ( ! is_string($options['hint'])) {
-                throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], 'string or array or object');
-            }
+        if (isset($options['hint']) && ! is_string($options['hint']) && ! is_array($options['hint']) && ! is_object($options['hint'])) {
+            throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], 'string or array or object');
         }
 
         if (isset($options['limit']) && ! is_integer($options['limit'])) {
@@ -177,7 +172,11 @@ class Count implements Executable
             $cmd['collation'] = (object) $this->options['collation'];
         }
 
-        foreach (['hint', 'limit', 'maxTimeMS', 'skip'] as $option) {
+        if (isset($this->options['hint'])) {
+            $cmd['hint'] = is_array($this->options['hint']) ? (object) $this->options['hint'] : $this->options['hint'];
+        }
+
+        foreach (['limit', 'maxTimeMS', 'skip'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }

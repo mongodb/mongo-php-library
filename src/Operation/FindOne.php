@@ -48,6 +48,10 @@ class FindOne implements Executable
      *  * comment (string): Attaches a comment to the query. If "$comment" also
      *    exists in the modifiers document, this option will take precedence.
      *
+     *  * hint (string|document): The index to use. Specify either the index
+     *    name as a string or the index key pattern as a document. If specified,
+     *    then the query system will only consider plans using the hinted index.
+     *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run. If "$maxTimeMS" also exists in the modifiers document, this
      *    option will take precedence.

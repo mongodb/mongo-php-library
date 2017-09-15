@@ -48,6 +48,10 @@ class FindTest extends TestCase
             $options[][] = ['cursorType' => $value];
         }
 
+        foreach ($this->getInvalidHintValues() as $value) {
+            $options[][] = ['hint' => $value];
+        }
+
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['limit' => $value];
         }
@@ -89,6 +93,11 @@ class FindTest extends TestCase
         }
 
         return $options;
+    }
+
+    private function getInvalidHintValues()
+    {
+        return [123, 3.14, true];
     }
 
     /**

@@ -19,6 +19,10 @@ source:
   ref: comment
 ---
 source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: hint
+---
+source:
   file: apiargs-common-option.yaml
   ref: maxTimeMS
 ---

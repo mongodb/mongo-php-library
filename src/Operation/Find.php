@@ -70,6 +70,10 @@ class Find implements Executable
      *    NON_TAILABLE, TAILABLE, or TAILABLE_AWAIT. The default is
      *    NON_TAILABLE.
      *
+     *  * hint (string|document): The index to use. Specify either the index
+     *    name as a string or the index key pattern as a document. If specified,
+     *    then the query system will only consider plans using the hinted index.
+     *
      *  * limit (integer): The maximum number of documents to return.
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
@@ -144,6 +148,10 @@ class Find implements Executable
                 $options['cursorType'] !== self::TAILABLE_AWAIT) {
                 throw new InvalidArgumentException('Invalid value for "cursorType" option: ' . $options['cursorType']);
             }
+        }
+
+        if (isset($options['hint']) && ! is_string($options['hint']) && ! is_array($options['hint']) && ! is_object($options['hint'])) {
+            throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], 'string or array or object');
         }
 
         if (isset($options['limit']) && ! is_integer($options['limit'])) {
@@ -249,7 +257,7 @@ class Find implements Executable
             }
         }
 
-        foreach (['allowPartialResults', 'batchSize', 'comment', 'limit', 'maxTimeMS', 'noCursorTimeout', 'oplogReplay', 'projection', 'readConcern', 'skip', 'sort'] as $option) {
+        foreach (['allowPartialResults', 'batchSize', 'comment', 'hint', 'limit', 'maxTimeMS', 'noCursorTimeout', 'oplogReplay', 'projection', 'readConcern', 'skip', 'sort'] as $option) {
             if (isset($this->options[$option])) {
                 $options[$option] = $this->options[$option];
             }

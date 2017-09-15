@@ -121,7 +121,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(6) {
        ["_id"]=>
-       object(MongoDB\BSON\ObjectID)#11 (1) {
+       object(MongoDB\BSON\ObjectId)#11 (1) {
          ["oid"]=>
          string(24) "594d5ef380a846852a4b5837"
        }

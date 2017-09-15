@@ -41,11 +41,11 @@ abstract class FunctionalTestCase extends TestCase
         $this->assertEquals(1, $document['ok']);
     }
 
-    protected function assertSameObjectID($expectedObjectID, $actualObjectID)
+    protected function assertSameObjectId($expectedObjectId, $actualObjectId)
     {
-        $this->assertInstanceOf('MongoDB\BSON\ObjectID', $expectedObjectID);
-        $this->assertInstanceOf('MongoDB\BSON\ObjectID', $actualObjectID);
-        $this->assertEquals((string) $expectedObjectID, (string) $actualObjectID);
+        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $expectedObjectId);
+        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $actualObjectId);
+        $this->assertEquals((string) $expectedObjectId, (string) $actualObjectId);
     }
 
     protected function assertSameDocument($expectedDocument, $actualDocument)

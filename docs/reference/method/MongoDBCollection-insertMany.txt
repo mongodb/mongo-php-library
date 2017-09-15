@@ -84,12 +84,12 @@ The output would then resemble::
    Inserted 2 document(s)
    array(2) {
      [0]=>
-     object(MongoDB\BSON\ObjectID)#11 (1) {
+     object(MongoDB\BSON\ObjectId)#11 (1) {
        ["oid"]=>
        string(24) "579a25921f417dd1e5518141"
      }
      [1]=>
-     object(MongoDB\BSON\ObjectID)#12 (1) {
+     object(MongoDB\BSON\ObjectId)#12 (1) {
        ["oid"]=>
        string(24) "579a25921f417dd1e5518142"
      }

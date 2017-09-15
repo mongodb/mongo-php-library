@@ -34,7 +34,7 @@ Return Values
 
 The ``_id`` field of the metadata document associated with the newly created
 GridFS file. If the ``_id`` option is not specified, a new
-:php:`MongoDB\\BSON\\ObjectID <class.mongodb-bson-objectid>` object will be used
+:php:`MongoDB\\BSON\\ObjectId <class.mongodb-bson-objectid>` object will be used
 by default.
 
 Errors/Exceptions

@@ -56,9 +56,9 @@ Matching BSON Types in Query Criteria
 
 In the following example, documents in the ``restaurants`` collection use an
 :manual:`ObjectId </reference/object-id/>` for their identifier (the default)
-and documents in the ``zips`` collection use a string. Since ObjectID is a
+and documents in the ``zips`` collection use a string. Since ObjectId is a
 special BSON type, the query criteria for selecting a restaurant must use the
-:php:`MongoDB\\BSON\\ObjectID <class.mongodb-bson-objectid>` class.
+:php:`MongoDB\\BSON\\ObjectId <class.mongodb-bson-objectid>` class.
 
 .. code-block:: php
 
@@ -67,7 +67,7 @@ special BSON type, the query criteria for selecting a restaurant must use the
    $zip = $database->zips->findOne(['_id' => '10036']);
 
    $restaurant = $database->restaurants->findOne([
-       '_id' => new MongoDB\BSON\ObjectID('594d5ef280a846852a4b3f70'),
+       '_id' => new MongoDB\BSON\ObjectId('594d5ef280a846852a4b3f70'),
    ]);
 
 Projecting Fields
@@ -104,7 +104,7 @@ The output would then resemble::
      ["storage":"ArrayObject":private]=>
      array(4) {
        ["_id"]=>
-       object(MongoDB\BSON\ObjectID)#8 (1) {
+       object(MongoDB\BSON\ObjectId)#8 (1) {
          ["oid"]=>
          string(24) "576023c6b02fa9281da3f983"
        }

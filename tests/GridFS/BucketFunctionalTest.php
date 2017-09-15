@@ -363,6 +363,18 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertEquals('fs', $this->bucket->getBucketName());
     }
 
+    public function testGetChunkSizeBytesWithCustomValue()
+    {
+        $bucket = new Bucket($this->manager, $this->getDatabaseName(), ['chunkSizeBytes' => 8192]);
+
+        $this->assertEquals(8192, $bucket->getChunkSizeBytes());
+    }
+
+    public function testGetChunkSizeBytesWithDefaultValue()
+    {
+        $this->assertEquals(261120, $this->bucket->getChunkSizeBytes());
+    }
+
     public function testGetDatabaseName()
     {
         $this->assertEquals($this->getDatabaseName(), $this->bucket->getDatabaseName());

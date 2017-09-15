@@ -42,10 +42,12 @@ Methods
    /reference/method/MongoDBGridFSBucket-find
    /reference/method/MongoDBGridFSBucket-findOne
    /reference/method/MongoDBGridFSBucket-getBucketName
+   /reference/method/MongoDBGridFSBucket-getChunksCollection
    /reference/method/MongoDBGridFSBucket-getChunkSizeBytes
    /reference/method/MongoDBGridFSBucket-getDatabaseName
    /reference/method/MongoDBGridFSBucket-getFileDocumentForStream
    /reference/method/MongoDBGridFSBucket-getFileIdForStream
+   /reference/method/MongoDBGridFSBucket-getFilesCollection
    /reference/method/MongoDBGridFSBucket-getReadConcern
    /reference/method/MongoDBGridFSBucket-getReadPreference
    /reference/method/MongoDBGridFSBucket-getTypeMap

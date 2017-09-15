@@ -363,6 +363,14 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertEquals('fs', $this->bucket->getBucketName());
     }
 
+    public function testGetChunksCollection()
+    {
+        $chunksCollection = $this->bucket->getChunksCollection();
+
+        $this->assertInstanceOf('MongoDB\Collection', $chunksCollection);
+        $this->assertEquals('fs.chunks', $chunksCollection->getCollectionName());
+    }
+
     public function testGetChunkSizeBytesWithCustomValue()
     {
         $bucket = new Bucket($this->manager, $this->getDatabaseName(), ['chunkSizeBytes' => 8192]);
@@ -464,6 +472,14 @@ class BucketFunctionalTest extends FunctionalTestCase
     public function testGetFileIdForStreamShouldRequireGridFSStreamResource($stream)
     {
         $this->bucket->getFileIdForStream($stream);
+    }
+
+    public function testGetFilesCollection()
+    {
+        $filesCollection = $this->bucket->getFilesCollection();
+
+        $this->assertInstanceOf('MongoDB\Collection', $filesCollection);
+        $this->assertEquals('fs.files', $filesCollection->getCollectionName());
     }
 
     /**

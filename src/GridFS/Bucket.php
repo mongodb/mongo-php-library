@@ -279,6 +279,16 @@ class Bucket
     }
 
     /**
+     * Return the chunks collection.
+     *
+     * @return Collection
+     */
+    public function getChunksCollection()
+    {
+        return $this->collectionWrapper->getChunksCollection();
+    }
+
+    /**
      * Return the chunk size in bytes.
      *
      * @return integer
@@ -338,6 +348,16 @@ class Bucket
         }
 
         return $file->_id;
+    }
+
+    /**
+     * Return the files collection.
+     *
+     * @return Collection
+     */
+    public function getFilesCollection()
+    {
+        return $this->collectionWrapper->getFilesCollection();
     }
 
     /**

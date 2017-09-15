@@ -76,9 +76,16 @@ class Find implements Executable
      *
      *  * limit (integer): The maximum number of documents to return.
      *
+     *  * max (document): The exclusive upper bound for a specific index.
+     *
+     *  * maxScan (integer): Maximum number of documents or index keys to scan
+     *    when executing the query.
+     *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run. If "$maxTimeMS" also exists in the modifiers document, this
      *    option will take precedence.
+     *
+     *  * min (document): The inclusive upper bound for a specific index.
      *
      *  * modifiers (document): Meta operators that modify the output or
      *    behavior of a query. Use of these operators is deprecated in favor of
@@ -101,7 +108,17 @@ class Find implements Executable
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
+     *  * returnKey (boolean): If true, returns only the index keys in the
+     *    resulting documents.
+     *
+     *  * showRecordId (boolean): Determines whether to return the record
+     *    identifier for each document. If true, adds a field $recordId to the
+     *    returned documents.
+     *
      *  * skip (integer): The number of documents to skip before returning.
+     *
+     *  * snapshot (boolean): Prevents the cursor from returning a document more
+     *    than once because of an intervening write operation.
      *
      *  * sort (document): The order in which to return matching documents. If
      *    "$orderby" also exists in the modifiers document, this option will
@@ -158,8 +175,20 @@ class Find implements Executable
             throw InvalidArgumentException::invalidType('"limit" option', $options['limit'], 'integer');
         }
 
+        if (isset($options['max']) && ! is_array($options['max']) && ! is_object($options['max'])) {
+            throw InvalidArgumentException::invalidType('"max" option', $options['max'], 'array or object');
+        }
+
+        if (isset($options['maxScan']) && ! is_integer($options['maxScan'])) {
+            throw InvalidArgumentException::invalidType('"maxScan" option', $options['maxScan'], 'integer');
+        }
+
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        }
+
+        if (isset($options['min']) && ! is_array($options['min']) && ! is_object($options['min'])) {
+            throw InvalidArgumentException::invalidType('"min" option', $options['min'], 'array or object');
         }
 
         if (isset($options['modifiers']) && ! is_array($options['modifiers']) && ! is_object($options['modifiers'])) {
@@ -186,8 +215,20 @@ class Find implements Executable
             throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
         }
 
+        if (isset($options['returnKey']) && ! is_bool($options['returnKey'])) {
+            throw InvalidArgumentException::invalidType('"returnKey" option', $options['returnKey'], 'boolean');
+        }
+
+        if (isset($options['showRecordId']) && ! is_bool($options['showRecordId'])) {
+            throw InvalidArgumentException::invalidType('"showRecordId" option', $options['showRecordId'], 'boolean');
+        }
+
         if (isset($options['skip']) && ! is_integer($options['skip'])) {
             throw InvalidArgumentException::invalidType('"skip" option', $options['skip'], 'integer');
+        }
+
+        if (isset($options['snapshot']) && ! is_bool($options['snapshot'])) {
+            throw InvalidArgumentException::invalidType('"snapshot" option', $options['snapshot'], 'boolean');
         }
 
         if (isset($options['sort']) && ! is_array($options['sort']) && ! is_object($options['sort'])) {
@@ -257,14 +298,16 @@ class Find implements Executable
             }
         }
 
-        foreach (['allowPartialResults', 'batchSize', 'comment', 'hint', 'limit', 'maxTimeMS', 'noCursorTimeout', 'oplogReplay', 'projection', 'readConcern', 'skip', 'sort'] as $option) {
+        foreach (['allowPartialResults', 'batchSize', 'comment', 'hint', 'limit', 'maxScan', 'maxTimeMS', 'noCursorTimeout', 'oplogReplay', 'projection', 'readConcern', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'] as $option) {
             if (isset($this->options[$option])) {
                 $options[$option] = $this->options[$option];
             }
         }
 
-        if (isset($this->options['collation'])) {
-            $options['collation'] = (object) $this->options['collation'];
+        foreach (['collation', 'max', 'min'] as $option) {
+            if (isset($this->options[$option])) {
+                $options[$option] = (object) $this->options[$option];
+            }
         }
 
         $modifiers = empty($this->options['modifiers']) ? [] : (array) $this->options['modifiers'];

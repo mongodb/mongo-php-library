@@ -56,8 +56,20 @@ class FindTest extends TestCase
             $options[][] = ['limit' => $value];
         }
 
+        foreach ($this->getInvalidDocumentValues() as $value) {
+            $options[][] = ['max' => $value];
+        }
+
+        foreach ($this->getInvalidIntegerValues() as $value) {
+            $options[][] = ['maxScan' => $value];
+        }
+
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['maxTimeMS' => $value];
+        }
+
+        foreach ($this->getInvalidDocumentValues() as $value) {
+            $options[][] = ['min' => $value];
         }
 
         foreach ($this->getInvalidDocumentValues() as $value) {
@@ -80,8 +92,20 @@ class FindTest extends TestCase
             $options[][] = ['readPreference' => $value];
         }
 
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = ['returnKey' => $value];
+        }
+
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = ['showRecordId' => $value];
+        }
+
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['skip' => $value];
+        }
+
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = ['snapshot' => $value];
         }
 
         foreach ($this->getInvalidDocumentValues() as $value) {

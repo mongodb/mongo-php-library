@@ -42,5 +42,25 @@ post: |
 ---
 source:
   file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: max
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: maxScan
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: min
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: returnKey
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: showRecordId
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
   ref: modifiers
 ...

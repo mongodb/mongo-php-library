@@ -127,13 +127,7 @@ class InsertMany implements Executable
         $insertedIds = [];
 
         foreach ($this->documents as $i => $document) {
-            $insertedId = $bulk->insert($document);
-
-            if ($insertedId !== null) {
-                $insertedIds[$i] = $insertedId;
-            } else {
-                $insertedIds[$i] = \MongoDB\extract_id_from_inserted_document($document);
-            }
+            $insertedIds[$i] = $bulk->insert($document);
         }
 
         $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;

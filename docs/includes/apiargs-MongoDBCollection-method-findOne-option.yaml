@@ -19,6 +19,10 @@ source:
   ref: comment
 ---
 source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: hint
+---
+source:
   file: apiargs-common-option.yaml
   ref: maxTimeMS
 ---
@@ -35,6 +39,26 @@ source:
   ref: typeMap
 post: |
   This will be used for the returned result document.
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: max
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: maxScan
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: min
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: returnKey
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: showRecordId
 ---
 source:
   file: apiargs-MongoDBCollection-method-find-option.yaml

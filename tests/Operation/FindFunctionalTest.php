@@ -3,7 +3,9 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\CreateIndexes;
+use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
@@ -121,6 +123,39 @@ class FindFunctionalTest extends FunctionalTestCase
                 ],
             ],
         ];
+    }
+
+    public function testMaxAwaitTimeMS()
+    {
+        $maxAwaitTimeMS = 10;
+
+        // Create a capped collection.
+        $databaseName = $this->getDatabaseName();
+        $cappedCollectionName = $this->getCollectionName();
+        $cappedCollectionOptions = [
+            'capped' => true,
+            'max' => 100,
+            'size' => 1048576,
+        ];
+
+        $operation = new CreateCollection($databaseName, $cappedCollectionName, $cappedCollectionOptions);
+        $operation->execute($this->getPrimaryServer());
+
+        // Insert documents into the capped collection.
+        $bulkWrite = new BulkWrite(['ordered' => true]);
+        $bulkWrite->insert(['_id' => 1]);
+        $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
+
+        $operation = new Find($databaseName, $cappedCollectionName, [], ['cursorType' => Find::TAILABLE_AWAIT, 'maxAwaitTimeMS' => $maxAwaitTimeMS]);
+        $cursor = $operation->execute($this->getPrimaryServer());
+        $it = new \IteratorIterator($cursor);
+
+        // Make sure we await results for no more than the maxAwaitTimeMS.
+        $it->rewind();
+        $it->next();
+        $startTime = microtime(true);
+        $it->next();
+        $this->assertGreaterThanOrEqual($maxAwaitTimeMS * 0.001, microtime(true) - $startTime);
     }
 
     /**

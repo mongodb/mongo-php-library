@@ -21,7 +21,7 @@ use MongoDB\InsertOneResult;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\BulkWriteException as BulkWriteException;
+use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Exception\DuplicateKeyException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;

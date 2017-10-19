@@ -23,6 +23,21 @@ class InsertOneFunctionalTest extends FunctionalTestCase
     }
 
     /**
+     * @expectedException MongoDB\Exception\DuplicateKeyException
+     */
+    public function testInsertOneWithDuplicateId()
+    {
+        $operation = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['_id' => 'foo']);
+        $result = $operation->execute($this->getPrimaryServer());
+
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
+        $this->assertSame('foo', $result->getInsertedId());
+
+        $operation->execute($this->getPrimaryServer());
+    }
+
+    /**
      * @dataProvider provideDocumentWithExistingId
      */
     public function testInsertOneWithExistingId($document)

@@ -22,7 +22,9 @@ use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Exception\BulkWriteException as BulkWriteException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
+use MongoDB\Exception\DuplicateKeyException;
 use MongoDB\Exception\InvalidArgumentException;
 
 /**
@@ -111,7 +113,17 @@ class InsertOne implements Executable
         $bulk = new Bulk($options);
         $insertedId = $bulk->insert($this->document);
 
-        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createOptions());
+        $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;
+
+        try {
+            $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createOptions());
+        } catch (BulkWriteException $e) {
+            if ($this->isBulkWriteExceptionDuplicateKeyError($e)) {
+                throw DuplicateKeyException::fromBulkWriteException($e);
+            }
+
+            throw $e;
+        }
 
         return new InsertOneResult($writeResult, $insertedId);
     }
@@ -135,5 +147,38 @@ class InsertOne implements Executable
         }
 
         return $options;
+    }
+
+    /**
+     * Determine if a BulkWriteException is a DuplicateKeyException.
+     *
+     * We only wrap a BulkWriteException if it identifies as a duplicate key
+     * error or contains exactly one write error that identifies as a duplicate
+     * key error. It must not contain a write concern error.
+     *
+     * @param BulkWriteException $e
+     * @return boolean
+     */
+    private function isBulkWriteExceptionDuplicateKeyError(BulkWriteException $e)
+    {
+        if (\MongoDB\is_duplicate_key_error($e->getCode(), $e->getMessage())) {
+            return true;
+        }
+
+        $writeResult = $e->getWriteResult();
+
+        if ($writeResult->getWriteConcernError() !== null) {
+            return false;
+        }
+
+        $writeErrors =  $writeResult->getWriteErrors();
+
+        if (count($writeErrors) !== 1) {
+            return false;
+        }
+
+        $writeError = current($writeErrors);
+
+        return \MongoDB\is_duplicate_key_error($writeError->getCode(), $writeError->getMessage());
     }
 }

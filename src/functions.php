@@ -21,6 +21,7 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
 use ReflectionClass;
@@ -77,6 +78,38 @@ function generate_index_name($document)
     }
 
     return $name;
+}
+
+/**
+ * Return whether the error code and message indicate a duplicate key error.
+ *
+ * @internal
+ * @param integer $code
+ * @param string  $message
+ * @return boolean
+ */
+function is_duplicate_key_error($code, $message)
+{
+    if ($code === 11000) {
+        return true;
+    }
+
+    // mongos (see: SERVER-11493)
+    if ($code === 16460 && strstr($message, ' E11000 ') !== false) {
+        return true;
+    }
+
+    // duplicate key for updates before 2.6
+    if ($code === 11001) {
+        return true;
+    }
+
+    // mongos before 2.6
+    if ($code === 12582) {
+        return true;
+    }
+
+    return false;
 }
 
 /**

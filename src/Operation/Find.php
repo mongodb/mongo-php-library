@@ -78,6 +78,9 @@ class Find implements Executable
      *
      *  * max (document): The exclusive upper bound for a specific index.
      *
+     *  * maxAwaitTimeMS (integer): The maxium amount of time for the server to wait
+     *    on new documents to satisfy a query, if cursorType is TAILABLE_AWAIT.
+     *
      *  * maxScan (integer): Maximum number of documents or index keys to scan
      *    when executing the query.
      *
@@ -177,6 +180,10 @@ class Find implements Executable
 
         if (isset($options['max']) && ! is_array($options['max']) && ! is_object($options['max'])) {
             throw InvalidArgumentException::invalidType('"max" option', $options['max'], 'array or object');
+        }
+
+        if (isset($options['maxAwaitTimeMS']) && ! is_integer($options['maxAwaitTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxAwaitTimeMS" option', $options['maxAwaitTimeMS'], 'integer');
         }
 
         if (isset($options['maxScan']) && ! is_integer($options['maxScan'])) {
@@ -298,7 +305,7 @@ class Find implements Executable
             }
         }
 
-        foreach (['allowPartialResults', 'batchSize', 'comment', 'hint', 'limit', 'maxScan', 'maxTimeMS', 'noCursorTimeout', 'oplogReplay', 'projection', 'readConcern', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'] as $option) {
+        foreach (['allowPartialResults', 'batchSize', 'comment', 'hint', 'limit', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'noCursorTimeout', 'oplogReplay', 'projection', 'readConcern', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'] as $option) {
             if (isset($this->options[$option])) {
                 $options[$option] = $this->options[$option];
             }

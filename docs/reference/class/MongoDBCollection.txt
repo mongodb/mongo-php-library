@@ -87,6 +87,7 @@ Methods
    /reference/method/MongoDBCollection-insertMany
    /reference/method/MongoDBCollection-insertOne
    /reference/method/MongoDBCollection-listIndexes
+   /reference/method/MongoDBCollection-mapReduce
    /reference/method/MongoDBCollection-replaceOne
    /reference/method/MongoDBCollection-updateMany
    /reference/method/MongoDBCollection-updateOne

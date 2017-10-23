@@ -17,7 +17,7 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\BSON\Javascript;
+use MongoDB\BSON\JavascriptInterface;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -130,13 +130,13 @@ class MapReduce implements Executable
      *
      * @param string              $databaseName   Database name
      * @param string              $collectionName Collection name
-     * @param Javascript          $map            Map function
-     * @param Javascript          $reduce         Reduce function
+     * @param JavascriptInterface $map            Map function
+     * @param JavascriptInterface $reduce         Reduce function
      * @param string|array|object $out            Output specification
      * @param array               $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($databaseName, $collectionName, Javascript $map, Javascript $reduce, $out, array $options = [])
+    public function __construct($databaseName, $collectionName, JavascriptInterface $map, JavascriptInterface $reduce, $out, array $options = [])
     {
         if ( ! is_string($out) && ! is_array($out) && ! is_object($out)) {
             throw InvalidArgumentException::invalidType('$out', $out, 'string or array or object');

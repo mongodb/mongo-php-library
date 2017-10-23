@@ -17,6 +17,7 @@
 
 namespace MongoDB;
 
+use MongoDB\BSON\JavascriptInterface;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
@@ -804,6 +805,28 @@ class Collection
     public function listIndexes(array $options = [])
     {
         $operation = new ListIndexes($this->databaseName, $this->collectionName, $options);
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
+    }
+
+    /**
+     * Runs map-reduce aggregation operations as defined by the $map and $reduce parameters.
+     *
+     * @see MapReduce::__construct() for supported options
+     * @see http://docs.mongodb.org/manual/reference/command/mapReduce/
+     * @param JavascriptInterface $map            Map function
+     * @param JavascriptInterface $reduce         Reduce function
+     * @param string|array|object $out            Output specification
+     * @param array               $options        Command options
+     * @return MapReduceResult
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function mapReduce(JavascriptInterface $map, JavascriptInterface $reduce, $out, array $options = [])
+    {
+        $operation = new MapReduce($this->databaseName, $this->collectionName, $map, $reduce, $out, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);

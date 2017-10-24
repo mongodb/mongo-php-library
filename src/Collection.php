@@ -833,24 +833,21 @@ class Collection
         }
 
         // Check if the out option is inline because we will want to coerce a primary read preference if not
-        if ( ! is_array($out) && ! is_object($out)) {
-            return false;
-        }
-
-        $out = (array) $out;
-
-        if (key($out) !== 'inline') {
+        if ($this->isOutInline($out)) {
+            $isOutInline = true;
             $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
         }
 
         $server = $this->manager->selectServer($options['readPreference']);
 
-        // Set options if not set already
-        if ( ! isset($options['readConcern']) && ! ($this->readConcern->getLevel() === ReadConcern::MAJORITY) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        /* A "majority" read concern is not compatible with $out inline, so
+         * avoid providing the Collection's read concern if it would conflict.
+         */
+        if ( ! isset($options['readConcern']) && ! ($isOutInline && $this->readConcern->getLevel() === ReadConcern::MAJORITY) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
             $options['readConcern'] = $this->readConcern;
         }
 
-        if ( ! isset($options['typeMap']) && ( ! isset($options['useCursor']) || $options['useCursor'])) {
+        if ( ! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }
 
@@ -956,5 +953,20 @@ class Collection
         ];
 
         return new Collection($this->manager, $this->databaseName, $this->collectionName, $options);
+    }
+
+    private function isOutInline($out)
+    {
+        if ( ! is_array($out) && ! is_object($out)) {
+            return false;
+        }
+
+        $out = (array) $out;
+
+        if (key($out) === 'inline') {
+            return true;
+        }
+
+        return false;
     }
 }

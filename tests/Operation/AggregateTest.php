@@ -44,6 +44,10 @@ class AggregateTest extends TestCase
             $options[][] = ['collation' => $value];
         }
 
+        foreach ($this->getInvalidHintValues() as $value) {
+            $options[][] = ['hint' => $value];
+        }
+
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['maxTimeMS' => $value];
         }
@@ -97,5 +101,10 @@ class AggregateTest extends TestCase
             [['$match' => ['x' => 1]]],
             ['typeMap' => ['root' => 'array'], 'useCursor' => false]
         );
+    }
+
+    private function getInvalidHintValues()
+    {
+        return [123, 3.14, true];
     }
 }

@@ -45,6 +45,7 @@ use MongoDB\Operation\FindOneAndUpdate;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListIndexes;
+use MongoDB\Operation\MapReduce;
 use MongoDB\Operation\ReplaceOne;
 use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
@@ -811,7 +812,7 @@ class Collection
     }
 
     /**
-     * Runs map-reduce aggregation operations as defined by the $map and $reduce parameters.
+     * Executes a map-reduce aggregation on the collection.
      *
      * @see MapReduce::__construct() for supported options
      * @see http://docs.mongodb.org/manual/reference/command/mapReduce/
@@ -823,11 +824,41 @@ class Collection
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     * @throws UnexpectedValueException if the command response was malformed
      */
     public function mapReduce(JavascriptInterface $map, JavascriptInterface $reduce, $out, array $options = [])
     {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
+        // Check if the out option is inline because we will want to coerce a primary read preference if not
+        if ( ! is_array($out) && ! is_object($out)) {
+            return false;
+        }
+
+        $out = (array) $out;
+
+        if (key($out) !== 'inline') {
+            $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
+        }
+
+        $server = $this->manager->selectServer($options['readPreference']);
+
+        // Set options if not set already
+        if ( ! isset($options['readConcern']) && ! ($this->readConcern->getLevel() === ReadConcern::MAJORITY) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
+        if ( ! isset($options['typeMap']) && ( ! isset($options['useCursor']) || $options['useCursor'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        if (! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
         $operation = new MapReduce($this->databaseName, $this->collectionName, $map, $reduce, $out, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         return $operation->execute($server);
     }

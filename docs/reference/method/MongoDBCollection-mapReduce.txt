@@ -69,8 +69,8 @@ the results to a sharded collection. See
 Example
 -------
 
-This example will get all users with at least one "sale" event and count the
-number of sales for each of these users.
+This example will use city populations to calculate the overall population of
+each state.
 
 .. code-block:: php
 
@@ -78,11 +78,11 @@ number of sales for each of these users.
 
    $collection = (new MongoDB\Client)->test->zips;
 
-   $map = new Javascript('function() { emit(this.state, this.pop); }');
-   $reduce = new Javascript('function(key, values) { return Array.sum(values) }');
-   $out = '{ inline: 1 }';
+   $map = new MongoDB\BSON\Javascript('function() { emit(this.state, this.pop); }');
+   $reduce = new MongoDB\BSON\Javascript('function(key, values) { return Array.sum(values) }');
+   $out = ['inline' => 1];
 
-   $populations = new MapReduce($map, $reduce, $out);
+   $populations = $collection->mapReduce($map, $reduce, $out);
 
    foreach ($populations as $pop) {
       var_dump($pop);

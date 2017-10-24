@@ -60,7 +60,7 @@ class FindTest extends TestCase
             $options[][] = ['max' => $value];
         }
 
-        foreach ($this->getInvalidIntegerVAlues() as $value) {
+        foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['maxAwaitTimeMS' => $value];
         }
 

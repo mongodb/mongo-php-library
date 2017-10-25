@@ -2,6 +2,8 @@
 MongoDB\\Collection::getReadConcern()
 =====================================
 
+.. versionadded:: 1.2
+
 .. default-domain:: mongodb
 
 .. contents:: On this page

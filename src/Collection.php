@@ -828,22 +828,23 @@ class Collection
      */
     public function mapReduce(JavascriptInterface $map, JavascriptInterface $reduce, $out, array $options = [])
     {
+        $hasOutputCollection = ! $this->isOutInline($out);
+
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }
 
         // Check if the out option is inline because we will want to coerce a primary read preference if not
-        if ($this->isOutInline($out)) {
-            $isOutInline = true;
+        if ($hasOutputCollection) {
             $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
         }
 
         $server = $this->manager->selectServer($options['readPreference']);
 
-        /* A "majority" read concern is not compatible with $out inline, so
+        /* A "majority" read concern is not compatible with inline output, so
          * avoid providing the Collection's read concern if it would conflict.
          */
-        if ( ! isset($options['readConcern']) && ! ($isOutInline && $this->readConcern->getLevel() === ReadConcern::MAJORITY) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if ( ! isset($options['readConcern']) && ! ($hasOutputCollection && $this->readConcern->getLevel() === ReadConcern::MAJORITY) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
             $options['readConcern'] = $this->readConcern;
         }
 

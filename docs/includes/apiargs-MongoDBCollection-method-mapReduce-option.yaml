@@ -1,0 +1,90 @@
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: bypassDocumentValidation
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: collation
+---
+arg_name: option
+name: finalize
+type: :php:`MongoDB\\BSON\\Javascript <class.mongodb-bson-javascript>`
+description: |
+  Follows the reduce method and modifies the output.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: jsMode
+type: boolean
+description: |
+  Specifies whether to convert intermediate data into BSON format between the
+  execution of the map and reduce functions. The default is ``false``.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: limit
+type: integer
+description: |
+  Specifies a maximum number of documents for the input into the map function.
+interface: phpmethod
+operation: ~
+optional: true
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: maxTimeMS
+---
+arg_name: option
+name: query
+type: document
+description: |
+  Specifies the selection criteria using query operators for determining the
+  documents input to the map function.
+interface: phpmethod
+operation: ~
+optional: true
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: readConcern
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: readPreference
+---
+arg_name: option
+name: scope
+type: document
+description: |
+  Specifies global variables that are accessible in the map, reduce, and finalize
+  functions.
+interface: phpmethod
+operation: ~
+optional: true
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: sort
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: typeMap
+---
+arg_name: option
+name: verbose
+type: boolean
+description: |
+  Specifies whether to include the timing information in the result information.
+  The default is ``true``.
+interface: phpmethod
+operation: ~
+optional: true
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: writeConcern
+...

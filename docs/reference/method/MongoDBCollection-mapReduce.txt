@@ -1,0 +1,125 @@
+=================================
+MongoDB\\Collection::mapReduce()
+=================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::mapReduce()
+
+   The :manual:`mapReduce </reference/command/mapReduce>` command allows you to
+   run map-reduce aggregation operations over a collection.
+
+   .. code-block:: php
+
+      function mapReduce($map, $reduce, $out, array $options = []): MongoDB\MapReduceResult
+
+   This method has the following parameters:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-mapReduce-param.rst
+
+   The ``$options`` parameter supports the following options:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-mapReduce-option.rst
+
+Return Values
+-------------
+
+A :phpclass:`MongoDB\\MapReduceResult` object, which allows for iteration of
+mapReduce results irrespective of the output method (e.g. inline, collection)
+via the :php:`IteratorAggregate <iteratoraggregate>` interface. It also
+provides access to command statistics.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-unexpectedvalueexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+Behavior
+--------
+
+In MongoDB, the map-reduce operation can write results to a collection
+or return the results inline. If you write map-reduce output to a
+collection, you can perform subsequent map-reduce operations on the
+same input collection that merge replace, merge, or reduce new results
+with previous results. See :manual:`Map-Reduce </core/map-reduce>` and
+:manual:`Perform Incremental Map-Reduce </tutorial/perform-incremental-map-reduce>`
+for details and examples.
+
+When returning the results of a map-reduce operation *inline*, the
+result documents must be within the :limit:`BSON Document Size` limit,
+which is currently 16 megabytes.
+
+MongoDB supports map-reduce operations on :manual:`sharded collections
+</sharding>`. Map-reduce operations can also output
+the results to a sharded collection. See
+:manual:`Map-Reduce and Sharded Collections </core/map-reduce-sharded-collections>`.
+
+Example
+-------
+
+This example will use city populations to calculate the overall population of
+each state.
+
+.. code-block:: php
+
+   <?php
+
+   $collection = (new MongoDB\Client)->test->zips;
+
+   $map = new MongoDB\BSON\Javascript('function() { emit(this.state, this.pop); }');
+   $reduce = new MongoDB\BSON\Javascript('function(key, values) { return Array.sum(values) }');
+   $out = ['inline' => 1];
+
+   $populations = $collection->mapReduce($map, $reduce, $out);
+
+   foreach ($populations as $pop) {
+      var_dump($pop);
+   };
+
+The output would then resemble::
+
+   object(stdClass)#2293 (2) {
+      ["_id"]=>
+      string(2) "AK"
+      ["value"]=>
+      float(544698)
+   }
+   object(stdClass)#2300 (2) {
+      ["_id"]=>
+      string(2) "AL"
+      ["value"]=>
+      float(4040587)
+   }
+   object(stdClass)#2293 (2) {
+      ["_id"]=>
+      string(2) "AR"
+      ["value"]=>
+      float(2350725)
+   }
+   object(stdClass)#2300 (2) {
+      ["_id"]=>
+      string(2) "AZ"
+      ["value"]=>
+      float(3665228)
+   }
+
+
+See Also
+--------
+
+- :manual:`mapReduce </reference/command/mapReduce>` command reference in the MongoDB
+  manual
+- :manual:`Map-Reduce </core/map-reduce>` documentation in the MongoDB manual
+

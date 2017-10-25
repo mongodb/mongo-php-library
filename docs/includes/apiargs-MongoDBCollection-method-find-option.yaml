@@ -100,9 +100,18 @@ interface: phpmethod
 operation: ~
 optional: true
 ---
-source:
-  file: apiargs-common-option.yaml
-  ref: maxAwaitTimeMS
+arg_name: option
+name: maxAwaitTimeMS
+type: integer
+description: |
+  Positive integer denoting the time limit in milliseconds for the server to
+  block a getMore operation if no data is available. This option should only be
+  used if cursorType is TAILABLE_AWAIT.
+
+  .. versionadded:: 1.2
+interface: phpmethod
+operation: ~
+optional: true
 ---
 source:
   file: apiargs-common-option.yaml

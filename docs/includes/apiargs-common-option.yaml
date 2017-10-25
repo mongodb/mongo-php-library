@@ -10,17 +10,6 @@ operation: ~
 optional: true
 ---
 arg_name: option
-name: maxAwaitTimeMS
-type: integer
-description: |
-    Positive integer denoting the time limit in milliseconds for the server to block
-    a getMore operation if no data is available. This option should only be used if
-    cursorType is TAILABLE_AWAIT.
-interface: phpmethod
-operation: ~
-optional: true
----
-arg_name: option
 name: readConcern
 type: :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
 description: |

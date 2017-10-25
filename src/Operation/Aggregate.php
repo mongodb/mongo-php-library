@@ -281,7 +281,7 @@ class Aggregate implements Executable
         }
 
         if (isset($this->options['hint'])) {
-            $cmd['hint'] = $this->options['hint'];
+            $cmd['hint'] = is_array($this->options['hint']) ? (object) $this->options['hint'] : $this->options['hint'];
         }
 
         if (isset($this->options['maxTimeMS'])) {

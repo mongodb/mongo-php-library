@@ -21,6 +21,8 @@ use MongoDB\InsertOneResult;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Exception\BulkWriteException;
+use MongoDB\Exception\DuplicateKeyException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 
@@ -103,7 +105,14 @@ class InsertOne implements Executable
         $insertedId = $bulk->insert($this->document);
 
         $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;
-        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $writeConcern);
+        try {
+            $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $writeConcern);
+            return new InsertOneResult($writeResult, $insertedId);
+       } catch (BulkWriteException $e) {
+            if ($e->getCode() == "E11000") {
+                throw DuplicateKeyException::duplicateKeyInsertion($insertedId);
+            }
+        }
 
         return new InsertOneResult($writeResult, $insertedId);
     }

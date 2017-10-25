@@ -35,6 +35,13 @@ type: integer
 description: |
   The maximum number of documents to return. If unspecified, then defaults to no
   limit. A limit of ``0`` is equivalent to setting no limit.
+
+  A negative limit is similar to a positive limit but closes the cursor after
+  returning a single batch of results. As such, with a negative limit, if the
+  limited result set does not fit into a single batch, the number of documents
+  received will be less than the specified limit. By passing a negative limit, the
+  client indicates to the server that it will not ask for a subsequent batch via
+  getMore.
 interface: phpmethod
 operation: ~
 optional: true

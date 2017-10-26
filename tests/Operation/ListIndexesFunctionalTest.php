@@ -22,9 +22,6 @@ class ListIndexesFunctionalTest extends FunctionalTestCase
 
         $this->assertInstanceOf('MongoDB\Model\IndexInfoIterator', $indexes);
 
-        // Convert the CursorInfoIterator to an array since we cannot rewind its cursor
-        $indexes = iterator_to_array($indexes);
-
         $this->assertCount(1, $indexes);
 
         foreach ($indexes as $index) {

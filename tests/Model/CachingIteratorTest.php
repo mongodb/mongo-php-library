@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\Model;
 
 use MongoDB\Model\CachingIterator;
+use Exception;
 
 class CachingIteratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,6 +18,15 @@ class CachingIteratorTest extends \PHPUnit_Framework_TestCase
         $iterator = $this->getTraversable([1, 2, 3]);
         $this->assertSame([1, 2, 3], iterator_to_array($iterator));
         $this->assertSame([1, 2, 3], iterator_to_array($iterator));
+    }
+
+    public function testConstructorRewinds()
+    {
+        $iterator = new CachingIterator($this->getTraversable([1, 2, 3]));
+
+        $this->assertTrue($iterator->valid());
+        $this->assertSame(0, $iterator->key());
+        $this->assertSame(1, $iterator->current());
     }
 
     public function testIteration()
@@ -34,13 +44,44 @@ class CachingIteratorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($iterator->valid());
     }
 
+    public function testIterationWithEmptySet()
+    {
+        $iterator = new CachingIterator($this->getTraversable([]));
+
+        $iterator->rewind();
+        $this->assertFalse($iterator->valid());
+    }
+
+    public function testPartialIterationDoesNotExhaust()
+    {
+        $traversable = $this->getTraversableThatThrows([1, 2, new Exception]);
+        $iterator = new CachingIterator($traversable);
+
+        $expectedKey = 0;
+        $expectedItem = 1;
+
+        foreach ($iterator as $key => $item) {
+            $this->assertSame($expectedKey++, $key);
+            $this->assertSame($expectedItem++, $item);
+
+            if ($key === 1) {
+                break;
+            }
+        }
+
+        $this->assertTrue($iterator->valid());
+    }
+
     public function testRewindAfterPartialIteration()
     {
         $iterator = new CachingIterator($this->getTraversable([1, 2, 3]));
 
+        $iterator->rewind();
+        $this->assertTrue($iterator->valid());
+        $this->assertSame(0, $iterator->key());
         $this->assertSame(1, $iterator->current());
-        $iterator->next();
 
+        $iterator->next();
         $this->assertSame([1, 2, 3], iterator_to_array($iterator));
     }
 
@@ -53,14 +94,37 @@ class CachingIteratorTest extends \PHPUnit_Framework_TestCase
     public function testCountAfterPartialIteration()
     {
         $iterator = new CachingIterator($this->getTraversable([1, 2, 3]));
+
+        $iterator->rewind();
+        $this->assertTrue($iterator->valid());
+        $this->assertSame(0, $iterator->key());
+        $this->assertSame(1, $iterator->current());
+
         $iterator->next();
         $this->assertCount(3, $iterator);
+    }
+
+    public function testCountWithEmptySet()
+    {
+        $iterator = new CachingIterator($this->getTraversable([]));
+        $this->assertCount(0, $iterator);
     }
 
     private function getTraversable($items)
     {
         foreach ($items as $item) {
             yield $item;
+        }
+    }
+
+    private function getTraversableThatThrows($items)
+    {
+        foreach ($items as $item) {
+            if ($item instanceof Exception) {
+                throw $item;
+            } else {
+                yield $item;
+            }
         }
     }
 }

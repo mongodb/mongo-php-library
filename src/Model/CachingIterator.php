@@ -33,11 +33,20 @@ use Traversable;
  */
 class CachingIterator implements Countable, Iterator
 {
-    private $items;
+    private $items = [];
     private $iterator;
+    private $iteratorAdvanced = false;
     private $iteratorExhausted = false;
 
     /**
+     * Constructor.
+     *
+     * Initialize the iterator and stores the first item in the cache. This
+     * effectively rewinds the Traversable and the wrapping Generator, which
+     * will execute up to its first yield statement. Additionally, this mimics
+     * behavior of the SPL iterators and allows users to omit an explicit call
+     * to rewind() before using the other methods.
+     *
      * @param Traversable $traversable
      */
     public function __construct(Traversable $traversable)
@@ -95,7 +104,13 @@ class CachingIterator implements Countable, Iterator
      */
     public function rewind()
     {
-        $this->exhaustIterator();
+        /* If the iterator has advanced, exhaust it now so that future iteration
+         * can rely on the cache.
+         */
+        if ($this->iteratorAdvanced) {
+            $this->exhaustIterator();
+        }
+
         reset($this->items);
     }
 
@@ -143,6 +158,7 @@ class CachingIterator implements Countable, Iterator
     {
         foreach ($traversable as $key => $value) {
             yield $key => $value;
+            $this->iteratorAdvanced = true;
         }
 
         $this->iteratorExhausted = true;

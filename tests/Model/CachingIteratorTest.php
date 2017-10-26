@@ -1,37 +1,40 @@
 <?php
 
-namespace MongoDB\Tests;
+namespace MongoDB\Tests\Model;
 
-use MongoDB\CachingIterator;
+use MongoDB\Model\CachingIterator;
 
 class CachingIteratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Sanity check for all following tests
+     * Sanity check for all following tests.
+     *
      * @expectedException \Exception
      * @expectedExceptionMessage Cannot traverse an already closed generator
      */
-    public function testTraverseGeneratorConsumesIt()
+    public function testTraversingGeneratorConsumesIt()
     {
         $iterator = $this->getTraversable([1, 2, 3]);
         $this->assertSame([1, 2, 3], iterator_to_array($iterator));
         $this->assertSame([1, 2, 3], iterator_to_array($iterator));
     }
 
-    public function testIterateOverItems()
+    public function testIteration()
     {
         $iterator = new CachingIterator($this->getTraversable([1, 2, 3]));
 
         $expectedKey = 0;
         $expectedItem = 1;
+
         foreach ($iterator as $key => $item) {
             $this->assertSame($expectedKey++, $key);
             $this->assertSame($expectedItem++, $item);
         }
+
         $this->assertFalse($iterator->valid());
     }
 
-    public function testIteratePartiallyThenRewind()
+    public function testRewindAfterPartialIteration()
     {
         $iterator = new CachingIterator($this->getTraversable([1, 2, 3]));
 
@@ -47,7 +50,7 @@ class CachingIteratorTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(3, $iterator);
     }
 
-    public function testCountAfterPartiallyIterating()
+    public function testCountAfterPartialIteration()
     {
         $iterator = new CachingIterator($this->getTraversable([1, 2, 3]));
         $iterator->next();

@@ -127,6 +127,10 @@ class FindFunctionalTest extends FunctionalTestCase
 
     public function testMaxAwaitTimeMS()
     {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('maxAwaitTimeMS option is not supported');
+        }
+
         $maxAwaitTimeMS = 10;
 
         // Create a capped collection.

@@ -20,8 +20,9 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
         $operation = new ListCollections($this->getDatabaseName(), ['filter' => ['name' => $this->getCollectionName()]]);
-        // Convert the CollectionInfoIterator to an array since we cannot rewind its cursor
-        $collections = iterator_to_array($operation->execute($server));
+        $collections = $operation->execute($server);
+
+        $this->assertInstanceOf('MongoDB\Model\CollectionInfoIterator', $collections);
 
         $this->assertCount(1, $collections);
 

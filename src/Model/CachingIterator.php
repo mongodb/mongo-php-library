@@ -115,7 +115,6 @@ class CachingIterator implements Countable, Iterator
     }
 
     /**
-     * 
      * @see http://php.net/iterator.valid
      * @return boolean
      */

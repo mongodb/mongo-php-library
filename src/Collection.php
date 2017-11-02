@@ -238,6 +238,7 @@ class Collection
         return $operation->execute($server);
     }
 
+
     /**
      * Gets the number of documents matching the filter.
      *
@@ -932,6 +933,23 @@ class Collection
 
         $operation = new UpdateOne($this->databaseName, $this->collectionName, $filter, $update, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
+    }
+
+    /*
+     * ChangeStream outline
+     *
+     * @see ChangeStream::__construct() for supported options
+     * @param array          $pipeline       List of pipeline operations
+     * @param array          $options        Command options
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     */
+    public function watch(array $pipeline, array $options = [])
+    {
+        $server = $this->manager->selectServer($this->readPreference);
+
+        $operation = new ChangeStream($this->databaseName, $this->collectionName, $pipeline, $options);
 
         return $operation->execute($server);
     }

@@ -25,14 +25,15 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $op1 = $this->collection->insertOne(['x' => 1]);
 
         $changeStreamResult = $this->collection->watch();
-//$cSR should be empty right now
+
         $changeStreamResult->rewind();
         var_dump($changeStreamResult->current());
+        print("\n\n");
         $changeStreamResult->next();
 
-        $op2 = $this->collection->deleteOne(['x' => 1]);
-// now $cSR should show deletion
+        $this->collection->insertOne(['x' => 2]);
+
         $changeStreamResult->next();
-        var_dump($changeStreamResult->toArray());
+        var_dump($changeStreamResult->current());
     }
 }

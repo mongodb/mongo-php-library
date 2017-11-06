@@ -123,7 +123,7 @@ class ChangeStreamCommand implements Executable
 
         $cursor = $command->execute($server);
 
-        return new ChangeStream($cursor, $server, $this->databaseName, $this->collectionName);
+        return new ChangeStream($cursor);
     }
 
     private function createAggregateOptions()
@@ -147,11 +147,9 @@ class ChangeStreamCommand implements Executable
     /**
      * Create the changeStream command.
      *
-     * @param Server  $server
-     * @param boolean $isCursorSupported
      * @return Command
      */
-    private function createCommand(Server $server)
+    private function createCommand()
     {
         $changeStreamArray = ['$changeStream' => $this->createChangeStreamOptions()];
         array_unshift($this->pipeline, $changeStreamArray);

@@ -3,8 +3,8 @@
 namespace MongoDB\Tests\Model;
 
 use MongoDB\Model\CachingIterator;
+use MongoDB\Tests\TestCase;
 use Exception;
-use PHPUnit\Framework\TestCase;
 
 class CachingIteratorTest extends TestCase
 {

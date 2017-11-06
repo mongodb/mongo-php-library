@@ -11,7 +11,7 @@ use RegexIterator;
 /**
  * Pedantic tests that have nothing to do with functional correctness.
  */
-class PedantryTest extends \PHPUnit_Framework_TestCase
+class PedantryTest extends TestCase
 {
     /**
      * @dataProvider provideProjectClassNames

@@ -30,6 +30,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\BulkWrite;
+use MongoDB\Operation\ChangeStreamCommand;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\DeleteMany;
@@ -940,16 +941,24 @@ class Collection
     /*
      * ChangeStream outline
      *
-     * @see ChangeStream::__construct() for supported options
+     * @see ChangeStreamCommand::__construct() for supported options
      * @param array          $pipeline       List of pipeline operations
      * @param array          $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function watch(array $pipeline, array $options = [])
+    public function watch(array $pipeline = [], array $options = [])
     {
-        $server = $this->manager->selectServer($this->readPreference);
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
 
-        $operation = new ChangeStream($this->databaseName, $this->collectionName, $pipeline, $options);
+        $server = $this->manager->selectServer($options['readPreference']);
+
+        if ( ! isset($options['readConcern'])) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
+        $operation = new ChangeStreamCommand($this->databaseName, $this->collectionName, $pipeline, $options);
 
         return $operation->execute($server);
     }

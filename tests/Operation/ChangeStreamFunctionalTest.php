@@ -2,41 +2,37 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Operation\ChangeStream;
+use MongoDB\Operation\Aggregate;
+use MongoDB\Operation\ChangeStreamCommand;
 use MongoDB\Operation\DatabaseCommand;
+use MongoDB\Operation\InsertOne;
 use MongoDB\Tests\CommandObserver;
+use IteratorIterator;
 use stdClass;
 
 class ChangeStreamFunctionalTest extends FunctionalTestCase
 {
-    public function testDefaultReadConcernIsOmitted()
+    public function testChangeStream()
     {
         $op = new DatabaseCommand("admin", ["setFeatureCompatibilityVersion" => "3.6"]);
         $op->execute($this->getPrimaryServer());
 
-        $bulkWrite = new BulkWrite;
-        $bulkWrite->insert(['_id' => 1, 'x' => 1]);
-        $bulkWrite->insert(['_id' => 2, 'x' => 2]);
-        $bulkWrite->insert(['_id' => 3, 'y' => 3]);
-        $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
-        $operation = new ChangeStream($this->getDatabaseName(), $this->getCollectionName(), [['$match' => ['x' => 1]]], ['fullDocument' => 'default']);
-        $changeStreamResult = $operation->execute($this->getPrimaryServer());
-    }
+        $op1 = $this->collection->insertOne(['x' => 1]);
 
-    public function testEmptyPipeline()
-    {
-        $bulkWrite = new BulkWrite;
-        $bulkWrite->insert(['_id' => 1, 'x' => 1]);
-        $bulkWrite->insert(['_id' => 2, 'x' => 2]);
-        $bulkWrite->insert(['_id' => 3, 'y' => 3]);
-        $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
+        $changeStreamResult = $this->collection->watch();
+//$cSR should be empty right now
+        $changeStreamResult->rewind();
+        var_dump($changeStreamResult->current());
+        $changeStreamResult->next();
 
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
-        $operation = new ChangeStream($this->getDatabaseName(), $this->getCollectionName(), []);
-        $changeStreamResult = $operation->execute($this->getPrimaryServer());
+        $op2 = $this->collection->deleteOne(['x' => 1]);
+// now $cSR should show deletion
+        $changeStreamResult->next();
+        var_dump($changeStreamResult->toArray());
     }
 }

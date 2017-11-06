@@ -23,6 +23,8 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\ChangeStream;
+use ArrayIterator;
 use stdClass;
 use Traversable;
 
@@ -33,8 +35,11 @@ use Traversable;
  * @see \MongoDB\Collection::changeStream()
  * @see http://docs.mongodb.org/manual/reference/command/changeStream/
  */
-class ChangeStream implements Executable
+class ChangeStreamCommand implements Executable
 {
+    const LOOKUP_DOCUMENT_DEFAULT = 'default';
+    const LOOKUP_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
+
     private $databaseName;
     private $collectionName;
     private $resumeToken;
@@ -80,24 +85,6 @@ class ChangeStream implements Executable
      */
     public function __construct($databaseName, $collectionName, array $pipeline, array $options = [])
     {
-        $expectedIndex = 0;
-
-        foreach ($pipeline as $i => $operation) {
-            if ($i !== $expectedIndex) {
-                throw new InvalidArgumentException(sprintf('$pipeline is not a list (unexpected index: "%s")', $i));
-            }
-
-            if ( ! is_array($operation) && ! is_object($operation)) {
-                throw InvalidArgumentException::invalidType(sprintf('$pipeline[%d]', $i), $operation, 'array or object');
-            }
-
-            $expectedIndex += 1;
-        }
-
-        if (isset($options['fullDocument']) && ! is_string($options['fullDocument'])) {
-            throw InvalidArgumentException::invalidType('"fullDocument" option', $options['fullDocument'], 'string');
-        }
-
         if (isset($options['resumeAfter']) && ! is_array($options['resumeAfter']) && ! is_object($options['resumeAfter'])) {
             throw InvalidArgumentException::invalidType('"resumeAfter" option', $options['resumeAfter'], 'array or object');
         }
@@ -116,9 +103,7 @@ class ChangeStream implements Executable
 
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
-
         $this->pipeline = $pipeline;
-
         $this->options = $options;
     }
 
@@ -138,7 +123,25 @@ class ChangeStream implements Executable
 
         $cursor = $command->execute($server);
 
-        return $cursor;
+        return new ChangeStream($cursor, $server, $this->databaseName, $this->collectionName);
+    }
+
+    private function createAggregateOptions()
+    {
+        $aggOptions = array_intersect_key($this->options, ['batchSize' => 1, 'collation' => 1]);
+        if ( ! $aggOptions) {
+            return [];
+        }
+        return $aggOptions;
+    }
+
+    private function createChangeStreamOptions()
+    {
+        $csOptions = array_intersect_key($this->options, ['fullDocument' => 1, 'resumeAfter' => 1]);
+        if ( ! $csOptions) {
+            return [];
+        }
+        return $csOptions;
     }
 
     /**
@@ -150,10 +153,10 @@ class ChangeStream implements Executable
      */
     private function createCommand(Server $server)
     {
-        $changeStreamArray = ['$changeStream' => $this->options];
+        $changeStreamArray = ['$changeStream' => $this->createChangeStreamOptions()];
         array_unshift($this->pipeline, $changeStreamArray);
 
-        $cmd = new Aggregate($this->databaseName, $this->collectionName, $this->pipeline);
+        $cmd = new Aggregate($this->databaseName, $this->collectionName, $this->pipeline, $this->createAggregateOptions());
         return $cmd;
     }
 }

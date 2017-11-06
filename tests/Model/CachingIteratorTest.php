@@ -4,8 +4,9 @@ namespace MongoDB\Tests\Model;
 
 use MongoDB\Model\CachingIterator;
 use Exception;
+use PHPUnit\Framework\TestCase;
 
-class CachingIteratorTest extends \PHPUnit_Framework_TestCase
+class CachingIteratorTest extends TestCase
 {
     /**
      * Sanity check for all following tests.

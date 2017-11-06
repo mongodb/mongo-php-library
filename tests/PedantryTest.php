@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests;
 
+use PHPUnit\Framework\TestCase as BaseTestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
@@ -11,7 +12,7 @@ use RegexIterator;
 /**
  * Pedantic tests that have nothing to do with functional correctness.
  */
-class PedantryTest extends \PHPUnit_Framework_TestCase
+class PedantryTest extends BaseTestCase
 {
     /**
      * @dataProvider provideProjectClassNames

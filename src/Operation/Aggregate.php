@@ -150,6 +150,10 @@ class Aggregate implements Executable
             throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
         }
 
+        if (isset($options['comment']) && ! is_string($options['comment'])) {
+            throw InvalidArgumentException::invalidType('"comment" option', $options['comment'], 'string');
+        }
+
         if (isset($options['hint']) && ! is_string($options['hint']) && ! is_array($options['hint']) && ! is_object($options['hint'])) {
             throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], 'string or array or object');
         }
@@ -274,6 +278,10 @@ class Aggregate implements Executable
 
         if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
+        }
+
+        if (isset($this->options['comment'])) {
+            $cmd['comment'] = $this->options['comment'];
         }
 
         if (isset($this->options['collation'])) {

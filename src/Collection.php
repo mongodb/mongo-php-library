@@ -958,7 +958,7 @@ class Collection
             $options['readConcern'] = $this->readConcern;
         }
 
-        $operation = new ChangeStreamCommand($this->databaseName, $this->collectionName, $pipeline, $options);
+        $operation = new ChangeStreamCommand($this->databaseName, $this->collectionName, $pipeline, $options, $this->manager);
 
         return $operation->execute($server);
     }

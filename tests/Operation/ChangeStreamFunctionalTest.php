@@ -2,6 +2,8 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\ChangeStream;
+use MongoDB\ChangeStreamIterator;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadPreference;
@@ -22,18 +24,33 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
 
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
-        $op1 = $this->collection->insertOne(['x' => 1]);
+        $this->collection->insertOne(['x' => 1]);
 
         $changeStreamResult = $this->collection->watch();
 
         $changeStreamResult->rewind();
+
+        print("\n---SHOULD BE NULL---\n\n");
         var_dump($changeStreamResult->current());
-        print("\n\n");
-        $changeStreamResult->next();
 
         $this->collection->insertOne(['x' => 2]);
 
         $changeStreamResult->next();
+
+        print("\n---SHOULD NOT BE NULL---\n");
         var_dump($changeStreamResult->current());
-    }
+
+        $op1 = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
+        $op1->execute($this->getPrimaryServer());
+
+        print("\n---SHOULD RESUME---\n");
+
+        $changeStreamResult->next();
+
+        $this->collection->insertOne(['x' => 3]);
+
+        $changeStreamResult->next();
+
+        var_dump($changeStreamResult->current());
+   }
 }

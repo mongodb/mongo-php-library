@@ -17,18 +17,84 @@
 
 namespace MongoDB;
 
-use IteratorIterator;
-use Traversable;
+use MongoDB\ChangeStreamIterator;
+use MongoDB\Driver\Manager;
+use MongoDB\Exception\ResumableException;
+use MongoDB\Operation\ChangeStreamCommand;
+use MongoDB\Operation\DatabaseCommand;
+use stdClass;
 
 /**
- * Iterator for wrapping a Traversable and caching its results.
+ * Operation for the changeStream command.
  *
- * By caching results, this iterators allows a Traversable to be counted and
- * rewound multiple times, even if the wrapped object does not natively support
- * those operations (e.g. MongoDB\Driver\Cursor).
- *
- * @internal
+ * @api
+ * @see \MongoDB\Collection::changeStream()
+ * @see http://docs.mongodb.org/manual/reference/command/changeStream/
  */
-class ChangeStream extends IteratorIterator
+class ChangeStream
 {
+    private $databaseName;
+    private $collectionName;
+    private $pipeline;
+    private $options;
+    private $resumeToken;
+    private $manager;
+    private $csIt;
+
+    public function __construct($cursor, $databaseName, $collectionName, array $pipeline, array $options = [], $resumeToken, Manager $manager)
+    {
+        $this->databaseName = (string) $databaseName;
+        $this->collectionName = (string) $collectionName;
+        $this->pipeline = $pipeline;
+        $this->options = $options;
+        $this->resumeToken = $resumeToken;
+        $this->manager = $manager;
+
+        $this->csIt = new ChangeStreamIterator($cursor, $this->databaseName, $this->collectionName, $this->pipeline, $this->options, $this->resumeToken);
+    }
+
+    public function current()
+    {
+        $doc = $this->csIt->current();
+        $this->resumeToken = $this->csIt->extract_resume_token($doc);
+        return $this->csIt->current();
+    }
+
+    public function getId()
+    {
+        return $this->csIt->getId();
+    }
+
+    public function next()
+    {
+        try {
+            $this->csIt->next();
+        } catch (ResumableException $e) {
+            $this->resume();
+            return $this->csIt->next();
+        }
+    }
+
+    public function resume()
+    {
+        // A driver SHOULD attempt to kill the cursor on the server on which the cursor is opened during the resume process
+        $op1 = new DatabaseCommand($this->databaseName, ["killCursors" => $this->collectionName, "cursors" => [$this->getId()]]);
+        $op1->execute($this->manager->selectServer($this->options['readPreference']));
+
+        array_replace($this->options, ['resumeAfter' => $this->resumeToken]);
+        array_shift($this->pipeline);
+
+        $server = $this->manager->selectServer($this->options['readPreference']);
+
+        $command = new ChangeStreamCommand($this->databaseName, $this->collectionName, $this->pipeline, $this->options, $this->manager);
+        $server = $this->manager->selectServer($this->options['readPreference']);
+        $cursor = $command->resume($server, $this->pipeline);
+
+        $this->csIt = new ChangeStreamIterator($cursor, $this->databaseName, $this->collectionName, $this->pipeline, $this->options, $this->resumeToken);
+    }
+
+    public function rewind()
+    {
+        $this->csIt->rewind();
+    }
 }

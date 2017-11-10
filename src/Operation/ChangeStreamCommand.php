@@ -17,13 +17,16 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\ChangeStream;
+use MongoDB\ChangeStreamIterator;
+use MongoDB\Driver\Manager;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
-use MongoDB\ChangeStream;
 use ArrayIterator;
 use stdClass;
 use Traversable;
@@ -44,8 +47,8 @@ class ChangeStreamCommand implements Executable
     private $collectionName;
     private $resumeToken;
     private $pipeline;
-    private $readPreference;
     private $options;
+    private $manager;
 
     /**
      * Constructs a changeStream command.
@@ -63,6 +66,14 @@ class ChangeStreamCommand implements Executable
      *
      *  * resumeAfter (document): Specifies the logical starting point for the
      *    new change stream.
+     *
+     *  * readConcern (MongoDB\Driver\ReadConcern): Read concern. Note that a
+     *    "majority" read concern is not compatible with the $out stage
+     *
+     *    This is not supported for server versions < 3.2 and will result in an
+     *    exception at execution time if used.
+     *
+     *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
      *  * maxAwaitTimeMS (integer): The maximum amount of time for the server to
      *    wait on new documents to satisfy a change stream query.
@@ -83,16 +94,8 @@ class ChangeStreamCommand implements Executable
      * @param array          $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($databaseName, $collectionName, array $pipeline, array $options = [])
+    public function __construct($databaseName, $collectionName, array $pipeline, array $options = [], Manager $manager)
     {
-        if (isset($options['resumeAfter']) && ! is_array($options['resumeAfter']) && ! is_object($options['resumeAfter'])) {
-            throw InvalidArgumentException::invalidType('"resumeAfter" option', $options['resumeAfter'], 'array or object');
-        }
-
-        if (isset($options['maxAwaitTimeMS']) && ! is_integer($options['maxAwaitTimeMS'])) {
-            throw InvalidArgumentException::invalidType('"maxAwaitTimeMS" option', $options['maxAwaitTimeMS'], 'integer');
-        }
-
         if (isset($options['batchSize']) && ! is_integer($options['batchSize'])) {
             throw InvalidArgumentException::invalidType('"batchSize" option', $options['batchSize'], 'integer');
         }
@@ -101,10 +104,30 @@ class ChangeStreamCommand implements Executable
             throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
         }
 
+        if (isset($options['maxAwaitTimeMS']) && ! is_integer($options['maxAwaitTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxAwaitTimeMS" option', $options['maxAwaitTimeMS'], 'integer');
+        }
+
+        if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
+            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+        }
+
+        if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+        }
+
+        if (isset($options['resumeAfter'])) {
+            if ( ! is_array($options['resumeAfter']) && ! is_object($options['resumeAfter'])) {
+                throw InvalidArgumentException::invalidType('"resumeAfter" option', $options['resumeAfter'], 'array or object');
+            }
+            $this->resumeToken = $options['resumeAfter'];
+        }
+
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->pipeline = $pipeline;
         $this->options = $options;
+        $this->manager = $manager;
     }
 
     /**
@@ -119,11 +142,23 @@ class ChangeStreamCommand implements Executable
      */
     public function execute(Server $server)
     {
-        $command = $this->createCommand($server);
+        $command = $this->createCommand();
 
         $cursor = $command->execute($server);
 
-        return new ChangeStream($cursor);
+        return new ChangeStream($cursor, $this->databaseName, $this->collectionName, $this->pipeline, $this->options, $this->resumeToken, $this->manager);
+    }
+
+    public function resume(Server $server, $pipeline)
+    {
+        $this->pipeline = $pipeline;
+
+        // remove $changeStream because it will be added again in createCommand()
+        array_shift($this->pipeline);
+
+        $command = $this->createCommand();
+        $cursor = $command->execute($server);
+        return $cursor;
     }
 
     private function createAggregateOptions()

@@ -282,8 +282,8 @@ class Collection
      */
     public function createIndex($key, array $options = [])
     {
-        $indexOptions = array_diff_key($options, ['writeConcern' => 1]);
-        $commandOptions = array_intersect_key($options, ['writeConcern' => 1]);
+        $indexOptions = array_diff_key($options, ['maxTimeMS' => 1, 'writeConcern' => 1]);
+        $commandOptions = array_intersect_key($options, ['maxTimeMS' => 1, 'writeConcern' => 1]);
 
         return current($this->createIndexes([['key' => $key] + $indexOptions], $commandOptions));
     }

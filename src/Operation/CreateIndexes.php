@@ -92,6 +92,10 @@ class CreateIndexes implements Executable
             $expectedIndex += 1;
         }
 
+        if (isset($options['maxTimeMS']) && !is_integer($options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        }
+
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
         }
@@ -149,6 +153,10 @@ class CreateIndexes implements Executable
             'createIndexes' => $this->collectionName,
             'indexes' => $this->indexes,
         ];
+
+        if (isset($this->options['maxTimeMS'])) {
+            $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
+        }
 
         if (isset($this->options['writeConcern'])) {
             $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);

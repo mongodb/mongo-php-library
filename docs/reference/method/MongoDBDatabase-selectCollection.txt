@@ -57,7 +57,7 @@ The following example selects the ``users`` collection in the ``test`` database:
 
    $db = (new MongoDB\Client)->test;
 
-   $collection = $db->selectCollection('test', 'users');
+   $collection = $db->selectCollection('users');
 
 The following example selects the ``users`` collection in the ``test``
 database with a custom read preference:

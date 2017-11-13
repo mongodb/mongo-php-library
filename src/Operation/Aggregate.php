@@ -280,8 +280,10 @@ class Aggregate implements Executable
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 
-        if (isset($this->options['comment'])) {
-            $cmd['comment'] = $this->options['comment'];
+        foreach (['comment', 'maxTimeMS'] as $option) {
+            if (isset($this->options[$option])) {
+                $cmd[$option] = $this->options[$option];
+            }
         }
 
         if (isset($this->options['collation'])) {
@@ -290,10 +292,6 @@ class Aggregate implements Executable
 
         if (isset($this->options['hint'])) {
             $cmd['hint'] = is_array($this->options['hint']) ? (object) $this->options['hint'] : $this->options['hint'];
-        }
-
-        if (isset($this->options['maxTimeMS'])) {
-            $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
         }
 
         if (isset($this->options['readConcern'])) {

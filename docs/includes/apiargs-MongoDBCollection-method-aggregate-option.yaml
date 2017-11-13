@@ -35,6 +35,18 @@ post: |
   version of MongoDB, this option will be ignored.
 ---
 arg_name: option
+name: comment
+type: string
+description: |
+  Users can specify an arbitrary string to help trace the operation through the
+  database profiler, currentOp, and logs.
+
+  .. versionadded:: 1.3
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: hint
 type: string|array|object
 description: |

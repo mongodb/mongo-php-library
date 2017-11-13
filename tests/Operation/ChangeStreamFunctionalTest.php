@@ -19,38 +19,37 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
 {
     public function testChangeStream()
     {
-        $op = new DatabaseCommand("admin", ["setFeatureCompatibilityVersion" => "3.6"]);
-        $op->execute($this->getPrimaryServer());
+        $operation = new DatabaseCommand("admin", ["setFeatureCompatibilityVersion" => "3.6"]);
+        $operation->execute($this->getPrimaryServer());
 
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
-        $this->collection->insertOne(['x' => 1]);
+        $result = $this->collection->insertOne(['x' => 1]);
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
 
         $changeStreamResult = $this->collection->watch();
-
         $changeStreamResult->rewind();
+        $this->assertNull($changeStreamResult->current());
 
-        print("\n---SHOULD BE NULL---\n\n");
-        var_dump($changeStreamResult->current());
-
-        $this->collection->insertOne(['x' => 2]);
-
-        $changeStreamResult->next();
-
-        print("\n---SHOULD NOT BE NULL---\n");
-        var_dump($changeStreamResult->current());
-
-        $op1 = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
-        $op1->execute($this->getPrimaryServer());
-
-        print("\n---SHOULD RESUME---\n");
+        $result = $this->collection->insertOne(['x' => 2]);
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
 
         $changeStreamResult->next();
+        $this->assertNotNull($changeStreamResult->current());
 
-        $this->collection->insertOne(['x' => 3]);
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
+        $operation->execute($this->getPrimaryServer());
 
         $changeStreamResult->next();
+        $this->assertNull($changeStreamResult->current());
 
-        var_dump($changeStreamResult->current());
+        $result = $this->collection->insertOne(['x' => 3]);
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
+
+        $changeStreamResult->next();
+        $this->assertNotNull($changeStreamResult->current());
    }
 }

@@ -32,7 +32,7 @@ use stdClass;
 use Traversable;
 
 /**
- * Operation for the changeStream command.
+ * Raw changeStream command.
  *
  * @api
  * @see \MongoDB\Collection::changeStream()
@@ -180,7 +180,7 @@ class ChangeStreamCommand implements Executable
     }
 
     /**
-     * Create the changeStream command.
+     * Create the aggregate pipeline with the changeStream command.
      *
      * @return Command
      */

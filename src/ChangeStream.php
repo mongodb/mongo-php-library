@@ -21,8 +21,6 @@ use MongoDB\ChangeStreamIterator;
 use MongoDB\Driver\Manager;
 use MongoDB\Exception\ResumableException;
 use MongoDB\Operation\ChangeStreamCommand;
-use MongoDB\Operation\DatabaseCommand;
-use stdClass;
 
 /**
  * Operation for the changeStream command.
@@ -50,13 +48,11 @@ class ChangeStream
         $this->resumeToken = $resumeToken;
         $this->manager = $manager;
 
-        $this->csIt = new ChangeStreamIterator($cursor, $this->databaseName, $this->collectionName, $this->pipeline, $this->options, $this->resumeToken);
+        $this->csIt = new ChangeStreamIterator($cursor);
     }
 
     public function current()
     {
-        $doc = $this->csIt->current();
-        $this->resumeToken = $this->csIt->extract_resume_token($doc);
         return $this->csIt->current();
     }
 
@@ -69,19 +65,15 @@ class ChangeStream
     {
         try {
             $this->csIt->next();
+            $this->resumeToken = $this->csIt->extract_resume_token($this->csIt->current());
         } catch (ResumableException $e) {
             $this->resume();
-            return $this->csIt->next();
         }
     }
 
     public function resume()
     {
-        // A driver SHOULD attempt to kill the cursor on the server on which the cursor is opened during the resume process
-        $op1 = new DatabaseCommand($this->databaseName, ["killCursors" => $this->collectionName, "cursors" => [$this->getId()]]);
-        $op1->execute($this->manager->selectServer($this->options['readPreference']));
-
-        array_replace($this->options, ['resumeAfter' => $this->resumeToken]);
+        $this->options['resumeAfter'] = $this->resumeToken;
         array_shift($this->pipeline);
 
         $server = $this->manager->selectServer($this->options['readPreference']);
@@ -90,7 +82,8 @@ class ChangeStream
         $server = $this->manager->selectServer($this->options['readPreference']);
         $cursor = $command->resume($server, $this->pipeline);
 
-        $this->csIt = new ChangeStreamIterator($cursor, $this->databaseName, $this->collectionName, $this->pipeline, $this->options, $this->resumeToken);
+        $this->csIt = new ChangeStreamIterator($cursor);
+        $this->csIt->rewind();
     }
 
     public function rewind()

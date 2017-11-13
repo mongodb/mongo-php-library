@@ -19,51 +19,26 @@ namespace MongoDB;
 
 use MongoDB\BSON\Serializable;
 use MongoDB\Driver\Exception\RuntimeException;
-use MongoDB\Exception\ResumeException;
+use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Exception\ResumableException;
 use IteratorIterator;
 use Traversable;
 
 /**
- * Iterator for wrapping a Traversable and caching its results.
- *
- * By caching results, this iterators allows a Traversable to be counted and
- * rewound multiple times, even if the wrapped object does not natively support
- * those operations (e.g. MongoDB\Driver\Cursor).
+ * Iterator for change streams.
  *
  * @internal
  */
 class ChangeStreamIterator extends IteratorIterator
 {
-    private $databaseName;
-    private $collectionName;
-    private $pipeline;
-    private $options;
-    private $lastResumeToken;
-
-    public function __construct(Traversable $traversable, $databaseName, $collectionName, $pipeline, $options, $resumeToken)
-    {
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->pipeline = $pipeline;
-        $this->options = $options;
-        if (isset($resumeToken))
-        {
-            $this->lastResumeToken = $resumeToken;
-        }
-
-        parent::__construct($traversable);
-    }
-
     public function current()
     {
         $currentDocument = parent::current();
         if (isset($currentDocument)) {
             if (is_null($this->extract_resume_token($currentDocument))) {
-                throw new ResumeException("Cannot provide resume functionality when the resume token is missing");
+                throw new ResumeTokenException("Cannot provide resume functionality when the resume token is missing");
             }
-            $this->lastResumeToken = $this->extract_resume_token($currentDocument);
-       }
+        }
         return $currentDocument;
     }
 

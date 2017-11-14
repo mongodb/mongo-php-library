@@ -74,6 +74,9 @@ class Aggregate implements Executable
      *    This is not supported for server versions < 3.4 and will result in an
      *    exception at execution time if used.
      *
+     *  * comment (string): An arbitrary string to help trace the operation
+     *    through the database profiler, currentOp, and logs.
+     *
      *  * hint (string|document): The index to use. Specify either the index
      *    name as a string or the index key pattern as a document. If specified,
      *    then the query system will only consider plans using the hinted index.

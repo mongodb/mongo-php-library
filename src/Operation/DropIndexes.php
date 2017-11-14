@@ -67,6 +67,10 @@ class DropIndexes implements Executable
             throw new InvalidArgumentException('$indexName cannot be empty');
         }
 
+        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
+        }
+
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
@@ -120,6 +124,10 @@ class DropIndexes implements Executable
             'dropIndexes' => $this->collectionName,
             'index' => $this->indexName,
         ];
+
+        if (isset($this->options['maxTimeMS'])) {
+            $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
+        }
 
         if (isset($this->options['writeConcern'])) {
             $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);

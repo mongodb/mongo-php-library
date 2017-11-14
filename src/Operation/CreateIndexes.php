@@ -51,6 +51,9 @@ class CreateIndexes implements Executable
      *
      * Supported options:
      *
+     *  * maxTimeMS (integer): The maximum amount of time to allow the query to
+     *    run.
+     *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
      *    This is not supported for server versions < 3.4 and will result in an

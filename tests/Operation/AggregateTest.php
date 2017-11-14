@@ -44,6 +44,10 @@ class AggregateTest extends TestCase
             $options[][] = ['collation' => $value];
         }
 
+        foreach ($this->getInvalidStringValues() as $value) {
+            $options[][] = ['comment' => $value];
+        }
+
         foreach ($this->getInvalidHintValues() as $value) {
             $options[][] = ['hint' => $value];
         }

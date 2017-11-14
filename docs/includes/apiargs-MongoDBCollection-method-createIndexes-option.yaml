@@ -1,4 +1,8 @@
 source:
+  file: apiargs-common-option.yaml
+  ref: maxTimeMS
+---
+source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: writeConcern
 post: |

@@ -51,6 +51,9 @@ class CreateIndexes implements Executable
      *
      * Supported options:
      *
+     *  * maxTimeMS (integer): The maximum amount of time to allow the query to
+     *    run.
+     *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
      *    This is not supported for server versions < 3.4 and will result in an
@@ -90,6 +93,10 @@ class CreateIndexes implements Executable
             $this->indexes[] = new IndexInput($index);
 
             $expectedIndex += 1;
+        }
+
+        if (isset($options['maxTimeMS']) && !is_integer($options['maxTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
@@ -149,6 +156,10 @@ class CreateIndexes implements Executable
             'createIndexes' => $this->collectionName,
             'indexes' => $this->indexes,
         ];
+
+        if (isset($this->options['maxTimeMS'])) {
+            $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
+        }
 
         if (isset($this->options['writeConcern'])) {
             $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);

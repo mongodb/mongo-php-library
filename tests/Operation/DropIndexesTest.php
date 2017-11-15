@@ -27,6 +27,10 @@ class DropIndexesTest extends TestCase
     {
         $options = [];
 
+        foreach ($this->getInvalidIntegerValues() as $value) {
+            $options[][] = ['maxTimeMS' => $value];
+        }
+
         foreach ($this->getInvalidArrayValues() as $value) {
             $options[][] = ['typeMap' => $value];
         }

@@ -45,6 +45,9 @@ class DropIndexes implements Executable
      *
      * Supported options:
      *
+     *  * maxTimeMS (integer): The maximum amount of time to allow the query to
+     *    run.
+     *
      *  * typeMap (array): Type map for BSON deserialization. This will be used
      *    for the returned command result document.
      *

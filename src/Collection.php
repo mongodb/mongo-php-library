@@ -239,7 +239,6 @@ class Collection
         return $operation->execute($server);
     }
 
-
     /**
      * Gets the number of documents matching the filter.
      *

@@ -17,38 +17,28 @@
 
 namespace MongoDB;
 
-use MongoDB\ChangeStreamIterator;
-use MongoDB\Driver\Manager;
-use MongoDB\Exception\ResumableException;
-use MongoDB\Operation\ChangeStreamCommand;
+use MongoDB\Driver\Cursor;
+use MongoDB\Driver\Exception\RuntimeException;
+use IteratorIterator;
+use Iterator;
 
 /**
- * Operation for the changeStream command.
+ * Iterator for the changeStream command.
  *
  * @api
  * @see \MongoDB\Collection::changeStream()
  * @see http://docs.mongodb.org/manual/reference/command/changeStream/
  */
-class ChangeStream
+class ChangeStream implements Iterator
 {
-    private $databaseName;
-    private $collectionName;
-    private $pipeline;
-    private $options;
     private $resumeToken;
-    private $manager;
+    private $resumeCallable;
     private $csIt;
 
-    public function __construct($cursor, $databaseName, $collectionName, array $pipeline, array $options = [], $resumeToken, Manager $manager)
+    public function __construct(Cursor $cursor, Callable $resumeCallable)
     {
-        $this->databaseName = (string) $databaseName;
-        $this->collectionName = (string) $collectionName;
-        $this->pipeline = $pipeline;
-        $this->options = $options;
-        $this->resumeToken = $resumeToken;
-        $this->manager = $manager;
-
-        $this->csIt = new ChangeStreamIterator($cursor);
+        $this->resumeCallable = $resumeCallable;
+        $this->csIt = new IteratorIterator($cursor);
     }
 
     public function current()
@@ -58,36 +48,53 @@ class ChangeStream
 
     public function getId()
     {
-        return $this->csIt->getId();
+        return $this->csIt->getInnerIterator()->getId();
+    }
+
+    public function key()
+    {
+
     }
 
     public function next()
     {
         try {
             $this->csIt->next();
-            $this->resumeToken = $this->csIt->extract_resume_token($this->csIt->current());
-        } catch (ResumableException $e) {
+            $this->resumeToken = $this->extractResumeToken($this->csIt->current());
+        } catch (RuntimeException $e) {
             $this->resume();
         }
     }
 
     public function resume()
     {
-        $this->options['resumeAfter'] = $this->resumeToken;
-        array_shift($this->pipeline);
-
-        $server = $this->manager->selectServer($this->options['readPreference']);
-
-        $command = new ChangeStreamCommand($this->databaseName, $this->collectionName, $this->pipeline, $this->options, $this->manager);
-        $server = $this->manager->selectServer($this->options['readPreference']);
-        $cursor = $command->resume($server, $this->pipeline);
-
-        $this->csIt = new ChangeStreamIterator($cursor);
+        $newChangeStream = call_user_func($this->resumeCallable, $this->resumeToken);
+        $this->csIt = $newChangeStream->csIt;
         $this->csIt->rewind();
     }
 
     public function rewind()
     {
         $this->csIt->rewind();
+    }
+
+    public function valid()
+    {
+
+    }
+
+    private function extractResumeToken($document)
+    {
+        if ($document === null) {
+            throw new ResumeTokenException("Cannot extract a resumeToken from an empty document");
+        }
+        if ($document instanceof Serializable) {
+            return $this->extractResumeToken($document->bsonSerialize());
+        }
+        $lastResumeToken = is_array($document) ? $document['_id'] : $document->_id;
+        if ($lastResumeToken === null) {
+            throw new ResumeTokenException("Cannot provide resume functionality when the resume token is missing");
+        }
+        $this->resumeToken = $lastResumeToken;
     }
 }

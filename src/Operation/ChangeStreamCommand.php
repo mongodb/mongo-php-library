@@ -18,7 +18,6 @@
 namespace MongoDB\Operation;
 
 use MongoDB\ChangeStream;
-use MongoDB\ChangeStreamIterator;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -45,7 +44,6 @@ class ChangeStreamCommand implements Executable
 
     private $databaseName;
     private $collectionName;
-    private $resumeToken;
     private $pipeline;
     private $options;
     private $manager;
@@ -120,7 +118,6 @@ class ChangeStreamCommand implements Executable
             if ( ! is_array($options['resumeAfter']) && ! is_object($options['resumeAfter'])) {
                 throw InvalidArgumentException::invalidType('"resumeAfter" option', $options['resumeAfter'], 'array or object');
             }
-            $this->resumeToken = $options['resumeAfter'];
         }
 
         $this->databaseName = (string) $databaseName;
@@ -146,19 +143,7 @@ class ChangeStreamCommand implements Executable
 
         $cursor = $command->execute($server);
 
-        return new ChangeStream($cursor, $this->databaseName, $this->collectionName, $this->pipeline, $this->options, $this->resumeToken, $this->manager);
-    }
-
-    public function resume(Server $server, $pipeline)
-    {
-        $this->pipeline = $pipeline;
-
-        // remove $changeStream because it will be added again in createCommand()
-        array_shift($this->pipeline);
-
-        $command = $this->createCommand();
-        $cursor = $command->execute($server);
-        return $cursor;
+        return new ChangeStream($cursor, $this->createResumeCallable());
     }
 
     private function createAggregateOptions()
@@ -191,5 +176,18 @@ class ChangeStreamCommand implements Executable
 
         $cmd = new Aggregate($this->databaseName, $this->collectionName, $this->pipeline, $this->createAggregateOptions());
         return $cmd;
+    }
+
+    private function createResumeCallable()
+    {
+        array_shift($this->pipeline);
+        return function($resumeToken) {
+            // Select a server from manager using read preference option
+            $server = $this->manager->selectServer($this->options['readPreference']);
+            // Update $this->options['resumeAfter'] from $resumeToken arg
+            $this->options['resumeAfter'] = $resumeToken;
+            // Return $this->execute() with the newly selected server
+            return $this->execute($server);
+        };
     }
 }

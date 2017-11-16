@@ -17,7 +17,48 @@ use stdClass;
 
 class ChangeStreamFunctionalTest extends FunctionalTestCase
 {
-    public function testChangeStream()
+    public function setUp()
+    {
+        parent::setUp();
+        if (version_compare($this->getFeatureCompatibilityVersion(), '3.6.0', '<')) {
+            $this->markTestSkipped('$changeStream is only supported on FCV 3.6 or higher');
+        }
+   }
+
+    public function testChangeStreamResume()
+    {
+        $operation = new DatabaseCommand("admin", ["setFeatureCompatibilityVersion" => "3.6"]);
+        $operation->execute($this->getPrimaryServer());
+
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+
+        $result = $this->collection->insertOne(['x' => 1]);
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
+
+        $changeStreamResult = $this->collection->watch();
+        $changeStreamResult->rewind();
+        $this->assertNull($changeStreamResult->current());
+
+        $result = $this->collection->insertOne(['x' => 2]);
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
+
+        $changeStreamResult->next();
+        $this->assertNotNull($changeStreamResult->current());
+
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
+        $operation->execute($this->getPrimaryServer());
+
+        $result = $this->collection->insertOne(['x' => 3]);
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
+
+        $changeStreamResult->next();
+        $this->assertNotNull($changeStreamResult->current());
+   }
+
+    public function testChangeStreamAfterResumeBeforeInsert()
     {
         $operation = new DatabaseCommand("admin", ["setFeatureCompatibilityVersion" => "3.6"]);
         $operation->execute($this->getPrimaryServer());

@@ -20,7 +20,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        if (version_compare($this->getFeatureCompatibilityVersion(), '3.6.0', '<')) {
+        if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
             $this->markTestSkipped('$changeStream is only supported on FCV 3.6 or higher');
         }
    }
@@ -93,4 +93,40 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $changeStreamResult->next();
         $this->assertNotNull($changeStreamResult->current());
    }
+
+    public function test_resume_after_kill_then_no_operations()
+    {
+        $operation = new DatabaseCommand("admin", ["setFeatureCompatibilityVersion" => "3.6"]);
+        $operation->execute($this->getPrimaryServer());
+
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+
+        $changeStreamResult = $this->collection->watch();
+
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
+        $operation->execute($this->getPrimaryServer());
+
+        $changeStreamResult->next();
+        $this->assertNull($changeStreamResult->current());
+    }
+
+    public function test_resume_after_kill_then_insert()
+    {
+        $operation = new DatabaseCommand("admin", ["setFeatureCompatibilityVersion" => "3.6"]);
+        $operation->execute($this->getPrimaryServer());
+
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+
+        $changeStreamResult = $this->collection->watch();
+
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
+        $operation->execute($this->getPrimaryServer());
+
+        $result = $this->collection->insertOne(['x' => 3]);
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
+
+        $changeStreamResult->next();
+        $this->assertNull($changeStreamResult->current());
+    }
 }

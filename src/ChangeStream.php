@@ -19,6 +19,7 @@ namespace MongoDB;
 
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException;
+use MongoDB\Exception\ResumeTokenException;
 use IteratorIterator;
 use Iterator;
 
@@ -35,10 +36,11 @@ class ChangeStream implements Iterator
     private $resumeCallable;
     private $csIt;
 
-    public function __construct(Cursor $cursor, Callable $resumeCallable)
+    public function __construct(Cursor $cursor, callable $resumeCallable)
     {
         $this->resumeCallable = $resumeCallable;
         $this->csIt = new IteratorIterator($cursor);
+        $this->csIt->rewind();
     }
 
     public function current()
@@ -60,7 +62,7 @@ class ChangeStream implements Iterator
     {
         try {
             $this->csIt->next();
-            $this->resumeToken = $this->extractResumeToken($this->csIt->current());
+            $this->extractResumeToken($this->csIt->current());
         } catch (RuntimeException $e) {
             $this->resume();
         }
@@ -91,10 +93,9 @@ class ChangeStream implements Iterator
         if ($document instanceof Serializable) {
             return $this->extractResumeToken($document->bsonSerialize());
         }
-        $lastResumeToken = is_array($document) ? $document['_id'] : $document->_id;
-        if ($lastResumeToken === null) {
+        $this->resumeToken = is_array($document) ? $document['_id'] : $document->_id;
+        if ($this->resumeToken === null) {
             throw new ResumeTokenException("Cannot provide resume functionality when the resume token is missing");
         }
-        $this->resumeToken = $lastResumeToken;
     }
 }

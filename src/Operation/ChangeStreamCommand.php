@@ -181,11 +181,13 @@ class ChangeStreamCommand implements Executable
     private function createResumeCallable()
     {
         array_shift($this->pipeline);
-        return function($resumeToken) {
+        return function($resumeToken = null) {
             // Select a server from manager using read preference option
             $server = $this->manager->selectServer($this->options['readPreference']);
             // Update $this->options['resumeAfter'] from $resumeToken arg
-            $this->options['resumeAfter'] = $resumeToken;
+            if ($resumeToken !== null) {
+                $this->options['resumeAfter'] = $resumeToken;
+            }
             // Return $this->execute() with the newly selected server
             return $this->execute($server);
         };

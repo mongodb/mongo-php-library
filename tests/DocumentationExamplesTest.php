@@ -935,17 +935,23 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $next = $cursor->current();
         // End Changestream Example 1
 
+        $this->assertNull($next);
+
         // Start Changestream Example 2
-        $cursor = $db->inventory->watch([], ['fullDocument' => ChangeStreamCommand::FULL_DOCUMENT_UPDATE_LOOKUP]);
+        $cursor = $db->inventory->watch([], ['fullDocument' => \MongoDB\Operation\ChangeStreamCommand::FULL_DOCUMENT_UPDATE_LOOKUP]);
         $cursor->next();
         $next = $cursor->current();
         // End Changestream Example 2
+
+        $this->assertNull($next);
 
         // Start Changestream Example 3
         $resumeToken = $next->getId();
         $cursor = $db->inventory->watch([], ['resumeAfter' => $resumeToken]);
         $cursor->next();
         // End Changestream Example 3
+
+        $this->assertNull($cursor->current());
     }
 
     /**

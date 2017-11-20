@@ -92,7 +92,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
 
         $changeStreamResult->next();
         $this->assertNotNull($changeStreamResult->current());
-   }
+    }
 
     public function test_resume_after_kill_then_no_operations()
     {
@@ -128,5 +128,30 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
 
         $changeStreamResult->next();
         $this->assertNull($changeStreamResult->current());
+    }
+
+    public function test_key()
+    {
+        $operation = new DatabaseCommand("admin", ["setFeatureCompatibilityVersion" => "3.6"]);
+        $operation->execute($this->getPrimaryServer());
+
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+
+        $changeStreamResult = $this->collection->watch();
+
+        $this->assertSame(0, $changeStreamResult->key());
+
+        $result = $this->collection->insertOne(['x' => 1]);
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
+
+        $changeStreamResult->next();
+        $this->assertSame(1, $changeStreamResult->key());
+
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
+        $operation->execute($this->getPrimaryServer());
+
+        $changeStreamResult->next();
+        $this->assertSame(2, $changeStreamResult->key());
     }
 }

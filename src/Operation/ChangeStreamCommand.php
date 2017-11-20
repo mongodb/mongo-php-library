@@ -39,8 +39,8 @@ use Traversable;
  */
 class ChangeStreamCommand implements Executable
 {
-    const LOOKUP_DOCUMENT_DEFAULT = 'default';
-    const LOOKUP_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
+    const FULL_DOCUMENT_DEFAULT = 'default';
+    const FULL_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
 
     private $databaseName;
     private $collectionName;

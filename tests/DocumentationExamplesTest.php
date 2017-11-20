@@ -925,7 +925,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertInventoryCount(0);
     }
 
-    public function testExample_59_61()
+    public function testChangeStreamExample_1_3()
     {
         $db = new Database($this->manager, $this->getDatabaseName());
 
@@ -944,9 +944,19 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // End Changestream Example 2
 
         $this->assertNull($current);
-        $db->inventory->insertOne(['x' => '1']);
+
+        $insertedResult = $db->inventory->insertOne(['x' => 1]);
+        $insertedId = $insertedResult->getInsertedId();
         $cursor->next();
         $current = $cursor->current();
+        $expectedChange = (object) [
+            '_id' => $current->_id,
+            'operationType' => 'insert',
+            'fullDocument' => (object) ['_id' => $insertedId, 'x' => 1],
+            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'inventory'],
+            'documentKey' => (object) ['_id' => $insertedId]
+        ];
+        $this->assertEquals($current, $expectedChange);
 
         // Start Changestream Example 3
         $resumeToken = ($current !== null) ? $current->_id : null;
@@ -954,10 +964,19 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $cursor = $db->inventory->watch([], ['resumeAfter' => $resumeToken]);
             $cursor->next();
         }
-
         // End Changestream Example 3
 
-        $this->assertNull($cursor->current());
+        $insertedResult = $db->inventory->insertOne(['x' => 2]);
+        $insertedId = $insertedResult->getInsertedId();
+        $cursor->next();
+        $expectedChange = (object) [
+            '_id' => $cursor->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => (object) ['_id' => $insertedId, 'x' => 2],
+            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'inventory'],
+            'documentKey' => (object) ['_id' => $insertedId]
+        ];
+        $this->assertEquals($cursor->current(), $expectedChange);
     }
 
     /**

@@ -925,6 +925,29 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertInventoryCount(0);
     }
 
+    public function testExample_59_61()
+    {
+        $db = new Database($this->manager, $this->getDatabaseName());
+
+        // Start Changestream Example 1
+        $cursor = $db->inventory->watch();
+        $cursor->next();
+        $next = $cursor->current();
+        // End Changestream Example 1
+
+        // Start Changestream Example 2
+        $cursor = $db->inventory->watch([], ['fullDocument' => ChangeStreamCommand::FULL_DOCUMENT_UPDATE_LOOKUP]);
+        $cursor->next();
+        $next = $cursor->current();
+        // End Changestream Example 2
+
+        // Start Changestream Example 3
+        $resumeToken = $next->getId();
+        $cursor = $db->inventory->watch([], ['resumeAfter' => $resumeToken]);
+        $cursor->next();
+        // End Changestream Example 3
+    }
+
     /**
      * Return the test collection name.
      *

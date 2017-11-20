@@ -154,4 +154,33 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $changeStreamResult->next();
         $this->assertSame(2, $changeStreamResult->key());
     }
+
+    public function test_pipeline()
+    {
+        $operation = new DatabaseCommand("admin", ["setFeatureCompatibilityVersion" => "3.6"]);
+        $operation->execute($this->getPrimaryServer());
+
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+
+        $pipeline = [['$project' => ['foo' => [0]]]];
+        $changeStreamResult = $this->collection->watch($pipeline, []);
+
+        $result = $this->collection->insertOne(['x' => 1]);
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
+
+        $changeStreamResult->next();
+        $this->assertNotNull($changeStreamResult->current());
+    }
+
+    public function cursor_with_empty_batch_not_closed()
+    {
+        $operation = new DatabaseCommand("admin", ["setFeatureCompatibilityVersion" => "3.6"]);
+        $operation->execute($this->getPrimaryServer());
+
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+
+        $changeStreamResult = $this->collection->watch();
+        $this->assertNotNull($changeStreamResult);
+    }
 }

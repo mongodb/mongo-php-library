@@ -57,16 +57,19 @@ class ChangeStream implements Iterator
 
     public function key()
     {
-        return $this->key;
+        if ($this->valid() !== null) {
+            return $this->key;
+        }
+        return null;
     }
 
     public function next()
     {
-        $this->key++;
         try {
             $this->csIt->next();
             if ($this->valid()) {
                 $this->extractResumeToken($this->csIt->current());
+                $this->key++;
             }
         } catch (RuntimeException $e) {
             $this->resume();
@@ -87,7 +90,7 @@ class ChangeStream implements Iterator
 
     public function valid()
     {
-        return $this->csIt->key() !== null;
+        return $this->csIt->valid();
     }
 
     private function extractResumeToken($document)

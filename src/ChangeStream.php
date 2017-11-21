@@ -57,7 +57,7 @@ class ChangeStream implements Iterator
 
     public function key()
     {
-        if ($this->valid() !== null) {
+        if ($this->valid()) {
             return $this->key;
         }
         return null;
@@ -101,9 +101,10 @@ class ChangeStream implements Iterator
         if ($document instanceof Serializable) {
             return $this->extractResumeToken($document->bsonSerialize());
         }
-        $this->resumeToken = is_array($document) ? $document['_id'] : $document->_id;
-        if ($this->resumeToken === null) {
-            throw new ResumeTokenException("Cannot provide resume functionality when the resume token is missing");
+        if (isset($document->_id)) {
+            $this->resumeToken = is_array($document) ? $document['_id'] : $document->_id;
+        } else {
+             throw new ResumeTokenException("Cannot provide resume functionality when the resume token is missing");
         }
     }
 }

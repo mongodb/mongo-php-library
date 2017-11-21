@@ -7,6 +7,7 @@ use MongoDB\ChangeStreamIterator;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\ChangeStreamCommand;
 use MongoDB\Operation\DatabaseCommand;
@@ -124,7 +125,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
 
         $changeStreamResult = $this->collection->watch();
 
-        $this->assertSame(0, $changeStreamResult->key());
+        $this->assertSame(null, $changeStreamResult->key());
 
         $result = $this->collection->insertOne(['x' => 1]);
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
@@ -134,15 +135,22 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $changeStreamResult->key());
 
         $changeStreamResult->next();
-        $this->assertSame(1, $changeStreamResult->key());
+        $this->assertSame(null, $changeStreamResult->key());
         $changeStreamResult->next();
-        $this->assertSame(1, $changeStreamResult->key());
+        $this->assertSame(null, $changeStreamResult->key());
 
         $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
         $operation->execute($this->getPrimaryServer());
 
         $changeStreamResult->next();
-        $this->assertSame(1, $changeStreamResult->key());
+        $this->assertSame(null, $changeStreamResult->key());
+
+        $result = $this->collection->insertOne(['x' => 2]);
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
+
+        $changeStreamResult->next();
+        $this->assertSame(2, $changeStreamResult->key());
     }
 
     public function test_pipeline()
@@ -166,5 +174,24 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
 
         $changeStreamResult = $this->collection->watch();
         $this->assertNotNull($changeStreamResult);
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\ResumeTokenException
+     */
+    public function test_resume_token_removed()
+    {
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+
+        $pipeline =  [['$project' => ['_id' => 0 ]]];
+        $changeStreamResult = $this->collection->watch($pipeline, []);
+
+        $result = $this->collection->insertOne(['x' => 1]);
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
+
+        $changeStreamResult->next();
+        // expect error after call to next because resumeToken should be missing
+        // (due to the pipeline)
     }
 }

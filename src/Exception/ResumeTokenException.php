@@ -17,6 +17,6 @@
 
 namespace MongoDB\Exception;
 
-class ResumeTokenException extends \MongoDB\Driver\Exception\RuntimeException implements Exception
+class ResumeTokenException extends \Exception
 {
 }

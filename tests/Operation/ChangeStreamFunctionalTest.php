@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\ChangeStream;
 use MongoDB\ChangeStreamIterator;
+use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadPreference;
@@ -26,7 +27,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         }
    }
 
-    public function testChangeStreamResume()
+    public function testResume()
     {
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
@@ -56,7 +57,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertNotNull($changeStreamResult->current());
    }
 
-    public function testChangeStreamAfterResumeBeforeInsert()
+    public function testNoChangeAfterResumeBeforeInsert()
     {
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
@@ -89,7 +90,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertNotNull($changeStreamResult->current());
     }
 
-    public function test_resume_after_kill_then_no_operations()
+    public function testResumeAfterKillThenNoOperations()
     {
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
@@ -102,7 +103,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertNull($changeStreamResult->current());
     }
 
-    public function test_resume_after_kill_then_insert()
+    public function testResumeAfterKillThenOperation()
     {
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
@@ -119,7 +120,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertNull($changeStreamResult->current());
     }
 
-    public function test_key()
+    public function testKey()
     {
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
@@ -153,7 +154,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame(2, $changeStreamResult->key());
     }
 
-    public function test_pipeline()
+    public function testNonEmptyPipeline()
     {
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
@@ -168,7 +169,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertNotNull($changeStreamResult->current());
     }
 
-    public function test_cursor_with_empty_batch_not_closed()
+    public function testCursorWithEmptyBatchNotClosed()
     {
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
@@ -179,7 +180,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
     /**
      * @expectedException MongoDB\Exception\ResumeTokenException
      */
-    public function test_resume_token_removed()
+    public function testFailureAfterResumeTokenRemoved()
     {
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
@@ -191,7 +192,15 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $result->getInsertedCount());
 
         $changeStreamResult->next();
-        // expect error after call to next because resumeToken should be missing
-        // (due to the pipeline)
+    }
+
+    public function testConnectionException()
+    {
+        $client = new Client($this->getUri(), ['socketTimeoutMS' => 1005], []);
+        $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
+
+        $changeStreamResult = $collection->watch();
+        $changeStreamResult->next();
+        $this->assertNull($changeStreamResult->current());
     }
 }

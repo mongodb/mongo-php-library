@@ -18,6 +18,7 @@
 namespace MongoDB;
 
 use MongoDB\Driver\Cursor;
+use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Exception\ResumeTokenException;
 use IteratorIterator;
@@ -67,6 +68,7 @@ class ChangeStream implements Iterator
 
     public function next()
     {
+        $resumable = false;
         try {
             $this->csIt->next();
             if ($this->valid()) {
@@ -74,16 +76,18 @@ class ChangeStream implements Iterator
                 $this->key++;
             }
         } catch (RuntimeException $e) {
-            $resumable = false;
             if (strpos($e->getMessage(), "not master") !== false) {
                 $resumable = true;
             }
             if ($e->getCode() === self::CURSOR_NOT_FOUND) {
+               $resumable = true;
+            }
+            if ($e instanceof ConnectionTimeoutException) {
                 $resumable = true;
             }
-            if ($resumable) {
-                $this->resume();
-            }
+        }
+        if ($resumable) {
+            $this->resume();
         }
     }
 

@@ -37,6 +37,8 @@ class ChangeStream implements Iterator
     private $csIt;
     private $key;
 
+    const CURSOR_NOT_FOUND = 43;
+
     public function __construct(Cursor $cursor, callable $resumeCallable)
     {
         $this->resumeCallable = $resumeCallable;
@@ -72,7 +74,16 @@ class ChangeStream implements Iterator
                 $this->key++;
             }
         } catch (RuntimeException $e) {
-            $this->resume();
+            $resumable = false;
+            if (strpos($e->getMessage(), "not master") !== false) {
+                $resumable = true;
+            }
+            if ($e->getCode() === self::CURSOR_NOT_FOUND) {
+                $resumable = true;
+            }
+            if ($resumable) {
+                $this->resume();
+            }
         }
     }
 

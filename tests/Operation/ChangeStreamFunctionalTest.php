@@ -168,7 +168,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertNotNull($changeStreamResult->current());
     }
 
-    public function cursor_with_empty_batch_not_closed()
+    public function test_cursor_with_empty_batch_not_closed()
     {
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 

@@ -41,6 +41,9 @@ class FindOneAndUpdate implements Executable
      *
      * Supported options:
      *
+     *  * arrayFilters (document array): A set of filters specifying to which
+     *    array elements an update should apply.
+     *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.
      *

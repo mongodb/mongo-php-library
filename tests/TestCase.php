@@ -11,6 +11,11 @@ use stdClass;
 
 abstract class TestCase extends BaseTestCase
 {
+    public function provideInvalidArrayValues()
+    {
+        return $this->wrapValuesForDataProvider($this->getInvalidArrayValues());
+    }
+
     public function provideInvalidDocumentValues()
     {
         return $this->wrapValuesForDataProvider($this->getInvalidDocumentValues());

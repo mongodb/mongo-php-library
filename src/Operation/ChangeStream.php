@@ -17,7 +17,7 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\ChangeStream;
+use MongoDB\ChangeStream as ChangeStreamResult;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -26,18 +26,15 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
-use ArrayIterator;
-use stdClass;
-use Traversable;
 
 /**
- * Raw changeStream command.
+ * Operation for creating a change stream with the aggregate command.
  *
  * @api
  * @see \MongoDB\Collection::changeStream()
  * @see http://docs.mongodb.org/manual/reference/command/changeStream/
  */
-class ChangeStreamCommand implements Executable
+class ChangeStream implements Executable
 {
     const FULL_DOCUMENT_DEFAULT = 'default';
     const FULL_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
@@ -90,6 +87,7 @@ class ChangeStreamCommand implements Executable
      * @param string         $collectionName Collection name
      * @param array          $pipeline       List of pipeline operations
      * @param array          $options        Command options
+     * @param Manager        $manager        Manager instance from the driver
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($databaseName, $collectionName, array $pipeline, array $options = [], Manager $manager)
@@ -132,7 +130,7 @@ class ChangeStreamCommand implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return Traversable
+     * @return ChangeStreamResult
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if collation, read concern, or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -143,7 +141,7 @@ class ChangeStreamCommand implements Executable
 
         $cursor = $command->execute($server);
 
-        return new ChangeStream($cursor, $this->createResumeCallable());
+        return new ChangeStreamResult($cursor, $this->createResumeCallable());
     }
 
     private function createAggregateOptions()

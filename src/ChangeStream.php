@@ -40,6 +40,10 @@ class ChangeStream implements Iterator
 
     const CURSOR_NOT_FOUND = 43;
 
+    /**
+     * @param MongoDB\Driver\Cursor $cursor
+     * @param callable $resumeCallable
+     */
     public function __construct(Cursor $cursor, callable $resumeCallable)
     {
         $this->resumeCallable = $resumeCallable;
@@ -48,16 +52,27 @@ class ChangeStream implements Iterator
         $this->key = 0;
     }
 
+    /**
+     * @see http://php.net/iterator.current
+     * @return mixed
+     */
     public function current()
     {
         return $this->csIt->current();
     }
 
-    public function getId()
+    /**
+     * @return MongoDB\Driver\CursorId
+     */
+    public function getCursorId()
     {
         return $this->csIt->getInnerIterator()->getId();
     }
 
+    /**
+     * @see http://php.net/iterator.mixed
+     * @return mixed
+     */
     public function key()
     {
         if ($this->valid()) {
@@ -66,6 +81,10 @@ class ChangeStream implements Iterator
         return null;
     }
 
+    /**
+     * @see http://php.net/iterator.next
+     * @return void
+     */
     public function next()
     {
         $resumable = false;
@@ -91,23 +110,30 @@ class ChangeStream implements Iterator
         }
     }
 
-    public function resume()
-    {
-        $newChangeStream = call_user_func($this->resumeCallable, $this->resumeToken);
-        $this->csIt = $newChangeStream->csIt;
-        $this->csIt->rewind();
-    }
-
+    /**
+     * @see http://php.net/iterator.rewind
+     * @return void
+     */
     public function rewind()
     {
         $this->csIt->rewind();
     }
 
+    /**
+     * @see http://php.net/iterator.valid
+     * @return boolean
+     */
     public function valid()
     {
         return $this->csIt->valid();
     }
 
+    /**
+     * Extracts the resumeToken (_id) of the input document.
+     *
+     * @return void
+     * @throws ResumeTokenException if the document has no _id.
+     */
     private function extractResumeToken($document)
     {
         if ($document === null) {
@@ -121,5 +147,17 @@ class ChangeStream implements Iterator
         } else {
              throw new ResumeTokenException("Cannot provide resume functionality when the resume token is missing");
         }
+    }
+
+    /**
+     * Creates a new changeStream after a resumable server error.
+     *
+     * @return void
+     */
+    private function resume()
+    {
+        $newChangeStream = call_user_func($this->resumeCallable, $this->resumeToken);
+        $this->csIt = $newChangeStream->csIt;
+        $this->csIt->rewind();
     }
 }

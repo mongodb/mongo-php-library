@@ -18,6 +18,7 @@
 namespace MongoDB;
 
 use MongoDB\BSON\JavascriptInterface;
+use MongoDB\ChangeStream as ChangeStreamResult;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
@@ -30,7 +31,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\BulkWrite;
-use MongoDB\Operation\ChangeStreamCommand;
+use MongoDB\Operation\ChangeStream;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\DeleteMany;
@@ -940,10 +941,11 @@ class Collection
     /*
      * ChangeStream outline
      *
-     * @see ChangeStreamCommand::__construct() for supported options
+     * @see ChangeStream::__construct() for supported options
      * @param array          $pipeline       List of pipeline operations
      * @param array          $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
+     * @return ChangeStreamResult
      */
     public function watch(array $pipeline = [], array $options = [])
     {
@@ -957,7 +959,7 @@ class Collection
             $options['readConcern'] = $this->readConcern;
         }
 
-        $operation = new ChangeStreamCommand($this->databaseName, $this->collectionName, $pipeline, $options, $this->manager);
+        $operation = new ChangeStream($this->databaseName, $this->collectionName, $pipeline, $options, $this->manager);
 
         return $operation->execute($server);
     }

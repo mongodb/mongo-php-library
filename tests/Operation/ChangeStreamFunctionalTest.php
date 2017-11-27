@@ -2,20 +2,9 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\ChangeStream;
-use MongoDB\ChangeStreamIterator;
 use MongoDB\Client;
 use MongoDB\Collection;
-use MongoDB\Driver\BulkWrite;
-use MongoDB\Driver\ReadPreference;
-use MongoDB\Exception\ResumeTokenException;
-use MongoDB\Operation\Aggregate;
-use MongoDB\Operation\ChangeStreamCommand;
 use MongoDB\Operation\DatabaseCommand;
-use MongoDB\Operation\InsertOne;
-use MongoDB\Tests\CommandObserver;
-use IteratorIterator;
-use stdClass;
 
 class ChangeStreamFunctionalTest extends FunctionalTestCase
 {
@@ -53,7 +42,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
                         ]);
         $this->assertEquals($changeStreamResult->current(), $expectedResult);
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
 
         $result = $this->collection->insertOne(['x' => 3]);
@@ -97,7 +86,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
                         ]);
         $this->assertEquals($changeStreamResult->current(), $expectedResult);
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
 
         $changeStreamResult->next();
@@ -124,7 +113,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
 
         $changeStreamResult = $this->collection->watch();
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
 
         $changeStreamResult->next();
@@ -137,7 +126,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
 
         $changeStreamResult = $this->collection->watch();
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
 
         $result = $this->collection->insertOne(['x' => 3]);
@@ -168,7 +157,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $changeStreamResult->next();
         $this->assertSame(null, $changeStreamResult->key());
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
 
         $changeStreamResult->next();
@@ -247,6 +236,5 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
                             'documentKey' => (object) ['_id' => $result->getInsertedId()]
                         ]);
         $this->assertEquals($changeStreamResult->current(), $expectedResult);
-
     }
 }

@@ -7,6 +7,10 @@ source:
   ref: sort
 ---
 source:
+  file: apiargs-MongoDBCollection-method-updateOne-option.yaml
+  ref: arrayFilters
+---
+source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: collation
 ---

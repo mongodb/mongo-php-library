@@ -47,7 +47,7 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
 
         $this->assertSame('abc', fread($stream, 3));
         $this->assertSame('defghij', fread($stream, 10));
-        $this->assertSame('', fread($stream, 3));
+        $this->assertNull(fread($stream, 3));
     }
 
     public function testReadableStreamSeek()
@@ -57,7 +57,7 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame(0, fseek($stream, 2, \SEEK_SET));
         $this->assertSame('cde', fread($stream, 3));
         $this->assertSame(0, fseek($stream, 10, \SEEK_SET));
-        $this->assertSame('', fread($stream, 3));
+        $this->assertNull(fread($stream, 3));
         $this->assertSame(-1, fseek($stream, -1, \SEEK_SET));
         $this->assertSame(-1, fseek($stream, 11, \SEEK_SET));
 
@@ -69,7 +69,7 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame(-1, fseek($stream, -11, \SEEK_CUR));
 
         $this->assertSame(0, fseek($stream, 0, \SEEK_END));
-        $this->assertSame('', fread($stream, 3));
+        $this->assertNull(fread($stream, 3));
         $this->assertSame(0, fseek($stream, -8, \SEEK_END));
         $this->assertSame('cde', fread($stream, 3));
         $this->assertSame(-1, fseek($stream, -11, \SEEK_END));
@@ -123,9 +123,9 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
     {
         $stream = $this->bucket->openUploadStream('filename');
 
-        $this->assertSame('', fread($stream, 8192));
+        $this->assertNull(fread($stream, 8192));
         $this->assertSame(6, fwrite($stream, 'foobar'));
-        $this->assertSame('', fread($stream, 8192));
+        $this->assertNull(fread($stream, 8192));
     }
 
     public function testWritableStreamSeek()

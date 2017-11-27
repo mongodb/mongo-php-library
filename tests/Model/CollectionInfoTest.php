@@ -16,7 +16,7 @@ class CollectionInfoTest extends TestCase
     public function testGetOptions()
     {
         $info = new CollectionInfo(['name' => 'foo']);
-        $this->assertSame([], $info->getOptions());
+        $this->assertEmpty($info->getOptions());
 
         $info = new CollectionInfo(['name' => 'foo', 'options' => ['capped' => true, 'size' => 1048576]]);
         $this->assertSame(['capped' => true, 'size' => 1048576], $info->getOptions());

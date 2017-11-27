@@ -44,7 +44,14 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $result->getInsertedCount());
 
         $changeStreamResult->next();
-        $this->assertNotNull($changeStreamResult->current());
+        $expectedResult = (object) ([
+                            '_id' => $changeStreamResult->current()->_id,
+                            'operationType' => 'insert',
+                            'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 2],
+                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'ChangeStreamFunctionalTest.e68b9f01'],
+                            'documentKey' => (object) ['_id' => $result->getInsertedId()]
+                        ]);
+        $this->assertEquals($changeStreamResult->current(), $expectedResult);
 
         $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
         $operation->execute($this->getPrimaryServer());
@@ -54,7 +61,14 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $result->getInsertedCount());
 
         $changeStreamResult->next();
-        $this->assertNotNull($changeStreamResult->current());
+        $expectedResult = (object) ([
+                            '_id' => $changeStreamResult->current()->_id,
+                            'operationType' => 'insert',
+                            'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 3],
+                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'ChangeStreamFunctionalTest.e68b9f01'],
+                            'documentKey' => (object) ['_id' => $result->getInsertedId()]
+                        ]);
+        $this->assertEquals($changeStreamResult->current(), $expectedResult);
    }
 
     public function testNoChangeAfterResumeBeforeInsert()
@@ -74,7 +88,14 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $result->getInsertedCount());
 
         $changeStreamResult->next();
-        $this->assertNotNull($changeStreamResult->current());
+        $expectedResult = (object) ([
+                            '_id' => $changeStreamResult->current()->_id,
+                            'operationType' => 'insert',
+                            'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 2],
+                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'ChangeStreamFunctionalTest.4a554985'],
+                            'documentKey' => (object) ['_id' => $result->getInsertedId()]
+                        ]);
+        $this->assertEquals($changeStreamResult->current(), $expectedResult);
 
         $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getId()]]);
         $operation->execute($this->getPrimaryServer());
@@ -87,7 +108,14 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $result->getInsertedCount());
 
         $changeStreamResult->next();
-        $this->assertNotNull($changeStreamResult->current());
+        $expectedResult = (object) ([
+                            '_id' => $changeStreamResult->current()->_id,
+                            'operationType' => 'insert',
+                            'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 3],
+                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'ChangeStreamFunctionalTest.4a554985'],
+                            'documentKey' => (object) ['_id' => $result->getInsertedId()]
+                        ]);
+        $this->assertEquals($changeStreamResult->current(), $expectedResult);
     }
 
     public function testResumeAfterKillThenNoOperations()
@@ -166,7 +194,11 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $result->getInsertedCount());
 
         $changeStreamResult->next();
-        $this->assertNotNull($changeStreamResult->current());
+        $expectedResult = (object) ([
+                            '_id' => $changeStreamResult->current()->_id,
+                            'foo' => [0]
+                        ]);
+        $this->assertEquals($changeStreamResult->current(), $expectedResult);
     }
 
     public function testCursorWithEmptyBatchNotClosed()
@@ -201,6 +233,20 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
 
         $changeStreamResult = $collection->watch();
         $changeStreamResult->next();
-        $this->assertNull($changeStreamResult->current());
+
+        $result = $collection->insertOne(['x' => 1]);
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
+
+        $changeStreamResult->next();
+        $expectedResult = (object) ([
+                            '_id' => $changeStreamResult->current()->_id,
+                            'operationType' => 'insert',
+                            'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 1],
+                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'ChangeStreamFunctionalTest.226d95f1'],
+                            'documentKey' => (object) ['_id' => $result->getInsertedId()]
+                        ]);
+        $this->assertEquals($changeStreamResult->current(), $expectedResult);
+
     }
 }

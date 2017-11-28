@@ -46,7 +46,7 @@ class FindOneAndUpdate implements Executable
      *  * arrayFilters (document array): A set of filters specifying to which
      *    array elements an update should apply.
      *
-     *    This is not supported for server versions < 3.6 and will result in an$
+     *    This is not supported for server versions < 3.6 and will result in an
      *    exception at execution time if used.
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
@@ -111,10 +111,6 @@ class FindOneAndUpdate implements Executable
             'upsert' => false,
         ];
 
-        if (isset($options['arrayFilters']) && ! is_array($options['arrayFilters'])) {
-            throw InvalidArgumentException::invalidType('"arrayFilters" option', $options['arrayFilters'], 'array');
-        }
-
         if (isset($options['projection']) && ! is_array($options['projection']) && ! is_object($options['projection'])) {
             throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
         }
@@ -149,14 +145,11 @@ class FindOneAndUpdate implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return array|object|null
-     * @throws UnsupportedException if array filters or collation or write concern is used and unsupported
+     * @throws UnsupportedException if collation or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
-        if (isset($this->options['arrayFilters']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForArrayFilters)) {
-            throw UnsupportedException::arrayFiltersNotSupported();
-        }
         return $this->findAndModify->execute($server);
     }
 }

@@ -3,7 +3,7 @@ source:
   ref: upsert
 ---
 source:
-  file: apiargs-MongoDBCollection-method-updateOne-option.yaml
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: arrayFilters
 ---
 source:

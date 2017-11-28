@@ -2,18 +2,6 @@ source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: upsert
 ---
-arg_name: option
-name: arrayFilters
-type: array
-description: |
-  An array of filter documents that determines which array elements to modify
-  for an update operation on an array field.
-
-  .. versionadded:: 1.3
-interface: phpmethod
-operation: ~
-optional: true
----
 source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: bypassDocumentValidation

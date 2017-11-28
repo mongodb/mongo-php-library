@@ -1,5 +1,5 @@
 arg_name: param
-name: pipeline
+name: $pipeline
 type: array|object
 description: |
   The pipeline of stages to append to an initial ``$changeStream`` stage.
@@ -7,22 +7,7 @@ interface: phpmethod
 operation: ~
 optional: true
 ---
-arg_name: param
-name: readPreference
-type: :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
-description: |
-  The read preference for the initial change stream aggregation, used for
-  server selection during an automatic resume.
-interface: phpmethod
-operation: ~
-optional: true
----
-arg_name: param
-name: resumeToken
-type: array|object
-description: |
-  The resume token (_id) of the document the iterator last returned.
-interface: phpmethod
-operation: ~
-optional: true
+source:
+  file: apiargs-common-param.yaml
+  ref: $options
 ...

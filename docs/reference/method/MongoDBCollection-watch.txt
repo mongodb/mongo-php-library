@@ -20,7 +20,7 @@ Definition
 
    .. code-block:: php
 
-      function watch(array $pipeline = [], array $options = []): ChangeStream
+      function watch(array $pipeline = [], array $options = []): MongoDB\ChangeStream
 
    This method has the following parameters:
 
@@ -33,7 +33,8 @@ Definition
 Return Values
 -------------
 
-A ChangeStream object.
+A :phpclass:`MongoDB\\ChangeStream` object, which allows for iteration of
+events in the change stream via the :php:`Iterator <class.iterator>` interface.
 
 Errors/Exceptions
 -----------------
@@ -48,3 +49,4 @@ See Also
 
 - :manual:`Aggregation Pipeline </core/aggregation-pipeline>` documentation in
   the MongoDB Manual
+- :manual:`Change Streams </changeStreams>` documentation in the MongoDB manual

@@ -41,14 +41,18 @@ class ChangeStream implements Iterator
     const CURSOR_NOT_FOUND = 43;
 
     /**
-     * @param MongoDB\Driver\Cursor $cursor
+     * @param Cursor $cursor
      * @param callable $resumeCallable
      */
     public function __construct(Cursor $cursor, callable $resumeCallable)
     {
         $this->resumeCallable = $resumeCallable;
         $this->csIt = new IteratorIterator($cursor);
+
+        // TO DO: remove this call to rewind after the PHP driver no longer calls next on
+        // cursor immediately after it is constructed
         $this->csIt->rewind();
+
         $this->key = 0;
     }
 
@@ -70,7 +74,7 @@ class ChangeStream implements Iterator
     }
 
     /**
-     * @see http://php.net/iterator.mixed
+     * @see http://php.net/iterator.key
      * @return mixed
      */
     public function key()

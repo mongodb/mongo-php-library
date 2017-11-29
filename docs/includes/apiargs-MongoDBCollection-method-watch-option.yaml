@@ -26,15 +26,12 @@ source:
   file: apiargs-MongoDBCollection-method-find-option.yaml
   ref: maxAwaitTimeMS
 ---
-arg_name: option
-name: readPreference
-type: :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
-description: |
-  The read preference for the initial change stream aggregation, used for
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: readPreference
+post: |
+  This is used for both the initial change stream aggregation and for
   server selection during an automatic resume.
-interface: phpmethod
-operation: ~
-optional: true
 ---
 arg_name: option
 name: resumeAfter

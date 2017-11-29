@@ -925,6 +925,60 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertInventoryCount(0);
     }
 
+    public function testChangeStreamExample_1_3()
+    {
+        $db = new Database($this->manager, $this->getDatabaseName());
+
+        // Start Changestream Example 1
+        $cursor = $db->inventory->watch();
+        $cursor->next();
+        $current = $cursor->current();
+        // End Changestream Example 1
+
+        $this->assertNull($current);
+
+        // Start Changestream Example 2
+        $cursor = $db->inventory->watch([], ['fullDocument' => \MongoDB\Operation\ChangeStreamCommand::FULL_DOCUMENT_UPDATE_LOOKUP]);
+        $cursor->next();
+        $current = $cursor->current();
+        // End Changestream Example 2
+
+        $this->assertNull($current);
+
+        $insertedResult = $db->inventory->insertOne(['x' => 1]);
+        $insertedId = $insertedResult->getInsertedId();
+        $cursor->next();
+        $current = $cursor->current();
+        $expectedChange = (object) [
+            '_id' => $current->_id,
+            'operationType' => 'insert',
+            'fullDocument' => (object) ['_id' => $insertedId, 'x' => 1],
+            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'inventory'],
+            'documentKey' => (object) ['_id' => $insertedId]
+        ];
+        $this->assertEquals($current, $expectedChange);
+
+        // Start Changestream Example 3
+        $resumeToken = ($current !== null) ? $current->_id : null;
+        if ($resumeToken !== null) {
+            $cursor = $db->inventory->watch([], ['resumeAfter' => $resumeToken]);
+            $cursor->next();
+        }
+        // End Changestream Example 3
+
+        $insertedResult = $db->inventory->insertOne(['x' => 2]);
+        $insertedId = $insertedResult->getInsertedId();
+        $cursor->next();
+        $expectedChange = (object) [
+            '_id' => $cursor->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => (object) ['_id' => $insertedId, 'x' => 2],
+            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'inventory'],
+            'documentKey' => (object) ['_id' => $insertedId]
+        ];
+        $this->assertEquals($cursor->current(), $expectedChange);
+    }
+
     /**
      * Return the test collection name.
      *

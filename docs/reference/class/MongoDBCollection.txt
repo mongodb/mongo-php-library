@@ -91,4 +91,5 @@ Methods
    /reference/method/MongoDBCollection-replaceOne
    /reference/method/MongoDBCollection-updateMany
    /reference/method/MongoDBCollection-updateOne
+   /reference/method/MongoDBCollection-watch
    /reference/method/MongoDBCollection-withOptions

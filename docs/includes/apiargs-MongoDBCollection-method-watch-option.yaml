@@ -1,0 +1,49 @@
+source:
+  file: apiargs-MongoDBCollection-method-aggregate-option.yaml
+  ref: batchSize
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: collation
+---
+arg_name: option
+name: fullDocument
+type: string
+description: |
+  Allowed values are 'default' and 'updateLookup'. Defaults to 'default'.
+  When set to 'updateLookup', the change notification for partial updates will
+  include both a delta describing the changes to the document, as well as a
+  copy of the entire document that was changed from some time after the change
+  occurred. The following values are supported:
+
+  - ``MongoDB\Operation\ChangeStream::FULL_DOCUMENT_DEFAULT`` (*default*)
+  - ``MongoDB\Operation\ChangeStream::FULL_DOCUMENT_UPDATE_LOOKUP``
+interface: phpmethod
+operation: ~
+optional: true
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: maxAwaitTimeMS
+---
+arg_name: option
+name: readPreference
+type: :php:`MongoDB\\Driver\\ReadPreference <class.mongodb-driver-readpreference>`
+description: |
+  The read preference for the initial change stream aggregation, used for
+  server selection during an automatic resume.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: resumeAfter
+type: array|object
+description: |
+  Specifies the logical starting point for the new change stream.
+
+  Note this is an option of the '$changeStream' pipeline stage.
+interface: phpmethod
+operation: ~
+optional: true
+...

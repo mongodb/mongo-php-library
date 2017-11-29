@@ -1,0 +1,52 @@
+================================
+MongoDB\\Collection::watch()
+================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::watch()
+
+   Executes a :manual:`change stream </changeStreams>` operation on the
+   collection.
+
+   .. code-block:: php
+
+      function watch(array $pipeline = [], array $options = []): MongoDB\ChangeStream
+
+   This method has the following parameters:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-watch-param.rst
+
+   The ``$options`` parameter supports the following options:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-watch-option.rst
+
+Return Values
+-------------
+
+A :phpclass:`MongoDB\\ChangeStream` object, which allows for iteration of
+events in the change stream via the :php:`Iterator <class.iterator>` interface.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unexpectedvalueexception.rst
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+See Also
+--------
+
+- :manual:`Aggregation Pipeline </core/aggregation-pipeline>` documentation in
+  the MongoDB Manual
+- :manual:`Change Streams </changeStreams>` documentation in the MongoDB manual

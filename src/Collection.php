@@ -18,6 +18,7 @@
 namespace MongoDB;
 
 use MongoDB\BSON\JavascriptInterface;
+use MongoDB\ChangeStream as ChangeStreamResult;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
@@ -30,6 +31,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\BulkWrite;
+use MongoDB\Operation\ChangeStream;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\DeleteMany;
@@ -932,6 +934,32 @@ class Collection
 
         $operation = new UpdateOne($this->databaseName, $this->collectionName, $filter, $update, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
+    }
+
+    /*
+     * ChangeStream outline
+     *
+     * @see ChangeStream::__construct() for supported options
+     * @param array          $pipeline       List of pipeline operations
+     * @param array          $options        Command options
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @return ChangeStreamResult
+     */
+    public function watch(array $pipeline = [], array $options = [])
+    {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
+        $server = $this->manager->selectServer($options['readPreference']);
+
+        if ( ! isset($options['readConcern'])) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
+        $operation = new ChangeStream($this->databaseName, $this->collectionName, $pipeline, $options, $this->manager);
 
         return $operation->execute($server);
     }

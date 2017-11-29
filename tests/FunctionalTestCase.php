@@ -76,6 +76,19 @@ abstract class FunctionalTestCase extends TestCase
         );
     }
 
+    protected function getFeatureCompatibilityVersion()
+    {
+        $cursor = $this->manager->executeCommand(
+            "admin",
+            new Command(['getParameter' => 1, 'featureCompatibilityVersion' => 1])
+        );
+
+        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
+        $document = current($cursor->toArray());
+
+        return $document['featureCompatibilityVersion']['version'];
+    }
+
     protected function getPrimaryServer()
     {
         return $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));

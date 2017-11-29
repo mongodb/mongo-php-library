@@ -40,6 +40,7 @@ class BulkWrite implements Executable
     const UPDATE_MANY = 'updateMany';
     const UPDATE_ONE  = 'updateOne';
 
+    private static $wireVersionForArrayFilters = 6;
     private static $wireVersionForCollation = 5;
     private static $wireVersionForDocumentLevelValidation = 4;
 
@@ -47,6 +48,7 @@ class BulkWrite implements Executable
     private $collectionName;
     private $operations;
     private $options;
+    private $isArrayFiltersUsed = false;
     private $isCollationUsed = false;
 
     /**
@@ -83,6 +85,11 @@ class BulkWrite implements Executable
      *
      *  * upsert (boolean): When true, a new document is created if no document
      *    matches the query. The default is false.
+     *
+     * Supported options for updateMany and updateOne operations:
+     *
+     *  * arrayFilters (document array): A set of filters specifying to which
+     *    array elements an update should apply.
      *
      * Supported options for the bulk write operation:
      *
@@ -229,6 +236,14 @@ class BulkWrite implements Executable
                     $args[2]['multi'] = ($type === self::UPDATE_MANY);
                     $args[2] += ['upsert' => false];
 
+                    if (isset($args[2]['arrayFilters'])) {
+                        $this->isArrayFiltersUsed = true;
+
+                        if ( ! is_array($args[2]['arrayFilters'])) {
+                            throw InvalidArgumentException::InvalidType(sprintf('$operations[%d]["%s"][2]["arrayFilters"]', $i, $type), $args[2]['arrayFilters'], 'array');
+                        }
+                    }
+
                     if (isset($args[2]['collation'])) {
                         $this->isCollationUsed = true;
 
@@ -282,16 +297,24 @@ class BulkWrite implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return BulkWriteResult
-     * @throws UnsupportedException if collation is used and unsupported
+     * @throws UnsupportedException if array filters or collation is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
+        if ($this->isArrayFiltersUsed && ! \MongoDB\server_supports_feature($server, self::$wireVersionForArrayFilters)) {
+            throw UnsupportedException::arrayFiltersNotSupported();
+        }
+
         if ($this->isCollationUsed && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
             throw UnsupportedException::collationNotSupported();
         }
 
         $options = ['ordered' => $this->options['ordered']];
+
+        if (isset($this->options['arrayFilters'])) {
+            $options['arrayFilters'] = $this->options['arrayFilters'];
+        }
 
         if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
             $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];

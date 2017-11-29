@@ -36,6 +36,7 @@ use MongoDB\Exception\UnsupportedException;
  */
 class FindAndModify implements Executable
 {
+    private static $wireVersionForArrayFilters = 6;
     private static $wireVersionForCollation = 5;
     private static $wireVersionForDocumentLevelValidation = 4;
     private static $wireVersionForWriteConcern = 4;
@@ -48,6 +49,9 @@ class FindAndModify implements Executable
      * Constructs a findAndModify command.
      *
      * Supported options:
+     *
+     *  * arrayFilters (document array): A set of filters specifying to which
+     *    array elements an update should apply.
      *
      *  * collation (document): Collation specification.
      *
@@ -244,6 +248,10 @@ class FindAndModify implements Executable
             if (isset($this->options[$option])) {
                 $cmd[$option] = (object) $this->options[$option];
             }
+        }
+
+        if (isset($this->options['arrayFilters'])) {
+            $cmd['arrayFilters'] = $this->options['arrayFilters'];
         }
 
         if (isset($this->options['maxTimeMS'])) {

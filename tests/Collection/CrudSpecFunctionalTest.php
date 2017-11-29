@@ -115,6 +115,10 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                     array_diff_key($operation['arguments'], ['pipeline' => 1])
                 );
 
+            case 'bulkWrite':
+                $operation['arguments'] = $this->prepareBulkWriteArguments($operation['arguments']);
+                return $this->collection->bulkWrite(array_diff_key($operation['arguments'], ['options' => 1]), $operation['arguments']['options']);
+
             case 'count':
             case 'find':
                 return $this->collection->{$operation['name']}(
@@ -221,6 +225,38 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                  */
                 if ( ! \MongoDB\is_last_pipeline_operator_out($operation['arguments']['pipeline'])) {
                     $this->assertSameDocuments($expectedResult, $actualResult);
+                }
+                break;
+
+            case 'bulkWrite':
+                if (isset($expectedResult['deletedCount'])) {
+                    $this->assertSame($expectedResult['deletedCount'], $actualResult->getDeletedCount());
+                }
+
+                if (isset($expectedResult['insertedIds'])) {
+                    $this->assertSameDocument(
+                        ['insertedIds' => $expectedResult['insertedIds']],
+                        ['insertedIds' => $actualResult->getInsertedIds()]
+                    );
+                }
+
+                if (isset($expectedResult['matchedCount'])) {
+                    $this->assertSame($expectedResult['matchedCount'], $actualResult->getMatchedCount());
+                }
+
+                if (isset($expectedResult['modifiedCount'])) {
+                    $this->assertSame($expectedResult['modifiedCount'], $actualResult->getModifiedCount());
+                }
+
+                if (isset($expectedResult['upsertedCount'])) {
+                    $this->assertSame($expectedResult['upsertedCount'], $actualResult->getUpsertedCount());
+                }
+
+                if (array_key_exists('upsertedId', $expectedResult)) {
+                    $this->assertSameDocument(
+                        ['upsertedId' => $expectedResult['upsertedId']],
+                        ['upsertedId' => $actualResult->getUpsertedId()]
+                    );
                 }
                 break;
 
@@ -332,6 +368,50 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
         if ( ! empty($expectedData)) {
             $this->expectedCollection->insertMany($expectedData);
         }
+    }
+
+    private function prepareBulkWriteArguments($arguments)
+    {
+        $operations = [];
+        $operations['options'] = $arguments['options'];
+        foreach ($arguments['requests'] as $requests) {
+            if (isset($requests['arguments']['arrayFilters'])) {
+                if (isset($requests['arguments']['options'])) {
+                    array_push($requests['arguments']['options'], ['arrayFilters' => $requests['arguments']['arrayFilters']]);
+                } else {
+                    $options = ['arrayFilters' => $requests['arguments']['arrayFilters']];
+                }
+            }
+            $innerArray = [];
+            switch ($requests['name']) {
+                case 'deleteMany':
+                case 'deleteOne':
+                    $innerArray = [$requests['arguments']['filter']];
+                    if (isset($requests['arguments']['options'])) {
+                         array_push($innerArray, $requests['arguments']['options']);
+                    }
+                case 'insertOne':
+                    $innerArray = [$requests['arguments']['document']];
+                case 'replaceOne':
+                    $innerArray = [$requests['arguments']['filter'], $requests['arguments']['replacement']];
+                     if (isset($requests['arguments']['options'])) {
+                         array_push($innerArray, $requests['arguments']['options']);
+                    }
+                case 'updateMany':
+                case 'updateOne':
+                    if (isset($options)) {
+                        if (isset($requests['arguments']['options'])) {
+                            array_push($requests['arguments']['options'], $options);
+                        } else {
+                            $requests['arguments']['options'] = $options;
+                        }
+                    }
+                    $innerArray = [$requests['arguments']['filter'], $requests['arguments']['update'], $requests['arguments']['options']];
+           }
+            $operations[] = [$requests['name'] => $innerArray];
+        }
+
+        return $operations;
     }
 
     /**

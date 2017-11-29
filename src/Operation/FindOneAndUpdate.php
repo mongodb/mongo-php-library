@@ -34,8 +34,6 @@ class FindOneAndUpdate implements Executable
     const RETURN_DOCUMENT_BEFORE = 1;
     const RETURN_DOCUMENT_AFTER = 2;
 
-    private static $wireVersionForArrayFilters = 6;
-
     private $findAndModify;
 
     /**

@@ -377,28 +377,30 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     {
         $operations = [];
         $operations['options'] = $arguments['options'];
-        foreach ($arguments['requests'] as $requests) {
+        foreach ($arguments['requests'] as $request) {
             $innerArray = [];
-            switch ($requests['name']) {
+            switch ($request['name']) {
                 case 'deleteMany':
                 case 'deleteOne':
-                    $options = array_diff_key($requests['arguments'], ['filter' => 1]);
-                    $innerArray = [$requests['arguments']['filter'], $options];
+                    $options = array_diff_key($request['arguments'], ['filter' => 1]);
+                    $innerArray = [$request['arguments']['filter'], $options];
                 break;
                 case 'insertOne':
-                    $innerArray = [$requests['arguments']['document']];
+                    $innerArray = [$request['arguments']['document']];
                     break;
                 case 'replaceOne':
-                    $options = array_diff_key($requests['arguments'], ['filter' => 1, 'replacement' => 1]);
-                    $innerArray = [$requests['arguments']['filter'], $requests['arguments']['replacement'], $options];
+                    $options = array_diff_key($request['arguments'], ['filter' => 1, 'replacement' => 1]);
+                    $innerArray = [$request['arguments']['filter'], $request['arguments']['replacement'], $options];
                 break;
                 case 'updateMany':
                 case 'updateOne':
-                    $options = array_diff_key($requests['arguments'], ['filter' => 1, 'update' => 1]);
-                    $innerArray = [$requests['arguments']['filter'], $requests['arguments']['update'], $options];
+                    $options = array_diff_key($request['arguments'], ['filter' => 1, 'update' => 1]);
+                    $innerArray = [$request['arguments']['filter'], $request['arguments']['update'], $options];
                 break;
+                default:
+                    throw new LogicException('Unsupported bulk write request: ' . $request['name']);
             }
-            $operations[] = [$requests['name'] => $innerArray];
+            $operations[] = [$request['name'] => $innerArray];
         }
         return $operations;
     }

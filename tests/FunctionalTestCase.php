@@ -78,6 +78,9 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function getFeatureCompatibilityVersion()
     {
+        if (version_compare($this->getServerVersion(), '3.4.0', '<')) {
+            return $this->getServerVersion();
+        }
         $cursor = $this->manager->executeCommand(
             "admin",
             new Command(['getParameter' => 1, 'featureCompatibilityVersion' => 1])

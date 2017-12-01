@@ -181,7 +181,7 @@ class FindAndModify implements Executable
      * @param Server $server
      * @return array|object|null
      * @throws UnexpectedValueException if the command response was malformed
-     * @throws UnsupportedException if array filters or collation or write concern is used and unsupported
+     * @throws UnsupportedException if array filters, collation, or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)

@@ -91,6 +91,9 @@ class BulkWrite implements Executable
      *  * arrayFilters (document array): A set of filters specifying to which
      *    array elements an update should apply.
      *
+     *    This is not supported for server versions < 3.6 and will result in an
+     *    exception at execution time if used.
+    *
      * Supported options for the bulk write operation:
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
@@ -311,10 +314,6 @@ class BulkWrite implements Executable
         }
 
         $options = ['ordered' => $this->options['ordered']];
-
-        if (isset($this->options['arrayFilters'])) {
-            $options['arrayFilters'] = $this->options['arrayFilters'];
-        }
 
         if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
             $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];

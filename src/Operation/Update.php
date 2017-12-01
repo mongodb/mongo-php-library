@@ -36,6 +36,7 @@ use MongoDB\Exception\UnsupportedException;
  */
 class Update implements Executable
 {
+    private static $wireVersionForArrayFilters = 6;
     private static $wireVersionForCollation = 5;
     private static $wireVersionForDocumentLevelValidation = 4;
 
@@ -49,6 +50,12 @@ class Update implements Executable
      * Constructs a update command.
      *
      * Supported options:
+     *
+     *  * arrayFilters (document array): A set of filters specifying to which
+     *    array elements an update should apply.
+     *
+     *    This is not supported for server versions < 3.6 and will result in an
+     *    exception at execution time if used.
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.
@@ -93,6 +100,10 @@ class Update implements Executable
             'upsert' => false,
         ];
 
+        if (isset($options['arrayFilters']) && ! is_array($options['arrayFilters'])) {
+            throw InvalidArgumentException::invalidType('"arrayFilters" option', $options['arrayFilters'], 'array');
+        }
+
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
@@ -134,11 +145,15 @@ class Update implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return UpdateResult
-     * @throws UnsupportedException if collation is used and unsupported
+     * @throws UnsupportedException if array filters or collation is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
+        if (isset($this->options['arrayFilters']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForArrayFilters)) {
+            throw UnsupportedException::arrayFiltersNotSupported();
+        }
+
         if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
             throw UnsupportedException::collationNotSupported();
         }
@@ -147,6 +162,10 @@ class Update implements Executable
             'multi' => $this->options['multi'],
             'upsert' => $this->options['upsert'],
         ];
+
+        if (isset($this->options['arrayFilters'])) {
+            $updateOptions['arrayFilters'] = $this->options['arrayFilters'];
+        }
 
         if (isset($this->options['collation'])) {
             $updateOptions['collation'] = (object) $this->options['collation'];

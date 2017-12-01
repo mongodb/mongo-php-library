@@ -115,6 +115,13 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                     array_diff_key($operation['arguments'], ['pipeline' => 1])
                 );
 
+            case 'bulkWrite':
+                $results = $this->prepareBulkWriteArguments($operation['arguments']);
+                return $this->collection->bulkWrite(
+                    array_diff_key($results, ['options' => 1]),
+                    $results['options']
+                );
+
             case 'count':
             case 'find':
                 return $this->collection->{$operation['name']}(
@@ -221,6 +228,38 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                  */
                 if ( ! \MongoDB\is_last_pipeline_operator_out($operation['arguments']['pipeline'])) {
                     $this->assertSameDocuments($expectedResult, $actualResult);
+                }
+                break;
+
+            case 'bulkWrite':
+                if (isset($expectedResult['deletedCount'])) {
+                    $this->assertSame($expectedResult['deletedCount'], $actualResult->getDeletedCount());
+                }
+
+                if (isset($expectedResult['insertedIds'])) {
+                    $this->assertSameDocument(
+                        ['insertedIds' => $expectedResult['insertedIds']],
+                        ['insertedIds' => $actualResult->getInsertedIds()]
+                    );
+                }
+
+                if (isset($expectedResult['matchedCount'])) {
+                    $this->assertSame($expectedResult['matchedCount'], $actualResult->getMatchedCount());
+                }
+
+                if (isset($expectedResult['modifiedCount'])) {
+                    $this->assertSame($expectedResult['modifiedCount'], $actualResult->getModifiedCount());
+                }
+
+                if (isset($expectedResult['upsertedCount'])) {
+                    $this->assertSame($expectedResult['upsertedCount'], $actualResult->getUpsertedCount());
+                }
+
+                if (array_key_exists('upsertedId', $expectedResult)) {
+                    $this->assertSameDocument(
+                        ['upsertedId' => $expectedResult['upsertedId']],
+                        ['upsertedId' => $actualResult->getUpsertedId()]
+                    );
                 }
                 break;
 
@@ -332,6 +371,38 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
         if ( ! empty($expectedData)) {
             $this->expectedCollection->insertMany($expectedData);
         }
+    }
+
+    private function prepareBulkWriteArguments($arguments)
+    {
+        $operations = [];
+        $operations['options'] = $arguments['options'];
+        foreach ($arguments['requests'] as $request) {
+            $innerArray = [];
+            switch ($request['name']) {
+                case 'deleteMany':
+                case 'deleteOne':
+                    $options = array_diff_key($request['arguments'], ['filter' => 1]);
+                    $innerArray = [$request['arguments']['filter'], $options];
+                break;
+                case 'insertOne':
+                    $innerArray = [$request['arguments']['document']];
+                    break;
+                case 'replaceOne':
+                    $options = array_diff_key($request['arguments'], ['filter' => 1, 'replacement' => 1]);
+                    $innerArray = [$request['arguments']['filter'], $request['arguments']['replacement'], $options];
+                break;
+                case 'updateMany':
+                case 'updateOne':
+                    $options = array_diff_key($request['arguments'], ['filter' => 1, 'update' => 1]);
+                    $innerArray = [$request['arguments']['filter'], $request['arguments']['update'], $options];
+                break;
+                default:
+                    throw new LogicException('Unsupported bulk write request: ' . $request['name']);
+            }
+            $operations[] = [$request['name'] => $innerArray];
+        }
+        return $operations;
     }
 
     /**

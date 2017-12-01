@@ -39,6 +39,12 @@ class UpdateOne implements Executable
      *
      * Supported options:
      *
+     *  * arrayFilters (document array): A set of filters specifying to which
+     *    array elements an update should apply.
+     *
+     *    This is not supported for server versions < 3.6 and will result in an$
+     *    exception at execution time if used.
+     *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.
      *

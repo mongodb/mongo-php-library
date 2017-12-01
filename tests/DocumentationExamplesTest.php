@@ -927,6 +927,10 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testChangeStreamExample_1_3()
     {
+        if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
+            $this->markTestSkipped('$changeStream is only supported on FCV 3.6 or higher');
+        }
+
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Changestream Example 1
@@ -938,7 +942,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertNull($current);
 
         // Start Changestream Example 2
-        $cursor = $db->inventory->watch([], ['fullDocument' => \MongoDB\Operation\ChangeStreamCommand::FULL_DOCUMENT_UPDATE_LOOKUP]);
+        $cursor = $db->inventory->watch([], ['fullDocument' => \MongoDB\Operation\ChangeStream::FULL_DOCUMENT_UPDATE_LOOKUP]);
         $cursor->next();
         $current = $cursor->current();
         // End Changestream Example 2

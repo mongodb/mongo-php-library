@@ -46,10 +46,6 @@ class FindOneAndUpdateTest extends TestCase
     {
         $options = [];
 
-        foreach ($this->getInvalidArrayValues() as $value) {
-            $options[][] = ['arrayFilters' => $value];
-        }
-
         foreach ($this->getInvalidDocumentValues() as $value) {
             $options[][] = ['projection' => $value];
         }

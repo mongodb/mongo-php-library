@@ -116,8 +116,11 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 );
 
             case 'bulkWrite':
-                $operation['arguments'] = $this->prepareBulkWriteArguments($operation['arguments']);
-                return $this->collection->bulkWrite(array_diff_key($operation['arguments'], ['options' => 1]), $operation['arguments']['options']);
+                $results = $this->prepareBulkWriteArguments($operation['arguments']);
+                return $this->collection->bulkWrite(
+                    array_diff_key($results, ['options' => 1]),
+                    $results['options']
+                );
 
             case 'count':
             case 'find':
@@ -375,42 +378,28 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
         $operations = [];
         $operations['options'] = $arguments['options'];
         foreach ($arguments['requests'] as $requests) {
-            if (isset($requests['arguments']['arrayFilters'])) {
-                if (isset($requests['arguments']['options'])) {
-                    array_push($requests['arguments']['options'], ['arrayFilters' => $requests['arguments']['arrayFilters']]);
-                } else {
-                    $options = ['arrayFilters' => $requests['arguments']['arrayFilters']];
-                }
-            }
             $innerArray = [];
             switch ($requests['name']) {
                 case 'deleteMany':
                 case 'deleteOne':
-                    $innerArray = [$requests['arguments']['filter']];
-                    if (isset($requests['arguments']['options'])) {
-                         array_push($innerArray, $requests['arguments']['options']);
-                    }
+                    $options = array_diff_key($requests['arguments'], ['filter' => 1]);
+                    $innerArray = [$requests['arguments']['filter'], $options];
+                break;
                 case 'insertOne':
                     $innerArray = [$requests['arguments']['document']];
+                    break;
                 case 'replaceOne':
-                    $innerArray = [$requests['arguments']['filter'], $requests['arguments']['replacement']];
-                     if (isset($requests['arguments']['options'])) {
-                         array_push($innerArray, $requests['arguments']['options']);
-                    }
+                    $options = array_diff_key($requests['arguments'], ['filter' => 1, 'replacement' => 1]);
+                    $innerArray = [$requests['arguments']['filter'], $requests['arguments']['replacement'], $options];
+                break;
                 case 'updateMany':
                 case 'updateOne':
-                    if (isset($options)) {
-                        if (isset($requests['arguments']['options'])) {
-                            array_push($requests['arguments']['options'], $options);
-                        } else {
-                            $requests['arguments']['options'] = $options;
-                        }
-                    }
-                    $innerArray = [$requests['arguments']['filter'], $requests['arguments']['update'], $requests['arguments']['options']];
-           }
+                    $options = array_diff_key($requests['arguments'], ['filter' => 1, 'update' => 1]);
+                    $innerArray = [$requests['arguments']['filter'], $requests['arguments']['update'], $options];
+                break;
+            }
             $operations[] = [$requests['name'] => $innerArray];
         }
-
         return $operations;
     }
 

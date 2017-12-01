@@ -295,7 +295,7 @@ class BulkWriteTest extends TestCase
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateMany"\]\[2\]\["arrayFilters"\] to have type "array" but found "[\w ]+"/
-     * @dataProvider provideInvalidDocumentValues
+     * @dataProvider provideInvalidArrayValues
      */
     public function testUpdateManyArrayFiltersOptionTypeCheck($arrayFilters)
     {
@@ -388,7 +388,7 @@ class BulkWriteTest extends TestCase
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessageRegExp /Expected \$operations\[0\]\["updateOne"\]\[2\]\["arrayFilters"\] to have type "array" but found "[\w ]+"/
-     * @dataProvider provideInvalidDocumentValues
+     * @dataProvider provideInvalidArrayValues
      */
     public function testUpdateOneArrayFiltersOptionTypeCheck($arrayFilters)
     {

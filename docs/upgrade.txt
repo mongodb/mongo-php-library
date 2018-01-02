@@ -109,8 +109,7 @@ Old and New Methods
      - Not implemented.
 
    * - :php:`MongoCollection::group() <mongocollection.group>`
-     - Not yet implemented. See :issue:`PHPLIB-177`. 
-       Use :phpmethod:`MongoDB\\Database::command()`.
+     - Not implemented. Use :phpmethod:`MongoDB\\Database::command()`.
 
    * - :php:`MongoCollection::insert() <mongocollection.insert>`
      - :phpmethod:`MongoDB\\Collection::insertOne()`
@@ -156,10 +155,10 @@ also split to distinguish between :manual:`updating specific fields
 Group Command Helper
 --------------------
 
-:phpclass:`MongoDB\\Collection` does not yet have a helper method for the
-:manual:`group </reference/command/group>` command; however, it is planned in
-:issue:`PHPLIB-177`. The following example demonstrates how to execute a group
-command using the :phpmethod:`MongoDB\\Database::command()` method:
+:phpclass:`MongoDB\\Collection` does have a helper method for the
+:manual:`group </reference/command/group>` command; The following example
+demonstrates how to execute a group command using the
+:phpmethod:`MongoDB\\Database::command()` method:
 
 .. code-block:: php
 
@@ -175,28 +174,6 @@ command using the :phpmethod:`MongoDB\\Database::command()` method:
        ],
    ]);
 
-   $resultDocument = $cursor->toArray()[0];
-
-MapReduce Command Helper
-------------------------
-
-:phpclass:`MongoDB\\Collection` does not yet have a helper method for the
-:manual:`mapReduce </reference/command/mapReduce>` command; however, that is
-planned in :issue:`PHPLIB-53`. The following example demonstrates how to execute
-a mapReduce command using the :phpmethod:`MongoDB\\Database::command()` method:
-
-.. code-block:: php
-
-   <?php
-
-   $database = (new MongoDB\Client)->selectDatabase('db_name');
-   $cursor = $database->command([
-       'mapReduce' => 'collection_name',
-       'map' => new MongoDB\BSON\Javascript('...'),
-       'reduce' => new MongoDB\BSON\Javascript('...'),
-       'out' => 'output_collection_name',
-   ]);
-   
    $resultDocument = $cursor->toArray()[0];
 
 DBRef Helpers

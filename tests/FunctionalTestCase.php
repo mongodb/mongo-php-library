@@ -11,6 +11,7 @@ use MongoDB\Model\BSONDocument;
 use InvalidArgumentException;
 use stdClass;
 use Traversable;
+use UnexpectedValueException;
 
 abstract class FunctionalTestCase extends TestCase
 {
@@ -89,7 +90,17 @@ abstract class FunctionalTestCase extends TestCase
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
         $document = current($cursor->toArray());
 
-        return $document['featureCompatibilityVersion']['version'];
+        // MongoDB 3.6: featureCompatibilityVersion is an embedded document
+        if (isset($document['featureCompatibilityVersion']['version']) && is_string($document['featureCompatibilityVersion']['version'])) {
+            return $document['featureCompatibilityVersion']['version'];
+        }
+
+        // MongoDB 3.4: featureCompatibilityVersion is a string
+        if (isset($document['featureCompatibilityVersion']) && is_string($document['featureCompatibilityVersion'])) {
+            return $document['featureCompatibilityVersion'];
+        }
+
+        throw new UnexpectedValueException('Could not determine featureCompatibilityVersion');
     }
 
     protected function getPrimaryServer()
@@ -108,7 +119,11 @@ abstract class FunctionalTestCase extends TestCase
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
         $document = current($cursor->toArray());
 
-        return $document['version'];
+        if (isset($document['version']) && is_string($document['version'])) {
+            return $document['version'];
+        }
+
+        throw new UnexpectedValueException('Could not determine server version');
     }
 
     /**

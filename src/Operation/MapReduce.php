@@ -17,6 +17,7 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\BSON\Javascript;
 use MongoDB\BSON\JavascriptInterface;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\ReadConcern;

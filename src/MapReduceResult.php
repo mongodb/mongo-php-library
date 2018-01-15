@@ -77,7 +77,7 @@ class MapReduceResult implements IteratorAggregate
      * Return the mapReduce results as a Traversable.
      *
      * @see http://php.net/iteratoraggregate.getiterator
-     * @return Traversable
+     * @return \Traversable
      */
     public function getIterator()
     {

@@ -243,7 +243,7 @@ class BulkWrite implements Executable
                         $this->isArrayFiltersUsed = true;
 
                         if ( ! is_array($args[2]['arrayFilters'])) {
-                            throw InvalidArgumentException::InvalidType(sprintf('$operations[%d]["%s"][2]["arrayFilters"]', $i, $type), $args[2]['arrayFilters'], 'array');
+                            throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["arrayFilters"]', $i, $type), $args[2]['arrayFilters'], 'array');
                         }
                     }
 

@@ -41,7 +41,7 @@ class StreamWrapper
     /**
      * Return the stream's file document.
      *
-     * @return stdClass
+     * @return \stdClass
      */
     public function getFile()
     {
@@ -117,7 +117,7 @@ class StreamWrapper
      *
      * Note: this method may return a string smaller than the requested length
      * if data is not available to be read.
-     * 
+     *
      * @see http://php.net/manual/en/streamwrapper.stream-read.php
      * @param integer $length Number of bytes to read
      * @return string

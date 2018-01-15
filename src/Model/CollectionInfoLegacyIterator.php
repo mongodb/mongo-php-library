@@ -80,11 +80,7 @@ class CollectionInfoLegacyIterator extends FilterIterator implements CollectionI
          * the database name and a dot. Reject values that omit this prefix or
          * are empty beyond it.
          */
-        if ($firstDot === false || $firstDot + 1 == strlen($info['name'])) {
-            return false;
-        }
-
-        return true;
+        return $firstDot !== false || $firstDot + 1 !== strlen($info['name']);
     }
 
     /**

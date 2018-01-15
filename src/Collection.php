@@ -992,10 +992,6 @@ class Collection
 
         $out = (array) $out;
 
-        if (key($out) === 'inline') {
-            return true;
-        }
-
-        return false;
+        return key($out) === 'inline';
     }
 }

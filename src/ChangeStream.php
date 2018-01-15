@@ -66,7 +66,7 @@ class ChangeStream implements Iterator
     }
 
     /**
-     * @return MongoDB\Driver\CursorId
+     * @return \MongoDB\Driver\CursorId
      */
     public function getCursorId()
     {
@@ -143,8 +143,8 @@ class ChangeStream implements Iterator
         if ($document === null) {
             throw new ResumeTokenException("Cannot extract a resumeToken from an empty document");
         }
-        if ($document instanceof Serializable) {
-            return $this->extractResumeToken($document->bsonSerialize());
+        if ($document instanceof \Serializable) {
+            $this->extractResumeToken($document->bsonSerialize());
         }
         if (isset($document->_id)) {
             $this->resumeToken = is_array($document) ? $document['_id'] : $document->_id;

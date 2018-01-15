@@ -165,7 +165,7 @@ class ChangeStream implements Executable
     /**
      * Create the aggregate pipeline with the changeStream command.
      *
-     * @return Command
+     * @return \MongoDB\Driver\Command
      */
     private function createCommand()
     {

@@ -48,7 +48,7 @@ class WritableStream
      *
      *  * _id (mixed): File document identifier. Defaults to a new ObjectId.
      *
-     *  * aliases (array of strings): DEPRECATED An array of aliases. 
+     *  * aliases (array of strings): DEPRECATED An array of aliases.
      *    Applications wishing to store aliases should add an aliases field to
      *    the metadata document instead.
      *
@@ -141,7 +141,7 @@ class WritableStream
     /**
      * Return the stream's file document.
      *
-     * @return stdClass
+     * @return \stdClass
      */
     public function getFile()
     {

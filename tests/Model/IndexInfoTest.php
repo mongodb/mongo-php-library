@@ -80,7 +80,7 @@ class IndexInfoTest extends TestCase
         $this->assertFalse($info->isSparse());
         $this->assertTrue($info->isTtl());
         $this->assertFalse($info->isUnique());
-        $this->assertTrue(isset($info['expireAfterSeconds']));
+        $this->assertArrayHasKey('expireAfterSeconds', $info);
         $this->assertSame(100, $info['expireAfterSeconds']);
     }
 
@@ -107,7 +107,7 @@ class IndexInfoTest extends TestCase
         ]);
 
         $this->assertInstanceOf('ArrayAccess', $info);
-        $this->assertTrue(isset($info['name']));
+        $this->assertArrayHasKey('name', $info);
         $this->assertSame('x_1', $info['name']);
     }
 

@@ -143,7 +143,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
 
         $changeStreamResult = $this->collection->watch();
 
-        $this->assertSame(null, $changeStreamResult->key());
+        $this->assertNull($changeStreamResult->key());
 
         $result = $this->collection->insertOne(['x' => 1]);
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
@@ -153,15 +153,15 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $changeStreamResult->key());
 
         $changeStreamResult->next();
-        $this->assertSame(null, $changeStreamResult->key());
+        $this->assertNull($changeStreamResult->key());
         $changeStreamResult->next();
-        $this->assertSame(null, $changeStreamResult->key());
+        $this->assertNull($changeStreamResult->key());
 
         $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
 
         $changeStreamResult->next();
-        $this->assertSame(null, $changeStreamResult->key());
+        $this->assertNull($changeStreamResult->key());
 
         $result = $this->collection->insertOne(['x' => 2]);
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);

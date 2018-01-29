@@ -19,6 +19,7 @@ namespace MongoDB\GridFS;
 
 use MongoDB\BSON\UTCDateTime;
 use Exception;
+use stdClass;
 
 /**
  * Stream wrapper for reading and writing a GridFS file.
@@ -41,7 +42,7 @@ class StreamWrapper
     /**
      * Return the stream's file document.
      *
-     * @return \stdClass
+     * @return stdClass
      */
     public function getFile()
     {

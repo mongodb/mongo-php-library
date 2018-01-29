@@ -18,6 +18,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\ChangeStream as ChangeStreamResult;
+use MongoDB\Driver\Command;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -165,7 +166,7 @@ class ChangeStream implements Executable
     /**
      * Create the aggregate pipeline with the changeStream command.
      *
-     * @return \MongoDB\Driver\Command
+     * @return Command
      */
     private function createCommand()
     {

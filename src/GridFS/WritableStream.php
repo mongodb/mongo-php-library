@@ -22,6 +22,7 @@ use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
+use stdClass;
 
 /**
  * WritableStream abstracts the process of writing a GridFS file.
@@ -141,7 +142,7 @@ class WritableStream
     /**
      * Return the stream's file document.
      *
-     * @return \stdClass
+     * @return stdClass
      */
     public function getFile()
     {

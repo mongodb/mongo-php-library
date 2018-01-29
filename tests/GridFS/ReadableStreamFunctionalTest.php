@@ -177,4 +177,16 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
 
         $stream->readBytes(-1);
     }
+
+    /**
+     * @expectedException MongoDB\Exception\InvalidArgumentException
+     * @expectedExceptionMessage $offset must be >= 0 and <= 10; given: 11
+     */
+    public function testSeekOutOfRange()
+    {
+        $fileDocument = $this->collectionWrapper->findFileById('length-10');
+        $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
+
+        $stream->seek(11);
+    }
 }

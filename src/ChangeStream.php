@@ -17,6 +17,7 @@
 
 namespace MongoDB;
 
+use MongoDB\BSON\Serializable;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Driver\Exception\RuntimeException;
@@ -143,8 +144,9 @@ class ChangeStream implements Iterator
         if ($document === null) {
             throw new ResumeTokenException("Cannot extract a resumeToken from an empty document");
         }
-        if ($document instanceof \Serializable) {
+        if ($document instanceof Serializable) {
             $this->extractResumeToken($document->bsonSerialize());
+            return;
         }
         if (isset($document->_id)) {
             $this->resumeToken = is_array($document) ? $document['_id'] : $document->_id;

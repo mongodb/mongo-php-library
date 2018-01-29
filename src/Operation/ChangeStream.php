@@ -18,6 +18,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\ChangeStream as ChangeStreamResult;
+use MongoDB\Driver\Command;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;

@@ -18,6 +18,7 @@
 namespace MongoDB;
 
 use MongoDB\BSON\JavascriptInterface;
+use MongoDB\BSON\Serializable;
 use MongoDB\ChangeStream as ChangeStreamResult;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
@@ -830,7 +831,7 @@ class Collection
      */
     public function mapReduce(JavascriptInterface $map, JavascriptInterface $reduce, $out, array $options = [])
     {
-        $hasOutputCollection = ! $this->isOutInline($out);
+        $hasOutputCollection = ! $this->isMapReduceOutputInline($out);
 
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
@@ -984,18 +985,37 @@ class Collection
         return new Collection($this->manager, $this->databaseName, $this->collectionName, $options);
     }
 
-    private function isOutInline($out)
+    /**
+     * Return whether the "out" option for a mapReduce operation is "inline".
+     *
+     * This is used to determine if a mapReduce command requires a primary.
+     *
+     * @see https://docs.mongodb.com/manual/reference/command/mapReduce/#output-inline
+     * @param string|array|object $out Output specification
+     * @return boolean
+     * @throws InvalidArgumentException
+     */
+    private function isMapReduceOutputInline($out)
     {
         if ( ! is_array($out) && ! is_object($out)) {
             return false;
         }
 
-        $out = (array) $out;
-
-        if (key($out) === 'inline') {
-            return true;
+        if ($out instanceof Serializable) {
+            $out = $out->bsonSerialize();
         }
 
-        return false;
+        if (is_object($out)) {
+            $out = get_object_vars($out);
+        }
+
+        if ( ! is_array($out)) {
+            throw InvalidArgumentException::invalidType('$out', $out, 'array or object');
+        }
+
+        reset($out);
+        $firstKey = (string) key($out);
+
+        return $firstKey === 'inline';
     }
 }

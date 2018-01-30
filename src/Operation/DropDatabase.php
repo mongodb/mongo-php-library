@@ -89,7 +89,8 @@ class DropDatabase implements Executable
             throw UnsupportedException::writeConcernNotSupported();
         }
 
-        $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
+        $command = new Command(['dropDatabase' => 1]);
+        $cursor = $server->executeWriteCommand($this->databaseName, $command, $this->createOptions());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
@@ -99,18 +100,19 @@ class DropDatabase implements Executable
     }
 
     /**
-     * Create the dropDatabase command.
+     * Create options for executing the command.
      *
-     * @return Command
+     * @see http://php.net/manual/en/mongodb-driver-server.executewritecommand.php
+     * @return array
      */
-    private function createCommand()
+    private function createOptions()
     {
-        $cmd = ['dropDatabase' => 1];
+        $options = [];
 
         if (isset($this->options['writeConcern'])) {
-            $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
+            $options['writeConcern'] = $this->options['writeConcern'];
         }
 
-        return new Command($cmd);
+        return $options;
     }
 }

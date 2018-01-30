@@ -144,6 +144,23 @@ class CreateIndexes implements Executable
     }
 
     /**
+     * Create options for executing the command.
+     *
+     * @see http://php.net/manual/en/mongodb-driver-server.executewritecommand.php
+     * @return array
+     */
+    private function createOptions()
+    {
+        $options = [];
+
+        if (isset($this->options['writeConcern'])) {
+            $options['writeConcern'] = $this->options['writeConcern'];
+        }
+
+        return $options;
+    }
+
+    /**
      * Create one or more indexes for the collection using the createIndexes
      * command.
      *
@@ -161,11 +178,7 @@ class CreateIndexes implements Executable
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
         }
 
-        if (isset($this->options['writeConcern'])) {
-            $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
-        }
-
-        $server->executeCommand($this->databaseName, new Command($cmd));
+        $server->executeWriteCommand($this->databaseName, new Command($cmd), $this->createOptions());
     }
 
     /**

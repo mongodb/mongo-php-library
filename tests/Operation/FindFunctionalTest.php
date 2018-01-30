@@ -163,6 +163,7 @@ class FindFunctionalTest extends FunctionalTestCase
         $startTime = microtime(true);
         $it->next();
         $this->assertGreaterThanOrEqual($maxAwaitTimeMS * 0.001, microtime(true) - $startTime);
+        $this->assertLessThan(0.5, microtime(true) - $startTime);
     }
 
     /**

@@ -111,7 +111,7 @@ function is_first_key_operator($document)
 /**
  * Return whether the aggregation pipeline ends with an $out operator.
  *
- * This is used for determining whether the aggregation pipeline msut be
+ * This is used for determining whether the aggregation pipeline must be
  * executed against a primary server.
  *
  * @internal

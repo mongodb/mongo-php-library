@@ -33,13 +33,6 @@ matrix:
       addons: *common_addons
     - php: 7.0
       env:
-        - SERVER_VERSION=2.4
-      addons:
-        apt:
-          sources: [ mongodb-upstart ]
-          packages: [ mongodb-10gen, *common_packages ]
-    - php: 7.0
-      env:
         - SERVER_VERSION=2.6
       addons:
         apt:

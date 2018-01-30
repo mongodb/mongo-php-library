@@ -91,7 +91,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $commandResult = current($cursor->toArray());
 
         $this->assertCommandSucceeded($commandResult);
-        $this->assertTrue(isset($commandResult->ismaster));
+        $this->assertObjectHasAttribute('ismaster', $commandResult);
         $this->assertTrue($commandResult->ismaster);
     }
 
@@ -110,7 +110,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 
         $this->assertCommandSucceeded($commandResult);
         $this->assertInternalType('array', $commandResult);
-        $this->assertTrue(isset($commandResult['ismaster']));
+        $this->assertArrayHasKey('ismaster', $commandResult);
         $this->assertTrue($commandResult['ismaster']);
     }
 

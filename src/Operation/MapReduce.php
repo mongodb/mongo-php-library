@@ -88,8 +88,7 @@ class MapReduce implements Executable
      *    modifies the output.
      *
      *  * jsMode (boolean): Specifies whether to convert intermediate data into
-     *    BSON format between the execution of the map and reduce functions. The
-     *    default is false.
+     *    BSON format between the execution of the map and reduce functions.
      *
      *  * limit (integer): Specifies a maximum number of documents for the input
      *    into the map function.
@@ -143,7 +142,6 @@ class MapReduce implements Executable
         }
 
         $options += [
-            'jsMode' => false,
             'verbose' => true,
         ];
 

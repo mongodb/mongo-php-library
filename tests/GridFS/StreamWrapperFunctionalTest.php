@@ -179,10 +179,10 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame(0100444, $stat['mode']);
         $this->assertSame(10, $stat[7]);
         $this->assertSame(10, $stat['size']);
-        $this->assertSame(1484202200000/1000, $stat[9]);
-        $this->assertSame(1484202200000/1000, $stat['mtime']);
-        $this->assertSame(1484202200000/1000, $stat[10]);
-        $this->assertSame(1484202200000/1000, $stat['ctime']);
+        $this->assertSame(1484202200, $stat[9]);
+        $this->assertSame(1484202200, $stat['mtime']);
+        $this->assertSame(1484202200, $stat[10]);
+        $this->assertSame(1484202200, $stat['ctime']);
         $this->assertSame(4, $stat[11]);
         $this->assertSame(4, $stat['blksize']);
     }

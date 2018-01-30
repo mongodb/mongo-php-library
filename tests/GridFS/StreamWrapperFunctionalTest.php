@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\GridFS;
 
 use MongoDB\BSON\Binary;
-use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
 
 /**
@@ -157,10 +156,10 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame(0100222, $stat['mode']);
         $this->assertSame(0, $stat[7]);
         $this->assertSame(0, $stat['size']);
-        $this->assertGreaterThanOrEqual(0, $stat[9]);
-        $this->assertGreaterThanOrEqual(0, $stat['mtime']);
-        $this->assertGreaterThanOrEqual(0, $stat[10]);
-        $this->assertGreaterThanOrEqual(0, $stat['ctime']);
+        $this->assertSame(0, $stat[9]);
+        $this->assertSame(0, $stat['mtime']);
+        $this->assertSame(0, $stat[10]);
+        $this->assertSame(0, $stat['ctime']);
         $this->assertSame(1024, $stat[11]);
         $this->assertSame(1024, $stat['blksize']);
 
@@ -173,25 +172,19 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
 
     public function testWritableStreamStatAfterSaving()
     {
-        $id = new ObjectId;
-        $stream = $this->bucket->openUploadStream('filename', ['chunkSizeBytes' => 1024, '_id' => $id]);
-
-        $this->assertSame(6, fwrite($stream, 'foobar'));
-        $this->assertTrue(fclose($stream));
-        $currentTimestamp = time();
-        $stream = $this->bucket->openDownloadStream($id);
+        $stream = $this->bucket->openDownloadStream('length-10');
 
         $stat = fstat($stream);
         $this->assertSame(0100444, $stat[2]);
         $this->assertSame(0100444, $stat['mode']);
-        $this->assertSame(6, $stat[7]);
-        $this->assertSame(6, $stat['size']);
-        $this->assertGreaterThanOrEqual($currentTimestamp, $stat[9]);
-        $this->assertGreaterThanOrEqual($currentTimestamp, $stat['mtime']);
-        $this->assertGreaterThanOrEqual($currentTimestamp, $stat[10]);
-        $this->assertGreaterThanOrEqual($currentTimestamp, $stat['ctime']);
-        $this->assertSame(1024, $stat[11]);
-        $this->assertSame(1024, $stat['blksize']);
+        $this->assertSame(10, $stat[7]);
+        $this->assertSame(10, $stat['size']);
+        $this->assertSame(1484202200000/1000, $stat[9]);
+        $this->assertSame(1484202200000/1000, $stat['mtime']);
+        $this->assertSame(1484202200000/1000, $stat[10]);
+        $this->assertSame(1484202200000/1000, $stat['ctime']);
+        $this->assertSame(4, $stat[11]);
+        $this->assertSame(4, $stat['blksize']);
     }
 
     public function testWritableStreamWrite()

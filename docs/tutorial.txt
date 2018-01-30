@@ -12,3 +12,4 @@ Tutorials
    /tutorial/gridfs
    /tutorial/indexes
    /tutorial/example-data
+   /tutorial/tailable-cursor

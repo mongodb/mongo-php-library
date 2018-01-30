@@ -1,6 +1,8 @@
 source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: bypassDocumentValidation
+post: |
+  This only applies when results are output to a collection.
 ---
 source:
   file: apiargs-MongoDBCollection-common-option.yaml
@@ -55,6 +57,8 @@ source:
 source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: readPreference
+post: |
+  This option will be ignored when results are output to a collection.
 ---
 arg_name: option
 name: scope

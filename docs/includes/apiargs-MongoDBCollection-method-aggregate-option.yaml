@@ -70,6 +70,8 @@ source:
 source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: readPreference
+post: |
+  This option will be ignored when using the :ref:`$out <agg-out>` stage.
 ---
 source:
   file: apiargs-MongoDBCollection-common-option.yaml

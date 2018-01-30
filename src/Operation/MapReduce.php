@@ -107,6 +107,8 @@ class MapReduce implements Executable
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
+     *    This option is ignored if results are output to a collection.
+     *
      *  * scope (document): Specifies global variables that are accessible in
      *    the map, reduce and finalize functions.
      *

@@ -92,6 +92,8 @@ class Aggregate implements Executable
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
+     *    This option is ignored if the $out stage is specified.
+     *
      *  * typeMap (array): Type map for BSON deserialization. This will be
      *    applied to the returned Cursor (it is not sent to the server).
      *

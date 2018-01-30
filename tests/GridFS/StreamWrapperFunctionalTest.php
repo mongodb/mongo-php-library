@@ -147,9 +147,8 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame(-1, fseek($stream, 1, \SEEK_END));
     }
 
-    public function testWritableStreamStat()
+    public function testWritableStreamStatBeforeSaving()
     {
-        $currentTimestamp = time();
         $stream = $this->bucket->openUploadStream('filename', ['chunkSizeBytes' => 1024]);
 
         $stat = fstat($stream);
@@ -157,10 +156,10 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $this->assertSame(0100222, $stat['mode']);
         $this->assertSame(0, $stat[7]);
         $this->assertSame(0, $stat['size']);
-        $this->assertGreaterThanOrEqual($currentTimestamp, $stat[9]);
-        $this->assertGreaterThanOrEqual($currentTimestamp, $stat['mtime']);
-        $this->assertGreaterThanOrEqual($currentTimestamp, $stat[10]);
-        $this->assertGreaterThanOrEqual($currentTimestamp, $stat['ctime']);
+        $this->assertSame(0, $stat[9]);
+        $this->assertSame(0, $stat['mtime']);
+        $this->assertSame(0, $stat[10]);
+        $this->assertSame(0, $stat['ctime']);
         $this->assertSame(1024, $stat[11]);
         $this->assertSame(1024, $stat['blksize']);
 
@@ -169,6 +168,23 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $stat = fstat($stream);
         $this->assertSame(6, $stat[7]);
         $this->assertSame(6, $stat['size']);
+  }
+
+    public function testWritableStreamStatAfterSaving()
+    {
+        $stream = $this->bucket->openDownloadStream('length-10');
+
+        $stat = fstat($stream);
+        $this->assertSame(0100444, $stat[2]);
+        $this->assertSame(0100444, $stat['mode']);
+        $this->assertSame(10, $stat[7]);
+        $this->assertSame(10, $stat['size']);
+        $this->assertSame(1484202200, $stat[9]);
+        $this->assertSame(1484202200, $stat['mtime']);
+        $this->assertSame(1484202200, $stat[10]);
+        $this->assertSame(1484202200, $stat['ctime']);
+        $this->assertSame(4, $stat[11]);
+        $this->assertSame(4, $stat['blksize']);
     }
 
     public function testWritableStreamWrite()

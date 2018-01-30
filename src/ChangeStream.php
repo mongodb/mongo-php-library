@@ -50,10 +50,6 @@ class ChangeStream implements Iterator
         $this->resumeCallable = $resumeCallable;
         $this->csIt = new IteratorIterator($cursor);
 
-        // TO DO: remove this call to rewind after the PHP driver no longer calls next on
-        // cursor immediately after it is constructed
-        $this->csIt->rewind();
-
         $this->key = 0;
     }
 

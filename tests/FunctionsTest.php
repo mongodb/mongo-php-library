@@ -118,6 +118,24 @@ class FunctionsTest extends TestCase
     }
 
     /**
+     * @dataProvider provideMapReduceOutValues
+     */
+    public function testIsMapReduceOutputInline($out, $isInline)
+    {
+        $this->assertSame($isInline, \MongoDB\is_mapreduce_output_inline($out));
+    }
+
+    public function provideMapReduceOutValues()
+    {
+        return [
+            [ 'collectionName', false ],
+            [ ['inline' => 1], true ],
+            [ ['inline' => 0], true ], // only the key is significant
+            [ ['replace' => 'collectionName'], false ],
+        ];
+    }
+
+    /**
      * @dataProvider provideReadConcernsAndDocuments
      */
     public function testReadConcernAsDocument(ReadConcern $readConcern, $expectedDocument)

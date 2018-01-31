@@ -51,6 +51,10 @@ class FindAndModifyTest extends TestCase
             $options[][] = ['remove' => $value];
         }
 
+        foreach ($this->getInvalidSessionValues() as $value) {
+            $options[][] = ['session' => $value];
+        }
+
         foreach ($this->getInvalidDocumentValues() as $value) {
             $options[][] = ['sort' => $value];
         }

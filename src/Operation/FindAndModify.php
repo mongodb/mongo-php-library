@@ -19,6 +19,7 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
@@ -82,6 +83,10 @@ class FindAndModify implements Executable
      *  * remove (boolean): When true, removes the matched document. This option
      *    cannot be true if the update option is set. The default is false.
      *
+     *  * session (MongoDB\Driver\Session): Client session.
+     *
+     *    Sessions are not supported for server versions < 3.6.
+     *
      *  * sort (document): Determines which document the operation modifies if
      *    the query selects multiple documents.
      *
@@ -142,6 +147,10 @@ class FindAndModify implements Executable
 
         if ( ! is_bool($options['remove'])) {
             throw InvalidArgumentException::invalidType('"remove" option', $options['remove'], 'boolean');
+        }
+
+        if (isset($options['session']) && ! $options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $options['session'], 'MongoDB\Driver\Session');
         }
 
         if (isset($options['sort']) && ! is_array($options['sort']) && ! is_object($options['sort'])) {
@@ -277,6 +286,10 @@ class FindAndModify implements Executable
     private function createOptions()
     {
         $options = [];
+
+        if (isset($this->options['session'])) {
+            $options['session'] = $this->options['session'];
+        }
 
         if (isset($this->options['writeConcern'])) {
             $options['writeConcern'] = $this->options['writeConcern'];

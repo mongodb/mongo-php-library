@@ -125,6 +125,10 @@ source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: readPreference
 ---
+source:
+  file: apiargs-common-option.yaml
+  ref: session
+---
 arg_name: option
 name: max
 type: array|object

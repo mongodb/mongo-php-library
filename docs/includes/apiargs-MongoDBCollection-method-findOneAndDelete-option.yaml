@@ -15,6 +15,10 @@ source:
   ref: maxTimeMS
 ---
 source:
+  file: apiargs-common-option.yaml
+  ref: session
+---
+source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: typeMap
 post: |

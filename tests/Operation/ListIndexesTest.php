@@ -23,6 +23,10 @@ class ListIndexesTest extends TestCase
             $options[][] = ['maxTimeMS' => $value];
         }
 
+        foreach ($this->getInvalidSessionValues() as $value) {
+            $options[][] = ['session' => $value];
+        }
+
         return $options;
     }
 }

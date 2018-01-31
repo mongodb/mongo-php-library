@@ -19,6 +19,10 @@ class DropCollectionTest extends TestCase
     {
         $options = [];
 
+        foreach ($this->getInvalidSessionValues() as $value) {
+            $options[][] = ['session' => $value];
+        }
+
         foreach ($this->getInvalidArrayValues() as $value) {
             $options[][] = ['typeMap' => $value];
         }

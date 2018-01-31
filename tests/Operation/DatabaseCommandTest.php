@@ -32,6 +32,10 @@ class DatabaseCommandTest extends TestCase
             $options[][] = ['readPreference' => $value];
         }
 
+        foreach ($this->getInvalidSessionValues() as $value) {
+            $options[][] = ['session' => $value];
+        }
+
         foreach ($this->getInvalidArrayValues() as $value) {
             $options[][] = ['typeMap' => $value];
         }

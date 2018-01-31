@@ -69,6 +69,10 @@ post: |
   This option will be ignored when using the :ref:`$out <agg-out>` stage.
 ---
 source:
+  file: apiargs-common-option.yaml
+  ref: session
+---
+source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: typeMap
 ---

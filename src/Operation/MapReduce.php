@@ -22,6 +22,7 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
@@ -112,6 +113,10 @@ class MapReduce implements Executable
      *  * scope (document): Specifies global variables that are accessible in
      *    the map, reduce and finalize functions.
      *
+     *  * session (MongoDB\Driver\Session): Client session.
+     *
+     *    Sessions are not supported for server versions < 3.6.
+     *
      *  * sort (document): Sorts the input documents. This option is useful for
      *    optimization. For example, specify the sort key to be the same as the
      *    emit key so that there are fewer reduce operations. The sort key must
@@ -181,6 +186,10 @@ class MapReduce implements Executable
 
         if (isset($options['scope']) && ! is_array($options['scope']) && ! is_object($options['scope'])) {
             throw InvalidArgumentException::invalidType('"scope" option', $options['scope'], 'array or object');
+        }
+
+        if (isset($options['session']) && ! $options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $options['session'], 'MongoDB\Driver\Session');
         }
 
         if (isset($options['sort']) && ! is_array($options['sort']) && ! is_object($options['sort'])) {
@@ -345,6 +354,10 @@ class MapReduce implements Executable
 
         if ( ! $hasOutputCollection && isset($this->options['readPreference'])) {
             $options['readPreference'] = $this->options['readPreference'];
+        }
+
+        if (isset($this->options['session'])) {
+            $options['session'] = $this->options['session'];
         }
 
         if ($hasOutputCollection && isset($this->options['writeConcern'])) {

@@ -20,6 +20,7 @@ namespace MongoDB\Operation;
 use MongoDB\UpdateResult;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
@@ -72,6 +73,10 @@ class Update implements Executable
      *    This option cannot be true if the $update argument is a replacement
      *    document (i.e. contains no update operators). The default is false.
      *
+     *  * session (MongoDB\Driver\Session): Client session.
+     *
+     *    Sessions are not supported for server versions < 3.6.
+     *
      *  * upsert (boolean): When true, a new document is created if no document
      *    matches the query. The default is false.
      *
@@ -118,6 +123,10 @@ class Update implements Executable
 
         if ($options['multi'] && ! \MongoDB\is_first_key_operator($update)) {
             throw new InvalidArgumentException('"multi" option cannot be true if $update is a replacement document');
+        }
+
+        if (isset($options['session']) && ! $options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $options['session'], 'MongoDB\Driver\Session');
         }
 
         if ( ! is_bool($options['upsert'])) {
@@ -180,9 +189,29 @@ class Update implements Executable
         $bulk = new Bulk($bulkOptions);
         $bulk->update($this->filter, $this->update, $updateOptions);
 
-        $writeConcern = isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null;
-        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $writeConcern);
+        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createOptions());
 
         return new UpdateResult($writeResult);
+    }
+
+    /**
+     * Create options for executing the bulk write.
+     *
+     * @see http://php.net/manual/en/mongodb-driver-server.executebulkwrite.php
+     * @return array
+     */
+    private function createOptions()
+    {
+        $options = [];
+
+        if (isset($this->options['session'])) {
+            $options['session'] = $this->options['session'];
+        }
+
+        if (isset($this->options['writeConcern'])) {
+            $options['writeConcern'] = $this->options['writeConcern'];
+        }
+
+        return $options;
     }
 }

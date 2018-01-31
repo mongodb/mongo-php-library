@@ -100,6 +100,10 @@ class FindTest extends TestCase
             $options[][] = ['returnKey' => $value];
         }
 
+        foreach ($this->getInvalidSessionValues() as $value) {
+            $options[][] = ['session' => $value];
+        }
+
         foreach ($this->getInvalidBooleanValues() as $value) {
             $options[][] = ['showRecordId' => $value];
         }

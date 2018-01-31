@@ -3,6 +3,10 @@ source:
   ref: bypassDocumentValidation
 ---
 source:
+  file: apiargs-common-option.yaml
+  ref: session
+---
+source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: writeConcern
 ...

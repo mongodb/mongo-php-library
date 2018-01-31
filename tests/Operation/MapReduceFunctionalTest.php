@@ -129,6 +129,33 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $this->assertEmpty($result->getTiming());
     }
 
+    public function testSessionOption()
+    {
+        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
+            $this->markTestSkipped('Sessions are not supported');
+        }
+
+        $this->createFixtures(3);
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new MapReduce(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    new Javascript('function() { emit(this.x, this.y); }'),
+                    new Javascript('function(key, values) { return Array.sum(values); }'),
+                    ['inline' => 1],
+                    ['session' => $this->createSession()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectHasAttribute('lsid', $command);
+            }
+        );
+    }
+
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocuments
      */

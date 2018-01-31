@@ -78,6 +78,10 @@ class FindOne implements Executable
      *  * returnKey (boolean): If true, returns only the index keys in the
      *    resulting documents.
      *
+     *  * session (MongoDB\Driver\Session): Client session.
+     *
+     *    Sessions are not supported for server versions < 3.6.
+     *
      *  * showRecordId (boolean): Determines whether to return the record
      *    identifier for each document. If true, adds a field $recordId to the
      *    returned documents.

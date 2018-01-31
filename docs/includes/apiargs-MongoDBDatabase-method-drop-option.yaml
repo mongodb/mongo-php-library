@@ -1,4 +1,8 @@
 source:
+  file: apiargs-common-option.yaml
+  ref: session
+---
+source:
   file: apiargs-MongoDBDatabase-common-option.yaml
   ref: typeMap
 post: |

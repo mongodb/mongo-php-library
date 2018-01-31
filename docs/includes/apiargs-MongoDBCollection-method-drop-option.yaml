@@ -5,6 +5,10 @@ post: |
   This will be used for the returned command result document.
 ---
 source:
+  file: apiargs-common-option.yaml
+  ref: session
+---
+source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: writeConcern
 post: |

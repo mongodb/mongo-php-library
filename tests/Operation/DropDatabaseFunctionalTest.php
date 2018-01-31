@@ -58,6 +58,27 @@ class DropDatabaseFunctionalTest extends FunctionalTestCase
         $operation->execute($server);
     }
 
+    public function testSessionOption()
+    {
+        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
+            $this->markTestSkipped('Sessions are not supported');
+        }
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new DropDatabase(
+                    $this->getDatabaseName(),
+                    ['session' => $this->createSession()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectHasAttribute('lsid', $command);
+            }
+        );
+    }
+
     /**
      * Asserts that a database with the given name does not exist on the server.
      *

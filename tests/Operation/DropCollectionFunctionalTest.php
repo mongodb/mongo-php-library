@@ -53,6 +53,28 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
         $operation->execute($this->getPrimaryServer());
     }
 
+    public function testSessionOption()
+    {
+        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
+            $this->markTestSkipped('Sessions are not supported');
+        }
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new DropCollection(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    ['session' => $this->createSession()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectHasAttribute('lsid', $command);
+            }
+        );
+    }
+
     /**
      * Asserts that a collection with the given name does not exist on the
      * server.

@@ -84,8 +84,8 @@ class MapReduce implements Executable
      *    This is not supported for server versions < 3.4 and will result in an
      *    exception at execution time if used.
      *
-     *  * finalize (MongoDB\BSON\Javascript): Follows the reduce method and
-     *    modifies the output.
+     *  * finalize (MongoDB\BSON\JavascriptInterface): Follows the reduce method
+     *    and modifies the output.
      *
      *  * jsMode (boolean): Specifies whether to convert intermediate data into
      *    BSON format between the execution of the map and reduce functions.
@@ -155,7 +155,7 @@ class MapReduce implements Executable
             throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
         }
 
-        if (isset($options['finalize']) && ! $options['finalize'] instanceof Javascript) {
+        if (isset($options['finalize']) && ! $options['finalize'] instanceof JavascriptInterface) {
             throw InvalidArgumentException::invalidType('"finalize" option', $options['finalize'], 'MongoDB\Driver\Javascript');
         }
 

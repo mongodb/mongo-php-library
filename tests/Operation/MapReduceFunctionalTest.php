@@ -64,6 +64,21 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $operation->execute($this->getPrimaryServer());
     }
 
+    public function testFinalize()
+    {
+        $this->createFixtures(3);
+
+        $map = new Javascript('function() { emit(this.x, this.y); }');
+        $reduce = new Javascript('function(key, values) { return Array.sum(values); }');
+        $out = ['inline' => 1];
+        $finalize = new Javascript('function(key, reducedValue) { return reducedValue; }');
+
+        $operation = new MapReduce($this->getDatabaseName(), $this->getCollectionName(), $map, $reduce, $out, ['finalize' => $finalize]);
+        $result = $operation->execute($this->getPrimaryServer());
+
+        $this->assertNotNull($result);
+    }
+
     public function testResult()
     {
         $this->createFixtures(3);

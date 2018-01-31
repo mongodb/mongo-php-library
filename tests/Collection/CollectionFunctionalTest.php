@@ -201,7 +201,6 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
         $this->assertGreaterThanOrEqual(0, $result->getExecutionTimeMS());
         $this->assertNotEmpty($result->getCounts());
-        $this->assertNotEmpty($result->getTiming());
     }
 
     /**

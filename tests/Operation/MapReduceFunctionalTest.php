@@ -93,7 +93,6 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $this->assertInstanceOf('MongoDB\MapReduceResult', $result);
         $this->assertGreaterThanOrEqual(0, $result->getExecutionTimeMS());
         $this->assertNotEmpty($result->getCounts());
-        $this->assertNotEmpty($result->getTiming());
     }
 
     public function testResultDoesNotIncludeTimingWithoutVerboseOption()

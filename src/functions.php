@@ -111,7 +111,7 @@ function is_first_key_operator($document)
 /**
  * Return whether the aggregation pipeline ends with an $out operator.
  *
- * This is used for determining whether the aggregation pipeline msut be
+ * This is used for determining whether the aggregation pipeline must be
  * executed against a primary server.
  *
  * @internal
@@ -129,6 +129,40 @@ function is_last_pipeline_operator_out(array $pipeline)
     $lastOp = (array) $lastOp;
 
     return key($lastOp) === '$out';
+}
+
+/**
+ * Return whether the "out" option for a mapReduce operation is "inline".
+ *
+ * This is used to determine if a mapReduce command requires a primary.
+ *
+ * @internal
+ * @see https://docs.mongodb.com/manual/reference/command/mapReduce/#output-inline
+ * @param string|array|object $out Output specification
+ * @return boolean
+ * @throws InvalidArgumentException
+ */
+function is_mapreduce_output_inline($out)
+{
+    if ( ! is_array($out) && ! is_object($out)) {
+        return false;
+    }
+
+    if ($out instanceof Serializable) {
+        $out = $out->bsonSerialize();
+    }
+
+    if (is_object($out)) {
+        $out = get_object_vars($out);
+    }
+
+    if ( ! is_array($out)) {
+        throw InvalidArgumentException::invalidType('$out', $out, 'array or object');
+    }
+
+    reset($out);
+
+    return key($out) === 'inline';
 }
 
 /**

@@ -142,9 +142,7 @@ class Count implements Executable
             throw UnsupportedException::readConcernNotSupported();
         }
 
-        $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
-
-        $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $readPreference);
+        $cursor = $server->executeReadCommand($this->databaseName, $this->createCommand(), $this->createOptions());
         $result = current($cursor->toArray());
 
         // Older server versions may return a float
@@ -182,10 +180,27 @@ class Count implements Executable
             }
         }
 
+        return new Command($cmd);
+    }
+
+    /**
+     * Create options for executing the command.
+     *
+     * @see http://php.net/manual/en/mongodb-driver-server.executereadcommand.php
+     * @return array
+     */
+    private function createOptions()
+    {
+        $options = [];
+
         if (isset($this->options['readConcern'])) {
-            $cmd['readConcern'] = \MongoDB\read_concern_as_document($this->options['readConcern']);
+            $options['readConcern'] = $this->options['readConcern'];
         }
 
-        return new Command($cmd);
+        if (isset($this->options['readPreference'])) {
+            $options['readPreference'] = $this->options['readPreference'];
+        }
+
+        return $options;
     }
 }

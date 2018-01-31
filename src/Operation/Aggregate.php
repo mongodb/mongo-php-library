@@ -92,6 +92,8 @@ class Aggregate implements Executable
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
+     *    This option is ignored if the $out stage is specified.
+     *
      *  * typeMap (array): Type map for BSON deserialization. This will be
      *    applied to the returned Cursor (it is not sent to the server).
      *
@@ -231,11 +233,15 @@ class Aggregate implements Executable
             throw UnsupportedException::writeConcernNotSupported();
         }
 
+        $hasOutStage = \MongoDB\is_last_pipeline_operator_out($this->pipeline);
         $isCursorSupported = \MongoDB\server_supports_feature($server, self::$wireVersionForCursor);
-        $readPreference = isset($this->options['readPreference']) ? $this->options['readPreference'] : null;
 
         $command = $this->createCommand($server, $isCursorSupported);
-        $cursor = $server->executeCommand($this->databaseName, $command, $readPreference);
+        $options = $this->createOptions($hasOutStage);
+
+        $cursor = $hasOutStage
+            ? $server->executeReadWriteCommand($this->databaseName, $command, $options)
+            : $server->executeReadCommand($this->databaseName, $command, $options);
 
         if ($isCursorSupported && $this->options['useCursor']) {
             if (isset($this->options['typeMap'])) {
@@ -297,14 +303,6 @@ class Aggregate implements Executable
             $cmd['hint'] = is_array($this->options['hint']) ? (object) $this->options['hint'] : $this->options['hint'];
         }
 
-        if (isset($this->options['readConcern'])) {
-            $cmd['readConcern'] = \MongoDB\read_concern_as_document($this->options['readConcern']);
-        }
-
-        if (isset($this->options['writeConcern'])) {
-            $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
-        }
-
         if ($this->options['useCursor']) {
             $cmd['cursor'] = isset($this->options["batchSize"])
                 ? ['batchSize' => $this->options["batchSize"]]
@@ -312,5 +310,32 @@ class Aggregate implements Executable
         }
 
         return new Command($cmd);
+    }
+
+    /**
+     * Create options for executing the command.
+     *
+     * @see http://php.net/manual/en/mongodb-driver-server.executereadcommand.php
+     * @see http://php.net/manual/en/mongodb-driver-server.executereadwritecommand.php
+     * @param boolean $hasOutStage
+     * @return array
+     */
+    private function createOptions($hasOutStage)
+    {
+        $options = [];
+
+        if (isset($this->options['readConcern'])) {
+            $options['readConcern'] = $this->options['readConcern'];
+        }
+
+        if ( ! $hasOutStage && isset($this->options['readPreference'])) {
+            $options['readPreference'] = $this->options['readPreference'];
+        }
+
+        if ($hasOutStage && isset($this->options['writeConcern'])) {
+            $options['writeConcern'] = $this->options['writeConcern'];
+        }
+
+        return $options;
     }
 }

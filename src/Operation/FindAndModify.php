@@ -201,7 +201,7 @@ class FindAndModify implements Executable
             throw UnsupportedException::writeConcernNotSupported();
         }
 
-        $cursor = $server->executeCommand($this->databaseName, $this->createCommand($server));
+        $cursor = $server->executeReadWriteCommand($this->databaseName, $this->createCommand($server), $this->createOptions());
         $result = current($cursor->toArray());
 
         if ( ! isset($result->value)) {
@@ -265,10 +265,23 @@ class FindAndModify implements Executable
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 
+        return new Command($cmd);
+    }
+
+    /**
+     * Create options for executing the command.
+     *
+     * @see http://php.net/manual/en/mongodb-driver-server.executereadwritecommand.php
+     * @return array
+     */
+    private function createOptions()
+    {
+        $options = [];
+
         if (isset($this->options['writeConcern'])) {
-            $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
+            $options['writeConcern'] = $this->options['writeConcern'];
         }
 
-        return new Command($cmd);
+        return $options;
     }
 }

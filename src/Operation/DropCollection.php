@@ -93,8 +93,10 @@ class DropCollection implements Executable
             throw UnsupportedException::writeConcernNotSupported();
         }
 
+        $command = new Command(['drop' => $this->collectionName]);
+
         try {
-            $cursor = $server->executeCommand($this->databaseName, $this->createCommand());
+            $cursor = $server->executeWriteCommand($this->databaseName, $command, $this->createOptions());
         } catch (DriverRuntimeException $e) {
             /* The server may return an error if the collection does not exist.
              * Check for an error message (unfortunately, there isn't a code)
@@ -115,18 +117,19 @@ class DropCollection implements Executable
     }
 
     /**
-     * Create the drop command.
+     * Create options for executing the command.
      *
-     * @return Command
+     * @see http://php.net/manual/en/mongodb-driver-server.executewritecommand.php
+     * @return array
      */
-    private function createCommand()
+    private function createOptions()
     {
-        $cmd = ['drop' => $this->collectionName];
+        $options = [];
 
         if (isset($this->options['writeConcern'])) {
-            $cmd['writeConcern'] = \MongoDB\write_concern_as_document($this->options['writeConcern']);
+            $options['writeConcern'] = $this->options['writeConcern'];
         }
 
-        return new Command($cmd);
+        return $options;
     }
 }

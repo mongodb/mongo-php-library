@@ -925,7 +925,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertInventoryCount(0);
     }
 
-    public function testChangeStreamExample_1_3()
+    public function testChangeStreamExample_1_4()
     {
         if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
             $this->markTestSkipped('$changeStream is only supported on FCV 3.6 or higher');
@@ -981,6 +981,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
             'documentKey' => (object) ['_id' => $insertedId]
         ];
         $this->assertEquals($cursor->current(), $expectedChange);
+
+        // Start Changestream Example 4
+        $pipeline = [['$match' => ['$or' => [['fullDocument.username' => 'alice'], ['operationType' => 'delete']]]]];
+        $cursor = $db->inventory->watch($pipeline, []);
+        $cursor->next();
+        // End Changestream Example 4
     }
 
     /**

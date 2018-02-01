@@ -17,7 +17,7 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\ChangeStream as ChangeStreamResult;
+use MongoDB\ChangeStream;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
@@ -35,7 +35,7 @@ use MongoDB\Exception\UnsupportedException;
  * @see \MongoDB\Collection::changeStream()
  * @see http://docs.mongodb.org/manual/reference/command/changeStream/
  */
-class ChangeStream implements Executable
+class Watch implements Executable
 {
     const FULL_DOCUMENT_DEFAULT = 'default';
     const FULL_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
@@ -131,7 +131,7 @@ class ChangeStream implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return ChangeStreamResult
+     * @return ChangeStream
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if collation, read concern, or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -142,7 +142,7 @@ class ChangeStream implements Executable
 
         $cursor = $command->execute($server);
 
-        return new ChangeStreamResult($cursor, $this->createResumeCallable());
+        return new ChangeStream($cursor, $this->createResumeCallable());
     }
 
     private function createAggregateOptions()

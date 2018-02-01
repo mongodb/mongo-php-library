@@ -19,7 +19,7 @@ namespace MongoDB;
 
 use MongoDB\BSON\JavascriptInterface;
 use MongoDB\BSON\Serializable;
-use MongoDB\ChangeStream as ChangeStreamResult;
+use MongoDB\ChangeStream;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
@@ -32,7 +32,6 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\BulkWrite;
-use MongoDB\Operation\ChangeStream;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\DeleteMany;
@@ -52,6 +51,7 @@ use MongoDB\Operation\MapReduce;
 use MongoDB\Operation\ReplaceOne;
 use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
+use MongoDB\Operation\Watch;
 use Traversable;
 
 class Collection
@@ -939,14 +939,14 @@ class Collection
         return $operation->execute($server);
     }
 
-    /*
-     * ChangeStream outline
+    /**
+     * Create a change stream for watching changes to the collection.
      *
-     * @see ChangeStream::__construct() for supported options
-     * @param array          $pipeline       List of pipeline operations
-     * @param array          $options        Command options
+     * @see Watch::__construct() for supported options
+     * @param array $pipeline List of pipeline operations
+     * @param array $options  Command options
+     * @return ChangeStream
      * @throws InvalidArgumentException for parameter/option parsing errors
-     * @return ChangeStreamResult
      */
     public function watch(array $pipeline = [], array $options = [])
     {
@@ -960,7 +960,7 @@ class Collection
             $options['readConcern'] = $this->readConcern;
         }
 
-        $operation = new ChangeStream($this->databaseName, $this->collectionName, $pipeline, $options, $this->manager);
+        $operation = new Watch($this->databaseName, $this->collectionName, $pipeline, $options, $this->manager);
 
         return $operation->execute($server);
     }

@@ -938,7 +938,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertNull($current);
 
         // Start Changestream Example 2
-        $cursor = $db->inventory->watch([], ['fullDocument' => \MongoDB\Operation\ChangeStream::FULL_DOCUMENT_UPDATE_LOOKUP]);
+        $cursor = $db->inventory->watch([], ['fullDocument' => \MongoDB\Operation\Watch::FULL_DOCUMENT_UPDATE_LOOKUP]);
         $cursor->next();
         $current = $cursor->current();
         // End Changestream Example 2

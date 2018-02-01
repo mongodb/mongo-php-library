@@ -6,7 +6,7 @@ use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Operation\DatabaseCommand;
 
-class ChangeStreamFunctionalTest extends FunctionalTestCase
+class WatchFunctionalTest extends FunctionalTestCase
 {
     public function setUp()
     {
@@ -37,7 +37,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
                             '_id' => $changeStreamResult->current()->_id,
                             'operationType' => 'insert',
                             'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 2],
-                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'ChangeStreamFunctionalTest.e68b9f01'],
+                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.e68b9f01'],
                             'documentKey' => (object) ['_id' => $result->getInsertedId()]
                         ]);
         $this->assertEquals($changeStreamResult->current(), $expectedResult);
@@ -54,7 +54,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
                             '_id' => $changeStreamResult->current()->_id,
                             'operationType' => 'insert',
                             'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 3],
-                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'ChangeStreamFunctionalTest.e68b9f01'],
+                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.e68b9f01'],
                             'documentKey' => (object) ['_id' => $result->getInsertedId()]
                         ]);
         $this->assertEquals($changeStreamResult->current(), $expectedResult);
@@ -81,7 +81,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
                             '_id' => $changeStreamResult->current()->_id,
                             'operationType' => 'insert',
                             'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 2],
-                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'ChangeStreamFunctionalTest.4a554985'],
+                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.4a554985'],
                             'documentKey' => (object) ['_id' => $result->getInsertedId()]
                         ]);
         $this->assertEquals($changeStreamResult->current(), $expectedResult);
@@ -101,7 +101,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
                             '_id' => $changeStreamResult->current()->_id,
                             'operationType' => 'insert',
                             'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 3],
-                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'ChangeStreamFunctionalTest.4a554985'],
+                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.4a554985'],
                             'documentKey' => (object) ['_id' => $result->getInsertedId()]
                         ]);
         $this->assertEquals($changeStreamResult->current(), $expectedResult);
@@ -232,7 +232,7 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
                             '_id' => $changeStreamResult->current()->_id,
                             'operationType' => 'insert',
                             'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 1],
-                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'ChangeStreamFunctionalTest.226d95f1'],
+                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.226d95f1'],
                             'documentKey' => (object) ['_id' => $result->getInsertedId()]
                         ]);
         $this->assertEquals($changeStreamResult->current(), $expectedResult);

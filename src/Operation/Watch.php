@@ -91,7 +91,7 @@ class Watch implements Executable
      * @param Manager        $manager        Manager instance from the driver
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($databaseName, $collectionName, array $pipeline, array $options = [], Manager $manager)
+    public function __construct(Manager $manager, $databaseName, $collectionName, array $pipeline, array $options = [])
     {
         if (isset($options['batchSize']) && ! is_integer($options['batchSize'])) {
             throw InvalidArgumentException::invalidType('"batchSize" option', $options['batchSize'], 'integer');
@@ -119,11 +119,11 @@ class Watch implements Executable
             }
         }
 
+        $this->manager = $manager;
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->pipeline = $pipeline;
         $this->options = $options;
-        $this->manager = $manager;
     }
 
     /**

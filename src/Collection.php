@@ -960,7 +960,7 @@ class Collection
             $options['readConcern'] = $this->readConcern;
         }
 
-        $operation = new Watch($this->databaseName, $this->collectionName, $pipeline, $options, $this->manager);
+        $operation = new Watch($this->manager, $this->databaseName, $this->collectionName, $pipeline, $options);
 
         return $operation->execute($server);
     }

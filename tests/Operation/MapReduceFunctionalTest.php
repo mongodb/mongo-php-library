@@ -95,6 +95,23 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $this->assertNotEmpty($result->getCounts());
     }
 
+    public function testResultIncludesTimingWithVerboseOption()
+    {
+        $this->createFixtures(3);
+
+        $map = new Javascript('function() { emit(this.x, this.y); }');
+        $reduce = new Javascript('function(key, values) { return Array.sum(values); }');
+        $out = ['inline' => 1];
+
+        $operation = new MapReduce($this->getDatabaseName(), $this->getCollectionName(), $map, $reduce, $out, ['verbose' => true]);
+        $result = $operation->execute($this->getPrimaryServer());
+
+        $this->assertInstanceOf('MongoDB\MapReduceResult', $result);
+        $this->assertGreaterThanOrEqual(0, $result->getExecutionTimeMS());
+        $this->assertNotEmpty($result->getCounts());
+        $this->assertNotEmpty($result->getTiming());
+    }
+
     public function testResultDoesNotIncludeTimingWithoutVerboseOption()
     {
         $this->createFixtures(3);

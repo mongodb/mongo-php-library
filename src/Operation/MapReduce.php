@@ -121,7 +121,7 @@ class MapReduce implements Executable
      *    applied to the returned Cursor (it is not sent to the server).
      *
      *  * verbose (boolean): Specifies whether to include the timing information
-     *    in the result information. The default is true.
+     *    in the result information.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern. This only
      *    applies when results are output to a collection.
@@ -142,10 +142,6 @@ class MapReduce implements Executable
         if ( ! is_string($out) && ! is_array($out) && ! is_object($out)) {
             throw InvalidArgumentException::invalidType('$out', $out, 'string or array or object');
         }
-
-        $options += [
-            'verbose' => true,
-        ];
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');

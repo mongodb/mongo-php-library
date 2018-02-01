@@ -18,6 +18,10 @@ description: |
 
   - ``MongoDB\Operation\ChangeStream::FULL_DOCUMENT_DEFAULT`` (*default*)
   - ``MongoDB\Operation\ChangeStream::FULL_DOCUMENT_UPDATE_LOOKUP``
+
+  .. note::
+
+     This is an option of the `$changeStream` pipeline stage.
 interface: phpmethod
 operation: ~
 optional: true
@@ -45,7 +49,9 @@ type: array|object
 description: |
   Specifies the logical starting point for the new change stream.
 
-  Note this is an option of the '$changeStream' pipeline stage.
+  .. note::
+
+     This is an option of the `$changeStream` pipeline stage.
 interface: phpmethod
 operation: ~
 optional: true

@@ -32,8 +32,8 @@ use MongoDB\Exception\UnsupportedException;
  * Operation for creating a change stream with the aggregate command.
  *
  * @api
- * @see \MongoDB\Collection::changeStream()
- * @see http://docs.mongodb.org/manual/reference/command/changeStream/
+ * @see \MongoDB\Collection::watch()
+ * @see https://docs.mongodb.com/manual/changeStreams/
  */
 class Watch implements Executable
 {
@@ -47,7 +47,7 @@ class Watch implements Executable
     private $manager;
 
     /**
-     * Constructs a changeStream command.
+     * Constructs an aggregate command for creating a change stream.
      *
      * Supported options:
      *

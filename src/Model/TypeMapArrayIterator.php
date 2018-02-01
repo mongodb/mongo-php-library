@@ -18,6 +18,7 @@
 namespace MongoDB\Model;
 
 use ArrayIterator;
+use MongoDB\Exception\BadMethodCallException;
 
 /**
  * Iterator for applying a type map to documents in inline command results.
@@ -46,6 +47,16 @@ class TypeMapArrayIterator extends ArrayIterator
         $this->typeMap = $typeMap;
     }
 
+    public function append($value)
+    {
+        throw BadMethodCallException::classIsImmutable(__CLASS__);
+    }
+
+    public function asort()
+    {
+        throw BadMethodCallException::classIsImmutable(__CLASS__);
+    }
+
     /**
      * Return the current element with the type map applied to it.
      *
@@ -55,5 +66,51 @@ class TypeMapArrayIterator extends ArrayIterator
     public function current()
     {
         return \MongoDB\apply_type_map_to_document(parent::current(), $this->typeMap);
+    }
+
+    public function ksort()
+    {
+        throw BadMethodCallException::classIsImmutable(__CLASS__);
+    }
+
+    public function natcasesort()
+    {
+        throw BadMethodCallException::classIsImmutable(__CLASS__);
+    }
+
+    public function natsort()
+    {
+        throw BadMethodCallException::classIsImmutable(__CLASS__);
+    }
+
+    /**
+     * Return the value from the provided offset with the type map applied.
+     *
+     * @see http://php.net/arrayiterator.offsetget
+     * @return array|object
+     */
+    public function offsetGet($offset)
+    {
+        return \MongoDB\apply_type_map_to_document(parent::offsetGet($offset), $this->typeMap);
+    }
+
+    public function offsetSet($index, $newval)
+    {
+        throw BadMethodCallException::classIsImmutable(__CLASS__);
+    }
+
+    public function offsetUnset($index)
+    {
+        throw BadMethodCallException::classIsImmutable(__CLASS__);
+    }
+
+    public function uasort($cmp_function)
+    {
+        throw BadMethodCallException::classIsImmutable(__CLASS__);
+    }
+
+    public function uksort($cmp_function)
+    {
+        throw BadMethodCallException::classIsImmutable(__CLASS__);
     }
 }

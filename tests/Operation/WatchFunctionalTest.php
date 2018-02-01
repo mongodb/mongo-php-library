@@ -24,40 +24,40 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
         $this->assertSame(1, $result->getInsertedCount());
 
-        $changeStreamResult = $this->collection->watch();
-        $changeStreamResult->rewind();
-        $this->assertNull($changeStreamResult->current());
+        $changeStream = $this->collection->watch();
+        $changeStream->rewind();
+        $this->assertNull($changeStream->current());
 
         $result = $this->collection->insertOne(['x' => 2]);
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
         $this->assertSame(1, $result->getInsertedCount());
 
-        $changeStreamResult->next();
+        $changeStream->next();
         $expectedResult = (object) ([
-                            '_id' => $changeStreamResult->current()->_id,
+                            '_id' => $changeStream->current()->_id,
                             'operationType' => 'insert',
                             'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 2],
                             'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.e68b9f01'],
                             'documentKey' => (object) ['_id' => $result->getInsertedId()]
                         ]);
-        $this->assertEquals($changeStreamResult->current(), $expectedResult);
+        $this->assertEquals($changeStream->current(), $expectedResult);
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getCursorId()]]);
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
 
         $result = $this->collection->insertOne(['x' => 3]);
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
         $this->assertSame(1, $result->getInsertedCount());
 
-        $changeStreamResult->next();
+        $changeStream->next();
         $expectedResult = (object) ([
-                            '_id' => $changeStreamResult->current()->_id,
+                            '_id' => $changeStream->current()->_id,
                             'operationType' => 'insert',
                             'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 3],
                             'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.e68b9f01'],
                             'documentKey' => (object) ['_id' => $result->getInsertedId()]
                         ]);
-        $this->assertEquals($changeStreamResult->current(), $expectedResult);
+        $this->assertEquals($changeStream->current(), $expectedResult);
    }
 
     public function testNoChangeAfterResumeBeforeInsert()
@@ -68,107 +68,107 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
         $this->assertSame(1, $result->getInsertedCount());
 
-        $changeStreamResult = $this->collection->watch();
-        $changeStreamResult->rewind();
-        $this->assertNull($changeStreamResult->current());
+        $changeStream = $this->collection->watch();
+        $changeStream->rewind();
+        $this->assertNull($changeStream->current());
 
         $result = $this->collection->insertOne(['x' => 2]);
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
         $this->assertSame(1, $result->getInsertedCount());
 
-        $changeStreamResult->next();
+        $changeStream->next();
         $expectedResult = (object) ([
-                            '_id' => $changeStreamResult->current()->_id,
+                            '_id' => $changeStream->current()->_id,
                             'operationType' => 'insert',
                             'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 2],
                             'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.4a554985'],
                             'documentKey' => (object) ['_id' => $result->getInsertedId()]
                         ]);
-        $this->assertEquals($changeStreamResult->current(), $expectedResult);
+        $this->assertEquals($changeStream->current(), $expectedResult);
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getCursorId()]]);
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
 
-        $changeStreamResult->next();
-        $this->assertNull($changeStreamResult->current());
+        $changeStream->next();
+        $this->assertNull($changeStream->current());
 
         $result = $this->collection->insertOne(['x' => 3]);
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
         $this->assertSame(1, $result->getInsertedCount());
 
-        $changeStreamResult->next();
+        $changeStream->next();
         $expectedResult = (object) ([
-                            '_id' => $changeStreamResult->current()->_id,
+                            '_id' => $changeStream->current()->_id,
                             'operationType' => 'insert',
                             'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 3],
                             'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.4a554985'],
                             'documentKey' => (object) ['_id' => $result->getInsertedId()]
                         ]);
-        $this->assertEquals($changeStreamResult->current(), $expectedResult);
+        $this->assertEquals($changeStream->current(), $expectedResult);
     }
 
     public function testResumeAfterKillThenNoOperations()
     {
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
-        $changeStreamResult = $this->collection->watch();
+        $changeStream = $this->collection->watch();
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getCursorId()]]);
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
 
-        $changeStreamResult->next();
-        $this->assertNull($changeStreamResult->current());
+        $changeStream->next();
+        $this->assertNull($changeStream->current());
     }
 
     public function testResumeAfterKillThenOperation()
     {
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
-        $changeStreamResult = $this->collection->watch();
+        $changeStream = $this->collection->watch();
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getCursorId()]]);
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
 
         $result = $this->collection->insertOne(['x' => 3]);
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
         $this->assertSame(1, $result->getInsertedCount());
 
-        $changeStreamResult->next();
-        $this->assertNull($changeStreamResult->current());
+        $changeStream->next();
+        $this->assertNull($changeStream->current());
     }
 
     public function testKey()
     {
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
-        $changeStreamResult = $this->collection->watch();
+        $changeStream = $this->collection->watch();
 
-        $this->assertNull($changeStreamResult->key());
+        $this->assertNull($changeStream->key());
 
         $result = $this->collection->insertOne(['x' => 1]);
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
         $this->assertSame(1, $result->getInsertedCount());
 
-        $changeStreamResult->next();
-        $this->assertSame(1, $changeStreamResult->key());
+        $changeStream->next();
+        $this->assertSame(1, $changeStream->key());
 
-        $changeStreamResult->next();
-        $this->assertNull($changeStreamResult->key());
-        $changeStreamResult->next();
-        $this->assertNull($changeStreamResult->key());
+        $changeStream->next();
+        $this->assertNull($changeStream->key());
+        $changeStream->next();
+        $this->assertNull($changeStream->key());
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStreamResult->getCursorId()]]);
+        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
 
-        $changeStreamResult->next();
-        $this->assertNull($changeStreamResult->key());
+        $changeStream->next();
+        $this->assertNull($changeStream->key());
 
         $result = $this->collection->insertOne(['x' => 2]);
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
         $this->assertSame(1, $result->getInsertedCount());
 
-        $changeStreamResult->next();
-        $this->assertSame(2, $changeStreamResult->key());
+        $changeStream->next();
+        $this->assertSame(2, $changeStream->key());
     }
 
     public function testNonEmptyPipeline()
@@ -176,26 +176,26 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
         $pipeline = [['$project' => ['foo' => [0]]]];
-        $changeStreamResult = $this->collection->watch($pipeline, []);
+        $changeStream = $this->collection->watch($pipeline, []);
 
         $result = $this->collection->insertOne(['x' => 1]);
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
         $this->assertSame(1, $result->getInsertedCount());
 
-        $changeStreamResult->next();
+        $changeStream->next();
         $expectedResult = (object) ([
-                            '_id' => $changeStreamResult->current()->_id,
+                            '_id' => $changeStream->current()->_id,
                             'foo' => [0]
                         ]);
-        $this->assertEquals($changeStreamResult->current(), $expectedResult);
+        $this->assertEquals($changeStream->current(), $expectedResult);
     }
 
     public function testCursorWithEmptyBatchNotClosed()
     {
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
-        $changeStreamResult = $this->collection->watch();
-        $this->assertNotNull($changeStreamResult);
+        $changeStream = $this->collection->watch();
+        $this->assertNotNull($changeStream);
     }
 
     /**
@@ -206,13 +206,13 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
         $pipeline =  [['$project' => ['_id' => 0 ]]];
-        $changeStreamResult = $this->collection->watch($pipeline, []);
+        $changeStream = $this->collection->watch($pipeline, []);
 
         $result = $this->collection->insertOne(['x' => 1]);
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
         $this->assertSame(1, $result->getInsertedCount());
 
-        $changeStreamResult->next();
+        $changeStream->next();
     }
 
     public function testConnectionException()
@@ -220,22 +220,22 @@ class WatchFunctionalTest extends FunctionalTestCase
         $client = new Client($this->getUri(), ['socketTimeoutMS' => 1005], []);
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
 
-        $changeStreamResult = $collection->watch();
-        $changeStreamResult->next();
+        $changeStream = $collection->watch();
+        $changeStream->next();
 
         $result = $collection->insertOne(['x' => 1]);
         $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
         $this->assertSame(1, $result->getInsertedCount());
 
-        $changeStreamResult->next();
+        $changeStream->next();
         $expectedResult = (object) ([
-                            '_id' => $changeStreamResult->current()->_id,
+                            '_id' => $changeStream->current()->_id,
                             'operationType' => 'insert',
                             'fullDocument' => (object) ['_id' => $result->getInsertedId(), 'x' => 1],
                             'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.226d95f1'],
                             'documentKey' => (object) ['_id' => $result->getInsertedId()]
                         ]);
-        $this->assertEquals($changeStreamResult->current(), $expectedResult);
+        $this->assertEquals($changeStream->current(), $expectedResult);
     }
 
     public function testMaxAwaitTimeMS()
@@ -245,7 +245,7 @@ class WatchFunctionalTest extends FunctionalTestCase
          * change stream on the server so we'll use a higher maxAwaitTimeMS to
          * ensure we see the write. */
         $maxAwaitTimeMS = 100;
-        $changeStreamResult = $this->collection->watch([], ['maxAwaitTimeMS' => $maxAwaitTimeMS]);
+        $changeStream = $this->collection->watch([], ['maxAwaitTimeMS' => $maxAwaitTimeMS]);
 
         /* The initial change stream is empty so we should expect a delay when
          * we call rewind, since it issues a getMore. Expect to wait at least
@@ -253,22 +253,22 @@ class WatchFunctionalTest extends FunctionalTestCase
          * the server's query thread. Also ensure we don't wait too long (server
          * default is one second). */
         $startTime = microtime(true);
-        $changeStreamResult->rewind();
+        $changeStream->rewind();
         $duration = microtime(true) - $startTime;
         $this->assertGreaterThanOrEqual($maxAwaitTimeMS * 0.001, $duration);
         $this->assertLessThan(0.5, $duration);
 
-        $this->assertFalse($changeStreamResult->valid());
+        $this->assertFalse($changeStream->valid());
 
         /* Advancing again on a change stream will issue a getMore, so we should
          * expect a delay again. */
         $startTime = microtime(true);
-        $changeStreamResult->next();
+        $changeStream->next();
         $duration = microtime(true) - $startTime;
         $this->assertGreaterThanOrEqual($maxAwaitTimeMS * 0.001, $duration);
         $this->assertLessThan(0.5, $duration);
 
-        $this->assertFalse($changeStreamResult->valid());
+        $this->assertFalse($changeStream->valid());
 
         /* After inserting a document, the change stream will not issue a
          * getMore so we should not expect a delay. */
@@ -277,9 +277,9 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $result->getInsertedCount());
 
         $startTime = microtime(true);
-        $changeStreamResult->next();
+        $changeStream->next();
         $duration = microtime(true) - $startTime;
         $this->assertLessThan($maxAwaitTimeMS * 0.001, $duration);
-        $this->assertTrue($changeStreamResult->valid());
+        $this->assertTrue($changeStream->valid());
     }
 }

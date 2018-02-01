@@ -33,7 +33,6 @@ use MongoDB\Exception\UnsupportedException;
 class FindOne implements Executable
 {
     private $find;
-    private $options;
 
     /**
      * Constructs a find command for finding a single document.
@@ -105,8 +104,6 @@ class FindOne implements Executable
             $filter,
             ['limit' => 1] + $options
         );
-
-        $this->options = $options;
     }
 
     /**

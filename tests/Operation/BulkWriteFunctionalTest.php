@@ -1,8 +1,9 @@
 <?php
 
-namespace MongoDB\Tests\Collection;
+namespace MongoDB\Tests\Operation;
 
 use MongoDB\BulkWriteResult;
+use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\BSONDocument;
@@ -10,12 +11,14 @@ use MongoDB\Operation\BulkWrite;
 
 class BulkWriteFunctionalTest extends FunctionalTestCase
 {
+    private $collection;
     private $omitModifiedCount;
 
     public function setUp()
     {
         parent::setUp();
 
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
         $this->omitModifiedCount = version_compare($this->getServerVersion(), '2.6.0', '<');
     }
 

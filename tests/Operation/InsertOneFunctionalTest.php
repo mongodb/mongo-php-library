@@ -1,7 +1,8 @@
 <?php
 
-namespace MongoDB\Tests\Collection;
+namespace MongoDB\Tests\Operation;
 
+use MongoDB\Collection;
 use MongoDB\InsertOneResult;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\BSONDocument;
@@ -9,6 +10,15 @@ use MongoDB\Operation\InsertOne;
 
 class InsertOneFunctionalTest extends FunctionalTestCase
 {
+    private $collection;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+    }
+
     /**
      * @dataProvider provideDocumentWithExistingId
      */

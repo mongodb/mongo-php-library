@@ -1,14 +1,24 @@
 <?php
 
-namespace MongoDB\Tests\Collection;
+namespace MongoDB\Tests\Operation;
 
 use MongoDB\DeleteResult;
+use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\Delete;
 
 class DeleteFunctionalTest extends FunctionalTestCase
 {
+    private $collection;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+    }
+
     public function testDeleteOne()
     {
         $this->createFixtures(3);

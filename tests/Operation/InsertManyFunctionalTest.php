@@ -1,7 +1,8 @@
 <?php
 
-namespace MongoDB\Tests\Collection;
+namespace MongoDB\Tests\Operation;
 
+use MongoDB\Collection;
 use MongoDB\InsertManyResult;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\BSONDocument;
@@ -9,6 +10,15 @@ use MongoDB\Operation\InsertMany;
 
 class InsertManyFunctionalTest extends FunctionalTestCase
 {
+    private $collection;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+    }
+
     public function testInsertMany()
     {
         $documents = [

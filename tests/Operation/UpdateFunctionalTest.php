@@ -1,7 +1,8 @@
 <?php
 
-namespace MongoDB\Tests\Collection;
+namespace MongoDB\Tests\Operation;
 
+use MongoDB\Collection;
 use MongoDB\UpdateResult;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
@@ -9,12 +10,14 @@ use MongoDB\Operation\Update;
 
 class UpdateFunctionalTest extends FunctionalTestCase
 {
+    private $collection;
     private $omitModifiedCount;
 
     public function setUp()
     {
         parent::setUp();
 
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
         $this->omitModifiedCount = version_compare($this->getServerVersion(), '2.6.0', '<');
     }
 

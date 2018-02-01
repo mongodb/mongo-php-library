@@ -956,7 +956,14 @@ class Collection
 
         $server = $this->manager->selectServer($options['readPreference']);
 
-        if ( ! isset($options['readConcern'])) {
+        /* Although change streams require a newer version of the server than
+         * read concerns, perform the usual wire version check before inheriting
+         * the collection's read concern. In the event that the server is too
+         * old, this makes it more likely that users will encounter an error
+         * related to change streams being unsupported instead of an
+         * UnsupportedException regarding use of the "readConcern" option from
+         * the Aggregate operation class. */
+        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
             $options['readConcern'] = $this->readConcern;
         }
 

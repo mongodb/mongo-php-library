@@ -1,8 +1,9 @@
 <?php
 
-namespace MongoDB\Tests;
+namespace MongoDB\Tests\Model;
 
 use MongoDB\Model\TypeMapArrayIterator;
+use MongoDB\Tests\TestCase;
 
 class TypeMapArrayIteratorTest extends TestCase
 {

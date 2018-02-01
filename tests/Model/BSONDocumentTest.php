@@ -1,9 +1,10 @@
 <?php
 
-namespace MongoDB\Tests;
+namespace MongoDB\Tests\Model;
 
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
+use MongoDB\Tests\TestCase;
 use ArrayObject;
 
 class BSONDocumentTest extends TestCase

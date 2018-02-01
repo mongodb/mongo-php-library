@@ -147,7 +147,7 @@ class ChangeStream implements Executable
 
     private function createAggregateOptions()
     {
-        $aggOptions = array_intersect_key($this->options, ['batchSize' => 1, 'collation' => 1]);
+        $aggOptions = array_intersect_key($this->options, ['batchSize' => 1, 'collation' => 1, 'maxAwaitTimeMS' => 1]);
         if ( ! $aggOptions) {
             return [];
         }
@@ -174,6 +174,7 @@ class ChangeStream implements Executable
         array_unshift($this->pipeline, $changeStreamArray);
 
         $cmd = new Aggregate($this->databaseName, $this->collectionName, $this->pipeline, $this->createAggregateOptions());
+
         return $cmd;
     }
 

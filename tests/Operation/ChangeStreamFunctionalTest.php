@@ -237,4 +237,49 @@ class ChangeStreamFunctionalTest extends FunctionalTestCase
                         ]);
         $this->assertEquals($changeStreamResult->current(), $expectedResult);
     }
+
+    public function testMaxAwaitTimeMS()
+    {
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+        /* On average, an acknowledged write takes about 20 ms to appear in a
+         * change stream on the server so we'll use a higher maxAwaitTimeMS to
+         * ensure we see the write. */
+        $maxAwaitTimeMS = 100;
+        $changeStreamResult = $this->collection->watch([], ['maxAwaitTimeMS' => $maxAwaitTimeMS]);
+
+        /* The initial change stream is empty so we should expect a delay when
+         * we call rewind, since it issues a getMore. Expect to wait at least
+         * maxAwaitTimeMS, since no new documents should be inserted to wake up
+         * the server's query thread. Also ensure we don't wait too long (server
+         * default is one second). */
+        $startTime = microtime(true);
+        $changeStreamResult->rewind();
+        $duration = microtime(true) - $startTime;
+        $this->assertGreaterThanOrEqual($maxAwaitTimeMS * 0.001, $duration);
+        $this->assertLessThan(0.5, $duration);
+
+        $this->assertFalse($changeStreamResult->valid());
+
+        /* Advancing again on a change stream will issue a getMore, so we should
+         * expect a delay again. */
+        $startTime = microtime(true);
+        $changeStreamResult->next();
+        $duration = microtime(true) - $startTime;
+        $this->assertGreaterThanOrEqual($maxAwaitTimeMS * 0.001, $duration);
+        $this->assertLessThan(0.5, $duration);
+
+        $this->assertFalse($changeStreamResult->valid());
+
+        /* After inserting a document, the change stream will not issue a
+         * getMore so we should not expect a delay. */
+        $result = $this->collection->insertOne(['_id' => 1]);
+        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertSame(1, $result->getInsertedCount());
+
+        $startTime = microtime(true);
+        $changeStreamResult->next();
+        $duration = microtime(true) - $startTime;
+        $this->assertLessThan($maxAwaitTimeMS * 0.001, $duration);
+        $this->assertTrue($changeStreamResult->valid());
+    }
 }

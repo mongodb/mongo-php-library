@@ -148,18 +148,45 @@ class FindFunctionalTest extends FunctionalTestCase
         // Insert documents into the capped collection.
         $bulkWrite = new BulkWrite(['ordered' => true]);
         $bulkWrite->insert(['_id' => 1]);
+        $bulkWrite->insert(['_id' => 2]);
         $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
 
         $operation = new Find($databaseName, $cappedCollectionName, [], ['cursorType' => Find::TAILABLE_AWAIT, 'maxAwaitTimeMS' => $maxAwaitTimeMS]);
         $cursor = $operation->execute($this->getPrimaryServer());
         $it = new \IteratorIterator($cursor);
 
-        // Make sure we await results for no more than the maxAwaitTimeMS.
+        /* The initial query includes the one and only document in its result
+         * batch, so we should not expect a delay. */
+        $startTime = microtime(true);
         $it->rewind();
-        $it->next();
+        $duration = microtime(true) - $startTime;
+        $this->assertLessThan($maxAwaitTimeMS * 0.001, $duration);
+
+        $this->assertTrue($it->valid());
+        $this->assertSameDocument(['_id' => 1], $it->current());
+
+        /* Advancing again takes us to the last document of the result batch,
+         * but still should not issue a getMore */
         $startTime = microtime(true);
         $it->next();
-        $this->assertGreaterThanOrEqual($maxAwaitTimeMS * 0.001, microtime(true) - $startTime);
+        $duration = microtime(true) - $startTime;
+        $this->assertLessThan($maxAwaitTimeMS * 0.001, $duration);
+
+        $this->assertTrue($it->valid());
+        $this->assertSameDocument(['_id' => 2], $it->current());
+
+        /* Now that we've reached the end of the initial result batch, advancing
+         * again will issue a getMore. Expect to wait at least maxAwaitTimeMS,
+         * since no new documents should be inserted to wake up the server's
+         * query thread. Also ensure we don't wait too long (server default is
+         * one second). */
+        $startTime = microtime(true);
+        $it->next();
+        $duration = microtime(true) - $startTime;
+        $this->assertGreaterThanOrEqual($maxAwaitTimeMS * 0.001, $duration);
+        $this->assertLessThan(0.5, $duration);
+
+        $this->assertFalse($it->valid());
     }
 
     /**

@@ -177,7 +177,6 @@ using :php:`IteratorIterator <iteratoriterator>`.
 
       $iterator->next();
    }
-}
 
 Much like the ``foreach`` example, this version on the consumer script will
 start by quickly printing all results in the capped collection; however, it will

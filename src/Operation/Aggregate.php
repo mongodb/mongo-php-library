@@ -163,6 +163,10 @@ class Aggregate implements Executable
             throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], 'string or array or object');
         }
 
+        if (isset($options['maxAwaitTimeMS']) && ! is_integer($options['maxAwaitTimeMS'])) {
+            throw InvalidArgumentException::invalidType('"maxAwaitTimeMS" option', $options['maxAwaitTimeMS'], 'integer');
+        }
+
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
@@ -277,6 +281,7 @@ class Aggregate implements Executable
             'aggregate' => $this->collectionName,
             'pipeline' => $this->pipeline,
         ];
+        $cmdOptions = [];
 
         // Servers < 2.6 do not support any command options
         if ( ! $isCursorSupported) {
@@ -303,13 +308,17 @@ class Aggregate implements Executable
             $cmd['hint'] = is_array($this->options['hint']) ? (object) $this->options['hint'] : $this->options['hint'];
         }
 
+        if (isset($this->options['maxAwaitTimeMS'])) {
+            $cmdOptions['maxAwaitTimeMS'] = $this->options['maxAwaitTimeMS'];
+        }
+
         if ($this->options['useCursor']) {
             $cmd['cursor'] = isset($this->options["batchSize"])
                 ? ['batchSize' => $this->options["batchSize"]]
                 : new stdClass;
         }
 
-        return new Command($cmd);
+        return new Command($cmd, $cmdOptions);
     }
 
     /**

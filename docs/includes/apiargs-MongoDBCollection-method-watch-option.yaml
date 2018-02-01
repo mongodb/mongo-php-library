@@ -1,6 +1,13 @@
-source:
-  file: apiargs-MongoDBCollection-method-aggregate-option.yaml
-  ref: batchSize
+---
+arg_name: option
+name: batchSize
+type: integer
+description: |
+  Specifies the maximum number of change events to return in each batch of the
+  response from the MongoDB cluster.
+interface: phpmethod
+operation: ~
+optional: true
 ---
 source:
   file: apiargs-MongoDBCollection-common-option.yaml

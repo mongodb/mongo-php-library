@@ -3,10 +3,15 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Client;
+use MongoDB\Driver\Manager;
+use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\Watch;
+use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 class WatchFunctionalTest extends FunctionalTestCase
 {
@@ -59,6 +64,62 @@ class WatchFunctionalTest extends FunctionalTestCase
                             'documentKey' => (object) ['_id' => 3]
                         ]);
         $this->assertEquals($expectedResult, $changeStream->current());
+    }
+
+    /**
+     * @todo test that rewind() also resumes once PHPLIB-322 is implemented
+     */
+    public function testNextResumesAfterConnectionException()
+    {
+        /* In order to trigger a dropped connection, we'll use a new client with
+         * a socket timeout that is less than the change stream's maxAwaitTimeMS
+         * option. */
+        $manager = new Manager($this->getUri(), ['socketTimeoutMS' => 50]);
+        $primaryServer = $manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        $operation = new Watch($manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
+        $changeStream = $operation->execute($primaryServer);
+
+        /* Note: we intentionally do not start iteration with rewind() to ensure
+         * that we test resume functionality within next(). */
+
+        $commands = [];
+
+        try {
+            (new CommandObserver)->observe(
+                function() use ($changeStream) {
+                    $changeStream->next();
+                },
+                function(stdClass $command) use (&$commands) {
+                    $commands[] = key((array) $command);
+                }
+            );
+            $this->fail('ConnectionTimeoutException was not thrown');
+        } catch (ConnectionTimeoutException $e) {}
+
+        $expectedCommands = [
+            /* The initial aggregate command for change streams returns a cursor
+             * envelope with an empty initial batch, since there are no changes
+             * to report at the moment the change stream is created. Therefore,
+             * we expect a getMore to be issued when we first advance the change
+             * stream (with either rewind() or next()). */
+            'getMore',
+            /* Since socketTimeoutMS is less than maxAwaitTimeMS, the previous
+             * getMore command encounters a client socket timeout and leaves the
+             * cursor open on the server. ChangeStream should catch this error
+             * and resume by issuing a new aggregate command. */
+            'aggregate',
+            /* When ChangeStream resumes, it overwrites its original cursor with
+             * the new cursor resulting from the last aggregate command. This
+             * removes the last reference to the old cursor, which causes the
+             * driver to kill it (via mongoc_cursor_destroy()). */
+            'killCursors',
+            /* Finally, ChangeStream will rewind the new cursor as the last step
+             * of the resume process. This results in one last getMore. */
+            'getMore',
+        ];
+
+        $this->assertSame($expectedCommands, $commands);
     }
 
     public function testNoChangeAfterResumeBeforeInsert()
@@ -195,27 +256,6 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['x' => 1]);
 
         $changeStream->next();
-    }
-
-    public function testConnectionException()
-    {
-        $client = new Client($this->getUri(), ['socketTimeoutMS' => 1005], []);
-        $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
-
-        $changeStream = $collection->watch();
-        $changeStream->next();
-
-        $this->insertDocument(['_id' => 1, 'x' => 'foo']);
-
-        $changeStream->next();
-        $expectedResult = (object) ([
-                            '_id' => $changeStream->current()->_id,
-                            'operationType' => 'insert',
-                            'fullDocument' => (object) ['_id' => 1, 'x' => 'foo'],
-                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.226d95f1'],
-                            'documentKey' => (object) ['_id' => 1]
-                        ]);
-        $this->assertEquals($changeStream->current(), $expectedResult);
     }
 
     public function testMaxAwaitTimeMS()

@@ -51,14 +51,15 @@ class Watch implements Executable
      *
      * Supported options:
      *
-     *  * fullDocument (string): Allowed values: ‘default’, ‘updateLookup’.
-     *    Defaults to ‘default’.  When set to ‘updateLookup’, the change
-     *    notification for partial updates will include both a delta describing
-     *    the changes to the document, as well as a copy of the entire document
-     *    that was changed from some time after the change occurred. For forward
-     *    compatibility, a driver MUST NOT raise an error when a user provides
-     *    an unknown value. The driver relies on the server to validate this
-     *    option.
+     *  * fullDocument (string): Determines whether the "fullDocument" field
+     *    will be populated for update operations. By default, change streams
+     *    only return the delta of fields during the update operation (via the
+     *    "updateDescription" field). To additionally return the most current
+     *    majority-committed version of the updated document, specify
+     *    "updateLookup" for this option. Defaults to "default".
+     *
+     *    Insert and replace operations always include the "fullDocument" field
+     *    and delete operations omit the field as the document no longer exists.
      *
      *  * resumeAfter (document): Specifies the logical starting point for the
      *    new change stream.
@@ -69,7 +70,9 @@ class Watch implements Executable
      *    This is not supported for server versions < 3.2 and will result in an
      *    exception at execution time if used.
      *
-     *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
+     *  * readPreference (MongoDB\Driver\ReadPreference): Read preference. This
+     *    will be used to select a new server when resuming. Defaults to a
+     *    "primary" read preference.
      *
      *  * maxAwaitTimeMS (integer): The maximum amount of time for the server to
      *    wait on new documents to satisfy a change stream query.
@@ -93,6 +96,11 @@ class Watch implements Executable
      */
     public function __construct(Manager $manager, $databaseName, $collectionName, array $pipeline, array $options = [])
     {
+        $options += [
+            'fullDocument' => self::FULL_DOCUMENT_DEFAULT,
+            'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
+        ];
+
         if (isset($options['batchSize']) && ! is_integer($options['batchSize'])) {
             throw InvalidArgumentException::invalidType('"batchSize" option', $options['batchSize'], 'integer');
         }

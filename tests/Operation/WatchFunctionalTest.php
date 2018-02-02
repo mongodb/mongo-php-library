@@ -33,7 +33,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $this->insertDocument(['_id' => 1, 'x' => 'foo']);
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), []);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $changeStream->rewind();
@@ -130,7 +130,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $this->insertDocument(['_id' => 1, 'x' => 'foo']);
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), []);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $changeStream->rewind();
@@ -172,7 +172,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testResumeAfterKillThenNoOperations()
     {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), []);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->killChangeStreamCursor($changeStream);
@@ -183,7 +183,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testResumeAfterKillThenOperation()
     {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), []);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->killChangeStreamCursor($changeStream);
@@ -196,7 +196,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testKey()
     {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), []);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->assertNull($changeStream->key());
@@ -226,7 +226,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $pipeline = [['$project' => ['foo' => [0]]]];
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->insertDocument(['_id' => 1]);
@@ -243,7 +243,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testCursorWithEmptyBatchNotClosed()
     {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), []);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->assertNotNull($changeStream);
@@ -256,7 +256,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->insertDocument(['x' => 1]);

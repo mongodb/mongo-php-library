@@ -933,65 +933,93 @@ class DocumentationExamplesTest extends FunctionalTestCase
         }
 
         $db = new Database($this->manager, $this->getDatabaseName());
+        $db->dropCollection('inventory');
 
         // Start Changestream Example 1
         $changeStream = $db->inventory->watch();
+        $changeStream->rewind();
+
+        $firstChange = $changeStream->current();
+
         $changeStream->next();
-        $document = $changeStream->current();
+
+        $secondChange = $changeStream->current();
         // End Changestream Example 1
 
-        $this->assertNull($document);
+        $this->assertNull($firstChange);
+        $this->assertNull($secondChange);
 
         // Start Changestream Example 2
         $changeStream = $db->inventory->watch([], ['fullDocument' => \MongoDB\Operation\Watch::FULL_DOCUMENT_UPDATE_LOOKUP]);
+        $changeStream->rewind();
+
+        $firstChange = $changeStream->current();
+
         $changeStream->next();
-        $document = $changeStream->current();
+
+        $nextChange = $changeStream->current();
         // End Changestream Example 2
 
-        $this->assertNull($document);
+        $this->assertNull($firstChange);
+        $this->assertNull($nextChange);
 
-        $insertedResult = $db->inventory->insertOne(['x' => 1]);
-        $insertedId = $insertedResult->getInsertedId();
+        $insertManyResult = $db->inventory->insertMany([
+            ['_id' => 1, 'x' => 'foo'],
+            ['_id' => 2, 'x' => 'bar'],
+        ]);
+        $this->assertEquals(2, $insertManyResult->getInsertedCount());
+
         $changeStream->next();
-        $document = $changeStream->current();
+        $this->assertTrue($changeStream->valid());
+        $lastChange = $changeStream->current();
 
         $expectedChange = [
-            '_id' => $document->_id,
+            '_id' => $lastChange->_id,
             'operationType' => 'insert',
-            'fullDocument' => ['_id' => $insertedId, 'x' => 1],
+            'fullDocument' => ['_id' => 1, 'x' => 'foo'],
             'ns' => ['db' => $this->getDatabaseName(), 'coll' => 'inventory'],
-            'documentKey' => ['_id' => $insertedId],
+            'documentKey' => ['_id' => 1],
         ];
 
-        $this->assertSameDocument($expectedChange, $document);
+        $this->assertSameDocument($expectedChange, $lastChange);
 
         // Start Changestream Example 3
-        $resumeToken = ($document !== null) ? $document->_id : null;
-        if ($resumeToken !== null) {
-            $changeStream = $db->inventory->watch([], ['resumeAfter' => $resumeToken]);
-            $changeStream->next();
+        $resumeToken = ($lastChange !== null) ? $lastChange->_id : null;
+
+        if ($resumeToken === null) {
+            throw new \Exception('resumeToken was not found');
         }
+
+        $changeStream = $db->inventory->watch([], ['resumeAfter' => $resumeToken]);
+        $changeStream->rewind();
+
+        $nextChange = $changeStream->current();
         // End Changestream Example 3
 
-        $insertedResult = $db->inventory->insertOne(['x' => 2]);
-        $insertedId = $insertedResult->getInsertedId();
-        $changeStream->next();
-
         $expectedChange = [
-            '_id' => $changeStream->current()->_id,
+            '_id' => $nextChange->_id,
             'operationType' => 'insert',
-            'fullDocument' => ['_id' => $insertedId, 'x' => 2],
+            'fullDocument' => ['_id' => 2, 'x' => 'bar'],
             'ns' => ['db' => $this->getDatabaseName(), 'coll' => 'inventory'],
-            'documentKey' => ['_id' => $insertedId],
+            'documentKey' => ['_id' => 2],
         ];
 
-        $this->assertSameDocument($expectedChange, $changeStream->current());
+        $this->assertSameDocument($expectedChange, $nextChange);
 
         // Start Changestream Example 4
         $pipeline = [['$match' => ['$or' => [['fullDocument.username' => 'alice'], ['operationType' => 'delete']]]]];
         $changeStream = $db->inventory->watch($pipeline);
+        $changeStream->rewind();
+
+        $firstChange = $changeStream->current();
+
         $changeStream->next();
+
+        $nextChange = $changeStream->current();
         // End Changestream Example 4
+
+        $this->assertNull($firstChange);
+        $this->assertNull($nextChange);
     }
 
     /**

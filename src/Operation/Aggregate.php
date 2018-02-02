@@ -41,7 +41,6 @@ use Traversable;
 class Aggregate implements Executable
 {
     private static $wireVersionForCollation = 5;
-    private static $wireVersionForCursor = 2;
     private static $wireVersionForDocumentLevelValidation = 4;
     private static $wireVersionForReadConcern = 4;
     private static $wireVersionForWriteConcern = 5;
@@ -99,9 +98,6 @@ class Aggregate implements Executable
      *
      *  * useCursor (boolean): Indicates whether the command will request that
      *    the server provide results using a cursor. The default is true.
-     *
-     *    For servers < 2.6, this option is ignored as aggregation cursors are
-     *    not available.
      *
      *    For servers >= 2.6, this option allows users to turn off cursors if
      *    necessary to aid in mongod/mongos upgrades.
@@ -238,16 +234,15 @@ class Aggregate implements Executable
         }
 
         $hasOutStage = \MongoDB\is_last_pipeline_operator_out($this->pipeline);
-        $isCursorSupported = \MongoDB\server_supports_feature($server, self::$wireVersionForCursor);
 
-        $command = $this->createCommand($server, $isCursorSupported);
+        $command = $this->createCommand($server);
         $options = $this->createOptions($hasOutStage);
 
         $cursor = $hasOutStage
             ? $server->executeReadWriteCommand($this->databaseName, $command, $options)
             : $server->executeReadCommand($this->databaseName, $command, $options);
 
-        if ($isCursorSupported && $this->options['useCursor']) {
+        if ($this->options['useCursor']) {
             if (isset($this->options['typeMap'])) {
                 $cursor->setTypeMap($this->options['typeMap']);
             }
@@ -272,21 +267,15 @@ class Aggregate implements Executable
      * Create the aggregate command.
      *
      * @param Server  $server
-     * @param boolean $isCursorSupported
      * @return Command
      */
-    private function createCommand(Server $server, $isCursorSupported)
+    private function createCommand(Server $server)
     {
         $cmd = [
             'aggregate' => $this->collectionName,
             'pipeline' => $this->pipeline,
         ];
         $cmdOptions = [];
-
-        // Servers < 2.6 do not support any command options
-        if ( ! $isCursorSupported) {
-            return new Command($cmd);
-        }
 
         $cmd['allowDiskUse'] = $this->options['allowDiskUse'];
 

@@ -954,14 +954,16 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $insertedId = $insertedResult->getInsertedId();
         $cursor->next();
         $current = $cursor->current();
-        $expectedChange = (object) [
+
+        $expectedChange = [
             '_id' => $current->_id,
             'operationType' => 'insert',
-            'fullDocument' => (object) ['_id' => $insertedId, 'x' => 1],
-            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'inventory'],
-            'documentKey' => (object) ['_id' => $insertedId]
+            'fullDocument' => ['_id' => $insertedId, 'x' => 1],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => 'inventory'],
+            'documentKey' => ['_id' => $insertedId],
         ];
-        $this->assertEquals($expectedChange, $current);
+
+        $this->assertSameDocument($expectedChange, $current);
 
         // Start Changestream Example 3
         $resumeToken = ($current !== null) ? $current->_id : null;
@@ -974,14 +976,16 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $insertedResult = $db->inventory->insertOne(['x' => 2]);
         $insertedId = $insertedResult->getInsertedId();
         $cursor->next();
-        $expectedChange = (object) [
+
+        $expectedChange = [
             '_id' => $cursor->current()->_id,
             'operationType' => 'insert',
-            'fullDocument' => (object) ['_id' => $insertedId, 'x' => 2],
-            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'inventory'],
-            'documentKey' => (object) ['_id' => $insertedId]
+            'fullDocument' => ['_id' => $insertedId, 'x' => 2],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => 'inventory'],
+            'documentKey' => ['_id' => $insertedId],
         ];
-        $this->assertEquals($expectedChange, $cursor->current());
+
+        $this->assertSameDocument($expectedChange, $cursor->current());
 
         // Start Changestream Example 4
         $pipeline = [['$match' => ['$or' => [['fullDocument.username' => 'alice'], ['operationType' => 'delete']]]]];

@@ -41,14 +41,16 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['_id' => 2, 'x' => 'bar']);
 
         $changeStream->next();
-        $expectedResult = (object) ([
-                            '_id' => $changeStream->current()->_id,
-                            'operationType' => 'insert',
-                            'fullDocument' => (object) ['_id' => 2, 'x' => 'bar'],
-                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.e68b9f01'],
-                            'documentKey' => (object) ['_id' => 2]
-                        ]);
-        $this->assertEquals($expectedResult, $changeStream->current());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 2, 'x' => 'bar'],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 2],
+        ];
+
+        $this->assertSameDocument($expectedResult, $changeStream->current());
 
         $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
@@ -56,14 +58,16 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['_id' => 3, 'x' => 'baz']);
 
         $changeStream->next();
-        $expectedResult = (object) ([
-                            '_id' => $changeStream->current()->_id,
-                            'operationType' => 'insert',
-                            'fullDocument' => (object) ['_id' => 3, 'x' => 'baz'],
-                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.e68b9f01'],
-                            'documentKey' => (object) ['_id' => 3]
-                        ]);
-        $this->assertEquals($expectedResult, $changeStream->current());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 3, 'x' => 'baz'],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 3]
+        ];
+
+        $this->assertSameDocument($expectedResult, $changeStream->current());
     }
 
     /**
@@ -135,14 +139,16 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['_id' => 2, 'x' => 'bar']);
 
         $changeStream->next();
-        $expectedResult = (object) ([
-                            '_id' => $changeStream->current()->_id,
-                            'operationType' => 'insert',
-                            'fullDocument' => (object) ['_id' => 2, 'x' => 'bar'],
-                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.4a554985'],
-                            'documentKey' => (object) ['_id' => 2]
-                        ]);
-        $this->assertEquals($expectedResult, $changeStream->current());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 2, 'x' => 'bar'],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 2],
+        ];
+
+        $this->assertSameDocument($expectedResult, $changeStream->current());
 
         $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
@@ -153,14 +159,16 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['_id' => 3, 'x' => 'baz']);
 
         $changeStream->next();
-        $expectedResult = (object) ([
-                            '_id' => $changeStream->current()->_id,
-                            'operationType' => 'insert',
-                            'fullDocument' => (object) ['_id' => 3, 'x' => 'baz'],
-                            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.4a554985'],
-                            'documentKey' => (object) ['_id' => 3]
-                        ]);
-        $this->assertEquals($expectedResult, $changeStream->current());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 3, 'x' => 'baz'],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 3],
+        ];
+
+        $this->assertSameDocument($expectedResult, $changeStream->current());
     }
 
     public function testResumeAfterKillThenNoOperations()
@@ -228,11 +236,13 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['_id' => 1]);
 
         $changeStream->next();
-        $expectedResult = (object) ([
-                            '_id' => $changeStream->current()->_id,
-                            'foo' => [0]
-                        ]);
-        $this->assertEquals($expectedResult, $changeStream->current());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'foo' => [0],
+        ];
+
+        $this->assertSameDocument($expectedResult, $changeStream->current());
     }
 
     public function testCursorWithEmptyBatchNotClosed()

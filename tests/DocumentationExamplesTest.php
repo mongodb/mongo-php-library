@@ -712,10 +712,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_51_54()
     {
-        if (version_compare($this->getServerVersion(), '2.6.0', '<')) {
-            $this->markTestSkipped('$currentDate update operator is not supported');
-        }
-
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 51

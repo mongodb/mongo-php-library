@@ -31,10 +31,6 @@ class CountFunctionalTest extends FunctionalTestCase
 
     public function testHintOption()
     {
-        if (version_compare($this->getServerVersion(), '2.6.0', '<')) {
-            $this->markTestSkipped('count command does not support "hint" option');
-        }
-
         $insertMany = new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [
             ['x' => 1],
             ['x' => 2],

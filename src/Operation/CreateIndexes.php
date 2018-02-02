@@ -19,7 +19,6 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
-use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
@@ -37,7 +36,6 @@ use MongoDB\Model\IndexInput;
 class CreateIndexes implements Executable
 {
     private static $wireVersionForCollation = 5;
-    private static $wireVersionForCommand = 2;
     private static $wireVersionForWriteConcern = 5;
 
     private $databaseName;
@@ -115,9 +113,6 @@ class CreateIndexes implements Executable
     /**
      * Execute the operation.
      *
-     * For servers < 2.6, this will actually perform an insert operation on the
-     * database's "system.indexes" collection.
-     *
      * @see Executable::execute()
      * @param Server $server
      * @return string[] The names of the created indexes
@@ -134,11 +129,7 @@ class CreateIndexes implements Executable
             throw UnsupportedException::writeConcernNotSupported();
         }
 
-        if (\MongoDB\server_supports_feature($server, self::$wireVersionForCommand)) {
-            $this->executeCommand($server);
-        } else {
-            $this->executeLegacy($server);
-        }
+        $this->executeCommand($server);
 
         return array_map(function(IndexInput $index) { return (string) $index; }, $this->indexes);
     }
@@ -179,23 +170,5 @@ class CreateIndexes implements Executable
         }
 
         $server->executeWriteCommand($this->databaseName, new Command($cmd), $this->createOptions());
-    }
-
-    /**
-     * Create one or more indexes for the collection by inserting into the
-     * "system.indexes" collection (MongoDB <2.6).
-     *
-     * @param Server $server
-     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
-     */
-    private function executeLegacy(Server $server)
-    {
-        $bulk = new Bulk(['ordered' => true]);
-
-        foreach ($this->indexes as $index) {
-            $bulk->insert($index);
-        }
-
-        $server->executeBulkWrite($this->databaseName . '.system.indexes', $bulk, new WriteConcern(1));
     }
 }

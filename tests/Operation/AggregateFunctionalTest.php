@@ -30,10 +30,6 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
     public function testDefaultWriteConcernIsOmitted()
     {
-        if (version_compare($this->getServerVersion(), '2.6.0', '<')) {
-            $this->markTestSkipped('$out pipeline operator is not supported');
-        }
-
         (new CommandObserver)->observe(
             function() {
                 $operation = new Aggregate(

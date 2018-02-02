@@ -42,6 +42,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['_id' => 2, 'x' => 'bar']);
 
         $changeStream->next();
+        $this->assertTrue($changeStream->valid());
 
         $expectedResult = [
             '_id' => $changeStream->current()->_id,
@@ -58,6 +59,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['_id' => 3, 'x' => 'baz']);
 
         $changeStream->next();
+        $this->assertTrue($changeStream->valid());
 
         $expectedResult = [
             '_id' => $changeStream->current()->_id,
@@ -139,6 +141,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['_id' => 2, 'x' => 'bar']);
 
         $changeStream->next();
+        $this->assertTrue($changeStream->valid());
 
         $expectedResult = [
             '_id' => $changeStream->current()->_id,
@@ -153,11 +156,13 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->killChangeStreamCursor($changeStream);
 
         $changeStream->next();
+        $this->assertFalse($changeStream->valid());
         $this->assertNull($changeStream->current());
 
         $this->insertDocument(['_id' => 3, 'x' => 'baz']);
 
         $changeStream->next();
+        $this->assertTrue($changeStream->valid());
 
         $expectedResult = [
             '_id' => $changeStream->current()->_id,
@@ -178,6 +183,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->killChangeStreamCursor($changeStream);
 
         $changeStream->next();
+        $this->assertFalse($changeStream->valid());
         $this->assertNull($changeStream->current());
     }
 
@@ -191,6 +197,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['_id' => 1, 'x' => 'foo']);
 
         $changeStream->next();
+        $this->assertFalse($changeStream->valid());
         $this->assertNull($changeStream->current());
     }
 
@@ -204,21 +211,27 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['_id' => 1, 'x' => 'foo']);
 
         $changeStream->next();
+        $this->assertTrue($changeStream->valid());
         $this->assertSame(1, $changeStream->key());
 
         $changeStream->next();
+        $this->assertFalse($changeStream->valid());
         $this->assertNull($changeStream->key());
+
         $changeStream->next();
+        $this->assertFalse($changeStream->valid());
         $this->assertNull($changeStream->key());
 
         $this->killChangeStreamCursor($changeStream);
 
         $changeStream->next();
+        $this->assertFalse($changeStream->valid());
         $this->assertNull($changeStream->key());
 
         $this->insertDocument(['_id' => 2, 'x' => 'bar']);
 
         $changeStream->next();
+        $this->assertTrue($changeStream->valid());
         $this->assertSame(2, $changeStream->key());
     }
 
@@ -232,6 +245,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['_id' => 1]);
 
         $changeStream->next();
+        $this->assertTrue($changeStream->valid());
 
         $expectedResult = [
             '_id' => $changeStream->current()->_id,

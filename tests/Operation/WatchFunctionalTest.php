@@ -13,6 +13,7 @@ use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\Watch;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
+use ReflectionClass;
 
 class WatchFunctionalTest extends FunctionalTestCase
 {
@@ -230,12 +231,31 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertSameDocument($expectedResult, $changeStream->current());
     }
 
-    public function testCursorWithEmptyBatchNotClosed()
+    public function testInitialCursorIsNotClosed()
     {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), []);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
-        $this->assertNotNull($changeStream);
+        /* The spec requests that we assert that the cursor returned from the
+         * aggregate command is not closed on the driver side. We will verify
+         * this by checking that the cursor ID is non-zero and that libmongoc
+         * reports the cursor as alive. While the cursor ID is easily accessed
+         * through ChangeStream, we'll need to use reflection to access the
+         * internal Cursor and call isDead(). */
+        $this->assertNotEquals('0', (string) $changeStream->getCursorId());
+
+        $rc = new ReflectionClass('MongoDB\ChangeStream');
+        $rp = $rc->getProperty('csIt');
+        $rp->setAccessible(true);
+
+        $iterator = $rp->getValue($changeStream);
+
+        $this->assertInstanceOf('IteratorIterator', $iterator);
+
+        $cursor = $iterator->getInnerIterator();
+
+        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+        $this->assertFalse($cursor->isDead());
     }
 
     /**

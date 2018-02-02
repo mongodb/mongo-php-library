@@ -47,11 +47,23 @@ class TypeMapArrayIterator extends ArrayIterator
         $this->typeMap = $typeMap;
     }
 
+    /**
+     * Not supported.
+     *
+     * @see http://php.net/arrayiterator.append
+     * @throws BadMethodCallException
+     */
     public function append($value)
     {
         throw BadMethodCallException::classIsImmutable(__CLASS__);
     }
 
+    /**
+     * Not supported.
+     *
+     * @see http://php.net/arrayiterator.asort
+     * @throws BadMethodCallException
+     */
     public function asort()
     {
         throw BadMethodCallException::classIsImmutable(__CLASS__);
@@ -68,16 +80,34 @@ class TypeMapArrayIterator extends ArrayIterator
         return \MongoDB\apply_type_map_to_document(parent::current(), $this->typeMap);
     }
 
+    /**
+     * Not supported.
+     *
+     * @see http://php.net/arrayiterator.ksort
+     * @throws BadMethodCallException
+     */
     public function ksort()
     {
         throw BadMethodCallException::classIsImmutable(__CLASS__);
     }
 
+    /**
+     * Not supported.
+     *
+     * @see http://php.net/arrayiterator.natcasesort
+     * @throws BadMethodCallException
+     */
     public function natcasesort()
     {
         throw BadMethodCallException::classIsImmutable(__CLASS__);
     }
 
+    /**
+     * Not supported.
+     *
+     * @see http://php.net/arrayiterator.natsort
+     * @throws BadMethodCallException
+     */
     public function natsort()
     {
         throw BadMethodCallException::classIsImmutable(__CLASS__);
@@ -87,6 +117,7 @@ class TypeMapArrayIterator extends ArrayIterator
      * Return the value from the provided offset with the type map applied.
      *
      * @see http://php.net/arrayiterator.offsetget
+     * @param mixed $offset
      * @return array|object
      */
     public function offsetGet($offset)
@@ -94,21 +125,45 @@ class TypeMapArrayIterator extends ArrayIterator
         return \MongoDB\apply_type_map_to_document(parent::offsetGet($offset), $this->typeMap);
     }
 
+    /**
+     * Not supported.
+     *
+     * @see http://php.net/arrayiterator.offsetset
+     * @throws BadMethodCallException
+     */
     public function offsetSet($index, $newval)
     {
         throw BadMethodCallException::classIsImmutable(__CLASS__);
     }
 
+    /**
+     * Not supported.
+     *
+     * @see http://php.net/arrayiterator.offsetunset
+     * @throws BadMethodCallException
+     */
     public function offsetUnset($index)
     {
         throw BadMethodCallException::classIsImmutable(__CLASS__);
     }
 
+    /**
+     * Not supported.
+     *
+     * @see http://php.net/arrayiterator.uasort
+     * @throws BadMethodCallException
+     */
     public function uasort($cmp_function)
     {
         throw BadMethodCallException::classIsImmutable(__CLASS__);
     }
 
+    /**
+     * Not supported.
+     *
+     * @see http://php.net/arrayiterator.uksort
+     * @throws BadMethodCallException
+     */
     public function uksort($cmp_function)
     {
         throw BadMethodCallException::classIsImmutable(__CLASS__);

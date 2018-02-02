@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\Model;
 
-use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Model\TypeMapArrayIterator;
 use MongoDB\Tests\TestCase;
 
@@ -56,35 +55,6 @@ class TypeMapArrayIteratorTest extends TestCase
         $iterator->rewind();
 
         $this->assertEquals($expectedDocument, $iterator->offsetGet(0));
-    }
-
-    /**
-     * @expectedException MongoDB\Exception\BadMethodCallException
-     * @expectedExceptionMessage MongoDB\Model\TypeMapArrayIterator is immutable
-     */
-    public function testAppendThrowsException()
-    {
-        $document = [
-            'array' => [1, 2, 3],
-            'object' => ['foo' => 'bar'],
-        ];
-
-        $typeMap = [
-            'root' => 'object',
-            'document' => 'object',
-            'array' => 'array',
-        ];
-
-        $iterator = new TypeMapArrayIterator([$document], $typeMap);
-
-        $expectedDocument = (object) [
-            'array' => [1, 2, 3],
-            'object' => (object) ['foo' => 'bar'],
-        ];
-
-        $iterator->rewind();
-
-        $iterator->asort();
     }
 
     /**

@@ -220,7 +220,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->insertDocument(['_id' => 1]);
 
-        $changeStream->next();
+        $changeStream->rewind();
         $this->assertTrue($changeStream->valid());
 
         $expectedResult = [
@@ -260,13 +260,16 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     /**
      * @expectedException MongoDB\Exception\ResumeTokenException
+     * @todo test that rewind() also attempts to extract the resume token once PHPLIB-322 is implemented
      */
-    public function testFailureAfterResumeTokenRemoved()
+    public function testNextCannotExtractResumeToken()
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $changeStream->rewind();
 
         $this->insertDocument(['x' => 1]);
 

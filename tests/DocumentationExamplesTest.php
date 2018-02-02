@@ -961,7 +961,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             'ns' => (object) ['db' => 'phplib_test', 'coll' => 'inventory'],
             'documentKey' => (object) ['_id' => $insertedId]
         ];
-        $this->assertEquals($current, $expectedChange);
+        $this->assertEquals($expectedChange, $current);
 
         // Start Changestream Example 3
         $resumeToken = ($current !== null) ? $current->_id : null;
@@ -981,7 +981,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             'ns' => (object) ['db' => 'phplib_test', 'coll' => 'inventory'],
             'documentKey' => (object) ['_id' => $insertedId]
         ];
-        $this->assertEquals($cursor->current(), $expectedChange);
+        $this->assertEquals($expectedChange, $cursor->current());
 
         // Start Changestream Example 4
         $pipeline = [['$match' => ['$or' => [['fullDocument.username' => 'alice'], ['operationType' => 'delete']]]]];

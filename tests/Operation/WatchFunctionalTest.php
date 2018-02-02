@@ -43,7 +43,7 @@ class WatchFunctionalTest extends FunctionalTestCase
                             'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.e68b9f01'],
                             'documentKey' => (object) ['_id' => 2]
                         ]);
-        $this->assertEquals($changeStream->current(), $expectedResult);
+        $this->assertEquals($expectedResult, $changeStream->current());
 
         $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
@@ -58,7 +58,7 @@ class WatchFunctionalTest extends FunctionalTestCase
                             'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.e68b9f01'],
                             'documentKey' => (object) ['_id' => 3]
                         ]);
-        $this->assertEquals($changeStream->current(), $expectedResult);
+        $this->assertEquals($expectedResult, $changeStream->current());
    }
 
     public function testNoChangeAfterResumeBeforeInsert()
@@ -81,7 +81,7 @@ class WatchFunctionalTest extends FunctionalTestCase
                             'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.4a554985'],
                             'documentKey' => (object) ['_id' => 2]
                         ]);
-        $this->assertEquals($changeStream->current(), $expectedResult);
+        $this->assertEquals($expectedResult, $changeStream->current());
 
         $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
         $operation->execute($this->getPrimaryServer());
@@ -99,7 +99,7 @@ class WatchFunctionalTest extends FunctionalTestCase
                             'ns' => (object) ['db' => 'phplib_test', 'coll' => 'WatchFunctionalTest.4a554985'],
                             'documentKey' => (object) ['_id' => 3]
                         ]);
-        $this->assertEquals($changeStream->current(), $expectedResult);
+        $this->assertEquals($expectedResult, $changeStream->current());
     }
 
     public function testResumeAfterKillThenNoOperations()
@@ -171,7 +171,7 @@ class WatchFunctionalTest extends FunctionalTestCase
                             '_id' => $changeStream->current()->_id,
                             'foo' => [0]
                         ]);
-        $this->assertEquals($changeStream->current(), $expectedResult);
+        $this->assertEquals($expectedResult, $changeStream->current());
     }
 
     public function testCursorWithEmptyBatchNotClosed()

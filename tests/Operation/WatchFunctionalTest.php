@@ -180,13 +180,14 @@ class WatchFunctionalTest extends FunctionalTestCase
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
+        $this->assertFalse($changeStream->valid());
         $this->assertNull($changeStream->key());
 
         $this->insertDocument(['_id' => 1, 'x' => 'foo']);
 
-        $changeStream->next();
+        $changeStream->rewind();
         $this->assertTrue($changeStream->valid());
-        $this->assertSame(1, $changeStream->key());
+        $this->assertSame(0, $changeStream->key());
 
         $changeStream->next();
         $this->assertFalse($changeStream->valid());
@@ -206,7 +207,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $changeStream->next();
         $this->assertTrue($changeStream->valid());
-        $this->assertSame(2, $changeStream->key());
+        $this->assertSame(1, $changeStream->key());
     }
 
     public function testNonEmptyPipeline()

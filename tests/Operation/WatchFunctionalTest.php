@@ -29,7 +29,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testResume()
+    public function testNextResumesAfterCursorNotFound()
     {
         $this->insertDocument(['_id' => 1, 'x' => 'foo']);
 
@@ -173,32 +173,6 @@ class WatchFunctionalTest extends FunctionalTestCase
         ];
 
         $this->assertSameDocument($expectedResult, $changeStream->current());
-    }
-
-    public function testResumeAfterKillThenNoOperations()
-    {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
-        $changeStream = $operation->execute($this->getPrimaryServer());
-
-        $this->killChangeStreamCursor($changeStream);
-
-        $changeStream->next();
-        $this->assertFalse($changeStream->valid());
-        $this->assertNull($changeStream->current());
-    }
-
-    public function testResumeAfterKillThenOperation()
-    {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
-        $changeStream = $operation->execute($this->getPrimaryServer());
-
-        $this->killChangeStreamCursor($changeStream);
-
-        $this->insertDocument(['_id' => 1, 'x' => 'foo']);
-
-        $changeStream->next();
-        $this->assertFalse($changeStream->valid());
-        $this->assertNull($changeStream->current());
     }
 
     public function testKey()

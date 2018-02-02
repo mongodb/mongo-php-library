@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\ChangeStream;
 use MongoDB\Client;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
@@ -52,8 +53,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->assertSameDocument($expectedResult, $changeStream->current());
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
-        $operation->execute($this->getPrimaryServer());
+        $this->killChangeStreamCursor($changeStream);
 
         $this->insertDocument(['_id' => 3, 'x' => 'baz']);
 
@@ -150,8 +150,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->assertSameDocument($expectedResult, $changeStream->current());
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
-        $operation->execute($this->getPrimaryServer());
+        $this->killChangeStreamCursor($changeStream);
 
         $changeStream->next();
         $this->assertNull($changeStream->current());
@@ -176,8 +175,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), []);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
-        $operation->execute($this->getPrimaryServer());
+        $this->killChangeStreamCursor($changeStream);
 
         $changeStream->next();
         $this->assertNull($changeStream->current());
@@ -188,8 +186,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), []);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
-        $operation->execute($this->getPrimaryServer());
+        $this->killChangeStreamCursor($changeStream);
 
         $this->insertDocument(['_id' => 1, 'x' => 'foo']);
 
@@ -214,8 +211,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $changeStream->next();
         $this->assertNull($changeStream->key());
 
-        $operation = new DatabaseCommand($this->getDatabaseName(), ["killCursors" => $this->getCollectionName(), "cursors" => [$changeStream->getCursorId()]]);
-        $operation->execute($this->getPrimaryServer());
+        $this->killChangeStreamCursor($changeStream);
 
         $changeStream->next();
         $this->assertNull($changeStream->key());
@@ -317,5 +313,16 @@ class WatchFunctionalTest extends FunctionalTestCase
         $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
         $writeResult = $insertOne->execute($this->getPrimaryServer());
         $this->assertEquals(1, $writeResult->getInsertedCount());
+    }
+
+    private function killChangeStreamCursor(ChangeStream $changeStream)
+    {
+        $command = [
+            'killCursors' => $this->getCollectionName(),
+            'cursors' => [ $changeStream->getCursorId() ],
+        ];
+
+        $operation = new DatabaseCommand($this->getDatabaseName(), $command);
+        $operation->execute($this->getPrimaryServer());
     }
 }

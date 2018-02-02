@@ -12,14 +12,12 @@ use MongoDB\Operation\BulkWrite;
 class BulkWriteFunctionalTest extends FunctionalTestCase
 {
     private $collection;
-    private $omitModifiedCount;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
-        $this->omitModifiedCount = version_compare($this->getServerVersion(), '2.6.0', '<');
     }
 
     public function testInserts()
@@ -70,7 +68,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
         $this->assertInstanceOf('MongoDB\BulkWriteResult', $result);
         $this->assertSame(5, $result->getMatchedCount());
-        $this->omitModifiedCount or $this->assertSame(5, $result->getModifiedCount());
+        $this->assertSame(5, $result->getModifiedCount());
         $this->assertSame(2, $result->getUpsertedCount());
 
         $upsertedIds = $result->getUpsertedIds();
@@ -132,7 +130,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $this->assertSame([2 => 4], $result->getInsertedIds());
 
         $this->assertSame(3, $result->getMatchedCount());
-        $this->omitModifiedCount or $this->assertSame(3, $result->getModifiedCount());
+        $this->assertSame(3, $result->getModifiedCount());
         $this->assertSame(1, $result->getUpsertedCount());
         $this->assertSame([4 => 4], $result->getUpsertedIds());
 

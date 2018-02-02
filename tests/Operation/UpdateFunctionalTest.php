@@ -11,14 +11,12 @@ use MongoDB\Operation\Update;
 class UpdateFunctionalTest extends FunctionalTestCase
 {
     private $collection;
-    private $omitModifiedCount;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
-        $this->omitModifiedCount = version_compare($this->getServerVersion(), '2.6.0', '<');
     }
 
     public function testUpdateOne()
@@ -33,7 +31,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
 
         $this->assertInstanceOf('MongoDB\UpdateResult', $result);
         $this->assertSame(1, $result->getMatchedCount());
-        $this->omitModifiedCount or $this->assertSame(1, $result->getModifiedCount());
+        $this->assertSame(1, $result->getModifiedCount());
         $this->assertSame(0, $result->getUpsertedCount());
         $this->assertNull($result->getUpsertedId());
 
@@ -59,7 +57,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
 
         $this->assertInstanceOf('MongoDB\UpdateResult', $result);
         $this->assertSame(2, $result->getMatchedCount());
-        $this->omitModifiedCount or $this->assertSame(2, $result->getModifiedCount());
+        $this->assertSame(2, $result->getModifiedCount());
         $this->assertSame(0, $result->getUpsertedCount());
         $this->assertNull($result->getUpsertedId());
 
@@ -85,7 +83,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
 
         $this->assertInstanceOf('MongoDB\UpdateResult', $result);
         $this->assertSame(0, $result->getMatchedCount());
-        $this->omitModifiedCount or $this->assertSame(0, $result->getModifiedCount());
+        $this->assertSame(0, $result->getModifiedCount());
         $this->assertSame(1, $result->getUpsertedCount());
         $this->assertSame(5, $result->getUpsertedId());
 
@@ -112,7 +110,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
 
         $this->assertInstanceOf('MongoDB\UpdateResult', $result);
         $this->assertSame(0, $result->getMatchedCount());
-        $this->omitModifiedCount or $this->assertSame(0, $result->getModifiedCount());
+        $this->assertSame(0, $result->getModifiedCount());
         $this->assertSame(1, $result->getUpsertedCount());
         $this->assertInstanceOf('MongoDB\BSON\ObjectId', $result->getUpsertedId());
 

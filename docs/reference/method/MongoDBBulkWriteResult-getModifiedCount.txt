@@ -37,10 +37,6 @@ Return Values
 The total number of documents that were modified by all update and replace
 operations in the bulk write.
 
-The modified count is not available on versions of MongoDB before 2.6, which
-used the legacy wire protocol version (i.e. ``OP_UPDATE``). If this is the case,
-the modified count will be ``null``.
-
 Errors/Exceptions
 -----------------
 

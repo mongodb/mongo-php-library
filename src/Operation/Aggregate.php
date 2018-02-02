@@ -99,8 +99,8 @@ class Aggregate implements Executable
      *  * useCursor (boolean): Indicates whether the command will request that
      *    the server provide results using a cursor. The default is true.
      *
-     *    For servers >= 2.6, this option allows users to turn off cursors if
-     *    necessary to aid in mongod/mongos upgrades.
+     *    This option allows users to turn off cursors if necessary to aid in
+     *    mongod/mongos upgrades.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern. This only
      *    applies when the $out stage is specified.

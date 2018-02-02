@@ -1,0 +1,82 @@
+===============================
+MongoDB\\Client::startSession()
+===============================
+
+.. default-domain:: mongodb
+
+.. versionadded:: 1.3
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Client::startSession()
+
+   Start a new client session for use with this client.
+
+   .. code-block:: php
+
+      function startSession(array $options = []): MongoDB\Driver\Session
+
+   The ``$options`` parameter supports the following options:
+
+   .. include:: /includes/apiargs/MongoDBClient-method-startSession-option.rst
+
+Return Values
+-------------
+
+A :php:`MongoDB\Driver\Session <mongodb-driver-session>`
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-driver-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+Example
+-------
+
+The following example starts a new session:
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client;
+
+   $session = $client->startSession();
+
+   var_dump($session);
+
+The output would then resemble::
+
+   object(MongoDB\Driver\Session)#2043 (4) {
+     ["logicalSessionId"]=>
+     array(1) {
+       ["id"]=>
+       object(MongoDB\BSON\Binary)#225 (2) {
+         ["data"]=>
+         string(16) "................"
+         ["type"]=>
+         int(4)
+       }
+     }
+     ["clusterTime"]=>
+     NULL
+     ["causalConsistency"]=>
+     bool(true)
+     ["operationTime"]=>
+     NULL
+   }
+
+See Also
+--------
+
+- :php:`MongoDB\\Driver\\Manager::startSession()
+  <manual/en/mongodb-driver-manager.startsession.php>`
+- :ref:`Causal Consistency <causal-consistency>` in the MongoDB manual

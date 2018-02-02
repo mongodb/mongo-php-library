@@ -1,0 +1,12 @@
+arg_name: option
+name: causalConsistency
+type: boolean
+description: |
+  Enables or disables :ref:`causal consistency <causal-consistency>` for the
+  session. If true, each operation in the session will be causally ordered after
+  the previous read or write operation. Set to false to disable causal
+  consistency. Defaults to true.
+interface: phpmethod
+operation: ~
+optional: true
+...

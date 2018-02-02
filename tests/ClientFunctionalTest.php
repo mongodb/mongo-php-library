@@ -97,4 +97,12 @@ class ClientFunctionalTest extends FunctionalTestCase
             call_user_func($callback, $foundDatabase);
         }
     }
+
+    public function testStartSession()
+    {
+        if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
+            $this->markTestSkipped('startSession() is only supported on FCV 3.6 or higher');
+        }
+        $this->assertInstanceOf('MongoDB\Driver\Session', $this->client->startSession());
+    }
 }

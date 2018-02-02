@@ -31,4 +31,69 @@ class TypeMapArrayIteratorTest extends TestCase
 
         $this->assertEquals($expectedDocument, $iterator->current());
     }
+
+    public function testOffsetGetAppliesTypeMap()
+    {
+        $document = [
+            'array' => [1, 2, 3],
+            'object' => ['foo' => 'bar'],
+        ];
+
+        $typeMap = [
+            'root' => 'object',
+            'document' => 'object',
+            'array' => 'array',
+        ];
+
+        $iterator = new TypeMapArrayIterator([$document], $typeMap);
+
+        $expectedDocument = (object) [
+            'array' => [1, 2, 3],
+            'object' => (object) ['foo' => 'bar'],
+        ];
+
+        $iterator->rewind();
+
+        $this->assertEquals($expectedDocument, $iterator->offsetGet(0));
+    }
+
+    /**
+     * @dataProvider provideMutateMethods
+     * @expectedException MongoDB\Exception\BadMethodCallException
+     * @expectedExceptionMessage MongoDB\Model\TypeMapArrayIterator is immutable
+     */
+    public function testMutateMethodsCannotBeCalled($method, $args)
+    {
+        $document = [
+            'array' => [1, 2, 3],
+            'object' => ['foo' => 'bar'],
+        ];
+
+        $typeMap = [
+            'root' => 'object',
+            'document' => 'object',
+            'array' => 'array',
+        ];
+
+        $iterator = new TypeMapArrayIterator([$document], $typeMap);
+
+        $iterator->rewind();
+
+        call_user_func_array([$iterator, $method], $args);
+    }
+
+    public function provideMutateMethods()
+    {
+        return [
+            ['append', [['x' => 1]]],
+            ['asort', []],
+            ['ksort', []],
+            ['natcasesort', []],
+            ['natsort', []],
+            ['offsetSet', [0, ['x' => 1]]],
+            ['offsetUnset', [0]],
+            ['uasort', [function($a, $b) { return 0; }]],
+            ['uksort', [function($a, $b) { return 0; }]],
+        ];
+    }
 }

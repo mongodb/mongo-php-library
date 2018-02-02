@@ -935,62 +935,62 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Changestream Example 1
-        $cursor = $db->inventory->watch();
-        $cursor->next();
-        $current = $cursor->current();
+        $changeStream = $db->inventory->watch();
+        $changeStream->next();
+        $document = $changeStream->current();
         // End Changestream Example 1
 
-        $this->assertNull($current);
+        $this->assertNull($document);
 
         // Start Changestream Example 2
-        $cursor = $db->inventory->watch([], ['fullDocument' => \MongoDB\Operation\Watch::FULL_DOCUMENT_UPDATE_LOOKUP]);
-        $cursor->next();
-        $current = $cursor->current();
+        $changeStream = $db->inventory->watch([], ['fullDocument' => \MongoDB\Operation\Watch::FULL_DOCUMENT_UPDATE_LOOKUP]);
+        $changeStream->next();
+        $document = $changeStream->current();
         // End Changestream Example 2
 
-        $this->assertNull($current);
+        $this->assertNull($document);
 
         $insertedResult = $db->inventory->insertOne(['x' => 1]);
         $insertedId = $insertedResult->getInsertedId();
-        $cursor->next();
-        $current = $cursor->current();
+        $changeStream->next();
+        $document = $changeStream->current();
 
         $expectedChange = [
-            '_id' => $current->_id,
+            '_id' => $document->_id,
             'operationType' => 'insert',
             'fullDocument' => ['_id' => $insertedId, 'x' => 1],
             'ns' => ['db' => $this->getDatabaseName(), 'coll' => 'inventory'],
             'documentKey' => ['_id' => $insertedId],
         ];
 
-        $this->assertSameDocument($expectedChange, $current);
+        $this->assertSameDocument($expectedChange, $document);
 
         // Start Changestream Example 3
-        $resumeToken = ($current !== null) ? $current->_id : null;
+        $resumeToken = ($document !== null) ? $document->_id : null;
         if ($resumeToken !== null) {
-            $cursor = $db->inventory->watch([], ['resumeAfter' => $resumeToken]);
-            $cursor->next();
+            $changeStream = $db->inventory->watch([], ['resumeAfter' => $resumeToken]);
+            $changeStream->next();
         }
         // End Changestream Example 3
 
         $insertedResult = $db->inventory->insertOne(['x' => 2]);
         $insertedId = $insertedResult->getInsertedId();
-        $cursor->next();
+        $changeStream->next();
 
         $expectedChange = [
-            '_id' => $cursor->current()->_id,
+            '_id' => $changeStream->current()->_id,
             'operationType' => 'insert',
             'fullDocument' => ['_id' => $insertedId, 'x' => 2],
             'ns' => ['db' => $this->getDatabaseName(), 'coll' => 'inventory'],
             'documentKey' => ['_id' => $insertedId],
         ];
 
-        $this->assertSameDocument($expectedChange, $cursor->current());
+        $this->assertSameDocument($expectedChange, $changeStream->current());
 
         // Start Changestream Example 4
         $pipeline = [['$match' => ['$or' => [['fullDocument.username' => 'alice'], ['operationType' => 'delete']]]]];
-        $cursor = $db->inventory->watch($pipeline, []);
-        $cursor->next();
+        $changeStream = $db->inventory->watch($pipeline);
+        $changeStream->next();
         // End Changestream Example 4
     }
 

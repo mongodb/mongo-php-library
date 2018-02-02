@@ -21,7 +21,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
             $this->markTestSkipped('$changeStream is only supported on FCV 3.6 or higher');
         }
-   }
+    }
 
     public function testResume()
     {
@@ -59,7 +59,7 @@ class WatchFunctionalTest extends FunctionalTestCase
                             'documentKey' => (object) ['_id' => 3]
                         ]);
         $this->assertEquals($expectedResult, $changeStream->current());
-   }
+    }
 
     public function testNoChangeAfterResumeBeforeInsert()
     {

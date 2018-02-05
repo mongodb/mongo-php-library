@@ -307,8 +307,9 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     /**
      * @expectedException MongoDB\Exception\ResumeTokenException
+     * @expectedExceptionMessage Resume token not found in change document
      */
-    public function testNextCannotExtractResumeToken()
+    public function testNextResumeTokenNotFound()
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
 
@@ -324,10 +325,45 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     /**
      * @expectedException MongoDB\Exception\ResumeTokenException
+     * @expectedExceptionMessage Resume token not found in change document
      */
-    public function testRewindCannotExtractResumeToken()
+    public function testRewindResumeTokenNotFound()
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $this->insertDocument(['x' => 1]);
+
+        $changeStream->rewind();
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\ResumeTokenException
+     * @expectedExceptionMessage Expected resume token to have type "array or object" but found "string"
+     */
+    public function testNextResumeTokenInvalidType()
+    {
+        $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        /* Note: we intentionally do not start iteration with rewind() to ensure
+         * that we test extraction functionality within next(). */
+        $this->insertDocument(['x' => 1]);
+
+        $changeStream->next();
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\ResumeTokenException
+     * @expectedExceptionMessage Expected resume token to have type "array or object" but found "string"
+     */
+    public function testRewindResumeTokenInvalidType()
+    {
+        $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
@@ -425,6 +461,67 @@ class WatchFunctionalTest extends FunctionalTestCase
             'documentKey' => ['_id' => 2],
         ];
         $this->assertSameDocument($expectedResult, $changeStream->current());
+    }
+
+    /**
+     * @dataProvider provideTypeMapOptionsAndExpectedChangeDocument
+     */
+    public function testTypeMapOption(array $typeMap, $expectedChangeDocument)
+    {
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100, 'typeMap' => $typeMap]);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $changeStream->rewind();
+        $this->assertNull($changeStream->current());
+
+        $this->insertDocument(['_id' => 1, 'x' => 'foo']);
+
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+        $changeDocument = $changeStream->current();
+
+        // Unset the resume token and namespace, which are intentionally omitted
+        if (is_array($changeDocument)) {
+            unset($changeDocument['_id'], $changeDocument['ns']);
+        } else {
+            unset($changeDocument->_id, $changeDocument->ns);
+        }
+
+        $this->assertEquals($expectedChangeDocument, $changeDocument);
+    }
+
+    public function provideTypeMapOptionsAndExpectedChangeDocument()
+    {
+        /* Note: the "_id" and "ns" fields are purposefully omitted because the
+         * resume token's value cannot be anticipated and the collection name,
+         * which is generated from the test name, is not available in the data
+         * provider, respectively. */
+        return [
+            [
+                ['root' => 'array', 'document' => 'array'],
+                [
+                    'operationType' => 'insert',
+                    'fullDocument' => ['_id' => 1, 'x' => 'foo'],
+                    'documentKey' => ['_id' => 1],
+                ],
+            ],
+            [
+                ['root' => 'object', 'document' => 'array'],
+                (object) [
+                    'operationType' => 'insert',
+                    'fullDocument' => ['_id' => 1, 'x' => 'foo'],
+                    'documentKey' => ['_id' => 1],
+                ],
+            ],
+            [
+                ['root' => 'array', 'document' => 'stdClass'],
+                [
+                    'operationType' => 'insert',
+                    'fullDocument' => (object) ['_id' => 1, 'x' => 'foo'],
+                    'documentKey' => (object) ['_id' => 1],
+                ],
+            ],
+        ];
     }
 
     private function insertDocument($document)

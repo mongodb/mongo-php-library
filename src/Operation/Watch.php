@@ -83,6 +83,9 @@ class Watch implements Executable
      *
      *    Sessions are not supported for server versions < 3.6.
      *
+     *  * typeMap (array): Type map for BSON deserialization. This will be
+     *    applied to the returned Cursor (it is not sent to the server).
+     *
      * @param string         $databaseName   Database name
      * @param string         $collectionName Collection name
      * @param array          $pipeline       List of pipeline operations
@@ -148,7 +151,7 @@ class Watch implements Executable
         $pipeline = $this->pipeline;
         array_unshift($pipeline, $changeStream);
 
-        $aggregateOptions = array_intersect_key($this->options, ['batchSize' => 1, 'collation' => 1, 'maxAwaitTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1]);
+        $aggregateOptions = array_intersect_key($this->options, ['batchSize' => 1, 'collation' => 1, 'maxAwaitTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1, 'typeMap' => 1]);
 
         return new Aggregate($this->databaseName, $this->collectionName, $pipeline, $aggregateOptions);
     }

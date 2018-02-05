@@ -21,6 +21,7 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Driver\Exception\RuntimeException;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\ResumeTokenException;
 use IteratorIterator;
 use Iterator;
@@ -92,7 +93,7 @@ class ChangeStream implements Iterator
         try {
             $this->csIt->next();
             if ($this->valid()) {
-                $this->extractResumeToken($this->csIt->current());
+                $this->resumeToken = $this->extractResumeToken($this->csIt->current());
                 $this->key++;
             }
         } catch (RuntimeException $e) {
@@ -121,7 +122,7 @@ class ChangeStream implements Iterator
         try {
             $this->csIt->rewind();
             if ($this->valid()) {
-                $this->extractResumeToken($this->csIt->current());
+                $this->resumeToken = $this->extractResumeToken($this->csIt->current());
             }
         } catch (RuntimeException $e) {
             if (strpos($e->getMessage(), "not master") !== false) {
@@ -149,25 +150,36 @@ class ChangeStream implements Iterator
     }
 
     /**
-     * Extracts the resumeToken (_id) of the input document.
+     * Extracts the resume token (i.e. "_id" field) from the change document.
      *
-     * @return void
-     * @throws ResumeTokenException if the document has no _id.
+     * @param array|document $document Change document
+     * @return mixed
+     * @throws InvalidArgumentException
+     * @throws ResumeTokenException if the resume token is not found or invalid
      */
     private function extractResumeToken($document)
     {
-        if ($document === null) {
-            throw new ResumeTokenException("Cannot extract a resumeToken from an empty document");
+        if ( ! is_array($document) && ! is_object($document)) {
+            throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
         }
+
         if ($document instanceof Serializable) {
-            $this->extractResumeToken($document->bsonSerialize());
-            return;
+            return $this->extractResumeToken($document->bsonSerialize());
         }
-        if (isset($document->_id)) {
-            $this->resumeToken = is_array($document) ? $document['_id'] : $document->_id;
-        } else {
-            throw new ResumeTokenException("Cannot provide resume functionality when the resume token is missing");
+
+        $resumeToken = is_array($document)
+            ? (isset($document['_id']) ? $document['_id'] : null)
+            : (isset($document->_id) ? $document->_id : null);
+
+        if ( ! isset($resumeToken)) {
+            throw ResumeTokenException::notFound();
         }
+
+        if ( ! is_array($resumeToken) && ! is_object($resumeToken)) {
+            throw ResumeTokenException::invalidType($resumeToken);
+        }
+
+        return $resumeToken;
     }
 
     /**

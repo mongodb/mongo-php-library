@@ -307,8 +307,9 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     /**
      * @expectedException MongoDB\Exception\ResumeTokenException
+     * @expectedExceptionMessage Resume token not found in change document
      */
-    public function testNextCannotExtractResumeToken()
+    public function testNextResumeTokenNotFound()
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
 
@@ -324,10 +325,45 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     /**
      * @expectedException MongoDB\Exception\ResumeTokenException
+     * @expectedExceptionMessage Resume token not found in change document
      */
-    public function testRewindCannotExtractResumeToken()
+    public function testRewindResumeTokenNotFound()
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $this->insertDocument(['x' => 1]);
+
+        $changeStream->rewind();
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\ResumeTokenException
+     * @expectedExceptionMessage Expected resume token to have type "array or object" but found "string"
+     */
+    public function testNextResumeTokenInvalidType()
+    {
+        $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        /* Note: we intentionally do not start iteration with rewind() to ensure
+         * that we test extraction functionality within next(). */
+        $this->insertDocument(['x' => 1]);
+
+        $changeStream->next();
+    }
+
+    /**
+     * @expectedException MongoDB\Exception\ResumeTokenException
+     * @expectedExceptionMessage Expected resume token to have type "array or object" but found "string"
+     */
+    public function testRewindResumeTokenInvalidType()
+    {
+        $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());

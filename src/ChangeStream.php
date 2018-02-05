@@ -100,7 +100,7 @@ class ChangeStream implements Iterator
                 $resumable = true;
             }
             if ($e->getCode() === self::CURSOR_NOT_FOUND) {
-               $resumable = true;
+                $resumable = true;
             }
             if ($e instanceof ConnectionTimeoutException) {
                 $resumable = true;
@@ -147,7 +147,7 @@ class ChangeStream implements Iterator
         if (isset($document->_id)) {
             $this->resumeToken = is_array($document) ? $document['_id'] : $document->_id;
         } else {
-             throw new ResumeTokenException("Cannot provide resume functionality when the resume token is missing");
+            throw new ResumeTokenException("Cannot provide resume functionality when the resume token is missing");
         }
     }
 

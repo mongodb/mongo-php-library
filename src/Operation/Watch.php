@@ -17,7 +17,7 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\ChangeStream as ChangeStreamResult;
+use MongoDB\ChangeStream;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
@@ -32,10 +32,10 @@ use MongoDB\Exception\UnsupportedException;
  * Operation for creating a change stream with the aggregate command.
  *
  * @api
- * @see \MongoDB\Collection::changeStream()
- * @see http://docs.mongodb.org/manual/reference/command/changeStream/
+ * @see \MongoDB\Collection::watch()
+ * @see https://docs.mongodb.com/manual/changeStreams/
  */
-class ChangeStream implements Executable
+class Watch implements Executable
 {
     const FULL_DOCUMENT_DEFAULT = 'default';
     const FULL_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
@@ -47,18 +47,19 @@ class ChangeStream implements Executable
     private $manager;
 
     /**
-     * Constructs a changeStream command.
+     * Constructs an aggregate command for creating a change stream.
      *
      * Supported options:
      *
-     *  * fullDocument (string): Allowed values: ‘default’, ‘updateLookup’.
-     *    Defaults to ‘default’.  When set to ‘updateLookup’, the change
-     *    notification for partial updates will include both a delta describing
-     *    the changes to the document, as well as a copy of the entire document
-     *    that was changed from some time after the change occurred. For forward
-     *    compatibility, a driver MUST NOT raise an error when a user provides
-     *    an unknown value. The driver relies on the server to validate this
-     *    option.
+     *  * fullDocument (string): Determines whether the "fullDocument" field
+     *    will be populated for update operations. By default, change streams
+     *    only return the delta of fields during the update operation (via the
+     *    "updateDescription" field). To additionally return the most current
+     *    majority-committed version of the updated document, specify
+     *    "updateLookup" for this option. Defaults to "default".
+     *
+     *    Insert and replace operations always include the "fullDocument" field
+     *    and delete operations omit the field as the document no longer exists.
      *
      *  * resumeAfter (document): Specifies the logical starting point for the
      *    new change stream.
@@ -69,7 +70,9 @@ class ChangeStream implements Executable
      *    This is not supported for server versions < 3.2 and will result in an
      *    exception at execution time if used.
      *
-     *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
+     *  * readPreference (MongoDB\Driver\ReadPreference): Read preference. This
+     *    will be used to select a new server when resuming. Defaults to a
+     *    "primary" read preference.
      *
      *  * maxAwaitTimeMS (integer): The maximum amount of time for the server to
      *    wait on new documents to satisfy a change stream query.
@@ -91,8 +94,13 @@ class ChangeStream implements Executable
      * @param Manager        $manager        Manager instance from the driver
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($databaseName, $collectionName, array $pipeline, array $options = [], Manager $manager)
+    public function __construct(Manager $manager, $databaseName, $collectionName, array $pipeline, array $options = [])
     {
+        $options += [
+            'fullDocument' => self::FULL_DOCUMENT_DEFAULT,
+            'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
+        ];
+
         if (isset($options['batchSize']) && ! is_integer($options['batchSize'])) {
             throw InvalidArgumentException::invalidType('"batchSize" option', $options['batchSize'], 'integer');
         }
@@ -119,11 +127,11 @@ class ChangeStream implements Executable
             }
         }
 
+        $this->manager = $manager;
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->pipeline = $pipeline;
         $this->options = $options;
-        $this->manager = $manager;
     }
 
     /**
@@ -131,7 +139,7 @@ class ChangeStream implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return ChangeStreamResult
+     * @return ChangeStream
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if collation, read concern, or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -142,7 +150,7 @@ class ChangeStream implements Executable
 
         $cursor = $command->execute($server);
 
-        return new ChangeStreamResult($cursor, $this->createResumeCallable());
+        return new ChangeStream($cursor, $this->createResumeCallable());
     }
 
     private function createAggregateOptions()

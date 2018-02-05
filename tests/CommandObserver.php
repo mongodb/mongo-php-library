@@ -6,6 +6,7 @@ use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
+use Exception;
 
 /**
  * Observes command documents using the driver's monitoring API.
@@ -20,12 +21,18 @@ class CommandObserver implements CommandSubscriber
 
         \MongoDB\Driver\Monitoring\addSubscriber($this);
 
-        call_user_func($execution);
+        try {
+            call_user_func($execution);
+        } catch (Exception $executionException) {}
 
         \MongoDB\Driver\Monitoring\removeSubscriber($this);
 
         foreach ($this->commands as $command) {
             call_user_func($commandCallback, $command);
+        }
+
+        if (isset($executionException)) {
+            throw $executionException;
         }
     }
 

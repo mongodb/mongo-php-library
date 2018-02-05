@@ -19,7 +19,7 @@ namespace MongoDB;
 
 use MongoDB\BSON\JavascriptInterface;
 use MongoDB\BSON\Serializable;
-use MongoDB\ChangeStream as ChangeStreamResult;
+use MongoDB\ChangeStream;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
@@ -32,7 +32,6 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\BulkWrite;
-use MongoDB\Operation\ChangeStream;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\DeleteMany;
@@ -52,6 +51,7 @@ use MongoDB\Operation\MapReduce;
 use MongoDB\Operation\ReplaceOne;
 use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
+use MongoDB\Operation\Watch;
 use Traversable;
 
 class Collection
@@ -939,14 +939,14 @@ class Collection
         return $operation->execute($server);
     }
 
-    /*
-     * ChangeStream outline
+    /**
+     * Create a change stream for watching changes to the collection.
      *
-     * @see ChangeStream::__construct() for supported options
-     * @param array          $pipeline       List of pipeline operations
-     * @param array          $options        Command options
+     * @see Watch::__construct() for supported options
+     * @param array $pipeline List of pipeline operations
+     * @param array $options  Command options
+     * @return ChangeStream
      * @throws InvalidArgumentException for parameter/option parsing errors
-     * @return ChangeStreamResult
      */
     public function watch(array $pipeline = [], array $options = [])
     {
@@ -956,11 +956,18 @@ class Collection
 
         $server = $this->manager->selectServer($options['readPreference']);
 
-        if ( ! isset($options['readConcern'])) {
+        /* Although change streams require a newer version of the server than
+         * read concerns, perform the usual wire version check before inheriting
+         * the collection's read concern. In the event that the server is too
+         * old, this makes it more likely that users will encounter an error
+         * related to change streams being unsupported instead of an
+         * UnsupportedException regarding use of the "readConcern" option from
+         * the Aggregate operation class. */
+        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
             $options['readConcern'] = $this->readConcern;
         }
 
-        $operation = new ChangeStream($this->databaseName, $this->collectionName, $pipeline, $options, $this->manager);
+        $operation = new Watch($this->manager, $this->databaseName, $this->collectionName, $pipeline, $options);
 
         return $operation->execute($server);
     }

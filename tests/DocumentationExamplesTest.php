@@ -4,6 +4,7 @@ namespace MongoDB\Tests;
 
 use MongoDB\Database;
 use MongoDB\Driver\Cursor;
+use MongoDB\Driver\Server;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropDatabase;
 
@@ -923,66 +924,102 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testChangeStreamExample_1_4()
     {
+        if ($this->getPrimaryServer()->getType() === Server::TYPE_STANDALONE) {
+            $this->markTestSkipped('$changeStream is not supported on standalone servers');
+        }
+
         if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
             $this->markTestSkipped('$changeStream is only supported on FCV 3.6 or higher');
         }
 
         $db = new Database($this->manager, $this->getDatabaseName());
+        $db->dropCollection('inventory');
 
         // Start Changestream Example 1
-        $cursor = $db->inventory->watch();
-        $cursor->next();
-        $current = $cursor->current();
+        $changeStream = $db->inventory->watch();
+        $changeStream->rewind();
+
+        $firstChange = $changeStream->current();
+
+        $changeStream->next();
+
+        $secondChange = $changeStream->current();
         // End Changestream Example 1
 
-        $this->assertNull($current);
+        $this->assertNull($firstChange);
+        $this->assertNull($secondChange);
 
         // Start Changestream Example 2
-        $cursor = $db->inventory->watch([], ['fullDocument' => \MongoDB\Operation\ChangeStream::FULL_DOCUMENT_UPDATE_LOOKUP]);
-        $cursor->next();
-        $current = $cursor->current();
+        $changeStream = $db->inventory->watch([], ['fullDocument' => \MongoDB\Operation\Watch::FULL_DOCUMENT_UPDATE_LOOKUP]);
+        $changeStream->rewind();
+
+        $firstChange = $changeStream->current();
+
+        $changeStream->next();
+
+        $nextChange = $changeStream->current();
         // End Changestream Example 2
 
-        $this->assertNull($current);
+        $this->assertNull($firstChange);
+        $this->assertNull($nextChange);
 
-        $insertedResult = $db->inventory->insertOne(['x' => 1]);
-        $insertedId = $insertedResult->getInsertedId();
-        $cursor->next();
-        $current = $cursor->current();
-        $expectedChange = (object) [
-            '_id' => $current->_id,
+        $insertManyResult = $db->inventory->insertMany([
+            ['_id' => 1, 'x' => 'foo'],
+            ['_id' => 2, 'x' => 'bar'],
+        ]);
+        $this->assertEquals(2, $insertManyResult->getInsertedCount());
+
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+        $lastChange = $changeStream->current();
+
+        $expectedChange = [
+            '_id' => $lastChange->_id,
             'operationType' => 'insert',
-            'fullDocument' => (object) ['_id' => $insertedId, 'x' => 1],
-            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'inventory'],
-            'documentKey' => (object) ['_id' => $insertedId]
+            'fullDocument' => ['_id' => 1, 'x' => 'foo'],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => 'inventory'],
+            'documentKey' => ['_id' => 1],
         ];
-        $this->assertEquals($current, $expectedChange);
+
+        $this->assertSameDocument($expectedChange, $lastChange);
 
         // Start Changestream Example 3
-        $resumeToken = ($current !== null) ? $current->_id : null;
-        if ($resumeToken !== null) {
-            $cursor = $db->inventory->watch([], ['resumeAfter' => $resumeToken]);
-            $cursor->next();
+        $resumeToken = ($lastChange !== null) ? $lastChange->_id : null;
+
+        if ($resumeToken === null) {
+            throw new \Exception('resumeToken was not found');
         }
+
+        $changeStream = $db->inventory->watch([], ['resumeAfter' => $resumeToken]);
+        $changeStream->rewind();
+
+        $nextChange = $changeStream->current();
         // End Changestream Example 3
 
-        $insertedResult = $db->inventory->insertOne(['x' => 2]);
-        $insertedId = $insertedResult->getInsertedId();
-        $cursor->next();
-        $expectedChange = (object) [
-            '_id' => $cursor->current()->_id,
+        $expectedChange = [
+            '_id' => $nextChange->_id,
             'operationType' => 'insert',
-            'fullDocument' => (object) ['_id' => $insertedId, 'x' => 2],
-            'ns' => (object) ['db' => 'phplib_test', 'coll' => 'inventory'],
-            'documentKey' => (object) ['_id' => $insertedId]
+            'fullDocument' => ['_id' => 2, 'x' => 'bar'],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => 'inventory'],
+            'documentKey' => ['_id' => 2],
         ];
-        $this->assertEquals($cursor->current(), $expectedChange);
+
+        $this->assertSameDocument($expectedChange, $nextChange);
 
         // Start Changestream Example 4
         $pipeline = [['$match' => ['$or' => [['fullDocument.username' => 'alice'], ['operationType' => 'delete']]]]];
-        $cursor = $db->inventory->watch($pipeline, []);
-        $cursor->next();
+        $changeStream = $db->inventory->watch($pipeline);
+        $changeStream->rewind();
+
+        $firstChange = $changeStream->current();
+
+        $changeStream->next();
+
+        $nextChange = $changeStream->current();
         // End Changestream Example 4
+
+        $this->assertNull($firstChange);
+        $this->assertNull($nextChange);
     }
 
     /**

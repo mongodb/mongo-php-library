@@ -380,6 +380,11 @@ class WatchFunctionalTest extends FunctionalTestCase
          * ensure we see the write. */
         $maxAwaitTimeMS = 100;
 
+        /* Calculate an approximate pivot to use for time assertions. We will
+         * assert that the duration of blocking responses is greater than this
+         * value, and vice versa. */
+        $pivot = ($maxAwaitTimeMS * 0.001) * 0.9;
+
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => $maxAwaitTimeMS]);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
@@ -391,7 +396,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $startTime = microtime(true);
         $changeStream->rewind();
         $duration = microtime(true) - $startTime;
-        $this->assertGreaterThanOrEqual($maxAwaitTimeMS * 0.001, $duration);
+        $this->assertGreaterThan($pivot, $duration);
         $this->assertLessThan(0.5, $duration);
 
         $this->assertFalse($changeStream->valid());
@@ -401,7 +406,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $startTime = microtime(true);
         $changeStream->next();
         $duration = microtime(true) - $startTime;
-        $this->assertGreaterThanOrEqual($maxAwaitTimeMS * 0.001, $duration);
+        $this->assertGreaterThan($pivot, $duration);
         $this->assertLessThan(0.5, $duration);
 
         $this->assertFalse($changeStream->valid());
@@ -413,7 +418,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $startTime = microtime(true);
         $changeStream->next();
         $duration = microtime(true) - $startTime;
-        $this->assertLessThan($maxAwaitTimeMS * 0.001, $duration);
+        $this->assertLessThan($pivot, $duration);
         $this->assertTrue($changeStream->valid());
     }
 

@@ -154,7 +154,12 @@ class FindFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('maxAwaitTimeMS option is not supported');
         }
 
-        $maxAwaitTimeMS = 10;
+        $maxAwaitTimeMS = 100;
+
+        /* Calculate an approximate pivot to use for time assertions. We will
+         * assert that the duration of blocking responses is greater than this
+         * value, and vice versa. */
+        $pivot = ($maxAwaitTimeMS * 0.001) * 0.9;
 
         // Create a capped collection.
         $databaseName = $this->getDatabaseName();
@@ -183,7 +188,7 @@ class FindFunctionalTest extends FunctionalTestCase
         $startTime = microtime(true);
         $it->rewind();
         $duration = microtime(true) - $startTime;
-        $this->assertLessThan($maxAwaitTimeMS * 0.001, $duration);
+        $this->assertLessThan($pivot, $duration);
 
         $this->assertTrue($it->valid());
         $this->assertSameDocument(['_id' => 1], $it->current());
@@ -193,7 +198,7 @@ class FindFunctionalTest extends FunctionalTestCase
         $startTime = microtime(true);
         $it->next();
         $duration = microtime(true) - $startTime;
-        $this->assertLessThan($maxAwaitTimeMS * 0.001, $duration);
+        $this->assertLessThan($pivot, $duration);
 
         $this->assertTrue($it->valid());
         $this->assertSameDocument(['_id' => 2], $it->current());
@@ -206,7 +211,7 @@ class FindFunctionalTest extends FunctionalTestCase
         $startTime = microtime(true);
         $it->next();
         $duration = microtime(true) - $startTime;
-        $this->assertGreaterThanOrEqual($maxAwaitTimeMS * 0.001, $duration);
+        $this->assertGreaterThan($pivot, $duration);
         $this->assertLessThan(0.5, $duration);
 
         $this->assertFalse($it->valid());

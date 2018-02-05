@@ -128,7 +128,7 @@ class ChangeStream implements Iterator
                 $resumable = true;
             }
             if ($e->getCode() === self::CURSOR_NOT_FOUND) {
-               $resumable = true;
+                $resumable = true;
             }
             if ($e instanceof ConnectionTimeoutException) {
                 $resumable = true;

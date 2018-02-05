@@ -315,6 +315,8 @@ class WatchFunctionalTest extends FunctionalTestCase
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
+        /* Note: we intentionally do not start iteration with rewind() to ensure
+         * that we test extraction functionality within next(). */
         $this->insertDocument(['x' => 1]);
 
         $changeStream->next();
@@ -379,12 +381,10 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertTrue($changeStream->valid());
     }
 
-    public function testResumeAfterKillThenNoOperations()
+    public function testRewindResumesAfterCursorNotFound()
     {
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
-
-        $this->insertDocument(['_id' => 1, 'x' => 'foo']);
 
         $this->killChangeStreamCursor($changeStream);
 
@@ -393,7 +393,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertNull($changeStream->current());
     }
 
-    public function testResumeAfterKillThenOperation()
+    public function testRewindExtractsResumeTokenAndNextResumes()
     {
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());

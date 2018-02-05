@@ -117,7 +117,26 @@ class ChangeStream implements Iterator
      */
     public function rewind()
     {
-        $this->csIt->rewind();
+        $resumable = false;
+        try {
+            $this->csIt->rewind();
+            if ($this->valid()) {
+                $this->extractResumeToken($this->csIt->current());
+            }
+        } catch (RuntimeException $e) {
+            if (strpos($e->getMessage(), "not master") !== false) {
+                $resumable = true;
+            }
+            if ($e->getCode() === self::CURSOR_NOT_FOUND) {
+                $resumable = true;
+            }
+            if ($e instanceof ConnectionTimeoutException) {
+                $resumable = true;
+            }
+        }
+        if ($resumable) {
+            $this->resume();
+        }
     }
 
     /**

@@ -53,6 +53,10 @@ class AggregateTest extends TestCase
         }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
+            $options[][] = ['maxAwaitTimeMS' => $value];
+        }
+
+        foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['maxTimeMS' => $value];
         }
 
@@ -62,6 +66,10 @@ class AggregateTest extends TestCase
 
         foreach ($this->getInvalidReadPreferenceValues() as $value) {
             $options[][] = ['readPreference' => $value];
+        }
+
+        foreach ($this->getInvalidSessionValues() as $value) {
+            $options[][] = ['session' => $value];
         }
 
         foreach ($this->getInvalidArrayValues() as $value) {

@@ -55,6 +55,10 @@ class UpdateTest extends TestCase
             $options[][] = ['multi' => $value];
         }
 
+        foreach ($this->getInvalidSessionValues() as $value) {
+            $options[][] = ['session' => $value];
+        }
+
         foreach ($this->getInvalidBooleanValues() as $value) {
             $options[][] = ['upsert' => $value];
         }

@@ -88,6 +88,32 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
         }
     }
 
+    public function testSessionOption()
+    {
+        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
+            $this->markTestSkipped('Sessions are not supported');
+        }
+
+        $operation = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => ['x' => 1]]]);
+        $operation->execute($this->getPrimaryServer());
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new DropIndexes(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    '*',
+                    ['session' => $this->createSession()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectHasAttribute('lsid', $command);
+            }
+        );
+    }
+
     /**
      * Asserts that an index with the given name exists for the collection.
      *

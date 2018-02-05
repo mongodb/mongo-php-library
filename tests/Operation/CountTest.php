@@ -52,6 +52,10 @@ class CountTest extends TestCase
             $options[][] = ['readPreference' => $value];
         }
 
+        foreach ($this->getInvalidSessionValues() as $value) {
+            $options[][] = ['session' => $value];
+        }
+
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['skip' => $value];
         }

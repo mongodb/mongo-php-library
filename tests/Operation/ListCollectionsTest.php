@@ -2,9 +2,9 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\Operation\ListDatabases;
+use MongoDB\Operation\ListCollections;
 
-class ListDatabasesTest extends TestCase
+class ListCollectionsTest extends TestCase
 {
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
@@ -12,12 +12,16 @@ class ListDatabasesTest extends TestCase
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        new ListDatabases($options);
+        new ListCollections($this->getDatabaseName(), $options);
     }
 
     public function provideInvalidConstructorOptions()
     {
         $options = [];
+
+        foreach ($this->getInvalidDocumentValues() as $value) {
+            $options[][] = ['filter' => $value];
+        }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['maxTimeMS' => $value];

@@ -71,6 +71,10 @@ operation: ~
 optional: true
 ---
 source:
+  file: apiargs-common-option.yaml
+  ref: session
+---
+source:
   file: apiargs-MongoDBCollection-method-find-option.yaml
   ref: sort
 ---

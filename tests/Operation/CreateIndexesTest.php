@@ -32,6 +32,10 @@ class CreateIndexesTest extends TestCase
             $options[][] = ['maxTimeMS' => $value];
         }
 
+        foreach ($this->getInvalidSessionValues() as $value) {
+            $options[][] = ['session' => $value];
+        }
+
         foreach ($this->getInvalidWriteConcernValues() as $value) {
             $options[][] = ['writeConcern' => $value];
         }

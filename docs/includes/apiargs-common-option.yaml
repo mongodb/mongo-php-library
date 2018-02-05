@@ -36,6 +36,17 @@ replacement:
   parent: "client"
 ---
 arg_name: option
+name: session
+type: :php:`MongoDB\\Driver\\Session <class.mongodb-driver-session>`
+description: |
+  Client session to associate with the operation.
+
+  Sessions are not supported for server versions prior to 3.6.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: typeMap
 type: array
 description: |

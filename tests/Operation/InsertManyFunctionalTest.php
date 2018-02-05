@@ -7,6 +7,8 @@ use MongoDB\InsertManyResult;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertMany;
+use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 class InsertManyFunctionalTest extends FunctionalTestCase
 {
@@ -48,6 +50,29 @@ class InsertManyFunctionalTest extends FunctionalTestCase
         ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
+    }
+
+    public function testSessionOption()
+    {
+        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
+            $this->markTestSkipped('Sessions are not supported');
+        }
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new InsertMany(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [['_id' => 1], ['_id' => 2]],
+                    ['session' => $this->createSession()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectHasAttribute('lsid', $command);
+            }
+        );
     }
 
     public function testUnacknowledgedWriteConcern()

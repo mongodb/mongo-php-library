@@ -104,6 +104,16 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * Return a list of invalid Session values.
+     *
+     * @return array
+     */
+    protected function getInvalidSessionValues()
+    {
+        return [123, 3.14, 'foo', true, [], new stdClass, new ReadConcern, new ReadPreference(ReadPreference::RP_PRIMARY), new WriteConcern(1)];
+    }
+
+    /**
      * Return a list of invalid string values.
      *
      * @return array

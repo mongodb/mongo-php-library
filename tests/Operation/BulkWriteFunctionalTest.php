@@ -8,6 +8,8 @@ use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\BulkWrite;
+use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 class BulkWriteFunctionalTest extends FunctionalTestCase
 {
@@ -284,6 +286,29 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             ['replaceOne' => [['_id' => 1], ['$inc' => ['x' => 1]]]],
         ]);
+    }
+
+    public function testSessionOption()
+    {
+        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
+            $this->markTestSkipped('Sessions are not supported');
+        }
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new BulkWrite(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [['insertOne' => [['_id' => 1]]]],
+                    ['session' => $this->createSession()]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectHasAttribute('lsid', $command);
+            }
+        );
     }
 
     /**

@@ -53,6 +53,10 @@ class AggregateTest extends TestCase
         }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
+            $options[][] = ['maxAwaitTimeMS' => $value];
+        }
+
+        foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['maxTimeMS' => $value];
         }
 

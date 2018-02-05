@@ -67,10 +67,6 @@ class Watch implements Executable
      *    Insert and replace operations always include the "fullDocument" field
      *    and delete operations omit the field as the document no longer exists.
      *
-     *  * session (MongoDB\Driver\Session): Client session.
-     *
-     *    Sessions are not supported for server versions < 3.6.
-     *
      *  * maxAwaitTimeMS (integer): The maximum amount of time for the server to
      *    wait on new documents to satisfy a change stream query.
      *
@@ -82,6 +78,10 @@ class Watch implements Executable
      *
      *  * resumeAfter (document): Specifies the logical starting point for the
      *    new change stream.
+     *
+     *  * session (MongoDB\Driver\Session): Client session.
+     *
+     *    Sessions are not supported for server versions < 3.6.
      *
      * @param string         $databaseName   Database name
      * @param string         $collectionName Collection name
@@ -148,7 +148,7 @@ class Watch implements Executable
         $pipeline = $this->pipeline;
         array_unshift($pipeline, $changeStream);
 
-        $aggregateOptions = array_intersect_key($this->options, ['batchSize' => 1, 'collation' => 1, 'maxAwaitTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1]);
+        $aggregateOptions = array_intersect_key($this->options, ['batchSize' => 1, 'collation' => 1, 'maxAwaitTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1]);
 
         return new Aggregate($this->databaseName, $this->collectionName, $pipeline, $aggregateOptions);
     }

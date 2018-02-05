@@ -63,6 +63,10 @@ class WatchTest extends FunctionalTestCase
             $options[][] = ['resumeAfter' => $value];
         }
 
+        foreach ($this->getInvalidSessionValues() as $value) {
+            $options[][] = ['session' => $value];
+        }
+
         return $options;
     }
 }

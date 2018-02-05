@@ -66,4 +66,8 @@ description: |
 interface: phpmethod
 operation: ~
 optional: true
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: session
 ...

@@ -21,6 +21,7 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Driver\Exception\RuntimeException;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\ResumeTokenException;
 use IteratorIterator;
 use Iterator;
@@ -149,25 +150,33 @@ class ChangeStream implements Iterator
     }
 
     /**
-     * Extracts the resumeToken (_id) of the input document.
+     * Extracts the resume token (i.e. "_id" field) from the change document.
      *
-     * @return void
-     * @throws ResumeTokenException if the document has no _id.
+     * @throws InvalidArgumentException
+     * @throws ResumeTokenException if the resume token cannot be found (i.e. no _id field)
      */
     private function extractResumeToken($document)
     {
-        if ($document === null) {
-            throw new ResumeTokenException("Cannot extract a resumeToken from an empty document");
+        if ( ! is_array($document) && ! is_object($document)) {
+            throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
         }
+
+        if (is_array($document) && isset($document['_id'])) {
+            $this->resumeToken = $document['_id'];
+            return;
+        }
+
         if ($document instanceof Serializable) {
             $this->extractResumeToken($document->bsonSerialize());
             return;
         }
+
         if (isset($document->_id)) {
-            $this->resumeToken = is_array($document) ? $document['_id'] : $document->_id;
-        } else {
-            throw new ResumeTokenException("Cannot provide resume functionality when the resume token is missing");
+            $this->resumeToken = $document->_id;
+            return;
         }
+
+        throw new ResumeTokenException("Cannot provide resume functionality when the resume token is missing");
     }
 
     /**

@@ -67,6 +67,10 @@ class WatchTest extends FunctionalTestCase
             $options[][] = ['session' => $value];
         }
 
+        foreach ($this->getInvalidArrayValues() as $value) {
+            $options[][] = ['typeMap' => $value];
+        }
+
         return $options;
     }
 }

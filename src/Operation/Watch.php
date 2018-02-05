@@ -122,8 +122,7 @@ class Watch implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return ChangeStream
-     * @throws UnexpectedValueException if the command response was malformed
-     * @throws UnsupportedException if collation, read concern, or write concern is used and unsupported
+     * @throws UnsupportedException if collation or read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)

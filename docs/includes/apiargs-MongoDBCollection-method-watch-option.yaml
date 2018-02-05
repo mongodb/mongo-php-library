@@ -45,6 +45,10 @@ optional: true
 ---
 source:
   file: apiargs-MongoDBCollection-common-option.yaml
+  ref: readConcern
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
   ref: readPreference
 post: |
   This is used for both the initial change stream aggregation and for

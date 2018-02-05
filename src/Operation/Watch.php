@@ -41,6 +41,7 @@ class Watch implements Executable
     const FULL_DOCUMENT_DEFAULT = 'default';
     const FULL_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
 
+    private $aggregate;
     private $databaseName;
     private $collectionName;
     private $pipeline;
@@ -96,24 +97,8 @@ class Watch implements Executable
             'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
         ];
 
-        if (isset($options['batchSize']) && ! is_integer($options['batchSize'])) {
-            throw InvalidArgumentException::invalidType('"batchSize" option', $options['batchSize'], 'integer');
-        }
-
-        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
-            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
-        }
-
-        if (isset($options['maxAwaitTimeMS']) && ! is_integer($options['maxAwaitTimeMS'])) {
-            throw InvalidArgumentException::invalidType('"maxAwaitTimeMS" option', $options['maxAwaitTimeMS'], 'integer');
-        }
-
-        if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
-            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
-        }
-
-        if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+        if (isset($options['fullDocument']) && ! is_string($options['fullDocument'])) {
+            throw InvalidArgumentException::invalidType('"fullDocument" option', $options['fullDocument'], 'string');
         }
 
         if (isset($options['resumeAfter'])) {
@@ -127,6 +112,8 @@ class Watch implements Executable
         $this->collectionName = (string) $collectionName;
         $this->pipeline = $pipeline;
         $this->options = $options;
+
+        $this->aggregate = $this->createAggregate();
     }
 
     /**
@@ -141,57 +128,46 @@ class Watch implements Executable
      */
     public function execute(Server $server)
     {
-        $command = $this->createCommand();
-
-        $cursor = $command->execute($server);
+        $cursor = $this->aggregate->execute($server);
 
         return new ChangeStream($cursor, $this->createResumeCallable());
     }
 
-    private function createAggregateOptions()
-    {
-        $aggOptions = array_intersect_key($this->options, ['batchSize' => 1, 'collation' => 1, 'maxAwaitTimeMS' => 1]);
-        if ( ! $aggOptions) {
-            return [];
-        }
-        return $aggOptions;
-    }
-
-    private function createChangeStreamOptions()
-    {
-        $csOptions = array_intersect_key($this->options, ['fullDocument' => 1, 'resumeAfter' => 1]);
-        if ( ! $csOptions) {
-            return [];
-        }
-        return $csOptions;
-    }
-
     /**
-     * Create the aggregate pipeline with the changeStream command.
+     * Create the aggregate command for creating a change stream.
      *
-     * @return Command
+     * This method is also used to recreate the aggregate command if a new
+     * resume token is provided while resuming.
+     *
+     * @return Aggregate
      */
-    private function createCommand()
+    private function createAggregate()
     {
-        $changeStreamArray = ['$changeStream' => $this->createChangeStreamOptions()];
-        array_unshift($this->pipeline, $changeStreamArray);
+        $changeStreamOptions = array_intersect_key($this->options, ['fullDocument' => 1, 'resumeAfter' => 1]);
+        $changeStream = ['$changeStream' => (object) $changeStreamOptions];
 
-        $cmd = new Aggregate($this->databaseName, $this->collectionName, $this->pipeline, $this->createAggregateOptions());
+        $pipeline = $this->pipeline;
+        array_unshift($pipeline, $changeStream);
 
-        return $cmd;
+        $aggregateOptions = array_intersect_key($this->options, ['batchSize' => 1, 'collation' => 1, 'maxAwaitTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1]);
+
+        return new Aggregate($this->databaseName, $this->collectionName, $pipeline, $aggregateOptions);
     }
 
     private function createResumeCallable()
     {
-        array_shift($this->pipeline);
         return function($resumeToken = null) {
-            // Select a server from manager using read preference option
-            $server = $this->manager->selectServer($this->options['readPreference']);
-            // Update $this->options['resumeAfter'] from $resumeToken arg
+            /* If a resume token was provided, recreate the Aggregate operation
+             * using the new resume token. */
             if ($resumeToken !== null) {
                 $this->options['resumeAfter'] = $resumeToken;
+                $this->aggregate = $this->createAggregate();
             }
-            // Return $this->execute() with the newly selected server
+
+            /* Select a new server using the read preference, execute this
+             * operation on it, and return the new ChangeStream. */
+            $server = $this->manager->selectServer($this->options['readPreference']);
+
             return $this->execute($server);
         };
     }

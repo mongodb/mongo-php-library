@@ -51,6 +51,10 @@ class Watch implements Executable
      *
      * Supported options:
      *
+     *  * batchSize (integer): The number of documents to return per batch.
+     *
+     *  * collation (document): Specifies a collation.
+     *
      *  * fullDocument (string): Determines whether the "fullDocument" field
      *    will be populated for update operations. By default, change streams
      *    only return the delta of fields during the update operation (via the
@@ -61,31 +65,17 @@ class Watch implements Executable
      *    Insert and replace operations always include the "fullDocument" field
      *    and delete operations omit the field as the document no longer exists.
      *
-     *  * resumeAfter (document): Specifies the logical starting point for the
-     *    new change stream.
+     *  * maxAwaitTimeMS (integer): The maximum amount of time for the server to
+     *    wait on new documents to satisfy a change stream query.
      *
-     *  * readConcern (MongoDB\Driver\ReadConcern): Read concern. Note that a
-     *    "majority" read concern is not compatible with the $out stage
-     *
-     *    This is not supported for server versions < 3.2 and will result in an
-     *    exception at execution time if used.
+     *  * readConcern (MongoDB\Driver\ReadConcern): Read concern.
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference. This
      *    will be used to select a new server when resuming. Defaults to a
      *    "primary" read preference.
      *
-     *  * maxAwaitTimeMS (integer): The maximum amount of time for the server to
-     *    wait on new documents to satisfy a change stream query.
-     *
-     *  * batchSize (integer): The number of documents to return per batch.
-     *
-     *    This option is sent only if the caller explicitly provides a value.
-     *    The default is to not send a value.
-     *
-     *  * collation (document): Specifies a collation.
-     *
-     *    This option is sent only if the caller explicitly provides a value.
-     *    The default is to not send a value.
+     *  * resumeAfter (document): Specifies the logical starting point for the
+     *    new change stream.
      *
      * @param string         $databaseName   Database name
      * @param string         $collectionName Collection name

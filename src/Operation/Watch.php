@@ -46,7 +46,7 @@ class Watch implements Executable
     private $collectionName;
     private $pipeline;
     private $options;
-    private $manager;
+    private $resumeCallable;
 
     /**
      * Constructs an aggregate command for creating a change stream.
@@ -107,13 +107,13 @@ class Watch implements Executable
             }
         }
 
-        $this->manager = $manager;
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->pipeline = $pipeline;
         $this->options = $options;
 
         $this->aggregate = $this->createAggregate();
+        $this->resumeCallable = $this->createResumeCallable($manager);
     }
 
     /**
@@ -129,7 +129,7 @@ class Watch implements Executable
     {
         $cursor = $this->aggregate->execute($server);
 
-        return new ChangeStream($cursor, $this->createResumeCallable());
+        return new ChangeStream($cursor, $this->resumeCallable);
     }
 
     /**
@@ -153,9 +153,9 @@ class Watch implements Executable
         return new Aggregate($this->databaseName, $this->collectionName, $pipeline, $aggregateOptions);
     }
 
-    private function createResumeCallable()
+    private function createResumeCallable(Manager $manager)
     {
-        return function($resumeToken = null) {
+        return function($resumeToken = null) use ($manager) {
             /* If a resume token was provided, recreate the Aggregate operation
              * using the new resume token. */
             if ($resumeToken !== null) {
@@ -165,7 +165,7 @@ class Watch implements Executable
 
             /* Select a new server using the read preference, execute this
              * operation on it, and return the new ChangeStream. */
-            $server = $this->manager->selectServer($this->options['readPreference']);
+            $server = $manager->selectServer($this->options['readPreference']);
 
             return $this->execute($server);
         };

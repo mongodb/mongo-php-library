@@ -7,6 +7,10 @@ addons:
     packages:
       - gdb
 
+cache:
+  directories:
+    - ${HOME}/.cache/pip
+
 env:
   global:
     - DRIVER_VERSION=1.4.0RC1
@@ -53,6 +57,9 @@ before_script:
 
 script:
   - vendor/bin/phpunit -v
+
+before_cache:
+  - rm -f ${HOME}/.cache/pip/log/debug.log
 
 after_failure:
   - find . -name 'core*' -exec ${TRAVIS_BUILD_DIR}/.travis/debug-core.sh {} \;

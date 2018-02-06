@@ -90,10 +90,6 @@ changes in this maintenance branch. This is important because we will later
 merge the ensuing release commits up to master with `--strategy=ours`, which
 will ignore changes from the merged commits.
 
-A version constant may be added at a later date (see:
-[PHPLIB-131](https://jira.mongodb.org/browse/PHPLIB-131)). For now, there is
-nothing to update.
-
 ### Tag release
 
 The maintenance branch's HEAD will be the target for our release tag:

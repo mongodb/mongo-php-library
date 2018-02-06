@@ -1,67 +1,69 @@
 language: php
 dist: trusty
-sudo: false 
-
-services:
-  - mongodb
+sudo: false
 
 addons:
   apt:
-    packages: &common_packages
+    packages:
       - gdb
+
+cache:
+  directories:
+    - ${HOME}/.cache/pip
+    - ${HOME}/.composer/cache/files
 
 env:
   global:
     - DRIVER_VERSION=1.4.0RC1
-    - SERVER_VERSION=3.4
+    - SERVER_VERSION=3.6.2
 
 matrix:
   fast_finish: true
   include:
     - php: 5.5
-      addons: &common_addons
-        apt:
-          sources: [ mongodb-3.4-precise ]
-          packages: [ mongodb-org, *common_packages ]
     - php: 5.6
-      addons: *common_addons
     - php: 7.0
-      addons: *common_addons
     - php: 7.1
-      addons: *common_addons
     - php: 7.2
-      addons: *common_addons
     - php: 7.0
       env:
-        - SERVER_VERSION=2.6
-      addons:
-        apt:
-          sources: [ mongodb-upstart ]
-          packages: [ mongodb-org, *common_packages ]
+        - SERVER_VERSION=2.6.12
     - php: 7.0
       env:
-        - SERVER_VERSION=3.0
-      addons:
-        apt:
-          sources: [ mongodb-3.0-precise ]
-          packages: [ mongodb-org, *common_packages ]
+        - SERVER_VERSION=3.0.15
     - php: 7.0
       env:
-        - SERVER_VERSION=3.2
-      addons:
-        apt:
-          sources: [ mongodb-3.2-precise ]
-          packages: [ mongodb-org, *common_packages ]
+        - SERVER_VERSION=3.2.18
+    - php: 7.0
+      env:
+        - SERVER_VERSION=3.4.11
+
+before_install:
+  - pip install "mongo-orchestration>=0.6.7,<1.0" --user `whoami`
+  - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${SERVER_VERSION}.tgz
+  - tar zxf mongodb-linux-x86_64-${SERVER_VERSION}.tgz
+  - export PATH=${PWD}/mongodb-linux-x86_64-${SERVER_VERSION}/bin/:${PATH}
+  - mongod --version
+  - mongo-orchestration --version
+  - export MO_PATH=`python -c 'import mongo_orchestration; from os import path; print(path.dirname(mongo_orchestration.__file__));'`
 
 before_script:
-  - mongod --version
+  - mongo-orchestration start
+  - pushd ${MO_PATH} && ${TRAVIS_BUILD_DIR}/.travis/mo.sh configurations/servers/clean.json start && popd
   - pecl install -f mongodb-${DRIVER_VERSION}
   - php --ri mongodb
-  - composer install --dev --no-interaction --prefer-source
+  - composer install --no-interaction --no-progress --no-suggest
   - ulimit -c
   - ulimit -c unlimited -S
 
 script:
-  - ./vendor/bin/phpunit --debug || RESULT=$?
-  - for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb `php -r 'echo PHP_BINARY;'` core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done;
-  - if [[ ${RESULT} != 0 ]]; then exit $RESULT ; fi;
+  - vendor/bin/phpunit -v
+
+before_cache:
+  - rm -f ${HOME}/.cache/pip/log/debug.log
+
+after_failure:
+  - find . -name 'core*' -exec ${TRAVIS_BUILD_DIR}/.travis/debug-core.sh {} \;
+
+after_script:
+  - mongo-orchestration stop

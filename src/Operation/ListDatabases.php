@@ -42,6 +42,10 @@ class ListDatabases implements Executable
      *
      * Supported options:
      *
+     *  * filter (document): Query by which to filter databases.
+     *
+     *    For servers < 3.6, this option is ignored.
+     *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
      *
@@ -54,6 +58,10 @@ class ListDatabases implements Executable
      */
     public function __construct(array $options = [])
     {
+        if (isset($options['filter']) && ! is_array($options['filter']) && ! is_object($options['filter'])) {
+            throw InvalidArgumentException::invalidType('"filter" option', $options['filter'], 'array or object');
+        }
+
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
@@ -77,6 +85,10 @@ class ListDatabases implements Executable
     public function execute(Server $server)
     {
         $cmd = ['listDatabases' => 1];
+
+        if ( ! empty($this->options['filter'])) {
+            $cmd['filter'] = (object) $this->options['filter'];
+        }
 
         if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];

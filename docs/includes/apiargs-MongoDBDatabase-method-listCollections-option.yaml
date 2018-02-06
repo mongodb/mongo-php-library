@@ -4,7 +4,12 @@ type: array|object
 description: |
   A query expression to filter the list of collections.
 
-  You can specify a query expression on the collection ``name`` and ``options``.
+  You can specify a query expression for collection fields (e.g. ``name``,
+  ``options``).
+
+  For server versions < 3.0, the filter can only be used to match the ``name``
+  field with a string value. More complex filters will result in an exception at
+  execution time if used.
 interface: phpmethod
 operation: ~
 optional: true

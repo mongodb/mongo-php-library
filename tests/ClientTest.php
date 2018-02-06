@@ -48,8 +48,6 @@ class ClientTest extends TestCase
 
     public function testSelectCollectionInheritsOptions()
     {
-        $this->markTestSkipped('Depends on https://jira.mongodb.org/browse/PHPC-523');
-
         $uriOptions = [
             'readConcernLevel' => ReadConcern::LOCAL,
             'readPreference' => 'secondaryPreferred',
@@ -112,8 +110,6 @@ class ClientTest extends TestCase
 
     public function testSelectDatabaseInheritsOptions()
     {
-        $this->markTestSkipped('Depends on https://jira.mongodb.org/browse/PHPC-523');
-
         $uriOptions = [
             'readConcernLevel' => ReadConcern::LOCAL,
             'readPreference' => 'secondaryPreferred',

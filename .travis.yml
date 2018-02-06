@@ -37,6 +37,8 @@ matrix:
     - php: 7.0
       env:
         - SERVER_VERSION=3.4.11
+    - php: 7.0
+      script: vendor/bin/phpstan analyse -l 0 src
 
 before_install:
   - pip install "mongo-orchestration>=0.6.7,<1.0" --user `whoami`

@@ -2,9 +2,9 @@
 MongoDB\\Client::startSession()
 ===============================
 
-.. default-domain:: mongodb
-
 .. versionadded:: 1.3
+
+.. default-domain:: mongodb
 
 .. contents:: On this page
    :local:

@@ -1,6 +1,8 @@
 source:
   file: apiargs-common-option.yaml
   ref: session
+post: |
+  .. versionadded:: 1.3
 ---
 source:
   file: apiargs-common-option.yaml

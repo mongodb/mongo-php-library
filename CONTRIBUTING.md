@@ -35,15 +35,6 @@ test suite. In addition to various PHPUnit options, it defines required
 this configuration by creating your own `phpunit.xml` file based on the
 `phpunit.xml.dist` file we provide.
 
-### Testing on HHVM
-
-By default, the PHPUnit script relies on the `php` interpreter for your shell
-(i.e. `#!/usr/bin/env php`). You can run the test suite with HHVM like so:
-
-```
-$ hhvm vendor/bin/phpunit
-```
-
 ## Documentation
 
 Documentation for the library lives in the `docs/` directory and is built with
@@ -73,8 +64,7 @@ releasing the `vX.Y` branch as X.Y.Z).
 
 ### Ensure PHP version compatibility
 
-Ensure that the library test suite completes on supported versions of PHP and
-HHVM.
+Ensure that the library test suite completes on supported versions of PHP.
 
 ### Transition JIRA issues and version
 
@@ -99,10 +89,6 @@ Before proceeding, ensure that the `master` branch is up-to-date with all code
 changes in this maintenance branch. This is important because we will later
 merge the ensuing release commits up to master with `--strategy=ours`, which
 will ignore changes from the merged commits.
-
-A version constant may be added at a later date (see:
-[PHPLIB-131](https://jira.mongodb.org/browse/PHPLIB-131)). For now, there is
-nothing to update.
 
 ### Tag release
 
@@ -135,7 +121,7 @@ The following template should be used for creating GitHub release notes via
 [this form](https://github.com/mongodb/mongo-php-library/releases/new).
 
 ```
-The PHP team is happy to announce that version X.Y.Z of our MongoDB PHP library is now available. This library is a high-level abstraction for the PHP 5, PHP 7, and HHVM drivers (i.e. [`mongodb`](http://php.net/mongodb) extension).
+The PHP team is happy to announce that version X.Y.Z of the MongoDB PHP library is now available. This library is a high-level abstraction for the [`mongodb`](http://php.net/mongodb) extension.
 
 **Release Highlights**
 
@@ -160,7 +146,7 @@ This library may be installed or upgraded with:
 
     composer require mongodb/mongodb
 
-Installation instructions for the PHP and HHVM driver may be found in the [PHP.net documentation](http://php.net/manual/en/mongodb.installation.php).
+Installation instructions for the `mongodb` extension may be found in the [PHP.net documentation](http://php.net/manual/en/mongodb.installation.php).
 ```
 
 The URL for the list of resolved JIRA issues will need to be updated with each

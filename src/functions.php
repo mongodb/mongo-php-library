@@ -166,25 +166,6 @@ function is_mapreduce_output_inline($out)
 }
 
 /**
- * Converts a ReadConcern instance to a stdClass for use in a BSON document.
- *
- * @internal
- * @see https://jira.mongodb.org/browse/PHPC-498
- * @param ReadConcern $readConcern Read concern
- * @return stdClass
- */
-function read_concern_as_document(ReadConcern $readConcern)
-{
-    $document = [];
-
-    if ($readConcern->getLevel() !== null) {
-        $document['level'] = $readConcern->getLevel();
-    }
-
-    return (object) $document;
-}
-
-/**
  * Return whether the server supports a particular feature.
  *
  * @internal
@@ -213,29 +194,3 @@ function is_string_array($input) {
     return true;
 }
 
-/**
- * Converts a WriteConcern instance to a stdClass for use in a BSON document.
- *
- * @internal
- * @see https://jira.mongodb.org/browse/PHPC-498
- * @param WriteConcern $writeConcern Write concern
- * @return stdClass
- */
-function write_concern_as_document(WriteConcern $writeConcern)
-{
-    $document = [];
-
-    if ($writeConcern->getW() !== null) {
-        $document['w'] = $writeConcern->getW();
-    }
-
-    if ($writeConcern->getJournal() !== null) {
-        $document['j'] = $writeConcern->getJournal();
-    }
-
-    if ($writeConcern->getWtimeout() !== 0) {
-        $document['wtimeout'] = $writeConcern->getWtimeout();
-    }
-
-    return (object) $document;
-}

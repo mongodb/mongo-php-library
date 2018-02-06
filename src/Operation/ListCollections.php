@@ -49,6 +49,10 @@ class ListCollections implements Executable
      *
      *  * filter (document): Query by which to filter collections.
      *
+     *    For server versions < 3.0, the filter can only be used to match the
+     *    "name" field with a string value. More complex filters will result in
+     *    an exception at execution time if used.
+     *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
      *

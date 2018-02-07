@@ -4,6 +4,9 @@ type: array
 description: |
    An array of filter documents that determines which array elements to modify
    for an update operation on an array field.
+
+   This is not supported for server versions prior to 3.6 and will result in an
+   exception at execution time if used.
 interface: phpmethod
 operation: ~
 optional: true

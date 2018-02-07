@@ -27,6 +27,7 @@ class ReplaceOneTest extends TestCase
 
     /**
      * @dataProvider provideReplacementDocuments
+     * @doesNotPerformAssertions
      */
     public function testConstructorReplacementArgument($replacement)
     {

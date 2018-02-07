@@ -262,7 +262,7 @@ class Client
      *
      * @see http://php.net/manual/en/mongodb-driver-manager.startsession.php
      * @param array  $options      Session options
-     * @return MongoDB\Driver\Session
+     * @return \MongoDB\Driver\Session
      */
     public function startSession(array $options = [])
     {

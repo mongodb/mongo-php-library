@@ -967,6 +967,10 @@ class Collection
             $options['readConcern'] = $this->readConcern;
         }
 
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
         $operation = new Watch($this->manager, $this->databaseName, $this->collectionName, $pipeline, $options);
 
         return $operation->execute($server);

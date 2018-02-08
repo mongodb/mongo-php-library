@@ -199,4 +199,32 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
 
         $stream->seek(11);
     }
+
+    public function testSeekPreviousChunk()
+    {
+        $fileDocument = $this->collectionWrapper->findFileById('length-10');
+        $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
+
+        $stream->readBytes(1);
+        $stream->seek(5);
+        $stream->seek(2);
+        $stream->readBytes(1);
+    }
+
+    public function testSeekSubsequentChunk()
+    {
+        $fileDocument = $this->collectionWrapper->findFileById('length-10');
+
+        $observer = $this->getMockBuilder(ReadableStream::class)
+                         ->setConstructorArgs(array($this->collectionWrapper, $fileDocument))
+                         ->getMock();
+
+        $observer->expects($this->never())
+                 ->method('initChunksIterator');
+
+        $observer->readBytes(1);
+        $observer->seek(5);
+        $observer->seek(2);
+        $observer->readBytes(1);
+    }
 }

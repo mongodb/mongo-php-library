@@ -1,6 +1,6 @@
-===============
-Tailable Cursor
-===============
+=========================
+Tailable Cursor Iteration
+=========================
 
 .. default-domain:: mongodb
 

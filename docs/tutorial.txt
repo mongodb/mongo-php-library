@@ -11,5 +11,5 @@ Tutorials
    /tutorial/decimal128
    /tutorial/gridfs
    /tutorial/indexes
-   /tutorial/example-data
    /tutorial/tailable-cursor
+   /tutorial/example-data

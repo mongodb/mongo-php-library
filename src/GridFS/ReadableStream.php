@@ -186,9 +186,32 @@ class ReadableStream
         $this->chunkOffset = (integer) floor($offset / $this->chunkSize);
         $this->bufferOffset = $offset % $this->chunkSize;
 
-        if ($lastChunkOffset !== $this->chunkOffset) {
-            $this->buffer = null;
+        if ($lastChunkOffset === $this->chunkOffset) {
+            return;
+        }
+
+        if ($this->chunksIterator === null) {
+            return;
+        }
+
+        // Clear the buffer since the current chunk will be changed
+        $this->buffer = null;
+
+        /* If we are seeking to a previous chunk, we need to reinitialize the
+         * chunk iterator.
+         */
+        if ($lastChunkOffset > $this->chunkOffset) {
             $this->chunksIterator = null;
+            return;
+        }
+
+        /* If we are seeking to a subsequent chunk, we do not need to
+         * reinitalize the chunk iterator. Instead, we can simply move forward
+         * to $this->chunkOffset.
+         */
+        $numChunks = $this->chunkOffset - $lastChunkOffset;
+        for ($i = 0; $i < $numChunks; $i++) {
+            $this->chunksIterator->next();
         }
     }
 

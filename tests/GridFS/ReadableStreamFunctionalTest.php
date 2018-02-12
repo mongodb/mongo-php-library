@@ -5,6 +5,8 @@ namespace MongoDB\Tests\GridFS;
 use MongoDB\BSON\Binary;
 use MongoDB\GridFS\CollectionWrapper;
 use MongoDB\GridFS\ReadableStream;
+use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 /**
  * Functional tests for the internal ReadableStream class.
@@ -188,6 +190,15 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         $stream->readBytes(-1);
     }
 
+    public function testSeekBeforeReading()
+    {
+        $fileDocument = $this->collectionWrapper->findFileById('length-10');
+        $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
+
+        $stream->seek(8);
+        $this->assertSame('ij', $stream->readBytes(2));
+    }
+
     /**
      * @expectedException MongoDB\Exception\InvalidArgumentException
      * @expectedExceptionMessage $offset must be >= 0 and <= 10; given: 11
@@ -198,5 +209,110 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
 
         $stream->seek(11);
+    }
+
+    /**
+     * @dataProvider providePreviousChunkSeekOffsetAndBytes
+     */
+    public function testSeekPreviousChunk($offset, $length, $expectedBytes)
+    {
+        $fileDocument = $this->collectionWrapper->findFileById('length-10');
+        $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
+
+        // Read to initialize and advance the chunk iterator to the last chunk
+        $this->assertSame('abcdefghij', $stream->readBytes(10));
+
+        $commands = [];
+
+        (new CommandObserver)->observe(
+            function() use ($stream, $offset, $length, $expectedBytes) {
+                $stream->seek($offset);
+                $this->assertSame($expectedBytes, $stream->readBytes($length));
+            },
+            function(stdClass $command) use (&$commands) {
+                $commands[] = key((array) $command);
+            }
+        );
+
+        $this->assertSame(['find'], $commands);
+    }
+
+    public function providePreviousChunkSeekOffsetAndBytes()
+    {
+        return [
+            [0, 4, 'abcd'],
+            [2, 4, 'cdef'],
+            [4, 4, 'efgh'],
+            [6, 4, 'ghij'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideSameChunkSeekOffsetAndBytes
+     */
+    public function testSeekSameChunk($offset, $length, $expectedBytes)
+    {
+        $fileDocument = $this->collectionWrapper->findFileById('length-10');
+        $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
+
+        // Read to initialize and advance the chunk iterator to the middle chunk
+        $this->assertSame('abcdef', $stream->readBytes(6));
+
+        $commands = [];
+
+        (new CommandObserver)->observe(
+            function() use ($stream, $offset, $length, $expectedBytes) {
+                $stream->seek($offset);
+                $this->assertSame($expectedBytes, $stream->readBytes($length));
+            },
+            function(stdClass $command) use (&$commands) {
+                $commands[] = key((array) $command);
+            }
+        );
+
+        $this->assertSame([], $commands);
+    }
+
+    public function provideSameChunkSeekOffsetAndBytes()
+    {
+        return [
+            [4, 4, 'efgh'],
+            [6, 4, 'ghij'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideSubsequentChunkSeekOffsetAndBytes
+     */
+    public function testSeekSubsequentChunk($offset, $length, $expectedBytes)
+    {
+        $fileDocument = $this->collectionWrapper->findFileById('length-10');
+        $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
+
+        // Read to initialize the chunk iterator to the first chunk
+        $this->assertSame('a', $stream->readBytes(1));
+
+        $commands = [];
+
+        (new CommandObserver)->observe(
+            function() use ($stream, $offset, $length, $expectedBytes) {
+                $stream->seek($offset);
+                $this->assertSame($expectedBytes, $stream->readBytes($length));
+            },
+            function(stdClass $command) use (&$commands) {
+                $commands[] = key((array) $command);
+            }
+        );
+
+        $this->assertSame([], $commands);
+    }
+
+    public function provideSubsequentChunkSeekOffsetAndBytes()
+    {
+        return [
+            [4, 4, 'efgh'],
+            [6, 4, 'ghij'],
+            [8, 2, 'ij'],
+        ];
     }
 }

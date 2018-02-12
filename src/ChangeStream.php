@@ -27,10 +27,10 @@ use IteratorIterator;
 use Iterator;
 
 /**
- * Iterator for the changeStream command.
+ * Iterator for a change stream.
  *
  * @api
- * @see \MongoDB\Collection::changeStream()
+ * @see \MongoDB\Collection::watch()
  * @see http://docs.mongodb.org/manual/reference/command/changeStream/
  */
 class ChangeStream implements Iterator
@@ -43,6 +43,9 @@ class ChangeStream implements Iterator
     const CURSOR_NOT_FOUND = 43;
 
     /**
+     * Constructor.
+     *
+     * @internal
      * @param Cursor $cursor
      * @param callable $resumeCallable
      */

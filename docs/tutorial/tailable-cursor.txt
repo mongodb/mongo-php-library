@@ -1,6 +1,8 @@
-===============
-Tailable Cursor
-===============
+.. _php-tailable-cursor:
+
+=========================
+Tailable Cursor Iteration
+=========================
 
 .. default-domain:: mongodb
 

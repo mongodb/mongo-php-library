@@ -1,0 +1,58 @@
+==============================================
+MongoDB\\MapReduceResult::getExecutionTimeMS()
+==============================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\MapReduceResult::getExecutionTimeMS()
+
+   Returns the execution time in milliseconds of the map-reduce operation.
+
+   .. code-block:: php
+
+      function getExecutionTimeMS(): integer
+
+Return Values
+-------------
+
+An integer denoting the execution time in milliseconds for the map-reduce
+operation.
+
+Examples
+--------
+
+This example reports the execution time for a map-reduce operation.
+
+.. code-block:: php
+
+   <?php
+
+   $collection = (new MongoDB\Client)->test->zips;
+
+   $map = new MongoDB\BSON\Javascript('function() { emit(this.state, this.pop); }');
+   $reduce = new MongoDB\BSON\Javascript('function(key, values) { return Array.sum(values) }');
+   $out = ['inline' => 1];
+
+   $result = $collection->mapReduce($map, $reduce, $out);
+
+   var_dump($result->getExecutionTimeMS());
+
+The output would then resemble::
+
+   int(244)
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::mapReduce()`
+- :manual:`mapReduce </reference/command/mapReduce>` command reference in the
+  MongoDB manual

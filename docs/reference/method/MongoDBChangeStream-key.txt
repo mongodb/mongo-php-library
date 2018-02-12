@@ -1,0 +1,74 @@
+============================
+MongoDB\\ChangeStream::key()
+============================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\ChangeStream::key()
+
+   Returns the index of the current event in the change stream.
+
+   .. code-block:: php
+
+      function key(): integer|null
+
+   The index of the first event in a change stream starts at zero and will
+   increment by one for each subsequent event.
+
+Return Values
+-------------
+
+The index of the current event in the change stream, or ``null`` if there is no
+current event (i.e. :phpmethod:`MongoDB\\ChangeStream::valid()` returns
+``false``).
+
+Examples
+--------
+
+This example reports the index of events while iterating a change stream.
+
+.. code-block:: php
+
+   <?php
+
+   $uri = 'mongodb://rs1.example.com,rs2.example.com/?replicaSet=myReplicaSet';
+
+   $collection = (new MongoDB\Client($uri))->test->inventory;
+
+   $changeStream = $collection->watch();
+
+   for ($changeStream->rewind(); true; $changeStream->next()) {
+       if ( ! $changeStream->valid()) {
+           continue;
+       }
+
+       $event = $changeStream->current();
+
+       printf("%d: %s\n", $changeStream->key(), $event['operationType']);
+   }
+
+Assuming that a document was inserted, updated, and deleted while the above
+script was iterating the change stream, the output would then resemble:
+
+.. code-block:: none
+
+   0: insert
+   1: update
+   2: delete
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::watch()`
+- :php:`Iterator::key() <iterator.key>`
+- :ref:`Tailable Cursor Iteration <php-tailable-cursor>`
+- :manual:`Change Streams </changeStreams>` documentation in the MongoDB manual

@@ -1,0 +1,73 @@
+==============
+Result Classes
+==============
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+MongoDB\\ChangeStream
+---------------------
+
+.. versionadded:: 1.3
+
+Definition
+~~~~~~~~~~
+
+.. phpclass:: MongoDB\\ChangeStream
+
+   This class extends PHP's :php:`Iterator <manual/en/class.iterator.php>`
+   interface. An instance of this class is returned by
+   :phpmethod:`MongoDB\\Collection::watch()`.
+
+   This class allows for iteration of events in a change stream. It also allows
+   iteration to automatically resume after certain errors, such as a replica set
+   failover.
+
+Methods
+~~~~~~~
+
+.. toctree::
+   :titlesonly:
+
+   /reference/method/MongoDBChangeStream-current
+   /reference/method/MongoDBChangeStream-getCursorId
+   /reference/method/MongoDBChangeStream-key
+   /reference/method/MongoDBChangeStream-next
+   /reference/method/MongoDBChangeStream-rewind
+   /reference/method/MongoDBChangeStream-valid
+
+----
+
+MongoDB\\MapReduceResult
+------------------------
+
+.. versionadded:: 1.2
+
+Definition
+~~~~~~~~~~
+
+.. phpclass:: MongoDB\\MapReduceResult
+
+   This class extends PHP's :php:`IteratorAggregate <iteratoraggregate>`
+   interface. An instance of this class is returned by
+   :phpmethod:`MongoDB\\Collection::mapReduce()`.
+
+   This class allows for iteration of map-reduce results irrespective of the
+   output method (e.g. inline, collection). It also provides access to command
+   statistics.
+
+Methods
+~~~~~~~
+
+.. toctree::
+   :titlesonly:
+
+   /reference/method/MongoDBMapReduceResult-getCounts
+   /reference/method/MongoDBMapReduceResult-getExecutionTimeMS
+   /reference/method/MongoDBMapReduceResult-getIterator
+   /reference/method/MongoDBMapReduceResult-getTiming

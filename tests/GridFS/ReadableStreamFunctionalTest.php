@@ -38,9 +38,11 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         ]);
     }
 
-    public function testValidConstructorFileDocument()
+    public function testGetFile()
     {
-        new ReadableStream($this->collectionWrapper, (object) ['_id' => null, 'chunkSize' => 1, 'length' => 0]);
+        $fileDocument = (object) ['_id' => null, 'chunkSize' => 1, 'length' => 0];
+        $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
+        $this->assertSame($fileDocument, $stream->getFile());
     }
 
     /**
@@ -108,14 +110,22 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         ];
     }
 
+    public function provideFilteredFileIdAndExpectedBytes()
+    {
+        return array_filter($this->provideFileIdAndExpectedBytes(),
+            function(array $args) {
+                return $args[1] > 0;
+            }
+        );
+    }
+
     /**
-     * @dataProvider provideFileIdAndExpectedBytes
+     * @dataProvider provideFilteredFileIdAndExpectedBytes
      */
     public function testReadBytesCalledMultipleTimes($fileId, $length, $expectedBytes)
     {
         $fileDocument = $this->collectionWrapper->findFileById($fileId);
         $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
-
         for ($i = 0; $i < $length; $i++) {
             $expectedByte = isset($expectedBytes[$i]) ? $expectedBytes[$i] : '';
             $this->assertSame($expectedByte, $stream->readBytes(1));

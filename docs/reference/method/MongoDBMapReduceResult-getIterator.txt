@@ -1,0 +1,83 @@
+=======================================
+MongoDB\\MapReduceResult::getIterator()
+=======================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\MapReduceResult::getIterator()
+
+   Returns a php:`Traversable <traversable>`, which may be used to iterate
+   through the results of the map-reduce operation.
+
+   .. code-block:: php
+
+      function getIterator(): Traversable
+
+Return Values
+-------------
+
+A :php:`Traversable <traversable>`, which may be used to iterate through the
+results of the map-reduce operation.
+
+Example
+-------
+
+This example iterates through the results of a map-reduce operation.
+
+.. code-block:: php
+
+   <?php
+
+   $collection = (new MongoDB\Client)->test->zips;
+
+   $map = new MongoDB\BSON\Javascript('function() { emit(this.state, this.pop); }');
+   $reduce = new MongoDB\BSON\Javascript('function(key, values) { return Array.sum(values) }');
+   $out = ['inline' => 1];
+
+   $result = $collection->mapReduce($map, $reduce, $out);
+
+   foreach ($result as $population) {
+      var_dump($population);
+   };
+
+The output would then resemble::
+
+   object(stdClass)#2293 (2) {
+      ["_id"]=>
+      string(2) "AK"
+      ["value"]=>
+      float(544698)
+   }
+   object(stdClass)#2300 (2) {
+      ["_id"]=>
+      string(2) "AL"
+      ["value"]=>
+      float(4040587)
+   }
+   object(stdClass)#2293 (2) {
+      ["_id"]=>
+      string(2) "AR"
+      ["value"]=>
+      float(2350725)
+   }
+   object(stdClass)#2300 (2) {
+      ["_id"]=>
+      string(2) "AZ"
+      ["value"]=>
+      float(3665228)
+   }
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::mapReduce()`
+- :php:`IteratorAggregate::getIterator() <manual/en/iteratoraggregate.getiterator.php>`

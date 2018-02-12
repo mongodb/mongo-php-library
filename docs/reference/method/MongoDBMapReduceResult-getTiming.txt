@@ -1,0 +1,74 @@
+=====================================
+MongoDB\\MapReduceResult::getTiming()
+=====================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\MapReduceResult::getTiming()
+
+   Returns timing statistics for the map-reduce operation.
+
+   .. code-block:: php
+
+      function getTiming(): array
+
+   Timing statistics will only be available if the ``verbose`` option was
+   specified for :phpmethod:`MongoDB\\Collection::mapReduce()`.
+
+Return Values
+-------------
+
+An array of timing statistics for the map-reduce operation. If no timing
+statistics are available, the array will be empty.
+
+Examples
+--------
+
+This example specifies the ``verbose`` option for
+:phpmethod:`MongoDB\\Collection::mapReduce()` and reports the timing statistics
+for a map-reduce operation.
+
+.. code-block:: php
+
+   <?php
+
+   $collection = (new MongoDB\Client)->test->zips;
+
+   $map = new MongoDB\BSON\Javascript('function() { emit(this.state, this.pop); }');
+   $reduce = new MongoDB\BSON\Javascript('function(key, values) { return Array.sum(values) }');
+   $out = ['inline' => 1];
+
+   $result = $collection->mapReduce($map, $reduce, $out, ['verbose' => true]);
+
+   var_dump($result->getTiming());
+
+The output would then resemble::
+
+   array(5) {
+     ["mapTime"]=>
+     int(163)
+     ["emitLoop"]=>
+     int(233)
+     ["reduceTime"]=>
+     int(9)
+     ["mode"]=>
+     string(5) "mixed"
+     ["total"]=>
+     int(233)
+   }
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::mapReduce()`
+- :manual:`mapReduce </reference/command/mapReduce>` command reference in the
+  MongoDB manual

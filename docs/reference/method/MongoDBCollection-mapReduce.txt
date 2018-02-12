@@ -36,7 +36,7 @@ Return Values
 -------------
 
 A :phpclass:`MongoDB\\MapReduceResult` object, which allows for iteration of
-mapReduce results irrespective of the output method (e.g. inline, collection)
+map-reduce results irrespective of the output method (e.g. inline, collection)
 via the :php:`IteratorAggregate <iteratoraggregate>` interface. It also
 provides access to command statistics.
 
@@ -116,7 +116,6 @@ The output would then resemble::
       ["value"]=>
       float(3665228)
    }
-
 
 See Also
 --------

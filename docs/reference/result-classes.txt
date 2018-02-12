@@ -40,3 +40,34 @@ Methods
    /reference/method/MongoDBChangeStream-next
    /reference/method/MongoDBChangeStream-rewind
    /reference/method/MongoDBChangeStream-valid
+
+----
+
+MongoDB\\MapReduceResult
+------------------------
+
+.. versionadded:: 1.2
+
+Definition
+~~~~~~~~~~
+
+.. phpclass:: MongoDB\\MapReduceResult
+
+   This class extends PHP's :php:`IteratorAggregate <iteratoraggregate>`
+   interface. An instance of this class is returned by
+   :phpmethod:`MongoDB\\Collection::mapReduce()`.
+
+   This class allows for iteration of map-reduce results irrespective of the
+   output method (e.g. inline, collection). It also provides access to command
+   statistics.
+
+Methods
+~~~~~~~
+
+.. toctree::
+   :titlesonly:
+
+   /reference/method/MongoDBMapReduceResult-getCounts
+   /reference/method/MongoDBMapReduceResult-getExecutionTimeMS
+   /reference/method/MongoDBMapReduceResult-getIterator
+   /reference/method/MongoDBMapReduceResult-getTiming

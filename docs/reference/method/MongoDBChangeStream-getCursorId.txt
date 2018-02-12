@@ -1,0 +1,58 @@
+====================================
+MongoDB\\ChangeStream::getCursorId()
+====================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\ChangeStream::getCursorId()
+
+   Returns the change stream cursor's ID.
+
+   .. code-block:: php
+
+      function getCursorId(): MongoDB\Driver\CursorId
+
+Return Values
+-------------
+
+A :php:`MongoDB\\Driver\\CursorId <class.mongodb-driver-cursorid>` object.
+
+Examples
+--------
+
+This example reports the cursor ID for a change stream.
+
+.. code-block:: php
+
+   <?php
+
+   $uri = 'mongodb://rs1.example.com,rs2.example.com/?replicaSet=myReplicaSet';
+
+   $collection = (new MongoDB\Client($uri))->test->inventory;
+
+   $changeStream = $collection->watch();
+
+   var_dump($changeStream->getCursorId());
+
+The output would then resemble::
+
+   object(MongoDB\Driver\CursorId)#5 (1) {
+     ["id"]=>
+     int(8462642181784669708)
+   }
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::watch()`
+- :php:`MongoDB\\Driver\\CursorId <class.mongodb-driver-cursorid>`
+- :php:`MongoDB\\Driver\\Cursor::getId() <manual/en/mongodb-driver-cursor.getid.php>`

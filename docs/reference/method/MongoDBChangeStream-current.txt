@@ -1,8 +1,6 @@
-============================
-MongoDB\\Collection::watch()
-============================
-
-.. versionadded:: 1.3
+================================
+MongoDB\\ChangeStream::current()
+================================
 
 .. default-domain:: mongodb
 
@@ -15,36 +13,25 @@ MongoDB\\Collection::watch()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::watch()
+.. phpmethod:: MongoDB\\ChangeStream::current()
 
-   Executes a :manual:`change stream </changeStreams>` operation on the
-   collection.
+   Returns the current event in the change stream.
 
    .. code-block:: php
 
-      function watch(array $pipeline = [], array $options = []): MongoDB\ChangeStream
+      function current(): array|object|null
 
-   This method has the following parameters:
-
-   .. include:: /includes/apiargs/MongoDBCollection-method-watch-param.rst
-
-   The ``$options`` parameter supports the following options:
-
-   .. include:: /includes/apiargs/MongoDBCollection-method-watch-option.rst
+   The structure of each event document will vary based on the operation type.
+   See :manual:`Change Events </reference/change-events/>` in the MongoDB manual
+   for more information.
 
 Return Values
 -------------
 
-A :phpclass:`MongoDB\\ChangeStream` object, which allows for iteration of
-events in the change stream via the :php:`Iterator <class.iterator>` interface.
-
-Errors/Exceptions
------------------
-
-.. include:: /includes/extracts/error-unexpectedvalueexception.rst
-.. include:: /includes/extracts/error-unsupportedexception.rst
-.. include:: /includes/extracts/error-invalidargumentexception.rst
-.. include:: /includes/extracts/error-driver-runtimeexception.rst
+An array or object for the current event in the change stream, or ``null`` if
+there is no current event (i.e. :phpmethod:`MongoDB\\ChangeStream::valid()`
+returns ``false``). The return type will depend on the ``typeMap`` option for
+:phpmethod:`MongoDB\\Collection::watch()`.
 
 Examples
 --------
@@ -109,8 +96,9 @@ script was iterating the change stream, the output would then resemble:
 See Also
 --------
 
-- :manual:`Aggregation Pipeline </core/aggregation-pipeline>` documentation in
-  the MongoDB Manual
+- :phpmethod:`MongoDB\\Collection::watch()`
+- :php:`Iterator::current() <iterator.current>`
+- :ref:`Tailable Cursor Iteration <php-tailable-cursor>`
 - :manual:`Change Streams </changeStreams>` documentation in the MongoDB manual
 - :manual:`Change Events </reference/change-events/>` documentation in the
   MongoDB manual

@@ -1,0 +1,42 @@
+=============================
+MongoDB\\ChangeStream::next()
+=============================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\ChangeStream::next()
+
+   Advances the change stream and attempts to load the next event.
+
+   .. code-block:: php
+
+      function next(): void
+
+   .. note::
+
+      Advancing the change stream does not guarantee that there will be a
+      current event to access. You should still call
+      :phpmethod:`MongoDB\\ChangeStream::valid()` to check for a current event
+      at each step of iteration.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::watch()`
+- :php:`Iterator::next() <iterator.next>`
+- :ref:`Tailable Cursor Iteration <php-tailable-cursor>`
+- :manual:`Change Streams </changeStreams>` documentation in the MongoDB manual

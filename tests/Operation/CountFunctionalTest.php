@@ -29,6 +29,56 @@ class CountFunctionalTest extends FunctionalTestCase
         );
     }
 
+    public function testExplainAllPlansExecution()
+    {
+        $insertMany = new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [
+            ['x' => 0],
+            ['x' => 1],
+            ['x' => 2],
+            ['y' => 3]
+        ]);
+        $insertMany->execute($this->getPrimaryServer());
+
+        $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), [], []);
+        $result = $operation->explain($this->getPrimaryServer(), ['x' => ['$gte' => 1]]);
+
+        $this->assertSame(['queryPlanner', 'executionStats'], array_keys($result));
+        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
+    }
+
+    public function testExplainExecutionStats()
+    {
+        $insertMany = new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [
+            ['x' => 0],
+            ['x' => 1],
+            ['x' => 2],
+            ['y' => 3]
+        ]);
+        $insertMany->execute($this->getPrimaryServer());
+
+        $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), [], []);
+        $result = $operation->explain($this->getPrimaryServer(), ['x' => ['$gte' => 1]], ['verbosity' => 'executionStats']);
+
+        $this->assertSame(['queryPlanner', 'executionStats'], array_keys($result));
+        $this->assertFalse(array_key_exists('allPlansExecution', $result['executionStats']));
+    }
+
+    public function testExplainQueryPlanner()
+    {
+        $insertMany = new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [
+            ['x' => 0],
+            ['x' => 1],
+            ['x' => 2],
+            ['y' => 3]
+        ]);
+        $insertMany->execute($this->getPrimaryServer());
+
+        $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), [], []);
+        $result = $operation->explain($this->getPrimaryServer(), ['x' => ['$gte' => 1]], ['verbosity' => 'queryPlanner']);
+
+        $this->assertSame(['queryPlanner'], array_keys($result));
+    }
+
     public function testHintOption()
     {
         $insertMany = new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [

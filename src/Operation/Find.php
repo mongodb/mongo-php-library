@@ -17,6 +17,7 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadConcern;
@@ -35,7 +36,7 @@ use MongoDB\Exception\UnsupportedException;
  * @see http://docs.mongodb.org/manual/tutorial/query-documents/
  * @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
  */
-class Find implements Executable
+class Find implements Explainable
 {
     const NON_TAILABLE = 1;
     const TAILABLE = 2;
@@ -291,6 +292,38 @@ class Find implements Executable
         }
 
         return $cursor;
+    }
+
+    /**
+     * Explain the operation.
+     *
+     * @see Explainable::explain()
+     * @param Server $server
+     * @param $command
+     * @param array $options
+     * @return array|object
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function explain($server, $command, $options = [])
+    {
+        if ( ! isset($options['verbosity'])) {
+            $options['verbosity'] = 'allPlansExecution';
+        }
+
+        $cmd = new Command(['explain' => ['find' => $this->collectionName, 'query' => $command], 'verbosity' => $options['verbosity']]);
+
+        if (empty($command)) {
+            $cmd = new Command(['explain' => ['find' => $this->collectionName], 'verbosity' => $options['verbosity']]);
+        }
+
+        $result = $server->executeCommand($this->databaseName, $cmd);
+        $resultArray = get_object_vars($result->toArray()[0]);
+
+        if ($options['verbosity'] === 'queryPlanner') {
+            return ['queryPlanner' => $resultArray['queryPlanner']];
+        }
+
+        return ['queryPlanner' => $resultArray['queryPlanner'], 'executionStats' => $resultArray['executionStats']];
     }
 
     /**

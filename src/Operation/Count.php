@@ -34,7 +34,7 @@ use MongoDB\Exception\UnsupportedException;
  * @see \MongoDB\Collection::count()
  * @see http://docs.mongodb.org/manual/reference/command/count/
  */
-class Count implements Executable
+class Count implements Explainable
 {
     private static $wireVersionForCollation = 5;
     private static $wireVersionForReadConcern = 4;
@@ -160,6 +160,39 @@ class Count implements Executable
         }
 
         return (integer) $result->n;
+    }
+
+    /**
+     * Explain the operation.
+     *
+     * @see Explainable::explain()
+     * @param Server $server
+     * @param $command
+     * @param array $options
+     * @return array|object
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function explain($server, $command, $options = [])
+    {
+        if ( ! isset($options['verbosity'])) {
+            $options['verbosity'] = 'allPlansExecution';
+        }
+
+        $cmd = new Command(['explain' => ['count' => $this->collectionName, 'query' => $command], 'verbosity' => $options['verbosity']]);
+
+        if (empty($command)) {
+            $cmd = new Command(['explain' => ['count' => $this->collectionName], 'verbosity' => $options['verbosity']]);
+        }
+
+        $result = $server->executeCommand($this->databaseName, $cmd);
+
+        $resultArray = get_object_vars($result->toArray()[0]); // cast $result to array
+
+        if ($options['verbosity'] === 'queryPlanner') {
+            return ['queryPlanner' => $resultArray['queryPlanner']];
+        }
+
+        return ['queryPlanner' => $resultArray['queryPlanner'], 'executionStats' => $resultArray['executionStats']];
     }
 
     /**

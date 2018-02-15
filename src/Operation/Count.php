@@ -34,7 +34,7 @@ use MongoDB\Exception\UnsupportedException;
  * @see \MongoDB\Collection::count()
  * @see http://docs.mongodb.org/manual/reference/command/count/
  */
-class Count implements Explainable
+class Count implements Executable, Explainable
 {
     private static $wireVersionForCollation = 5;
     private static $wireVersionForReadConcern = 4;
@@ -162,37 +162,9 @@ class Count implements Explainable
         return (integer) $result->n;
     }
 
-    /**
-     * Explain the operation.
-     *
-     * @see Explainable::explain()
-     * @param Server $server
-     * @param $command
-     * @param array $options
-     * @return array|object
-     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
-     */
-    public function explain($server, $command, $options = [])
+    public function getCommandDocument()
     {
-        if ( ! isset($options['verbosity'])) {
-            $options['verbosity'] = 'allPlansExecution';
-        }
-
-        $cmd = new Command(['explain' => ['count' => $this->collectionName, 'query' => $command], 'verbosity' => $options['verbosity']]);
-
-        if (empty($command)) {
-            $cmd = new Command(['explain' => ['count' => $this->collectionName], 'verbosity' => $options['verbosity']]);
-        }
-
-        $result = $server->executeCommand($this->databaseName, $cmd);
-
-        $resultArray = get_object_vars($result->toArray()[0]); // cast $result to array
-
-        if ($options['verbosity'] === 'queryPlanner') {
-            return ['queryPlanner' => $resultArray['queryPlanner']];
-        }
-
-        return ['queryPlanner' => $resultArray['queryPlanner'], 'executionStats' => $resultArray['executionStats']];
+        return $this->createCommandDocument();
     }
 
     /**
@@ -201,6 +173,16 @@ class Count implements Explainable
      * @return Command
      */
     private function createCommand()
+    {
+        return new Command($this->createCommandDocument());
+    }
+
+    /**
+     * Create the count command document.
+     *
+     * @return array
+     */
+    private function createCommandDocument()
     {
         $cmd = ['count' => $this->collectionName];
 
@@ -222,7 +204,7 @@ class Count implements Explainable
             }
         }
 
-        return new Command($cmd);
+        return $cmd;
     }
 
     /**

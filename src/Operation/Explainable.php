@@ -20,19 +20,12 @@ namespace MongoDB\Operation;
 use MongoDB\Driver\Server;
 
 /**
- * Explainable interface for explainable operations (count, distinct, group,
- * find, findAndModify, delete, and update).
+ * Explainable interface for explainable operations (count, distinct, find,
+ * findAndModify, delete, and update).
  *
  * @internal
  */
 interface Explainable extends Executable
 {
-    /**
-     * Explain the operation.
-     *
-     * @param $command
-     * @param array $options
-     * @return mixed
-     */
-    public function explain($server, $command, $options = []);
+    function getCommandDocument();
 }

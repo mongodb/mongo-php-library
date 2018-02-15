@@ -34,7 +34,7 @@ use MongoDB\Exception\UnsupportedException;
  * @see \MongoDB\Collection::distinct()
  * @see http://docs.mongodb.org/manual/reference/command/distinct/
  */
-class Distinct implements Executable
+class Distinct implements Executable, Explainable
 {
     private static $wireVersionForCollation = 5;
     private static $wireVersionForReadConcern = 4;
@@ -143,12 +143,27 @@ class Distinct implements Executable
         return $result->values;
     }
 
+    public function getCommandDocument()
+    {
+        return $this->createCommandDocument();
+    }
+
     /**
      * Create the distinct command.
      *
      * @return Command
      */
     private function createCommand()
+    {
+        return new Command($this->createCommandDocument());
+    }
+
+    /**
+     * Create the distinct command document.
+     *
+     * @return array
+     */
+    private function createCommandDocument()
     {
         $cmd = [
             'distinct' => $this->collectionName,
@@ -167,7 +182,7 @@ class Distinct implements Executable
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
         }
 
-        return new Command($cmd);
+        return $cmd;
     }
 
     /**

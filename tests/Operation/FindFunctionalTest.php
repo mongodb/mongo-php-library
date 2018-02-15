@@ -217,41 +217,6 @@ class FindFunctionalTest extends FunctionalTestCase
         $this->assertFalse($it->valid());
     }
 
-    public function testExplainAllPlansExecution()
-    {
-        $this->createFixtures(3);
-
-        $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), [], []);
-        $command = [];
-        $result = $operation->explain($this->getPrimaryServer(), $command);
-
-        $this->assertSame(['queryPlanner', 'executionStats'], array_keys($result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testExplainExecutionStats()
-    {
-        $this->createFixtures(3);
-
-        $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), [], []);
-        $command = [];
-        $result = $operation->explain($this->getPrimaryServer(), $command, ['verbosity' => 'executionStats']);
-
-        $this->assertSame(['queryPlanner', 'executionStats'], array_keys($result));
-        $this->assertFalse(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testExplainQueryPlanner()
-    {
-        $this->createFixtures(3);
-
-        $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), [], []);
-        $command = [];
-        $result = $operation->explain($this->getPrimaryServer(), $command, ['verbosity' => 'queryPlanner']);
-
-        $this->assertSame(['queryPlanner'], array_keys($result));
-    }
-
     /**
      * Create data fixtures.
      *

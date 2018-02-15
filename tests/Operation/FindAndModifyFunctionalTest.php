@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Model\BSONDocument;
+use MongoDB\Operation\Explain;
 use MongoDB\Operation\FindAndModify;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
@@ -26,6 +27,53 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $this->assertObjectNotHasAttribute('writeConcern', $command);
             }
         );
+    }
+
+    public function testExplainAllPlansExecution()
+    {
+        $operation = new FindAndModify($this->getDatabaseName(), $this->getCollectionName(), ['remove' => true, 'session' => $this->createSession()]);
+
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_ALL_PLANS, 'typeMap' => ['root' => 'array']]);
+        $result = $explainOperation->execute($this->getPrimaryServer());
+
+        $this->assertTrue(array_key_exists('queryPlanner', $result));
+        $this->assertTrue(array_key_exists('executionStats', $result));
+        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
+    }
+
+    public function testExplainDefaultVerbosity()
+    {
+        $operation = new FindAndModify($this->getDatabaseName(), $this->getCollectionName(), ['remove' => true, 'session' => $this->createSession()]);
+
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array']]);
+        $result = $explainOperation->execute($this->getPrimaryServer());
+
+        $this->assertTrue(array_key_exists('queryPlanner', $result));
+        $this->assertTrue(array_key_exists('executionStats', $result));
+        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
+    }
+
+    public function testExplainExecutionStats()
+    {
+        $operation = new FindAndModify($this->getDatabaseName(), $this->getCollectionName(), ['remove' => true, 'session' => $this->createSession()]);
+
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_EXEC_STATS, 'typeMap' => ['root' => 'array']]);
+        $result = $explainOperation->execute($this->getPrimaryServer());
+
+        $this->assertTrue(array_key_exists('queryPlanner', $result));
+        $this->assertTrue(array_key_exists('executionStats', $result));
+        $this->assertFalse(array_key_exists('allPlansExecution', $result['executionStats']));
+    }
+
+    public function testExplainQueryPlanner()
+    {
+        $operation = new FindAndModify($this->getDatabaseName(), $this->getCollectionName(), ['remove' => true, 'session' => $this->createSession()]);
+
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_QUERY, 'typeMap' => ['root' => 'array']]);
+        $result = $explainOperation->execute($this->getPrimaryServer());
+
+        $this->assertTrue(array_key_exists('queryPlanner', $result));
+        $this->assertFalse(array_key_exists('executionStats', $result));
     }
 
     public function testSessionOption()

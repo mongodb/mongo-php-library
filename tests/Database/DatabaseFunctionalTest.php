@@ -8,6 +8,7 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Operation\CreateIndexes;
 
 /**
  * Functional tests for the Database class.
@@ -151,6 +152,22 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
+
+    public function testModifyCollection()
+    {
+        $this->database->createCollection($this->getCollectionName());
+
+        $indexes = [['key' => ['lastAccess' => 1], 'expireAfterSeconds' => 3]];
+        $createIndexes = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), $indexes);
+        $createIndexes->execute($this->getPrimaryServer());
+
+        $commandResult = $this->database->modifyCollection($this->getCollectionName(), ['index' => ['keyPattern' => ['lastAccess' => 1], 'expireAfterSeconds' => 1000]]);
+
+        $this->assertCommandSucceeded($commandResult);
+        $this->assertSame(3, $commandResult['expireAfterSeconds_old']);
+        $this->assertSame(1000, $commandResult['expireAfterSeconds_new']);
+    }
+
 
     public function testSelectCollectionInheritsOptions()
     {

@@ -33,6 +33,7 @@ use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListCollections;
+use MongoDB\Operation\ModifyCollection;
 
 class Database
 {
@@ -336,6 +337,33 @@ class Database
     {
         $operation = new ListCollections($this->databaseName, $options);
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        return $operation->execute($server);
+    }
+
+    /**
+     * Modifies a collection or view.
+     *
+     * @see ModifyCollection::__construct() for supported options
+     * @param string $collectionName    Collection or view to modify
+     * @param array  $collectionOptions Collection or view options to assign
+     * @param array  $options           Command options
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function modifyCollection($collectionName, array $collectionOptions, array $options = [])
+    {
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new ModifyCollection($this->databaseName, $collectionName, $collectionOptions, $options);
 
         return $operation->execute($server);
     }

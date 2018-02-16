@@ -21,6 +21,7 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Model\BSONDocument;
 
 /**
  * Operation for the explain command.

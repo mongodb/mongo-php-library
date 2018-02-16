@@ -26,7 +26,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
-
+use MongoDB\Model\BSONDocument;
 /**
  * Operation for the find command.
  *
@@ -35,7 +35,7 @@ use MongoDB\Exception\UnsupportedException;
  * @see http://docs.mongodb.org/manual/tutorial/query-documents/
  * @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
  */
-class Find implements Executable
+class Find implements Executable, Explainable
 {
     const NON_TAILABLE = 1;
     const TAILABLE = 2;
@@ -284,7 +284,7 @@ class Find implements Executable
             throw UnsupportedException::readConcernNotSupported();
         }
 
-        $cursor = $server->executeQuery($this->databaseName . '.' . $this->collectionName, $this->createQuery(), $this->createOptions());
+        $cursor = $server->executeQuery($this->databaseName . '.' . $this->collectionName, new Query($this->filter, $this->createFindOptions()), $this->createOptions());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
@@ -293,33 +293,49 @@ class Find implements Executable
         return $cursor;
     }
 
-    /**
-     * Create options for executing the command.
-     *
-     * @see http://php.net/manual/en/mongodb-driver-server.executequery.php
-     * @return array
-     */
-    private function createOptions()
+    public function getCommandDocument()
     {
-        $options = [];
-
-        if (isset($this->options['readPreference'])) {
-            $options['readPreference'] = $this->options['readPreference'];
-        }
-
-        if (isset($this->options['session'])) {
-            $options['session'] = $this->options['session'];
-        }
-
-        return $options;
+        return $this->createCommandDocument();
     }
 
     /**
-     * Create the find query.
-     *
-     * @return Query
+     * Construct a command document for Find
      */
-    private function createQuery()
+    private function createCommandDocument()
+    {
+        $cmd = ['find' => $this->collectionName, 'filter' => new BSONDocument($this->filter)];
+
+        $options = $this->createFindOptions();
+
+        if (empty($options)) {
+            return $cmd;
+        }
+
+        // maxAwaitTimeMS is a Query level option so should not be considered here
+        unset($options['maxAwaitTimeMS']);
+
+        if (isset($options['cursorType'])) {
+            if ($options['cursorType'] === self::TAILABLE) {
+                $cmd['tailable'] = true;
+            }
+            if ($options['cursorType'] === self::TAILABLE_AWAIT) {
+                $cmd['tailable'] = true;
+                $cmd['awaitData'] = true;
+            }
+        }
+
+        return $cmd + $options;
+    }
+
+    /**
+     * Create options for the find query.
+     *
+     * Note that these are separate from the options for executing the command,
+     * which are created in createOptions().
+     *
+     * @return array
+     */
+    private function createFindOptions()
     {
         $options = [];
 
@@ -351,6 +367,27 @@ class Find implements Executable
             $options['modifiers'] = $modifiers;
         }
 
-        return new Query($this->filter, $options);
+        return $options;
+    }
+
+    /**
+     * Create options for executing the command.
+     *
+     * @see http://php.net/manual/en/mongodb-driver-server.executequery.php
+     * @return array
+     */
+    private function createOptions()
+    {
+        $options = [];
+
+        if (isset($this->options['readPreference'])) {
+            $options['readPreference'] = $this->options['readPreference'];
+        }
+
+        if (isset($this->options['session'])) {
+            $options['session'] = $this->options['session'];
+        }
+
+        return $options;
     }
 }

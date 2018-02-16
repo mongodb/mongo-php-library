@@ -19,6 +19,8 @@ namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Server;
+use MongoDB\Exception\UnsupportedException;
+use MongoDB\Exception\InvalidArgumentException;
 
 /**
  * Operation for the explain command.
@@ -29,26 +31,43 @@ use MongoDB\Driver\Server;
  */
 class Explain implements Executable
 {
-
     const VERBOSITY_ALL_PLANS = 'allPlansExecution';
     const VERBOSITY_EXEC_STATS = 'executionStats';
     const VERBOSITY_QUERY = 'queryPlanner';
+
+    private static $wireVersionForExplain = 2;
+    private static $wireVersionForDistinct = 4;
+    private static $wireVersionForFindAndModify = 4;
 
     private $databaseName;
     private $explainable;
     private $options;
 
-    /* The Explainable knows what collection it targets, so we only need
-     * a database to run `explain` on. Alternatively, we might decide to also
-     * pull the database from Explainable somehow, since all Operations we
-     * might explain also require a database name.
+    /**
+     * Constructs an explain command for explainable operations.
      *
-     * Options will at least be verbosity (the only documented explain option)
-     * and typeMap, which we can apply to the cursor before the execute()
-     * method returns current($cursor->toArray()) or $cursor->toArray()[0]
-     * (both are equivalent). */
+     * Supported options:
+     *
+     *  * verbosity (string): The mode in which the explain command will be run.
+     *
+     *  * typeMap (array): Type map for BSON deserialization. This will be used
+     *    used for the returned command result document.
+     *
+     * @param string $databaseName      Database name
+     * @param Explainable $explainable  Operation to explain
+     * @param array  $options           Command options
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     */
     public function __construct($databaseName, Explainable $explainable, array $options = [])
     {
+        if (isset($options['verbosity']) && ! is_string($options['verbosity'])) {
+            throw InvalidArgumentException::invalidType('"verbosity" option', $options['verbosity'], 'string');
+        }
+
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        }
+
         $this->databaseName = $databaseName;
         $this->explainable = $explainable;
         $this->options = $options;
@@ -56,6 +75,22 @@ class Explain implements Executable
 
     public function execute(Server $server)
     {
+        if (! \MongoDB\server_supports_feature($server, self::$wireVersionForExplain)) {
+            throw UnsupportedException::explainNotSupported();
+        }
+
+        if ($this->explainable instanceOf \MongoDB\Operation\Distinct) {
+            if (! \MongoDB\server_supports_feature($server, self::$wireVersionForDistinct)) {
+                throw UnsupportedException::explainNotSupported();
+            }
+        }
+
+        if ($this->explainable instanceOf \MongoDB\Operation\FindAndModify) {
+            if (! \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModify)) {
+                throw UnsupportedException::explainNotSupported();
+            }
+        }
+
         $cmd = ['explain' => $this->explainable->getCommandDocument()];
 
         if (isset($this->options['verbosity'])) {

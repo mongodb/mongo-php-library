@@ -210,7 +210,7 @@ class FindAndModify implements Executable, Explainable
             throw UnsupportedException::writeConcernNotSupported();
         }
 
-        $cursor = $server->executeReadWriteCommand($this->databaseName, $this->createCommand($server), $this->createOptions());
+        $cursor = $server->executeReadWriteCommand($this->databaseName, new Command($this->createCommandDocument()), $this->createOptions());
         $result = current($cursor->toArray());
 
         if ( ! isset($result->value)) {
@@ -242,17 +242,6 @@ class FindAndModify implements Executable, Explainable
     public function getCommandDocument()
     {
         return $this->createCommandDocument();
-    }
-
-    /**
-     * Create the findAndModify command.
-     *
-     * @param Server $server
-     * @return Command
-     */
-    private function createCommand(Server $server)
-    {
-        return new Command($this->createCommandDocument());
     }
 
     /**

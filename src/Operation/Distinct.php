@@ -133,7 +133,7 @@ class Distinct implements Executable, Explainable
             throw UnsupportedException::readConcernNotSupported();
         }
 
-        $cursor = $server->executeReadCommand($this->databaseName, $this->createCommand(), $this->createOptions());
+        $cursor = $server->executeReadCommand($this->databaseName, new Command($this->createCommandDocument()), $this->createOptions());
         $result = current($cursor->toArray());
 
         if ( ! isset($result->values) || ! is_array($result->values)) {
@@ -146,16 +146,6 @@ class Distinct implements Executable, Explainable
     public function getCommandDocument()
     {
         return $this->createCommandDocument();
-    }
-
-    /**
-     * Create the distinct command.
-     *
-     * @return Command
-     */
-    private function createCommand()
-    {
-        return new Command($this->createCommandDocument());
     }
 
     /**

@@ -29,53 +29,6 @@ class DistinctFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function testExplainAllPlansExecution()
-    {
-        $operation = new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', []);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_ALL_PLANS, 'typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testExplainDefaultVerbosity()
-    {
-        $operation = new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', []);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testExplainExecutionStats()
-    {
-        $operation = new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', []);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_EXEC_STATS, 'typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertFalse(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testExplainQueryPlanner()
-    {
-        $operation = new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', []);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_QUERY, 'typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertFalse(array_key_exists('executionStats', $result));
-    }
-
     public function testSessionOption()
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {

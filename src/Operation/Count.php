@@ -151,7 +151,7 @@ class Count implements Executable, Explainable
             throw UnsupportedException::readConcernNotSupported();
         }
 
-        $cursor = $server->executeReadCommand($this->databaseName, $this->createCommand(), $this->createOptions());
+        $cursor = $server->executeReadCommand($this->databaseName, new Command($this->createCommandDocument()), $this->createOptions());
         $result = current($cursor->toArray());
 
         // Older server versions may return a float
@@ -165,16 +165,6 @@ class Count implements Executable, Explainable
     public function getCommandDocument()
     {
         return $this->createCommandDocument();
-    }
-
-    /**
-     * Create the count command.
-     *
-     * @return Command
-     */
-    private function createCommand()
-    {
-        return new Command($this->createCommandDocument());
     }
 
     /**

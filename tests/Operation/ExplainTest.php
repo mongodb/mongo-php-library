@@ -12,19 +12,9 @@ class ExplainTest extends TestCase
      * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorOptionTypeChecksForCount(array $options)
+    public function testConstructorOptionTypeChecks(array $options)
     {
-        $explainable = new Count($this->getDatabaseName(), $this->getCollectionName(),[]);
-        new Explain($this->getDatabaseName(), $explainable, $options);
-    }
-
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @dataProvider provideInvalidConstructorOptions
-     */
-    public function testConstructorOptionTypeChecksForDistinct(array $options)
-    {
-        $explainable = new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', []);
+        $explainable = $this->createMock('MongoDB\Operation\Explainable');
         new Explain($this->getDatabaseName(), $explainable, $options);
     }
 

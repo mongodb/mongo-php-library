@@ -80,16 +80,12 @@ class Explain implements Executable
             throw UnsupportedException::explainNotSupported();
         }
 
-        if ($this->explainable instanceOf \MongoDB\Operation\Distinct) {
-            if (! \MongoDB\server_supports_feature($server, self::$wireVersionForDistinct)) {
-                throw UnsupportedException::explainNotSupported();
-            }
+        if ($this->explainable instanceof \MongoDB\Operation\Distinct && ! \MongoDB\server_supports_feature($server, self::$wireVersionForDistinct)) {
+            throw UnsupportedException::explainNotSupported();
         }
 
-        if ($this->explainable instanceOf \MongoDB\Operation\FindAndModify) {
-            if (! \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModify)) {
-                throw UnsupportedException::explainNotSupported();
-            }
+        if ($this->explainable instanceof \MongoDB\Operation\FindAndModify && ! \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModify)) {
+            throw UnsupportedException::explainNotSupported();
         }
 
         $cmd = ['explain' => $this->explainable->getCommandDocument()];

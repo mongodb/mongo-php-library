@@ -22,7 +22,10 @@ class ExplainFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testCountAllPlansExecution()
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testCount($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
     {
         $insertMany = new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [
             ['x' => 0],
@@ -33,72 +36,16 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $insertMany->execute($this->getPrimaryServer());
 
         $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), ['x' => ['$gte' => 1]], []);
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_ALL_PLANS, 'typeMap' => ['root' => 'array']]);
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
         $result = $explainOperation->execute($this->getPrimaryServer());
 
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    public function testCountDefaultVerbosity()
-    {
-        $insertMany = new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [
-            ['x' => 0],
-            ['x' => 1],
-            ['x' => 2],
-            ['y' => 3]
-        ]);
-        $insertMany->execute($this->getPrimaryServer());
-
-        $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), ['x' => ['$gte' => 1]], []);
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testCountExecutionStats()
-    {
-        $insertMany = new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [
-            ['x' => 0],
-            ['x' => 1],
-            ['x' => 2],
-            ['y' => 3]
-        ]);
-        $insertMany->execute($this->getPrimaryServer());
-
-        $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), ['x' => ['$gte' => 1]], []);
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_EXEC_STATS, 'typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-
-        $this->assertFalse(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testCountQueryPlanner()
-    {
-        $insertMany = new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [
-            ['x' => 0],
-            ['x' => 1],
-            ['x' => 2],
-            ['y' => 3]
-        ]);
-        $insertMany->execute($this->getPrimaryServer());
-
-        $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), ['x' => ['$gte' => 1]], []);
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_QUERY, 'typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertFalse(array_key_exists('executionStats', $result));
-    }
-
-    public function testDistinctAllPlansExecution()
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testDistinct($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
     {
         if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
             $this->markTestSkipped('Distinct is not supported on servers with version < 3.2');
@@ -106,62 +53,16 @@ class ExplainFunctionalTest extends FunctionalTestCase
 
         $operation = new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', []);
 
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_ALL_PLANS, 'typeMap' => ['root' => 'array']]);
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
         $result = $explainOperation->execute($this->getPrimaryServer());
 
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    public function testDistinctDefaultVerbosity()
-    {
-        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
-            $this->markTestSkipped('Distinct is not supported on servers with version < 3.2');
-        }
-
-        $operation = new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', []);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testDistinctExecutionStats()
-    {
-        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
-            $this->markTestSkipped('Distinct is not supported on servers with version < 3.2');
-        }
-
-        $operation = new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', []);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_EXEC_STATS, 'typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertFalse(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testDistinctQueryPlanner()
-    {
-        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
-            $this->markTestSkipped('Distinct is not supported on servers with version < 3.2');
-        }
-
-        $operation = new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', []);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_QUERY, 'typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertFalse(array_key_exists('executionStats', $result));
-    }
-
-    public function testFindAndModifyAllPlansExecution()
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testFindAndModify($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
     {
         if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
             $this->markTestSkipped('FindAndModify is not supported on servers with version < 3.2');
@@ -169,117 +70,31 @@ class ExplainFunctionalTest extends FunctionalTestCase
 
         $operation = new FindAndModify($this->getDatabaseName(), $this->getCollectionName(), ['remove' => true]);
 
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_ALL_PLANS, 'typeMap' => ['root' => 'array']]);
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
         $result = $explainOperation->execute($this->getPrimaryServer());
 
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    public function testFindAndModifyDefaultVerbosity()
-    {
-        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
-            $this->markTestSkipped('FindAndModify is not supported on servers with version < 3.2');
-        }
-
-        $operation = new FindAndModify($this->getDatabaseName(), $this->getCollectionName(), ['remove' => true]);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testFindAndModifyExecutionStats()
-    {
-        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
-            $this->markTestSkipped('FindAndModify is not supported on servers with version < 3.2');
-        }
-
-        $operation = new FindAndModify($this->getDatabaseName(), $this->getCollectionName(), ['remove' => true]);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_EXEC_STATS, 'typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertFalse(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testFindAndModifyQueryPlanner()
-    {
-        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
-            $this->markTestSkipped('FindAndModify is not supported on servers with version < 3.2');
-        }
-
-        $operation = new FindAndModify($this->getDatabaseName(), $this->getCollectionName(), ['remove' => true]);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_QUERY, 'typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertFalse(array_key_exists('executionStats', $result));
-    }
-
-    public function testFindAllPlansExecution()
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testFind($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
     {
         $this->createFixtures(3);
 
         $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['readConcern' => $this->createDefaultReadConcern()]);
 
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_ALL_PLANS, 'typeMap' => ['root' => 'array']]);
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
         $result = $explainOperation->execute($this->getPrimaryServer());
 
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    public function testFindDefaultVerbosity()
-    {
-        $this->createFixtures(3);
-
-        $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['readConcern' => $this->createDefaultReadConcern()]);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testFindExecutionStats()
-    {
-        $this->createFixtures(3);
-
-        $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['readConcern' => $this->createDefaultReadConcern()]);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_EXEC_STATS, 'typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertFalse(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testFindQueryPlanner()
-    {
-        $this->createFixtures(3);
-
-        $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['readConcern' => $this->createDefaultReadConcern()]);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_QUERY, 'typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertFalse(array_key_exists('executionStats', $result));
-    }
-
-    public function testFindMaxAwait()
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testFindMaxAwait($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
     {
         if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
             $this->markTestSkipped('maxAwaitTimeMS option is not supported');
@@ -312,67 +127,49 @@ class ExplainFunctionalTest extends FunctionalTestCase
 
         $operation = new Find($databaseName, $cappedCollectionName, [], ['cursorType' => Find::TAILABLE_AWAIT, 'maxAwaitTimeMS' => $maxAwaitTimeMS]);
 
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array']]);
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
         $result = $explainOperation->execute($this->getPrimaryServer());
 
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    public function testFindOneAllPlansExecution()
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testFindOne($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
     {
         $this->createFixtures(1);
 
         $operation = new FindOne($this->getDatabaseName(), $this->getCollectionName(), []);
 
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_ALL_PLANS, 'typeMap' => ['root' => 'array']]);
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
         $result = $explainOperation->execute($this->getPrimaryServer());
 
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    public function testFindOneDefaultVerbosity()
+    public function provideVerbosityInformation()
     {
-        $this->createFixtures(1);
-
-        $operation = new FindOne($this->getDatabaseName(), $this->getCollectionName(), []);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertTrue(array_key_exists('allPlansExecution', $result['executionStats']));
+        return [
+            [Explain::VERBOSITY_ALL_PLANS, true, true],
+            [Explain::VERBOSITY_EXEC_STATS, true, false],
+            [Explain::VERBOSITY_QUERY, false, false]
+        ];
     }
 
-    public function testFindOneExecutionStats()
+    private function assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected)
     {
-        $this->createFixtures(1);
-
-        $operation = new FindOne($this->getDatabaseName(), $this->getCollectionName(), []);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_EXEC_STATS, 'typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertTrue(array_key_exists('executionStats', $result));
-        $this->assertFalse(array_key_exists('allPlansExecution', $result['executionStats']));
-    }
-
-    public function testFindOneQueryPlanner()
-    {
-        $this->createFixtures(1);
-
-        $operation = new FindOne($this->getDatabaseName(), $this->getCollectionName(), []);
-
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_QUERY, 'typeMap' => ['root' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertTrue(array_key_exists('queryPlanner', $result));
-        $this->assertFalse(array_key_exists('executionStats', $result));
+        $this->assertArrayHasKey('queryPlanner', $result);
+        if ($executionStatsExpected) {
+            $this->assertArrayHasKey('executionStats', $result);
+            if ($allPlansExecutionExpected) {
+                $this->assertArrayHasKey('allPlansExecution', $result['executionStats']);
+            } else {
+                $this->assertArrayNotHasKey('allPlansExecution', $result['executionStats']);
+            }
+        } else {
+            $this->assertArrayNotHasKey('executionStats', $result);
+        }
     }
 
     /**

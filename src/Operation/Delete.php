@@ -35,7 +35,7 @@ use MongoDB\Exception\UnsupportedException;
  * @internal
  * @see http://docs.mongodb.org/manual/reference/command/delete/
  */
-class Delete implements Executable
+class Delete implements Executable, Explainable
 {
     private static $wireVersionForCollation = 5;
 
@@ -117,18 +117,38 @@ class Delete implements Executable
             throw UnsupportedException::collationNotSupported();
         }
 
+        $deleteOptions = $this->createDeleteOptions();
+
+        $bulk = new Bulk();
+        $bulk->delete($this->filter, $this->createDeleteOptions());
+
+        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createExecuteOptions());
+
+        return new DeleteResult($writeResult);
+    }
+
+    public function getCommandDocument()
+    {
+        return ['delete' => $this->collectionName, 'deletes' => [['q' => $this->filter] + $this->createDeleteOptions()]];
+    }
+
+    /**
+     * Create options for the delete command.
+     *
+     * Note that these options are different from the bulk write options, which
+     * are created in createOptions().
+     *
+     * @return array
+     */
+    private function createDeleteOptions()
+    {
         $deleteOptions = ['limit' => $this->limit];
 
         if (isset($this->options['collation'])) {
             $deleteOptions['collation'] = (object) $this->options['collation'];
         }
 
-        $bulk = new Bulk();
-        $bulk->delete($this->filter, $deleteOptions);
-
-        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createOptions());
-
-        return new DeleteResult($writeResult);
+        return $deleteOptions;
     }
 
     /**
@@ -137,7 +157,7 @@ class Delete implements Executable
      * @see http://php.net/manual/en/mongodb-driver-server.executebulkwrite.php
      * @return array
      */
-    private function createOptions()
+    private function createExecuteOptions()
     {
         $options = [];
 

@@ -3,14 +3,17 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Collection;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\Distinct;
+use MongoDB\Operation\Delete;
 use MongoDB\Operation\Explain;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\FindAndModify;
 use MongoDB\Operation\FindOne;
 use MongoDB\Operation\InsertMany;
+use MongoDB\Operation\Update;
 
 class ExplainFunctionalTest extends FunctionalTestCase
 {
@@ -18,7 +21,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
     {
         parent::setUp();
         if (version_compare($this->getServerVersion(), '3.0.0', '<')) {
-            $this->markTestSkipped('Explain is not supported');
+            $this->markTestSkipped('Explain command is not supported');
         }
     }
 
@@ -36,6 +39,26 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $insertMany->execute($this->getPrimaryServer());
 
         $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), ['x' => ['$gte' => 1]], []);
+
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
+        $result = $explainOperation->execute($this->getPrimaryServer());
+
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
+    }
+
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testDelete($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
+    {
+        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+
+        $this->createFixtures(3);
+
+        $filter = ['_id' => 1];
+
+        $operation = new Delete($this->getDatabaseName(), $this->getCollectionName(), $filter, 1);
+
         $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
         $result = $explainOperation->execute($this->getPrimaryServer());
 
@@ -48,7 +71,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
     public function testDistinct($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
     {
         if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
-            $this->markTestSkipped('Distinct is not supported on servers with version < 3.2');
+            $this->markTestSkipped('Explaining distinct command requires server version >= 3.2');
         }
 
         $operation = new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', []);
@@ -65,7 +88,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
     public function testFindAndModify($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
     {
         if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
-            $this->markTestSkipped('FindAndModify is not supported on servers with version < 3.2');
+            $this->markTestSkipped('Explaining findAndModify command requires server version >= 3.2');
         }
 
         $operation = new FindAndModify($this->getDatabaseName(), $this->getCollectionName(), ['remove' => true]);
@@ -148,6 +171,24 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testUpdate($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
+    {
+        $this->createFixtures(3);
+
+        $filter = ['_id' => ['$gt' => 1]];
+        $update = ['$inc' => ['x' => 1]];
+
+        $operation = new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, $update);
+
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
+        $result = $explainOperation->execute($this->getPrimaryServer());
+
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
+    }
+
     public function provideVerbosityInformation()
     {
         return [
@@ -184,7 +225,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         for ($i = 1; $i <= $n; $i++) {
             $bulkWrite->insert([
                 '_id' => $i,
-                'x' => (object) ['foo' => 'bar'],
+                'x' => (integer) ($i . $i),
             ]);
         }
 

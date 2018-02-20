@@ -284,7 +284,7 @@ class Find implements Executable
             throw UnsupportedException::readConcernNotSupported();
         }
 
-        $cursor = $server->executeQuery($this->databaseName . '.' . $this->collectionName, $this->createQuery(), $this->createOptions());
+        $cursor = $server->executeQuery($this->databaseName . '.' . $this->collectionName, $this->createQuery(), $this->options['readPreference']);
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);

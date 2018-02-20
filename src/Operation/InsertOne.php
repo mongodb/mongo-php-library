@@ -111,7 +111,7 @@ class InsertOne implements Executable
         $bulk = new Bulk($options);
         $insertedId = $bulk->insert($this->document);
 
-        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createOptions());
+        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null);
 
         return new InsertOneResult($writeResult, $insertedId);
     }

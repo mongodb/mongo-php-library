@@ -284,7 +284,7 @@ class Find implements Executable, Explainable
             throw UnsupportedException::readConcernNotSupported();
         }
 
-        $cursor = $server->executeQuery($this->databaseName . '.' . $this->collectionName, new Query($this->filter, $this->createFindOptions()), $this->createOptions());
+        $cursor = $server->executeQuery($this->databaseName . '.' . $this->collectionName, new Query($this->filter, $this->createQueryOptions()), $this->createExecuteOptions());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
@@ -303,9 +303,9 @@ class Find implements Executable, Explainable
      */
     private function createCommandDocument()
     {
-        $cmd = ['find' => $this->collectionName, 'filter' => new BSONDocument($this->filter)];
+        $cmd = ['find' => $this->collectionName, 'filter' => (object) $this->filter];
 
-        $options = $this->createFindOptions();
+        $options = $this->createQueryOptions();
 
         if (empty($options)) {
             return $cmd;
@@ -314,28 +314,60 @@ class Find implements Executable, Explainable
         // maxAwaitTimeMS is a Query level option so should not be considered here
         unset($options['maxAwaitTimeMS']);
 
-        if (isset($options['cursorType'])) {
-            if ($options['cursorType'] === self::TAILABLE) {
-                $cmd['tailable'] = true;
-            }
-            if ($options['cursorType'] === self::TAILABLE_AWAIT) {
-                $cmd['tailable'] = true;
-                $cmd['awaitData'] = true;
+        $modifierFallback = [
+            ['allowPartialResults' , 'partial'],
+            ['comment' , '$comment'],
+            ['hint' , '$hint'],
+            ['maxScan' , '$maxScan'],
+            ['max' , '$max'],
+            ['maxTimeMS' , '$maxTimeMS'],
+            ['min' , '$min'],
+            ['returnKey' , '$returnKey'],
+            ['showRecordId' , '$showDiskLoc'],
+            ['sort' , '$orderby'],
+            ['snapshot' , '$snapshot'],
+        ];
+
+        foreach ($modifierFallback as $modifier) {
+            if ( ! isset($options[$modifier[0]]) && isset($options['modifiers'][$modifier[1]])) {
+                $options[$modifier[0]] = $options['modifiers'][$modifier[1]];
             }
         }
+        unset($options['modifiers']);
 
         return $cmd + $options;
+    }
+
+    /**
+     * Create options for executing the command.
+     *
+     * @see http://php.net/manual/en/mongodb-driver-server.executequery.php
+     * @return array
+     */
+    private function createExecuteOptions()
+    {
+        $options = [];
+
+        if (isset($this->options['readPreference'])) {
+            $options['readPreference'] = $this->options['readPreference'];
+        }
+
+        if (isset($this->options['session'])) {
+            $options['session'] = $this->options['session'];
+        }
+
+        return $options;
     }
 
     /**
      * Create options for the find query.
      *
      * Note that these are separate from the options for executing the command,
-     * which are created in createOptions().
+     * which are created in createExecuteOptions().
      *
      * @return array
      */
-    private function createFindOptions()
+    private function createQueryOptions()
     {
         $options = [];
 
@@ -365,27 +397,6 @@ class Find implements Executable, Explainable
 
         if ( ! empty($modifiers)) {
             $options['modifiers'] = $modifiers;
-        }
-
-        return $options;
-    }
-
-    /**
-     * Create options for executing the command.
-     *
-     * @see http://php.net/manual/en/mongodb-driver-server.executequery.php
-     * @return array
-     */
-    private function createOptions()
-    {
-        $options = [];
-
-        if (isset($this->options['readPreference'])) {
-            $options['readPreference'] = $this->options['readPreference'];
-        }
-
-        if (isset($this->options['session'])) {
-            $options['session'] = $this->options['session'];
         }
 
         return $options;

@@ -183,7 +183,7 @@ class Update implements Executable, Explainable
 
     public function getCommandDocument()
     {
-        return ['update' => $this->collectionName, 'updates' => [['q' => $this->filter] + ['u' => $this->update] + $this->createUpdateOptions()]];
+        return ['update' => $this->collectionName, 'updates' => [['q' => $this->filter, 'u' => $this->update] + $this->createUpdateOptions()]];
     }
 
     /**
@@ -211,7 +211,7 @@ class Update implements Executable, Explainable
      * Create options for the update command.
      *
      * Note that these options are different from the bulk write options, which
-     * are created in createOptions().
+     * are created in createExecuteOptions().
      *
      * @return array
      */

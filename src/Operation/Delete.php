@@ -117,8 +117,6 @@ class Delete implements Executable, Explainable
             throw UnsupportedException::collationNotSupported();
         }
 
-        $deleteOptions = $this->createDeleteOptions();
-
         $bulk = new Bulk();
         $bulk->delete($this->filter, $this->createDeleteOptions());
 
@@ -136,7 +134,7 @@ class Delete implements Executable, Explainable
      * Create options for the delete command.
      *
      * Note that these options are different from the bulk write options, which
-     * are created in createOptions().
+     * are created in createExecuteOptions().
      *
      * @return array
      */

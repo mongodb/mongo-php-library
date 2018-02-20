@@ -9,6 +9,7 @@ use MongoDB\Operation\Explain;
 class ExplainTest extends TestCase
 {
     /**
+     * @requires PHPUnit 5.4.0
      * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */

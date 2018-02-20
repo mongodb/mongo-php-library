@@ -12,8 +12,9 @@ use MongoDB\Operation\Explain;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\FindAndModify;
 use MongoDB\Operation\FindOne;
-use MongoDB\Operation\InsertMany;
 use MongoDB\Operation\Update;
+use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 class ExplainFunctionalTest extends FunctionalTestCase
 {
@@ -30,13 +31,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
      */
     public function testCount($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
     {
-        $insertMany = new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [
-            ['x' => 0],
-            ['x' => 1],
-            ['x' => 2],
-            ['y' => 3]
-        ]);
-        $insertMany->execute($this->getPrimaryServer());
+        $this->createFixtures(3);
 
         $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), ['x' => ['$gte' => 1]], []);
 
@@ -114,10 +109,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
-    public function testFindMaxAwait($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
+    public function testFindMaxAwait()
     {
         if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
             $this->markTestSkipped('maxAwaitTimeMS option is not supported');
@@ -142,19 +134,46 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $operation = new CreateCollection($databaseName, $cappedCollectionName, $cappedCollectionOptions);
         $operation->execute($this->getPrimaryServer());
 
-        // Insert documents into the capped collection.
-        $bulkWrite = new BulkWrite(['ordered' => true]);
-        $bulkWrite->insert(['_id' => 1]);
-        $bulkWrite->insert(['_id' => 2]);
-        $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
+        $this->createFixtures(2);
 
         $operation = new Find($databaseName, $cappedCollectionName, [], ['cursorType' => Find::TAILABLE_AWAIT, 'maxAwaitTimeMS' => $maxAwaitTimeMS]);
 
-        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
-        $result = $explainOperation->execute($this->getPrimaryServer());
-
-        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
+        (new CommandObserver)->observe(
+            function() use ($operation) {
+                $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array', 'document' => 'array']]);
+                $explainOperation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectNotHasAttribute('maxAwaitTimeMS', $command->explain);
+                $this->assertObjectHasAttribute('tailable', $command->explain);
+                $this->assertObjectHasAttribute('awaitData', $command->explain);
+            }
+        );
     }
+
+    public function testFindModifiers()
+    {
+        $this->createFixtures(3);
+
+        $operation = new Find(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            ['readConcern' => $this->createDefaultReadConcern(), 'modifiers' => ['$max' => ['_id' => 2.2]]]
+        );
+
+        (new CommandObserver)->observe(
+            function() use ($operation) {
+                $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array', 'document' => 'array']]);
+                $explainOperation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertObjectHasAttribute('max', $command->explain);
+                $this->assertObjectNotHasAttribute('modifiers', $command->explain);
+            }
+        );
+    }
+
 
     /**
      * @dataProvider provideVerbosityInformation
@@ -194,7 +213,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         return [
             [Explain::VERBOSITY_ALL_PLANS, true, true],
             [Explain::VERBOSITY_EXEC_STATS, true, false],
-            [Explain::VERBOSITY_QUERY, false, false]
+            [Explain::VERBOSITY_QUERY, false, false],
         ];
     }
 

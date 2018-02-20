@@ -189,7 +189,7 @@ class Update implements Executable
         $bulk = new Bulk($bulkOptions);
         $bulk->update($this->filter, $this->update, $updateOptions);
 
-        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createOptions());
+        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, isset($this->options['writeConcern']) ? $this->options['writeConcern'] : null);
 
         return new UpdateResult($writeResult);
     }

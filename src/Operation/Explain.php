@@ -80,11 +80,11 @@ class Explain implements Executable
             throw UnsupportedException::explainNotSupported();
         }
 
-        if ($this->explainable instanceof \MongoDB\Operation\Distinct && ! \MongoDB\server_supports_feature($server, self::$wireVersionForDistinct)) {
+        if ($this->explainable instanceof Distinct && ! \MongoDB\server_supports_feature($server, self::$wireVersionForDistinct)) {
             throw UnsupportedException::explainNotSupported();
         }
 
-        if ($this->explainable instanceof \MongoDB\Operation\FindAndModify && ! \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModify)) {
+        if ($this->isFindAndModify($this->explainable) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModify)) {
             throw UnsupportedException::explainNotSupported();
         }
 
@@ -101,5 +101,13 @@ class Explain implements Executable
         }
 
         return current($cursor->toArray());
+    }
+
+    private function isFindAndModify($explainable)
+    {
+        if ($explainable instanceof FindAndModify || $explainable instanceof FindOneAndDelete || $explainable instanceof FindOneAndReplace || $explainable instanceof FindOneAndUpdate) {
+            return true;
+        }
+        return false;
     }
 }

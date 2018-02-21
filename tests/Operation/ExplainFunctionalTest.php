@@ -12,6 +12,9 @@ use MongoDB\Operation\Explain;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\FindAndModify;
 use MongoDB\Operation\FindOne;
+use MongoDB\Operation\FindOneAndDelete;
+use MongoDB\Operation\FindOneAndReplace;
+use MongoDB\Operation\FindOneAndUpdate;
 use MongoDB\Operation\Update;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
@@ -101,7 +104,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
     {
         $this->createFixtures(3);
 
-        $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['readConcern' => $this->createDefaultReadConcern()]);
+        $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), []);
 
         $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
         $result = $explainOperation->execute($this->getPrimaryServer());
@@ -159,7 +162,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
             $this->getDatabaseName(),
             $this->getCollectionName(),
             [],
-            ['readConcern' => $this->createDefaultReadConcern(), 'modifiers' => ['$max' => ['_id' => 2.2]]]
+            ['modifiers' => ['$orderby' => ['_id' => 1]]]
         );
 
         (new CommandObserver)->observe(
@@ -168,7 +171,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
                 $explainOperation->execute($this->getPrimaryServer());
             },
             function(stdClass $command) {
-                $this->assertObjectHasAttribute('max', $command->explain);
+                $this->assertObjectHasAttribute('sort', $command->explain);
                 $this->assertObjectNotHasAttribute('modifiers', $command->explain);
             }
         );
@@ -183,6 +186,57 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->createFixtures(1);
 
         $operation = new FindOne($this->getDatabaseName(), $this->getCollectionName(), []);
+
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
+        $result = $explainOperation->execute($this->getPrimaryServer());
+
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
+    }
+
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testFindOneAndDelete($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
+    {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('Explaining findOneAndDelete command requires server version >= 3.2');
+        }
+
+        $operation = new FindOneAndDelete($this->getDatabaseName(), $this->getCollectionName(), []);
+
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
+        $result = $explainOperation->execute($this->getPrimaryServer());
+
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
+    }
+
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testFindOneAndReplace($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
+    {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('Explaining findOneAndReplace command requires server version >= 3.2');
+        }
+
+        $operation = new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1.1], ['x' => 5]);
+
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
+        $result = $explainOperation->execute($this->getPrimaryServer());
+
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
+    }
+
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testFindOneAndUpdate($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
+    {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('Explaining findOneAndUpdate command requires server version >= 3.2');
+        }
+
+        $operation = new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], ['$rename' => ['x' => 'y']]);
 
         $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
         $result = $explainOperation->execute($this->getPrimaryServer());

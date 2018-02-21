@@ -4,7 +4,6 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Model\BSONDocument;
-use MongoDB\Operation\Explain;
 use MongoDB\Operation\FindAndModify;
 use MongoDB\Tests\CommandObserver;
 use stdClass;

@@ -9,13 +9,12 @@ use MongoDB\Operation\Explain;
 class ExplainTest extends TestCase
 {
     /**
-     * @requires PHPUnit 5.4.0
      * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
-        $explainable = $this->createMock('MongoDB\Operation\Explainable');
+        $explainable = $this->getMockBuilder('MongoDB\Operation\Explainable')->getMock();
         new Explain($this->getDatabaseName(), $explainable, $options);
     }
 

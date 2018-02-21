@@ -4,7 +4,6 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Operation\Count;
 use MongoDB\Operation\CreateIndexes;
-use MongoDB\Operation\Explain;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\CommandObserver;
 use stdClass;

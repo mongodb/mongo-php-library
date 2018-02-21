@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Operation\Distinct;
-use MongoDB\Operation\Explain;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
 

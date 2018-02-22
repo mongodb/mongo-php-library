@@ -183,7 +183,17 @@ class Update implements Executable, Explainable
 
     public function getCommandDocument()
     {
-        return ['update' => $this->collectionName, 'updates' => [['q' => $this->filter, 'u' => $this->update] + $this->createUpdateOptions()]];
+        $cmd = ['update' => $this->collectionName, 'updates' => [['q' => $this->filter, 'u' => $this->update] + $this->createUpdateOptions()]];
+
+        if (isset($this->options['writeConcern'])) {
+            $cmd['writeConcern'] = $this->options['writeConcern'];
+        }
+
+        if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+            $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
+        }
+
+        return $cmd;
     }
 
     /**

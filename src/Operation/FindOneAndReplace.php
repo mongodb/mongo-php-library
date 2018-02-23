@@ -149,8 +149,8 @@ class FindOneAndReplace implements Executable, Explainable
         return $this->findAndModify->execute($server);
     }
 
-    public function getCommandDocument()
+    public function getCommandDocument(Server $server)
     {
-        return $this->findAndModify->getCommandDocument();
+        return $this->findAndModify->getCommandDocument($server);
     }
 }

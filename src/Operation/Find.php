@@ -293,7 +293,7 @@ class Find implements Executable, Explainable
         return $cursor;
     }
 
-    public function getCommandDocument()
+    public function getCommandDocument(Server $server)
     {
         return $this->createCommandDocument();
     }

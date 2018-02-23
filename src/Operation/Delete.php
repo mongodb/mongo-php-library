@@ -125,7 +125,7 @@ class Delete implements Executable, Explainable
         return new DeleteResult($writeResult);
     }
 
-    public function getCommandDocument()
+    public function getCommandDocument(Server $server)
     {
         $cmd = ['delete' => $this->collectionName, 'deletes' => [['q' => $this->filter] + $this->createDeleteOptions()]];
 

@@ -143,7 +143,7 @@ class Distinct implements Executable, Explainable
         return $result->values;
     }
 
-    public function getCommandDocument()
+    public function getCommandDocument(Server $server)
     {
         return $this->createCommandDocument();
     }

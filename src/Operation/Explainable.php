@@ -17,6 +17,8 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\Driver\Server;
+
 /**
  * Explainable interface for explainable operations (count, distinct, find,
  * findAndModify, delete, and update).
@@ -25,5 +27,5 @@ namespace MongoDB\Operation;
  */
 interface Explainable extends Executable
 {
-    function getCommandDocument();
+    function getCommandDocument(Server $server);
 }

@@ -127,8 +127,8 @@ class FindOne implements Executable, Explainable
         return ($document === false) ? null : $document;
     }
 
-    public function getCommandDocument()
+    public function getCommandDocument(Server $server)
     {
-        return $this->find->getCommandDocument();
+        return $this->find->getCommandDocument($server);
     }
 }

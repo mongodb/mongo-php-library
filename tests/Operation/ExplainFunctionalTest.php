@@ -8,6 +8,8 @@ use MongoDB\Operation\Count;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\Distinct;
 use MongoDB\Operation\Delete;
+use MongoDB\Operation\DeleteMany;
+use MongoDB\Operation\DeleteOne;
 use MongoDB\Operation\Explain;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\FindAndModify;
@@ -16,6 +18,8 @@ use MongoDB\Operation\FindOneAndDelete;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
 use MongoDB\Operation\Update;
+use MongoDB\Operation\UpdateMany;
+use MongoDB\Operation\UpdateOne;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
 
@@ -49,13 +53,45 @@ class ExplainFunctionalTest extends FunctionalTestCase
      */
     public function testDelete($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
     {
-        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
-
         $this->createFixtures(3);
 
         $filter = ['_id' => 1];
 
         $operation = new Delete($this->getDatabaseName(), $this->getCollectionName(), $filter, 1);
+
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
+        $result = $explainOperation->execute($this->getPrimaryServer());
+
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
+    }
+
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testDeleteMany($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
+    {
+        $this->createFixtures(3);
+
+        $filter = ['_id' => ['$gt' => 1]];
+
+        $operation = new DeleteMany($this->getDatabaseName(), $this->getCollectionName(), $filter);
+
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
+        $result = $explainOperation->execute($this->getPrimaryServer());
+
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
+    }
+
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testDeleteOne($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
+    {
+        $this->createFixtures(3);
+
+        $filter = ['_id' => 1];
+
+        $operation = new DeleteOne($this->getDatabaseName(), $this->getCollectionName(), $filter);
 
         $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
         $result = $explainOperation->execute($this->getPrimaryServer());
@@ -255,6 +291,42 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $update = ['$inc' => ['x' => 1]];
 
         $operation = new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, $update);
+
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
+        $result = $explainOperation->execute($this->getPrimaryServer());
+
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
+    }
+
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testUpdateMany($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
+    {
+        $this->createFixtures(3);
+
+        $filter = ['_id' => ['$gt' => 1]];
+        $update = ['$inc' => ['x' => 1]];
+
+        $operation = new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), $filter, $update);
+
+        $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
+        $result = $explainOperation->execute($this->getPrimaryServer());
+
+        $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
+    }
+
+    /**
+     * @dataProvider provideVerbosityInformation
+     */
+    public function testUpdateOne($verbosity, $executionStatsExpected, $allPlansExecutionExpected)
+    {
+        $this->createFixtures(3);
+
+        $filter = ['_id' => ['$lte' => 1]];
+        $update = ['$inc' => ['x' => 1]];
+
+        $operation = new UpdateOne($this->getDatabaseName(), $this->getCollectionName(), $filter, $update);
 
         $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => $verbosity, 'typeMap' => ['root' => 'array', 'document' => 'array']]);
         $result = $explainOperation->execute($this->getPrimaryServer());

@@ -88,7 +88,7 @@ class Explain implements Executable
             throw UnsupportedException::explainNotSupported();
         }
 
-        $cmd = ['explain' => $this->explainable->getCommandDocument()];
+        $cmd = ['explain' => $this->explainable->getCommandDocument($server)];
 
         if (isset($this->options['verbosity'])) {
             $cmd['verbosity'] = $this->options['verbosity'];

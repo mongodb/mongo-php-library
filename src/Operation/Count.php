@@ -162,7 +162,7 @@ class Count implements Executable, Explainable
         return (integer) $result->n;
     }
 
-    public function getCommandDocument()
+    public function getCommandDocument(Server $server)
     {
         return $this->createCommandDocument();
     }

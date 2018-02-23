@@ -181,7 +181,7 @@ class Update implements Executable, Explainable
         return new UpdateResult($writeResult);
     }
 
-    public function getCommandDocument()
+    public function getCommandDocument(Server $server)
     {
         $cmd = ['update' => $this->collectionName, 'updates' => [['q' => $this->filter, 'u' => $this->update] + $this->createUpdateOptions()]];
 

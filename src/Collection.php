@@ -205,7 +205,7 @@ class Collection
             $options['readConcern'] = $this->readConcern;
         }
 
-        if ( ! isset($options['typeMap']) && ( ! isset($options['useCursor']) || $options['useCursor'])) {
+        if ( ! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }
 

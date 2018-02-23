@@ -39,6 +39,16 @@ class UnsupportedException extends RuntimeException
         return new static('Collations are not supported by the server executing this operation');
     }
 
+   /**
+     * Thrown when explain is not supported by a server.
+     *
+     * @return self
+     */
+    public static function explainNotSupported()
+    {
+        return new static('Explain is not supported by the server executing this operation');
+    }
+
     /**
      * Thrown when a command's readConcern option is not supported by a server.
      *

@@ -30,7 +30,7 @@ use MongoDB\Exception\UnsupportedException;
  * @see http://docs.mongodb.org/manual/tutorial/query-documents/
  * @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
  */
-class FindOne implements Executable
+class FindOne implements Executable, Explainable
 {
     private $find;
 
@@ -125,5 +125,10 @@ class FindOne implements Executable
         $document = current($cursor->toArray());
 
         return ($document === false) ? null : $document;
+    }
+
+    public function getCommandDocument(Server $server)
+    {
+        return $this->find->getCommandDocument($server);
     }
 }

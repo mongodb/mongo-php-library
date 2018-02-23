@@ -77,6 +77,9 @@ class Aggregate implements Executable
      *  * comment (string): An arbitrary string to help trace the operation
      *    through the database profiler, currentOp, and logs.
      *
+     *  * explain (boolean): Specifies whether or not to return the information
+     *    on the processing of the pipeline.
+     *
      *  * hint (string|document): The index to use. Specify either the index
      *    name as a string or the index key pattern as a document. If specified,
      *    then the query system will only consider plans using the hinted index.
@@ -160,6 +163,10 @@ class Aggregate implements Executable
             throw InvalidArgumentException::invalidType('"comment" option', $options['comment'], 'string');
         }
 
+        if (isset($options['explain']) && ! is_bool($options['explain'])) {
+            throw InvalidArgumentException::invalidType('"explain" option', $options['explain'], 'boolean');
+        }
+
         if (isset($options['hint']) && ! is_string($options['hint']) && ! is_array($options['hint']) && ! is_object($options['hint'])) {
             throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], 'string or array or object');
         }
@@ -208,6 +215,10 @@ class Aggregate implements Executable
             unset($options['writeConcern']);
         }
 
+        if ( ! empty($options['explain'])) {
+            $options['useCursor'] = false;
+        }
+
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->pipeline = $pipeline;
@@ -238,16 +249,17 @@ class Aggregate implements Executable
             throw UnsupportedException::writeConcernNotSupported();
         }
 
+        $hasExplain = ! empty($this->options['explain']);
         $hasOutStage = \MongoDB\is_last_pipeline_operator_out($this->pipeline);
 
         $command = $this->createCommand($server);
-        $options = $this->createOptions($hasOutStage);
+        $options = $this->createOptions($hasOutStage, $hasExplain);
 
-        $cursor = $hasOutStage
+        $cursor = ($hasOutStage && ! $hasExplain)
             ? $server->executeReadWriteCommand($this->databaseName, $command, $options)
             : $server->executeReadCommand($this->databaseName, $command, $options);
 
-        if ($this->options['useCursor']) {
+        if ($this->options['useCursor'] || $hasExplain) {
             if (isset($this->options['typeMap'])) {
                 $cursor->setTypeMap($this->options['typeMap']);
             }
@@ -288,7 +300,7 @@ class Aggregate implements Executable
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 
-        foreach (['comment', 'maxTimeMS'] as $option) {
+        foreach (['comment', 'explain', 'maxTimeMS'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }
@@ -323,7 +335,7 @@ class Aggregate implements Executable
      * @param boolean $hasOutStage
      * @return array
      */
-    private function createOptions($hasOutStage)
+    private function createOptions($hasOutStage, $hasExplain)
     {
         $options = [];
 
@@ -339,7 +351,7 @@ class Aggregate implements Executable
             $options['session'] = $this->options['session'];
         }
 
-        if ($hasOutStage && isset($this->options['writeConcern'])) {
+        if ($hasOutStage && ! $hasExplain && isset($this->options['writeConcern'])) {
             $options['writeConcern'] = $this->options['writeConcern'];
         }
 

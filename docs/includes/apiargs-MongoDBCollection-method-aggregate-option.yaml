@@ -42,6 +42,18 @@ operation: ~
 optional: true
 ---
 arg_name: option
+name: explain
+type: boolean
+description: |
+  Specifies whether or not to return the information on the processing of the
+  pipeline.
+
+  .. versionadded:: 1.4
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: hint
 type: string|array|object
 description: |

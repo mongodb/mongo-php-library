@@ -200,10 +200,6 @@ class Aggregate implements Executable
             throw new InvalidArgumentException('"batchSize" option should not be used if "useCursor" is false');
         }
 
-        if (isset($options['typeMap']) && ! $options['useCursor']) {
-            throw new InvalidArgumentException('"typeMap" option should not be used if "useCursor" is false');
-        }
-
         if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
             unset($options['readConcern']);
         }

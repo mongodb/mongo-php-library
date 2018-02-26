@@ -101,20 +101,6 @@ class AggregateTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage "typeMap" option should not be used if "useCursor" is false
-     */
-    public function testConstructorTypeMapOptionRequiresUseCursor()
-    {
-        new Aggregate(
-            $this->getDatabaseName(),
-            $this->getCollectionName(),
-            [['$match' => ['x' => 1]]],
-            ['typeMap' => ['root' => 'array'], 'useCursor' => false]
-        );
-    }
-
     private function getInvalidHintValues()
     {
         return [123, 3.14, true];

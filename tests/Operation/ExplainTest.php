@@ -22,6 +22,14 @@ class ExplainTest extends TestCase
     {
         $options = [];
 
+        foreach ($this->getInvalidReadPreferenceValues() as $value) {
+            $options[][] = ['readPreference' => $value];
+        }
+
+        foreach ($this->getInvalidSessionValues() as $value) {
+            $options[][] = ['session' => $value];
+        }
+
         foreach ($this->getInvalidStringValues() as $value) {
             $options[][] = ['verbosity' => $value];
         }

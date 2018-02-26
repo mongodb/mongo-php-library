@@ -18,7 +18,9 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\Session;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONDocument;
@@ -49,10 +51,14 @@ class Explain implements Executable
      *
      * Supported options:
      *
-     *  * verbosity (string): The mode in which the explain command will be run.
+     *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
+     *
+     *  * session (MongoDB\Driver\Session): Client session.
      *
      *  * typeMap (array): Type map for BSON deserialization. This will be used
      *    used for the returned command result document.
+     *
+     *  * verbosity (string): The mode in which the explain command will be run.
      *
      * @param string $databaseName      Database name
      * @param Explainable $explainable  Operation to explain
@@ -61,12 +67,20 @@ class Explain implements Executable
      */
     public function __construct($databaseName, Explainable $explainable, array $options = [])
     {
-        if (isset($options['verbosity']) && ! is_string($options['verbosity'])) {
-            throw InvalidArgumentException::invalidType('"verbosity" option', $options['verbosity'], 'string');
+        if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+        }
+
+        if (isset($options['session']) && ! $options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $options['session'], 'MongoDB\Driver\Session');
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        }
+
+        if (isset($options['verbosity']) && ! is_string($options['verbosity'])) {
+            throw InvalidArgumentException::invalidType('"verbosity" option', $options['verbosity'], 'string');
         }
 
         $this->databaseName = $databaseName;
@@ -94,13 +108,34 @@ class Explain implements Executable
             $cmd['verbosity'] = $this->options['verbosity'];
         }
 
-        $cursor = $server->executeCommand($this->databaseName, new Command($cmd));
+        $cursor = $server->executeCommand($this->databaseName, new Command($cmd), $this->createOptions());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
         }
 
         return current($cursor->toArray());
+    }
+
+    /**
+     * Create options for executing the command.
+     *
+     * @see http://php.net/manual/en/mongodb-driver-server.executecommand.php
+     * @return array
+     */
+    private function createOptions()
+    {
+        $options = [];
+
+        if (isset($this->options['readPreference'])) {
+            $options['readPreference'] = $this->options['readPreference'];
+        }
+
+        if (isset($this->options['session'])) {
+            $options['session'] = $this->options['session'];
+        }
+
+        return $options;
     }
 
     private function isFindAndModify($explainable)

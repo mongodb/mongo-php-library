@@ -7,6 +7,7 @@ use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Exception\InvalidArgumentException;
 
 /**
  * Functional tests for the Database class.
@@ -14,11 +15,11 @@ use MongoDB\Driver\WriteConcern;
 class DatabaseFunctionalTest extends FunctionalTestCase
 {
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDatabaseNames
      */
     public function testConstructorDatabaseNameArgument($databaseName)
     {
+        $this->expectException(InvalidArgumentException::class);
         // TODO: Move to unit test once ManagerInterface can be mocked (PHPC-378)
         new Database($this->manager, $databaseName);
     }
@@ -32,11 +33,11 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
+        $this->expectException(InvalidArgumentException::class);
         new Database($this->manager, $this->getDatabaseName(), $options);
     }
 
@@ -115,11 +116,11 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testCommandCommandArgumentTypeCheck($command)
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->database->command($command);
     }
 

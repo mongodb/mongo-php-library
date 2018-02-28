@@ -2,25 +2,26 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Find;
 
 class FindTest extends TestCase
 {
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testConstructorFilterArgumentTypeCheck($filter)
     {
+        $this->expectException(InvalidArgumentException::class);
         new Find($this->getDatabaseName(), $this->getCollectionName(), $filter);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
+        $this->expectException(InvalidArgumentException::class);
         new Find($this->getDatabaseName(), $this->getCollectionName(), [], $options);
     }
 
@@ -133,11 +134,11 @@ class FindTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorCursorTypeOptions
      */
     public function testConstructorCursorTypeOption($cursorType)
     {
+        $this->expectException(InvalidArgumentException::class);
         new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['cursorType' => $cursorType]);
     }
 

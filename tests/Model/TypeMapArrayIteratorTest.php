@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Model;
 
+use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Model\TypeMapArrayIterator;
 use MongoDB\Tests\TestCase;
 
@@ -59,8 +60,6 @@ class TypeMapArrayIteratorTest extends TestCase
 
     /**
      * @dataProvider provideMutateMethods
-     * @expectedException MongoDB\Exception\BadMethodCallException
-     * @expectedExceptionMessage MongoDB\Model\TypeMapArrayIterator is immutable
      */
     public function testMutateMethodsCannotBeCalled($method, $args)
     {
@@ -79,6 +78,8 @@ class TypeMapArrayIteratorTest extends TestCase
 
         $iterator->rewind();
 
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage('MongoDB\Model\TypeMapArrayIterator is immutable');
         call_user_func_array([$iterator, $method], $args);
     }
 

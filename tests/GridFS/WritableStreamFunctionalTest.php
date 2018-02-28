@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\GridFS;
 
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\CollectionWrapper;
 use MongoDB\GridFS\WritableStream;
 
@@ -32,11 +33,11 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
+        $this->expectException(InvalidArgumentException::class);
         new WritableStream($this->collectionWrapper, 'filename', $options);
     }
 
@@ -55,12 +56,10 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
         return $options;
     }
 
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Expected "chunkSizeBytes" option to be >= 1, 0 given
-     */
     public function testConstructorShouldRequireChunkSizeBytesOptionToBePositive()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected "chunkSizeBytes" option to be >= 1, 0 given');
         new WritableStream($this->collectionWrapper, 'filename', ['chunkSizeBytes' => 0]);
     }
 

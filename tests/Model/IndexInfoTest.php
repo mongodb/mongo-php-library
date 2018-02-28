@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Model;
 
+use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Tests\TestCase;
 
@@ -111,10 +112,6 @@ class IndexInfoTest extends TestCase
         $this->assertSame('x_1', $info['name']);
     }
 
-    /**
-     * @expectedException MongoDB\Exception\BadMethodCallException
-     * @expectedExceptionMessage MongoDB\Model\IndexInfo is immutable
-     */
     public function testOffsetSetCannotBeCalled()
     {
         $info = new IndexInfo([
@@ -124,13 +121,11 @@ class IndexInfoTest extends TestCase
             'ns' => 'foo.bar',
         ]);
 
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage('MongoDB\Model\IndexInfo is immutable');
         $info['v'] = 2;
     }
 
-    /**
-     * @expectedException MongoDB\Exception\BadMethodCallException
-     * @expectedExceptionMessage MongoDB\Model\IndexInfo is immutable
-     */
     public function testOffsetUnsetCannotBeCalled()
     {
         $info = new IndexInfo([
@@ -140,6 +135,8 @@ class IndexInfoTest extends TestCase
             'ns' => 'foo.bar',
         ]);
 
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage('MongoDB\Model\IndexInfo is immutable');
         unset($info['v']);
     }
 }

@@ -6,6 +6,7 @@ use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Exception\InvalidArgumentException;
 
 /**
  * Unit tests for utility functions.
@@ -80,11 +81,11 @@ class FunctionsTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testGenerateIndexNameArgumentTypeCheck($document)
     {
+        $this->expectException(InvalidArgumentException::class);
         \MongoDB\generate_index_name($document);
     }
 
@@ -109,11 +110,11 @@ class FunctionsTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testIsFirstKeyOperatorArgumentTypeCheck($document)
     {
+        $this->expectException(InvalidArgumentException::class);
         \MongoDB\is_first_key_operator($document);
     }
 

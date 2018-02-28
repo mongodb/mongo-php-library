@@ -2,25 +2,26 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\InsertOne;
 
 class InsertOneTest extends TestCase
 {
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testConstructorDocumentArgumentTypeCheck($document)
     {
+        $this->expectException(InvalidArgumentException::class);
         new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
+        $this->expectException(InvalidArgumentException::class);
         new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $options);
     }
 

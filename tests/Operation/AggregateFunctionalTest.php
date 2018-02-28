@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Tests\CommandObserver;
 use ArrayIterator;
@@ -65,12 +66,10 @@ class AggregateFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expectedDocuments, $results);
     }
 
-    /**
-     * @expectedException MongoDB\Driver\Exception\RuntimeException
-     */
     public function testUnrecognizedPipelineState()
     {
         $operation = new Aggregate($this->getDatabaseName(), $this->getCollectionName(), [['$foo' => 1]]);
+        $this->expectException(RuntimeException::class);
         $operation->execute($this->getPrimaryServer());
     }
 

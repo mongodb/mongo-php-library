@@ -2,25 +2,26 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\DatabaseCommand;
 
 class DatabaseCommandTest extends TestCase
 {
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testConstructorCommandArgumentTypeCheck($command)
     {
+        $this->expectException(InvalidArgumentException::class);
         new DatabaseCommand($this->getDatabaseName(), $command);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
+        $this->expectException(InvalidArgumentException::class);
         new DatabaseCommand($this->getDatabaseName(), ['ping' => 1], $options);
     }
 

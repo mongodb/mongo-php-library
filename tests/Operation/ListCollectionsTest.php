@@ -2,16 +2,17 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\ListCollections;
 
 class ListCollectionsTest extends TestCase
 {
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
+        $this->expectException(InvalidArgumentException::class);
         new ListCollections($this->getDatabaseName(), $options);
     }
 

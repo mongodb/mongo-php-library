@@ -8,6 +8,7 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
+use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\Watch;
@@ -305,13 +306,12 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertFalse($cursor->isDead());
     }
 
-    /**
-     * @expectedException MongoDB\Exception\ResumeTokenException
-     * @expectedExceptionMessage Resume token not found in change document
-     */
     public function testNextResumeTokenNotFound()
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
+
+        $this->expectException(ResumeTokenException::class);
+        $this->expectExceptionMessage('Resume token not found in change document');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
@@ -323,13 +323,12 @@ class WatchFunctionalTest extends FunctionalTestCase
         $changeStream->next();
     }
 
-    /**
-     * @expectedException MongoDB\Exception\ResumeTokenException
-     * @expectedExceptionMessage Resume token not found in change document
-     */
     public function testRewindResumeTokenNotFound()
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
+
+        $this->expectException(ResumeTokenException::class);
+        $this->expectExceptionMessage('Resume token not found in change document');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
@@ -339,13 +338,12 @@ class WatchFunctionalTest extends FunctionalTestCase
         $changeStream->rewind();
     }
 
-    /**
-     * @expectedException MongoDB\Exception\ResumeTokenException
-     * @expectedExceptionMessage Expected resume token to have type "array or object" but found "string"
-     */
     public function testNextResumeTokenInvalidType()
     {
         $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
+
+        $this->expectException(ResumeTokenException::class);
+        $this->expectExceptionMessage('Expected resume token to have type "array or object" but found "string"');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());
@@ -357,13 +355,12 @@ class WatchFunctionalTest extends FunctionalTestCase
         $changeStream->next();
     }
 
-    /**
-     * @expectedException MongoDB\Exception\ResumeTokenException
-     * @expectedExceptionMessage Expected resume token to have type "array or object" but found "string"
-     */
     public function testRewindResumeTokenInvalidType()
     {
         $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
+
+        $this->expectException(ResumeTokenException::class);
+        $this->expectExceptionMessage('Expected resume token to have type "array or object" but found "string"');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
         $changeStream = $operation->execute($this->getPrimaryServer());

@@ -2,34 +2,31 @@
 
 namespace MongoDB\Tests\Model;
 
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\IndexInput;
 use MongoDB\Tests\TestCase;
 use stdClass;
 
 class IndexInputTest extends TestCase
 {
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     */
     public function testConstructorShouldRequireKey()
     {
+        $this->expectException(InvalidArgumentException::class);
         new IndexInput([]);
     }
 
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     */
     public function testConstructorShouldRequireKeyToBeArrayOrObject()
     {
+        $this->expectException(InvalidArgumentException::class);
         new IndexInput(['key' => 'foo']);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidFieldOrderValues
      */
     public function testConstructorShouldRequireKeyFieldOrderToBeNumericOrString($order)
     {
+        $this->expectException(InvalidArgumentException::class);
         new IndexInput(['key' => ['x' => $order]]);
     }
 
@@ -38,27 +35,21 @@ class IndexInputTest extends TestCase
         return $this->wrapValuesForDataProvider([true, [], new stdClass]);
     }
 
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     */
     public function testConstructorShouldRequireNamespace()
     {
+        $this->expectException(InvalidArgumentException::class);
         new IndexInput(['key' => ['x' => 1]]);
     }
 
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     */
     public function testConstructorShouldRequireNamespaceToBeString()
     {
+        $this->expectException(InvalidArgumentException::class);
         new IndexInput(['key' => ['x' => 1], 'ns' => 1]);
     }
 
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     */
     public function testConstructorShouldRequireNameToBeString()
     {
+        $this->expectException(InvalidArgumentException::class);
         new IndexInput(['key' => ['x' => 1], 'ns' => 'foo.bar', 'name' => 1]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\DropIndexes;
@@ -113,9 +114,6 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
         });
     }
 
-    /**
-     * @expectedException MongoDB\Driver\Exception\RuntimeException
-     */
     public function testCreateConflictingIndexesWithCommand()
     {
         $indexes = [
@@ -124,6 +122,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
         ];
 
         $operation = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), $indexes);
+        $this->expectException(RuntimeException::class);
         $createdIndexNames = $operation->execute($this->getPrimaryServer());
     }
 

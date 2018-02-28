@@ -2,25 +2,26 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Distinct;
 
 class DistinctTest extends TestCase
 {
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testConstructorFilterArgumentTypeCheck($filter)
     {
+        $this->expectException(InvalidArgumentException::class);
         new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', $filter);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
+        $this->expectException(InvalidArgumentException::class);
         new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', [], $options);
     }
 

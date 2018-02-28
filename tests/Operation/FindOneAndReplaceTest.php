@@ -2,43 +2,42 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\FindOneAndReplace;
 
 class FindOneAndReplaceTest extends TestCase
 {
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testConstructorFilterArgumentTypeCheck($filter)
     {
+        $this->expectException(InvalidArgumentException::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), $filter, []);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testConstructorReplacementArgumentTypeCheck($replacement)
     {
+        $this->expectException(InvalidArgumentException::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage First key in $replacement argument is an update operator
-     */
     public function testConstructorReplacementArgumentRequiresNoOperators()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('First key in $replacement argument is an update operator');
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], ['$set' => ['x' => 1]]);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
+        $this->expectException(InvalidArgumentException::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], [], $options);
     }
 
@@ -58,11 +57,11 @@ class FindOneAndReplaceTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorReturnDocumentOptions
      */
     public function testConstructorReturnDocumentOption($returnDocument)
     {
+        $this->expectException(InvalidArgumentException::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], [], ['returnDocument' => $returnDocument]);
     }
 

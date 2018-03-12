@@ -2,44 +2,41 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\InsertMany;
 
 class InsertManyTest extends TestCase
 {
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage $documents is empty
-     */
     public function testConstructorDocumentsMustNotBeEmpty()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$documents is empty');
         new InsertMany($this->getDatabaseName(), $this->getCollectionName(), []);
     }
 
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage $documents is not a list (unexpected index: "1")
-     */
     public function testConstructorDocumentsMustBeAList()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$documents is not a list (unexpected index: "1")');
         new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [1 => ['x' => 1]]);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessageRegExp /Expected \$documents\[0\] to have type "array or object" but found "[\w ]+"/
      * @dataProvider provideInvalidDocumentValues
      */
     public function testConstructorDocumentsArgumentElementTypeChecks($document)
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageRegExp('/Expected \$documents[0\] to have type "array or object" but found "[\w ]+"/');
         new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [$document]);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
+        $this->expectException(InvalidArgumentException::class);
         new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [['x' => 1]], $options);
     }
 

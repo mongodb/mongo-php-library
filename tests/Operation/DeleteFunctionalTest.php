@@ -6,6 +6,7 @@ use MongoDB\DeleteResult;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Operation\Delete;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
@@ -99,11 +100,11 @@ class DeleteFunctionalTest extends FunctionalTestCase
 
     /**
      * @depends testUnacknowledgedWriteConcern
-     * @expectedException MongoDB\Exception\BadMethodCallException
-     * @expectedExceptionMessageRegExp /[\w:\\]+ should not be called for an unacknowledged write result/
      */
     public function testUnacknowledgedWriteConcernAccessesDeletedCount(DeleteResult $result)
     {
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getDeletedCount();
     }
 

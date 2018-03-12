@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Watch;
 
 /**
@@ -10,12 +11,11 @@ use MongoDB\Operation\Watch;
  */
 class WatchTest extends FunctionalTestCase
 {
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage $pipeline is not a list (unexpected index: "foo")
-     */
     public function testConstructorPipelineArgumentMustBeAList()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$pipeline is not a list (unexpected index: "foo")');
+
         /* Note: Watch uses array_unshift() to prepend the $changeStream stage
          * to the pipeline. Since array_unshift() reindexes numeric keys, we'll
          * use a string key to test for this exception. */
@@ -23,11 +23,11 @@ class WatchTest extends FunctionalTestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
+        $this->expectException(InvalidArgumentException::class);
         new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
     }
 

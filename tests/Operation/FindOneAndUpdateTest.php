@@ -2,43 +2,42 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\FindOneAndUpdate;
 
 class FindOneAndUpdateTest extends TestCase
 {
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testConstructorFilterArgumentTypeCheck($filter)
     {
+        $this->expectException(InvalidArgumentException::class);
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), $filter, []);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidDocumentValues
      */
     public function testConstructorUpdateArgumentTypeCheck($update)
     {
+        $this->expectException(InvalidArgumentException::class);
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], $update);
     }
 
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage First key in $update argument is not an update operator
-     */
     public function testConstructorUpdateArgumentRequiresOperators()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('First key in $update argument is not an update operator');
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], []);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
+        $this->expectException(InvalidArgumentException::class);
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], ['$set' => ['x' => 1]], $options);
     }
 
@@ -58,11 +57,11 @@ class FindOneAndUpdateTest extends TestCase
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorReturnDocumentOptions
      */
     public function testConstructorReturnDocumentOption($returnDocument)
     {
+        $this->expectException(InvalidArgumentException::class);
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], [], ['returnDocument' => $returnDocument]);
     }
 

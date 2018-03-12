@@ -2,25 +2,24 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CreateIndexes;
 
 class CreateIndexesTest extends TestCase
 {
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage $indexes is not a list (unexpected index: "1")
-     */
     public function testConstructorIndexesArgumentMustBeAList()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$indexes is not a list (unexpected index: "1")');
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [1 => ['key' => ['x' => 1]]]);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidConstructorOptions
      */
     public function testConstructorOptionTypeChecks(array $options)
     {
+        $this->expectException(InvalidArgumentException::class);
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => ['x' => 1]]], $options);
     }
 
@@ -43,21 +42,19 @@ class CreateIndexesTest extends TestCase
         return $options;
     }
 
-    /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
-     * @expectedExceptionMessage $indexes is empty
-     */
     public function testConstructorRequiresAtLeastOneIndex()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$indexes is empty');
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), []);
     }
 
     /**
-     * @expectedException MongoDB\Exception\InvalidArgumentException
      * @dataProvider provideInvalidIndexSpecificationTypes
      */
     public function testConstructorRequiresIndexSpecificationsToBeAnArray($index)
     {
+        $this->expectException(InvalidArgumentException::class);
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [$index]);
     }
 

@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\ChangeStream;
-use MongoDB\Client;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
@@ -534,6 +533,23 @@ class WatchFunctionalTest extends FunctionalTestCase
                 ],
             ],
         ];
+    }
+
+    public function testNextAdvancesKey()
+    {
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $this->insertDocument(['x' => 1]);
+        $this->insertDocument(['x' => 2]);
+
+        $changeStream->next();
+
+        $this->assertSame(0, $changeStream->key());
+
+        $changeStream->next();
+
+        $this->assertSame(1, $changeStream->key());
     }
 
     private function insertDocument($document)

@@ -17,7 +17,7 @@ use ReflectionClass;
 
 class WatchFunctionalTest extends FunctionalTestCase
 {
-    private $defaultOptions = ['maxAwaitTimeMS' => 100];
+    private $defaultOptions = ['maxAwaitTimeMS' => 500];
 
     public function setUp()
     {
@@ -380,12 +380,17 @@ class WatchFunctionalTest extends FunctionalTestCase
         /* On average, an acknowledged write takes about 20 ms to appear in a
          * change stream on the server so we'll use a higher maxAwaitTimeMS to
          * ensure we see the write. */
-        $maxAwaitTimeMS = 100;
+        $maxAwaitTimeMS = 500;
 
         /* Calculate an approximate pivot to use for time assertions. We will
          * assert that the duration of blocking responses is greater than this
          * value, and vice versa. */
         $pivot = ($maxAwaitTimeMS * 0.001) * 0.9;
+
+        /* Calculate an approximate upper bound to use for time assertions. We
+         * will assert that the duration of blocking responses is less than this
+         * value. */
+        $upperBound = ($maxAwaitTimeMS * 0.001) * 1.5;
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => $maxAwaitTimeMS]);
         $changeStream = $operation->execute($this->getPrimaryServer());
@@ -399,7 +404,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $changeStream->rewind();
         $duration = microtime(true) - $startTime;
         $this->assertGreaterThan($pivot, $duration);
-        $this->assertLessThan(0.5, $duration);
+        $this->assertLessThan($upperBound, $duration);
 
         $this->assertFalse($changeStream->valid());
 
@@ -409,7 +414,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $changeStream->next();
         $duration = microtime(true) - $startTime;
         $this->assertGreaterThan($pivot, $duration);
-        $this->assertLessThan(0.5, $duration);
+        $this->assertLessThan($upperBound, $duration);
 
         $this->assertFalse($changeStream->valid());
 

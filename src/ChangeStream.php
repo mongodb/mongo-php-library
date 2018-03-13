@@ -38,7 +38,8 @@ class ChangeStream implements Iterator
     private $resumeToken;
     private $resumeCallable;
     private $csIt;
-    private $key;
+    private $key = 0;
+    private $hasAdvanced = false;
 
     const CURSOR_NOT_FOUND = 43;
 
@@ -53,8 +54,6 @@ class ChangeStream implements Iterator
     {
         $this->resumeCallable = $resumeCallable;
         $this->csIt = new IteratorIterator($cursor);
-
-        $this->key = 0;
     }
 
     /**
@@ -96,8 +95,11 @@ class ChangeStream implements Iterator
         try {
             $this->csIt->next();
             if ($this->valid()) {
+                if ($this->hasAdvanced) {
+                    $this->key++;
+                }
+                $this->hasAdvanced = true;
                 $this->resumeToken = $this->extractResumeToken($this->csIt->current());
-                $this->key++;
             }
         } catch (RuntimeException $e) {
             if (strpos($e->getMessage(), "not master") !== false) {
@@ -125,6 +127,7 @@ class ChangeStream implements Iterator
         try {
             $this->csIt->rewind();
             if ($this->valid()) {
+                $this->hasAdvanced = true;
                 $this->resumeToken = $this->extractResumeToken($this->csIt->current());
             }
         } catch (RuntimeException $e) {

@@ -122,8 +122,9 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
         ];
 
         $operation = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), $indexes);
+
         $this->expectException(RuntimeException::class);
-        $createdIndexNames = $operation->execute($this->getPrimaryServer());
+        $operation->execute($this->getPrimaryServer());
     }
 
     public function testDefaultWriteConcernIsOmitted()

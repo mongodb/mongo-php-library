@@ -8,17 +8,14 @@ use Exception;
 
 class CachingIteratorTest extends TestCase
 {
-    /**
-     * Sanity check for all following tests.
-     *
-     */
     public function testTraversingGeneratorConsumesIt()
     {
         $iterator = $this->getTraversable([1, 2, 3]);
         $this->assertSame([1, 2, 3], iterator_to_array($iterator));
+
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Cannot traverse an already closed generator');
-        $this->assertSame([1, 2, 3], iterator_to_array($iterator));
+        iterator_to_array($iterator);
     }
 
     public function testConstructorRewinds()

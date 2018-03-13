@@ -312,9 +312,6 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
 
-        $this->expectException(ResumeTokenException::class);
-        $this->expectExceptionMessage('Resume token not found in change document');
-
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
@@ -322,6 +319,8 @@ class WatchFunctionalTest extends FunctionalTestCase
          * that we test extraction functionality within next(). */
         $this->insertDocument(['x' => 1]);
 
+        $this->expectException(ResumeTokenException::class);
+        $this->expectExceptionMessage('Resume token not found in change document');
         $changeStream->next();
     }
 
@@ -329,23 +328,19 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
 
-        $this->expectException(ResumeTokenException::class);
-        $this->expectExceptionMessage('Resume token not found in change document');
-
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->insertDocument(['x' => 1]);
 
+        $this->expectException(ResumeTokenException::class);
+        $this->expectExceptionMessage('Resume token not found in change document');
         $changeStream->rewind();
     }
 
     public function testNextResumeTokenInvalidType()
     {
         $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
-
-        $this->expectException(ResumeTokenException::class);
-        $this->expectExceptionMessage('Expected resume token to have type "array or object" but found "string"');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
@@ -354,6 +349,8 @@ class WatchFunctionalTest extends FunctionalTestCase
          * that we test extraction functionality within next(). */
         $this->insertDocument(['x' => 1]);
 
+        $this->expectException(ResumeTokenException::class);
+        $this->expectExceptionMessage('Expected resume token to have type "array or object" but found "string"');
         $changeStream->next();
     }
 
@@ -361,14 +358,13 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
 
-        $this->expectException(ResumeTokenException::class);
-        $this->expectExceptionMessage('Expected resume token to have type "array or object" but found "string"');
-
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->insertDocument(['x' => 1]);
 
+        $this->expectException(ResumeTokenException::class);
+        $this->expectExceptionMessage('Expected resume token to have type "array or object" but found "string"');
         $changeStream->rewind();
     }
 

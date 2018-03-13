@@ -95,11 +95,11 @@ class ChangeStream implements Iterator
         try {
             $this->csIt->next();
             if ($this->valid()) {
-                $this->resumeToken = $this->extractResumeToken($this->csIt->current());
                 if ($this->hasAdvanced) {
                     $this->key++;
                 }
                 $this->hasAdvanced = true;
+                $this->resumeToken = $this->extractResumeToken($this->csIt->current());
             }
         } catch (RuntimeException $e) {
             if (strpos($e->getMessage(), "not master") !== false) {
@@ -127,8 +127,8 @@ class ChangeStream implements Iterator
         try {
             $this->csIt->rewind();
             if ($this->valid()) {
-                $this->resumeToken = $this->extractResumeToken($this->csIt->current());
                 $this->hasAdvanced = true;
+                $this->resumeToken = $this->extractResumeToken($this->csIt->current());
             }
         } catch (RuntimeException $e) {
             if (strpos($e->getMessage(), "not master") !== false) {

@@ -8,10 +8,6 @@ use Exception;
 
 class CachingIteratorTest extends TestCase
 {
-    /**
-     * Sanity check for all following tests.
-     *
-     */
     public function testTraversingGeneratorConsumesIt()
     {
         $iterator = $this->getTraversable([1, 2, 3]);

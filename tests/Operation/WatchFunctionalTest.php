@@ -17,6 +17,8 @@ use ReflectionClass;
 
 class WatchFunctionalTest extends FunctionalTestCase
 {
+    private $defaultOptions = ['maxAwaitTimeMS' => 100];
+
     public function setUp()
     {
         parent::setUp();
@@ -34,7 +36,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $this->insertDocument(['_id' => 1, 'x' => 'foo']);
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $changeStream->rewind();
@@ -81,7 +83,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $manager = new Manager($this->getUri(), ['socketTimeoutMS' => 50]);
         $primaryServer = $manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $operation = new Watch($manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
+        $operation = new Watch($manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($primaryServer);
 
         /* Note: we intentionally do not start iteration with rewind() to ensure
@@ -134,7 +136,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $manager = new Manager($this->getUri(), ['socketTimeoutMS' => 50]);
         $primaryServer = $manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        $operation = new Watch($manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
+        $operation = new Watch($manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($primaryServer);
 
         $commands = [];
@@ -180,7 +182,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $this->insertDocument(['_id' => 1, 'x' => 'foo']);
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $changeStream->rewind();
@@ -225,7 +227,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testKey()
     {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->assertFalse($changeStream->valid());
@@ -262,7 +264,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $pipeline = [['$project' => ['foo' => [0]]]];
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->insertDocument(['_id' => 1]);
@@ -313,7 +315,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         /* Note: we intentionally do not start iteration with rewind() to ensure
@@ -331,7 +333,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->insertDocument(['x' => 1]);
@@ -347,7 +349,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         /* Note: we intentionally do not start iteration with rewind() to ensure
@@ -365,7 +367,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, ['maxAwaitTimeMS' => 100]);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->insertDocument(['x' => 1]);
@@ -424,7 +426,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testRewindResumesAfterCursorNotFound()
     {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->killChangeStreamCursor($changeStream);
@@ -436,7 +438,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testRewindExtractsResumeTokenAndNextResumes()
     {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100]);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->insertDocument(['_id' => 1, 'x' => 'foo']);
@@ -473,7 +475,7 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testTypeMapOption(array $typeMap, $expectedChangeDocument)
     {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['maxAwaitTimeMS' => 100, 'typeMap' => $typeMap]);
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['typeMap' => $typeMap] + $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $changeStream->rewind();

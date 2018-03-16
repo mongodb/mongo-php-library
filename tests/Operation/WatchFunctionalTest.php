@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\ChangeStream;
-use MongoDB\Client;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
@@ -527,6 +526,58 @@ class WatchFunctionalTest extends FunctionalTestCase
                 ],
             ],
         ];
+    }
+
+    public function testNextAdvancesKey()
+    {
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $this->insertDocument(['x' => 1]);
+        $this->insertDocument(['x' => 2]);
+
+        $changeStream->next();
+
+        $this->assertSame(0, $changeStream->key());
+
+        $changeStream->next();
+
+        $this->assertSame(1, $changeStream->key());
+    }
+
+    public function testResumeTokenNotFoundAdvancesKey()
+    {
+        $pipeline =  [['$project' => ['_id' => 0 ]]];
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        /* Note: we intentionally do not start iteration with rewind() to ensure
+         * that we test extraction functionality within next(). */
+        $this->insertDocument(['x' => 1]);
+        $this->insertDocument(['x' => 2]);
+        $this->insertDocument(['x' => 3]);
+
+        try {
+            $changeStream->rewind();
+            $this->fail('ResumeTokenException was not thrown');
+        } catch (ResumeTokenException $e) {}
+
+        $this->assertSame(0, $changeStream->key());
+
+        try {
+            $changeStream->next();
+            $this->fail('ResumeTokenException was not thrown');
+        } catch (ResumeTokenException $e) {}
+
+        $this->assertSame(1, $changeStream->key());
+
+        try {
+            $changeStream->next();
+            $this->fail('ResumeTokenException was not thrown');
+        } catch (ResumeTokenException $e) {}
+
+        $this->assertSame(2, $changeStream->key());
     }
 
     private function insertDocument($document)

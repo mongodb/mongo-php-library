@@ -277,7 +277,7 @@ class Collection
      * @see CreateIndexes::__construct() for supported command options
      * @param array|object $key     Document containing fields mapped to values,
      *                              which denote order or an index type
-     * @param array        $options Index options
+     * @param array        $options Index and command options
      * @return string The name of the created index
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors

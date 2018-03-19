@@ -23,11 +23,12 @@ arg_name: param
 name: $collectionName
 type: string
 description: |
-  The name of the collection{{action}}.
+  The name of the {{subject}}{{action}}.
 interface: phpmethod
 operation: ~
 optional: false
 replacement:
+  subject: "collection"
   action: ""
 ---
 arg_name: param

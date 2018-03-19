@@ -1,0 +1,81 @@
+=====================================
+MongoDB\\Database::modifyCollection()
+=====================================
+
+.. versionadded:: 1.4
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Database::modifyCollection()
+
+   Modifies a collection or view according to the specified
+   ``$collectionOptions``.
+
+   .. code-block:: php
+
+      function modifyCollection($collectionName, array $collectionOptions, array $options = []): array|object
+
+   This method has the following parameters:
+
+   .. include:: /includes/apiargs/MongoDBDatabase-method-modifyCollection-param.rst
+
+   The ``$options`` parameter supports the following options:
+
+   .. include:: /includes/apiargs/MongoDBDatabase-method-modifyCollection-option.rst
+
+Return Values
+-------------
+
+An array or object with the result document of the :manual:`collMod
+</reference/command/collMod>` command.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+Example
+-------
+
+The following example changes the expiration time of a TTL collection in the
+``test`` database:
+
+.. code-block:: php
+
+   <?php
+
+   $db = (new MongoDB\Client)->test;
+
+   $result = $db->modifyCollection('users', [
+       'keyPattern' => ['lastAccess' => 1],
+       'expireAfterSeconds' => 1000
+   ]);
+
+   var_dump($result);
+
+The output would then resemble::
+
+   object(stdClass)#2779 {
+     ["expireAfterSeconds_old"]=>
+     int(3)
+     ["expireAfterSeconds_new"]=>
+     int(1000)
+     ["ok"]=>
+     float(1)
+   }
+
+See Also
+--------
+
+- :manual:`collMod </reference/command/collMod>` command reference in the MongoDB
+  manual

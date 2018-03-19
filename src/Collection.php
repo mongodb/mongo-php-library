@@ -277,7 +277,7 @@ class Collection
      * @see CreateIndexes::__construct() for supported command options
      * @param array|object $key     Document containing fields mapped to values,
      *                              which denote order or an index type
-     * @param array        $options Index options
+     * @param array        $options Index and command options
      * @return string The name of the created index
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -285,8 +285,9 @@ class Collection
      */
     public function createIndex($key, array $options = [])
     {
-        $indexOptions = array_diff_key($options, ['maxTimeMS' => 1, 'writeConcern' => 1]);
-        $commandOptions = array_intersect_key($options, ['maxTimeMS' => 1, 'writeConcern' => 1]);
+        $commandOptionKeys = ['maxTimeMS' => 1, 'session' => 1, 'writeConcern' => 1];
+        $indexOptions = array_diff_key($options, $commandOptionKeys);
+        $commandOptions = array_intersect_key($options, $commandOptionKeys);
 
         return current($this->createIndexes([['key' => $key] + $indexOptions], $commandOptions));
     }

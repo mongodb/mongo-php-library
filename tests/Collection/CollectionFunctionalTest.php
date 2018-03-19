@@ -9,6 +9,8 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\MapReduce;
+use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 /**
  * Functional tests for the Collection class.
@@ -98,6 +100,35 @@ class CollectionFunctionalTest extends FunctionalTestCase
     public function testGetNamespace()
     {
         $this->assertEquals($this->getNamespace(), $this->collection->getNamespace());
+    }
+
+    public function testCreateIndexSplitsCommandOptions()
+    {
+        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
+            $this->markTestSkipped('Sessions are not supported');
+        }
+
+        (new CommandObserver)->observe(
+            function() {
+                $this->collection->createIndex(
+                    ['x' => 1],
+                    [
+                        'maxTimeMS' => 1000,
+                        'session' => $this->manager->startSession(),
+                        'sparse' => true,
+                        'unique' => true,
+                        'writeConcern' => new WriteConcern(1),
+                    ]
+                );
+            },
+            function(stdClass $command) {
+                $this->assertObjectHasAttribute('lsid', $command);
+                $this->assertObjectHasAttribute('maxTimeMS', $command);
+                $this->assertObjectHasAttribute('writeConcern', $command);
+                $this->assertObjectHasAttribute('sparse', $command->indexes[0]);
+                $this->assertObjectHasAttribute('unique', $command->indexes[0]);
+            }
+        );
     }
 
     public function testDrop()

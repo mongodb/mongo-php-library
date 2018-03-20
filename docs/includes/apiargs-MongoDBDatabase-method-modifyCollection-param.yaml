@@ -1,0 +1,20 @@
+source:
+  file: apiargs-common-param.yaml
+  ref: $collectionName
+replacement:
+  subject: "collection or view"
+  action: " to modify"
+---
+arg_name: param
+name: $collectionOptions
+type: array
+description: |
+  Collection or view options to assign.
+interface: phpmethod
+operation: ~
+optional: false
+---
+source:
+  file: apiargs-common-param.yaml
+  ref: $options
+...

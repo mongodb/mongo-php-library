@@ -71,6 +71,7 @@ Methods
    /reference/method/MongoDBCollection-drop
    /reference/method/MongoDBCollection-dropIndex
    /reference/method/MongoDBCollection-dropIndexes
+   /reference/method/MongoDBCollection-explain
    /reference/method/MongoDBCollection-find
    /reference/method/MongoDBCollection-findOne
    /reference/method/MongoDBCollection-findOneAndDelete

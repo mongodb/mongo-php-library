@@ -9,6 +9,7 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Operation\Count;
 use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
@@ -149,6 +150,21 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->collection->dropIndex('*');
+    }
+
+    public function testExplain()
+    {
+        if (version_compare($this->getServerVersion(), '3.0.0', '<')) {
+            $this->markTestSkipped('Explain command is not supported');
+        }
+
+        $this->createFixtures(3);
+
+        $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), ['x' => ['$gte' => 1]], []);
+
+        $result = $this->collection->explain($operation);
+
+        $this->assertArrayHasKey('queryPlanner', $result);
     }
 
     public function testFindOne()

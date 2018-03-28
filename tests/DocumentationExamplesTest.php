@@ -851,8 +851,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertCursorCount(1, $cursor);
     }
 
-
-
     public function testExample_55_58()
     {
         $db = new Database($this->manager, $this->getDatabaseName());
@@ -1020,6 +1018,166 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertNull($firstChange);
         $this->assertNull($nextChange);
+    }
+
+    public function testAggregation_example_1()
+    {
+        $db = new Database($this->manager, $this->getDatabaseName());
+
+        // Start Aggregation Example 1
+        $cursor = $db->sales->aggregate([
+            ['$match' => ['items.fruit' => 'banana']],
+            ['$sort' => ['date' => 1]],
+        ]);
+        // End Aggregation Example 1
+
+        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+    }
+
+    public function testAggregation_example_2()
+    {
+        $db = new Database($this->manager, $this->getDatabaseName());
+
+        // Start Aggregation Example 2
+        $cursor = $db->sales->aggregate([
+            ['$unwind' => '$items'],
+            ['$match' => ['items.fruit' => 'banana']],
+            [
+                '$group' => ['_id' => ['day' => ['$dayOfWeek' => '$date']],
+                'count' => ['$sum' => '$items.quantity']],
+            ],
+            [
+                '$project' => [
+                    'dayOfWeek' => '$_id.day',
+                    'numberSold' => '$count',
+                    '_id' => 0,
+                ]
+            ],
+            ['$sort' => ['numberSold' => 1]],
+        ]);
+        // End Aggregation Example 2
+
+        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+    }
+
+    public function testAggregation_example_3()
+    {
+        $db = new Database($this->manager, $this->getDatabaseName());
+
+        // Start Aggregation Example 3
+        $cursor = $db->sales->aggregate([
+            ['$unwind' => '$items'],
+            ['$group' => [
+                '_id' => ['day' => ['$dayOfWeek' => '$date']],
+                'items_sold' => ['$sum' => '$items.quantity'],
+                'revenue' => [
+                    '$sum' => [
+                        '$multiply' => ['$items.quantity', '$items.price']
+                    ]
+                ],
+            ]],
+            ['$project' => [
+                'day' => '$_id.day',
+                'revenue' => 1,
+                'items_sold' => 1,
+                'discount' => [
+                    '$cond' => [
+                        'if' => ['$lte' => ['$revenue', 250]],
+                        'then' => 25,
+                        'else' => 0,
+                    ]
+                ],
+            ]],
+        ]);
+        // End Aggregation Example 3
+
+        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+    }
+
+    public function testAggregation_example_4()
+    {
+        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
+            $this->markTestSkipped('$lookup does not support "let" option');
+        }
+
+        $db = new Database($this->manager, $this->getDatabaseName());
+
+        // Start Aggregation Example 4
+        $cursor = $db->air_alliances->aggregate([
+            ['$lookup' => [
+                'from' => 'air_airlines',
+                'let' => ['constituents' => '$airlines'],
+                'pipeline' => [['$match' => [
+                        '$expr' => ['$in' => ['$name', '$constituents']]
+                ]]],
+                'as' => 'airlines',
+            ]],
+            ['$project' => [
+                '_id' => 0,
+                'name' => 1,
+                'airlines' => [
+                    '$filter' => [
+                        'input' => '$airlines',
+                        'as' => 'airline',
+                        'cond' => ['$eq' => ['$$airline.country', 'Canada']],
+                    ]
+                ],
+            ]],
+        ]);
+        // End Aggregation Example 4
+
+        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+    }
+
+    public function testRunCommand_example_1()
+    {
+        $db = new Database($this->manager, $this->getDatabaseName());
+
+        // Start runCommand Example 1
+        $cursor = $db->command(['buildInfo' => 1]);
+        $result = $cursor->toArray()[0];
+        // End runCommand Example 1
+
+        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+    }
+
+    public function testRunCommand_example_2()
+    {
+        $db = new Database($this->manager, $this->getDatabaseName());
+        $db->dropCollection('restaurants');
+        $db->createCollection('restaurants');
+
+        // Start runCommand Example 2
+        $cursor = $db->command(['collStats' => 'restaurants']);
+        $result = $cursor->toArray()[0];
+        // End runCommand Example 2
+
+        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+    }
+
+    public function testIndex_example_1()
+    {
+        $db = new Database($this->manager, $this->getDatabaseName());
+
+        // Start Index Example 1
+        $indexName = $db->records->createIndex(['score' => 1]);
+        // End Index Example 1
+
+        $this->assertEquals('score_1', $indexName);
+    }
+
+    public function testIndex_example_2()
+    {
+        $db = new Database($this->manager, $this->getDatabaseName());
+
+        // Start Index Example 2
+        $indexName = $db->restaurants->createIndex(
+            ['cuisine' => 1, 'name' => 1],
+            ['partialFilterExpression' => ['rating' => ['$gt' => 5]]]
+        );
+        // End Index Example 2
+
+        $this->assertEquals('cuisine_1_name_1', $indexName);
     }
 
     /**

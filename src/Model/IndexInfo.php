@@ -61,6 +61,16 @@ class IndexInfo implements ArrayAccess
     }
 
     /**
+     * Return the index name to allow casting IndexInfo to string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
+    /**
      * Return the index key.
      *
      * @return array

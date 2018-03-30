@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\DropIndexes;
 use MongoDB\Operation\ListIndexes;
@@ -84,6 +85,34 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
 
             if ($index->getName() === 'y_1') {
                 $this->fail('The "y_1" index should have been deleted');
+            }
+        }
+    }
+
+    public function testDropByIndexInfo()
+    {
+        $info = new IndexInfo([
+            'v' => 1,
+            'key' => ['x' => 1],
+            'name' => 'x_1',
+            'ns' => 'foo.bar',
+        ]);
+
+        $operation = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => ['x' => 1]]]);
+        $createdIndexNames = $operation->execute($this->getPrimaryServer());
+
+        $this->assertSame('x_1', $createdIndexNames[0]);
+        $this->assertIndexExists('x_1');
+
+        $operation = new DropIndexes($this->getDatabaseName(), $this->getCollectionName(), $info);
+        $this->assertCommandSucceeded($operation->execute($this->getPrimaryServer()));
+
+        $operation = new ListIndexes($this->getDatabaseName(), $this->getCollectionName());
+        $indexes = $operation->execute($this->getPrimaryServer());
+
+        foreach ($indexes as $index) {
+            if ($index->getName() === 'x_1') {
+                $this->fail('The "x_1" index should have been deleted');
             }
         }
     }

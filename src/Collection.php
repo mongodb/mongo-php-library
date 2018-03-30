@@ -29,6 +29,7 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Model\IndexInfo;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\BulkWrite;
@@ -443,7 +444,7 @@ class Collection
      * Drop a single index in the collection.
      *
      * @see DropIndexes::__construct() for supported options
-     * @param string $indexName Index name
+     * @param string|IndexInfo $indexName Index name or model object
      * @param array  $options   Additional options
      * @return array|object Command result document
      * @throws UnsupportedException if options are not supported by the selected server

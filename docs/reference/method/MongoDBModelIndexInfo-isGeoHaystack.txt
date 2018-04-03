@@ -1,0 +1,59 @@
+==========================================
+MongoDB\\Model\\IndexInfo::isGeoHaystack()
+==========================================
+
+.. versionadded:: 1.4
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Model\\IndexInfo::isGeoHaystack()
+
+   Return whether the index is a :manual:`geoHaystack
+   </core/geohaystack>` index.
+
+   .. code-block:: php
+
+      function isGeoHaystack(): boolean
+
+Return Values
+-------------
+
+A boolean indicating whether the index is a geoHaystack index.
+
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $collection = (new MongoDB\Client)->selectCollection('test', 'places');
+
+   $collection->createIndex(['pos' => 'geoHaystack', 'x' => 1], ['bucketSize' => 5]);
+
+   foreach ($collection->listIndexes() as $index) {
+       if ($index->isGeoHaystack()) {
+           printf("%s has bucketSize: %d\n", $index->getName(), $index['bucketSize']);
+       }
+   }
+
+The output would then resemble::
+
+   pos_geoHaystack_x_1 has bucketSize: 5
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::createIndex()`
+- :phpmethod:`MongoDB\\Collection::listIndexes()`
+- :manual:`geoHaystack Indexes </core/geohaystack>` reference in the MongoDB
+  manual

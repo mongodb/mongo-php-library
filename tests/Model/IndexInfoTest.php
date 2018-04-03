@@ -21,7 +21,10 @@ class IndexInfoTest extends TestCase
         $this->assertSame(['x' => 1], $info->getKey());
         $this->assertSame('x_1', $info->getName());
         $this->assertSame('foo.bar', $info->getNamespace());
+        $this->assertFalse($info->is2dSphere());
+        $this->assertFalse($info->isGeoHaystack());
         $this->assertFalse($info->isSparse());
+        $this->assertFalse($info->isText());
         $this->assertFalse($info->isTtl());
         $this->assertFalse($info->isUnique());
     }
@@ -40,7 +43,10 @@ class IndexInfoTest extends TestCase
         $this->assertSame(['y' => 1], $info->getKey());
         $this->assertSame('y_sparse', $info->getName());
         $this->assertSame('foo.bar', $info->getNamespace());
+        $this->assertFalse($info->is2dSphere());
+        $this->assertFalse($info->isGeoHaystack());
         $this->assertTrue($info->isSparse());
+        $this->assertFalse($info->isText());
         $this->assertFalse($info->isTtl());
         $this->assertFalse($info->isUnique());
     }
@@ -59,7 +65,10 @@ class IndexInfoTest extends TestCase
         $this->assertSame(['z' => 1], $info->getKey());
         $this->assertSame('z_unique', $info->getName());
         $this->assertSame('foo.bar', $info->getNamespace());
+        $this->assertFalse($info->is2dSphere());
+        $this->assertFalse($info->isGeoHaystack());
         $this->assertFalse($info->isSparse());
+        $this->assertFalse($info->isText());
         $this->assertFalse($info->isTtl());
         $this->assertTrue($info->isUnique());
     }
@@ -78,7 +87,10 @@ class IndexInfoTest extends TestCase
         $this->assertSame(['z' => 1], $info->getKey());
         $this->assertSame('z_unique', $info->getName());
         $this->assertSame('foo.bar', $info->getNamespace());
+        $this->assertFalse($info->is2dSphere());
+        $this->assertFalse($info->isGeoHaystack());
         $this->assertFalse($info->isSparse());
+        $this->assertFalse($info->isText());
         $this->assertTrue($info->isTtl());
         $this->assertFalse($info->isUnique());
         $this->assertArrayHasKey('expireAfterSeconds', $info);
@@ -138,5 +150,68 @@ class IndexInfoTest extends TestCase
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage('MongoDB\Model\IndexInfo is immutable');
         unset($info['v']);
+    }
+
+    public function testIs2dSphere()
+    {
+        $info = new IndexInfo([
+            'v' => 2,
+            'key' => ['pos' => '2dsphere'],
+            'name' => 'pos_2dsphere',
+            'ns' => 'foo.bar',
+        ]);
+
+        $this->assertSame(2, $info->getVersion());
+        $this->assertSame(['pos' => '2dsphere'], $info->getKey());
+        $this->assertSame('pos_2dsphere', $info->getName());
+        $this->assertSame('foo.bar', $info->getNamespace());
+        $this->assertTrue($info->is2dSphere());
+        $this->assertFalse($info->isGeoHaystack());
+        $this->assertFalse($info->isSparse());
+        $this->assertFalse($info->isText());
+        $this->assertFalse($info->isTtl());
+        $this->assertFalse($info->isUnique());
+    }
+
+    public function testIsGeoHaystack()
+    {
+        $info = new IndexInfo([
+            'v' => 2,
+            'key' => ['pos2' => 'geoHaystack', 'x' => 1],
+            'name' => 'pos2_geoHaystack_x_1',
+            'ns' => 'foo.bar',
+        ]);
+
+        $this->assertSame(2, $info->getVersion());
+        $this->assertSame(['pos2' => 'geoHaystack', 'x' => 1], $info->getKey());
+        $this->assertSame('pos2_geoHaystack_x_1', $info->getName());
+        $this->assertSame('foo.bar', $info->getNamespace());
+        $this->assertFalse($info->is2dSphere());
+        $this->assertTrue($info->isGeoHaystack());
+        $this->assertFalse($info->isSparse());
+        $this->assertFalse($info->isText());
+        $this->assertFalse($info->isTtl());
+        $this->assertFalse($info->isUnique());
+    }
+
+    public function testIsText()
+    {
+        $info = new IndexInfo([
+            'v' => 2,
+            'key' => ['_fts' => 'text', '_ftsx' => 1],
+            'name' => 'title_text_description_text',
+            'ns' => 'foo.bar',
+        ]);
+
+        $this->assertSame(2, $info->getVersion());
+        $this->assertSame(['_fts' => 'text', '_ftsx' => 1], $info->getKey());
+        $this->assertSame('title_text_description_text', $info->getName());
+        $this->assertSame('foo.bar', $info->getNamespace());
+        $this->assertFalse($info->is2dSphere());
+        $this->assertFalse($info->isGeoHaystack());
+        $this->assertFalse($info->isSparse());
+        $this->assertTrue($info->isText());
+        $this->assertFalse($info->isTtl());
+        $this->assertFalse($info->isUnique());
     }
 }

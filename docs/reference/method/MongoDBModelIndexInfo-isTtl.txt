@@ -28,6 +28,23 @@ Return Values
 
 A boolean indicating whether the index is a TTL index.
 
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new IndexInfo([
+       'expireAfterSeconds' => 100,
+   ]);
+
+   var_dump($info->isTtl());
+
+The output would then resemble::
+
+   bool(true)
+
 See Also
 --------
 

@@ -28,6 +28,23 @@ Return Values
 
 A boolean indicating whether the index is a unique index.
 
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new IndexInfo([
+       'unique' => true,
+   ]);
+
+   var_dump($info->isUnique());
+
+The output would then resemble::
+
+   bool(true)
+
 See Also
 --------
 

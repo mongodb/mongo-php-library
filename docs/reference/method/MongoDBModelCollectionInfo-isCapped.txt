@@ -27,6 +27,27 @@ Return Values
 
 A boolean indicating whether the collection is a capped collection.
 
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new CollectionInfo([
+       'name' => 'foo',
+       'options' => [
+           'capped' => true,
+           'size' => 1048576,
+      ]
+   ]);
+
+   var_dump($info->isCapped());
+
+The output would then resemble::
+
+   bool(true)
+
 See Also
 --------
 

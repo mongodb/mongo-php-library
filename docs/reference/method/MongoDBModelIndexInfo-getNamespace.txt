@@ -27,6 +27,23 @@ Return Values
 
 The index namespace.
 
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new IndexInfo([
+       'ns' => 'foo.bar',
+   ]);
+
+   echo $info->getNamespace();
+
+The output would then resemble::
+
+   foo.bar
+
 See Also
 --------
 

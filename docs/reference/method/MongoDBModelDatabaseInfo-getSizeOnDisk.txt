@@ -26,6 +26,21 @@ Return Values
 
 The total size of the database file on disk in bytes.
 
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new DatabaseInfo(['sizeOnDisk' => 1048576]);
+
+   var_dump($info->getSizeOnDisk());
+
+The output would then resemble::
+
+   int(1048576)
+
 See Also
 --------
 

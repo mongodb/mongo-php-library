@@ -28,6 +28,28 @@ Return Values
 The document limit for the capped collection. If the collection is not capped,
 ``null`` will be returned.
 
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new CollectionInfo([
+       'name' => 'foo',
+       'options' => [
+           'capped' => true,
+           'size' => 1048576,
+           'max' => 100,
+       ]
+   ]);
+
+   var_dump($info->getCappedMax());
+
+The output would then resemble::
+
+   int(100)
+
 See Also
 --------
 

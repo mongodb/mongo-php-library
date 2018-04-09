@@ -29,6 +29,23 @@ Return Values
 
 The index name.
 
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new IndexInfo([
+       'name' => 'x_1',
+   ]);
+
+   echo $info->getName();
+
+The output would then resemble::
+
+   x_1
+
 See Also
 --------
 

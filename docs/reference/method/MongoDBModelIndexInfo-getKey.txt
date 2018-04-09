@@ -28,6 +28,26 @@ Return Values
 
 The index specification as an associative array.
 
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new IndexInfo([
+       'key' => ['x' => 1],
+   ]);
+
+   var_dump($info->getKey());
+
+The output would then resemble::
+
+   array(1) {
+     ["x"]=>
+     int(1)
+   }
+
 See Also
 --------
 

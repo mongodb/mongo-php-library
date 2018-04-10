@@ -22,6 +22,19 @@ Definition
    returned by traversing a :phpclass:`MongoDB\\Model\\CollectionInfoIterator`,
    which is returned by :phpmethod:`MongoDB\\Database::listCollections()`.
 
+.. versionchanged:: 1.4
+
+   This class implements PHP's :php:`ArrayAccess <arrayaccess>` interface. This
+   provides a mechanism for accessing index fields for which there exists no
+   helper method. :php:`isset() <isset>` may be used to check for the existence
+   of a field before accessing it with ``[]``.
+
+   .. note::
+
+      The :phpclass:`MongoDB\\Model\\CollectionInfo` class is immutable. Attempting
+      to modify it via the :php:`ArrayAccess <arrayaccess>` interface will
+      result in a :phpclass:`MongoDB\\Exception\\BadMethodCallException`.
+
 Methods
 ~~~~~~~
 
@@ -69,6 +82,19 @@ Definition
    This class models information about a database. Instances of this class are
    returned by traversing a :phpclass:`MongoDB\\Model\\DatabaseInfoIterator`,
    which is returned by :phpmethod:`MongoDB\\Client::listDatabases()`.
+
+.. versionchanged:: 1.4
+
+   This class implements PHP's :php:`ArrayAccess <arrayaccess>` interface. This
+   provides a mechanism for accessing index fields for which there exists no
+   helper method. :php:`isset() <isset>` may be used to check for the existence
+   of a field before accessing it with ``[]``.
+
+   .. note::
+
+      The :phpclass:`MongoDB\\Model\\DatabaseInfo` class is immutable. Attempting
+      to modify it via the :php:`ArrayAccess <arrayaccess>` interface will
+      result in a :phpclass:`MongoDB\\Exception\\BadMethodCallException`.
 
 Methods
 ~~~~~~~

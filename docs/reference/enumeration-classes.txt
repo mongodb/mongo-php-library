@@ -115,7 +115,7 @@ MongoDB\\Model\\IndexInfo
 
    This class implements PHP's :php:`ArrayAccess <arrayaccess>` interface. This
    provides a mechanism for accessing index fields for which there exists no
-   helper method. :php`isset() <isset>` may be used to check for the existence
+   helper method. :php:`isset() <isset>` may be used to check for the existence
    of a field before accessing it with ``[]``.
 
    .. note::

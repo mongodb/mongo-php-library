@@ -1,0 +1,59 @@
+=======================================
+MongoDB\\Model\\IndexInfo::is2dSphere()
+=======================================
+
+.. versionadded:: 1.4
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Model\\IndexInfo::is2dSphere()
+
+   Return whether the index is a :manual:`2dsphere </core/2dsphere>`
+   index.
+
+   .. code-block:: php
+
+      function is2dSphere(): boolean
+
+Return Values
+-------------
+
+A boolean indicating whether the index is a 2dsphere index.
+
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $collection = (new MongoDB\Client)->selectCollection('test', 'places');
+
+   $collection->createIndex(['pos' => '2dsphere']);
+
+   foreach ($collection->listIndexes() as $index) {
+       if ($index->is2dSphere()) {
+           printf("%s has 2dsphereIndexVersion: %d\n", $index->getName(), $index['2dsphereIndexVersion']);
+       }
+   }
+
+The output would then resemble::
+
+   pos_2dsphere has 2dsphereIndexVersion: 3
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::createIndex()`
+- :phpmethod:`MongoDB\\Collection::listIndexes()`
+- :manual:`2dsphere Indexes </core/2dsphere>` reference in the MongoDB
+  manual

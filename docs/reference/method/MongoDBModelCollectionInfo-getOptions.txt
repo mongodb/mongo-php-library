@@ -28,6 +28,32 @@ Return Values
 
 The collection options.
 
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new CollectionInfo([
+       'name' => 'foo',
+       'options' => [
+           'capped' => true,
+           'size' => 1048576,
+       ]
+   ]);
+
+   var_dump($info->getOptions());
+
+The output would then resemble::
+
+   array(2) {
+     ["capped"]=>
+     bool(true)
+     ["size"]=>
+     int(1048576)
+   }
+
 See Also
 --------
 

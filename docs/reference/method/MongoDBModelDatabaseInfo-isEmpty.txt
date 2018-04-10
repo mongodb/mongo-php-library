@@ -26,6 +26,21 @@ Return Values
 
 A boolean indicating whether the database has any data.
 
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new DatabaseInfo(['empty' => true]);
+
+   var_dump($info->isEmpty());
+
+The output would then resemble::
+
+   bool(true)
+
 See Also
 --------
 

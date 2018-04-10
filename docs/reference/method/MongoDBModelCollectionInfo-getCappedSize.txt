@@ -29,6 +29,27 @@ Return Values
 The size limit for the capped collection in bytes. If the collection is not
 capped, ``null`` will be returned.
 
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new CollectionInfo([
+       'name' => 'foo',
+       'options' => [
+           'capped' => true,
+           'size' => 1048576,
+       ]
+   ]);
+
+   var_dump($info->getCappedSize());
+
+The output would then resemble::
+
+   int(1048576)
+
 See Also
 --------
 

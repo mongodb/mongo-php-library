@@ -6,6 +6,7 @@ use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\TestCase;
 use ArrayObject;
+use stdClass;
 
 class BSONDocumentTest extends TestCase
 {
@@ -23,6 +24,31 @@ class BSONDocumentTest extends TestCase
         $document = new BSONDocument($data);
         $this->assertSame($data, $document->getArrayCopy());
         $this->assertEquals((object) [0 => 'foo', 2 => 'bar'], $document->bsonSerialize());
+    }
+
+    public function testClone()
+    {
+        $document = new BSONDocument([
+            'a' => [
+                'a' => 'foo',
+                'b' => new stdClass,
+                'c' => ['bar', new stdClass],
+            ],
+            'b' => new BSONDocument([
+                'a' => 'foo',
+                'b' => new stdClass,
+                'c' => ['bar', new stdClass],
+            ]),
+        ]);
+        $documentClone = clone $document;
+
+        $this->assertSameDocument($document, $documentClone);
+        $this->assertNotSame($document, $documentClone);
+        $this->assertNotSame($document['a']['b'], $documentClone['a']['b']);
+        $this->assertNotSame($document['a']['c'][1], $documentClone['a']['c'][1]);
+        $this->assertNotSame($document['b'], $documentClone['b']);
+        $this->assertNotSame($document['b']['b'], $documentClone['b']['b']);
+        $this->assertNotSame($document['b']['c'][1], $documentClone['b']['c'][1]);
     }
 
     public function testJsonSerialize()

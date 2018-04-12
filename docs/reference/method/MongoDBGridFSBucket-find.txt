@@ -46,7 +46,49 @@ Behavior
 
 .. include:: /includes/extracts/note-bson-comparison.rst
 
-.. todo: add examples
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
+
+   $stream = fopen('php://temp', 'w+b');
+   fwrite($stream, "foobar");
+   rewind($stream);
+
+   $bucket->uploadFromStream('b', $stream);
+
+   $cursor = $bucket->find(
+       ['length' => ['$lte' => 6]],
+       [
+           'projection' => [
+               'filename' => 1,
+               'length' => 1,
+               '_id' => 0,
+            ],
+            'sort' => ['length' => -1],
+        ]
+   );
+
+   var_dump($cursor->toArray());
+
+The output would then resemble::
+
+   array(1) {
+     [0]=>
+     object(MongoDB\Model\BSONDocument)#3015 (1) {
+       ["storage":"ArrayObject":private]=>
+       array(2) {
+         ["filename"]=>
+         string(1) "b"
+         ["length"]=>
+         int(6)
+       }
+     }
+   }
 
 See Also
 --------

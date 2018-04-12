@@ -37,7 +37,39 @@ Errors/Exceptions
 .. include:: /includes/extracts/error-invalidargumentexception.rst
 .. include:: /includes/extracts/error-driver-runtimeexception.rst
 
-.. todo: add examples
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
+
+   $stream = $bucket->openUploadStream('filename');
+
+   $fileDocument = $bucket->getFileDocumentForStream($stream);
+
+   var_dump($fileDocument);
+
+   fclose($stream);
+
+The output would then resemble::
+
+   object(MongoDB\Model\BSONDocument)#4956 (1) {
+     ["storage":"ArrayObject":private]=>
+     array(3) {
+       ["_id"]=>
+       object(MongoDB\BSON\ObjectId)#4955 (1) {
+         ["oid"]=>
+         string(24) "5acfb05b7e21e83b5a29037c"
+       }
+       ["chunkSize"]=>
+       int(261120)
+       ["filename"]=>
+       string(8) "filename"
+     }
+   }
 
 See Also
 --------

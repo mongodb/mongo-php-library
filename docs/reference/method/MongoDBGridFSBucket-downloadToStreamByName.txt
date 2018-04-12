@@ -30,14 +30,37 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBGridFSBucket-method-downloadToStreamByName-option.rst
 
-.. todo: add examples
-
 Errors/Exceptions
 -----------------
 
 .. include:: /includes/extracts/error-gridfs-filenotfoundexception.rst
 .. include:: /includes/extracts/error-invalidargumentexception.rst
 .. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
+
+   $stream = fopen('php://temp', 'w+b');
+   fwrite($stream, "foobar");
+   rewind($stream);
+
+   $bucket->uploadFromStream('filename', $stream);
+
+   $destination = fopen('php://temp', 'w+b');
+
+   $bucket->downloadToStreamByName('filename', $destination);
+
+   var_dump(stream_get_contents($destination, -1, 0));
+
+The output would then resemble::
+
+   string(6) "foobar"
 
 See Also
 --------

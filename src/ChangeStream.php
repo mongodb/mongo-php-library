@@ -101,6 +101,15 @@ class ChangeStream implements Iterator
                 $this->hasAdvanced = true;
                 $this->resumeToken = $this->extractResumeToken($this->csIt->current());
             }
+            /* If the cursorId is 0, the server has invalidated the cursor so we
+             * will never perform another getMore. This means that we cannot
+             * resume and we can therefore unset the resumeCallable, which will
+             * free any reference to Watch. This will also free the only
+             * reference to an implicit session, since any such reference
+             * belongs to Watch. */
+            if ((string)$this->getCursorId() === '0') {
+                $this->resumeCallable = null;
+            }
         } catch (RuntimeException $e) {
             if (strpos($e->getMessage(), "not master") !== false) {
                 $resumable = true;
@@ -129,6 +138,10 @@ class ChangeStream implements Iterator
             if ($this->valid()) {
                 $this->hasAdvanced = true;
                 $this->resumeToken = $this->extractResumeToken($this->csIt->current());
+            }
+            // As with next(), free the callable once we know it will never be used.
+            if ((string)$this->getCursorId() === '0') {
+                $this->resumeCallable = null;
             }
         } catch (RuntimeException $e) {
             if (strpos($e->getMessage(), "not master") !== false) {

@@ -110,6 +110,12 @@ class Watch implements Executable
             }
         }
 
+        if ( ! isset($options['session'])) {
+            try {
+                $options['session'] = $manager->startSession();
+            } catch (DriverRuntimeException $e) {}
+        }
+
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->pipeline = $pipeline;

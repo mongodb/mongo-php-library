@@ -42,7 +42,25 @@ from the :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` object.
 If you select the Bucket from a :phpclass:`Database <MongoDB\\Database>` object,
 the Bucket inherits its options from that object.
 
-.. todo: add an example
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
+
+   var_dump($bucket);
+
+The output would then resemble::
+
+   object(MongoDB\GridFS\Bucket)#3053 (2) {
+     ["bucketName"]=>
+     string(4) "test"
+     ["databaseName"]=>
+     string(11) "phplib_test"
+   }
 
 See Also
 --------

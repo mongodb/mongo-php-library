@@ -37,4 +37,19 @@ Behavior
 If the files collection document is not found, this method will still attempt to
 delete orphaned chunks.
 
-.. todo: add examples
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
+
+   $stream = fopen('php://temp', 'w+b');
+   fwrite($stream, "foobar");
+   rewind($stream);
+
+   $id = $bucket->uploadFromStream('filename', $stream);
+
+   $bucket->delete($id);

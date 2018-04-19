@@ -28,4 +28,17 @@ Return Values
 
 The chunk size of this bucket in bytes.
 
-.. todo: add examples
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
+
+   var_dump($bucket->getChunkSizeBytes());
+
+The output would then resemble::
+
+   int(261120)

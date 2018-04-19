@@ -40,7 +40,25 @@ Behavior
 Chunk documents will be created as data is written to the writable stream. The
 metadata document will be created when the writable stream is closed.
 
-.. todo: add examples
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
+
+   $uploadStream = $bucket->openUploadStream('filename');
+   fwrite($uploadStream, 'foobar');
+   fclose($uploadStream);
+
+   $downloadStream = $bucket->openDownloadStreamByName('filename');
+   var_dump(stream_get_contents($downloadStream));
+
+The output would then resemble::
+
+   string(6) "foobar"
 
 See Also
 --------

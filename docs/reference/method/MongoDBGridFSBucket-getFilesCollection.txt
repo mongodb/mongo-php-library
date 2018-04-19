@@ -28,4 +28,20 @@ Return Values
 
 A :phpclass:`MongoDB\\Collection` object for the files collection.
 
-.. todo: add examples
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
+
+   $filesCollection = $bucket->getFilesCollection();
+
+   var_dump($filesCollection->getCollectionName());
+
+The output would then resemble::
+
+   string(8) "fs.files"
+

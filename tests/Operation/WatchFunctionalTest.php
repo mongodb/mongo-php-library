@@ -8,7 +8,9 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Exception\ResumeTokenException;
+use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
+use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\Watch;
 use MongoDB\Tests\CommandObserver;
@@ -586,6 +588,90 @@ class WatchFunctionalTest extends FunctionalTestCase
         } catch (ResumeTokenException $e) {}
 
         $this->assertSame(2, $changeStream->key());
+    }
+
+    public function testSessionPersistsAfterResume()
+    {
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+
+        $changeStream = null;
+        $originalSession = null;
+        $sessionAfterResume = [];
+        $commands = [];
+
+        /* We want to ensure that the lsid of the initial aggregate matches the
+         * lsid of any aggregates after the change stream resumes. After
+         * PHPC-1152 is complete, we will ensure that the lsid of the initial
+         * aggregate matches the lsid of any subsequent aggregates and getMores.
+         */
+        (new CommandObserver)->observe(
+            function() use ($operation, &$changeStream) {
+                $changeStream = $operation->execute($this->getPrimaryServer());
+            },
+            function($changeStream) use (&$originalSession) {
+                if (isset($changeStream->aggregate)) {
+                    $originalSession = bin2hex((string) $changeStream->lsid->id);
+                }
+            }
+        );
+
+        $changeStream->rewind();
+        $this->killChangeStreamCursor($changeStream);
+
+        (new CommandObserver)->observe(
+            function() use (&$changeStream) {
+                $changeStream->next();
+            },
+            function ($changeStream) use (&$sessionAfterResume, &$commands) {
+                $commands[] = key((array) $changeStream);
+                $sessionAfterResume[] = bin2hex((string) $changeStream->lsid->id);
+            }
+        );
+
+        $expectedCommands = [
+            /* We expect a getMore to be issued because we are calling next(). */
+            'getMore',
+            /* Since we have killed the cursor, ChangeStream will resume by
+             * issuing a new aggregate commmand. */
+            'aggregate',
+            /* When ChangeStream resumes, it overwrites its original cursor with
+             * the new cursor resulting from the last aggregate command. This
+             * removes the last reference to the old cursor, which causes the
+             * driver to kill it (via mongoc_cursor_destroy()). */
+            'killCursors',
+            /* Finally, ChangeStream will rewind the new cursor as the last step
+             * of the resume process. This results in one last getMore. */
+            'getMore',
+        ];
+
+        $this->assertSame($expectedCommands, $commands);
+
+        foreach ($sessionAfterResume as $session) {
+            $this->assertEquals($session, $originalSession);
+        }
+    }
+
+    public function testSessionFreed()
+    {
+        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName());
+        $operation->execute($this->getPrimaryServer());
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $rc = new ReflectionClass($changeStream);
+        $rp = $rc->getProperty('resumeCallable');
+        $rp->setAccessible(true);
+
+        $this->assertNotNull($rp->getValue($changeStream));
+
+        // Invalidate the cursor to verify that resumeCallable is unset when the cursor is exhausted.
+        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
+        $operation->execute($this->getPrimaryServer());
+
+        $changeStream->next();
+
+        $this->assertNull($rp->getValue($changeStream));
     }
 
     private function insertDocument($document)

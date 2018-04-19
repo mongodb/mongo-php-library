@@ -18,6 +18,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
@@ -297,6 +298,10 @@ class FindAndModify implements Executable, Explainable
 
         if (isset($this->options['writeConcern'])) {
             $options['writeConcern'] = $this->options['writeConcern'];
+        }
+
+        if (false === isset($this->options['readConcern']) || (isset($this->options['readConcern']) && $this->options['readConcern']->getLevel() !== ReadConcern::LOCAL)) {
+            $options['readConcern'] = new ReadConcern(ReadConcern::LOCAL);
         }
 
         return $options;

@@ -40,7 +40,26 @@ Errors/Exceptions
 .. include:: /includes/extracts/error-gridfs-filenotfoundexception.rst
 .. include:: /includes/extracts/error-driver-runtimeexception.rst
 
-.. todo: add examples
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
+
+   $stream = fopen('php://temp', 'w+b');
+   fwrite($stream, "foobar");
+   rewind($stream);
+
+   $bucket->uploadFromStream('filename', $stream);
+
+   var_dump(stream_get_contents($bucket->openDownloadStreamByName('filename')));
+
+The output would then resemble::
+
+   string(6) "foobar"
 
 See Also
 --------

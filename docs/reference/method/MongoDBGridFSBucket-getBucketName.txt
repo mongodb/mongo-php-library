@@ -26,4 +26,17 @@ Return Values
 
 The name of this bucket as a string.
 
-.. todo: add examples
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
+
+   var_dump($bucket->getBucketName());
+
+The output would then resemble::
+
+   string(2) "fs"

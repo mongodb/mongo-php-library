@@ -210,7 +210,7 @@ class FindAndModify implements Executable, Explainable
             throw UnsupportedException::writeConcernNotSupported();
         }
 
-        $cursor = $server->executeReadWriteCommand($this->databaseName, new Command($this->createCommandDocument($server)), $this->createOptions());
+        $cursor = $server->executeWriteCommand($this->databaseName, new Command($this->createCommandDocument($server)), $this->createOptions());
         $result = current($cursor->toArray());
 
         if ( ! isset($result->value)) {
@@ -284,7 +284,7 @@ class FindAndModify implements Executable, Explainable
     /**
      * Create options for executing the command.
      *
-     * @see http://php.net/manual/en/mongodb-driver-server.executereadwritecommand.php
+     * @see http://php.net/manual/en/mongodb-driver-server.executewritecommand.php
      * @return array
      */
     private function createOptions()

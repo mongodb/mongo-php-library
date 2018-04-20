@@ -128,6 +128,17 @@ class FindTest extends TestCase
         return $options;
     }
 
+    public function testSnapshotOptionIsDeprecated()
+    {
+        $this->assertDeprecated(function() {
+            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['snapshot' => true]);
+        });
+
+        $this->assertDeprecated(function() {
+            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['snapshot' => false]);
+        });
+    }
+
     private function getInvalidHintValues()
     {
         return [123, 3.14, true];

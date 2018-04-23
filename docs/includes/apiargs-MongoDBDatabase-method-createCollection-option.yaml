@@ -9,7 +9,10 @@ description: |
 
      For replica sets, do not set ``autoIndexId`` to ``false``.
 
-  .. deprecated:: 3.2. The ``autoIndexId`` option will be removed in MongoDB 3.4.
+  .. deprecated:: 1.4
+     This option has been deprecated since MongoDB 3.2. As of MongoDB 4.0, this
+     option cannot be ``false`` when creating a replicated collection (i.e. a
+     collection outside of the ``local`` database in any mongod mode).
 interface: phpmethod
 operation: ~
 optional: true

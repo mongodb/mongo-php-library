@@ -82,4 +82,15 @@ class CreateCollectionTest extends TestCase
 
         return $options;
     }
+
+    public function testAutoIndexIdOptionIsDeprecated()
+    {
+        $this->assertDeprecated(function() {
+            new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['autoIndexId' => true]);
+        });
+
+        $this->assertDeprecated(function() {
+            new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['autoIndexId' => false]);
+        });
+    }
 }

@@ -52,6 +52,23 @@ abstract class TestCase extends BaseTestCase
         return $this->wrapValuesForDataProvider($this->getInvalidDocumentValues());
     }
 
+    protected function assertDeprecated(callable $execution)
+    {
+        $errors = [];
+
+        set_error_handler(function($errno, $errstr) use (&$errors) {
+            $errors[] = $errstr;
+        }, E_USER_DEPRECATED);
+
+        try {
+            call_user_func($execution);
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertCount(1, $errors);
+    }
+
     protected function assertSameDocument($expectedDocument, $actualDocument)
     {
         $this->assertEquals(

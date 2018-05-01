@@ -128,6 +128,8 @@ class Find implements Executable, Explainable
      *  * snapshot (boolean): Prevents the cursor from returning a document more
      *    than once because of an intervening write operation.
      *
+     *    This options has been deprecated since version 1.4.
+     *
      *  * sort (document): The order in which to return matching documents. If
      *    "$orderby" also exists in the modifiers document, this option will
      *    take precedence.
@@ -257,6 +259,10 @@ class Find implements Executable, Explainable
 
         if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
             unset($options['readConcern']);
+        }
+
+        if (isset($options['snapshot'])) {
+            trigger_error('The "snapshot" option is deprecated and will be removed in a future release', E_USER_DEPRECATED);
         }
 
         $this->databaseName = (string) $databaseName;

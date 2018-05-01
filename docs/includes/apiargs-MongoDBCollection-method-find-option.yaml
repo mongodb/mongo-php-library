@@ -221,6 +221,7 @@ description: |
   Prevents the cursor from returning a document more than once because of an
   intervening write operation.
 
+  .. deprecated:: 1.4
   .. versionadded:: 1.2
 interface: phpmethod
 operation: ~

@@ -56,6 +56,8 @@ class FindOne implements Executable, Explainable
      *  * maxScan (integer): Maximum number of documents or index keys to scan
      *    when executing the query.
      *
+     *    This option has been deprecated since version 1.4.
+     *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run. If "$maxTimeMS" also exists in the modifiers document, this
      *    option will take precedence.

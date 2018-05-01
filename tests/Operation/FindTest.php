@@ -139,6 +139,13 @@ class FindTest extends TestCase
         });
     }
 
+    public function testMaxScanOptionIsDeprecated()
+    {
+        $this->assertDeprecated(function() {
+            new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['maxScan' => 1]);
+        });
+    }
+
     private function getInvalidHintValues()
     {
         return [123, 3.14, true];

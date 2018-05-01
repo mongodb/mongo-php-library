@@ -148,6 +148,7 @@ type: integer
 description: |
   Maximum number of documents or index keys to scan when executing the query.
 
+  .. deprecated:: 1.4
   .. versionadded:: 1.2
 interface: phpmethod
 operation: ~

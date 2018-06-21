@@ -35,11 +35,13 @@ use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\BulkWrite;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Count;
+use MongoDB\Operation\CountDocuments;
 use MongoDB\Operation\DeleteMany;
 use MongoDB\Operation\DeleteOne;
 use MongoDB\Operation\Distinct;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropIndexes;
+use MongoDB\Operation\EstimatedDocumentCount;
 use MongoDB\Operation\Explain;
 use MongoDB\Operation\Explainable;
 use MongoDB\Operation\Find;
@@ -255,6 +257,8 @@ class Collection
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     *
+     * @deprecated 1.4
      */
     public function count($filter = [], array $options = [])
     {
@@ -269,6 +273,35 @@ class Collection
         }
 
         $operation = new Count($this->databaseName, $this->collectionName, $filter, $options);
+
+        return $operation->execute($server);
+    }
+
+    /**
+     * Gets the number of documents matching the filter.
+     *
+     * @see CountDocuments::__construct() for supported options
+     * @param array|object $filter  Query by which to filter documents
+     * @param array        $options Command options
+     * @return integer
+     * @throws UnexpectedValueException if the command response was malformed
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function countDocuments($filter = [], array $options = [])
+    {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
+        $server = $this->manager->selectServer($options['readPreference']);
+
+        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
+        $operation = new CountDocuments($this->databaseName, $this->collectionName, $filter, $options);
 
         return $operation->execute($server);
     }
@@ -497,6 +530,34 @@ class Collection
         }
 
         $operation = new DropIndexes($this->databaseName, $this->collectionName, '*', $options);
+
+        return $operation->execute($server);
+    }
+
+    /**
+     * Gets an estimated number of documents in the collection using the collection metadata.
+     *
+     * @see EstimatedDocumentCount::__construct() for supported options
+     * @param array $options Command options
+     * @return integer
+     * @throws UnexpectedValueException if the command response was malformed
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function EstimatedDocumentCount(array $options = [])
+    {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
+        $server = $this->manager->selectServer($options['readPreference']);
+
+        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
+        $operation = new EstimatedDocumentCount($this->databaseName, $this->collectionName, $options);
 
         return $operation->execute($server);
     }

@@ -1,0 +1,49 @@
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: collation
+---
+arg_name: option
+name: hint
+type: string|array|object
+description: |
+  The index to use. Specify either the index name as a string or the index key
+  pattern as a document. If specified, then the query system will only consider
+  plans using the hinted index.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: limit
+type: integer
+description: |
+  The maximum number of matching documents to return.
+interface: phpmethod
+operation: ~
+optional: true
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: maxTimeMS
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: readConcern
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: readPreference
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: session
+---
+arg_name: option
+name: skip
+type: integer
+description: |
+  The number of matching documents to skip before returning results.
+interface: phpmethod
+operation: ~
+optional: true
+...

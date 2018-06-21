@@ -179,7 +179,7 @@ class WritableStream
      * written. Since seeking is not supported and writes are appended, this is
      * always the end of the stream.
      *
-     * @see WriteableStream::getSize()
+     * @see WritableStream::getSize()
      * @return integer
      */
     public function tell()

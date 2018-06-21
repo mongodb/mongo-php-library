@@ -18,6 +18,17 @@ operation: ~
 optional: true
 ---
 arg_name: option
+name: disableMD5
+type: boolean
+description: |
+  Whether to disable automatic MD5 generation when storing files.
+
+  Defaults to ``false``.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: metadata
 type: array|object
 description: |

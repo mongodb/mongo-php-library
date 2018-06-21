@@ -358,7 +358,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 break;
 
             default:
-                throw new LogicException('Unsupported operation: ' . $operationName);
+                throw new LogicException('Unsupported operation: ' . $operation['name']);
         }
     }
 

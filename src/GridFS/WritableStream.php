@@ -76,6 +76,7 @@ class WritableStream
         $options += [
             '_id' => new ObjectId,
             'chunkSizeBytes' => self::$defaultChunkSizeBytes,
+            'disableMD5' => false,
         ];
 
         if (isset($options['aliases']) && ! \MongoDB\is_string_array($options['aliases'])) {
@@ -104,7 +105,7 @@ class WritableStream
 
         $this->chunkSize = $options['chunkSizeBytes'];
         $this->collectionWrapper = $collectionWrapper;
-        $this->disableMD5 = isset($options['disableMD5']) ? $options['disableMD5'] : false;
+        $this->disableMD5 = $options['disableMD5'];
 
         if ( ! $this->disableMD5) {
             $this->hashCtx = hash_init('md5');
@@ -235,8 +236,7 @@ class WritableStream
         $this->file['uploadDate'] = new UTCDateTime;
 
         if ( ! $this->disableMD5) {
-            $md5 = hash_final($this->hashCtx);
-            $this->file['md5'] = $md5;
+            $this->file['md5'] = hash_final($this->hashCtx);
         }
 
         try {

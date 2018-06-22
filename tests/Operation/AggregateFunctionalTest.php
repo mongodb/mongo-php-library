@@ -12,6 +12,28 @@ use stdClass;
 
 class AggregateFunctionalTest extends FunctionalTestCase
 {
+    public function testCurrentOpCommand()
+    {
+        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
+            $this->markTestSkipped('$currentOp is not supported');
+        }
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new Aggregate(
+                    'admin',
+                    null,
+                    [['$currentOp' => (object) []]]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(stdClass $command) {
+                $this->assertSame(1, $command->aggregate);
+            }
+        );
+    }
+
     public function testDefaultReadConcernIsOmitted()
     {
         (new CommandObserver)->observe(

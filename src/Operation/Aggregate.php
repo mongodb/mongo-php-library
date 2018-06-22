@@ -116,10 +116,13 @@ class Aggregate implements Executable
      *    This is not supported for server versions < 3.4 and will result in an
      *    exception at execution time if used.
      *
-     * @param string $databaseName   Database name
-     * @param string $collectionName Collection name
-     * @param array  $pipeline       List of pipeline operations
-     * @param array  $options        Command options
+     * Note: Collection-agnostic commands (e.g. $currentOp) may be executed by
+     * specifying null for the collection name.
+     *
+     * @param string      $databaseName   Database name
+     * @param string|null $collectionName Collection name
+     * @param array       $pipeline       List of pipeline operations
+     * @param array       $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($databaseName, $collectionName, array $pipeline, array $options = [])
@@ -220,7 +223,7 @@ class Aggregate implements Executable
         }
 
         $this->databaseName = (string) $databaseName;
-        $this->collectionName = (string) $collectionName;
+        $this->collectionName = isset($collectionName) ? (string) $collectionName : null;
         $this->pipeline = $pipeline;
         $this->options = $options;
     }
@@ -289,7 +292,7 @@ class Aggregate implements Executable
     private function createCommand(Server $server)
     {
         $cmd = [
-            'aggregate' => $this->collectionName,
+            'aggregate' => isset($this->collectionName) ? $this->collectionName : 1,
             'pipeline' => $this->pipeline,
         ];
         $cmdOptions = [];

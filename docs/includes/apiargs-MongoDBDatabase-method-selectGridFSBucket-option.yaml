@@ -20,8 +20,8 @@ optional: true
 source:
   file: apiargs-MongoDBGridFSBucket-common-option.yaml
   ref: disableMD5
-  post: |
-    .. versionadded: 1.4
+post: |
+  .. versionadded: 1.4
 ---
 source:
   file: apiargs-common-option.yaml

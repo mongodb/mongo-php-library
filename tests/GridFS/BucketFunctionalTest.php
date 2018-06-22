@@ -54,6 +54,10 @@ class BucketFunctionalTest extends FunctionalTestCase
             $options[][] = ['chunkSizeBytes' => $value];
         }
 
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = ['disableMD5' => $value];
+        }
+
         foreach ($this->getInvalidReadConcernValues() as $value) {
             $options[][] = ['readConcern' => $value];
         }

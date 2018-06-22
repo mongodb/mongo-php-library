@@ -63,6 +63,7 @@ Methods
    /reference/method/MongoDBCollection-aggregate
    /reference/method/MongoDBCollection-bulkWrite
    /reference/method/MongoDBCollection-count
+   /reference/method/MongoDBCollection-countDocuments
    /reference/method/MongoDBCollection-createIndex
    /reference/method/MongoDBCollection-createIndexes
    /reference/method/MongoDBCollection-deleteMany
@@ -71,6 +72,7 @@ Methods
    /reference/method/MongoDBCollection-drop
    /reference/method/MongoDBCollection-dropIndex
    /reference/method/MongoDBCollection-dropIndexes
+   /reference/method/MongoDBCollection-estimatedDocumentCount
    /reference/method/MongoDBCollection-explain
    /reference/method/MongoDBCollection-find
    /reference/method/MongoDBCollection-findOne

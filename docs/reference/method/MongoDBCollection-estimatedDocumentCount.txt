@@ -1,0 +1,56 @@
+=============================================
+MongoDB\\Collection::estimatedDocumentCount()
+=============================================
+
+.. versionadded:: 1.4
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Collection::estimatedDocumentCount()
+
+   Gets an estimated number of documents in the collection using collection metadata.
+
+   .. code-block:: php
+
+      function countDocuments(array $options = []): integer
+
+   This method has the following parameters:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-estimateDocumentCount-param.rst
+
+   The ``$options`` parameter supports the following options:
+
+   .. include:: /includes/apiargs/MongoDBCollection-method-estimateDocumentCount-option.rst
+
+Return Values
+-------------
+
+An estimated number of documents in the collection.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-unexpectedvalueexception.rst
+.. include:: /includes/extracts/error-unsupportedexception.rst
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+Behavior
+--------
+
+.. include:: /includes/extracts/note-bson-comparison.rst
+
+See Also
+--------
+
+- :manual:`count </reference/command/count>` command reference in the MongoDB
+  manual

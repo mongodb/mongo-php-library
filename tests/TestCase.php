@@ -69,6 +69,49 @@ abstract class TestCase extends BaseTestCase
         $this->assertCount(1, $errors);
     }
 
+    /**
+     * Asserts that a document has expected values for some fields.
+     *
+     * Only fields in the expected document will be checked. The actual document
+     * may contain additional fields.
+     *
+     * @param array|object $expectedDocument
+     * @param array|object $actualDocument
+     */
+    protected function assertMatchesDocument($expectedDocument, $actualDocument)
+    {
+        $normalizedExpectedDocument = $this->normalizeBSON($expectedDocument);
+        $normalizedActualDocument = $this->normalizeBSON($actualDocument);
+
+        $extraKeys = [];
+
+        /* Avoid unsetting fields while we're iterating on the ArrayObject to
+         * work around https://bugs.php.net/bug.php?id=70246 */
+        foreach ($normalizedActualDocument as $key => $value) {
+            if ( ! $normalizedExpectedDocument->offsetExists($key)) {
+                $extraKeys[] = $key;
+            }
+        }
+
+        foreach ($extraKeys as $key) {
+            $normalizedActualDocument->offsetUnset($key);
+        }
+
+        $this->assertEquals(
+            \MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP($normalizedExpectedDocument)),
+            \MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP($normalizedActualDocument))
+        );
+    }
+
+    /**
+     * Asserts that a document has expected values for all fields.
+     *
+     * The actual document will be compared directly with the expected document
+     * and may not contain extra fields.
+     *
+     * @param array|object $expectedDocument
+     * @param array|object $actualDocument
+     */
     protected function assertSameDocument($expectedDocument, $actualDocument)
     {
         $this->assertEquals(

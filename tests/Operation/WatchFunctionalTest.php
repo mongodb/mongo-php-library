@@ -57,7 +57,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'documentKey' => ['_id' => 2],
         ];
 
-        $this->assertSameDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
 
         $this->killChangeStreamCursor($changeStream);
 
@@ -74,7 +74,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'documentKey' => ['_id' => 3]
         ];
 
-        $this->assertSameDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
     }
 
     public function testNextResumesAfterConnectionException()
@@ -203,7 +203,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'documentKey' => ['_id' => 2],
         ];
 
-        $this->assertSameDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
 
         $this->killChangeStreamCursor($changeStream);
 
@@ -224,7 +224,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'documentKey' => ['_id' => 3],
         ];
 
-        $this->assertSameDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
     }
 
     public function testKey()
@@ -452,7 +452,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
             'documentKey' => ['_id' => 1],
         ];
-        $this->assertSameDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
 
         $this->killChangeStreamCursor($changeStream);
 
@@ -466,7 +466,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
             'documentKey' => ['_id' => 2],
         ];
-        $this->assertSameDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
     }
 
     /**
@@ -484,16 +484,8 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $changeStream->next();
         $this->assertTrue($changeStream->valid());
-        $changeDocument = $changeStream->current();
 
-        // Unset the resume token and namespace, which are intentionally omitted
-        if (is_array($changeDocument)) {
-            unset($changeDocument['_id'], $changeDocument['ns']);
-        } else {
-            unset($changeDocument->_id, $changeDocument->ns);
-        }
-
-        $this->assertEquals($expectedChangeDocument, $changeDocument);
+        $this->assertMatchesDocument($expectedChangeDocument, $changeStream->current());
     }
 
     public function provideTypeMapOptionsAndExpectedChangeDocument()

@@ -24,7 +24,7 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
-use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
+use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
@@ -110,10 +110,16 @@ class Watch implements Executable
             }
         }
 
+        /* In the absence of an explicit session, create one to ensure that the
+         * initial aggregation and any resume attempts can use the same session
+         * ("implicit from the user's perspective" per PHPLIB-342). */
         if ( ! isset($options['session'])) {
             try {
                 $options['session'] = $manager->startSession();
-            } catch (DriverRuntimeException $e) {}
+            } catch (RuntimeException $e) {
+                /* We can ignore the exception, as libmongoc likely cannot
+                 * create its own session and there is no risk of a mismatch. */
+            }
         }
 
         $this->databaseName = (string) $databaseName;
@@ -132,7 +138,7 @@ class Watch implements Executable
      * @param Server $server
      * @return ChangeStream
      * @throws UnsupportedException if collation or read concern is used and unsupported
-     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     * @throws RuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {

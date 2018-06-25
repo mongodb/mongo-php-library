@@ -26,14 +26,14 @@ use Iterator;
  */
 class BSONIterator implements Iterator
 {
+    private static $bsonSize = 4;
+
     private $buffer;
     private $bufferLength;
     private $current;
     private $key = 0;
     private $position = 0;
     private $options;
-
-    const BSON_SIZE = 4;
 
     /**
      * Constructs a BSON Iterator.
@@ -119,11 +119,11 @@ class BSONIterator implements Iterator
             return;
         }
 
-        if (($this->bufferLength - $this->position) < self::BSON_SIZE) {
-            throw new UnexpectedValueException(sprintf('Expected at least %d bytes; %d remaining', self::BSON_SIZE, $this->bufferLength - $this->position));
+        if (($this->bufferLength - $this->position) < self::$bsonSize) {
+            throw new UnexpectedValueException(sprintf('Expected at least %d bytes; %d remaining', self::$bsonSize, $this->bufferLength - $this->position));
         }
 
-        list(,$documentLength) = unpack('V', substr($this->buffer, $this->position, self::BSON_SIZE));
+        list(,$documentLength) = unpack('V', substr($this->buffer, $this->position, self::$bsonSize));
 
         if (($this->bufferLength - $this->position) < $documentLength) {
             throw new UnexpectedValueException(sprintf('Expected %d bytes; %d remaining', $documentLength, $this->bufferLength - $this->position));

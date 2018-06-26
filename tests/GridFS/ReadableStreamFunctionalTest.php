@@ -221,8 +221,8 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
                 $stream->seek($offset);
                 $this->assertSame($expectedBytes, $stream->readBytes($length));
             },
-            function(stdClass $command) use (&$commands) {
-                $commands[] = key((array) $command);
+            function(array $event) use (&$commands) {
+                $commands[] = $event['started']->getCommandName();
             }
         );
 
@@ -257,8 +257,8 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
                 $stream->seek($offset);
                 $this->assertSame($expectedBytes, $stream->readBytes($length));
             },
-            function(stdClass $command) use (&$commands) {
-                $commands[] = key((array) $command);
+            function(array $event) use (&$commands) {
+                $commands[] = $event['started']->getCommandName();
             }
         );
 
@@ -291,8 +291,8 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
                 $stream->seek($offset);
                 $this->assertSame($expectedBytes, $stream->readBytes($length));
             },
-            function(stdClass $command) use (&$commands) {
-                $commands[] = key((array) $command);
+            function(array $event) use (&$commands) {
+                $commands[] = $event['started']->getCommandName();
             }
         );
 

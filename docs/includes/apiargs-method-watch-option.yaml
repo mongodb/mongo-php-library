@@ -1,0 +1,81 @@
+---
+arg_name: option
+name: batchSize
+type: integer
+description: |
+  Specifies the maximum number of change events to return in each batch of the
+  response from the MongoDB cluster.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: fullDocument
+type: string
+description: |
+  Allowed values are 'default' and 'updateLookup'. Defaults to 'default'.
+  When set to 'updateLookup', the change notification for partial updates will
+  include both a delta describing the changes to the document, as well as a
+  copy of the entire document that was changed from some time after the change
+  occurred. The following values are supported:
+
+  - ``MongoDB\Operation\Watch::FULL_DOCUMENT_DEFAULT`` (*default*)
+  - ``MongoDB\Operation\Watch::FULL_DOCUMENT_UPDATE_LOOKUP``
+
+  .. note::
+
+     This is an option of the ``$changeStream`` pipeline stage.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: maxAwaitTimeMS
+type: integer
+description: |
+  Positive integer denoting the time limit in milliseconds for the server to
+  block a getMore operation if no data is available.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: resumeAfter
+type: array|object
+description: |
+  Specifies the logical starting point for the new change stream. The ``_id``
+  field in documents returned by the change stream may be used here.
+
+  Using this option in conjunction with ``startAtOperationTime`` will result in
+  a server error. The options are mutually exclusive.
+
+  .. note::
+
+     This is an option of the ``$changeStream`` pipeline stage.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: startAtOperationTime
+type: :php:`MongoDB\\BSON\\TimestampInterface <class.mongodb-bson-timestampinterface>`
+description: |
+  If specified, the change stream will only provide changes that occurred at or
+  after the specified timestamp. Command responses from a MongoDB 4.0+ server
+  include an ``operationTime`` that can be used here. By default, the
+  ``operationTime`` returned by the initial ``aggregate`` command will be used
+  if available.
+
+  Using this option in conjunction with ``resumeAfter`` will result in a server
+  error. The options are mutually exclusive.
+
+  This is not supported for server versions prior to 4.0 and will result in an
+  exception at execution time if used.
+
+  .. note::
+
+     This is an option of the ``$changeStream`` pipeline stage.
+interface: phpmethod
+operation: ~
+optional: true
+...

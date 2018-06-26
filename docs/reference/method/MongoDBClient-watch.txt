@@ -1,8 +1,8 @@
-============================
-MongoDB\\Collection::watch()
-============================
+========================
+MongoDB\\Client::watch()
+========================
 
-.. versionadded:: 1.3
+.. versionadded:: 1.4
 
 .. default-domain:: mongodb
 
@@ -15,10 +15,10 @@ MongoDB\\Collection::watch()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::watch()
+.. phpmethod:: MongoDB\\Client::watch()
 
-   Executes a :manual:`change stream </changeStreams>` operation on the
-   collection. The change stream can be watched for collection-level changes.
+   Executes a :manual:`change stream </changeStreams>` operation on the client.
+   The change stream can be watched for cluster-level changes.
 
    .. code-block:: php
 
@@ -26,11 +26,11 @@ Definition
 
    This method has the following parameters:
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-watch-param.rst
+   .. include:: /includes/apiargs/MongoDBClient-method-watch-param.rst
 
    The ``$options`` parameter supports the following options:
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-watch-option.rst
+   .. include:: /includes/apiargs/MongoDBClient-method-watch-option.rst
 
 Return Values
 -------------
@@ -57,9 +57,9 @@ This example reports events while iterating a change stream.
 
    $uri = 'mongodb://rs1.example.com,rs2.example.com/?replicaSet=myReplicaSet';
 
-   $collection = (new MongoDB\Client($uri))->test->inventory;
+   $client = new MongoDB\Client($uri);
 
-   $changeStream = $collection->watch();
+   $changeStream = $client->watch();
 
    for ($changeStream->rewind(); true; $changeStream->next()) {
        if ( ! $changeStream->valid()) {
@@ -102,14 +102,14 @@ script was iterating the change stream, the output would then resemble:
 
 .. code-block:: none
 
-   Inserted new document in test.user
-   {"_id":{"$oid":"5b329c4874083047cc05e60a"},"username":"bob"}
+   Inserted new document in app.user
+   {"_id":{"$oid":"5b329b6674083047cc05e607"},"username":"bob"}
 
-   Inserted new document in test.products
-   {"_id":{"$oid":"5b329c4d74083047cc05e60b"},"name":"Widget","quantity":5}
+   Inserted new document in app.products
+   {"_id":{"$oid":"5b329b6a74083047cc05e608"},"name":"Widget","quantity":5}
 
-   Updated document in test.user with _id: {"$oid":"5b329a4f74083047cc05e603"}
-   {"updatedFields":{"username":"robert"},"removedFields":[]}
+   Inserted new document in logs.messages
+   {"_id":{"$oid":"5b329b7374083047cc05e609"},"msg":"bob purchased a widget"}
 
 See Also
 --------

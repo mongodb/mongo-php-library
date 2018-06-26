@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\ChangeStream;
+use MongoDB\BSON\TimestampInterface;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
@@ -57,7 +58,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'documentKey' => ['_id' => 2],
         ];
 
-        $this->assertSameDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
 
         $this->killChangeStreamCursor($changeStream);
 
@@ -74,7 +75,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'documentKey' => ['_id' => 3]
         ];
 
-        $this->assertSameDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
     }
 
     public function testNextResumesAfterConnectionException()
@@ -98,8 +99,8 @@ class WatchFunctionalTest extends FunctionalTestCase
                 function() use ($changeStream) {
                     $changeStream->next();
                 },
-                function(stdClass $command) use (&$commands) {
-                    $commands[] = key((array) $command);
+                function(array $event) use (&$commands) {
+                    $commands[] = $event['started']->getCommandName();
                 }
             );
             $this->fail('ConnectionTimeoutException was not thrown');
@@ -130,6 +131,100 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertSame($expectedCommands, $commands);
     }
 
+    public function testResumeBeforeReceivingAnyResultsIncludesStartAtOperationTime()
+    {
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+
+        $operationTime = null;
+        $events = [];
+
+        (new CommandObserver)->observe(
+            function() use ($operation, &$changeStream) {
+                $changeStream = $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use (&$events) {
+                $events[] = $event;
+            }
+        );
+
+        $this->assertCount(1, $events);
+        $this->assertSame('aggregate', $events[0]['started']->getCommandName());
+        $operationTime = $events[0]['succeeded']->getReply()->operationTime;
+        $this->assertInstanceOf(TimestampInterface::class, $operationTime);
+
+        $this->assertNull($changeStream->current());
+        $this->killChangeStreamCursor($changeStream);
+
+        $events = [];
+
+        (new CommandObserver)->observe(
+            function() use ($changeStream) {
+                $changeStream->rewind();
+            },
+            function (array $event) use (&$events) {
+                $events[] = $event;
+            }
+        );
+
+        $this->assertCount(4, $events);
+
+        $this->assertSame('getMore', $events[0]['started']->getCommandName());
+        $this->arrayHasKey('failed', $events[0]);
+
+        $this->assertSame('aggregate', $events[1]['started']->getCommandName());
+        $this->assertStartAtOperationTime($operationTime, $events[1]['started']->getCommand());
+        $this->arrayHasKey('succeeded', $events[1]);
+
+        // Original cursor is freed immediately after the change stream resumes
+        $this->assertSame('killCursors', $events[2]['started']->getCommandName());
+        $this->arrayHasKey('succeeded', $events[2]);
+
+        $this->assertSame('getMore', $events[3]['started']->getCommandName());
+        $this->arrayHasKey('succeeded', $events[3]);
+
+        $this->assertNull($changeStream->current());
+        $this->killChangeStreamCursor($changeStream);
+
+        $events = [];
+
+        (new CommandObserver)->observe(
+            function() use ($changeStream) {
+                $changeStream->next();
+            },
+            function (array $event) use (&$events) {
+                $events[] = $event;
+            }
+        );
+
+        $this->assertCount(4, $events);
+
+        $this->assertSame('getMore', $events[0]['started']->getCommandName());
+        $this->arrayHasKey('failed', $events[0]);
+
+        $this->assertSame('aggregate', $events[1]['started']->getCommandName());
+        $this->assertStartAtOperationTime($operationTime, $events[1]['started']->getCommand());
+        $this->arrayHasKey('succeeded', $events[1]);
+
+        // Original cursor is freed immediately after the change stream resumes
+        $this->assertSame('killCursors', $events[2]['started']->getCommandName());
+        $this->arrayHasKey('succeeded', $events[2]);
+
+        $this->assertSame('getMore', $events[3]['started']->getCommandName());
+        $this->arrayHasKey('succeeded', $events[3]);
+
+        $this->assertNull($changeStream->current());
+    }
+
+    private function assertStartAtOperationTime(TimestampInterface $expectedOperationTime, stdClass $command)
+    {
+        $this->assertObjectHasAttribute('pipeline', $command);
+        $this->assertInternalType('array', $command->pipeline);
+        $this->assertArrayHasKey(0, $command->pipeline);
+        $this->assertObjectHasAttribute('$changeStream', $command->pipeline[0]);
+        $this->assertObjectHasAttribute('startAtOperationTime', $command->pipeline[0]->{'$changeStream'});
+        $this->assertEquals($expectedOperationTime, $command->pipeline[0]->{'$changeStream'}->startAtOperationTime);
+    }
+
     public function testRewindResumesAfterConnectionException()
     {
         /* In order to trigger a dropped connection, we'll use a new client with
@@ -148,8 +243,8 @@ class WatchFunctionalTest extends FunctionalTestCase
                 function() use ($changeStream) {
                     $changeStream->rewind();
                 },
-                function(stdClass $command) use (&$commands) {
-                    $commands[] = key((array) $command);
+                function(array $event) use (&$commands) {
+                    $commands[] = $event['started']->getCommandName();
                 }
             );
             $this->fail('ConnectionTimeoutException was not thrown');
@@ -203,7 +298,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'documentKey' => ['_id' => 2],
         ];
 
-        $this->assertSameDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
 
         $this->killChangeStreamCursor($changeStream);
 
@@ -224,7 +319,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'documentKey' => ['_id' => 3],
         ];
 
-        $this->assertSameDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
     }
 
     public function testKey()
@@ -452,7 +547,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
             'documentKey' => ['_id' => 1],
         ];
-        $this->assertSameDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
 
         $this->killChangeStreamCursor($changeStream);
 
@@ -466,7 +561,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
             'documentKey' => ['_id' => 2],
         ];
-        $this->assertSameDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
     }
 
     /**
@@ -484,16 +579,8 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $changeStream->next();
         $this->assertTrue($changeStream->valid());
-        $changeDocument = $changeStream->current();
 
-        // Unset the resume token and namespace, which are intentionally omitted
-        if (is_array($changeDocument)) {
-            unset($changeDocument['_id'], $changeDocument['ns']);
-        } else {
-            unset($changeDocument->_id, $changeDocument->ns);
-        }
-
-        $this->assertEquals($expectedChangeDocument, $changeDocument);
+        $this->assertMatchesDocument($expectedChangeDocument, $changeStream->current());
     }
 
     public function provideTypeMapOptionsAndExpectedChangeDocument()
@@ -600,9 +687,10 @@ class WatchFunctionalTest extends FunctionalTestCase
             function() use ($operation, &$changeStream) {
                 $changeStream = $operation->execute($this->getPrimaryServer());
             },
-            function($changeStream) use (&$originalSession) {
-                if (isset($changeStream->aggregate)) {
-                    $originalSession = bin2hex((string) $changeStream->lsid->id);
+            function(array $event) use (&$originalSession) {
+                $command = $event['started']->getCommand();
+                if (isset($command->aggregate)) {
+                    $originalSession = bin2hex((string) $command->lsid->id);
                 }
             }
         );
@@ -614,9 +702,9 @@ class WatchFunctionalTest extends FunctionalTestCase
             function() use (&$changeStream) {
                 $changeStream->next();
             },
-            function ($changeStream) use (&$sessionAfterResume, &$commands) {
-                $commands[] = key((array) $changeStream);
-                $sessionAfterResume[] = bin2hex((string) $changeStream->lsid->id);
+            function (array $event) use (&$sessionAfterResume, &$commands) {
+                $commands[] = $event['started']->getCommandName();
+                $sessionAfterResume[] = bin2hex((string) $event['started']->getCommand()->lsid->id);
             }
         );
 

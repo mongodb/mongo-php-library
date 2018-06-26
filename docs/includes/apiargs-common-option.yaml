@@ -1,4 +1,21 @@
 arg_name: option
+name: collation
+type: array|object
+description: |
+   :manual:`Collation </reference/collation>` allows users to specify
+   language-specific rules for string comparison, such as rules for lettercase
+   and accent marks. When specifying collation, the ``locale`` field is
+   mandatory; all other collation fields are optional. For descriptions of the
+   fields, see :manual:`Collation Document
+   </reference/collation/#collation-document>`.
+
+   This option is available in MongoDB 3.4+ and will result in an exception at
+   execution time if specified for an older server version.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: maxTimeMS
 type: integer
 description: |

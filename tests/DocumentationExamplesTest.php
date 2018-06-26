@@ -979,7 +979,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             'documentKey' => ['_id' => 1],
         ];
 
-        $this->assertSameDocument($expectedChange, $lastChange);
+        $this->assertMatchesDocument($expectedChange, $lastChange);
 
         // Start Changestream Example 3
         $resumeToken = ($lastChange !== null) ? $lastChange->_id : null;
@@ -1002,7 +1002,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             'documentKey' => ['_id' => 2],
         ];
 
-        $this->assertSameDocument($expectedChange, $nextChange);
+        $this->assertMatchesDocument($expectedChange, $nextChange);
 
         // Start Changestream Example 4
         $pipeline = [['$match' => ['$or' => [['fullDocument.username' => 'alice'], ['operationType' => 'delete']]]]];

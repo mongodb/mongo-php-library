@@ -28,7 +28,7 @@ operation: ~
 optional: true
 ---
 source:
-  file: apiargs-MongoDBCollection-common-option.yaml
+  file: apiargs-common-option.yaml
   ref: collation
 pre: |
   Specifies the :manual:`collation

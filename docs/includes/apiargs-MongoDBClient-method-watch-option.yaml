@@ -16,11 +16,11 @@ source:
   ref: maxAwaitTimeMS
 ---
 source:
-  file: apiargs-MongoDBCollection-common-option.yaml
+  file: apiargs-MongoDBClient-common-option.yaml
   ref: readConcern
 ---
 source:
-  file: apiargs-MongoDBCollection-common-option.yaml
+  file: apiargs-MongoDBClient-common-option.yaml
   ref: readPreference
 post: |
   This is used for both the initial change stream aggregation and for
@@ -37,10 +37,8 @@ source:
 source:
   file: apiargs-method-watch-option.yaml
   ref: startAtOperationTime
-post: |
-  .. versionadded:: 1.4
 ---
 source:
-  file: apiargs-MongoDBCollection-common-option.yaml
+  file: apiargs-MongoDBClient-common-option.yaml
   ref: typeMap
 ...

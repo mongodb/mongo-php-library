@@ -59,5 +59,6 @@ Methods
    /reference/method/MongoDBDatabase-modifyCollection
    /reference/method/MongoDBDatabase-selectCollection
    /reference/method/MongoDBDatabase-selectGridFSBucket
+   /reference/method/MongoDBDatabase-watch
    /reference/method/MongoDBDatabase-withOptions
 

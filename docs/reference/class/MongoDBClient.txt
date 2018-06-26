@@ -40,3 +40,4 @@ Methods
    /reference/method/MongoDBClient-selectCollection
    /reference/method/MongoDBClient-selectDatabase
    /reference/method/MongoDBClient-startSession
+   /reference/method/MongoDBClient-watch

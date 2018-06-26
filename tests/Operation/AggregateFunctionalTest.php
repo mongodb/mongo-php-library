@@ -28,8 +28,8 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(stdClass $command) {
-                $this->assertSame(1, $command->aggregate);
+            function(array $event) {
+                $this->assertSame(1, $event['started']->getCommand()->aggregate);
             }
         );
     }
@@ -47,8 +47,8 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(stdClass $command) {
-                $this->assertObjectNotHasAttribute('readConcern', $command);
+            function(array $event) {
+                $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
             }
         );
     }
@@ -66,8 +66,8 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(stdClass $command) {
-                $this->assertObjectNotHasAttribute('writeConcern', $command);
+            function(array $event) {
+                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
             }
         );
     }
@@ -112,8 +112,8 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(stdClass $command) {
-                $this->assertObjectHasAttribute('lsid', $command);
+            function(array $event) {
+                $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
     }
@@ -185,8 +185,8 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 $this->assertCount(1, $results);
                 $this->assertObjectHasAttribute('stages', current($results));
             },
-            function(stdClass $command) {
-                $this->assertObjectNotHasAttribute('writeConcern', $command);
+            function(array $event) {
+                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
             }
         );
 

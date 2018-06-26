@@ -182,7 +182,8 @@ class ExplainFunctionalTest extends FunctionalTestCase
                 $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array', 'document' => 'array']]);
                 $explainOperation->execute($this->getPrimaryServer());
             },
-            function(stdClass $command) {
+            function(array $event) {
+                $command = $event['started']->getCommand();
                 $this->assertObjectNotHasAttribute('maxAwaitTimeMS', $command->explain);
                 $this->assertObjectHasAttribute('tailable', $command->explain);
                 $this->assertObjectHasAttribute('awaitData', $command->explain);
@@ -206,7 +207,8 @@ class ExplainFunctionalTest extends FunctionalTestCase
                 $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array', 'document' => 'array']]);
                 $explainOperation->execute($this->getPrimaryServer());
             },
-            function(stdClass $command) {
+            function(array $event) {
+                $command = $event['started']->getCommand();
                 $this->assertObjectHasAttribute('sort', $command->explain);
                 $this->assertObjectNotHasAttribute('modifiers', $command->explain);
             }

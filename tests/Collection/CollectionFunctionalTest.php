@@ -123,7 +123,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
                     ]
                 );
             },
-            function(stdClass $command) {
+            function(array $event) {
+                $command = $event['started']->getCommand();
                 $this->assertObjectHasAttribute('lsid', $command);
                 $this->assertObjectHasAttribute('maxTimeMS', $command);
                 $this->assertObjectHasAttribute('writeConcern', $command);

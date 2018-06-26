@@ -98,8 +98,8 @@ class WatchFunctionalTest extends FunctionalTestCase
                 function() use ($changeStream) {
                     $changeStream->next();
                 },
-                function(stdClass $command) use (&$commands) {
-                    $commands[] = key((array) $command);
+                function(array $event) use (&$commands) {
+                    $commands[] = $event['started']->getCommandName();
                 }
             );
             $this->fail('ConnectionTimeoutException was not thrown');
@@ -148,8 +148,8 @@ class WatchFunctionalTest extends FunctionalTestCase
                 function() use ($changeStream) {
                     $changeStream->rewind();
                 },
-                function(stdClass $command) use (&$commands) {
-                    $commands[] = key((array) $command);
+                function(array $event) use (&$commands) {
+                    $commands[] = $event['started']->getCommandName();
                 }
             );
             $this->fail('ConnectionTimeoutException was not thrown');
@@ -592,9 +592,10 @@ class WatchFunctionalTest extends FunctionalTestCase
             function() use ($operation, &$changeStream) {
                 $changeStream = $operation->execute($this->getPrimaryServer());
             },
-            function($changeStream) use (&$originalSession) {
-                if (isset($changeStream->aggregate)) {
-                    $originalSession = bin2hex((string) $changeStream->lsid->id);
+            function(array $event) use (&$originalSession) {
+                $command = $event['started']->getCommand();
+                if (isset($command->aggregate)) {
+                    $originalSession = bin2hex((string) $command->lsid->id);
                 }
             }
         );
@@ -606,9 +607,9 @@ class WatchFunctionalTest extends FunctionalTestCase
             function() use (&$changeStream) {
                 $changeStream->next();
             },
-            function ($changeStream) use (&$sessionAfterResume, &$commands) {
-                $commands[] = key((array) $changeStream);
-                $sessionAfterResume[] = bin2hex((string) $changeStream->lsid->id);
+            function (array $event) use (&$sessionAfterResume, &$commands) {
+                $commands[] = $event['started']->getCommandName();
+                $sessionAfterResume[] = bin2hex((string) $event['started']->getCommand()->lsid->id);
             }
         );
 

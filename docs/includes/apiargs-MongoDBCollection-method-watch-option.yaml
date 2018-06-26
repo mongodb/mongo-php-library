@@ -28,7 +28,7 @@ description: |
 
   .. note::
 
-     This is an option of the `$changeStream` pipeline stage.
+     This is an option of the ``$changeStream`` pipeline stage.
 interface: phpmethod
 operation: ~
 optional: true
@@ -62,7 +62,7 @@ description: |
 
   .. note::
 
-     This is an option of the `$changeStream` pipeline stage.
+     This is an option of the ``$changeStream`` pipeline stage.
 interface: phpmethod
 operation: ~
 optional: true

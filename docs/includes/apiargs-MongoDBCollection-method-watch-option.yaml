@@ -23,8 +23,8 @@ description: |
   copy of the entire document that was changed from some time after the change
   occurred. The following values are supported:
 
-  - ``MongoDB\Operation\ChangeStream::FULL_DOCUMENT_DEFAULT`` (*default*)
-  - ``MongoDB\Operation\ChangeStream::FULL_DOCUMENT_UPDATE_LOOKUP``
+  - ``MongoDB\Operation\Watch::FULL_DOCUMENT_DEFAULT`` (*default*)
+  - ``MongoDB\Operation\Watch::FULL_DOCUMENT_UPDATE_LOOKUP``
 
   .. note::
 

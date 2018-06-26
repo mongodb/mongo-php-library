@@ -34,6 +34,7 @@ use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\ModifyCollection;
+use MongoDB\Operation\Watch;
 
 class Database
 {
@@ -42,6 +43,7 @@ class Database
         'document' => 'MongoDB\Model\BSONDocument',
         'root' => 'MongoDB\Model\BSONDocument',
     ];
+    private static $wireVersionForReadConcern = 4;
     private static $wireVersionForWritableCommandWriteConcern = 5;
 
     private $databaseName;
@@ -407,6 +409,36 @@ class Database
         ];
 
         return new Bucket($this->manager, $this->databaseName, $options);
+    }
+
+    /**
+     * Create a change stream for watching changes to the database.
+     *
+     * @see Watch::__construct() for supported options
+     * @param array $pipeline List of pipeline operations
+     * @param array $options  Command options
+     * @return ChangeStream
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     */
+    public function watch(array $pipeline = [], array $options = [])
+    {
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
+        $server = $this->manager->selectServer($options['readPreference']);
+
+        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        $operation = new Watch($this->manager, $this->databaseName, null, $pipeline, $options);
+
+        return $operation->execute($server);
     }
 
     /**

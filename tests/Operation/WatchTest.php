@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Watch;
+use stdClass;
 
 /**
  * Although these are unit tests, we extend FunctionalTestCase because Watch is
@@ -11,6 +12,14 @@ use MongoDB\Operation\Watch;
  */
 class WatchTest extends FunctionalTestCase
 {
+    public function testConstructorCollectionNameShouldBeNullIfDatabaseNameIsNull()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$collectionName should also be null if $databaseName is null');
+
+        new Watch($this->manager, null, 'foo', []);
+    }
+
     public function testConstructorPipelineArgumentMustBeAList()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -67,10 +76,19 @@ class WatchTest extends FunctionalTestCase
             $options[][] = ['session' => $value];
         }
 
+        foreach ($this->getInvalidTimestampValues() as $value) {
+            $options[][] = ['startAtOperationTime' => $value];
+        }
+
         foreach ($this->getInvalidArrayValues() as $value) {
             $options[][] = ['typeMap' => $value];
         }
 
         return $options;
+    }
+
+    private function getInvalidTimestampValues()
+    {
+        return [123, 3.14, 'foo', true, [], new stdClass];
     }
 }

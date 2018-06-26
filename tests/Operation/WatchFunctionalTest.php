@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\ChangeStream;
+use MongoDB\BSON\TimestampInterface;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
@@ -128,6 +129,100 @@ class WatchFunctionalTest extends FunctionalTestCase
         ];
 
         $this->assertSame($expectedCommands, $commands);
+    }
+
+    public function testResumeBeforeReceivingAnyResultsIncludesStartAtOperationTime()
+    {
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+
+        $operationTime = null;
+        $events = [];
+
+        (new CommandObserver)->observe(
+            function() use ($operation, &$changeStream) {
+                $changeStream = $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use (&$events) {
+                $events[] = $event;
+            }
+        );
+
+        $this->assertCount(1, $events);
+        $this->assertSame('aggregate', $events[0]['started']->getCommandName());
+        $operationTime = $events[0]['succeeded']->getReply()->operationTime;
+        $this->assertInstanceOf(TimestampInterface::class, $operationTime);
+
+        $this->assertNull($changeStream->current());
+        $this->killChangeStreamCursor($changeStream);
+
+        $events = [];
+
+        (new CommandObserver)->observe(
+            function() use ($changeStream) {
+                $changeStream->rewind();
+            },
+            function (array $event) use (&$events) {
+                $events[] = $event;
+            }
+        );
+
+        $this->assertCount(4, $events);
+
+        $this->assertSame('getMore', $events[0]['started']->getCommandName());
+        $this->arrayHasKey('failed', $events[0]);
+
+        $this->assertSame('aggregate', $events[1]['started']->getCommandName());
+        $this->assertStartAtOperationTime($operationTime, $events[1]['started']->getCommand());
+        $this->arrayHasKey('succeeded', $events[1]);
+
+        // Original cursor is freed immediately after the change stream resumes
+        $this->assertSame('killCursors', $events[2]['started']->getCommandName());
+        $this->arrayHasKey('succeeded', $events[2]);
+
+        $this->assertSame('getMore', $events[3]['started']->getCommandName());
+        $this->arrayHasKey('succeeded', $events[3]);
+
+        $this->assertNull($changeStream->current());
+        $this->killChangeStreamCursor($changeStream);
+
+        $events = [];
+
+        (new CommandObserver)->observe(
+            function() use ($changeStream) {
+                $changeStream->next();
+            },
+            function (array $event) use (&$events) {
+                $events[] = $event;
+            }
+        );
+
+        $this->assertCount(4, $events);
+
+        $this->assertSame('getMore', $events[0]['started']->getCommandName());
+        $this->arrayHasKey('failed', $events[0]);
+
+        $this->assertSame('aggregate', $events[1]['started']->getCommandName());
+        $this->assertStartAtOperationTime($operationTime, $events[1]['started']->getCommand());
+        $this->arrayHasKey('succeeded', $events[1]);
+
+        // Original cursor is freed immediately after the change stream resumes
+        $this->assertSame('killCursors', $events[2]['started']->getCommandName());
+        $this->arrayHasKey('succeeded', $events[2]);
+
+        $this->assertSame('getMore', $events[3]['started']->getCommandName());
+        $this->arrayHasKey('succeeded', $events[3]);
+
+        $this->assertNull($changeStream->current());
+    }
+
+    private function assertStartAtOperationTime(TimestampInterface $expectedOperationTime, stdClass $command)
+    {
+        $this->assertObjectHasAttribute('pipeline', $command);
+        $this->assertInternalType('array', $command->pipeline);
+        $this->assertArrayHasKey(0, $command->pipeline);
+        $this->assertObjectHasAttribute('$changeStream', $command->pipeline[0]);
+        $this->assertObjectHasAttribute('startAtOperationTime', $command->pipeline[0]->{'$changeStream'});
+        $this->assertEquals($expectedOperationTime, $command->pipeline[0]->{'$changeStream'}->startAtOperationTime);
     }
 
     public function testRewindResumesAfterConnectionException()

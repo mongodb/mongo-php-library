@@ -149,10 +149,12 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
 
         /* In the absence of an explicit session, create one to ensure that the
          * initial aggregation and any resume attempts can use the same session
-         * ("implicit from the user's perspective" per PHPLIB-342). */
+         * ("implicit from the user's perspective" per PHPLIB-342). Since this
+         * is filling in for an implicit session, we default "causalConsistency"
+         * to false. */
         if ( ! isset($options['session'])) {
             try {
-                $options['session'] = $manager->startSession();
+                $options['session'] = $manager->startSession(['causalConsistency' => false]);
             } catch (RuntimeException $e) {
                 /* We can ignore the exception, as libmongoc likely cannot
                  * create its own session and there is no risk of a mismatch. */

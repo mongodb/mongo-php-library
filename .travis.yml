@@ -15,7 +15,7 @@ cache:
 
 env:
   global:
-    - DRIVER_VERSION=1.4.0
+    - DRIVER_VERSION=1.5.0
     - SERVER_VERSION=3.6.2
 
 matrix:
@@ -26,9 +26,6 @@ matrix:
     - php: 7.0
     - php: 7.1
     - php: 7.2
-    - php: 7.0
-      env:
-        - SERVER_VERSION=2.6.12
     - php: 7.0
       env:
         - SERVER_VERSION=3.0.15

@@ -25,14 +25,6 @@ use stdClass;
 
 class ExplainFunctionalTest extends FunctionalTestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-        if (version_compare($this->getServerVersion(), '3.0.0', '<')) {
-            $this->markTestSkipped('Explain command is not supported');
-        }
-    }
-
     /**
      * @dataProvider provideVerbosityInformation
      */

@@ -51,7 +51,26 @@ Behavior
 
 Internally, this method uses the ``$group`` aggregation pipeline operator to
 obtain the result. If a ``filter`` parameter is given, this is converted into
-a ``$match`` pipeline operator. Optional ``skip`` and ``limit`` stages are
+a ``$match`` pipeline operator. Optional ``$skip`` and ``$limit`` stages are
 added between ``$match`` and ``group`` if present in the options.
+
+Since this method uses an aggregation pipeline, some query operators accepted
+within a :phpmethod:`MongoDB\\Collection::count()` ``filter`` cannot be used.
+Consider the following alternatives to these restricted operators:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Restricted
+     - Alternative Syntax
+
+   * - :query:`$near`
+     - :query:`$geoWithin` with :query:`$center`
+
+   * - :query:`$nearSphere`
+     - :query:`$geoWithin` with :query:`$centerSphere`
+
+   * - :query:`$where`
+     - :query:`$expr` (requires MongoDB 3.6+)
 
 .. todo: add output and examples

@@ -38,7 +38,6 @@ class Explain implements Executable
     const VERBOSITY_EXEC_STATS = 'executionStats';
     const VERBOSITY_QUERY = 'queryPlanner';
 
-    private static $wireVersionForExplain = 2;
     private static $wireVersionForDistinct = 4;
     private static $wireVersionForFindAndModify = 4;
 
@@ -90,10 +89,6 @@ class Explain implements Executable
 
     public function execute(Server $server)
     {
-        if (! \MongoDB\server_supports_feature($server, self::$wireVersionForExplain)) {
-            throw UnsupportedException::explainNotSupported();
-        }
-
         if ($this->explainable instanceof Distinct && ! \MongoDB\server_supports_feature($server, self::$wireVersionForDistinct)) {
             throw UnsupportedException::explainNotSupported();
         }

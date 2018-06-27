@@ -155,10 +155,6 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
     public function testExplain()
     {
-        if (version_compare($this->getServerVersion(), '3.0.0', '<')) {
-            $this->markTestSkipped('Explain command is not supported');
-        }
-
         $this->createFixtures(3);
 
         $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), ['x' => ['$gte' => 1]], []);

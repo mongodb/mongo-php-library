@@ -47,10 +47,14 @@ Errors/Exceptions
 Behavior
 --------
 
-.. include:: /includes/extracts/note-bson-comparison.rst
+This method returns an estimate of the count of documents in the collection
+using collection metadata, rather than counting the documents or consulting an
+index. This method does not take a ``session`` option and cannot be executed
+within a transaction.
 
 See Also
 --------
 
 - :manual:`count </reference/command/count>` command reference in the MongoDB
   manual
+- :phpmethod:`MongoDB\\Collection::countDocuments()`

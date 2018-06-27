@@ -2,6 +2,8 @@
 MongoDB\\Collection::count()
 ============================
 
+.. deprecated:: 1.4
+
 .. default-domain:: mongodb
 
 .. contents:: On this page
@@ -45,12 +47,24 @@ Errors/Exceptions
 Behavior
 --------
 
-.. include:: /includes/extracts/note-bson-comparison.rst
+This method is deprecated and cannot be executed within a transaction. It has
+always been implemented using the :manual:`count </reference/command/count>`
+command. The behavior of the ``count`` command differs depending on the options
+passed to it and may or may not provide an accurate count. When no query filter
+is provided, the ``count`` command provides an estimate using collection
+metadata. Even when provided with a query filter the ``count`` command can
+return inaccurate results with a sharded cluster if orphaned documents exist or
+if a chunk migration is in progress. The
+:phpmethod:`MongoDB\\Collection::countDocuments()` method avoids these sharded
+cluster problems entirely when used with MongoDB 3.6+, and when a primary read
+preference with older sharded clusters.
 
-.. todo: add output and examples
+.. include:: /includes/extracts/note-bson-comparison.rst
 
 See Also
 --------
 
 - :manual:`count </reference/command/count>` command reference in the MongoDB
   manual
+- :phpmethod:`MongoDB\\Collection::countDocuments()`
+- :phpmethod:`MongoDB\\Collection::estimatedDocumentCount()`

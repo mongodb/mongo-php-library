@@ -47,8 +47,6 @@ Errors/Exceptions
 Behavior
 --------
 
-.. include:: /includes/extracts/note-bson-comparison.rst
-
 Internally, this method uses the ``$group`` aggregation pipeline operator to
 obtain the result. If a ``filter`` parameter is given, this is converted into
 a ``$match`` pipeline operator. Optional ``$skip`` and ``$limit`` stages are
@@ -73,4 +71,11 @@ Consider the following alternatives to these restricted operators:
    * - :query:`$where`
      - :query:`$expr` (requires MongoDB 3.6+)
 
+.. include:: /includes/extracts/note-bson-comparison.rst
+
 .. todo: add output and examples
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Collection::estimatedDocumentCount()`

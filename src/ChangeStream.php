@@ -115,7 +115,7 @@ class ChangeStream implements Iterator
              * free any reference to Watch. This will also free the only
              * reference to an implicit session, since any such reference
              * belongs to Watch. */
-            if ((string)$this->getCursorId() === '0') {
+            if ((string) $this->getCursorId() === '0') {
                 $this->resumeCallable = null;
             }
         } catch (RuntimeException $e) {
@@ -138,7 +138,7 @@ class ChangeStream implements Iterator
                 $this->resumeToken = $this->extractResumeToken($this->csIt->current());
             }
             // As with next(), free the callable once we know it will never be used.
-            if ((string)$this->getCursorId() === '0') {
+            if ((string) $this->getCursorId() === '0') {
                 $this->resumeCallable = null;
             }
         } catch (RuntimeException $e) {

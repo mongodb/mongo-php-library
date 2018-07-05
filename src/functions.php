@@ -23,6 +23,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
+use ReflectionClass;
 
 /**
  * Applies a type map to a document.
@@ -213,6 +214,10 @@ function recursive_copy($element) {
     }
 
     if ( ! is_object($element)) {
+        return $element;
+    }
+
+    if ( ! (new ReflectionClass($element))->isCloneable()) {
         return $element;
     }
 

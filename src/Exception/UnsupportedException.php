@@ -29,7 +29,7 @@ class UnsupportedException extends RuntimeException
         return new static('Array filters are not supported by the server executing this operation');
     }
 
-   /**
+    /**
      * Thrown when collations are not supported by a server.
      *
      * @return self
@@ -39,7 +39,7 @@ class UnsupportedException extends RuntimeException
         return new static('Collations are not supported by the server executing this operation');
     }
 
-   /**
+    /**
      * Thrown when explain is not supported by a server.
      *
      * @return self

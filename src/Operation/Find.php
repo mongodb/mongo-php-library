@@ -327,17 +327,17 @@ class Find implements Executable, Explainable
         unset($options['maxAwaitTimeMS']);
 
         $modifierFallback = [
-            ['allowPartialResults' , 'partial'],
-            ['comment' , '$comment'],
-            ['hint' , '$hint'],
-            ['maxScan' , '$maxScan'],
-            ['max' , '$max'],
-            ['maxTimeMS' , '$maxTimeMS'],
-            ['min' , '$min'],
-            ['returnKey' , '$returnKey'],
-            ['showRecordId' , '$showDiskLoc'],
-            ['sort' , '$orderby'],
-            ['snapshot' , '$snapshot'],
+            ['allowPartialResults', 'partial'],
+            ['comment', '$comment'],
+            ['hint', '$hint'],
+            ['maxScan', '$maxScan'],
+            ['max', '$max'],
+            ['maxTimeMS', '$maxTimeMS'],
+            ['min', '$min'],
+            ['returnKey', '$returnKey'],
+            ['showRecordId', '$showDiskLoc'],
+            ['sort', '$orderby'],
+            ['snapshot', '$snapshot'],
         ];
 
         foreach ($modifierFallback as $modifier) {

@@ -2,10 +2,12 @@
 
 namespace MongoDB\Tests\Model;
 
+use MongoDB\BSON\ObjectId;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\TestCase;
 use stdClass;
+use ReflectionClass;
 
 class BSONArrayTest extends TestCase
 {
@@ -41,6 +43,36 @@ class BSONArrayTest extends TestCase
         $this->assertNotSame($array[1], $arrayClone[1]);
         $this->assertNotSame($array[1][1], $arrayClone[1][1]);
         $this->assertNotSame($array[1][2][1], $arrayClone[1][2][1]);
+    }
+
+    public function testCloneRespectsUncloneableObjects()
+    {
+        $this->assertFalse((new ReflectionClass(UncloneableObject::class))->isCloneable());
+
+        $array = new BSONArray([
+            [new UncloneableObject],
+            new BSONArray([new UncloneableObject]),
+        ]);
+        $arrayClone = clone $array;
+
+        $this->assertNotSame($array, $arrayClone);
+        $this->assertSame($array[0][0], $arrayClone[0][0]);
+        $this->assertNotSame($array[1], $arrayClone[1]);
+        $this->assertSame($array[1][0], $arrayClone[1][0]);
+    }
+
+    public function testCloneSupportsBSONTypes()
+    {
+        /* Note: this test does not check that the BSON type itself is cloned,
+         * as that is not yet supported in the driver (see: PHPC-1230). */
+        $array = new BSONArray([
+            [new ObjectId],
+            new BSONArray([new ObjectId]),
+        ]);
+        $arrayClone = clone $array;
+
+        $this->assertNotSame($array, $arrayClone);
+        $this->assertNotSame($array[1], $arrayClone[1]);
     }
 
     public function testJsonSerialize()

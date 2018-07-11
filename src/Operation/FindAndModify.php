@@ -217,17 +217,6 @@ class FindAndModify implements Executable, Explainable
             return null;
         }
 
-        /* Prior to 3.0, findAndModify returns an empty document instead of null
-         * when an upsert is performed and the pre-modified document was
-         * requested.
-         */
-        if ($this->options['upsert'] && ! $this->options['new'] &&
-            isset($result->lastErrorObject->updatedExisting) &&
-            ! $result->lastErrorObject->updatedExisting) {
-
-            return null;
-        }
-
         if ( ! is_object($result->value)) {
             throw new UnexpectedValueException('findAndModify command did not return a "value" document');
         }

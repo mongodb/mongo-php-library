@@ -6,6 +6,7 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\Server;
 use stdClass;
 use UnexpectedValueException;
 
@@ -94,5 +95,42 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         throw new UnexpectedValueException('Could not determine server version');
+    }
+
+    protected function getServerStorageEngine(ReadPreference $readPreference = null)
+    {
+        $cursor = $this->manager->executeCommand(
+            $this->getDatabaseName(),
+            new Command(['serverStatus' => 1]),
+            $readPreference ?: new ReadPreference('primary')
+        );
+
+        $result = current($cursor->toArray());
+
+        if (isset($result->storageEngine->name) && is_string($result->storageEngine->name)) {
+            return $result->storageEngine->name;
+        }
+
+        throw new UnexpectedValueException('Could not determine server storage engine');
+    }
+
+    protected function skipIfTransactionsAreNotSupported()
+    {
+        if ($this->getPrimaryServer()->getType() === Server::TYPE_STANDALONE) {
+            $this->markTestSkipped('Transactions are not supported on standalone servers');
+        }
+
+        // TODO: MongoDB 4.2 should support sharded clusters (see: PHPLIB-374)
+        if ($this->getPrimaryServer()->getType() === Server::TYPE_MONGOS) {
+            $this->markTestSkipped('Transactions are not supported on sharded clusters');
+        }
+
+        if (version_compare($this->getFeatureCompatibilityVersion(), '4.0', '<')) {
+            $this->markTestSkipped('Transactions are only supported on FCV 4.0 or higher');
+        }
+
+        if ($this->getServerStorageEngine() !== 'wiredTiger') {
+            $this->markTestSkipped('Transactions require WiredTiger storage engine');
+        }
     }
 }

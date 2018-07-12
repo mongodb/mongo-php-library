@@ -3,11 +3,14 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
+use Exception;
 use stdClass;
 
 class FindFunctionalTest extends FunctionalTestCase
@@ -217,12 +220,50 @@ class FindFunctionalTest extends FunctionalTestCase
         $this->assertFalse($it->valid());
     }
 
+    public function testReadPreferenceWithinTransaction()
+    {
+        $this->skipIfTransactionsAreNotSupported();
+
+        // Collection must be created before the transaction starts
+        $options = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
+        $operation->execute($this->getPrimaryServer());
+
+        $session = $this->manager->startSession();
+        $session->startTransaction();
+
+        try {
+            $this->createFixtures(3, ['session' => $session]);
+
+            $filter = ['_id' => ['$lt' => 3]];
+            $options = [
+                'readPreference' => new ReadPreference('primary'),
+                'session' => $session,
+            ];
+
+            $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), $filter, $options);
+            $cursor = $operation->execute($this->getPrimaryServer());
+
+            $expected = [
+                ['_id' => 1, 'x' => ['foo' => 'bar']],
+                ['_id' => 2, 'x' => ['foo' => 'bar']],
+            ];
+
+            $this->assertSameDocuments($expected, $cursor);
+
+            $session->commitTransaction();
+        } finally {
+            $session->endSession();
+        }
+    }
+
     /**
      * Create data fixtures.
      *
      * @param integer $n
+     * @param array   $executeBulkWriteOptions
      */
-    private function createFixtures($n)
+    private function createFixtures($n, array $executeBulkWriteOptions = [])
     {
         $bulkWrite = new BulkWrite(['ordered' => true]);
 
@@ -233,7 +274,7 @@ class FindFunctionalTest extends FunctionalTestCase
             ]);
         }
 
-        $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
+        $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite, $executeBulkWriteOptions);
 
         $this->assertEquals($n, $result->getInsertedCount());
     }

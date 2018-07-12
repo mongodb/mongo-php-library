@@ -10,8 +10,10 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Count;
+use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
+use Exception;
 use stdClass;
 
 /**
@@ -104,6 +106,39 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertEquals($this->getNamespace(), $this->collection->getNamespace());
     }
 
+    public function testAggregateWithinTransaction()
+    {
+        $this->skipIfTransactionsAreNotSupported();
+
+        // Collection must be created before the transaction starts
+        $options = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
+        $operation->execute($this->getPrimaryServer());
+
+        $session = $this->manager->startSession();
+        $session->startTransaction();
+
+        try {
+            $this->createFixtures(3, ['session' => $session]);
+
+            $cursor = $this->collection->aggregate(
+                [['$match' => ['_id' => ['$lt' => 3]]]],
+                ['session' => $session]
+            );
+
+            $expected = [
+                ['_id' => 1, 'x' => 11],
+                ['_id' => 2, 'x' => 22],
+            ];
+
+            $this->assertSameDocuments($expected, $cursor);
+
+            $session->commitTransaction();
+        } finally {
+            $session->endSession();
+        }
+    }
+
     public function testCreateIndexSplitsCommandOptions()
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
@@ -179,6 +214,39 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertSameDocument($expected, $this->collection->findOne($filter, $options));
     }
 
+    public function testFindWithinTransaction()
+    {
+        $this->skipIfTransactionsAreNotSupported();
+
+        // Collection must be created before the transaction starts
+        $options = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
+        $operation->execute($this->getPrimaryServer());
+
+        $session = $this->manager->startSession();
+        $session->startTransaction();
+
+        try {
+            $this->createFixtures(3, ['session' => $session]);
+
+            $cursor = $this->collection->find(
+                ['_id' => ['$lt' => 3]],
+                ['session' => $session]
+            );
+
+            $expected = [
+                ['_id' => 1, 'x' => 11],
+                ['_id' => 2, 'x' => 22],
+            ];
+
+            $this->assertSameDocuments($expected, $cursor);
+
+            $session->commitTransaction();
+        } finally {
+            $session->endSession();
+        }
+    }
+
     public function testWithOptionsInheritsOptions()
     {
         $collectionOptions = [
@@ -252,8 +320,9 @@ class CollectionFunctionalTest extends FunctionalTestCase
      * Create data fixtures.
      *
      * @param integer $n
+     * @param array   $executeBulkWriteOptions
      */
-    private function createFixtures($n)
+    private function createFixtures($n, array $executeBulkWriteOptions = [])
     {
         $bulkWrite = new BulkWrite(['ordered' => true]);
 
@@ -264,7 +333,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             ]);
         }
 
-        $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
+        $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite, $executeBulkWriteOptions);
 
         $this->assertEquals($n, $result->getInsertedCount());
     }

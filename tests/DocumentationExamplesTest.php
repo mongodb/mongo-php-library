@@ -1230,12 +1230,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testTransactions_intro_example_1()
     {
-        if ($this->getPrimaryServer()->getType() === Server::TYPE_STANDALONE) {
-            $this->markTestSkipped('Transactions are not supported on standalone servers');
-        }
-        if (version_compare($this->getFeatureCompatibilityVersion(), '4.0', '<')) {
-            $this->markTestSkipped('Transactions are only supported on FCV 4.0 or higher');
-        }
+        $this->skipIfTransactionsAreNotSupported();
 
         $client = new Client($this->getUri());
 
@@ -1395,12 +1390,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testTransactions_retry_example_3()
     {
-        if ($this->getPrimaryServer()->getType() === Server::TYPE_STANDALONE) {
-            $this->markTestSkipped('Transactions are not supported on standalone servers');
-        }
-        if (version_compare($this->getFeatureCompatibilityVersion(), '4.0', '<')) {
-            $this->markTestSkipped('Transactions are only supported on FCV 4.0 or higher');
-        }
+        $this->skipIfTransactionsAreNotSupported();
 
         $client = new Client($this->getUri());
 

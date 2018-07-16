@@ -55,7 +55,7 @@ class CountFunctionalTest extends FunctionalTestCase
 
         foreach ($hintsUsingSparseIndex as $hint) {
             $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), $filter, ['hint' => $hint]);
-            $this->assertEquals(2, $operation->execute($this->getPrimaryServer()));
+            $this->assertSame(2, $operation->execute($this->getPrimaryServer()));
         }
 
         $hintsNotUsingSparseIndex = [
@@ -66,7 +66,7 @@ class CountFunctionalTest extends FunctionalTestCase
 
         foreach ($hintsNotUsingSparseIndex as $hint) {
             $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), $filter, ['hint' => $hint]);
-            $this->assertEquals(3, $operation->execute($this->getPrimaryServer()));
+            $this->assertSame(3, $operation->execute($this->getPrimaryServer()));
         }
     }
 

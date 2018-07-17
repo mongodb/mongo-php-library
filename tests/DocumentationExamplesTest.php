@@ -8,7 +8,6 @@ use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\DropCollection;
-use MongoDB\Operation\DropDatabase;
 
 /**
  * Documentation examples to be parsed for inclusion in the MongoDB manual.

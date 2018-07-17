@@ -152,8 +152,15 @@ class CountDocuments implements Executable
         }
 
         $cursor = $server->executeReadCommand($this->databaseName, new Command($this->createCommandDocument()), $this->createOptions());
-        $result = current($cursor->toArray());
+        $allResults = $cursor->toArray();
 
+        /* If there are no documents to count, the aggregation pipeline has no items to group, and
+         * hence the result is an empty array (PHPLIB-376) */
+        if (count($allResults) == 0) {
+            return 0;
+        }
+
+        $result = current($allResults);
         if ( ! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {
             throw new UnexpectedValueException('count command did not return a numeric "n" value');
         }

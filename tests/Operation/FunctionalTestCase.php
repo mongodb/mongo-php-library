@@ -18,8 +18,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     {
         parent::setUp();
 
-        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
+        $this->dropCollection();
     }
 
     public function tearDown()
@@ -28,8 +27,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
             return;
         }
 
-        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
+        $this->dropCollection();
     }
 
     protected function createDefaultReadConcern()
@@ -45,5 +43,15 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     protected function createSession()
     {
         return $this->manager->startSession();
+    }
+
+    private function dropCollection()
+    {
+        $options = version_compare($this->getServerVersion(), '3.4.0', '>=')
+            ? ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]
+            : [];
+
+        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
+        $operation->execute($this->getPrimaryServer());
     }
 }

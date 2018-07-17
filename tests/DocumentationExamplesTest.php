@@ -6,6 +6,7 @@ use MongoDB\Client;
 use MongoDB\Database;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropDatabase;
 
@@ -20,8 +21,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
+        $this->dropCollection();
     }
 
     public function tearDown()
@@ -30,8 +30,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             return;
         }
 
-        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
+        $this->dropCollection();
     }
 
     public function testExample_1_2()
@@ -1428,5 +1427,15 @@ class DocumentationExamplesTest extends FunctionalTestCase
     private function assertInventoryCount($count)
     {
         $this->assertCollectionCount($this->getDatabaseName() . '.' . $this->getCollectionName(), $count);
+    }
+
+    private function dropCollection()
+    {
+        $options = version_compare($this->getServerVersion(), '3.4.0', '>=')
+            ? ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]
+            : [];
+
+        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
+        $operation->execute($this->getPrimaryServer());
     }
 }

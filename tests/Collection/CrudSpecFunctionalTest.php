@@ -240,6 +240,10 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                     $this->assertSame($expectedResult['deletedCount'], $actualResult->getDeletedCount());
                 }
 
+                if (isset($expectedResult['insertedCount'])) {
+                    $this->assertSame($expectedResult['insertedCount'], $actualResult->getInsertedCount());
+                }
+
                 if (isset($expectedResult['insertedIds'])) {
                     $this->assertSameDocument(
                         ['insertedIds' => $expectedResult['insertedIds']],

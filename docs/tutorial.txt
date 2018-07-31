@@ -8,6 +8,7 @@ Tutorials
    /tutorial/crud
    /tutorial/collation
    /tutorial/commands
+   /tutorial/custom-types
    /tutorial/decimal128
    /tutorial/gridfs
    /tutorial/indexes

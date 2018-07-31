@@ -1,0 +1,187 @@
+=================
+Custom Data-Types
+=================
+
+.. default-domain:: mongodb
+
+The MongoDB PHP extension and library support custom classes while
+serializing and deserializing. An example of where this might be useful is
+if you want to store date/time information retaining the time zone
+information that PHP's :php:`DateTimeImmutable <class.datetimeimmutable>`
+class stores with a point in time.
+
+The driver serializes PHP variables, including objects, into BSON when it
+communicates to the server, and deserializes BSON back into PHP variables when
+it receives data from the server.
+
+It is possible to influence the behaviour by implementing the
+:php:`MongoDB\\BSON\\Persistable <class.mongodb-bson-persistable>` interface.
+If a class implements this interface, then upon serialization the
+:php:`bsonSerialize <mongodb-bson-serializable.bsonserialize>` method is
+called. This method is responsible for returning an array or stdClass object
+to convert to BSON and store in the database. That data will later be used to
+reconstruct the object upon reading from the database.
+
+As an example we present the ``LocalDateTime`` class. This class wraps around
+the :php:`MongoDB\\BSON\UTCDateTime <class.mongodb-bson-utcdatetime>` data
+type and a time zone.
+
+.. code-block:: php
+
+    <?php
+    /* Custom document class that stores a UTCDateTime and time zone and also
+     * implements the UTCDateTime interface for portability. */
+    class LocalDateTime implements \MongoDB\BSON\Persistable, \MongoDB\BSON\UTCDateTimeInterface
+    {
+        private $utc;
+        private $tz;
+        public function __construct($milliseconds = null, \DateTimeZone $timezone = null)
+        {
+            $this->utc = new \MongoDB\BSON\UTCDateTime($milliseconds);
+            if ($timezone === null) {
+                $timezone = new \DateTimeZone(date_default_timezone_get());
+            }
+            $this->tz = $timezone;
+        }
+    ?>
+
+As it implements the :php:`MongoDB\\BSON\\Persistable
+<class.mongodb-bson-persistable>` interface, the
+class is required to implement the :php:`bsonSerialize
+<mongodb-bson-serializable.bsonserialize>` and :php:`bsonUnserialize
+<mongodb-bson-unserializable.bsonunserialize>` methods. In the
+:php:`bsonSerialize <mongodb-bson-serializable.bsonserialize>` method, we
+return an array with the two values that we need to persist: the point in time
+in milliseconds since the Epoch, represented by a
+:php:`MongoDB\\BSON\\UTCDateTime <class.mongodb-bson-utcdatetime>` object, and
+a string containing the Olson time zone identifier:
+
+.. code-block:: php
+
+    <?php
+        public function bsonSerialize()
+        {
+            return [
+                'utc' => $this->utc,
+                'tz' => $this->tz->getName(),
+            ];
+        }
+    ?>
+
+The driver will additionally add a ``__pclass`` field to the document, and
+store that in the database, too. This field contains the PHP class name so that
+upon deserialization the driver knows which class to use for recreating the
+stored object.
+
+When the document is read from the database, the driver detects whether a
+``__pclass`` field is present and then executes
+:php:`MongoDB\\BSON\\Persistable::bsonUnserialize
+<mongodb-bson-unserializable.bsonunserialize>` method which is
+responsible for restoring the object's original state.
+
+In the code below, we make sure that the data in the ``utc`` and ``tz`` fields
+are of the right time, and then assign their values to the two private
+properties.
+
+.. code-block:: php
+
+    <?php
+        public function bsonUnserialize(array $data)
+        {
+            if ( ! isset($data['utc']) || ! $data['utc'] instanceof \MongoDB\BSON\UTCDateTime) {
+                throw new Exception('Expected "utc" field to be a UTCDateTime');
+            }
+
+            if ( ! isset($data['tz']) || ! is_string($data['tz'])) {
+                throw new Exception('Expected "tz" field to be a string');
+            }
+
+            $this->utc = $data['utc'];
+            $this->tz = new \DateTimeZone($data['tz']);
+        }
+    ?>
+
+You may have noticed that the class also implements the
+:php:`MongoDB\\BSON\\UTCDateTimeInterface
+<class.mongodb-bson-utcdatetimeinterface>` interface. This interface defines
+the two non-constructor methods of the :php:`MongoDB\\BSON\\UTCDateTime
+<class.mongodb-bson-utcdatetime>` class.
+
+It is recommended that wrappers around existing BSON classes implement their
+respective interface (i.e. :php:`MongoDB\\BSON\\UTCDateTimeInterface
+<class.mongodb-bson-utcdatetimeinterface>`) so that the wrapper objects can be
+used in the same context as their original unwrapped version. It is also
+recommended that you always type-hint against the interface (i.e.
+:php:`MongoDB\\BSON\\UTCDateTimeInterface
+<class.mongodb-bson-utcdatetimeinterface>`) and never against the concrete
+class (i.e. :php:`MongoDB\\BSON\\UTCDateTime
+<class.mongodb-bson-utcdatetime>`), as this would prevent wrapped objects from
+being accepted into methods.
+
+In our new ``toDateTime`` method we return a :php:`DateTime <class.datetime>`
+object with the local time zone set, instead of the UTC time zone that
+:php:`MongoDB\\BSON\\UTCDateTime <class.mongodb-bson-utcdatetime>` normally uses
+in its return value.
+
+.. code-block:: php
+
+    <?php
+        public function toDateTime()
+        {
+            return $this->utc->toDateTime()->setTimezone($this->tz);
+        }
+
+        public function __toString()
+        {
+            return (string) $this->utc;
+        }
+    }
+    ?>
+
+With the class defined, we can now use it in our documents. The snippet below
+demonstrates the round tripping from the ``LocalDateTime`` object to BSON, and
+back to ``LocalDateTime``.
+
+.. code-block:: php
+
+    <?php
+    $bson = MongoDB\BSON\fromPHP(['date' => new LocalDateTime]);
+    $document = MongoDB\BSON\toPHP($bson);
+
+    var_dump($document);
+    var_dump($document->date->toDateTime());
+    ?>
+
+Which outputs::
+
+    object(stdClass)#1 (1) {
+      ["date"]=>
+      object(LocalDateTime)#2 (2) {
+        ["utc":"LocalDateTime":private]=>
+        object(MongoDB\BSON\UTCDateTime)#3 (1) {
+          ["milliseconds"]=>
+          string(13) "1533042443716"
+        }
+        ["tz":"LocalDateTime":private]=>
+        object(DateTimeZone)#4 (2) {
+          ["timezone_type"]=>
+          int(3)
+          ["timezone"]=>
+          string(13) "Europe/London"
+        }
+      }
+    }
+    object(DateTime)#5 (3) {
+      ["date"]=>
+      string(26) "2018-07-31 14:07:23.716000"
+      ["timezone_type"]=>
+      int(3)
+      ["timezone"]=>
+      string(13) "Europe/London"
+    }
+
+Storing the Olson time zone identifier in a separate field also works well
+with MongoDB's :manual:`Aggregation Framework </aggregation>`, which allows
+date manipulation, :manual:`formatting
+</reference/operator/aggregation/dateToString>`, and querying depending on a
+specific time zone.

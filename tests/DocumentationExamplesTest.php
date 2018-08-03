@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests;
 
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Client;
 use MongoDB\Database;
 use MongoDB\Driver\Cursor;
@@ -13,6 +14,8 @@ use MongoDB\Operation\DropCollection;
  * Documentation examples to be parsed for inclusion in the MongoDB manual.
  *
  * @see https://jira.mongodb.org/browse/DRIVERS-356
+ * @see https://jira.mongodb.org/browse/DRIVERS-488
+ * @see https://jira.mongodb.org/browse/DRIVERS-547
  */
 class DocumentationExamplesTest extends FunctionalTestCase
 {
@@ -921,13 +924,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testChangeStreamExample_1_4()
     {
-        if ($this->getPrimaryServer()->getType() === Server::TYPE_STANDALONE) {
-            $this->markTestSkipped('$changeStream is not supported on standalone servers');
-        }
-
-        if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
-            $this->markTestSkipped('$changeStream is only supported on FCV 3.6 or higher');
-        }
+        $this->skipIfChangeStreamIsNotSupported();
 
         $db = new Database($this->manager, $this->getDatabaseName());
         $db->dropCollection('inventory');
@@ -1406,6 +1403,65 @@ class DocumentationExamplesTest extends FunctionalTestCase
         } finally {
             ob_end_clean();
         }
+    }
+
+    function testCausalConsistency()
+    {
+        $this->skipIfCausalConsistencyIsNotSupported();
+
+        // Prep
+        $client = new Client($this->getUri());
+        $test = $client->selectDatabase(
+            'test',
+            [ 'writeConcern' => new WriteConcern(WriteConcern::MAJORITY) ]
+        );
+        $items = $client->test->items;
+
+        $items->drop();
+        $items->insertOne(
+            [ 'sku' => '111', 'name' => 'Peanuts', 'start' => new UTCDateTime() ]
+        );
+
+        // Start Causal Consistency Example 1
+        $s1 = $client->startSession(
+            [ 'causalConsistency' => true ]
+        );
+
+        $items->updateOne(
+            [ 'sku' => '111', 'end' => [ '$exists' => false ] ],
+            [ '$currentDate' => [ 'end' => true ] ],
+            [ 'session' => $s1 ]
+        );
+        $items->insertOne(
+            [ 'sku' => '111-nuts', 'name' => 'Pecans', 'start' => new \MongoDB\BSON\UTCDateTime() ],
+            [ 'session' => $s1 ]
+        );
+        // End Causal Consistency Example 1
+
+        ob_start();
+
+        // Start Causal Consistency Example 2
+        $s2 = $client->startSession(
+            [ 'causalConsistency' => true ]
+        );
+        $s2->advanceClusterTime($s1->getClusterTime());
+        $s2->advanceOperationTime($s1->getOperationTime());
+
+        $items = $client->selectDatabase(
+            'test',
+            [ 'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_SECONDARY) ]
+        )->items;
+
+        $result = $items->find(
+            [ 'end' => [ '$exists' => false ] ],
+            [ 'session' => $s2 ]
+        );
+        foreach ($result as $item) {
+            var_dump($item);
+        }
+        // End Causal Consistency Example 2
+
+        ob_end_clean();
     }
 
     /**

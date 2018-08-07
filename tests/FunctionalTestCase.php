@@ -6,6 +6,7 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\Query;
 use MongoDB\Driver\Server;
 use stdClass;
 use UnexpectedValueException;
@@ -112,6 +113,79 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         throw new UnexpectedValueException('Could not determine server storage engine');
+    }
+
+    protected function isShardedClusterUsingReplicasets()
+    {
+        $cursor = $this->getPrimaryServer()->executeQuery(
+            'config.shards',
+            new Query([], ['limit' => 1])
+        );
+
+        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
+        $document = current($cursor->toArray());
+
+        if (! $document ) {
+            return false;
+        }
+
+        /**
+         * Use regular expression to distinguish between standalone or replicaset:
+         * Without a replicaset: "host" : "localhost:4100"
+         * With a replicaset: "host" : "dec6d8a7-9bc1-4c0e-960c-615f860b956f/localhost:4400,localhost:4401"
+         */
+        return preg_match('@^.*/.*:\d+@', $document['host']);
+    }
+
+    protected function skipIfChangeStreamIsNotSupported()
+    {
+        switch ( $this->getPrimaryServer()->getType() )
+        {
+            case Server::TYPE_MONGOS:
+                if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
+                    $this->markTestSkipped('$changeStream is only supported on MongoDB 3.6 or higher');
+                }
+                if (!$this->isShardedClusterUsingReplicasets()) {
+                    $this->markTestSkipped('$changeStream is only supported with replicasets');
+                }
+                break;
+
+            case Server::TYPE_RS_PRIMARY:
+                if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
+                    $this->markTestSkipped('$changeStream is only supported on FCV 3.6 or higher');
+                }
+                break;
+
+            default:
+                $this->markTestSkipped('$changeStream is not supported');
+        }
+    }
+
+    protected function skipIfCausalConsistencyIsNotSupported()
+    {
+        switch ( $this->getPrimaryServer()->getType() )
+        {
+            case Server::TYPE_MONGOS:
+                if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
+                    $this->markTestSkipped('Causal Consistency is only supported on MongoDB 3.6 or higher');
+                }
+                if (!$this->isShardedClusterUsingReplicasets()) {
+                    $this->markTestSkipped('Causal Consistency is only supported with replicasets');
+                }
+                break;
+
+            case Server::TYPE_RS_PRIMARY:
+                if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
+                    $this->markTestSkipped('Causal Consistency is only supported on FCV 3.6 or higher');
+                }
+                if ($this->getServerStorageEngine() !== 'wiredTiger') {
+                    $this->markTestSkipped('Causal Consistency requires WiredTiger storage engine');
+                }
+                break;
+
+            default:
+                $this->markTestSkipped('Causal Consistency is not supported');
+        }
     }
 
     protected function skipIfTransactionsAreNotSupported()

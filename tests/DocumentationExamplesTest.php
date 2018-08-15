@@ -1411,11 +1411,10 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         // Prep
         $client = new Client($this->getUri());
-        $test = $client->selectDatabase(
+        $items = $client->selectDatabase(
             'test',
             [ 'writeConcern' => new WriteConcern(WriteConcern::MAJORITY) ]
-        );
-        $items = $client->test->items;
+        )->items;
 
         $items->drop();
         $items->insertOne(
@@ -1423,17 +1422,27 @@ class DocumentationExamplesTest extends FunctionalTestCase
         );
 
         // Start Causal Consistency Example 1
+        $items = $client->selectDatabase(
+            'test',
+            [
+                'readConcern' => new \MongoDB\Driver\ReadConcern(\MongoDB\Driver\ReadConcern::MAJORITY),
+                'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
+            ]
+        )->items;
+
         $s1 = $client->startSession(
             [ 'causalConsistency' => true ]
         );
 
+        $currentDate = new \MongoDB\BSON\UTCDateTime();
+
         $items->updateOne(
             [ 'sku' => '111', 'end' => [ '$exists' => false ] ],
-            [ '$currentDate' => [ 'end' => true ] ],
+            [ '$set' => [ 'end' => $currentDate ] ],
             [ 'session' => $s1 ]
         );
         $items->insertOne(
-            [ 'sku' => '111-nuts', 'name' => 'Pecans', 'start' => new \MongoDB\BSON\UTCDateTime() ],
+            [ 'sku' => '111-nuts', 'name' => 'Pecans', 'start' => $currentDate ],
             [ 'session' => $s1 ]
         );
         // End Causal Consistency Example 1
@@ -1449,7 +1458,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $items = $client->selectDatabase(
             'test',
-            [ 'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_SECONDARY) ]
+            [
+                'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_SECONDARY),
+                'readConcern' => new \MongoDB\Driver\ReadConcern(\MongoDB\Driver\ReadConcern::MAJORITY),
+                'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000)
+            ]
         )->items;
 
         $result = $items->find(

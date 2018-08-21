@@ -1,0 +1,66 @@
+{
+    "id": "REPLICASET",
+    "name": "mongod",
+    "members": [
+        {
+            "procParams": {
+                "dbpath": "/tmp/REPLICASET/3000/",
+                "ipv6": true,
+                "logappend": true,
+                "logpath": "/tmp/REPLICASET/3000/mongod.log",
+                "journal": true,
+                "nssize": 1,
+                "port": 3000,
+                "bind_ip_all": true,
+                "smallfiles": true
+            },
+            "rsParams": {
+                "priority": 99,
+                "tags": {
+                    "ordinal": "one",
+                    "dc": "pa"
+                }
+            },
+            "server_id": "RS-one"
+        },
+        {
+            "procParams": {
+                "dbpath": "/tmp/REPLICASET/3001/",
+                "ipv6": true,
+                "logappend": true,
+                "logpath": "/tmp/REPLICASET/3001/mongod.log",
+                "journal": true,
+                "nssize": 1,
+                "port": 3001,
+                "bind_ip_all": true,
+                "smallfiles": true
+            },
+            "rsParams": {
+                "priority": 1.1,
+                "tags": {
+                    "ordinal": "two",
+                    "dc": "nyc"
+                }
+            },
+            "server_id": "RS-two"
+        },
+        {
+            "procParams": {
+                "dbpath": "/tmp/REPLICASET/3002/",
+                "ipv6": true,
+                "logappend": true,
+                "logpath": "/tmp/REPLICASET/3002/mongod.log",
+                "journal": true,
+                "nssize": 1,
+                "port": 3002,
+                "bind_ip_all": true,
+                "smallfiles": true
+            },
+            "rsParams": {
+                "arbiterOnly": true
+
+            },
+            "server_id": "RS-arbiter"
+        }
+    ]
+}

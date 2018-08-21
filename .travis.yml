@@ -57,9 +57,9 @@ matrix:
 
 before_install:
   - pip install "mongo-orchestration>=0.6.7,<1.0" --user `whoami`
-  - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${SERVER_VERSION}.tgz
-  - tar zxf mongodb-linux-x86_64-${SERVER_VERSION}.tgz
-  - export PATH=${PWD}/mongodb-linux-x86_64-${SERVER_VERSION}/bin/:${PATH}
+  - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1404-${SERVER_VERSION}.tgz
+  - tar zxf mongodb-linux-x86_64-ubuntu1404-${SERVER_VERSION}.tgz
+  - export PATH=${PWD}/mongodb-linux-x86_64-ubuntu1404-${SERVER_VERSION}/bin/:${PATH}
   - mongod --version
   - mongo-orchestration --version
   - export MO_PATH=`python -c 'import mongo_orchestration; from os import path; print(path.dirname(mongo_orchestration.__file__));'`

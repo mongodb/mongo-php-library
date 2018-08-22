@@ -26,13 +26,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        if ($this->getPrimaryServer()->getType() === Server::TYPE_STANDALONE) {
-            $this->markTestSkipped('$changeStream is not supported on standalone servers');
-        }
-
-        if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
-            $this->markTestSkipped('$changeStream is only supported on FCV 3.6 or higher');
-        }
+        $this->skipIfChangeStreamIsNotSupported();
     }
 
     public function testNextResumesAfterCursorNotFound()

@@ -25,7 +25,21 @@ class ModifyCollectionFunctionalTest extends FunctionalTestCase
         );
         $result = $modifyCollection->execute($this->getPrimaryServer());
 
-        $this->assertSame(3, $result['expireAfterSeconds_old']);
-        $this->assertSame(1000, $result['expireAfterSeconds_new']);
+        if (array_key_exists('raw', $result)) {
+            /* Sharded environment, where we only assert if a shard had a successful update. For
+             * non-primary shards that don't have chunks for the collection, the result contains a
+             * "ns does not exist" error. */
+            foreach ($result['raw'] as $shard) {
+                $shard = (array) $shard;
+
+                if (array_key_exists('ok', $shard) && $shard['ok'] == 1) {
+                    $this->assertSame(3, $shard['expireAfterSeconds_old']);
+                    $this->assertSame(1000, $shard['expireAfterSeconds_new']);
+                }
+            }
+        } else {
+            $this->assertSame(3, $result['expireAfterSeconds_old']);
+            $this->assertSame(1000, $result['expireAfterSeconds_new']);
+        }
     }
 }

@@ -8,6 +8,7 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\Exception\CommandException;
 use stdClass;
 use UnexpectedValueException;
 
@@ -49,6 +50,10 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function getFeatureCompatibilityVersion(ReadPreference $readPreference = null)
     {
+        if ($this->isShardedCluster()) {
+            return $this->getServerVersion($readPreference);
+        }
+
         if (version_compare($this->getServerVersion(), '3.4.0', '<')) {
             return $this->getServerVersion($readPreference);
         }
@@ -113,6 +118,15 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         throw new UnexpectedValueException('Could not determine server storage engine');
+    }
+
+    protected function isShardedCluster()
+    {
+        if ($this->getPrimaryServer()->getType() == Server::TYPE_MONGOS) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function isShardedClusterUsingReplicasets()
@@ -195,7 +209,7 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         // TODO: MongoDB 4.2 should support sharded clusters (see: PHPLIB-374)
-        if ($this->getPrimaryServer()->getType() === Server::TYPE_MONGOS) {
+        if ($this->isShardedCluster()) {
             $this->markTestSkipped('Transactions are not supported on sharded clusters');
         }
 

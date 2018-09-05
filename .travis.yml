@@ -15,8 +15,9 @@ cache:
 
 env:
   global:
-    - DRIVER_VERSION=1.5.0
-    - SERVER_VERSION=4.0.0
+    - DRIVER_VERSION=1.5.2
+    - SERVER_VERSION=4.0.1
+    - DEPLOYMENT=STANDALONE
 
 matrix:
   fast_finish: true
@@ -29,21 +30,36 @@ matrix:
     - php: 7.0
       env:
         - SERVER_VERSION=3.0.15
+        - DEPLOYMENT=STANDALONE_OLD
     - php: 7.0
       env:
         - SERVER_VERSION=3.2.20
+        - DEPLOYMENT=STANDALONE_OLD
     - php: 7.0
       env:
         - SERVER_VERSION=3.4.15
+        - DEPLOYMENT=STANDALONE_OLD
     - php: 7.0
       env:
         - SERVER_VERSION=3.6.5
+    - php: 7.2
+      env:
+        - DEPLOYMENT=STANDALONE_AUTH
+    - php: 7.2
+      env:
+        - DEPLOYMENT=STANDALONE_SSL
+    - php: 7.2
+      env:
+        - DEPLOYMENT=REPLICASET
+    - php: 7.2
+      env:
+        - DEPLOYMENT=SHARDED_CLUSTER
 
 before_install:
   - pip install "mongo-orchestration>=0.6.7,<1.0" --user `whoami`
-  - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${SERVER_VERSION}.tgz
-  - tar zxf mongodb-linux-x86_64-${SERVER_VERSION}.tgz
-  - export PATH=${PWD}/mongodb-linux-x86_64-${SERVER_VERSION}/bin/:${PATH}
+  - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1404-${SERVER_VERSION}.tgz
+  - tar zxf mongodb-linux-x86_64-ubuntu1404-${SERVER_VERSION}.tgz
+  - export PATH=${PWD}/mongodb-linux-x86_64-ubuntu1404-${SERVER_VERSION}/bin/:${PATH}
   - mongod --version
   - mongo-orchestration --version
   - export MO_PATH=`python -c 'import mongo_orchestration; from os import path; print(path.dirname(mongo_orchestration.__file__));'`
@@ -67,7 +83,7 @@ before_install:
 
 before_script:
   - mongo-orchestration start
-  - pushd ${MO_PATH} && ${TRAVIS_BUILD_DIR}/.travis/mo.sh configurations/servers/clean.json start && popd
+  - .travis/setup_mo.sh
   - tpecl mongodb-${DRIVER_VERSION} mongodb.so
   - php --ri mongodb
   - composer install --no-interaction --no-progress --no-suggest
@@ -75,6 +91,8 @@ before_script:
   - ulimit -c unlimited -S
 
 script:
+  - export MONGODB_URI=`cat /tmp/uri.txt`
+  - echo $MONGODB_URI
   - vendor/bin/phpunit -v
 
 before_cache:

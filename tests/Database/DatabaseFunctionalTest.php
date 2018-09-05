@@ -161,11 +161,29 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $createIndexes = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), $indexes);
         $createIndexes->execute($this->getPrimaryServer());
 
-        $commandResult = $this->database->modifyCollection($this->getCollectionName(), ['index' => ['keyPattern' => ['lastAccess' => 1], 'expireAfterSeconds' => 1000]]);
-
+        $commandResult = $this->database->modifyCollection(
+            $this->getCollectionName(),
+            ['index' => ['keyPattern' => ['lastAccess' => 1], 'expireAfterSeconds' => 1000]],
+            ['typeMap' => ['root' => 'array', 'document' => 'array']]
+        );
         $this->assertCommandSucceeded($commandResult);
-        $this->assertSame(3, $commandResult['expireAfterSeconds_old']);
-        $this->assertSame(1000, $commandResult['expireAfterSeconds_new']);
+
+        $commandResult = (array) $commandResult;
+
+        if (array_key_exists('raw', $commandResult)) {
+            /* Sharded environment, where we only assert if a shard had a successful update. For
+             * non-primary shards that don't have chunks for the collection, the result contains a
+             * "ns does not exist" error. */
+            foreach ($commandResult['raw'] as $shard) {
+                if (array_key_exists('ok', $shard) && $shard['ok'] == 1) {
+                    $this->assertSame(3, $shard['expireAfterSeconds_old']);
+                    $this->assertSame(1000, $shard['expireAfterSeconds_new']);
+                }
+            }
+        } else {
+            $this->assertSame(3, $commandResult['expireAfterSeconds_old']);
+            $this->assertSame(1000, $commandResult['expireAfterSeconds_new']);
+        }
     }
 
 

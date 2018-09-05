@@ -1,0 +1,23 @@
+{
+    "name": "mongod",
+    "id" : "STANDALONE_SSL",
+    "procParams": {
+        "dbpath": "/tmp/standalone-ssl/",
+        "ipv6": true,
+        "logappend": true,
+        "logpath": "/tmp/standalone-ssl/m.log",
+        "journal": true,
+        "nssize": 1,
+        "port": 2100,
+        "bind_ip_all": true,
+        "smallfiles": true,
+        "setParameter": {"enableTestCommands": 1}
+    },
+    "sslParams": {
+        "sslMode": "requireSSL",
+        "sslCAFile": "$TRAVIS_BUILD_DIR/mongo-orchestration/ssl/ca.pem",
+        "sslPEMKeyFile": "$TRAVIS_BUILD_DIR/mongo-orchestration/ssl/server.pem",
+        "sslWeakCertificateValidation": true,
+        "sslAllowInvalidHostnames": true
+    }
+}

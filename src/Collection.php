@@ -900,6 +900,8 @@ class Collection
      * @param array $options
      *
      * @return IndexInfoIterator
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function listIndexes(array $options = [])
     {

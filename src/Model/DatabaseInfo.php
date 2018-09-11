@@ -128,6 +128,7 @@ class DatabaseInfo implements ArrayAccess
      * @see http://php.net/arrayaccess.offsetunset
      *
      * @param mixed $key
+     * throws BadMethodCallException
      */
     public function offsetUnset($key)
     {

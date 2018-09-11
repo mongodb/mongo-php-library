@@ -206,6 +206,9 @@ class IndexInfo implements ArrayAccess
      * Not supported.
      *
      * @see http://php.net/arrayaccess.offsetset
+     *
+     * @param mixed $key
+     * @param mixed $value
      * @throws BadMethodCallException
      */
     public function offsetSet($key, $value)
@@ -217,6 +220,8 @@ class IndexInfo implements ArrayAccess
      * Not supported.
      *
      * @see http://php.net/arrayaccess.offsetunset
+     * @param mixed $key
+     *
      * @throws BadMethodCallException
      */
     public function offsetUnset($key)

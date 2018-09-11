@@ -178,17 +178,23 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         $this->resumeCallable = $this->createResumeCallable($manager);
     }
 
-    /** @internal */
+    /** @internal
+     * @param \MongoDB\Driver\Monitoring\CommandFailedEvent $event
+     */
     final public function commandFailed(CommandFailedEvent $event)
     {
     }
 
-    /** @internal */
+    /** @internal
+     * @param \MongoDB\Driver\Monitoring\CommandStartedEvent $event
+     */
     final public function commandStarted(CommandStartedEvent $event)
     {
     }
 
-    /** @internal */
+    /** @internal
+     * @param \MongoDB\Driver\Monitoring\CommandSucceededEvent $event
+     */
     final public function commandSucceeded(CommandSucceededEvent $event)
     {
         if ($event->getCommandName() !== 'aggregate') {

@@ -347,9 +347,12 @@ class Database
      * Modifies a collection or view.
      *
      * @see ModifyCollection::__construct() for supported options
+     *
      * @param string $collectionName    Collection or view to modify
      * @param array  $collectionOptions Collection or view options to assign
      * @param array  $options           Command options
+     *
+     * @return array|object
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

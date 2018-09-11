@@ -97,6 +97,7 @@ class ChangeStream implements Iterator
     /**
      * @see http://php.net/iterator.next
      * @return void
+     * @throws \MongoDB\Exception\ResumeTokenException
      */
     public function next()
     {
@@ -128,6 +129,7 @@ class ChangeStream implements Iterator
     /**
      * @see http://php.net/iterator.rewind
      * @return void
+     * @throws \MongoDB\Exception\ResumeTokenException
      */
     public function rewind()
     {

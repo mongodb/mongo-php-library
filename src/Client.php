@@ -41,11 +41,29 @@ class Client
     private static $wireVersionForReadConcern = 4;
     private static $wireVersionForWritableCommandWriteConcern = 5;
 
+    /**
+     * @var \MongoDB\Driver\Manager
+     */
     private $manager;
+    /**
+     * @var \MongoDB\Driver\ReadConcern
+     */
     private $readConcern;
+    /**
+     * @var \MongoDB\Driver\ReadPreference
+     */
     private $readPreference;
+    /**
+     * @var string
+     */
     private $uri;
+    /**
+     * @var mixed|null
+     */
     private $typeMap;
+    /**
+     * @var \MongoDB\Driver\WriteConcern
+     */
     private $writeConcern;
 
     /**
@@ -216,6 +234,7 @@ class Client
     /**
      * List databases.
      *
+     * @param array $options
      * @see ListDatabases::__construct() for supported options
      * @return DatabaseInfoIterator
      * @throws UnexpectedValueException if the command response was malformed
@@ -268,7 +287,7 @@ class Client
      *
      * @see http://php.net/manual/en/mongodb-driver-manager.startsession.php
      * @param array  $options      Session options
-     * @return MongoDB\Driver\Session
+     * @return \MongoDB\Driver\Session
      */
     public function startSession(array $options = [])
     {

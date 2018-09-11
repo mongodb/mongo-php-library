@@ -236,6 +236,8 @@ class FindAndModify implements Executable, Explainable
     /**
      * Create the findAndModify command document.
      *
+     * @param \MongoDB\Driver\Server $server
+     *
      * @return array
      */
     private function createCommandDocument(Server $server)

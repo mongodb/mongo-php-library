@@ -335,7 +335,10 @@ class Aggregate implements Executable
      *
      * @see http://php.net/manual/en/mongodb-driver-server.executereadcommand.php
      * @see http://php.net/manual/en/mongodb-driver-server.executereadwritecommand.php
+     *
      * @param boolean $hasOutStage
+     * @param boolean $hasExplain
+     *
      * @return array
      */
     private function createOptions($hasOutStage, $hasExplain)

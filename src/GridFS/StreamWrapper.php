@@ -92,10 +92,13 @@ class StreamWrapper
      * Opens the stream.
      *
      * @see http://php.net/manual/en/streamwrapper.stream-open.php
+     *
      * @param string  $path       Path to the file resource
      * @param string  $mode       Mode used to open the file (only "r" and "w" are supported)
      * @param integer $options    Additional flags set by the streams API
      * @param string  $openedPath Not used
+     *
+     * @return bool
      */
     public function stream_open($path, $mode, $options, &$openedPath)
     {

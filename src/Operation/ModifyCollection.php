@@ -23,6 +23,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 
 /**
  * Operation for the collMod command.
@@ -57,7 +58,7 @@ class ModifyCollection implements Executable
      *
      * @param string       $databaseName      Database name
      * @param string       $collectionName    Collection or view to modify
-     * @param string       $collectionOptions Collection or view options to assign
+     * @param array        $collectionOptions Collection or view options to assign
      * @param array        $options           Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */

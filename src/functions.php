@@ -22,6 +22,7 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use ReflectionException;
 use stdClass;
 use ReflectionClass;
 
@@ -204,6 +205,7 @@ function is_string_array($input) {
  * @see https://bugs.php.net/bug.php?id=49664
  * @param mixed $element Value to be copied
  * @return mixed
+ * @throws ReflectionException
  */
 function recursive_copy($element) {
     if (is_array($element)) {

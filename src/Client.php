@@ -217,8 +217,8 @@ class Client
     /**
      * List databases.
      *
-     * @param array $options
      * @see ListDatabases::__construct() for supported options
+     * @param array $options
      * @return DatabaseInfoIterator
      * @throws UnexpectedValueException if the command response was malformed
      * @throws InvalidArgumentException for parameter/option parsing errors

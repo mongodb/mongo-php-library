@@ -34,21 +34,9 @@ use MongoDB\Exception\UnsupportedException;
  */
 class ModifyCollection implements Executable
 {
-    /**
-     * @var string
-     */
     private $databaseName;
-    /**
-     * @var string
-     */
     private $collectionName;
-    /**
-     * @var array
-     */
     private $collectionOptions;
-    /**
-     * @var array
-     */
     private $options;
 
     /**

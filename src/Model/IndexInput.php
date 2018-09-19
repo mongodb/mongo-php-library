@@ -78,8 +78,6 @@ class IndexInput implements Serializable
     /**
      * Return the index name.
      *
-     * @param string
-     *
      * @return string
      */
     public function __toString()

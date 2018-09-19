@@ -46,7 +46,6 @@ class TypeMapArrayIterator extends ArrayIterator
      * Not supported.
      *
      * @see http://php.net/arrayiterator.append
-     *
      * @param mixed $value
      * @throws BadMethodCallException
      */
@@ -126,12 +125,11 @@ class TypeMapArrayIterator extends ArrayIterator
      * Not supported.
      *
      * @see http://php.net/arrayiterator.offsetset
-     *
      * @param mixed $index
-     * @param mixed $newval
+     * @param mixed $value
      * @throws BadMethodCallException
      */
-    public function offsetSet($index, $newval)
+    public function offsetSet($index, $value)
     {
         throw BadMethodCallException::classIsImmutable(__CLASS__);
     }
@@ -140,7 +138,6 @@ class TypeMapArrayIterator extends ArrayIterator
      * Not supported.
      *
      * @see http://php.net/arrayiterator.offsetunset
-     *
      * @param mixed $index
      * @throws BadMethodCallException
      */
@@ -153,7 +150,7 @@ class TypeMapArrayIterator extends ArrayIterator
      * Not supported.
      *
      * @see http://php.net/arrayiterator.uasort
-     * @param string $cmp_function
+     * @param callable $cmp_function
      * @throws BadMethodCallException
      */
     public function uasort($cmp_function)
@@ -165,7 +162,7 @@ class TypeMapArrayIterator extends ArrayIterator
      * Not supported.
      *
      * @see http://php.net/arrayiterator.uksort
-     * @param string $cmp_function
+     * @param callable $cmp_function
      * @throws BadMethodCallException
      */
     public function uksort($cmp_function)

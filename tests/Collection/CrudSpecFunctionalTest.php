@@ -263,10 +263,10 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                     $this->assertSame($expectedResult['upsertedCount'], $actualResult->getUpsertedCount());
                 }
 
-                if (array_key_exists('upsertedId', $expectedResult)) {
+                if (isset($expectedResult['upsertedIds'])) {
                     $this->assertSameDocument(
-                        ['upsertedId' => $expectedResult['upsertedId']],
-                        ['upsertedId' => $actualResult->getUpsertedId()]
+                        ['upsertedIds' => $expectedResult['upsertedIds']],
+                        ['upsertedIds' => $actualResult->getUpsertedIds()]
                     );
                 }
                 break;

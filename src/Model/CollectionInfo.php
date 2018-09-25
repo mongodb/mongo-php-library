@@ -134,6 +134,8 @@ class CollectionInfo implements ArrayAccess
      * Not supported.
      *
      * @see http://php.net/arrayaccess.offsetset
+     * @param mixed $key
+     * @param mixed $value
      * @throws BadMethodCallException
      */
     public function offsetSet($key, $value)
@@ -145,7 +147,8 @@ class CollectionInfo implements ArrayAccess
      * Not supported.
      *
      * @see http://php.net/arrayaccess.offsetunset
-     * @throws BadMethodCallException
+     * @param mixed $key
+     * throws BadMethodCallException
      */
     public function offsetUnset($key)
     {

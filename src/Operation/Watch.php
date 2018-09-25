@@ -188,7 +188,9 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
     {
     }
 
-    /** @internal */
+    /** @internal
+     * @param \MongoDB\Driver\Monitoring\CommandSucceededEvent $event
+     */
     final public function commandSucceeded(CommandSucceededEvent $event)
     {
         if ($event->getCommandName() !== 'aggregate') {

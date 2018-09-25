@@ -20,6 +20,7 @@ namespace MongoDB;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
@@ -217,6 +218,7 @@ class Client
      * List databases.
      *
      * @see ListDatabases::__construct() for supported options
+     * @param array $options
      * @return DatabaseInfoIterator
      * @throws UnexpectedValueException if the command response was malformed
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -268,7 +270,7 @@ class Client
      *
      * @see http://php.net/manual/en/mongodb-driver-manager.startsession.php
      * @param array  $options      Session options
-     * @return MongoDB\Driver\Session
+     * @return Session
      */
     public function startSession(array $options = [])
     {

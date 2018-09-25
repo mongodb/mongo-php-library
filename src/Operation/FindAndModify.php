@@ -236,6 +236,7 @@ class FindAndModify implements Executable, Explainable
     /**
      * Create the findAndModify command document.
      *
+     * @param Server $server
      * @return array
      */
     private function createCommandDocument(Server $server)

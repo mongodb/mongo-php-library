@@ -18,6 +18,7 @@
 namespace MongoDB\GridFS;
 
 use MongoDB\Collection;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\UpdateResult;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;

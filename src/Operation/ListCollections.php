@@ -18,7 +18,6 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Query;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
@@ -26,7 +25,6 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Model\CollectionInfoCommandIterator;
 use MongoDB\Model\CollectionInfoIterator;
-use MongoDB\Model\CollectionInfoLegacyIterator;
 
 /**
  * Operation for the listCollections command.

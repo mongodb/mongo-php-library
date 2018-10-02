@@ -2,7 +2,11 @@
 
 namespace MongoDB\Tests\Collection;
 
+use MongoDB\BulkWriteResult;
 use MongoDB\Collection;
+use MongoDB\InsertManyResult;
+use MongoDB\Driver\Exception\BulkWriteException;
+use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Operation\FindOneAndReplace;
 use IteratorIterator;
 use LogicException;
@@ -39,8 +43,16 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
         $expectedData = isset($test['outcome']['collection']['data']) ? $test['outcome']['collection']['data'] : null;
         $this->initializeData($initialData, $expectedData);
 
-        $result = $this->executeOperation($test['operation']);
-        $this->executeOutcome($test['operation'], $test['outcome'], $result);
+        $result = null;
+        $exception = null;
+
+        try {
+            $result = $this->executeOperation($test['operation']);
+        } catch (RuntimeException $e) {
+            $exception = $e;
+        }
+
+        $this->executeOutcome($test['operation'], $test['outcome'], $result, $exception);
     }
 
     public function provideSpecificationTests()
@@ -116,10 +128,9 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 );
 
             case 'bulkWrite':
-                $results = $this->prepareBulkWriteArguments($operation['arguments']);
                 return $this->collection->bulkWrite(
-                    array_diff_key($results, ['options' => 1]),
-                    $results['options']
+                    array_map([$this, 'prepareBulkWriteRequest'], $operation['arguments']['requests']),
+                    isset($operation['arguments']['options']) ? $operation['arguments']['options'] : []
                 );
 
             case 'count':
@@ -174,7 +185,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             case 'insertMany':
                 return $this->collection->insertMany(
                     $operation['arguments']['documents'],
-                    array_diff_key($operation['arguments'], ['documents' => 1])
+                    isset($operation['arguments']['options']) ? $operation['arguments']['options'] : []
                 );
 
             case 'insertOne':
@@ -191,16 +202,26 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     /**
      * Executes an "outcome" block.
      *
-     * @param array $operation
-     * @param array $outcome
-     * @param mixed $actualResult
+     * @param array            $operation
+     * @param array            $outcome
+     * @param mixed            $result
+     * @param RuntimeException $exception
      * @return mixed
      * @throws LogicException if the operation is unsupported
      */
-    private function executeOutcome(array $operation, array $outcome, $actualResult)
+    private function executeOutcome(array $operation, array $outcome, $result, RuntimeException $exception = null)
     {
+        $expectedError = array_key_exists('error', $outcome) ? $outcome['error'] : false;
+
+        if ($expectedError) {
+            $this->assertNull($result);
+            $this->assertNotNull($exception);
+
+            $result = $this->extractResultFromException($operation, $outcome, $exception);
+        }
+
         if (array_key_exists('result', $outcome)) {
-            $this->executeAssertResult($operation, $outcome['result'], $actualResult);
+            $this->executeAssertResult($operation, $outcome['result'], $result);
         }
 
         if (isset($outcome['collection'])) {
@@ -210,6 +231,42 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
 
             $this->assertEquivalentCollections($this->expectedCollection, $actualCollection);
         }
+    }
+
+    /**
+     * Extracts a result from an exception.
+     *
+     * Errors for bulkWrite and insertMany operations may still report a write
+     * result. This method will attempt to extract such a result so that it can
+     * be used in executeAssertResult().
+     *
+     * If no result can be extracted, null will be returned.
+     *
+     * @param array            $operation
+     * @param RuntimeException $exception
+     * @return mixed
+     */
+    private function extractResultFromException(array $operation, array $outcome, RuntimeException $exception)
+    {
+        switch ($operation['name']) {
+            case 'bulkWrite':
+                $insertedIds = isset($outcome['result']['insertedIds']) ? $outcome['result']['insertedIds'] : [];
+
+                if ($exception instanceof BulkWriteException) {
+                    return new BulkWriteResult($exception->getWriteResult(), $insertedIds);
+                }
+                break;
+
+            case 'insertMany':
+                $insertedIds = isset($outcome['result']['insertedIds']) ? $outcome['result']['insertedIds'] : [];
+
+                if ($exception instanceof BulkWriteException) {
+                    return new InsertManyResult($exception->getWriteResult(), $insertedIds);
+                }
+                break;
+        }
+
+        return null;
     }
 
     /**
@@ -236,6 +293,9 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 break;
 
             case 'bulkWrite':
+                $this->assertInternalType('array', $expectedResult);
+                $this->assertInstanceOf('MongoDB\BulkWriteResult', $actualResult);
+
                 if (isset($expectedResult['deletedCount'])) {
                     $this->assertSame($expectedResult['deletedCount'], $actualResult->getDeletedCount());
                 }
@@ -307,6 +367,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 break;
 
             case 'insertMany':
+                $this->assertInternalType('array', $expectedResult);
                 $this->assertInstanceOf('MongoDB\InsertManyResult', $actualResult);
 
                 if (isset($expectedResult['insertedCount'])) {
@@ -383,36 +444,43 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
         }
     }
 
-    private function prepareBulkWriteArguments($arguments)
+    /**
+     * Prepares a request element for a bulkWrite operation.
+     *
+     * @param array $request
+     * @return array
+     */
+    private function prepareBulkWriteRequest(array $request)
     {
-        $operations = [];
-        $operations['options'] = $arguments['options'];
-        foreach ($arguments['requests'] as $request) {
-            $innerArray = [];
-            switch ($request['name']) {
-                case 'deleteMany':
-                case 'deleteOne':
-                    $options = array_diff_key($request['arguments'], ['filter' => 1]);
-                    $innerArray = [$request['arguments']['filter'], $options];
-                break;
-                case 'insertOne':
-                    $innerArray = [$request['arguments']['document']];
-                    break;
-                case 'replaceOne':
-                    $options = array_diff_key($request['arguments'], ['filter' => 1, 'replacement' => 1]);
-                    $innerArray = [$request['arguments']['filter'], $request['arguments']['replacement'], $options];
-                break;
-                case 'updateMany':
-                case 'updateOne':
-                    $options = array_diff_key($request['arguments'], ['filter' => 1, 'update' => 1]);
-                    $innerArray = [$request['arguments']['filter'], $request['arguments']['update'], $options];
-                break;
-                default:
-                    throw new LogicException('Unsupported bulk write request: ' . $request['name']);
-            }
-            $operations[] = [$request['name'] => $innerArray];
+        switch ($request['name']) {
+            case 'deleteMany':
+            case 'deleteOne':
+                return [ $request['name'] => [
+                    $request['arguments']['filter'],
+                    array_diff_key($request['arguments'], ['filter' => 1]),
+                ]];
+
+            case 'insertOne':
+                return [ 'insertOne' => [ $request['arguments']['document'] ]];
+
+            case 'replaceOne':
+                return [ 'replaceOne' => [
+                    $request['arguments']['filter'],
+                    $request['arguments']['replacement'],
+                    array_diff_key($request['arguments'], ['filter' => 1, 'replacement' => 1]),
+                ]];
+
+            case 'updateMany':
+            case 'updateOne':
+                return [ $request['name'] => [
+                    $request['arguments']['filter'],
+                    $request['arguments']['update'],
+                    array_diff_key($request['arguments'], ['filter' => 1, 'update' => 1]),
+                ]];
+
+            default:
+                throw new LogicException('Unsupported bulk write request: ' . $request['name']);
         }
-        return $operations;
     }
 
     /**

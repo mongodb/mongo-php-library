@@ -350,6 +350,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
 
             case 'deleteMany':
             case 'deleteOne':
+                $this->assertInternalType('array', $expectedResult);
                 $this->assertInstanceOf('MongoDB\DeleteResult', $actualResult);
 
                 if (isset($expectedResult['deletedCount'])) {
@@ -383,6 +384,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 break;
 
             case 'insertOne':
+                $this->assertInternalType('array', $expectedResult);
                 $this->assertInstanceOf('MongoDB\InsertOneResult', $actualResult);
 
                 if (isset($expectedResult['insertedCount'])) {
@@ -400,6 +402,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             case 'replaceOne':
             case 'updateMany':
             case 'updateOne':
+                $this->assertInternalType('array', $expectedResult);
                 $this->assertInstanceOf('MongoDB\UpdateResult', $actualResult);
 
                 if (isset($expectedResult['matchedCount'])) {
@@ -489,7 +492,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
      * @param array $arguments
      * @return array
      */
-    private function prepareFindAndModifyArguments($arguments)
+    private function prepareFindAndModifyArguments(array $arguments)
     {
         if (isset($arguments['returnDocument'])) {
             $arguments['returnDocument'] = ('after' === strtolower($arguments['returnDocument']))

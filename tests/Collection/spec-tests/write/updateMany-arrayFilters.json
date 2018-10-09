@@ -98,7 +98,8 @@
       "outcome": {
         "result": {
           "matchedCount": 2,
-          "modifiedCount": 1
+          "modifiedCount": 1,
+          "upsertedCount": 0
         },
         "collection": {
           "data": [

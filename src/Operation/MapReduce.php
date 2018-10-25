@@ -291,7 +291,10 @@ class MapReduce implements Executable
             }
         }
 
-        if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
+            \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
+        ) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 

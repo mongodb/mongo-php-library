@@ -104,7 +104,10 @@ class InsertOne implements Executable
     {
         $options = [];
 
-        if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
+            \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
+        ) {
             $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 

@@ -76,6 +76,43 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         );
     }
 
+    public function testBypassDocumentValidationSetWhenTrue()
+    {
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new FindAndModify(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    ['remove' => true, 'bypassDocumentValidation' => true]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(array $event) {
+                $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+                $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
+            }
+        );
+    }
+
+    public function testBypassDocumentValidationUnsetWhenFalse()
+    {
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new FindAndModify(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    ['remove' => true, 'bypassDocumentValidation' => false]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(array $event) {
+                $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+            }
+        );
+    }
+
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocument
      */

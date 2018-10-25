@@ -128,7 +128,10 @@ class InsertMany implements Executable
     {
         $options = ['ordered' => $this->options['ordered']];
 
-        if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
+            \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
+        ) {
             $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 

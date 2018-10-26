@@ -76,6 +76,53 @@ class InsertManyFunctionalTest extends FunctionalTestCase
         );
     }
 
+    public function testBypassDocumentValidationSetWhenTrue()
+    {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('bypassDocumentValidation is not supported');
+        }
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new InsertMany(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [['_id' => 1], ['_id' => 2]],
+                    ['bypassDocumentValidation' => true]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(array $event) {
+                $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+                $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
+            }
+        );
+    }
+
+    public function testBypassDocumentValidationUnsetWhenFalse()
+    {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('bypassDocumentValidation is not supported');
+        }
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new InsertMany(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [['_id' => 1], ['_id' => 2]],
+                    ['bypassDocumentValidation' => false]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(array $event) {
+                $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+            }
+        );
+    }
+
     public function testUnacknowledgedWriteConcern()
     {
         $documents = [['x' => 11]];

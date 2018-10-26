@@ -169,7 +169,10 @@ class Update implements Executable, Explainable
 
         $bulkOptions = [];
 
-        if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
+            \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
+        ) {
             $bulkOptions['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 
@@ -189,7 +192,10 @@ class Update implements Executable, Explainable
             $cmd['writeConcern'] = $this->options['writeConcern'];
         }
 
-        if (isset($this->options['bypassDocumentValidation']) && \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)) {
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
+            \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
+        ) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 

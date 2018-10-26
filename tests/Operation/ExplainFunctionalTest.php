@@ -292,6 +292,67 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
+    public function testUpdateBypassDocumentValidationSetWhenTrue()
+    {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('bypassDocumentValidation is not supported');
+        }
+
+        $this->createFixtures(3);
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new Update(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    ['_id' => ['$gt' => 1]],
+                    ['$inc' => ['x' => 1]],
+                    ['bypassDocumentValidation' => true]
+                );
+
+                $explainOperation = new Explain($this->getDatabaseName(), $operation);
+                $result = $explainOperation->execute($this->getPrimaryServer());
+            },
+            function(array $event) {
+                $this->assertObjectHasAttribute(
+                    'bypassDocumentValidation',
+                    $event['started']->getCommand()->explain
+                );
+                $this->assertEquals(true, $event['started']->getCommand()->explain->bypassDocumentValidation);
+            }
+        );
+    }
+
+    public function testUpdateBypassDocumentValidationUnsetWhenFalse()
+    {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('bypassDocumentValidation is not supported');
+        }
+
+        $this->createFixtures(3);
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new Update(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    ['_id' => ['$gt' => 1]],
+                    ['$inc' => ['x' => 1]],
+                    ['bypassDocumentValidation' => false]
+                );
+
+                $explainOperation = new Explain($this->getDatabaseName(), $operation);
+                $result = $explainOperation->execute($this->getPrimaryServer());
+            },
+            function(array $event) {
+                $this->assertObjectNotHasAttribute(
+                    'bypassDocumentValidation',
+                    $event['started']->getCommand()->explain
+                );
+            }
+        );
+    }
+
     /**
      * @dataProvider provideVerbosityInformation
      */

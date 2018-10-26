@@ -156,6 +156,61 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         );
     }
 
+    public function testBypassDocumentValidationSetWhenTrue()
+    {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('bypassDocumentValidation is not supported');
+        }
+
+        $this->createFixtures(1);
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new MapReduce(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    new Javascript('function() { emit(this.x, this.y); }'),
+                    new Javascript('function(key, values) { return Array.sum(values); }'),
+                    ['inline' => 1],
+                    ['bypassDocumentValidation' => true]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(array $event) {
+                $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+                $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
+            }
+        );
+    }
+
+    public function testBypassDocumentValidationUnsetWhenFalse()
+    {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('bypassDocumentValidation is not supported');
+        }
+
+        $this->createFixtures(1);
+
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new MapReduce(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    new Javascript('function() { emit(this.x, this.y); }'),
+                    new Javascript('function(key, values) { return Array.sum(values); }'),
+                    ['inline' => 1],
+                    ['bypassDocumentValidation' => false]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(array $event) {
+                $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
+            }
+        );
+    }
+
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocuments
      */

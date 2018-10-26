@@ -158,6 +158,10 @@ class MapReduceFunctionalTest extends FunctionalTestCase
 
     public function testBypassDocumentValidationSetWhenTrue()
     {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('bypassDocumentValidation is not supported');
+        }
+
         $this->createFixtures(1);
 
         (new CommandObserver)->observe(
@@ -182,6 +186,10 @@ class MapReduceFunctionalTest extends FunctionalTestCase
 
     public function testBypassDocumentValidationUnsetWhenFalse()
     {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('bypassDocumentValidation is not supported');
+        }
+
         $this->createFixtures(1);
 
         (new CommandObserver)->observe(

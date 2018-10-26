@@ -93,6 +93,10 @@ class InsertOneFunctionalTest extends FunctionalTestCase
 
     public function testBypassDocumentValidationSetWhenTrue()
     {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('bypassDocumentValidation is not supported');
+        }
+
         (new CommandObserver)->observe(
             function() {
                 $operation = new InsertOne(
@@ -113,6 +117,10 @@ class InsertOneFunctionalTest extends FunctionalTestCase
 
     public function testBypassDocumentValidationUnsetWhenFalse()
     {
+        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
+            $this->markTestSkipped('bypassDocumentValidation is not supported');
+        }
+
         (new CommandObserver)->observe(
             function() {
                 $operation = new InsertOne(

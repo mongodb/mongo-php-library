@@ -71,7 +71,7 @@ class MapReduceResult implements IteratorAggregate
      */
     public function getExecutionTimeMS()
     {
-        return $this->executionTimeMS;
+        return (integer) $this->executionTimeMS;
     }
 
     /**

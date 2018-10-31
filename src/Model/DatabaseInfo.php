@@ -71,6 +71,7 @@ class DatabaseInfo implements ArrayAccess
      */
     public function getSizeOnDisk()
     {
+        /* The MongoDB server might return this number as an integer or float */
         return (integer) $this->info['sizeOnDisk'];
     }
 

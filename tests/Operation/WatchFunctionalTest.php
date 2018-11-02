@@ -9,9 +9,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Exception\ResumeTokenException;
-use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
-use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\Watch;
 use MongoDB\Tests\CommandObserver;
@@ -727,8 +725,8 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testSessionFreed()
     {
-        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
+        // Create collection so we can drop it later
+        $this->createCollection();
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
@@ -740,8 +738,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertNotNull($rp->getValue($changeStream));
 
         // Invalidate the cursor to verify that resumeCallable is unset when the cursor is exhausted.
-        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
+        $this->dropCollection();
 
         $changeStream->next();
 

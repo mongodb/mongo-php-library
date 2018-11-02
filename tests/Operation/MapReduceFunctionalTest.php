@@ -4,7 +4,6 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\BSON\Javascript;
 use MongoDB\Driver\BulkWrite;
-use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\MapReduce;
@@ -15,8 +14,8 @@ class MapReduceFunctionalTest extends FunctionalTestCase
 {
     public function testDefaultReadConcernIsOmitted()
     {
-        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
+        // Collection must exist for mapReduce command
+        $this->createCollection();
 
         (new CommandObserver)->observe(
             function() {
@@ -39,8 +38,8 @@ class MapReduceFunctionalTest extends FunctionalTestCase
 
     public function testDefaultWriteConcernIsOmitted()
     {
-        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
+        // Collection must exist for mapReduce command
+        $this->createCollection();
 
         (new CommandObserver)->observe(
             function() {

@@ -10,7 +10,6 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Count;
-use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
 use Exception;
@@ -111,9 +110,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->skipIfTransactionsAreNotSupported();
 
         // Collection must be created before the transaction starts
-        $options = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
-        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
-        $operation->execute($this->getPrimaryServer());
+        $this->createCollection();
 
         $session = $this->manager->startSession();
         $session->startTransaction();
@@ -219,9 +216,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->skipIfTransactionsAreNotSupported();
 
         // Collection must be created before the transaction starts
-        $options = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
-        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
-        $operation->execute($this->getPrimaryServer());
+        $this->createCollection();
 
         $session = $this->manager->startSession();
         $session->startTransaction();

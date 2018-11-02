@@ -3,15 +3,13 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Operation\ModifyCollection;
-use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\CreateIndexes;
 
 class ModifyCollectionFunctionalTest extends FunctionalTestCase
 {
     public function testCollMod()
     {
-        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
+        $this->createCollection();
 
         $indexes = [['key' => ['lastAccess' => 1], 'expireAfterSeconds' => 3]];
         $createIndexes = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), $indexes);

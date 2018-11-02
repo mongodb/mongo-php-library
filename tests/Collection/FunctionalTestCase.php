@@ -30,13 +30,4 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
 
         $this->dropCollection();
     }
-
-    private function dropCollection()
-    {
-        $options = version_compare($this->getServerVersion(), '3.4.0', '>=')
-            ? ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]
-            : [];
-
-        $this->collection->drop($options);
-    }
 }

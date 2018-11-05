@@ -8,7 +8,10 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\CommandException;
+use MongoDB\Operation\CreateCollection;
+use MongoDB\Operation\DropCollection;
 use stdClass;
 use UnexpectedValueException;
 
@@ -46,6 +49,44 @@ abstract class FunctionalTestCase extends TestCase
         $this->assertInstanceOf('MongoDB\BSON\ObjectId', $expectedObjectId);
         $this->assertInstanceOf('MongoDB\BSON\ObjectId', $actualObjectId);
         $this->assertEquals((string) $expectedObjectId, (string) $actualObjectId);
+    }
+
+    /**
+     * Creates the test collection with the specified options.
+     *
+     * If the "writeConcern" option is not specified but is supported by the
+     * server, a majority write concern will be used. This is helpful for tests
+     * using transactions or secondary reads.
+     *
+     * @param array $options
+     */
+    protected function createCollection(array $options = [])
+    {
+        if (version_compare($this->getServerVersion(), '3.4.0', '>=')) {
+            $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+        }
+
+        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
+        $operation->execute($this->getPrimaryServer());
+    }
+
+    /**
+     * Drops the test collection with the specified options.
+     *
+     * If the "writeConcern" option is not specified but is supported by the
+     * server, a majority write concern will be used. This is helpful for tests
+     * using transactions or secondary reads.
+     *
+     * @param array $options
+     */
+    protected function dropCollection(array $options = [])
+    {
+        if (version_compare($this->getServerVersion(), '3.4.0', '>=')) {
+            $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+        }
+
+        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
+        $operation->execute($this->getPrimaryServer());
     }
 
     protected function getFeatureCompatibilityVersion(ReadPreference $readPreference = null)

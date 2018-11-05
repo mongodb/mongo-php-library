@@ -3,11 +3,13 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Tests\CommandObserver;
 use ArrayIterator;
+use Exception;
 use stdClass;
 
 class AggregateFunctionalTest extends FunctionalTestCase
@@ -274,12 +276,48 @@ class AggregateFunctionalTest extends FunctionalTestCase
         ];
     }
 
+    public function testReadPreferenceWithinTransaction()
+    {
+        $this->skipIfTransactionsAreNotSupported();
+
+        // Collection must be created before the transaction starts
+        $this->createCollection();
+
+        $session = $this->manager->startSession();
+        $session->startTransaction();
+
+        try {
+            $this->createFixtures(3, ['session' => $session]);
+
+            $pipeline = [['$match' => ['_id' => ['$lt' => 3]]]];
+            $options = [
+                'readPreference' => new ReadPreference('primary'),
+                'session' => $session,
+            ];
+
+            $operation = new Aggregate($this->getDatabaseName(), $this->getCollectionName(), $pipeline, $options);
+            $cursor = $operation->execute($this->getPrimaryServer());
+
+            $expected = [
+                ['_id' => 1, 'x' => ['foo' => 'bar']],
+                ['_id' => 2, 'x' => ['foo' => 'bar']],
+            ];
+
+            $this->assertSameDocuments($expected, $cursor);
+
+            $session->commitTransaction();
+        } finally {
+            $session->endSession();
+        }
+    }
+
     /**
      * Create data fixtures.
      *
      * @param integer $n
+     * @param array   $executeBulkWriteOptions
      */
-    private function createFixtures($n)
+    private function createFixtures($n, array $executeBulkWriteOptions = [])
     {
         $bulkWrite = new BulkWrite(['ordered' => true]);
 
@@ -290,7 +328,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
             ]);
         }
 
-        $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
+        $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite, $executeBulkWriteOptions);
 
         $this->assertEquals($n, $result->getInsertedCount());
     }

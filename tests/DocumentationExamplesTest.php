@@ -1496,14 +1496,4 @@ class DocumentationExamplesTest extends FunctionalTestCase
     {
         $this->assertCollectionCount($this->getDatabaseName() . '.' . $this->getCollectionName(), $count);
     }
-
-    private function dropCollection()
-    {
-        $options = version_compare($this->getServerVersion(), '3.4.0', '>=')
-            ? ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]
-            : [];
-
-        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
-        $operation->execute($this->getPrimaryServer());
-    }
 }

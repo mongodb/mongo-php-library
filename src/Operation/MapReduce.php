@@ -248,6 +248,16 @@ class MapReduce implements Executable
             throw UnsupportedException::writeConcernNotSupported();
         }
 
+        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
+        if ($inTransaction) {
+            if (isset($this->options['readConcern'])) {
+                throw UnsupportedException::readConcernNotSupportedInTransaction();
+            }
+            if (isset($this->options['writeConcern'])) {
+                throw UnsupportedException::writeConcernNotSupportedInTransaction();
+            }
+        }
+
         $hasOutputCollection = ! \MongoDB\is_mapreduce_output_inline($this->out);
 
         $command = $this->createCommand($server);

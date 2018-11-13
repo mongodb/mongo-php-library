@@ -15,7 +15,7 @@ cache:
 
 env:
   global:
-    - DRIVER_VERSION=1.5.2
+    - DRIVER_VERSION=1.6.0alpha1
     - SERVER_VERSION=4.0.1
     - DEPLOYMENT=STANDALONE
 

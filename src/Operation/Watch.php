@@ -213,6 +213,11 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      */
     public function execute(Server $server)
     {
+        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
+        if ($inTransaction && isset($this->options['readConcern'])) {
+            throw UnsupportedException::readConcernNotSupportedInTransaction();
+        }
+
         return new ChangeStream($this->executeAggregate($server), $this->resumeCallable);
     }
 

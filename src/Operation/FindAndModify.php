@@ -210,6 +210,11 @@ class FindAndModify implements Executable, Explainable
             throw UnsupportedException::writeConcernNotSupported();
         }
 
+        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
+        if ($inTransaction && isset($this->options['writeConcern'])) {
+            throw UnsupportedException::writeConcernNotSupportedInTransaction();
+        }
+
         $cursor = $server->executeWriteCommand($this->databaseName, new Command($this->createCommandDocument($server)), $this->createOptions());
         $result = current($cursor->toArray());
 

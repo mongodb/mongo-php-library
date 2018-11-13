@@ -167,6 +167,11 @@ class Update implements Executable, Explainable
             throw UnsupportedException::collationNotSupported();
         }
 
+        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
+        if ($inTransaction && isset($this->options['writeConcern'])) {
+            throw UnsupportedException::writeConcernNotSupportedInTransaction();
+        }
+
         $bulkOptions = [];
 
         if (

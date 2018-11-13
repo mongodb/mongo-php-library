@@ -133,6 +133,11 @@ class Distinct implements Executable, Explainable
             throw UnsupportedException::readConcernNotSupported();
         }
 
+        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
+        if ($inTransaction && isset($this->options['readConcern'])) {
+            throw UnsupportedException::readConcernNotSupportedInTransaction();
+        }
+
         $cursor = $server->executeReadCommand($this->databaseName, new Command($this->createCommandDocument()), $this->createOptions());
         $result = current($cursor->toArray());
 

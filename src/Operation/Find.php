@@ -296,6 +296,11 @@ class Find implements Executable, Explainable
             throw UnsupportedException::readConcernNotSupported();
         }
 
+        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
+        if ($inTransaction && isset($this->options['readConcern'])) {
+            throw UnsupportedException::readConcernNotSupportedInTransaction();
+        }
+
         $cursor = $server->executeQuery($this->databaseName . '.' . $this->collectionName, new Query($this->filter, $this->createQueryOptions()), $this->createExecuteOptions());
 
         if (isset($this->options['typeMap'])) {

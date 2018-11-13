@@ -24,6 +24,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 
 /**
  * Operation for inserting multiple documents with the insert command.
@@ -126,6 +127,11 @@ class InsertMany implements Executable
      */
     public function execute(Server $server)
     {
+        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
+        if ($inTransaction && isset($this->options['writeConcern'])) {
+            throw UnsupportedException::writeConcernNotSupportedInTransaction();
+        }
+
         $options = ['ordered' => $this->options['ordered']];
 
         if (

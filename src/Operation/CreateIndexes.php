@@ -139,6 +139,11 @@ class CreateIndexes implements Executable
             throw UnsupportedException::writeConcernNotSupported();
         }
 
+        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
+        if ($inTransaction && isset($this->options['writeConcern'])) {
+            throw UnsupportedException::writeConcernNotSupportedInTransaction();
+        }
+
         $this->executeCommand($server);
 
         return array_map(function(IndexInput $index) { return (string) $index; }, $this->indexes);

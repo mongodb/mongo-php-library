@@ -311,6 +311,353 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertNotEmpty($result->getCounts());
     }
 
+    public function collectionMethodClosures()
+    {
+        return [
+            [
+                function($collection, $session, $options = []) {
+                    $collection->aggregate(
+                        [['$match' => ['_id' => ['$lt' => 3]]]],
+                        ['session' => $session] + $options
+                    );
+                }, 'rw'
+            ],
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->bulkWrite(
+                        [['insertOne' => [['test' => 'foo']]]],
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+
+            /* Disabled, as count command can't be used in transactions
+            [
+                function($collection, $session, $options = []) {
+                    $collection->count(
+                        [],
+                        ['session' => $session] + $options
+                    );
+                }, 'r'
+            ],
+            */
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->countDocuments(
+                        [],
+                        ['session' => $session] + $options
+                    );
+                }, 'r'
+            ],
+
+            /* Disabled, as it's illegal to use createIndex command in transactions
+            [
+                function($collection, $session, $options = []) {
+                    $collection->createIndex(
+                        ['test' => 1],
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+            */
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->deleteMany(
+                        ['test' => 'foo'],
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->deleteOne(
+                        ['test' => 'foo'],
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->distinct(
+                        '_id',
+                        [],
+                        ['session' => $session] + $options
+                    );
+                }, 'r'
+            ],
+
+            /* Disabled, as it's illegal to use drop command in transactions
+            [
+                function($collection, $session, $options = []) {
+                    $collection->drop(
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+            */
+
+            /* Disabled, as it's illegal to use dropIndexes command in transactions
+            [
+                function($collection, $session, $options = []) {
+                    $collection->dropIndex(
+                        '_id_1',
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ], */
+
+            /* Disabled, as it's illegal to use dropIndexes command in transactions
+            [
+                function($collection, $session, $options = []) {
+                    $collection->dropIndexes(
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+            */
+
+            /* Disabled, as count command can't be used in transactions
+            [
+                function($collection, $session, $options = []) {
+                    $collection->estimatedDocumentCount(
+                        ['session' => $session] + $options
+                    );
+                }, 'r'
+            ],
+            */
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->find(
+                        ['test' => 'foo'],
+                        ['session' => $session] + $options
+                    );
+                }, 'r'
+            ],
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->findOne(
+                        ['test' => 'foo'],
+                        ['session' => $session] + $options
+                    );
+                }, 'r'
+            ],
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->findOneAndDelete(
+                        ['test' => 'foo'],
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->findOneAndReplace(
+                        ['test' => 'foo'],
+                        [],
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->findOneAndUpdate(
+                        ['test' => 'foo'],
+                        ['$set' => ['updated' => 1]],
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->insertMany(
+                        [
+                            ['test' => 'foo'],
+                            ['test' => 'bar'],
+                        ],
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->insertOne(
+                        ['test' => 'foo'],
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+
+            /* Disabled, as it's illegal to use listIndexes command in transactions
+            [
+                function($collection, $session, $options = []) {
+                    $collection->listIndexes(
+                        ['session' => $session] + $options
+                    );
+                }, 'r'
+            ],
+            */
+
+            /* Disabled, as it's illegal to use mapReduce command in transactions
+            [
+                function($collection, $session, $options = []) {
+                    $collection->mapReduce(
+                        new \MongoDB\BSON\Javascript('function() { emit(this.state, this.pop); }'),
+                        new \MongoDB\BSON\Javascript('function(key, values) { return Array.sum(values) }'),
+                        ['inline' => 1],
+                        ['session' => $session] + $options
+                    );
+                }, 'rw'
+            ],
+            */
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->replaceOne(
+                        ['test' => 'foo'],
+                        [],
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->updateMany(
+                        ['test' => 'foo'],
+                        ['$set' => ['updated' => 1]],
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+
+            [
+                function($collection, $session, $options = []) {
+                    $collection->updateOne(
+                        ['test' => 'foo'],
+                        ['$set' => ['updated' => 1]],
+                        ['session' => $session] + $options
+                    );
+                }, 'w'
+            ],
+        ];
+    }
+
+    public function collectionReadMethodClosures()
+    {
+        return array_filter(
+            $this->collectionMethodClosures(),
+            function($rw) {
+                if (strchr($rw[1], 'r') !== false) {
+                    return true;
+                }
+            }
+        );
+    }
+
+    public function collectionWriteMethodClosures()
+    {
+        return array_filter(
+            $this->collectionMethodClosures(),
+            function($rw) {
+                if (strchr($rw[1], 'w') !== false) {
+                    return true;
+                }
+            }
+        );
+    }
+
+    /**
+     * @dataProvider collectionMethodClosures
+     */
+    public function testMethodDoesNotInheritReadWriteConcernInTranasaction(\Closure $method)
+    {
+        $this->skipIfTransactionsAreNotSupported();
+
+        $this->createCollection();
+
+        $session = $this->manager->startSession();
+        $session->startTransaction();
+
+        $collection = $this->collection->withOptions([
+            'readConcern' => new ReadConcern(ReadConcern::LOCAL),
+            'writeConcern' => new WriteConcern(1)
+        ]);
+
+        (new CommandObserver)->observe(
+            function() use ($method, $collection, $session) {
+                $method->call($this, $collection, $session);
+            },
+            function(array $event) {
+                $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
+                $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
+            }
+        );
+    }
+
+    /**
+     * @dataProvider collectionWriteMethodClosures
+     * @expectedException MongoDB\Exception\UnsupportedException
+     * @expectedExceptionMessage "writeConcern" option cannot be specified within a transaction
+     */
+    public function testMethodInTransactionWithWriteConcernOption($method)
+    {
+        $this->skipIfTransactionsAreNotSupported();
+
+        $this->createCollection();
+
+        $session = $this->manager->startSession();
+        $session->startTransaction();
+
+        try {
+            $method->call(
+                $this, $this->collection, $session,
+                [
+                    'writeConcern' => new WriteConcern(1),
+                ]
+            );
+        } finally {
+            $session->endSession();
+        }
+    }
+
+    /**
+     * @dataProvider collectionReadMethodClosures
+     * @expectedException MongoDB\Exception\UnsupportedException
+     * @expectedExceptionMessage "readConcern" option cannot be specified within a transaction
+     */
+    public function testMethodInTransactionWithReadConcernOption($method)
+    {
+        $this->skipIfTransactionsAreNotSupported();
+
+        $this->createCollection();
+
+        $session = $this->manager->startSession();
+        $session->startTransaction();
+
+        try {
+            $method->call(
+                $this, $this->collection, $session,
+                [
+                    'readConcern' => new ReadConcern(ReadConcern::LOCAL),
+                ]
+            );
+        } finally {
+            $session->endSession();
+        }
+    }
+
     /**
      * Create data fixtures.
      *

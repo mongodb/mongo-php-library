@@ -43,6 +43,11 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
         $expectedData = isset($test['outcome']['collection']['data']) ? $test['outcome']['collection']['data'] : null;
         $this->initializeData($initialData, $expectedData);
 
+        if (isset($test['outcome']['collection']['name'])) {
+            $outputCollection = new Collection($this->manager, $this->getDatabaseName(), $test['outcome']['collection']['name']);
+            $outputCollection->drop();
+        }
+
         $result = null;
         $exception = null;
 
@@ -81,7 +86,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
      */
     private function assertEquivalentCollections($expectedCollection, $actualCollection)
     {
-        $mi = new MultipleIterator;
+        $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);
         $mi->attachIterator(new IteratorIterator($expectedCollection->find()));
         $mi->attachIterator(new IteratorIterator($actualCollection->find()));
 

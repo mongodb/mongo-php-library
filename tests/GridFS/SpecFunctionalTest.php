@@ -269,6 +269,10 @@ class SpecFunctionalTest extends FunctionalTestCase
      */
     private function executeDataModification(array $dataModification)
     {
+        if (empty($dataModification)) {
+            throw new LogicException('Command for data modification is empty');
+        }
+
         foreach ($dataModification as $type => $collectionName) {
             break;
         }

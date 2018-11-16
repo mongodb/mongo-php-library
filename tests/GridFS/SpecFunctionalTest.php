@@ -90,7 +90,7 @@ class SpecFunctionalTest extends FunctionalTestCase
      */
     private function assertEquivalentCollections($expectedCollection, $actualCollection, $actualResult)
     {
-        $mi = new MultipleIterator;
+        $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);
         $mi->attachIterator(new IteratorIterator($expectedCollection->find()));
         $mi->attachIterator(new IteratorIterator($actualCollection->find()));
 

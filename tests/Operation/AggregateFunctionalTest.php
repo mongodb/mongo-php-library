@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -14,6 +15,28 @@ use stdClass;
 
 class AggregateFunctionalTest extends FunctionalTestCase
 {
+    public function testBatchSizeIsIgnoredIfPipelineIncludesOutStage()
+    {
+        (new CommandObserver)->observe(
+            function() {
+                $operation = new Aggregate(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [['$out' => $this->getCollectionName() . '.output']],
+                    ['batchSize' => 0]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(array $event) {
+                $this->assertEquals(new stdClass, $event['started']->getCommand()->cursor);
+            }
+        );
+
+        $outCollection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName() . '.output');
+        $outCollection->drop();
+    }
+
     public function testCurrentOpCommand()
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
@@ -72,6 +95,9 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
             }
         );
+
+        $outCollection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName() . '.output');
+        $outCollection->drop();
     }
 
     public function testEmptyPipelineReturnsAllDocuments()

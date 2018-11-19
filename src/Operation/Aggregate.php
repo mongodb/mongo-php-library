@@ -255,7 +255,7 @@ class Aggregate implements Executable
         $hasExplain = ! empty($this->options['explain']);
         $hasOutStage = \MongoDB\is_last_pipeline_operator_out($this->pipeline);
 
-        $command = $this->createCommand($server);
+        $command = $this->createCommand($server, $hasOutStage);
         $options = $this->createOptions($hasOutStage, $hasExplain);
 
         $cursor = ($hasOutStage && ! $hasExplain)
@@ -287,9 +287,10 @@ class Aggregate implements Executable
      * Create the aggregate command.
      *
      * @param Server  $server
+     * @param boolean $hasOutStage
      * @return Command
      */
-    private function createCommand(Server $server)
+    private function createCommand(Server $server, $hasOutStage)
     {
         $cmd = [
             'aggregate' => isset($this->collectionName) ? $this->collectionName : 1,
@@ -325,7 +326,10 @@ class Aggregate implements Executable
         }
 
         if ($this->options['useCursor']) {
-            $cmd['cursor'] = isset($this->options["batchSize"])
+            /* Ignore batchSize if pipeline includes an $out stage, as no
+             * documents will be returned and sending a batchSize of zero could
+             * prevent the pipeline from executing at all. */
+            $cmd['cursor'] = isset($this->options["batchSize"]) && ! $hasOutStage
                 ? ['batchSize' => $this->options["batchSize"]]
                 : new stdClass;
         }

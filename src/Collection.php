@@ -551,7 +551,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function EstimatedDocumentCount(array $options = [])
+    public function estimatedDocumentCount(array $options = [])
     {
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;

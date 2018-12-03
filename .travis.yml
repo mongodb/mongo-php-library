@@ -84,7 +84,7 @@ before_install:
 before_script:
   - mongo-orchestration start
   - .travis/setup_mo.sh
-  - tpecl mongodb-${DRIVER_VERSION} mongodb.so
+  - pecl install -f mongodb-${DRIVER_VERSION}
   - php --ri mongodb
   - composer install --no-interaction --no-progress --no-suggest
   - ulimit -c

@@ -102,6 +102,11 @@ class DropCollection implements Executable
             throw UnsupportedException::writeConcernNotSupported();
         }
 
+        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
+        if ($inTransaction && isset($this->options['writeConcern'])) {
+            throw UnsupportedException::writeConcernNotSupportedInTransaction();
+        }
+
         $command = new Command(['drop' => $this->collectionName]);
 
         try {

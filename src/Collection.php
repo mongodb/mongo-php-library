@@ -203,10 +203,13 @@ class Collection
 
         /* A "majority" read concern is not compatible with the $out stage, so
          * avoid providing the Collection's read concern if it would conflict.
+         *
+         * A read concern is also not compatible with transactions.
          */
         if ( ! isset($options['readConcern']) &&
-             ! ($hasOutStage && $this->readConcern->getLevel() === ReadConcern::MAJORITY) &&
-            \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+            ! ($hasOutStage && $this->readConcern->getLevel() === ReadConcern::MAJORITY) &&
+            \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) &&
+            ! $this->isInTransaction($options)) {
             $options['readConcern'] = $this->readConcern;
         }
 
@@ -214,7 +217,10 @@ class Collection
             $options['typeMap'] = $this->typeMap;
         }
 
-        if ($hasOutStage && ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if ($hasOutStage &&
+            ! isset($options['writeConcern']) &&
+            \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) &&
+            ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -236,7 +242,7 @@ class Collection
      */
     public function bulkWrite(array $operations, array $options = [])
     {
-        if ( ! isset($options['writeConcern'])) {
+        if ( ! isset($options['writeConcern']) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -268,7 +274,7 @@ class Collection
 
         $server = $this->manager->selectServer($options['readPreference']);
 
-        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) && ! $this->isInTransaction($options)) {
             $options['readConcern'] = $this->readConcern;
         }
 
@@ -297,7 +303,7 @@ class Collection
 
         $server = $this->manager->selectServer($options['readPreference']);
 
-        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) && ! $this->isInTransaction($options)) {
             $options['readConcern'] = $this->readConcern;
         }
 
@@ -359,7 +365,7 @@ class Collection
     {
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -382,7 +388,7 @@ class Collection
      */
     public function deleteMany($filter, array $options = [])
     {
-        if ( ! isset($options['writeConcern'])) {
+        if ( ! isset($options['writeConcern']) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -406,7 +412,7 @@ class Collection
      */
     public function deleteOne($filter, array $options = [])
     {
-        if ( ! isset($options['writeConcern'])) {
+        if ( ! isset($options['writeConcern']) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -437,7 +443,7 @@ class Collection
 
         $server = $this->manager->selectServer($options['readPreference']);
 
-        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) && ! $this->isInTransaction($options)) {
             $options['readConcern'] = $this->readConcern;
         }
 
@@ -464,7 +470,7 @@ class Collection
 
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -498,7 +504,7 @@ class Collection
 
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -525,7 +531,7 @@ class Collection
 
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -545,7 +551,7 @@ class Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function EstimatedDocumentCount(array $options = [])
+    public function estimatedDocumentCount(array $options = [])
     {
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
@@ -553,7 +559,7 @@ class Collection
 
         $server = $this->manager->selectServer($options['readPreference']);
 
-        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) && ! $this->isInTransaction($options)) {
             $options['readConcern'] = $this->readConcern;
         }
 
@@ -611,7 +617,7 @@ class Collection
 
         $server = $this->manager->selectServer($options['readPreference']);
 
-        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) && ! $this->isInTransaction($options)) {
             $options['readConcern'] = $this->readConcern;
         }
 
@@ -644,7 +650,7 @@ class Collection
 
         $server = $this->manager->selectServer($options['readPreference']);
 
-        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) && ! $this->isInTransaction($options)) {
             $options['readConcern'] = $this->readConcern;
         }
 
@@ -676,7 +682,7 @@ class Collection
     {
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -713,7 +719,7 @@ class Collection
     {
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -750,7 +756,7 @@ class Collection
     {
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern)) {
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -859,7 +865,7 @@ class Collection
      */
     public function insertMany(array $documents, array $options = [])
     {
-        if ( ! isset($options['writeConcern'])) {
+        if ( ! isset($options['writeConcern']) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -882,7 +888,7 @@ class Collection
      */
     public function insertOne($document, array $options = [])
     {
-        if ( ! isset($options['writeConcern'])) {
+        if ( ! isset($options['writeConcern']) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -941,8 +947,10 @@ class Collection
 
         /* A "majority" read concern is not compatible with inline output, so
          * avoid providing the Collection's read concern if it would conflict.
+         *
+         * A read concern is also not compatible with transactions.
          */
-        if ( ! isset($options['readConcern']) && ! ($hasOutputCollection && $this->readConcern->getLevel() === ReadConcern::MAJORITY) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if ( ! isset($options['readConcern']) && ! ($hasOutputCollection && $this->readConcern->getLevel() === ReadConcern::MAJORITY) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) && ! $this->isInTransaction($options)) {
             $options['readConcern'] = $this->readConcern;
         }
 
@@ -950,7 +958,7 @@ class Collection
             $options['typeMap'] = $this->typeMap;
         }
 
-        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -974,7 +982,7 @@ class Collection
      */
     public function replaceOne($filter, $replacement, array $options = [])
     {
-        if ( ! isset($options['writeConcern'])) {
+        if ( ! isset($options['writeConcern']) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -999,7 +1007,7 @@ class Collection
      */
     public function updateMany($filter, $update, array $options = [])
     {
-        if ( ! isset($options['writeConcern'])) {
+        if ( ! isset($options['writeConcern']) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -1024,7 +1032,7 @@ class Collection
      */
     public function updateOne($filter, $update, array $options = [])
     {
-        if ( ! isset($options['writeConcern'])) {
+        if ( ! isset($options['writeConcern']) && ! $this->isInTransaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -1058,7 +1066,7 @@ class Collection
          * related to change streams being unsupported instead of an
          * UnsupportedException regarding use of the "readConcern" option from
          * the Aggregate operation class. */
-        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) && ! $this->isInTransaction($options)) {
             $options['readConcern'] = $this->readConcern;
         }
 
@@ -1089,5 +1097,19 @@ class Collection
         ];
 
         return new Collection($this->manager, $this->databaseName, $this->collectionName, $options);
+    }
+
+    /**
+     * Returns whether we are currently in a transaction
+     *
+     * @param array  $options  Command options
+     * @return bool
+     */
+    private function isInTransaction(array $options)
+    {
+        if (isset($options['session']) && $options['session'] instanceof \MongoDB\Driver\Session && $options['session']->isInTransaction()) {
+            return true;
+        }
+        return false;
     }
 }

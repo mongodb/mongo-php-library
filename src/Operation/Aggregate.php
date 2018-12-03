@@ -252,6 +252,17 @@ class Aggregate implements Executable
             throw UnsupportedException::writeConcernNotSupported();
         }
 
+        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
+        if ($inTransaction) {
+            if (isset($this->options['readConcern'])) {
+                throw UnsupportedException::readConcernNotSupportedInTransaction();
+            }
+            if (isset($this->options['writeConcern'])) {
+                throw UnsupportedException::writeConcernNotSupportedInTransaction();
+            }
+        }
+
+
         $hasExplain = ! empty($this->options['explain']);
         $hasOutStage = \MongoDB\is_last_pipeline_operator_out($this->pipeline);
 

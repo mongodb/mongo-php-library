@@ -24,6 +24,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 
 /**
  * Operation for inserting a single document with the insert command.
@@ -103,6 +104,11 @@ class InsertOne implements Executable
     public function execute(Server $server)
     {
         $options = [];
+
+        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
+        if (isset($this->options['writeConcern']) && $inTransaction) {
+            throw UnsupportedException::writeConcernNotSupportedInTransaction();
+        }
 
         if (
             ! empty($this->options['bypassDocumentValidation']) &&

@@ -15,7 +15,7 @@ cache:
 
 env:
   global:
-    - DRIVER_VERSION=1.5.2
+    - DRIVER_VERSION=1.6.0alpha1
     - SERVER_VERSION=4.0.1
     - DEPLOYMENT=STANDALONE
 
@@ -84,7 +84,7 @@ before_install:
 before_script:
   - mongo-orchestration start
   - .travis/setup_mo.sh
-  - tpecl mongodb-${DRIVER_VERSION} mongodb.so
+  - pecl install -f mongodb-${DRIVER_VERSION}
   - php --ri mongodb
   - composer install --no-interaction --no-progress --no-suggest
   - ulimit -c

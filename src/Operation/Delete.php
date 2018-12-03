@@ -117,6 +117,11 @@ class Delete implements Executable, Explainable
             throw UnsupportedException::collationNotSupported();
         }
 
+        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
+        if ($inTransaction && isset($this->options['writeConcern'])) {
+            throw UnsupportedException::writeConcernNotSupportedInTransaction();
+        }
+
         $bulk = new Bulk();
         $bulk->delete($this->filter, $this->createDeleteOptions());
 

@@ -157,4 +157,50 @@ class ClientTest extends TestCase
         $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
+
+    public function testWithOptionsAllowsOverridingDatabaseOptions()
+    {
+        $originalUriOptions = [
+            'readConcernLevel' => ReadConcern::LOCAL,
+            'readPreference' => 'secondaryPreferred',
+        ];
+
+        $originalDriverOptions = [
+            'typeMap' => ['root' => 'array'],
+        ];
+
+        $client = new Client($this->getUri(), $originalUriOptions, $originalDriverOptions);
+
+        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $client->getReadConcern());
+        $this->assertSame(ReadConcern::LOCAL, $client-> getReadConcern()->getLevel());
+        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $client->getReadPreference());
+        $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $client->getReadPreference()->getMode());
+        $this->assertInternalType('array', $client->getTypeMap());
+        $this->assertSame(['root' => 'array'], $client->getTypeMap());
+
+        $changedOptions = [
+            'readConcern' => new ReadConcern(ReadConcern::MAJORITY),
+            'readPreference' => new ReadPreference(ReadPreference::RP_NEAREST, [['dc' => 'ny']]),
+            'typeMap' => ['array' => 'array'],
+            'writeConcern' => new WriteConcern(3, 1000, true),
+        ];
+
+        $changedClient = $client->withOptions($changedOptions);
+
+        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $changedClient->getReadConcern());
+        $this->assertSame(ReadConcern::MAJORITY, $changedClient->getReadConcern()->getLevel());
+        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $changedClient->getReadPreference());
+        $this->assertSame(ReadPreference::RP_NEAREST, $changedClient->getReadPreference()->getMode());
+        $this->assertSame([['dc' => 'ny']], $changedClient->getReadPreference()->getTagSets());
+        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $changedClient->getWriteConcern());
+        $this->assertSame(3, $changedClient->getWriteConcern()->getW());
+        $this->assertSame(1000, $changedClient->getWriteConcern()->getWtimeout());
+        $this->assertSame(true, $changedClient->getWriteConcern()->getJournal());
+        $this->assertInternalType('array', $changedClient->getTypeMap());
+        $this->assertSame(['array' => 'array'], $changedClient->getTypeMap());
+
+        $this->assertEquals($changedClient->getReadConcern(), $changedClient->getManager()->getReadConcern());
+        $this->assertEquals($changedClient->getReadPreference(), $changedClient->getManager()->getReadPreference());
+        $this->assertEquals($changedClient->getWriteConcern(), $changedClient->getManager()->getWriteConcern());
+    }
 }

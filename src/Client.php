@@ -42,10 +42,12 @@ class Client
     private static $wireVersionForReadConcern = 4;
     private static $wireVersionForWritableCommandWriteConcern = 5;
 
+    private $driverOptions;
     private $manager;
     private $readConcern;
     private $readPreference;
     private $uri;
+    private $uriOptions;
     private $typeMap;
     private $writeConcern;
 
@@ -80,15 +82,15 @@ class Client
             throw InvalidArgumentException::invalidType('"typeMap" driver option', $driverOptions['typeMap'], 'array');
         }
 
+        $this->uriOptions = $uriOptions;
+        $this->driverOptions = $driverOptions;
+
         $this->uri = (string) $uri;
         $this->typeMap = isset($driverOptions['typeMap']) ? $driverOptions['typeMap'] : null;
 
         unset($driverOptions['typeMap']);
 
-        $this->manager = new Manager($uri, $uriOptions, $driverOptions);
-        $this->readConcern = $this->manager->getReadConcern();
-        $this->readPreference = $this->manager->getReadPreference();
-        $this->writeConcern = $this->manager->getWriteConcern();
+        $this->setManager(new Manager($uri, $uriOptions, $driverOptions));
     }
 
     /**
@@ -305,5 +307,92 @@ class Client
         $operation = new Watch($this->manager, null, null, $pipeline, $options);
 
         return $operation->execute($server);
+    }
+
+    /**
+     * Get a clone of this client with different options.
+     *
+     * It supports changing the following options:
+     *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
+     *    use.
+     *
+     *  * readPreference (MongoDB\Driver\ReadPreference): The default read
+     *    preference to use.
+     *
+     *  * typeMap (array): Default type map for cursors and BSON documents.
+     *
+     *  * writeConcern (MongoDB\Driver\WriteConcern): The default write concern
+     *    to use.
+     *
+     * Changing the readConcern, readPreference, or writeConcern options causes
+     * instantiation of a new manager instance, opening a new connection to the
+     * database.
+     *
+     * @param array $options
+     * @return Client
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     */
+    public function withOptions(array $options = [])
+    {
+        $client = clone $this;
+
+        $uriOptions = [];
+
+        if (isset($options['readConcern'])) {
+            if ( ! $options['readConcern'] instanceof ReadConcern) {
+                throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+            }
+
+            $uriOptions['readConcernLevel'] = $options['readConcern']->getLevel();
+        }
+
+        if (isset($options['readPreference'])) {
+            if ( ! $options['readPreference'] instanceof ReadPreference) {
+                throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            }
+
+            $readPreference = $options['readPreference']->bsonSerialize();
+
+            $uriOptions['readPreference'] = $readPreference->mode;
+            $uriOptions['readPreferenceTags'] = $readPreference->tags;
+        }
+
+        if (isset($options['typeMap'])) {
+            if ( ! is_array($options['typeMap'])) {
+                throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+            }
+
+            $client->typeMap = $options['typeMap'];
+        }
+
+        if (isset($options['writeConcern'])) {
+            if ( ! $options['writeConcern'] instanceof WriteConcern) {
+                throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            }
+
+            $uriOptions['journal'] = $options['writeConcern']->getJournal();
+            $uriOptions['w'] = $options['writeConcern']->getW();
+            $uriOptions['wTimeoutMS'] = $options['writeConcern']->getWtimeout();
+        }
+
+        if ($uriOptions !== []) {
+            $uriOptions += $this->uriOptions;
+
+            $client->setManager(new Manager($this->uri, $uriOptions, $this->driverOptions));
+        }
+
+        return $client;
+    }
+
+    /**
+     * Stores the manager, setting readConcern, readPreference, and writeConcern
+     * after doing so
+     */
+    private function setManager(Manager $manager)
+    {
+        $this->manager = $manager;
+        $this->readConcern = $manager->getReadConcern();
+        $this->readPreference = $manager->getReadPreference();
+        $this->writeConcern = $manager->getWriteConcern();
     }
 }

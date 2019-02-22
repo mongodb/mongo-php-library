@@ -6,6 +6,7 @@ use MongoDB\Collection;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
+use MongoDB\GridFS\Exception\FileNotFoundException;
 use MongoDB\Operation\BulkWrite;
 use DateTime;
 use Exception;
@@ -52,6 +53,15 @@ class SpecFunctionalTest extends FunctionalTestCase
             $result = $this->executeAct($test['act']);
         } catch (Exception $e) {
             $result = $e;
+        }
+
+        /* Per the GridFS spec: "Drivers MAY attempt to delete any orphaned
+         * chunks with files_id equal to id before raising the error." The spec
+         * tests do not expect orphaned chunks to be removed, so we manually
+         * remove those chunks from the expected collection. */
+        if ($test['act']['operation'] === 'delete' && $result instanceof FileNotFoundException) {
+            $filesId = $this->convertTypes($test['act'])['arguments']['id'];
+            $this->expectedChunksCollection->deleteMany(['files_id' => $filesId]);
         }
 
         if (isset($test['assert'])) {

@@ -6,6 +6,7 @@ use MongoDB\Collection;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
+use MongoDB\GridFS\Exception\FileNotFoundException;
 use MongoDB\Operation\BulkWrite;
 use DateTime;
 use Exception;
@@ -54,6 +55,15 @@ class SpecFunctionalTest extends FunctionalTestCase
             $result = $e;
         }
 
+        /* Per the GridFS spec: "Drivers MAY attempt to delete any orphaned
+         * chunks with files_id equal to id before raising the error." The spec
+         * tests do not expect orphaned chunks to be removed, so we manually
+         * remove those chunks from the expected collection. */
+        if ($test['act']['operation'] === 'delete' && $result instanceof FileNotFoundException) {
+            $filesId = $this->convertTypes($test['act'])['arguments']['id'];
+            $this->expectedChunksCollection->deleteMany(['files_id' => $filesId]);
+        }
+
         if (isset($test['assert'])) {
             $this->executeAssert($test['assert'], $result);
         }
@@ -90,7 +100,7 @@ class SpecFunctionalTest extends FunctionalTestCase
      */
     private function assertEquivalentCollections($expectedCollection, $actualCollection, $actualResult)
     {
-        $mi = new MultipleIterator;
+        $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);
         $mi->attachIterator(new IteratorIterator($expectedCollection->find()));
         $mi->attachIterator(new IteratorIterator($actualCollection->find()));
 
@@ -269,6 +279,10 @@ class SpecFunctionalTest extends FunctionalTestCase
      */
     private function executeDataModification(array $dataModification)
     {
+        if (empty($dataModification)) {
+            throw new LogicException('Command for data modification is empty');
+        }
+
         foreach ($dataModification as $type => $collectionName) {
             break;
         }

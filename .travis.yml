@@ -15,7 +15,8 @@ cache:
 env:
   global:
     - DRIVER_VERSION=1.6.0alpha1
-    - SERVER_VERSION=4.0.1
+    - SERVER_DISTRO=ubuntu1604
+    - SERVER_VERSION=4.0.6
     - DEPLOYMENT=STANDALONE
 
 matrix:
@@ -23,25 +24,29 @@ matrix:
   include:
     - php: 5.5
       dist: trusty
+      env:
+        - SERVER_DISTRO=ubuntu1404
     - php: 5.6
     - php: 7.0
     - php: 7.1
     - php: 7.2
     - php: 7.0
+      dist: trusty
       env:
+        - SERVER_DISTRO=ubuntu1404
         - SERVER_VERSION=3.0.15
         - DEPLOYMENT=STANDALONE_OLD
     - php: 7.0
       env:
-        - SERVER_VERSION=3.2.20
+        - SERVER_VERSION=3.2.22
         - DEPLOYMENT=STANDALONE_OLD
     - php: 7.0
       env:
-        - SERVER_VERSION=3.4.15
+        - SERVER_VERSION=3.4.19
         - DEPLOYMENT=STANDALONE_OLD
     - php: 7.0
       env:
-        - SERVER_VERSION=3.6.5
+        - SERVER_VERSION=3.6.10
     - php: 7.2
       env:
         - DEPLOYMENT=STANDALONE_AUTH
@@ -57,9 +62,9 @@ matrix:
 
 before_install:
   - pip install "mongo-orchestration>=0.6.7,<1.0" --user `whoami`
-  - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1404-${SERVER_VERSION}.tgz
-  - tar zxf mongodb-linux-x86_64-ubuntu1404-${SERVER_VERSION}.tgz
-  - export PATH=${PWD}/mongodb-linux-x86_64-ubuntu1404-${SERVER_VERSION}/bin/:${PATH}
+  - export SERVER_FILENAME=mongodb-linux-x86_64-${SERVER_DISTRO}-${SERVER_VERSION}
+  - wget -qO- http://fastdl.mongodb.org/linux/${SERVER_FILENAME}.tgz | tar xz
+  - export PATH=${PWD}/${SERVER_FILENAME}/bin:${PATH}
   - mongod --version
   - mongo-orchestration --version
   - export MO_PATH=`python -c 'import mongo_orchestration; from os import path; print(path.dirname(mongo_orchestration.__file__));'`

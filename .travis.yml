@@ -16,7 +16,7 @@ env:
   global:
     - DRIVER_VERSION=1.6.0alpha1
     - SERVER_DISTRO=ubuntu1604
-    - SERVER_VERSION=4.0.1
+    - SERVER_VERSION=4.0.6
     - DEPLOYMENT=STANDALONE
 
 matrix:
@@ -38,15 +38,15 @@ matrix:
         - DEPLOYMENT=STANDALONE_OLD
     - php: 7.0
       env:
-        - SERVER_VERSION=3.2.20
+        - SERVER_VERSION=3.2.22
         - DEPLOYMENT=STANDALONE_OLD
     - php: 7.0
       env:
-        - SERVER_VERSION=3.4.15
+        - SERVER_VERSION=3.4.19
         - DEPLOYMENT=STANDALONE_OLD
     - php: 7.0
       env:
-        - SERVER_VERSION=3.6.5
+        - SERVER_VERSION=3.6.10
     - php: 7.2
       env:
         - DEPLOYMENT=STANDALONE_AUTH

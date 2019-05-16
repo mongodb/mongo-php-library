@@ -362,8 +362,9 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
      */
     protected function initTestSubjects(array $test)
     {
-        if (isset($test['useMultipleMongoses']) && $this->isShardedCluster()) {
-            throw new LogicException('"useMultipleMongoses" is not supported');
+        // TODO: Revise this once a test environment with multiple mongos nodes is available (see: PHPLIB-430)
+        if (isset($test['useMultipleMongoses']) && $test['useMultipleMongoses'] && $this->isShardedCluster()) {
+            $this->markTestSkipped('"useMultipleMongoses" is not supported');
         }
 
         $clientOptions = isset($test['clientOptions']) ? $test['clientOptions'] : [];

@@ -18,7 +18,7 @@ class ClientFunctionalTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->client = new Client($this->getUri());
+        $this->client = new Client(static::getUri());
         $this->client->dropDatabase($this->getDatabaseName());
     }
 

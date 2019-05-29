@@ -26,7 +26,7 @@ class ClientTest extends TestCase
     public function testConstructorDriverOptionTypeChecks(array $driverOptions)
     {
         $this->expectException(InvalidArgumentException::class);
-        new Client($this->getUri(), [], $driverOptions);
+        new Client(static::getUri(), [], $driverOptions);
     }
 
     public function provideInvalidConstructorDriverOptions()
@@ -42,9 +42,9 @@ class ClientTest extends TestCase
 
     public function testToString()
     {
-        $client = new Client($this->getUri());
+        $client = new Client(static::getUri());
 
-        $this->assertSame($this->getUri(), (string) $client);
+        $this->assertSame(static::getUri(), (string) $client);
     }
 
     public function testSelectCollectionInheritsOptions()
@@ -59,7 +59,7 @@ class ClientTest extends TestCase
             'typeMap' => ['root' => 'array'],
         ];
 
-        $client = new Client($this->getUri(), $uriOptions, $driverOptions);
+        $client = new Client(static::getUri(), $uriOptions, $driverOptions);
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
         $debug = $collection->__debugInfo();
 
@@ -82,7 +82,7 @@ class ClientTest extends TestCase
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];
 
-        $client = new Client($this->getUri());
+        $client = new Client(static::getUri());
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName(), $collectionOptions);
         $debug = $collection->__debugInfo();
 
@@ -100,7 +100,7 @@ class ClientTest extends TestCase
     {
         $uriOptions = ['w' => WriteConcern::MAJORITY];
 
-        $client = new Client($this->getUri(), $uriOptions);
+        $client = new Client(static::getUri(), $uriOptions);
         $database = $client->{$this->getDatabaseName()};
         $debug = $database->__debugInfo();
 
@@ -121,7 +121,7 @@ class ClientTest extends TestCase
             'typeMap' => ['root' => 'array'],
         ];
 
-        $client = new Client($this->getUri(), $uriOptions, $driverOptions);
+        $client = new Client(static::getUri(), $uriOptions, $driverOptions);
         $database = $client->selectDatabase($this->getDatabaseName());
         $debug = $database->__debugInfo();
 
@@ -144,7 +144,7 @@ class ClientTest extends TestCase
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];
 
-        $client = new Client($this->getUri());
+        $client = new Client(static::getUri());
         $database = $client->selectDatabase($this->getDatabaseName(), $databaseOptions);
         $debug = $database->__debugInfo();
 

@@ -2,6 +2,9 @@
 
 namespace MongoDB\Tests\SpecTests;
 
+use LogicException;
+use stdClass;
+
 /**
  * Retryable writes spec tests.
  *
@@ -9,38 +12,47 @@ namespace MongoDB\Tests\SpecTests;
  */
 class RetryableWritesSpecTest extends FunctionalTestCase
 {
+    public function assertSameCommand(stdClass $expectedCommand, stdClass $actualCommand)
+    {
+        throw new LogicException('Retryable writes spec tests do not assert CommandStartedEvents');
+    }
+
     /**
      * Execute an individual test case from the specification.
      *
      * @dataProvider provideTests
-     * @param string $name  Test name
-     * @param array  $test  Individual "tests[]" document
-     * @param array  $runOn Top-level "runOn" document
-     * @param array  $data  Top-level "data" array to initialize collection
+     * @param string   $name  Test name
+     * @param stdClass $test  Individual "tests[]" document
+     * @param array    $runOn Top-level "runOn" array with server requirements
+     * @param array    $data  Top-level "data" array to initialize collection
      */
-    public function testRetryableWrites($name, array $test, array $runOn = null, array $data)
+    public function testRetryableWrites($name, stdClass $test, array $runOn = null, array $data)
     {
         $this->setName($name);
+
+        // TODO: Revise this once a test environment with multiple mongos nodes is available (see: PHPLIB-430)
+        if (isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster()) {
+            $this->markTestSkipped('"useMultipleMongoses" is not supported');
+        }
 
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
         }
 
-        // TODO: Remove this once retryWrites=true by default (see: PHPC-1324)
-        $test['clientOptions']['retryWrites'] = true;
+        $context = Context::fromRetryableWrites($test, $this->getDatabaseName(), $this->getCollectionName());
+        $this->setContext($context);
 
-        $this->initTestSubjects($test);
-        $this->initOutcomeCollection($test);
-        $this->initDataFixtures($data);
+        $this->dropTestAndOutcomeCollections();
+        $this->insertDataFixtures($data);
 
-        if (isset($test['failPoint'])) {
-            $this->configureFailPoint($test['failPoint']);
+        if (isset($test->failPoint)) {
+            $this->configureFailPoint($test->failPoint);
         }
 
-        $this->assertOperation($test['operation'], $test['outcome']);
+        Operation::fromRetryableWrites($test->operation, $test->outcome)->assert($this, $context);
 
-        if (isset($test['outcome']['collection']['data'])) {
-            $this->assertOutcomeCollectionData($test['outcome']['collection']['data']);
+        if (isset($test->outcome->collection->data)) {
+            $this->assertOutcomeCollectionData($test->outcome->collection->data);
         }
     }
 
@@ -49,13 +61,13 @@ class RetryableWritesSpecTest extends FunctionalTestCase
         $testArgs = [];
 
         foreach (glob(__DIR__ . '/retryable-writes/*.json') as $filename) {
-            $json = json_decode(file_get_contents($filename), true);
+            $json = $this->decodeJson(file_get_contents($filename));
             $group = basename($filename, '.json');
-            $runOn = isset($json['runOn']) ? $json['runOn'] : null;
-            $data = isset($json['data']) ? $json['data'] : [];
+            $runOn = isset($json->runOn) ? $json->runOn : null;
+            $data = isset($json->data) ? $json->data : [];
 
-            foreach ($json['tests'] as $test) {
-                $name = $group . ': ' . $test['description'];
+            foreach ($json->tests as $test) {
+                $name = $group . ': ' . $test->description;
                 $testArgs[] = [$name, $test, $runOn, $data];
             }
         }

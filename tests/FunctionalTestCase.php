@@ -17,11 +17,9 @@ use UnexpectedValueException;
 
 abstract class FunctionalTestCase extends TestCase
 {
-    protected $manager;
-
     public function setUp()
     {
-        $this->manager = new Manager($this->getUri());
+        $this->manager = new Manager(static::getUri());
     }
 
     protected function assertCollectionCount($namespace, $count)

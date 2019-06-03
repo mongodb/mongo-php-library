@@ -75,7 +75,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         /* In order to trigger a dropped connection, we'll use a new client with
          * a socket timeout that is less than the change stream's maxAwaitTimeMS
          * option. */
-        $manager = new Manager($this->getUri(), ['socketTimeoutMS' => 50]);
+        $manager = new Manager(static::getUri(), ['socketTimeoutMS' => 50]);
         $primaryServer = $manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         $operation = new Watch($manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
@@ -222,7 +222,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         /* In order to trigger a dropped connection, we'll use a new client with
          * a socket timeout that is less than the change stream's maxAwaitTimeMS
          * option. */
-        $manager = new Manager($this->getUri(), ['socketTimeoutMS' => 50]);
+        $manager = new Manager(static::getUri(), ['socketTimeoutMS' => 50]);
         $primaryServer = $manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         $operation = new Watch($manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);

@@ -1227,7 +1227,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
     {
         $this->skipIfTransactionsAreNotSupported();
 
-        $client = new Client($this->getUri());
+        $client = new Client(static::getUri());
 
         /* The WC is required: https://docs.mongodb.com/manual/core/transactions/#transactions-and-locks */
         $client->hr->dropCollection('employees', ['writeConcern' => new \MongoDB\Driver\WriteConcern('majority')]);
@@ -1387,7 +1387,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
     {
         $this->skipIfTransactionsAreNotSupported();
 
-        $client = new Client($this->getUri());
+        $client = new Client(static::getUri());
 
         /* The WC is required: https://docs.mongodb.com/manual/core/transactions/#transactions-and-locks */
         $client->hr->dropCollection('employees', ['writeConcern' => new \MongoDB\Driver\WriteConcern('majority')]);
@@ -1410,7 +1410,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->skipIfCausalConsistencyIsNotSupported();
 
         // Prep
-        $client = new Client($this->getUri());
+        $client = new Client(static::getUri());
         $items = $client->selectDatabase(
             'test',
             [ 'writeConcern' => new WriteConcern(WriteConcern::MAJORITY) ]

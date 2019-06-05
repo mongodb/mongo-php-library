@@ -57,88 +57,61 @@ class TransactionsSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Kill all sessions on the cluster.
-     *
-     * This will clean up any open transactions that may remain from a
-     * previously failed test. For sharded clusters, this command will be run
-     * on all mongos nodes.
-     */
-    private static function killAllSessions()
-    {
-        $manager = new Manager(static::getUri());
-        $primary = $manager->selectServer(new ReadPreference('primary'));
-
-        $servers = ($primary->getType() === Server::TYPE_MONGOS)
-            ? $manager->getServers()
-            : [$primary];
-
-        foreach ($servers as $server) {
-            try {
-                // Skip servers that do not support sessions
-                if (!isset($server->getInfo()['logicalSessionTimeoutMinutes'])) {
-                    continue;
-                }
-                $server->executeCommand('admin', new Command(['killAllSessions' => []]));
-            } catch (ServerException $e) {
-                // Interrupted error is safe to ignore (see: SERVER-38335)
-                if ($e->getCode() != self::INTERRUPTED) {
-                    throw $e;
-                }
-            }
-        }
-    }
-
-    /**
      * Assert that the expected and actual command documents match.
      *
-     * Note: this method may modify the $expectedCommand object.
+     * Note: this method may modify the $expected object.
      *
-     * @param stdClass $expectedCommand Expected command document
-     * @param stdClass $actualCommand   Actual command document
+     * @param stdClass $expected Expected command document
+     * @param stdClass $actual   Actual command document
      */
-    public function assertSameCommand(stdClass $expectedCommand, stdClass $actualCommand)
+    public static function assertCommandMatches(stdClass $expected, stdClass $actual)
     {
-        if (isset($expectedCommand->getMore) && $expectedCommand->getMore === 42) {
-            $this->assertObjectHasAttribute('getMore', $actualCommand);
-            $this->assertThat($actualCommand->getMore, $this->logicalOr(
-                $this->isInstanceOf(Int64::class),
-                $this->isType('integer')
+        if (isset($expected->getMore) && $expected->getMore === 42) {
+            static::assertObjectHasAttribute('getMore', $actual);
+            static::assertThat($actual->getMore, static::logicalOr(
+                static::isInstanceOf(Int64::class),
+                static::isType('integer')
             ));
-            unset($expectedCommand->getMore);
+            unset($expected->getMore);
         }
 
-        if (isset($expectedCommand->recoveryToken) && $expectedCommand->recoveryToken === 42) {
-            $this->assertObjectHasAttribute('recoveryToken', $actualCommand);
-            $this->assertInternalType('object', $actualCommand->recoveryToken);
-            unset($expectedCommand->recoveryToken);
+        if (isset($expected->recoveryToken) && $expected->recoveryToken === 42) {
+            static::assertObjectHasAttribute('recoveryToken', $actual);
+            static::assertInternalType('object', $actual->recoveryToken);
+            unset($expected->recoveryToken);
         }
 
-        if (isset($expectedCommand->readConcern->afterClusterTime) && $expectedCommand->readConcern->afterClusterTime === 42) {
-            $this->assertObjectHasAttribute('readConcern', $actualCommand);
-            $this->assertInternalType('object', $actualCommand->readConcern);
-            $this->assertObjectHasAttribute('afterClusterTime', $actualCommand->readConcern);
-            $this->assertInstanceOf(Timestamp::class, $actualCommand->readConcern->afterClusterTime);
-            unset($expectedCommand->readConcern->afterClusterTime);
+        if (isset($expected->readConcern->afterClusterTime) && $expected->readConcern->afterClusterTime === 42) {
+            static::assertObjectHasAttribute('readConcern', $actual);
+            static::assertInternalType('object', $actual->readConcern);
+            static::assertObjectHasAttribute('afterClusterTime', $actual->readConcern);
+            static::assertInstanceOf(Timestamp::class, $actual->readConcern->afterClusterTime);
+            unset($expected->readConcern->afterClusterTime);
 
             /* If "afterClusterTime" was the only assertion for "readConcern",
              * unset the field to avoid expecting an empty document later. */
-            if (get_object_vars($expectedCommand->readConcern) === []) {
-                unset($expectedCommand->readConcern);
+            if (get_object_vars($expected->readConcern) === []) {
+                unset($expected->readConcern);
             }
         }
 
         /* TODO: Determine if forcing a new libmongoc client in Context is
          * preferable to skipping the txnNumber assertion. */
-        //unset($expectedCommand['txnNumber']);
+        //unset($expected['txnNumber']);
 
-        foreach ($expectedCommand as $key => $value) {
+        foreach ($expected as $key => $value) {
             if ($value === null) {
-                $this->assertObjectNotHasAttribute($key, $actualCommand);
-                unset($expectedCommand->{$key});
+                static::assertObjectNotHasAttribute($key, $actual);
+                unset($expected->{$key});
             }
         }
 
-        $this->assertMatchesDocument($expectedCommand, $actualCommand);
+        static::assertDocumentsMatch($expected, $actual);
+    }
+
+    public static function assertCommandReplyMatches(stdClass $expected, stdClass $actual)
+    {
+        throw new LogicException('Transactions spec tests do not assert CommandSucceededEvents');
     }
 
     /**
@@ -240,6 +213,38 @@ class TransactionsSpecTest extends FunctionalTestCase
 
         $database = $context->getDatabase();
         $database->createCollection($context->collectionName, $context->defaultWriteOptions);
+    }
+
+    /**
+     * Kill all sessions on the cluster.
+     *
+     * This will clean up any open transactions that may remain from a
+     * previously failed test. For sharded clusters, this command will be run
+     * on all mongos nodes.
+     */
+    private static function killAllSessions()
+    {
+        $manager = new Manager(static::getUri());
+        $primary = $manager->selectServer(new ReadPreference('primary'));
+
+        $servers = ($primary->getType() === Server::TYPE_MONGOS)
+            ? $manager->getServers()
+            : [$primary];
+
+        foreach ($servers as $server) {
+            try {
+                // Skip servers that do not support sessions
+                if (!isset($server->getInfo()['logicalSessionTimeoutMinutes'])) {
+                    continue;
+                }
+                $server->executeCommand('admin', new Command(['killAllSessions' => []]));
+            } catch (ServerException $e) {
+                // Interrupted error is safe to ignore (see: SERVER-38335)
+                if ($e->getCode() != self::INTERRUPTED) {
+                    throw $e;
+                }
+            }
+        }
     }
 
     /**

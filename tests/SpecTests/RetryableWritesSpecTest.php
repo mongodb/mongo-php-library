@@ -12,9 +12,14 @@ use stdClass;
  */
 class RetryableWritesSpecTest extends FunctionalTestCase
 {
-    public function assertSameCommand(stdClass $expectedCommand, stdClass $actualCommand)
+    public static function assertCommandMatches(stdClass $expected, stdClass $actual)
     {
         throw new LogicException('Retryable writes spec tests do not assert CommandStartedEvents');
+    }
+
+    public static function assertCommandReplyMatches(stdClass $expected, stdClass $actual)
+    {
+        throw new LogicException('Retryable writes spec tests do not assert CommandSucceededEvents');
     }
 
     /**

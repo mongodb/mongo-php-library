@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\SpecTests;
 
-use MongoDB\BSON\Timestamp;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
@@ -17,20 +16,45 @@ use stdClass;
  */
 class CommandExpectations implements CommandSubscriber
 {
-    private $commandStartedEvents = [];
-    private $expectedCommandStartedEvents = [];
+    private $actualEvents = [];
+    private $expectedEvents = [];
+    private $ignoreCommandFailed = false;
+    private $ignoreCommandStarted = false;
+    private $ignoreCommandSucceeded = false;
+
+    private function __construct(array $events)
+    {
+        foreach ($events as $event) {
+            switch (key($event)) {
+                case 'command_failed_event':
+                    $this->expectedEvents[] = [$event->command_failed_event, CommandFailedEvent::class];
+                    break;
+
+                case 'command_started_event':
+                    $this->expectedEvents[] = [$event->command_started_event, CommandStartedEvent::class];
+                    break;
+
+                case 'command_succeeded_event':
+                    $this->expectedEvents[] = [$event->command_succeeded_event, CommandSucceededEvent::class];
+                    break;
+
+                default:
+                    throw new LogicException('Unsupported event type: ' . key($event));
+            }
+        }
+    }
+
+    public static function fromCommandMonitoring(array $expectedEvents)
+    {
+        return new self($expectedEvents);
+    }
 
     public static function fromTransactions(array $expectedEvents)
     {
-        $o = new self;
+        $o = new self($expectedEvents);
 
-        foreach ($expectedEvents as $expectedEvent) {
-            if (!isset($expectedEvent->command_started_event)) {
-                throw new LogicException('$expectedEvent->command_started_event field is not set');
-            }
-
-            $o->expectedCommandStartedEvents[] = $expectedEvent->command_started_event;
-        }
+        $o->ignoreCommandFailed = true;
+        $o->ignoreCommandSucceeded = true;
 
         return $o;
     }
@@ -42,6 +66,11 @@ class CommandExpectations implements CommandSubscriber
      */
     public function commandFailed(CommandFailedEvent $event)
     {
+        if ($this->ignoreCommandFailed) {
+            return;
+        }
+
+        $this->actualEvents[] = $event;
     }
 
     /**
@@ -51,7 +80,11 @@ class CommandExpectations implements CommandSubscriber
      */
     public function commandStarted(CommandStartedEvent $event)
     {
-        $this->commandStartedEvents[] = $event;
+        if ($this->ignoreCommandStarted) {
+            return;
+        }
+
+        $this->actualEvents[] = $event;
     }
 
     /**
@@ -61,6 +94,11 @@ class CommandExpectations implements CommandSubscriber
      */
     public function commandSucceeded(CommandSucceededEvent $event)
     {
+        if ($this->ignoreCommandSucceeded) {
+            return;
+        }
+
+        $this->actualEvents[] = $event;
     }
 
     /**
@@ -87,16 +125,17 @@ class CommandExpectations implements CommandSubscriber
      */
     public function assert(FunctionalTestCase $test, Context $context)
     {
-        $test->assertCount(count($this->expectedCommandStartedEvents), $this->commandStartedEvents);
+        $test->assertCount(count($this->expectedEvents), $this->actualEvents);
 
         $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);
-        $mi->attachIterator(new ArrayIterator($this->expectedCommandStartedEvents));
-        $mi->attachIterator(new ArrayIterator($this->commandStartedEvents));
+        $mi->attachIterator(new ArrayIterator($this->expectedEvents));
+        $mi->attachIterator(new ArrayIterator($this->actualEvents));
 
         foreach ($mi as $events) {
-            list($expectedEvent, $actualEvent) = $events;
-            $test->assertInternalType('object', $expectedEvent);
-            $test->assertInstanceOf(CommandStartedEvent::class, $actualEvent);
+            list($expectedEventAndClass, $actualEvent) = $events;
+            list($expectedEvent, $expectedClass) = $expectedEventAndClass;
+
+            $test->assertInstanceOf($expectedClass, $actualEvent);
 
             if (isset($expectedEvent->command_name)) {
                 $test->assertSame($expectedEvent->command_name, $actualEvent->getCommandName());
@@ -107,14 +146,16 @@ class CommandExpectations implements CommandSubscriber
             }
 
             if (isset($expectedEvent->command)) {
+                $test->assertInstanceOf(CommandStartedEvent::class, $actualEvent);
                 $expectedCommand = $expectedEvent->command;
                 $context->replaceCommandSessionPlaceholder($expectedCommand);
-                $test->assertSameCommand($expectedCommand, $actualEvent->getCommand());
+                $test->assertCommandMatches($expectedCommand, $actualEvent->getCommand());
+            }
+
+            if (isset($expectedEvent->reply)) {
+                $test->assertInstanceOf(CommandSucceededEvent::class, $actualEvent);
+                $test->assertCommandReplyMatches($expectedEvent->reply, $actualEvent->getReply());
             }
         }
-    }
-
-    private function __construct()
-    {
     }
 }

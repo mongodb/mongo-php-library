@@ -21,6 +21,7 @@ class CommandExpectations implements CommandSubscriber
     private $ignoreCommandFailed = false;
     private $ignoreCommandStarted = false;
     private $ignoreCommandSucceeded = false;
+    private $ignoreExtraEvents = false;
 
     private function __construct(array $events)
     {
@@ -42,6 +43,20 @@ class CommandExpectations implements CommandSubscriber
                     throw new LogicException('Unsupported event type: ' . key($event));
             }
         }
+    }
+
+    public static function fromChangeStreams(array $expectedEvents)
+    {
+        $o = new self($expectedEvents);
+
+        $o->ignoreCommandFailed = true;
+        $o->ignoreCommandSucceeded = true;
+        /* Change Streams spec tests do not include getMore commands in the
+         * list of expected events, so ignore any observed events beyond the
+         * number that are expected. */
+        $o->ignoreExtraEvents = true;;
+
+        return $o;
     }
 
     public static function fromCommandMonitoring(array $expectedEvents)
@@ -125,11 +140,15 @@ class CommandExpectations implements CommandSubscriber
      */
     public function assert(FunctionalTestCase $test, Context $context)
     {
-        $test->assertCount(count($this->expectedEvents), $this->actualEvents);
+        $actualEvents = $this->ignoreExtraEvents
+            ? array_slice($this->actualEvents, 0, count($this->expectedEvents))
+            : $this->actualEvents;
+
+        $test->assertCount(count($this->expectedEvents), $actualEvents);
 
         $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);
         $mi->attachIterator(new ArrayIterator($this->expectedEvents));
-        $mi->attachIterator(new ArrayIterator($this->actualEvents));
+        $mi->attachIterator(new ArrayIterator($actualEvents));
 
         foreach ($mi as $events) {
             list($expectedEventAndClass, $actualEvent) = $events;

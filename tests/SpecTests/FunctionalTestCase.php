@@ -60,7 +60,34 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
      * @param stdClass $expectedCommand Expected command document
      * @param stdClass $actualCommand   Actual command document
      */
-    abstract public function assertSameCommand(stdClass $expectedCommand, stdClass $actualCommand);
+    abstract public static function assertCommandMatches(stdClass $expected, stdClass $actual);
+
+    /**
+     * Assert that the expected and actual command reply documents match.
+     *
+     * Note: Spec tests that do not assert command started events may throw an
+     * exception in lieu of implementing this method.
+     *
+     * @param stdClass $expected Expected command reply document
+     * @param stdClass $actual   Actual command reply document
+     */
+    abstract public static function assertCommandReplyMatches(stdClass $expected, stdClass $actual);
+
+    /**
+     * Asserts that two given documents match.
+     *
+     * Extra keys in the actual value's document(s) will be ignored.
+     *
+     * @param array|object $expectedDocument
+     * @param array|object $actualDocument
+     * @param string       $message
+     */
+    protected static function assertDocumentsMatch($expectedDocument, $actualDocument, $message = '')
+    {
+        $constraint = new DocumentsMatchConstraint($expectedDocument, true, true);
+
+        static::assertThat($actualDocument, $constraint, $message);
+    }
 
     /**
      * Assert data within the outcome collection.

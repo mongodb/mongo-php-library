@@ -35,6 +35,15 @@ final class Context
         $this->outcomeCollectionName = $collectionName;
     }
 
+    public static function fromCommandMonitoring(stdClass $test, $databaseName, $collectionName)
+    {
+        $o = new self($databaseName, $collectionName);
+
+        $o->client = new Client(FunctionalTestCase::getUri());
+
+        return $o;
+    }
+
     public static function fromRetryableWrites(stdClass $test, $databaseName, $collectionName)
     {
         $o = new self($databaseName, $collectionName);

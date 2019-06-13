@@ -3,11 +3,12 @@
 namespace MongoDB\Tests\SpecTests;
 
 use MongoDB\Collection;
-use MongoDB\Operation\FindOneAndReplace;
-use MongoDB\Operation\FindOneAndUpdate;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\Exception;
+use MongoDB\Operation\FindOneAndReplace;
+use MongoDB\Operation\FindOneAndUpdate;
 use LogicException;
 use stdClass;
 
@@ -41,6 +42,17 @@ final class Operation
         if (isset($operation->object)) {
             $this->object = $operation->object;
         }
+    }
+
+    public static function fromCommandMonitoring(stdClass $operation)
+    {
+        $o = new self($operation);
+
+        if (isset($operation->collectionOptions)) {
+            $o->collectionOptions = (array) $operation->collectionOptions;
+        }
+
+        return $o;
     }
 
     public static function fromRetryableWrites(stdClass $operation, stdClass $outcome)
@@ -84,6 +96,14 @@ final class Operation
 
         try {
             $result = $this->execute($context);
+
+            /* Eagerly iterate the results of a cursor. This both allows an
+             * exception to be thrown sooner and ensures that any expected
+             * getMore command(s) can be observed even if a ResultExpectation
+             * is not used (e.g. Command Monitoring spec). */
+            if ($result instanceof Cursor) {
+                $result = $result->toArray();
+            }
         } catch (Exception $e) {
             $exception = $e;
         }
@@ -93,8 +113,13 @@ final class Operation
             $result = $exception->getWriteResult();
         }
 
-        $this->errorExpectation->assert($test, $exception);
-        $this->resultExpectation->assert($test, $result);
+        if (isset($this->errorExpectation)) {
+            $this->errorExpectation->assert($test, $exception);
+        }
+
+        if (isset($this->resultExpectation)) {
+            $this->resultExpectation->assert($test, $result);
+        }
     }
 
     /**

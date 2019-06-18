@@ -120,9 +120,7 @@ class ChangeStream implements Iterator
                 $this->resumeCallable = null;
             }
         } catch (RuntimeException $e) {
-            if ($this->isResumableError($e)) {
-                $this->resume();
-            }
+            $this->resumeOrThrow($e);
         }
     }
 
@@ -144,9 +142,7 @@ class ChangeStream implements Iterator
                 $this->resumeCallable = null;
             }
         } catch (RuntimeException $e) {
-            if ($this->isResumableError($e)) {
-                $this->resume();
-            }
+            $this->resumeOrThrow($e);
         }
     }
 
@@ -226,5 +222,21 @@ class ChangeStream implements Iterator
         $newChangeStream = call_user_func($this->resumeCallable, $this->resumeToken);
         $this->csIt = $newChangeStream->csIt;
         $this->csIt->rewind();
+    }
+
+    /**
+     * Either resumes after a resumable error or re-throws the exception.
+     *
+     * @param RuntimeException $exception
+     * @throws RuntimeException
+     */
+    private function resumeOrThrow(RuntimeException $exception)
+    {
+        if ($this->isResumableError($exception)) {
+            $this->resume();
+            return;
+        }
+
+        throw $exception;
     }
 }

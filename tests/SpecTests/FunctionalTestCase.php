@@ -147,11 +147,19 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      * The fail point will automatically be disabled during tearDown() to avoid
      * affecting a subsequent test.
      *
-     * @param stdClass $command configureFailPoint command document
+     * @param array|stdClass $command configureFailPoint command document
      * @throws InvalidArgumentException if $command is not a configureFailPoint command
      */
-    protected function configureFailPoint(stdClass $command)
+    protected function configureFailPoint($command)
     {
+        if (is_array($command)) {
+            $command = (object) $command;
+        }
+
+        if ( ! $command instanceof stdClass) {
+            throw new InvalidArgumentException('$command is not an array or stdClass instance');
+        }
+
         if (key($command) !== 'configureFailPoint') {
             throw new InvalidArgumentException('$command is not a configureFailPoint command');
         }

@@ -19,6 +19,7 @@ class DocumentsMatchConstraint extends Constraint
 {
     private $ignoreExtraKeysInRoot = false;
     private $ignoreExtraKeysInEmbedded = false;
+    private $placeholders = [];
     /* TODO: This is not currently used, but was preserved from the design of
      * TestCase::assertMatchesDocument(), which would sort keys and then compare
      * documents as JSON strings. If the TODO item in matches() is implemented
@@ -33,14 +34,15 @@ class DocumentsMatchConstraint extends Constraint
      * @param array|object $value
      * @param boolean      $ignoreExtraKeysInRoot     If true, ignore extra keys within the root document
      * @param boolean      $ignoreExtraKeysInEmbedded If true, ignore extra keys within embedded documents
-     * 
+     * @param array        $placeholders              Placeholders for any value
      */
-    public function __construct($value, $ignoreExtraKeysInRoot = false, $ignoreExtraKeysInEmbedded = false)
+    public function __construct($value, $ignoreExtraKeysInRoot = false, $ignoreExtraKeysInEmbedded = false, array $placeholders = [])
     {
         parent::__construct();
         $this->value = $this->prepareBSON($value, true, $this->sortKeys);
         $this->ignoreExtraKeysInRoot = $ignoreExtraKeysInRoot;
         $this->ignoreExtraKeysInEmbedded = $ignoreExtraKeysInEmbedded;
+        $this->placeholders = $placeholders;
     }
 
     /**
@@ -99,6 +101,10 @@ class DocumentsMatchConstraint extends Constraint
 
             if (!$actualHasKey) {
                 throw new RuntimeException('$actual is missing key: ' . $key);
+            }
+
+            if (in_array($expectedValue, $this->placeholders, true)) {
+                continue;
             }
 
             $actualValue = $actual[$key];

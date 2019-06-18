@@ -26,7 +26,7 @@ use UnexpectedValueException;
  *
  * @see https://github.com/mongodb/specifications
  */
-abstract class FunctionalTestCase extends BaseFunctionalTestCase
+class FunctionalTestCase extends BaseFunctionalTestCase
 {
     const TOPOLOGY_SINGLE = 'single';
     const TOPOLOGY_REPLICASET = 'replicaset';
@@ -60,7 +60,10 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
      * @param stdClass $expectedCommand Expected command document
      * @param stdClass $actualCommand   Actual command document
      */
-    abstract public static function assertCommandMatches(stdClass $expected, stdClass $actual);
+    public static function assertCommandMatches(stdClass $expected, stdClass $actual)
+    {
+        throw new LogicException(sprintf('%s does not assert CommandStartedEvents', get_called_class()));
+    }
 
     /**
      * Assert that the expected and actual command reply documents match.
@@ -71,7 +74,10 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
      * @param stdClass $expected Expected command reply document
      * @param stdClass $actual   Actual command reply document
      */
-    abstract public static function assertCommandReplyMatches(stdClass $expected, stdClass $actual);
+    public static function assertCommandReplyMatches(stdClass $expected, stdClass $actual)
+    {
+        throw new LogicException(sprintf('%s does not assert CommandSucceededEvents', get_called_class()));
+    }
 
     /**
      * Asserts that two given documents match.

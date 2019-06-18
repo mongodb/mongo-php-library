@@ -109,11 +109,6 @@ class TransactionsSpecTest extends FunctionalTestCase
         static::assertDocumentsMatch($expected, $actual);
     }
 
-    public static function assertCommandReplyMatches(stdClass $expected, stdClass $actual)
-    {
-        throw new LogicException('Transactions spec tests do not assert CommandSucceededEvents');
-    }
-
     /**
      * Execute an individual test case from the specification.
      *

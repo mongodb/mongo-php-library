@@ -29,9 +29,11 @@ final class ResultExpectation
     const ASSERT_SAME_DOCUMENTS = 8;
     const ASSERT_MATCHES_DOCUMENT = 9;
     const ASSERT_NULL = 10;
+    const ASSERT_CALLABLE = 11;
 
     private $assertionType = self::ASSERT_NOTHING;
     private $expectedValue;
+    private $assertionCallable;
 
     private function __construct($assertionType, $expectedValue)
     {
@@ -55,6 +57,19 @@ final class ResultExpectation
 
         $this->assertionType = $assertionType;
         $this->expectedValue = $expectedValue;
+    }
+
+    public static function fromChangeStreams(stdClass $result, callable $assertionCallable)
+    {
+        if (!property_exists($result, 'success')) {
+            return new self(self::ASSERT_NOTHING, null);
+        }
+
+        $o = new self(self::ASSERT_CALLABLE, $result->success);
+
+        $o->assertionCallable = $assertionCallable;
+
+        return $o;
     }
 
     public static function fromRetryableWrites(stdClass $outcome, $defaultAssertionType)
@@ -136,6 +151,10 @@ final class ResultExpectation
                 if (isset($expected->upsertedIds)) {
                     $test->assertSameDocument($expected->upsertedIds, $actual->getUpsertedIds());
                 }
+                break;
+
+            case self::ASSERT_CALLABLE:
+                call_user_func($this->assertionCallable, $expected, $actual);
                 break;
 
             case self::ASSERT_DELETE:

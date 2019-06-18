@@ -35,6 +35,15 @@ final class Context
         $this->outcomeCollectionName = $collectionName;
     }
 
+    public static function fromChangeStreams(stdClass $test, $databaseName, $collectionName)
+    {
+        $o = new self($databaseName, $collectionName);
+
+        $o->client = new Client(FunctionalTestCase::getUri());
+
+        return $o;
+    }
+
     public static function fromCommandMonitoring(stdClass $test, $databaseName, $collectionName)
     {
         $o = new self($databaseName, $collectionName);
@@ -98,7 +107,7 @@ final class Context
 
     public function getCollection(array $collectionOptions = [])
     {
-        return $this->client->selectCollection(
+        return $this->selectCollection(
             $this->databaseName,
             $this->collectionName,
             $this->prepareOptions($collectionOptions)
@@ -107,10 +116,7 @@ final class Context
 
     public function getDatabase(array $databaseOptions = [])
     {
-        return $this->client->selectDatabase(
-            $this->databaseName,
-            $this->prepareOptions($databaseOptions)
-        );
+        return $this->selectDatabase($this->databaseName, $databaseOptions);
     }
 
     /**
@@ -219,6 +225,23 @@ final class Context
             default:
                 throw new LogicException('Unsupported session placeholder: ' . $command->lsid);
         }
+    }
+
+    public function selectCollection($databaseName, $collectionName, array $collectionOptions = [])
+    {
+        return $this->client->selectCollection(
+            $databaseName,
+            $collectionName,
+            $this->prepareOptions($collectionOptions)
+        );
+    }
+
+    public function selectDatabase($databaseName, array $databaseOptions = [])
+    {
+        return $this->client->selectDatabase(
+            $databaseName,
+            $this->prepareOptions($databaseOptions)
+        );
     }
 
     private function prepareSessionOptions(array $options)

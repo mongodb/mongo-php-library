@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\SpecTests;
 
 use MongoDB\Collection;
+use MongoDB\Database;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\Exception\BulkWriteException;
@@ -19,6 +20,8 @@ final class Operation
 {
     const OBJECT_COLLECTION = 'collection';
     const OBJECT_DATABASE = 'database';
+    const OBJECT_SELECT_COLLECTION = 'selectCollection';
+    const OBJECT_SELECT_DATABASE = 'selectDatabase';
     const OBJECT_SESSION0 = 'session0';
     const OBJECT_SESSION1 = 'session1';
 
@@ -26,7 +29,9 @@ final class Operation
     public $resultExpectation;
 
     private $arguments = [];
+    private $collectionName;
     private $collectionOptions = [];
+    private $databaseName;
     private $databaseOptions = [];
     private $name;
     private $object = self::OBJECT_COLLECTION;
@@ -44,6 +49,35 @@ final class Operation
         }
     }
 
+    public static function fromChangeStreams(stdClass $operation)
+    {
+        $o = new self($operation);
+
+        // Expect all operations to succeed
+        $o->errorExpectation = ErrorExpectation::noError();
+
+        /* The Change Streams spec tests include a unique "rename" operation,
+         * which we should convert to a renameCollection command to be run
+         * against the admin database. */
+        if ($operation->name === 'rename') {
+            $o->object = self::OBJECT_SELECT_DATABASE;
+            $o->databaseName = 'admin';
+            $o->name = 'runCommand';
+            $o->arguments = ['command' => [
+                'renameCollection' => $operation->database . '.' . $operation->collection,
+                'to' => $operation->database . '.' . $operation->arguments->to,
+            ]];
+
+            return $o;
+        }
+
+        $o->databaseName = $operation->database;
+        $o->collectionName = $operation->collection;
+        $o->object = self::OBJECT_SELECT_COLLECTION;
+
+        return $o;
+    }
+
     public static function fromCommandMonitoring(stdClass $operation)
     {
         $o = new self($operation);
@@ -51,6 +85,9 @@ final class Operation
         if (isset($operation->collectionOptions)) {
             $o->collectionOptions = (array) $operation->collectionOptions;
         }
+
+        /* We purposefully avoid setting a default error expectation, because
+         * some tests may trigger a write or command error. */
 
         return $o;
     }
@@ -134,16 +171,26 @@ final class Operation
     {
         switch ($this->object) {
             case self::OBJECT_COLLECTION:
-                return $this->executeForCollection($context);
+                $collection = $context->getCollection($this->collectionOptions);
+                return $this->executeForCollection($collection, $context);
 
             case self::OBJECT_DATABASE:
-                return $this->executeForDatabase($context);
+                $database = $context->getDatabase($this->databaseOptions);
+                return $this->executeForDatabase($database, $context);
+
+            case self::OBJECT_SELECT_COLLECTION:
+                $collection = $context->selectCollection($this->databaseName, $this->collectionName, $this->collectionOptions);
+                return $this->executeForCollection($collection, $context);
+
+            case self::OBJECT_SELECT_DATABASE:
+                $database = $context->selectDatabase($this->databaseName, $this->databaseOptions);
+                return $this->executeForDatabase($database, $context);
 
             case self::OBJECT_SESSION0:
-                return $this->executeForSession($context);
+                return $this->executeForSession($context->session0, $context);
 
             case self::OBJECT_SESSION1:
-                return $this->executeForSession($context);
+                return $this->executeForSession($context->session1, $context);
 
             default:
                 throw new LogicException('Unsupported object: ' . $this->object);
@@ -153,13 +200,13 @@ final class Operation
     /**
      * Executes the collection operation and return its result.
      *
-     * @param Context $context Execution context
+     * @param Collection $collection
+     * @param Context    $context    Execution context
      * @return mixed
      * @throws LogicException if the collection operation is unsupported
      */
-    private function executeForCollection(Context $context)
+    private function executeForCollection(Collection $collection, Context $context)
     {
-        $collection = $context->getCollection($this->collectionOptions);
         $args = $context->prepareOptions($this->arguments);
         $context->replaceArgumentSessionPlaceholder($args);
 
@@ -206,6 +253,9 @@ final class Operation
                     isset($args['filter']) ? $args['filter'] : [],
                     array_diff_key($args, ['fieldName' => 1, 'filter' => 1])
                 );
+
+            case 'drop':
+                return $collection->drop($args);
 
             case 'findOneAndReplace':
                 if (isset($args['returnDocument'])) {
@@ -262,13 +312,13 @@ final class Operation
     /**
      * Executes the database operation and return its result.
      *
-     * @param Context $context Execution context
+     * @param Database $database
+     * @param Context  $context  Execution context
      * @return mixed
      * @throws LogicException if the database operation is unsupported
      */
-    private function executeForDatabase(Context $context)
+    private function executeForDatabase(Database $database, Context $context)
     {
-        $database = $context->getDatabase($this->databaseOptions);
         $args = $context->prepareOptions($this->arguments);
         $context->replaceArgumentSessionPlaceholder($args);
 
@@ -287,14 +337,13 @@ final class Operation
     /**
      * Executes the session operation and return its result.
      *
+     * @param Session $session
      * @param Context $context Execution context
      * @return mixed
      * @throws LogicException if the session operation is unsupported
      */
-    private function executeForSession(Context $context)
+    private function executeForSession(Session $session, Context $context)
     {
-        $session = $context->{$this->object};
-
         switch ($this->name) {
             case 'abortTransaction':
                 return $session->abortTransaction();
@@ -361,6 +410,9 @@ final class Operation
             case 'deleteMany':
             case 'deleteOne':
                 return ResultExpectation::ASSERT_DELETE;
+
+            case 'drop':
+                return ResultExpectation::ASSERT_NOTHING;
 
             case 'findOneAndDelete':
             case 'findOneAndReplace':

@@ -96,33 +96,6 @@ abstract class TestCase extends BaseTestCase
         );
     }
 
-    public function expectException($exception)
-    {
-        if (method_exists(BaseTestCase::class, 'expectException')) {
-            parent::expectException($exception);
-            return;
-        }
-        parent::setExpectedException($exception);
-    }
-
-   public function expectExceptionMessage($exceptionMessage)
-    {
-        if (method_exists(BaseTestCase::class, 'expectExceptionMessage')) {
-            parent::expectExceptionMessage($exceptionMessage);
-            return;
-        }
-        parent::setExpectedException($this->getExpectedException(), $exceptionMessage);
-    }
-
-    public function expectExceptionMessageRegExp($exceptionMessageRegExp)
-    {
-        if (method_exists(BaseTestCase::class, 'expectExceptionMessageRegExp')) {
-            parent::expectExceptionMessageRegExp($exceptionMessageRegExp);
-            return;
-        }
-        parent::setExpectedExceptionRegExp($this->getExpectedException(), $exceptionMessageRegExp);
-    }
-
     public function provideInvalidArrayValues()
     {
         return $this->wrapValuesForDataProvider($this->getInvalidArrayValues());

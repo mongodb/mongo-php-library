@@ -138,7 +138,7 @@ class ChangeStream implements Iterator
     /**
      * Extracts the resume token (i.e. "_id" field) from the change document.
      *
-     * @param array|document $document Change document
+     * @param array|object $document Change document
      * @return mixed
      * @throws InvalidArgumentException
      * @throws ResumeTokenException if the resume token is not found or invalid

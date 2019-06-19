@@ -398,6 +398,10 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testNextResumeTokenNotFound()
     {
+        if (version_compare($this->getServerVersion(), '4.1.8', '>=')) {
+            $this->markTestSkipped('Server rejects change streams that modify resume token (SERVER-37786)');
+        }
+
         $pipeline =  [['$project' => ['_id' => 0 ]]];
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
@@ -414,6 +418,10 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testRewindResumeTokenNotFound()
     {
+        if (version_compare($this->getServerVersion(), '4.1.8', '>=')) {
+            $this->markTestSkipped('Server rejects change streams that modify resume token (SERVER-37786)');
+        }
+
         $pipeline =  [['$project' => ['_id' => 0 ]]];
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
@@ -428,6 +436,10 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testNextResumeTokenInvalidType()
     {
+        if (version_compare($this->getServerVersion(), '4.1.8', '>=')) {
+            $this->markTestSkipped('Server rejects change streams that modify resume token (SERVER-37786)');
+        }
+
         $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
@@ -444,6 +456,10 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testRewindResumeTokenInvalidType()
     {
+        if (version_compare($this->getServerVersion(), '4.1.8', '>=')) {
+            $this->markTestSkipped('Server rejects change streams that modify resume token (SERVER-37786)');
+        }
+
         $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
@@ -628,6 +644,10 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testResumeTokenNotFoundAdvancesKey()
     {
+        if (version_compare($this->getServerVersion(), '4.1.8', '>=')) {
+            $this->markTestSkipped('Server rejects change streams that modify resume token (SERVER-37786)');
+        }
+
         $pipeline =  [['$project' => ['_id' => 0 ]]];
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);

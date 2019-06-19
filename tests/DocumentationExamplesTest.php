@@ -1004,7 +1004,10 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertMatchesDocument($expectedChange, $firstChange);
 
         // Start Changestream Example 4
-        $pipeline = [['$match' => ['$or' => [['fullDocument.username' => 'alice'], ['operationType' => 'delete']]]]];
+        $pipeline = [
+            ['$match' => ['fullDocument.username' => 'alice']],
+            ['$addFields' => ['newField' => 'this is an added field!']],
+        ];
         $changeStream = $db->inventory->watch($pipeline);
         $changeStream->rewind();
 

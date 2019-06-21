@@ -18,6 +18,12 @@ use stdClass;
  */
 class ChangeStreamsSpecTest extends FunctionalTestCase
 {
+    /* These should all pass before the driver can be considered compatible with
+     * MongoDB 4.2. */
+    private static $incompleteTests = [
+        'change-streams: Test consecutive resume' => 'PHPLIB-442, PHPLIB-416',
+    ];
+
     /**
      * Assert that the expected and actual command documents match.
      *
@@ -68,6 +74,10 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
     public function testChangeStreams($name, stdClass $test, $databaseName = null, $collectionName = null, $database2Name = null, $collection2Name = null)
     {
         $this->setName($name);
+
+        if (isset(self::$incompleteTests[$name])) {
+            $this->markTestIncomplete(self::$incompleteTests[$name]);
+        }
 
         $this->checkServerRequirements($this->createRunOn($test));
 

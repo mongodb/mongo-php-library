@@ -706,7 +706,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $changeStream->key());
     }
 
-    public function testResumeTokenNotFoundAdvancesKey()
+    public function testResumeTokenNotFoundDoesNotAdvanceKey()
     {
         if (version_compare($this->getServerVersion(), '4.1.8', '>=')) {
             $this->markTestSkipped('Server rejects change streams that modify resume token (SERVER-37786)');
@@ -717,8 +717,6 @@ class WatchFunctionalTest extends FunctionalTestCase
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
-        /* Note: we intentionally do not start iteration with rewind() to ensure
-         * that we test extraction functionality within next(). */
         $this->insertDocument(['x' => 1]);
         $this->insertDocument(['x' => 2]);
         $this->insertDocument(['x' => 3]);
@@ -735,14 +733,14 @@ class WatchFunctionalTest extends FunctionalTestCase
             $this->fail('ResumeTokenException was not thrown');
         } catch (ResumeTokenException $e) {}
 
-        $this->assertSame(1, $changeStream->key());
+        $this->assertSame(0, $changeStream->key());
 
         try {
             $changeStream->next();
             $this->fail('ResumeTokenException was not thrown');
         } catch (ResumeTokenException $e) {}
 
-        $this->assertSame(2, $changeStream->key());
+        $this->assertSame(0, $changeStream->key());
     }
 
     public function testSessionPersistsAfterResume()

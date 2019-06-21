@@ -212,6 +212,8 @@ class ChangeStream implements Iterator
             return;
         }
 
+        $this->resumeToken = $this->extractResumeToken($this->csIt->current());
+
         /* Increment the key if the iteration event was a call to next() and we
          * have already advanced past the first result. */
         if ($isNext && $this->hasAdvanced) {
@@ -219,7 +221,6 @@ class ChangeStream implements Iterator
         }
 
         $this->hasAdvanced = true;
-        $this->resumeToken = $this->extractResumeToken($this->csIt->current());
     }
 
     /**

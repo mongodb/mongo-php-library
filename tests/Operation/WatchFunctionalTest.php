@@ -8,6 +8,7 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
+use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
@@ -223,6 +224,62 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertObjectHasAttribute('$changeStream', $command->pipeline[0]);
         $this->assertObjectHasAttribute('startAtOperationTime', $command->pipeline[0]->{'$changeStream'});
         $this->assertEquals($expectedOperationTime, $command->pipeline[0]->{'$changeStream'}->startAtOperationTime);
+    }
+
+    public function testRewindMultipleTimesWithResults()
+    {
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $this->insertDocument(['x' => 1]);
+        $this->insertDocument(['x' => 2]);
+
+        $changeStream->rewind();
+        $this->assertTrue($changeStream->valid());
+        $this->assertSame(0, $changeStream->key());
+        $this->assertNotNull($changeStream->current());
+
+        // Subsequent rewind does not change iterator state
+        $changeStream->rewind();
+        $this->assertTrue($changeStream->valid());
+        $this->assertSame(0, $changeStream->key());
+        $this->assertNotNull($changeStream->current());
+
+        $changeStream->next();
+
+        $this->assertTrue($changeStream->valid());
+        $this->assertSame(1, $changeStream->key());
+        $this->assertNotNull($changeStream->current());
+
+        // Rewinding after advancing the iterator is an error
+        $this->expectException(LogicException::class);
+        $changeStream->rewind();
+    }
+
+    public function testRewindMultipleTimesWithNoResults()
+    {
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $changeStream->rewind();
+        $this->assertFalse($changeStream->valid());
+        $this->assertNull($changeStream->key());
+        $this->assertNull($changeStream->current());
+
+        // Subsequent rewind does not change iterator state
+        $changeStream->rewind();
+        $this->assertFalse($changeStream->valid());
+        $this->assertNull($changeStream->key());
+        $this->assertNull($changeStream->current());
+
+        $changeStream->next();
+        $this->assertFalse($changeStream->valid());
+        $this->assertNull($changeStream->key());
+        $this->assertNull($changeStream->current());
+
+        // Rewinding after advancing the iterator is an error
+        $this->expectException(LogicException::class);
+        $changeStream->rewind();
     }
 
     public function testRewindResumesAfterConnectionException()

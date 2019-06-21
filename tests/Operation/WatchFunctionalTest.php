@@ -379,20 +379,67 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertMatchesDocument($expectedResult, $changeStream->current());
     }
 
-    public function testResumeTokenIsUpdatedAfterResuming()
+    public function testResumeMultipleTimesInSuccession()
     {
-        $this->insertDocument(['_id' => 1]);
+        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName());
+        $operation->execute($this->getPrimaryServer());
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
+        /* Killing the cursor when there are no results will test that neither
+         * the initial rewind() nor its resume attempt incremented the key. */
+        $this->killChangeStreamCursor($changeStream);
+
         $changeStream->rewind();
+        $this->assertFalse($changeStream->valid());
+        $this->assertNull($changeStream->key());
         $this->assertNull($changeStream->current());
+
+        $this->insertDocument(['_id' => 1]);
+
+        /* Killing the cursor a second time when there is a result will test
+         * that the resume attempt picks up the latest change. */
+        $this->killChangeStreamCursor($changeStream);
+
+        $changeStream->rewind();
+        $this->assertTrue($changeStream->valid());
+        $this->assertSame(0, $changeStream->key());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 1],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 1],
+        ];
+
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+
+        /* Killing the cursor a second time will not trigger a resume until
+         * ChangeStream::next() is called. A successive call to rewind() should
+         * not change the iterator's state and preserve the current result. */
+        $this->killChangeStreamCursor($changeStream);
+
+        $changeStream->rewind();
+        $this->assertTrue($changeStream->valid());
+        $this->assertSame(0, $changeStream->key());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 1],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 1],
+        ];
+
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
 
         $this->insertDocument(['_id' => 2]);
 
         $changeStream->next();
         $this->assertTrue($changeStream->valid());
+        $this->assertSame(1, $changeStream->key());
 
         $expectedResult = [
             '_id' => $changeStream->current()->_id,
@@ -410,6 +457,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $changeStream->next();
         $this->assertTrue($changeStream->valid());
+        $this->assertSame(2, $changeStream->key());
 
         $expectedResult = [
             '_id' => $changeStream->current()->_id,
@@ -431,6 +479,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $changeStream->next();
         $this->assertTrue($changeStream->valid());
+        $this->assertSame(3, $changeStream->key());
 
         $expectedResult = [
             '_id' => $changeStream->current()->_id,

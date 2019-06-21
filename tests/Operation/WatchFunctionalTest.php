@@ -746,6 +746,8 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['x' => 1]);
         $this->insertDocument(['x' => 2]);
 
+        /* Note: we intentionally do not start iteration with rewind() to ensure
+         * that next() behaves identically when called without rewind(). */
         $changeStream->next();
 
         $this->assertSame(0, $changeStream->key());

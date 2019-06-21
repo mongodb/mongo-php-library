@@ -954,11 +954,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $changeStream->next();
 
-        $nextChange = $changeStream->current();
+        $secondChange = $changeStream->current();
         // End Changestream Example 2
 
         $this->assertNull($firstChange);
-        $this->assertNull($nextChange);
+        $this->assertNull($secondChange);
 
         $insertManyResult = $db->inventory->insertMany([
             ['_id' => 1, 'x' => 'foo'],
@@ -984,27 +984,30 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $resumeToken = ($lastChange !== null) ? $lastChange->_id : null;
 
         if ($resumeToken === null) {
-            throw new \Exception('resumeToken was not found');
+            throw new \Exception('Resume token was not found');
         }
 
         $changeStream = $db->inventory->watch([], ['resumeAfter' => $resumeToken]);
         $changeStream->rewind();
 
-        $nextChange = $changeStream->current();
+        $firstChange = $changeStream->current();
         // End Changestream Example 3
 
         $expectedChange = [
-            '_id' => $nextChange->_id,
+            '_id' => $firstChange->_id,
             'operationType' => 'insert',
             'fullDocument' => ['_id' => 2, 'x' => 'bar'],
             'ns' => ['db' => $this->getDatabaseName(), 'coll' => 'inventory'],
             'documentKey' => ['_id' => 2],
         ];
 
-        $this->assertMatchesDocument($expectedChange, $nextChange);
+        $this->assertMatchesDocument($expectedChange, $firstChange);
 
         // Start Changestream Example 4
-        $pipeline = [['$match' => ['$or' => [['fullDocument.username' => 'alice'], ['operationType' => 'delete']]]]];
+        $pipeline = [
+            ['$match' => ['fullDocument.username' => 'alice']],
+            ['$addFields' => ['newField' => 'this is an added field!']],
+        ];
         $changeStream = $db->inventory->watch($pipeline);
         $changeStream->rewind();
 
@@ -1012,11 +1015,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $changeStream->next();
 
-        $nextChange = $changeStream->current();
+        $secondChange = $changeStream->current();
         // End Changestream Example 4
 
         $this->assertNull($firstChange);
-        $this->assertNull($nextChange);
+        $this->assertNull($secondChange);
     }
 
     public function testAggregation_example_1()

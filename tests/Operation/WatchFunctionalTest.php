@@ -322,6 +322,70 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertMatchesDocument($expectedResult, $changeStream->current());
     }
 
+    public function testResumeTokenIsUpdatedAfterResuming()
+    {
+        $this->insertDocument(['_id' => 1]);
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $changeStream->rewind();
+        $this->assertNull($changeStream->current());
+
+        $this->insertDocument(['_id' => 2]);
+
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 2],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 2],
+        ];
+
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+
+        $this->killChangeStreamCursor($changeStream);
+
+        $this->insertDocument(['_id' => 3]);
+
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 3],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 3],
+        ];
+
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+
+        /* Triggering a consecutive failure will allow us to test whether the
+         * resume token was properly updated after the last resume. If the
+         * resume token updated, the next result will be {_id: 4}; otherwise,
+         * we'll see {_id: 3} returned again. */
+        $this->killChangeStreamCursor($changeStream);
+
+        $this->insertDocument(['_id' => 4]);
+
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 4],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 4],
+        ];
+
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+    }
+
     public function testKey()
     {
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);

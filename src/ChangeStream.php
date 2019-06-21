@@ -183,6 +183,10 @@ class ChangeStream implements Iterator
             return false;
         }
 
+        if ($exception->hasErrorLabel('NonResumableChangeStreamError')) {
+            return false;
+        }
+
         if (in_array($exception->getCode(), [self::$errorCodeCappedPositionLost, self::$errorCodeCursorKilled, self::$errorCodeInterrupted])) {
             return false;
         }

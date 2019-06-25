@@ -50,6 +50,11 @@ class ChangeStream implements Iterator
     private $resumeCallable;
     private $csIt;
     private $key = 0;
+
+    /**
+     * Whether the change stream has advanced to its first result. This is used
+     * to determine whether $key should be incremented after an iteration event.
+     */
     private $hasAdvanced = false;
 
     /**
@@ -102,7 +107,7 @@ class ChangeStream implements Iterator
     {
         try {
             $this->csIt->next();
-            $this->onIteration(true);
+            $this->onIteration($this->hasAdvanced);
         } catch (RuntimeException $e) {
             if ($this->isResumableError($e)) {
                 $this->resume();
@@ -118,6 +123,9 @@ class ChangeStream implements Iterator
     {
         try {
             $this->csIt->rewind();
+            /* Unlike next() and resume(), the decision to increment the key
+             * does not depend on whether the change stream has advanced. This
+             * ensures that multiple calls to rewind() do not alter state. */
             $this->onIteration(false);
         } catch (RuntimeException $e) {
             if ($this->isResumableError($e)) {
@@ -193,12 +201,12 @@ class ChangeStream implements Iterator
     }
 
     /**
-     * Perform housekeeping after an iteration event (i.e. next or rewind).
+     * Perform housekeeping after an iteration event.
      *
-     * @param boolean $isNext Whether the iteration event was a call to next()
+     * @param boolean $incrementKey Increment $key if there is a current result
      * @throws ResumeTokenException
      */
-    private function onIteration($isNext)
+    private function onIteration($incrementKey)
     {
         /* If the cursorId is 0, the server has invalidated the cursor and we
          * will never perform another getMore nor need to resume since any
@@ -210,13 +218,13 @@ class ChangeStream implements Iterator
             $this->resumeCallable = null;
         }
 
+        /* Return early if there is not a current result. Avoid any attempt to
+         * increment the iterator's key or extract a resume token */
         if (!$this->valid()) {
             return;
         }
 
-        /* Increment the key if the iteration event was a call to next() and we
-         * have already advanced past the first result. */
-        if ($isNext && $this->hasAdvanced) {
+        if ($incrementKey) {
             $this->key++;
         }
 
@@ -234,6 +242,14 @@ class ChangeStream implements Iterator
         $newChangeStream = call_user_func($this->resumeCallable, $this->resumeToken);
         $this->csIt = $newChangeStream->csIt;
         $this->csIt->rewind();
-        $this->onIteration(false);
+        /* Note: if we are resuming after a call to ChangeStream::rewind(),
+         * $hasAdvanced will always be false. For it to be true, rewind() would
+         * need to have thrown a RuntimeException with a resumable error, which
+         * can only happen during the first call to IteratorIterator::rewind()
+         * before onIteration() has a chance to set $hasAdvanced to true.
+         * Otherwise, IteratorIterator::rewind() would either NOP (consecutive
+         * rewinds) or throw a LogicException (rewind after next), neither of
+         * which would result in a call to resume(). */
+        $this->onIteration($this->hasAdvanced);
     }
 }

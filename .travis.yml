@@ -16,7 +16,7 @@ env:
   global:
     - DRIVER_VERSION=1.6.0alpha2
     - SERVER_DISTRO=ubuntu1604
-    - SERVER_VERSION=4.0.9
+    - SERVER_VERSION=4.0.10
     - DEPLOYMENT=STANDALONE
 
 matrix:
@@ -39,11 +39,11 @@ matrix:
         - DEPLOYMENT=STANDALONE_OLD
     - php: 7.0
       env:
-        - SERVER_VERSION=3.4.20
+        - SERVER_VERSION=3.4.21
         - DEPLOYMENT=STANDALONE_OLD
     - php: 7.0
       env:
-        - SERVER_VERSION=3.6.12
+        - SERVER_VERSION=3.6.13
     - php: 7.3
       env:
         - DEPLOYMENT=STANDALONE_AUTH
@@ -52,6 +52,10 @@ matrix:
         - DEPLOYMENT=STANDALONE_SSL
     - php: 7.3
       env:
+        - DEPLOYMENT=REPLICASET
+    - php: 7.3
+      env:
+        - SERVER_VERSION=4.2.0-rc1
         - DEPLOYMENT=REPLICASET
     - php: 7.3
       env:

@@ -8,10 +8,8 @@
                     "ipv6": true,
                     "journal": true,
                     "logappend": true,
-                    "nssize": 1,
                     "port": 4000,
-                    "bind_ip_all": true,
-                    "smallfiles": true
+                    "bind_ip_all": true
                 }
             },
             {
@@ -21,10 +19,8 @@
                     "ipv6": true,
                     "journal": true,
                     "logappend": true,
-                    "nssize": 1,
                     "port": 4001,
-                    "bind_ip_all": true,
-                    "smallfiles": true
+                    "bind_ip_all": true
                 }
             },
             {
@@ -34,10 +30,8 @@
                     "ipv6": true,
                     "journal": true,
                     "logappend": true,
-                    "nssize": 1,
                     "port": 4002,
-                    "bind_ip_all": true,
-                    "smallfiles": true
+                    "bind_ip_all": true
                 }
             }
         ]
@@ -53,10 +47,8 @@
                     "ipv6": true,
                     "journal": true,
                     "logappend": true,
-                    "nssize": 1,
                     "port": 4100,
-                    "bind_ip_all": true,
-                    "smallfiles": true
+                    "bind_ip_all": true
                 }
             }
         }, 
@@ -69,10 +61,8 @@
                     "ipv6": true,
                     "journal": true,
                     "logappend": true,
-                    "nssize": 1,
                     "port": 4200,
-                    "bind_ip_all": true,
-                    "smallfiles": true
+                    "bind_ip_all": true
                 }
             }
         }

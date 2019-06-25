@@ -10,10 +10,8 @@
         "logappend": true,
         "logpath": "/tmp/standalone-auth/m.log",
         "journal": true,
-        "nssize": 1,
         "port": 2200,
         "bind_ip_all": true,
-        "smallfiles": true,
         "setParameter": {"enableTestCommands": 1}
     }
 }

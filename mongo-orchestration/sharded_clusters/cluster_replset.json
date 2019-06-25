@@ -8,10 +8,8 @@
                     "ipv6": true,
                     "journal": true,
                     "logappend": true,
-                    "nssize": 1,
                     "port": 4490,
-                    "bind_ip_all": true,
-                    "smallfiles": true
+                    "bind_ip_all": true
                 }
             },
             {
@@ -21,10 +19,8 @@
                     "ipv6": true,
                     "journal": true,
                     "logappend": true,
-                    "nssize": 1,
                     "port": 4491,
-                    "bind_ip_all": true,
-                    "smallfiles": true
+                    "bind_ip_all": true
                 }
             },
             {
@@ -34,10 +30,8 @@
                     "ipv6": true,
                     "journal": true,
                     "logappend": true,
-                    "nssize": 1,
                     "port": 4492,
-                    "bind_ip_all": true,
-                    "smallfiles": true
+                    "bind_ip_all": true
                 }
             }
         ]
@@ -55,10 +49,8 @@
                         "ipv6": true,
                         "journal": true,
                         "logappend": true,
-                        "nssize": 1,
                         "port": 4400,
-                        "bind_ip_all": true,
-                        "smallfiles": true
+                        "bind_ip_all": true
                     } },
                     { "procParams": {
                         "dbpath": "/tmp/SHARDED-RS/SHARD1/4401",
@@ -66,10 +58,8 @@
                         "ipv6": true,
                         "journal": true,
                         "logappend": true,
-                        "nssize": 1,
                         "port": 4401,
-                        "bind_ip_all": true,
-                        "smallfiles": true
+                        "bind_ip_all": true
                     } }
                 ]
             }
@@ -85,10 +75,8 @@
                         "ipv6": true,
                         "journal": true,
                         "logappend": true,
-                        "nssize": 1,
                         "port": 4410,
-                        "bind_ip_all": true,
-                        "smallfiles": true
+                        "bind_ip_all": true
                     } },
                     { "procParams": {
                         "dbpath": "/tmp/SHARDED-RS/SHARD2/4411",
@@ -96,10 +84,8 @@
                         "ipv6": true,
                         "journal": true,
                         "logappend": true,
-                        "nssize": 1,
                         "port": 4411,
                         "bind_ip_all": true,
-                        "smallfiles": true
                     } }
                 ]
             }

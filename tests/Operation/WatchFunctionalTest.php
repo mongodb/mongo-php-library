@@ -10,6 +10,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Exception\ResumeTokenException;
+use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\Watch;

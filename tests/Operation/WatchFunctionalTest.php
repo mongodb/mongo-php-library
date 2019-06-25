@@ -398,11 +398,11 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->insertDocument(['_id' => 1]);
 
-        /* Killing the cursor a second time when there is a result will test
-         * that the resume attempt picks up the latest change. */
+        /* Killing the cursor and advancing when there is a result will test
+         * that next()'s resume attempt picks up the latest change. */
         $this->killChangeStreamCursor($changeStream);
 
-        $changeStream->rewind();
+        $changeStream->next();
         $this->assertTrue($changeStream->valid());
         $this->assertSame(0, $changeStream->key());
 
@@ -418,7 +418,8 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         /* Killing the cursor a second time will not trigger a resume until
          * ChangeStream::next() is called. A successive call to rewind() should
-         * not change the iterator's state and preserve the current result. */
+         * not change the iterator's state and preserve the current result.
+         * Note: PHPLIB-448 may require this rewind() to throw an exception. */
         $this->killChangeStreamCursor($changeStream);
 
         $changeStream->rewind();

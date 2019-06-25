@@ -7,10 +7,8 @@
         "logappend": true,
         "logpath": "/tmp/standalone-ssl/m.log",
         "journal": true,
-        "nssize": 1,
         "port": 2100,
         "bind_ip_all": true,
-        "smallfiles": true,
         "setParameter": {"enableTestCommands": 1}
     },
     "sslParams": {

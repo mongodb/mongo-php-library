@@ -55,6 +55,10 @@ matrix:
         - DEPLOYMENT=REPLICASET
     - php: 7.3
       env:
+        - SERVER_VERSION=4.2.0-rc1
+        - DEPLOYMENT=REPLICASET
+    - php: 7.3
+      env:
         - DEPLOYMENT=SHARDED_CLUSTER
 
 before_install:

@@ -52,6 +52,10 @@ matrix:
         - DEPLOYMENT=STANDALONE_SSL
     - php: 7.3
       env:
+        - SERVER_VERSION=3.6.13
+        - DEPLOYMENT=REPLICASET
+    - php: 7.3
+      env:
         - DEPLOYMENT=REPLICASET
     - php: 7.3
       env:

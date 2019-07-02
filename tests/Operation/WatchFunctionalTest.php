@@ -21,6 +21,8 @@ use ReflectionClass;
 
 class WatchFunctionalTest extends FunctionalTestCase
 {
+    private static $wireVersionForStartAtOperationTime = 7;
+
     private $defaultOptions = ['maxAwaitTimeMS' => 500];
 
     public function setUp()
@@ -134,6 +136,8 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testResumeBeforeReceivingAnyResultsIncludesStartAtOperationTime()
     {
+        $this->skipIfStartAtOperationTimeNotSupported();
+
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
 
         $operationTime = null;
@@ -943,5 +947,12 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $operation = new DatabaseCommand($this->getDatabaseName(), $command);
         $operation->execute($this->getPrimaryServer());
+    }
+
+    private function skipIfStartAtOperationTimeNotSupported()
+    {
+        if (!\MongoDB\server_supports_feature($this->getPrimaryServer(), self::$wireVersionForStartAtOperationTime)) {
+             $this->markTestSkipped('Operation time is not supported');
+        }
     }
 }

@@ -402,45 +402,18 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->insertDocument(['_id' => 1]);
 
-        /* Killing the cursor and advancing when there is a result will test
-         * that next()'s resume attempt picks up the latest change. */
-        $this->killChangeStreamCursor($changeStream);
-
+        /* Insert a document and advance the change stream to ensure we capture
+         * a resume token. This is necessary when startAtOperationTime is not
+         * supported (i.e. 3.6 server version). */
         $changeStream->next();
         $this->assertTrue($changeStream->valid());
         $this->assertSame(0, $changeStream->key());
 
-        $expectedResult = [
-            '_id' => $changeStream->current()->_id,
-            'operationType' => 'insert',
-            'fullDocument' => ['_id' => 1],
-            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
-            'documentKey' => ['_id' => 1],
-        ];
-
-        $this->assertMatchesDocument($expectedResult, $changeStream->current());
-
-        /* Killing the cursor a second time will not trigger a resume until
-         * ChangeStream::next() is called. A successive call to rewind() should
-         * not change the iterator's state and preserve the current result.
-         * Note: PHPLIB-448 may require this rewind() to throw an exception. */
-        $this->killChangeStreamCursor($changeStream);
-
-        $changeStream->rewind();
-        $this->assertTrue($changeStream->valid());
-        $this->assertSame(0, $changeStream->key());
-
-        $expectedResult = [
-            '_id' => $changeStream->current()->_id,
-            'operationType' => 'insert',
-            'fullDocument' => ['_id' => 1],
-            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
-            'documentKey' => ['_id' => 1],
-        ];
-
-        $this->assertMatchesDocument($expectedResult, $changeStream->current());
-
         $this->insertDocument(['_id' => 2]);
+
+        /* Killing the cursor and advancing when there is a result will test
+         * that next()'s resume attempt picks up the latest change. */
+        $this->killChangeStreamCursor($changeStream);
 
         $changeStream->next();
         $this->assertTrue($changeStream->valid());
@@ -456,7 +429,25 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->assertMatchesDocument($expectedResult, $changeStream->current());
 
+        /* Killing the cursor a second time will not trigger a resume until
+         * ChangeStream::next() is called. A successive call to rewind() should
+         * not change the iterator's state and preserve the current result.
+         * Note: PHPLIB-448 may require this rewind() to throw an exception. */
         $this->killChangeStreamCursor($changeStream);
+
+        $changeStream->rewind();
+        $this->assertTrue($changeStream->valid());
+        $this->assertSame(1, $changeStream->key());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 2],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 2],
+        ];
+
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
 
         $this->insertDocument(['_id' => 3]);
 
@@ -474,10 +465,6 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->assertMatchesDocument($expectedResult, $changeStream->current());
 
-        /* Triggering a consecutive failure will allow us to test whether the
-         * resume token was properly updated after the last resume. If the
-         * resume token updated, the next result will be {_id: 4}; otherwise,
-         * we'll see {_id: 3} returned again. */
         $this->killChangeStreamCursor($changeStream);
 
         $this->insertDocument(['_id' => 4]);
@@ -492,6 +479,28 @@ class WatchFunctionalTest extends FunctionalTestCase
             'fullDocument' => ['_id' => 4],
             'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
             'documentKey' => ['_id' => 4],
+        ];
+
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+
+        /* Triggering a consecutive failure will allow us to test whether the
+         * resume token was properly updated after the last resume. If the
+         * resume token updated, the next result will be {_id: 4}; otherwise,
+         * we'll see {_id: 3} returned again. */
+        $this->killChangeStreamCursor($changeStream);
+
+        $this->insertDocument(['_id' => 5]);
+
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+        $this->assertSame(4, $changeStream->key());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 5],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 5],
         ];
 
         $this->assertMatchesDocument($expectedResult, $changeStream->current());

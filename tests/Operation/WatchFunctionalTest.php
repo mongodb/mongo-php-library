@@ -154,7 +154,9 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->assertCount(1, $events);
         $this->assertSame('aggregate', $events[0]['started']->getCommandName());
-        $operationTime = $events[0]['succeeded']->getReply()->operationTime;
+        $reply = $events[0]['succeeded']->getReply();
+        $this->assertObjectHasAttribute('operationTime', $reply);
+        $operationTime = $reply->operationTime;
         $this->assertInstanceOf(TimestampInterface::class, $operationTime);
 
         $this->assertNull($changeStream->current());

@@ -267,8 +267,8 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
     private function executeAggregate(Server $server)
     {
         /* If we've already captured an operation time or the server does not
-         * support returning an operation time (e.g. MongoDB 3.6), execute the
-         * aggregation directly and return its cursor. */
+         * support resuming from an operation time (e.g. MongoDB 3.6), execute
+         * the aggregation directly and return its cursor. */
         if ($this->operationTime !== null || ! \MongoDB\server_supports_feature($server, self::$wireVersionForStartAtOperationTime)) {
             return $this->aggregate->execute($server);
         }

@@ -973,7 +973,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     private function skipIfStartAtOperationTimeNotSupported()
     {
         if (!\MongoDB\server_supports_feature($this->getPrimaryServer(), self::$wireVersionForStartAtOperationTime)) {
-             $this->markTestSkipped('Operation time is not supported');
+             $this->markTestSkipped('startAtOperationTime is not supported');
         }
     }
 }

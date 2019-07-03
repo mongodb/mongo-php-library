@@ -6,8 +6,10 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\Client;
 use MongoDB\Database;
 use MongoDB\Driver\Cursor;
+use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Operation\DropCollection;
 
 /**
@@ -1411,6 +1413,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
     function testCausalConsistency()
     {
         $this->skipIfCausalConsistencyIsNotSupported();
+
+        try {
+            $this->manager->selectServer(new ReadPreference('secondary'));
+        } catch (ConnectionTimeoutException $e) {
+            $this->markTestSkipped('Secondary is not available');
+        }
 
         // Prep
         $client = new Client(static::getUri());

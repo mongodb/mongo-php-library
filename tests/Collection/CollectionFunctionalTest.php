@@ -551,6 +551,17 @@ class CollectionFunctionalTest extends FunctionalTestCase
                     );
                 }, 'w'
             ],
+
+            /* Disabled, as it's illegal to use change streams in transactions
+            [
+                function($collection, $session, $options = []) {
+                    $collection->watch(
+                        [],
+                        ['session' => $session] + $options
+                    );
+                }, 'r'
+            ],
+            */
         ];
     }
 

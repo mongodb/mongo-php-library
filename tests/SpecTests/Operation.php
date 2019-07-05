@@ -6,6 +6,7 @@ use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Session;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\Exception;
 use MongoDB\Operation\FindOneAndReplace;
@@ -53,6 +54,11 @@ final class Operation
     {
         $o = new self($operation);
 
+        /* Note: change streams only return majority-committed writes, so ensure
+         * each operation applies that write concern. This will avoid spurious
+         * test failures. */
+        $writeConcern = new WriteConcern(WriteConcern::MAJORITY);
+
         // Expect all operations to succeed
         $o->errorExpectation = ErrorExpectation::noError();
 
@@ -66,6 +72,8 @@ final class Operation
             $o->arguments = ['command' => [
                 'renameCollection' => $operation->database . '.' . $operation->collection,
                 'to' => $operation->database . '.' . $operation->arguments->to,
+                // Note: Database::command() does not inherit WC, so be explicit
+                'writeConcern' => $writeConcern,
             ]];
 
             return $o;
@@ -73,6 +81,7 @@ final class Operation
 
         $o->databaseName = $operation->database;
         $o->collectionName = $operation->collection;
+        $o->collectionOptions = ['writeConcern' => $writeConcern];
         $o->object = self::OBJECT_SELECT_COLLECTION;
 
         return $o;

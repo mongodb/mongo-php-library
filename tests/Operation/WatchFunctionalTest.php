@@ -7,6 +7,7 @@ use MongoDB\BSON\TimestampInterface;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Exception\ResumeTokenException;
@@ -1026,7 +1027,12 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     private function insertDocument($document)
     {
-        $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
+        $insertOne = new InsertOne(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            $document,
+            ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]
+        );
         $writeResult = $insertOne->execute($this->getPrimaryServer());
         $this->assertEquals(1, $writeResult->getInsertedCount());
     }

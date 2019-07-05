@@ -233,22 +233,33 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
      * Iterate a change stream.
      *
      * @param ChangeStream $changeStream
+     * @param integer      $limit
      * @return BSONDocument[]
      */
     private function iterateChangeStream(ChangeStream $changeStream, $limit = 0)
     {
+        if ($limit < 0) {
+            throw new LogicException('$limit is negative');
+        }
+
+        /* Limit iterations to guard against an infinite loop should a test fail
+         * to return as many results as are expected. Require at least one
+         * iteration to allow next() a chance to throw for error tests. */
+        $maxIterations = $limit + 1;
         $events = [];
 
-        for ($changeStream->rewind(); count($events) < $limit; $changeStream->next()) {
+        for ($i = 0, $changeStream->rewind(); $i < $maxIterations; $i++, $changeStream->next()) {
             if ( ! $changeStream->valid()) {
                 continue;
             }
 
             $event = $changeStream->current();
-
             $this->assertInstanceOf(BSONDocument::class, $event);
-
             $events[] = $event;
+
+            if (count($events) >= $limit) {
+                break;
+            }
         }
 
         return $events;

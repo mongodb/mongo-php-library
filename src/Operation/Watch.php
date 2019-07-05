@@ -57,6 +57,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
     private $changeStreamOptions;
     private $collectionName;
     private $databaseName;
+    private $isFirstBatchEmpty = false;
     private $operationTime;
     private $pipeline;
     private $resumeCallable;
@@ -200,6 +201,11 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
     /** @internal */
     final public function commandStarted(CommandStartedEvent $event)
     {
+        if ($event->getCommandName() !== 'aggregate') {
+            return;
+        }
+
+        $this->isFirstBatchEmpty = false;
     }
 
     /** @internal */
@@ -211,8 +217,14 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
 
         $reply = $event->getReply();
 
-        if (isset($reply->operationTime) && $reply->operationTime instanceof TimestampInterface) {
+        /* Note: the spec only refers to collecting an operation time from the
+         * "original aggregation", so only capture it if we've not already. */
+        if (!isset($this->operationTime) && isset($reply->operationTime) && $reply->operationTime instanceof TimestampInterface) {
             $this->operationTime = $reply->operationTime;
+        }
+
+        if (isset($reply->cursor->firstBatch) && is_array($reply->cursor->firstBatch)) {
+            $this->isFirstBatchEmpty = empty($reply->cursor->firstBatch);
         }
     }
 
@@ -227,7 +239,9 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      */
     public function execute(Server $server)
     {
-        return new ChangeStream($this->executeAggregate($server), $this->resumeCallable);
+        $cursor = $this->executeAggregate($server);
+
+        return new ChangeStream($cursor, $this->resumeCallable, $this->isFirstBatchEmpty);
     }
 
     /**
@@ -255,40 +269,36 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
                 unset($this->changeStreamOptions['startAtOperationTime']);
             }
 
+            // Select a new server using the original read preference
+            $server = $manager->selectServer($this->aggregateOptions['readPreference']);
+
             /* If we captured an operation time from the first aggregate command
              * and there is no "resumeAfter" option, set "startAtOperationTime"
              * so that we can resume from the original aggregate's time. */
-            if ($this->operationTime !== null && ! isset($this->changeStreamOptions['resumeAfter'])) {
+            if ($this->operationTime !== null && ! isset($this->changeStreamOptions['resumeAfter']) &&
+                \MongoDB\server_supports_feature($server, self::$wireVersionForStartAtOperationTime)) {
                 $this->changeStreamOptions['startAtOperationTime'] = $this->operationTime;
             }
 
+            // Recreate the aggregate command and execute to obtain a new cursor
             $this->aggregate = $this->createAggregate();
+            $cursor = $this->executeAggregate($server);
 
-            /* Select a new server using the read preference, execute this
-             * operation on it, and return the new ChangeStream. */
-            $server = $manager->selectServer($this->aggregateOptions['readPreference']);
-
-            return $this->execute($server);
+            return [$cursor, $this->isFirstBatchEmpty];
         };
     }
 
     /**
-     * Execute the aggregate command and optionally capture its operation time.
+     * Execute the aggregate command.
+     *
+     * The command will be executed using APM so that we can capture its
+     * operation time and/or firstBatch size.
      *
      * @param Server $server
      * @return Cursor
      */
     private function executeAggregate(Server $server)
     {
-        /* If we've already captured an operation time or the server does not
-         * support resuming from an operation time (e.g. MongoDB 3.6), execute
-         * the aggregation directly and return its cursor. */
-        if ($this->operationTime !== null || ! \MongoDB\server_supports_feature($server, self::$wireVersionForStartAtOperationTime)) {
-            return $this->aggregate->execute($server);
-        }
-
-        /* Otherwise, execute the aggregation using command monitoring so that
-         * we can capture its operation time with commandSucceeded(). */
         \MongoDB\Driver\Monitoring\addSubscriber($this);
 
         try {

@@ -38,12 +38,12 @@ class TailableCursorIterator extends IteratorIterator
      *
      * @internal
      * @param Cursor  $cursor
-     * @param boolean $isFirstBatchIsEmpty
+     * @param boolean $isFirstBatchEmpty
      */
-    public function __construct(Cursor $cursor, $isFirstBatchIsEmpty)
+    public function __construct(Cursor $cursor, $isFirstBatchEmpty)
     {
         parent::__construct($cursor);
-        $this->isRewindNop = $isFirstBatchIsEmpty;
+        $this->isRewindNop = $isFirstBatchEmpty;
     }
 
     /**

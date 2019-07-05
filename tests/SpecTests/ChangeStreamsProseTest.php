@@ -54,10 +54,11 @@ class ChangeStreamsProseTest extends FunctionalTestCase
 
         $this->createCollection();
         $changeStream = $this->collection->watch();
+        $changeStream->rewind();
 
         $this->expectException(ServerException::class);
         $this->expectExceptionCode($errorCode);
-        $changeStream->rewind();
+        $changeStream->next();
     }
 
     public function provideNonResumableErrorCodes()

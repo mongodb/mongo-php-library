@@ -46,8 +46,32 @@ description: |
   Specifies the logical starting point for the new change stream. The ``_id``
   field in documents returned by the change stream may be used here.
 
-  Using this option in conjunction with ``startAtOperationTime`` will result in
-  a server error. The options are mutually exclusive.
+  Using this option in conjunction with ``startAfter`` and/or
+  ``startAtOperationTime`` will result in a server error. The options are
+  mutually exclusive.
+
+  .. note::
+
+     This is an option of the ``$changeStream`` pipeline stage.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: startAfter
+type: array|object
+description: |
+  Specifies the logical starting point for the new change stream. The ``_id``
+  field in documents returned by the change stream may be used here. Unlike
+  ``resumeAfter``, this option can be used with a resume token from an
+  "invalidate" event.
+
+  Using this option in conjunction with ``resumeAfter`` and/or
+  ``startAtOperationTime`` will result in a server error. The options are
+  mutually exclusive.
+
+  This is not supported for server versions prior to 4.2 and will result in an
+  exception at execution time if used.
 
   .. note::
 
@@ -66,8 +90,8 @@ description: |
   ``operationTime`` returned by the initial ``aggregate`` command will be used
   if available.
 
-  Using this option in conjunction with ``resumeAfter`` will result in a server
-  error. The options are mutually exclusive.
+  Using this option in conjunction with ``resumeAfter`` and/or ``startAfter``
+  will result in a server error. The options are mutually exclusive.
 
   This is not supported for server versions prior to 4.0 and will result in an
   exception at execution time if used.

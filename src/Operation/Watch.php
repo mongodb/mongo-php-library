@@ -92,12 +92,21 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      *  * resumeAfter (document): Specifies the logical starting point for the
      *    new change stream.
      *
-     *    Using this option in conjunction with "startAtOperationTime" will
-     *    result in a server error. The options are mutually exclusive.
+     *    Using this option in conjunction with "startAfter" and/or
+     *    "startAtOperationTime" will result in a server error. The options are
+     *    mutually exclusive.
      *
      *  * session (MongoDB\Driver\Session): Client session.
      *
      *    Sessions are not supported for server versions < 3.6.
+     *
+     *  * startAfter (document): Specifies the logical starting point for the
+     *    new change stream. Unlike "resumeAfter", this option can be used with
+     *    a resume token from an "invalidate" event.
+     *
+     *    Using this option in conjunction with "resumeAfter" and/or
+     *    "startAtOperationTime" will result in a server error. The options are
+     *    mutually exclusive.
      *
      *  * startAtOperationTime (MongoDB\BSON\TimestampInterface): If specified,
      *    the change stream will only provide changes that occurred at or after
@@ -105,8 +114,9 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      *    return an operation time that can be used here. Alternatively, an
      *    operation time may be obtained from MongoDB\Driver\Server::getInfo().
      *
-     *    Using this option in conjunction with "resumeAfter" will result in a
-     *    server error. The options are mutually exclusive.
+     *    Using this option in conjunction with "resumeAfter" and/or
+     *    "startAfter" will result in a server error. The options are mutually
+     *    exclusive.
      *
      *    This option is not supported for server versions < 4.0.
      *
@@ -143,6 +153,10 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             throw InvalidArgumentException::invalidType('"resumeAfter" option', $options['resumeAfter'], 'array or object');
         }
 
+        if (isset($options['startAfter']) && ! is_array($options['startAfter']) && ! is_object($options['startAfter'])) {
+            throw InvalidArgumentException::invalidType('"startAfter" option', $options['startAfter'], 'array or object');
+        }
+
         if (isset($options['startAtOperationTime']) && ! $options['startAtOperationTime'] instanceof TimestampInterface) {
             throw InvalidArgumentException::invalidType('"startAtOperationTime" option', $options['startAtOperationTime'], TimestampInterface::class);
         }
@@ -162,7 +176,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         }
 
         $this->aggregateOptions = array_intersect_key($options, ['batchSize' => 1, 'collation' => 1, 'maxAwaitTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1, 'typeMap' => 1]);
-        $this->changeStreamOptions = array_intersect_key($options, ['fullDocument' => 1, 'resumeAfter' => 1, 'startAtOperationTime' => 1]);
+        $this->changeStreamOptions = array_intersect_key($options, ['fullDocument' => 1, 'resumeAfter' => 1, 'startAfter' => 1, 'startAtOperationTime' => 1]);
 
         // Null database name implies a cluster-wide change stream
         if ($databaseName === null) {

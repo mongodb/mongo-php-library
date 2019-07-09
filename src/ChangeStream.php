@@ -24,7 +24,7 @@ use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\ResumeTokenException;
-use IteratorIterator;
+use MongoDB\Model\TailableCursorIterator;
 use Iterator;
 
 /**
@@ -61,13 +61,14 @@ class ChangeStream implements Iterator
      * Constructor.
      *
      * @internal
-     * @param Cursor $cursor
+     * @param Cursor   $cursor
      * @param callable $resumeCallable
+     * @param boolean  $isFirstBatchEmpty
      */
-    public function __construct(Cursor $cursor, callable $resumeCallable)
+    public function __construct(Cursor $cursor, callable $resumeCallable, $isFirstBatchEmpty)
     {
         $this->resumeCallable = $resumeCallable;
-        $this->csIt = new IteratorIterator($cursor);
+        $this->csIt = new TailableCursorIterator($cursor, $isFirstBatchEmpty);
     }
 
     /**
@@ -242,17 +243,11 @@ class ChangeStream implements Iterator
      */
     private function resume()
     {
-        $newChangeStream = call_user_func($this->resumeCallable, $this->resumeToken);
-        $this->csIt = $newChangeStream->csIt;
+        list($cursor, $isFirstBatchEmpty) = call_user_func($this->resumeCallable, $this->resumeToken);
+
+        $this->csIt = new TailableCursorIterator($cursor, $isFirstBatchEmpty);
         $this->csIt->rewind();
-        /* Note: if we are resuming after a call to ChangeStream::rewind(),
-         * $hasAdvanced will always be false. For it to be true, rewind() would
-         * need to have thrown a RuntimeException with a resumable error, which
-         * can only happen during the first call to IteratorIterator::rewind()
-         * before onIteration() has a chance to set $hasAdvanced to true.
-         * Otherwise, IteratorIterator::rewind() would either NOP (consecutive
-         * rewinds) or throw a LogicException (rewind after next), neither of
-         * which would result in a call to resume(). */
+
         $this->onIteration($this->hasAdvanced);
     }
 

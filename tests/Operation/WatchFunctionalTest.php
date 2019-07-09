@@ -759,6 +759,78 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertMatchesDocument($expectedResult, $changeStream->current());
     }
 
+    public function testResumeAfterOption()
+    {
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $changeStream->rewind();
+        $this->assertFalse($changeStream->valid());
+
+        $this->insertDocument(['_id' => 1, 'x' => 'foo']);
+        $this->insertDocument(['_id' => 2, 'x' => 'bar']);
+
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+
+        $resumeToken = $changeStream->current()->_id;
+
+        $options = $this->defaultOptions + ['resumeAfter' => $resumeToken];
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $changeStream->rewind();
+        $this->assertTrue($changeStream->valid());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 2, 'x' => 'bar'],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 2],
+        ];
+
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+    }
+
+    public function testStartAfterOption()
+    {
+        if (version_compare($this->getServerVersion(), '4.1.1', '<')) {
+            $this->markTestSkipped('startAfter is not supported');
+        }
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $changeStream->rewind();
+        $this->assertFalse($changeStream->valid());
+
+        $this->insertDocument(['_id' => 1, 'x' => 'foo']);
+        $this->insertDocument(['_id' => 2, 'x' => 'bar']);
+
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+
+        $resumeToken = $changeStream->current()->_id;
+
+        $options = $this->defaultOptions + ['startAfter' => $resumeToken];
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $changeStream->rewind();
+        $this->assertTrue($changeStream->valid());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 2, 'x' => 'bar'],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 2],
+        ];
+
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+    }
+
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedChangeDocument
      */

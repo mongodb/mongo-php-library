@@ -119,9 +119,86 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertSame($expectedCommands, $commands);
     }
 
+    public function testResumeBeforeReceivingAnyResultsIncludesPostBatchResumeToken()
+    {
+        if ( ! $this->isPostBatchResumeTokenSupported()) {
+            $this->markTestSkipped('postBatchResumeToken is not supported');
+        }
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+
+        $operationTime = null;
+        $events = [];
+
+        (new CommandObserver)->observe(
+            function() use ($operation, &$changeStream) {
+                $changeStream = $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use (&$events) {
+                $events[] = $event;
+            }
+        );
+
+        $this->assertCount(1, $events);
+        $this->assertSame('aggregate', $events[0]['started']->getCommandName());
+        $reply = $events[0]['succeeded']->getReply();
+        $this->assertObjectHasAttribute('cursor', $reply);
+        $this->assertInternalType('object', $reply->cursor);
+        $this->assertObjectHasAttribute('postBatchResumeToken', $reply->cursor);
+        $postBatchResumeToken = $reply->cursor->postBatchResumeToken;
+        $this->assertInternalType('object', $postBatchResumeToken);
+
+        $this->assertFalse($changeStream->valid());
+        $this->killChangeStreamCursor($changeStream);
+
+        $this->assertNoCommandExecuted(function() use ($changeStream) { $changeStream->rewind(); });
+
+        $events = [];
+
+        (new CommandObserver)->observe(
+            function() use ($changeStream) {
+                $changeStream->next();
+            },
+            function (array $event) use (&$events) {
+                $events[] = $event;
+            }
+        );
+
+        $this->assertCount(3, $events);
+
+        $this->assertSame('getMore', $events[0]['started']->getCommandName());
+        $this->arrayHasKey('failed', $events[0]);
+
+        $this->assertSame('aggregate', $events[1]['started']->getCommandName());
+        $this->assertResumeAfter($postBatchResumeToken, $events[1]['started']->getCommand());
+        $this->arrayHasKey('succeeded', $events[1]);
+
+        // Original cursor is freed immediately after the change stream resumes
+        $this->assertSame('killCursors', $events[2]['started']->getCommandName());
+        $this->arrayHasKey('succeeded', $events[2]);
+
+        $this->assertFalse($changeStream->valid());
+    }
+
+    private function assertResumeAfter($expectedResumeToken, stdClass $command)
+    {
+        $this->assertObjectHasAttribute('pipeline', $command);
+        $this->assertInternalType('array', $command->pipeline);
+        $this->assertArrayHasKey(0, $command->pipeline);
+        $this->assertObjectHasAttribute('$changeStream', $command->pipeline[0]);
+        $this->assertObjectHasAttribute('resumeAfter', $command->pipeline[0]->{'$changeStream'});
+        $this->assertEquals($expectedResumeToken, $command->pipeline[0]->{'$changeStream'}->resumeAfter);
+    }
+
     public function testResumeBeforeReceivingAnyResultsIncludesStartAtOperationTime()
     {
-        $this->skipIfStartAtOperationTimeNotSupported();
+        if ( ! $this->isStartAtOperationTimeSupported()) {
+            $this->markTestSkipped('startAtOperationTime is not supported');
+        }
+
+        if ($this->isPostBatchResumeTokenSupported()) {
+            $this->markTestSkipped('postBatchResumeToken takes precedence over startAtOperationTime');
+        }
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
 
@@ -496,7 +573,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertNotEquals('0', (string) $changeStream->getCursorId());
 
         $rc = new ReflectionClass('MongoDB\ChangeStream');
-        $rp = $rc->getProperty('csIt');
+        $rp = $rc->getProperty('iterator');
         $rp->setAccessible(true);
 
         $iterator = $rp->getValue($changeStream);
@@ -935,6 +1012,16 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertEquals(1, $writeResult->getInsertedCount());
     }
 
+    private function isPostBatchResumeTokenSupported()
+    {
+        return version_compare($this->getServerVersion(), '4.0.7', '>=');
+    }
+
+    private function isStartAtOperationTimeSupported()
+    {
+        return \MongoDB\server_supports_feature($this->getPrimaryServer(), self::$wireVersionForStartAtOperationTime);
+    }
+
     private function killChangeStreamCursor(ChangeStream $changeStream)
     {
         $command = [
@@ -944,12 +1031,5 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $operation = new DatabaseCommand($this->getDatabaseName(), $command);
         $operation->execute($this->getPrimaryServer());
-    }
-
-    private function skipIfStartAtOperationTimeNotSupported()
-    {
-        if (!\MongoDB\server_supports_feature($this->getPrimaryServer(), self::$wireVersionForStartAtOperationTime)) {
-             $this->markTestSkipped('startAtOperationTime is not supported');
-        }
     }
 }

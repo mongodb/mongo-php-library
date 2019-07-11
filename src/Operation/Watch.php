@@ -19,6 +19,7 @@ namespace MongoDB\Operation;
 
 use MongoDB\ChangeStream;
 use MongoDB\BSON\TimestampInterface;
+use MongoDB\Model\ChangeStreamIterator;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
@@ -57,10 +58,12 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
     private $changeStreamOptions;
     private $collectionName;
     private $databaseName;
-    private $isFirstBatchEmpty = false;
+    private $firstBatchSize;
+    private $hasResumed = false;
+    private $manager;
     private $operationTime;
     private $pipeline;
-    private $resumeCallable;
+    private $postBatchResumeToken;
 
     /**
      * Constructs an aggregate command for creating a change stream.
@@ -185,12 +188,12 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             $this->changeStreamOptions['allChangesForCluster'] = true;
         }
 
+        $this->manager = $manager;
         $this->databaseName = (string) $databaseName;
         $this->collectionName = isset($collectionName) ? (string) $collectionName : null;
         $this->pipeline = $pipeline;
 
         $this->aggregate = $this->createAggregate();
-        $this->resumeCallable = $this->createResumeCallable($manager);
     }
 
     /** @internal */
@@ -205,7 +208,8 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             return;
         }
 
-        $this->isFirstBatchEmpty = false;
+        $this->firstBatchSize = null;
+        $this->postBatchResumeToken = null;
     }
 
     /** @internal */
@@ -217,14 +221,19 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
 
         $reply = $event->getReply();
 
-        /* Note: the spec only refers to collecting an operation time from the
-         * "original aggregation", so only capture it if we've not already. */
-        if (!isset($this->operationTime) && isset($reply->operationTime) && $reply->operationTime instanceof TimestampInterface) {
-            $this->operationTime = $reply->operationTime;
+        if ( ! isset($reply->cursor->firstBatch) || ! is_array($reply->cursor->firstBatch)) {
+            throw new UnexpectedValueException('aggregate command did not return a "cursor.firstBatch" array');
         }
 
-        if (isset($reply->cursor->firstBatch) && is_array($reply->cursor->firstBatch)) {
-            $this->isFirstBatchEmpty = empty($reply->cursor->firstBatch);
+        $this->firstBatchSize = count($reply->cursor->firstBatch);
+
+        if (isset($reply->cursor->postBatchResumeToken) && is_object($reply->cursor->postBatchResumeToken)) {
+            $this->postBatchResumeToken = $reply->cursor->postBatchResumeToken;
+        }
+
+        if ($this->shouldCaptureOperationTime($event->getServer()) &&
+            isset($reply->operationTime) && $reply->operationTime instanceof TimestampInterface) {
+            $this->operationTime = $reply->operationTime;
         }
     }
 
@@ -239,13 +248,14 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      */
     public function execute(Server $server)
     {
-        $cursor = $this->executeAggregate($server);
-
-        return new ChangeStream($cursor, $this->resumeCallable, $this->isFirstBatchEmpty);
+        return new ChangeStream(
+            $this->createChangeStreamIterator($server),
+            function($resumeToken) { return $this->resume($resumeToken); }
+        );
     }
 
     /**
-     * Create the aggregate command for creating a change stream.
+     * Create the aggregate command for a change stream.
      *
      * This method is also used to recreate the aggregate command when resuming.
      *
@@ -259,40 +269,27 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         return new Aggregate($this->databaseName, $this->collectionName, $pipeline, $this->aggregateOptions);
     }
 
-    private function createResumeCallable(Manager $manager)
+    /**
+     * Create a ChangeStreamIterator by executing the aggregate command.
+     *
+     * @param Server $server
+     * @return ChangeStreamIterator
+     */
+    private function createChangeStreamIterator(Server $server)
     {
-        return function($resumeToken = null) use ($manager) {
-            /* If a resume token was provided, update the "resumeAfter" option
-             * and ensure that "startAtOperationTime" is no longer set. */
-            if ($resumeToken !== null) {
-                $this->changeStreamOptions['resumeAfter'] = $resumeToken;
-                unset($this->changeStreamOptions['startAtOperationTime']);
-            }
-
-            // Select a new server using the original read preference
-            $server = $manager->selectServer($this->aggregateOptions['readPreference']);
-
-            /* If we captured an operation time from the first aggregate command
-             * and there is no "resumeAfter" option, set "startAtOperationTime"
-             * so that we can resume from the original aggregate's time. */
-            if ($this->operationTime !== null && ! isset($this->changeStreamOptions['resumeAfter']) &&
-                \MongoDB\server_supports_feature($server, self::$wireVersionForStartAtOperationTime)) {
-                $this->changeStreamOptions['startAtOperationTime'] = $this->operationTime;
-            }
-
-            // Recreate the aggregate command and execute to obtain a new cursor
-            $this->aggregate = $this->createAggregate();
-            $cursor = $this->executeAggregate($server);
-
-            return [$cursor, $this->isFirstBatchEmpty];
-        };
+        return new ChangeStreamIterator(
+            $this->executeAggregate($server),
+            $this->firstBatchSize,
+            $this->getInitialResumeToken(),
+            $this->postBatchResumeToken
+        );
     }
 
     /**
      * Execute the aggregate command.
      *
-     * The command will be executed using APM so that we can capture its
-     * operation time and/or firstBatch size.
+     * The command will be executed using APM so that we can capture data from
+     * its response (e.g. firstBatch size, postBatchResumeToken).
      *
      * @param Server $server
      * @return Cursor
@@ -306,5 +303,99 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         } finally {
             \MongoDB\Driver\Monitoring\removeSubscriber($this);
         }
+    }
+
+    /**
+     * Return the initial resume token for creating the ChangeStreamIterator.
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#updating-the-cached-resume-token
+     * @return array|object|null
+     */
+    private function getInitialResumeToken()
+    {
+        if ($this->firstBatchSize === 0 && isset($this->postBatchResumeToken)) {
+            return $this->postBatchResumeToken;
+        }
+
+        if (isset($this->changeStreamOptions['startAfter'])) {
+            return $this->changeStreamOptions['startAfter'];
+        }
+
+        if (isset($this->changeStreamOptions['resumeAfter'])) {
+            return $this->changeStreamOptions['resumeAfter'];
+        }
+
+        return null;
+    }
+
+    /**
+     * Resumes a change stream.
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#resume-process
+     * @param array|object|null $resumeToken
+     * @return ChangeStreamIterator
+     * @throws InvalidArgumentException
+     */
+    private function resume($resumeToken = null)
+    {
+        if (isset($resumeToken) && ! is_array($resumeToken) && ! is_object($resumeToken)) {
+            throw InvalidArgumentException::invalidType('$resumeToken', $resumeToken, 'array or object');
+        }
+
+        $this->hasResumed = true;
+
+        // Select a new server using the original read preference
+        $server = $this->manager->selectServer($this->aggregateOptions['readPreference']);
+
+        unset($this->changeStreamOptions['resumeAfter']);
+        unset($this->changeStreamOptions['startAfter']);
+        unset($this->changeStreamOptions['startAtOperationTime']);
+
+        if ($resumeToken !== null) {
+            $this->changeStreamOptions['resumeAfter'] = $resumeToken;
+        }
+
+        if ($resumeToken === null && $this->operationTime !== null) {
+            $this->changeStreamOptions['startAtOperationTime'] = $this->operationTime;
+        }
+
+        // Recreate the aggregate command and return a new ChangeStreamIterator
+        $this->aggregate = $this->createAggregate();
+
+        return $this->createChangeStreamIterator($server);
+    }
+
+    /**
+     * Determine whether to capture operation time from an aggregate response.
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#startatoperationtime
+     * @param Server $server
+     * @return boolean
+     */
+    private function shouldCaptureOperationTime(Server $server)
+    {
+        if ($this->hasResumed) {
+            return false;
+        }
+
+        if (isset($this->changeStreamOptions['resumeAfter']) ||
+            isset($this->changeStreamOptions['startAfter']) ||
+            isset($this->changeStreamOptions['startAtOperationTime'])) {
+            return false;
+        }
+
+        if ($this->firstBatchSize > 0) {
+            return false;
+        }
+
+        if ($this->postBatchResumeToken !== null) {
+            return false;
+        }
+
+        if ( ! \MongoDB\server_supports_feature($server, self::$wireVersionForStartAtOperationTime)) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -40,9 +40,11 @@ class ChangeStream implements Iterator
      */
     const CURSOR_NOT_FOUND = 43;
 
-    private static $errorCodeCappedPositionLost = 136;
-    private static $errorCodeInterrupted = 11601;
-    private static $errorCodeCursorKilled = 237;
+    private static $nonResumableErrorCodes = [
+        136, // CappedPositionLost
+        237, // CursorKilled
+        11601, // Interrupted
+    ];
 
     private $resumeCallable;
     private $iterator;
@@ -173,7 +175,7 @@ class ChangeStream implements Iterator
             return false;
         }
 
-        if (in_array($exception->getCode(), [self::$errorCodeCappedPositionLost, self::$errorCodeCursorKilled, self::$errorCodeInterrupted])) {
+        if (in_array($exception->getCode(), self::$nonResumableErrorCodes)) {
             return false;
         }
 

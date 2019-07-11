@@ -11,15 +11,31 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Operation\CreateCollection;
+use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
+use InvalidArgumentException;
 use stdClass;
 use UnexpectedValueException;
 
 abstract class FunctionalTestCase extends TestCase
 {
+    protected $manager;
+
+    private $configuredFailPoints = [];
+
     public function setUp()
     {
+        parent::setUp();
+
         $this->manager = new Manager(static::getUri());
+        $this->configuredFailPoints = [];
+    }
+
+    public function tearDown()
+    {
+        $this->disableFailPoints();
+
+        parent::tearDown();
     }
 
     protected function assertCollectionCount($namespace, $count)
@@ -47,6 +63,39 @@ abstract class FunctionalTestCase extends TestCase
         $this->assertInstanceOf('MongoDB\BSON\ObjectId', $expectedObjectId);
         $this->assertInstanceOf('MongoDB\BSON\ObjectId', $actualObjectId);
         $this->assertEquals((string) $expectedObjectId, (string) $actualObjectId);
+    }
+
+    /**
+     * Configure a fail point for the test.
+     *
+     * The fail point will automatically be disabled during tearDown() to avoid
+     * affecting a subsequent test.
+     *
+     * @param array|stdClass $command configureFailPoint command document
+     * @throws InvalidArgumentException if $command is not a configureFailPoint command
+     */
+    protected function configureFailPoint($command)
+    {
+        if (is_array($command)) {
+            $command = (object) $command;
+        }
+
+        if ( ! $command instanceof stdClass) {
+            throw new InvalidArgumentException('$command is not an array or stdClass instance');
+        }
+
+        if (key($command) !== 'configureFailPoint') {
+            throw new InvalidArgumentException('$command is not a configureFailPoint command');
+        }
+
+        $operation = new DatabaseCommand('admin', $command);
+        $cursor = $operation->execute($this->getPrimaryServer());
+        $result = $cursor->toArray()[0];
+
+        $this->assertCommandSucceeded($result);
+
+        // Record the fail point so it can be disabled during tearDown()
+        $this->configuredFailPoints[] = $command->configureFailPoint;
     }
 
     /**
@@ -258,6 +307,26 @@ abstract class FunctionalTestCase extends TestCase
 
         if ($this->getServerStorageEngine() !== 'wiredTiger') {
             $this->markTestSkipped('Transactions require WiredTiger storage engine');
+        }
+    }
+
+    /**
+     * Disables any fail points that were configured earlier in the test.
+     *
+     * This tracks fail points set via configureFailPoint() and should be called
+     * during tearDown().
+     */
+    private function disableFailPoints()
+    {
+        if (empty($this->configuredFailPoints)) {
+            return;
+        }
+
+        $server = $this->getPrimaryServer();
+
+        foreach ($this->configuredFailPoints as $failPoint) {
+            $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
+            $operation->execute($server);
         }
     }
 }

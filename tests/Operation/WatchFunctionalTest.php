@@ -9,6 +9,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\LogicException;
+use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
@@ -578,6 +579,45 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
         $this->assertFalse($cursor->isDead());
+    }
+
+    /**
+     * Prose test: "ChangeStream will not attempt to resume after encountering
+     * error code 11601 (Interrupted), 136 (CappedPositionLost), or 237
+     * (CursorKilled) while executing a getMore command."
+     *
+     * @dataProvider provideNonResumableErrorCodes
+     */
+    public function testNonResumableErrorCodes($errorCode)
+    {
+        if (version_compare($this->getServerVersion(), '4.0.0', '<')) {
+            $this->markTestSkipped('failCommand is not supported');
+        }
+
+        $this->configureFailPoint([
+            'configureFailPoint' => 'failCommand',
+            'mode' => ['times' => 1],
+            'data' => ['failCommands' => ['getMore'], 'errorCode' => $errorCode],
+        ]);
+
+        $this->insertDocument(['x' => 1]);
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), []);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+        $changeStream->rewind();
+
+        $this->expectException(ServerException::class);
+        $this->expectExceptionCode($errorCode);
+        $changeStream->next();
+    }
+
+    public function provideNonResumableErrorCodes()
+    {
+        return [
+            [136], // CappedPositionLost
+            [237], // CursorKilled
+            [11601], // Interrupted
+        ];
     }
 
     public function testNextResumeTokenNotFound()

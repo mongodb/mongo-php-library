@@ -1232,6 +1232,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
     {
         $this->skipIfTransactionsAreNotSupported();
 
+        $this->assertNotNull('This test intentionally performs no assertions');
+
         $client = new Client(static::getUri());
 
         /* The WC is required: https://docs.mongodb.com/manual/core/transactions/#transactions-and-locks */
@@ -1392,6 +1394,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
     {
         $this->skipIfTransactionsAreNotSupported();
 
+        $this->assertNotNull('This test intentionally performs no assertions');
+
         $client = new Client(static::getUri());
 
         /* The WC is required: https://docs.mongodb.com/manual/core/transactions/#transactions-and-locks */
@@ -1419,6 +1423,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
         } catch (ConnectionTimeoutException $e) {
             $this->markTestSkipped('Secondary is not available');
         }
+
+        $this->assertNotNull('This test intentionally performs no assertions');
 
         // Prep
         $client = new Client(static::getUri());

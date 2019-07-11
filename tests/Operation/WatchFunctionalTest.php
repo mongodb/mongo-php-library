@@ -29,17 +29,33 @@ class WatchFunctionalTest extends FunctionalTestCase
         parent::setUp();
 
         $this->skipIfChangeStreamIsNotSupported();
+        $this->createCollection();
     }
 
     public function testNextResumesAfterCursorNotFound()
     {
-        $this->insertDocument(['_id' => 1, 'x' => 'foo']);
-
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $changeStream->rewind();
         $this->assertFalse($changeStream->valid());
+
+        $this->insertDocument(['_id' => 1, 'x' => 'foo']);
+
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 1, 'x' => 'foo'],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 1],
+        ];
+
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+
+        $this->killChangeStreamCursor($changeStream);
 
         $this->insertDocument(['_id' => 2, 'x' => 'bar']);
 
@@ -51,24 +67,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'operationType' => 'insert',
             'fullDocument' => ['_id' => 2, 'x' => 'bar'],
             'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
-            'documentKey' => ['_id' => 2],
-        ];
-
-        $this->assertMatchesDocument($expectedResult, $changeStream->current());
-
-        $this->killChangeStreamCursor($changeStream);
-
-        $this->insertDocument(['_id' => 3, 'x' => 'baz']);
-
-        $changeStream->next();
-        $this->assertTrue($changeStream->valid());
-
-        $expectedResult = [
-            '_id' => $changeStream->current()->_id,
-            'operationType' => 'insert',
-            'fullDocument' => ['_id' => 3, 'x' => 'baz'],
-            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
-            'documentKey' => ['_id' => 3]
+            'documentKey' => ['_id' => 2]
         ];
 
         $this->assertMatchesDocument($expectedResult, $changeStream->current());
@@ -335,12 +334,30 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testNoChangeAfterResumeBeforeInsert()
     {
-        $this->insertDocument(['_id' => 1, 'x' => 'foo']);
-
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->assertNoCommandExecuted(function() use ($changeStream) { $changeStream->rewind(); });
+        $this->assertFalse($changeStream->valid());
+
+        $this->insertDocument(['_id' => 1, 'x' => 'foo']);
+
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+
+        $expectedResult = [
+            '_id' => $changeStream->current()->_id,
+            'operationType' => 'insert',
+            'fullDocument' => ['_id' => 1, 'x' => 'foo'],
+            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
+            'documentKey' => ['_id' => 1],
+        ];
+
+        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+
+        $this->killChangeStreamCursor($changeStream);
+
+        $changeStream->next();
         $this->assertFalse($changeStream->valid());
 
         $this->insertDocument(['_id' => 2, 'x' => 'bar']);
@@ -357,33 +374,10 @@ class WatchFunctionalTest extends FunctionalTestCase
         ];
 
         $this->assertMatchesDocument($expectedResult, $changeStream->current());
-
-        $this->killChangeStreamCursor($changeStream);
-
-        $changeStream->next();
-        $this->assertFalse($changeStream->valid());
-
-        $this->insertDocument(['_id' => 3, 'x' => 'baz']);
-
-        $changeStream->next();
-        $this->assertTrue($changeStream->valid());
-
-        $expectedResult = [
-            '_id' => $changeStream->current()->_id,
-            'operationType' => 'insert',
-            'fullDocument' => ['_id' => 3, 'x' => 'baz'],
-            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
-            'documentKey' => ['_id' => 3],
-        ];
-
-        $this->assertMatchesDocument($expectedResult, $changeStream->current());
     }
 
     public function testResumeMultipleTimesInSuccession()
     {
-        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
-
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
@@ -966,9 +960,6 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testSessionFreed()
     {
-        // Create collection so we can drop it later
-        $this->createCollection();
-
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 

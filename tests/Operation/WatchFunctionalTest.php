@@ -1085,7 +1085,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $rp = $rc->getProperty('resumeCallable');
         $rp->setAccessible(true);
 
-        $this->assertNotNull($rp->getValue($changeStream));
+        $this->assertInternalType('callable', $rp->getValue($changeStream));
 
         // Invalidate the cursor to verify that resumeCallable is unset when the cursor is exhausted.
         $this->dropCollection();

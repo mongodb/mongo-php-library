@@ -620,7 +620,12 @@ class WatchFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    public function testNextResumeTokenNotFound()
+    /**
+     * Prose test: "ChangeStream will throw an exception if the server response
+     * is missing the resume token (if wire version is < 8, this is a driver-
+     * side error; for 8+, this is a server-side error)"
+     */
+    public function testResumeTokenNotFoundClientSideError()
     {
         if (version_compare($this->getServerVersion(), '4.1.8', '>=')) {
             $this->markTestSkipped('Server rejects change streams that modify resume token (SERVER-37786)');
@@ -631,16 +636,47 @@ class WatchFunctionalTest extends FunctionalTestCase
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
-        /* Note: we intentionally do not start iteration with rewind() to ensure
-         * that we test extraction functionality within next(). */
+        $changeStream->rewind();
+
+        /* Insert two documents to ensure the client does not ignore the first
+         * document's resume token in favor of a postBatchResumeToken */
         $this->insertDocument(['x' => 1]);
+        $this->insertDocument(['x' => 2]);
 
         $this->expectException(ResumeTokenException::class);
         $this->expectExceptionMessage('Resume token not found in change document');
         $changeStream->next();
     }
 
-    public function testNextResumeTokenInvalidType()
+    /**
+     * Prose test: "ChangeStream will throw an exception if the server response
+     * is missing the resume token (if wire version is < 8, this is a driver-
+     * side error; for 8+, this is a server-side error)"
+     */
+    public function testResumeTokenNotFoundServerSideError()
+    {
+        if (version_compare($this->getServerVersion(), '4.1.8', '<')) {
+            $this->markTestSkipped('Server does not reject change streams that modify resume token');
+        }
+
+        $pipeline =  [['$project' => ['_id' => 0 ]]];
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $changeStream->rewind();
+        $this->insertDocument(['x' => 1]);
+
+        $this->expectException(ServerException::class);
+        $changeStream->next();
+    }
+
+    /**
+     * Prose test: "ChangeStream will throw an exception if the server response
+     * is missing the resume token (if wire version is < 8, this is a driver-
+     * side error; for 8+, this is a server-side error)"
+     */
+    public function testResumeTokenInvalidTypeClientSideError()
     {
         if (version_compare($this->getServerVersion(), '4.1.8', '>=')) {
             $this->markTestSkipped('Server rejects change streams that modify resume token (SERVER-37786)');
@@ -651,12 +687,38 @@ class WatchFunctionalTest extends FunctionalTestCase
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 
-        /* Note: we intentionally do not start iteration with rewind() to ensure
-         * that we test extraction functionality within next(). */
+        $changeStream->rewind();
+
+        /* Insert two documents to ensure the client does not ignore the first
+         * document's resume token in favor of a postBatchResumeToken */
         $this->insertDocument(['x' => 1]);
+        $this->insertDocument(['x' => 2]);
 
         $this->expectException(ResumeTokenException::class);
         $this->expectExceptionMessage('Expected resume token to have type "array or object" but found "string"');
+        $changeStream->next();
+    }
+
+    /**
+     * Prose test: "ChangeStream will throw an exception if the server response
+     * is missing the resume token (if wire version is < 8, this is a driver-
+     * side error; for 8+, this is a server-side error)"
+     */
+    public function testResumeTokenInvalidTypeServerSideError()
+    {
+        if (version_compare($this->getServerVersion(), '4.1.8', '<')) {
+            $this->markTestSkipped('Server does not reject change streams that modify resume token');
+        }
+
+        $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $changeStream->rewind();
+        $this->insertDocument(['x' => 1]);
+
+        $this->expectException(ServerException::class);
         $changeStream->next();
     }
 
@@ -908,10 +970,6 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testResumeTokenNotFoundDoesNotAdvanceKey()
     {
-        if (version_compare($this->getServerVersion(), '4.1.8', '>=')) {
-            $this->markTestSkipped('Server rejects change streams that modify resume token (SERVER-37786)');
-        }
-
         $pipeline =  [['$project' => ['_id' => 0 ]]];
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $pipeline, $this->defaultOptions);
@@ -923,20 +981,40 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $changeStream->rewind();
         $this->assertFalse($changeStream->valid());
+        $this->assertNull($changeStream->key());
 
         try {
             $changeStream->next();
-            $this->fail('ResumeTokenException was not thrown');
-        } catch (ResumeTokenException $e) {}
+            $this->fail('Exception for missing resume token was not thrown');
+        } catch (ResumeTokenException $e) {
+            /* If a client-side error is thrown (server < 4.1.8), the tailable
+             * cursor's position is still valid. This may change once PHPLIB-456
+             * is implemented. */
+            $expectedValid = true;
+            $expectedKey = 0;
+        } catch (ServerException $e) {
+            /* If a server-side error is thrown (server >= 4.1.8), the tailable
+             * cursor's position is not valid. */
+            $expectedValid = false;
+            $expectedKey = null;
+        }
 
-        $this->assertSame(0, $changeStream->key());
+        $this->assertSame($expectedValid, $changeStream->valid());
+        $this->assertSame($expectedKey, $changeStream->key());
 
         try {
             $changeStream->next();
-            $this->fail('ResumeTokenException was not thrown');
-        } catch (ResumeTokenException $e) {}
+            $this->fail('Exception for missing resume token was not thrown');
+        } catch (ResumeTokenException $e) {
+            $expectedValid = true;
+            $expectedKey = 0;
+        } catch (ServerException $e) {
+            $expectedValid = false;
+            $expectedKey = null;
+        }
 
-        $this->assertSame(0, $changeStream->key());
+        $this->assertSame($expectedValid, $changeStream->valid());
+        $this->assertSame($expectedKey, $changeStream->key());
     }
 
     public function testSessionPersistsAfterResume()

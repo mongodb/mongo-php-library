@@ -4,7 +4,6 @@ namespace MongoDB\Tests\SpecTests;
 
 use MongoDB\Client;
 use MongoDB\Collection;
-use MongoDB\Database;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\BulkWriteException;
@@ -14,7 +13,6 @@ use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 use MongoDB\Tests\TestCase;
 use PHPUnit\Framework\SkippedTest;
 use ArrayIterator;
-use InvalidArgumentException;
 use IteratorIterator;
 use LogicException;
 use MultipleIterator;
@@ -32,21 +30,18 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     const TOPOLOGY_REPLICASET = 'replicaset';
     const TOPOLOGY_SHARDED = 'sharded';
 
-    private $configuredFailPoints = [];
     private $context;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->configuredFailPoints = [];
         $this->context = null;
     }
 
     public function tearDown()
     {
         $this->context = null;
-        $this->disableFailPoints();
 
         parent::tearDown();
     }
@@ -142,39 +137,6 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     }
 
     /**
-     * Configure a fail point for the test.
-     *
-     * The fail point will automatically be disabled during tearDown() to avoid
-     * affecting a subsequent test.
-     *
-     * @param array|stdClass $command configureFailPoint command document
-     * @throws InvalidArgumentException if $command is not a configureFailPoint command
-     */
-    protected function configureFailPoint($command)
-    {
-        if (is_array($command)) {
-            $command = (object) $command;
-        }
-
-        if ( ! $command instanceof stdClass) {
-            throw new InvalidArgumentException('$command is not an array or stdClass instance');
-        }
-
-        if (key($command) !== 'configureFailPoint') {
-            throw new InvalidArgumentException('$command is not a configureFailPoint command');
-        }
-
-        $database = new Database($this->manager, 'admin');
-        $cursor = $database->command($command);
-        $result = $cursor->toArray()[0];
-
-        $this->assertCommandSucceeded($result);
-
-        // Record the fail point so it can be disabled during tearDown()
-        $this->configuredFailPoints[] = $command->configureFailPoint;
-    }
-
-    /**
      * Decode a JSON spec test.
      *
      * This decodes the file through the driver's extended JSON parser to ensure
@@ -253,21 +215,6 @@ class FunctionalTestCase extends BaseFunctionalTestCase
 
         // Outcome collection need not use the client under test
         return new Collection($this->manager, $context->databaseName, $context->outcomeCollectionName);
-    }
-
-    /**
-     * Disables any fail points that were configured earlier in the test.
-     *
-     * This tracks fail points set via configureFailPoint() and should be called
-     * during tearDown().
-     */
-    private function disableFailPoints()
-    {
-        $database = new Database($this->manager, 'admin');
-
-        foreach ($this->configuredFailPoints as $failPoint) {
-            $database->command(['configureFailPoint' => $failPoint, 'mode' => 'off']);
-        }
     }
 
     /**

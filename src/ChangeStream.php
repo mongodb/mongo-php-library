@@ -17,14 +17,12 @@
 
 namespace MongoDB;
 
-use MongoDB\BSON\Serializable;
-use MongoDB\Driver\Cursor;
+use MongoDB\Driver\CursorId;
 use MongoDB\Driver\Exception\ConnectionException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
-use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\ResumeTokenException;
-use MongoDB\Model\TailableCursorIterator;
+use MongoDB\Model\ChangeStreamIterator;
 use Iterator;
 
 /**
@@ -42,13 +40,14 @@ class ChangeStream implements Iterator
      */
     const CURSOR_NOT_FOUND = 43;
 
-    private static $errorCodeCappedPositionLost = 136;
-    private static $errorCodeInterrupted = 11601;
-    private static $errorCodeCursorKilled = 237;
+    private static $nonResumableErrorCodes = [
+        136, // CappedPositionLost
+        237, // CursorKilled
+        11601, // Interrupted
+    ];
 
-    private $resumeToken;
     private $resumeCallable;
-    private $csIt;
+    private $iterator;
     private $key = 0;
 
     /**
@@ -61,14 +60,13 @@ class ChangeStream implements Iterator
      * Constructor.
      *
      * @internal
-     * @param Cursor   $cursor
-     * @param callable $resumeCallable
-     * @param boolean  $isFirstBatchEmpty
+     * @param ChangeStreamIterator $iterator
+     * @param callable             $resumeCallable
      */
-    public function __construct(Cursor $cursor, callable $resumeCallable, $isFirstBatchEmpty)
+    public function __construct(ChangeStreamIterator $iterator, callable $resumeCallable)
     {
+        $this->iterator = $iterator;
         $this->resumeCallable = $resumeCallable;
-        $this->csIt = new TailableCursorIterator($cursor, $isFirstBatchEmpty);
     }
 
     /**
@@ -77,15 +75,29 @@ class ChangeStream implements Iterator
      */
     public function current()
     {
-        return $this->csIt->current();
+        return $this->iterator->current();
     }
 
     /**
-     * @return \MongoDB\Driver\CursorId
+     * @return CursorId
      */
     public function getCursorId()
     {
-        return $this->csIt->getInnerIterator()->getId();
+        return $this->iterator->getInnerIterator()->getId();
+    }
+
+    /**
+     * Returns the resume token for the iterator's current position.
+     *
+     * Null may be returned if no change documents have been iterated and the
+     * server did not include a postBatchResumeToken in its aggregate or getMore
+     * command response.
+     *
+     * @return array|object|null
+     */
+    public function getResumeToken()
+    {
+        return $this->iterator->getResumeToken();
     }
 
     /**
@@ -108,7 +120,7 @@ class ChangeStream implements Iterator
     public function next()
     {
         try {
-            $this->csIt->next();
+            $this->iterator->next();
             $this->onIteration($this->hasAdvanced);
         } catch (RuntimeException $e) {
             $this->resumeOrThrow($e);
@@ -123,7 +135,7 @@ class ChangeStream implements Iterator
     public function rewind()
     {
         try {
-            $this->csIt->rewind();
+            $this->iterator->rewind();
             /* Unlike next() and resume(), the decision to increment the key
              * does not depend on whether the change stream has advanced. This
              * ensures that multiple calls to rewind() do not alter state. */
@@ -139,40 +151,7 @@ class ChangeStream implements Iterator
      */
     public function valid()
     {
-        return $this->csIt->valid();
-    }
-
-    /**
-     * Extracts the resume token (i.e. "_id" field) from the change document.
-     *
-     * @param array|object $document Change document
-     * @return mixed
-     * @throws InvalidArgumentException
-     * @throws ResumeTokenException if the resume token is not found or invalid
-     */
-    private function extractResumeToken($document)
-    {
-        if ( ! is_array($document) && ! is_object($document)) {
-            throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
-        }
-
-        if ($document instanceof Serializable) {
-            return $this->extractResumeToken($document->bsonSerialize());
-        }
-
-        $resumeToken = is_array($document)
-            ? (isset($document['_id']) ? $document['_id'] : null)
-            : (isset($document->_id) ? $document->_id : null);
-
-        if ( ! isset($resumeToken)) {
-            throw ResumeTokenException::notFound();
-        }
-
-        if ( ! is_array($resumeToken) && ! is_object($resumeToken)) {
-            throw ResumeTokenException::invalidType($resumeToken);
-        }
-
-        return $resumeToken;
+        return $this->iterator->valid();
     }
 
     /**
@@ -196,7 +175,7 @@ class ChangeStream implements Iterator
             return false;
         }
 
-        if (in_array($exception->getCode(), [self::$errorCodeCappedPositionLost, self::$errorCodeCursorKilled, self::$errorCodeInterrupted])) {
+        if (in_array($exception->getCode(), self::$nonResumableErrorCodes)) {
             return false;
         }
 
@@ -222,12 +201,10 @@ class ChangeStream implements Iterator
         }
 
         /* Return early if there is not a current result. Avoid any attempt to
-         * increment the iterator's key or extract a resume token */
+         * increment the iterator's key. */
         if (!$this->valid()) {
             return;
         }
-
-        $this->resumeToken = $this->extractResumeToken($this->csIt->current());
 
         if ($incrementKey) {
             $this->key++;
@@ -237,16 +214,14 @@ class ChangeStream implements Iterator
     }
 
     /**
-     * Creates a new changeStream after a resumable server error.
+     * Recreates the ChangeStreamIterator after a resumable server error.
      *
      * @return void
      */
     private function resume()
     {
-        list($cursor, $isFirstBatchEmpty) = call_user_func($this->resumeCallable, $this->resumeToken);
-
-        $this->csIt = new TailableCursorIterator($cursor, $isFirstBatchEmpty);
-        $this->csIt->rewind();
+        $this->iterator = call_user_func($this->resumeCallable, $this->getResumeToken());
+        $this->iterator->rewind();
 
         $this->onIteration($this->hasAdvanced);
     }

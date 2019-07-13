@@ -930,6 +930,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $db = new Database($this->manager, $this->getDatabaseName());
         $db->dropCollection('inventory');
+        $db->createCollection('inventory');
 
         // Start Changestream Example 1
         $changeStream = $db->inventory->watch();

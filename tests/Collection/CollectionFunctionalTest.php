@@ -608,7 +608,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
         (new CommandObserver)->observe(
             function() use ($method, $collection, $session) {
-                $method->call($this, $collection, $session);
+                call_user_func($method, $collection, $session);
             },
             function(array $event) {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
@@ -632,12 +632,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $session->startTransaction();
 
         try {
-            $method->call(
-                $this, $this->collection, $session,
-                [
-                    'writeConcern' => new WriteConcern(1),
-                ]
-            );
+            call_user_func($method, $this->collection, $session, ['writeConcern' => new WriteConcern(1)]);
         } finally {
             $session->endSession();
         }
@@ -658,12 +653,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $session->startTransaction();
 
         try {
-            $method->call(
-                $this, $this->collection, $session,
-                [
-                    'readConcern' => new ReadConcern(ReadConcern::LOCAL),
-                ]
-            );
+            call_user_func($method, $this->collection, $session, ['readConcern' => new ReadConcern(ReadConcern::LOCAL)]);
         } finally {
             $session->endSession();
         }

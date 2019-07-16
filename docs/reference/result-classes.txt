@@ -22,6 +22,8 @@ Definition
 
    This class extends PHP's :php:`Iterator <manual/en/class.iterator.php>`
    interface. An instance of this class is returned by
+   :phpmethod:`MongoDB\\Client::watch()`,
+   :phpmethod:`MongoDB\\Database::watch()`, and
    :phpmethod:`MongoDB\\Collection::watch()`.
 
    This class allows for iteration of events in a change stream. It also allows
@@ -36,6 +38,7 @@ Methods
 
    /reference/method/MongoDBChangeStream-current
    /reference/method/MongoDBChangeStream-getCursorId
+   /reference/method/MongoDBChangeStream-getResumeToken
    /reference/method/MongoDBChangeStream-key
    /reference/method/MongoDBChangeStream-next
    /reference/method/MongoDBChangeStream-rewind

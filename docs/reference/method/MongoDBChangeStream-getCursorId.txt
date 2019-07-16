@@ -53,6 +53,8 @@ The output would then resemble::
 See Also
 --------
 
+- :phpmethod:`MongoDB\\Client::watch()`
 - :phpmethod:`MongoDB\\Collection::watch()`
+- :phpmethod:`MongoDB\\Database::watch()`
 - :php:`MongoDB\\Driver\\CursorId <class.mongodb-driver-cursorid>`
 - :php:`MongoDB\\Driver\\Cursor::getId() <manual/en/mongodb-driver-cursor.getid.php>`

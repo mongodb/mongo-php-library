@@ -114,6 +114,8 @@ script was iterating the change stream, the output would then resemble:
 See Also
 --------
 
+- :phpmethod:`MongoDB\\Client::watch()`
+- :phpmethod:`MongoDB\\Database::watch()`
 - :manual:`Aggregation Pipeline </core/aggregation-pipeline>` documentation in
   the MongoDB Manual
 - :manual:`Change Streams </changeStreams>` documentation in the MongoDB manual

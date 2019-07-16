@@ -68,7 +68,9 @@ script was iterating the change stream, the output would then resemble:
 See Also
 --------
 
+- :phpmethod:`MongoDB\\Client::watch()`
 - :phpmethod:`MongoDB\\Collection::watch()`
+- :phpmethod:`MongoDB\\Database::watch()`
 - :php:`Iterator::key() <iterator.key>`
 - :ref:`Tailable Cursor Iteration <php-tailable-cursor>`
 - :manual:`Change Streams </changeStreams>` documentation in the MongoDB manual

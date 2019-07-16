@@ -1,0 +1,75 @@
+=======================================
+MongoDB\\ChangeStream::getResumeToken()
+=======================================
+
+.. versionadded:: 1.5
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\ChangeStream::getResumeToken()
+
+   Returns the cached resume token that will be used to resume the change
+   stream.
+
+   .. code-block:: php
+
+      function getResumeToken(): array|object|null
+
+Return Values
+-------------
+
+An array or object, or ``null`` if there is no cached resume token. The return
+type will depend on the ``typeMap`` option for the ``watch()`` method used to
+create the change stream.
+
+Examples
+--------
+
+This example captures the resume token for a change stream after encountering
+an ``invalidate`` event and uses it to construct a second change stream using
+the ``startAfter`` option.
+
+.. code-block:: php
+
+   <?php
+
+   $uri = 'mongodb://rs1.example.com,rs2.example.com/?replicaSet=myReplicaSet';
+
+   $collection = (new MongoDB\Client($uri))->test->inventory;
+
+   $changeStream = $collection->watch();
+
+   for ($changeStream->rewind(); true; $changeStream->next()) {
+       if ( ! $changeStream->valid()) {
+           continue;
+       }
+
+       $event = $changeStream->current();
+
+       if ($event['operationType'] === 'invalidate') {
+           $startAfter = $changeStream->getResumeToken();
+           break;
+       }
+
+       printf("%d: %s\n", $changeStream->key(), $event['operationType']);
+   }
+
+   $changeStream = $collection->watch([], ['startAfter' => $startAfter]);
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Client::watch()`
+- :phpmethod:`MongoDB\\Collection::watch()`
+- :phpmethod:`MongoDB\\Database::watch()`
+- :manual:`Resume a Change Stream </changeStreams#resume-a-change-stream>`
+  documentation in the MongoDB manual

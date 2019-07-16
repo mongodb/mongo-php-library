@@ -36,6 +36,7 @@ Methods
 
    /reference/method/MongoDBChangeStream-current
    /reference/method/MongoDBChangeStream-getCursorId
+   /reference/method/MongoDBChangeStream-getResumeToken
    /reference/method/MongoDBChangeStream-key
    /reference/method/MongoDBChangeStream-next
    /reference/method/MongoDBChangeStream-rewind

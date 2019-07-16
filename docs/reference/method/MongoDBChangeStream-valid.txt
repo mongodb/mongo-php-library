@@ -34,7 +34,9 @@ A boolean indicating whether there is a current event in the change stream.
 See Also
 --------
 
+- :phpmethod:`MongoDB\\Client::watch()`
 - :phpmethod:`MongoDB\\Collection::watch()`
+- :phpmethod:`MongoDB\\Database::watch()`
 - :php:`Iterator::valid() <iterator.valid>`
 - :ref:`Tailable Cursor Iteration <php-tailable-cursor>`
 - :manual:`Change Streams </changeStreams>` documentation in the MongoDB manual

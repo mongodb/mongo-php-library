@@ -46,7 +46,9 @@ advanced).
 See Also
 --------
 
+- :phpmethod:`MongoDB\\Client::watch()`
 - :phpmethod:`MongoDB\\Collection::watch()`
+- :phpmethod:`MongoDB\\Database::watch()`
 - :php:`Iterator::rewind() <iterator.rewind>`
 - :ref:`Tailable Cursor Iteration <php-tailable-cursor>`
 - :manual:`Change Streams </changeStreams>` documentation in the MongoDB manual

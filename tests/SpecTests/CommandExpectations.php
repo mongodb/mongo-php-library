@@ -54,7 +54,7 @@ class CommandExpectations implements CommandSubscriber
         /* Change Streams spec tests do not include getMore commands in the
          * list of expected events, so ignore any observed events beyond the
          * number that are expected. */
-        $o->ignoreExtraEvents = true;;
+        $o->ignoreExtraEvents = true;
 
         return $o;
     }

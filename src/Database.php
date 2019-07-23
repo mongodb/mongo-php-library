@@ -48,6 +48,7 @@ class Database
     ];
     private static $wireVersionForReadConcern = 4;
     private static $wireVersionForWritableCommandWriteConcern = 5;
+    private static $wireVersionForReadConcernWithOutStage = 8;
 
     private $databaseName;
     private $manager;
@@ -186,15 +187,16 @@ class Database
 
         $server = $this->manager->selectServer($options['readPreference']);
 
-        /* A "majority" read concern is not compatible with the $out stage, so
-         * avoid providing the Collection's read concern if it would conflict.
+        /* MongoDB 4.2 and later supports a read concern when an $out stage is
+         * being used, but earlier versions do not.
          *
          * A read concern is also not compatible with transactions.
          */
         if ( ! isset($options['readConcern']) &&
-            ! ($hasOutStage && $this->readConcern->getLevel() === ReadConcern::MAJORITY) &&
             \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) &&
-            ! \MongoDB\is_in_transaction($options)) {
+            ! \MongoDB\is_in_transaction($options) &&
+            ( ! $hasOutStage || \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcernWithOutStage))
+        ) {
             $options['readConcern'] = $this->readConcern;
         }
 

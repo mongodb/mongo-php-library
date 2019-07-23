@@ -33,7 +33,6 @@ final class Operation
     private $collectionName;
     private $collectionOptions = [];
     private $databaseName;
-    private $databaseOptions = [];
     private $name;
     private $object = self::OBJECT_COLLECTION;
 
@@ -101,6 +100,19 @@ final class Operation
         return $o;
     }
 
+    public static function fromCrud(stdClass $operation)
+    {
+        $o = new self($operation);
+
+        $o->resultExpectation = ResultExpectation::fromCrud($operation, $o->getResultAssertionType());
+
+        if (isset($operation->collectionOptions)) {
+            $o->collectionOptions = (array) $operation->collectionOptions;
+        }
+
+        return $o;
+    }
+
     public static function fromRetryableWrites(stdClass $operation, stdClass $outcome)
     {
         $o = new self($operation);
@@ -120,10 +132,6 @@ final class Operation
 
         if (isset($operation->collectionOptions)) {
             $o->collectionOptions = (array) $operation->collectionOptions;
-        }
-
-        if (isset($operation->databaseOptions)) {
-            $o->databaseOptions = (array) $operation->databaseOptions;
         }
 
         return $o;
@@ -184,7 +192,7 @@ final class Operation
                 return $this->executeForCollection($collection, $context);
 
             case self::OBJECT_DATABASE:
-                $database = $context->getDatabase($this->databaseOptions);
+                $database = $context->getDatabase();
                 return $this->executeForDatabase($database, $context);
 
             case self::OBJECT_SELECT_COLLECTION:
@@ -192,7 +200,7 @@ final class Operation
                 return $this->executeForCollection($collection, $context);
 
             case self::OBJECT_SELECT_DATABASE:
-                $database = $context->selectDatabase($this->databaseName, $this->databaseOptions);
+                $database = $context->selectDatabase($this->databaseName);
                 return $this->executeForDatabase($database, $context);
 
             case self::OBJECT_SESSION0:
@@ -332,6 +340,12 @@ final class Operation
         $context->replaceArgumentSessionPlaceholder($args);
 
         switch ($this->name) {
+            case 'aggregate':
+                return $database->aggregate(
+                    $args['pipeline'],
+                    array_diff_key($args, ['pipeline' => 1])
+                );
+
             case 'runCommand':
                 return $database->command(
                     $args['command'],
@@ -453,6 +467,9 @@ final class Operation
     private function getResultAssertionTypeForDatabase()
     {
         switch ($this->name) {
+            case 'aggregate':
+                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
+
             case 'runCommand':
                 return ResultExpectation::ASSERT_MATCHES_DOCUMENT;
 

@@ -64,6 +64,16 @@ class CommandExpectations implements CommandSubscriber
         return new self($expectedEvents);
     }
 
+    public static function fromCrud(array $expectedEvents)
+    {
+        $o = new self($expectedEvents);
+
+        $o->ignoreCommandFailed = true;
+        $o->ignoreCommandSucceeded = true;
+
+        return $o;
+    }
+
     public static function fromTransactions(array $expectedEvents)
     {
         $o = new self($expectedEvents);

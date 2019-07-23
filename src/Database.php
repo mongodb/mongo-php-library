@@ -25,9 +25,11 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\GridFS\Bucket;
 use MongoDB\Model\CollectionInfoIterator;
+use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
@@ -35,6 +37,7 @@ use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\ModifyCollection;
 use MongoDB\Operation\Watch;
+use Traversable;
 
 class Database
 {
@@ -153,6 +156,62 @@ class Database
     public function __toString()
     {
         return $this->databaseName;
+    }
+
+    /**
+     * Runs an aggregation framework pipeline on the database for pipeline
+     * stages that do not require an underlying collection, such as $currentOp
+     * and $listLocalSessions. Requires MongoDB >= 3.6
+     *
+     * @see Aggregate::__construct() for supported options
+     * @param array $pipeline List of pipeline operations
+     * @param array $options  Command options
+     * @return Traversable
+     * @throws UnexpectedValueException if the command response was malformed
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function aggregate(array $pipeline, array $options = [])
+    {
+        $hasOutStage = \MongoDB\is_last_pipeline_operator_out($pipeline);
+
+        if ( ! isset($options['readPreference'])) {
+            $options['readPreference'] = $this->readPreference;
+        }
+
+        if ($hasOutStage) {
+            $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
+        }
+
+        $server = $this->manager->selectServer($options['readPreference']);
+
+        /* A "majority" read concern is not compatible with the $out stage, so
+         * avoid providing the Collection's read concern if it would conflict.
+         *
+         * A read concern is also not compatible with transactions.
+         */
+        if ( ! isset($options['readConcern']) &&
+            ! ($hasOutStage && $this->readConcern->getLevel() === ReadConcern::MAJORITY) &&
+            \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) &&
+            ! \MongoDB\is_in_transaction($options)) {
+            $options['readConcern'] = $this->readConcern;
+        }
+
+        if ( ! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        if ($hasOutStage &&
+            ! isset($options['writeConcern']) &&
+            \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) &&
+            ! \MongoDB\is_in_transaction($options)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new Aggregate($this->databaseName, null, $pipeline, $options);
+
+        return $operation->execute($server);
     }
 
     /**

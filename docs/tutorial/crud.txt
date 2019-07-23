@@ -401,7 +401,7 @@ The |php-library|\'s :phpmethod:`MongoDB\\Collection::aggregate()` method
 returns a :php:`Traversable <traversable>` object, which you can iterate upon to
 access the results of the aggregation operation. Refer to the
 :phpmethod:`MongoDB\\Collection::aggregate()` method's :ref:`behavior
-reference <php-agg-method-behavior>` for more about the method's output.
+reference <php-coll-agg-method-behavior>` for more about the method's output.
 
 The following example lists the 5 US states with the most zip codes associated
 with them:

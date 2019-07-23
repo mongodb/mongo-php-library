@@ -127,7 +127,7 @@ function is_in_transaction(array $options)
 }
 
 /**
- * Return whether the aggregation pipeline ends with an $out operator.
+ * Return whether the aggregation pipeline ends with an $out or $merge operator.
  *
  * This is used for determining whether the aggregation pipeline must be
  * executed against a primary server.
@@ -136,7 +136,7 @@ function is_in_transaction(array $options)
  * @param array $pipeline List of pipeline operations
  * @return boolean
  */
-function is_last_pipeline_operator_out(array $pipeline)
+function is_last_pipeline_operator_write(array $pipeline)
 {
     $lastOp = end($pipeline);
 
@@ -146,7 +146,7 @@ function is_last_pipeline_operator_out(array $pipeline)
 
     $lastOp = (array) $lastOp;
 
-    return key($lastOp) === '$out';
+    return in_array(key($lastOp), ['$out', '$merge'], true);
 }
 
 /**

@@ -264,12 +264,12 @@ class Aggregate implements Executable
 
 
         $hasExplain = ! empty($this->options['explain']);
-        $hasOutStage = \MongoDB\is_last_pipeline_operator_out($this->pipeline);
+        $hasWriteStage = \MongoDB\is_last_pipeline_operator_write($this->pipeline);
 
-        $command = $this->createCommand($server, $hasOutStage);
-        $options = $this->createOptions($hasOutStage, $hasExplain);
+        $command = $this->createCommand($server, $hasWriteStage);
+        $options = $this->createOptions($hasWriteStage, $hasExplain);
 
-        $cursor = ($hasOutStage && ! $hasExplain)
+        $cursor = ($hasWriteStage && ! $hasExplain)
             ? $server->executeReadWriteCommand($this->databaseName, $command, $options)
             : $server->executeReadCommand($this->databaseName, $command, $options);
 
@@ -353,11 +353,11 @@ class Aggregate implements Executable
      *
      * @see http://php.net/manual/en/mongodb-driver-server.executereadcommand.php
      * @see http://php.net/manual/en/mongodb-driver-server.executereadwritecommand.php
-     * @param boolean $hasOutStage
+     * @param boolean $hasWriteStage
      * @param boolean $hasExplain
      * @return array
      */
-    private function createOptions($hasOutStage, $hasExplain)
+    private function createOptions($hasWriteStage, $hasExplain)
     {
         $options = [];
 
@@ -365,7 +365,7 @@ class Aggregate implements Executable
             $options['readConcern'] = $this->options['readConcern'];
         }
 
-        if ( ! $hasOutStage && isset($this->options['readPreference'])) {
+        if (!$hasWriteStage && isset($this->options['readPreference'])) {
             $options['readPreference'] = $this->options['readPreference'];
         }
 
@@ -373,7 +373,7 @@ class Aggregate implements Executable
             $options['session'] = $this->options['session'];
         }
 
-        if ($hasOutStage && ! $hasExplain && isset($this->options['writeConcern'])) {
+        if ($hasWriteStage && ! $hasExplain && isset($this->options['writeConcern'])) {
             $options['writeConcern'] = $this->options['writeConcern'];
         }
 

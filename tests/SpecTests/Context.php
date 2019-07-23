@@ -63,6 +63,15 @@ final class Context
             $o->outcomeCollectionName = $test->outcome->collection->name;
         }
 
+        $o->defaultWriteOptions = [
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+        ];
+
+        $o->outcomeFindOptions = [
+            'readConcern' => new ReadConcern('local'),
+            'readPreference' => new ReadPreference('primary'),
+        ];
+
         $o->client = new Client(FunctionalTestCase::getUri(), $clientOptions);
 
         return $o;

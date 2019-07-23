@@ -33,8 +33,6 @@ source:
 source:
   file: apiargs-MongoDBDatabase-common-option.yaml
   ref: readPreference
-post: |
-  This option will be ignored when using the :ref:`$out <agg-out>` stage.
 ---
 source:
   file: apiargs-common-option.yaml
@@ -48,7 +46,8 @@ source:
   file: apiargs-MongoDBDatabase-common-option.yaml
   ref: writeConcern
 post: |
-  This only applies when the :ref:`$out <agg-out>` stage is specified.
+  This only applies when a :ref:`$out <agg-out>` or :ref:`$merge <agg-merge>`
+  stage is specified.
 
   This is not supported for server versions prior to 3.4 and will result in an
   exception at execution time if used.

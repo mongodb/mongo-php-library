@@ -415,7 +415,7 @@ final class Operation
                  * the CRUD specification and is not implemented in the library
                  * since we have no concept of lazy cursors. Rely on examining
                  * the output collection rather than the operation result. */
-                if (\MongoDB\is_last_pipeline_operator_out($this->arguments['pipeline'])) {
+                if (\MongoDB\is_last_pipeline_operator_write($this->arguments['pipeline'])) {
                     return ResultExpectation::ASSERT_NOTHING;
                 }
 

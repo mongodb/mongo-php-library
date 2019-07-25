@@ -59,6 +59,10 @@ final class Context
 
         $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
 
+        if (isset($test->outcome->collection->name)) {
+            $o->outcomeCollectionName = $test->outcome->collection->name;
+        }
+
         $o->client = new Client(FunctionalTestCase::getUri(), $clientOptions);
 
         return $o;

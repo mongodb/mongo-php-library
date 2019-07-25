@@ -36,12 +36,12 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\BulkWriteResult', $result);
+        $this->assertInstanceOf(\MongoDB\BulkWriteResult::class, $result);
         $this->assertSame(4, $result->getInsertedCount());
 
         $insertedIds = $result->getInsertedIds();
         $this->assertSame(1, $insertedIds[0]);
-        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $insertedIds[1]);
+        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $insertedIds[1]);
         $this->assertSame('foo', $insertedIds[2]);
         $this->assertSame('bar', $insertedIds[3]);
 
@@ -70,14 +70,14 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\BulkWriteResult', $result);
+        $this->assertInstanceOf(\MongoDB\BulkWriteResult::class, $result);
         $this->assertSame(5, $result->getMatchedCount());
         $this->assertSame(5, $result->getModifiedCount());
         $this->assertSame(2, $result->getUpsertedCount());
 
         $upsertedIds = $result->getUpsertedIds();
         $this->assertSame(5, $upsertedIds[2]);
-        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $upsertedIds[3]);
+        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $upsertedIds[3]);
 
         $expected = [
             ['_id' => 1, 'x' => 11],
@@ -103,7 +103,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\BulkWriteResult', $result);
+        $this->assertInstanceOf(\MongoDB\BulkWriteResult::class, $result);
         $this->assertSame(3, $result->getDeletedCount());
 
         $expected = [
@@ -128,7 +128,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\BulkWriteResult', $result);
+        $this->assertInstanceOf(\MongoDB\BulkWriteResult::class, $result);
 
         $this->assertSame(1, $result->getInsertedCount());
         $this->assertSame([2 => 4], $result->getInsertedIds());

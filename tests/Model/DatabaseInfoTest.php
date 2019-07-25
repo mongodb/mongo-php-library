@@ -53,7 +53,7 @@ class DatabaseInfoTest extends TestCase
     {
         $info = new DatabaseInfo(['name' => 'foo', 'sizeOnDisk' => 1048576, 'empty' => false]);
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessage('MongoDB\Model\DatabaseInfo is immutable');
+        $this->expectExceptionMessage(DatabaseInfo::class .' is immutable');
         $info['empty'] = true;
     }
 
@@ -61,7 +61,7 @@ class DatabaseInfoTest extends TestCase
     {
         $info = new DatabaseInfo(['name' => 'foo', 'sizeOnDisk' => 1048576, 'empty' => false]);
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessage('MongoDB\Model\DatabaseInfo is immutable');
+        $this->expectExceptionMessage(DatabaseInfo::class .' is immutable');
         unset($info['empty']);
     }
 }

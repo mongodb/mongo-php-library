@@ -42,9 +42,9 @@ use Traversable;
 class Database
 {
     private static $defaultTypeMap = [
-        'array' => 'MongoDB\Model\BSONArray',
-        'document' => 'MongoDB\Model\BSONDocument',
-        'root' => 'MongoDB\Model\BSONDocument',
+        'array' => \MongoDB\Model\BSONArray::class,
+        'document' => \MongoDB\Model\BSONDocument::class,
+        'root' => \MongoDB\Model\BSONDocument::class,
     ];
     private static $wireVersionForReadConcern = 4;
     private static $wireVersionForWritableCommandWriteConcern = 5;
@@ -91,11 +91,11 @@ class Database
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
-            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], 'MongoDB\Driver\ReadConcern');
+            throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], ReadConcern::class);
         }
 
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
-            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], 'MongoDB\Driver\ReadPreference');
+            throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], ReadPreference::class);
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
@@ -103,7 +103,7 @@ class Database
         }
 
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], 'MongoDB\Driver\WriteConcern');
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
 
         $this->manager = $manager;

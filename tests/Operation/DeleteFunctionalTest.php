@@ -31,7 +31,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
         $operation = new Delete($this->getDatabaseName(), $this->getCollectionName(), $filter, 1);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\DeleteResult', $result);
+        $this->assertInstanceOf(\MongoDB\DeleteResult::class, $result);
         $this->assertSame(1, $result->getDeletedCount());
 
         $expected = [
@@ -51,7 +51,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
         $operation = new Delete($this->getDatabaseName(), $this->getCollectionName(), $filter, 0);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\DeleteResult', $result);
+        $this->assertInstanceOf(\MongoDB\DeleteResult::class, $result);
         $this->assertSame(2, $result->getDeletedCount());
 
         $expected = [

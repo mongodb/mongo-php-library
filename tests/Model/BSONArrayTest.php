@@ -103,7 +103,7 @@ class BSONArrayTest extends TestCase
         $data = ['foo', 'bar'];
 
         $array = BSONArray::__set_state($data);
-        $this->assertInstanceOf('MongoDB\Model\BSONArray', $array);
+        $this->assertInstanceOf(\MongoDB\Model\BSONArray::class, $array);
         $this->assertSame($data, $array->getArrayCopy());
     }
 }

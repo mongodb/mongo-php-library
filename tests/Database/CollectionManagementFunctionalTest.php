@@ -57,10 +57,10 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
         $this->assertCommandSucceeded($commandResult);
 
         $collections = $this->database->listCollections();
-        $this->assertInstanceOf('MongoDB\Model\CollectionInfoIterator', $collections);
+        $this->assertInstanceOf(\MongoDB\Model\CollectionInfoIterator::class, $collections);
 
         foreach ($collections as $collection) {
-            $this->assertInstanceOf('MongoDB\Model\CollectionInfo', $collection);
+            $this->assertInstanceOf(\MongoDB\Model\CollectionInfo::class, $collection);
         }
     }
 
@@ -73,10 +73,10 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
         $options = ['filter' => ['name' => $collectionName]];
 
         $collections = $this->database->listCollections($options);
-        $this->assertInstanceOf('MongoDB\Model\CollectionInfoIterator', $collections);
+        $this->assertInstanceOf(\MongoDB\Model\CollectionInfoIterator::class, $collections);
 
         foreach ($collections as $collection) {
-            $this->assertInstanceOf('MongoDB\Model\CollectionInfo', $collection);
+            $this->assertInstanceOf(\MongoDB\Model\CollectionInfo::class, $collection);
             $this->assertEquals($collectionName, $collection->getName());
         }
     }

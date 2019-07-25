@@ -79,7 +79,7 @@ class TypeMapArrayIteratorTest extends TestCase
         $iterator->rewind();
 
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessage('MongoDB\Model\TypeMapArrayIterator is immutable');
+        $this->expectExceptionMessage(TypeMapArrayIterator::class . ' is immutable');
         call_user_func_array([$iterator, $method], $args);
     }
 

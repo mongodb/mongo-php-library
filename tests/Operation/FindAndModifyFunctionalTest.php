@@ -161,7 +161,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 ['_id' => 1, 'x' => (object) ['foo' => 'bar']],
             ],
             [
-                ['root' => 'MongoDB\Model\BSONDocument', 'document' => 'object'],
+                ['root' => BSONDocument::class, 'document' => 'object'],
                 new BSONDocument(['_id' => 1, 'x' => (object) ['foo' => 'bar']]),
             ],
         ];

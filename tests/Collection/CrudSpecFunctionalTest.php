@@ -299,7 +299,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
 
             case 'bulkWrite':
                 $this->assertInternalType('array', $expectedResult);
-                $this->assertInstanceOf('MongoDB\BulkWriteResult', $actualResult);
+                $this->assertInstanceOf(\MongoDB\BulkWriteResult::class, $actualResult);
 
                 if (isset($expectedResult['deletedCount'])) {
                     $this->assertSame($expectedResult['deletedCount'], $actualResult->getDeletedCount());
@@ -356,7 +356,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             case 'deleteMany':
             case 'deleteOne':
                 $this->assertInternalType('array', $expectedResult);
-                $this->assertInstanceOf('MongoDB\DeleteResult', $actualResult);
+                $this->assertInstanceOf(\MongoDB\DeleteResult::class, $actualResult);
 
                 if (isset($expectedResult['deletedCount'])) {
                     $this->assertSame($expectedResult['deletedCount'], $actualResult->getDeletedCount());
@@ -374,7 +374,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
 
             case 'insertMany':
                 $this->assertInternalType('array', $expectedResult);
-                $this->assertInstanceOf('MongoDB\InsertManyResult', $actualResult);
+                $this->assertInstanceOf(\MongoDB\InsertManyResult::class, $actualResult);
 
                 if (isset($expectedResult['insertedCount'])) {
                     $this->assertSame($expectedResult['insertedCount'], $actualResult->getInsertedCount());
@@ -390,7 +390,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
 
             case 'insertOne':
                 $this->assertInternalType('array', $expectedResult);
-                $this->assertInstanceOf('MongoDB\InsertOneResult', $actualResult);
+                $this->assertInstanceOf(\MongoDB\InsertOneResult::class, $actualResult);
 
                 if (isset($expectedResult['insertedCount'])) {
                     $this->assertSame($expectedResult['insertedCount'], $actualResult->getInsertedCount());
@@ -408,7 +408,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             case 'updateMany':
             case 'updateOne':
                 $this->assertInternalType('array', $expectedResult);
-                $this->assertInstanceOf('MongoDB\UpdateResult', $actualResult);
+                $this->assertInstanceOf(\MongoDB\UpdateResult::class, $actualResult);
 
                 if (isset($expectedResult['matchedCount'])) {
                     $this->assertSame($expectedResult['matchedCount'], $actualResult->getMatchedCount());

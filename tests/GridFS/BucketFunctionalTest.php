@@ -323,7 +323,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $cursor = $this->bucket->find();
         $fileDocument = current($cursor->toArray());
 
-        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $fileDocument);
+        $this->assertInstanceOf(\MongoDB\Model\BSONDocument::class, $fileDocument);
     }
 
     public function testFindOne()
@@ -344,7 +344,7 @@ class BucketFunctionalTest extends FunctionalTestCase
             ]
         );
 
-        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $fileDocument);
+        $this->assertInstanceOf(\MongoDB\Model\BSONDocument::class, $fileDocument);
         $this->assertSameDocument(['filename' => 'b', 'length' => 6], $fileDocument);
     }
 
@@ -364,7 +364,7 @@ class BucketFunctionalTest extends FunctionalTestCase
     {
         $chunksCollection = $this->bucket->getChunksCollection();
 
-        $this->assertInstanceOf('MongoDB\Collection', $chunksCollection);
+        $this->assertInstanceOf(\MongoDB\Collection::class, $chunksCollection);
         $this->assertEquals('fs.chunks', $chunksCollection->getCollectionName());
     }
 
@@ -392,8 +392,8 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $fileDocument = $this->bucket->getFileDocumentForStream($stream);
 
-        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $fileDocument);
-        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $fileDocument['metadata']);
+        $this->assertInstanceOf(\MongoDB\Model\BSONDocument::class, $fileDocument);
+        $this->assertInstanceOf(\MongoDB\Model\BSONDocument::class, $fileDocument['metadata']);
         $this->assertSame(['foo' => 'bar'], $fileDocument['metadata']->getArrayCopy());
     }
 
@@ -443,7 +443,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $id = $this->bucket->getFileIdForStream($stream);
 
-        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $id);
+        $this->assertInstanceOf(\MongoDB\Model\BSONDocument::class, $id);
         $this->assertSame(['x' => 1], $id->getArrayCopy());
     }
 
@@ -475,7 +475,7 @@ class BucketFunctionalTest extends FunctionalTestCase
     {
         $filesCollection = $this->bucket->getFilesCollection();
 
-        $this->assertInstanceOf('MongoDB\Collection', $filesCollection);
+        $this->assertInstanceOf(\MongoDB\Collection::class, $filesCollection);
         $this->assertEquals('fs.files', $filesCollection->getCollectionName());
     }
 

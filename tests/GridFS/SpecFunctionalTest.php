@@ -337,14 +337,14 @@ class SpecFunctionalTest extends FunctionalTestCase
         switch ($error) {
             case 'FileNotFound':
             case 'RevisionNotFound':
-                return 'MongoDB\GridFS\Exception\FileNotFoundException';
+                return \MongoDB\GridFS\Exception\FileNotFoundException::class;
 
             case 'ChunkIsMissing':
             case 'ChunkIsWrongSize':
                 /* Although ReadableStream throws a CorruptFileException, the
                  * stream wrapper will convert it to a PHP error of type
                  * E_USER_WARNING. */
-                return 'PHPUnit\Framework\Error\Warning';
+                return \PHPUnit\Framework\Error\Warning::class;
 
             default:
                 throw new LogicException('Unsupported error: ' . $error);

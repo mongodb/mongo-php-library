@@ -24,7 +24,7 @@ class ClientFunctionalTest extends FunctionalTestCase
 
     public function testGetManager()
     {
-        $this->assertInstanceOf('MongoDB\Driver\Manager', $this->client->getManager());
+        $this->assertInstanceOf(\MongoDB\Driver\Manager::class, $this->client->getManager());
     }
 
     public function testDropDatabase()
@@ -50,10 +50,10 @@ class ClientFunctionalTest extends FunctionalTestCase
 
         $databases = $this->client->listDatabases();
 
-        $this->assertInstanceOf('MongoDB\Model\DatabaseInfoIterator', $databases);
+        $this->assertInstanceOf(\MongoDB\Model\DatabaseInfoIterator::class, $databases);
 
         foreach ($databases as $database) {
-            $this->assertInstanceOf('MongoDB\Model\DatabaseInfo', $database);
+            $this->assertInstanceOf(\MongoDB\Model\DatabaseInfo::class, $database);
         }
 
         $that = $this;
@@ -103,6 +103,6 @@ class ClientFunctionalTest extends FunctionalTestCase
         if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
             $this->markTestSkipped('startSession() is only supported on FCV 3.6 or higher');
         }
-        $this->assertInstanceOf('MongoDB\Driver\Session', $this->client->startSession());
+        $this->assertInstanceOf(\MongoDB\Driver\Session::class, $this->client->startSession());
     }
 }

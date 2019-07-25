@@ -51,7 +51,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // End Example 1
 
         $this->assertSame(1, $insertOneResult->getInsertedCount());
-        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $insertOneResult->getInsertedId());
+        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $insertOneResult->getInsertedId());
         $this->assertInventoryCount(1);
 
         // Start Example 2
@@ -90,7 +90,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(3, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf('MongoDB\BSON\ObjectId', $id);
+            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
         }
         $this->assertInventoryCount(3);
     }
@@ -136,7 +136,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(5, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf('MongoDB\BSON\ObjectId', $id);
+            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
         }
         $this->assertInventoryCount(5);
 
@@ -239,7 +239,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(5, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf('MongoDB\BSON\ObjectId', $id);
+            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
         }
         $this->assertInventoryCount(5);
 
@@ -319,7 +319,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(5, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf('MongoDB\BSON\ObjectId', $id);
+            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
         }
         $this->assertInventoryCount(5);
 
@@ -429,7 +429,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(5, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf('MongoDB\BSON\ObjectId', $id);
+            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
         }
         $this->assertInventoryCount(5);
 
@@ -570,7 +570,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(5, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf('MongoDB\BSON\ObjectId', $id);
+            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
         }
         $this->assertInventoryCount(5);
 
@@ -786,7 +786,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(10, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf('MongoDB\BSON\ObjectId', $id);
+            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
         }
         $this->assertInventoryCount(10);
 
@@ -896,7 +896,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(5, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf('MongoDB\BSON\ObjectId', $id);
+            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
         }
         $this->assertInventoryCount(5);
 
@@ -1033,7 +1033,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         ]);
         // End Aggregation Example 1
 
-        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+        $this->assertInstanceOf(\MongoDB\Driver\Cursor::class, $cursor);
     }
 
     public function testAggregation_example_2()
@@ -1059,7 +1059,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         ]);
         // End Aggregation Example 2
 
-        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+        $this->assertInstanceOf(\MongoDB\Driver\Cursor::class, $cursor);
     }
 
     public function testAggregation_example_3()
@@ -1093,7 +1093,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         ]);
         // End Aggregation Example 3
 
-        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+        $this->assertInstanceOf(\MongoDB\Driver\Cursor::class, $cursor);
     }
 
     public function testAggregation_example_4()
@@ -1128,7 +1128,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         ]);
         // End Aggregation Example 4
 
-        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+        $this->assertInstanceOf(\MongoDB\Driver\Cursor::class, $cursor);
     }
 
     public function testRunCommand_example_1()
@@ -1140,7 +1140,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $result = $cursor->toArray()[0];
         // End runCommand Example 1
 
-        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+        $this->assertInstanceOf(\MongoDB\Driver\Cursor::class, $cursor);
     }
 
     public function testRunCommand_example_2()
@@ -1154,7 +1154,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $result = $cursor->toArray()[0];
         // End runCommand Example 2
 
-        $this->assertInstanceOf('MongoDB\Driver\Cursor', $cursor);
+        $this->assertInstanceOf(\MongoDB\Driver\Cursor::class, $cursor);
     }
 
     public function testIndex_example_1()

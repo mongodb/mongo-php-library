@@ -34,12 +34,12 @@ class InsertManyFunctionalTest extends FunctionalTestCase
         $operation = new InsertMany($this->getDatabaseName(), $this->getCollectionName(), $documents);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\InsertManyResult', $result);
+        $this->assertInstanceOf(\MongoDB\InsertManyResult::class, $result);
         $this->assertSame(4, $result->getInsertedCount());
 
         $insertedIds = $result->getInsertedIds();
         $this->assertSame('foo', $insertedIds[0]);
-        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $insertedIds[1]);
+        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $insertedIds[1]);
         $this->assertSame('bar', $insertedIds[2]);
         $this->assertSame('baz', $insertedIds[3]);
 
@@ -151,6 +151,6 @@ class InsertManyFunctionalTest extends FunctionalTestCase
      */
     public function testUnacknowledgedWriteConcernAccessesInsertedId(InsertManyResult $result)
     {
-        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $result->getInsertedIds()[0]);
+        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $result->getInsertedIds()[0]);
     }
 }

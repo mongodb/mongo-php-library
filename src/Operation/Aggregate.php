@@ -63,8 +63,8 @@ class Aggregate implements Executable
      *  * batchSize (integer): The number of documents to return per batch.
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
-     *    circumvent document level validation. This only applies when the $out
-     *    stage is specified.
+     *    circumvent document level validation. This only applies when an $out
+     *    or $merge stage is specified.
      *
      *    For servers < 3.2, this option is ignored as document level validation
      *    is not available.
@@ -87,15 +87,14 @@ class Aggregate implements Executable
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
      *
-     *  * readConcern (MongoDB\Driver\ReadConcern): Read concern. Note that a
-     *    "majority" read concern is not compatible with the $out stage.
+     *  * readConcern (MongoDB\Driver\ReadConcern): Read concern.
      *
      *    This is not supported for server versions < 3.2 and will result in an
      *    exception at execution time if used.
      *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
-     *    This option is ignored if the $out stage is specified.
+     *    This option is ignored if an $out or $merge stage is specified.
      *
      *  * session (MongoDB\Driver\Session): Client session.
      *
@@ -111,7 +110,7 @@ class Aggregate implements Executable
      *    mongod/mongos upgrades.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern. This only
-     *    applies when the $out stage is specified.
+     *    applies when an $out or $merge stage is specified.
      *
      *    This is not supported for server versions < 3.4 and will result in an
      *    exception at execution time if used.
@@ -298,10 +297,10 @@ class Aggregate implements Executable
      * Create the aggregate command.
      *
      * @param Server  $server
-     * @param boolean $hasOutStage
+     * @param boolean $hasWriteStage
      * @return Command
      */
-    private function createCommand(Server $server, $hasOutStage)
+    private function createCommand(Server $server, $hasWriteStage)
     {
         $cmd = [
             'aggregate' => isset($this->collectionName) ? $this->collectionName : 1,
@@ -337,10 +336,10 @@ class Aggregate implements Executable
         }
 
         if ($this->options['useCursor']) {
-            /* Ignore batchSize if pipeline includes an $out stage, as no
-             * documents will be returned and sending a batchSize of zero could
-             * prevent the pipeline from executing at all. */
-            $cmd['cursor'] = isset($this->options["batchSize"]) && ! $hasOutStage
+            /* Ignore batchSize if pipeline includes an $out or $merge stage, as
+             * no documents will be returned and sending a batchSize of zero
+             * could prevent the pipeline from executing at all. */
+            $cmd['cursor'] = isset($this->options["batchSize"]) && !$hasWriteStage
                 ? ['batchSize' => $this->options["batchSize"]]
                 : new stdClass;
         }

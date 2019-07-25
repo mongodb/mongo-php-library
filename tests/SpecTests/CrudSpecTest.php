@@ -14,11 +14,6 @@ class CrudSpecTest extends FunctionalTestCase
     /* These should all pass before the driver can be considered compatible with
      * MongoDB 4.2. */
     private static $incompleteTests = [
-        'aggregate-merge: Aggregate with $merge' => 'PHPLIB-438',
-        'aggregate-merge: Aggregate with $merge and batch size of 0' => 'PHPLIB-438',
-        'aggregate-merge: Aggregate with $merge and majority readConcern' => 'PHPLIB-438',
-        'aggregate-merge: Aggregate with $merge and local readConcern' => 'PHPLIB-438',
-        'aggregate-merge: Aggregate with $merge and available readConcern' => 'PHPLIB-438',
         'bulkWrite-arrayFilters: BulkWrite with arrayFilters' => 'Fails due to command assertions',
         'updateWithPipelines: UpdateOne using pipelines' => 'PHPLIB-418',
         'updateWithPipelines: UpdateMany using pipelines' => 'PHPLIB-418',

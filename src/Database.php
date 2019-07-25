@@ -48,7 +48,7 @@ class Database
     ];
     private static $wireVersionForReadConcern = 4;
     private static $wireVersionForWritableCommandWriteConcern = 5;
-    private static $wireVersionForReadConcernWithOutStage = 8;
+    private static $wireVersionForReadConcernWithWriteStage = 8;
 
     private $databaseName;
     private $manager;
@@ -175,13 +175,13 @@ class Database
      */
     public function aggregate(array $pipeline, array $options = [])
     {
-        $hasOutStage = \MongoDB\is_last_pipeline_operator_out($pipeline);
+        $hasWriteStage = \MongoDB\is_last_pipeline_operator_write($pipeline);
 
         if ( ! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }
 
-        if ($hasOutStage) {
+        if ($hasWriteStage) {
             $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
         }
 
@@ -195,7 +195,7 @@ class Database
         if ( ! isset($options['readConcern']) &&
             \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) &&
             ! \MongoDB\is_in_transaction($options) &&
-            ( ! $hasOutStage || \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcernWithOutStage))
+            ( ! $hasWriteStage || \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcernWithWriteStage))
         ) {
             $options['readConcern'] = $this->readConcern;
         }
@@ -204,7 +204,7 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        if ($hasOutStage &&
+        if ($hasWriteStage &&
             ! isset($options['writeConcern']) &&
             \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) &&
             ! \MongoDB\is_in_transaction($options)) {

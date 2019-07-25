@@ -292,7 +292,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                  * the result here; however, assertEquivalentCollections() will
                  * assert the output collection's contents later.
                  */
-                if ( ! \MongoDB\is_last_pipeline_operator_out($operation['arguments']['pipeline'])) {
+                if ( ! \MongoDB\is_last_pipeline_operator_write($operation['arguments']['pipeline'])) {
                     $this->assertSameDocuments($expectedResult, $actualResult);
                 }
                 break;

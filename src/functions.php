@@ -111,6 +111,22 @@ function is_first_key_operator($document)
 }
 
 /**
+ * Returns whether we are currently in a transaction.
+ *
+ * @internal
+ * @param array $options Command options
+ * @return boolean
+ */
+function is_in_transaction(array $options)
+{
+    if (isset($options['session']) && $options['session'] instanceof \MongoDB\Driver\Session && $options['session']->isInTransaction()) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Return whether the aggregation pipeline ends with an $out operator.
  *
  * This is used for determining whether the aggregation pipeline must be

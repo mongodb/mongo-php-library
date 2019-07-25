@@ -1,6 +1,8 @@
-================================
-MongoDB\\Collection::aggregate()
-================================
+==============================
+MongoDB\\Database::aggregate()
+==============================
+
+.. versionadded:: 1.5
 
 .. default-domain:: mongodb
 
@@ -13,10 +15,12 @@ MongoDB\\Collection::aggregate()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::aggregate()
+.. phpmethod:: MongoDB\\Database::aggregate()
 
-   Executes an :manual:`aggregation framework pipeline
-   </core/aggregation-pipeline>` operation on the collection.
+   Runs a specified :manual:`admin/diagnostic pipeline
+   </reference/operator/aggregation-pipeline/#db-aggregate-stages>` which does
+   not require an underlying collection. For aggregations on collection data,
+   see :phpmethod:`MongoDB\\Collection::aggregate()`.
 
    .. code-block:: php
 
@@ -24,11 +28,11 @@ Definition
 
    This method has the following parameters:
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-aggregate-param.rst
+   .. include:: /includes/apiargs/MongoDBDatabase-method-aggregate-param.rst
 
    The ``$options`` parameter supports the following options:
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-aggregate-option.rst
+   .. include:: /includes/apiargs/MongoDBDatabase-method-aggregate-option.rst
 
 Return Values
 -------------
@@ -45,25 +49,14 @@ Errors/Exceptions
 .. include:: /includes/extracts/error-invalidargumentexception.rst
 .. include:: /includes/extracts/error-driver-runtimeexception.rst
 
-.. _php-coll-agg-method-behavior:
-
-Behavior
---------
-
-:phpmethod:`MongoDB\\Collection::aggregate()`'s return value depends on the
-MongoDB server version and whether the ``useCursor`` option is specified. If
-``useCursor`` is ``true``, a :php:`MongoDB\\Driver\\Cursor
-<class.mongodb-driver-cursor>` object is returned. If ``useCursor`` is
-``false``, an :php:`ArrayIterator <arrayiterator>` is returned that wraps the
-``result`` array from the command response document. In both cases, the return
-value will be :php:`Traversable <traversable>`.
+.. _php-db-agg-method-behavior:
 
 .. todo: add examples
 
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::aggregate()`
+- :phpmethod:`MongoDB\\Collection::aggregate()`
 - :manual:`aggregate </reference/command/aggregate>` command reference in the
   MongoDB manual
 - :manual:`Aggregation Pipeline </core/aggregation-pipeline>` documentation in

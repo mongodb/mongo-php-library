@@ -53,6 +53,17 @@ final class Context
         return $o;
     }
 
+    public static function fromCrud(stdClass $test, $databaseName, $collectionName)
+    {
+        $o = new self($databaseName, $collectionName);
+
+        $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
+
+        $o->client = new Client(FunctionalTestCase::getUri(), $clientOptions);
+
+        return $o;
+    }
+
     public static function fromRetryableWrites(stdClass $test, $databaseName, $collectionName)
     {
         $o = new self($databaseName, $collectionName);

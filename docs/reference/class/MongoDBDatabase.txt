@@ -45,6 +45,7 @@ Methods
 
    /reference/method/MongoDBDatabase__construct
    /reference/method/MongoDBDatabase__get
+   /reference/method/MongoDBDatabase-aggregate
    /reference/method/MongoDBDatabase-command
    /reference/method/MongoDBDatabase-createCollection
    /reference/method/MongoDBDatabase-drop

@@ -1,0 +1,62 @@
+arg_name: option
+name: allowDiskUse
+type: boolean
+description: |
+  Enables writing to temporary files. When set to ``true``, aggregation stages
+  can write data to the ``_tmp`` sub-directory in the ``dbPath`` directory. The
+  default is ``false``.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: batchSize
+type: integer
+description: |
+  Specifies the initial batch size for the cursor. A batchSize of ``0`` means an
+  empty first batch and is useful for quickly returning a cursor or failure
+  message without doing significant server-side work.
+interface: phpmethod
+operation: ~
+optional: true
+---
+source:
+  file: apiargs-MongoDBCollection-common-option.yaml
+  ref: bypassDocumentValidation
+post: |
+  This only applies when using the :ref:`$out <agg-out>` stage.
+
+  Document validation requires MongoDB 3.2 or later: if you are using an earlier
+  version of MongoDB, this option will be ignored.
+---
+arg_name: option
+name: comment
+type: string
+description: |
+  Users can specify an arbitrary string to help trace the operation through the
+  database profiler, currentOp, and logs.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: explain
+type: boolean
+description: |
+  Specifies whether or not to return the information on the processing of the
+  pipeline.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: hint
+type: string|array|object
+description: |
+  The index to use. Specify either the index name as a string or the index key
+  pattern as a document. If specified, then the query system will only consider
+  plans using the hinted index.
+interface: phpmethod
+operation: ~
+optional: true
+...

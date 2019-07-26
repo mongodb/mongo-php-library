@@ -18,6 +18,7 @@ env:
     - SERVER_DISTRO=ubuntu1604
     - SERVER_VERSION=4.0.10
     - DEPLOYMENT=STANDALONE
+    - COMPOSER_OPTIONS=
 
 jobs:
   allow_failures:
@@ -39,6 +40,12 @@ jobs:
       php: "7.2"
     - stage: Test
       php: "7.4snapshot"
+
+    # Test against lowest supported dependencies
+    - stage: Test
+      php: "5.6"
+      env:
+        - COMPOSER_OPTIONS=--prefer-lowest
 
       # Test older standalone server versions (3.0-3.6)
     - stage: Test
@@ -124,7 +131,7 @@ before_script:
   - .travis/setup_mo.sh
   - pecl install -f mongodb-${DRIVER_VERSION}
   - php --ri mongodb
-  - composer install --no-interaction --no-progress --no-suggest
+  - composer update --no-interaction --no-progress --no-suggest --prefer-dist --prefer-stable ${COMPOSER_OPTIONS}
   - ulimit -c
   - ulimit -c unlimited -S
 

@@ -74,6 +74,13 @@
             "logappend": true,
             "port": 4300,
             "bind_ip_all": true
+        },
+        {
+            "logpath": "/tmp/SHARDED/ROUTER/4301/mongod.log",
+            "ipv6": true,
+            "logappend": true,
+            "port": 4301,
+            "bind_ip_all": true
         }
     ]
 }

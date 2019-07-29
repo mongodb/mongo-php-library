@@ -18,52 +18,87 @@ env:
     - SERVER_DISTRO=ubuntu1604
     - SERVER_VERSION=4.0.10
     - DEPLOYMENT=STANDALONE
+    - COMPOSER_OPTIONS=
 
-matrix:
-  fast_finish: true
+jobs:
+  allow_failures:
+    - php: "7.4snapshot"
+
   include:
-    - php: 5.6
-    - php: 7.0
-    - php: 7.1
-    - php: 7.2
-    - php: 7.3
-    - php: 7.0
+
+    - stage: Smoke Testing
+      php: "7.3"
+
+    # Test remaining supported PHP versions
+    - stage: Test
+      php: "5.6"
+    - stage: Test
+      php: "7.0"
+    - stage: Test
+      php: "7.1"
+    - stage: Test
+      php: "7.2"
+    - stage: Test
+      php: "7.4snapshot"
+
+    # Test against lowest supported dependencies
+    - stage: Test
+      php: "5.6"
+      env:
+        - COMPOSER_OPTIONS=--prefer-lowest
+
+      # Test older standalone server versions (3.0-3.6)
+    - stage: Test
+      php: "7.0"
       dist: trusty
       env:
         - SERVER_DISTRO=ubuntu1404
         - SERVER_VERSION=3.0.15
         - DEPLOYMENT=STANDALONE_OLD
-    - php: 7.0
+    - stage: Test
+      php: "7.0"
       env:
         - SERVER_VERSION=3.2.22
         - DEPLOYMENT=STANDALONE_OLD
-    - php: 7.0
+    - stage: Test
+      php: "7.0"
       env:
         - SERVER_VERSION=3.4.21
         - DEPLOYMENT=STANDALONE_OLD
-    - php: 7.0
+    - stage: Test
+      php: "7.0"
       env:
         - SERVER_VERSION=3.6.13
-    - php: 7.3
+
+    # Test other server configurations
+    - stage: Test
+      php: "7.3"
       env:
         - DEPLOYMENT=STANDALONE_AUTH
-    - php: 7.3
+    - stage: Test
+      php: "7.3"
       env:
         - DEPLOYMENT=STANDALONE_SSL
-    - php: 7.3
+    - stage: Test
+      php: "7.3"
       env:
         - SERVER_VERSION=3.6.13
         - DEPLOYMENT=REPLICASET
-    - php: 7.3
+    - stage: Test
+      php: "7.3"
       env:
         - DEPLOYMENT=REPLICASET
-    - php: 7.3
+    - stage: Test
+      php: "7.3"
+      env:
+        - DEPLOYMENT=SHARDED_CLUSTER
+
+    # Test upcoming server versions
+    - stage: Test
+      php: "7.3"
       env:
         - SERVER_VERSION=4.2.0-rc1
         - DEPLOYMENT=REPLICASET
-    - php: 7.3
-      env:
-        - DEPLOYMENT=SHARDED_CLUSTER
 
 before_install:
   - pip install "mongo-orchestration>=0.6.7,<1.0" --user `whoami`
@@ -96,7 +131,7 @@ before_script:
   - .travis/setup_mo.sh
   - pecl install -f mongodb-${DRIVER_VERSION}
   - php --ri mongodb
-  - composer install --no-interaction --no-progress --no-suggest
+  - composer update --no-interaction --no-progress --no-suggest --prefer-dist --prefer-stable ${COMPOSER_OPTIONS}
   - ulimit -c
   - ulimit -c unlimited -S
 

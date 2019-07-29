@@ -91,7 +91,7 @@ class CommandExpectations implements CommandSubscriber
      */
     public function commandFailed(CommandFailedEvent $event)
     {
-        if ($this->ignoreCommandFailed) {
+        if ($this->ignoreCommandFailed || ($this->ignoreExtraEvents && count($this->actualEvents) === count($this->expectedEvents))) {
             return;
         }
 
@@ -105,7 +105,7 @@ class CommandExpectations implements CommandSubscriber
      */
     public function commandStarted(CommandStartedEvent $event)
     {
-        if ($this->ignoreCommandStarted) {
+        if ($this->ignoreCommandStarted || ($this->ignoreExtraEvents && count($this->actualEvents) === count($this->expectedEvents))) {
             return;
         }
 
@@ -119,7 +119,7 @@ class CommandExpectations implements CommandSubscriber
      */
     public function commandSucceeded(CommandSucceededEvent $event)
     {
-        if ($this->ignoreCommandSucceeded) {
+        if ($this->ignoreCommandSucceeded || ($this->ignoreExtraEvents && count($this->actualEvents) === count($this->expectedEvents))) {
             return;
         }
 
@@ -150,15 +150,11 @@ class CommandExpectations implements CommandSubscriber
      */
     public function assert(FunctionalTestCase $test, Context $context)
     {
-        $actualEvents = $this->ignoreExtraEvents
-            ? array_slice($this->actualEvents, 0, count($this->expectedEvents))
-            : $this->actualEvents;
-
-        $test->assertCount(count($this->expectedEvents), $actualEvents);
+        $test->assertCount(count($this->expectedEvents), $this->actualEvents);
 
         $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);
         $mi->attachIterator(new ArrayIterator($this->expectedEvents));
-        $mi->attachIterator(new ArrayIterator($actualEvents));
+        $mi->attachIterator(new ArrayIterator($this->actualEvents));
 
         foreach ($mi as $events) {
             list($expectedEventAndClass, $actualEvent) = $events;

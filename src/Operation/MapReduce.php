@@ -100,8 +100,7 @@ class MapReduce implements Executable
      *  * query (document): Specifies the selection criteria using query
      *    operators for determining the documents input to the map function.
      *
-     *  * readConcern (MongoDB\Driver\ReadConcern): Read concern. This is not
-     *    supported when results are returned inline.
+     *  * readConcern (MongoDB\Driver\ReadConcern): Read concern.
      *
      *    This is not supported for server versions < 3.2 and will result in an
      *    exception at execution time if used.

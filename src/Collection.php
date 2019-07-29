@@ -69,7 +69,7 @@ class Collection
     private static $wireVersionForFindAndModifyWriteConcern = 4;
     private static $wireVersionForReadConcern = 4;
     private static $wireVersionForWritableCommandWriteConcern = 5;
-    private static $wireVersionForReadConcernWithWriteStage = 8;
+    private static $wireVersionForReadConcernInWriteOperations = 8;
 
     private $collectionName;
     private $databaseName;
@@ -210,7 +210,7 @@ class Collection
         if ( ! isset($options['readConcern']) &&
             \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) &&
             ! \MongoDB\is_in_transaction($options) &&
-            ( ! $hasWriteStage || \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcernWithWriteStage))
+            ( ! $hasWriteStage || \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcernInWriteOperations))
         ) {
             $options['readConcern'] = $this->readConcern;
         }
@@ -952,7 +952,11 @@ class Collection
          *
          * A read concern is also not compatible with transactions.
          */
-        if ( ! isset($options['readConcern']) && ! ($hasOutputCollection && $this->readConcern->getLevel() === ReadConcern::MAJORITY) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) && ! \MongoDB\is_in_transaction($options)) {
+        if ( ! isset($options['readConcern']) &&
+            \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) &&
+            ! \MongoDB\is_in_transaction($options) &&
+            ( ! $hasOutputCollection || \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcernInWriteOperations))
+        ) {
             $options['readConcern'] = $this->readConcern;
         }
 

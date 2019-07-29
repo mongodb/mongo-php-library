@@ -48,7 +48,7 @@ class Database
     ];
     private static $wireVersionForReadConcern = 4;
     private static $wireVersionForWritableCommandWriteConcern = 5;
-    private static $wireVersionForReadConcernWithWriteStage = 8;
+    private static $wireVersionForReadConcernInWriteOperations = 8;
 
     private $databaseName;
     private $manager;
@@ -195,7 +195,7 @@ class Database
         if ( ! isset($options['readConcern']) &&
             \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) &&
             ! \MongoDB\is_in_transaction($options) &&
-            ( ! $hasWriteStage || \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcernWithWriteStage))
+            ( ! $hasWriteStage || \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcernInWriteOperations))
         ) {
             $options['readConcern'] = $this->readConcern;
         }

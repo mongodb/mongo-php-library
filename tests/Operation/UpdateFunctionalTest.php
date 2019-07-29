@@ -105,7 +105,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         $operation = new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, $update);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\UpdateResult', $result);
+        $this->assertInstanceOf(\MongoDB\UpdateResult::class, $result);
         $this->assertSame(1, $result->getMatchedCount());
         $this->assertSame(1, $result->getModifiedCount());
         $this->assertSame(0, $result->getUpsertedCount());
@@ -131,7 +131,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         $operation = new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, $update, $options);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\UpdateResult', $result);
+        $this->assertInstanceOf(\MongoDB\UpdateResult::class, $result);
         $this->assertSame(2, $result->getMatchedCount());
         $this->assertSame(2, $result->getModifiedCount());
         $this->assertSame(0, $result->getUpsertedCount());
@@ -157,7 +157,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         $operation = new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, $update, $options);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\UpdateResult', $result);
+        $this->assertInstanceOf(\MongoDB\UpdateResult::class, $result);
         $this->assertSame(0, $result->getMatchedCount());
         $this->assertSame(0, $result->getModifiedCount());
         $this->assertSame(1, $result->getUpsertedCount());
@@ -184,11 +184,11 @@ class UpdateFunctionalTest extends FunctionalTestCase
         $operation = new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, $update, $options);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\UpdateResult', $result);
+        $this->assertInstanceOf(\MongoDB\UpdateResult::class, $result);
         $this->assertSame(0, $result->getMatchedCount());
         $this->assertSame(0, $result->getModifiedCount());
         $this->assertSame(1, $result->getUpsertedCount());
-        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $result->getUpsertedId());
+        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $result->getUpsertedId());
 
         $expected = [
             ['_id' => 1, 'x' => 11],

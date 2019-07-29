@@ -63,13 +63,13 @@ class ClientTest extends TestCase
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
         $debug = $collection->__debugInfo();
 
-        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertInstanceOf(\MongoDB\Driver\ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertInstanceOf(\MongoDB\Driver\ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertInternalType('array', $debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertInstanceOf(\MongoDB\Driver\WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
@@ -86,13 +86,13 @@ class ClientTest extends TestCase
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName(), $collectionOptions);
         $debug = $collection->__debugInfo();
 
-        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertInstanceOf(\MongoDB\Driver\ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertInstanceOf(\MongoDB\Driver\ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertInternalType('array', $debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertInstanceOf(\MongoDB\Driver\WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
@@ -105,7 +105,7 @@ class ClientTest extends TestCase
         $debug = $database->__debugInfo();
 
         $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
-        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertInstanceOf(\MongoDB\Driver\WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
@@ -125,13 +125,13 @@ class ClientTest extends TestCase
         $database = $client->selectDatabase($this->getDatabaseName());
         $debug = $database->__debugInfo();
 
-        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertInstanceOf(\MongoDB\Driver\ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertInstanceOf(\MongoDB\Driver\ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertInternalType('array', $debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertInstanceOf(\MongoDB\Driver\WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
@@ -148,13 +148,13 @@ class ClientTest extends TestCase
         $database = $client->selectDatabase($this->getDatabaseName(), $databaseOptions);
         $debug = $database->__debugInfo();
 
-        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertInstanceOf(\MongoDB\Driver\ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertInstanceOf(\MongoDB\Driver\ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertInternalType('array', $debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertInstanceOf(\MongoDB\Driver\WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 }

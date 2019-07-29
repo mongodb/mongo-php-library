@@ -24,12 +24,12 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
         $operation = new ListCollections($this->getDatabaseName(), ['filter' => ['name' => $this->getCollectionName()]]);
         $collections = $operation->execute($server);
 
-        $this->assertInstanceOf('MongoDB\Model\CollectionInfoIterator', $collections);
+        $this->assertInstanceOf(\MongoDB\Model\CollectionInfoIterator::class, $collections);
 
         $this->assertCount(1, $collections);
 
         foreach ($collections as $collection) {
-            $this->assertInstanceOf('MongoDB\Model\CollectionInfo', $collection);
+            $this->assertInstanceOf(\MongoDB\Model\CollectionInfo::class, $collection);
             $this->assertEquals($this->getCollectionName(), $collection->getName());
         }
     }
@@ -49,10 +49,10 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
         $operation = new ListCollections($this->getDatabaseName(), ['filter' => ['name' => $this->getCollectionName()]]);
         $collections = $operation->execute($server);
 
-        $this->assertInstanceOf('MongoDB\Model\CollectionInfoIterator', $collections);
+        $this->assertInstanceOf(\MongoDB\Model\CollectionInfoIterator::class, $collections);
 
         foreach ($collections as $collection) {
-            $this->assertInstanceOf('MongoDB\Model\CollectionInfo', $collection);
+            $this->assertInstanceOf(\MongoDB\Model\CollectionInfo::class, $collection);
             $this->assertArrayHasKey('readOnly', $collection['info']);
             $this->assertEquals(['v' => 2, 'key' => ['_id' => 1], 'name' => '_id_', 'ns' => $this->getNamespace()], $collection['idIndex']);
         }

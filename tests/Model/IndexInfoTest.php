@@ -134,7 +134,7 @@ class IndexInfoTest extends TestCase
         ]);
 
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessage('MongoDB\Model\IndexInfo is immutable');
+        $this->expectExceptionMessage(IndexInfo::class .' is immutable');
         $info['v'] = 2;
     }
 
@@ -148,7 +148,7 @@ class IndexInfoTest extends TestCase
         ]);
 
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessage('MongoDB\Model\IndexInfo is immutable');
+        $this->expectExceptionMessage(IndexInfo::class .' is immutable');
         unset($info['v']);
     }
 

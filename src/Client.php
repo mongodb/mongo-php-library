@@ -35,9 +35,9 @@ use MongoDB\Operation\Watch;
 class Client
 {
     private static $defaultTypeMap = [
-        'array' => 'MongoDB\Model\BSONArray',
-        'document' => 'MongoDB\Model\BSONDocument',
-        'root' => 'MongoDB\Model\BSONDocument',
+        'array' => \MongoDB\Model\BSONArray::class,
+        'document' => \MongoDB\Model\BSONDocument::class,
+        'root' => \MongoDB\Model\BSONDocument::class,
     ];
     private static $wireVersionForReadConcern = 4;
     private static $wireVersionForWritableCommandWriteConcern = 5;

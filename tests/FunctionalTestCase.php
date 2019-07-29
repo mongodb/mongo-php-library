@@ -60,8 +60,8 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function assertSameObjectId($expectedObjectId, $actualObjectId)
     {
-        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $expectedObjectId);
-        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $actualObjectId);
+        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $expectedObjectId);
+        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $actualObjectId);
         $this->assertEquals((string) $expectedObjectId, (string) $actualObjectId);
     }
 

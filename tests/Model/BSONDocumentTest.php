@@ -111,7 +111,7 @@ class BSONDocumentTest extends TestCase
         $data = ['foo' => 'bar'];
 
         $document = BSONDocument::__set_state($data);
-        $this->assertInstanceOf('MongoDB\Model\BSONDocument', $document);
+        $this->assertInstanceOf(\MongoDB\Model\BSONDocument::class, $document);
         $this->assertSame($data, $document->getArrayCopy());
     }
 }

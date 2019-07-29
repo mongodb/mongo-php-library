@@ -20,10 +20,10 @@ class ListDatabasesFunctionalTest extends FunctionalTestCase
         $operation = new ListDatabases();
         $databases = $operation->execute($server);
 
-        $this->assertInstanceOf('MongoDB\Model\DatabaseInfoIterator', $databases);
+        $this->assertInstanceOf(\MongoDB\Model\DatabaseInfoIterator::class, $databases);
 
         foreach ($databases as $database) {
-            $this->assertInstanceOf('MongoDB\Model\DatabaseInfo', $database);
+            $this->assertInstanceOf(\MongoDB\Model\DatabaseInfo::class, $database);
         }
     }
 
@@ -42,12 +42,12 @@ class ListDatabasesFunctionalTest extends FunctionalTestCase
         $operation = new ListDatabases(['filter' => ['name' => $this->getDatabaseName()]]);
         $databases = $operation->execute($server);
 
-        $this->assertInstanceOf('MongoDB\Model\DatabaseInfoIterator', $databases);
+        $this->assertInstanceOf(\MongoDB\Model\DatabaseInfoIterator::class, $databases);
 
         $this->assertCount(1, $databases);
 
         foreach ($databases as $database) {
-            $this->assertInstanceOf('MongoDB\Model\DatabaseInfo', $database);
+            $this->assertInstanceOf(\MongoDB\Model\DatabaseInfo::class, $database);
             $this->assertEquals($this->getDatabaseName(), $database->getName());
         }
     }

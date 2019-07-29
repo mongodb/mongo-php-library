@@ -22,12 +22,12 @@ class ListIndexesFunctionalTest extends FunctionalTestCase
         $operation = new ListIndexes($this->getDatabaseName(), $this->getCollectionName());
         $indexes = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\Model\IndexInfoIterator', $indexes);
+        $this->assertInstanceOf(\MongoDB\Model\IndexInfoIterator::class, $indexes);
 
         $this->assertCount(1, $indexes);
 
         foreach ($indexes as $index) {
-            $this->assertInstanceOf('MongoDB\Model\IndexInfo', $index);
+            $this->assertInstanceOf(\MongoDB\Model\IndexInfo::class, $index);
             $this->assertEquals(['_id' => 1], $index->getKey());
         }
     }

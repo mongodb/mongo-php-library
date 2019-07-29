@@ -89,7 +89,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $operation = new MapReduce($this->getDatabaseName(), $this->getCollectionName(), $map, $reduce, $out);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\MapReduceResult', $result);
+        $this->assertInstanceOf(\MongoDB\MapReduceResult::class, $result);
         $this->assertGreaterThanOrEqual(0, $result->getExecutionTimeMS());
         $this->assertNotEmpty($result->getCounts());
     }
@@ -105,7 +105,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $operation = new MapReduce($this->getDatabaseName(), $this->getCollectionName(), $map, $reduce, $out, ['verbose' => true]);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\MapReduceResult', $result);
+        $this->assertInstanceOf(\MongoDB\MapReduceResult::class, $result);
         $this->assertGreaterThanOrEqual(0, $result->getExecutionTimeMS());
         $this->assertNotEmpty($result->getCounts());
         $this->assertNotEmpty($result->getTiming());
@@ -122,7 +122,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $operation = new MapReduce($this->getDatabaseName(), $this->getCollectionName(), $map, $reduce, $out, ['verbose' => false]);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\MapReduceResult', $result);
+        $this->assertInstanceOf(\MongoDB\MapReduceResult::class, $result);
         $this->assertGreaterThanOrEqual(0, $result->getExecutionTimeMS());
         $this->assertNotEmpty($result->getCounts());
         $this->assertEmpty($result->getTiming());

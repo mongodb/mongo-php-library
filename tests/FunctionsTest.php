@@ -48,9 +48,9 @@ class FunctionsTest extends TestCase
                     'z' => [1, 2, 3],
                 ],
                 [
-                    'root' => 'MongoDB\Model\BSONDocument',
-                    'document' => 'MongoDB\Model\BSONDocument',
-                    'array' => 'MongoDB\Model\BSONArray',
+                    'root' => BSONDocument::class,
+                    'document' => BSONDocument::class,
+                    'array' => BSONArray::class,
                 ],
                 new BSONDocument([
                     'x' => 1,

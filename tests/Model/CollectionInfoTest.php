@@ -64,7 +64,7 @@ class CollectionInfoTest extends TestCase
     {
         $info = new CollectionInfo(['name' => 'foo', 'options' => ['capped' => true, 'size' => 1048576]]);
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessage('MongoDB\Model\CollectionInfo is immutable');
+        $this->expectExceptionMessage(CollectionInfo::class .' is immutable');
         $info['options'] = ['capped' => false];
     }
 
@@ -72,7 +72,7 @@ class CollectionInfoTest extends TestCase
     {
         $info = new CollectionInfo(['name' => 'foo', 'options' => ['capped' => true, 'size' => 1048576]]);
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessage('MongoDB\Model\CollectionInfo is immutable');
+        $this->expectExceptionMessage(CollectionInfo::class .' is immutable');
         unset($info['options']);
     }
 }

@@ -30,7 +30,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
         $operation = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertInstanceOf(\MongoDB\InsertOneResult::class, $result);
         $this->assertSame(1, $result->getInsertedCount());
         $this->assertSame('foo', $result->getInsertedId());
 
@@ -57,9 +57,9 @@ class InsertOneFunctionalTest extends FunctionalTestCase
         $operation = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf('MongoDB\InsertOneResult', $result);
+        $this->assertInstanceOf(\MongoDB\InsertOneResult::class, $result);
         $this->assertSame(1, $result->getInsertedCount());
-        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $result->getInsertedId());
+        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $result->getInsertedId());
 
         $expected = [
             ['_id' => $result->getInsertedId(), 'x' => 11],
@@ -166,6 +166,6 @@ class InsertOneFunctionalTest extends FunctionalTestCase
      */
     public function testUnacknowledgedWriteConcernAccessesInsertedId(InsertOneResult $result)
     {
-        $this->assertInstanceOf('MongoDB\BSON\ObjectId', $result->getInsertedId());
+        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $result->getInsertedId());
     }
 }

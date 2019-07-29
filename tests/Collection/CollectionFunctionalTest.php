@@ -258,13 +258,13 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame($this->manager, $debug['manager']);
         $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
         $this->assertSame($this->getCollectionName(), $debug['collectionName']);
-        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertInstanceOf(\MongoDB\Driver\ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertInstanceOf(\MongoDB\Driver\ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertInternalType('array', $debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertInstanceOf(\MongoDB\Driver\WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
@@ -280,13 +280,13 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $clone = $this->collection->withOptions($collectionOptions);
         $debug = $clone->__debugInfo();
 
-        $this->assertInstanceOf('MongoDB\Driver\ReadConcern', $debug['readConcern']);
+        $this->assertInstanceOf(\MongoDB\Driver\ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf('MongoDB\Driver\ReadPreference', $debug['readPreference']);
+        $this->assertInstanceOf(\MongoDB\Driver\ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertInternalType('array', $debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf('MongoDB\Driver\WriteConcern', $debug['writeConcern']);
+        $this->assertInstanceOf(\MongoDB\Driver\WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
@@ -300,7 +300,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
         $result = $this->collection->mapReduce($map, $reduce, $out);
 
-        $this->assertInstanceOf('MongoDB\MapReduceResult', $result);
+        $this->assertInstanceOf(\MongoDB\MapReduceResult::class, $result);
         $expected = [
             [ '_id' => 1.0, 'value' => 66.0 ],
         ];

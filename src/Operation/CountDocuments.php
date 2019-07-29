@@ -192,7 +192,7 @@ class CountDocuments implements Executable
             $pipeline[] = ['$limit' => $this->options['limit']];
         }
 
-        $pipeline[] = ['$group' => ['_id' => null, 'n' => ['$sum' => 1]]];
+        $pipeline[] = ['$group' => ['_id' => 1, 'n' => ['$sum' => 1]]];
 
         $cmd = [
             'aggregate' => $this->collectionName,

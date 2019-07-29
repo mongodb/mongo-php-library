@@ -58,17 +58,14 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
      * Execute an individual test case from the specification.
      *
      * @dataProvider provideTests
-     * @param string    $name            Test name
-     * @param stdClass  $test            Individual "tests[]" document
-     * @param string    $databaseName    Name of database under test
-     * @param string    $collectionName  Name of collection under test
-     * @param string    $database2Name   Name of alternate database under test
-     * @param string    $collection2Name Name of alternate collection under test
+     * @param stdClass $test            Individual "tests[]" document
+     * @param string   $databaseName    Name of database under test
+     * @param string   $collectionName  Name of collection under test
+     * @param string   $database2Name   Name of alternate database under test
+     * @param string   $collection2Name Name of alternate collection under test
      */
-    public function testChangeStreams($name, stdClass $test, $databaseName = null, $collectionName = null, $database2Name = null, $collection2Name = null)
+    public function testChangeStreams(stdClass $test, $databaseName = null, $collectionName = null, $database2Name = null, $collection2Name = null)
     {
-        $this->setName($name);
-
         $this->checkServerRequirements($this->createRunOn($test));
 
         if (!isset($databaseName, $collectionName, $database2Name, $collection2Name)) {
@@ -151,7 +148,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;
-                $testArgs[] = [$name, $test, $databaseName, $collectionName, $database2Name, $collection2Name];
+                $testArgs[$name] = [$test, $databaseName, $collectionName, $database2Name, $collection2Name];
             }
         }
 

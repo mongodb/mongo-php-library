@@ -40,7 +40,6 @@ class SpecFunctionalTest extends FunctionalTestCase
      */
     public function testSpecification(array $initialData, array $test)
     {
-        $this->setName(str_replace(' ', '_', $test['description']));
         $this->initializeData($initialData);
 
         if (isset($test['arrange'])) {
@@ -77,7 +76,8 @@ class SpecFunctionalTest extends FunctionalTestCase
             $json = json_decode(file_get_contents($filename), true);
 
             foreach ($json['tests'] as $test) {
-                $testArgs[] = [$json['data'], $test];
+                $name = str_replace(' ', '_', $test['description']);
+                $testArgs[$name] = [$json['data'], $test];
             }
         }
 

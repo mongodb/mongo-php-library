@@ -37,17 +37,16 @@ class CrudSpecTest extends FunctionalTestCase
      * Execute an individual test case from the specification.
      *
      * @dataProvider provideTests
-     * @param string   $name           Test name
      * @param stdClass $test           Individual "tests[]" document
      * @param array    $runOn          Top-level "runOn" array with server requirements
      * @param array    $data           Top-level "data" array to initialize collection
      * @param string   $databaseName   Name of database under test
      * @param string   $collectionName Name of collection under test
      */
-    public function testCrud($name, stdClass $test, array $runOn = null, array $data, $databaseName = null, $collectionName = null)
+    public function testCrud(stdClass $test, array $runOn = null, array $data, $databaseName = null, $collectionName = null)
     {
-        if (isset(self::$incompleteTests[$name])) {
-            $this->markTestIncomplete(self::$incompleteTests[$name]);
+        if (isset(self::$incompleteTests[$this->dataDescription()])) {
+            $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
         }
 
         if (isset($runOn)) {
@@ -104,7 +103,7 @@ class CrudSpecTest extends FunctionalTestCase
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;
-                $testArgs[$name] = [$name, $test, $runOn, $data, $databaseName, $collectionName];
+                $testArgs[$name] = [$test, $runOn, $data, $databaseName, $collectionName];
             }
         }
 

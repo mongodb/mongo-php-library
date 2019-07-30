@@ -1356,7 +1356,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
     {
         $session->startTransaction([
             'readConcern' => new \MongoDB\Driver\ReadConcern("snapshot"),
-            'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY)
+            'readPrefernece' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_PRIMARY),
+            'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY),
         ]);
 
         try {

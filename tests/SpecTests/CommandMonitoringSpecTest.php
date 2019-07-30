@@ -130,16 +130,13 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
      * Execute an individual test case from the specification.
      *
      * @dataProvider provideTests
-     * @param string    $name           Test name
      * @param stdClass  $test           Individual "tests[]" document
      * @param array     $data           Top-level "data" array to initialize collection
      * @param string    $databaseName   Name of database under test
      * @param string    $collectionName Name of collection under test
      */
-    public function testCommandMonitoring($name, stdClass $test, array $data, $databaseName = null, $collectionName = null)
+    public function testCommandMonitoring(stdClass $test, array $data, $databaseName = null, $collectionName = null)
     {
-        $this->setName($name);
-
         $this->checkServerRequirements($this->createRunOn($test));
 
         $databaseName = isset($databaseName) ? $databaseName : $this->getDatabaseName();
@@ -177,7 +174,7 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;
-                $testArgs[] = [$name, $test, $data, $databaseName, $collectionName];
+                $testArgs[$name] = [$test, $data, $databaseName, $collectionName];
             }
         }
 

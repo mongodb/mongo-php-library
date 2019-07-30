@@ -16,15 +16,12 @@ class RetryableWritesSpecTest extends FunctionalTestCase
      * Execute an individual test case from the specification.
      *
      * @dataProvider provideTests
-     * @param string   $name  Test name
      * @param stdClass $test  Individual "tests[]" document
      * @param array    $runOn Top-level "runOn" array with server requirements
      * @param array    $data  Top-level "data" array to initialize collection
      */
-    public function testRetryableWrites($name, stdClass $test, array $runOn = null, array $data)
+    public function testRetryableWrites(stdClass $test, array $runOn = null, array $data)
     {
-        $this->setName($name);
-
         // TODO: Revise this once a test environment with multiple mongos nodes is available (see: PHPLIB-430)
         if (isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster()) {
             $this->markTestSkipped('"useMultipleMongoses" is not supported');
@@ -63,7 +60,7 @@ class RetryableWritesSpecTest extends FunctionalTestCase
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;
-                $testArgs[] = [$name, $test, $runOn, $data];
+                $testArgs[$name] = [$test, $runOn, $data];
             }
         }
 

@@ -34,8 +34,6 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
      */
     public function testSpecification(array $initialData, array $test, $minServerVersion, $maxServerVersion)
     {
-        $this->setName(str_replace(' ', '_', $test['description']));
-
         if (isset($minServerVersion) || isset($maxServerVersion)) {
             $this->checkServerVersion($minServerVersion, $maxServerVersion);
         }
@@ -71,7 +69,8 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             $maxServerVersion = isset($json['maxServerVersion']) ? $json['maxServerVersion'] : null;
 
             foreach ($json['tests'] as $test) {
-                $testArgs[] = [$json['data'], $test, $minServerVersion, $maxServerVersion];
+                $name = str_replace(' ', '_', $test['description']);
+                $testArgs[$name] = [$json['data'], $test, $minServerVersion, $maxServerVersion];
             }
         }
 

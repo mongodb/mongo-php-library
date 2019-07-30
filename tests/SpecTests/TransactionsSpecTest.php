@@ -123,9 +123,8 @@ class TransactionsSpecTest extends FunctionalTestCase
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
         }
 
-        // TODO: Revise this once a test environment with multiple mongos nodes is available (see: PHPLIB-430)
         if (isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster()) {
-            $this->markTestIncomplete('"useMultipleMongoses" is not supported');
+            $this->manager = new Manager(static::getUri(true));
         }
 
         if (isset($runOn)) {

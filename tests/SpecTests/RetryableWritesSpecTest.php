@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\SpecTests;
 
 use LogicException;
+use MongoDB\Driver\Manager;
 use stdClass;
 
 /**
@@ -22,9 +23,8 @@ class RetryableWritesSpecTest extends FunctionalTestCase
      */
     public function testRetryableWrites(stdClass $test, array $runOn = null, array $data)
     {
-        // TODO: Revise this once a test environment with multiple mongos nodes is available (see: PHPLIB-430)
         if (isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster()) {
-            $this->markTestSkipped('"useMultipleMongoses" is not supported');
+            $this->manager = new Manager(static::getUri(true));
         }
 
         if (isset($runOn)) {

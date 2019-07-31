@@ -17,10 +17,13 @@
 
 namespace MongoDB;
 
+use Exception;
 use MongoDB\BSON\Serializable;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\RuntimeException;
+use MongoDB\Operation\WithTransaction;
 use ReflectionClass;
 use ReflectionException;
 use function end;
@@ -337,4 +340,36 @@ function create_field_path_type_map(array $typeMap, $fieldPath)
     $typeMap['root'] = 'object';
 
     return $typeMap;
+}
+
+/**
+ * Execute a callback within a transaction in the given session
+ *
+ * This helper takes care of retrying the commit operation or the entire
+ * transaction if an error occurs.
+ *
+ * If the commit fails because of an UnknownTransactionCommitResult error, the
+ * commit is retried without re-invoking the callback.
+ * If the commit fails because of a TransientTransactionError, the entire
+ * transaction will be retried. In this case, the callback will be invoked
+ * again. It is important that the logic inside the callback is idempotent.
+ *
+ * In case of failures, the commit or transaction are retried until 120 seconds
+ * from the initial call have elapsed. After that, no retries will happen and
+ * the helper will throw the last exception received from the driver.
+ *
+ * @see Client::startSession
+ * @see Session::startTransaction for supported transaction options
+ *
+ * @param Session  $session            A session object as retrieved by Client::startSession
+ * @param callable $callback           A callback that will be invoked within the transaction
+ * @param array    $transactionOptions Additional options that are passed to Session::startTransaction
+ * @return void
+ * @throws RuntimeException for driver errors while committing the transaction
+ * @throws Exception for any other errors, including those thrown in the callback
+ */
+function with_transaction(Session $session, callable $callback, array $transactionOptions = [])
+{
+    $operation = new WithTransaction($callback, $transactionOptions);
+    $operation->execute($session);
 }

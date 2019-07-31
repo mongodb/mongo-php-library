@@ -5,6 +5,7 @@ namespace MongoDB\Tests\SpecTests;
 use Exception;
 use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\CommandException;
+use MongoDB\Driver\Exception\ExecutionTimeoutException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Tests\TestCase;
@@ -26,9 +27,10 @@ final class ErrorExpectation
      */
     private static $codeNameMap = [
         'Interrupted' => 11601,
-        'WriteConflict' => 112,
+        'MaxTimeMSExpired' => 50,
         'NoSuchTransaction' => 251,
         'OperationNotSupportedInTransaction' => 263,
+        'WriteConflict' => 112,
     ];
 
     /** @var integer */
@@ -198,7 +200,7 @@ final class ErrorExpectation
          * around this be comparing the error code against a map.
          *
          * TODO: Remove this once PHPC-1386 is resolved. */
-        if ($actual instanceof BulkWriteException) {
+        if ($actual instanceof BulkWriteException || $actual instanceof ExecutionTimeoutException) {
             $test->assertArrayHasKey($this->codeName, self::$codeNameMap);
             $test->assertSame(self::$codeNameMap[$this->codeName], $actual->getCode());
 
@@ -207,6 +209,14 @@ final class ErrorExpectation
 
         $test->assertInstanceOf(CommandException::class, $actual);
         $result = $actual->getResultDocument();
+
+        if (isset($result->writeConcernError)) {
+            $test->assertObjectHasAttribute('codeName', $result->writeConcernError);
+            $test->assertSame($this->codeName, $result->writeConcernError->codeName);
+
+            return;
+        }
+
         $test->assertObjectHasAttribute('codeName', $result);
         $test->assertSame($this->codeName, $result->codeName);
     }

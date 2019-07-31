@@ -23,6 +23,10 @@ class RetryableWritesSpecTest extends FunctionalTestCase
      */
     public function testRetryableWrites(stdClass $test, array $runOn = null, array $data)
     {
+        if ($this->isShardedCluster() && ! $this->isShardedClusterUsingReplicasets()) {
+            $this->markTestSkipped('Transaction numbers are only allowed on a replica set member or mongos (PHPC-1415)');
+        }
+
         if (isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster()) {
             $this->manager = new Manager(static::getUri(true));
         }

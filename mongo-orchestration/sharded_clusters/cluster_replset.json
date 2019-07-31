@@ -85,7 +85,7 @@
                         "journal": true,
                         "logappend": true,
                         "port": 4411,
-                        "bind_ip_all": true,
+                        "bind_ip_all": true
                     } }
                 ]
             }

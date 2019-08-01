@@ -69,6 +69,8 @@ class Distinct implements Executable, Explainable
      *
      *    Sessions are not supported for server versions < 3.6.
      *
+     *  * typeMap (array): Type map for BSON deserialization.
+     *
      * @param string       $databaseName   Database name
      * @param string       $collectionName Collection name
      * @param string       $fieldName      Field for which to return distinct values
@@ -100,6 +102,10 @@ class Distinct implements Executable, Explainable
 
         if (isset($options['session']) && ! $options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
+        }
+
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
         if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
@@ -139,6 +145,11 @@ class Distinct implements Executable, Explainable
         }
 
         $cursor = $server->executeReadCommand($this->databaseName, new Command($this->createCommandDocument()), $this->createOptions());
+
+        if (isset($this->options['typeMap'])) {
+            $cursor->setTypeMap(\MongoDB\create_field_path_type_map($this->options['typeMap'], 'values.$'));
+        }
+
         $result = current($cursor->toArray());
 
         if ( ! isset($result->values) || ! is_array($result->values)) {

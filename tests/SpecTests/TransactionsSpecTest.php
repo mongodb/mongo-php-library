@@ -27,8 +27,6 @@ class TransactionsSpecTest extends FunctionalTestCase
     private static $incompleteTests = [
         'error-labels: add unknown commit label to MaxTimeMSExpired' => 'PHPC-1382',
         'error-labels: add unknown commit label to writeConcernError MaxTimeMSExpired' => 'PHPC-1382',
-        'read-concern: only first countDocuments includes readConcern' => 'PHPLIB-417',
-        'read-concern: countDocuments ignores collection readConcern' => 'PHPLIB-417',
         'read-pref: default readPreference' => 'PHPLIB does not properly inherit readPreference for transactions',
         'read-pref: primary readPreference' => 'PHPLIB does not properly inherit readPreference for transactions',
         'run-command: run command with secondary read preference in client option and primary read preference in transaction options' => 'PHPLIB does not properly inherit readPreference for transactions',

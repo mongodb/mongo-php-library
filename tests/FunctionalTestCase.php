@@ -250,6 +250,9 @@ abstract class FunctionalTestCase extends TestCase
                 if (!$this->isShardedClusterUsingReplicasets()) {
                     $this->markTestSkipped('$changeStream is only supported with replicasets');
                 }
+
+                // Temporarily skip tests because of an issue with change streams in the driver
+                $this->markTestSkipped('$changeStreams currently don\'t on replica sets');
                 break;
 
             case Server::TYPE_RS_PRIMARY:

@@ -92,6 +92,10 @@ jobs:
       php: "7.3"
       env:
         - DEPLOYMENT=SHARDED_CLUSTER
+    - stage: Test
+      php: "7.3"
+      env:
+        - DEPLOYMENT=SHARDED_CLUSTER_RS
 
     # Test upcoming server versions
     - stage: Test

@@ -58,6 +58,40 @@ class FunctionsTest extends TestCase
                     'z' => new BSONArray([1, 2, 3]),
                 ]),
             ],
+            [
+                [
+                    'x' => 1,
+                    'random' => [
+                        'foo' => 'bar',
+                    ],
+                    'value' => [
+                        'bar' => 'baz',
+                        'embedded' => [
+                            'foo' => 'bar',
+                        ],
+                    ],
+                ],
+                [
+                    'root' => 'array',
+                    'document' => 'stdClass',
+                    'array' => 'array',
+                    'fieldPaths' => [
+                        'value' => 'array',
+                    ],
+                ],
+                [
+                    'x' => 1,
+                    'random' => (object) [
+                        'foo' => 'bar',
+                    ],
+                    'value' => [
+                        'bar' => 'baz',
+                        'embedded' => (object) [
+                            'foo' => 'bar',
+                        ],
+                    ],
+                ],
+            ]
         ];
     }
 

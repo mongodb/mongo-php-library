@@ -216,21 +216,14 @@ class FindAndModify implements Executable, Explainable
         }
 
         $cursor = $server->executeWriteCommand($this->databaseName, new Command($this->createCommandDocument($server)), $this->createOptions());
-        $result = current($cursor->toArray());
-
-        if ( ! isset($result->value)) {
-            return null;
-        }
-
-        if ( ! is_object($result->value)) {
-            throw new UnexpectedValueException('findAndModify command did not return a "value" document');
-        }
 
         if (isset($this->options['typeMap'])) {
-            return \MongoDB\apply_type_map_to_document($result->value, $this->options['typeMap']);
+            $cursor->setTypeMap(\MongoDB\create_field_path_type_map($this->options['typeMap'], 'value'));
         }
 
-        return $result->value;
+        $result = current($cursor->toArray());
+
+        return isset($result->value) ? $result->value : null;
     }
 
     public function getCommandDocument(Server $server)

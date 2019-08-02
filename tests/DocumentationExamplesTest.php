@@ -935,6 +935,10 @@ class DocumentationExamplesTest extends FunctionalTestCase
     {
         $this->skipIfChangeStreamIsNotSupported();
 
+        if ($this->isShardedCluster()) {
+            $this->markTestSkipped('Test does not apply on sharded clusters: need more than a single getMore call on the change stream.');
+        }
+
         $db = new Database($this->manager, $this->getDatabaseName());
         $db->dropCollection('inventory');
         $db->createCollection('inventory');

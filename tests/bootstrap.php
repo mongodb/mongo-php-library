@@ -17,3 +17,7 @@ if ( ! class_exists(PHPUnit\Framework\Error\Warning::class)) {
 if ( ! class_exists(PHPUnit\Framework\Constraint\Constraint::class)) {
     class_alias(PHPUnit_Framework_Constraint::class, PHPUnit\Framework\Constraint\Constraint::class);
 }
+
+if ( ! class_exists(PHPUnit\Framework\ExpectationFailedException::class)) {
+    class_alias(PHPUnit_Framework_ExpectationFailedException::class, PHPUnit\Framework\ExpectationFailedException::class);
+}

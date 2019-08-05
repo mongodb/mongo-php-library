@@ -38,6 +38,68 @@ abstract class FunctionalTestCase extends TestCase
         parent::tearDown();
     }
 
+    public static function getUri($allowMultipleMongoses = false)
+    {
+        $uri = parent::getUri();
+
+        if ($allowMultipleMongoses) {
+            return $uri;
+        }
+
+        $urlParts = parse_url($uri);
+        if ($urlParts === false) {
+            return $uri;
+        }
+
+        // Only modify URIs using the mongodb scheme
+        if ($urlParts['scheme'] !== 'mongodb') {
+            return $uri;
+        }
+
+        $hosts = explode(',', $urlParts['host']);
+        $numHosts = count($hosts);
+        if ($numHosts === 1) {
+            return $uri;
+        }
+
+        $manager = new Manager($uri);
+        if ($manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY))->getType() !== Server::TYPE_MONGOS) {
+            return $uri;
+        }
+
+        // Re-append port to last host
+        if (isset($urlParts['port'])) {
+            $hosts[$numHosts-1] .= ':' . $urlParts['port'];
+        }
+
+        $parts = [
+            'mongodb://'
+        ];
+
+        if (isset($urlParts['user'], $urlParts['pass'])) {
+            $parts += [
+                $urlParts['user'],
+                ':',
+                $urlParts['pass'],
+                '@',
+            ];
+        }
+
+        $parts[] = $hosts[0];
+
+        if (isset($urlParts['path'])) {
+            $parts[] = $urlParts['path'];
+        }
+        if (isset($urlParts['query'])) {
+            $parts += [
+                '?',
+                $urlParts['path']
+            ];
+        }
+
+        return implode('', $parts);
+    }
+
     protected function assertCollectionCount($namespace, $count)
     {
         list($databaseName, $collectionName) = explode('.', $namespace, 2);

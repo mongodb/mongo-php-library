@@ -123,9 +123,12 @@ class TransactionsSpecTest extends FunctionalTestCase
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
         }
 
-        // TODO: Revise this once a test environment with multiple mongos nodes is available (see: PHPLIB-430)
+        if ($this->isShardedCluster()) {
+            $this->markTestSkipped('PHP MongoDB driver 1.6.0alpha2 does not support running multi-document transactions on sharded clusters');
+        }
+
         if (isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster()) {
-            $this->markTestIncomplete('"useMultipleMongoses" is not supported');
+            $this->manager = new Manager(static::getUri(true));
         }
 
         if (isset($runOn)) {

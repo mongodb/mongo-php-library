@@ -55,14 +55,17 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['x' => 2]);
 
         $changeStream->next();
+        $this->assertTrue($changeStream->valid());
         $this->assertSameDocument($changeStream->current()->_id, $changeStream->getResumeToken());
 
         $changeStream->next();
+        $this->assertTrue($changeStream->valid());
         $this->assertSameDocument($changeStream->current()->_id, $changeStream->getResumeToken());
 
         $this->insertDocument(['x' => 3]);
 
         $changeStream->next();
+        $this->assertTrue($changeStream->valid());
         $this->assertSameDocument($changeStream->current()->_id, $changeStream->getResumeToken());
     }
 
@@ -116,6 +119,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $postBatchResumeToken = $this->getPostBatchResumeTokenFromReply($events[0]['succeeded']->getReply());
 
         $changeStream->next();
+        $this->assertTrue($changeStream->valid());
         $this->assertSameDocument($changeStream->current()->_id, $changeStream->getResumeToken());
 
         $changeStream->next();

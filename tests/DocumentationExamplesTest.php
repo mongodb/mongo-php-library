@@ -981,7 +981,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertMatchesDocument($expectedChange, $lastChange);
 
         // Start Changestream Example 3
-        $resumeToken = ($lastChange !== null) ? $lastChange->_id : null;
+        $resumeToken = $changeStream->getResumeToken();
 
         if ($resumeToken === null) {
             throw new \Exception('Resume token was not found');

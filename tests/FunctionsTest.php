@@ -135,4 +135,70 @@ class FunctionsTest extends TestCase
             [ ['replace' => 'collectionName'], false ],
         ];
     }
+
+    /**
+     * @dataProvider provideTypeMapValues
+     */
+    public function testCreateFieldPathTypeMap(array $expected, array $typeMap, $fieldPath = 'field')
+    {
+        $this->assertEquals($expected, \MongoDB\create_field_path_type_map($typeMap, $fieldPath));
+    }
+
+    public function provideTypeMapValues()
+    {
+        return [
+            'No root type' => [
+                ['document' => 'array', 'root' => 'object'],
+                ['document' => 'array'],
+            ],
+            'No field path' => [
+                ['root' => 'object', 'fieldPaths' => ['field' => 'array']],
+                ['root' => 'array'],
+            ],
+            'Field path exists' => [
+                ['root' => 'object', 'fieldPaths' => ['field' => 'array', 'field.field' => 'object']],
+                ['root' => 'array', 'fieldPaths' => ['field' => 'object']],
+            ],
+            'Nested field path' => [
+                ['root' => 'object', 'fieldPaths' => ['field' => 'object', 'field.nested' => 'array']],
+                ['root' => 'object', 'fieldPaths' => ['nested' => 'array']],
+            ],
+            'Array field path converted to array' => [
+                [
+                    'root' => 'object',
+                    'array' => 'MongoDB\Model\BSONArray',
+                    'fieldPaths' => [
+                        'field' => 'array',
+                        'field.$' => 'object',
+                        'field.$.nested' => 'array',
+                    ]
+                ],
+                [
+                    'root' => 'object',
+                    'array' => 'MongoDB\Model\BSONArray',
+                    'fieldPaths' => [
+                        'nested' => 'array',
+                    ]
+                ],
+                'field.$',
+            ],
+            'Array field path without root key' => [
+                [
+                    'root' => 'object',
+                    'array' => 'MongoDB\Model\BSONArray',
+                    'fieldPaths' => [
+                        'field' => 'array',
+                        'field.$.nested' => 'array',
+                    ]
+                ],
+                [
+                    'array' => 'MongoDB\Model\BSONArray',
+                    'fieldPaths' => [
+                        'nested' => 'array',
+                    ]
+                ],
+                'field.$',
+            ],
+        ];
+    }
 }

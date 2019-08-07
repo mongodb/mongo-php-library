@@ -250,7 +250,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
     {
         return new ChangeStream(
             $this->createChangeStreamIterator($server),
-            function($resumeToken) { return $this->resume($resumeToken); }
+            function($resumeToken, $hasAdvanced) { return $this->resume($resumeToken, $hasAdvanced); }
         );
     }
 
@@ -333,10 +333,11 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#resume-process
      * @param array|object|null $resumeToken
+     * @param bool              $hasAdvanced
      * @return ChangeStreamIterator
      * @throws InvalidArgumentException
      */
-    private function resume($resumeToken = null)
+    private function resume($resumeToken = null, $hasAdvanced = false)
     {
         if (isset($resumeToken) && ! is_array($resumeToken) && ! is_object($resumeToken)) {
             throw InvalidArgumentException::invalidType('$resumeToken', $resumeToken, 'array or object');
@@ -347,12 +348,14 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         // Select a new server using the original read preference
         $server = $this->manager->selectServer($this->aggregateOptions['readPreference']);
 
+        $resumeOption = isset($this->changeStreamOptions['startAfter']) && !$hasAdvanced ? 'startAfter' : 'resumeAfter';
+
         unset($this->changeStreamOptions['resumeAfter']);
         unset($this->changeStreamOptions['startAfter']);
         unset($this->changeStreamOptions['startAtOperationTime']);
 
         if ($resumeToken !== null) {
-            $this->changeStreamOptions['resumeAfter'] = $resumeToken;
+            $this->changeStreamOptions[$resumeOption] = $resumeToken;
         }
 
         if ($resumeToken === null && $this->operationTime !== null) {

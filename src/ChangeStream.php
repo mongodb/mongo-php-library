@@ -220,7 +220,7 @@ class ChangeStream implements Iterator
      */
     private function resume()
     {
-        $this->iterator = call_user_func($this->resumeCallable, $this->getResumeToken());
+        $this->iterator = call_user_func($this->resumeCallable, $this->getResumeToken(), $this->hasAdvanced);
         $this->iterator->rewind();
 
         $this->onIteration($this->hasAdvanced);

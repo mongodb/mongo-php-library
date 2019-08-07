@@ -1382,6 +1382,105 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertSame($resumeToken, $changeStream->getResumeToken());
     }
 
+    /**
+     * Prose test: "$changeStream stage for ChangeStream started with startAfter
+     * against a server >=4.1.1 that has not received any results yet MUST
+     * include a startAfter option and MUST NOT include a resumeAfter option
+     * when resuming a change stream."
+     */
+    public function testResumingChangeStreamWithoutPreviousResultsIncludesStartAfterOption()
+    {
+        if (version_compare($this->getServerVersion(), '4.1.1', '<')) {
+            $this->markTestSkipped('Testing resumeAfter and startAfter can only be tested on servers >= 4.1.1');
+        }
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $this->insertDocument(['x' => 1]);
+
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+        $resumeToken = $changeStream->getResumeToken();
+
+        $options = ['startAfter' => $resumeToken] + $this->defaultOptions;
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+        $changeStream->rewind();
+        $this->killChangeStreamCursor($changeStream);
+
+        $aggregateCommand = null;
+
+        (new CommandObserver)->observe(
+            function() use ($changeStream) {
+                $changeStream->next();
+            },
+            function(array $event) use (&$aggregateCommand) {
+                if ($event['started']->getCommandName() !== 'aggregate') {
+                    return;
+                }
+
+                $aggregateCommand = $event['started']->getCommand();
+            }
+        );
+
+        $this->assertNotNull($aggregateCommand);
+        $this->assertObjectNotHasAttribute('resumeAfter', $aggregateCommand->pipeline[0]->{'$changeStream'});
+        $this->assertObjectHasAttribute('startAfter', $aggregateCommand->pipeline[0]->{'$changeStream'});
+    }
+
+    /**
+     * Prose test: "$changeStream stage for ChangeStream started with startAfter
+     * against a server >=4.1.1 that has received at least one result MUST
+     * include a resumeAfter option and MUST NOT include a startAfter option
+     * when resuming a change stream."
+     */
+    public function testResumingChangeStreamWithPreviousResultsIncludesResumeAfterOption()
+    {
+        if (version_compare($this->getServerVersion(), '4.1.1', '<')) {
+            $this->markTestSkipped('Testing resumeAfter and startAfter can only be tested on servers >= 4.1.1');
+        }
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $this->insertDocument(['x' => 1]);
+
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+        $resumeToken = $changeStream->getResumeToken();
+
+        $options = ['startAfter' => $resumeToken] + $this->defaultOptions;
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+        $changeStream->rewind();
+
+        $this->insertDocument(['x' => 2]);
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+
+        $this->killChangeStreamCursor($changeStream);
+
+        $aggregateCommand = null;
+
+        (new CommandObserver)->observe(
+            function() use ($changeStream) {
+                $changeStream->next();
+            },
+            function(array $event) use (&$aggregateCommand) {
+                if ($event['started']->getCommandName() !== 'aggregate') {
+                    return;
+                }
+
+                $aggregateCommand = $event['started']->getCommand();
+            }
+        );
+
+        $this->assertNotNull($aggregateCommand);
+        $this->assertObjectNotHasAttribute('startAfter', $aggregateCommand->pipeline[0]->{'$changeStream'});
+        $this->assertObjectHasAttribute('resumeAfter', $aggregateCommand->pipeline[0]->{'$changeStream'});
+    }
+
     private function assertNoCommandExecuted(callable $callable)
     {
         $commands = [];

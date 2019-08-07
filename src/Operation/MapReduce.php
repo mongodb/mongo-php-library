@@ -156,7 +156,7 @@ class MapReduce implements Executable
         }
 
         if (isset($options['finalize']) && ! $options['finalize'] instanceof JavascriptInterface) {
-            throw InvalidArgumentException::invalidType('"finalize" option', $options['finalize'], Javascript::class);
+            throw InvalidArgumentException::invalidType('"finalize" option', $options['finalize'], JavascriptInterface::class);
         }
 
         if (isset($options['jsMode']) && ! is_bool($options['jsMode'])) {

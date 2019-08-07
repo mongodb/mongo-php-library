@@ -139,7 +139,7 @@ final class ErrorExpectation
             $this->assertCodeName($test, $actual);
         }
 
-        if (!empty($this->excludedLabels) or !empty($this->includedLabels)) {
+        if (! empty($this->excludedLabels) || ! empty($this->includedLabels)) {
             $test->assertInstanceOf(RuntimeException::class, $actual);
 
             foreach ($this->excludedLabels as $label) {

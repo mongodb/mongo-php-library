@@ -2,16 +2,20 @@
 
 namespace MongoDB\Tests;
 
+use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Client;
 use MongoDB\Database;
 use MongoDB\Driver\Cursor;
-use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\Server;
-use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
-use MongoDB\Operation\DropCollection;
+use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\WriteConcern;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function in_array;
+use function ob_end_clean;
+use function ob_start;
+use function var_dump;
+use function version_compare;
 
 /**
  * Documentation examples to be parsed for inclusion in the MongoDB manual.
@@ -54,7 +58,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // End Example 1
 
         $this->assertSame(1, $insertOneResult->getInsertedCount());
-        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $insertOneResult->getInsertedId());
+        $this->assertInstanceOf(ObjectId::class, $insertOneResult->getInsertedId());
         $this->assertInventoryCount(1);
 
         // Start Example 2
@@ -71,19 +75,19 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 3
         $insertManyResult = $db->inventory->insertMany([
             [
-                'item' => 'journal', 
+                'item' => 'journal',
                 'qty' => 25,
                 'tags' => ['blank', 'red'],
                 'size' => ['h' => 14, 'w' => 21, 'uom' => 'cm'],
             ],
             [
-                'item' => 'mat', 
+                'item' => 'mat',
                 'qty' => 85,
                 'tags' => ['gray'],
                 'size' => ['h' => 27.9, 'w' => 35.5, 'uom' => 'cm'],
             ],
             [
-                'item' => 'mousepad', 
+                'item' => 'mousepad',
                 'qty' => 25,
                 'tags' => ['gel', 'blue'],
                 'size' => ['h' => 19, 'w' => 22.85, 'uom' => 'cm'],
@@ -93,7 +97,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(3, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
+            $this->assertInstanceOf(ObjectId::class, $id);
         }
         $this->assertInventoryCount(3);
     }
@@ -105,31 +109,31 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 6
         $insertManyResult = $db->inventory->insertMany([
             [
-                'item' => 'journal', 
+                'item' => 'journal',
                 'qty' => 25,
                 'size' => ['h' => 14, 'w' => 21, 'uom' => 'cm'],
                 'status' => 'A',
             ],
             [
-                'item' => 'notebook', 
+                'item' => 'notebook',
                 'qty' => 50,
                 'size' => ['h' => 8.5, 'w' => 11, 'uom' => 'in'],
                 'status' => 'A',
             ],
             [
-                'item' => 'paper', 
+                'item' => 'paper',
                 'qty' => 100,
                 'size' => ['h' => 8.5, 'w' => 11, 'uom' => 'in'],
                 'status' => 'D',
             ],
             [
-                'item' => 'planner', 
+                'item' => 'planner',
                 'qty' => 75,
                 'size' => ['h' => 22.85, 'w' => 30, 'uom' => 'cm'],
                 'status' => 'D',
             ],
             [
-                'item' => 'postcard', 
+                'item' => 'postcard',
                 'qty' => 45,
                 'size' => ['h' => 10, 'w' => 15.25, 'uom' => 'cm'],
                 'status' => 'A',
@@ -139,7 +143,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(5, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
+            $this->assertInstanceOf(ObjectId::class, $id);
         }
         $this->assertInventoryCount(5);
 
@@ -208,31 +212,31 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 14
         $insertManyResult = $db->inventory->insertMany([
             [
-                'item' => 'journal', 
+                'item' => 'journal',
                 'qty' => 25,
                 'size' => ['h' => 14, 'w' => 21, 'uom' => 'cm'],
                 'status' => 'A',
             ],
             [
-                'item' => 'notebook', 
+                'item' => 'notebook',
                 'qty' => 50,
                 'size' => ['h' => 8.5, 'w' => 11, 'uom' => 'in'],
                 'status' => 'A',
             ],
             [
-                'item' => 'paper', 
+                'item' => 'paper',
                 'qty' => 100,
                 'size' => ['h' => 8.5, 'w' => 11, 'uom' => 'in'],
                 'status' => 'D',
             ],
             [
-                'item' => 'planner', 
+                'item' => 'planner',
                 'qty' => 75,
                 'size' => ['h' => 22.85, 'w' => 30, 'uom' => 'cm'],
                 'status' => 'D',
             ],
             [
-                'item' => 'postcard', 
+                'item' => 'postcard',
                 'qty' => 45,
                 'size' => ['h' => 10, 'w' => 15.25, 'uom' => 'cm'],
                 'status' => 'A',
@@ -242,7 +246,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(5, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
+            $this->assertInstanceOf(ObjectId::class, $id);
         }
         $this->assertInventoryCount(5);
 
@@ -288,31 +292,31 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 20
         $insertManyResult = $db->inventory->insertMany([
             [
-                'item' => 'journal', 
+                'item' => 'journal',
                 'qty' => 25,
                 'tags' => ['blank', 'red'],
                 'dim_cm' => [14, 21],
             ],
             [
-                'item' => 'notebook', 
+                'item' => 'notebook',
                 'qty' => 50,
                 'tags' => ['red', 'blank'],
                 'dim_cm' => [14, 21],
             ],
             [
-                'item' => 'paper', 
+                'item' => 'paper',
                 'qty' => 100,
                 'tags' => ['red', 'blank', 'plain'],
                 'dim_cm' => [14, 21],
             ],
             [
-                'item' => 'planner', 
+                'item' => 'planner',
                 'qty' => 75,
                 'tags' => ['blank', 'red'],
                 'dim_cm' => [22.85, 30],
             ],
             [
-                'item' => 'postcard', 
+                'item' => 'postcard',
                 'qty' => 45,
                 'tags' => ['blue'],
                 'dim_cm' => [10, 15.25],
@@ -322,7 +326,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(5, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
+            $this->assertInstanceOf(ObjectId::class, $id);
         }
         $this->assertInventoryCount(5);
 
@@ -394,34 +398,34 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 29
         $insertManyResult = $db->inventory->insertMany([
             [
-                'item' => 'journal', 
+                'item' => 'journal',
                 'instock' => [
                     ['warehouse' => 'A',  'qty' => 5],
                     ['warehouse' => 'C',  'qty' => 15],
                 ],
             ],
             [
-                'item' => 'notebook', 
+                'item' => 'notebook',
                 'instock' => [
                     ['warehouse' => 'C',  'qty' => 5],
                 ],
             ],
             [
-                'item' => 'paper', 
+                'item' => 'paper',
                 'instock' => [
                     ['warehouse' => 'A',  'qty' => 60],
                     ['warehouse' => 'B',  'qty' => 15],
                 ],
             ],
             [
-                'item' => 'planner', 
+                'item' => 'planner',
                 'instock' => [
                     ['warehouse' => 'A',  'qty' => 40],
                     ['warehouse' => 'B',  'qty' => 5],
                 ],
             ],
             [
-                'item' => 'postcard', 
+                'item' => 'postcard',
                 'instock' => [
                     ['warehouse' => 'B',  'qty' => 15],
                     ['warehouse' => 'C',  'qty' => 35],
@@ -432,7 +436,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(5, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
+            $this->assertInstanceOf(ObjectId::class, $id);
         }
         $this->assertInventoryCount(5);
 
@@ -573,7 +577,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(5, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
+            $this->assertInstanceOf(ObjectId::class, $id);
         }
         $this->assertInventoryCount(5);
 
@@ -789,7 +793,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(10, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
+            $this->assertInstanceOf(ObjectId::class, $id);
         }
         $this->assertInventoryCount(10);
 
@@ -899,7 +903,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(5, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $id);
+            $this->assertInstanceOf(ObjectId::class, $id);
         }
         $this->assertInventoryCount(5);
 
@@ -949,6 +953,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertNull($firstChange);
         $this->assertNull($secondChange);
 
+        // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
         // Start Changestream Example 2
         $changeStream = $db->inventory->watch([], ['fullDocument' => \MongoDB\Operation\Watch::FULL_DOCUMENT_UPDATE_LOOKUP]);
         $changeStream->rewind();
@@ -959,6 +964,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $secondChange = $changeStream->current();
         // End Changestream Example 2
+        // phpcs:enable
 
         $this->assertNull($firstChange);
         $this->assertNull($secondChange);
@@ -983,6 +989,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertMatchesDocument($expectedChange, $lastChange);
 
+        // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
         // Start Changestream Example 3
         $resumeToken = $changeStream->getResumeToken();
 
@@ -995,6 +1002,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $firstChange = $changeStream->current();
         // End Changestream Example 3
+        // phpcs:enable
 
         $expectedChange = [
             '_id' => $firstChange->_id,
@@ -1036,7 +1044,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         ]);
         // End Aggregation Example 1
 
-        $this->assertInstanceOf(\MongoDB\Driver\Cursor::class, $cursor);
+        $this->assertInstanceOf(Cursor::class, $cursor);
     }
 
     public function testAggregation_example_2()
@@ -1048,21 +1056,23 @@ class DocumentationExamplesTest extends FunctionalTestCase
             ['$unwind' => '$items'],
             ['$match' => ['items.fruit' => 'banana']],
             [
-                '$group' => ['_id' => ['day' => ['$dayOfWeek' => '$date']],
-                'count' => ['$sum' => '$items.quantity']],
+                '$group' => [
+                    '_id' => ['day' => ['$dayOfWeek' => '$date']],
+                    'count' => ['$sum' => '$items.quantity'],
+                ],
             ],
             [
                 '$project' => [
                     'dayOfWeek' => '$_id.day',
                     'numberSold' => '$count',
                     '_id' => 0,
-                ]
+                ],
             ],
             ['$sort' => ['numberSold' => 1]],
         ]);
         // End Aggregation Example 2
 
-        $this->assertInstanceOf(\MongoDB\Driver\Cursor::class, $cursor);
+        $this->assertInstanceOf(Cursor::class, $cursor);
     }
 
     public function testAggregation_example_3()
@@ -1072,31 +1082,35 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Aggregation Example 3
         $cursor = $db->sales->aggregate([
             ['$unwind' => '$items'],
-            ['$group' => [
-                '_id' => ['day' => ['$dayOfWeek' => '$date']],
-                'items_sold' => ['$sum' => '$items.quantity'],
-                'revenue' => [
-                    '$sum' => [
-                        '$multiply' => ['$items.quantity', '$items.price']
-                    ]
+            [
+                '$group' => [
+                    '_id' => ['day' => ['$dayOfWeek' => '$date']],
+                    'items_sold' => ['$sum' => '$items.quantity'],
+                    'revenue' => [
+                        '$sum' => [
+                            '$multiply' => ['$items.quantity', '$items.price'],
+                        ],
+                    ],
                 ],
-            ]],
-            ['$project' => [
-                'day' => '$_id.day',
-                'revenue' => 1,
-                'items_sold' => 1,
-                'discount' => [
-                    '$cond' => [
-                        'if' => ['$lte' => ['$revenue', 250]],
-                        'then' => 25,
-                        'else' => 0,
-                    ]
+            ],
+            [
+                '$project' => [
+                    'day' => '$_id.day',
+                    'revenue' => 1,
+                    'items_sold' => 1,
+                    'discount' => [
+                        '$cond' => [
+                            'if' => ['$lte' => ['$revenue', 250]],
+                            'then' => 25,
+                            'else' => 0,
+                        ],
+                    ],
                 ],
-            ]],
+            ],
         ]);
         // End Aggregation Example 3
 
-        $this->assertInstanceOf(\MongoDB\Driver\Cursor::class, $cursor);
+        $this->assertInstanceOf(Cursor::class, $cursor);
     }
 
     public function testAggregation_example_4()
@@ -1109,29 +1123,36 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         // Start Aggregation Example 4
         $cursor = $db->air_alliances->aggregate([
-            ['$lookup' => [
-                'from' => 'air_airlines',
-                'let' => ['constituents' => '$airlines'],
-                'pipeline' => [['$match' => [
-                        '$expr' => ['$in' => ['$name', '$constituents']]
-                ]]],
-                'as' => 'airlines',
-            ]],
-            ['$project' => [
-                '_id' => 0,
-                'name' => 1,
-                'airlines' => [
-                    '$filter' => [
-                        'input' => '$airlines',
-                        'as' => 'airline',
-                        'cond' => ['$eq' => ['$$airline.country', 'Canada']],
-                    ]
+            [
+                '$lookup' => [
+                    'from' => 'air_airlines',
+                    'let' => ['constituents' => '$airlines'],
+                    'pipeline' => [[
+                        '$match' => [
+                            '$expr' => ['$in' => ['$name', '$constituents']],
+                        ],
+                    ],
+                    ],
+                    'as' => 'airlines',
                 ],
-            ]],
+            ],
+            [
+                '$project' => [
+                    '_id' => 0,
+                    'name' => 1,
+                    'airlines' => [
+                        '$filter' => [
+                            'input' => '$airlines',
+                            'as' => 'airline',
+                            'cond' => ['$eq' => ['$$airline.country', 'Canada']],
+                        ],
+                    ],
+                ],
+            ],
         ]);
         // End Aggregation Example 4
 
-        $this->assertInstanceOf(\MongoDB\Driver\Cursor::class, $cursor);
+        $this->assertInstanceOf(Cursor::class, $cursor);
     }
 
     public function testRunCommand_example_1()
@@ -1143,7 +1164,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $result = $cursor->toArray()[0];
         // End runCommand Example 1
 
-        $this->assertInstanceOf(\MongoDB\Driver\Cursor::class, $cursor);
+        $this->assertInstanceOf(Cursor::class, $cursor);
     }
 
     public function testRunCommand_example_2()
@@ -1157,7 +1178,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $result = $cursor->toArray()[0];
         // End runCommand Example 2
 
-        $this->assertInstanceOf(\MongoDB\Driver\Cursor::class, $cursor);
+        $this->assertInstanceOf(Cursor::class, $cursor);
     }
 
     public function testIndex_example_1()
@@ -1185,12 +1206,15 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertEquals('cuisine_1_name_1', $indexName);
     }
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
+    // phpcs:disable Squiz.Commenting.FunctionComment.WrongStyle
+    // phpcs:disable Squiz.WhiteSpace.FunctionSpacing.After
     // Start Transactions Intro Example 1
     private function updateEmployeeInfo1(\MongoDB\Client $client, \MongoDB\Driver\Session $session)
     {
         $session->startTransaction([
             'readConcern' => new \MongoDB\Driver\ReadConcern('snapshot'),
-            'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY)
+            'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY),
         ]);
 
         try {
@@ -1231,6 +1255,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         }
     }
     // End Transactions Intro Example 1
+    // phpcs:enable
 
     public function testTransactions_intro_example_1()
     {
@@ -1241,12 +1266,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $client = new Client(static::getUri());
 
         /* The WC is required: https://docs.mongodb.com/manual/core/transactions/#transactions-and-locks */
-        $client->hr->dropCollection('employees', ['writeConcern' => new \MongoDB\Driver\WriteConcern('majority')]);
-        $client->reporting->dropCollection('events', ['writeConcern' => new \MongoDB\Driver\WriteConcern('majority')]);
+        $client->hr->dropCollection('employees', ['writeConcern' => new WriteConcern('majority')]);
+        $client->reporting->dropCollection('events', ['writeConcern' => new WriteConcern('majority')]);
 
         /* Collections need to be created before a transaction starts */
-        $client->hr->createCollection('employees', ['writeConcern' => new \MongoDB\Driver\WriteConcern('majority')]);
-        $client->reporting->createCollection('events', ['writeConcern' => new \MongoDB\Driver\WriteConcern('majority')]);
+        $client->hr->createCollection('employees', ['writeConcern' => new WriteConcern('majority')]);
+        $client->reporting->createCollection('events', ['writeConcern' => new WriteConcern('majority')]);
 
         $session = $client->startSession();
 
@@ -1258,6 +1283,9 @@ class DocumentationExamplesTest extends FunctionalTestCase
         }
     }
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
+    // phpcs:disable Squiz.Commenting.FunctionComment.WrongStyle
+    // phpcs:disable Squiz.WhiteSpace.FunctionSpacing.After
     // Start Transactions Retry Example 1
     private function runTransactionWithRetry1(callable $txnFunc, \MongoDB\Client $client, \MongoDB\Driver\Session $session)
     {
@@ -1282,7 +1310,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
         }
     }
     // End Transactions Retry Example 1
+    // phpcs:enable
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
+    // phpcs:disable Squiz.Commenting.FunctionComment.WrongStyle
+    // phpcs:disable Squiz.WhiteSpace.FunctionSpacing.After
     // Start Transactions Retry Example 2
     private function commitWithRetry2(\MongoDB\Driver\Session $session)
     {
@@ -1308,7 +1340,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
         }
     }
     // End Transactions Retry Example 2
+    // phpcs:enable
 
+    // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
+    // phpcs:disable Squiz.Commenting.FunctionComment.WrongStyle
+    // phpcs:disable Squiz.WhiteSpace.FunctionSpacing.After
     // Start Transactions Retry Example 3
     private function runTransactionWithRetry3(callable $txnFunc, \MongoDB\Client $client, \MongoDB\Driver\Session $session)
     {
@@ -1394,6 +1430,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         }
     }
     // End Transactions Retry Example 3
+    // phpcs:enable
 
     public function testTransactions_retry_example_3()
     {
@@ -1404,12 +1441,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $client = new Client(static::getUri());
 
         /* The WC is required: https://docs.mongodb.com/manual/core/transactions/#transactions-and-locks */
-        $client->hr->dropCollection('employees', ['writeConcern' => new \MongoDB\Driver\WriteConcern('majority')]);
-        $client->reporting->dropCollection('events', ['writeConcern' => new \MongoDB\Driver\WriteConcern('majority')]);
+        $client->hr->dropCollection('employees', ['writeConcern' => new WriteConcern('majority')]);
+        $client->reporting->dropCollection('events', ['writeConcern' => new WriteConcern('majority')]);
 
         /* Collections need to be created before a transaction starts */
-        $client->hr->createCollection('employees', ['writeConcern' => new \MongoDB\Driver\WriteConcern('majority')]);
-        $client->reporting->createCollection('events', ['writeConcern' => new \MongoDB\Driver\WriteConcern('majority')]);
+        $client->hr->createCollection('employees', ['writeConcern' => new WriteConcern('majority')]);
+        $client->reporting->createCollection('events', ['writeConcern' => new WriteConcern('majority')]);
 
         ob_start();
         try {
@@ -1419,7 +1456,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         }
     }
 
-    function testCausalConsistency()
+    public function testCausalConsistency()
     {
         $this->skipIfCausalConsistencyIsNotSupported();
 
@@ -1443,6 +1480,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             [ 'sku' => '111', 'name' => 'Peanuts', 'start' => new UTCDateTime() ]
         );
 
+        // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
         // Start Causal Consistency Example 1
         $items = $client->selectDatabase(
             'test',
@@ -1468,9 +1506,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
             [ 'session' => $s1 ]
         );
         // End Causal Consistency Example 1
+        // phpcs:enable
 
         ob_start();
 
+        // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
         // Start Causal Consistency Example 2
         $s2 = $client->startSession(
             [ 'causalConsistency' => true ]
@@ -1483,7 +1523,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             [
                 'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_SECONDARY),
                 'readConcern' => new \MongoDB\Driver\ReadConcern(\MongoDB\Driver\ReadConcern::MAJORITY),
-                'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000)
+                'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
             ]
         )->items;
 
@@ -1495,6 +1535,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             var_dump($item);
         }
         // End Causal Consistency Example 2
+        // phpcs:enable
 
         ob_end_clean();
     }

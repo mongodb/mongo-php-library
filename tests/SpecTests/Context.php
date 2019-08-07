@@ -85,7 +85,7 @@ final class Context
 
         // TODO: Remove this once retryWrites=true by default (see: PHPC-1324)
         $clientOptions['retryWrites'] = true;
-        
+
         if (isset($test->outcome->collection->name)) {
             $o->outcomeCollectionName = $test->outcome->collection->name;
         }
@@ -175,7 +175,7 @@ final class Context
             $options['readPreference'] = new ReadPreference($readPreference['mode']);
         }
 
-        if (isset($options['writeConcern']) && !($options['writeConcern'] instanceof writeConcern)) {
+        if (isset($options['writeConcern']) && ! ($options['writeConcern'] instanceof WriteConcern)) {
             $writeConcern = (array) $options['writeConcern'];
             $diff = array_diff_key($writeConcern, ['w' => 1, 'wtimeout' => 1, 'j' => 1]);
 

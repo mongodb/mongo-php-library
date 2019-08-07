@@ -242,6 +242,7 @@ class StreamWrapper
     private function getStatTemplate()
     {
         return [
+            // phpcs:disable Squiz.Arrays.ArrayDeclaration.IndexNoNewline
             0  => 0,  'dev'     => 0,
             1  => 0,  'ino'     => 0,
             2  => 0,  'mode'    => 0,
@@ -255,6 +256,7 @@ class StreamWrapper
             10 => 0,  'ctime'   => 0,
             11 => -1, 'blksize' => -1,
             12 => -1, 'blocks'  => -1,
+            // phpcs:enable
         ];
     }
 

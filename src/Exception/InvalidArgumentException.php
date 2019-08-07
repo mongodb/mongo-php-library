@@ -17,7 +17,9 @@
 
 namespace MongoDB\Exception;
 
-class InvalidArgumentException extends \MongoDB\Driver\Exception\InvalidArgumentException implements Exception
+use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
+
+class InvalidArgumentException extends DriverInvalidArgumentException implements Exception
 {
     /**
      * Thrown when an argument or option has an invalid type.

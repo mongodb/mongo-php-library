@@ -179,8 +179,7 @@ final class Operation
     /**
      * Executes the operation with a given context.
      *
-     * @param FunctionalTestCase $test    Test instance
-     * @param Context            $context Execution context
+     * @param Context $context Execution context
      * @return mixed
      * @throws LogicException if the operation is unsupported
      */

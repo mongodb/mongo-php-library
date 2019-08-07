@@ -2,9 +2,12 @@
 
 namespace MongoDB\Tests\Operation;
 
+use Closure;
 use MongoDB\ChangeStream;
 use MongoDB\BSON\TimestampInterface;
 use MongoDB\Driver\Cursor;
+use MongoDB\Driver\Exception\CommandException;
+use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
@@ -24,6 +27,8 @@ use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 class WatchFunctionalTest extends FunctionalTestCase
 {
     use SetUpTearDownTrait;
+
+    const NOT_MASTER = 10107;
 
     private static $wireVersionForStartAtOperationTime = 7;
 
@@ -890,9 +895,11 @@ class WatchFunctionalTest extends FunctionalTestCase
         $changeStream->next();
         $this->assertTrue($changeStream->valid());
 
-        $options = ['resumeAfter' => $changeStream->current()->_id] + $this->defaultOptions;
+        $resumeToken = $changeStream->current()->_id;
+        $options = ['resumeAfter' => $resumeToken] + $this->defaultOptions;
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
         $changeStream = $operation->execute($this->getPrimaryServer());
+        $this->assertSame($resumeToken, $changeStream->getResumeToken());
 
         $changeStream->rewind();
         $this->assertTrue($changeStream->valid());
@@ -979,6 +986,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $options = $this->defaultOptions + ['startAfter' => $resumeToken];
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
         $changeStream = $operation->execute($this->getPrimaryServer());
+        $this->assertSame($resumeToken, $changeStream->getResumeToken());
 
         $changeStream->rewind();
         $this->assertTrue($changeStream->valid());
@@ -1191,6 +1199,187 @@ class WatchFunctionalTest extends FunctionalTestCase
         $changeStream->next();
 
         $this->assertNull($rp->getValue($changeStream));
+    }
+
+    /**
+     * Prose test: "ChangeStream will automatically resume one time on a
+     * resumable error (including not master) with the initial pipeline and
+     * options, except for the addition/update of a resumeToken."
+     */
+    public function testResumeRepeatsOriginalPipelineAndOptions()
+    {
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+
+        $aggregateCommands = [];
+
+        $this->configureFailPoint([
+            'configureFailPoint' => 'failCommand',
+            'mode' => ['times' => 1],
+            'data' => ['failCommands' => ['getMore'], 'errorCode' => self::NOT_MASTER],
+        ]);
+
+        (new CommandObserver)->observe(
+            function() use ($operation) {
+                $changeStream = $operation->execute($this->getPrimaryServer());
+
+                // The first next will hit the fail point, causing a resume
+                $changeStream->next();
+                $changeStream->next();
+            },
+            function(array $event) use (&$aggregateCommands) {
+                $command = $event['started']->getCommand();
+                if ($event['started']->getCommandName() !== 'aggregate') {
+                    return;
+                }
+
+                $aggregateCommands[] = (array) $command;
+            }
+        );
+
+        $this->assertCount(2, $aggregateCommands);
+
+        $this->assertThat(
+            $aggregateCommands[0]['pipeline'][0]->{'$changeStream'},
+            $this->logicalNot(
+                $this->logicalOr(
+                    $this->objectHasAttribute('resumeAfter'),
+                    $this->objectHasAttribute('startAfter'),
+                    $this->objectHasAttribute('startAtOperationTime')
+                )
+            )
+        );
+
+        $this->assertThat(
+            $aggregateCommands[1]['pipeline'][0]->{'$changeStream'},
+            $this->logicalOr(
+                $this->objectHasAttribute('resumeAfter'),
+                $this->objectHasAttribute('startAfter'),
+                $this->objectHasAttribute('startAtOperationTime')
+            )
+        );
+
+        $aggregateCommands = array_map(
+            function (array $aggregateCommand) {
+                // Remove resume options from the changestream document
+                if (isset($aggregateCommand['pipeline'][0]->{'$changeStream'})) {
+                    $aggregateCommand['pipeline'][0]->{'$changeStream'} = array_diff_key(
+                        (array) $aggregateCommand['pipeline'][0]->{'$changeStream'},
+                        ['resumeAfter' => false, 'startAfter' => false, 'startAtOperationTime' => false]
+                    );
+                }
+
+                // Remove options we don't want to compare between commands
+                return array_diff_key($aggregateCommand, ['lsid' => false, '$clusterTime' => false]);
+            },
+            $aggregateCommands
+        );
+
+        // Ensure options in original and resuming aggregate command match
+        $this->assertEquals($aggregateCommands[0], $aggregateCommands[1]);
+    }
+
+    /**
+     * Prose test: "ChangeStream will not attempt to resume on any error
+     * encountered while executing an aggregate command."
+     */
+    public function testErrorDuringAggregateCommandDoesNotCauseResume()
+    {
+        if (version_compare($this->getServerVersion(), '4.0.0', '<')) {
+            $this->markTestSkipped('failCommand is not supported');
+        }
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+
+        $commandCount = 0;
+
+        $this->configureFailPoint([
+            'configureFailPoint' => 'failCommand',
+            'mode' => ['times' => 1],
+            'data' => ['failCommands' => ['aggregate'], 'errorCode' => self::NOT_MASTER],
+        ]);
+
+        $this->expectException(CommandException::class);
+
+        (new CommandObserver)->observe(
+            function() use ($operation) {
+                $operation->execute($this->getPrimaryServer());
+            },
+            function(array $event) use (&$commandCount) {
+                $commandCount++;
+            }
+        );
+
+        $this->assertSame(1, $commandCount);
+    }
+
+    /**
+     * Prose test: "ChangeStream will perform server selection before attempting
+     * to resume, using initial readPreference"
+     */
+    public function testOriginalReadPreferenceIsPreservedOnResume()
+    {
+        $readPreference = new ReadPreference('secondary');
+        $options = ['readPreference' => $readPreference] + $this->defaultOptions;
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
+
+        try {
+            $secondary = $this->manager->selectServer($readPreference);
+        } catch (ConnectionTimeoutException $e) {
+            $this->markTestSkipped('Secondary is not available');
+        }
+
+        $changeStream = $operation->execute($secondary);
+        $previousCursorId = $changeStream->getCursorId();
+        $this->killChangeStreamCursor($changeStream);
+
+        $changeStream->next();
+        $this->assertNotSame($previousCursorId, $changeStream->getCursorId());
+
+        $getCursor = Closure::bind(
+            function () {
+                return $this->iterator->getInnerIterator();
+            },
+            $changeStream,
+            ChangeStream::class
+        );
+        /** @var Cursor $cursor */
+        $cursor = $getCursor();
+        self::assertTrue($cursor->getServer()->isSecondary());
+    }
+
+    /**
+     * Prose test
+     * For a ChangeStream under these conditions:
+     * - Running against a server <4.0.7.
+     * - The batch is empty or has been iterated to the last document.
+     * Expected result:
+     * - getResumeToken must return the _id of the last document returned if one exists.
+     * - getResumeToken must return resumeAfter from the initial aggregate if the option was specified.
+     * - If resumeAfter was not specified, the getResumeToken result must be empty.
+     */
+    public function testGetResumeTokenReturnsOriginalResumeTokenOnEmptyBatch()
+    {
+        if ($this->isPostBatchResumeTokenSupported()) {
+            $this->markTestSkipped('postBatchResumeToken is supported');
+        }
+
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $this->assertNull($changeStream->getResumeToken());
+
+        $this->insertDocument(['x' => 1]);
+
+        $changeStream->next();
+        $this->assertTrue($changeStream->valid());
+        $resumeToken = $changeStream->getResumeToken();
+        $this->assertSame($resumeToken, $changeStream->current()->_id);
+
+        $options = ['resumeAfter' => $resumeToken] + $this->defaultOptions;
+        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
+        $changeStream = $operation->execute($this->getPrimaryServer());
+
+        $this->assertSame($resumeToken, $changeStream->getResumeToken());
     }
 
     private function assertNoCommandExecuted(callable $callable)

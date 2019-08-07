@@ -34,8 +34,13 @@ use function is_object;
  */
 class DatabaseCommand implements Executable
 {
+    /** @var string */
     private $databaseName;
+
+    /** @var array|Command|object */
     private $command;
+
+    /** @var array */
     private $options;
 
     /**

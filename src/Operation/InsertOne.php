@@ -39,11 +39,19 @@ use function MongoDB\server_supports_feature;
  */
 class InsertOne implements Executable
 {
+    /** @var integer */
     private static $wireVersionForDocumentLevelValidation = 4;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var array|object */
     private $document;
+
+    /** @var array */
     private $options;
 
     /**

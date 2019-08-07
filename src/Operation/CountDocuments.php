@@ -39,11 +39,22 @@ use function is_object;
  */
 class CountDocuments implements Executable
 {
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var array|object */
     private $filter;
+
+    /** @var array */
     private $aggregateOptions;
+
+    /** @var array */
     private $countOptions;
+
+    /** @var Aggregate */
     private $aggregate;
 
     /**

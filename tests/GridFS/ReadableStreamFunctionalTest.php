@@ -18,6 +18,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
 {
     use SetUpTearDownTrait;
 
+    /** @var CollectionWrapper */
     private $collectionWrapper;
 
     private function doSetUp()

@@ -6,6 +6,7 @@ use LogicException;
 use MongoDB\Client;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use stdClass;
 use function array_diff_key;
@@ -21,18 +22,43 @@ use function mt_rand;
  */
 final class Context
 {
+    /** @var string|null */
     public $bucketName;
+
+    /** @var Client|null */
     public $client;
+
+    /** @var string */
     public $collectionName;
+
+    /** @var string */
     public $databaseName;
+
+    /** @var array */
     public $defaultWriteOptions = [];
+
+    /** @var array */
     public $outcomeFindOptions = [];
+
+    /** @var string */
     public $outcomeCollectionName;
+
+    /** @var Session|null */
     public $session0;
+
+    /** @var object */
     public $session0Lsid;
+
+    /** @var Session|null */
     public $session1;
+
+    /** @var object */
     public $session1Lsid;
 
+    /**
+     * @param string $databaseName
+     * @param string $collectionName
+     */
     private function __construct($databaseName, $collectionName)
     {
         $this->databaseName = $databaseName;

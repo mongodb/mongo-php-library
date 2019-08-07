@@ -37,6 +37,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
 {
     use SetUpTearDownTrait;
 
+    /** @var Collection */
     private $expectedCollection;
 
     private function doSetUp()

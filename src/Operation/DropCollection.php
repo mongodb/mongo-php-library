@@ -38,11 +38,19 @@ use function MongoDB\server_supports_feature;
  */
 class DropCollection implements Executable
 {
+    /** @var string */
     private static $errorMessageNamespaceNotFound = 'ns not found';
+
+    /** @var integer */
     private static $wireVersionForWriteConcern = 5;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var array */
     private $options;
 
     /**

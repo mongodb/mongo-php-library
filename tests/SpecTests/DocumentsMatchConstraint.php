@@ -29,15 +29,27 @@ class DocumentsMatchConstraint extends Constraint
 {
     use ConstraintTrait;
 
+    /** @var boolean */
     private $ignoreExtraKeysInRoot = false;
+
+    /** @var boolean */
     private $ignoreExtraKeysInEmbedded = false;
+
+    /** @var array */
     private $placeholders = [];
-    /* TODO: This is not currently used, but was preserved from the design of
+
+    /**
+     * TODO: This is not currently used, but was preserved from the design of
      * TestCase::assertMatchesDocument(), which would sort keys and then compare
      * documents as JSON strings. If the TODO item in matches() is implemented
      * to make document comparisons more efficient, we may consider supporting
-     * this option. */
+     * this option.
+     *
+     * @var boolean
+     */
     private $sortKeys = false;
+
+    /** @var BSONArray|BSONDocument */
     private $value;
 
     /** @var ComparisonFailure|null */

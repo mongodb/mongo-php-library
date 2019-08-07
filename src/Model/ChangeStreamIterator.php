@@ -45,10 +45,19 @@ use function MongoDB\Driver\Monitoring\removeSubscriber;
  */
 class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 {
+    /** @var integer */
     private $batchPosition = 0;
+
+    /** @var integer */
     private $batchSize;
+
+    /** @var boolean */
     private $isRewindNop;
+
+    /** @var object|null */
     private $postBatchResumeToken;
+
+    /** @var array|object|null */
     private $resumeToken;
 
     /**

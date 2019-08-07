@@ -36,6 +36,7 @@ use function MongoDB\is_pipeline;
  */
 class ReplaceOne implements Executable
 {
+    /** @var Update */
     private $update;
 
     /**

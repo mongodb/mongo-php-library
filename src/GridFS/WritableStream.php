@@ -44,16 +44,34 @@ use function substr;
  */
 class WritableStream
 {
+    /** @var integer */
     private static $defaultChunkSizeBytes = 261120;
 
+    /** @var string */
     private $buffer = '';
+
+    /** @var integer */
     private $chunkOffset = 0;
+
+    /** @var integer */
     private $chunkSize;
+
+    /** @var boolean */
     private $disableMD5;
+
+    /** @var CollectionWrapper */
     private $collectionWrapper;
+
+    /** @var array */
     private $file;
+
+    /** @var resource */
     private $hashCtx;
+
+    /** @var boolean */
     private $isClosed = false;
+
+    /** @var integer */
     private $length = 0;
 
     /**

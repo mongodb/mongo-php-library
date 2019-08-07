@@ -25,8 +25,13 @@ use MongoDB\Exception\BadMethodCallException;
  */
 class InsertOneResult
 {
+    /** @var WriteResult */
     private $writeResult;
+
+    /** @var mixed */
     private $insertedId;
+
+    /** @var boolean */
     private $isAcknowledged;
 
     /**

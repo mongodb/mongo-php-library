@@ -21,6 +21,8 @@ final class ErrorExpectation
 {
     /**
      * @see https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err
+     *
+     * @var array
      */
     private static $codeNameMap = [
         'Interrupted' => 11601,
@@ -29,11 +31,22 @@ final class ErrorExpectation
         'OperationNotSupportedInTransaction' => 263,
     ];
 
+    /** @var integer */
     private $code;
+
+    /** @var string */
     private $codeName;
+
+    /** @var boolean */
     private $isExpected = false;
+
+    /** @var string[] */
     private $excludedLabels = [];
+
+    /** @var string[] */
     private $includedLabels = [];
+
+    /** @var string */
     private $messageContains;
 
     private function __construct()

@@ -32,6 +32,7 @@ use MongoDB\Exception\UnsupportedException;
  */
 class DeleteOne implements Executable, Explainable
 {
+    /** @var Delete */
     private $delete;
 
     /**

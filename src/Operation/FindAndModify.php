@@ -45,13 +45,25 @@ use function MongoDB\server_supports_feature;
  */
 class FindAndModify implements Executable, Explainable
 {
+    /** @var integer */
     private static $wireVersionForArrayFilters = 6;
+
+    /** @var integer */
     private static $wireVersionForCollation = 5;
+
+    /** @var integer */
     private static $wireVersionForDocumentLevelValidation = 4;
+
+    /** @var integer */
     private static $wireVersionForWriteConcern = 4;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var array */
     private $options;
 
     /**

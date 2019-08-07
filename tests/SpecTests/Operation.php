@@ -37,14 +37,28 @@ final class Operation
     const OBJECT_SESSION0 = 'session0';
     const OBJECT_SESSION1 = 'session1';
 
+    /** @var ErrorExpectation|null */
     public $errorExpectation;
+
+    /** @var ResultExpectation|null */
     public $resultExpectation;
 
+    /** @var array */
     private $arguments = [];
+
+    /** @var string|null */
     private $collectionName;
+
+    /** @var array */
     private $collectionOptions = [];
+
+    /** @var string|null */
     private $databaseName;
+
+    /** @var string */
     private $name;
+
+    /** @var string */
     private $object = self::OBJECT_COLLECTION;
 
     private function __construct(stdClass $operation)

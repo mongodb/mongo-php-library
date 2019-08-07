@@ -21,6 +21,7 @@ use function glob;
  */
 class ChangeStreamsSpecTest extends FunctionalTestCase
 {
+    /** @var array */
     private static $incompleteTests = ['change-streams-errors: Change Stream should error when _id is projected out' => 'PHPC-1419'];
 
     /**

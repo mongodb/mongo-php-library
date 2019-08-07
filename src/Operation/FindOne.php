@@ -33,6 +33,7 @@ use function current;
  */
 class FindOne implements Executable, Explainable
 {
+    /** @var Find */
     private $find;
 
     /**

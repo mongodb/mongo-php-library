@@ -35,9 +35,16 @@ use function call_user_func;
  */
 class MapReduceResult implements IteratorAggregate
 {
+    /** @var callable */
     private $getIterator;
+
+    /** @var integer */
     private $executionTimeMS;
+
+    /** @var array */
     private $counts;
+
+    /** @var array */
     private $timing;
 
     /**

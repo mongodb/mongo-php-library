@@ -62,24 +62,50 @@ use function urlencode;
  */
 class Bucket
 {
+    /** @var string */
     private static $defaultBucketName = 'fs';
+
+    /** @var integer */
     private static $defaultChunkSizeBytes = 261120;
+
+    /** @var array */
     private static $defaultTypeMap = [
         'array' => BSONArray::class,
         'document' => BSONDocument::class,
         'root' => BSONDocument::class,
     ];
+
+    /** @var string */
     private static $streamWrapperProtocol = 'gridfs';
 
+    /** @var CollectionWrapper */
     private $collectionWrapper;
+
+    /** @var string */
     private $databaseName;
+
+    /** @var Manager */
     private $manager;
+
+    /** @var string */
     private $bucketName;
+
+    /** @var boolean */
     private $disableMD5;
+
+    /** @var integer */
     private $chunkSizeBytes;
+
+    /** @var ReadConcern */
     private $readConcern;
+
+    /** @var ReadPreference */
     private $readPreference;
+
+    /** @var array */
     private $typeMap;
+
+    /** @var WriteConcern */
     private $writeConcern;
 
     /**

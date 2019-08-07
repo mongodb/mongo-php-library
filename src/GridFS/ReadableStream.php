@@ -36,15 +36,34 @@ use function substr;
  */
 class ReadableStream
 {
+    /** @var string|null */
     private $buffer;
+
+    /** @var integer */
     private $bufferOffset = 0;
+
+    /** @var integer */
     private $chunkSize;
+
+    /** @var integer */
     private $chunkOffset = 0;
+
+    /** @var IteratorIterator|null */
     private $chunksIterator;
+
+    /** @var CollectionWrapper */
     private $collectionWrapper;
+
+    /** @var float|integer */
     private $expectedLastChunkSize = 0;
+
+    /** @var stdClass */
     private $file;
+
+    /** @var integer */
     private $length;
+
+    /** @var integer */
     private $numChunks = 0;
 
     /**

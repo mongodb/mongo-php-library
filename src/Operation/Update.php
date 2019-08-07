@@ -43,14 +43,28 @@ use function MongoDB\server_supports_feature;
  */
 class Update implements Executable, Explainable
 {
+    /** @var integer */
     private static $wireVersionForArrayFilters = 6;
+
+    /** @var integer */
     private static $wireVersionForCollation = 5;
+
+    /** @var integer */
     private static $wireVersionForDocumentLevelValidation = 4;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var array|object */
     private $filter;
+
+    /** @var array|object */
     private $update;
+
+    /** @var array */
     private $options;
 
     /**

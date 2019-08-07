@@ -42,13 +42,25 @@ use function MongoDB\server_supports_feature;
  */
 class Distinct implements Executable, Explainable
 {
+    /** @var integer */
     private static $wireVersionForCollation = 5;
+
+    /** @var integer */
     private static $wireVersionForReadConcern = 4;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var string */
     private $fieldName;
+
+    /** @var array|object */
     private $filter;
+
+    /** @var array */
     private $options;
 
     /**

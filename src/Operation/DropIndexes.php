@@ -38,11 +38,19 @@ use function MongoDB\server_supports_feature;
  */
 class DropIndexes implements Executable
 {
+    /** @var integer */
     private static $wireVersionForWriteConcern = 5;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var string */
     private $indexName;
+
+    /** @var array */
     private $options;
 
     /**

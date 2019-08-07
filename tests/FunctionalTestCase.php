@@ -34,8 +34,10 @@ abstract class FunctionalTestCase extends TestCase
 {
     use SetUpTearDownTrait;
 
+    /** @var Manager */
     protected $manager;
 
+    /** @var array */
     private $configuredFailPoints = [];
 
     private function doSetUp()

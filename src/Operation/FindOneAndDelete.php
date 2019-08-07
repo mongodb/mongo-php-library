@@ -33,6 +33,7 @@ use function is_object;
  */
 class FindOneAndDelete implements Executable, Explainable
 {
+    /** @var FindAndModify */
     private $findAndModify;
 
     /**

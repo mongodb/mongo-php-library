@@ -37,19 +37,35 @@ use function is_array;
 
 class Client
 {
+    /** @var array */
     private static $defaultTypeMap = [
         'array' => BSONArray::class,
         'document' => BSONDocument::class,
         'root' => BSONDocument::class,
     ];
+
+    /** @var integer */
     private static $wireVersionForReadConcern = 4;
+
+    /** @var integer */
     private static $wireVersionForWritableCommandWriteConcern = 5;
 
+    /** @var Manager */
     private $manager;
+
+    /** @var ReadConcern */
     private $readConcern;
+
+    /** @var ReadPreference */
     private $readPreference;
+
+    /** @var string */
     private $uri;
+
+    /** @var array */
     private $typeMap;
+
+    /** @var WriteConcern */
     private $writeConcern;
 
     /**

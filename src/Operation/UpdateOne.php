@@ -36,6 +36,7 @@ use function MongoDB\is_pipeline;
  */
 class UpdateOne implements Executable, Explainable
 {
+    /** @var Update */
     private $update;
 
     /**

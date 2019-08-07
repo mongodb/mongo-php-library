@@ -50,14 +50,28 @@ use function sprintf;
  */
 class Aggregate implements Executable
 {
+    /** @var integer */
     private static $wireVersionForCollation = 5;
+
+    /** @var integer */
     private static $wireVersionForDocumentLevelValidation = 4;
+
+    /** @var integer */
     private static $wireVersionForReadConcern = 4;
+
+    /** @var integer */
     private static $wireVersionForWriteConcern = 5;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var string|null */
     private $collectionName;
+
+    /** @var array */
     private $pipeline;
+
+    /** @var array */
     private $options;
 
     /**

@@ -38,7 +38,10 @@ class SpecFunctionalTest extends FunctionalTestCase
 {
     use SetUpTearDownTrait;
 
+    /** @var Collection */
     private $expectedChunksCollection;
+
+    /** @var Collection */
     private $expectedFilesCollection;
 
     private function doSetUp()

@@ -49,12 +49,22 @@ class Find implements Executable, Explainable
     const TAILABLE = 2;
     const TAILABLE_AWAIT = 3;
 
+    /** @var integer */
     private static $wireVersionForCollation = 5;
+
+    /** @var integer */
     private static $wireVersionForReadConcern = 4;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var array|object */
     private $filter;
+
+    /** @var array */
     private $options;
 
     /**

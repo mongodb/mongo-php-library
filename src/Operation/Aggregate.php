@@ -27,7 +27,6 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
-use MongoDB\Model\TypeMapArrayIterator;
 use ArrayIterator;
 use stdClass;
 use Traversable;
@@ -280,14 +279,14 @@ class Aggregate implements Executable
             return $cursor;
         }
 
+        if (isset($this->options['typeMap'])) {
+            $cursor->setTypeMap(\MongoDB\create_field_path_type_map($this->options['typeMap'], 'result.$'));
+        }
+
         $result = current($cursor->toArray());
 
         if ( ! isset($result->result) || ! is_array($result->result)) {
             throw new UnexpectedValueException('aggregate command did not return a "result" array');
-        }
-
-        if (isset($this->options['typeMap'])) {
-            return new TypeMapArrayIterator($result->result, $this->options['typeMap']);
         }
 
         return new ArrayIterator($result->result);

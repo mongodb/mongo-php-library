@@ -241,3 +241,46 @@ function recursive_copy($element) {
 
     return clone $element;
 }
+
+/**
+ * Creates a type map to apply to a field type
+ *
+ * This is used in the Aggregate, Distinct, and FindAndModify operations to
+ * apply the root-level type map to the document that will be returned. It also
+ * replaces the root type with object for consistency within these operations
+ *
+ * An existing type map for the given field path will not be overwritten
+ *
+ * @internal
+ * @param array  $typeMap   The existing typeMap
+ * @param string $fieldPath The field path to apply the root type to
+ * @return array
+ */
+function create_field_path_type_map(array $typeMap, $fieldPath)
+{
+    // If some field paths already exist, we prefix them with the field path we are assuming as the new root
+    if (isset($typeMap['fieldPaths']) && is_array($typeMap['fieldPaths'])) {
+        $fieldPaths = $typeMap['fieldPaths'];
+
+        $typeMap['fieldPaths'] = [];
+        foreach ($fieldPaths as $existingFieldPath => $type) {
+            $typeMap['fieldPaths'][$fieldPath . '.' . $existingFieldPath] = $type;
+        }
+    }
+
+    // If a root typemap was set, apply this to the field object
+    if (isset($typeMap['root'])) {
+        $typeMap['fieldPaths'][$fieldPath] = $typeMap['root'];
+    }
+
+    /* Special case if we want to convert an array, in which case we need to
+     * ensure that the field containing the array is exposed as an array,
+     * instead of the type given in the type map's array key. */
+    if (substr($fieldPath, -2, 2) === '.$') {
+        $typeMap['fieldPaths'][substr($fieldPath, 0, -2)] = 'array';
+    }
+
+    $typeMap['root'] = 'object';
+
+    return $typeMap;
+}

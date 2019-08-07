@@ -49,6 +49,10 @@ class DistinctTest extends TestCase
             $options[][] = ['session' => $value];
         }
 
+        foreach ($this->getInvalidArrayValues() as $value) {
+            $options[][] = ['typeMap' => $value];
+        }
+
         return $options;
     }
 }

@@ -28,7 +28,6 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
-use MongoDB\Model\TypeMapArrayIterator;
 use MongoDB\MapReduceResult;
 use ArrayIterator;
 use stdClass;
@@ -267,6 +266,10 @@ class MapReduce implements Executable
             ? $server->executeReadWriteCommand($this->databaseName, $command, $options)
             : $server->executeReadCommand($this->databaseName, $command, $options);
 
+        if (isset($this->options['typeMap']) && ! $hasOutputCollection) {
+            $cursor->setTypeMap(\MongoDB\create_field_path_type_map($this->options['typeMap'], 'results.$'));
+        }
+
         $result = current($cursor->toArray());
 
         $getIterator = $this->createGetIteratorCallable($result, $server);
@@ -326,10 +329,6 @@ class MapReduce implements Executable
             $results = $result->results;
 
             return function() use ($results) {
-                if (isset($this->options['typeMap'])) {
-                    return new TypeMapArrayIterator($results, $this->options['typeMap']);
-                }
-
                 return new ArrayIterator($results);
             };
         }

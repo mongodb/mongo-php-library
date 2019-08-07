@@ -164,6 +164,10 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 ['root' => BSONDocument::class, 'document' => 'object'],
                 new BSONDocument(['_id' => 1, 'x' => (object) ['foo' => 'bar']]),
             ],
+            [
+                ['root' => 'array', 'document' => 'stdClass', 'fieldPaths' => ['x' => 'array']],
+                ['_id' => 1, 'x' => ['foo' => 'bar']],
+            ],
         ];
     }
 

@@ -305,6 +305,13 @@ class AggregateFunctionalTest extends FunctionalTestCase
                     ['_id' => 3, 'x' => (object) ['foo' => 'bar']],
                 ],
             ],
+            [
+                ['root' => 'array', 'document' => 'stdClass', 'fieldPaths' => ['x' => 'array']],
+                [
+                    ['_id' => 1, 'x' => ['foo' => 'bar']],
+                    ['_id' => 3, 'x' => ['foo' => 'bar']],
+                ],
+            ],
         ];
     }
 

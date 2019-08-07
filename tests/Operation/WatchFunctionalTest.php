@@ -689,10 +689,6 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testNonResumableErrorCodes($errorCode)
     {
-        if (version_compare($this->getServerVersion(), '4.0.0', '<')) {
-            $this->markTestSkipped('failCommand is not supported');
-        }
-
         $this->configureFailPoint([
             'configureFailPoint' => 'failCommand',
             'mode' => ['times' => 1],

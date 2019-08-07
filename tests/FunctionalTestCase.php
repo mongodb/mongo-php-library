@@ -138,6 +138,14 @@ abstract class FunctionalTestCase extends TestCase
      */
     protected function configureFailPoint($command)
     {
+        if (! $this->isFailCommandSupported()) {
+            $this->markTestSkipped('failCommand is only supported on mongod >= 4.0.0 and mongos >= 4.1.5.');
+        }
+
+        if (! $this->isFailCommandEnabled()) {
+            $this->markTestSkipped('The enableTestCommands parameter is not enabled.');
+        }
+
         if (is_array($command)) {
             $command = (object) $command;
         }
@@ -393,5 +401,38 @@ abstract class FunctionalTestCase extends TestCase
             $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
             $operation->execute($server);
         }
+    }
+
+    /**
+     * Checks if the failCommand command is supported on this server version
+     *
+     * @return bool
+     */
+    private function isFailCommandSupported()
+    {
+        $minVersion = $this->isShardedCluster() ? '4.1.5' : '4.0.0';
+
+        return version_compare($this->getServerVersion(), $minVersion, '>=');
+    }
+
+    /**
+     * Checks if the failCommand command is enabled by checking the enableTestCommands parameter
+     *
+     * @return bool
+     */
+    private function isFailCommandEnabled()
+    {
+        try {
+            $cursor = $this->manager->executeCommand(
+                'admin',
+                new Command(['getParameter' => 1, 'enableTestCommands' => 1])
+            );
+
+            $document = current($cursor->toArray());
+        } catch (CommandException $e) {
+            return false;
+        }
+
+        return isset($document->enableTestCommands) && $document->enableTestCommands === true;
     }
 }

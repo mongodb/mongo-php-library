@@ -5,15 +5,18 @@ namespace MongoDB\Tests\Collection;
 use MongoDB\Collection;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 /**
  * Base class for Collection functional tests.
  */
 abstract class FunctionalTestCase extends BaseFunctionalTestCase
 {
+    use SetUpTearDownTrait;
+
     protected $collection;
 
-    public function setUp()
+    private function doSetUp()
     {
         parent::setUp();
 
@@ -22,7 +25,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         $this->dropCollection();
     }
 
-    public function tearDown()
+    private function doTearDown()
     {
         if ($this->hasFailed()) {
             return;

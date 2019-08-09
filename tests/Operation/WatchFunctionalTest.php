@@ -19,14 +19,17 @@ use MongoDB\Operation\Watch;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
 use ReflectionClass;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 class WatchFunctionalTest extends FunctionalTestCase
 {
+    use SetUpTearDownTrait;
+
     private static $wireVersionForStartAtOperationTime = 7;
 
     private $defaultOptions = ['maxAwaitTimeMS' => 500];
 
-    public function setUp()
+    private function doSetUp()
     {
         parent::setUp();
 

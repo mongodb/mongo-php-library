@@ -9,15 +9,18 @@ use MongoDB\GridFS\ReadableStream;
 use MongoDB\GridFS\Exception\CorruptFileException;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 /**
  * Functional tests for the internal ReadableStream class.
  */
 class ReadableStreamFunctionalTest extends FunctionalTestCase
 {
+    use SetUpTearDownTrait;
+
     private $collectionWrapper;
 
-    public function setUp()
+    private function doSetUp()
     {
         parent::setUp();
 

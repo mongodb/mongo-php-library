@@ -4,13 +4,16 @@ namespace MongoDB\Tests\GridFS;
 
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\UTCDateTime;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 /**
  * Functional tests for the internal StreamWrapper class.
  */
 class StreamWrapperFunctionalTest extends FunctionalTestCase
 {
-    public function setUp()
+    use SetUpTearDownTrait;
+
+    private function doSetUp()
     {
         parent::setUp();
 

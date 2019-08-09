@@ -15,15 +15,18 @@ use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
 use InvalidArgumentException;
 use stdClass;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use UnexpectedValueException;
 
 abstract class FunctionalTestCase extends TestCase
 {
+    use SetUpTearDownTrait;
+
     protected $manager;
 
     private $configuredFailPoints = [];
 
-    public function setUp()
+    private function doSetUp()
     {
         parent::setUp();
 
@@ -31,7 +34,7 @@ abstract class FunctionalTestCase extends TestCase
         $this->configuredFailPoints = [];
     }
 
-    public function tearDown()
+    private function doTearDown()
     {
         $this->disableFailPoints();
 

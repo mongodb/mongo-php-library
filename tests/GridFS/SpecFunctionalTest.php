@@ -13,6 +13,7 @@ use Exception;
 use IteratorIterator;
 use LogicException;
 use MultipleIterator;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 /**
  * GridFS spec functional tests.
@@ -21,10 +22,12 @@ use MultipleIterator;
  */
 class SpecFunctionalTest extends FunctionalTestCase
 {
+    use SetUpTearDownTrait;
+
     private $expectedChunksCollection;
     private $expectedFilesCollection;
 
-    public function setUp()
+    private function doSetUp()
     {
         parent::setUp();
 

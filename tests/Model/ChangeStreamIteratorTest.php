@@ -11,12 +11,15 @@ use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\FunctionalTestCase;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 class ChangeStreamIteratorTest extends FunctionalTestCase
 {
+    use SetUpTearDownTrait;
+
     private $collection;
 
-    public function setUp()
+    private function doSetUp()
     {
         parent::setUp();
 

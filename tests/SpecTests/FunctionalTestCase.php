@@ -17,6 +17,7 @@ use IteratorIterator;
 use LogicException;
 use MultipleIterator;
 use stdClass;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use UnexpectedValueException;
 
 /**
@@ -26,20 +27,22 @@ use UnexpectedValueException;
  */
 class FunctionalTestCase extends BaseFunctionalTestCase
 {
+    use SetUpTearDownTrait;
+
     const TOPOLOGY_SINGLE = 'single';
     const TOPOLOGY_REPLICASET = 'replicaset';
     const TOPOLOGY_SHARDED = 'sharded';
 
     private $context;
 
-    public function setUp()
+    private function doSetUp()
     {
         parent::setUp();
 
         $this->context = null;
     }
 
-    public function tearDown()
+    private function doTearDown()
     {
         $this->context = null;
 

@@ -6,15 +6,18 @@ use MongoDB\Client;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Command;
 use MongoDB\Model\DatabaseInfo;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 /**
  * Functional tests for the Client class.
  */
 class ClientFunctionalTest extends FunctionalTestCase
 {
+    use SetUpTearDownTrait;
+
     private $client;
 
-    public function setUp()
+    private function doSetUp()
     {
         parent::setUp();
 

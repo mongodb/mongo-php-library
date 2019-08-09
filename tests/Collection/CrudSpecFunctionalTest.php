@@ -11,6 +11,7 @@ use MongoDB\Operation\FindOneAndReplace;
 use IteratorIterator;
 use LogicException;
 use MultipleIterator;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 /**
  * CRUD spec functional tests.
@@ -19,9 +20,11 @@ use MultipleIterator;
  */
 class CrudSpecFunctionalTest extends FunctionalTestCase
 {
+    use SetUpTearDownTrait;
+
     private $expectedCollection;
 
-    public function setUp()
+    private function doSetUp()
     {
         parent::setUp();
 

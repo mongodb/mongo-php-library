@@ -39,7 +39,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
      */
     protected function assertStreamContents($expectedContents, $stream)
     {
-        $this->assertInternalType('resource', $stream);
+        $this->assertIsResource($stream);
         $this->assertSame('stream', get_resource_type($stream));
         $this->assertEquals($expectedContents, stream_get_contents($stream, -1, 0));
     }

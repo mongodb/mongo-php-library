@@ -111,7 +111,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $commandResult = current($cursor->toArray());
 
         $this->assertCommandSucceeded($commandResult);
-        $this->assertInternalType('array', $commandResult);
+        $this->assertIsArray($commandResult);
         $this->assertArrayHasKey('ismaster', $commandResult);
         $this->assertTrue($commandResult['ismaster']);
     }
@@ -207,7 +207,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf(\MongoDB\Driver\ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
-        $this->assertInternalType('array', $debug['typeMap']);
+        $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf(\MongoDB\Driver\WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
@@ -229,7 +229,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf(\MongoDB\Driver\ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
-        $this->assertInternalType('array', $debug['typeMap']);
+        $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf(\MongoDB\Driver\WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
@@ -303,7 +303,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf(\MongoDB\Driver\ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
-        $this->assertInternalType('array', $debug['typeMap']);
+        $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf(\MongoDB\Driver\WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
@@ -325,7 +325,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf(\MongoDB\Driver\ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
-        $this->assertInternalType('array', $debug['typeMap']);
+        $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf(\MongoDB\Driver\WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());

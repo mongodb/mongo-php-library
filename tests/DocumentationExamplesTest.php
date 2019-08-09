@@ -498,7 +498,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(2, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInternalType('int', $id);
+            $this->assertIsInt($id);
         }
         $this->assertInventoryCount(2);
 

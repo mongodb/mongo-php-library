@@ -216,7 +216,7 @@ final class ResultExpectation
                 break;
 
             case self::ASSERT_MATCHES_DOCUMENT:
-                $test->assertInternalType('object', $expected);
+                $test->assertIsObject($expected);
                 $test->assertThat($actual, $test->logicalOr(
                     $test->isType('array'),
                     $test->isType('object')
@@ -236,7 +236,7 @@ final class ResultExpectation
                 break;
 
             case self::ASSERT_SAME_DOCUMENT:
-                $test->assertInternalType('object', $expected);
+                $test->assertIsObject($expected);
                 $test->assertThat($actual, $test->logicalOr(
                     $test->isType('array'),
                     $test->isType('object')

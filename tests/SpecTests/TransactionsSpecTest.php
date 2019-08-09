@@ -78,13 +78,13 @@ class TransactionsSpecTest extends FunctionalTestCase
 
         if (isset($expected->recoveryToken) && $expected->recoveryToken === 42) {
             static::assertObjectHasAttribute('recoveryToken', $actual);
-            static::assertInternalType('object', $actual->recoveryToken);
+            static::assertIsObject($actual->recoveryToken);
             unset($expected->recoveryToken);
         }
 
         if (isset($expected->readConcern->afterClusterTime) && $expected->readConcern->afterClusterTime === 42) {
             static::assertObjectHasAttribute('readConcern', $actual);
-            static::assertInternalType('object', $actual->readConcern);
+            static::assertIsObject($actual->readConcern);
             static::assertObjectHasAttribute('afterClusterTime', $actual->readConcern);
             static::assertInstanceOf(Timestamp::class, $actual->readConcern->afterClusterTime);
             unset($expected->readConcern->afterClusterTime);

@@ -277,7 +277,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     private function assertResumeAfter($expectedResumeToken, stdClass $command)
     {
         $this->assertObjectHasAttribute('pipeline', $command);
-        $this->assertInternalType('array', $command->pipeline);
+        $this->assertIsArray($command->pipeline);
         $this->assertArrayHasKey(0, $command->pipeline);
         $this->assertObjectHasAttribute('$changeStream', $command->pipeline[0]);
         $this->assertObjectHasAttribute('resumeAfter', $command->pipeline[0]->{'$changeStream'});
@@ -354,7 +354,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     private function assertStartAtOperationTime(TimestampInterface $expectedOperationTime, stdClass $command)
     {
         $this->assertObjectHasAttribute('pipeline', $command);
-        $this->assertInternalType('array', $command->pipeline);
+        $this->assertIsArray($command->pipeline);
         $this->assertArrayHasKey(0, $command->pipeline);
         $this->assertObjectHasAttribute('$changeStream', $command->pipeline[0]);
         $this->assertObjectHasAttribute('startAtOperationTime', $command->pipeline[0]->{'$changeStream'});
@@ -1183,7 +1183,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $rp = $rc->getProperty('resumeCallable');
         $rp->setAccessible(true);
 
-        $this->assertInternalType('callable', $rp->getValue($changeStream));
+        $this->assertIsCallable($rp->getValue($changeStream));
 
         // Invalidate the cursor to verify that resumeCallable is unset when the cursor is exhausted.
         $this->dropCollection();
@@ -1210,9 +1210,9 @@ class WatchFunctionalTest extends FunctionalTestCase
     private function getPostBatchResumeTokenFromReply(stdClass $reply)
     {
         $this->assertObjectHasAttribute('cursor', $reply);
-        $this->assertInternalType('object', $reply->cursor);
+        $this->assertIsObject($reply->cursor);
         $this->assertObjectHasAttribute('postBatchResumeToken', $reply->cursor);
-        $this->assertInternalType('object', $reply->cursor->postBatchResumeToken);
+        $this->assertIsObject($reply->cursor->postBatchResumeToken);
 
         return $reply->cursor->postBatchResumeToken;
     }

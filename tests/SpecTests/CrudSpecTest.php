@@ -14,15 +14,6 @@ use function glob;
  */
 class CrudSpecTest extends FunctionalTestCase
 {
-    /* These should all pass before the driver can be considered compatible with
-     * MongoDB 4.2. */
-    private static $incompleteTests = [
-        'bulkWrite-arrayFilters: BulkWrite with arrayFilters' => 'Fails due to command assertions',
-        'updateWithPipelines: UpdateOne using pipelines' => 'PHPLIB-418',
-        'updateWithPipelines: UpdateMany using pipelines' => 'PHPLIB-418',
-        'updateWithPipelines: FindOneAndUpdate using pipelines' => 'PHPLIB-418',
-    ];
-
     /**
      * Assert that the expected and actual command documents match.
      *
@@ -48,10 +39,6 @@ class CrudSpecTest extends FunctionalTestCase
      */
     public function testCrud(stdClass $test, array $runOn = null, array $data, $databaseName = null, $collectionName = null)
     {
-        if (isset(self::$incompleteTests[$this->dataDescription()])) {
-            $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
-        }
-
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
         }

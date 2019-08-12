@@ -41,7 +41,7 @@ class UpdateOneTest extends TestCase
     public function testConstructorUpdateArgumentRequiresOperators($replacement)
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('First key in $update argument is not an update operator');
+        $this->expectExceptionMessage('Expected an update document with operator as first key or a pipeline');
         new UpdateOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $replacement);
     }
 

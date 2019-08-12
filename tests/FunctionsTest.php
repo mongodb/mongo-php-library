@@ -10,6 +10,7 @@ use function MongoDB\create_field_path_type_map;
 use function MongoDB\generate_index_name;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_mapreduce_output_inline;
+use function MongoDB\is_pipeline;
 
 /**
  * Unit tests for utility functions.
@@ -222,6 +223,35 @@ class FunctionsTest extends TestCase
                 ],
                 'field.$',
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider providePipelines
+     */
+    public function testIsPipeline($expected, $pipeline)
+    {
+        $this->assertSame($expected, is_pipeline($pipeline));
+    }
+
+    public function providePipelines()
+    {
+        return [
+            'Not an array' => [false, (object) []],
+            'Empty array' => [false, []],
+            'Non-sequential indexes in array' => [false, [1 => ['$group' => []]]],
+            'Update document instead of pipeline' => [false, ['$set' => ['foo' => 'bar']]],
+            'Invalid pipeline stage' => [false, [['group' => []]]],
+            'Update with DbRef' => [false, ['x' => ['$ref' => 'foo', '$id' => 'bar']]],
+            'Valid pipeline' => [
+                true,
+                [
+                    ['$match' => ['foo' => 'bar']],
+                    ['$group' => ['_id' => 1]],
+                ],
+            ],
+            'False positive with DbRef in numeric field' => [true, ['0' => ['$ref' => 'foo', '$id' => 'bar']]],
+            'DbRef in numeric field as object' => [false, (object) ['0' => ['$ref' => 'foo', '$id' => 'bar']]],
         ];
     }
 }

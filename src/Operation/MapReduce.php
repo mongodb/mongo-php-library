@@ -271,9 +271,15 @@ class MapReduce implements Executable
         $command = $this->createCommand($server);
         $options = $this->createOptions($hasOutputCollection);
 
+        /* If the mapReduce operation results in a write, use
+         * executeReadWriteCommand to ensure we're handling the writeConcern
+         * option.
+         * In other cases, we use executeCommand as this will prevent the
+         * mapReduce operation from being retried when retryReads is enabled.
+         * See https://github.com/mongodb/specifications/blob/master/source/retryable-reads/retryable-reads.rst#unsupported-read-operations. */
         $cursor = $hasOutputCollection
             ? $server->executeReadWriteCommand($this->databaseName, $command, $options)
-            : $server->executeReadCommand($this->databaseName, $command, $options);
+            : $server->executeCommand($this->databaseName, $command, $options);
 
         if (isset($this->options['typeMap']) && ! $hasOutputCollection) {
             $cursor->setTypeMap(create_field_path_type_map($this->options['typeMap'], 'results.$'));

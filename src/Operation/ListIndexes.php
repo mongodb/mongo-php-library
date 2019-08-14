@@ -126,7 +126,7 @@ class ListIndexes implements Executable
         }
 
         try {
-            $cursor = $server->executeCommand($this->databaseName, new Command($cmd), $this->createOptions());
+            $cursor = $server->executeReadCommand($this->databaseName, new Command($cmd), $this->createOptions());
         } catch (DriverRuntimeException $e) {
             /* The server may return an error if the collection does not exist.
              * Check for possible error codes (see: SERVER-20463) and return an

@@ -60,6 +60,17 @@ final class ErrorExpectation
         return $o;
     }
 
+    public static function fromRetryableReads(stdClass $operation)
+    {
+        $o = new self();
+
+        if (isset($operation->error)) {
+            $o->isExpected = $operation->error;
+        }
+
+        return $o;
+    }
+
     public static function fromRetryableWrites(stdClass $outcome)
     {
         $o = new self();

@@ -21,6 +21,7 @@ use function mt_rand;
  */
 final class Context
 {
+    public $bucketName;
     public $client;
     public $collectionName;
     public $databaseName;
@@ -81,6 +82,19 @@ final class Context
         return $o;
     }
 
+    public static function fromRetryableReads(stdClass $test, $databaseName, $collectionName, $bucketName)
+    {
+        $o = new self($databaseName, $collectionName);
+
+        $o->bucketName = $bucketName;
+
+        $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
+
+        $o->client = new Client(FunctionalTestCase::getUri(), $clientOptions);
+
+        return $o;
+    }
+
     public static function fromRetryableWrites(stdClass $test, $databaseName, $collectionName)
     {
         $o = new self($databaseName, $collectionName);
@@ -133,6 +147,14 @@ final class Context
         return $o;
     }
 
+    /**
+     * @return Client
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
     public function getCollection(array $collectionOptions = [])
     {
         return $this->selectCollection(
@@ -145,6 +167,11 @@ final class Context
     public function getDatabase(array $databaseOptions = [])
     {
         return $this->selectDatabase($this->databaseName, $databaseOptions);
+    }
+
+    public function getGridFSBucket(array $bucketOptions = [])
+    {
+        return $this->selectGridFSBucket($this->databaseName, $this->bucketName, $bucketOptions);
     }
 
     /**
@@ -270,6 +297,20 @@ final class Context
             $databaseName,
             $this->prepareOptions($databaseOptions)
         );
+    }
+
+    public function selectGridFSBucket($databaseName, $bucketName, array $bucketOptions = [])
+    {
+        return $this->selectDatabase($databaseName)->selectGridFSBucket($this->prepareGridFSBucketOptions($bucketOptions, $bucketName));
+    }
+
+    private function prepareGridFSBucketOptions(array $options, $bucketPrefix)
+    {
+        if ($bucketPrefix !== null) {
+            $options['bucketPrefix'] = $bucketPrefix;
+        }
+
+        return $options;
     }
 
     private function prepareSessionOptions(array $options)

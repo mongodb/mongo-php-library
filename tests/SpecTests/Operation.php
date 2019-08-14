@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\SpecTests;
 
 use LogicException;
+use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\Cursor;
@@ -10,12 +11,16 @@ use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\Exception;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\GridFS\Bucket;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
 use stdClass;
 use function array_diff_key;
 use function array_map;
+use function fclose;
+use function fopen;
 use function MongoDB\is_last_pipeline_operator_write;
+use function stream_get_contents;
 use function strtolower;
 
 /**
@@ -23,8 +28,10 @@ use function strtolower;
  */
 final class Operation
 {
+    const OBJECT_CLIENT = 'client';
     const OBJECT_COLLECTION = 'collection';
     const OBJECT_DATABASE = 'database';
+    const OBJECT_GRIDFS_BUCKET = 'gridfsbucket';
     const OBJECT_SELECT_COLLECTION = 'selectCollection';
     const OBJECT_SELECT_DATABASE = 'selectDatabase';
     const OBJECT_SESSION0 = 'session0';
@@ -119,6 +126,16 @@ final class Operation
         return $o;
     }
 
+    public static function fromRetryableReads(stdClass $operation)
+    {
+        $o = new self($operation);
+
+        $o->errorExpectation = ErrorExpectation::fromRetryableReads($operation);
+        $o->resultExpectation = ResultExpectation::fromRetryableReads($operation, $o->getResultAssertionType());
+
+        return $o;
+    }
+
     public static function fromRetryableWrites(stdClass $operation, stdClass $outcome)
     {
         $o = new self($operation);
@@ -192,6 +209,10 @@ final class Operation
     private function execute(Context $context)
     {
         switch ($this->object) {
+            case self::OBJECT_CLIENT:
+                $client = $context->getClient();
+
+                return $this->executeForClient($client, $context);
             case self::OBJECT_COLLECTION:
                 $collection = $context->getCollection($this->collectionOptions);
 
@@ -200,6 +221,10 @@ final class Operation
                 $database = $context->getDatabase();
 
                 return $this->executeForDatabase($database, $context);
+            case self::OBJECT_GRIDFS_BUCKET:
+                $bucket = $context->getGridFSBucket();
+
+                return $this->executeForGridFSBucket($bucket, $context);
             case self::OBJECT_SELECT_COLLECTION:
                 $collection = $context->selectCollection($this->databaseName, $this->collectionName, $this->collectionOptions);
 
@@ -214,6 +239,32 @@ final class Operation
                 return $this->executeForSession($context->session1, $context);
             default:
                 throw new LogicException('Unsupported object: ' . $this->object);
+        }
+    }
+
+    /**
+     * Executes the client operation and return its result.
+     *
+     * @param Client  $client
+     * @param Context $context Execution context
+     * @return mixed
+     * @throws LogicException if the collection operation is unsupported
+     */
+    private function executeForClient(Client $client, Context $context)
+    {
+        $args = $context->prepareOptions($this->arguments);
+        $context->replaceArgumentSessionPlaceholder($args);
+
+        switch ($this->name) {
+            case 'listDatabases':
+                return $client->listDatabases($args);
+            case 'watch':
+                return $client->watch(
+                    isset($args['pipeline']) ? $args['pipeline'] : [],
+                    array_diff_key($args, ['pipeline' => 1])
+                );
+            default:
+                throw new LogicException('Unsupported client operation: ' . $this->name);
         }
     }
 
@@ -270,6 +321,8 @@ final class Operation
                 );
             case 'drop':
                 return $collection->drop($args);
+            case 'findOne':
+                return $collection->findOne($args['filter'], array_diff_key($args, ['filter' => 1]));
             case 'findOneAndReplace':
                 if (isset($args['returnDocument'])) {
                     $args['returnDocument'] = 'after' === strtolower($args['returnDocument'])
@@ -313,6 +366,20 @@ final class Operation
                     $args['document'],
                     array_diff_key($args, ['document' => 1])
                 );
+            case 'listIndexes':
+                return $collection->listIndexes($args);
+            case 'mapReduce':
+                return $collection->mapReduce(
+                    $args['map'],
+                    $args['reduce'],
+                    $args['out'],
+                    array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1])
+                );
+            case 'watch':
+                return $collection->watch(
+                    isset($args['pipeline']) ? $args['pipeline'] : [],
+                    array_diff_key($args, ['pipeline' => 1])
+                );
             default:
                 throw new LogicException('Unsupported collection operation: ' . $this->name);
         }
@@ -337,13 +404,61 @@ final class Operation
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
+            case 'listCollections':
+                return $database->listCollections($args);
             case 'runCommand':
                 return $database->command(
                     $args['command'],
                     array_diff_key($args, ['command' => 1])
                 )->toArray()[0];
+            case 'watch':
+                return $database->watch(
+                    isset($args['pipeline']) ? $args['pipeline'] : [],
+                    array_diff_key($args, ['pipeline' => 1])
+                );
             default:
                 throw new LogicException('Unsupported database operation: ' . $this->name);
+        }
+    }
+
+    /**
+     * Executes the GridFS bucket operation and return its result.
+     *
+     * @param Bucket  $bucket
+     * @param Context $context Execution context
+     * @return mixed
+     * @throws LogicException if the database operation is unsupported
+     */
+    private function executeForGridFSBucket(Bucket $bucket, Context $context)
+    {
+        $args = $context->prepareOptions($this->arguments);
+        $context->replaceArgumentSessionPlaceholder($args);
+
+        switch ($this->name) {
+            case 'download':
+                $stream = fopen('php://memory', 'w+');
+                try {
+                    $bucket->downloadToStream($args['id'], $stream);
+
+                    return stream_get_contents($stream);
+                } finally {
+                    fclose($stream);
+                }
+                break;
+
+            case 'download_by_name':
+                $stream = fopen('php://memory', 'w+');
+                try {
+                    $bucket->downloadToStreamByName($args['filename'], $stream, array_diff_key($args, ['filename' => 1]));
+
+                    return stream_get_contents($stream);
+                } finally {
+                    fclose($stream);
+                }
+                break;
+
+            default:
+                throw new LogicException('Unsupported GridFS bucket operation: ' . $this->name);
         }
     }
 
@@ -377,15 +492,34 @@ final class Operation
     private function getResultAssertionType()
     {
         switch ($this->object) {
+            case self::OBJECT_CLIENT:
+                return $this->getResultAssertionTypeForClient();
             case self::OBJECT_COLLECTION:
                 return $this->getResultAssertionTypeForCollection();
             case self::OBJECT_DATABASE:
                 return $this->getResultAssertionTypeForDatabase();
+            case self::OBJECT_GRIDFS_BUCKET:
+                return ResultExpectation::ASSERT_SAME;
             case self::OBJECT_SESSION0:
             case self::OBJECT_SESSION1:
                 return ResultExpectation::ASSERT_NOTHING;
             default:
                 throw new LogicException('Unsupported object: ' . $this->object);
+        }
+    }
+
+    /**
+     * @throws LogicException if the collection operation is unsupported
+     */
+    private function getResultAssertionTypeForClient()
+    {
+        switch ($this->name) {
+            case 'listDatabases':
+                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
+            case 'watch':
+                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
+            default:
+                throw new LogicException('Unsupported client operation: ' . $this->name);
         }
     }
 
@@ -417,6 +551,7 @@ final class Operation
                 return ResultExpectation::ASSERT_DELETE;
             case 'drop':
                 return ResultExpectation::ASSERT_NOTHING;
+            case 'findOne':
             case 'findOneAndDelete':
             case 'findOneAndReplace':
             case 'findOneAndUpdate':
@@ -427,10 +562,16 @@ final class Operation
                 return ResultExpectation::ASSERT_INSERTMANY;
             case 'insertOne':
                 return ResultExpectation::ASSERT_INSERTONE;
+            case 'listIndexes':
+                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
+            case 'mapReduce':
+                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
             case 'replaceOne':
             case 'updateMany':
             case 'updateOne':
                 return ResultExpectation::ASSERT_UPDATE;
+            case 'watch':
+                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
             default:
                 throw new LogicException('Unsupported collection operation: ' . $this->name);
         }
@@ -443,9 +584,12 @@ final class Operation
     {
         switch ($this->name) {
             case 'aggregate':
+            case 'listCollections':
                 return ResultExpectation::ASSERT_SAME_DOCUMENTS;
             case 'runCommand':
                 return ResultExpectation::ASSERT_MATCHES_DOCUMENT;
+            case 'watch':
+                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
             default:
                 throw new LogicException('Unsupported database operation: ' . $this->name);
         }

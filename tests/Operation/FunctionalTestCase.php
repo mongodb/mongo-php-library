@@ -8,20 +8,23 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 /**
  * Base class for Operation functional tests.
  */
 abstract class FunctionalTestCase extends BaseFunctionalTestCase
 {
-    public function setUp()
+    use SetUpTearDownTrait;
+
+    private function doSetUp()
     {
         parent::setUp();
 
         $this->dropCollection();
     }
 
-    public function tearDown()
+    private function doTearDown()
     {
         if ($this->hasFailed()) {
             return;

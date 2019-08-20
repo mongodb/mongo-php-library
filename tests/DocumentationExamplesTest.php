@@ -11,6 +11,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Operation\DropCollection;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 /**
  * Documentation examples to be parsed for inclusion in the MongoDB manual.
@@ -21,14 +22,16 @@ use MongoDB\Operation\DropCollection;
  */
 class DocumentationExamplesTest extends FunctionalTestCase
 {
-    public function setUp()
+    use SetUpTearDownTrait;
+
+    private function doSetUp()
     {
         parent::setUp();
 
         $this->dropCollection();
     }
 
-    public function tearDown()
+    private function doTearDown()
     {
         if ($this->hasFailed()) {
             return;
@@ -495,7 +498,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(2, $insertManyResult->getInsertedCount());
         foreach ($insertManyResult->getInsertedIds() as $id) {
-            $this->assertInternalType('int', $id);
+            $this->assertIsInt($id);
         }
         $this->assertInventoryCount(2);
 

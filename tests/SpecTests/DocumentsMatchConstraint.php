@@ -9,6 +9,7 @@ use ArrayObject;
 use InvalidArgumentException;
 use RuntimeException;
 use stdClass;
+use Symfony\Bridge\PhpUnit\ConstraintTrait;
 
 /**
  * Constraint that checks if one document matches another.
@@ -17,6 +18,8 @@ use stdClass;
  */
 class DocumentsMatchConstraint extends Constraint
 {
+    use ConstraintTrait;
+
     private $ignoreExtraKeysInRoot = false;
     private $ignoreExtraKeysInEmbedded = false;
     private $placeholders = [];
@@ -38,48 +41,10 @@ class DocumentsMatchConstraint extends Constraint
      */
     public function __construct($value, $ignoreExtraKeysInRoot = false, $ignoreExtraKeysInEmbedded = false, array $placeholders = [])
     {
-        parent::__construct();
         $this->value = $this->prepareBSON($value, true, $this->sortKeys);
         $this->ignoreExtraKeysInRoot = $ignoreExtraKeysInRoot;
         $this->ignoreExtraKeysInEmbedded = $ignoreExtraKeysInEmbedded;
         $this->placeholders = $placeholders;
-    }
-
-    /**
-     * Returns a string representation of the constraint.
-     *
-     * @return string
-     */
-    public function toString()
-    {
-        return 'matches ' . json_encode($this->value);
-    }
-
-    /**
-     * Evaluates the constraint for parameter $other. Returns true if the
-     * constraint is met, false otherwise.
-     *
-     * @param mixed $other
-     * @return boolean
-     */
-    protected function matches($other)
-    {
-        /* TODO: If ignoreExtraKeys and sortKeys are both false, then we may be
-         * able to skip preparation, convert both documents to extended JSON,
-         * and compare strings.
-         *
-         * If ignoreExtraKeys is false and sortKeys is true, we still be able to
-         * compare JSON strings but will still require preparation to sort keys
-         * in all documents and sub-documents. */
-        $other = $this->prepareBSON($other, true, $this->sortKeys);
-
-        try {
-            $this->assertEquals($this->value, $other, $this->ignoreExtraKeysInRoot);
-        } catch (RuntimeException $e) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -129,6 +94,31 @@ class DocumentsMatchConstraint extends Constraint
                 throw new RuntimeException('$actual has extra key: ' . $key);
             }
         }
+    }
+
+    private function doMatches($other)
+    {
+        /* TODO: If ignoreExtraKeys and sortKeys are both false, then we may be
+         * able to skip preparation, convert both documents to extended JSON,
+         * and compare strings.
+         *
+         * If ignoreExtraKeys is false and sortKeys is true, we still be able to
+         * compare JSON strings but will still require preparation to sort keys
+         * in all documents and sub-documents. */
+        $other = $this->prepareBSON($other, true, $this->sortKeys);
+
+        try {
+            $this->assertEquals($this->value, $other, $this->ignoreExtraKeysInRoot);
+        } catch (RuntimeException $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function doToString()
+    {
+        return 'matches ' . json_encode($this->value);
     }
 
     /**

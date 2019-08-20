@@ -11,6 +11,7 @@ use MongoDB\Operation\FindOneAndReplace;
 use IteratorIterator;
 use LogicException;
 use MultipleIterator;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 /**
  * CRUD spec functional tests.
@@ -19,9 +20,11 @@ use MultipleIterator;
  */
 class CrudSpecFunctionalTest extends FunctionalTestCase
 {
+    use SetUpTearDownTrait;
+
     private $expectedCollection;
 
-    public function setUp()
+    private function doSetUp()
     {
         parent::setUp();
 
@@ -297,7 +300,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 break;
 
             case 'bulkWrite':
-                $this->assertInternalType('array', $expectedResult);
+                $this->assertIsArray($expectedResult);
                 $this->assertInstanceOf(\MongoDB\BulkWriteResult::class, $actualResult);
 
                 if (isset($expectedResult['deletedCount'])) {
@@ -354,7 +357,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
 
             case 'deleteMany':
             case 'deleteOne':
-                $this->assertInternalType('array', $expectedResult);
+                $this->assertIsArray($expectedResult);
                 $this->assertInstanceOf(\MongoDB\DeleteResult::class, $actualResult);
 
                 if (isset($expectedResult['deletedCount'])) {
@@ -372,7 +375,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 break;
 
             case 'insertMany':
-                $this->assertInternalType('array', $expectedResult);
+                $this->assertIsArray($expectedResult);
                 $this->assertInstanceOf(\MongoDB\InsertManyResult::class, $actualResult);
 
                 if (isset($expectedResult['insertedCount'])) {
@@ -388,7 +391,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 break;
 
             case 'insertOne':
-                $this->assertInternalType('array', $expectedResult);
+                $this->assertIsArray($expectedResult);
                 $this->assertInstanceOf(\MongoDB\InsertOneResult::class, $actualResult);
 
                 if (isset($expectedResult['insertedCount'])) {
@@ -406,7 +409,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             case 'replaceOne':
             case 'updateMany':
             case 'updateOne':
-                $this->assertInternalType('array', $expectedResult);
+                $this->assertIsArray($expectedResult);
                 $this->assertInstanceOf(\MongoDB\UpdateResult::class, $actualResult);
 
                 if (isset($expectedResult['matchedCount'])) {

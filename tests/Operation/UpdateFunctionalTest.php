@@ -10,12 +10,15 @@ use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Operation\Update;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 class UpdateFunctionalTest extends FunctionalTestCase
 {
+    use SetUpTearDownTrait;
+
     private $collection;
 
-    public function setUp()
+    private function doSetUp()
     {
         parent::setUp();
 

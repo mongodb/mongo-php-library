@@ -12,6 +12,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\ServerException;
 use stdClass;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 /**
  * Transactions spec tests.
@@ -20,6 +21,8 @@ use stdClass;
  */
 class TransactionsSpecTest extends FunctionalTestCase
 {
+    use SetUpTearDownTrait;
+
     const INTERRUPTED = 11601;
 
     /* In addition to the useMultipleMongoses tests, these should all pass
@@ -38,14 +41,14 @@ class TransactionsSpecTest extends FunctionalTestCase
         'transaction-options: readConcern snapshot in startTransaction options' => 'PHPLIB does not properly inherit readConcern for transactions',
     ];
 
-    public static function setUpBeforeClass()
+    private static function doSetUpBeforeClass()
     {
         parent::setUpBeforeClass();
 
         static::killAllSessions();
     }
 
-    public function tearDown()
+    private function doTearDown()
     {
         if ($this->hasFailed()) {
             static::killAllSessions();
@@ -75,13 +78,13 @@ class TransactionsSpecTest extends FunctionalTestCase
 
         if (isset($expected->recoveryToken) && $expected->recoveryToken === 42) {
             static::assertObjectHasAttribute('recoveryToken', $actual);
-            static::assertInternalType('object', $actual->recoveryToken);
+            static::assertIsObject($actual->recoveryToken);
             unset($expected->recoveryToken);
         }
 
         if (isset($expected->readConcern->afterClusterTime) && $expected->readConcern->afterClusterTime === 42) {
             static::assertObjectHasAttribute('readConcern', $actual);
-            static::assertInternalType('object', $actual->readConcern);
+            static::assertIsObject($actual->readConcern);
             static::assertObjectHasAttribute('afterClusterTime', $actual->readConcern);
             static::assertInstanceOf(Timestamp::class, $actual->readConcern->afterClusterTime);
             unset($expected->readConcern->afterClusterTime);

@@ -7,6 +7,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
+use MongoDB\Tests\Compat\PolyfillAssertTrait;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use InvalidArgumentException;
 use ReflectionClass;
@@ -15,6 +16,8 @@ use Traversable;
 
 abstract class TestCase extends BaseTestCase
 {
+    use PolyfillAssertTrait;
+
     /**
      * Return the connection URI.
      *

@@ -502,7 +502,7 @@ class BucketFunctionalTest extends FunctionalTestCase
             $expectedReadLength = min(4096, strlen($input) - strlen($buffer));
             $buffer .= $read = fread($stream, 4096);
 
-            $this->assertInternalType('string', $read);
+            $this->assertIsString($read);
             $this->assertEquals($expectedReadLength, strlen($read));
         }
 

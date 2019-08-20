@@ -16,7 +16,8 @@
         "ext-mongodb": "^1.6"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.7.27 || ^6.4"
+        "phpunit/phpunit": "^5.7.27 || ^6.4 || ^8.3",
+        "symfony/phpunit-bridge": "^4.4@dev"
     },
     "autoload": {
         "psr-4": { "MongoDB\\": "src/" },

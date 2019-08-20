@@ -32,7 +32,7 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
 
         if (isset($expected->killCursors) && isset($expected->cursors) && is_array($expected->cursors)) {
             static::assertObjectHasAttribute('cursors', $actual);
-            static::assertInternalType('array', $actual->cursors);
+            static::assertIsArray($actual->cursors);
 
             foreach ($expected->cursors as $i => $cursorId) {
                 static::assertArrayHasKey($i, $actual->cursors);
@@ -63,7 +63,7 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
     {
         if (isset($expected->cursor->id) && $expected->cursor->id === 42) {
             static::assertObjectHasAttribute('cursor', $actual);
-            static::assertInternalType('object', $actual->cursor);
+            static::assertIsObject($actual->cursor);
             static::assertObjectHasAttribute('id', $actual->cursor);
             static::assertThat($actual->cursor->id, static::logicalOr(
                 static::isInstanceOf(Int64::class),
@@ -74,7 +74,7 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
 
         if (isset($expected->cursorsUnknown) && is_array($expected->cursorsUnknown)) {
             static::assertObjectHasAttribute('cursorsUnknown', $actual);
-            static::assertInternalType('array', $actual->cursorsUnknown);
+            static::assertIsArray($actual->cursorsUnknown);
 
             foreach ($expected->cursorsUnknown as $i => $cursorId) {
                 static::assertArrayHasKey($i, $actual->cursorsUnknown);
@@ -92,14 +92,14 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
 
         if (isset($expected->ok) && is_numeric($expected->ok)) {
             static::assertObjectHasAttribute('ok', $actual);
-            static::assertInternalType('numeric', $actual->ok);
+            static::assertIsNumeric($actual->ok);
             static::assertEquals($expected->ok, $actual->ok);
             unset($expected->ok);
         }
 
         if (isset($expected->writeErrors) && is_array($expected->writeErrors)) {
             static::assertObjectHasAttribute('writeErrors', $actual);
-            static::assertInternalType('array', $actual->writeErrors);
+            static::assertIsArray($actual->writeErrors);
 
             foreach ($expected->writeErrors as $i => $expectedWriteError) {
                 static::assertArrayHasKey($i, $actual->writeErrors);
@@ -116,7 +116,7 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
 
                 if (isset($expectedWriteError->errmsg) && $expectedWriteError->errmsg === '') {
                     static::assertObjectHasAttribute('errmsg', $actualWriteError);
-                    static::assertInternalType('string', $actualWriteError->errmsg);
+                    static::assertIsString($actualWriteError->errmsg);
                     static::assertNotEmpty($actualWriteError->errmsg);
                     unset($expected->writeErrors[$i]->errmsg);
                 }

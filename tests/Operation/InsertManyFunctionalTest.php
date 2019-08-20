@@ -10,12 +10,15 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 class InsertManyFunctionalTest extends FunctionalTestCase
 {
+    use SetUpTearDownTrait;
+
     private $collection;
 
-    public function setUp()
+    private function doSetUp()
     {
         parent::setUp();
 

@@ -8,6 +8,8 @@ use PHPUnit\Framework\Constraint\Constraint;
 use ArrayObject;
 use InvalidArgumentException;
 use RuntimeException;
+use SebastianBergmann\Comparator\ComparisonFailure;
+use SebastianBergmann\Comparator\Factory;
 use stdClass;
 use Symfony\Bridge\PhpUnit\ConstraintTrait;
 
@@ -31,6 +33,12 @@ class DocumentsMatchConstraint extends Constraint
     private $sortKeys = false;
     private $value;
 
+    /** @var ComparisonFailure|null */
+    private $lastFailure;
+
+    /** @var Factory */
+    private $comparatorFactory;
+
     /**
      * Creates a new constraint.
      *
@@ -45,6 +53,44 @@ class DocumentsMatchConstraint extends Constraint
         $this->ignoreExtraKeysInRoot = $ignoreExtraKeysInRoot;
         $this->ignoreExtraKeysInEmbedded = $ignoreExtraKeysInEmbedded;
         $this->placeholders = $placeholders;
+        $this->comparatorFactory = Factory::getInstance();
+    }
+
+    public function evaluate($other, $description = '', $returnResult = false)
+    {
+        /* TODO: If ignoreExtraKeys and sortKeys are both false, then we may be
+         * able to skip preparation, convert both documents to extended JSON,
+         * and compare strings.
+         *
+         * If ignoreExtraKeys is false and sortKeys is true, we still be able to
+         * compare JSON strings but will still require preparation to sort keys
+         * in all documents and sub-documents. */
+        $other = $this->prepareBSON($other, true, $this->sortKeys);
+
+        $success = false;
+        $this->lastFailure = null;
+
+        try {
+            $this->assertEquals($this->value, $other, $this->ignoreExtraKeysInRoot);
+            $success = true;
+        } catch (RuntimeException $e) {
+            $this->lastFailure = new ComparisonFailure(
+                $this->value,
+                $other,
+                $this->exporter()->export($this->value),
+                $this->exporter()->export($other),
+                false,
+                $e->getMessage()
+            );
+        }
+
+        if ($returnResult) {
+            return $success;
+        }
+
+        if (!$success) {
+            $this->fail($other, $description, $this->lastFailure);
+        }
     }
 
     /**
@@ -53,19 +99,24 @@ class DocumentsMatchConstraint extends Constraint
      * @param ArrayObject $expected
      * @param ArrayObject $actual
      * @param boolean     $ignoreExtraKeys
+     * @param string      $keyPrefix
      * @throws RuntimeException if the documents do not match
      */
-    private function assertEquals(ArrayObject $expected, ArrayObject $actual, $ignoreExtraKeys)
+    private function assertEquals(ArrayObject $expected, ArrayObject $actual, $ignoreExtraKeys, $keyPrefix = '')
     {
         if (get_class($expected) !== get_class($actual)) {
-            throw new RuntimeException(sprintf('$expected is %s but $actual is %s', get_class($expected), get_class($actual)));
+            throw new RuntimeException(sprintf(
+                '%s is not instance of expected class "%s"',
+                $this->exporter()->shortenedExport($actual),
+                get_class($expected)
+            ));
         }
 
         foreach ($expected as $key => $expectedValue) {
             $actualHasKey = $actual->offsetExists($key);
 
             if (!$actualHasKey) {
-                throw new RuntimeException('$actual is missing key: ' . $key);
+                throw new RuntimeException(sprintf('$actual is missing key: "%s"', $keyPrefix . $key));
             }
 
             if (in_array($expectedValue, $this->placeholders, true)) {
@@ -76,12 +127,53 @@ class DocumentsMatchConstraint extends Constraint
 
             if (($expectedValue instanceof BSONArray && $actualValue instanceof BSONArray) ||
                 ($expectedValue instanceof BSONDocument && $actualValue instanceof BSONDocument)) {
-                $this->assertEquals($expectedValue, $actualValue, $this->ignoreExtraKeysInEmbedded);
+                $this->assertEquals($expectedValue, $actualValue, $this->ignoreExtraKeysInEmbedded, $keyPrefix . $key . '.');
                 continue;
             }
 
-            if (gettype($expectedValue) != gettype($actualValue) || $expectedValue != $actualValue) {
-                throw new RuntimeException('$expectedValue != $actualValue for key: ' . $key);
+            if (is_scalar($expectedValue) && is_scalar($actualValue)) {
+                if ($expectedValue !== $actualValue) {
+                    throw new ComparisonFailure(
+                        $expectedValue,
+                        $actualValue,
+                        '',
+                        '',
+                        false,
+                        sprintf('Field path "%s": %s', $keyPrefix . $key, 'Failed asserting that two values are equal.')
+                    );
+                }
+
+                continue;
+            }
+
+            // Workaround for ObjectComparator printing the whole actual object
+            if (get_class($expectedValue) !== get_class($actualValue)) {
+                throw new ComparisonFailure(
+                    $expectedValue,
+                    $actualValue,
+                    '',
+                    '',
+                    false,
+                    \sprintf(
+                        'Field path "%s": %s is not instance of expected class "%s".',
+                        $keyPrefix . $key,
+                        $this->exporter()->shortenedExport($actualValue),
+                        get_class($expectedValue)
+                    )
+                );
+            }
+
+            try {
+                $this->comparatorFactory->getComparatorFor($expectedValue, $actualValue)->assertEquals($expectedValue, $actualValue);
+            } catch (ComparisonFailure $failure) {
+                throw new ComparisonFailure(
+                    $expectedValue,
+                    $actualValue,
+                    '',
+                    '',
+                    false,
+                    sprintf('Field path "%s": %s', $keyPrefix . $key, $failure->getMessage())
+                );
             }
         }
 
@@ -91,9 +183,23 @@ class DocumentsMatchConstraint extends Constraint
 
         foreach ($actual as $key => $value) {
             if (!$expected->offsetExists($key)) {
-                throw new RuntimeException('$actual has extra key: ' . $key);
+                throw new RuntimeException(sprintf('$actual has extra key: "%s"', $keyPrefix . $key));
             }
         }
+    }
+
+    private function doAdditionalFailureDescription($other)
+    {
+        if ($this->lastFailure === null) {
+            return '';
+        }
+
+        return $this->lastFailure->getMessage();
+    }
+
+    private function doFailureDescription($other)
+    {
+        return 'two BSON objects are equal';
     }
 
     private function doMatches($other)
@@ -118,7 +224,7 @@ class DocumentsMatchConstraint extends Constraint
 
     private function doToString()
     {
-        return 'matches ' . json_encode($this->value);
+        return 'matches ' . $this->exporter()->export($this->value);
     }
 
     /**

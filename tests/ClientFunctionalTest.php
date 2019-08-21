@@ -4,9 +4,15 @@ namespace MongoDB\Tests;
 
 use MongoDB\Client;
 use MongoDB\Driver\BulkWrite;
-use MongoDB\Driver\Command;
+use MongoDB\Driver\Manager;
+use MongoDB\Driver\Session;
 use MongoDB\Model\DatabaseInfo;
+use MongoDB\Model\DatabaseInfoIterator;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function call_user_func;
+use function is_callable;
+use function sprintf;
+use function version_compare;
 
 /**
  * Functional tests for the Client class.
@@ -27,7 +33,7 @@ class ClientFunctionalTest extends FunctionalTestCase
 
     public function testGetManager()
     {
-        $this->assertInstanceOf(\MongoDB\Driver\Manager::class, $this->client->getManager());
+        $this->assertInstanceOf(Manager::class, $this->client->getManager());
     }
 
     public function testDropDatabase()
@@ -53,14 +59,14 @@ class ClientFunctionalTest extends FunctionalTestCase
 
         $databases = $this->client->listDatabases();
 
-        $this->assertInstanceOf(\MongoDB\Model\DatabaseInfoIterator::class, $databases);
+        $this->assertInstanceOf(DatabaseInfoIterator::class, $databases);
 
         foreach ($databases as $database) {
-            $this->assertInstanceOf(\MongoDB\Model\DatabaseInfo::class, $database);
+            $this->assertInstanceOf(DatabaseInfo::class, $database);
         }
 
         $that = $this;
-        $this->assertDatabaseExists($this->getDatabaseName(), function(DatabaseInfo $info) use ($that) {
+        $this->assertDatabaseExists($this->getDatabaseName(), function (DatabaseInfo $info) use ($that) {
             $that->assertFalse($info->isEmpty());
             $that->assertGreaterThan(0, $info->getSizeOnDisk());
         });
@@ -74,7 +80,7 @@ class ClientFunctionalTest extends FunctionalTestCase
      * the given name is found, it will be passed to the callback, which may
      * perform additional assertions.
      *
-     * @param string $databaseName
+     * @param string   $databaseName
      * @param callable $callback
      */
     private function assertDatabaseExists($databaseName, $callback = null)
@@ -106,6 +112,6 @@ class ClientFunctionalTest extends FunctionalTestCase
         if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
             $this->markTestSkipped('startSession() is only supported on FCV 3.6 or higher');
         }
-        $this->assertInstanceOf(\MongoDB\Driver\Session::class, $this->client->startSession());
+        $this->assertInstanceOf(Session::class, $this->client->startSession());
     }
 }

@@ -3,8 +3,6 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Operation\Count;
-use MongoDB\Operation\Distinct;
 use MongoDB\Operation\Explain;
 use MongoDB\Operation\Explainable;
 

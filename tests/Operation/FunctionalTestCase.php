@@ -2,11 +2,8 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\Collection;
 use MongoDB\Driver\ReadConcern;
-use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Operation\DropCollection;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
@@ -35,7 +32,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
 
     protected function createDefaultReadConcern()
     {
-        return new ReadConcern;
+        return new ReadConcern();
     }
 
     protected function createDefaultWriteConcern()

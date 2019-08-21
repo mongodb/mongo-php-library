@@ -5,6 +5,15 @@ namespace MongoDB\Tests\GridFS;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\UTCDateTime;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function fclose;
+use function feof;
+use function fread;
+use function fseek;
+use function fstat;
+use function fwrite;
+use const SEEK_CUR;
+use const SEEK_END;
+use const SEEK_SET;
 
 /**
  * Functional tests for the internal StreamWrapper class.
@@ -57,26 +66,26 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
     {
         $stream = $this->bucket->openDownloadStream('length-10');
 
-        $this->assertSame(0, fseek($stream, 2, \SEEK_SET));
+        $this->assertSame(0, fseek($stream, 2, SEEK_SET));
         $this->assertSame('cde', fread($stream, 3));
-        $this->assertSame(0, fseek($stream, 10, \SEEK_SET));
+        $this->assertSame(0, fseek($stream, 10, SEEK_SET));
         $this->assertSame('', fread($stream, 3));
-        $this->assertSame(-1, fseek($stream, -1, \SEEK_SET));
-        $this->assertSame(-1, fseek($stream, 11, \SEEK_SET));
+        $this->assertSame(-1, fseek($stream, -1, SEEK_SET));
+        $this->assertSame(-1, fseek($stream, 11, SEEK_SET));
 
-        $this->assertSame(0, fseek($stream, -5, \SEEK_CUR));
+        $this->assertSame(0, fseek($stream, -5, SEEK_CUR));
         $this->assertSame('fgh', fread($stream, 3));
-        $this->assertSame(0, fseek($stream, 1, \SEEK_CUR));
+        $this->assertSame(0, fseek($stream, 1, SEEK_CUR));
         $this->assertSame('j', fread($stream, 3));
-        $this->assertSame(-1, fseek($stream, 1, \SEEK_CUR));
-        $this->assertSame(-1, fseek($stream, -11, \SEEK_CUR));
+        $this->assertSame(-1, fseek($stream, 1, SEEK_CUR));
+        $this->assertSame(-1, fseek($stream, -11, SEEK_CUR));
 
-        $this->assertSame(0, fseek($stream, 0, \SEEK_END));
+        $this->assertSame(0, fseek($stream, 0, SEEK_END));
         $this->assertSame('', fread($stream, 3));
-        $this->assertSame(0, fseek($stream, -8, \SEEK_END));
+        $this->assertSame(0, fseek($stream, -8, SEEK_END));
         $this->assertSame('cde', fread($stream, 3));
-        $this->assertSame(-1, fseek($stream, -11, \SEEK_END));
-        $this->assertSame(-1, fseek($stream, 1, \SEEK_END));
+        $this->assertSame(-1, fseek($stream, -11, SEEK_END));
+        $this->assertSame(-1, fseek($stream, 1, SEEK_END));
     }
 
     public function testReadableStreamStat()
@@ -137,17 +146,17 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
 
         $this->assertSame(6, fwrite($stream, 'foobar'));
 
-        $this->assertSame(-1, fseek($stream, 0, \SEEK_SET));
-        $this->assertSame(-1, fseek($stream, 7, \SEEK_SET));
-        $this->assertSame(0, fseek($stream, 6, \SEEK_SET));
+        $this->assertSame(-1, fseek($stream, 0, SEEK_SET));
+        $this->assertSame(-1, fseek($stream, 7, SEEK_SET));
+        $this->assertSame(0, fseek($stream, 6, SEEK_SET));
 
-        $this->assertSame(0, fseek($stream, 0, \SEEK_CUR));
-        $this->assertSame(-1, fseek($stream, -1, \SEEK_CUR));
-        $this->assertSame(-1, fseek($stream, 1, \SEEK_CUR));
+        $this->assertSame(0, fseek($stream, 0, SEEK_CUR));
+        $this->assertSame(-1, fseek($stream, -1, SEEK_CUR));
+        $this->assertSame(-1, fseek($stream, 1, SEEK_CUR));
 
-        $this->assertSame(0, fseek($stream, 0, \SEEK_END));
-        $this->assertSame(-1, fseek($stream, -1, \SEEK_END));
-        $this->assertSame(-1, fseek($stream, 1, \SEEK_END));
+        $this->assertSame(0, fseek($stream, 0, SEEK_END));
+        $this->assertSame(-1, fseek($stream, -1, SEEK_END));
+        $this->assertSame(-1, fseek($stream, 1, SEEK_END));
     }
 
     public function testWritableStreamStatBeforeSaving()
@@ -171,7 +180,7 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         $stat = fstat($stream);
         $this->assertSame(6, $stat[7]);
         $this->assertSame(6, $stat['size']);
-  }
+    }
 
     public function testWritableStreamStatAfterSaving()
     {

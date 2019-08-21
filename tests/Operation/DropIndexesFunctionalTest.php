@@ -2,13 +2,16 @@
 
 namespace MongoDB\Tests\Operation;
 
+use InvalidArgumentException;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\DropIndexes;
 use MongoDB\Operation\ListIndexes;
 use MongoDB\Tests\CommandObserver;
-use InvalidArgumentException;
-use stdClass;
+use function call_user_func;
+use function is_callable;
+use function sprintf;
+use function version_compare;
 
 class DropIndexesFunctionalTest extends FunctionalTestCase
 {
@@ -17,8 +20,8 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
         $operation = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => ['x' => 1]]]);
         $operation->execute($this->getPrimaryServer());
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new DropIndexes(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -28,7 +31,7 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
             }
         );
@@ -126,8 +129,8 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
         $operation = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => ['x' => 1]]]);
         $operation->execute($this->getPrimaryServer());
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new DropIndexes(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -137,7 +140,7 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );

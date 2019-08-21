@@ -30,8 +30,6 @@ class InsertManyResult
     private $isAcknowledged;
 
     /**
-     * Constructor.
-     *
      * @param WriteResult $writeResult
      * @param mixed[]     $insertedIds
      */

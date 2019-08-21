@@ -17,10 +17,15 @@
 
 namespace MongoDB\Model;
 
+use Iterator;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
-use MongoDB\Model\BSONDocument;
-use Iterator;
+use function is_array;
+use function MongoDB\BSON\toPHP;
+use function sprintf;
+use function strlen;
+use function substr;
+use function unpack;
 
 /**
  * Iterator for BSON documents.
@@ -55,7 +60,7 @@ class BSONIterator implements Iterator
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
-        if ( ! isset($options['typeMap'])) {
+        if (! isset($options['typeMap'])) {
             $options['typeMap'] = [];
         }
 
@@ -130,7 +135,7 @@ class BSONIterator implements Iterator
             throw new UnexpectedValueException(sprintf('Expected %d bytes; %d remaining', $documentLength, $this->bufferLength - $this->position));
         }
 
-        $this->current = \MongoDB\BSON\toPHP(substr($this->buffer, $this->position, $documentLength), $this->options['typeMap']);
+        $this->current = toPHP(substr($this->buffer, $this->position, $documentLength), $this->options['typeMap']);
         $this->position += $documentLength;
     }
 }

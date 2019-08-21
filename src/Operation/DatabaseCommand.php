@@ -23,6 +23,8 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
+use function is_array;
+use function is_object;
 
 /**
  * Operation for executing a database command.
@@ -54,14 +56,14 @@ class DatabaseCommand implements Executable
      *  * typeMap (array): Type map for BSON deserialization. This will be
      *    applied to the returned Cursor (it is not sent to the server).
      *
-     * @param string       $databaseName   Database name
-     * @param array|object $command        Command document
-     * @param array        $options        Options for command execution
+     * @param string       $databaseName Database name
+     * @param array|object $command      Command document
+     * @param array        $options      Options for command execution
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($databaseName, $command, array $options = [])
     {
-        if ( ! is_array($command) && ! is_object($command)) {
+        if (! is_array($command) && ! is_object($command)) {
             throw InvalidArgumentException::invalidType('$command', $command, 'array or object');
         }
 
@@ -78,7 +80,7 @@ class DatabaseCommand implements Executable
         }
 
         $this->databaseName = (string) $databaseName;
-        $this->command = ($command instanceof Command) ? $command : new Command($command);
+        $this->command = $command instanceof Command ? $command : new Command($command);
         $this->options = $options;
     }
 

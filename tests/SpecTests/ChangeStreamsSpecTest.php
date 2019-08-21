@@ -2,14 +2,17 @@
 
 namespace MongoDB\Tests\SpecTests;
 
-use MongoDB\ChangeStream;
-use MongoDB\Client;
-use MongoDB\Driver\Exception\Exception;
-use MongoDB\Model\BSONDocument;
 use ArrayIterator;
 use LogicException;
+use MongoDB\ChangeStream;
+use MongoDB\Driver\Exception\Exception;
+use MongoDB\Model\BSONDocument;
 use MultipleIterator;
 use stdClass;
+use function basename;
+use function count;
+use function file_get_contents;
+use function glob;
 
 /**
  * Change Streams spec tests.
@@ -18,9 +21,7 @@ use stdClass;
  */
 class ChangeStreamsSpecTest extends FunctionalTestCase
 {
-    private static $incompleteTests = [
-        'change-streams-errors: Change Stream should error when _id is projected out' => 'PHPC-1419',
-    ];
+    private static $incompleteTests = ['change-streams-errors: Change Stream should error when _id is projected out' => 'PHPC-1419'];
 
     /**
      * Assert that the expected and actual command documents match.
@@ -76,7 +77,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
 
         $this->checkServerRequirements($this->createRunOn($test));
 
-        if (!isset($databaseName, $collectionName, $database2Name, $collection2Name)) {
+        if (! isset($databaseName, $collectionName, $database2Name, $collection2Name)) {
             $this->fail('Required database and collection names are unset');
         }
 
@@ -179,13 +180,10 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
         switch ($test->target) {
             case 'client':
                 return $context->client->watch($pipeline, $options);
-
             case 'database':
                 return $context->getDatabase()->watch($pipeline, $options);
-
             case 'collection':
                 return $context->getCollection()->watch($pipeline, $options);
-
             default:
                 throw new LogicException('Unsupported target: ' . $test->target);
         }
@@ -200,7 +198,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
      */
     private function createRunOn(stdClass $test)
     {
-        $req = new stdClass;
+        $req = new stdClass();
 
         /* Append ".99" as patch version, since command monitoring tests expect
          * the minor version to be an inclusive upper bound. */
@@ -254,7 +252,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
         $events = [];
 
         for ($i = 0, $changeStream->rewind(); $i < $maxIterations; $i++, $changeStream->next()) {
-            if ( ! $changeStream->valid()) {
+            if (! $changeStream->valid()) {
                 continue;
             }
 

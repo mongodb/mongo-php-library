@@ -109,6 +109,6 @@ class MapReduceTest extends TestCase
 
     private function getInvalidJavascriptValues()
     {
-        return [123, 3.14, 'foo', true, [], new stdClass, new ObjectId];
+        return [123, 3.14, 'foo', true, [], new stdClass(), new ObjectId()];
     }
 }

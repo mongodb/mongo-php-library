@@ -17,6 +17,9 @@
 
 namespace MongoDB\Exception;
 
+use function gettype;
+use function sprintf;
+
 class ResumeTokenException extends RuntimeException
 {
     /**

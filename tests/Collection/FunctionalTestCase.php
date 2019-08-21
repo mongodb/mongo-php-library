@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Collection;
 
 use MongoDB\Collection;
-use MongoDB\Driver\WriteConcern;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 

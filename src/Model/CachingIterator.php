@@ -21,6 +21,11 @@ use Countable;
 use Generator;
 use Iterator;
 use Traversable;
+use function count;
+use function current;
+use function key;
+use function next;
+use function reset;
 
 /**
  * Iterator for wrapping a Traversable and caching its results.
@@ -39,8 +44,6 @@ class CachingIterator implements Countable, Iterator
     private $iteratorExhausted = false;
 
     /**
-     * Constructor.
-     *
      * Initialize the iterator and stores the first item in the cache. This
      * effectively rewinds the Traversable and the wrapping Generator, which
      * will execute up to its first yield statement. Additionally, this mimics
@@ -90,7 +93,7 @@ class CachingIterator implements Countable, Iterator
      */
     public function next()
     {
-        if ( ! $this->iteratorExhausted) {
+        if (! $this->iteratorExhausted) {
             $this->iterator->next();
             $this->storeCurrentItem();
         }
@@ -128,7 +131,7 @@ class CachingIterator implements Countable, Iterator
      */
     private function exhaustIterator()
     {
-        while ( ! $this->iteratorExhausted) {
+        while (! $this->iteratorExhausted) {
             $this->next();
         }
     }

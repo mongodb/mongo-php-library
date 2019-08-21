@@ -2,21 +2,33 @@
 
 namespace MongoDB\Tests;
 
+use InvalidArgumentException;
+use MongoDB\BSON\ObjectId;
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Cursor;
+use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Manager;
-use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Query;
+use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
-use InvalidArgumentException;
 use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use UnexpectedValueException;
+use function array_merge;
+use function count;
+use function current;
+use function explode;
+use function implode;
+use function is_array;
+use function is_object;
+use function is_string;
+use function key;
+use function parse_url;
+use function preg_match;
+use function version_compare;
 
 abstract class FunctionalTestCase extends TestCase
 {
@@ -75,9 +87,7 @@ abstract class FunctionalTestCase extends TestCase
             $hosts[$numHosts-1] .= ':' . $urlParts['port'];
         }
 
-        $parts = [
-            'mongodb://'
-        ];
+        $parts = ['mongodb://'];
 
         if (isset($urlParts['user'], $urlParts['pass'])) {
             $parts += [
@@ -96,7 +106,7 @@ abstract class FunctionalTestCase extends TestCase
         if (isset($urlParts['query'])) {
             $parts = array_merge($parts, [
                 '?',
-                $urlParts['query']
+                $urlParts['query'],
             ]);
         }
 
@@ -125,8 +135,8 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function assertSameObjectId($expectedObjectId, $actualObjectId)
     {
-        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $expectedObjectId);
-        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $actualObjectId);
+        $this->assertInstanceOf(ObjectId::class, $expectedObjectId);
+        $this->assertInstanceOf(ObjectId::class, $actualObjectId);
         $this->assertEquals((string) $expectedObjectId, (string) $actualObjectId);
     }
 
@@ -153,7 +163,7 @@ abstract class FunctionalTestCase extends TestCase
             $command = (object) $command;
         }
 
-        if ( ! $command instanceof stdClass) {
+        if (! $command instanceof stdClass) {
             throw new InvalidArgumentException('$command is not an array or stdClass instance');
         }
 
@@ -300,7 +310,7 @@ abstract class FunctionalTestCase extends TestCase
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
         $document = current($cursor->toArray());
 
-        if (! $document ) {
+        if (! $document) {
             return false;
         }
 
@@ -314,13 +324,12 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function skipIfChangeStreamIsNotSupported()
     {
-        switch ( $this->getPrimaryServer()->getType() )
-        {
+        switch ($this->getPrimaryServer()->getType()) {
             case Server::TYPE_MONGOS:
                 if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
                     $this->markTestSkipped('$changeStream is only supported on MongoDB 3.6 or higher');
                 }
-                if (!$this->isShardedClusterUsingReplicasets()) {
+                if (! $this->isShardedClusterUsingReplicasets()) {
                     $this->markTestSkipped('$changeStream is only supported with replicasets');
                 }
 
@@ -341,13 +350,12 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function skipIfCausalConsistencyIsNotSupported()
     {
-        switch ( $this->getPrimaryServer()->getType() )
-        {
+        switch ($this->getPrimaryServer()->getType()) {
             case Server::TYPE_MONGOS:
                 if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
                     $this->markTestSkipped('Causal Consistency is only supported on MongoDB 3.6 or higher');
                 }
-                if (!$this->isShardedClusterUsingReplicasets()) {
+                if (! $this->isShardedClusterUsingReplicasets()) {
                     $this->markTestSkipped('Causal Consistency is only supported with replicasets');
                 }
                 break;

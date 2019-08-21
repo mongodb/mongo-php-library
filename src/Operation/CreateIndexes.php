@@ -17,15 +17,19 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\IndexInput;
+use function array_map;
+use function is_array;
+use function is_integer;
+use function MongoDB\server_supports_feature;
+use function sprintf;
 
 /**
  * Operation for the createIndexes command.
@@ -82,11 +86,11 @@ class CreateIndexes implements Executable
                 throw new InvalidArgumentException(sprintf('$indexes is not a list (unexpected index: "%s")', $i));
             }
 
-            if ( ! is_array($index)) {
+            if (! is_array($index)) {
                 throw InvalidArgumentException::invalidType(sprintf('$index[%d]', $i), $index, 'array');
             }
 
-            if ( ! isset($index['ns'])) {
+            if (! isset($index['ns'])) {
                 $index['ns'] = $databaseName . '.' . $collectionName;
             }
 
@@ -99,7 +103,7 @@ class CreateIndexes implements Executable
             $expectedIndex += 1;
         }
 
-        if (isset($options['maxTimeMS']) && !is_integer($options['maxTimeMS'])) {
+        if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
@@ -131,11 +135,11 @@ class CreateIndexes implements Executable
      */
     public function execute(Server $server)
     {
-        if ($this->isCollationUsed && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
+        if ($this->isCollationUsed && ! server_supports_feature($server, self::$wireVersionForCollation)) {
             throw UnsupportedException::collationNotSupported();
         }
 
-        if (isset($this->options['writeConcern']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForWriteConcern)) {
+        if (isset($this->options['writeConcern']) && ! server_supports_feature($server, self::$wireVersionForWriteConcern)) {
             throw UnsupportedException::writeConcernNotSupported();
         }
 
@@ -146,7 +150,9 @@ class CreateIndexes implements Executable
 
         $this->executeCommand($server);
 
-        return array_map(function(IndexInput $index) { return (string) $index; }, $this->indexes);
+        return array_map(function (IndexInput $index) {
+            return (string) $index;
+        }, $this->indexes);
     }
 
     /**

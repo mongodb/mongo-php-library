@@ -2,11 +2,13 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Model\IndexInfo;
+use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListIndexes;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
+use function version_compare;
 
 class ListIndexesFunctionalTest extends FunctionalTestCase
 {
@@ -22,12 +24,12 @@ class ListIndexesFunctionalTest extends FunctionalTestCase
         $operation = new ListIndexes($this->getDatabaseName(), $this->getCollectionName());
         $indexes = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf(\MongoDB\Model\IndexInfoIterator::class, $indexes);
+        $this->assertInstanceOf(IndexInfoIterator::class, $indexes);
 
         $this->assertCount(1, $indexes);
 
         foreach ($indexes as $index) {
-            $this->assertInstanceOf(\MongoDB\Model\IndexInfo::class, $index);
+            $this->assertInstanceOf(IndexInfo::class, $index);
             $this->assertEquals(['_id' => 1], $index->getKey());
         }
     }
@@ -49,8 +51,8 @@ class ListIndexesFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Sessions are not supported');
         }
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new ListIndexes(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -59,7 +61,7 @@ class ListIndexesFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );

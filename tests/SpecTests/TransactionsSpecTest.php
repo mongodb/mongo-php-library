@@ -5,14 +5,16 @@ namespace MongoDB\Tests\SpecTests;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\Timestamp;
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Manager;
-use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
-use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\ServerException;
 use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function basename;
+use function file_get_contents;
+use function get_object_vars;
+use function glob;
 
 /**
  * Transactions spec tests.
@@ -223,14 +225,14 @@ class TransactionsSpecTest extends FunctionalTestCase
         $manager = new Manager(static::getUri());
         $primary = $manager->selectServer(new ReadPreference('primary'));
 
-        $servers = ($primary->getType() === Server::TYPE_MONGOS)
+        $servers = $primary->getType() === Server::TYPE_MONGOS
             ? $manager->getServers()
             : [$primary];
 
         foreach ($servers as $server) {
             try {
                 // Skip servers that do not support sessions
-                if (!isset($server->getInfo()['logicalSessionTimeoutMinutes'])) {
+                if (! isset($server->getInfo()['logicalSessionTimeoutMinutes'])) {
                     continue;
                 }
                 $server->executeCommand('admin', new Command(['killAllSessions' => []]));
@@ -251,13 +253,14 @@ class TransactionsSpecTest extends FunctionalTestCase
      */
     private function preventStaleDbVersionError(array $operations)
     {
-        if (!$this->isShardedCluster()) {
+        if (! $this->isShardedCluster()) {
             return;
         }
 
         foreach ($operations as $operation) {
             if ($operation->name === 'distinct') {
                 $this->getContext()->getCollection()->distinct('foo');
+
                 return;
             }
         }

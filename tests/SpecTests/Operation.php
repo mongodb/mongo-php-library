@@ -2,17 +2,21 @@
 
 namespace MongoDB\Tests\SpecTests;
 
+use LogicException;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\Cursor;
-use MongoDB\Driver\Session;
-use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\Exception;
+use MongoDB\Driver\Session;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
-use LogicException;
 use stdClass;
+use function array_diff_key;
+use function array_map;
+use function MongoDB\is_last_pipeline_operator_write;
+use function strtolower;
 
 /**
  * Spec test operation.
@@ -68,12 +72,14 @@ final class Operation
             $o->object = self::OBJECT_SELECT_DATABASE;
             $o->databaseName = 'admin';
             $o->name = 'runCommand';
-            $o->arguments = ['command' => [
-                'renameCollection' => $operation->database . '.' . $operation->collection,
-                'to' => $operation->database . '.' . $operation->arguments->to,
+            $o->arguments = [
+                'command' => [
+                    'renameCollection' => $operation->database . '.' . $operation->collection,
+                    'to' => $operation->database . '.' . $operation->arguments->to,
                 // Note: Database::command() does not inherit WC, so be explicit
-                'writeConcern' => $writeConcern,
-            ]];
+                    'writeConcern' => $writeConcern,
+                ],
+            ];
 
             return $o;
         }
@@ -188,26 +194,24 @@ final class Operation
         switch ($this->object) {
             case self::OBJECT_COLLECTION:
                 $collection = $context->getCollection($this->collectionOptions);
-                return $this->executeForCollection($collection, $context);
 
+                return $this->executeForCollection($collection, $context);
             case self::OBJECT_DATABASE:
                 $database = $context->getDatabase();
-                return $this->executeForDatabase($database, $context);
 
+                return $this->executeForDatabase($database, $context);
             case self::OBJECT_SELECT_COLLECTION:
                 $collection = $context->selectCollection($this->databaseName, $this->collectionName, $this->collectionOptions);
-                return $this->executeForCollection($collection, $context);
 
+                return $this->executeForCollection($collection, $context);
             case self::OBJECT_SELECT_DATABASE:
                 $database = $context->selectDatabase($this->databaseName);
-                return $this->executeForDatabase($database, $context);
 
+                return $this->executeForDatabase($database, $context);
             case self::OBJECT_SESSION0:
                 return $this->executeForSession($context->session0, $context);
-
             case self::OBJECT_SESSION1:
                 return $this->executeForSession($context->session1, $context);
-
             default:
                 throw new LogicException('Unsupported object: ' . $this->object);
         }
@@ -232,7 +236,6 @@ final class Operation
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
-
             case 'bulkWrite':
                 // Merge nested and top-level options (see: SPEC-1158)
                 $options = isset($args['options']) ? (array) $args['options'] : [];
@@ -243,7 +246,6 @@ final class Operation
                     array_map([$this, 'prepareBulkWriteRequest'], $args['requests']),
                     $options
                 );
-
             case 'count':
             case 'countDocuments':
             case 'find':
@@ -251,10 +253,8 @@ final class Operation
                     isset($args['filter']) ? $args['filter'] : [],
                     array_diff_key($args, ['filter' => 1])
                 );
-
             case 'estimatedDocumentCount':
                 return $collection->estimatedDocumentCount($args);
-
             case 'deleteMany':
             case 'deleteOne':
             case 'findOneAndDelete':
@@ -262,20 +262,17 @@ final class Operation
                     $args['filter'],
                     array_diff_key($args, ['filter' => 1])
                 );
-
             case 'distinct':
                 return $collection->distinct(
                     $args['fieldName'],
                     isset($args['filter']) ? $args['filter'] : [],
                     array_diff_key($args, ['fieldName' => 1, 'filter' => 1])
                 );
-
             case 'drop':
                 return $collection->drop($args);
-
             case 'findOneAndReplace':
                 if (isset($args['returnDocument'])) {
-                    $args['returnDocument'] = ('after' === strtolower($args['returnDocument']))
+                    $args['returnDocument'] = 'after' === strtolower($args['returnDocument'])
                         ? FindOneAndReplace::RETURN_DOCUMENT_AFTER
                         : FindOneAndReplace::RETURN_DOCUMENT_BEFORE;
                 }
@@ -287,10 +284,9 @@ final class Operation
                     $args['replacement'],
                     array_diff_key($args, ['filter' => 1, 'replacement' => 1])
                 );
-
             case 'findOneAndUpdate':
                 if (isset($args['returnDocument'])) {
-                    $args['returnDocument'] = ('after' === strtolower($args['returnDocument']))
+                    $args['returnDocument'] = 'after' === strtolower($args['returnDocument'])
                         ? FindOneAndUpdate::RETURN_DOCUMENT_AFTER
                         : FindOneAndUpdate::RETURN_DOCUMENT_BEFORE;
                 }
@@ -303,7 +299,6 @@ final class Operation
                     $args['update'],
                     array_diff_key($args, ['filter' => 1, 'update' => 1])
                 );
-
             case 'insertMany':
                 // Merge nested and top-level options (see: SPEC-1158)
                 $options = isset($args['options']) ? (array) $args['options'] : [];
@@ -313,13 +308,11 @@ final class Operation
                     $args['documents'],
                     $options
                 );
-
             case 'insertOne':
                 return $collection->insertOne(
                     $args['document'],
                     array_diff_key($args, ['document' => 1])
                 );
-
             default:
                 throw new LogicException('Unsupported collection operation: ' . $this->name);
         }
@@ -344,13 +337,11 @@ final class Operation
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
-
             case 'runCommand':
                 return $database->command(
                     $args['command'],
                     array_diff_key($args, ['command' => 1])
                 )->toArray()[0];
-
             default:
                 throw new LogicException('Unsupported database operation: ' . $this->name);
         }
@@ -369,14 +360,12 @@ final class Operation
         switch ($this->name) {
             case 'abortTransaction':
                 return $session->abortTransaction();
-
             case 'commitTransaction':
                 return $session->commitTransaction();
-
             case 'startTransaction':
                 $options = isset($this->arguments['options']) ? (array) $this->arguments['options'] : [];
-                return $session->startTransaction($context->prepareOptions($options));
 
+                return $session->startTransaction($context->prepareOptions($options));
             default:
                 throw new LogicException('Unsupported session operation: ' . $this->name);
         }
@@ -388,16 +377,13 @@ final class Operation
     private function getResultAssertionType()
     {
         switch ($this->object) {
-            case Operation::OBJECT_COLLECTION:
+            case self::OBJECT_COLLECTION:
                 return $this->getResultAssertionTypeForCollection();
-
-            case Operation::OBJECT_DATABASE:
+            case self::OBJECT_DATABASE:
                 return $this->getResultAssertionTypeForDatabase();
-
-            case Operation::OBJECT_SESSION0:
-            case Operation::OBJECT_SESSION1:
+            case self::OBJECT_SESSION0:
+            case self::OBJECT_SESSION1:
                 return ResultExpectation::ASSERT_NOTHING;
-
             default:
                 throw new LogicException('Unsupported object: ' . $this->object);
         }
@@ -414,47 +400,37 @@ final class Operation
                  * the CRUD specification and is not implemented in the library
                  * since we have no concept of lazy cursors. Rely on examining
                  * the output collection rather than the operation result. */
-                if (\MongoDB\is_last_pipeline_operator_write($this->arguments['pipeline'])) {
+                if (is_last_pipeline_operator_write($this->arguments['pipeline'])) {
                     return ResultExpectation::ASSERT_NOTHING;
                 }
 
                 return ResultExpectation::ASSERT_SAME_DOCUMENTS;
-
             case 'bulkWrite':
                 return ResultExpectation::ASSERT_BULKWRITE;
-
             case 'count':
             case 'countDocuments':
             case 'distinct':
             case 'estimatedDocumentCount':
                 return ResultExpectation::ASSERT_SAME;
-
             case 'deleteMany':
             case 'deleteOne':
                 return ResultExpectation::ASSERT_DELETE;
-
             case 'drop':
                 return ResultExpectation::ASSERT_NOTHING;
-
             case 'findOneAndDelete':
             case 'findOneAndReplace':
             case 'findOneAndUpdate':
                 return ResultExpectation::ASSERT_SAME_DOCUMENT;
-
             case 'find':
                 return ResultExpectation::ASSERT_SAME_DOCUMENTS;
-
             case 'insertMany':
                 return ResultExpectation::ASSERT_INSERTMANY;
-
             case 'insertOne':
                 return ResultExpectation::ASSERT_INSERTONE;
-
             case 'replaceOne':
             case 'updateMany':
             case 'updateOne':
                 return ResultExpectation::ASSERT_UPDATE;
-
             default:
                 throw new LogicException('Unsupported collection operation: ' . $this->name);
         }
@@ -468,10 +444,8 @@ final class Operation
         switch ($this->name) {
             case 'aggregate':
                 return ResultExpectation::ASSERT_SAME_DOCUMENTS;
-
             case 'runCommand':
                 return ResultExpectation::ASSERT_MATCHES_DOCUMENT;
-
             default:
                 throw new LogicException('Unsupported database operation: ' . $this->name);
         }
@@ -491,29 +465,31 @@ final class Operation
         switch ($request->name) {
             case 'deleteMany':
             case 'deleteOne':
-                return [ $request->name => [
-                    $args['filter'],
-                    array_diff_key($args, ['filter' => 1]),
-                ]];
-
+                return [
+                    $request->name => [
+                        $args['filter'],
+                        array_diff_key($args, ['filter' => 1]),
+                    ],
+                ];
             case 'insertOne':
                 return [ 'insertOne' => [ $args['document'] ]];
-
             case 'replaceOne':
-                return [ 'replaceOne' => [
-                    $args['filter'],
-                    $args['replacement'],
-                    array_diff_key($args, ['filter' => 1, 'replacement' => 1]),
-                ]];
-
+                return [
+                    'replaceOne' => [
+                        $args['filter'],
+                        $args['replacement'],
+                        array_diff_key($args, ['filter' => 1, 'replacement' => 1]),
+                    ],
+                ];
             case 'updateMany':
             case 'updateOne':
-                return [ $request->name => [
-                    $args['filter'],
-                    $args['update'],
-                    array_diff_key($args, ['filter' => 1, 'update' => 1]),
-                ]];
-
+                return [
+                    $request->name => [
+                        $args['filter'],
+                        $args['update'],
+                        array_diff_key($args, ['filter' => 1, 'update' => 1]),
+                    ],
+                ];
             default:
                 throw new LogicException('Unsupported bulk write request: ' . $request->name);
         }

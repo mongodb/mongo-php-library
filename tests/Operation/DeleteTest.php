@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Delete;
+use function array_merge;
 
 class DeleteTest extends TestCase
 {

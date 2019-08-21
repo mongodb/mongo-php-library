@@ -85,11 +85,11 @@ class CreateCollectionTest extends TestCase
 
     public function testAutoIndexIdOptionIsDeprecated()
     {
-        $this->assertDeprecated(function() {
+        $this->assertDeprecated(function () {
             new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['autoIndexId' => true]);
         });
 
-        $this->assertDeprecated(function() {
+        $this->assertDeprecated(function () {
             new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['autoIndexId' => false]);
         });
     }

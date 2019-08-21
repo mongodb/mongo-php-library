@@ -18,12 +18,14 @@
 namespace MongoDB\GridFS;
 
 use MongoDB\Collection;
-use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\UpdateResult;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\UpdateResult;
 use stdClass;
+use function abs;
+use function sprintf;
 
 /**
  * CollectionWrapper abstracts the GridFS files and chunks collections.
@@ -122,7 +124,7 @@ class CollectionWrapper
      *
      * @see Bucket::downloadToStreamByName()
      * @see Bucket::openDownloadStreamByName()
-     * @param string $filename
+     * @param string  $filename
      * @param integer $revision
      * @return stdClass|null
      */
@@ -235,7 +237,7 @@ class CollectionWrapper
      */
     public function insertChunk($chunk)
     {
-        if ( ! $this->checkedIndexes) {
+        if (! $this->checkedIndexes) {
             $this->ensureIndexes();
         }
 
@@ -251,7 +253,7 @@ class CollectionWrapper
      */
     public function insertFile($file)
     {
-        if ( ! $this->checkedIndexes) {
+        if (! $this->checkedIndexes) {
             $this->ensureIndexes();
         }
 
@@ -262,7 +264,7 @@ class CollectionWrapper
      * Updates the filename field in the file document for a given ID.
      *
      * @param mixed  $id
-     * @param string $filename 
+     * @param string $filename
      * @return UpdateResult
      */
     public function updateFilenameForId($id, $filename)
@@ -315,7 +317,7 @@ class CollectionWrapper
 
         $this->checkedIndexes = true;
 
-        if ( ! $this->isFilesCollectionEmpty()) {
+        if (! $this->isFilesCollectionEmpty()) {
             return;
         }
 

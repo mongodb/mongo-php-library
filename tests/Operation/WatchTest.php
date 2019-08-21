@@ -89,6 +89,6 @@ class WatchTest extends FunctionalTestCase
 
     private function getInvalidTimestampValues()
     {
-        return [123, 3.14, 'foo', true, [], new stdClass];
+        return [123, 3.14, 'foo', true, [], new stdClass()];
     }
 }

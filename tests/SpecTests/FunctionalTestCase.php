@@ -2,23 +2,23 @@
 
 namespace MongoDB\Tests\SpecTests;
 
-use MongoDB\Client;
-use MongoDB\Collection;
-use MongoDB\Driver\Server;
-use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\BulkWriteException;
-use MongoDB\Driver\Exception\RuntimeException;
-use MongoDB\Operation\FindOneAndReplace;
-use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
-use MongoDB\Tests\TestCase;
-use PHPUnit\Framework\SkippedTest;
 use ArrayIterator;
 use IteratorIterator;
 use LogicException;
+use MongoDB\Collection;
+use MongoDB\Driver\Server;
+use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 use MultipleIterator;
+use PHPUnit\Framework\SkippedTest;
 use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use UnexpectedValueException;
+use function in_array;
+use function json_encode;
+use function MongoDB\BSON\fromJSON;
+use function MongoDB\BSON\toPHP;
+use function sprintf;
+use function version_compare;
 
 /**
  * Base class for spec test runners.
@@ -60,7 +60,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      */
     public static function assertCommandMatches(stdClass $expected, stdClass $actual)
     {
-        throw new LogicException(sprintf('%s does not assert CommandStartedEvents', get_called_class()));
+        throw new LogicException(sprintf('%s does not assert CommandStartedEvents', static::class));
     }
 
     /**
@@ -74,7 +74,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      */
     public static function assertCommandReplyMatches(stdClass $expected, stdClass $actual)
     {
-        throw new LogicException(sprintf('%s does not assert CommandSucceededEvents', get_called_class()));
+        throw new LogicException(sprintf('%s does not assert CommandSucceededEvents', static::class));
     }
 
     /**
@@ -150,7 +150,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      */
     protected function decodeJson($json)
     {
-        return \MongoDB\BSON\toPHP(\MongoDB\BSON\fromJSON($json));
+        return toPHP(fromJSON($json));
     }
 
     /**
@@ -161,7 +161,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      */
     protected function getContext()
     {
-        if (!$this->context instanceof Context) {
+        if (! $this->context instanceof Context) {
             throw new LogicException('Context has not been set');
         }
 

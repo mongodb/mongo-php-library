@@ -2,13 +2,17 @@
 
 namespace MongoDB\Tests\SpecTests;
 
+use Exception;
 use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Tests\TestCase;
-use Exception;
 use stdClass;
+use function get_class;
+use function is_array;
+use function is_string;
+use function sprintf;
 
 /**
  * Spec test operation error expectation.
@@ -38,7 +42,7 @@ final class ErrorExpectation
 
     public static function fromChangeStreams(stdClass $result)
     {
-        $o = new self;
+        $o = new self();
 
         if (isset($result->error->code)) {
             $o->code = $result->error->code;
@@ -46,7 +50,7 @@ final class ErrorExpectation
         }
 
         if (isset($result->error->errorLabels)) {
-            if (!self::isArrayOfStrings($result->error->errorLabels)) {
+            if (! self::isArrayOfStrings($result->error->errorLabels)) {
                 throw InvalidArgumentException::invalidType('errorLabels', $result->error->errorLabels, 'string[]');
             }
             $o->includedLabels = $result->error->errorLabels;
@@ -58,7 +62,7 @@ final class ErrorExpectation
 
     public static function fromRetryableWrites(stdClass $outcome)
     {
-        $o = new self;
+        $o = new self();
 
         if (isset($outcome->error)) {
             $o->isExpected = $outcome->error;
@@ -72,7 +76,7 @@ final class ErrorExpectation
      */
     public static function fromTransactions(stdClass $operation)
     {
-        $o = new self;
+        $o = new self();
 
         if (isset($operation->error)) {
             $o->isExpected = $operation->error;
@@ -91,7 +95,7 @@ final class ErrorExpectation
         }
 
         if (isset($result->errorLabelsContain)) {
-            if (!self::isArrayOfStrings($result->errorLabelsContain)) {
+            if (! self::isArrayOfStrings($result->errorLabelsContain)) {
                 throw InvalidArgumentException::invalidType('errorLabelsContain', $result->errorLabelsContain, 'string[]');
             }
             $o->includedLabels = $result->errorLabelsContain;
@@ -99,7 +103,7 @@ final class ErrorExpectation
         }
 
         if (isset($result->errorLabelsOmit)) {
-            if (!self::isArrayOfStrings($result->errorLabelsOmit)) {
+            if (! self::isArrayOfStrings($result->errorLabelsOmit)) {
                 throw InvalidArgumentException::invalidType('errorLabelsOmit', $result->errorLabelsOmit, 'string[]');
             }
             $o->excludedLabels = $result->errorLabelsOmit;
@@ -122,10 +126,11 @@ final class ErrorExpectation
      */
     public function assert(TestCase $test, Exception $actual = null)
     {
-        if (!$this->isExpected) {
+        if (! $this->isExpected) {
             if ($actual !== null) {
                 $test->fail(sprintf("Operation threw unexpected %s: %s\n%s", get_class($actual), $actual->getMessage(), $actual->getTraceAsString()));
             }
+
             return;
         }
 
@@ -172,6 +177,7 @@ final class ErrorExpectation
         if ($actual instanceof BulkWriteException) {
             $test->assertArrayHasKey($this->codeName, self::$codeNameMap);
             $test->assertSame(self::$codeNameMap[$this->codeName], $actual->getCode());
+
             return;
         }
 
@@ -183,12 +189,12 @@ final class ErrorExpectation
 
     private static function isArrayOfStrings($array)
     {
-        if (!is_array($array)) {
+        if (! is_array($array)) {
             return false;
         }
 
         foreach ($array as $string) {
-            if (!is_string($string)) {
+            if (! is_string($string)) {
                 return false;
             }
         }

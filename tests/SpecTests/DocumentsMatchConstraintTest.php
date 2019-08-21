@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\SpecTests;
 
-use ArrayObject;
 use MongoDB\Model\BSONArray;
 use MongoDB\Tests\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;

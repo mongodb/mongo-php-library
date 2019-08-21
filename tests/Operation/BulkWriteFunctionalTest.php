@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\ObjectId;
 use MongoDB\BulkWriteResult;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite as Bulk;
@@ -11,8 +12,8 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\BulkWrite;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function version_compare;
 
 class BulkWriteFunctionalTest extends FunctionalTestCase
 {
@@ -39,12 +40,12 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf(\MongoDB\BulkWriteResult::class, $result);
+        $this->assertInstanceOf(BulkWriteResult::class, $result);
         $this->assertSame(4, $result->getInsertedCount());
 
         $insertedIds = $result->getInsertedIds();
         $this->assertSame(1, $insertedIds[0]);
-        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $insertedIds[1]);
+        $this->assertInstanceOf(ObjectId::class, $insertedIds[1]);
         $this->assertSame('foo', $insertedIds[2]);
         $this->assertSame('bar', $insertedIds[3]);
 
@@ -73,14 +74,14 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf(\MongoDB\BulkWriteResult::class, $result);
+        $this->assertInstanceOf(BulkWriteResult::class, $result);
         $this->assertSame(5, $result->getMatchedCount());
         $this->assertSame(5, $result->getModifiedCount());
         $this->assertSame(2, $result->getUpsertedCount());
 
         $upsertedIds = $result->getUpsertedIds();
         $this->assertSame(5, $upsertedIds[2]);
-        $this->assertInstanceOf(\MongoDB\BSON\ObjectId::class, $upsertedIds[3]);
+        $this->assertInstanceOf(ObjectId::class, $upsertedIds[3]);
 
         $expected = [
             ['_id' => 1, 'x' => 11],
@@ -106,7 +107,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf(\MongoDB\BulkWriteResult::class, $result);
+        $this->assertInstanceOf(BulkWriteResult::class, $result);
         $this->assertSame(3, $result->getDeletedCount());
 
         $expected = [
@@ -131,7 +132,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf(\MongoDB\BulkWriteResult::class, $result);
+        $this->assertInstanceOf(BulkWriteResult::class, $result);
 
         $this->assertSame(1, $result->getInsertedCount());
         $this->assertSame([2 => 4], $result->getInsertedIds());
@@ -291,8 +292,8 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Sessions are not supported');
         }
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new BulkWrite(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -302,7 +303,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
@@ -314,8 +315,8 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('bypassDocumentValidation is not supported');
         }
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new BulkWrite(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -325,7 +326,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
             }
@@ -338,8 +339,8 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('bypassDocumentValidation is not supported');
         }
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new BulkWrite(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -349,7 +350,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
             }
         );

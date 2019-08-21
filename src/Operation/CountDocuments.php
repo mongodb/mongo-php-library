@@ -17,11 +17,18 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\Driver\Server;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
+use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
+use function array_intersect_key;
+use function count;
+use function current;
+use function is_array;
+use function is_float;
+use function is_integer;
+use function is_object;
 
 /**
  * Operation for obtaining an exact count of documents in a collection
@@ -80,7 +87,7 @@ class CountDocuments implements Executable
      */
     public function __construct($databaseName, $collectionName, $filter, array $options = [])
     {
-        if ( ! is_array($filter) && ! is_object($filter)) {
+        if (! is_array($filter) && ! is_object($filter)) {
             throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
@@ -124,7 +131,7 @@ class CountDocuments implements Executable
         }
 
         $result = current($allResults);
-        if ( ! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {
+        if (! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {
             throw new UnexpectedValueException('count command did not return a numeric "n" value');
         }
 
@@ -137,7 +144,7 @@ class CountDocuments implements Executable
     private function createAggregate()
     {
         $pipeline = [
-            ['$match' => (object) $this->filter]
+            ['$match' => (object) $this->filter],
         ];
 
         if (isset($this->countOptions['skip'])) {

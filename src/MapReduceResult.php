@@ -20,6 +20,7 @@ namespace MongoDB;
 use IteratorAggregate;
 use stdClass;
 use Traversable;
+use function call_user_func;
 
 /**
  * Result class for mapReduce command results.
@@ -40,8 +41,6 @@ class MapReduceResult implements IteratorAggregate
     private $timing;
 
     /**
-     * Constructor.
-     *
      * @internal
      * @param callable $getIterator Callback that returns a Traversable for mapReduce results
      * @param stdClass $result      Result document from the mapReduce command

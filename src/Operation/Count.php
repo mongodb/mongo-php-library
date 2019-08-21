@@ -18,14 +18,21 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
-use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
+use function current;
+use function is_array;
+use function is_float;
+use function is_integer;
+use function is_object;
+use function is_string;
+use function MongoDB\server_supports_feature;
 
 /**
  * Operation for the count command.
@@ -85,7 +92,7 @@ class Count implements Executable, Explainable
      */
     public function __construct($databaseName, $collectionName, $filter = [], array $options = [])
     {
-        if ( ! is_array($filter) && ! is_object($filter)) {
+        if (! is_array($filter) && ! is_object($filter)) {
             throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
@@ -143,11 +150,11 @@ class Count implements Executable, Explainable
      */
     public function execute(Server $server)
     {
-        if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
+        if (isset($this->options['collation']) && ! server_supports_feature($server, self::$wireVersionForCollation)) {
             throw UnsupportedException::collationNotSupported();
         }
 
-        if (isset($this->options['readConcern']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if (isset($this->options['readConcern']) && ! server_supports_feature($server, self::$wireVersionForReadConcern)) {
             throw UnsupportedException::readConcernNotSupported();
         }
 
@@ -160,7 +167,7 @@ class Count implements Executable, Explainable
         $result = current($cursor->toArray());
 
         // Older server versions may return a float
-        if ( ! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {
+        if (! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {
             throw new UnexpectedValueException('count command did not return a numeric "n" value');
         }
 
@@ -181,7 +188,7 @@ class Count implements Executable, Explainable
     {
         $cmd = ['count' => $this->collectionName];
 
-        if ( ! empty($this->filter)) {
+        if (! empty($this->filter)) {
             $cmd['query'] = (object) $this->filter;
         }
 

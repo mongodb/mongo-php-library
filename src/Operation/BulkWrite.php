@@ -19,12 +19,22 @@ namespace MongoDB\Operation;
 
 use MongoDB\BulkWriteResult;
 use MongoDB\Driver\BulkWrite as Bulk;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+use function array_key_exists;
+use function count;
+use function current;
+use function is_array;
+use function is_bool;
+use function is_object;
+use function key;
+use function MongoDB\is_first_key_operator;
+use function MongoDB\server_supports_feature;
+use function sprintf;
 
 /**
  * Operation for executing multiple write operations.
@@ -132,7 +142,7 @@ class BulkWrite implements Executable
                 throw new InvalidArgumentException(sprintf('$operations is not a list (unexpected index: "%s")', $i));
             }
 
-            if ( ! is_array($operation)) {
+            if (! is_array($operation)) {
                 throw InvalidArgumentException::invalidType(sprintf('$operations[%d]', $i), $operation, 'array');
             }
 
@@ -143,11 +153,11 @@ class BulkWrite implements Executable
             $type = key($operation);
             $args = current($operation);
 
-            if ( ! isset($args[0]) && ! array_key_exists(0, $args)) {
+            if (! isset($args[0]) && ! array_key_exists(0, $args)) {
                 throw new InvalidArgumentException(sprintf('Missing first argument for $operations[%d]["%s"]', $i, $type));
             }
 
-            if ( ! is_array($args[0]) && ! is_object($args[0])) {
+            if (! is_array($args[0]) && ! is_object($args[0])) {
                 throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][0]', $i, $type), $args[0], 'array or object');
             }
 
@@ -157,11 +167,11 @@ class BulkWrite implements Executable
 
                 case self::DELETE_MANY:
                 case self::DELETE_ONE:
-                    if ( ! isset($args[1])) {
+                    if (! isset($args[1])) {
                         $args[1] = [];
                     }
 
-                    if ( ! is_array($args[1])) {
+                    if (! is_array($args[1])) {
                         throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array');
                     }
 
@@ -170,7 +180,7 @@ class BulkWrite implements Executable
                     if (isset($args[1]['collation'])) {
                         $this->isCollationUsed = true;
 
-                        if ( ! is_array($args[1]['collation']) && ! is_object($args[1]['collation'])) {
+                        if (! is_array($args[1]['collation']) && ! is_object($args[1]['collation'])) {
                             throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]["collation"]', $i, $type), $args[1]['collation'], 'array or object');
                         }
                     }
@@ -180,23 +190,23 @@ class BulkWrite implements Executable
                     break;
 
                 case self::REPLACE_ONE:
-                    if ( ! isset($args[1]) && ! array_key_exists(1, $args)) {
+                    if (! isset($args[1]) && ! array_key_exists(1, $args)) {
                         throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
                     }
 
-                    if ( ! is_array($args[1]) && ! is_object($args[1])) {
+                    if (! is_array($args[1]) && ! is_object($args[1])) {
                         throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
                     }
 
-                    if (\MongoDB\is_first_key_operator($args[1])) {
+                    if (is_first_key_operator($args[1])) {
                         throw new InvalidArgumentException(sprintf('First key in $operations[%d]["%s"][1] is an update operator', $i, $type));
                     }
 
-                    if ( ! isset($args[2])) {
+                    if (! isset($args[2])) {
                         $args[2] = [];
                     }
 
-                    if ( ! is_array($args[2])) {
+                    if (! is_array($args[2])) {
                         throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]', $i, $type), $args[2], 'array');
                     }
 
@@ -206,12 +216,12 @@ class BulkWrite implements Executable
                     if (isset($args[2]['collation'])) {
                         $this->isCollationUsed = true;
 
-                        if ( ! is_array($args[2]['collation']) && ! is_object($args[2]['collation'])) {
+                        if (! is_array($args[2]['collation']) && ! is_object($args[2]['collation'])) {
                             throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation'], 'array or object');
                         }
                     }
 
-                    if ( ! is_bool($args[2]['upsert'])) {
+                    if (! is_bool($args[2]['upsert'])) {
                         throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["upsert"]', $i, $type), $args[2]['upsert'], 'boolean');
                     }
 
@@ -221,23 +231,23 @@ class BulkWrite implements Executable
 
                 case self::UPDATE_MANY:
                 case self::UPDATE_ONE:
-                    if ( ! isset($args[1]) && ! array_key_exists(1, $args)) {
+                    if (! isset($args[1]) && ! array_key_exists(1, $args)) {
                         throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
                     }
 
-                    if ( ! is_array($args[1]) && ! is_object($args[1])) {
+                    if (! is_array($args[1]) && ! is_object($args[1])) {
                         throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
                     }
 
-                    if ( ! \MongoDB\is_first_key_operator($args[1])) {
+                    if (! is_first_key_operator($args[1])) {
                         throw new InvalidArgumentException(sprintf('First key in $operations[%d]["%s"][1] is not an update operator', $i, $type));
                     }
 
-                    if ( ! isset($args[2])) {
+                    if (! isset($args[2])) {
                         $args[2] = [];
                     }
 
-                    if ( ! is_array($args[2])) {
+                    if (! is_array($args[2])) {
                         throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]', $i, $type), $args[2], 'array');
                     }
 
@@ -247,7 +257,7 @@ class BulkWrite implements Executable
                     if (isset($args[2]['arrayFilters'])) {
                         $this->isArrayFiltersUsed = true;
 
-                        if ( ! is_array($args[2]['arrayFilters'])) {
+                        if (! is_array($args[2]['arrayFilters'])) {
                             throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["arrayFilters"]', $i, $type), $args[2]['arrayFilters'], 'array');
                         }
                     }
@@ -255,12 +265,12 @@ class BulkWrite implements Executable
                     if (isset($args[2]['collation'])) {
                         $this->isCollationUsed = true;
 
-                        if ( ! is_array($args[2]['collation']) && ! is_object($args[2]['collation'])) {
+                        if (! is_array($args[2]['collation']) && ! is_object($args[2]['collation'])) {
                             throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation'], 'array or object');
                         }
                     }
 
-                    if ( ! is_bool($args[2]['upsert'])) {
+                    if (! is_bool($args[2]['upsert'])) {
                         throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["upsert"]', $i, $type), $args[2]['upsert'], 'boolean');
                     }
 
@@ -281,7 +291,7 @@ class BulkWrite implements Executable
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
-        if ( ! is_bool($options['ordered'])) {
+        if (! is_bool($options['ordered'])) {
             throw InvalidArgumentException::invalidType('"ordered" option', $options['ordered'], 'boolean');
         }
 
@@ -314,11 +324,11 @@ class BulkWrite implements Executable
      */
     public function execute(Server $server)
     {
-        if ($this->isArrayFiltersUsed && ! \MongoDB\server_supports_feature($server, self::$wireVersionForArrayFilters)) {
+        if ($this->isArrayFiltersUsed && ! server_supports_feature($server, self::$wireVersionForArrayFilters)) {
             throw UnsupportedException::arrayFiltersNotSupported();
         }
 
-        if ($this->isCollationUsed && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
+        if ($this->isCollationUsed && ! server_supports_feature($server, self::$wireVersionForCollation)) {
             throw UnsupportedException::collationNotSupported();
         }
 
@@ -329,9 +339,8 @@ class BulkWrite implements Executable
 
         $options = ['ordered' => $this->options['ordered']];
 
-        if (
-            ! empty($this->options['bypassDocumentValidation']) &&
-            \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
+        if (! empty($this->options['bypassDocumentValidation']) &&
+            server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }

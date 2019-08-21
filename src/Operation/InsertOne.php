@@ -17,14 +17,18 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\InsertOneResult;
 use MongoDB\Driver\BulkWrite as Bulk;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\InsertOneResult;
+use function is_array;
+use function is_bool;
+use function is_object;
+use function MongoDB\server_supports_feature;
 
 /**
  * Operation for inserting a single document with the insert command.
@@ -67,7 +71,7 @@ class InsertOne implements Executable
      */
     public function __construct($databaseName, $collectionName, $document, array $options = [])
     {
-        if ( ! is_array($document) && ! is_object($document)) {
+        if (! is_array($document) && ! is_object($document)) {
             throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
         }
 
@@ -110,9 +114,8 @@ class InsertOne implements Executable
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
         }
 
-        if (
-            ! empty($this->options['bypassDocumentValidation']) &&
-            \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
+        if (! empty($this->options['bypassDocumentValidation']) &&
+            server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }

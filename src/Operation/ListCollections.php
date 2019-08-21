@@ -18,13 +18,16 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
-use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Model\CollectionInfoCommandIterator;
 use MongoDB\Model\CollectionInfoIterator;
+use function is_array;
+use function is_integer;
+use function is_object;
 
 /**
  * Operation for the listCollections command.
@@ -119,7 +122,7 @@ class ListCollections implements Executable
     {
         $cmd = ['listCollections' => 1];
 
-        if ( ! empty($this->options['filter'])) {
+        if (! empty($this->options['filter'])) {
             $cmd['filter'] = (object) $this->options['filter'];
         }
 

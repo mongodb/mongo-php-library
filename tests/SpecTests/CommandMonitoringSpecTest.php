@@ -3,6 +3,12 @@
 namespace MongoDB\Tests\SpecTests;
 
 use stdClass;
+use function array_diff;
+use function basename;
+use function file_get_contents;
+use function glob;
+use function is_array;
+use function is_numeric;
 
 /**
  * Command monitoring spec tests.
@@ -130,10 +136,10 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
      * Execute an individual test case from the specification.
      *
      * @dataProvider provideTests
-     * @param stdClass  $test           Individual "tests[]" document
-     * @param array     $data           Top-level "data" array to initialize collection
-     * @param string    $databaseName   Name of database under test
-     * @param string    $collectionName Name of collection under test
+     * @param stdClass $test           Individual "tests[]" document
+     * @param array    $data           Top-level "data" array to initialize collection
+     * @param string   $databaseName   Name of database under test
+     * @param string   $collectionName Name of collection under test
      */
     public function testCommandMonitoring(stdClass $test, array $data, $databaseName = null, $collectionName = null)
     {
@@ -190,12 +196,12 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
      */
     private function createRunOn(stdClass $test)
     {
-        $req = new stdClass;
+        $req = new stdClass();
 
         $topologies = [
             self::TOPOLOGY_SINGLE,
             self::TOPOLOGY_REPLICASET,
-            self::TOPOLOGY_SHARDED
+            self::TOPOLOGY_SHARDED,
         ];
 
         /* Append ".99" as patch version, since command monitoring tests expect

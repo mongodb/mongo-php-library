@@ -2,16 +2,23 @@
 
 namespace MongoDB\Tests\SpecTests;
 
+use ArrayObject;
+use InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use PHPUnit\Framework\Constraint\Constraint;
-use ArrayObject;
-use InvalidArgumentException;
 use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
 use stdClass;
 use Symfony\Bridge\PhpUnit\ConstraintTrait;
+use function array_values;
+use function get_class;
+use function in_array;
+use function is_array;
+use function is_object;
+use function is_scalar;
+use function sprintf;
 
 /**
  * Constraint that checks if one document matches another.
@@ -88,7 +95,7 @@ class DocumentsMatchConstraint extends Constraint
             return $success;
         }
 
-        if (!$success) {
+        if (! $success) {
             $this->fail($other, $description, $this->lastFailure);
         }
     }
@@ -115,7 +122,7 @@ class DocumentsMatchConstraint extends Constraint
         foreach ($expected as $key => $expectedValue) {
             $actualHasKey = $actual->offsetExists($key);
 
-            if (!$actualHasKey) {
+            if (! $actualHasKey) {
                 throw new RuntimeException(sprintf('$actual is missing key: "%s"', $keyPrefix . $key));
             }
 
@@ -154,7 +161,7 @@ class DocumentsMatchConstraint extends Constraint
                     '',
                     '',
                     false,
-                    \sprintf(
+                    sprintf(
                         'Field path "%s": %s is not instance of expected class "%s".',
                         $keyPrefix . $key,
                         $this->exporter()->shortenedExport($actualValue),
@@ -182,7 +189,7 @@ class DocumentsMatchConstraint extends Constraint
         }
 
         foreach ($actual as $key => $value) {
-            if (!$expected->offsetExists($key)) {
+            if (! $expected->offsetExists($key)) {
                 throw new RuntimeException(sprintf('$actual has extra key: "%s"', $keyPrefix . $key));
             }
         }
@@ -242,7 +249,7 @@ class DocumentsMatchConstraint extends Constraint
      */
     private function prepareBSON($bson, $isRoot, $sortKeys = false)
     {
-        if ( ! is_array($bson) && ! is_object($bson)) {
+        if (! is_array($bson) && ! is_object($bson)) {
             throw new InvalidArgumentException('$bson is not an array or object');
         }
 
@@ -251,11 +258,11 @@ class DocumentsMatchConstraint extends Constraint
         }
 
         if ($bson instanceof BSONArray || (is_array($bson) && $bson === array_values($bson))) {
-            if ( ! $bson instanceof BSONArray) {
+            if (! $bson instanceof BSONArray) {
                 $bson = new BSONArray($bson);
             }
         } else {
-            if ( ! $bson instanceof BSONDocument) {
+            if (! $bson instanceof BSONDocument) {
                 $bson = new BSONDocument((array) $bson);
             }
 

@@ -17,10 +17,12 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\Driver\Server;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
+use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+use function is_array;
+use function is_object;
 
 /**
  * Operation for deleting a document with the findAndModify command.
@@ -71,7 +73,7 @@ class FindOneAndDelete implements Executable, Explainable
      */
     public function __construct($databaseName, $collectionName, $filter, array $options = [])
     {
-        if ( ! is_array($filter) && ! is_object($filter)) {
+        if (! is_array($filter) && ! is_object($filter)) {
             throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 

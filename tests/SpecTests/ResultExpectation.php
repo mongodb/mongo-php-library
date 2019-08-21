@@ -2,16 +2,20 @@
 
 namespace MongoDB\Tests\SpecTests;
 
+use LogicException;
 use MongoDB\BulkWriteResult;
 use MongoDB\DeleteResult;
-use MongoDB\InsertManyResult;
-use MongoDB\InsertOneResult;
-use MongoDB\UpdateResult;
 use MongoDB\Driver\WriteResult;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\InsertManyResult;
+use MongoDB\InsertOneResult;
 use MongoDB\Tests\TestCase;
-use LogicException;
+use MongoDB\UpdateResult;
 use stdClass;
+use function call_user_func;
+use function is_array;
+use function is_object;
+use function property_exists;
 
 /**
  * Spec test operation result expectation.
@@ -43,13 +47,13 @@ final class ResultExpectation
             case self::ASSERT_INSERTMANY:
             case self::ASSERT_INSERTONE:
             case self::ASSERT_UPDATE:
-                if (!is_object($expectedValue)) {
+                if (! is_object($expectedValue)) {
                     throw InvalidArgumentException::invalidType('$expectedValue', $expectedValue, 'object');
                 }
                 break;
 
             case self::ASSERT_SAME_DOCUMENTS:
-                if (!self::isArrayOfObjects($expectedValue)) {
+                if (! self::isArrayOfObjects($expectedValue)) {
                     throw InvalidArgumentException::invalidType('$expectedValue', $expectedValue, 'object[]');
                 }
                 break;
@@ -61,7 +65,7 @@ final class ResultExpectation
 
     public static function fromChangeStreams(stdClass $result, callable $assertionCallable)
     {
-        if (!property_exists($result, 'success')) {
+        if (! property_exists($result, 'success')) {
             return new self(self::ASSERT_NOTHING, null);
         }
 
@@ -74,7 +78,7 @@ final class ResultExpectation
 
     public static function fromCrud(stdClass $operation, $defaultAssertionType)
     {
-        if (property_exists($operation, 'result') && !self::isErrorResult($operation->result)) {
+        if (property_exists($operation, 'result') && ! self::isErrorResult($operation->result)) {
             $assertionType = $operation->result === null ? self::ASSERT_NULL : $defaultAssertionType;
             $expectedValue = $operation->result;
         } else {
@@ -100,7 +104,7 @@ final class ResultExpectation
 
     public static function fromTransactions(stdClass $operation, $defaultAssertionType)
     {
-        if (property_exists($operation, 'result') && !self::isErrorResult($operation->result)) {
+        if (property_exists($operation, 'result') && ! self::isErrorResult($operation->result)) {
             $assertionType = $operation->result === null ? self::ASSERT_NULL : $defaultAssertionType;
             $expectedValue = $operation->result;
         } else {
@@ -132,7 +136,7 @@ final class ResultExpectation
                     $test->isInstanceOf(WriteResult::class)
                 ));
 
-                if (!$actual->isAcknowledged()) {
+                if (! $actual->isAcknowledged()) {
                     break;
                 }
 
@@ -283,12 +287,12 @@ final class ResultExpectation
 
     private static function isArrayOfObjects($array)
     {
-        if (!is_array($array)) {
+        if (! is_array($array)) {
             return false;
         }
 
         foreach ($array as $object) {
-            if (!is_object($object)) {
+            if (! is_object($object)) {
                 return false;
             }
         }
@@ -305,7 +309,7 @@ final class ResultExpectation
      */
     private static function isErrorResult($result)
     {
-        if (!is_object($result)) {
+        if (! is_object($result)) {
             return false;
         }
 

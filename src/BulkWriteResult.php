@@ -30,8 +30,6 @@ class BulkWriteResult
     private $isAcknowledged;
 
     /**
-     * Constructor.
-     *
      * @param WriteResult $writeResult
      * @param mixed[]     $insertedIds
      */

@@ -17,16 +17,22 @@
 
 namespace MongoDB\Model;
 
+use IteratorIterator;
 use MongoDB\BSON\Serializable;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
-use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
+use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Exception\UnexpectedValueException;
-use IteratorIterator;
+use function count;
+use function is_array;
+use function is_integer;
+use function is_object;
+use function MongoDB\Driver\Monitoring\addSubscriber;
+use function MongoDB\Driver\Monitoring\removeSubscriber;
 
 /**
  * ChangeStreamIterator wraps a change stream's tailable cursor.
@@ -46,8 +52,6 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     private $resumeToken;
 
     /**
-     * Constructor.
-     *
      * @internal
      * @param Cursor            $cursor
      * @param integer           $firstBatchSize
@@ -56,7 +60,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      */
     public function __construct(Cursor $cursor, $firstBatchSize, $initialResumeToken, $postBatchResumeToken)
     {
-        if ( ! is_integer($firstBatchSize)) {
+        if (! is_integer($firstBatchSize)) {
             throw InvalidArgumentException::invalidType('$firstBatchSize', $firstBatchSize, 'integer');
         }
 
@@ -102,7 +106,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
         $reply = $event->getReply();
 
-        if ( ! isset($reply->cursor->nextBatch) || ! is_array($reply->cursor->nextBatch)) {
+        if (! isset($reply->cursor->nextBatch) || ! is_array($reply->cursor->nextBatch)) {
             throw new UnexpectedValueException('getMore command did not return a "cursor.nextBatch" array');
         }
 
@@ -141,15 +145,15 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
         $getMore = $this->isAtEndOfBatch();
 
         if ($getMore) {
-            \MongoDB\Driver\Monitoring\addSubscriber($this);
+            addSubscriber($this);
         }
 
         try {
             parent::next();
-            $this->onIteration(!$getMore);
+            $this->onIteration(! $getMore);
         } finally {
             if ($getMore) {
-                \MongoDB\Driver\Monitoring\removeSubscriber($this);
+                removeSubscriber($this);
             }
         }
     }
@@ -178,7 +182,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      */
     private function extractResumeToken($document)
     {
-        if ( ! is_array($document) && ! is_object($document)) {
+        if (! is_array($document) && ! is_object($document)) {
             throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
         }
 
@@ -190,11 +194,11 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
             ? (isset($document['_id']) ? $document['_id'] : null)
             : (isset($document->_id) ? $document->_id : null);
 
-        if ( ! isset($resumeToken)) {
+        if (! isset($resumeToken)) {
             throw ResumeTokenException::notFound();
         }
 
-        if ( ! is_array($resumeToken) && ! is_object($resumeToken)) {
+        if (! is_array($resumeToken) && ! is_object($resumeToken)) {
             throw ResumeTokenException::invalidType($resumeToken);
         }
 
@@ -208,7 +212,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      */
     private function isAtEndOfBatch()
     {
-        return ($this->batchPosition + 1 >= $this->batchSize);
+        return $this->batchPosition + 1 >= $this->batchSize;
     }
 
     /**

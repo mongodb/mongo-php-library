@@ -9,6 +9,7 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
@@ -619,8 +620,6 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
     /**
      * @dataProvider collectionWriteMethodClosures
-     * @expectedException MongoDB\Exception\UnsupportedException
-     * @expectedExceptionMessage "writeConcern" option cannot be specified within a transaction
      */
     public function testMethodInTransactionWithWriteConcernOption($method)
     {
@@ -631,6 +630,9 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $session = $this->manager->startSession();
         $session->startTransaction();
 
+        $this->expectException(UnsupportedException::class);
+        $this->expectExceptionMessage('"writeConcern" option cannot be specified within a transaction');
+
         try {
             call_user_func($method, $this->collection, $session, ['writeConcern' => new WriteConcern(1)]);
         } finally {
@@ -640,8 +642,6 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
     /**
      * @dataProvider collectionReadMethodClosures
-     * @expectedException MongoDB\Exception\UnsupportedException
-     * @expectedExceptionMessage "readConcern" option cannot be specified within a transaction
      */
     public function testMethodInTransactionWithReadConcernOption($method)
     {
@@ -651,6 +651,9 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
         $session = $this->manager->startSession();
         $session->startTransaction();
+
+        $this->expectException(UnsupportedException::class);
+        $this->expectExceptionMessage('"readConcern" option cannot be specified within a transaction');
 
         try {
             call_user_func($method, $this->collection, $session, ['readConcern' => new ReadConcern(ReadConcern::LOCAL)]);

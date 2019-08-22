@@ -132,7 +132,7 @@ final class ErrorExpectation
         $test->assertNotNull($actual);
 
         if (isset($this->messageContains)) {
-            $test->assertContains($this->messageContains, $actual->getMessage(), '', true /* case-insensitive */);
+            $test->assertStringContainsStringIgnoringCase($this->messageContains, $actual->getMessage());
         }
 
         if (isset($this->codeName)) {
@@ -178,7 +178,7 @@ final class ErrorExpectation
         $test->assertInstanceOf(CommandException::class, $actual);
         $result = $actual->getResultDocument();
         $test->assertObjectHasAttribute('codeName', $result);
-        $test->assertAttributeSame($this->codeName, 'codeName', $result);
+        $test->assertSame($this->codeName, $result->codeName);
     }
 
     private static function isArrayOfStrings($array)

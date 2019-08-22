@@ -9,7 +9,7 @@ fi
 case $DEPLOYMENT in
   SHARDED_CLUSTER)
     ${TRAVIS_BUILD_DIR}/.travis/mo.sh ${TRAVIS_BUILD_DIR}/mongo-orchestration/sharded_clusters/cluster.json start > /tmp/mo-result.json
-    cat /tmp/mo-result.json | tail -n 1 | php -r 'echo json_decode(file_get_contents("php://stdin"))->mongodb_uri;' > /tmp/uri.txt
+    cat /tmp/mo-result.json | tail -n 1 | php -r 'echo json_decode(file_get_contents("php://stdin"))->mongodb_uri, "/?retryWrites=false";' > /tmp/uri.txt
     ;;
   SHARDED_CLUSTER_RS)
     ${TRAVIS_BUILD_DIR}/.travis/mo.sh ${TRAVIS_BUILD_DIR}/mongo-orchestration/sharded_clusters/cluster_replset.json start > /tmp/mo-result.json

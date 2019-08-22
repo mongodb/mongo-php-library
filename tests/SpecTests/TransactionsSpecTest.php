@@ -35,6 +35,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @var array
      */
     private static $incompleteTests = [
+        'transactions/pin-mongos: remain pinned after non-transient error on commit' => 'Blocked on SPEC-1320',
         'transactions/read-pref: default readPreference' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
         'transactions/read-pref: primary readPreference' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
         'transactions/run-command: run command with secondary read preference in client option and primary read preference in transaction options' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
@@ -48,6 +49,8 @@ class TransactionsSpecTest extends FunctionalTestCase
         parent::setUp();
 
         static::killAllSessions();
+
+        $this->skipIfTransactionsAreNotSupported();
     }
 
     private function doTearDown()
@@ -128,8 +131,8 @@ class TransactionsSpecTest extends FunctionalTestCase
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
         }
 
-        if ($this->isShardedCluster()) {
-            $this->markTestSkipped('PHP MongoDB driver 1.6.0alpha2 does not support running multi-document transactions on sharded clusters');
+        if (isset($test->skipReason)) {
+            $this->markTestSkipped($test->skipReason);
         }
 
         if (isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster()) {

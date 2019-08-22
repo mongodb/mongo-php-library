@@ -10,6 +10,7 @@ use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MultipleIterator;
 use function count;
+use function in_array;
 use function key;
 use function MongoDB\Driver\Monitoring\addSubscriber;
 use function MongoDB\Driver\Monitoring\removeSubscriber;
@@ -36,6 +37,9 @@ class CommandExpectations implements CommandSubscriber
 
     /** @var boolean */
     private $ignoreExtraEvents = false;
+
+    /** @var string[] */
+    private $ignoredCommandNames = [];
 
     private function __construct(array $events)
     {
@@ -110,6 +114,14 @@ class CommandExpectations implements CommandSubscriber
         $o->ignoreCommandFailed = true;
         $o->ignoreCommandSucceeded = true;
 
+        /* Ignore the buildInfo and getParameter commands as they are used to
+         * check for the availability of configureFailPoint and are not expected
+         * to be called by any spec tests.
+         * configureFailPoint needs to be ignored as the targetedFailPoint
+         * operation will be caught by command monitoring and is also not
+         * present in the expected commands in spec tests. */
+        $o->ignoredCommandNames = ['buildInfo', 'getParameter', 'configureFailPoint'];
+
         return $o;
     }
 
@@ -120,7 +132,7 @@ class CommandExpectations implements CommandSubscriber
      */
     public function commandFailed(CommandFailedEvent $event)
     {
-        if ($this->ignoreCommandFailed || ($this->ignoreExtraEvents && count($this->actualEvents) === count($this->expectedEvents))) {
+        if ($this->ignoreCommandFailed || $this->isEventIgnored($event)) {
             return;
         }
 
@@ -134,7 +146,7 @@ class CommandExpectations implements CommandSubscriber
      */
     public function commandStarted(CommandStartedEvent $event)
     {
-        if ($this->ignoreCommandStarted || ($this->ignoreExtraEvents && count($this->actualEvents) === count($this->expectedEvents))) {
+        if ($this->ignoreCommandStarted || $this->isEventIgnored($event)) {
             return;
         }
 
@@ -148,7 +160,7 @@ class CommandExpectations implements CommandSubscriber
      */
     public function commandSucceeded(CommandSucceededEvent $event)
     {
-        if ($this->ignoreCommandSucceeded || ($this->ignoreExtraEvents && count($this->actualEvents) === count($this->expectedEvents))) {
+        if ($this->ignoreCommandSucceeded || $this->isEventIgnored($event)) {
             return;
         }
 
@@ -211,5 +223,11 @@ class CommandExpectations implements CommandSubscriber
                 $test->assertCommandReplyMatches($expectedEvent->reply, $actualEvent->getReply());
             }
         }
+    }
+
+    private function isEventIgnored($event)
+    {
+        return ($this->ignoreExtraEvents && count($this->actualEvents) === count($this->expectedEvents))
+            || in_array($event->getCommandName(), $this->ignoredCommandNames);
     }
 }

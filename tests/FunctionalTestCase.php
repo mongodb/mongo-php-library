@@ -151,7 +151,7 @@ abstract class FunctionalTestCase extends TestCase
      * @param array|stdClass $command configureFailPoint command document
      * @throws InvalidArgumentException if $command is not a configureFailPoint command
      */
-    protected function configureFailPoint($command)
+    public function configureFailPoint($command, Server $server = null)
     {
         if (! $this->isFailCommandSupported()) {
             $this->markTestSkipped('failCommand is only supported on mongod >= 4.0.0 and mongos >= 4.1.5.');
@@ -173,14 +173,16 @@ abstract class FunctionalTestCase extends TestCase
             throw new InvalidArgumentException('$command is not a configureFailPoint command');
         }
 
+        $failPointServer = $server ?: $this->getPrimaryServer();
+
         $operation = new DatabaseCommand('admin', $command);
-        $cursor = $operation->execute($this->getPrimaryServer());
+        $cursor = $operation->execute($failPointServer);
         $result = $cursor->toArray()[0];
 
         $this->assertCommandSucceeded($result);
 
         // Record the fail point so it can be disabled during tearDown()
-        $this->configuredFailPoints[] = $command->configureFailPoint;
+        $this->configuredFailPoints[] = [$command->configureFailPoint, $failPointServer];
     }
 
     /**
@@ -408,9 +410,7 @@ abstract class FunctionalTestCase extends TestCase
             return;
         }
 
-        $server = $this->getPrimaryServer();
-
-        foreach ($this->configuredFailPoints as $failPoint) {
+        foreach ($this->configuredFailPoints as list($failPoint, $server)) {
             $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
             $operation->execute($server);
         }

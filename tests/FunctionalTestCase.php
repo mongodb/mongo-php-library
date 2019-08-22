@@ -94,10 +94,10 @@ abstract class FunctionalTestCase extends TestCase
             $parts[] = $urlParts['path'];
         }
         if (isset($urlParts['query'])) {
-            $parts += [
+            $parts = array_merge($parts, [
                 '?',
-                $urlParts['path']
-            ];
+                $urlParts['query']
+            ]);
         }
 
         return implode('', $parts);

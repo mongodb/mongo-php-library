@@ -217,7 +217,17 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 $results = iterator_to_array($operation->execute($this->getPrimaryServer()));
 
                 $this->assertCount(1, $results);
-                $this->assertObjectHasAttribute('stages', current($results));
+                $result = current($results);
+
+                if ($this->isShardedCluster()) {
+                    $this->assertObjectHasAttribute('shards', $result);
+
+                    foreach ($result->shards as $shard) {
+                        $this->assertObjectHasAttribute('stages', $shard);
+                    }
+                } else {
+                    $this->assertObjectHasAttribute('stages', $result);
+                }
             },
             function(array $event) {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());

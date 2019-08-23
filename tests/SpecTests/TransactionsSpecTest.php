@@ -135,9 +135,7 @@ class TransactionsSpecTest extends FunctionalTestCase
             $this->markTestSkipped($test->skipReason);
         }
 
-        if (isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster()) {
-            $this->manager = new Manager(static::getUri(true));
-        }
+        $useMultipleMongoses = isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster();
 
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
@@ -150,7 +148,7 @@ class TransactionsSpecTest extends FunctionalTestCase
         $databaseName = isset($databaseName) ? $databaseName : $this->getDatabaseName();
         $collectionName = isset($collectionName) ? $collectionName : $this->getCollectionName();
 
-        $context = Context::fromTransactions($test, $databaseName, $collectionName);
+        $context = Context::fromTransactions($test, $databaseName, $collectionName, $useMultipleMongoses);
         $this->setContext($context);
 
         $this->dropTestAndOutcomeCollections();

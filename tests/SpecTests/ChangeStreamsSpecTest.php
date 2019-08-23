@@ -18,6 +18,10 @@ use stdClass;
  */
 class ChangeStreamsSpecTest extends FunctionalTestCase
 {
+    private static $incompleteTests = [
+        'change-streams-errors: Change Stream should error when _id is projected out' => 'PHPC-1419',
+    ];
+
     /**
      * Assert that the expected and actual command documents match.
      *
@@ -66,6 +70,10 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
      */
     public function testChangeStreams(stdClass $test, $databaseName = null, $collectionName = null, $database2Name = null, $collection2Name = null)
     {
+        if (isset(self::$incompleteTests[$this->dataDescription()])) {
+            $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
+        }
+
         $this->checkServerRequirements($this->createRunOn($test));
 
         if (!isset($databaseName, $collectionName, $database2Name, $collection2Name)) {

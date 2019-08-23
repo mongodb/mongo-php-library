@@ -14,9 +14,9 @@ cache:
 
 env:
   global:
-    - DRIVER_VERSION=1.6.0alpha2
+    - DRIVER_VERSION=1.6.0alpha3
     - SERVER_DISTRO=ubuntu1604
-    - SERVER_VERSION=4.0.10
+    - SERVER_VERSION=4.2.0
     - DEPLOYMENT=STANDALONE
     - COMPOSER_OPTIONS=
 
@@ -44,7 +44,7 @@ jobs:
       env:
         - COMPOSER_OPTIONS=--prefer-lowest
 
-      # Test older standalone server versions (3.0-3.6)
+      # Test older standalone server versions (3.0-4.0)
     - stage: Test
       php: "7.0"
       dist: trusty
@@ -66,6 +66,10 @@ jobs:
       php: "7.0"
       env:
         - SERVER_VERSION=3.6.13
+    - stage: Test
+      php: "7.3"
+      env:
+        - SERVER_VERSION=4.0.12
 
     # Test other server configurations
     - stage: Test
@@ -93,13 +97,6 @@ jobs:
       php: "7.3"
       env:
         - DEPLOYMENT=SHARDED_CLUSTER_RS
-
-    # Test upcoming server versions
-    - stage: Test
-      php: "7.3"
-      env:
-        - SERVER_VERSION=4.2.0-rc1
-        - DEPLOYMENT=REPLICASET
 
 before_install:
   - pip install "mongo-orchestration>=0.6.7,<1.0" --user `whoami`

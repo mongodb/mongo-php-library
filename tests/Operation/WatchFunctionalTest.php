@@ -28,6 +28,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 {
     use SetUpTearDownTrait;
 
+    const INTERRUPTED = 11601;
     const NOT_MASTER = 10107;
 
     private static $wireVersionForStartAtOperationTime = 7;
@@ -1295,7 +1296,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->configureFailPoint([
             'configureFailPoint' => 'failCommand',
             'mode' => ['times' => 1],
-            'data' => ['failCommands' => ['aggregate'], 'errorCode' => self::NOT_MASTER],
+            'data' => ['failCommands' => ['aggregate'], 'errorCode' => self::INTERRUPTED],
         ]);
 
         $this->expectException(CommandException::class);

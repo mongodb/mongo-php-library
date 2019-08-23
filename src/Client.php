@@ -170,7 +170,7 @@ class Client
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -246,7 +246,7 @@ class Client
     public function listDatabases(array $options = [])
     {
         $operation = new ListDatabases($options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         return $operation->execute($server);
     }
@@ -311,7 +311,7 @@ class Client
             $options['readPreference'] = $this->readPreference;
         }
 
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern)) {
             $options['readConcern'] = $this->readConcern;

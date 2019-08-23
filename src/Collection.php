@@ -227,7 +227,7 @@ class Collection
             $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
         }
 
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         /* MongoDB 4.2 and later supports a read concern when an $out stage is
          * being used, but earlier versions do not.
@@ -276,7 +276,7 @@ class Collection
         }
 
         $operation = new BulkWrite($this->databaseName, $this->collectionName, $operations, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         return $operation->execute($server);
     }
@@ -301,7 +301,7 @@ class Collection
             $options['readPreference'] = $this->readPreference;
         }
 
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern) && ! is_in_transaction($options)) {
             $options['readConcern'] = $this->readConcern;
@@ -330,7 +330,7 @@ class Collection
             $options['readPreference'] = $this->readPreference;
         }
 
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern) && ! is_in_transaction($options)) {
             $options['readConcern'] = $this->readConcern;
@@ -392,7 +392,7 @@ class Collection
      */
     public function createIndexes(array $indexes, array $options = [])
     {
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -422,7 +422,7 @@ class Collection
         }
 
         $operation = new DeleteMany($this->databaseName, $this->collectionName, $filter, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         return $operation->execute($server);
     }
@@ -446,7 +446,7 @@ class Collection
         }
 
         $operation = new DeleteOne($this->databaseName, $this->collectionName, $filter, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         return $operation->execute($server);
     }
@@ -470,7 +470,7 @@ class Collection
             $options['readPreference'] = $this->readPreference;
         }
 
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern) && ! is_in_transaction($options)) {
             $options['readConcern'] = $this->readConcern;
@@ -497,7 +497,7 @@ class Collection
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -531,7 +531,7 @@ class Collection
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -558,7 +558,7 @@ class Collection
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -586,7 +586,7 @@ class Collection
             $options['readPreference'] = $this->readPreference;
         }
 
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern) && ! is_in_transaction($options)) {
             $options['readConcern'] = $this->readConcern;
@@ -619,7 +619,7 @@ class Collection
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         $operation = new Explain($this->databaseName, $explainable, $options);
 
@@ -644,7 +644,7 @@ class Collection
             $options['readPreference'] = $this->readPreference;
         }
 
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern) && ! is_in_transaction($options)) {
             $options['readConcern'] = $this->readConcern;
@@ -677,7 +677,7 @@ class Collection
             $options['readPreference'] = $this->readPreference;
         }
 
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern) && ! is_in_transaction($options)) {
             $options['readConcern'] = $this->readConcern;
@@ -709,7 +709,7 @@ class Collection
      */
     public function findOneAndDelete($filter, array $options = [])
     {
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -746,7 +746,7 @@ class Collection
      */
     public function findOneAndReplace($filter, $replacement, array $options = [])
     {
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -783,7 +783,7 @@ class Collection
      */
     public function findOneAndUpdate($filter, $update, array $options = [])
     {
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForFindAndModifyWriteConcern) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -899,7 +899,7 @@ class Collection
         }
 
         $operation = new InsertMany($this->databaseName, $this->collectionName, $documents, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         return $operation->execute($server);
     }
@@ -922,7 +922,7 @@ class Collection
         }
 
         $operation = new InsertOne($this->databaseName, $this->collectionName, $document, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         return $operation->execute($server);
     }
@@ -939,7 +939,7 @@ class Collection
     public function listIndexes(array $options = [])
     {
         $operation = new ListIndexes($this->databaseName, $this->collectionName, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         return $operation->execute($server);
     }
@@ -972,7 +972,7 @@ class Collection
             $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
         }
 
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         /* A "majority" read concern is not compatible with inline output, so
          * avoid providing the Collection's read concern if it would conflict.
@@ -1016,7 +1016,7 @@ class Collection
         }
 
         $operation = new ReplaceOne($this->databaseName, $this->collectionName, $filter, $replacement, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         return $operation->execute($server);
     }
@@ -1041,7 +1041,7 @@ class Collection
         }
 
         $operation = new UpdateMany($this->databaseName, $this->collectionName, $filter, $update, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         return $operation->execute($server);
     }
@@ -1066,7 +1066,7 @@ class Collection
         }
 
         $operation = new UpdateOne($this->databaseName, $this->collectionName, $filter, $update, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         return $operation->execute($server);
     }
@@ -1086,7 +1086,7 @@ class Collection
             $options['readPreference'] = $this->readPreference;
         }
 
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         /* Although change streams require a newer version of the server than
          * read concerns, perform the usual wire version check before inheriting

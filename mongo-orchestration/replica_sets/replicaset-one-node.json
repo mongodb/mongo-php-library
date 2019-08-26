@@ -13,7 +13,6 @@
                 "bind_ip_all": true
             },
             "rsParams": {
-                "priority": 99,
                 "tags": {
                     "ordinal": "one",
                     "dc": "pa"

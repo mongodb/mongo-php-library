@@ -6,6 +6,11 @@ use MongoDB\Collection;
 use MongoDB\GridFS\Bucket;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function fopen;
+use function fwrite;
+use function get_resource_type;
+use function rewind;
+use function stream_get_contents;
 
 /**
  * Base class for GridFS functional tests.

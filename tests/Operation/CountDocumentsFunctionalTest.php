@@ -4,7 +4,6 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Operation\CountDocuments;
 use MongoDB\Operation\InsertMany;
-use stdClass;
 
 class CountDocumentsFunctionalTest extends FunctionalTestCase
 {

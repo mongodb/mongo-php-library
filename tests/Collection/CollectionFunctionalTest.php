@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Collection;
 
+use Closure;
 use MongoDB\BSON\Javascript;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
@@ -10,11 +11,13 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\MapReduceResult;
 use MongoDB\Operation\Count;
-use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
-use Exception;
-use stdClass;
+use function array_filter;
+use function call_user_func;
+use function strchr;
+use function version_compare;
 
 /**
  * Functional tests for the Collection class.
@@ -143,8 +146,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Sessions are not supported');
         }
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $this->collection->createIndex(
                     ['x' => 1],
                     [
@@ -156,7 +159,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                     ]
                 );
             },
-            function(array $event) {
+            function (array $event) {
                 $command = $event['started']->getCommand();
                 $this->assertObjectHasAttribute('lsid', $command);
                 $this->assertObjectHasAttribute('maxTimeMS', $command);
@@ -259,13 +262,13 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame($this->manager, $debug['manager']);
         $this->assertSame($this->getDatabaseName(), $debug['databaseName']);
         $this->assertSame($this->getCollectionName(), $debug['collectionName']);
-        $this->assertInstanceOf(\MongoDB\Driver\ReadConcern::class, $debug['readConcern']);
+        $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf(\MongoDB\Driver\ReadPreference::class, $debug['readPreference']);
+        $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf(\MongoDB\Driver\WriteConcern::class, $debug['writeConcern']);
+        $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
@@ -281,13 +284,13 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $clone = $this->collection->withOptions($collectionOptions);
         $debug = $clone->__debugInfo();
 
-        $this->assertInstanceOf(\MongoDB\Driver\ReadConcern::class, $debug['readConcern']);
+        $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertInstanceOf(\MongoDB\Driver\ReadPreference::class, $debug['readPreference']);
+        $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
         $this->assertSame(ReadPreference::RP_SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
-        $this->assertInstanceOf(\MongoDB\Driver\WriteConcern::class, $debug['writeConcern']);
+        $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
@@ -301,7 +304,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
         $result = $this->collection->mapReduce($map, $reduce, $out);
 
-        $this->assertInstanceOf(\MongoDB\MapReduceResult::class, $result);
+        $this->assertInstanceOf(MapReduceResult::class, $result);
         $expected = [
             [ '_id' => 1.0, 'value' => 66.0 ],
         ];
@@ -316,21 +319,21 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         return [
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->aggregate(
                         [['$match' => ['_id' => ['$lt' => 3]]]],
                         ['session' => $session] + $options
                     );
-                }, 'rw'
+                }, 'rw',
             ],
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->bulkWrite(
                         [['insertOne' => [['test' => 'foo']]]],
                         ['session' => $session] + $options
                     );
-                }, 'w'
+                }, 'w',
             ],
 
             /* Disabled, as count command can't be used in transactions
@@ -345,12 +348,12 @@ class CollectionFunctionalTest extends FunctionalTestCase
             */
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->countDocuments(
                         [],
                         ['session' => $session] + $options
                     );
-                }, 'r'
+                }, 'r',
             ],
 
             /* Disabled, as it's illegal to use createIndex command in transactions
@@ -365,31 +368,31 @@ class CollectionFunctionalTest extends FunctionalTestCase
             */
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->deleteMany(
                         ['test' => 'foo'],
                         ['session' => $session] + $options
                     );
-                }, 'w'
+                }, 'w',
             ],
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->deleteOne(
                         ['test' => 'foo'],
                         ['session' => $session] + $options
                     );
-                }, 'w'
+                }, 'w',
             ],
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->distinct(
                         '_id',
                         [],
                         ['session' => $session] + $options
                     );
-                }, 'r'
+                }, 'r',
             ],
 
             /* Disabled, as it's illegal to use drop command in transactions
@@ -433,54 +436,54 @@ class CollectionFunctionalTest extends FunctionalTestCase
             */
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->find(
                         ['test' => 'foo'],
                         ['session' => $session] + $options
                     );
-                }, 'r'
+                }, 'r',
             ],
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->findOne(
                         ['test' => 'foo'],
                         ['session' => $session] + $options
                     );
-                }, 'r'
+                }, 'r',
             ],
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->findOneAndDelete(
                         ['test' => 'foo'],
                         ['session' => $session] + $options
                     );
-                }, 'w'
+                }, 'w',
             ],
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->findOneAndReplace(
                         ['test' => 'foo'],
                         [],
                         ['session' => $session] + $options
                     );
-                }, 'w'
+                }, 'w',
             ],
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->findOneAndUpdate(
                         ['test' => 'foo'],
                         ['$set' => ['updated' => 1]],
                         ['session' => $session] + $options
                     );
-                }, 'w'
+                }, 'w',
             ],
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->insertMany(
                         [
                             ['test' => 'foo'],
@@ -488,16 +491,16 @@ class CollectionFunctionalTest extends FunctionalTestCase
                         ],
                         ['session' => $session] + $options
                     );
-                }, 'w'
+                }, 'w',
             ],
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->insertOne(
                         ['test' => 'foo'],
                         ['session' => $session] + $options
                     );
-                }, 'w'
+                }, 'w',
             ],
 
             /* Disabled, as it's illegal to use listIndexes command in transactions
@@ -524,33 +527,33 @@ class CollectionFunctionalTest extends FunctionalTestCase
             */
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->replaceOne(
                         ['test' => 'foo'],
                         [],
                         ['session' => $session] + $options
                     );
-                }, 'w'
+                }, 'w',
             ],
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->updateMany(
                         ['test' => 'foo'],
                         ['$set' => ['updated' => 1]],
                         ['session' => $session] + $options
                     );
-                }, 'w'
+                }, 'w',
             ],
 
             [
-                function($collection, $session, $options = []) {
+                function ($collection, $session, $options = []) {
                     $collection->updateOne(
                         ['test' => 'foo'],
                         ['$set' => ['updated' => 1]],
                         ['session' => $session] + $options
                     );
-                }, 'w'
+                }, 'w',
             ],
 
             /* Disabled, as it's illegal to use change streams in transactions
@@ -570,7 +573,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         return array_filter(
             $this->collectionMethodClosures(),
-            function($rw) {
+            function ($rw) {
                 if (strchr($rw[1], 'r') !== false) {
                     return true;
                 }
@@ -582,7 +585,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         return array_filter(
             $this->collectionMethodClosures(),
-            function($rw) {
+            function ($rw) {
                 if (strchr($rw[1], 'w') !== false) {
                     return true;
                 }
@@ -593,7 +596,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider collectionMethodClosures
      */
-    public function testMethodDoesNotInheritReadWriteConcernInTranasaction(\Closure $method)
+    public function testMethodDoesNotInheritReadWriteConcernInTranasaction(Closure $method)
     {
         $this->skipIfTransactionsAreNotSupported();
 
@@ -604,14 +607,14 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
         $collection = $this->collection->withOptions([
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
-            'writeConcern' => new WriteConcern(1)
+            'writeConcern' => new WriteConcern(1),
         ]);
 
-        (new CommandObserver)->observe(
-            function() use ($method, $collection, $session) {
+        (new CommandObserver())->observe(
+            function () use ($method, $collection, $session) {
                 call_user_func($method, $collection, $session);
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
                 $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
             }

@@ -17,13 +17,15 @@
 
 namespace MongoDB;
 
+use Iterator;
 use MongoDB\Driver\CursorId;
 use MongoDB\Driver\Exception\ConnectionException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Model\ChangeStreamIterator;
-use Iterator;
+use function call_user_func;
+use function in_array;
 
 /**
  * Iterator for a change stream.
@@ -57,8 +59,6 @@ class ChangeStream implements Iterator
     private $hasAdvanced = false;
 
     /**
-     * Constructor.
-     *
      * @internal
      * @param ChangeStreamIterator $iterator
      * @param callable             $resumeCallable
@@ -109,6 +109,7 @@ class ChangeStream implements Iterator
         if ($this->valid()) {
             return $this->key;
         }
+
         return null;
     }
 
@@ -167,7 +168,7 @@ class ChangeStream implements Iterator
             return true;
         }
 
-        if ( ! $exception instanceof ServerException) {
+        if (! $exception instanceof ServerException) {
             return false;
         }
 
@@ -202,7 +203,7 @@ class ChangeStream implements Iterator
 
         /* Return early if there is not a current result. Avoid any attempt to
          * increment the iterator's key. */
-        if (!$this->valid()) {
+        if (! $this->valid()) {
             return;
         }
 
@@ -236,6 +237,7 @@ class ChangeStream implements Iterator
     {
         if ($this->isResumableError($exception)) {
             $this->resume();
+
             return;
         }
 

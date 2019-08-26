@@ -2,9 +2,10 @@
 
 namespace MongoDB\Tests\Model;
 
+use Exception;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Tests\TestCase;
-use Exception;
+use function iterator_to_array;
 
 class CachingIteratorTest extends TestCase
 {
@@ -52,7 +53,7 @@ class CachingIteratorTest extends TestCase
 
     public function testPartialIterationDoesNotExhaust()
     {
-        $traversable = $this->getTraversableThatThrows([1, 2, new Exception]);
+        $traversable = $this->getTraversableThatThrows([1, 2, new Exception()]);
         $iterator = new CachingIterator($traversable);
 
         $expectedKey = 0;

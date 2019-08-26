@@ -2,18 +2,32 @@
 
 namespace MongoDB\Tests\GridFS;
 
-use MongoDB\Collection;
-use MongoDB\BSON\Binary;
-use MongoDB\BSON\ObjectId;
-use MongoDB\BSON\UTCDateTime;
-use MongoDB\GridFS\Exception\FileNotFoundException;
-use MongoDB\Operation\BulkWrite;
 use DateTime;
 use Exception;
 use IteratorIterator;
 use LogicException;
+use MongoDB\BSON\Binary;
+use MongoDB\BSON\ObjectId;
+use MongoDB\BSON\UTCDateTime;
+use MongoDB\Collection;
+use MongoDB\GridFS\Exception\FileNotFoundException;
+use MongoDB\Operation\BulkWrite;
 use MultipleIterator;
+use PHPUnit\Framework\Error\Warning;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function array_walk;
+use function array_walk_recursive;
+use function file_get_contents;
+use function glob;
+use function hex2bin;
+use function in_array;
+use function is_array;
+use function is_string;
+use function json_decode;
+use function str_replace;
+use function stream_get_contents;
+use function strncmp;
+use function var_export;
 
 /**
  * GridFS spec functional tests.
@@ -111,7 +125,7 @@ class SpecFunctionalTest extends FunctionalTestCase
             list($expectedDocument, $actualDocument) = $documents;
 
             foreach ($expectedDocument as $key => $value) {
-                if ( ! is_string($value)) {
+                if (! is_string($value)) {
                     continue;
                 }
 
@@ -119,7 +133,7 @@ class SpecFunctionalTest extends FunctionalTestCase
                     $expectedDocument[$key] = $actualResult;
                 }
 
-                if ( ! strncmp($value, '*actual_', 8)) {
+                if (! strncmp($value, '*actual_', 8)) {
                     $expectedDocument[$key] = $actualDocument[$key];
                 }
             }
@@ -144,13 +158,14 @@ class SpecFunctionalTest extends FunctionalTestCase
         /* array_walk_recursive() only visits leaf nodes within the array, so we
          * need to manually recurse.
          */
-        array_walk($data, function(&$value) use ($createBinary) {
-            if ( ! is_array($value)) {
+        array_walk($data, function (&$value) use ($createBinary) {
+            if (! is_array($value)) {
                 return;
             }
 
             if (isset($value['$oid'])) {
                 $value = new ObjectId($value['$oid']);
+
                 return;
             }
 
@@ -164,6 +179,7 @@ class SpecFunctionalTest extends FunctionalTestCase
 
             if (isset($value['$date'])) {
                 $value = new UTCDateTime(new DateTime($value['$date']));
+
                 return;
             }
 
@@ -187,23 +203,19 @@ class SpecFunctionalTest extends FunctionalTestCase
         switch ($act['operation']) {
             case 'delete':
                 return $this->bucket->delete($act['arguments']['id']);
-
             case 'download':
                 return stream_get_contents($this->bucket->openDownloadStream($act['arguments']['id']));
-
             case 'download_by_name':
                 return stream_get_contents($this->bucket->openDownloadStreamByName(
                     $act['arguments']['filename'],
                     isset($act['arguments']['options']) ? $act['arguments']['options'] : []
                 ));
-
             case 'upload':
                 return $this->bucket->uploadFromStream(
                     $act['arguments']['filename'],
                     $this->createStream($act['arguments']['source']),
                     isset($act['arguments']['options']) ? $act['arguments']['options'] : []
                 );
-
             default:
                 throw new LogicException('Unsupported act: ' . $act['operation']);
         }
@@ -227,16 +239,16 @@ class SpecFunctionalTest extends FunctionalTestCase
             $this->executeAssertResult($assert['result'], $actualResult);
         }
 
-        if ( ! isset($assert['data'])) {
+        if (! isset($assert['data'])) {
             return;
         }
 
         /* Since "*actual" may be used for an expected document's "_id", append
          * a unique value to avoid duplicate key exceptions.
          */
-        array_walk_recursive($assert['data'], function(&$value) {
+        array_walk_recursive($assert['data'], function (&$value) {
             if ($value === '*actual') {
-                $value .= '_' . new ObjectId;
+                $value .= '_' . new ObjectId();
             }
         });
 
@@ -290,7 +302,7 @@ class SpecFunctionalTest extends FunctionalTestCase
             break;
         }
 
-        if ( ! in_array($collectionName, ['fs.files', 'fs.chunks', 'expected.files', 'expected.chunks'])) {
+        if (! in_array($collectionName, ['fs.files', 'fs.chunks', 'expected.files', 'expected.chunks'])) {
             throw new LogicException('Unsupported collection: ' . $collectionName);
         }
 
@@ -340,15 +352,13 @@ class SpecFunctionalTest extends FunctionalTestCase
         switch ($error) {
             case 'FileNotFound':
             case 'RevisionNotFound':
-                return \MongoDB\GridFS\Exception\FileNotFoundException::class;
-
+                return FileNotFoundException::class;
             case 'ChunkIsMissing':
             case 'ChunkIsWrongSize':
                 /* Although ReadableStream throws a CorruptFileException, the
                  * stream wrapper will convert it to a PHP error of type
                  * E_USER_WARNING. */
-                return \PHPUnit\Framework\Error\Warning::class;
-
+                return Warning::class;
             default:
                 throw new LogicException('Unsupported error: ' . $error);
         }
@@ -363,12 +373,12 @@ class SpecFunctionalTest extends FunctionalTestCase
     {
         $data = $this->convertTypes($data);
 
-        if ( ! empty($data['files'])) {
+        if (! empty($data['files'])) {
             $this->filesCollection->insertMany($data['files']);
             $this->expectedFilesCollection->insertMany($data['files']);
         }
 
-        if ( ! empty($data['chunks'])) {
+        if (! empty($data['chunks'])) {
             $this->chunksCollection->insertMany($data['chunks']);
             $this->expectedChunksCollection->insertMany($data['chunks']);
         }

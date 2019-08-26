@@ -2,9 +2,11 @@
 
 namespace MongoDB\Tests\SpecTests;
 
-use LogicException;
 use MongoDB\Driver\Manager;
 use stdClass;
+use function basename;
+use function file_get_contents;
+use function glob;
 
 /**
  * Retryable writes spec tests.

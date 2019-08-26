@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Model;
 
+use MongoDB\BSON\Serializable;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\IndexInput;
 use MongoDB\Tests\TestCase;
@@ -32,7 +33,7 @@ class IndexInputTest extends TestCase
 
     public function provideInvalidFieldOrderValues()
     {
-        return $this->wrapValuesForDataProvider([true, [], new stdClass]);
+        return $this->wrapValuesForDataProvider([true, [], new stdClass()]);
     }
 
     public function testConstructorShouldRequireNamespace()
@@ -85,7 +86,7 @@ class IndexInputTest extends TestCase
             'ns' => 'foo.bar',
         ]);
 
-        $this->assertInstanceOf(\MongoDB\BSON\Serializable::class, $indexInput);
+        $this->assertInstanceOf(Serializable::class, $indexInput);
         $this->assertEquals($expected, $indexInput->bsonSerialize());
     }
 }

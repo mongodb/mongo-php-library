@@ -30,8 +30,6 @@ class InsertOneResult
     private $isAcknowledged;
 
     /**
-     * Constructor.
-     *
      * @param WriteResult $writeResult
      * @param mixed       $insertedId
      */

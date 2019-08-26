@@ -2,15 +2,15 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\DeleteResult;
 use MongoDB\Collection;
+use MongoDB\DeleteResult;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Operation\Delete;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function version_compare;
 
 class DeleteFunctionalTest extends FunctionalTestCase
 {
@@ -34,7 +34,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
         $operation = new Delete($this->getDatabaseName(), $this->getCollectionName(), $filter, 1);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf(\MongoDB\DeleteResult::class, $result);
+        $this->assertInstanceOf(DeleteResult::class, $result);
         $this->assertSame(1, $result->getDeletedCount());
 
         $expected = [
@@ -54,7 +54,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
         $operation = new Delete($this->getDatabaseName(), $this->getCollectionName(), $filter, 0);
         $result = $operation->execute($this->getPrimaryServer());
 
-        $this->assertInstanceOf(\MongoDB\DeleteResult::class, $result);
+        $this->assertInstanceOf(DeleteResult::class, $result);
         $this->assertSame(2, $result->getDeletedCount());
 
         $expected = [
@@ -70,8 +70,8 @@ class DeleteFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Sessions are not supported');
         }
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new Delete(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -82,7 +82,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );

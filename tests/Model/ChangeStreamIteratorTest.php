@@ -6,12 +6,14 @@ use MongoDB\Collection;
 use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\ChangeStreamIterator;
-use MongoDB\Operation\Find;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DropCollection;
+use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\FunctionalTestCase;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function array_merge;
+use function sprintf;
 
 class ChangeStreamIteratorTest extends FunctionalTestCase
 {
@@ -90,7 +92,9 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
         $cursor = $this->collection->find([], ['cursorType' => Find::TAILABLE]);
         $iterator = new ChangeStreamIterator($cursor, 2, null, $postBatchResumeToken);
 
-        $this->assertNoCommandExecuted(function() use ($iterator) { $iterator->rewind(); });
+        $this->assertNoCommandExecuted(function () use ($iterator) {
+            $iterator->rewind();
+        });
         $this->assertTrue($iterator->valid());
         $this->assertSameDocument(['resumeToken' => 1], $iterator->getResumeToken());
         $this->assertSameDocument(['_id' => ['resumeToken' => 1], 'x' => 1], $iterator->current());
@@ -108,7 +112,9 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
         $cursor = $this->collection->find(['x' => ['$gt' => 1]], ['cursorType' => Find::TAILABLE]);
         $iterator = new ChangeStreamIterator($cursor, 0, null, null);
 
-        $this->assertNoCommandExecuted(function() use ($iterator) { $iterator->rewind(); });
+        $this->assertNoCommandExecuted(function () use ($iterator) {
+            $iterator->rewind();
+        });
         $this->assertFalse($iterator->valid());
 
         $this->collection->insertOne(['_id' => ['resumeToken' => 2], 'x' => 2]);
@@ -128,7 +134,9 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
         $cursor = $this->collection->find([], ['cursorType' => Find::TAILABLE]);
         $iterator = new ChangeStreamIterator($cursor, 1, null, null);
 
-        $this->assertNoCommandExecuted(function() use ($iterator) { $iterator->rewind(); });
+        $this->assertNoCommandExecuted(function () use ($iterator) {
+            $iterator->rewind();
+        });
         $this->assertTrue($iterator->valid());
         $this->assertSameDocument(['_id' => ['resumeToken' => 1], 'x' => 1], $iterator->current());
 
@@ -146,9 +154,9 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
     {
         $commands = [];
 
-        (new CommandObserver)->observe(
+        (new CommandObserver())->observe(
             $callable,
-            function(array $event) use (&$commands) {
+            function (array $event) use (&$commands) {
                 $this->fail(sprintf('"%s" command was executed', $event['started']->getCommandName()));
             }
         );

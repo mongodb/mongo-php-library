@@ -5,6 +5,7 @@ namespace MongoDB\Tests\Model;
 use MongoDB\Collection;
 use MongoDB\Tests\FunctionalTestCase;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function version_compare;
 
 class IndexInfoFunctionalTest extends FunctionalTestCase
 {

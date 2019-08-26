@@ -17,8 +17,10 @@
 
 namespace MongoDB\Model;
 
-use MongoDB\Exception\BadMethodCallException;
 use ArrayAccess;
+use MongoDB\Exception\BadMethodCallException;
+use function array_key_exists;
+use function array_search;
 
 /**
  * Index information model class.
@@ -40,8 +42,6 @@ class IndexInfo implements ArrayAccess
     private $info;
 
     /**
-     * Constructor.
-     *
      * @param array $info Index info
      */
     public function __construct(array $info)
@@ -212,7 +212,7 @@ class IndexInfo implements ArrayAccess
      */
     public function offsetSet($key, $value)
     {
-        throw BadMethodCallException::classIsImmutable(__CLASS__);
+        throw BadMethodCallException::classIsImmutable(self::class);
     }
 
     /**
@@ -224,6 +224,6 @@ class IndexInfo implements ArrayAccess
      */
     public function offsetUnset($key)
     {
-        throw BadMethodCallException::classIsImmutable(__CLASS__);
+        throw BadMethodCallException::classIsImmutable(self::class);
     }
 }

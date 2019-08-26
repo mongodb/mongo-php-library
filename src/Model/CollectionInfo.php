@@ -17,8 +17,9 @@
 
 namespace MongoDB\Model;
 
-use MongoDB\Exception\BadMethodCallException;
 use ArrayAccess;
+use MongoDB\Exception\BadMethodCallException;
+use function array_key_exists;
 
 /**
  * Collection information model class.
@@ -36,8 +37,6 @@ class CollectionInfo implements ArrayAccess
     private $info;
 
     /**
-     * Constructor.
-     *
      * @param array $info Collection info
      */
     public function __construct(array $info)
@@ -142,7 +141,7 @@ class CollectionInfo implements ArrayAccess
      */
     public function offsetSet($key, $value)
     {
-        throw BadMethodCallException::classIsImmutable(__CLASS__);
+        throw BadMethodCallException::classIsImmutable(self::class);
     }
 
     /**
@@ -154,6 +153,6 @@ class CollectionInfo implements ArrayAccess
      */
     public function offsetUnset($key)
     {
-        throw BadMethodCallException::classIsImmutable(__CLASS__);
+        throw BadMethodCallException::classIsImmutable(self::class);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests;
 
+use InvalidArgumentException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -9,10 +10,23 @@ use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\Compat\PolyfillAssertTrait;
 use PHPUnit\Framework\TestCase as BaseTestCase;
-use InvalidArgumentException;
 use ReflectionClass;
 use stdClass;
 use Traversable;
+use function array_map;
+use function array_values;
+use function call_user_func;
+use function getenv;
+use function hash;
+use function is_array;
+use function is_object;
+use function iterator_to_array;
+use function MongoDB\BSON\fromPHP;
+use function MongoDB\BSON\toJSON;
+use function restore_error_handler;
+use function set_error_handler;
+use function sprintf;
+use const E_USER_DEPRECATED;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -47,7 +61,7 @@ abstract class TestCase extends BaseTestCase
         /* Avoid unsetting fields while we're iterating on the ArrayObject to
          * work around https://bugs.php.net/bug.php?id=70246 */
         foreach ($normalizedActualDocument as $key => $value) {
-            if ( ! $normalizedExpectedDocument->offsetExists($key)) {
+            if (! $normalizedExpectedDocument->offsetExists($key)) {
                 $extraKeys[] = $key;
             }
         }
@@ -57,8 +71,8 @@ abstract class TestCase extends BaseTestCase
         }
 
         $this->assertEquals(
-            \MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP($normalizedExpectedDocument)),
-            \MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP($normalizedActualDocument))
+            toJSON(fromPHP($normalizedExpectedDocument)),
+            toJSON(fromPHP($normalizedActualDocument))
         );
     }
 
@@ -74,8 +88,8 @@ abstract class TestCase extends BaseTestCase
     public function assertSameDocument($expectedDocument, $actualDocument)
     {
         $this->assertEquals(
-            \MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP($this->normalizeBSON($expectedDocument))),
-            \MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP($this->normalizeBSON($actualDocument)))
+            toJSON(fromPHP($this->normalizeBSON($expectedDocument))),
+            toJSON(fromPHP($this->normalizeBSON($actualDocument)))
         );
     }
 
@@ -85,12 +99,12 @@ abstract class TestCase extends BaseTestCase
             $actualDocuments = iterator_to_array($actualDocuments);
         }
 
-        if ( ! is_array($actualDocuments)) {
+        if (! is_array($actualDocuments)) {
             throw new InvalidArgumentException('$actualDocuments is not an array or Traversable');
         }
 
-        $normalizeRootDocuments = function($document) {
-            return \MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP($this->normalizeBSON($document)));
+        $normalizeRootDocuments = function ($document) {
+            return toJSON(fromPHP($this->normalizeBSON($document)));
         };
 
         $this->assertEquals(
@@ -113,7 +127,7 @@ abstract class TestCase extends BaseTestCase
     {
         $errors = [];
 
-        set_error_handler(function($errno, $errstr) use (&$errors) {
+        set_error_handler(function ($errno, $errstr) use (&$errors) {
             $errors[] = $errstr;
         }, E_USER_DEPRECATED);
 
@@ -155,7 +169,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidArrayValues()
     {
-        return [123, 3.14, 'foo', true, new stdClass];
+        return [123, 3.14, 'foo', true, new stdClass()];
     }
 
     /**
@@ -165,7 +179,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidBooleanValues()
     {
-        return [123, 3.14, 'foo', [], new stdClass];
+        return [123, 3.14, 'foo', [], new stdClass()];
     }
 
     /**
@@ -185,7 +199,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidIntegerValues()
     {
-        return [3.14, 'foo', true, [], new stdClass];
+        return [3.14, 'foo', true, [], new stdClass()];
     }
 
     /**
@@ -195,7 +209,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidReadConcernValues()
     {
-        return [123, 3.14, 'foo', true, [], new stdClass, new ReadPreference(ReadPreference::RP_PRIMARY), new WriteConcern(1)];
+        return [123, 3.14, 'foo', true, [], new stdClass(), new ReadPreference(ReadPreference::RP_PRIMARY), new WriteConcern(1)];
     }
 
     /**
@@ -205,7 +219,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidReadPreferenceValues()
     {
-        return [123, 3.14, 'foo', true, [], new stdClass, new ReadConcern, new WriteConcern(1)];
+        return [123, 3.14, 'foo', true, [], new stdClass(), new ReadConcern(), new WriteConcern(1)];
     }
 
     /**
@@ -215,7 +229,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidSessionValues()
     {
-        return [123, 3.14, 'foo', true, [], new stdClass, new ReadConcern, new ReadPreference(ReadPreference::RP_PRIMARY), new WriteConcern(1)];
+        return [123, 3.14, 'foo', true, [], new stdClass(), new ReadConcern(), new ReadPreference(ReadPreference::RP_PRIMARY), new WriteConcern(1)];
     }
 
     /**
@@ -225,7 +239,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidStringValues()
     {
-        return [123, 3.14, true, [], new stdClass];
+        return [123, 3.14, true, [], new stdClass()];
     }
 
     /**
@@ -235,7 +249,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidWriteConcernValues()
     {
-        return [123, 3.14, 'foo', true, [], new stdClass, new ReadConcern, new ReadPreference(ReadPreference::RP_PRIMARY)];
+        return [123, 3.14, 'foo', true, [], new stdClass(), new ReadConcern(), new ReadPreference(ReadPreference::RP_PRIMARY)];
     }
 
     /**
@@ -256,7 +270,9 @@ abstract class TestCase extends BaseTestCase
      */
     protected function wrapValuesForDataProvider(array $values)
     {
-        return array_map(function($value) { return [$value]; }, $values);
+        return array_map(function ($value) {
+            return [$value];
+        }, $values);
     }
 
     /**
@@ -272,16 +288,16 @@ abstract class TestCase extends BaseTestCase
      */
     private function normalizeBSON($bson)
     {
-        if ( ! is_array($bson) && ! is_object($bson)) {
+        if (! is_array($bson) && ! is_object($bson)) {
             throw new InvalidArgumentException('$bson is not an array or object');
         }
 
         if ($bson instanceof BSONArray || (is_array($bson) && $bson === array_values($bson))) {
-            if ( ! $bson instanceof BSONArray) {
+            if (! $bson instanceof BSONArray) {
                 $bson = new BSONArray($bson);
             }
         } else {
-            if ( ! $bson instanceof BSONDocument) {
+            if (! $bson instanceof BSONDocument) {
                 $bson = new BSONDocument((array) $bson);
             }
 

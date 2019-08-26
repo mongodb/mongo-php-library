@@ -17,27 +17,30 @@
 
 namespace MongoDB;
 
+use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
-use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Model\BSONArray;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Model\DatabaseInfoIterator;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListDatabases;
 use MongoDB\Operation\Watch;
+use function is_array;
 
 class Client
 {
     private static $defaultTypeMap = [
-        'array' => \MongoDB\Model\BSONArray::class,
-        'document' => \MongoDB\Model\BSONDocument::class,
-        'root' => \MongoDB\Model\BSONDocument::class,
+        'array' => BSONArray::class,
+        'document' => BSONDocument::class,
+        'root' => BSONDocument::class,
     ];
     private static $wireVersionForReadConcern = 4;
     private static $wireVersionForWritableCommandWriteConcern = 5;
@@ -147,13 +150,13 @@ class Client
      */
     public function dropDatabase($databaseName, array $options = [])
     {
-        if ( ! isset($options['typeMap'])) {
+        if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }
 
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -269,7 +272,7 @@ class Client
      * Start a new client session.
      *
      * @see http://php.net/manual/en/mongodb-driver-manager.startsession.php
-     * @param array  $options      Session options
+     * @param array $options Session options
      * @return Session
      */
     public function startSession(array $options = [])
@@ -288,17 +291,17 @@ class Client
      */
     public function watch(array $pipeline = [], array $options = [])
     {
-        if ( ! isset($options['readPreference'])) {
+        if (! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }
 
         $server = $this->manager->selectServer($options['readPreference']);
 
-        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern)) {
             $options['readConcern'] = $this->readConcern;
         }
 
-        if ( ! isset($options['typeMap'])) {
+        if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }
 

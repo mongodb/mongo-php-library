@@ -4,7 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
+use function version_compare;
 
 class DatabaseCommandFunctionalTest extends FunctionalTestCase
 {
@@ -14,8 +14,8 @@ class DatabaseCommandFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Sessions are not supported');
         }
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new DatabaseCommand(
                     $this->getDatabaseName(),
                     ['ping' => 1],
@@ -24,7 +24,7 @@ class DatabaseCommandFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );

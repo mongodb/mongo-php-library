@@ -130,18 +130,18 @@ class FindTest extends TestCase
 
     public function testSnapshotOptionIsDeprecated()
     {
-        $this->assertDeprecated(function() {
+        $this->assertDeprecated(function () {
             new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['snapshot' => true]);
         });
 
-        $this->assertDeprecated(function() {
+        $this->assertDeprecated(function () {
             new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['snapshot' => false]);
         });
     }
 
     public function testMaxScanOptionIsDeprecated()
     {
-        $this->assertDeprecated(function() {
+        $this->assertDeprecated(function () {
             new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['maxScan' => 1]);
         });
     }

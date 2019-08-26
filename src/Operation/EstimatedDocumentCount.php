@@ -17,11 +17,12 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\Driver\Server;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
+use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
+use function array_intersect_key;
 
 /**
  * Operation for obtaining an estimated count of documents in a collection
@@ -56,9 +57,9 @@ class EstimatedDocumentCount implements Executable, Explainable
      *
      *    Sessions are not supported for server versions < 3.6.
      *
-     * @param string       $databaseName   Database name
-     * @param string       $collectionName Collection name
-     * @param array        $options        Command options
+     * @param string $databaseName   Database name
+     * @param string $collectionName Collection name
+     * @param array  $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($databaseName, $collectionName, array $options = [])

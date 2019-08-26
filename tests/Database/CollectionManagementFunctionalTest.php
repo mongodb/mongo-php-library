@@ -2,9 +2,13 @@
 
 namespace MongoDB\Tests\Database;
 
+use InvalidArgumentException;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Model\CollectionInfo;
-use InvalidArgumentException;
+use MongoDB\Model\CollectionInfoIterator;
+use function call_user_func;
+use function is_callable;
+use function sprintf;
 
 /**
  * Functional tests for collection management methods.
@@ -18,7 +22,7 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
 
         $commandResult = $this->database->createCollection($basicCollectionName);
         $this->assertCommandSucceeded($commandResult);
-        $this->assertCollectionExists($basicCollectionName, function(CollectionInfo $info) use ($that) {
+        $this->assertCollectionExists($basicCollectionName, function (CollectionInfo $info) use ($that) {
             $that->assertFalse($info->isCapped());
         });
 
@@ -31,7 +35,7 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
 
         $commandResult = $this->database->createCollection($cappedCollectionName, $cappedCollectionOptions);
         $this->assertCommandSucceeded($commandResult);
-        $this->assertCollectionExists($cappedCollectionName, function(CollectionInfo $info) use ($that) {
+        $this->assertCollectionExists($cappedCollectionName, function (CollectionInfo $info) use ($that) {
             $that->assertTrue($info->isCapped());
             $that->assertEquals(100, $info->getCappedMax());
             $that->assertEquals(1048576, $info->getCappedSize());
@@ -57,10 +61,10 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
         $this->assertCommandSucceeded($commandResult);
 
         $collections = $this->database->listCollections();
-        $this->assertInstanceOf(\MongoDB\Model\CollectionInfoIterator::class, $collections);
+        $this->assertInstanceOf(CollectionInfoIterator::class, $collections);
 
         foreach ($collections as $collection) {
-            $this->assertInstanceOf(\MongoDB\Model\CollectionInfo::class, $collection);
+            $this->assertInstanceOf(CollectionInfo::class, $collection);
         }
     }
 
@@ -73,10 +77,10 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
         $options = ['filter' => ['name' => $collectionName]];
 
         $collections = $this->database->listCollections($options);
-        $this->assertInstanceOf(\MongoDB\Model\CollectionInfoIterator::class, $collections);
+        $this->assertInstanceOf(CollectionInfoIterator::class, $collections);
 
         foreach ($collections as $collection) {
-            $this->assertInstanceOf(\MongoDB\Model\CollectionInfo::class, $collection);
+            $this->assertInstanceOf(CollectionInfo::class, $collection);
             $this->assertEquals($collectionName, $collection->getName());
         }
     }

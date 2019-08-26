@@ -3,6 +3,9 @@
 namespace MongoDB\Tests\SpecTests;
 
 use stdClass;
+use function basename;
+use function file_get_contents;
+use function glob;
 
 /**
  * Crud spec tests.

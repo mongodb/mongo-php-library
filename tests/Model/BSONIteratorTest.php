@@ -3,11 +3,13 @@
 namespace MongoDB\Tests\Model;
 
 use MongoDB\Exception\UnexpectedValueException;
-use MongoDB\Model\BSONArray;
-use MongoDB\Model\BSONDocument;
 use MongoDB\Model\BSONIterator;
 use MongoDB\Tests\TestCase;
-use stdClass;
+use function array_map;
+use function implode;
+use function iterator_to_array;
+use function MongoDB\BSON\fromPHP;
+use function substr;
 
 class BSONIteratorTest extends TestCase
 {
@@ -38,7 +40,7 @@ class BSONIteratorTest extends TestCase
                 [
                     (object) ['_id' => 1, 'x' => (object) ['foo' => 'bar']],
                     (object) ['_id' => 3, 'x' => (object) ['foo' => 'bar']],
-                ]
+                ],
             ],
             [
                 ['root' => 'array', 'document' => 'array'],
@@ -52,7 +54,7 @@ class BSONIteratorTest extends TestCase
                 [
                     ['_id' => 1, 'x' => ['foo' => 'bar']],
                     ['_id' => 3, 'x' => ['foo' => 'bar']],
-                ]
+                ],
             ],
             [
                 ['root' => 'object', 'document' => 'array'],
@@ -66,7 +68,7 @@ class BSONIteratorTest extends TestCase
                 [
                     (object) ['_id' => 1, 'x' => ['foo' => 'bar']],
                     (object) ['_id' => 3, 'x' => ['foo' => 'bar']],
-                ]
+                ],
             ],
             [
                 ['root' => 'array', 'document' => 'stdClass'],
@@ -80,14 +82,14 @@ class BSONIteratorTest extends TestCase
                 [
                     ['_id' => 1, 'x' => (object) ['foo' => 'bar']],
                     ['_id' => 3, 'x' => (object) ['foo' => 'bar']],
-                ]
+                ],
             ],
         ];
     }
 
     public function testCannotReadLengthFromFirstDocument()
     {
-        $binaryString = substr(\MongoDB\BSON\fromPHP([]), 0, 3);
+        $binaryString = substr(fromPHP([]), 0, 3);
 
         $bsonIt = new BSONIterator($binaryString);
 
@@ -98,7 +100,7 @@ class BSONIteratorTest extends TestCase
 
     public function testCannotReadLengthFromSubsequentDocument()
     {
-        $binaryString = \MongoDB\BSON\fromPHP([]) . substr(\MongoDB\BSON\fromPHP([]), 0, 3);
+        $binaryString = fromPHP([]) . substr(fromPHP([]), 0, 3);
 
         $bsonIt = new BSONIterator($binaryString);
         $bsonIt->rewind();
@@ -110,7 +112,7 @@ class BSONIteratorTest extends TestCase
 
     public function testCannotReadFirstDocument()
     {
-        $binaryString = substr(\MongoDB\BSON\fromPHP([]), 0, 4);
+        $binaryString = substr(fromPHP([]), 0, 4);
 
         $bsonIt = new BSONIterator($binaryString);
 
@@ -121,7 +123,7 @@ class BSONIteratorTest extends TestCase
 
     public function testCannotReadSecondDocument()
     {
-        $binaryString = \MongoDB\BSON\fromPHP([]) . substr(\MongoDB\BSON\fromPHP([]), 0, 4);
+        $binaryString = fromPHP([]) . substr(fromPHP([]), 0, 4);
 
         $bsonIt = new BSONIterator($binaryString);
         $bsonIt->rewind();

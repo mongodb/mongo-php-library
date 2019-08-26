@@ -17,14 +17,19 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\UpdateResult;
 use MongoDB\Driver\BulkWrite as Bulk;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\UpdateResult;
+use function is_array;
+use function is_bool;
+use function is_object;
+use function MongoDB\is_first_key_operator;
+use function MongoDB\server_supports_feature;
 
 /**
  * Operation for the update command.
@@ -92,11 +97,11 @@ class Update implements Executable, Explainable
      */
     public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
-        if ( ! is_array($filter) && ! is_object($filter)) {
+        if (! is_array($filter) && ! is_object($filter)) {
             throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
-        if ( ! is_array($update) && ! is_object($update)) {
+        if (! is_array($update) && ! is_object($update)) {
             throw InvalidArgumentException::invalidType('$update', $filter, 'array or object');
         }
 
@@ -117,11 +122,11 @@ class Update implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
         }
 
-        if ( ! is_bool($options['multi'])) {
+        if (! is_bool($options['multi'])) {
             throw InvalidArgumentException::invalidType('"multi" option', $options['multi'], 'boolean');
         }
 
-        if ($options['multi'] && ! \MongoDB\is_first_key_operator($update)) {
+        if ($options['multi'] && ! is_first_key_operator($update)) {
             throw new InvalidArgumentException('"multi" option cannot be true if $update is a replacement document');
         }
 
@@ -129,7 +134,7 @@ class Update implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
         }
 
-        if ( ! is_bool($options['upsert'])) {
+        if (! is_bool($options['upsert'])) {
             throw InvalidArgumentException::invalidType('"upsert" option', $options['upsert'], 'boolean');
         }
 
@@ -159,11 +164,11 @@ class Update implements Executable, Explainable
      */
     public function execute(Server $server)
     {
-        if (isset($this->options['arrayFilters']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForArrayFilters)) {
+        if (isset($this->options['arrayFilters']) && ! server_supports_feature($server, self::$wireVersionForArrayFilters)) {
             throw UnsupportedException::arrayFiltersNotSupported();
         }
 
-        if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
+        if (isset($this->options['collation']) && ! server_supports_feature($server, self::$wireVersionForCollation)) {
             throw UnsupportedException::collationNotSupported();
         }
 
@@ -174,9 +179,8 @@ class Update implements Executable, Explainable
 
         $bulkOptions = [];
 
-        if (
-            ! empty($this->options['bypassDocumentValidation']) &&
-            \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
+        if (! empty($this->options['bypassDocumentValidation']) &&
+            server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $bulkOptions['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
@@ -197,9 +201,8 @@ class Update implements Executable, Explainable
             $cmd['writeConcern'] = $this->options['writeConcern'];
         }
 
-        if (
-            ! empty($this->options['bypassDocumentValidation']) &&
-            \MongoDB\server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
+        if (! empty($this->options['bypassDocumentValidation']) &&
+            server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }

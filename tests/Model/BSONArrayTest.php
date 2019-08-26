@@ -6,8 +6,9 @@ use MongoDB\BSON\ObjectId;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\TestCase;
-use stdClass;
 use ReflectionClass;
+use stdClass;
+use function json_encode;
 
 class BSONArrayTest extends TestCase
 {
@@ -25,13 +26,13 @@ class BSONArrayTest extends TestCase
         $array = new BSONArray([
             [
                 'foo',
-                new stdClass,
-                ['bar', new stdClass],
+                new stdClass(),
+                ['bar', new stdClass()],
             ],
             new BSONArray([
                 'foo',
-                new stdClass,
-                ['bar', new stdClass],
+                new stdClass(),
+                ['bar', new stdClass()],
             ]),
         ]);
         $arrayClone = clone $array;
@@ -50,8 +51,8 @@ class BSONArrayTest extends TestCase
         $this->assertFalse((new ReflectionClass(UncloneableObject::class))->isCloneable());
 
         $array = new BSONArray([
-            [new UncloneableObject],
-            new BSONArray([new UncloneableObject]),
+            [new UncloneableObject()],
+            new BSONArray([new UncloneableObject()]),
         ]);
         $arrayClone = clone $array;
 
@@ -66,8 +67,8 @@ class BSONArrayTest extends TestCase
         /* Note: this test does not check that the BSON type itself is cloned,
          * as that is not yet supported in the driver (see: PHPC-1230). */
         $array = new BSONArray([
-            [new ObjectId],
-            new BSONArray([new ObjectId]),
+            [new ObjectId()],
+            new BSONArray([new ObjectId()]),
         ]);
         $arrayClone = clone $array;
 
@@ -81,7 +82,7 @@ class BSONArrayTest extends TestCase
             'foo',
             new BSONArray(['foo' => 1, 'bar' => 2, 'baz' => 3]),
             new BSONDocument(['foo' => 1, 'bar' => 2, 'baz' => 3]),
-            new BSONArray([new BSONArray([new BSONArray])]),
+            new BSONArray([new BSONArray([new BSONArray()])]),
         ]);
 
         $expectedJson = '["foo",[1,2,3],{"foo":1,"bar":2,"baz":3},[[[]]]]';
@@ -103,7 +104,7 @@ class BSONArrayTest extends TestCase
         $data = ['foo', 'bar'];
 
         $array = BSONArray::__set_state($data);
-        $this->assertInstanceOf(\MongoDB\Model\BSONArray::class, $array);
+        $this->assertInstanceOf(BSONArray::class, $array);
         $this->assertSame($data, $array->getArrayCopy());
     }
 }

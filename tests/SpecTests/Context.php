@@ -2,12 +2,16 @@
 
 namespace MongoDB\Tests\SpecTests;
 
+use LogicException;
 use MongoDB\Client;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
-use LogicException;
 use stdClass;
+use function array_diff_key;
+use function array_keys;
+use function implode;
+use function mt_rand;
 
 /**
  * Execution context for spec tests.
@@ -85,7 +89,7 @@ final class Context
 
         // TODO: Remove this once retryWrites=true by default (see: PHPC-1324)
         $clientOptions['retryWrites'] = true;
-        
+
         if (isset($test->outcome->collection->name)) {
             $o->outcomeCollectionName = $test->outcome->collection->name;
         }
@@ -153,33 +157,33 @@ final class Context
      */
     public function prepareOptions(array $options)
     {
-        if (isset($options['readConcern']) && !($options['readConcern'] instanceof ReadConcern)) {
+        if (isset($options['readConcern']) && ! ($options['readConcern'] instanceof ReadConcern)) {
             $readConcern = (array) $options['readConcern'];
             $diff = array_diff_key($readConcern, ['level' => 1]);
 
-            if (!empty($diff)) {
+            if (! empty($diff)) {
                 throw new LogicException('Unsupported readConcern args: ' . implode(',', array_keys($diff)));
             }
 
             $options['readConcern'] = new ReadConcern($readConcern['level']);
         }
 
-        if (isset($options['readPreference']) && !($options['readPreference'] instanceof ReadPreference)) {
+        if (isset($options['readPreference']) && ! ($options['readPreference'] instanceof ReadPreference)) {
             $readPreference = (array) $options['readPreference'];
             $diff = array_diff_key($readPreference, ['mode' => 1]);
 
-            if (!empty($diff)) {
+            if (! empty($diff)) {
                 throw new LogicException('Unsupported readPreference args: ' . implode(',', array_keys($diff)));
             }
 
             $options['readPreference'] = new ReadPreference($readPreference['mode']);
         }
 
-        if (isset($options['writeConcern']) && !($options['writeConcern'] instanceof writeConcern)) {
+        if (isset($options['writeConcern']) && ! ($options['writeConcern'] instanceof WriteConcern)) {
             $writeConcern = (array) $options['writeConcern'];
             $diff = array_diff_key($writeConcern, ['w' => 1, 'wtimeout' => 1, 'j' => 1]);
 
-            if (!empty($diff)) {
+            if (! empty($diff)) {
                 throw new LogicException('Unsupported writeConcern args: ' . implode(',', array_keys($diff)));
             }
 
@@ -205,7 +209,7 @@ final class Context
      */
     public function replaceArgumentSessionPlaceholder(array &$args)
     {
-        if (!isset($args['session'])) {
+        if (! isset($args['session'])) {
             return;
         }
 
@@ -233,7 +237,7 @@ final class Context
      */
     public function replaceCommandSessionPlaceholder(stdClass $command)
     {
-        if (!isset($command->lsid)) {
+        if (! isset($command->lsid)) {
             return;
         }
 

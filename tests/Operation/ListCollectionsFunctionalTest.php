@@ -2,11 +2,13 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Model\CollectionInfo;
+use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListCollections;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
+use function version_compare;
 
 class ListCollectionsFunctionalTest extends FunctionalTestCase
 {
@@ -24,12 +26,12 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
         $operation = new ListCollections($this->getDatabaseName(), ['filter' => ['name' => $this->getCollectionName()]]);
         $collections = $operation->execute($server);
 
-        $this->assertInstanceOf(\MongoDB\Model\CollectionInfoIterator::class, $collections);
+        $this->assertInstanceOf(CollectionInfoIterator::class, $collections);
 
         $this->assertCount(1, $collections);
 
         foreach ($collections as $collection) {
-            $this->assertInstanceOf(\MongoDB\Model\CollectionInfo::class, $collection);
+            $this->assertInstanceOf(CollectionInfo::class, $collection);
             $this->assertEquals($this->getCollectionName(), $collection->getName());
         }
     }
@@ -49,10 +51,10 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
         $operation = new ListCollections($this->getDatabaseName(), ['filter' => ['name' => $this->getCollectionName()]]);
         $collections = $operation->execute($server);
 
-        $this->assertInstanceOf(\MongoDB\Model\CollectionInfoIterator::class, $collections);
+        $this->assertInstanceOf(CollectionInfoIterator::class, $collections);
 
         foreach ($collections as $collection) {
-            $this->assertInstanceOf(\MongoDB\Model\CollectionInfo::class, $collection);
+            $this->assertInstanceOf(CollectionInfo::class, $collection);
             $this->assertArrayHasKey('readOnly', $collection['info']);
             $this->assertEquals(['v' => 2, 'key' => ['_id' => 1], 'name' => '_id_', 'ns' => $this->getNamespace()], $collection['idIndex']);
         }
@@ -77,8 +79,8 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Sessions are not supported');
         }
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new ListCollections(
                     $this->getDatabaseName(),
                     ['session' => $this->createSession()]
@@ -86,7 +88,7 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );

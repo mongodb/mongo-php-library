@@ -18,13 +18,22 @@
 namespace MongoDB;
 
 use MongoDB\BSON\Serializable;
-use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\Server;
-use MongoDB\Driver\WriteConcern;
+use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
-use ReflectionException;
-use stdClass;
 use ReflectionClass;
+use ReflectionException;
+use function end;
+use function get_object_vars;
+use function in_array;
+use function is_array;
+use function is_object;
+use function is_string;
+use function key;
+use function MongoDB\BSON\fromPHP;
+use function MongoDB\BSON\toPHP;
+use function reset;
+use function substr;
 
 /**
  * Applies a type map to a document.
@@ -41,11 +50,11 @@ use ReflectionClass;
  */
 function apply_type_map_to_document($document, array $typeMap)
 {
-    if ( ! is_array($document) && ! is_object($document)) {
+    if (! is_array($document) && ! is_object($document)) {
         throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
     }
 
-    return \MongoDB\BSON\toPHP(\MongoDB\BSON\fromPHP($document), $typeMap);
+    return toPHP(fromPHP($document), $typeMap);
 }
 
 /**
@@ -67,7 +76,7 @@ function generate_index_name($document)
         $document = get_object_vars($document);
     }
 
-    if ( ! is_array($document)) {
+    if (! is_array($document)) {
         throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
     }
 
@@ -100,14 +109,14 @@ function is_first_key_operator($document)
         $document = get_object_vars($document);
     }
 
-    if ( ! is_array($document)) {
+    if (! is_array($document)) {
         throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
     }
 
     reset($document);
     $firstKey = (string) key($document);
 
-    return (isset($firstKey[0]) && $firstKey[0] === '$');
+    return isset($firstKey[0]) && $firstKey[0] === '$';
 }
 
 /**
@@ -119,7 +128,7 @@ function is_first_key_operator($document)
  */
 function is_in_transaction(array $options)
 {
-    if (isset($options['session']) && $options['session'] instanceof \MongoDB\Driver\Session && $options['session']->isInTransaction()) {
+    if (isset($options['session']) && $options['session'] instanceof Session && $options['session']->isInTransaction()) {
         return true;
     }
 
@@ -162,7 +171,7 @@ function is_last_pipeline_operator_write(array $pipeline)
  */
 function is_mapreduce_output_inline($out)
 {
-    if ( ! is_array($out) && ! is_object($out)) {
+    if (! is_array($out) && ! is_object($out)) {
         return false;
     }
 
@@ -174,7 +183,7 @@ function is_mapreduce_output_inline($out)
         $out = get_object_vars($out);
     }
 
-    if ( ! is_array($out)) {
+    if (! is_array($out)) {
         throw InvalidArgumentException::invalidType('$out', $out, 'array or object');
     }
 
@@ -197,18 +206,20 @@ function server_supports_feature(Server $server, $feature)
     $maxWireVersion = isset($info['maxWireVersion']) ? (integer) $info['maxWireVersion'] : 0;
     $minWireVersion = isset($info['minWireVersion']) ? (integer) $info['minWireVersion'] : 0;
 
-    return ($minWireVersion <= $feature && $maxWireVersion >= $feature);
+    return $minWireVersion <= $feature && $maxWireVersion >= $feature;
 }
 
-function is_string_array($input) {
-    if (!is_array($input)){
+function is_string_array($input)
+{
+    if (! is_array($input)) {
         return false;
     }
-    foreach($input as $item) {
-        if (!is_string($item)) {
+    foreach ($input as $item) {
+        if (! is_string($item)) {
             return false;
         }
     }
+
     return true;
 }
 
@@ -223,19 +234,21 @@ function is_string_array($input) {
  * @return mixed
  * @throws ReflectionException
  */
-function recursive_copy($element) {
+function recursive_copy($element)
+{
     if (is_array($element)) {
         foreach ($element as $key => $value) {
             $element[$key] = recursive_copy($value);
         }
+
         return $element;
     }
 
-    if ( ! is_object($element)) {
+    if (! is_object($element)) {
         return $element;
     }
 
-    if ( ! (new ReflectionClass($element))->isCloneable()) {
+    if (! (new ReflectionClass($element))->isCloneable()) {
         return $element;
     }
 

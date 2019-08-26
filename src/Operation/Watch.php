@@ -17,24 +17,30 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\ChangeStream;
 use MongoDB\BSON\TimestampInterface;
-use MongoDB\Model\ChangeStreamIterator;
-use MongoDB\Driver\Command;
+use MongoDB\ChangeStream;
 use MongoDB\Driver\Cursor;
+use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Manager;
-use MongoDB\Driver\ReadConcern;
+use MongoDB\Driver\Monitoring\CommandFailedEvent;
+use MongoDB\Driver\Monitoring\CommandStartedEvent;
+use MongoDB\Driver\Monitoring\CommandSubscriber;
+use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
-use MongoDB\Driver\Session;
-use MongoDB\Driver\Exception\RuntimeException;
-use MongoDB\Driver\Monitoring\CommandFailedEvent;
-use MongoDB\Driver\Monitoring\CommandSubscriber;
-use MongoDB\Driver\Monitoring\CommandStartedEvent;
-use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Model\ChangeStreamIterator;
+use function array_intersect_key;
+use function array_unshift;
+use function count;
+use function is_array;
+use function is_object;
+use function is_string;
+use function MongoDB\Driver\Monitoring\addSubscriber;
+use function MongoDB\Driver\Monitoring\removeSubscriber;
+use function MongoDB\server_supports_feature;
 
 /**
  * Operation for creating a change stream with the aggregate command.
@@ -131,11 +137,11 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      * for the collection name. A cluster-level change stream may be created by
      * specifying null for both the database and collection name.
      *
-     * @param Manager        $manager        Manager instance from the driver
-     * @param string|null    $databaseName   Database name
-     * @param string|null    $collectionName Collection name
-     * @param array          $pipeline       List of pipeline operations
-     * @param array          $options        Command options
+     * @param Manager     $manager        Manager instance from the driver
+     * @param string|null $databaseName   Database name
+     * @param string|null $collectionName Collection name
+     * @param array       $pipeline       List of pipeline operations
+     * @param array       $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct(Manager $manager, $databaseName, $collectionName, array $pipeline, array $options = [])
@@ -170,7 +176,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
          * ("implicit from the user's perspective" per PHPLIB-342). Since this
          * is filling in for an implicit session, we default "causalConsistency"
          * to false. */
-        if ( ! isset($options['session'])) {
+        if (! isset($options['session'])) {
             try {
                 $options['session'] = $manager->startSession(['causalConsistency' => false]);
             } catch (RuntimeException $e) {
@@ -221,7 +227,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
 
         $reply = $event->getReply();
 
-        if ( ! isset($reply->cursor->firstBatch) || ! is_array($reply->cursor->firstBatch)) {
+        if (! isset($reply->cursor->firstBatch) || ! is_array($reply->cursor->firstBatch)) {
             throw new UnexpectedValueException('aggregate command did not return a "cursor.firstBatch" array');
         }
 
@@ -250,7 +256,9 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
     {
         return new ChangeStream(
             $this->createChangeStreamIterator($server),
-            function($resumeToken, $hasAdvanced) { return $this->resume($resumeToken, $hasAdvanced); }
+            function ($resumeToken, $hasAdvanced) {
+                return $this->resume($resumeToken, $hasAdvanced);
+            }
         );
     }
 
@@ -296,12 +304,12 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      */
     private function executeAggregate(Server $server)
     {
-        \MongoDB\Driver\Monitoring\addSubscriber($this);
+        addSubscriber($this);
 
         try {
             return $this->aggregate->execute($server);
         } finally {
-            \MongoDB\Driver\Monitoring\removeSubscriber($this);
+            removeSubscriber($this);
         }
     }
 
@@ -348,7 +356,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         // Select a new server using the original read preference
         $server = $this->manager->selectServer($this->aggregateOptions['readPreference']);
 
-        $resumeOption = isset($this->changeStreamOptions['startAfter']) && !$hasAdvanced ? 'startAfter' : 'resumeAfter';
+        $resumeOption = isset($this->changeStreamOptions['startAfter']) && ! $hasAdvanced ? 'startAfter' : 'resumeAfter';
 
         unset($this->changeStreamOptions['resumeAfter']);
         unset($this->changeStreamOptions['startAfter']);
@@ -395,7 +403,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             return false;
         }
 
-        if ( ! \MongoDB\server_supports_feature($server, self::$wireVersionForStartAtOperationTime)) {
+        if (! server_supports_feature($server, self::$wireVersionForStartAtOperationTime)) {
             return false;
         }
 

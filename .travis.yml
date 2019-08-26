@@ -25,6 +25,20 @@ jobs:
 
     - stage: Smoke Testing
       php: "7.3"
+      env:
+        - CHECKS=phpunit
+    - stage: Smoke Testing
+      php: "7.1"
+      before_install: []
+      before_script:
+        - pecl install -f mongodb-${DRIVER_VERSION}
+        - composer require --no-update doctrine/coding-standard=^6.0
+        - composer install --no-interaction --no-progress --no-suggest ${COMPOSER_OPTIONS}
+      script: vendor/bin/phpcs
+      after_script: []
+      after_failure: []
+      env:
+        - CHECKS=phpcs
 
     # Test remaining supported PHP versions
     - stage: Test

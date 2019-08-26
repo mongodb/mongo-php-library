@@ -2,13 +2,14 @@
 
 namespace MongoDB\Tests\Model;
 
+use ArrayObject;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\TestCase;
-use ArrayObject;
-use stdClass;
 use ReflectionClass;
+use stdClass;
+use function json_encode;
 
 class BSONDocumentTest extends TestCase
 {
@@ -33,13 +34,13 @@ class BSONDocumentTest extends TestCase
         $document = new BSONDocument([
             'a' => [
                 'a' => 'foo',
-                'b' => new stdClass,
-                'c' => ['bar', new stdClass],
+                'b' => new stdClass(),
+                'c' => ['bar', new stdClass()],
             ],
             'b' => new BSONDocument([
                 'a' => 'foo',
-                'b' => new stdClass,
-                'c' => ['bar', new stdClass],
+                'b' => new stdClass(),
+                'c' => ['bar', new stdClass()],
             ]),
         ]);
         $documentClone = clone $document;
@@ -58,8 +59,8 @@ class BSONDocumentTest extends TestCase
         $this->assertFalse((new ReflectionClass(UncloneableObject::class))->isCloneable());
 
         $document = new BSONDocument([
-            'a' => ['a' => new UncloneableObject],
-            'b' => new BSONDocument(['a' => new UncloneableObject]),
+            'a' => ['a' => new UncloneableObject()],
+            'b' => new BSONDocument(['a' => new UncloneableObject()]),
         ]);
         $documentClone = clone $document;
 
@@ -74,8 +75,8 @@ class BSONDocumentTest extends TestCase
         /* Note: this test does not check that the BSON type itself is cloned,
          * as that is not yet supported in the driver (see: PHPC-1230). */
         $document = new BSONDocument([
-            'a' => ['a' => new ObjectId],
-            'b' => new BSONDocument(['a' => new ObjectId]),
+            'a' => ['a' => new ObjectId()],
+            'b' => new BSONDocument(['a' => new ObjectId()]),
         ]);
         $documentClone = clone $document;
 
@@ -89,7 +90,7 @@ class BSONDocumentTest extends TestCase
             'foo' => 'bar',
             'array' => new BSONArray([1, 2, 3]),
             'object' => new BSONDocument([1, 2, 3]),
-            'nested' => new BSONDocument([new BSONDocument([new BSONDocument])]),
+            'nested' => new BSONDocument([new BSONDocument([new BSONDocument()])]),
         ]);
 
         $expectedJson = '{"foo":"bar","array":[1,2,3],"object":{"0":1,"1":2,"2":3},"nested":{"0":{"0":{}}}}';
@@ -111,7 +112,7 @@ class BSONDocumentTest extends TestCase
         $data = ['foo' => 'bar'];
 
         $document = BSONDocument::__set_state($data);
-        $this->assertInstanceOf(\MongoDB\Model\BSONDocument::class, $document);
+        $this->assertInstanceOf(BSONDocument::class, $document);
         $this->assertSame($data, $document->getArrayCopy());
     }
 }

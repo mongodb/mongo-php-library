@@ -2,22 +2,22 @@
 
 namespace MongoDB\Tests\Operation;
 
+use IteratorIterator;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
-use Exception;
-use stdClass;
+use function microtime;
+use function version_compare;
 
 class FindFunctionalTest extends FunctionalTestCase
 {
     public function testDefaultReadConcernIsOmitted()
     {
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new Find(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -27,7 +27,7 @@ class FindFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
             }
         );
@@ -35,7 +35,7 @@ class FindFunctionalTest extends FunctionalTestCase
 
     public function testHintOption()
     {
-        $bulkWrite = new BulkWrite;
+        $bulkWrite = new BulkWrite();
         $bulkWrite->insert(['_id' => 1, 'x' => 1]);
         $bulkWrite->insert(['_id' => 2, 'x' => 2]);
         $bulkWrite->insert(['_id' => 3, 'y' => 3]);
@@ -90,8 +90,8 @@ class FindFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Sessions are not supported');
         }
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new Find(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -101,7 +101,7 @@ class FindFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
@@ -161,7 +161,7 @@ class FindFunctionalTest extends FunctionalTestCase
         /* Calculate an approximate pivot to use for time assertions. We will
          * assert that the duration of blocking responses is greater than this
          * value, and vice versa. */
-        $pivot = ($maxAwaitTimeMS * 0.001) * 0.9;
+        $pivot = $maxAwaitTimeMS * 0.001 * 0.9;
 
         // Create a capped collection.
         $databaseName = $this->getDatabaseName();
@@ -183,7 +183,7 @@ class FindFunctionalTest extends FunctionalTestCase
 
         $operation = new Find($databaseName, $cappedCollectionName, [], ['cursorType' => Find::TAILABLE_AWAIT, 'maxAwaitTimeMS' => $maxAwaitTimeMS]);
         $cursor = $operation->execute($this->getPrimaryServer());
-        $it = new \IteratorIterator($cursor);
+        $it = new IteratorIterator($cursor);
 
         /* The initial query includes the one and only document in its result
          * batch, so we should not expect a delay. */

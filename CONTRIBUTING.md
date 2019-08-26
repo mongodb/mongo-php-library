@@ -35,6 +35,31 @@ test suite. In addition to various PHPUnit options, it defines required
 this configuration by creating your own `phpunit.xml` file based on the
 `phpunit.xml.dist` file we provide.
 
+## Checking coding standards
+
+The library's code is checked using [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer),
+which is installed as a development dependency by Composer. Due to the PHP
+requirement, the base version of the coding standard is not installed and needs
+to be added manually if you plan to contributing code:
+
+```
+$ composer require --dev doctrine/coding-standard=^6.0
+```
+
+Once the coding standard has been installed, you can check the code for style
+errors:
+
+
+```
+$ vendor/bin/phpcs
+```
+
+To automatically fix all fixable errors, use the `phpcbf` binary:
+
+```
+$ vendor/bin/phpcbf
+```
+
 ## Documentation
 
 Documentation for the library lives in the `docs/` directory and is built with

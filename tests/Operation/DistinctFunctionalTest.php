@@ -5,14 +5,17 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Operation\Distinct;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
+use function is_scalar;
+use function json_encode;
+use function usort;
+use function version_compare;
 
 class DistinctFunctionalTest extends FunctionalTestCase
 {
     public function testDefaultReadConcernIsOmitted()
     {
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new Distinct(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -23,7 +26,7 @@ class DistinctFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
             }
         );
@@ -35,8 +38,8 @@ class DistinctFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Sessions are not supported');
         }
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new Distinct(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -47,7 +50,7 @@ class DistinctFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
@@ -62,9 +65,7 @@ class DistinctFunctionalTest extends FunctionalTestCase
         $bulkWrite->insert([
             'x' => (object) ['foo' => 'bar'],
         ]);
-        $bulkWrite->insert([
-            'x' => 4,
-        ]);
+        $bulkWrite->insert(['x' => 4]);
         $bulkWrite->insert([
             'x' => (object) ['foo' => ['foo' => 'bar']],
         ]);

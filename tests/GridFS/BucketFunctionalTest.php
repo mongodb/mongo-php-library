@@ -3,16 +3,32 @@
 namespace MongoDB\Tests\GridFS;
 
 use MongoDB\BSON\Binary;
+use MongoDB\Collection;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Bucket;
 use MongoDB\GridFS\Exception\FileNotFoundException;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\ListIndexes;
 use PHPUnit\Framework\Error\Warning;
+use function array_merge;
+use function call_user_func;
+use function current;
+use function fclose;
+use function fread;
+use function fwrite;
+use function hash_init;
+use function is_callable;
+use function min;
+use function sprintf;
+use function str_repeat;
+use function stream_get_contents;
+use function strlen;
+use function substr;
 
 /**
  * Functional tests for the Bucket class.
@@ -137,7 +153,8 @@ class BucketFunctionalTest extends FunctionalTestCase
         try {
             $this->bucket->delete($id);
             $this->fail('FileNotFoundException was not thrown');
-        } catch (FileNotFoundException $e) {}
+        } catch (FileNotFoundException $e) {
+        }
 
         $this->assertCollectionCount($this->chunksCollection, 0);
     }
@@ -323,7 +340,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $cursor = $this->bucket->find();
         $fileDocument = current($cursor->toArray());
 
-        $this->assertInstanceOf(\MongoDB\Model\BSONDocument::class, $fileDocument);
+        $this->assertInstanceOf(BSONDocument::class, $fileDocument);
     }
 
     public function testFindOne()
@@ -344,7 +361,7 @@ class BucketFunctionalTest extends FunctionalTestCase
             ]
         );
 
-        $this->assertInstanceOf(\MongoDB\Model\BSONDocument::class, $fileDocument);
+        $this->assertInstanceOf(BSONDocument::class, $fileDocument);
         $this->assertSameDocument(['filename' => 'b', 'length' => 6], $fileDocument);
     }
 
@@ -364,7 +381,7 @@ class BucketFunctionalTest extends FunctionalTestCase
     {
         $chunksCollection = $this->bucket->getChunksCollection();
 
-        $this->assertInstanceOf(\MongoDB\Collection::class, $chunksCollection);
+        $this->assertInstanceOf(Collection::class, $chunksCollection);
         $this->assertEquals('fs.chunks', $chunksCollection->getCollectionName());
     }
 
@@ -392,8 +409,8 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $fileDocument = $this->bucket->getFileDocumentForStream($stream);
 
-        $this->assertInstanceOf(\MongoDB\Model\BSONDocument::class, $fileDocument);
-        $this->assertInstanceOf(\MongoDB\Model\BSONDocument::class, $fileDocument['metadata']);
+        $this->assertInstanceOf(BSONDocument::class, $fileDocument);
+        $this->assertInstanceOf(BSONDocument::class, $fileDocument['metadata']);
         $this->assertSame(['foo' => 'bar'], $fileDocument['metadata']->getArrayCopy());
     }
 
@@ -443,7 +460,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $id = $this->bucket->getFileIdForStream($stream);
 
-        $this->assertInstanceOf(\MongoDB\Model\BSONDocument::class, $id);
+        $this->assertInstanceOf(BSONDocument::class, $id);
         $this->assertSame(['x' => 1], $id->getArrayCopy());
     }
 
@@ -475,7 +492,7 @@ class BucketFunctionalTest extends FunctionalTestCase
     {
         $filesCollection = $this->bucket->getFilesCollection();
 
-        $this->assertInstanceOf(\MongoDB\Collection::class, $filesCollection);
+        $this->assertInstanceOf(Collection::class, $filesCollection);
         $this->assertEquals('fs.files', $filesCollection->getCollectionName());
     }
 
@@ -675,7 +692,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->bucket->uploadFromStream('filename', $this->createStream('foo'));
 
         $this->assertIndexExists($this->filesCollection->getCollectionName(), 'filename_1_uploadDate_1');
-        $this->assertIndexExists($this->chunksCollection->getCollectionName(), 'files_id_1_n_1', function(IndexInfo $info) {
+        $this->assertIndexExists($this->chunksCollection->getCollectionName(), 'files_id_1_n_1', function (IndexInfo $info) {
             $this->assertTrue($info->isUnique());
         });
     }

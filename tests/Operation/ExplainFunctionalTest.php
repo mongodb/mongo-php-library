@@ -3,13 +3,12 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
-use MongoDB\Collection;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\CreateCollection;
-use MongoDB\Operation\Distinct;
 use MongoDB\Operation\Delete;
 use MongoDB\Operation\DeleteMany;
 use MongoDB\Operation\DeleteOne;
+use MongoDB\Operation\Distinct;
 use MongoDB\Operation\Explain;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\FindAndModify;
@@ -21,7 +20,7 @@ use MongoDB\Operation\Update;
 use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
+use function version_compare;
 
 class ExplainFunctionalTest extends FunctionalTestCase
 {
@@ -151,7 +150,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         /* Calculate an approximate pivot to use for time assertions. We will
          * assert that the duration of blocking responses is greater than this
          * value, and vice versa. */
-        $pivot = ($maxAwaitTimeMS * 0.001) * 0.9;
+        $pivot = $maxAwaitTimeMS * 0.001 * 0.9;
 
         // Create a capped collection.
         $databaseName = $this->getDatabaseName();
@@ -169,12 +168,12 @@ class ExplainFunctionalTest extends FunctionalTestCase
 
         $operation = new Find($databaseName, $cappedCollectionName, [], ['cursorType' => Find::TAILABLE_AWAIT, 'maxAwaitTimeMS' => $maxAwaitTimeMS]);
 
-        (new CommandObserver)->observe(
-            function() use ($operation) {
+        (new CommandObserver())->observe(
+            function () use ($operation) {
                 $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array', 'document' => 'array']]);
                 $explainOperation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $command = $event['started']->getCommand();
                 $this->assertObjectNotHasAttribute('maxAwaitTimeMS', $command->explain);
                 $this->assertObjectHasAttribute('tailable', $command->explain);
@@ -194,19 +193,18 @@ class ExplainFunctionalTest extends FunctionalTestCase
             ['modifiers' => ['$orderby' => ['_id' => 1]]]
         );
 
-        (new CommandObserver)->observe(
-            function() use ($operation) {
+        (new CommandObserver())->observe(
+            function () use ($operation) {
                 $explainOperation = new Explain($this->getDatabaseName(), $operation, ['typeMap' => ['root' => 'array', 'document' => 'array']]);
                 $explainOperation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $command = $event['started']->getCommand();
                 $this->assertObjectHasAttribute('sort', $command->explain);
                 $this->assertObjectNotHasAttribute('modifiers', $command->explain);
             }
         );
     }
-
 
     /**
      * @dataProvider provideVerbosityInformation
@@ -300,8 +298,8 @@ class ExplainFunctionalTest extends FunctionalTestCase
 
         $this->createFixtures(3);
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new Update(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -313,7 +311,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
                 $explainOperation = new Explain($this->getDatabaseName(), $operation);
                 $result = $explainOperation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectHasAttribute(
                     'bypassDocumentValidation',
                     $event['started']->getCommand()->explain
@@ -331,8 +329,8 @@ class ExplainFunctionalTest extends FunctionalTestCase
 
         $this->createFixtures(3);
 
-        (new CommandObserver)->observe(
-            function() {
+        (new CommandObserver())->observe(
+            function () {
                 $operation = new Update(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -344,7 +342,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
                 $explainOperation = new Explain($this->getDatabaseName(), $operation);
                 $result = $explainOperation->execute($this->getPrimaryServer());
             },
-            function(array $event) {
+            function (array $event) {
                 $this->assertObjectNotHasAttribute(
                     'bypassDocumentValidation',
                     $event['started']->getCommand()->explain

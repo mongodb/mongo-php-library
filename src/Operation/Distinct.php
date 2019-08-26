@@ -18,14 +18,20 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
-use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
+use function current;
+use function is_array;
+use function is_integer;
+use function is_object;
+use function MongoDB\create_field_path_type_map;
+use function MongoDB\server_supports_feature;
 
 /**
  * Operation for the distinct command.
@@ -80,7 +86,7 @@ class Distinct implements Executable, Explainable
      */
     public function __construct($databaseName, $collectionName, $fieldName, $filter = [], array $options = [])
     {
-        if ( ! is_array($filter) && ! is_object($filter)) {
+        if (! is_array($filter) && ! is_object($filter)) {
             throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
@@ -131,11 +137,11 @@ class Distinct implements Executable, Explainable
      */
     public function execute(Server $server)
     {
-        if (isset($this->options['collation']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForCollation)) {
+        if (isset($this->options['collation']) && ! server_supports_feature($server, self::$wireVersionForCollation)) {
             throw UnsupportedException::collationNotSupported();
         }
 
-        if (isset($this->options['readConcern']) && ! \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if (isset($this->options['readConcern']) && ! server_supports_feature($server, self::$wireVersionForReadConcern)) {
             throw UnsupportedException::readConcernNotSupported();
         }
 
@@ -147,12 +153,12 @@ class Distinct implements Executable, Explainable
         $cursor = $server->executeReadCommand($this->databaseName, new Command($this->createCommandDocument()), $this->createOptions());
 
         if (isset($this->options['typeMap'])) {
-            $cursor->setTypeMap(\MongoDB\create_field_path_type_map($this->options['typeMap'], 'values.$'));
+            $cursor->setTypeMap(create_field_path_type_map($this->options['typeMap'], 'values.$'));
         }
 
         $result = current($cursor->toArray());
 
-        if ( ! isset($result->values) || ! is_array($result->values)) {
+        if (! isset($result->values) || ! is_array($result->values)) {
             throw new UnexpectedValueException('distinct command did not return a "values" array');
         }
 
@@ -176,7 +182,7 @@ class Distinct implements Executable, Explainable
             'key' => $this->fieldName,
         ];
 
-        if ( ! empty($this->filter)) {
+        if (! empty($this->filter)) {
             $cmd['query'] = (object) $this->filter;
         }
 

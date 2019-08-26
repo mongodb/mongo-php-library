@@ -6,6 +6,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\CollectionWrapper;
 use MongoDB\GridFS\WritableStream;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function str_repeat;
 
 /**
  * Functional tests for the internal WritableStream class.

@@ -17,10 +17,14 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\Driver\Server;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
+use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+use function is_array;
+use function is_integer;
+use function is_object;
+use function MongoDB\is_first_key_operator;
 
 /**
  * Operation for updating a document with the findAndModify command.
@@ -93,15 +97,15 @@ class FindOneAndUpdate implements Executable, Explainable
      */
     public function __construct($databaseName, $collectionName, $filter, $update, array $options = [])
     {
-        if ( ! is_array($filter) && ! is_object($filter)) {
+        if (! is_array($filter) && ! is_object($filter)) {
             throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
-        if ( ! is_array($update) && ! is_object($update)) {
+        if (! is_array($update) && ! is_object($update)) {
             throw InvalidArgumentException::invalidType('$update', $update, 'array or object');
         }
 
-        if ( ! \MongoDB\is_first_key_operator($update)) {
+        if (! is_first_key_operator($update)) {
             throw new InvalidArgumentException('First key in $update argument is not an update operator');
         }
 
@@ -114,7 +118,7 @@ class FindOneAndUpdate implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
         }
 
-        if ( ! is_integer($options['returnDocument'])) {
+        if (! is_integer($options['returnDocument'])) {
             throw InvalidArgumentException::invalidType('"returnDocument" option', $options['returnDocument'], 'integer');
         }
 

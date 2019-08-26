@@ -19,17 +19,40 @@ namespace MongoDB\GridFS;
 
 use MongoDB\Collection;
 use MongoDB\Driver\Cursor;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\GridFS\Exception\CorruptFileException;
 use MongoDB\GridFS\Exception\FileNotFoundException;
+use MongoDB\Model\BSONArray;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Find;
 use stdClass;
+use function array_intersect_key;
+use function fopen;
+use function get_resource_type;
+use function in_array;
+use function is_array;
+use function is_bool;
+use function is_integer;
+use function is_object;
+use function is_resource;
+use function is_string;
+use function method_exists;
+use function MongoDB\apply_type_map_to_document;
+use function MongoDB\BSON\fromPHP;
+use function MongoDB\BSON\toJSON;
+use function property_exists;
+use function sprintf;
+use function stream_context_create;
+use function stream_copy_to_stream;
+use function stream_get_meta_data;
+use function stream_get_wrappers;
+use function urlencode;
 
 /**
  * Bucket provides a public API for interacting with the GridFS files and chunks
@@ -42,9 +65,9 @@ class Bucket
     private static $defaultBucketName = 'fs';
     private static $defaultChunkSizeBytes = 261120;
     private static $defaultTypeMap = [
-        'array' => \MongoDB\Model\BSONArray::class,
-        'document' => \MongoDB\Model\BSONDocument::class,
-        'root' => \MongoDB\Model\BSONDocument::class,
+        'array' => BSONArray::class,
+        'document' => BSONDocument::class,
+        'root' => BSONDocument::class,
     ];
     private static $streamWrapperProtocol = 'gridfs';
 
@@ -193,7 +216,7 @@ class Bucket
      */
     public function downloadToStream($id, $destination)
     {
-        if ( ! is_resource($destination) || get_resource_type($destination) != "stream") {
+        if (! is_resource($destination) || get_resource_type($destination) != "stream") {
             throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
         }
 
@@ -228,7 +251,7 @@ class Bucket
      */
     public function downloadToStreamByName($filename, $destination, array $options = [])
     {
-        if ( ! is_resource($destination) || get_resource_type($destination) != "stream") {
+        if (! is_resource($destination) || get_resource_type($destination) != "stream") {
             throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
         }
 
@@ -333,7 +356,7 @@ class Bucket
         $file = $this->getRawFileDocumentForStream($stream);
 
         // Filter the raw document through the specified type map
-        return \MongoDB\apply_type_map_to_document($file, $this->typeMap);
+        return apply_type_map_to_document($file, $this->typeMap);
     }
 
     /**
@@ -353,9 +376,9 @@ class Bucket
          * the root type so we can reliably access the ID.
          */
         $typeMap = ['root' => 'stdClass'] + $this->typeMap;
-        $file = \MongoDB\apply_type_map_to_document($file, $typeMap);
+        $file = apply_type_map_to_document($file, $typeMap);
 
-        if ( ! isset($file->_id) && ! property_exists($file, '_id')) {
+        if (! isset($file->_id) && ! property_exists($file, '_id')) {
             throw new CorruptFileException('file._id does not exist');
         }
 
@@ -532,7 +555,7 @@ class Bucket
             ? $updateResult->getMatchedCount() === 1
             : $this->collectionWrapper->findFileById($id) !== null;
 
-        if ( ! $found) {
+        if (! $found) {
             throw FileNotFoundException::byId($id, $this->getFilesNamespace());
         }
     }
@@ -562,7 +585,7 @@ class Bucket
      */
     public function uploadFromStream($filename, $source, array $options = [])
     {
-        if ( ! is_resource($source) || get_resource_type($source) != "stream") {
+        if (! is_resource($source) || get_resource_type($source) != "stream") {
             throw InvalidArgumentException::invalidType('$source', $source, 'resource');
         }
 
@@ -580,10 +603,10 @@ class Bucket
      */
     private function createPathForFile(stdClass $file)
     {
-        if ( ! is_object($file->_id) || method_exists($file->_id, '__toString')) {
+        if (! is_object($file->_id) || method_exists($file->_id, '__toString')) {
             $id = (string) $file->_id;
         } else {
-            $id = \MongoDB\BSON\toJSON(\MongoDB\BSON\fromPHP(['_id' => $file->_id]));
+            $id = toJSON(fromPHP(['_id' => $file->_id]));
         }
 
         return sprintf(
@@ -632,13 +655,13 @@ class Bucket
      */
     private function getRawFileDocumentForStream($stream)
     {
-        if ( ! is_resource($stream) || get_resource_type($stream) != "stream") {
+        if (! is_resource($stream) || get_resource_type($stream) != "stream") {
             throw InvalidArgumentException::invalidType('$stream', $stream, 'resource');
         }
 
         $metadata = stream_get_meta_data($stream);
 
-        if ( ! isset ($metadata['wrapper_data']) || ! $metadata['wrapper_data'] instanceof StreamWrapper) {
+        if (! isset($metadata['wrapper_data']) || ! $metadata['wrapper_data'] instanceof StreamWrapper) {
             throw InvalidArgumentException::invalidType('$stream wrapper data', isset($metadata['wrapper_data']) ? $metadata['wrapper_data'] : null, StreamWrapper::class);
         }
 

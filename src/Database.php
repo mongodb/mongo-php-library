@@ -17,17 +17,18 @@
 
 namespace MongoDB;
 
-use MongoDB\Collection;
 use MongoDB\Driver\Cursor;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\GridFS\Bucket;
+use MongoDB\Model\BSONArray;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\CreateCollection;
@@ -38,13 +39,15 @@ use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\ModifyCollection;
 use MongoDB\Operation\Watch;
 use Traversable;
+use function is_array;
+use function strlen;
 
 class Database
 {
     private static $defaultTypeMap = [
-        'array' => \MongoDB\Model\BSONArray::class,
-        'document' => \MongoDB\Model\BSONDocument::class,
-        'root' => \MongoDB\Model\BSONDocument::class,
+        'array' => BSONArray::class,
+        'document' => BSONDocument::class,
+        'root' => BSONDocument::class,
     ];
     private static $wireVersionForReadConcern = 4;
     private static $wireVersionForWritableCommandWriteConcern = 5;
@@ -175,9 +178,9 @@ class Database
      */
     public function aggregate(array $pipeline, array $options = [])
     {
-        $hasWriteStage = \MongoDB\is_last_pipeline_operator_write($pipeline);
+        $hasWriteStage = is_last_pipeline_operator_write($pipeline);
 
-        if ( ! isset($options['readPreference'])) {
+        if (! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }
 
@@ -192,22 +195,22 @@ class Database
          *
          * A read concern is also not compatible with transactions.
          */
-        if ( ! isset($options['readConcern']) &&
-            \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern) &&
-            ! \MongoDB\is_in_transaction($options) &&
-            ( ! $hasWriteStage || \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcernWithWriteStage))
+        if (! isset($options['readConcern']) &&
+            server_supports_feature($server, self::$wireVersionForReadConcern) &&
+            ! is_in_transaction($options) &&
+            ( ! $hasWriteStage || server_supports_feature($server, self::$wireVersionForReadConcernWithWriteStage))
         ) {
             $options['readConcern'] = $this->readConcern;
         }
 
-        if ( ! isset($options['typeMap'])) {
+        if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }
 
         if ($hasWriteStage &&
             ! isset($options['writeConcern']) &&
-            \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) &&
-            ! \MongoDB\is_in_transaction($options)) {
+            server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) &&
+            ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -228,11 +231,11 @@ class Database
      */
     public function command($command, array $options = [])
     {
-        if ( ! isset($options['readPreference'])) {
+        if (! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }
 
-        if ( ! isset($options['typeMap'])) {
+        if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }
 
@@ -255,13 +258,13 @@ class Database
      */
     public function createCollection($collectionName, array $options = [])
     {
-        if ( ! isset($options['typeMap'])) {
+        if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }
 
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -282,13 +285,13 @@ class Database
      */
     public function drop(array $options = [])
     {
-        if ( ! isset($options['typeMap'])) {
+        if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }
 
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -310,13 +313,13 @@ class Database
      */
     public function dropCollection($collectionName, array $options = [])
     {
-        if ( ! isset($options['typeMap'])) {
+        if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }
 
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -417,13 +420,13 @@ class Database
      */
     public function modifyCollection($collectionName, array $collectionOptions, array $options = [])
     {
-        if ( ! isset($options['typeMap'])) {
+        if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }
 
         $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
-        if ( ! isset($options['writeConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -484,17 +487,17 @@ class Database
      */
     public function watch(array $pipeline = [], array $options = [])
     {
-        if ( ! isset($options['readPreference'])) {
+        if (! isset($options['readPreference'])) {
             $options['readPreference'] = $this->readPreference;
         }
 
         $server = $this->manager->selectServer($options['readPreference']);
 
-        if ( ! isset($options['readConcern']) && \MongoDB\server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern)) {
             $options['readConcern'] = $this->readConcern;
         }
 
-        if ( ! isset($options['typeMap'])) {
+        if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }
 

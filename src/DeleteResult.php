@@ -29,8 +29,6 @@ class DeleteResult
     private $isAcknowledged;
 
     /**
-     * Constructor.
-     *
      * @param WriteResult $writeResult
      */
     public function __construct(WriteResult $writeResult)

@@ -2,14 +2,17 @@
 
 namespace MongoDB\Tests\SpecTests;
 
-use MongoDB\Driver\Monitoring\CommandFailedEvent;
-use MongoDB\Driver\Monitoring\CommandStartedEvent;
-use MongoDB\Driver\Monitoring\CommandSucceededEvent;
-use MongoDB\Driver\Monitoring\CommandSubscriber;
 use ArrayIterator;
 use LogicException;
+use MongoDB\Driver\Monitoring\CommandFailedEvent;
+use MongoDB\Driver\Monitoring\CommandStartedEvent;
+use MongoDB\Driver\Monitoring\CommandSubscriber;
+use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MultipleIterator;
-use stdClass;
+use function count;
+use function key;
+use function MongoDB\Driver\Monitoring\addSubscriber;
+use function MongoDB\Driver\Monitoring\removeSubscriber;
 
 /**
  * Spec test CommandStartedEvent expectations.
@@ -131,7 +134,7 @@ class CommandExpectations implements CommandSubscriber
      */
     public function startMonitoring()
     {
-        \MongoDB\Driver\Monitoring\addSubscriber($this);
+        addSubscriber($this);
     }
 
     /**
@@ -139,7 +142,7 @@ class CommandExpectations implements CommandSubscriber
      */
     public function stopMonitoring()
     {
-        \MongoDB\Driver\Monitoring\removeSubscriber($this);
+        removeSubscriber($this);
     }
 
     /**

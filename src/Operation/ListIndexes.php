@@ -17,16 +17,16 @@
 
 namespace MongoDB\Operation;
 
+use EmptyIterator;
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Query;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
-use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInfoIteratorIterator;
-use EmptyIterator;
+use function is_integer;
 
 /**
  * Operation for the listIndexes command.
@@ -133,7 +133,7 @@ class ListIndexes implements Executable
              * empty iterator instead of throwing.
              */
             if ($e->getCode() === self::$errorCodeNamespaceNotFound || $e->getCode() === self::$errorCodeDatabaseNotFound) {
-                return new IndexInfoIteratorIterator(new EmptyIterator);
+                return new IndexInfoIteratorIterator(new EmptyIterator());
             }
 
             throw $e;

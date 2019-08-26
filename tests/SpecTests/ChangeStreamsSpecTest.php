@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\SpecTests;
 
 use MongoDB\ChangeStream;
-use MongoDB\Client;
 use MongoDB\Driver\Exception\Exception;
 use MongoDB\Model\BSONDocument;
 use ArrayIterator;

@@ -4,13 +4,10 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
-use Exception;
-use stdClass;
 
 class FindFunctionalTest extends FunctionalTestCase
 {

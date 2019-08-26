@@ -28,7 +28,6 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\GridFS\Exception\CorruptFileException;
 use MongoDB\GridFS\Exception\FileNotFoundException;
-use MongoDB\Operation\Find;
 use stdClass;
 
 /**

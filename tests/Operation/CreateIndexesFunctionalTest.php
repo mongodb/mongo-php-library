@@ -5,11 +5,9 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\CreateIndexes;
-use MongoDB\Operation\DropIndexes;
 use MongoDB\Operation\ListIndexes;
 use MongoDB\Tests\CommandObserver;
 use InvalidArgumentException;
-use stdClass;
 
 class CreateIndexesFunctionalTest extends FunctionalTestCase
 {

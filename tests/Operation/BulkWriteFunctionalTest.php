@@ -11,7 +11,6 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\BulkWrite;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 class BulkWriteFunctionalTest extends FunctionalTestCase

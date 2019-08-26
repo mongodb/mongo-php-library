@@ -23,7 +23,6 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Model\BSONDocument;
 
 /**
  * Operation for the explain command.

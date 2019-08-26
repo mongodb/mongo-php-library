@@ -8,7 +8,6 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\FindAndModify;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 
 class FindAndModifyFunctionalTest extends FunctionalTestCase
 {

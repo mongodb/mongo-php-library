@@ -9,7 +9,6 @@ use MongoDB\Driver\Monitoring\CommandSubscriber;
 use ArrayIterator;
 use LogicException;
 use MultipleIterator;
-use stdClass;
 
 /**
  * Spec test CommandStartedEvent expectations.

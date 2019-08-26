@@ -3,11 +3,8 @@
 namespace MongoDB\Tests\Model;
 
 use MongoDB\Exception\UnexpectedValueException;
-use MongoDB\Model\BSONArray;
-use MongoDB\Model\BSONDocument;
 use MongoDB\Model\BSONIterator;
 use MongoDB\Tests\TestCase;
-use stdClass;
 
 class BSONIteratorTest extends TestCase
 {

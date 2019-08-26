@@ -9,7 +9,6 @@ use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 class InsertOneFunctionalTest extends FunctionalTestCase

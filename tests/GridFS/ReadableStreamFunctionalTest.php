@@ -8,7 +8,6 @@ use MongoDB\GridFS\CollectionWrapper;
 use MongoDB\GridFS\ReadableStream;
 use MongoDB\GridFS\Exception\CorruptFileException;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 /**

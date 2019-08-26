@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\SpecTests;
 
-use LogicException;
 use MongoDB\Driver\Manager;
 use stdClass;
 

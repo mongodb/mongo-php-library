@@ -10,7 +10,6 @@ use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Tests\CommandObserver;
 use ArrayIterator;
-use Exception;
 use stdClass;
 
 class AggregateFunctionalTest extends FunctionalTestCase

@@ -5,7 +5,6 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Operation\Distinct;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 
 class DistinctFunctionalTest extends FunctionalTestCase
 {

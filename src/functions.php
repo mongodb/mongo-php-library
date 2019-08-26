@@ -18,12 +18,9 @@
 namespace MongoDB;
 
 use MongoDB\BSON\Serializable;
-use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\Server;
-use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use ReflectionException;
-use stdClass;
 use ReflectionClass;
 
 /**

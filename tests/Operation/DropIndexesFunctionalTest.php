@@ -8,7 +8,6 @@ use MongoDB\Operation\DropIndexes;
 use MongoDB\Operation\ListIndexes;
 use MongoDB\Tests\CommandObserver;
 use InvalidArgumentException;
-use stdClass;
 
 class DropIndexesFunctionalTest extends FunctionalTestCase
 {

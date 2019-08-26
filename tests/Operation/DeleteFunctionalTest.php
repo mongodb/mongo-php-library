@@ -9,7 +9,6 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Operation\Delete;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 class DeleteFunctionalTest extends FunctionalTestCase

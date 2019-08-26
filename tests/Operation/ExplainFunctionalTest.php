@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
-use MongoDB\Collection;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\Distinct;
@@ -21,7 +20,6 @@ use MongoDB\Operation\Update;
 use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 
 class ExplainFunctionalTest extends FunctionalTestCase
 {

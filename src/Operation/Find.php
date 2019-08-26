@@ -26,7 +26,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
-use MongoDB\Model\BSONDocument;
+
 /**
  * Operation for the find command.
  *

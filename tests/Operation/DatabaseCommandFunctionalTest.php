@@ -4,7 +4,6 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 
 class DatabaseCommandFunctionalTest extends FunctionalTestCase
 {

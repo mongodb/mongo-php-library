@@ -7,10 +7,8 @@ use MongoDB\Client;
 use MongoDB\Database;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
-use MongoDB\Operation\DropCollection;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 /**

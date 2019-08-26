@@ -6,7 +6,6 @@ use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListCollections;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 
 class ListCollectionsFunctionalTest extends FunctionalTestCase
 {

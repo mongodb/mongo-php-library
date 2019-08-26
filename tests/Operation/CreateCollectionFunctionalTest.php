@@ -4,7 +4,6 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 
 class CreateCollectionFunctionalTest extends FunctionalTestCase
 {

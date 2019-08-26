@@ -2,15 +2,9 @@
 
 namespace MongoDB\Tests\SpecTests;
 
-use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Driver\Server;
-use MongoDB\Driver\WriteConcern;
-use MongoDB\Driver\Exception\BulkWriteException;
-use MongoDB\Driver\Exception\RuntimeException;
-use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
-use MongoDB\Tests\TestCase;
 use PHPUnit\Framework\SkippedTest;
 use ArrayIterator;
 use IteratorIterator;

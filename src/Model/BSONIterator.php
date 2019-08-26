@@ -19,7 +19,6 @@ namespace MongoDB\Model;
 
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
-use MongoDB\Model\BSONDocument;
 use Iterator;
 
 /**

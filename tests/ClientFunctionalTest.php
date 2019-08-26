@@ -4,7 +4,6 @@ namespace MongoDB\Tests;
 
 use MongoDB\Client;
 use MongoDB\Driver\BulkWrite;
-use MongoDB\Driver\Command;
 use MongoDB\Model\DatabaseInfo;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 

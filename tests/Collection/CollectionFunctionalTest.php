@@ -11,10 +11,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Operation\Count;
-use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
-use Exception;
-use stdClass;
 
 /**
  * Functional tests for the Collection class.

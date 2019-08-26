@@ -4,8 +4,6 @@ namespace MongoDB\Tests;
 
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
-use MongoDB\Driver\ReadConcern;
-use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 
 /**

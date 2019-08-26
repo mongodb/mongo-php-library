@@ -5,7 +5,6 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListDatabases;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 
 class ListDatabasesFunctionalTest extends FunctionalTestCase
 {

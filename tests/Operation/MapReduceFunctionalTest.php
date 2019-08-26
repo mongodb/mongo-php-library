@@ -8,7 +8,6 @@ use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
-use stdClass;
 
 class MapReduceFunctionalTest extends FunctionalTestCase
 {

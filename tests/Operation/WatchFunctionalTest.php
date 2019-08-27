@@ -1125,34 +1125,23 @@ class WatchFunctionalTest extends FunctionalTestCase
             $changeStream->next();
             $this->fail('Exception for missing resume token was not thrown');
         } catch (ResumeTokenException $e) {
-            /* If a client-side error is thrown (server < 4.1.8), the tailable
-             * cursor's position is still valid. This may change once PHPLIB-456
-             * is implemented. */
-            $expectedValid = true;
-            $expectedKey = 0;
+            /* On server versions < 4.1.8, a client-side error is thrown. */
         } catch (ServerException $e) {
-            /* If a server-side error is thrown (server >= 4.1.8), the tailable
-             * cursor's position is not valid. */
-            $expectedValid = false;
-            $expectedKey = null;
+            /* On server versions >= 4.1.8, the error is thrown server-side. */
         }
 
-        $this->assertSame($expectedValid, $changeStream->valid());
-        $this->assertSame($expectedKey, $changeStream->key());
+        $this->assertFalse($changeStream->valid());
+        $this->assertNull($changeStream->key());
 
         try {
             $changeStream->next();
             $this->fail('Exception for missing resume token was not thrown');
         } catch (ResumeTokenException $e) {
-            $expectedValid = true;
-            $expectedKey = 0;
         } catch (ServerException $e) {
-            $expectedValid = false;
-            $expectedKey = null;
         }
 
-        $this->assertSame($expectedValid, $changeStream->valid());
-        $this->assertSame($expectedKey, $changeStream->key());
+        $this->assertFalse($changeStream->valid());
+        $this->assertNull($changeStream->key());
     }
 
     public function testSessionPersistsAfterResume()

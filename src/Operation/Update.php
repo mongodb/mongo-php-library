@@ -29,6 +29,7 @@ use function is_array;
 use function is_bool;
 use function is_object;
 use function MongoDB\is_first_key_operator;
+use function MongoDB\is_pipeline;
 use function MongoDB\server_supports_feature;
 
 /**
@@ -126,7 +127,7 @@ class Update implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"multi" option', $options['multi'], 'boolean');
         }
 
-        if ($options['multi'] && ! is_first_key_operator($update)) {
+        if ($options['multi'] && ! is_first_key_operator($update) && ! is_pipeline($update)) {
             throw new InvalidArgumentException('"multi" option cannot be true if $update is a replacement document');
         }
 

@@ -120,6 +120,47 @@ function is_first_key_operator($document)
 }
 
 /**
+ * Returns whether an update specification is a valid aggregation pipeline.
+ *
+ * @internal
+ * @param mixed $pipeline
+ * @return boolean
+ */
+function is_pipeline($pipeline)
+{
+    if (! is_array($pipeline)) {
+        return false;
+    }
+
+    if ($pipeline === []) {
+        return false;
+    }
+
+    $expectedKey = 0;
+
+    foreach ($pipeline as $key => $stage) {
+        if (! is_array($stage) && ! is_object($stage)) {
+            return false;
+        }
+
+        if ($expectedKey !== $key) {
+            return false;
+        }
+
+        $expectedKey++;
+        $stage = (array) $stage;
+        reset($stage);
+        $key = key($stage);
+
+        if (! isset($key[0]) || $key[0] !== '$') {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
  * Returns whether we are currently in a transaction.
  *
  * @internal

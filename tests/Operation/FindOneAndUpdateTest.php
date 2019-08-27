@@ -25,10 +25,10 @@ class FindOneAndUpdateTest extends TestCase
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], $update);
     }
 
-    public function testConstructorUpdateArgumentRequiresOperators()
+    public function testConstructorUpdateArgumentRequiresOperatorsOrPipeline()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('First key in $update argument is not an update operator');
+        $this->expectExceptionMessage('Expected an update document with operator as first key or a pipeline');
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], []);
     }
 

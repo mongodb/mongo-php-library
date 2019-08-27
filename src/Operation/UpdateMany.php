@@ -25,6 +25,7 @@ use MongoDB\UpdateResult;
 use function is_array;
 use function is_object;
 use function MongoDB\is_first_key_operator;
+use function MongoDB\is_pipeline;
 
 /**
  * Operation for updating multiple documents with the update command.
@@ -81,8 +82,8 @@ class UpdateMany implements Executable, Explainable
             throw InvalidArgumentException::invalidType('$update', $update, 'array or object');
         }
 
-        if (! is_first_key_operator($update)) {
-            throw new InvalidArgumentException('First key in $update argument is not an update operator');
+        if (! is_first_key_operator($update) && ! is_pipeline($update)) {
+            throw new InvalidArgumentException('Expected an update document with operator as first key or a pipeline');
         }
 
         $this->update = new Update(

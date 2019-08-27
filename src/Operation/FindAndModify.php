@@ -31,6 +31,7 @@ use function is_bool;
 use function is_integer;
 use function is_object;
 use function MongoDB\create_field_path_type_map;
+use function MongoDB\is_pipeline;
 use function MongoDB\server_supports_feature;
 
 /**
@@ -255,10 +256,16 @@ class FindAndModify implements Executable, Explainable
             $cmd['upsert'] = $this->options['upsert'];
         }
 
-        foreach (['collation', 'fields', 'query', 'sort', 'update'] as $option) {
+        foreach (['collation', 'fields', 'query', 'sort'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = (object) $this->options[$option];
             }
+        }
+
+        if (isset($this->options['update'])) {
+            $cmd['update'] = is_pipeline($this->options['update'])
+                ? $this->options['update']
+                : (object) $this->options['update'];
         }
 
         if (isset($this->options['arrayFilters'])) {

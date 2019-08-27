@@ -25,6 +25,7 @@ use MongoDB\UpdateResult;
 use function is_array;
 use function is_object;
 use function MongoDB\is_first_key_operator;
+use function MongoDB\is_pipeline;
 
 /**
  * Operation for replacing a single document with the update command.
@@ -77,6 +78,10 @@ class ReplaceOne implements Executable
 
         if (is_first_key_operator($replacement)) {
             throw new InvalidArgumentException('First key in $replacement argument is an update operator');
+        }
+
+        if (is_pipeline($replacement)) {
+            throw new InvalidArgumentException('$replacement argument is a pipeline');
         }
 
         $this->update = new Update(

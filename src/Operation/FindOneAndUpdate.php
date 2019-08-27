@@ -25,6 +25,7 @@ use function is_array;
 use function is_integer;
 use function is_object;
 use function MongoDB\is_first_key_operator;
+use function MongoDB\is_pipeline;
 
 /**
  * Operation for updating a document with the findAndModify command.
@@ -105,8 +106,8 @@ class FindOneAndUpdate implements Executable, Explainable
             throw InvalidArgumentException::invalidType('$update', $update, 'array or object');
         }
 
-        if (! is_first_key_operator($update)) {
-            throw new InvalidArgumentException('First key in $update argument is not an update operator');
+        if (! is_first_key_operator($update) && ! is_pipeline($update)) {
+            throw new InvalidArgumentException('Expected an update document with operator as first key or a pipeline');
         }
 
         $options += [

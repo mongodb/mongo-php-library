@@ -34,6 +34,7 @@ use function array_key_exists;
  */
 class CollectionInfo implements ArrayAccess
 {
+    /** @var array */
     private $info;
 
     /**

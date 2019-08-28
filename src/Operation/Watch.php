@@ -54,21 +54,43 @@ use function MongoDB\server_supports_feature;
  */
 class Watch implements Executable, /* @internal */ CommandSubscriber
 {
-    private static $wireVersionForStartAtOperationTime = 7;
-
     const FULL_DOCUMENT_DEFAULT = 'default';
     const FULL_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
 
+    /** @var integer */
+    private static $wireVersionForStartAtOperationTime = 7;
+
+    /** @var Aggregate */
     private $aggregate;
+
+    /** @var array */
     private $aggregateOptions;
+
+    /** @var array */
     private $changeStreamOptions;
+
+    /** @var string|null */
     private $collectionName;
+
+    /** @var string */
     private $databaseName;
+
+    /** @var integer|null */
     private $firstBatchSize;
+
+    /** @var boolean */
     private $hasResumed = false;
+
+    /** @var Manager */
     private $manager;
+
+    /** @var TimestampInterface */
     private $operationTime;
+
+    /** @var array */
     private $pipeline;
+
+    /** @var object|null */
     private $postBatchResumeToken;
 
     /**

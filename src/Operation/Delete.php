@@ -40,12 +40,22 @@ use function MongoDB\server_supports_feature;
  */
 class Delete implements Executable, Explainable
 {
+    /** @var integer */
     private static $wireVersionForCollation = 5;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var array|object */
     private $filter;
+
+    /** @var integer */
     private $limit;
+
+    /** @var array */
     private $options;
 
     /**

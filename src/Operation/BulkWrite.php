@@ -51,15 +51,31 @@ class BulkWrite implements Executable
     const UPDATE_MANY = 'updateMany';
     const UPDATE_ONE  = 'updateOne';
 
+    /** @var integer */
     private static $wireVersionForArrayFilters = 6;
+
+    /** @var integer */
     private static $wireVersionForCollation = 5;
+
+    /** @var integer */
     private static $wireVersionForDocumentLevelValidation = 4;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var array[] */
     private $operations;
+
+    /** @var array */
     private $options;
+
+    /** @var boolean */
     private $isArrayFiltersUsed = false;
+
+    /** @var boolean */
     private $isCollationUsed = false;
 
     /**

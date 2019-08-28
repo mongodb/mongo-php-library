@@ -21,6 +21,7 @@ class ClientFunctionalTest extends FunctionalTestCase
 {
     use SetUpTearDownTrait;
 
+    /** @var Client */
     private $client;
 
     private function doSetUp()

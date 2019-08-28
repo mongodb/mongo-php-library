@@ -19,11 +19,22 @@ use function MongoDB\Driver\Monitoring\removeSubscriber;
  */
 class CommandExpectations implements CommandSubscriber
 {
+    /** @var array */
     private $actualEvents = [];
+
+    /** @var array */
     private $expectedEvents = [];
+
+    /** @var boolean */
     private $ignoreCommandFailed = false;
+
+    /** @var boolean */
     private $ignoreCommandStarted = false;
+
+    /** @var boolean */
     private $ignoreCommandSucceeded = false;
+
+    /** @var boolean */
     private $ignoreExtraEvents = false;
 
     private function __construct(array $events)

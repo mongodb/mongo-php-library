@@ -38,9 +38,16 @@ use function reset;
  */
 class CachingIterator implements Countable, Iterator
 {
+    /** @var array */
     private $items = [];
+
+    /** @var Generator */
     private $iterator;
+
+    /** @var boolean */
     private $iteratorAdvanced = false;
+
+    /** @var boolean */
     private $iteratorExhausted = false;
 
     /**

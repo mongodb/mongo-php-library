@@ -33,6 +33,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     const TOPOLOGY_REPLICASET = 'replicaset';
     const TOPOLOGY_SHARDED = 'sharded';
 
+    /** @var Context|null */
     private $context;
 
     private function doSetUp()

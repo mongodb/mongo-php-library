@@ -50,16 +50,34 @@ use function MongoDB\server_supports_feature;
  */
 class MapReduce implements Executable
 {
+    /** @var integer */
     private static $wireVersionForCollation = 5;
+
+    /** @var integer */
     private static $wireVersionForDocumentLevelValidation = 4;
+
+    /** @var integer */
     private static $wireVersionForReadConcern = 4;
+
+    /** @var integer */
     private static $wireVersionForWriteConcern = 4;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var JavascriptInterface */
     private $map;
+
+    /** @var JavascriptInterface */
     private $reduce;
+
+    /** @var array|object|string */
     private $out;
+
+    /** @var array */
     private $options;
 
     /**

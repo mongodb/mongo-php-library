@@ -19,6 +19,7 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
 {
     use SetUpTearDownTrait;
 
+    /** @var Collection */
     private $collection;
 
     private function doSetUp()

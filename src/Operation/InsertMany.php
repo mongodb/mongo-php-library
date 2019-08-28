@@ -40,11 +40,19 @@ use function sprintf;
  */
 class InsertMany implements Executable
 {
+    /** @var integer */
     private static $wireVersionForDocumentLevelValidation = 4;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var object[]|array[] */
     private $documents;
+
+    /** @var array */
     private $options;
 
     /**

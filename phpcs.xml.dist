@@ -19,8 +19,6 @@
         <!-- Exclude sniffs that require newer PHP versions -->
         <!-- Available with PHP 7.0 -->
         <exclude name="SlevomatCodingStandard.TypeHints.DeclareStrictTypes" />
-        <!-- In addition to requiring PHP 7.0, this sniff will cause a significant amount of BC breaks. Proceed with caution! -->
-        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration" />
         <exclude name="SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly" />
         <exclude name="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator" />
 
@@ -61,7 +59,6 @@
 
         <!-- These sniffs cause a large diff, so enable them in separate steps -->
         <exclude name="SlevomatCodingStandard.Commenting.DocCommentSpacing.IncorrectAnnotationsGroup" />
-        <exclude name="SlevomatCodingStandard.Commenting.RequireOneLinePropertyDocComment" />
         <exclude name="Squiz.Strings.DoubleQuoteUsage" />
 
         <!-- Sniff currently breaks, see https://github.com/slevomat/coding-standard/issues/727 -->
@@ -87,6 +84,24 @@
             <property phpcs-only="true" name="allowFullyQualifiedNameForCollidingConstants" value="false"/>
             <property phpcs-only="true" name="allowFullyQualifiedNameForCollidingFunctions" value="false"/>
             <property name="searchAnnotations" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- Only enable some checks regarding type hints -->
+    <!-- In addition to requiring PHP 7.0, this sniff will cause a significant amount of BC breaks. Proceed with caution! -->
+    <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration">
+        <!-- Traversable type hints often end up as mixed[], so we skip them for now -->
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversablePropertyTypeHintSpecification" />
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableParameterTypeHintSpecification" />
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversableReturnTypeHintSpecification" />
+
+        <!-- Will cause BC breaks to method signatures - disabled for now -->
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint" />
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingReturnTypeHint" />
+
+        <properties>
+            <property name="enableObjectTypeHint" value="true" />
+            <property name="enableEachParameterAndReturnInspection" value="false" />
         </properties>
     </rule>
 

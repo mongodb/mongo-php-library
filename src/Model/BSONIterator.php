@@ -32,13 +32,25 @@ use function unpack;
  */
 class BSONIterator implements Iterator
 {
+    /** @var integer */
     private static $bsonSize = 4;
 
+    /** @var string */
     private $buffer;
+
+    /** @var integer */
     private $bufferLength;
+
+    /** @var mixed */
     private $current;
+
+    /** @var integer */
     private $key = 0;
+
+    /** @var integer */
     private $position = 0;
+
+    /** @var array */
     private $options;
 
     /**

@@ -34,10 +34,19 @@ use function sprintf;
  */
 class CollectionWrapper
 {
+    /** @var string */
     private $bucketName;
+
+    /** @var Collection */
     private $chunksCollection;
+
+    /** @var string */
     private $databaseName;
+
+    /** @var boolean */
     private $checkedIndexes = false;
+
+    /** @var Collection */
     private $filesCollection;
 
     /**

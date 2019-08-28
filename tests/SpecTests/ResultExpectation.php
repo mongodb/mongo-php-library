@@ -35,10 +35,19 @@ final class ResultExpectation
     const ASSERT_NULL = 10;
     const ASSERT_CALLABLE = 11;
 
+    /** @var integer */
     private $assertionType = self::ASSERT_NOTHING;
+
+    /** @var mixed */
     private $expectedValue;
+
+    /** @var callable */
     private $assertionCallable;
 
+    /**
+     * @param integer $assertionType
+     * @param mixed   $expectedValue
+     */
     private function __construct($assertionType, $expectedValue)
     {
         switch ($assertionType) {

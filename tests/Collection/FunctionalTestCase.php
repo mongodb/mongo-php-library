@@ -13,6 +13,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
 {
     use SetUpTearDownTrait;
 
+    /** @var Collection */
     protected $collection;
 
     private function doSetUp()

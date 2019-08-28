@@ -42,19 +42,27 @@ class ChangeStream implements Iterator
      */
     const CURSOR_NOT_FOUND = 43;
 
+    /** @var array */
     private static $nonResumableErrorCodes = [
         136, // CappedPositionLost
         237, // CursorKilled
         11601, // Interrupted
     ];
 
+    /** @var callable */
     private $resumeCallable;
+
+    /** @var ChangeStreamIterator */
     private $iterator;
+
+    /** @var integer */
     private $key = 0;
 
     /**
      * Whether the change stream has advanced to its first result. This is used
      * to determine whether $key should be incremented after an iteration event.
+     *
+     * @var boolean
      */
     private $hasAdvanced = false;
 

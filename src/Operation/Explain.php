@@ -41,11 +41,19 @@ class Explain implements Executable
     const VERBOSITY_EXEC_STATS = 'executionStats';
     const VERBOSITY_QUERY = 'queryPlanner';
 
+    /** @var integer */
     private static $wireVersionForDistinct = 4;
+
+    /** @var integer */
     private static $wireVersionForFindAndModify = 4;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var Explainable */
     private $explainable;
+
+    /** @var array */
     private $options;
 
     /**

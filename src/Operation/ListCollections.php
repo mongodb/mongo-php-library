@@ -38,7 +38,10 @@ use function is_object;
  */
 class ListCollections implements Executable
 {
+    /** @var string */
     private $databaseName;
+
+    /** @var array */
     private $options;
 
     /**

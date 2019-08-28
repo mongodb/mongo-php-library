@@ -33,9 +33,16 @@ use function array_intersect_key;
  */
 class EstimatedDocumentCount implements Executable, Explainable
 {
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var array */
     private $options;
+
+    /** @var Count */
     private $count;
 
     /**

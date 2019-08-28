@@ -45,13 +45,16 @@ use const STREAM_IS_URL;
  */
 class StreamWrapper
 {
-    /**
-     * @var resource|null Stream context (set by PHP)
-     */
+    /** @var resource|null Stream context (set by PHP) */
     public $context;
 
+    /** @var string|null */
     private $mode;
+
+    /** @var string|null */
     private $protocol;
+
+    /** @var ReadableStream|WritableStream|null */
     private $stream;
 
     /**

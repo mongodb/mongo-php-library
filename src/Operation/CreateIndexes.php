@@ -41,13 +41,25 @@ use function sprintf;
  */
 class CreateIndexes implements Executable
 {
+    /** @var integer */
     private static $wireVersionForCollation = 5;
+
+    /** @var integer */
     private static $wireVersionForWriteConcern = 5;
 
+    /** @var string */
     private $databaseName;
+
+    /** @var string */
     private $collectionName;
+
+    /** @var array */
     private $indexes = [];
+
+    /** @var boolean */
     private $isCollationUsed = false;
+
+    /** @var array */
     private $options = [];
 
     /**

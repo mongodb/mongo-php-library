@@ -25,8 +25,13 @@ use MongoDB\Exception\BadMethodCallException;
  */
 class BulkWriteResult
 {
+    /** @var WriteResult */
     private $writeResult;
+
+    /** @var mixed[] */
     private $insertedIds;
+
+    /** @var boolean */
     private $isAcknowledged;
 
     /**

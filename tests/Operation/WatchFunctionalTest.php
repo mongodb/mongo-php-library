@@ -36,8 +36,10 @@ class WatchFunctionalTest extends FunctionalTestCase
     const INTERRUPTED = 11601;
     const NOT_MASTER = 10107;
 
+    /** @var integer */
     private static $wireVersionForStartAtOperationTime = 7;
 
+    /** @var array */
     private $defaultOptions = ['maxAwaitTimeMS' => 500];
 
     private function doSetUp()

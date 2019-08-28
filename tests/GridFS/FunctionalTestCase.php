@@ -19,8 +19,13 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
 {
     use SetUpTearDownTrait;
 
+    /** @var Bucket */
     protected $bucket;
+
+    /** @var Collection */
     protected $chunksCollection;
+
+    /** @var Collection */
     protected $filesCollection;
 
     private function doSetUp()

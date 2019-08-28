@@ -27,8 +27,12 @@ class TransactionsSpecTest extends FunctionalTestCase
 
     const INTERRUPTED = 11601;
 
-    /* In addition to the useMultipleMongoses tests, these should all pass
-     * before the driver can be considered compatible with MongoDB 4.2. */
+    /**
+     * In addition to the useMultipleMongoses tests, these should all pass
+     * before the driver can be considered compatible with MongoDB 4.2.
+     *
+     * @var array
+     */
     private static $incompleteTests = [
         'error-labels: add unknown commit label to MaxTimeMSExpired' => 'PHPC-1382',
         'error-labels: add unknown commit label to writeConcernError MaxTimeMSExpired' => 'PHPC-1382',

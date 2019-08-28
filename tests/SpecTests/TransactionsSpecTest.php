@@ -35,12 +35,12 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @var array
      */
     private static $incompleteTests = [
-        'transactions/read-pref: default readPreference' => 'PHPLIB does not properly inherit readPreference for transactions',
-        'transactions/read-pref: primary readPreference' => 'PHPLIB does not properly inherit readPreference for transactions',
-        'transactions/run-command: run command with secondary read preference in client option and primary read preference in transaction options' => 'PHPLIB does not properly inherit readPreference for transactions',
-        'transactions/transaction-options: transaction options inherited from client' => 'PHPLIB does not properly inherit readConcern for transactions',
-        'transactions/transaction-options: readConcern local in defaultTransactionOptions' => 'PHPLIB does not properly inherit readConcern for transactions',
-        'transactions/transaction-options: readConcern snapshot in startTransaction options' => 'PHPLIB does not properly inherit readConcern for transactions',
+        'transactions/read-pref: default readPreference' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
+        'transactions/read-pref: primary readPreference' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
+        'transactions/run-command: run command with secondary read preference in client option and primary read preference in transaction options' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
+        'transactions/transaction-options: transaction options inherited from client' => 'PHPLIB does not properly inherit readConcern for transactions (PHPLIB-473)',
+        'transactions/transaction-options: readConcern local in defaultTransactionOptions' => 'PHPLIB does not properly inherit readConcern for transactions (PHPLIB-473)',
+        'transactions/transaction-options: readConcern snapshot in startTransaction options' => 'PHPLIB does not properly inherit readConcern for transactions (PHPLIB-473)',
     ];
 
     private function doSetUp()

@@ -130,7 +130,7 @@ class ListCollections implements Executable
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
         }
 
-        $cursor = $server->executeCommand($this->databaseName, new Command($cmd), $this->createOptions());
+        $cursor = $server->executeReadCommand($this->databaseName, new Command($cmd), $this->createOptions());
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
 
         return new CollectionInfoCommandIterator(new CachingIterator($cursor));

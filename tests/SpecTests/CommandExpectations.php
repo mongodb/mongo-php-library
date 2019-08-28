@@ -77,6 +77,21 @@ class CommandExpectations implements CommandSubscriber
         return $o;
     }
 
+    public static function fromRetryableReads(array $expectedEvents)
+    {
+        $o = new self($expectedEvents);
+
+        $o->ignoreCommandFailed = true;
+        $o->ignoreCommandSucceeded = true;
+
+        /* Retryable read spec tests don't include extra commands, e.g. the
+         * killCursors command issued when a change stream is garbage collected.
+         * We ignore any extra events for that reason. \*/
+        $o->ignoreExtraEvents = true;
+
+        return $o;
+    }
+
     public static function fromTransactions(array $expectedEvents)
     {
         $o = new self($expectedEvents);

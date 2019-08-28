@@ -98,7 +98,7 @@ class ListDatabases implements Executable
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
         }
 
-        $cursor = $server->executeCommand('admin', new Command($cmd), $this->createOptions());
+        $cursor = $server->executeReadCommand('admin', new Command($cmd), $this->createOptions());
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
         $result = current($cursor->toArray());
 

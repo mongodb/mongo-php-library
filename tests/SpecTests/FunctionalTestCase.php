@@ -185,31 +185,44 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     {
         $context = $this->getContext();
 
-        $collection = $context->getCollection();
-        $collection->drop($context->defaultWriteOptions);
+        if ($context->bucketName !== null) {
+            $bucket = $context->getGridFSBucket($context->defaultWriteOptions);
+            $bucket->drop();
+        }
 
-        $outcomeCollection = $this->getOutcomeCollection();
+        $collection = null;
+        if ($context->collectionName !== null) {
+            $collection = $context->getCollection();
+            $collection->drop($context->defaultWriteOptions);
+        }
 
-        // Avoid redundant drop if the test and outcome collections are the same
-        if ($outcomeCollection->getNamespace() !== $collection->getNamespace()) {
-            $outcomeCollection->drop($context->defaultWriteOptions);
+        if ($context->outcomeCollectionName !== null) {
+            $outcomeCollection = $this->getOutcomeCollection();
+
+            // Avoid redundant drop if the test and outcome collections are the same
+            if ($collection === null || $outcomeCollection->getNamespace() !== $collection->getNamespace()) {
+                $outcomeCollection->drop($context->defaultWriteOptions);
+            }
         }
     }
 
     /**
      * Insert data fixtures into the test collection.
      *
-     * @param array $documents
+     * @param array       $documents
+     * @param string|null $collectionName
      */
-    protected function insertDataFixtures(array $documents)
+    protected function insertDataFixtures(array $documents, $collectionName = null)
     {
         if (empty($documents)) {
             return;
         }
 
         $context = $this->getContext();
-        $collection = $context->getCollection();
+        $collection = $collectionName ? $context->selectCollection($context->databaseName, $collectionName) : $context->getCollection();
         $collection->insertMany($documents, $context->defaultWriteOptions);
+
+        return;
     }
 
     private function getOutcomeCollection()

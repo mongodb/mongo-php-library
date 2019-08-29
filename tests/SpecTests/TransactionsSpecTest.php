@@ -35,7 +35,9 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @var array
      */
     private static $incompleteTests = [
+        'transactions/mongos-recovery-token: commitTransaction retry fails on new mongos' => 'isMaster failpoints cannot be disabled',
         'transactions/pin-mongos: remain pinned after non-transient error on commit' => 'Blocked on SPEC-1320',
+        'transactions/pin-mongos: unpin after transient error within a transaction and commit' => 'isMaster failpoints cannot be disabled',
         'transactions/read-pref: default readPreference' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
         'transactions/read-pref: primary readPreference' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
         'transactions/run-command: run command with secondary read preference in client option and primary read preference in transaction options' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',

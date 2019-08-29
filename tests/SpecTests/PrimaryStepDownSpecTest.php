@@ -181,6 +181,8 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
      */
     public function testGetMoreIteration()
     {
+        $this->markTestSkipped('Test causes subsequent failures in other tests (see PHPLIB-471)');
+
         $runOn = [(object) ['minServerVersion' => '4.1.11', 'topology' => [self::TOPOLOGY_REPLICASET]]];
         $this->checkServerRequirements($runOn);
 

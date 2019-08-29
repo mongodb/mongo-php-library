@@ -54,6 +54,9 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     /** @var boolean */
     private $isRewindNop;
 
+    /** @var boolean */
+    private $isValid = false;
+
     /** @var object|null */
     private $postBatchResumeToken;
 
@@ -127,6 +130,15 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     }
 
     /**
+     * @see https://php.net/iteratoriterator.current
+     * @return mixed
+     */
+    public function current()
+    {
+        return $this->isValid ? parent::current() : null;
+    }
+
+    /**
      * Returns the resume token for the iterator's current position.
      *
      * Null may be returned if no change documents have been iterated and the
@@ -138,6 +150,15 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     public function getResumeToken()
     {
         return $this->resumeToken;
+    }
+
+    /**
+     * @see https://php.net/iteratoriterator.key
+     * @return mixed
+     */
+    public function key()
+    {
+        return $this->isValid ? parent::key() : null;
     }
 
     /**
@@ -182,6 +203,15 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     }
 
     /**
+     * @see https://php.net/iteratoriterator.valid
+     * @return boolean
+     */
+    public function valid()
+    {
+        return $this->isValid;
+    }
+
+    /**
      * Extracts the resume token (i.e. "_id" field) from a change document.
      *
      * @param array|object $document Change document
@@ -204,10 +234,12 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
             : (isset($document->_id) ? $document->_id : null);
 
         if (! isset($resumeToken)) {
+            $this->isValid = false;
             throw ResumeTokenException::notFound();
         }
 
         if (! is_array($resumeToken) && ! is_object($resumeToken)) {
+            $this->isValid = false;
             throw ResumeTokenException::invalidType($resumeToken);
         }
 
@@ -232,16 +264,16 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      */
     private function onIteration($incrementBatchPosition)
     {
-        $isValid = $this->valid();
+        $this->isValid = parent::valid();
 
         /* Disable rewind()'s NOP behavior once we advance to a valid position.
          * This will allow the driver to throw a LogicException if rewind() is
          * called after the cursor has advanced past its first element. */
-        if ($this->isRewindNop && $isValid) {
+        if ($this->isRewindNop && $this->isValid) {
             $this->isRewindNop = false;
         }
 
-        if ($incrementBatchPosition && $isValid) {
+        if ($incrementBatchPosition && $this->isValid) {
             $this->batchPosition++;
         }
 
@@ -253,7 +285,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
          * from the current document if possible. */
         if ($this->isAtEndOfBatch() && $this->postBatchResumeToken !== null) {
             $this->resumeToken = $this->postBatchResumeToken;
-        } elseif ($isValid) {
+        } elseif ($this->isValid) {
             $this->resumeToken = $this->extractResumeToken($this->current());
         }
     }

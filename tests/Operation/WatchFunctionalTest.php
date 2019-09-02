@@ -980,6 +980,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $options = $this->defaultOptions + ['resumeAfter' => $resumeToken];
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
         $changeStream = $operation->execute($this->getPrimaryServer());
+        $this->assertSame($resumeToken, $changeStream->getResumeToken());
 
         $changeStream->rewind();
         $this->assertTrue($changeStream->valid());

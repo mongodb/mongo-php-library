@@ -5,8 +5,8 @@
     "homepage": "https://jira.mongodb.org/browse/PHPLIB",
     "license": "Apache-2.0",
     "authors": [
+        { "name": "Andreas Braun", "email": "andreas.braun@mongodb.com" },
         { "name": "Jeremy Mikola", "email": "jmikola@gmail.com" },
-        { "name": "Derick Rethans", "email": "github@derickrethans.nl" },
         { "name": "Katherine Walker", "email": "katherine.walker@mongodb.com" }
     ],
     "require": {

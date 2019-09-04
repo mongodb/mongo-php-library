@@ -20,6 +20,7 @@ use function array_map;
 use function fclose;
 use function fopen;
 use function MongoDB\is_last_pipeline_operator_write;
+use function MongoDB\with_transaction;
 use function stream_get_contents;
 use function strtolower;
 
@@ -127,6 +128,29 @@ final class Operation
         return $o;
     }
 
+    /**
+     * This method is exclusively used to prepare nested operations for the
+     * withTransaction session operation
+     *
+     * @return Operation
+     */
+    private static function fromConvenientTransactions(stdClass $operation)
+    {
+        $o = new self($operation);
+
+        if (isset($operation->error)) {
+            $o->errorExpectation = ErrorExpectation::fromTransactions($operation);
+        }
+
+        $o->resultExpectation = ResultExpectation::fromTransactions($operation, $o->getResultAssertionType());
+
+        if (isset($operation->collectionOptions)) {
+            $o->collectionOptions = (array) $operation->collectionOptions;
+        }
+
+        return $o;
+    }
+
     public static function fromCrud(stdClass $operation)
     {
         $o = new self($operation);
@@ -177,16 +201,17 @@ final class Operation
     /**
      * Execute the operation and assert its outcome.
      *
-     * @param FunctionalTestCase $test    Test instance
-     * @param Context            $context Execution context
+     * @param FunctionalTestCase $test             Test instance
+     * @param Context            $context          Execution context
+     * @param bool               $bubbleExceptions If true, any exception that was caught is rethrown
      */
-    public function assert(FunctionalTestCase $test, Context $context)
+    public function assert(FunctionalTestCase $test, Context $context, $bubbleExceptions = false)
     {
         $result = null;
         $exception = null;
 
         try {
-            $result = $this->execute($context);
+            $result = $this->execute($test, $context);
 
             /* Eagerly iterate the results of a cursor. This both allows an
              * exception to be thrown sooner and ensures that any expected
@@ -211,6 +236,10 @@ final class Operation
         if (isset($this->resultExpectation)) {
             $this->resultExpectation->assert($test, $result);
         }
+
+        if ($exception && $bubbleExceptions) {
+            throw $exception;
+        }
     }
 
     /**
@@ -220,7 +249,7 @@ final class Operation
      * @return mixed
      * @throws LogicException if the operation is unsupported
      */
-    private function execute(Context $context)
+    private function execute(FunctionalTestCase $test, Context $context)
     {
         switch ($this->object) {
             case self::OBJECT_CLIENT:
@@ -248,9 +277,9 @@ final class Operation
 
                 return $this->executeForDatabase($database, $context);
             case self::OBJECT_SESSION0:
-                return $this->executeForSession($context->session0, $context);
+                return $this->executeForSession($context->session0, $test, $context);
             case self::OBJECT_SESSION1:
-                return $this->executeForSession($context->session1, $context);
+                return $this->executeForSession($context->session1, $test, $context);
             default:
                 throw new LogicException('Unsupported object: ' . $this->object);
         }
@@ -479,12 +508,13 @@ final class Operation
     /**
      * Executes the session operation and return its result.
      *
-     * @param Session $session
-     * @param Context $context Execution context
+     * @param Session            $session
+     * @param FunctionalTestCase $test
+     * @param Context            $context Execution context
      * @return mixed
      * @throws LogicException if the session operation is unsupported
      */
-    private function executeForSession(Session $session, Context $context)
+    private function executeForSession(Session $session, FunctionalTestCase $test, Context $context)
     {
         switch ($this->name) {
             case 'abortTransaction':
@@ -495,6 +525,21 @@ final class Operation
                 $options = isset($this->arguments['options']) ? (array) $this->arguments['options'] : [];
 
                 return $session->startTransaction($context->prepareOptions($options));
+            case 'withTransaction':
+                /** @var self[] $callbackOperations */
+                $callbackOperations = array_map(function ($operation) {
+                    return self::fromConvenientTransactions($operation);
+                }, $this->arguments['callback']->operations);
+
+                $callback = function () use ($callbackOperations, $test, $context) {
+                    foreach ($callbackOperations as $operation) {
+                        $operation->assert($test, $context, true);
+                    }
+                };
+
+                $options = isset($this->arguments['options']) ? (array) $this->arguments['options'] : [];
+
+                return with_transaction($session, $callback, $context->prepareOptions($options));
             default:
                 throw new LogicException('Unsupported session operation: ' . $this->name);
         }

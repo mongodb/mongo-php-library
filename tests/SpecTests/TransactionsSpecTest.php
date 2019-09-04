@@ -12,6 +12,7 @@ use MongoDB\Driver\Server;
 use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function basename;
+use function dirname;
 use function file_get_contents;
 use function get_object_vars;
 use function glob;
@@ -34,22 +35,17 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @var array
      */
     private static $incompleteTests = [
-        'error-labels: add unknown commit label to MaxTimeMSExpired' => 'PHPC-1382',
-        'error-labels: add unknown commit label to writeConcernError MaxTimeMSExpired' => 'PHPC-1382',
-        'read-pref: default readPreference' => 'PHPLIB does not properly inherit readPreference for transactions',
-        'read-pref: primary readPreference' => 'PHPLIB does not properly inherit readPreference for transactions',
-        'run-command: run command with secondary read preference in client option and primary read preference in transaction options' => 'PHPLIB does not properly inherit readPreference for transactions',
-        'transaction-options: transaction options inherited from defaultTransactionOptions' => 'PHPC-1382',
-        'transaction-options: startTransaction options override defaults' => 'PHPC-1382',
-        'transaction-options: defaultTransactionOptions override client options' => 'PHPC-1382',
-        'transaction-options: transaction options inherited from client' => 'PHPLIB does not properly inherit readConcern for transactions',
-        'transaction-options: readConcern local in defaultTransactionOptions' => 'PHPLIB does not properly inherit readConcern for transactions',
-        'transaction-options: readConcern snapshot in startTransaction options' => 'PHPLIB does not properly inherit readConcern for transactions',
+        'transactions/read-pref: default readPreference' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
+        'transactions/read-pref: primary readPreference' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
+        'transactions/run-command: run command with secondary read preference in client option and primary read preference in transaction options' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
+        'transactions/transaction-options: transaction options inherited from client' => 'PHPLIB does not properly inherit readConcern for transactions (PHPLIB-473)',
+        'transactions/transaction-options: readConcern local in defaultTransactionOptions' => 'PHPLIB does not properly inherit readConcern for transactions (PHPLIB-473)',
+        'transactions/transaction-options: readConcern snapshot in startTransaction options' => 'PHPLIB does not properly inherit readConcern for transactions (PHPLIB-473)',
     ];
 
-    private static function doSetUpBeforeClass()
+    private function doSetUp()
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         static::killAllSessions();
     }
@@ -189,9 +185,9 @@ class TransactionsSpecTest extends FunctionalTestCase
     {
         $testArgs = [];
 
-        foreach (glob(__DIR__ . '/transactions/*.json') as $filename) {
+        foreach (glob(__DIR__ . '/transactions*/*.json') as $filename) {
             $json = $this->decodeJson(file_get_contents($filename));
-            $group = basename($filename, '.json');
+            $group = basename(dirname($filename)) . '/' . basename($filename, '.json');
             $runOn = isset($json->runOn) ? $json->runOn : null;
             $data = isset($json->data) ? $json->data : [];
             $databaseName = isset($json->database_name) ? $json->database_name : null;

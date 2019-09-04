@@ -384,9 +384,16 @@ abstract class FunctionalTestCase extends TestCase
             $this->markTestSkipped('Transactions are not supported on standalone servers');
         }
 
-        // TODO: MongoDB 4.2 should support sharded clusters (see: PHPLIB-374)
         if ($this->isShardedCluster()) {
-            $this->markTestSkipped('Transactions are not supported on sharded clusters');
+            if (! $this->isShardedClusterUsingReplicasets()) {
+                $this->markTestSkipped('Transactions are not supported on sharded clusters without replica sets');
+            }
+
+            if (version_compare($this->getFeatureCompatibilityVersion(), '4.2', '<')) {
+                $this->markTestSkipped('Transactions are only supported on FCV 4.2 or higher');
+            }
+
+            return;
         }
 
         if (version_compare($this->getFeatureCompatibilityVersion(), '4.0', '<')) {

@@ -393,14 +393,40 @@ function extract_session_from_options(array $options)
 }
 
 /**
- * Performs server selection, respecting the server a session may be pinned to
+ * Returns the readPreference option if it is set and valid.
+ *
+ * @internal
+ * @param array $options
+ * @return ReadPreference|null
+ */
+function extract_read_preference_from_options(array $options)
+{
+    if (! isset($options['readPreference']) || ! $options['readPreference'] instanceof ReadPreference) {
+        return null;
+    }
+
+    return $options['readPreference'];
+}
+
+/**
+ * Performs server selection, respecting the readPreference and session options
+ * (if given)
  *
  * @internal
  * @return Server
  */
-function select_server(Manager $manager, ReadPreference $readPreference = null, Session $session = null)
+function select_server(Manager $manager, array $options)
 {
-    $server = $session !== null ? $session->getServer() : null;
+    $session = extract_session_from_options($options);
+    if ($session instanceof Session && $session->getServer() !== null) {
+        return $session->getServer();
+    }
 
-    return $server ?: $manager->selectServer($readPreference);
+    $readPreference = extract_read_preference_from_options($options);
+    if (! $readPreference instanceof ReadPreference) {
+        // TODO: PHPLIB-476: Read transaction read preference once PHPC-1439 is implemented
+        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+    }
+
+    return $manager->selectServer($readPreference);
 }

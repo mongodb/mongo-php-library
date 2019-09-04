@@ -40,75 +40,53 @@ jobs:
       env:
         - CHECKS=phpcs
 
-    # Test remaining supported PHP versions
-    - stage: Test
-      php: "5.6"
-    - stage: Test
-      php: "7.0"
-    - stage: Test
-      php: "7.1"
-    - stage: Test
-      php: "7.2"
-    - stage: Test
-      php: "7.4snapshot"
-
-    # Test against lowest supported dependencies
-    - stage: Test
-      php: "5.6"
-      env:
-        - COMPOSER_OPTIONS=--prefer-lowest
-
-      # Test older standalone server versions (3.0-4.0)
-    - stage: Test
-      php: "7.0"
-      dist: trusty
-      env:
-        - SERVER_DISTRO=ubuntu1404
-        - SERVER_VERSION=3.0.15
-        - DEPLOYMENT=STANDALONE_OLD
-    - stage: Test
-      php: "7.0"
-      env:
-        - SERVER_VERSION=3.2.22
-        - DEPLOYMENT=STANDALONE_OLD
-    - stage: Test
-      php: "7.0"
-      env:
-        - SERVER_VERSION=3.4.21
-        - DEPLOYMENT=STANDALONE_OLD
-    - stage: Test
-      php: "7.0"
-      env:
-        - SERVER_VERSION=3.6.13
-    - stage: Test
-      php: "7.3"
-      env:
-        - SERVER_VERSION=4.0.12
-
     # Test other server configurations
     - stage: Test
-      php: "7.3"
+      php: "5.6"
       env:
-        - DEPLOYMENT=STANDALONE_AUTH
+        - DEPLOYMENT=REPLICASET
+    - stage: Test
+      php: "5.6"
+      env:
+        - DEPLOYMENT=SHARDED_CLUSTER_RS
+    - stage: Test
+      php: "7.0"
+      env:
+        - DEPLOYMENT=REPLICASET
+    - stage: Test
+      php: "7.0"
+      env:
+        - DEPLOYMENT=SHARDED_CLUSTER_RS
+    - stage: Test
+      php: "7.1"
+      env:
+        - DEPLOYMENT=REPLICASET
+    - stage: Test
+      php: "7.1"
+      env:
+        - DEPLOYMENT=SHARDED_CLUSTER_RS
+    - stage: Test
+      php: "7.2"
+      env:
+        - DEPLOYMENT=REPLICASET
+    - stage: Test
+      php: "7.2"
+      env:
+        - DEPLOYMENT=SHARDED_CLUSTER_RS
     - stage: Test
       php: "7.3"
       env:
-        - DEPLOYMENT=STANDALONE_SSL
-    - stage: Test
-      php: "7.3"
-      env:
-        - SERVER_VERSION=3.6.13
         - DEPLOYMENT=REPLICASET
     - stage: Test
       php: "7.3"
       env:
+        - DEPLOYMENT=SHARDED_CLUSTER_RS
+    - stage: Test
+      php: "7.4snapshot"
+      env:
         - DEPLOYMENT=REPLICASET
     - stage: Test
-      php: "7.3"
-      env:
-        - DEPLOYMENT=SHARDED_CLUSTER
-    - stage: Test
-      php: "7.3"
+      php: "7.4snapshot"
       env:
         - DEPLOYMENT=SHARDED_CLUSTER_RS
 

@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\SpecTests;
 
-use MongoDB\Driver\Manager;
 use stdClass;
 use function basename;
 use function file_get_contents;
@@ -29,15 +28,13 @@ class RetryableWritesSpecTest extends FunctionalTestCase
             $this->markTestSkipped('Transaction numbers are only allowed on a replica set member or mongos (PHPC-1415)');
         }
 
-        if (isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster()) {
-            $this->manager = new Manager(static::getUri(true));
-        }
+        $useMultipleMongoses = isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster();
 
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
         }
 
-        $context = Context::fromRetryableWrites($test, $this->getDatabaseName(), $this->getCollectionName());
+        $context = Context::fromRetryableWrites($test, $this->getDatabaseName(), $this->getCollectionName(), $useMultipleMongoses);
         $this->setContext($context);
 
         $this->dropTestAndOutcomeCollections();

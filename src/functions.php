@@ -19,6 +19,8 @@ namespace MongoDB;
 
 use Exception;
 use MongoDB\BSON\Serializable;
+use MongoDB\Driver\Manager;
+use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
@@ -372,4 +374,33 @@ function with_transaction(Session $session, callable $callback, array $transacti
 {
     $operation = new WithTransaction($callback, $transactionOptions);
     $operation->execute($session);
+}
+
+/**
+ * Returns the session option if it is set and valid.
+ *
+ * @internal
+ * @param array $options
+ * @return Session|null
+ */
+function extract_session_from_options(array $options)
+{
+    if (! isset($options['session']) || ! $options['session'] instanceof Session) {
+        return null;
+    }
+
+    return $options['session'];
+}
+
+/**
+ * Performs server selection, respecting the server a session may be pinned to
+ *
+ * @internal
+ * @return Server
+ */
+function select_server(Manager $manager, ReadPreference $readPreference = null, Session $session = null)
+{
+    $server = $session !== null ? $session->getServer() : null;
+
+    return $server ?: $manager->selectServer($readPreference);
 }

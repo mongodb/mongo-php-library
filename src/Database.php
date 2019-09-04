@@ -206,7 +206,7 @@ class Database
             $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
         }
 
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         /* MongoDB 4.2 and later supports a read concern when an $out stage is
          * being used, but earlier versions do not.
@@ -258,7 +258,7 @@ class Database
         }
 
         $operation = new DatabaseCommand($this->databaseName, $command, $options);
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         return $operation->execute($server);
     }
@@ -280,7 +280,7 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -307,7 +307,7 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -335,7 +335,7 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -420,7 +420,7 @@ class Database
     public function listCollections(array $options = [])
     {
         $operation = new ListCollections($this->databaseName, $options);
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         return $operation->execute($server);
     }
@@ -442,7 +442,7 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
 
         if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -509,7 +509,7 @@ class Database
             $options['readPreference'] = $this->readPreference;
         }
 
-        $server = $this->manager->selectServer($options['readPreference']);
+        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
 
         if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern)) {
             $options['readConcern'] = $this->readConcern;

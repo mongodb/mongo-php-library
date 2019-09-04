@@ -4,6 +4,7 @@ namespace MongoDB\Tests\SpecTests;
 
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\Timestamp;
+use MongoDB\Client;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Manager;
@@ -11,7 +12,9 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function array_unique;
 use function basename;
+use function count;
 use function dirname;
 use function file_get_contents;
 use function get_object_vars;
@@ -35,6 +38,9 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @var array
      */
     private static $incompleteTests = [
+        'transactions/mongos-recovery-token: commitTransaction retry fails on new mongos' => 'isMaster failpoints cannot be disabled',
+        'transactions/pin-mongos: remain pinned after non-transient error on commit' => 'Blocked on SPEC-1320',
+        'transactions/pin-mongos: unpin after transient error within a transaction and commit' => 'isMaster failpoints cannot be disabled',
         'transactions/read-pref: default readPreference' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
         'transactions/read-pref: primary readPreference' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
         'transactions/run-command: run command with secondary read preference in client option and primary read preference in transaction options' => 'PHPLIB does not properly inherit readPreference for transactions (PHPLIB-473)',
@@ -48,6 +54,8 @@ class TransactionsSpecTest extends FunctionalTestCase
         parent::setUp();
 
         static::killAllSessions();
+
+        $this->skipIfTransactionsAreNotSupported();
     }
 
     private function doTearDown()
@@ -128,13 +136,11 @@ class TransactionsSpecTest extends FunctionalTestCase
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
         }
 
-        if ($this->isShardedCluster()) {
-            $this->markTestSkipped('PHP MongoDB driver 1.6.0alpha2 does not support running multi-document transactions on sharded clusters');
+        if (isset($test->skipReason)) {
+            $this->markTestSkipped($test->skipReason);
         }
 
-        if (isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster()) {
-            $this->manager = new Manager(static::getUri(true));
-        }
+        $useMultipleMongoses = isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster();
 
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
@@ -147,7 +153,7 @@ class TransactionsSpecTest extends FunctionalTestCase
         $databaseName = isset($databaseName) ? $databaseName : $this->getDatabaseName();
         $collectionName = isset($collectionName) ? $collectionName : $this->getCollectionName();
 
-        $context = Context::fromTransactions($test, $databaseName, $collectionName);
+        $context = Context::fromTransactions($test, $databaseName, $collectionName, $useMultipleMongoses);
         $this->setContext($context);
 
         $this->dropTestAndOutcomeCollections();
@@ -200,6 +206,80 @@ class TransactionsSpecTest extends FunctionalTestCase
         }
 
         return $testArgs;
+    }
+
+    /**
+     * Prose test 1: Test that starting a new transaction on a pinned
+     * ClientSession unpins the session and normal server selection is performed
+     * for the next operation.
+     */
+    public function testStartingNewTransactionOnPinnedSessionUnpinsSession()
+    {
+        if (! $this->isShardedClusterUsingReplicasets()) {
+            $this->markTestSkipped('Mongos pinning tests can only run on sharded clusters using replica sets');
+        }
+
+        $client = new Client($this->getUri(true));
+
+        $session = $client->startSession();
+        $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
+
+        // Create collection before transaction
+        $collection->insertOne([]);
+
+        $session->startTransaction([]);
+        $collection->insertOne([], ['session' => $session]);
+        $session->commitTransaction();
+
+        $servers = [];
+        for ($i = 0; $i < 50; $i++) {
+            $session->startTransaction([]);
+            $cursor = $collection->find([], ['session' => $session]);
+            $servers[] = $cursor->getServer()->getHost() . ':' . $cursor->getServer()->getPort();
+            $this->assertInstanceOf(Server::class, $session->getServer());
+            $session->commitTransaction();
+        }
+
+        $servers = array_unique($servers);
+        $this->assertGreaterThan(1, count($servers));
+
+        $session->endSession();
+    }
+
+    /**
+     * Prose test 2: Test non-transaction operations using a pinned
+     * ClientSession unpins the session and normal server selection is
+     * performed.
+     */
+    public function testRunningNonTransactionOperationOnPinnedSessionUnpinsSession()
+    {
+        if (! $this->isShardedClusterUsingReplicasets()) {
+            $this->markTestSkipped('Mongos pinning tests can only run on sharded clusters using replica sets');
+        }
+
+        $client = new Client($this->getUri(true));
+
+        $session = $client->startSession();
+        $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
+
+        // Create collection before transaction
+        $collection->insertOne([]);
+
+        $session->startTransaction([]);
+        $collection->insertOne([], ['session' => $session]);
+        $session->commitTransaction();
+
+        $servers = [];
+        for ($i = 0; $i < 50; $i++) {
+            $cursor = $collection->find([], ['session' => $session]);
+            $servers[] = $cursor->getServer()->getHost() . ':' . $cursor->getServer()->getPort();
+            $this->assertNull($session->getServer());
+        }
+
+        $servers = array_unique($servers);
+        $this->assertGreaterThan(1, count($servers));
+
+        $session->endSession();
     }
 
     /**

@@ -121,7 +121,7 @@ final class Context
         return $o;
     }
 
-    public static function fromRetryableWrites(stdClass $test, $databaseName, $collectionName)
+    public static function fromRetryableWrites(stdClass $test, $databaseName, $collectionName, $useMultipleMongoses)
     {
         $o = new self($databaseName, $collectionName);
 
@@ -134,12 +134,12 @@ final class Context
             $o->outcomeCollectionName = $test->outcome->collection->name;
         }
 
-        $o->client = new Client(FunctionalTestCase::getUri(), $clientOptions);
+        $o->client = new Client(FunctionalTestCase::getUri($useMultipleMongoses), $clientOptions);
 
         return $o;
     }
 
-    public static function fromTransactions(stdClass $test, $databaseName, $collectionName)
+    public static function fromTransactions(stdClass $test, $databaseName, $collectionName, $useMultipleMongoses)
     {
         $o = new self($databaseName, $collectionName);
 
@@ -159,7 +159,7 @@ final class Context
          * re-using a previously persisted libmongoc client object. */
         $clientOptions += ['p' => mt_rand()];
 
-        $o->client = new Client(FunctionalTestCase::getUri(), $clientOptions);
+        $o->client = new Client(FunctionalTestCase::getUri($useMultipleMongoses), $clientOptions);
 
         $session0Options = isset($test->sessionOptions->session0) ? (array) $test->sessionOptions->session0 : [];
         $session1Options = isset($test->sessionOptions->session1) ? (array) $test->sessionOptions->session1 : [];

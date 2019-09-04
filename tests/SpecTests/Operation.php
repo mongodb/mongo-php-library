@@ -9,6 +9,7 @@ use MongoDB\Database;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\Exception;
+use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\GridFS\Bucket;
@@ -19,6 +20,7 @@ use function array_diff_key;
 use function array_map;
 use function fclose;
 use function fopen;
+use function in_array;
 use function MongoDB\is_last_pipeline_operator_write;
 use function MongoDB\with_transaction;
 use function stream_get_contents;
@@ -37,6 +39,7 @@ final class Operation
     const OBJECT_SELECT_DATABASE = 'selectDatabase';
     const OBJECT_SESSION0 = 'session0';
     const OBJECT_SESSION1 = 'session1';
+    const OBJECT_TEST_RUNNER = 'testRunner';
 
     /** @var ErrorExpectation|null */
     public $errorExpectation;
@@ -280,6 +283,8 @@ final class Operation
                 return $this->executeForSession($context->session0, $test, $context);
             case self::OBJECT_SESSION1:
                 return $this->executeForSession($context->session1, $test, $context);
+            case self::OBJECT_TEST_RUNNER:
+                return $this->executeForTestRunner($test, $context);
             default:
                 throw new LogicException('Unsupported object: ' . $this->object);
         }
@@ -545,6 +550,42 @@ final class Operation
         }
     }
 
+    private function executeForTestRunner(FunctionalTestCase $test, Context $context)
+    {
+        $args = $context->prepareOptions($this->arguments);
+        $context->replaceArgumentSessionPlaceholder($args);
+
+        switch ($this->name) {
+            case 'assertSessionPinned':
+                $test->assertInstanceOf(Session::class, $args['session']);
+                $test->assertInstanceOf(Server::class, $args['session']->getServer());
+
+                return null;
+            case 'assertSessionTransactionState':
+                $test->assertInstanceOf(Session::class, $args['session']);
+                /* PHPC currently does not expose the exact session state, but
+                 * instead exposes a bool to let us know whether a transaction
+                 * is currently in progress. This code may fail down the line
+                 * and should be adjusted once PHPC-1438 is implemented. */
+                $expected = in_array($this->arguments['state'], ['in_progress', 'starting']);
+                $test->assertSame($expected, $args['session']->isInTransaction());
+
+                return null;
+            case 'assertSessionUnpinned':
+                $test->assertInstanceOf(Session::class, $args['session']);
+                $test->assertNull($args['session']->getServer());
+
+                return null;
+            case 'targetedFailPoint':
+                $test->assertInstanceOf(Session::class, $args['session']);
+                $test->configureFailPoint($this->arguments['failPoint'], $args['session']->getServer());
+
+                return null;
+            default:
+                throw new LogicException('Unsupported test runner operation: ' . $this->name);
+        }
+    }
+
     /**
      * @throws LogicException if the operation object is unsupported
      */
@@ -561,6 +602,7 @@ final class Operation
                 return ResultExpectation::ASSERT_SAME;
             case self::OBJECT_SESSION0:
             case self::OBJECT_SESSION1:
+            case self::OBJECT_TEST_RUNNER:
                 return ResultExpectation::ASSERT_NOTHING;
             default:
                 throw new LogicException('Unsupported object: ' . $this->object);

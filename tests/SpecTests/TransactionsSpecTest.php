@@ -4,6 +4,7 @@ namespace MongoDB\Tests\SpecTests;
 
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\Timestamp;
+use MongoDB\Client;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Manager;
@@ -11,7 +12,9 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function array_unique;
 use function basename;
+use function count;
 use function dirname;
 use function file_get_contents;
 use function get_object_vars;
@@ -203,6 +206,80 @@ class TransactionsSpecTest extends FunctionalTestCase
         }
 
         return $testArgs;
+    }
+
+    /**
+     * Prose test 1: Test that starting a new transaction on a pinned
+     * ClientSession unpins the session and normal server selection is performed
+     * for the next operation.
+     */
+    public function testStartingNewTransactionOnPinnedSessionUnpinsSession()
+    {
+        if (! $this->isShardedClusterUsingReplicasets()) {
+            $this->markTestSkipped('Mongos pinning tests can only run on sharded clusters using replica sets');
+        }
+
+        $client = new Client($this->getUri(true));
+
+        $session = $client->startSession();
+        $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
+
+        // Create collection before transaction
+        $collection->insertOne([]);
+
+        $session->startTransaction([]);
+        $collection->insertOne([], ['session' => $session]);
+        $session->commitTransaction();
+
+        $servers = [];
+        for ($i = 0; $i < 50; $i++) {
+            $session->startTransaction([]);
+            $cursor = $collection->find([], ['session' => $session]);
+            $servers[] = $cursor->getServer()->getHost() . ':' . $cursor->getServer()->getPort();
+            $this->assertInstanceOf(Server::class, $session->getServer());
+            $session->commitTransaction();
+        }
+
+        $servers = array_unique($servers);
+        $this->assertGreaterThan(1, count($servers));
+
+        $session->endSession();
+    }
+
+    /**
+     * Prose test 2: Test non-transaction operations using a pinned
+     * ClientSession unpins the session and normal server selection is
+     * performed.
+     */
+    public function testRunningNonTransactionOperationOnPinnedSessionUnpinsSession()
+    {
+        if (! $this->isShardedClusterUsingReplicasets()) {
+            $this->markTestSkipped('Mongos pinning tests can only run on sharded clusters using replica sets');
+        }
+
+        $client = new Client($this->getUri(true));
+
+        $session = $client->startSession();
+        $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
+
+        // Create collection before transaction
+        $collection->insertOne([]);
+
+        $session->startTransaction([]);
+        $collection->insertOne([], ['session' => $session]);
+        $session->commitTransaction();
+
+        $servers = [];
+        for ($i = 0; $i < 50; $i++) {
+            $cursor = $collection->find([], ['session' => $session]);
+            $servers[] = $cursor->getServer()->getHost() . ':' . $cursor->getServer()->getPort();
+            $this->assertNull($session->getServer());
+        }
+
+        $servers = array_unique($servers);
+        $this->assertGreaterThan(1, count($servers));
+
+        $session->endSession();
     }
 
     /**

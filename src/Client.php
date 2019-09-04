@@ -172,7 +172,7 @@ class Client
 
         $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 

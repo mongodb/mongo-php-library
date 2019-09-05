@@ -198,7 +198,7 @@ class Database
     {
         $hasWriteStage = is_last_pipeline_operator_write($pipeline);
 
-        if (! isset($options['readPreference'])) {
+        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
             $options['readPreference'] = $this->readPreference;
         }
 
@@ -206,7 +206,7 @@ class Database
             $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
         }
 
-        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
+        $server = select_server($this->manager, $options);
 
         /* MongoDB 4.2 and later supports a read concern when an $out stage is
          * being used, but earlier versions do not.
@@ -249,7 +249,7 @@ class Database
      */
     public function command($command, array $options = [])
     {
-        if (! isset($options['readPreference'])) {
+        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
             $options['readPreference'] = $this->readPreference;
         }
 
@@ -258,7 +258,7 @@ class Database
         }
 
         $operation = new DatabaseCommand($this->databaseName, $command, $options);
-        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
+        $server = select_server($this->manager, $options);
 
         return $operation->execute($server);
     }
@@ -280,9 +280,9 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
+        $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -307,9 +307,9 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
+        $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -335,9 +335,9 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
+        $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -420,7 +420,7 @@ class Database
     public function listCollections(array $options = [])
     {
         $operation = new ListCollections($this->databaseName, $options);
-        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
+        $server = select_server($this->manager, $options);
 
         return $operation->execute($server);
     }
@@ -442,9 +442,9 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
+        $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -505,13 +505,13 @@ class Database
      */
     public function watch(array $pipeline = [], array $options = [])
     {
-        if (! isset($options['readPreference'])) {
+        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
             $options['readPreference'] = $this->readPreference;
         }
 
-        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
+        $server = select_server($this->manager, $options);
 
-        if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern) && ! is_in_transaction($options)) {
             $options['readConcern'] = $this->readConcern;
         }
 

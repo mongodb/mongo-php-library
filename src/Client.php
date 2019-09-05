@@ -170,9 +170,9 @@ class Client
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
+        $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern)) {
+        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -246,7 +246,7 @@ class Client
     public function listDatabases(array $options = [])
     {
         $operation = new ListDatabases($options);
-        $server = select_server($this->manager, new ReadPreference(ReadPreference::RP_PRIMARY), extract_session_from_options($options));
+        $server = select_server($this->manager, $options);
 
         return $operation->execute($server);
     }
@@ -307,13 +307,13 @@ class Client
      */
     public function watch(array $pipeline = [], array $options = [])
     {
-        if (! isset($options['readPreference'])) {
+        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
             $options['readPreference'] = $this->readPreference;
         }
 
-        $server = select_server($this->manager, $options['readPreference'], extract_session_from_options($options));
+        $server = select_server($this->manager, $options);
 
-        if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern)) {
+        if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern) && ! is_in_transaction($options)) {
             $options['readConcern'] = $this->readConcern;
         }
 

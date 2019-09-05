@@ -40,7 +40,6 @@ use function is_object;
 use function is_string;
 use function MongoDB\Driver\Monitoring\addSubscriber;
 use function MongoDB\Driver\Monitoring\removeSubscriber;
-use function MongoDB\extract_session_from_options;
 use function MongoDB\select_server;
 use function MongoDB\server_supports_feature;
 
@@ -381,7 +380,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
          * is not usable within transactions, we still check if there is a
          * pinned session. This is to avoid an ambiguous error message about
          * running a command on the wrong server. */
-        $server = select_server($this->manager, $this->aggregateOptions['readPreference'], extract_session_from_options($this->aggregateOptions));
+        $server = select_server($this->manager, $this->aggregateOptions);
 
         $resumeOption = isset($this->changeStreamOptions['startAfter']) && ! $hasAdvanced ? 'startAfter' : 'resumeAfter';
 

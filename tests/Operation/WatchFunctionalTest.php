@@ -52,7 +52,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "ChangeStream must continuously track the last seen
+     * Prose test 1: "ChangeStream must continuously track the last seen
      * resumeToken"
      */
     public function testGetResumeToken()
@@ -87,8 +87,22 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "ChangeStream must continuously track the last seen
+     * Prose test 1: "ChangeStream must continuously track the last seen
      * resumeToken"
+     *
+     * Prose test 11:
+     * For a ChangeStream under these conditions:
+     *  - Running against a server >=4.0.7.
+     *  - The batch is empty or has been iterated to the last document.
+     * Expected result: getResumeToken must return the postBatchResumeToken from
+     * the current command response.
+     *
+     * Prose test 13:
+     * For a ChangeStream under these conditions:
+     *  - The batch is not empty.
+     *  - The batch has been iterated up to but not including the last element.
+     * Expected result: getResumeToken must return the _id of the previous
+     * document returned.
      */
     public function testGetResumeTokenWithPostBatchResumeToken()
     {
@@ -144,7 +158,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "ChangeStream will resume after a killCursors command is
+     * Prose test 10: "ChangeStream will resume after a killCursors command is
      * issued for its child cursor."
      */
     public function testNextResumesAfterCursorNotFound()
@@ -301,8 +315,8 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "$changeStream stage for ChangeStream against a server >=4.0
-     * and <4.0.7 that has not received any results yet MUST include a
+     * Prose test 9: "$changeStream stage for ChangeStream against a server
+     * >=4.0 and <4.0.7 that has not received any results yet MUST include a
      * startAtOperationTime option when resuming a changestream."
      */
     public function testResumeBeforeReceivingAnyResultsIncludesStartAtOperationTime()
@@ -691,8 +705,9 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "Ensure that a cursor returned from an aggregate command with
-     * a cursor id and an initial empty batch is not closed on the driver side."
+     * Prose test 7: "Ensure that a cursor returned from an aggregate command
+     * with a cursor id and an initial empty batch is not closed on the driver
+     * side."
      */
     public function testInitialCursorIsNotClosed()
     {
@@ -722,7 +737,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "ChangeStream will not attempt to resume after encountering
+     * Prose test 5: "ChangeStream will not attempt to resume after encountering
      * error code 11601 (Interrupted), 136 (CappedPositionLost), or 237
      * (CursorKilled) while executing a getMore command."
      *
@@ -757,9 +772,9 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "ChangeStream will throw an exception if the server response
-     * is missing the resume token (if wire version is < 8, this is a driver-
-     * side error; for 8+, this is a server-side error)"
+     * Prose test 2: "ChangeStream will throw an exception if the server
+     * response is missing the resume token (if wire version is < 8, this is a
+     * driver-side error; for 8+, this is a server-side error)"
      */
     public function testResumeTokenNotFoundClientSideError()
     {
@@ -785,9 +800,9 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "ChangeStream will throw an exception if the server response
-     * is missing the resume token (if wire version is < 8, this is a driver-
-     * side error; for 8+, this is a server-side error)"
+     * Prose test 2: "ChangeStream will throw an exception if the server
+     * response is missing the resume token (if wire version is < 8, this is a
+     * driver-side error; for 8+, this is a server-side error)"
      */
     public function testResumeTokenNotFoundServerSideError()
     {
@@ -808,9 +823,9 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "ChangeStream will throw an exception if the server response
-     * is missing the resume token (if wire version is < 8, this is a driver-
-     * side error; for 8+, this is a server-side error)"
+     * Prose test 2: "ChangeStream will throw an exception if the server
+     * response is missing the resume token (if wire version is < 8, this is a
+     * driver-side error; for 8+, this is a server-side error)"
      */
     public function testResumeTokenInvalidTypeClientSideError()
     {
@@ -836,9 +851,9 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "ChangeStream will throw an exception if the server response
-     * is missing the resume token (if wire version is < 8, this is a driver-
-     * side error; for 8+, this is a server-side error)"
+     * Prose test 2: "ChangeStream will throw an exception if the server
+     * response is missing the resume token (if wire version is < 8, this is a
+     * driver-side error; for 8+, this is a server-side error)"
      */
     public function testResumeTokenInvalidTypeServerSideError()
     {
@@ -1225,7 +1240,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "ChangeStream will automatically resume one time on a
+     * Prose test 3: "ChangeStream will automatically resume one time on a
      * resumable error (including not master) with the initial pipeline and
      * options, except for the addition/update of a resumeToken."
      */
@@ -1302,7 +1317,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "ChangeStream will not attempt to resume on any error
+     * Prose test 4: "ChangeStream will not attempt to resume on any error
      * encountered while executing an aggregate command."
      */
     public function testErrorDuringAggregateCommandDoesNotCauseResume()
@@ -1336,8 +1351,8 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "ChangeStream will perform server selection before attempting
-     * to resume, using initial readPreference"
+     * Prose test 6: "ChangeStream will perform server selection before
+     * attempting to resume, using initial readPreference"
      */
     public function testOriginalReadPreferenceIsPreservedOnResume()
     {
@@ -1371,7 +1386,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test
+     * Prose test 12
      * For a ChangeStream under these conditions:
      * - Running against a server <4.0.7.
      * - The batch is empty or has been iterated to the last document.
@@ -1406,6 +1421,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
+     * Prose test 14
      * For a ChangeStream under these conditions:
      *  - The batch is not empty.
      *  - The batch hasn’t been iterated at all.
@@ -1467,10 +1483,10 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "$changeStream stage for ChangeStream started with startAfter
-     * against a server >=4.1.1 that has not received any results yet MUST
-     * include a startAfter option and MUST NOT include a resumeAfter option
-     * when resuming a change stream."
+     * Prose test 17: "$changeStream stage for ChangeStream started with
+     * startAfter against a server >=4.1.1 that has not received any results yet
+     * MUST include a startAfter option and MUST NOT include a resumeAfter
+     * option when resuming a change stream."
      */
     public function testResumingChangeStreamWithoutPreviousResultsIncludesStartAfterOption()
     {
@@ -1514,10 +1530,10 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: "$changeStream stage for ChangeStream started with startAfter
-     * against a server >=4.1.1 that has received at least one result MUST
-     * include a resumeAfter option and MUST NOT include a startAfter option
-     * when resuming a change stream."
+     * Prose test 18: "$changeStream stage for ChangeStream started with
+     * startAfter against a server >=4.1.1 that has received at least one result
+     * MUST include a resumeAfter option and MUST NOT include a startAfter
+     * option when resuming a change stream."
      */
     public function testResumingChangeStreamWithPreviousResultsIncludesResumeAfterOption()
     {

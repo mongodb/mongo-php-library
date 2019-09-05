@@ -1541,6 +1541,73 @@ class DocumentationExamplesTest extends FunctionalTestCase
     }
 
     /**
+     * @doesNotPerformAssertions
+     */
+    public function testWithTransactionExample()
+    {
+        $this->skipIfTransactionsAreNotSupported();
+
+        $uriString = static::getUri(true);
+
+        // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
+        // Start Transactions withTxn API Example 1
+        /*
+         * For a replica set, include the replica set name and a seedlist of the members in the URI string; e.g.
+         * uriString = 'mongodb://mongodb0.example.com:27017,mongodb1.example.com:27017/?replicaSet=myRepl'
+         * For a sharded cluster, connect to the mongos instances; e.g.
+         * uriString = 'mongodb://mongos0.example.com:27017,mongos1.example.com:27017/'
+         */
+
+        $client = new \MongoDB\Client($uriString);
+
+        // Prerequisite: Create collections. CRUD operations in transactions must be on existing collections.
+        $client->selectCollection(
+            'mydb1',
+            'foo',
+            [
+                'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
+            ]
+        )->insertOne(['abc' => 0]);
+
+        $client->selectCollection(
+            'mydb2',
+            'bar',
+            [
+                'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
+            ]
+        )->insertOne(['xyz' => 0]);
+
+        // Step 1: Define the callback that specifies the sequence of operations to perform inside the transactions.
+
+        $callback = function (\MongoDB\Driver\Session $session) use ($client) {
+            $client
+                ->selectCollection('mydb1', 'foo')
+                ->insertOne(['abc' => 1], ['session' => $session]);
+
+            $client
+                ->selectCollection('mydb2', 'bar')
+                ->insertOne(['xyz' => 999], ['session' => $session]);
+        };
+
+        // Step 2: Start a client session.
+
+        $session = $client->startSession();
+
+        // Step 3: Use with_transaction to start a transaction, execute the callback, and commit (or abort on error).
+
+        $transactionOptions = [
+            'readConcern' => new \MongoDB\Driver\ReadConcern(\MongoDB\Driver\ReadConcern::LOCAL),
+            'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
+            'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_PRIMARY),
+        ];
+
+        \MongoDB\with_transaction($session, $callback, $transactionOptions);
+
+        // End Transactions withTxn API Example 1
+        // phpcs:enable
+    }
+
+    /**
      * Return the test collection name.
      *
      * @return string

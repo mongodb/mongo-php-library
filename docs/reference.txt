@@ -15,4 +15,5 @@ Reference
    /reference/write-result-classes
    /reference/result-classes
    /reference/enumeration-classes
+   /reference/functions
    /reference/exception-classes

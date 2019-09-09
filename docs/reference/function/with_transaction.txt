@@ -1,0 +1,79 @@
+===========================
+MongoDB\\with_transaction()
+===========================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+.. versionadded:: 1.5
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\with_transaction()
+
+   Execute a callback within a transaction using the given client session
+
+   .. code-block:: php
+
+      function with_transaction(MongoDB\Driver\Session $session, callable $callback, array $transactionOptions = []): void
+
+   This method has the following parameters:
+
+   .. include:: /includes/apiargs/function-with_transaction-param.rst
+
+Behavior
+--------
+
+This function is responsible for starting a transaction, invoking a callback,
+and committing a transaction. It also applies logic to retry this process after
+certain errors within a preset time limit. The callback is expected to execute
+one or more operations within the transactionby passing the callback's
+:php:`MongoDB\\Driver\\Session <mongodb-driver-session>` argument as an option to
+those operations; however, that is not enforced.
+
+.. note::
+
+  Applications are strongly encouraged to use an
+  `idempotent <https://en.wikipedia.org/wiki/Idempotence>`_ callback, since it
+  may be invoked multiple times if retryable errors are encountered during
+  either callback execution or committing.
+
+Any exception thrown during execution of the callback will be caught and
+evaluated. If an exception has a ``TransientTransactionError`` error label, the
+transaction will be aborted, restarted, and the callback will be invoked again.
+For any other exception, the transaction will be aborted and the exception
+re-thrown to propagate the error to the caller of ``with_transaction()``.
+
+Following successful execution of the callback, the transaction will be
+committed. If an exception with an UnknownTransactionCommitResult error label is
+encountered, the commit will be retried. If an exception with a
+``TransientTransactionError`` error label is encountered, the transaction will
+be restarted and control will return to invoking the callback. Any other
+exception will be re-thrown to propagate the error to the caller of
+``with_transaction()``.
+
+When an error occurs during callback execution or committing, the process is
+only retried if fewer than 120 seconds have elapsed since ``with_transaction()``
+was first called. This time limit is not configurable. After this time, any
+exception that would normally result in a retry attempt will instead be
+re-thrown.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-runtimeexception.rst
+
+See Also
+--------
+
+- :php:`MongoDB\\Driver\\Session::startTransaction <mongodb-driver-session.starttransaction>`
+- :php:`MongoDB\\Driver\\Session::commitTransaction <mongodb-driver-session.committransaction>`
+- :manual:`Transactions: Drivers API </core/transactions-in-applications>` documentation in the MongoDB manual
+- `Convenient API for Transactions <https://github.com/mongodb/specifications/blob/master/source/transactions-convenient-api/transactions-convenient-api.rst>`_ specification

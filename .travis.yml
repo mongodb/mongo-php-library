@@ -14,7 +14,7 @@ cache:
 
 env:
   global:
-    - DRIVER_VERSION=1.6.0rc1
+    - DRIVER_VERSION=1.6.0
     - SERVER_DISTRO=ubuntu1604
     - SERVER_VERSION=4.2.0
     - DEPLOYMENT=STANDALONE

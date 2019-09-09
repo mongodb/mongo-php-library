@@ -33,7 +33,7 @@ description: |
   The default read concern to use for {{resource}} operations. Defaults to the
   {{parent}}'s read concern.
 interface: phpmethod
-operation: selectCollection
+operation: ~
 optional: true
 replacement:
   resource: "collection"

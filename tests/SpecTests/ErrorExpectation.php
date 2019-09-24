@@ -75,6 +75,17 @@ final class ErrorExpectation
         return $o;
     }
 
+    public static function fromCrud(stdClass $result)
+    {
+        $o = new self();
+
+        if (isset($result->error)) {
+            $o->isExpected = $result->error;
+        }
+
+        return $o;
+    }
+
     public static function fromRetryableReads(stdClass $operation)
     {
         $o = new self();

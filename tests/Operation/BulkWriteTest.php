@@ -258,10 +258,10 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    public function testUpdateManyUpdateArgumentRequiresOperators()
+    public function testUpdateManyUpdateArgumentRequiresOperatorsOrPipeline()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('First key in $operations[0]["updateMany"][1] is not an update operator');
+        $this->expectExceptionMessage('First key in $operations[0]["updateMany"][1] is neither an update operator nor a pipeline');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::UPDATE_MANY => [['_id' => ['$gt' => 1]], ['x' => 1]]],
         ]);
@@ -345,10 +345,10 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    public function testUpdateOneUpdateArgumentRequiresOperators()
+    public function testUpdateOneUpdateArgumentRequiresOperatorsOrPipeline()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('First key in $operations[0]["updateOne"][1] is not an update operator');
+        $this->expectExceptionMessage('First key in $operations[0]["updateOne"][1] is neither an update operator nor a pipeline');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::UPDATE_ONE => [['_id' => 1], ['x' => 1]]],
         ]);

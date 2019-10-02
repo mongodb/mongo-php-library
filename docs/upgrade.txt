@@ -235,3 +235,63 @@ been replaced with a general-purpose
 :phpmethod:`MongoDB\\Collection::bulkWrite()` method. Whereas the legacy driver
 only allowed bulk operations of the same type, the new method allows operations
 to be mixed (e.g. inserts, updates, and deletes).
+
+BSON class upgrade guide
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+When upgrading from the legacy driver, classes like :php:`MongoId <mongoid>`
+have to be replaced with classes in the ``MongoDB\\BSON`` namespace. The
+following table lists all legacy classes along with the class that replaces
+them. When typehinting against BSON values, use type interfaces instead of their
+implementations.
+
+.. list-table::
+   :header-rows: 1
+
+   * - Legacy class
+     - BSON type class
+     - BSON type interface
+
+   * - :php:`MongoId <mongoid>`
+     - :php:`MongoDB\\BSON\\ObjectId <mongodb_bson_objectid>`
+     -
+
+   * - :php:`MongoCode <mongocode>`
+     - :php:`MongoDB\\BSON\\Javascript <mongodb_bson_javascript>`
+     - :php:`MongoDB\\BSON\\JavascriptInterface <mongodb_bson_javascriptinterface>`
+
+   * - :php:`MongoDate <mongodate>`
+     - :php:`MongoDB\\BSON\\UTCDateTime <mongodb_bson_utcdatetime>`
+     - :php:`MongoDB\\BSON\\UTCDateTimeInterface <mongodb_bson_utcdatetimeinterface>`
+
+   * - :php:`MongoRegex <mongoregex>`
+     - :php:`MongoDB\\BSON\\Regex <mongodb_bson_regex>`
+     - :php:`MongoDB\\BSON\\RegexInterface <mongodb_bson_regexinterface>`
+
+   * - :php:`MongoBinData <mongobindata>`
+     - :php:`MongoDB\\BSON\\Binary <mongodb_bson_binary>`
+     - :php:`MongoDB\\BSON\\BinaryInterface <mongodb_bson_binaryinterface>`
+
+   * - :php:`MongoInt32 <mongoint32>`
+     - Dropped without replacement.
+     -
+
+   * - :php:`MongoInt64 <mongoint64>`
+     - :php:`MongoDB\\BSON\\Int64 <mongodb_bson_int64>`
+     -
+
+   * - :php:`MongoDBRef <mongodbref>`
+     - Dropped without replacement.
+     -
+
+   * - :php:`MongoMinKey <mongominkey>`
+     - :php:`MongoDB\\BSON\\MinKey <mongodb_bson_minkey>`
+     - :php:`MongoDB\\BSON\\MinKeyInterface <mongodb_bson_minkeyinterface>`
+
+   * - :php:`MongoMaxKey <mongomaxkey>`
+     - :php:`MongoDB\\BSON\\MaxKey <mongodb_bson_maxkey>`
+     - :php:`MongoDB\\BSON\\MaxKeyInterface <mongodb_bson_maxkeyinterface>`
+
+   * - :php:`MongoTimestamp <mongotimestamp>`
+     - :php:`MongoDB\\BSON\\Timestamp <mongodb_bson_timestamp>`
+     - :php:`MongoDB\\BSON\\TimestampInterface <mongodb_bson_timestampinterface>`

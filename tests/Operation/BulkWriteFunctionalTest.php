@@ -295,6 +295,36 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         );
     }
 
+    public function testBulkWriteWithPipelineUpdates()
+    {
+        if (version_compare($this->getServerVersion(), '4.2.0', '<')) {
+            $this->markTestSkipped('Pipeline-style updates are not supported');
+        }
+
+        $this->createFixtures(4);
+
+        $ops = [
+            ['updateOne' => [['_id' => 2], [['$addFields' => ['y' => 2]]]]],
+            ['updateMany' => [['_id' => ['$gt' => 2]], [['$addFields' => ['y' => '$_id']]]]],
+        ];
+
+        $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
+        $result = $operation->execute($this->getPrimaryServer());
+
+        $this->assertInstanceOf(BulkWriteResult::class, $result);
+        $this->assertSame(3, $result->getMatchedCount());
+        $this->assertSame(3, $result->getModifiedCount());
+
+        $expected = [
+            ['_id' => 1, 'x' => 11],
+            ['_id' => 2, 'x' => 22, 'y' => 2],
+            ['_id' => 3, 'x' => 33, 'y' => 3],
+            ['_id' => 4, 'x' => 44, 'y' => 4],
+        ];
+
+        $this->assertSameDocuments($expected, $this->collection->find());
+    }
+
     /**
      * Create data fixtures.
      *

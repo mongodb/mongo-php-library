@@ -8,7 +8,6 @@ use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\BadMethodCallException;
-use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\BulkWrite;
 use MongoDB\Tests\CommandObserver;
@@ -224,67 +223,6 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getUpsertedIds();
-    }
-
-    public function testUnknownOperation()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unknown operation type "foo" in $operations[0]');
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            ['foo' => [['_id' => 1]]],
-        ]);
-    }
-
-    /**
-     * @dataProvider provideOpsWithMissingArguments
-     */
-    public function testMissingArguments(array $ops)
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageRegExp('/Missing (first|second) argument for \$operations\[\d+\]\["\w+\"]/');
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
-    }
-
-    public function provideOpsWithMissingArguments()
-    {
-        return [
-            [[['insertOne' => []]]],
-            [[['updateOne' => []]]],
-            [[['updateOne' => [['_id' => 1]]]]],
-            [[['updateMany' => []]]],
-            [[['updateMany' => [['_id' => 1]]]]],
-            [[['replaceOne' => []]]],
-            [[['replaceOne' => [['_id' => 1]]]]],
-            [[['deleteOne' => []]]],
-            [[['deleteMany' => []]]],
-        ];
-    }
-
-    public function testUpdateOneRequiresUpdateOperators()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('First key in $operations[0]["updateOne"][1] is neither an update operator nor a pipeline');
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            ['updateOne' => [['_id' => 1], ['x' => 1]]],
-        ]);
-    }
-
-    public function testUpdateManyRequiresUpdateOperators()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('First key in $operations[0]["updateMany"][1] is neither an update operator nor a pipeline');
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            ['updateMany' => [['_id' => ['$gt' => 1]], ['x' => 1]]],
-        ]);
-    }
-
-    public function testReplaceOneRequiresReplacementDocument()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('First key in $operations[0]["replaceOne"][1] is an update operator');
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            ['replaceOne' => [['_id' => 1], ['$inc' => ['x' => 1]]]],
-        ]);
     }
 
     public function testSessionOption()

@@ -158,6 +158,7 @@ final class Operation
     {
         $o = new self($operation);
 
+        $o->errorExpectation = ErrorExpectation::fromCrud($operation);
         $o->resultExpectation = ResultExpectation::fromCrud($operation, $o->getResultAssertionType());
 
         if (isset($operation->collectionOptions)) {

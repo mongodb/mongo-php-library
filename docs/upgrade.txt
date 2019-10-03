@@ -24,6 +24,88 @@ implements the `mongo extension <http://php.net/mongo>`_ API using this library
 and the new driver. While this adapter library is not officially supported by
 MongoDB, it does bear mentioning.
 
+BSON Type Classes
+-----------------
+
+When upgrading from the legacy driver,
+`type classes <https://www.php.net/manual/en/mongo.types.php>`_ such as
+:php:`MongoId <mongoid>` must be replaced with classes in the
+`MongoDB\\BSON namespace <https://www.php.net/manual/en/book.bson.php>`_. The
+new driver also introduces interfaces for its BSON types, which should be
+preferred if applications need to type hint against BSON values.
+
+The following table lists all legacy classes alongside the equivalent class in
+the new driver.
+
+.. list-table::
+   :header-rows: 1
+
+   * - Legacy class
+     - BSON type class
+     - BSON type interface
+
+   * - :php:`MongoId <mongoid>`
+     - :php:`MongoDB\\BSON\\ObjectId <mongodb_bson_objectid>`
+     - :php:`MongoDB\\BSON\\ObjectIdInterface <mongodb_bson_objectidinterface>`
+
+   * - :php:`MongoCode <mongocode>`
+     - :php:`MongoDB\\BSON\\Javascript <mongodb_bson_javascript>`
+     - :php:`MongoDB\\BSON\\JavascriptInterface <mongodb_bson_javascriptinterface>`
+
+   * - :php:`MongoDate <mongodate>`
+     - :php:`MongoDB\\BSON\\UTCDateTime <mongodb_bson_utcdatetime>`
+     - :php:`MongoDB\\BSON\\UTCDateTimeInterface <mongodb_bson_utcdatetimeinterface>`
+
+   * - :php:`MongoRegex <mongoregex>`
+     - :php:`MongoDB\\BSON\\Regex <mongodb_bson_regex>`
+     - :php:`MongoDB\\BSON\\RegexInterface <mongodb_bson_regexinterface>`
+
+   * - :php:`MongoBinData <mongobindata>`
+     - :php:`MongoDB\\BSON\\Binary <mongodb_bson_binary>`
+     - :php:`MongoDB\\BSON\\BinaryInterface <mongodb_bson_binaryinterface>`
+
+   * - :php:`MongoInt32 <mongoint32>`
+     - Not implemented. [1]_
+     -
+
+   * - :php:`MongoInt64 <mongoint64>`
+     - :php:`MongoDB\\BSON\\Int64 <mongodb_bson_int64>`
+     - Not implemented. [2]_
+
+   * - :php:`MongoDBRef <mongodbref>`
+     - Not implemented. [3]_
+     -
+
+   * - :php:`MongoMinKey <mongominkey>`
+     - :php:`MongoDB\\BSON\\MinKey <mongodb_bson_minkey>`
+     - :php:`MongoDB\\BSON\\MinKeyInterface <mongodb_bson_minkeyinterface>`
+
+   * - :php:`MongoMaxKey <mongomaxkey>`
+     - :php:`MongoDB\\BSON\\MaxKey <mongodb_bson_maxkey>`
+     - :php:`MongoDB\\BSON\\MaxKeyInterface <mongodb_bson_maxkeyinterface>`
+
+   * - :php:`MongoTimestamp <mongotimestamp>`
+     - :php:`MongoDB\\BSON\\Timestamp <mongodb_bson_timestamp>`
+     - :php:`MongoDB\\BSON\\TimestampInterface <mongodb_bson_timestampinterface>`
+
+.. [1] The new driver does not implement an equivalent class for
+   :php:`MongoInt32 <mongoint32>`. When decoding BSON, 32-bit integers will
+   always be represented as a PHP integer. When encoding BSON, PHP integers will
+   encode as either a 32-bit or 64-bit integer depending on their value.
+
+.. [2] :php:`MongoDB\\BSON\\Int64 <mongodb_bson_int64>` does not have an
+   interface defined. The new driver does not allow applications to instantiate
+   this type (i.e. its constructor is private) and it is only created during
+   BSON decoding when a 64-bit integer cannot be represented as a PHP integer on
+   a 32-bit platform.
+
+.. [3] The new driver does not implement an equivalent class for
+   :php:`MongoDBRef <mongodbref>` since
+   :manual:`DBRefs </reference/database-references>` are merely a BSON document
+   with a particular structure and not a proper BSON type. The new driver also
+   does not provide any helpers for working with DBRef objects, since their use
+   is not encouraged.
+
 Collection API
 --------------
 
@@ -235,63 +317,3 @@ been replaced with a general-purpose
 :phpmethod:`MongoDB\\Collection::bulkWrite()` method. Whereas the legacy driver
 only allowed bulk operations of the same type, the new method allows operations
 to be mixed (e.g. inserts, updates, and deletes).
-
-BSON class upgrade guide
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-When upgrading from the legacy driver, classes like :php:`MongoId <mongoid>`
-have to be replaced with classes in the ``MongoDB\\BSON`` namespace. The
-following table lists all legacy classes along with the class that replaces
-them. When typehinting against BSON values, use type interfaces instead of their
-implementations.
-
-.. list-table::
-   :header-rows: 1
-
-   * - Legacy class
-     - BSON type class
-     - BSON type interface
-
-   * - :php:`MongoId <mongoid>`
-     - :php:`MongoDB\\BSON\\ObjectId <mongodb_bson_objectid>`
-     -
-
-   * - :php:`MongoCode <mongocode>`
-     - :php:`MongoDB\\BSON\\Javascript <mongodb_bson_javascript>`
-     - :php:`MongoDB\\BSON\\JavascriptInterface <mongodb_bson_javascriptinterface>`
-
-   * - :php:`MongoDate <mongodate>`
-     - :php:`MongoDB\\BSON\\UTCDateTime <mongodb_bson_utcdatetime>`
-     - :php:`MongoDB\\BSON\\UTCDateTimeInterface <mongodb_bson_utcdatetimeinterface>`
-
-   * - :php:`MongoRegex <mongoregex>`
-     - :php:`MongoDB\\BSON\\Regex <mongodb_bson_regex>`
-     - :php:`MongoDB\\BSON\\RegexInterface <mongodb_bson_regexinterface>`
-
-   * - :php:`MongoBinData <mongobindata>`
-     - :php:`MongoDB\\BSON\\Binary <mongodb_bson_binary>`
-     - :php:`MongoDB\\BSON\\BinaryInterface <mongodb_bson_binaryinterface>`
-
-   * - :php:`MongoInt32 <mongoint32>`
-     - Dropped without replacement.
-     -
-
-   * - :php:`MongoInt64 <mongoint64>`
-     - :php:`MongoDB\\BSON\\Int64 <mongodb_bson_int64>`
-     -
-
-   * - :php:`MongoDBRef <mongodbref>`
-     - Dropped without replacement.
-     -
-
-   * - :php:`MongoMinKey <mongominkey>`
-     - :php:`MongoDB\\BSON\\MinKey <mongodb_bson_minkey>`
-     - :php:`MongoDB\\BSON\\MinKeyInterface <mongodb_bson_minkeyinterface>`
-
-   * - :php:`MongoMaxKey <mongomaxkey>`
-     - :php:`MongoDB\\BSON\\MaxKey <mongodb_bson_maxkey>`
-     - :php:`MongoDB\\BSON\\MaxKeyInterface <mongodb_bson_maxkeyinterface>`
-
-   * - :php:`MongoTimestamp <mongotimestamp>`
-     - :php:`MongoDB\\BSON\\Timestamp <mongodb_bson_timestamp>`
-     - :php:`MongoDB\\BSON\\TimestampInterface <mongodb_bson_timestampinterface>`

@@ -7,7 +7,7 @@ Upgrade Guide
 .. contents:: On this page
    :local:
    :backlinks: none
-   :depth: 1
+   :depth: 2
    :class: singlecol
 
 Overview
@@ -119,14 +119,23 @@ new specifications, the new class provides the same functionality as the legacy
 driver's :php:`MongoCollection <mongocollection>` class with some notable
 exceptions.
 
-Old and New Methods
-~~~~~~~~~~~~~~~~~~~
+A guiding principle in designing the new APIs was that explicit method names are
+preferable to overloaded terms found in the old API. For instance,
+:php:`MongoCollection::save() <mongocollection.save>` and
+:php:`MongoCollection::findAndModify() <mongocollection.findandmodify>`
+have different modes of operation, depending on their arguments. Methods were
+also split to distinguish between :manual:`updating specific fields
+</tutorial/modify-documents>` and :manual:`full-document replacement
+</tutorial/modify-documents/#replace-the-document>`.
+
+The following table lists all legacy methods alongside the
+equivalent method(s) in the new driver.
 
 .. list-table::
    :header-rows: 1
 
-   * - :php:`MongoCollection <mongocollection>`
-     - :phpclass:`MongoDB\\Collection`
+   * - :php:`MongoCollection <mongocollection>` method
+     - :phpclass:`MongoDB\\Collection` method(s)
 
    * - :php:`MongoCollection::aggregate() <mongocollection.aggregate>`
      - :phpmethod:`MongoDB\\Collection::aggregate()`
@@ -141,7 +150,7 @@ Old and New Methods
      - :phpmethod:`MongoDB\\Collection::count()`
 
    * - :php:`MongoCollection::createDBRef() <mongocollection.createdbref>`
-     - Not yet implemented. See :issue:`PHPLIB-24`.
+     - Not yet implemented. [3]_
 
    * - :php:`MongoCollection::createIndex() <mongocollection.createindex>`
      - :phpmethod:`MongoDB\\Collection::createIndex()`
@@ -173,7 +182,7 @@ Old and New Methods
      - :phpmethod:`MongoDB\\Collection::findOne()`
 
    * - :php:`MongoCollection::getDBRef() <mongocollection.getdbref>`
-     - Not implemented. See :issue:`PHPLIB-24`.
+     - Not implemented. [3]_
 
    * - :php:`MongoCollection::getIndexInfo() <mongocollection.getindexinfo>`
      - :phpmethod:`MongoDB\\Collection::listIndexes()`
@@ -191,7 +200,8 @@ Old and New Methods
      - Not implemented.
 
    * - :php:`MongoCollection::group() <mongocollection.group>`
-     - Not implemented. Use :phpmethod:`MongoDB\\Database::command()`.
+     - Not implemented. Use :phpmethod:`MongoDB\\Database::command()`. See
+       `Group Command Helper`_ for an example.
 
    * - :php:`MongoCollection::insert() <mongocollection.insert>`
      - :phpmethod:`MongoDB\\Collection::insertOne()`
@@ -209,13 +219,13 @@ Old and New Methods
        option.
 
    * - :php:`MongoCollection::setReadPreference() <mongocollection.setreadpreference>`
-     - Not implemented. Use :phpmethod:`MongoDB\\Collection::withOptions()`
+     - Not implemented. Use :phpmethod:`MongoDB\\Collection::withOptions()`.
 
    * - :php:`MongoCollection::setSlaveOkay() <mongocollection.getslaveokay>`
      - Not implemented.
 
    * - :php:`MongoCollection::setWriteConcern() <mongocollection.setwriteconcern>`
-     - Not implemented. Use :phpmethod:`MongoDB\\Collection::withOptions()`
+     - Not implemented. Use :phpmethod:`MongoDB\\Collection::withOptions()`.
 
    * - :php:`MongoCollection::update() <mongocollection.update>`
      - :phpmethod:`MongoDB\\Collection::replaceOne()`,
@@ -224,67 +234,6 @@ Old and New Methods
 
    * - :php:`MongoCollection::validate() <mongocollection.validate>`
      - Not implemented.
-
-A guiding principle in designing the new APIs was that explicit method names are
-preferable to overloaded terms found in the old API. For instance,
-:php:`MongoCollection::save() <mongocollection.save>` and
-:php:`MongoCollection::findAndModify() <mongocollection.findandmodify>`
-have different modes of operation, depending on their arguments. Methods were
-also split to distinguish between :manual:`updating specific fields
-</tutorial/modify-documents>` and :manual:`full-document replacement
-</tutorial/modify-documents/#replace-the-document>`.
-
-Group Command Helper
---------------------
-
-:phpclass:`MongoDB\\Collection` does have a helper method for the
-:manual:`group </reference/command/group>` command; The following example
-demonstrates how to execute a group command using the
-:phpmethod:`MongoDB\\Database::command()` method:
-
-.. code-block:: php
-
-   <?php
-
-   $database = (new MongoDB\Client)->selectDatabase('db_name');
-   $cursor = $database->command([
-       'group' => [
-           'ns' => 'collection_name',
-           'key' => ['field_name' => 1],
-           'initial' => ['total' => 0],
-           '$reduce' => new MongoDB\BSON\Javascript('...'),
-       ],
-   ]);
-
-   $resultDocument = $cursor->toArray()[0];
-
-DBRef Helpers
--------------
-
-:phpclass:`MongoDB\\Collection` does not yet have helper methods for working
-with :manual:`DBRef </reference/database-references>` objects; however, that is
-planned in :issue:`PHPLIB-24`.
-
-MongoCollection::save() Removed
--------------------------------
-
-:php:`MongoCollection::save() <mongocollection.save>`, which was syntactic sugar
-for an insert or upsert operation, has been removed in favor of explicitly using
-:phpmethod:`MongoDB\\Collection::insertOne` or
-:phpmethod:`MongoDB\\Collection::replaceOne` (with the ``upsert`` option).
-
-.. .. figure:: /images/save-flowchart.png
-..    :alt: save() flowchart
-
-While the ``save`` method does have its uses for interactive environments, such
-as the mongo shell, it was intentionally excluded from the `CRUD specification
-<https://github.com/mongodb/specifications/blob/master/source/crud/crud.rst>`_
-for language drivers. Generally, application code should know if the document
-has an identifier and be able to explicitly insert or replace the document and
-handle the returned :phpclass:`MongoDB\\InsertOneResult` or
-:phpclass:`MongoDB\\UpdateResult`, respectively. This also helps avoid
-inadvertent and potentially dangerous :manual:`full-document replacements
-</tutorial/modify-documents>`.
 
 Accessing IDs of Inserted Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -310,10 +259,52 @@ following methods on the write result objects:
   :phpmethod:`MongoDB\\Collection::bulkWrite()`
 
 Bulk Write Operations
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 The legacy driver's :php:`MongoWriteBatch <class.mongowritebatch>` classes have
 been replaced with a general-purpose
 :phpmethod:`MongoDB\\Collection::bulkWrite()` method. Whereas the legacy driver
 only allowed bulk operations of the same type, the new method allows operations
 to be mixed (e.g. inserts, updates, and deletes).
+
+MongoCollection::save() Removed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:php:`MongoCollection::save() <mongocollection.save>`, which was syntactic sugar
+for an insert or upsert operation, has been removed in favor of explicitly using
+:phpmethod:`MongoDB\\Collection::insertOne` or
+:phpmethod:`MongoDB\\Collection::replaceOne` (with the ``upsert`` option).
+
+While the ``save`` method does have its uses for interactive environments, such
+as the ``mongo`` shell, it was intentionally excluded from the
+`CRUD specification <https://github.com/mongodb/specifications/blob/master/source/crud/crud.rst>`_
+for language drivers. Generally, application code should know if the document
+has an identifier and be able to explicitly insert or replace the document and
+handle the returned :phpclass:`MongoDB\\InsertOneResult` or
+:phpclass:`MongoDB\\UpdateResult`, respectively. This also helps avoid
+inadvertent and potentially dangerous :manual:`full-document replacements
+</tutorial/modify-documents>`.
+
+Group Command Helper
+~~~~~~~~~~~~~~~~~~~~
+
+:phpclass:`MongoDB\\Collection` does have a helper method for the
+:manual:`group </reference/command/group>` command. The following example
+demonstrates how to execute a group command using the
+:phpmethod:`MongoDB\\Database::command()` method:
+
+.. code-block:: php
+
+   <?php
+
+   $database = (new MongoDB\Client)->selectDatabase('db_name');
+   $cursor = $database->command([
+       'group' => [
+           'ns' => 'collection_name',
+           'key' => ['field_name' => 1],
+           'initial' => ['total' => 0],
+           '$reduce' => new MongoDB\BSON\Javascript('...'),
+       ],
+   ]);
+
+   $resultDocument = $cursor->toArray()[0];

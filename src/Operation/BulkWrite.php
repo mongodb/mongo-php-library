@@ -33,6 +33,7 @@ use function is_bool;
 use function is_object;
 use function key;
 use function MongoDB\is_first_key_operator;
+use function MongoDB\is_pipeline;
 use function MongoDB\server_supports_feature;
 use function sprintf;
 
@@ -255,8 +256,8 @@ class BulkWrite implements Executable
                         throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
                     }
 
-                    if (! is_first_key_operator($args[1])) {
-                        throw new InvalidArgumentException(sprintf('First key in $operations[%d]["%s"][1] is not an update operator', $i, $type));
+                    if (! is_first_key_operator($args[1]) && ! is_pipeline($args[1])) {
+                        throw new InvalidArgumentException(sprintf('First key in $operations[%d]["%s"][1] is neither an update operator nor a pipeline', $i, $type));
                     }
 
                     if (! isset($args[2])) {

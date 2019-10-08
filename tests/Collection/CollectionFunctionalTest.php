@@ -16,7 +16,10 @@ use MongoDB\Operation\Count;
 use MongoDB\Tests\CommandObserver;
 use function array_filter;
 use function call_user_func;
+use function is_scalar;
+use function json_encode;
 use function strchr;
+use function usort;
 use function version_compare;
 
 /**
@@ -168,6 +171,88 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 $this->assertObjectHasAttribute('unique', $command->indexes[0]);
             }
         );
+    }
+
+    /**
+     * @dataProvider provideTypeMapOptionsAndExpectedDocuments
+     */
+    public function testDistinctWithTypeMap(array $typeMap, array $expectedDocuments)
+    {
+        $bulkWrite = new BulkWrite(['ordered' => true]);
+        $bulkWrite->insert([
+            'x' => (object) ['foo' => 'bar'],
+        ]);
+        $bulkWrite->insert(['x' => 4]);
+        $bulkWrite->insert([
+            'x' => (object) ['foo' => ['foo' => 'bar']],
+        ]);
+        $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
+
+        $values = $this->collection->withOptions(['typeMap' => $typeMap])->distinct('x');
+
+        /* This sort callable sorts all scalars to the front of the list. All
+         * non-scalar values are sorted by running json_encode on them and
+         * comparing their string representations.
+         */
+        $sort = function ($a, $b) {
+            if (is_scalar($a) && ! is_scalar($b)) {
+                return -1;
+            }
+
+            if (! is_scalar($a)) {
+                if (is_scalar($b)) {
+                    return 1;
+                }
+
+                $a = json_encode($a);
+                $b = json_encode($b);
+            }
+
+            return $a < $b ? -1 : 1;
+        };
+
+        usort($expectedDocuments, $sort);
+        usort($values, $sort);
+
+        $this->assertEquals($expectedDocuments, $values);
+    }
+
+    public function provideTypeMapOptionsAndExpectedDocuments()
+    {
+        return [
+            'No type map' => [
+                ['root' => 'array', 'document' => 'array'],
+                [
+                    ['foo' => 'bar'],
+                    4,
+                    ['foo' => ['foo' => 'bar']],
+                ],
+            ],
+            'array/array' => [
+                ['root' => 'array', 'document' => 'array'],
+                [
+                    ['foo' => 'bar'],
+                    4,
+                    ['foo' => ['foo' => 'bar']],
+                ],
+            ],
+            'object/array' => [
+                ['root' => 'object', 'document' => 'array'],
+                [
+                    (object) ['foo' => 'bar'],
+                    4,
+                    (object) ['foo' => ['foo' => 'bar']],
+                ],
+            ],
+            'array/stdClass' => [
+                ['root' => 'array', 'document' => 'stdClass'],
+                [
+                    ['foo' => 'bar'],
+                    4,
+                    ['foo' => (object) ['foo' => 'bar']],
+                ],
+            ],
+        ];
     }
 
     public function testDrop()

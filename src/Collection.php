@@ -470,6 +470,10 @@ class Collection
             $options['readPreference'] = $this->readPreference;
         }
 
+        if (! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
         $server = select_server($this->manager, $options);
 
         if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern) && ! is_in_transaction($options)) {

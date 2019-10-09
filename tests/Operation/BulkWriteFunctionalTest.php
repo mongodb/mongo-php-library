@@ -8,7 +8,6 @@ use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\BadMethodCallException;
-use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\BulkWrite;
 use MongoDB\Tests\CommandObserver;
@@ -226,67 +225,6 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $result->getUpsertedIds();
     }
 
-    public function testUnknownOperation()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unknown operation type "foo" in $operations[0]');
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            ['foo' => [['_id' => 1]]],
-        ]);
-    }
-
-    /**
-     * @dataProvider provideOpsWithMissingArguments
-     */
-    public function testMissingArguments(array $ops)
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageRegExp('/Missing (first|second) argument for \$operations\[\d+\]\["\w+\"]/');
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
-    }
-
-    public function provideOpsWithMissingArguments()
-    {
-        return [
-            [[['insertOne' => []]]],
-            [[['updateOne' => []]]],
-            [[['updateOne' => [['_id' => 1]]]]],
-            [[['updateMany' => []]]],
-            [[['updateMany' => [['_id' => 1]]]]],
-            [[['replaceOne' => []]]],
-            [[['replaceOne' => [['_id' => 1]]]]],
-            [[['deleteOne' => []]]],
-            [[['deleteMany' => []]]],
-        ];
-    }
-
-    public function testUpdateOneRequiresUpdateOperators()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('First key in $operations[0]["updateOne"][1] is not an update operator');
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            ['updateOne' => [['_id' => 1], ['x' => 1]]],
-        ]);
-    }
-
-    public function testUpdateManyRequiresUpdateOperators()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('First key in $operations[0]["updateMany"][1] is not an update operator');
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            ['updateMany' => [['_id' => ['$gt' => 1]], ['x' => 1]]],
-        ]);
-    }
-
-    public function testReplaceOneRequiresReplacementDocument()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('First key in $operations[0]["replaceOne"][1] is an update operator');
-        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            ['replaceOne' => [['_id' => 1], ['$inc' => ['x' => 1]]]],
-        ]);
-    }
-
     public function testSessionOption()
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
@@ -355,6 +293,36 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                 $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
             }
         );
+    }
+
+    public function testBulkWriteWithPipelineUpdates()
+    {
+        if (version_compare($this->getServerVersion(), '4.2.0', '<')) {
+            $this->markTestSkipped('Pipeline-style updates are not supported');
+        }
+
+        $this->createFixtures(4);
+
+        $ops = [
+            ['updateOne' => [['_id' => 2], [['$addFields' => ['y' => 2]]]]],
+            ['updateMany' => [['_id' => ['$gt' => 2]], [['$addFields' => ['y' => '$_id']]]]],
+        ];
+
+        $operation = new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), $ops);
+        $result = $operation->execute($this->getPrimaryServer());
+
+        $this->assertInstanceOf(BulkWriteResult::class, $result);
+        $this->assertSame(3, $result->getMatchedCount());
+        $this->assertSame(3, $result->getModifiedCount());
+
+        $expected = [
+            ['_id' => 1, 'x' => 11],
+            ['_id' => 2, 'x' => 22, 'y' => 2],
+            ['_id' => 3, 'x' => 33, 'y' => 3],
+            ['_id' => 4, 'x' => 44, 'y' => 4],
+        ];
+
+        $this->assertSameDocuments($expected, $this->collection->find());
     }
 
     /**

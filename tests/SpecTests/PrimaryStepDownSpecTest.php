@@ -110,6 +110,10 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
 
         // Verify that the connection pool has been cleared
         $this->assertSame($totalConnectionsCreated + 1, $this->getTotalConnectionsCreated());
+
+        // Execute an insert into the test collection of a {test: 1} document and verify that it succeeds.
+        $result = $this->insertDocuments(1);
+        $this->assertSame(1, $result->getInsertedCount());
     }
 
     /**
@@ -142,6 +146,10 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
 
         // Verify that the connection pool has been cleared
         $this->assertSame($totalConnectionsCreated + 1, $this->getTotalConnectionsCreated());
+
+        // Execute an insert into the test collection of a {test: 1} document and verify that it succeeds.
+        $result = $this->insertDocuments(1);
+        $this->assertSame(1, $result->getInsertedCount());
     }
 
     /**
@@ -174,6 +182,10 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
 
         // Verify that the connection pool has been cleared
         $this->assertSame($totalConnectionsCreated + 1, $this->getTotalConnectionsCreated());
+
+        // Execute an insert into the test collection of a {test: 1} document and verify that it succeeds.
+        $result = $this->insertDocuments(1);
+        $this->assertSame(1, $result->getInsertedCount());
     }
 
     /**

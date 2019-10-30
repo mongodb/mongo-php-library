@@ -4,6 +4,11 @@ type: :php:`MongoDB\\BSON\\Javascript <mongodb-bson-javascript>`
 description: |
   A JavaScript function that associates or "maps" a value with a key and emits
   the key and value pair.
+
+  .. note::
+
+     Passing a Javascript instance with a scope is deprecated. Put all scope
+     variables in the ``scope`` option of the MapReduce operation.
 interface: phpmethod
 operation: ~
 optional: false
@@ -14,6 +19,11 @@ type: :php:`MongoDB\\BSON\\Javascript <class.mongodb-bson-javascript>`
 description: |
   A JavaScript function that "reduces" to a single object all the values
   associated with a particular key.
+
+  .. note::
+
+     Passing a Javascript instance with a scope is deprecated. Put all scope
+     variables in the ``scope`` option of the MapReduce operation.
 interface: phpmethod
 operation: ~
 optional: false

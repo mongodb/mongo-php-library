@@ -266,6 +266,8 @@ class MapReduce implements Executable
             @trigger_error('Use of Javascript with scope in "finalize" option for MapReduce is deprecated. Put all scope variables in the "scope" option of the MapReduce operation.', E_USER_DEPRECATED);
         }
 
+        $this->checkOutDeprecations($out);
+
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
         $this->map = $map;
@@ -332,6 +334,27 @@ class MapReduce implements Executable
         $getIterator = $this->createGetIteratorCallable($result, $server);
 
         return new MapReduceResult($getIterator, $result);
+    }
+
+    /**
+     * @param string|array|object $out
+     * @return void
+     */
+    private function checkOutDeprecations($out)
+    {
+        if (is_string($out)) {
+            return;
+        }
+
+        $out = (array) $out;
+
+        if (isset($out['nonAtomic']) && ! $out['nonAtomic']) {
+            @trigger_error('Specifying false for "out.nonAtomic" is deprecated.', E_USER_DEPRECATED);
+        }
+
+        if (isset($out['sharded']) && ! $out['sharded']) {
+            @trigger_error('Specifying false for "out.sharded" is deprecated.', E_USER_DEPRECATED);
+        }
     }
 
     /**

@@ -27,7 +27,7 @@ class AggregateTest extends TestCase
     {
         $options = [];
 
-        foreach ($this->getInvalidBooleanValues() as $value) {
+        foreach ($this->getInvalidBooleanValues(true) as $value) {
             $options[][] = ['allowDiskUse' => $value];
         }
 
@@ -79,7 +79,7 @@ class AggregateTest extends TestCase
             $options[][] = ['typeMap' => $value];
         }
 
-        foreach ($this->getInvalidBooleanValues() as $value) {
+        foreach ($this->getInvalidBooleanValues(true) as $value) {
             $options[][] = ['useCursor' => $value];
         }
 

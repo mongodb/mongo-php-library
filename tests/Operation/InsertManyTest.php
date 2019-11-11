@@ -48,7 +48,7 @@ class InsertManyTest extends TestCase
             $options[][] = ['bypassDocumentValidation' => $value];
         }
 
-        foreach ($this->getInvalidBooleanValues() as $value) {
+        foreach ($this->getInvalidBooleanValues(true) as $value) {
             $options[][] = ['ordered' => $value];
         }
 

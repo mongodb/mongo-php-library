@@ -50,11 +50,11 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
     {
         $options = [];
 
-        foreach ($this->getInvalidIntegerValues() as $value) {
+        foreach ($this->getInvalidIntegerValues(true) as $value) {
             $options[][] = ['chunkSizeBytes' => $value];
         }
 
-        foreach ($this->getInvalidBooleanValues() as $value) {
+        foreach ($this->getInvalidBooleanValues(true) as $value) {
             $options[][] = ['disableMD5' => $value];
         }
 

@@ -52,7 +52,7 @@ class UpdateTest extends TestCase
             $options[][] = ['collation' => $value];
         }
 
-        foreach ($this->getInvalidBooleanValues() as $value) {
+        foreach ($this->getInvalidBooleanValues(true) as $value) {
             $options[][] = ['multi' => $value];
         }
 
@@ -60,7 +60,7 @@ class UpdateTest extends TestCase
             $options[][] = ['session' => $value];
         }
 
-        foreach ($this->getInvalidBooleanValues() as $value) {
+        foreach ($this->getInvalidBooleanValues(true) as $value) {
             $options[][] = ['upsert' => $value];
         }
 

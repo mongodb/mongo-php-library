@@ -40,7 +40,7 @@ class FindAndModifyTest extends TestCase
             $options[][] = ['maxTimeMS' => $value];
         }
 
-        foreach ($this->getInvalidBooleanValues() as $value) {
+        foreach ($this->getInvalidBooleanValues(true) as $value) {
             $options[][] = ['new' => $value];
         }
 
@@ -48,7 +48,7 @@ class FindAndModifyTest extends TestCase
             $options[][] = ['query' => $value];
         }
 
-        foreach ($this->getInvalidBooleanValues() as $value) {
+        foreach ($this->getInvalidBooleanValues(true) as $value) {
             $options[][] = ['remove' => $value];
         }
 
@@ -68,7 +68,7 @@ class FindAndModifyTest extends TestCase
             $options[][] = ['update' => $value];
         }
 
-        foreach ($this->getInvalidBooleanValues() as $value) {
+        foreach ($this->getInvalidBooleanValues(true) as $value) {
             $options[][] = ['upsert' => $value];
         }
 

@@ -33,7 +33,7 @@ class ClientTest extends TestCase
     {
         $options = [];
 
-        foreach ($this->getInvalidArrayValues() as $value) {
+        foreach ($this->getInvalidArrayValues(true) as $value) {
             $options[][] = ['typeMap' => $value];
         }
 

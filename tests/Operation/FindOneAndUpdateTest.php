@@ -49,7 +49,7 @@ class FindOneAndUpdateTest extends TestCase
             $options[][] = ['projection' => $value];
         }
 
-        foreach ($this->getInvalidIntegerValues() as $value) {
+        foreach ($this->getInvalidIntegerValues(true) as $value) {
             $options[][] = ['returnDocument' => $value];
         }
 

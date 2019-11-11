@@ -143,19 +143,19 @@ class Bucket
             'disableMD5' => false,
         ];
 
-        if (isset($options['bucketName']) && ! is_string($options['bucketName'])) {
+        if (! is_string($options['bucketName'])) {
             throw InvalidArgumentException::invalidType('"bucketName" option', $options['bucketName'], 'string');
         }
 
-        if (isset($options['chunkSizeBytes']) && ! is_integer($options['chunkSizeBytes'])) {
+        if (! is_integer($options['chunkSizeBytes'])) {
             throw InvalidArgumentException::invalidType('"chunkSizeBytes" option', $options['chunkSizeBytes'], 'integer');
         }
 
-        if (isset($options['chunkSizeBytes']) && $options['chunkSizeBytes'] < 1) {
+        if ($options['chunkSizeBytes'] < 1) {
             throw new InvalidArgumentException(sprintf('Expected "chunkSizeBytes" option to be >= 1, %d given', $options['chunkSizeBytes']));
         }
 
-        if (isset($options['disableMD5']) && ! is_bool($options['disableMD5'])) {
+        if (! is_bool($options['disableMD5'])) {
             throw InvalidArgumentException::invalidType('"disableMD5" option', $options['disableMD5'], 'boolean');
         }
 

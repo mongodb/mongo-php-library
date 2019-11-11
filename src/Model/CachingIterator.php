@@ -18,8 +18,8 @@
 namespace MongoDB\Model;
 
 use Countable;
-use Generator;
 use Iterator;
+use IteratorIterator;
 use Traversable;
 use function count;
 use function current;
@@ -41,7 +41,7 @@ class CachingIterator implements Countable, Iterator
     /** @var array */
     private $items = [];
 
-    /** @var Generator */
+    /** @var IteratorIterator */
     private $iterator;
 
     /** @var boolean */
@@ -61,7 +61,9 @@ class CachingIterator implements Countable, Iterator
      */
     public function __construct(Traversable $traversable)
     {
-        $this->iterator = $this->wrapTraversable($traversable);
+        $this->iterator = new IteratorIterator($traversable);
+
+        $this->iterator->rewind();
         $this->storeCurrentItem();
     }
 
@@ -101,8 +103,12 @@ class CachingIterator implements Countable, Iterator
     public function next()
     {
         if (! $this->iteratorExhausted) {
+            $this->iteratorAdvanced = true;
             $this->iterator->next();
+
             $this->storeCurrentItem();
+
+            $this->iteratorExhausted = ! $this->iterator->valid();
         }
 
         next($this->items);
@@ -155,21 +161,5 @@ class CachingIterator implements Countable, Iterator
         }
 
         $this->items[$key] = $this->iterator->current();
-    }
-
-    /**
-     * Wraps the Traversable with a Generator.
-     *
-     * @param Traversable $traversable
-     * @return Generator
-     */
-    private function wrapTraversable(Traversable $traversable)
-    {
-        foreach ($traversable as $key => $value) {
-            yield $key => $value;
-            $this->iteratorAdvanced = true;
-        }
-
-        $this->iteratorExhausted = true;
     }
 }

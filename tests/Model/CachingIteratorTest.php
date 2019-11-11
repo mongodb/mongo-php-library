@@ -53,7 +53,7 @@ class CachingIteratorTest extends TestCase
 
     public function testPartialIterationDoesNotExhaust()
     {
-        $traversable = $this->getTraversableThatThrows([1, 2, new Exception()]);
+        $traversable = $this->getTraversable([1, 2, new Exception()]);
         $iterator = new CachingIterator($traversable);
 
         $expectedKey = 0;
@@ -110,13 +110,6 @@ class CachingIteratorTest extends TestCase
     }
 
     private function getTraversable($items)
-    {
-        foreach ($items as $item) {
-            yield $item;
-        }
-    }
-
-    private function getTraversableThatThrows($items)
     {
         foreach ($items as $item) {
             if ($item instanceof Exception) {

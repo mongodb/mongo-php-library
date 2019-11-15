@@ -95,7 +95,7 @@ class Client
     {
         $driverOptions += ['typeMap' => self::$defaultTypeMap];
 
-        if (isset($driverOptions['typeMap']) && ! is_array($driverOptions['typeMap'])) {
+        if (! is_array($driverOptions['typeMap'])) {
             throw InvalidArgumentException::invalidType('"typeMap" driver option', $driverOptions['typeMap'], 'array');
         }
 

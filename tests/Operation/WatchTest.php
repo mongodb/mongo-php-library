@@ -52,7 +52,7 @@ class WatchTest extends FunctionalTestCase
             $options[][] = ['collation' => $value];
         }
 
-        foreach ($this->getInvalidStringValues() as $value) {
+        foreach ($this->getInvalidStringValues(true) as $value) {
             $options[][] = ['fullDocument' => $value];
         }
 
@@ -64,7 +64,7 @@ class WatchTest extends FunctionalTestCase
             $options[][] = ['readConcern' => $value];
         }
 
-        foreach ($this->getInvalidReadPreferenceValues() as $value) {
+        foreach ($this->getInvalidReadPreferenceValues(true) as $value) {
             $options[][] = ['readPreference' => $value];
         }
 

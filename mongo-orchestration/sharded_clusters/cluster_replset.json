@@ -50,7 +50,11 @@
                         "journal": true,
                         "logappend": true,
                         "port": 4400,
-                        "bind_ip_all": true
+                        "bind_ip_all": true,
+                        "setParameter":  {
+                            "periodicNoopIntervalSecs":  1,
+                            "writePeriodicNoops":  true
+                        }
                     } },
                     { "procParams": {
                         "dbpath": "/tmp/SHARDED-RS/SHARD1/4401",
@@ -59,7 +63,11 @@
                         "journal": true,
                         "logappend": true,
                         "port": 4401,
-                        "bind_ip_all": true
+                        "bind_ip_all": true,
+                        "setParameter":  {
+                            "periodicNoopIntervalSecs":  1,
+                            "writePeriodicNoops":  true
+                        }
                     } }
                 ]
             }
@@ -76,7 +84,11 @@
                         "journal": true,
                         "logappend": true,
                         "port": 4410,
-                        "bind_ip_all": true
+                        "bind_ip_all": true,
+                        "setParameter":  {
+                            "periodicNoopIntervalSecs":  1,
+                            "writePeriodicNoops":  true
+                        }
                     } },
                     { "procParams": {
                         "dbpath": "/tmp/SHARDED-RS/SHARD2/4411",
@@ -85,7 +97,11 @@
                         "journal": true,
                         "logappend": true,
                         "port": 4411,
-                        "bind_ip_all": true
+                        "bind_ip_all": true,
+                        "setParameter":  {
+                            "periodicNoopIntervalSecs":  1,
+                            "writePeriodicNoops":  true
+                        }
                     } }
                 ]
             }

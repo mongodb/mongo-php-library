@@ -112,6 +112,18 @@ jobs:
       env:
         - DEPLOYMENT=SHARDED_CLUSTER_RS
 
+    # Test next patch release for driver
+    - stage: Test
+      php: "7.3"
+      env:
+        - DRIVER_BRANCH="v1.6"
+
+    # Test next minor release for driver
+    - stage: Test
+      php: "7.3"
+      env:
+        - DRIVER_BRANCH="master"
+
 before_install:
   - pip install "mongo-orchestration>=0.6.7,<1.0" --user `whoami`
   - export SERVER_FILENAME=mongodb-linux-x86_64-${SERVER_DISTRO}-${SERVER_VERSION}

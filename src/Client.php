@@ -17,6 +17,7 @@
 
 namespace MongoDB;
 
+use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
@@ -159,6 +160,26 @@ class Client
     public function __toString()
     {
         return $this->uri;
+    }
+
+    /**
+     * Returns a ClientEncryption instance for explicit encryption and decryption
+     *
+     * @param array $options Encryption options
+     *
+     * @return ClientEncryption
+     */
+    public function createClientEncryption(array $options)
+    {
+        if (isset($options['keyVaultClient'])) {
+            if ($options['keyVaultClient'] instanceof self) {
+                $options['keyVaultClient'] = $options['keyVaultClient']->manager;
+            } elseif (! $options['keyVaultClient'] instanceof Manager) {
+                throw InvalidArgumentException::invalidType('"keyVaultClient" option', $options['keyVaultClient'], [self::class, Manager::class]);
+            }
+        }
+
+        return $this->manager->createClientEncryption($options);
     }
 
     /**

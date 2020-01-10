@@ -3,6 +3,7 @@
 namespace MongoDB\Tests;
 
 use MongoDB\Client;
+use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -172,5 +173,56 @@ class ClientTest extends TestCase
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
+    }
+
+    public function testCreateClientEncryption()
+    {
+        $client = new Client(static::getUri());
+
+        $options = [
+            'keyVaultNamespace' => 'default.keys',
+            'kmsProviders' => ['aws' => ['accessKeyId' => 'abc', 'secretAccessKey' => 'def']],
+        ];
+
+        $clientEncryption = $client->createClientEncryption($options);
+        $this->assertInstanceOf(ClientEncryption::class, $clientEncryption);
+    }
+
+    public function testCreateClientEncryptionWithKeyVaultClient()
+    {
+        $client = new Client(static::getUri());
+
+        $options = [
+            'keyVaultClient' => $client,
+            'keyVaultNamespace' => 'default.keys',
+            'kmsProviders' => ['aws' => ['accessKeyId' => 'abc', 'secretAccessKey' => 'def']],
+        ];
+
+        $clientEncryption = $client->createClientEncryption($options);
+        $this->assertInstanceOf(ClientEncryption::class, $clientEncryption);
+    }
+
+    public function testCreateClientEncryptionWithManager()
+    {
+        $client = new Client(static::getUri());
+
+        $options = [
+            'keyVaultClient' => $client->getManager(),
+            'keyVaultNamespace' => 'default.keys',
+            'kmsProviders' => ['aws' => ['accessKeyId' => 'abc', 'secretAccessKey' => 'def']],
+        ];
+
+        $clientEncryption = $client->createClientEncryption($options);
+        $this->assertInstanceOf(ClientEncryption::class, $clientEncryption);
+    }
+
+    public function testCreateClientEncryptionWithInvalidKeyVaultClient()
+    {
+        $client = new Client(static::getUri());
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected "keyVaultClient" option to have type "MongoDB\Client" or "MongoDB\Driver\Manager" but found "string"');
+
+        $client->createClientEncryption(['keyVaultClient' => 'foo']);
     }
 }

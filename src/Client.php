@@ -99,6 +99,14 @@ class Client
             throw InvalidArgumentException::invalidType('"typeMap" driver option', $driverOptions['typeMap'], 'array');
         }
 
+        if (isset($driverOptions['autoEncryption']['keyVaultClient'])) {
+            if ($driverOptions['autoEncryption']['keyVaultClient'] instanceof self) {
+                $driverOptions['autoEncryption']['keyVaultClient'] = $driverOptions['autoEncryption']['keyVaultClient']->manager;
+            } elseif (! $driverOptions['autoEncryption']['keyVaultClient'] instanceof Manager) {
+                throw InvalidArgumentException::invalidType('"keyVaultClient" autoEncryption option', $driverOptions['autoEncryption']['keyVaultClient'], [self::class, Manager::class]);
+            }
+        }
+
         $this->uri = (string) $uri;
         $this->typeMap = isset($driverOptions['typeMap']) ? $driverOptions['typeMap'] : null;
 

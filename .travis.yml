@@ -31,7 +31,7 @@ jobs:
       php: "7.1"
       before_install: []
       before_script:
-        - pecl install -f mongodb-${DRIVER_VERSION}
+        - .travis/install-extension.sh
         - composer require --no-update doctrine/coding-standard=^6.0
         - composer install --no-interaction --no-progress --no-suggest ${COMPOSER_OPTIONS}
       script: vendor/bin/phpcs
@@ -112,6 +112,18 @@ jobs:
       env:
         - DEPLOYMENT=SHARDED_CLUSTER_RS
 
+    # Test next patch release for driver
+    - stage: Test
+      php: "7.3"
+      env:
+        - DRIVER_BRANCH="v1.6"
+
+    # Test next minor release for driver
+    - stage: Test
+      php: "7.3"
+      env:
+        - DRIVER_BRANCH="master"
+
 before_install:
   - pip install "mongo-orchestration>=0.6.7,<1.0" --user `whoami`
   - export SERVER_FILENAME=mongodb-linux-x86_64-${SERVER_DISTRO}-${SERVER_VERSION}
@@ -120,28 +132,11 @@ before_install:
   - mongod --version
   - mongo-orchestration --version
   - export MO_PATH=`python -c 'import mongo_orchestration; from os import path; print(path.dirname(mongo_orchestration.__file__));'`
-  - |
-    INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-    # tpecl is a helper to compile and cache php extensions
-      tpecl () {
-          local ext_name=$1
-          local ext_so=$2
-          local ext_dir=$(php -r "echo ini_get('extension_dir');")
-          local ext_cache=~/php-ext/$(basename $ext_dir)/$ext_name
-          if [[ -e $ext_cache/$ext_so ]]; then
-              echo extension = $ext_cache/$ext_so >> $INI
-          else
-              mkdir -p $ext_cache
-              echo yes | pecl install -f $ext_name &&
-              cp $ext_dir/$ext_so $ext_cache
-          fi
-      }
-      export -f tpecl
 
 before_script:
   - mongo-orchestration start
   - .travis/setup_mo.sh
-  - pecl install -f mongodb-${DRIVER_VERSION}
+  - .travis/install-extension.sh
   - php --ri mongodb
   - composer update --no-interaction --no-progress --no-suggest --prefer-dist --prefer-stable ${COMPOSER_OPTIONS}
   - ulimit -c

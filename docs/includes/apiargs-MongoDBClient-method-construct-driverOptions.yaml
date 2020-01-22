@@ -112,4 +112,18 @@ description: |
 interface: phpmethod
 operation: ~
 optional: true
+---
+arg_name: option
+name: autoEncryption
+type: array
+description: |
+  Options to configure client-side field-level encryption in the driver. The
+  encryption options are documented in the :php:`extension documentation
+  <manual/en/mongodb-driver-manager.construct.php#mongodb-driver-manager.construct-driveroptions>`.
+  For the ``keyVaultClient`` option, you may pass a :phpclass:`MongoDB\\Client`
+  instance, which will be unwrapped to provide a :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>`
+  to the extension.
+interface: phpmethod
+operation: ~
+optional: true
 ...

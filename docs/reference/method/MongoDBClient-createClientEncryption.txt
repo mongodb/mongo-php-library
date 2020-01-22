@@ -1,0 +1,51 @@
+=========================================
+MongoDB\\Client::createClientEncryption()
+=========================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Client::createClientEncryption()
+
+   Returns a :php:`MongoDB\\Driver\\ClientEncryption <class.mongodb-driver-clientencryption>`
+   object for manual encryption and decryption of values.
+
+   .. code-block:: php
+
+      function createClientEncryption(array $options): MongoDB\Driver\ClientEncryption
+
+   This method has the following parameters:
+
+   .. include:: /includes/apiargs/MongoDBClient-method-createClientEncryption-param.rst
+
+   The ``$options`` parameter supports all options documented in the
+   :php:`extension manual <manual/en/mongodb-driver-manager.createclientencryption.php>`.
+   For the ``keyVaultClient`` option, an instance of :phpclass:`MongoDB\\Client`
+   is automatically unwrapped and the :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>`
+   instance is passed to the extension.
+
+Return Values
+-------------
+
+A :php:`MongoDB\\Driver\\ClientEncryption <class.mongodb-driver-clientencryption>`
+instance which can be used to encrypt and decrypt values.
+
+Errors/Exceptions
+-----------------
+
+.. include:: /includes/extracts/error-invalidargumentexception.rst
+.. include:: /includes/extracts/error-driver-invalidargumentexception.rst
+
+See Also
+--------
+
+- :php:`MongoDB\\Driver\\Manager::createClientEncryption()
+  <manual/en/mongodb-driver-manager.createclientencryption.php>`

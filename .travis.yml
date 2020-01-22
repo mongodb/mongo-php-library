@@ -5,6 +5,14 @@ addons:
   apt:
     packages:
       - gdb
+      - libcurl3
+      - libgssapi-krb5-2
+      - libkrb5-dbg
+      - libldap-2.4-2
+      - libpcap0.8
+      - libsasl2-2
+      - snmp
+      - openssl
 
 cache:
   directories:
@@ -17,7 +25,7 @@ env:
     - DRIVER_VERSION=1.7.0
     # TODO: remove once a 1.7 driver release has been tagged
     - DRIVER_BRANCH="master"
-    - SERVER_DISTRO=ubuntu1604
+    - SERVER_DISTRO=enterprise-ubuntu1604
     - SERVER_VERSION=4.2.0
     - DEPLOYMENT=STANDALONE
     - COMPOSER_OPTIONS=
@@ -65,7 +73,7 @@ jobs:
       php: "7.0"
       dist: trusty
       env:
-        - SERVER_DISTRO=ubuntu1404
+        - SERVER_DISTRO=enterprise-ubuntu1404
         - SERVER_VERSION=3.0.15
         - DEPLOYMENT=STANDALONE_OLD
     - stage: Test
@@ -131,7 +139,7 @@ jobs:
 before_install:
   - pip install "mongo-orchestration>=0.6.7,<1.0" --user `whoami`
   - export SERVER_FILENAME=mongodb-linux-x86_64-${SERVER_DISTRO}-${SERVER_VERSION}
-  - wget -qO- http://fastdl.mongodb.org/linux/${SERVER_FILENAME}.tgz | tar xz
+  - wget -qO- https://downloads.mongodb.com/linux/${SERVER_FILENAME}.tgz | tar xz
   - export PATH=${PWD}/${SERVER_FILENAME}/bin:${PATH}
   - mongod --version
   - mongo-orchestration --version

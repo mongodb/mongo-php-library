@@ -21,6 +21,20 @@ class ClientTest extends TestCase
     }
 
     /**
+     * @doesNotPerformAssertions
+     */
+    public function testConstructorAutoEncryptionOpts()
+    {
+        $autoEncryptionOpts = [
+            'keyVaultClient' => new Client(static::getUri()),
+            'keyVaultNamespace' => 'default.keys',
+            'kmsProviders' => ['aws' => ['accessKeyId' => 'abc', 'secretAccessKey' => 'def']],
+        ];
+
+        new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
+    }
+
+    /**
      * @dataProvider provideInvalidConstructorDriverOptions
      */
     public function testConstructorDriverOptionTypeChecks(array $driverOptions)
@@ -36,6 +50,8 @@ class ClientTest extends TestCase
         foreach ($this->getInvalidArrayValues(true) as $value) {
             $options[][] = ['typeMap' => $value];
         }
+
+        $options[][] = ['autoEncryption' => ['keyVaultClient' => 'foo']];
 
         return $options;
     }

@@ -11,3 +11,5 @@ phpunit.xml
 # phpcs
 .phpcs-cache
 phpcs.xml
+
+mongocryptd.pid

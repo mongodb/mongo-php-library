@@ -38,7 +38,7 @@ final class Context
     public $defaultWriteOptions = [];
 
     /** @var array */
-    public $outcomeFindOptions = [];
+    public $outcomeReadOptions = [];
 
     /** @var string */
     public $outcomeCollectionName;
@@ -98,7 +98,7 @@ final class Context
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];
 
-        $o->outcomeFindOptions = [
+        $o->outcomeReadOptions = [
             'readConcern' => new ReadConcern('local'),
             'readPreference' => new ReadPreference('primary'),
         ];
@@ -147,7 +147,7 @@ final class Context
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];
 
-        $o->outcomeFindOptions = [
+        $o->outcomeReadOptions = [
             'readConcern' => new ReadConcern('local'),
             'readPreference' => new ReadPreference('primary'),
         ];

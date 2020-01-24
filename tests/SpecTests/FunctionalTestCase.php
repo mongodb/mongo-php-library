@@ -101,12 +101,11 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      */
     protected function assertOutcomeCollectionData(array $expectedDocuments)
     {
-        $outcomeCollection = $this->getOutcomeCollection();
-        $findOptions = $this->getContext()->outcomeFindOptions;
+        $outcomeCollection = $this->getOutcomeCollection($this->getContext()->outcomeReadOptions);
 
         $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);
         $mi->attachIterator(new ArrayIterator($expectedDocuments));
-        $mi->attachIterator(new IteratorIterator($outcomeCollection->find([], $findOptions)));
+        $mi->attachIterator(new IteratorIterator($outcomeCollection->find()));
 
         foreach ($mi as $documents) {
             list($expectedDocument, $actualDocument) = $documents;
@@ -193,16 +192,16 @@ class FunctionalTestCase extends BaseFunctionalTestCase
 
         $collection = null;
         if ($context->collectionName !== null) {
-            $collection = $context->getCollection();
-            $collection->drop($context->defaultWriteOptions);
+            $collection = $context->getCollection($context->defaultWriteOptions);
+            $collection->drop();
         }
 
         if ($context->outcomeCollectionName !== null) {
-            $outcomeCollection = $this->getOutcomeCollection();
+            $outcomeCollection = $this->getOutcomeCollection($context->defaultWriteOptions);
 
             // Avoid redundant drop if the test and outcome collections are the same
             if ($collection === null || $outcomeCollection->getNamespace() !== $collection->getNamespace()) {
-                $outcomeCollection->drop($context->defaultWriteOptions);
+                $outcomeCollection->drop();
             }
         }
     }
@@ -226,12 +225,12 @@ class FunctionalTestCase extends BaseFunctionalTestCase
         return;
     }
 
-    private function getOutcomeCollection()
+    private function getOutcomeCollection(array $collectionOptions = [])
     {
         $context = $this->getContext();
 
         // Outcome collection need not use the client under test
-        return new Collection($this->manager, $context->databaseName, $context->outcomeCollectionName);
+        return new Collection($this->manager, $context->databaseName, $context->outcomeCollectionName, $collectionOptions);
     }
 
     /**

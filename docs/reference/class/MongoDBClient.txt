@@ -30,6 +30,7 @@ Methods
 
    /reference/method/MongoDBClient__construct
    /reference/method/MongoDBClient__get
+   /reference/method/MongoDBClient-createClientEncryption
    /reference/method/MongoDBClient-dropDatabase
    /reference/method/MongoDBClient-getManager
    /reference/method/MongoDBClient-getReadConcern

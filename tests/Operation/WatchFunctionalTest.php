@@ -928,7 +928,10 @@ class WatchFunctionalTest extends FunctionalTestCase
         }
 
         $this->assertTrue($changeStream->valid());
-        $this->assertLessThan($pivot, $duration);
+
+        if (!$this->isShardedCluster()) {
+            $this->assertLessThan($pivot, $duration);
+        }
     }
 
     public function testRewindExtractsResumeTokenAndNextResumes()

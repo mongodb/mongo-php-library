@@ -154,7 +154,7 @@ class DocumentsMatchConstraintTest extends TestCase
                 ['foo' => '42'],
             ],
             'Type mismatch' => [
-                'Field path "foo": MongoDB\Model\BSONDocument Object (...) is not instance of expected class "MongoDB\Model\BSONArray".',
+                'Field path "foo": MongoDB\Model\BSONDocument Object (...) is not instance of expected type "MongoDB\Model\BSONArray".',
                 new DocumentsMatchConstraint(['foo' => ['bar']]),
                 ['foo' => (object) ['bar']],
             ],

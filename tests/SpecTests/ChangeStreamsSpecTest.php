@@ -180,7 +180,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
 
         switch ($test->target) {
             case 'client':
-                return $context->client->watch($pipeline, $options);
+                return $context->getClient()->watch($pipeline, $options);
             case 'database':
                 return $context->getDatabase()->watch($pipeline, $options);
             case 'collection':
@@ -228,7 +228,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
     {
         $context = $this->getContext();
 
-        $database = $context->client->selectDatabase($databaseName);
+        $database = $context->getClient()->selectDatabase($databaseName);
         $database->drop($context->defaultWriteOptions);
         $database->createCollection($collectionName, $context->defaultWriteOptions);
     }

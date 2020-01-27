@@ -75,6 +75,11 @@ final class ErrorExpectation
         return $o;
     }
 
+    public static function fromClientSideEncryption(stdClass $operation)
+    {
+        return self::fromGenericOperation($operation);
+    }
+
     public static function fromCrud(stdClass $result)
     {
         $o = new self();

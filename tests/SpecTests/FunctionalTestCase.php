@@ -220,6 +220,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
 
         $context = $this->getContext();
         $collection = $collectionName ? $context->selectCollection($context->databaseName, $collectionName) : $context->getCollection();
+
         $collection->insertMany($documents, $context->defaultWriteOptions);
 
         return;

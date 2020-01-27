@@ -8,11 +8,14 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
+use PHPUnit\Framework\SkippedTestError;
 use stdClass;
 use function array_diff_key;
 use function array_keys;
+use function getenv;
 use function implode;
 use function mt_rand;
+use function uniqid;
 
 /**
  * Execution context for spec tests.
@@ -26,7 +29,7 @@ final class Context
     public $bucketName;
 
     /** @var Client|null */
-    public $client;
+    private $client;
 
     /** @var string */
     public $collectionName;
@@ -55,6 +58,12 @@ final class Context
     /** @var object */
     public $session1Lsid;
 
+    /** @var Client|null */
+    private $encryptedClient;
+
+    /** @var bool */
+    private $useEncryptedClient = false;
+
     /**
      * @param string $databaseName
      * @param string $collectionName
@@ -66,11 +75,60 @@ final class Context
         $this->outcomeCollectionName = $collectionName;
     }
 
+    public function disableEncryption()
+    {
+        $this->useEncryptedClient = false;
+    }
+
+    public function enableEncryption()
+    {
+        if (! $this->encryptedClient instanceof Client) {
+            throw new LogicException('Cannot enable encryption without autoEncryption options');
+        }
+
+        $this->useEncryptedClient = true;
+    }
+
     public static function fromChangeStreams(stdClass $test, $databaseName, $collectionName)
     {
         $o = new self($databaseName, $collectionName);
 
         $o->client = new Client(FunctionalTestCase::getUri());
+
+        return $o;
+    }
+
+    public static function fromClientSideEncryption(stdClass $test, $databaseName, $collectionName)
+    {
+        $o = new self($databaseName, $collectionName);
+
+        $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
+
+        /* mongocryptd caches collection information, which causes test failures
+         * if we reuse the client. Thus, we add a random value to ensure we're
+         * creating a new client for each test. */
+        $driverOptions = ['random' => uniqid()];
+
+        $autoEncryptionOptions = [];
+
+        if (isset($clientOptions['autoEncryptOpts'])) {
+            $autoEncryptionOptions = (array) $clientOptions['autoEncryptOpts'] + ['keyVaultNamespace' => 'admin.datakeys'];
+            unset($clientOptions['autoEncryptOpts']);
+
+            if (isset($autoEncryptionOptions['kmsProviders']->aws)) {
+                $autoEncryptionOptions['kmsProviders']->aws = self::getAWSCredentials();
+            }
+        }
+
+        if (isset($test->outcome->collection->name)) {
+            $o->outcomeCollectionName = $test->outcome->collection->name;
+        }
+
+        $o->client = new Client(FunctionalTestCase::getUri(), $clientOptions, $driverOptions);
+
+        if ($autoEncryptionOptions !== []) {
+            $o->encryptedClient = new Client(FunctionalTestCase::getUri(), $clientOptions, $driverOptions + ['autoEncryption' => $autoEncryptionOptions]);
+        }
 
         return $o;
     }
@@ -174,11 +232,28 @@ final class Context
     }
 
     /**
+     * @return array
+     *
+     * @throws SkippedTestError
+     */
+    public static function getAWSCredentials()
+    {
+        if (! getenv('AWS_ACCESS_KEY_ID') || ! getenv('AWS_SECRET_ACCESS_KEY')) {
+            throw new SkippedTestError('Please configure AWS credentials to use AWS KMS provider.');
+        }
+
+        return [
+            'accessKeyId' => getenv('AWS_ACCESS_KEY_ID'),
+            'secretAccessKey' => getenv('AWS_SECRET_ACCESS_KEY'),
+        ];
+    }
+
+    /**
      * @return Client
      */
     public function getClient()
     {
-        return $this->client;
+        return $this->useEncryptedClient && $this->encryptedClient ? $this->encryptedClient : $this->client;
     }
 
     public function getCollection(array $collectionOptions = [])
@@ -310,7 +385,7 @@ final class Context
 
     public function selectCollection($databaseName, $collectionName, array $collectionOptions = [])
     {
-        return $this->client->selectCollection(
+        return $this->getClient()->selectCollection(
             $databaseName,
             $collectionName,
             $this->prepareOptions($collectionOptions)
@@ -319,7 +394,7 @@ final class Context
 
     public function selectDatabase($databaseName, array $databaseOptions = [])
     {
-        return $this->client->selectDatabase(
+        return $this->getClient()->selectDatabase(
             $databaseName,
             $this->prepareOptions($databaseOptions)
         );

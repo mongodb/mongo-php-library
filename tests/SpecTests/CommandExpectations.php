@@ -77,6 +77,16 @@ class CommandExpectations implements CommandSubscriber
         return $o;
     }
 
+    public static function fromClientSideEncryption(array $expectedEvents)
+    {
+        $o = new self($expectedEvents);
+
+        $o->ignoreCommandFailed = true;
+        $o->ignoreCommandSucceeded = true;
+
+        return $o;
+    }
+
     public static function fromCommandMonitoring(array $expectedEvents)
     {
         return new self($expectedEvents);

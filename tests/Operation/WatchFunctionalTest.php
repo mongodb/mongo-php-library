@@ -929,7 +929,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->assertTrue($changeStream->valid());
 
-        if (!$this->isShardedCluster()) {
+        if (! $this->isShardedCluster()) {
             $this->assertLessThan($pivot, $duration);
         }
     }

@@ -20,7 +20,6 @@ use function array_diff_key;
 use function array_map;
 use function fclose;
 use function fopen;
-use function in_array;
 use function MongoDB\is_last_pipeline_operator_write;
 use function MongoDB\with_transaction;
 use function stream_get_contents;

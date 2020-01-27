@@ -31,6 +31,7 @@ use stdClass;
 use Symfony\Bridge\PhpUnit\ConstraintTrait;
 use function array_values;
 use function get_class;
+use function gettype;
 use function in_array;
 use function is_array;
 use function is_object;
@@ -295,8 +296,11 @@ class DocumentsMatchConstraint extends Constraint
                 continue;
             }
 
+            $expectedType = is_object($expectedValue) ? get_class($expectedValue) : gettype($expectedValue);
+            $actualType = is_object($expectedValue) ? get_class($actualValue) : gettype($actualValue);
+
             // Workaround for ObjectComparator printing the whole actual object
-            if (get_class($expectedValue) !== get_class($actualValue)) {
+            if ($expectedType !== $actualType) {
                 throw new ComparisonFailure(
                     $expectedValue,
                     $actualValue,
@@ -422,6 +426,12 @@ class DocumentsMatchConstraint extends Constraint
             if ($value instanceof BSONDocument || $value instanceof stdClass || is_array($value)) {
                 $bson[$key] = $this->prepareBSON($value, false, $sortKeys);
                 continue;
+            }
+
+            /* Convert Int64 objects to integers on 64-bit platforms for
+             * compatibility reasons. */
+            if ($value instanceof Int64 && PHP_INT_SIZE != 4) {
+                $bson[$key] = (int) ((string) $value);
             }
         }
 

@@ -375,6 +375,13 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
+    protected function skipIfClientSideEncryptionIsNotSupported()
+    {
+        if (version_compare($this->getFeatureCompatibilityVersion(), '4.2', '<')) {
+            $this->markTestSkipped('Client Side Encryption only supported on FCV 4.2 or higher');
+        }
+    }
+
     protected function skipIfTransactionsAreNotSupported()
     {
         if ($this->getPrimaryServer()->getType() === Server::TYPE_STANDALONE) {

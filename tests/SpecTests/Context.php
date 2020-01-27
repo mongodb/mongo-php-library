@@ -11,8 +11,10 @@ use MongoDB\Driver\WriteConcern;
 use stdClass;
 use function array_diff_key;
 use function array_keys;
+use function getenv;
 use function implode;
 use function mt_rand;
+use function uniqid;
 
 /**
  * Execution context for spec tests.
@@ -55,6 +57,9 @@ final class Context
     /** @var object */
     public $session1Lsid;
 
+    /** @var Client|null */
+    private $encryptedClient;
+
     /**
      * @param string $databaseName
      * @param string $collectionName
@@ -66,11 +71,59 @@ final class Context
         $this->outcomeCollectionName = $collectionName;
     }
 
+    public function enableEncryption()
+    {
+        if (! $this->encryptedClient instanceof Client) {
+            throw new LogicException('Cannot enable encryption without autoEncryption options');
+        }
+
+        $this->client = $this->encryptedClient;
+    }
+
     public static function fromChangeStreams(stdClass $test, $databaseName, $collectionName)
     {
         $o = new self($databaseName, $collectionName);
 
         $o->client = new Client(FunctionalTestCase::getUri());
+
+        return $o;
+    }
+
+    public static function fromClientSideEncryption(stdClass $test, $databaseName, $collectionName)
+    {
+        $o = new self($databaseName, $collectionName);
+
+        $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
+
+        /* mongocryptd caches collection information, which causes test failures
+         * if we reuse the client. Thus, we add a random value to ensure we're
+         * creating a new client for each test. */
+        $driverOptions = ['random' => uniqid()];
+
+        $autoEncryptionOptions = [];
+
+        if (isset($clientOptions['autoEncryptOpts'])) {
+            $autoEncryptionOptions = (array) $clientOptions['autoEncryptOpts'] + ['keyVaultNamespace' => 'admin.datakeys'];
+            unset($clientOptions['autoEncryptOpts']);
+
+            if (isset($autoEncryptionOptions['kmsProviders']->aws)) {
+                // Todo: Check AWS credentials, skip test if not given
+                $autoEncryptionOptions['kmsProviders']->aws = [
+                    'accessKeyId' => getenv('AWS_ACCESS_KEY_ID') ?: '',
+                    'secretAccessKey' => getenv('AWS_SECRET_ACCESS_KEY') ?: '',
+                ];
+            }
+        }
+
+        if (isset($test->outcome->collection->name)) {
+            $o->outcomeCollectionName = $test->outcome->collection->name;
+        }
+
+        $o->client = new Client(FunctionalTestCase::getUri(), $clientOptions, $driverOptions);
+
+        if ($autoEncryptionOptions !== []) {
+            $o->encryptedClient = new Client(FunctionalTestCase::getUri(), $clientOptions, $driverOptions + ['autoEncryption' => $autoEncryptionOptions]);
+        }
 
         return $o;
     }

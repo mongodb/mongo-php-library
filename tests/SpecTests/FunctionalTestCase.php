@@ -219,7 +219,8 @@ class FunctionalTestCase extends BaseFunctionalTestCase
         }
 
         $context = $this->getContext();
-        $collection = $collectionName ? $context->selectCollection($context->databaseName, $collectionName) : $context->getCollection();
+
+        $collection = new Collection($this->manager, $context->databaseName, $collectionName ?: $context->collectionName);
         $collection->insertMany($documents, $context->defaultWriteOptions);
 
         return;

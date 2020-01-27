@@ -77,6 +77,16 @@ class CommandExpectations implements CommandSubscriber
         return $o;
     }
 
+    public static function fromClientSideEncryption(array $expectedEvents)
+    {
+        $o = new self($expectedEvents);
+
+        $o->ignoreCommandFailed = true;
+        $o->ignoreCommandSucceeded = true;
+
+        return $o;
+    }
+
     public static function fromCommandMonitoring(array $expectedEvents)
     {
         return new self($expectedEvents);
@@ -191,6 +201,9 @@ class CommandExpectations implements CommandSubscriber
      */
     public function assert(FunctionalTestCase $test, Context $context)
     {
+        if (count($this->expectedEvents) !== count($this->actualEvents)) {
+            $foo = true;
+        }
         $test->assertCount(count($this->expectedEvents), $this->actualEvents);
 
         $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);

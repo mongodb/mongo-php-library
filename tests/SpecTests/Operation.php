@@ -116,6 +116,20 @@ final class Operation
         return $o;
     }
 
+    public static function fromClientSideEncryption(stdClass $operation)
+    {
+        $o = new self($operation);
+
+        $o->errorExpectation = ErrorExpectation::fromClientSideEncryption($operation);
+        $o->resultExpectation = ResultExpectation::fromClientSideEncryption($operation, $o->getResultAssertionType());
+
+        if (isset($operation->collectionOptions)) {
+            $o->collectionOptions = (array) $operation->collectionOptions;
+        }
+
+        return $o;
+    }
+
     public static function fromCommandMonitoring(stdClass $operation)
     {
         $o = new self($operation);

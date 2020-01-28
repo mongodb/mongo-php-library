@@ -144,7 +144,7 @@ final class ErrorExpectation
 
         $test->assertNotNull($actual);
 
-        if (isset($this->messageContains)) {
+        if (isset($this->messageContains) && $this->messageContains !== '') {
             $test->assertStringContainsStringIgnoringCase($this->messageContains, $actual->getMessage());
         }
 

@@ -1,0 +1,241 @@
+======================
+Client-Side Encryption
+======================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Client-Side Field Level Encryption allows administrators and developers to
+encrypt specific data fields in addition to other MongoDB encryption features.
+
+
+Automatic Encryption and Decryption
+-----------------------------------
+
+.. note::
+
+   Auto encryption is an enterprise only feature.
+
+The following example uses a local key, however using AWS Key Management Service
+is also an option. The data in the ``encryptedField`` field is automatically
+encrypted on insertion and decrypted when querying on the client side.
+
+.. code-block:: php
+
+   <?php
+
+   use MongoDB\BSON\Binary;
+   use MongoDB\Client;
+
+   $localKey = new Binary('<binary key data (96 bytes)>', Binary::TYPE_GENERIC);
+
+   $encryptionOpts = [
+       'keyVaultNamespace' => 'admin.datakeys',
+       'kmsProviders' => [
+           'local' => ['key' => $localKey],
+       ],
+   ];
+
+   $client = new Client('mongodb://127.0.0.1');
+   $clientEncryption = $client->createClientEncryption($encryptionOpts);
+
+   $database = $client->selectDatabase('test');
+   $database->dropCollection('coll'); // remove old data
+
+   // Create new key in the key vault and store its ID for later use
+   $keyId = $clientEncryption->createDataKey('local');
+
+   $database->createCollection('coll', [
+       'validator' => [
+           '$jsonSchema' => [
+               'bsonType' => 'object',
+               'properties' => [
+                   'encryptedField' => [
+                       'encrypt' => [
+                           'keyId' => [$keyId],
+                           'bsonType' => 'string',
+                           'algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC,
+                       ],
+                   ],
+               ],
+           ],
+       ],
+   ]);
+
+   $encryptedClient = new Client('mongodb://127.0.0.1', [], ['autoEncryption' => $encryptionOpts]);
+
+   $collection = $encryptedClient->selectCollection('test', 'coll');
+
+   $collection->insertOne(['encryptedField' => '123456789']);
+
+   var_dump($collection->findOne([]));
+
+
+Specifying an Explicit Schema for Encryption
+--------------------------------------------
+
+The following example shows how to create a new key and store it in the key
+vault collection. The encrypted client configures an explicit schema for
+encryption using the newly created key.
+
+.. note::
+
+   Supplying a ``schemaMap`` provides more security than relying on JSON schemas
+   obtained from the server. It protects against a malicious server advertising
+   a false JSON schema, which could trick the client into sending unencrypted
+   data that should be encrypted.
+
+.. code-block:: php
+
+   <?php
+
+   use MongoDB\BSON\Binary;
+   use MongoDB\Client;
+   use MongoDB\Driver\ClientEncryption;
+
+   $localKey = new Binary('<binary key data (96 bytes)>', Binary::TYPE_GENERIC);
+
+   $clientEncryptionOpts = [
+       'keyVaultNamespace' => 'admin.datakeys',
+       'kmsProviders' => [
+           'local' => ['key' => $localKey],
+       ],
+   ];
+
+   $client = new Client();
+   $clientEncryption = $client->createClientEncryption($clientEncryptionOpts);
+
+   // Create new key in the key vault and store its ID for later use
+   $keyId = $clientEncryption->createDataKey('local');
+
+   $autoEncryptionOpts = [
+       'keyVaultNamespace' => 'admin.datakeys',
+       'kmsProviders' => [
+           'local' => ['key' => $localKey],
+       ],
+       'schemaMap' => [
+           'test.coll' => [
+               'bsonType' => 'object',
+               'properties' => [
+                   'encryptedField' => [
+                       'encrypt' => [
+                           'keyId' => [$keyId],
+                           'bsonType' => 'string',
+                           'algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC,
+                       ],
+                   ],
+               ],
+           ],
+       ],
+   ];
+
+   $encryptedClient = new Client('mongodb://127.0.0.1', [], ['autoEncryption' => $autoEncryptionOpts]);
+
+   $collection = $encryptedClient->selectCollection('test', 'coll');
+   $collection->drop(); // clear old data
+
+   $collection->insertOne(['encryptedField' => '123456789']);
+
+   var_dump($collection->findOne([]));
+
+
+Manually Encrypting and Decrypting Values
+-----------------------------------------
+
+In the MongoDB Community Edition, you will have to manually encrypt and decrypt
+values before storing them in the database. The following example assumes that
+you have already created an encryption key in the key vault collection and
+explicitly encrypts and decrypts values in the document.
+
+.. code-block:: php
+
+   <?php
+
+   use MongoDB\BSON\Binary;
+   use MongoDB\Client;
+   use MongoDB\Driver\ClientEncryption;
+
+   $localKey = new Binary('<binary key data (96 bytes)>', Binary::TYPE_GENERIC);
+
+   $clientEncryptionOpts = [
+       'keyVaultNamespace' => 'admin.datakeys',
+       'kmsProviders' => [
+           'local' => ['key' => $localKey],
+       ],
+   ];
+
+   $client = new Client();
+   $clientEncryption = $client->createClientEncryption($clientEncryptionOpts);
+
+   // Create new key in the key vault and store its ID for later use
+   $keyId = $clientEncryption->createDataKey('local');
+
+   $collection = $client->selectCollection('test', 'coll');
+   $collection->drop(); // clear old data
+
+   $encryptionOpts = [
+       'keyId' => $keyId,
+       'algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC,
+   ];
+   $encryptedValue = $clientEncryption->encrypt('123456789', $encryptionOpts);
+
+   $collection->insertOne(['encryptedField' => $encryptedValue]);
+
+   $document = $collection->findOne();
+   var_dump($clientEncryption->decrypt($document->encryptedField));
+
+
+Referencing Encryption Keys by an Alternative Name
+--------------------------------------------------
+
+While it is possible to create an encryption key every time data is encrypted,
+this is not the recommended approach. Instead, you should create your encryption
+keys depending on your use-case, e.g. by creating a user-specific encryption
+key. To reference keys in your software, you can use the keyAltName attribute
+specified when creating the key. The following example creates an encryption key
+with an alternative name, which could be done when deploying the application.
+The software then encrypts data by referencing the key by its alternative name.
+
+.. code-block:: php
+
+   <?php
+
+   use MongoDB\BSON\Binary;
+   use MongoDB\Client;
+   use MongoDB\Driver\ClientEncryption;
+
+   $localKey = new Binary('<binary key data (96 bytes)>', Binary::TYPE_GENERIC);
+
+   $clientEncryptionOpts = [
+       'keyVaultNamespace' => 'admin.datakeys',
+       'kmsProviders' => [
+           'local' => ['key' => $localKey],
+       ],
+   ];
+
+   $client = new Client();
+   $clientEncryption = $client->createClientEncryption($clientEncryptionOpts);
+
+   // Create an encryption key with an alternative name. This could be done when
+   // deploying the application
+   $keyId = $clientEncryption->createDataKey('local', ['keyAltNames' => ['altname']]);
+
+   $collection = $client->selectCollection('test', 'coll');
+   $collection->drop(); // clear old data
+
+   // Reference the encryption key we created earlier by its alternative name
+   $encryptionOpts = [
+       'keyAltName' => 'altname',
+       'algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC,
+   ];
+   $encryptedValue = $clientEncryption->encrypt('123456789', $encryptionOpts);
+
+   $collection->insertOne(['encryptedField' => $encryptedValue]);
+
+   $document = $collection->findOne();
+   var_dump($clientEncryption->decrypt($document->encryptedField));

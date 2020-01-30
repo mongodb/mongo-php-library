@@ -23,7 +23,7 @@ post: |
   .. versionadded:: 1.4
 ---
 source:
-  file: apiargs-aggregate-option.yaml
+  file: apiargs-common-option.yaml
   ref: hint
 post: |
   .. versionadded:: 1.3

@@ -49,15 +49,4 @@ description: |
 interface: phpmethod
 operation: ~
 optional: true
----
-arg_name: option
-name: hint
-type: string|array|object
-description: |
-  The index to use. Specify either the index name as a string or the index key
-  pattern as a document. If specified, then the query system will only consider
-  plans using the hinted index.
-interface: phpmethod
-operation: ~
-optional: true
 ...

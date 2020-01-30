@@ -19,7 +19,7 @@ source:
   ref: explain
 ---
 source:
-  file: apiargs-aggregate-option.yaml
+  file: apiargs-common-option.yaml
   ref: hint
 ---
 source:

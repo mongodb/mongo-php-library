@@ -113,41 +113,7 @@ final class ErrorExpectation
      */
     public static function fromTransactions(stdClass $operation)
     {
-        $o = new self();
-
-        if (isset($operation->error)) {
-            $o->isExpected = $operation->error;
-        }
-
-        $result = isset($operation->result) ? $operation->result : null;
-
-        if (isset($result->errorContains)) {
-            $o->messageContains = $result->errorContains;
-            $o->isExpected = true;
-        }
-
-        if (isset($result->errorCodeName)) {
-            $o->codeName = $result->errorCodeName;
-            $o->isExpected = true;
-        }
-
-        if (isset($result->errorLabelsContain)) {
-            if (! self::isArrayOfStrings($result->errorLabelsContain)) {
-                throw InvalidArgumentException::invalidType('errorLabelsContain', $result->errorLabelsContain, 'string[]');
-            }
-            $o->includedLabels = $result->errorLabelsContain;
-            $o->isExpected = true;
-        }
-
-        if (isset($result->errorLabelsOmit)) {
-            if (! self::isArrayOfStrings($result->errorLabelsOmit)) {
-                throw InvalidArgumentException::invalidType('errorLabelsOmit', $result->errorLabelsOmit, 'string[]');
-            }
-            $o->excludedLabels = $result->errorLabelsOmit;
-            $o->isExpected = true;
-        }
-
-        return $o;
+        return self::fromGenericOperation($operation);
     }
 
     public static function noError()
@@ -230,6 +196,48 @@ final class ErrorExpectation
 
         $test->assertObjectHasAttribute('codeName', $result);
         $test->assertSame($this->codeName, $result->codeName);
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    private static function fromGenericOperation(stdClass $operation)
+    {
+        $o = new self();
+
+        if (isset($operation->error)) {
+            $o->isExpected = $operation->error;
+        }
+
+        $result = isset($operation->result) ? $operation->result : null;
+
+        if (isset($result->errorContains)) {
+            $o->messageContains = $result->errorContains;
+            $o->isExpected = true;
+        }
+
+        if (isset($result->errorCodeName)) {
+            $o->codeName = $result->errorCodeName;
+            $o->isExpected = true;
+        }
+
+        if (isset($result->errorLabelsContain)) {
+            if (! self::isArrayOfStrings($result->errorLabelsContain)) {
+                throw InvalidArgumentException::invalidType('errorLabelsContain', $result->errorLabelsContain, 'string[]');
+            }
+            $o->includedLabels = $result->errorLabelsContain;
+            $o->isExpected = true;
+        }
+
+        if (isset($result->errorLabelsOmit)) {
+            if (! self::isArrayOfStrings($result->errorLabelsOmit)) {
+                throw InvalidArgumentException::invalidType('errorLabelsOmit', $result->errorLabelsOmit, 'string[]');
+            }
+            $o->excludedLabels = $result->errorLabelsOmit;
+            $o->isExpected = true;
+        }
+
+        return $o;
     }
 
     private static function isArrayOfStrings($array)

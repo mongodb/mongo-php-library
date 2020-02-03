@@ -98,8 +98,9 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      * Assert data within the outcome collection.
      *
      * @param array $expectedDocuments
+     * @param int   $resultExpectation
      */
-    protected function assertOutcomeCollectionData(array $expectedDocuments)
+    protected function assertOutcomeCollectionData(array $expectedDocuments, $resultExpectation = ResultExpectation::ASSERT_SAME_DOCUMENT)
     {
         $outcomeCollection = $this->getOutcomeCollection($this->getContext()->outcomeReadOptions);
 
@@ -111,7 +112,19 @@ class FunctionalTestCase extends BaseFunctionalTestCase
             list($expectedDocument, $actualDocument) = $documents;
             $this->assertNotNull($expectedDocument);
             $this->assertNotNull($actualDocument);
-            $this->assertSameDocument($expectedDocument, $actualDocument);
+
+            switch ($resultExpectation) {
+                case ResultExpectation::ASSERT_SAME_DOCUMENT:
+                    $this->assertSameDocument($expectedDocument, $actualDocument);
+                    break;
+
+                case ResultExpectation::ASSERT_DOCUMENTS_MATCH:
+                    $this->assertDocumentsMatch($expectedDocument, $actualDocument);
+                    break;
+
+                default:
+                    $this->fail(sprintf('Invalid result expectation "%d" for %s', $resultExpectation, __METHOD__));
+            }
         }
     }
 

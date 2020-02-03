@@ -61,11 +61,6 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         static::assertDocumentsMatch($expected, $actual);
     }
 
-    public function assertSameDocument($expectedDocument, $actualDocument)
-    {
-        static::assertDocumentsMatch($expectedDocument, $actualDocument);
-    }
-
     /**
      * Execute an individual test case from the specification.
      *
@@ -127,7 +122,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $context->disableEncryption();
 
         if (isset($test->outcome->collection->data)) {
-            $this->assertOutcomeCollectionData($test->outcome->collection->data);
+            $this->assertOutcomeCollectionData($test->outcome->collection->data, ResultExpectation::ASSERT_DOCUMENTS_MATCH);
         }
     }
 

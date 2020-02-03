@@ -17,8 +17,6 @@ class CrudSpecTest extends FunctionalTestCase
     /**
      * Assert that the expected and actual command documents match.
      *
-     * Note: this method may modify the $expected object.
-     *
      * @param stdClass $expected Expected command document
      * @param stdClass $actual   Actual command document
      */

@@ -9,7 +9,6 @@ use MongoDB\Driver\WriteResult;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\InsertManyResult;
 use MongoDB\InsertOneResult;
-use MongoDB\Tests\TestCase;
 use MongoDB\UpdateResult;
 use stdClass;
 use function call_user_func;
@@ -34,6 +33,7 @@ final class ResultExpectation
     const ASSERT_MATCHES_DOCUMENT = 9;
     const ASSERT_NULL = 10;
     const ASSERT_CALLABLE = 11;
+    const ASSERT_DOCUMENTS_MATCH = 12;
 
     /** @var integer */
     private $assertionType = self::ASSERT_NOTHING;
@@ -83,6 +83,19 @@ final class ResultExpectation
         $o->assertionCallable = $assertionCallable;
 
         return $o;
+    }
+
+    public static function fromClientSideEncryption(stdClass $operation, $defaultAssertionType)
+    {
+        if (property_exists($operation, 'result') && ! self::isErrorResult($operation->result)) {
+            $assertionType = $operation->result === null ? self::ASSERT_NULL : $defaultAssertionType;
+            $expectedValue = $operation->result;
+        } else {
+            $assertionType = self::ASSERT_NOTHING;
+            $expectedValue = null;
+        }
+
+        return new self($assertionType, $expectedValue);
     }
 
     public static function fromCrud(stdClass $operation, $defaultAssertionType)
@@ -140,11 +153,11 @@ final class ResultExpectation
     /**
      * Assert that the result expectation matches the actual outcome.
      *
-     * @param TestCase $test   Test instance for performing assertions
-     * @param mixed    $result Result (if any) from the actual outcome
+     * @param FunctionalTestCase $test   Test instance for performing assertions
+     * @param mixed              $result Result (if any) from the actual outcome
      * @throws LogicException if the assertion type is unsupported
      */
-    public function assert(TestCase $test, $actual)
+    public function assert(FunctionalTestCase $test, $actual)
     {
         $expected = $this->expectedValue;
 
@@ -272,6 +285,10 @@ final class ResultExpectation
 
             case self::ASSERT_SAME_DOCUMENTS:
                 $test->assertSameDocuments($expected, $actual);
+                break;
+
+            case self::ASSERT_DOCUMENTS_MATCH:
+                $test->assertDocumentsMatch($expected, $actual);
                 break;
 
             case self::ASSERT_UPDATE:

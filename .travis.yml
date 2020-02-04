@@ -23,8 +23,6 @@ cache:
 env:
   global:
     - DRIVER_VERSION=1.7.0
-    # TODO: remove once a 1.7 driver release has been tagged
-    - DRIVER_BRANCH="master"
     - SERVER_DISTRO=enterprise-ubuntu1604
     - SERVER_VERSION=4.2.0
     - DEPLOYMENT=STANDALONE
@@ -122,19 +120,17 @@ jobs:
       env:
         - DEPLOYMENT=SHARDED_CLUSTER_RS
 
-    # TODO: re-enable once v1.7 has been branched in PHPC
     # Test next patch release for driver
-#    - stage: Test
-#      php: "7.3"
-#      env:
-#        - DRIVER_BRANCH="v1.7"
+    - stage: Test
+      php: "7.3"
+      env:
+        - DRIVER_BRANCH="v1.7"
 
-    # TODO: re-enable once v1.7 has been branched in PHPC
     # Test next minor release for driver
-#    - stage: Test
-#      php: "7.3"
-#      env:
-#        - DRIVER_BRANCH="master"
+    - stage: Test
+      php: "7.3"
+      env:
+        - DRIVER_BRANCH="master"
 
 before_install:
   - pip install "mongo-orchestration>=0.6.7,<1.0" --user `whoami`

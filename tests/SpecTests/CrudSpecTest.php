@@ -15,11 +15,7 @@ use function glob;
 class CrudSpecTest extends FunctionalTestCase
 {
     /** @var array */
-    private static $incompleteTests = [
-        'find-allowdiskuse: Find does not send allowDiskuse when value is not specified' => 'PHPLIB-500',
-        'find-allowdiskuse: Find sends allowDiskuse false when false is specified' => 'PHPLIB-500',
-        'find-allowdiskuse: Find sends allowDiskUse true when true is specified' => 'PHPLIB-500',
-    ];
+    private static $incompleteTests = [];
 
     /**
      * Assert that the expected and actual command documents match.
@@ -29,6 +25,13 @@ class CrudSpecTest extends FunctionalTestCase
      */
     public static function assertCommandMatches(stdClass $expected, stdClass $actual)
     {
+        foreach ($expected as $key => $value) {
+            if ($value === null) {
+                static::assertObjectNotHasAttribute($key, $actual);
+                unset($expected->{$key});
+            }
+        }
+
         static::assertDocumentsMatch($expected, $actual);
     }
 

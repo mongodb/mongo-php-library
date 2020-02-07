@@ -16,6 +16,10 @@ source:
 ---
 source:
   file: apiargs-MongoDBCollection-method-find-option.yaml
+  ref: allowDiskUse
+---
+source:
+  file: apiargs-MongoDBCollection-method-find-option.yaml
   ref: batchSize
 ---
 source:

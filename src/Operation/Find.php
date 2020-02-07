@@ -72,6 +72,10 @@ class Find implements Executable, Explainable
      *
      * Supported options:
      *
+     *  * allowDiskUse (boolean): Enables writing to temporary files. When set
+     *    to true, queries can write data to the _tmp sub-directory in the
+     *    dbPath directory. The default is false.
+     *
      *  * allowPartialResults (boolean): Get partial results from a mongos if
      *    some shards are inaccessible (instead of throwing an error).
      *
@@ -167,6 +171,10 @@ class Find implements Executable, Explainable
     {
         if (! is_array($filter) && ! is_object($filter)) {
             throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
+        }
+
+        if (isset($options['allowDiskUse']) && ! is_bool($options['allowDiskUse'])) {
+            throw InvalidArgumentException::invalidType('"allowDiskUse" option', $options['allowDiskUse'], 'boolean');
         }
 
         if (isset($options['allowPartialResults']) && ! is_bool($options['allowPartialResults'])) {
@@ -416,7 +424,7 @@ class Find implements Executable, Explainable
             }
         }
 
-        foreach (['allowPartialResults', 'batchSize', 'comment', 'hint', 'limit', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'noCursorTimeout', 'oplogReplay', 'projection', 'readConcern', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'] as $option) {
+        foreach (['allowDiskUse', 'allowPartialResults', 'batchSize', 'comment', 'hint', 'limit', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'noCursorTimeout', 'oplogReplay', 'projection', 'readConcern', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'] as $option) {
             if (isset($this->options[$option])) {
                 $options[$option] = $this->options[$option];
             }

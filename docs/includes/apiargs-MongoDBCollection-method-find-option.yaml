@@ -47,6 +47,17 @@ operation: ~
 optional: true
 ---
 arg_name: option
+name: allowDiskUse
+type: boolean
+description: |
+  Enables writing to temporary files. When set to ``true``, queries can write
+  data to the ``_tmp`` sub-directory in the ``dbPath`` directory. The default is
+  ``false``.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: batchSize
 type: integer
 description: |

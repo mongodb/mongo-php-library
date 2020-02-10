@@ -243,7 +243,7 @@ class FindAndModify implements Executable, Explainable
 
         $result = current($cursor->toArray());
 
-        return isset($result->value) ? $result->value : null;
+        return $result->value ?? null;
     }
 
     public function getCommandDocument(Server $server)

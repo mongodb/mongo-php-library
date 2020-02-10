@@ -162,10 +162,10 @@ class Collection
         $this->manager = $manager;
         $this->databaseName = (string) $databaseName;
         $this->collectionName = (string) $collectionName;
-        $this->readConcern = isset($options['readConcern']) ? $options['readConcern'] : $this->manager->getReadConcern();
-        $this->readPreference = isset($options['readPreference']) ? $options['readPreference'] : $this->manager->getReadPreference();
-        $this->typeMap = isset($options['typeMap']) ? $options['typeMap'] : self::$defaultTypeMap;
-        $this->writeConcern = isset($options['writeConcern']) ? $options['writeConcern'] : $this->manager->getWriteConcern();
+        $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();
+        $this->readPreference = $options['readPreference'] ?? $this->manager->getReadPreference();
+        $this->typeMap = $options['typeMap'] ?? self::$defaultTypeMap;
+        $this->writeConcern = $options['writeConcern'] ?? $this->manager->getWriteConcern();
     }
 
     /**

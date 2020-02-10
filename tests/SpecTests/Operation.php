@@ -322,7 +322,7 @@ final class Operation
                 return $client->listDatabases($args);
             case 'watch':
                 return $client->watch(
-                    isset($args['pipeline']) ? $args['pipeline'] : [],
+                    $args['pipeline'] ?? [],
                     array_diff_key($args, ['pipeline' => 1])
                 );
             default:
@@ -363,7 +363,7 @@ final class Operation
             case 'countDocuments':
             case 'find':
                 return $collection->{$this->name}(
-                    isset($args['filter']) ? $args['filter'] : [],
+                    $args['filter'] ?? [],
                     array_diff_key($args, ['filter' => 1])
                 );
             case 'estimatedDocumentCount':
@@ -378,7 +378,7 @@ final class Operation
             case 'distinct':
                 return $collection->distinct(
                     $args['fieldName'],
-                    isset($args['filter']) ? $args['filter'] : [],
+                    $args['filter'] ?? [],
                     array_diff_key($args, ['fieldName' => 1, 'filter' => 1])
                 );
             case 'drop':
@@ -439,7 +439,7 @@ final class Operation
                 );
             case 'watch':
                 return $collection->watch(
-                    isset($args['pipeline']) ? $args['pipeline'] : [],
+                    $args['pipeline'] ?? [],
                     array_diff_key($args, ['pipeline' => 1])
                 );
             default:
@@ -475,7 +475,7 @@ final class Operation
                 )->toArray()[0];
             case 'watch':
                 return $database->watch(
-                    isset($args['pipeline']) ? $args['pipeline'] : [],
+                    $args['pipeline'] ?? [],
                     array_diff_key($args, ['pipeline' => 1])
                 );
             default:

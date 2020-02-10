@@ -145,8 +145,8 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
     {
         $this->checkServerRequirements($this->createRunOn($test));
 
-        $databaseName = isset($databaseName) ? $databaseName : $this->getDatabaseName();
-        $collectionName = isset($collectionName) ? $collectionName : $this->getCollectionName();
+        $databaseName = $databaseName ?? $this->getDatabaseName();
+        $collectionName = $collectionName ?? $this->getCollectionName();
 
         $context = Context::fromCommandMonitoring($test, $databaseName, $collectionName);
         $this->setContext($context);
@@ -174,9 +174,9 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
         foreach (glob(__DIR__ . '/command-monitoring/*.json') as $filename) {
             $json = $this->decodeJson(file_get_contents($filename));
             $group = basename($filename, '.json');
-            $data = isset($json->data) ? $json->data : [];
-            $databaseName = isset($json->database_name) ? $json->database_name : null;
-            $collectionName = isset($json->collection_name) ? $json->collection_name : null;
+            $data = $json->data ?? [];
+            $databaseName = $json->database_name ?? null;
+            $collectionName = $json->collection_name ?? null;
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;

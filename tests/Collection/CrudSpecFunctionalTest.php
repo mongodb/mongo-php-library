@@ -57,7 +57,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             $this->checkServerVersion($minServerVersion, $maxServerVersion);
         }
 
-        $expectedData = isset($test['outcome']['collection']['data']) ? $test['outcome']['collection']['data'] : null;
+        $expectedData = $test['outcome']['collection']['data'] ?? null;
         $this->initializeData($initialData, $expectedData);
 
         if (isset($test['outcome']['collection']['name'])) {
@@ -84,8 +84,8 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
         foreach (glob(__DIR__ . '/spec-tests/*/*.json') as $filename) {
             $json = json_decode(file_get_contents($filename), true);
 
-            $minServerVersion = isset($json['minServerVersion']) ? $json['minServerVersion'] : null;
-            $maxServerVersion = isset($json['maxServerVersion']) ? $json['maxServerVersion'] : null;
+            $minServerVersion = $json['minServerVersion'] ?? null;
+            $maxServerVersion = $json['maxServerVersion'] ?? null;
 
             foreach ($json['tests'] as $test) {
                 $name = str_replace(' ', '_', $test['description']);
@@ -152,13 +152,13 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             case 'bulkWrite':
                 return $this->collection->bulkWrite(
                     array_map([$this, 'prepareBulkWriteRequest'], $operation['arguments']['requests']),
-                    isset($operation['arguments']['options']) ? $operation['arguments']['options'] : []
+                    $operation['arguments']['options'] ?? []
                 );
             case 'count':
             case 'countDocuments':
             case 'find':
                 return $this->collection->{$operation['name']}(
-                    isset($operation['arguments']['filter']) ? $operation['arguments']['filter'] : [],
+                    $operation['arguments']['filter'] ?? [],
                     array_diff_key($operation['arguments'], ['filter' => 1])
                 );
             case 'estimatedDocumentCount':
@@ -173,7 +173,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             case 'distinct':
                 return $this->collection->distinct(
                     $operation['arguments']['fieldName'],
-                    isset($operation['arguments']['filter']) ? $operation['arguments']['filter'] : [],
+                    $operation['arguments']['filter'] ?? [],
                     array_diff_key($operation['arguments'], ['fieldName' => 1, 'filter' => 1])
                 );
             case 'findOneAndReplace':
@@ -200,7 +200,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             case 'insertMany':
                 return $this->collection->insertMany(
                     $operation['arguments']['documents'],
-                    isset($operation['arguments']['options']) ? $operation['arguments']['options'] : []
+                    $operation['arguments']['options'] ?? []
                 );
             case 'insertOne':
                 return $this->collection->insertOne(
@@ -263,7 +263,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     {
         switch ($operation['name']) {
             case 'bulkWrite':
-                $insertedIds = isset($outcome['result']['insertedIds']) ? $outcome['result']['insertedIds'] : [];
+                $insertedIds = $outcome['result']['insertedIds'] ?? [];
 
                 if ($exception instanceof BulkWriteException) {
                     return new BulkWriteResult($exception->getWriteResult(), $insertedIds);
@@ -271,7 +271,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 break;
 
             case 'insertMany':
-                $insertedIds = isset($outcome['result']['insertedIds']) ? $outcome['result']['insertedIds'] : [];
+                $insertedIds = $outcome['result']['insertedIds'] ?? [];
 
                 if ($exception instanceof BulkWriteException) {
                     return new InsertManyResult($exception->getWriteResult(), $insertedIds);

@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\SpecTests;
 
 use Closure;
-use Exception;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Int64;
 use MongoDB\Client;
@@ -20,6 +19,7 @@ use MongoDB\Tests\CommandObserver;
 use PHPUnit\Framework\SkippedTestError;
 use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use Throwable;
 use UnexpectedValueException;
 use function base64_decode;
 use function basename;
@@ -83,8 +83,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             $this->markTestSkipped($test->skipReason);
         }
 
-        $databaseName = isset($databaseName) ? $databaseName : $this->getDatabaseName();
-        $collectionName = isset($collectionName) ? $collectionName : $this->getCollectionName();
+        $databaseName = $databaseName ?? $this->getDatabaseName();
+        $collectionName = $collectionName ?? $this->getCollectionName();
 
         try {
             $context = Context::fromClientSideEncryption($test, $databaseName, $collectionName);
@@ -135,7 +135,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
             try {
                 $json = $this->decodeJson(file_get_contents($filename));
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 $testArgs[$group] = [
                     (object) ['skipReason' => sprintf('Exception loading file "%s": %s', $filename, $e->getMessage())],
                     null,
@@ -145,12 +145,12 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 continue;
             }
 
-            $runOn = isset($json->runOn) ? $json->runOn : null;
-            $data = isset($json->data) ? $json->data : [];
-            $keyVaultData = isset($json->key_vault_data) ? $json->key_vault_data : null;
-            $jsonSchema = isset($json->json_schema) ? $json->json_schema : null;
-            $databaseName = isset($json->database_name) ? $json->database_name : null;
-            $collectionName = isset($json->collection_name) ? $json->collection_name : null;
+            $runOn = $json->runOn ?? null;
+            $data = $json->data ?? [];
+            $keyVaultData = $json->key_vault_data ?? null;
+            $jsonSchema = $json->json_schema ?? null;
+            $databaseName = $json->database_name ?? null;
+            $collectionName = $json->collection_name ?? null;
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;
@@ -211,6 +211,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             'local' => [
                 static function (ClientEncryption $clientEncryption, Client $client, Client $clientEncrypted, self $test) {
                     $commands = [];
+
                     $localDatakeyId = null;
 
                     (new CommandObserver())->observe(

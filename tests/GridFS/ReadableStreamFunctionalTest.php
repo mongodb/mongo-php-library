@@ -136,7 +136,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         $fileDocument = $this->collectionWrapper->findFileById($fileId);
         $stream = new ReadableStream($this->collectionWrapper, $fileDocument);
         for ($i = 0; $i < $length; $i++) {
-            $expectedByte = isset($expectedBytes[$i]) ? $expectedBytes[$i] : '';
+            $expectedByte = $expectedBytes[$i] ?? '';
             $this->assertSame($expectedByte, $stream->readBytes(1));
         }
     }

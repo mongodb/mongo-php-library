@@ -230,8 +230,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
         }
 
         $resumeToken = is_array($document)
-            ? (isset($document['_id']) ? $document['_id'] : null)
-            : (isset($document->_id) ? $document->_id : null);
+            ? ($document['_id'] ?? null)
+            : ($document->_id ?? null);
 
         if (! isset($resumeToken)) {
             $this->isValid = false;

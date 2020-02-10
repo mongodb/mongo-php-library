@@ -50,8 +50,6 @@ jobs:
 
     # Test remaining supported PHP versions
     - stage: Test
-      php: "5.6"
-    - stage: Test
       php: "7.0"
     - stage: Test
       php: "7.1"
@@ -62,7 +60,7 @@ jobs:
 
     # Test against lowest supported dependencies
     - stage: Test
-      php: "5.6"
+      php: "7.0"
       env:
         - COMPOSER_OPTIONS=--prefer-lowest
 

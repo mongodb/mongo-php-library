@@ -13,7 +13,7 @@
         "php": "^7.0",
         "ext-hash": "*",
         "ext-json": "*",
-        "ext-mongodb": "^1.7"
+        "ext-mongodb": "^1.8"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.4 || ^8.3",

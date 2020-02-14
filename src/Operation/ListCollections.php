@@ -136,6 +136,6 @@ class ListCollections implements Executable
         $cursor = $server->executeReadCommand($this->databaseName, new Command($cmd), $this->createOptions());
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
 
-        return new CollectionInfoCommandIterator(new CachingIterator($cursor));
+        return new CollectionInfoCommandIterator(new CachingIterator($cursor), $this->databaseName);
     }
 }

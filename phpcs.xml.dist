@@ -17,15 +17,13 @@
 
     <rule ref="Doctrine">
         <!-- Exclude sniffs that require newer PHP versions -->
-        <!-- Available with PHP 7.0 -->
-        <exclude name="SlevomatCodingStandard.TypeHints.DeclareStrictTypes" />
-        <exclude name="SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly" />
-        <exclude name="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator" />
-
         <!-- Available with PHP 7.1 -->
         <exclude name="SlevomatCodingStandard.Classes.ClassConstantVisibility" />
         <exclude name="SlevomatCodingStandard.PHP.ShortList.LongListUsed" />
         <exclude name="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue" />
+
+        <!-- Can cause subtle BC breaks, disabled for now -->
+        <exclude name="SlevomatCodingStandard.TypeHints.DeclareStrictTypes" />
 
         <!-- No statement alignment so far -->
         <exclude name="Generic.Formatting.MultipleStatementAlignment" />

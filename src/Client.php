@@ -109,7 +109,7 @@ class Client
         }
 
         $this->uri = (string) $uri;
-        $this->typeMap = isset($driverOptions['typeMap']) ? $driverOptions['typeMap'] : null;
+        $this->typeMap = $driverOptions['typeMap'] ?? null;
 
         unset($driverOptions['typeMap']);
 

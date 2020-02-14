@@ -149,10 +149,10 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
         foreach (glob(__DIR__ . '/change-streams/*.json') as $filename) {
             $json = $this->decodeJson(file_get_contents($filename));
             $group = basename($filename, '.json');
-            $databaseName = isset($json->database_name) ? $json->database_name : null;
-            $database2Name = isset($json->database2_name) ? $json->database2_name : null;
-            $collectionName = isset($json->collection_name) ? $json->collection_name : null;
-            $collection2Name = isset($json->collection2_name) ? $json->collection2_name : null;
+            $databaseName = $json->database_name ?? null;
+            $database2Name = $json->database2_name ?? null;
+            $collectionName = $json->collection_name ?? null;
+            $collection2Name = $json->collection2_name ?? null;
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;
@@ -173,7 +173,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
     private function createChangeStream(stdClass $test)
     {
         $context = $this->getContext();
-        $pipeline = isset($test->changeStreamPipeline) ? $test->changeStreamPipeline : [];
+        $pipeline = $test->changeStreamPipeline ?? [];
         $options = isset($test->changeStreamOptions) ? (array) $test->changeStreamOptions : [];
 
         switch ($test->target) {

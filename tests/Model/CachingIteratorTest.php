@@ -5,6 +5,7 @@ namespace MongoDB\Tests\Model;
 use Exception;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Tests\TestCase;
+use Throwable;
 use function iterator_to_array;
 
 class CachingIteratorTest extends TestCase
@@ -14,7 +15,7 @@ class CachingIteratorTest extends TestCase
         $iterator = $this->getTraversable([1, 2, 3]);
         $this->assertSame([1, 2, 3], iterator_to_array($iterator));
 
-        $this->expectException(Exception::class);
+        $this->expectException(Throwable::class);
         $this->expectExceptionMessage('Cannot traverse an already closed generator');
         iterator_to_array($iterator);
     }

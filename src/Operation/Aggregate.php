@@ -325,7 +325,7 @@ class Aggregate implements Executable
     private function createCommand(Server $server, $hasWriteStage)
     {
         $cmd = [
-            'aggregate' => isset($this->collectionName) ? $this->collectionName : 1,
+            'aggregate' => $this->collectionName ?? 1,
             'pipeline' => $this->pipeline,
         ];
         $cmdOptions = [];

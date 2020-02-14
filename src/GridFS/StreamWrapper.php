@@ -17,9 +17,9 @@
 
 namespace MongoDB\GridFS;
 
-use Exception;
 use MongoDB\BSON\UTCDateTime;
 use stdClass;
+use Throwable;
 use function explode;
 use function get_class;
 use function in_array;
@@ -150,7 +150,7 @@ class StreamWrapper
 
         try {
             return $this->stream->readBytes($length);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             trigger_error(sprintf('%s: %s', get_class($e), $e->getMessage()), E_USER_WARNING);
 
             return false;
@@ -247,7 +247,7 @@ class StreamWrapper
 
         try {
             return $this->stream->writeBytes($data);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             trigger_error(sprintf('%s: %s', get_class($e), $e->getMessage()), E_USER_WARNING);
 
             return false;

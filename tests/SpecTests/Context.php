@@ -316,8 +316,8 @@ final class Context
             }
 
             $w = $writeConcern['w'];
-            $wtimeout = isset($writeConcern['wtimeout']) ? $writeConcern['wtimeout'] : 0;
-            $j = isset($writeConcern['j']) ? $writeConcern['j'] : null;
+            $wtimeout = $writeConcern['wtimeout'] ?? 0;
+            $j = $writeConcern['j'] ?? null;
 
             $options['writeConcern'] = isset($j)
                 ? new WriteConcern($w, $wtimeout, $j)

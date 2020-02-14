@@ -45,8 +45,8 @@ class CrudSpecTest extends FunctionalTestCase
             $this->markTestSkipped($test->skipReason);
         }
 
-        $databaseName = isset($databaseName) ? $databaseName : $this->getDatabaseName();
-        $collectionName = isset($collectionName) ? $collectionName : $this->getCollectionName();
+        $databaseName = $databaseName ?? $this->getDatabaseName();
+        $collectionName = $collectionName ?? $this->getCollectionName();
 
         $context = Context::fromCrud($test, $databaseName, $collectionName);
         $this->setContext($context);
@@ -84,10 +84,10 @@ class CrudSpecTest extends FunctionalTestCase
         foreach (glob(__DIR__ . '/crud/*.json') as $filename) {
             $json = $this->decodeJson(file_get_contents($filename));
             $group = basename($filename, '.json');
-            $runOn = isset($json->runOn) ? $json->runOn : null;
-            $data = isset($json->data) ? $json->data : [];
-            $databaseName = isset($json->database_name) ? $json->database_name : null;
-            $collectionName = isset($json->collection_name) ? $json->collection_name : null;
+            $runOn = $json->runOn ?? null;
+            $data = $json->data ?? [];
+            $databaseName = $json->database_name ?? null;
+            $collectionName = $json->collection_name ?? null;
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;

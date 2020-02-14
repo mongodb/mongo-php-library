@@ -58,8 +58,8 @@ class RetryableWritesSpecTest extends FunctionalTestCase
         foreach (glob(__DIR__ . '/retryable-writes/*.json') as $filename) {
             $json = $this->decodeJson(file_get_contents($filename));
             $group = basename($filename, '.json');
-            $runOn = isset($json->runOn) ? $json->runOn : null;
-            $data = isset($json->data) ? $json->data : [];
+            $runOn = $json->runOn ?? null;
+            $data = $json->data ?? [];
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;

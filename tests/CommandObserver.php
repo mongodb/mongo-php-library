@@ -2,11 +2,11 @@
 
 namespace MongoDB\Tests;
 
-use Exception;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
+use Throwable;
 use function call_user_func;
 use function MongoDB\Driver\Monitoring\addSubscriber;
 use function MongoDB\Driver\Monitoring\removeSubscriber;
@@ -27,7 +27,7 @@ class CommandObserver implements CommandSubscriber
 
         try {
             call_user_func($execution);
-        } catch (Exception $executionException) {
+        } catch (Throwable $executionException) {
         }
 
         removeSubscriber($this);

@@ -9,7 +9,9 @@ use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
+use function is_object;
 use function iterator_to_array;
+use function usort;
 use function version_compare;
 
 class MapReduceFunctionalTest extends FunctionalTestCase
@@ -92,12 +94,19 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $result = $operation->execute($this->getPrimaryServer());
 
         $this->assertInstanceOf(MapReduceResult::class, $result);
-        $this->assertGreaterThanOrEqual(0, $result->getExecutionTimeMS());
-        $this->assertNotEmpty($result->getCounts());
+
+        if (version_compare($this->getServerVersion(), '4.3.0', '<')) {
+            $this->assertGreaterThanOrEqual(0, $result->getExecutionTimeMS());
+            $this->assertNotEmpty($result->getCounts());
+        }
     }
 
     public function testResultIncludesTimingWithVerboseOption()
     {
+        if (version_compare($this->getServerVersion(), '4.3.0', '>=')) {
+            $this->markTestSkipped('mapReduce statistics are no longer exposed');
+        }
+
         $this->createFixtures(3);
 
         $map = new Javascript('function() { emit(this.x, this.y); }');
@@ -115,6 +124,10 @@ class MapReduceFunctionalTest extends FunctionalTestCase
 
     public function testResultDoesNotIncludeTimingWithoutVerboseOption()
     {
+        if (version_compare($this->getServerVersion(), '4.3.0', '>=')) {
+            $this->markTestSkipped('mapReduce statistics are no longer exposed');
+        }
+
         $this->createFixtures(3);
 
         $map = new Javascript('function() { emit(this.x, this.y); }');
@@ -226,7 +239,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $operation = new MapReduce($this->getDatabaseName(), $this->getCollectionName(), $map, $reduce, $out, ['typeMap' => $typeMap]);
         $results = iterator_to_array($operation->execute($this->getPrimaryServer()));
 
-        $this->assertEquals($expectedDocuments, $results);
+        $this->assertEquals($this->sortResults($expectedDocuments), $this->sortResults($results));
     }
 
     public function provideTypeMapOptionsAndExpectedDocuments()
@@ -273,12 +286,12 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $operation = new MapReduce($this->getDatabaseName(), $this->getCollectionName(), $map, $reduce, $out, ['typeMap' => $typeMap]);
         $results = iterator_to_array($operation->execute($this->getPrimaryServer()));
 
-        $this->assertEquals($expectedDocuments, $results);
+        $this->assertEquals($this->sortResults($expectedDocuments), $this->sortResults($results));
 
         $operation = new Find($this->getDatabaseName(), $out, [], ['typeMap' => $typeMap]);
         $cursor = $operation->execute($this->getPrimaryServer());
 
-        $this->assertEquals($expectedDocuments, iterator_to_array($cursor));
+        $this->assertEquals($this->sortResults($expectedDocuments), $this->sortResults(iterator_to_array($cursor)));
 
         $operation = new DropCollection($this->getDatabaseName(), $out);
         $operation->execute($this->getPrimaryServer());
@@ -301,5 +314,20 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
 
         $this->assertEquals($n * 2, $result->getInsertedCount());
+    }
+
+    private function sortResults(array $results) : array
+    {
+        $sortFunction = static function ($resultA, $resultB) : int {
+            $idA = is_object($resultA) ? $resultA->_id : $resultA['_id'];
+            $idB = is_object($resultB) ? $resultB->_id : $resultB['_id'];
+
+            return $idA <=> $idB;
+        };
+
+        $sortedResults = $results;
+        usort($sortedResults, $sortFunction);
+
+        return $sortedResults;
     }
 }

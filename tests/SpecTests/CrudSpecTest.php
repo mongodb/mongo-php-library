@@ -14,6 +14,13 @@ use function glob;
  */
 class CrudSpecTest extends FunctionalTestCase
 {
+    /** @var array */
+    private static $incompleteTests = [
+        'find-allowdiskuse: Find does not send allowDiskuse when value is not specified' => 'PHPLIB-500',
+        'find-allowdiskuse: Find sends allowDiskuse false when false is specified' => 'PHPLIB-500',
+        'find-allowdiskuse: Find sends allowDiskUse true when true is specified' => 'PHPLIB-500',
+    ];
+
     /**
      * Assert that the expected and actual command documents match.
      *
@@ -37,6 +44,10 @@ class CrudSpecTest extends FunctionalTestCase
      */
     public function testCrud(stdClass $test, array $runOn = null, array $data, $databaseName = null, $collectionName = null)
     {
+        if (isset(self::$incompleteTests[$this->dataDescription()])) {
+            $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
+        }
+
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
         }

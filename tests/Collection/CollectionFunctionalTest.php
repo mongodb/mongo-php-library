@@ -396,8 +396,10 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
         $this->assertSameDocuments($expected, $result);
 
-        $this->assertGreaterThanOrEqual(0, $result->getExecutionTimeMS());
-        $this->assertNotEmpty($result->getCounts());
+        if (version_compare($this->getServerVersion(), '4.3.0', '<')) {
+            $this->assertGreaterThanOrEqual(0, $result->getExecutionTimeMS());
+            $this->assertNotEmpty($result->getCounts());
+        }
     }
 
     public function collectionMethodClosures()

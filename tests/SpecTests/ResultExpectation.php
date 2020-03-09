@@ -126,7 +126,7 @@ final class ResultExpectation
 
     public static function fromRetryableWrites(stdClass $outcome, $defaultAssertionType)
     {
-        if (property_exists($outcome, 'result')) {
+        if (property_exists($outcome, 'result') && ! self::isErrorResult($outcome->result)) {
             $assertionType = $outcome->result === null ? self::ASSERT_NULL : $defaultAssertionType;
             $expectedValue = $outcome->result;
         } else {

@@ -13,6 +13,8 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\GridFS\Bucket;
+use MongoDB\Model\CollectionInfo;
+use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
 use stdClass;
@@ -20,6 +22,7 @@ use function array_diff_key;
 use function array_map;
 use function fclose;
 use function fopen;
+use function iterator_to_array;
 use function MongoDB\is_last_pipeline_operator_write;
 use function MongoDB\with_transaction;
 use function stream_get_contents;
@@ -359,6 +362,11 @@ final class Operation
                     array_map([$this, 'prepareBulkWriteRequest'], $args['requests']),
                     $options
                 );
+            case 'createIndex':
+                return $collection->createIndex(
+                    $args['keys'],
+                    array_diff_key($args, ['keys' => 1])
+                );
             case 'count':
             case 'countDocuments':
             case 'find':
@@ -466,6 +474,16 @@ final class Operation
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
+            case 'createCollection':
+                return $database->createCollection(
+                    $args['collection'],
+                    array_diff_key($args, ['collection' => 1])
+                );
+            case 'dropCollection':
+                return $database->dropCollection(
+                    $args['collection'],
+                    array_diff_key($args, ['collection' => 1])
+                );
             case 'listCollections':
                 return $database->listCollections($args);
             case 'runCommand':
@@ -570,6 +588,36 @@ final class Operation
         $context->replaceArgumentSessionPlaceholder($args);
 
         switch ($this->name) {
+            case 'assertCollectionExists':
+                $databaseName = $args['database'];
+                $collectionName = $args['collection'];
+
+                $test->assertContains($collectionName, $this->getCollectionNames($context, $databaseName));
+
+                return null;
+            case 'assertCollectionNotExists':
+                $databaseName = $args['database'];
+                $collectionName = $args['collection'];
+
+                $test->assertNotContains($collectionName, $this->getCollectionNames($context, $databaseName));
+
+                return null;
+            case 'assertIndexExists':
+                $databaseName = $args['database'];
+                $collectionName = $args['collection'];
+                $indexName = $args['index'];
+
+                $test->assertContains($indexName, $this->getIndexNames($context, $databaseName, $collectionName));
+
+                return null;
+            case 'assertIndexNotExists':
+                $databaseName = $args['database'];
+                $collectionName = $args['collection'];
+                $indexName = $args['index'];
+
+                $test->assertNotContains($indexName, $this->getIndexNames($context, $databaseName, $collectionName));
+
+                return null;
             case 'assertSessionPinned':
                 $test->assertInstanceOf(Session::class, $args['session']);
                 $test->assertInstanceOf(Server::class, $args['session']->getServer());
@@ -597,6 +645,37 @@ final class Operation
             default:
                 throw new LogicException('Unsupported test runner operation: ' . $this->name);
         }
+    }
+
+    /**
+     * @param string $databaseName
+     *
+     * @return array
+     */
+    private function getCollectionNames(Context $context, $databaseName)
+    {
+        return array_map(
+            function (CollectionInfo $collectionInfo) {
+                return $collectionInfo->getName();
+            },
+            iterator_to_array($context->selectDatabase($databaseName)->listCollections())
+        );
+    }
+
+    /**
+     * @param string $databaseName
+     * @param string $collectionName
+     *
+     * @return array
+     */
+    private function getIndexNames(Context $context, $databaseName, $collectionName)
+    {
+        return array_map(
+            function (IndexInfo $indexInfo) {
+                return $indexInfo->getName();
+            },
+            iterator_to_array($context->selectCollection($databaseName, $collectionName)->listIndexes())
+        );
     }
 
     /**
@@ -657,6 +736,9 @@ final class Operation
                 return ResultExpectation::ASSERT_BULKWRITE;
             case 'count':
             case 'countDocuments':
+                return ResultExpectation::ASSERT_SAME;
+            case 'createIndex':
+                return ResultExpectation::ASSERT_MATCHES_DOCUMENT;
             case 'distinct':
             case 'estimatedDocumentCount':
                 return ResultExpectation::ASSERT_SAME;
@@ -700,6 +782,8 @@ final class Operation
             case 'aggregate':
             case 'listCollections':
                 return ResultExpectation::ASSERT_SAME_DOCUMENTS;
+            case 'createCollection':
+            case 'dropCollection':
             case 'runCommand':
                 return ResultExpectation::ASSERT_MATCHES_DOCUMENT;
             case 'watch':

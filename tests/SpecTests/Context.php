@@ -185,9 +185,6 @@ final class Context
 
         $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
 
-        // TODO: Remove this once retryWrites=true by default (see: PHPC-1324)
-        $clientOptions['retryWrites'] = true;
-
         if (isset($test->outcome->collection->name)) {
             $o->outcomeCollectionName = $test->outcome->collection->name;
         }

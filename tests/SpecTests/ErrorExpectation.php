@@ -92,6 +92,11 @@ final class ErrorExpectation
         return $o;
     }
 
+    public static function fromReadWriteConcern(stdClass $operation)
+    {
+        return self::fromGenericOperation($operation);
+    }
+
     public static function fromRetryableReads(stdClass $operation)
     {
         $o = new self();

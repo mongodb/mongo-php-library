@@ -97,7 +97,7 @@ jobs:
     - stage: Test
       php: "7.3"
       env:
-        - SERVER_VERSION=4.3.3
+        - SERVER_VERSION=4.3.4
 
     # Test other server configurations
     - stage: Test

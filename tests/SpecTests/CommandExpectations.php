@@ -130,7 +130,7 @@ class CommandExpectations implements CommandSubscriber
          * configureFailPoint needs to be ignored as the targetedFailPoint
          * operation will be caught by command monitoring and is also not
          * present in the expected commands in spec tests. */
-        $o->ignoredCommandNames = ['buildInfo', 'getParameter', 'configureFailPoint'];
+        $o->ignoredCommandNames = ['buildInfo', 'getParameter', 'configureFailPoint', 'listCollections', 'listIndexes'];
 
         return $o;
     }

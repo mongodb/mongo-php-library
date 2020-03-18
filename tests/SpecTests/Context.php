@@ -166,6 +166,21 @@ final class Context
         return $o;
     }
 
+    public static function fromReadWriteConcern(stdClass $test, $databaseName, $collectionName)
+    {
+        $o = new self($databaseName, $collectionName);
+
+        if (isset($test->outcome->collection->name)) {
+            $o->outcomeCollectionName = $test->outcome->collection->name;
+        }
+
+        $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
+
+        $o->client = new Client(FunctionalTestCase::getUri(), $clientOptions);
+
+        return $o;
+    }
+
     public static function fromRetryableReads(stdClass $test, $databaseName, $collectionName, $bucketName)
     {
         $o = new self($databaseName, $collectionName);
@@ -253,12 +268,13 @@ final class Context
         return $this->useEncryptedClient && $this->encryptedClient ? $this->encryptedClient : $this->client;
     }
 
-    public function getCollection(array $collectionOptions = [])
+    public function getCollection(array $collectionOptions = [], array $databaseOptions = [])
     {
         return $this->selectCollection(
             $this->databaseName,
             $this->collectionName,
-            $this->prepareOptions($collectionOptions)
+            $collectionOptions,
+            $databaseOptions
         );
     }
 
@@ -312,13 +328,17 @@ final class Context
                 throw new LogicException('Unsupported writeConcern args: ' . implode(',', array_keys($diff)));
             }
 
-            $w = $writeConcern['w'];
-            $wtimeout = $writeConcern['wtimeout'] ?? 0;
-            $j = $writeConcern['j'] ?? null;
+            if (! empty($writeConcern)) {
+                $w = $writeConcern['w'];
+                $wtimeout = $writeConcern['wtimeout'] ?? 0;
+                $j = $writeConcern['j'] ?? null;
 
-            $options['writeConcern'] = isset($j)
-                ? new WriteConcern($w, $wtimeout, $j)
-                : new WriteConcern($w, $wtimeout);
+                $options['writeConcern'] = isset($j)
+                    ? new WriteConcern($w, $wtimeout, $j)
+                    : new WriteConcern($w, $wtimeout);
+            } else {
+                unset($options['writeConcern']);
+            }
         }
 
         return $options;
@@ -380,13 +400,11 @@ final class Context
         }
     }
 
-    public function selectCollection($databaseName, $collectionName, array $collectionOptions = [])
+    public function selectCollection($databaseName, $collectionName, array $collectionOptions = [], array $databaseOptions = [])
     {
-        return $this->getClient()->selectCollection(
-            $databaseName,
-            $collectionName,
-            $this->prepareOptions($collectionOptions)
-        );
+        return $this
+            ->selectDatabase($databaseName, $databaseOptions)
+            ->selectCollection($collectionName, $this->prepareOptions($collectionOptions));
     }
 
     public function selectDatabase($databaseName, array $databaseOptions = [])

@@ -61,6 +61,9 @@ final class Operation
     /** @var string|null */
     private $databaseName;
 
+    /** @var array */
+    private $databaseOptions = [];
+
     /** @var string */
     private $name;
 
@@ -184,6 +187,24 @@ final class Operation
         return $o;
     }
 
+    public static function fromReadWriteConcern(stdClass $operation)
+    {
+        $o = new self($operation);
+
+        $o->errorExpectation = ErrorExpectation::fromReadWriteConcern($operation);
+        $o->resultExpectation = ResultExpectation::fromReadWriteConcern($operation, $o->getResultAssertionType());
+
+        if (isset($operation->databaseOptions)) {
+            $o->databaseOptions = (array) $operation->databaseOptions;
+        }
+
+        if (isset($operation->collectionOptions)) {
+            $o->collectionOptions = (array) $operation->collectionOptions;
+        }
+
+        return $o;
+    }
+
     public static function fromRetryableReads(stdClass $operation)
     {
         $o = new self($operation);
@@ -277,7 +298,7 @@ final class Operation
 
                 return $this->executeForClient($client, $context);
             case self::OBJECT_COLLECTION:
-                $collection = $context->getCollection($this->collectionOptions);
+                $collection = $context->getCollection($this->collectionOptions, $this->databaseOptions);
 
                 return $this->executeForCollection($collection, $context);
             case self::OBJECT_DATABASE:
@@ -289,7 +310,7 @@ final class Operation
 
                 return $this->executeForGridFSBucket($bucket, $context);
             case self::OBJECT_SELECT_COLLECTION:
-                $collection = $context->selectCollection($this->databaseName, $this->collectionName, $this->collectionOptions);
+                $collection = $context->selectCollection($this->databaseName, $this->collectionName, $this->collectionOptions, $this->databaseOptions);
 
                 return $this->executeForCollection($collection, $context);
             case self::OBJECT_SELECT_DATABASE:
@@ -366,6 +387,11 @@ final class Operation
                 return $collection->createIndex(
                     $args['keys'],
                     array_diff_key($args, ['keys' => 1])
+                );
+            case 'dropIndex':
+                return $collection->dropIndex(
+                    $args['name'],
+                    array_diff_key($args, ['name' => 1])
                 );
             case 'count':
             case 'countDocuments':
@@ -738,6 +764,7 @@ final class Operation
             case 'countDocuments':
                 return ResultExpectation::ASSERT_SAME;
             case 'createIndex':
+            case 'dropIndex':
                 return ResultExpectation::ASSERT_MATCHES_DOCUMENT;
             case 'distinct':
             case 'estimatedDocumentCount':

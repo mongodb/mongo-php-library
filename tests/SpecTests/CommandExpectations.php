@@ -102,6 +102,16 @@ class CommandExpectations implements CommandSubscriber
         return $o;
     }
 
+    public static function fromReadWriteConcern(array $expectedEvents)
+    {
+        $o = new self($expectedEvents);
+
+        $o->ignoreCommandFailed = true;
+        $o->ignoreCommandSucceeded = true;
+
+        return $o;
+    }
+
     public static function fromRetryableReads(array $expectedEvents)
     {
         $o = new self($expectedEvents);

@@ -111,6 +111,19 @@ final class ResultExpectation
         return new self($assertionType, $expectedValue);
     }
 
+    public static function fromReadWriteConcern(stdClass $operation, $defaultAssertionType)
+    {
+        if (property_exists($operation, 'result') && ! self::isErrorResult($operation->result)) {
+            $assertionType = $operation->result === null ? self::ASSERT_NULL : $defaultAssertionType;
+            $expectedValue = $operation->result;
+        } else {
+            $assertionType = self::ASSERT_NOTHING;
+            $expectedValue = null;
+        }
+
+        return new self($assertionType, $expectedValue);
+    }
+
     public static function fromRetryableReads(stdClass $operation, $defaultAssertionType)
     {
         if (property_exists($operation, 'result') && ! self::isErrorResult($operation->result)) {

@@ -124,7 +124,7 @@ class Find implements Executable, Explainable
      *    Set this option to prevent that.
      *
      *  * oplogReplay (boolean): Internal replication use only. The driver
-     *    should not set this.
+     *    should not set this. This option is deprecated as of MongoDB 4.4.
      *
      *  * projection (document): Limits the fields to return for the matching
      *    document.

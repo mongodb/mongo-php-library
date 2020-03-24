@@ -142,6 +142,34 @@ description: |
   For the ``keyVaultClient`` option, you may pass a :phpclass:`MongoDB\\Client`
   instance, which will be unwrapped to provide a :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>`
   to the extension.
+  .. versionadded:: 1.6
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: driver
+type: array
+description: |
+  Additional driver metadata to be passed on to the server handshake. This is an
+  array containing ``name``, ``version``, and ``platform`` fields:
+
+  .. code-block:: php
+
+     [
+         'name' => 'my-driver',
+         'version' => '1.2.3-dev',
+         'platform' => 'some-platform',
+     ]
+
+  .. note::
+
+     This feature is primarily designed for custom drivers and ODMs, which may
+     want to identify themselves to the server for diagnostic purposes.
+     Applications should use the ``appName`` URI option instead of driver
+     metadata.
+
+  .. versionadded:: 1.7
 interface: phpmethod
 operation: ~
 optional: true

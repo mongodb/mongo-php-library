@@ -155,49 +155,6 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertSameDocument($postBatchResumeToken, $changeStream->getResumeToken());
     }
 
-    /**
-     * Prose test 10: "ChangeStream will resume after a killCursors command is
-     * issued for its child cursor."
-     */
-    public function testNextResumesAfterCursorNotFound()
-    {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
-        $changeStream = $operation->execute($this->getPrimaryServer());
-
-        $changeStream->rewind();
-        $this->assertFalse($changeStream->valid());
-
-        $this->insertDocument(['_id' => 1, 'x' => 'foo']);
-
-        $this->advanceCursorUntilValid($changeStream);
-
-        $expectedResult = [
-            '_id' => $changeStream->current()->_id,
-            'operationType' => 'insert',
-            'fullDocument' => ['_id' => 1, 'x' => 'foo'],
-            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
-            'documentKey' => ['_id' => 1],
-        ];
-
-        $this->assertMatchesDocument($expectedResult, $changeStream->current());
-
-        $this->killChangeStreamCursor($changeStream);
-
-        $this->insertDocument(['_id' => 2, 'x' => 'bar']);
-
-        $this->advanceCursorUntilValid($changeStream);
-
-        $expectedResult = [
-            '_id' => $changeStream->current()->_id,
-            'operationType' => 'insert',
-            'fullDocument' => ['_id' => 2, 'x' => 'bar'],
-            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
-            'documentKey' => ['_id' => 2],
-        ];
-
-        $this->assertMatchesDocument($expectedResult, $changeStream->current());
-    }
-
     public function testNextResumesAfterConnectionException()
     {
         /* In order to trigger a dropped connection, we'll use a new client with
@@ -729,41 +686,6 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->assertInstanceOf(Cursor::class, $cursor);
         $this->assertFalse($cursor->isDead());
-    }
-
-    /**
-     * Prose test 5: "ChangeStream will not attempt to resume after encountering
-     * error code 11601 (Interrupted), 136 (CappedPositionLost), or 237
-     * (CursorKilled) while executing a getMore command."
-     *
-     * @dataProvider provideNonResumableErrorCodes
-     */
-    public function testNonResumableErrorCodes($errorCode)
-    {
-        $this->configureFailPoint([
-            'configureFailPoint' => 'failCommand',
-            'mode' => ['times' => 1],
-            'data' => ['failCommands' => ['getMore'], 'errorCode' => $errorCode],
-        ]);
-
-        $this->insertDocument(['x' => 1]);
-
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), []);
-        $changeStream = $operation->execute($this->getPrimaryServer());
-        $changeStream->rewind();
-
-        $this->expectException(ServerException::class);
-        $this->expectExceptionCode($errorCode);
-        $changeStream->next();
-    }
-
-    public function provideNonResumableErrorCodes()
-    {
-        return [
-            'CappedPositionLost' => [136],
-            'CursorKilled' => [237],
-            'Interrupted' => [11601],
-        ];
     }
 
     /**

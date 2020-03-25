@@ -4,6 +4,7 @@ namespace MongoDB\Tests;
 
 use MongoDB\Client;
 use MongoDB\Driver\ClientEncryption;
+use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -38,9 +39,9 @@ class ClientTest extends TestCase
     /**
      * @dataProvider provideInvalidConstructorDriverOptions
      */
-    public function testConstructorDriverOptionTypeChecks(array $driverOptions)
+    public function testConstructorDriverOptionTypeChecks(array $driverOptions, string $exception = InvalidArgumentException::class)
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($exception);
         new Client(static::getUri(), [], $driverOptions);
     }
 
@@ -53,6 +54,21 @@ class ClientTest extends TestCase
         }
 
         $options[][] = ['autoEncryption' => ['keyVaultClient' => 'foo']];
+
+        foreach ($this->getInvalidStringValues() as $value) {
+            $options[][] = ['driver' => ['name' => $value]];
+        }
+
+        foreach ($this->getInvalidStringValues() as $value) {
+            $options[][] = ['driver' => ['version' => $value]];
+        }
+
+        foreach ($this->getInvalidStringValues() as $value) {
+            $options[] = [
+                'driverOptions' => ['driver' => ['platform' => $value]],
+                'exception' => DriverInvalidArgumentException::class,
+            ];
+        }
 
         return $options;
     }

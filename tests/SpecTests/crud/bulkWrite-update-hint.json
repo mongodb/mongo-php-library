@@ -25,7 +25,7 @@
   "collection_name": "test_bulkwrite_update_hint",
   "tests": [
     {
-      "description": "BulkWrite with update hints",
+      "description": "BulkWrite updateOne with update hints",
       "operations": [
         {
           "name": "bulkWrite",
@@ -60,7 +60,89 @@
                     "_id": 1
                   }
                 }
-              },
+              }
+            ],
+            "options": {
+              "ordered": true
+            }
+          },
+          "result": {
+            "deletedCount": 0,
+            "insertedCount": 0,
+            "insertedIds": {},
+            "matchedCount": 2,
+            "modifiedCount": 2,
+            "upsertedCount": 0,
+            "upsertedIds": {}
+          }
+        }
+      ],
+      "expectations": [
+        {
+          "command_started_event": {
+            "command": {
+              "update": "test_bulkwrite_update_hint",
+              "updates": [
+                {
+                  "q": {
+                    "_id": 1
+                  },
+                  "u": {
+                    "$inc": {
+                      "x": 1
+                    }
+                  },
+                  "hint": "_id_"
+                },
+                {
+                  "q": {
+                    "_id": 1
+                  },
+                  "u": {
+                    "$inc": {
+                      "x": 1
+                    }
+                  },
+                  "hint": {
+                    "_id": 1
+                  }
+                }
+              ],
+              "ordered": true
+            }
+          }
+        }
+      ],
+      "outcome": {
+        "collection": {
+          "data": [
+            {
+              "_id": 1,
+              "x": 13
+            },
+            {
+              "_id": 2,
+              "x": 22
+            },
+            {
+              "_id": 3,
+              "x": 33
+            },
+            {
+              "_id": 4,
+              "x": 44
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "BulkWrite updateMany with update hints",
+      "operations": [
+        {
+          "name": "bulkWrite",
+          "arguments": {
+            "requests": [
               {
                 "name": "updateMany",
                 "arguments": {
@@ -94,7 +176,95 @@
                     "_id": 1
                   }
                 }
-              },
+              }
+            ],
+            "options": {
+              "ordered": true
+            }
+          },
+          "result": {
+            "deletedCount": 0,
+            "insertedCount": 0,
+            "insertedIds": {},
+            "matchedCount": 4,
+            "modifiedCount": 4,
+            "upsertedCount": 0,
+            "upsertedIds": {}
+          }
+        }
+      ],
+      "expectations": [
+        {
+          "command_started_event": {
+            "command": {
+              "update": "test_bulkwrite_update_hint",
+              "updates": [
+                {
+                  "q": {
+                    "_id": {
+                      "$lt": 3
+                    }
+                  },
+                  "u": {
+                    "$inc": {
+                      "x": 1
+                    }
+                  },
+                  "multi": true,
+                  "hint": "_id_"
+                },
+                {
+                  "q": {
+                    "_id": {
+                      "$lt": 3
+                    }
+                  },
+                  "u": {
+                    "$inc": {
+                      "x": 1
+                    }
+                  },
+                  "multi": true,
+                  "hint": {
+                    "_id": 1
+                  }
+                }
+              ],
+              "ordered": true
+            }
+          }
+        }
+      ],
+      "outcome": {
+        "collection": {
+          "data": [
+            {
+              "_id": 1,
+              "x": 13
+            },
+            {
+              "_id": 2,
+              "x": 24
+            },
+            {
+              "_id": 3,
+              "x": 33
+            },
+            {
+              "_id": 4,
+              "x": 44
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "BulkWrite replaceOne with update hints",
+      "operations": [
+        {
+          "name": "bulkWrite",
+          "arguments": {
+            "requests": [
               {
                 "name": "replaceOne",
                 "arguments": {
@@ -130,8 +300,8 @@
             "deletedCount": 0,
             "insertedCount": 0,
             "insertedIds": {},
-            "matchedCount": 8,
-            "modifiedCount": 8,
+            "matchedCount": 2,
+            "modifiedCount": 2,
             "upsertedCount": 0,
             "upsertedIds": {}
           }
@@ -143,60 +313,6 @@
             "command": {
               "update": "test_bulkwrite_update_hint",
               "updates": [
-                {
-                  "q": {
-                    "_id": 1
-                  },
-                  "u": {
-                    "$inc": {
-                      "x": 1
-                    }
-                  },
-                  "hint": "_id_"
-                },
-                {
-                  "q": {
-                    "_id": 1
-                  },
-                  "u": {
-                    "$inc": {
-                      "x": 1
-                    }
-                  },
-                  "hint": {
-                    "_id": 1
-                  }
-                },
-                {
-                  "q": {
-                    "_id": {
-                      "$lt": 3
-                    }
-                  },
-                  "u": {
-                    "$inc": {
-                      "x": 1
-                    }
-                  },
-                  "multi": true,
-                  "hint": "_id_"
-                },
-                {
-                  "q": {
-                    "_id": {
-                      "$lt": 3
-                    }
-                  },
-                  "u": {
-                    "$inc": {
-                      "x": 1
-                    }
-                  },
-                  "multi": true,
-                  "hint": {
-                    "_id": 1
-                  }
-                },
                 {
                   "q": {
                     "_id": 3
@@ -228,11 +344,11 @@
           "data": [
             {
               "_id": 1,
-              "x": 15
+              "x": 11
             },
             {
               "_id": 2,
-              "x": 24
+              "x": 22
             },
             {
               "_id": 3,

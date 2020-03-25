@@ -182,6 +182,8 @@ description: |
 
   The :php:`MongoDB\\BSON\\Timestamp <class.mongodb-bson-timestamp>` class
   reference describes how to represent MongoDB's BSON timestamp type with PHP.
+
+  .. deprecated:: 1.7
 interface: phpmethod
 operation: ~
 optional: true

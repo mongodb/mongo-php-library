@@ -86,6 +86,10 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
         }
 
+        if ($this->isShardedCluster() && ! $this->isShardedClusterUsingReplicasets()) {
+            $this->markTestSkipped('$changeStream is only supported with replicasets');
+        }
+
         $this->checkServerRequirements($this->createRunOn($test));
 
         if (! isset($databaseName, $collectionName)) {

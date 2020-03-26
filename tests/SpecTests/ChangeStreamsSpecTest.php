@@ -263,6 +263,13 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
          * to return as many results as are expected. Require at least one
          * iteration to allow next() a chance to throw for error tests. */
         $maxIterations = $limit + 1;
+
+        /* On sharded clusters, allow for empty getMore calls due to sharding
+         * architecture */
+        if ($this->isShardedCluster()) {
+            $maxIterations *= 5;
+        }
+
         $events = [];
 
         for ($i = 0, $changeStream->rewind(); $i < $maxIterations; $i++, $changeStream->next()) {

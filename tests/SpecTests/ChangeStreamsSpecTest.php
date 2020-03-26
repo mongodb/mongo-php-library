@@ -4,6 +4,7 @@ namespace MongoDB\Tests\SpecTests;
 
 use ArrayIterator;
 use LogicException;
+use MongoDB\BSON\Int64;
 use MongoDB\ChangeStream;
 use MongoDB\Driver\Exception\Exception;
 use MongoDB\Model\BSONDocument;
@@ -22,16 +23,27 @@ use function glob;
 class ChangeStreamsSpecTest extends FunctionalTestCase
 {
     /** @var array */
-    private static $incompleteTests = ['change-streams-errors: Change Stream should error when _id is projected out' => 'PHPC-1419'];
+    private static $incompleteTests = [];
 
     /**
      * Assert that the expected and actual command documents match.
+     *
+     * Note: this method may modify the $expected object.
      *
      * @param stdClass $expected Expected command document
      * @param stdClass $actual   Actual command document
      */
     public static function assertCommandMatches(stdClass $expected, stdClass $actual)
     {
+        if (isset($expected->getMore) && $expected->getMore === 42) {
+            static::assertObjectHasAttribute('getMore', $actual);
+            static::assertThat($actual->getMore, static::logicalOr(
+                static::isInstanceOf(Int64::class),
+                static::isType('integer')
+            ));
+            unset($expected->getMore);
+        }
+
         static::assertDocumentsMatch($expected, $actual);
     }
 
@@ -74,9 +86,13 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
         }
 
+        if ($this->isShardedCluster() && ! $this->isShardedClusterUsingReplicasets()) {
+            $this->markTestSkipped('$changeStream is only supported with replicasets');
+        }
+
         $this->checkServerRequirements($this->createRunOn($test));
 
-        if (! isset($databaseName, $collectionName, $database2Name, $collection2Name)) {
+        if (! isset($databaseName, $collectionName)) {
             $this->fail('Required database and collection names are unset');
         }
 
@@ -84,7 +100,10 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
         $this->setContext($context);
 
         $this->dropDatabasesAndCreateCollection($databaseName, $collectionName);
-        $this->dropDatabasesAndCreateCollection($database2Name, $collection2Name);
+
+        if (isset($database2Name, $collection2Name)) {
+            $this->dropDatabasesAndCreateCollection($database2Name, $collection2Name);
+        }
 
         if (isset($test->failPoint)) {
             $this->configureFailPoint($test->failPoint);
@@ -248,6 +267,13 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
          * to return as many results as are expected. Require at least one
          * iteration to allow next() a chance to throw for error tests. */
         $maxIterations = $limit + 1;
+
+        /* On sharded clusters, allow for empty getMore calls due to sharding
+         * architecture */
+        if ($this->isShardedCluster()) {
+            $maxIterations *= 5;
+        }
+
         $events = [];
 
         for ($i = 0, $changeStream->rewind(); $i < $maxIterations; $i++, $changeStream->next()) {

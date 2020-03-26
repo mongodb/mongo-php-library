@@ -24,6 +24,7 @@ use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
+use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Exception\UnexpectedValueException;
@@ -63,6 +64,9 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     /** @var array|object|null */
     private $resumeToken;
 
+    /** @var Server */
+    private $server;
+
     /**
      * @internal
      * @param Cursor            $cursor
@@ -90,6 +94,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
         $this->isRewindNop = ($firstBatchSize === 0);
         $this->postBatchResumeToken = $postBatchResumeToken;
         $this->resumeToken = $initialResumeToken;
+        $this->server = $cursor->getServer();
     }
 
     /** @internal */
@@ -150,6 +155,14 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     public function getResumeToken()
     {
         return $this->resumeToken;
+    }
+
+    /**
+     * Returns the server the cursor is running on.
+     */
+    public function getServer() : Server
+    {
+        return $this->server;
     }
 
     /**

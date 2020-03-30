@@ -56,6 +56,9 @@ class FindAndModify implements Executable, Explainable
     private static $wireVersionForDocumentLevelValidation = 4;
 
     /** @var integer */
+    private static $wireVersionForHint = 9;
+
+    /** @var integer */
     private static $wireVersionForHintServerSideError = 8;
 
     /** @var integer */
@@ -245,7 +248,7 @@ class FindAndModify implements Executable, Explainable
          * options (SERVER-40005), but the CRUD spec requires client-side errors
          * for server versions < 4.2. For later versions, we'll rely on the
          * server to either utilize the option or report its own error. */
-        if (isset($this->options['hint']) && ! server_supports_feature($server, self::$wireVersionForHintServerSideError)) {
+        if (isset($this->options['hint']) && ! $this->isHintSupported($server)) {
             throw UnsupportedException::hintNotSupported();
         }
 
@@ -337,5 +340,21 @@ class FindAndModify implements Executable, Explainable
         }
 
         return $options;
+    }
+
+    private function isAcknowledgedWriteConcern() : bool
+    {
+        if (! isset($this->options['writeConcern'])) {
+            return true;
+        }
+
+        return $this->options['writeConcern']->getW() > 1 || $this->options['writeConcern']->getJournal();
+    }
+
+    private function isHintSupported(Server $server) : bool
+    {
+        $requiredWireVersion = $this->isAcknowledgedWriteConcern() ? self::$wireVersionForHintServerSideError : self::$wireVersionForHint;
+
+        return server_supports_feature($server, $requiredWireVersion);
     }
 }

@@ -73,7 +73,7 @@ class CrudSpecTest extends FunctionalTestCase
         }
 
         if (isset($test->expectations)) {
-            $commandExpectations = CommandExpectations::fromCrud($test->expectations);
+            $commandExpectations = CommandExpectations::fromCrud((array) $test->expectations);
             $commandExpectations->startMonitoring();
         }
 

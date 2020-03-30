@@ -99,8 +99,7 @@ class FindAndModify implements Executable, Explainable
      *    name as a string or the index key pattern as a document. If specified,
      *    then the query system will only consider plans using the hinted index.
      *
-     *    This is only supported for update and replace operations (i.e. remove
-     *    option is false) on server versions >= 4.4. Using this option in
+     *    This is only supported on server versions >= 4.4. Using this option in
      *    other contexts will result in an exception at execution time.
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to

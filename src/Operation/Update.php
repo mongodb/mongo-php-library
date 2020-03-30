@@ -54,7 +54,7 @@ class Update implements Executable, Explainable
     private static $wireVersionForDocumentLevelValidation = 4;
 
     /** @var integer */
-    private static $wireVersionForHint = 8;
+    private static $wireVersionForHintServerSideError = 5;
 
     /** @var string */
     private $databaseName;
@@ -202,7 +202,10 @@ class Update implements Executable, Explainable
             throw UnsupportedException::collationNotSupported();
         }
 
-        if (isset($this->options['hint']) && ! server_supports_feature($server, self::$wireVersionForHint)) {
+        /* Server versions >= 3.4.0 raise errors for unknown update
+         * options. For previous versions, the CRUD spec requires a client-side
+         * error. */
+        if (isset($this->options['hint']) && ! server_supports_feature($server, self::$wireVersionForHintServerSideError)) {
             throw UnsupportedException::hintNotSupported();
         }
 

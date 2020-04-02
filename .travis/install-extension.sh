@@ -16,14 +16,17 @@ tpecl () {
     fi
 }
 
-if [ "x${DRIVER_BRANCH}" != "x" ]; then
-  echo "Compiling driver branch ${DRIVER_BRANCH}"
+if [ "x${DRIVER_BRANCH}" != "x" ] || [ "x${DRIVER_REPO}" != "x" ]; then
+  CLONE_REPO=${DRIVER_REPO:-https://github.com/mongodb/mongo-php-driver}
+  CHECKOUT_BRANCH=${DRIVER_BRANCH:-master}
+
+  echo "Compiling driver branch ${CHECKOUT_BRANCH} from repository ${CLONE_REPO}"
 
   mkdir -p /tmp/compile
-  git clone https://github.com/mongodb/mongo-php-driver /tmp/compile/mongo-php-driver
+  git clone ${CLONE_REPO} /tmp/compile/mongo-php-driver
   cd /tmp/compile/mongo-php-driver
 
-  git checkout ${DRIVER_BRANCH}
+  git checkout ${CHECKOUT_BRANCH}
   git submodule update --init
   phpize
   ./configure --enable-mongodb-developer-flags

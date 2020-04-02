@@ -2,6 +2,8 @@
 
 namespace MongoDB\Tests\SpecTests;
 
+use MongoDB\Client;
+use MongoDB\Driver\Exception\BulkWriteException;
 use stdClass;
 use function basename;
 use function file_get_contents;
@@ -110,5 +112,45 @@ class CrudSpecTest extends FunctionalTestCase
         }
 
         return $testArgs;
+    }
+
+    /**
+     * Prose test 1: "errInfo" is propagated
+     */
+    public function testErrInfoIsPropagated()
+    {
+        $runOn = [(object) ['minServerVersion' => '4.0.0']];
+        $this->checkServerRequirements($runOn);
+
+        $errInfo = (object) [
+            'writeConcern' => (object) [
+                'w' => 2,
+                'wtimeout' => 0,
+                'provenance' => 'clientSupplied',
+            ],
+        ];
+
+        $this->configureFailPoint([
+            'configureFailPoint' => 'failCommand',
+            'mode' => ['times' => 1],
+            'data' => [
+                'failCommands' => ['insert'],
+                'writeConcernError' => [
+                    'code' => 100,
+                    'codeName' => 'UnsatisfiableWriteConcern',
+                    'errmsg' => 'Not enough data-bearing nodes',
+                    'errInfo' => $errInfo,
+                ],
+            ],
+        ]);
+
+        $client = new Client(static::getUri());
+
+        try {
+            $client->selectCollection($this->getDatabaseName(), $this->getCollectionName())->insertOne(['fail' => 1]);
+            $this->fail('Expected insert command to fail');
+        } catch (BulkWriteException $e) {
+            self::assertEquals($errInfo, $e->getWriteResult()->getWriteConcernError()->getInfo());
+        }
     }
 }

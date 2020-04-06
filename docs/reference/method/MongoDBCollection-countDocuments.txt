@@ -52,6 +52,14 @@ obtain the result. If a ``filter`` parameter is given, this is converted into
 a ``$match`` pipeline operator. Optional ``$skip`` and ``$limit`` stages are
 added between ``$match`` and ``group`` if present in the options.
 
+.. note::
+
+   This method counts documents on the server side. To obtain an approximate
+   total number of documents without filters, the
+   :phpmethod:`MongoDB\\Collection::estimatedDocumentCount()` method can be
+   used. This method estimates the number of documents based on collection
+   metadata, thus sacrificing accuracy for performance.
+
 Since this method uses an aggregation pipeline, some query operators accepted
 within a :phpmethod:`MongoDB\\Collection::count()` ``filter`` cannot be used.
 Consider the following alternatives to these restricted operators:

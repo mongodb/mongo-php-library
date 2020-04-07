@@ -697,6 +697,17 @@ class BucketFunctionalTest extends FunctionalTestCase
         });
     }
 
+    public function testExistingIndexIsReused()
+    {
+        $this->filesCollection->createIndex(['filename' => 1.0, 'uploadDate' => 1], ['name' => 'test']);
+        $this->chunksCollection->createIndex(['files_id' => 1.0, 'n' => 1], ['name' => 'test', 'unique' => true]);
+
+        $this->bucket->uploadFromStream('filename', $this->createStream('foo'));
+
+        $this->assertIndexNotExists($this->filesCollection->getCollectionName(), 'filename_1_uploadDate_1');
+        $this->assertIndexNotExists($this->chunksCollection->getCollectionName(), 'files_id_1_n_1');
+    }
+
     /**
      * Asserts that a collection with the given name does not exist on the
      * server.
@@ -755,6 +766,29 @@ class BucketFunctionalTest extends FunctionalTestCase
         if ($callback !== null) {
             call_user_func($callback, $foundIndex);
         }
+    }
+
+    /**
+     * Asserts that an index with the given name does not exist for the collection.
+     *
+     * @param string $collectionName
+     * @param string $indexName
+     */
+    private function assertIndexNotExists($collectionName, $indexName)
+    {
+        $operation = new ListIndexes($this->getDatabaseName(), $collectionName);
+        $indexes = $operation->execute($this->getPrimaryServer());
+
+        $foundIndex = false;
+
+        foreach ($indexes as $index) {
+            if ($index->getName() === $indexName) {
+                $foundIndex = true;
+                break;
+            }
+        }
+
+        $this->assertFalse($foundIndex, sprintf('Index %s exists', $indexName));
     }
 
     /**

@@ -73,7 +73,7 @@ The output would then resemble::
 Create a Partial Index
 ~~~~~~~~~~~~~~~~~~~~~~
 
-The following example adds a :manual:`partial index </core/index-parital>` on
+The following example adds a :manual:`partial index </core/index-partial>` on
 the ``borough`` field in the ``restaurants`` collection in the ``test``
 database. The partial index indexes only documents where the ``borough`` field
 exists.

@@ -1,4 +1,16 @@
 arg_name: option
+name: authorizedDatabases
+type: boolean
+description: |
+  A flag that determines which databases are returned based on the user
+  privileges when access control is enabled. For more information, see the
+  `listDatabases command documentation <https://docs.mongodb.com/manual/reference/command/listDatabases/#dbcmd.listDatabases>`_.
+
+  For servers < 4.0.5, this option is ignored.
+
+  .. versionadded:: 1.7
+---
+arg_name: option
 name: filter
 type: array|object
 description: |

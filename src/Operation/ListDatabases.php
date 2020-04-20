@@ -27,6 +27,7 @@ use MongoDB\Model\DatabaseInfoIterator;
 use MongoDB\Model\DatabaseInfoLegacyIterator;
 use function current;
 use function is_array;
+use function is_bool;
 use function is_integer;
 use function is_object;
 
@@ -47,6 +48,11 @@ class ListDatabases implements Executable
      *
      * Supported options:
      *
+     *  * authorizedDatabases (boolean): Determines which databases are returned
+     *    based on the user privileges.
+     *
+     *    For servers < 4.0.5, this option is ignored.
+     *
      *  * filter (document): Query by which to filter databases.
      *
      *    For servers < 3.6, this option is ignored.
@@ -63,6 +69,10 @@ class ListDatabases implements Executable
      */
     public function __construct(array $options = [])
     {
+        if (isset($options['authorizedDatabases']) && ! is_bool($options['authorizedDatabases'])) {
+            throw InvalidArgumentException::invalidType('"authorizedDatabases" option', $options['authorizedDatabases'], 'boolean');
+        }
+
         if (isset($options['filter']) && ! is_array($options['filter']) && ! is_object($options['filter'])) {
             throw InvalidArgumentException::invalidType('"filter" option', $options['filter'], 'array or object');
         }
@@ -90,6 +100,10 @@ class ListDatabases implements Executable
     public function execute(Server $server)
     {
         $cmd = ['listDatabases' => 1];
+
+        if (isset($this->options['authorizedDatabases'])) {
+            $cmd['authorizedDatabases'] = $this->options['authorizedDatabases'];
+        }
 
         if (! empty($this->options['filter'])) {
             $cmd['filter'] = (object) $this->options['filter'];

@@ -18,6 +18,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
@@ -28,6 +29,7 @@ use MongoDB\Model\IndexInput;
 use function array_map;
 use function is_array;
 use function is_integer;
+use function is_string;
 use function MongoDB\server_supports_feature;
 use function sprintf;
 
@@ -46,6 +48,9 @@ class CreateIndexes implements Executable
 
     /** @var integer */
     private static $wireVersionForWriteConcern = 5;
+
+    /** @var integer */
+    private static $wireVersionForCommitQuorum = 9;
 
     /** @var string */
     private $databaseName;
@@ -66,6 +71,8 @@ class CreateIndexes implements Executable
      * Constructs a createIndexes command.
      *
      * Supported options:
+     *
+     *  * commitQuorum (integer|string):
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
@@ -113,6 +120,10 @@ class CreateIndexes implements Executable
             $this->indexes[] = new IndexInput($index);
 
             $expectedIndex += 1;
+        }
+
+        if (isset($options['commitQuorum']) && ! is_string($options['commitQuorum']) && ! is_integer($options['commitQuorum'])) {
+            throw InvalidArgumentException::invalidType('"commitQuorum" option', $options['commitQuorum'], ['integer', 'string']);
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
@@ -201,6 +212,16 @@ class CreateIndexes implements Executable
             'createIndexes' => $this->collectionName,
             'indexes' => $this->indexes,
         ];
+
+        if (isset($this->options['commitQuorum'])) {
+            /* Drivers MUST manually raise an error if this option is specified
+             * when creating an index on a pre 4.4 server. */
+            if (! server_supports_feature($server, self::$wireVersionForCommitQuorum)) {
+                throw new CommandException('Invalid field specified for createIndexes command: commitQuorum', 2);
+            }
+
+            $cmd['commitQuorum'] = $this->options['commitQuorum'];
+        }
 
         if (isset($this->options['maxTimeMS'])) {
             $cmd['maxTimeMS'] = $this->options['maxTimeMS'];

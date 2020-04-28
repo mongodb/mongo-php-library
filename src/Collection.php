@@ -356,7 +356,7 @@ class Collection
      */
     public function createIndex($key, array $options = [])
     {
-        $commandOptionKeys = ['maxTimeMS' => 1, 'session' => 1, 'writeConcern' => 1];
+        $commandOptionKeys = ['commitQuorum' => 1, 'maxTimeMS' => 1, 'session' => 1, 'writeConcern' => 1];
         $indexOptions = array_diff_key($options, $commandOptionKeys);
         $commandOptions = array_intersect_key($options, $commandOptionKeys);
 

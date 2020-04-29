@@ -18,7 +18,6 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
@@ -219,7 +218,7 @@ class CreateIndexes implements Executable
             /* Drivers MUST manually raise an error if this option is specified
              * when creating an index on a pre 4.4 server. */
             if (! server_supports_feature($server, self::$wireVersionForCommitQuorum)) {
-                throw new CommandException('Invalid field specified for createIndexes command: commitQuorum', 2);
+                throw UnsupportedException::commitQuorumNotSupported();
             }
 
             $cmd['commitQuorum'] = $this->options['commitQuorum'];

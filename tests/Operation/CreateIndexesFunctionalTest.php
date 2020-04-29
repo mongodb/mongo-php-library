@@ -3,9 +3,9 @@
 namespace MongoDB\Tests\Operation;
 
 use InvalidArgumentException;
-use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Server;
+use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\ListIndexes;
@@ -213,8 +213,8 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
             ['commitQuorum' => 'majority']
         );
 
-        $this->expectException(CommandException::class);
-        $this->expectExceptionMessage('Invalid field specified for createIndexes command: commitQuorum');
+        $this->expectException(UnsupportedException::class);
+        $this->expectExceptionMessage('The "commitQuorum" option is not supported by the server executing this operation');
 
         $operation->execute($this->getPrimaryServer());
     }

@@ -72,7 +72,9 @@ class CreateIndexes implements Executable
      *
      * Supported options:
      *
-     *  * commitQuorum (integer|string):
+     *  * commitQuorum (integer|string): Specifies how many data-bearing members
+     *    of a replica set, including the primary, must complete the index
+     *    builds successfully before the primary marks the indexes as ready.
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.

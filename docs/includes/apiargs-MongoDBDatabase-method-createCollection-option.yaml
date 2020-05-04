@@ -141,7 +141,7 @@ post: |
 ---
 arg_name: option
 name: validator
-type: array
+type: array|object
 description: |
   Allows users to specify :manual:`validation rules or expressions
   </core/document-validation>` for the collection. For more information, see

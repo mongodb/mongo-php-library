@@ -1,4 +1,8 @@
 source:
+  file: apiargs-MongoDBCollection-method-createIndex-option.yaml
+  ref: commitQuorum
+---
+source:
   file: apiargs-common-option.yaml
   ref: maxTimeMS
 post: |

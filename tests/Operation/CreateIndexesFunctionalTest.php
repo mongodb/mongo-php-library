@@ -4,6 +4,8 @@ namespace MongoDB\Tests\Operation;
 
 use InvalidArgumentException;
 use MongoDB\Driver\Exception\RuntimeException;
+use MongoDB\Driver\Server;
+use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\ListIndexes;
@@ -169,6 +171,52 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
+    }
+
+    public function testCommitQuorumOption()
+    {
+        if (version_compare($this->getServerVersion(), '4.3.4', '<')) {
+            $this->markTestSkipped('commitQuorum is not supported');
+        }
+
+        if ($this->getPrimaryServer()->getType() !== Server::TYPE_RS_PRIMARY) {
+            $this->markTestSkipped('commitQuorum is only supported on replica sets');
+        }
+
+        (new CommandObserver())->observe(
+            function () {
+                $operation = new CreateIndexes(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [['key' => ['x' => 1]]],
+                    ['commitQuorum' => 'majority']
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) {
+                $this->assertObjectHasAttribute('commitQuorum', $event['started']->getCommand());
+            }
+        );
+    }
+
+    public function testCommitQuorumUnsupported()
+    {
+        if (version_compare($this->getServerVersion(), '4.3.4', '>=')) {
+            $this->markTestSkipped('commitQuorum is supported');
+        }
+
+        $operation = new CreateIndexes(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [['key' => ['x' => 1]]],
+            ['commitQuorum' => 'majority']
+        );
+
+        $this->expectException(UnsupportedException::class);
+        $this->expectExceptionMessage('The "commitQuorum" option is not supported by the server executing this operation');
+
+        $operation->execute($this->getPrimaryServer());
     }
 
     /**

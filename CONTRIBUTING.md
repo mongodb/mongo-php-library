@@ -193,3 +193,9 @@ Release announcements should also be sent to the [MongoDB Product & Driver Annou
 
 Consider announcing each release on Twitter. Significant releases should also be
 announced via [@MongoDB](http://twitter.com/mongodb) as well.
+
+### Update compatibility tables in MongoDB docs
+
+The [compatibility tables](https://docs.mongodb.com/drivers/driver-compatibility-reference#php-driver-compatibility) in
+the MongoDB documentation must be updated to account for new releases. Make sure to update both MongoDB and Language
+compatibility tables, as shown in [this pull request](https://github.com/mongodb/docs-ecosystem/pull/642).

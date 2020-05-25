@@ -40,6 +40,17 @@ class UnsupportedException extends RuntimeException
     }
 
     /**
+     * Thrown when the commitQuorum option for createIndexes is not supported
+     * by a server.
+     *
+     * @return self
+     */
+    public static function commitQuorumNotSupported()
+    {
+        return new static('The "commitQuorum" option is not supported by the server executing this operation');
+    }
+
+    /**
      * Thrown when explain is not supported by a server.
      *
      * @return self

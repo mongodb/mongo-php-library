@@ -1,4 +1,23 @@
 arg_name: option
+name: commitQuorum
+type: string|integer
+description: |
+  Specifies how many data-bearing members of a replica set, including the
+  primary, must complete the index builds successfully before the primary marks
+  the indexes as ready.
+
+  This option accepts the same values for the ``w`` field in a write concern
+  plus ``"votingMembers"``, which indicates all voting data-bearing nodes.
+
+  This is not supported for server versions prior to 4.4 and will result in an
+  exception at execution time if used.
+
+  .. versionadded:: 1.7
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: unique
 type: boolean
 description: |

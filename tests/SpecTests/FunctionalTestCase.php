@@ -106,7 +106,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
 
         $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);
         $mi->attachIterator(new ArrayIterator($expectedDocuments));
-        $mi->attachIterator(new IteratorIterator($outcomeCollection->find()));
+        $mi->attachIterator(new IteratorIterator($outcomeCollection->find([], ['sort' => ['_id' => 1]])));
 
         foreach ($mi as $documents) {
             list($expectedDocument, $actualDocument) = $documents;

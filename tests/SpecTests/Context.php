@@ -112,7 +112,7 @@ final class Context
         $autoEncryptionOptions = [];
 
         if (isset($clientOptions['autoEncryptOpts'])) {
-            $autoEncryptionOptions = (array) $clientOptions['autoEncryptOpts'] + ['keyVaultNamespace' => 'admin.datakeys'];
+            $autoEncryptionOptions = (array) $clientOptions['autoEncryptOpts'] + ['keyVaultNamespace' => 'keyvault.datakeys'];
             unset($clientOptions['autoEncryptOpts']);
 
             if (isset($autoEncryptionOptions['kmsProviders']->aws)) {

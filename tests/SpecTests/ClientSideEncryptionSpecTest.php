@@ -68,7 +68,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * @param stdClass    $test           Individual "tests[]" document
      * @param array       $runOn          Top-level "runOn" array with server requirements
      * @param array       $data           Top-level "data" array to initialize collection
-     * @param array|null  $keyVaultData   Top-level "key_vault_data" array to initialize admin.datakeys collection
+     * @param array|null  $keyVaultData   Top-level "key_vault_data" array to initialize keyvault.datakeys collection
      * @param object|null $jsonSchema     Top-level "json_schema" array to initialize collection
      * @param string      $databaseName   Name of database under test
      * @param string      $collectionName Name of collection under test
@@ -170,11 +170,11 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     {
         $client = new Client(static::getUri());
 
-        $client->selectCollection('admin', 'datakeys')->drop();
+        $client->selectCollection('keyvault', 'datakeys')->drop();
         $client->selectCollection('db', 'coll')->drop();
 
         $encryptionOpts = [
-            'keyVaultNamespace' => 'admin.datakeys',
+            'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
                 'aws' => Context::getAWSCredentials(),
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
@@ -231,7 +231,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                     $test->assertSame('insert', $insert->getCommandName());
                     $test->assertSame(WriteConcern::MAJORITY, $insert->getCommand()->writeConcern->w);
 
-                    $keys = $client->selectCollection('admin', 'datakeys')->find(['_id' => $localDatakeyId]);
+                    $keys = $client->selectCollection('keyvault', 'datakeys')->find(['_id' => $localDatakeyId]);
                     $keys = iterator_to_array($keys);
                     $test->assertCount(1, $keys);
 
@@ -277,7 +277,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                     $test->assertSame('insert', $insert->getCommandName());
                     $test->assertSame(WriteConcern::MAJORITY, $insert->getCommand()->writeConcern->w);
 
-                    $keys = $client->selectCollection('admin', 'datakeys')->find(['_id' => $awsDatakeyId]);
+                    $keys = $client->selectCollection('keyvault', 'datakeys')->find(['_id' => $awsDatakeyId]);
                     $keys = iterator_to_array($keys);
                     $test->assertCount(1, $keys);
 
@@ -314,16 +314,16 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     {
         $client = new Client(static::getUri());
 
-        $client->selectCollection('admin', 'datakeys')->drop();
+        $client->selectCollection('keyvault', 'datakeys')->drop();
         $client->selectCollection('db', 'coll')->drop();
 
         $keyId = $client
-            ->selectCollection('admin', 'datakeys')
+            ->selectCollection('keyvault', 'datakeys')
             ->insertOne($this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/external/external-key.json')))
             ->getInsertedId();
 
         $encryptionOpts = [
-            'keyVaultNamespace' => 'admin.datakeys',
+            'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
             ],
@@ -372,14 +372,14 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     {
         $client = new Client(static::getUri());
 
-        $client->selectCollection('admin', 'datakeys')->drop();
+        $client->selectCollection('keyvault', 'datakeys')->drop();
         $client->selectCollection('db', 'coll')->drop();
 
         $client->selectDatabase('db')->createCollection('coll', ['validator' => ['$jsonSchema' => $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/limits/limits-schema.json'))]]);
-        $client->selectCollection('admin', 'datakeys')->insertOne($this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/limits/limits-key.json')));
+        $client->selectCollection('keyvault', 'datakeys')->insertOne($this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/limits/limits-key.json')));
 
         $autoEncryptionOpts = [
-            'keyVaultNamespace' => 'admin.datakeys',
+            'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
             ],
@@ -464,7 +464,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $client->selectDatabase('db')->command(['create' => 'view', 'viewOn' => 'coll']);
 
         $autoEncryptionOpts = [
-            'keyVaultNamespace' => 'admin.datakeys',
+            'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
             ],
@@ -503,14 +503,14 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 ->createCollection('coll', ['validator' => ['$jsonSchema' => $schema]]);
         }
 
-        $client->selectDatabase('admin')->dropCollection('datakeys');
-        $client->selectCollection('admin', 'datakeys')->insertMany([
+        $client->selectDatabase('keyvault')->dropCollection('datakeys');
+        $client->selectCollection('keyvault', 'datakeys')->insertMany([
             $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-local.json')),
             $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-aws.json')),
         ]);
 
         $encryptionOpts = [
-            'keyVaultNamespace' => 'admin.datakeys',
+            'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
                 'aws' => Context::getAWSCredentials(),
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
@@ -561,7 +561,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $client = new Client(static::getUri());
 
         $encryptionOpts = [
-            'keyVaultNamespace' => 'admin.datakeys',
+            'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
                 'aws' => Context::getAWSCredentials(),
             ],
@@ -615,7 +615,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     public function testBypassSpawningMongocryptdViaBypassSpawn()
     {
         $autoEncryptionOpts = [
-            'keyVaultNamespace' => 'admin.datakeys',
+            'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
             ],
@@ -648,7 +648,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     public function testBypassSpawningMongocryptdViaBypassAutoEncryption()
     {
         $autoEncryptionOpts = [
-            'keyVaultNamespace' => 'admin.datakeys',
+            'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
             ],
@@ -743,7 +743,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         }
 
         $context = $this->getContext();
-        $collection = $context->selectCollection('admin', 'datakeys', ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)] + $context->defaultWriteOptions);
+        $collection = $context->selectCollection('keyvault', 'datakeys', ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)] + $context->defaultWriteOptions);
         $collection->drop();
         $collection->insertMany($keyVaultData);
 

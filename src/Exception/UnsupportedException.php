@@ -20,6 +20,16 @@ namespace MongoDB\Exception;
 class UnsupportedException extends RuntimeException
 {
     /**
+     * Thrown when a command's allowDiskUse option is not supported by a server.
+     *
+     * @return self
+     */
+    public static function allowDiskUseNotSupported()
+    {
+        return new static('The "allowDiskUse" option is not supported by the server executing this operation');
+    }
+
+    /**
      * Thrown when array filters are not supported by a server.
      *
      * @return self

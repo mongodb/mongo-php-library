@@ -55,6 +55,9 @@ class Find implements Executable, Explainable
     /** @var integer */
     private static $wireVersionForReadConcern = 4;
 
+    /** @var integer */
+    private static $wireVersionForAllowDiskUseServerSideError = 4;
+
     /** @var string */
     private $databaseName;
 
@@ -320,6 +323,10 @@ class Find implements Executable, Explainable
 
         if (isset($this->options['readConcern']) && ! server_supports_feature($server, self::$wireVersionForReadConcern)) {
             throw UnsupportedException::readConcernNotSupported();
+        }
+
+        if (isset($this->options['allowDiskUse']) && ! server_supports_feature($server, self::$wireVersionForAllowDiskUseServerSideError)) {
+            throw UnsupportedException::allowDiskUseNotSupported();
         }
 
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();

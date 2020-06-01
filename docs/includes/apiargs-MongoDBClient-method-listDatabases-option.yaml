@@ -9,6 +9,9 @@ description: |
   For servers < 4.0.5, this option is ignored.
 
   .. versionadded:: 1.7
+interface: phpmethod
+operation: ~
+optional: true
 ---
 arg_name: option
 name: filter

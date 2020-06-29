@@ -17,6 +17,7 @@
 
 namespace MongoDB;
 
+use Iterator;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
@@ -35,6 +36,7 @@ use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropDatabase;
+use MongoDB\Operation\ListCollectionNames;
 use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\ModifyCollection;
 use MongoDB\Operation\Watch;
@@ -402,6 +404,21 @@ class Database
     public function getWriteConcern()
     {
         return $this->writeConcern;
+    }
+
+    /**
+     * Returns the names of all collections in this database
+     *
+     * @see ListCollectionNames::__construct() for supported options
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function listCollectionNames(array $options = []) : Iterator
+    {
+        $operation = new ListCollectionNames($this->databaseName, $options);
+        $server = select_server($this->manager, $options);
+
+        return $operation->execute($server);
     }
 
     /**

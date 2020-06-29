@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2015-2017 MongoDB, Inc.
+ * Copyright 2020-present MongoDB, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,22 @@
 
 namespace MongoDB\Operation;
 
+use Iterator;
 use MongoDB\Command\ListCollections as ListCollectionsCommand;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Model\CollectionInfoCommandIterator;
-use MongoDB\Model\CollectionInfoIterator;
+use MongoDB\Model\CallbackIterator;
 
 /**
- * Operation for the listCollections command.
+ * Operation for the listCollectionNames helper.
  *
  * @api
- * @see \MongoDB\Database::listCollections()
+ * @see \MongoDB\Database::listCollectionNames()
  * @see http://docs.mongodb.org/manual/reference/command/listCollections/
  */
-class ListCollections implements Executable
+class ListCollectionNames implements Executable
 {
-    /** @var string */
-    private $databaseName;
-
     /** @var ListCollectionsCommand */
     private $listCollections;
 
@@ -59,8 +56,7 @@ class ListCollections implements Executable
      */
     public function __construct($databaseName, array $options = [])
     {
-        $this->databaseName = (string) $databaseName;
-        $this->listCollections = new ListCollectionsCommand($databaseName, ['nameOnly' => false] + $options);
+        $this->listCollections = new ListCollectionsCommand($databaseName, ['nameOnly' => true] + $options);
     }
 
     /**
@@ -68,11 +64,16 @@ class ListCollections implements Executable
      *
      * @see Executable::execute()
      * @param Server $server
-     * @return CollectionInfoIterator
+     * @return Iterator
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server) : Iterator
     {
-        return new CollectionInfoCommandIterator($this->listCollections->execute($server), $this->databaseName);
+        return new CallbackIterator(
+            $this->listCollections->execute($server),
+            function (array $collectionInfo) {
+                return $collectionInfo['name'];
+            }
+        );
     }
 }

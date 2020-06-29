@@ -13,7 +13,6 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\GridFS\Bucket;
-use MongoDB\Model\CollectionInfo;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
@@ -512,6 +511,8 @@ final class Operation
                     $args['collection'],
                     array_diff_key($args, ['collection' => 1])
                 );
+            case 'listCollectionNames':
+                return iterator_to_array($database->listCollectionNames($args));
             case 'listCollections':
                 return $database->listCollections($args);
             case 'runCommand':
@@ -620,14 +621,14 @@ final class Operation
                 $databaseName = $args['database'];
                 $collectionName = $args['collection'];
 
-                $test->assertContains($collectionName, $this->getCollectionNames($context, $databaseName));
+                $test->assertContains($collectionName, $context->selectDatabase($databaseName)->listCollectionNames());
 
                 return null;
             case 'assertCollectionNotExists':
                 $databaseName = $args['database'];
                 $collectionName = $args['collection'];
 
-                $test->assertNotContains($collectionName, $this->getCollectionNames($context, $databaseName));
+                $test->assertNotContains($collectionName, $context->selectDatabase($databaseName)->listCollectionNames());
 
                 return null;
             case 'assertIndexExists':
@@ -673,21 +674,6 @@ final class Operation
             default:
                 throw new LogicException('Unsupported test runner operation: ' . $this->name);
         }
-    }
-
-    /**
-     * @param string $databaseName
-     *
-     * @return array
-     */
-    private function getCollectionNames(Context $context, $databaseName)
-    {
-        return array_map(
-            function (CollectionInfo $collectionInfo) {
-                return $collectionInfo->getName();
-            },
-            iterator_to_array($context->selectDatabase($databaseName)->listCollections())
-        );
     }
 
     /**
@@ -813,6 +799,8 @@ final class Operation
             case 'aggregate':
             case 'listCollections':
                 return ResultExpectation::ASSERT_SAME_DOCUMENTS;
+            case 'listCollectionNames':
+                return ResultExpectation::ASSERT_SAME;
             case 'createCollection':
             case 'dropCollection':
             case 'runCommand':

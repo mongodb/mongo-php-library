@@ -342,6 +342,8 @@ final class Operation
         $context->replaceArgumentSessionPlaceholder($args);
 
         switch ($this->name) {
+            case 'listDatabaseNames':
+                return iterator_to_array($client->listDatabaseNames($args));
             case 'listDatabases':
                 return $client->listDatabases($args);
             case 'watch':
@@ -733,6 +735,8 @@ final class Operation
     private function getResultAssertionTypeForClient()
     {
         switch ($this->name) {
+            case 'listDatabaseNames':
+                return ResultExpectation::ASSERT_SAME;
             case 'listDatabases':
                 return ResultExpectation::ASSERT_SAME_DOCUMENTS;
             case 'watch':

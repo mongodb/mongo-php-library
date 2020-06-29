@@ -66,11 +66,25 @@ class ClientFunctionalTest extends FunctionalTestCase
             $this->assertInstanceOf(DatabaseInfo::class, $database);
         }
 
-        $that = $this;
-        $this->assertDatabaseExists($this->getDatabaseName(), function (DatabaseInfo $info) use ($that) {
-            $that->assertFalse($info->isEmpty());
-            $that->assertGreaterThan(0, $info->getSizeOnDisk());
+        $this->assertDatabaseExists($this->getDatabaseName(), function (DatabaseInfo $info) {
+            $this->assertFalse($info->isEmpty());
+            $this->assertGreaterThan(0, $info->getSizeOnDisk());
         });
+    }
+
+    public function testListDatabaseNames()
+    {
+        $bulkWrite = new BulkWrite();
+        $bulkWrite->insert(['x' => 1]);
+
+        $writeResult = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
+        $this->assertEquals(1, $writeResult->getInsertedCount());
+
+        foreach ($this->client->listDatabaseNames() as $database) {
+            $this->assertIsString($database);
+        }
+
+        $this->assertContains($this->getDatabaseName(), $this->client->listDatabaseNames(), sprintf('Database %s does not exist on the server', $this->getDatabaseName()));
     }
 
     /**

@@ -16,6 +16,7 @@ use MongoDB\Tests\CommandObserver;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use UnexpectedValueException;
 use function current;
+use function sprintf;
 
 /**
  * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests
@@ -215,7 +216,20 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
 
         // Send a {replSetStepDown: 5, force: true} command to the current primary and verify that the command succeeded
         $primary = $this->client->getManager()->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
-        $primary->executeCommand('admin', new Command(['replSetStepDown' => 5, 'force' => true]));
+
+        $success = false;
+        $attempts = 0;
+        do {
+            try {
+                $attempts++;
+                $primary->executeCommand('admin', new Command(['replSetStepDown' => 5, 'force' => true]));
+                $success = true;
+            } catch (DriverException $e) {
+                if ($attempts == 10) {
+                    $this->fail(sprintf('Could not successfully execute replSetStepDown within %d attempts', $attempts));
+                }
+            }
+        } while (! $success);
 
         // Retrieve the next batch of results from the cursor obtained in the find operation, and verify that this operation succeeded.
         $events = [];

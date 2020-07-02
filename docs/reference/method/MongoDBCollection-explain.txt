@@ -50,6 +50,7 @@ Explainable Commands
 
 Explainable commands include, but are not limited to:
 
+   - :phpclass:`MongoDB\\Operation\\Aggregate`
    - :phpclass:`MongoDB\\Operation\\Count`
    - :phpclass:`MongoDB\\Operation\\DeleteMany`
    - :phpclass:`MongoDB\\Operation\\DeleteOne`

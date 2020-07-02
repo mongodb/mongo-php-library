@@ -301,6 +301,11 @@ abstract class FunctionalTestCase extends TestCase
         throw new UnexpectedValueException('Could not determine server storage engine');
     }
 
+    protected function isReplicaSet()
+    {
+        return $this->getPrimaryServer()->getType() !== Server::TYPE_RS_PRIMARY;
+    }
+
     protected function isShardedCluster()
     {
         if ($this->getPrimaryServer()->getType() == Server::TYPE_MONGOS) {

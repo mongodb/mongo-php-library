@@ -52,10 +52,9 @@ class CachingIterator implements Countable, Iterator
 
     /**
      * Initialize the iterator and stores the first item in the cache. This
-     * effectively rewinds the Traversable and the wrapping Generator, which
-     * will execute up to its first yield statement. Additionally, this mimics
-     * behavior of the SPL iterators and allows users to omit an explicit call
-     * to rewind() before using the other methods.
+     * effectively rewinds the Traversable and the wrapping IteratorIterator.
+     *  Additionally, this mimics behavior of the SPL iterators and allows users
+     * to omit an explicit call * to rewind() before using the other methods.
      *
      * @param Traversable $traversable
      */

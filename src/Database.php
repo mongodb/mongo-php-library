@@ -249,10 +249,6 @@ class Database
      */
     public function command($command, array $options = [])
     {
-        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
-            $options['readPreference'] = $this->readPreference;
-        }
-
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }

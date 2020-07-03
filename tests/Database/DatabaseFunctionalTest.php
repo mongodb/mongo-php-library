@@ -7,7 +7,6 @@ use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CreateIndexes;

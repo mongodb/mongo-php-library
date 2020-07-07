@@ -18,9 +18,7 @@ class RetryableReadsSpecTest extends FunctionalTestCase
 {
     /** @var array */
     private static $skippedOperations = [
-        'listCollectionNames' => 'Not implemented',
         'listCollectionObjects' => 'Not implemented',
-        'listDatabaseNames' => 'Not implemented',
         'listDatabaseObjects' => 'Not implemented',
         'listIndexNames' => 'Not implemented',
     ];

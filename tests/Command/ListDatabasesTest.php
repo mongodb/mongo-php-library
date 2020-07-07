@@ -1,9 +1,10 @@
 <?php
 
-namespace MongoDB\Tests\Operation;
+namespace MongoDB\Tests\Command;
 
+use MongoDB\Command\ListDatabases;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Operation\ListDatabases;
+use MongoDB\Tests\TestCase;
 
 class ListDatabasesTest extends TestCase
 {
@@ -30,6 +31,10 @@ class ListDatabasesTest extends TestCase
 
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['maxTimeMS' => $value];
+        }
+
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = ['nameOnly' => $value];
         }
 
         foreach ($this->getInvalidSessionValues() as $value) {

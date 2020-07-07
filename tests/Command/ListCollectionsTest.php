@@ -1,9 +1,10 @@
 <?php
 
-namespace MongoDB\Tests\Operation;
+namespace MongoDB\Tests\Command;
 
+use MongoDB\Command\ListCollections;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Operation\ListCollections;
+use MongoDB\Tests\TestCase;
 
 class ListCollectionsTest extends TestCase
 {

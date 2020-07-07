@@ -1,6 +1,8 @@
-================================
-MongoDB\\Client::listDatabases()
-================================
+====================================
+MongoDB\\Client::listDatabaseNames()
+====================================
+
+.. versionadded:: 1.7
 
 .. default-domain:: mongodb
 
@@ -13,13 +15,13 @@ MongoDB\\Client::listDatabases()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Client::listDatabases()
+.. phpmethod:: MongoDB\\Client::listDatabaseNames()
 
-   Returns information for all databases on the server.
+   Returns names for all databases on the server.
 
    .. code-block:: php
 
-      function listDatabases(array $options = []): MongoDB\Model\DatabaseInfoIterator
+      function listDatabaseNames(array $options = []): Iterator
 
    This method has the following parameters:
 
@@ -32,9 +34,8 @@ Definition
 Return Values
 -------------
 
-A traversable :phpclass:`MongoDB\\Model\\DatabaseInfoIterator`, which contains
-a :phpclass:`MongoDB\\Model\\DatabaseInfo` object for each database on the
-server.
+An :php:`Iterator <class.iterator.php>`, which provides the name of each
+database on the server.
 
 Errors/Exceptions
 -----------------
@@ -54,33 +55,19 @@ The following example lists all databases on the server:
 
    $client = new MongoDB\Client;
 
-   foreach ($client->listDatabases() as $databaseInfo) {
-       var_dump($databaseInfo);
+   foreach ($client->listDatabaseNames() as $databaseName) {
+       var_dump($databaseName);
    }
 
 The output would then resemble::
 
-   object(MongoDB\Model\DatabaseInfo)#4 (3) {
-     ["name"]=>
-     string(5) "local"
-     ["sizeOnDisk"]=>
-     float(65536)
-     ["empty"]=>
-     bool(false)
-   }
-   object(MongoDB\Model\DatabaseInfo)#7 (3) {
-     ["name"]=>
-     string(4) "test"
-     ["sizeOnDisk"]=>
-     float(32768)
-     ["empty"]=>
-     bool(false)
-   }
+   string(5) "local"
+   string(4) "test"
 
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::listDatabaseNames()`
+- :phpmethod:`MongoDB\\Database::listDatabases()`
 - :manual:`listDatabases </reference/command/listDatabases>` command reference
   in the MongoDB manual
 - `Enumerating Databases

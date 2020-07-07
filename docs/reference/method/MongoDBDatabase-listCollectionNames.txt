@@ -1,0 +1,98 @@
+========================================
+MongoDB\\Database::listCollectionNames()
+========================================
+
+.. versionadded:: 1.7
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Database::listCollectionNames()
+
+   Returns names for all collections in this database.
+
+   .. code-block:: php
+
+      function listCollectionNames(array $options = []): Iterator
+
+   This method has the following parameters:
+
+   .. include:: /includes/apiargs/MongoDBDatabase-method-listCollections-param.rst
+
+   The ``$options`` parameter supports the following options:
+
+   .. include:: /includes/apiargs/MongoDBDatabase-method-listCollections-option.rst
+
+Return Values
+-------------
+
+An :php:`Iterator <class.iterator.php>`, which provides the name of each
+collection in the database.
+
+Example
+-------
+
+The following example lists all of the collections in the ``test`` database:
+
+.. code-block:: php
+
+   <?php
+
+   $database = (new MongoDB\Client)->test;
+
+   foreach ($database->listCollectionNames() as $collectionName) {
+       var_dump($collectionName);
+   }
+
+The output would then resemble::
+
+   string(11) "restaurants"
+   string(5) "users"
+   string(6) "restos"
+
+The following example lists all collections whose name starts with ``"rest"``
+in the ``test`` database:
+
+.. code-block:: php
+
+   <?php
+
+   $database = (new MongoDB\Client)->test;
+
+   $collections = $database->listCollectionNames([
+       'filter' => [
+           'name' => new MongoDB\BSON\Regex('^rest.*'),
+       ],
+   ]);
+
+   foreach ($collections as $collectionName) {
+       var_dump($collectionName);
+   }
+
+The output would then resemble::
+
+   string(11) "restaurants"
+   string(6) "restos"
+
+.. note::
+
+   When enumerating collection names, a filter expression can only filter based
+   on a collection's name and type. No other fields are available.
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Database::listCollections()`
+- :manual:`listCollections </reference/command/listCollections` command
+  reference in the MongoDB manual
+- `Enumerating Collections
+  <https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst>`_
+  specification

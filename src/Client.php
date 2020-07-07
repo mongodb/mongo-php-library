@@ -17,6 +17,7 @@
 
 namespace MongoDB;
 
+use Iterator;
 use Jean85\PrettyVersions;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
@@ -33,6 +34,7 @@ use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\DatabaseInfoIterator;
 use MongoDB\Operation\DropDatabase;
+use MongoDB\Operation\ListDatabaseNames;
 use MongoDB\Operation\ListDatabases;
 use MongoDB\Operation\Watch;
 use Throwable;
@@ -271,6 +273,22 @@ class Client
     public function getWriteConcern()
     {
         return $this->writeConcern;
+    }
+
+    /**
+     * List database names.
+     *
+     * @see ListDatabaseNames::__construct() for supported options
+     * @throws UnexpectedValueException if the command response was malformed
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function listDatabaseNames(array $options = []) : Iterator
+    {
+        $operation = new ListDatabaseNames($options);
+        $server = select_server($this->manager, $options);
+
+        return $operation->execute($server);
     }
 
     /**

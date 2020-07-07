@@ -85,6 +85,33 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
         }
     }
 
+    public function testListCollectionNames()
+    {
+        $commandResult = $this->database->createCollection($this->getCollectionName());
+        $this->assertCommandSucceeded($commandResult);
+
+        $collections = $this->database->listCollectionNames();
+
+        foreach ($collections as $collection) {
+            $this->assertIsString($collection);
+        }
+    }
+
+    public function testListCollectionNamesWithFilter()
+    {
+        $commandResult = $this->database->createCollection($this->getCollectionName());
+        $this->assertCommandSucceeded($commandResult);
+
+        $collectionName = $this->getCollectionName();
+        $options = ['filter' => ['name' => $collectionName]];
+
+        $collections = $this->database->listCollectionNames($options);
+
+        foreach ($collections as $collection) {
+            $this->assertEquals($collectionName, $collection);
+        }
+    }
+
     /**
      * Asserts that a collection with the given name exists in the database.
      *

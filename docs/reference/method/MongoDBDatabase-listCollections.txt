@@ -114,6 +114,7 @@ The output would then resemble::
 See Also
 --------
 
+- :phpmethod:`MongoDB\\Database::listCollectionNames()`
 - :manual:`listCollections </reference/command/listCollections` command
   reference in the MongoDB manual
 - `Enumerating Collections

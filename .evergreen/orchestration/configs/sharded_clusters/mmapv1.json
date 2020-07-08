@@ -1,0 +1,31 @@
+{
+  "id": "shard_cluster_1",
+  "shards": [
+    {
+      "id": "sh01",
+      "shardParams": {
+        "members": [{
+          "procParams": {
+            "ipv6": true,
+            "bind_ip": "127.0.0.1,::1",
+            "shardsvr": true,
+            "storageEngine": "mmapv1",
+            "port": 27217
+          }
+        }]
+      }
+    }
+  ],
+  "routers": [
+    {
+      "ipv6": true,
+      "bind_ip": "127.0.0.1,::1",
+      "port": 27017
+    },
+    {
+      "ipv6": true,
+      "bind_ip": "127.0.0.1,::1",
+      "port": 27018
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "shard_cluster_1",
+  "shards": [
+    {
+      "id": "sh01",
+      "shardParams": {
+        "members": [{
+          "procParams": {
+            "ipv6": true,
+            "bind_ip": "127.0.0.1,::1",
+            "shardsvr": true,
+            "port": 27217,
+            "setParameter" : { "enableTestCommands": 0 }
+          }
+        }]
+      }
+    }
+  ],
+  "routers": [
+    {
+      "ipv6": true,
+      "bind_ip": "127.0.0.1,::1",
+      "port": 27017,
+      "setParameter" : { "enableTestCommands": 0 }
+    },
+    {
+      "ipv6": true,
+      "bind_ip": "127.0.0.1,::1",
+      "port": 27018,
+      "setParameter" : { "enableTestCommands": 0 }
+    }
+  ]
+}

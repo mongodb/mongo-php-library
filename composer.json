@@ -6,8 +6,7 @@
     "license": "Apache-2.0",
     "authors": [
         { "name": "Andreas Braun", "email": "andreas.braun@mongodb.com" },
-        { "name": "Jeremy Mikola", "email": "jmikola@gmail.com" },
-        { "name": "Katherine Walker", "email": "katherine.walker@mongodb.com" }
+        { "name": "Jeremy Mikola", "email": "jmikola@gmail.com" }
     ],
     "require": {
         "php": "^7.0",

@@ -4,55 +4,103 @@ Install the |php-library|
 
 .. default-domain:: mongodb
 
-Prerequisites
--------------
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 2
+   :class: singlecol
 
-The |php-library| is a high-level abstraction for the MongoDB PHP driver. As
-such, you must install the `mongodb` extension to use the library.
+The |php-library| is a high-level abstraction for the
+`PHP driver <https://php.net/mongodb>`_ (i.e. ``mongodb`` extension). This page
+will briefly explain how to install both the ``mongodb`` extension and the
+|php-library|.
 
-:php:`Installing the MongoDB PHP Driver <manual/en/mongodb.installation.php>`
-describes how to install the `mongodb` extension for PHP. Instructions for
-installing the driver for HHVM may be found in the :php:`Installation with HHVM
-<manual/en/mongodb.installation.hhvm>` article.
+Installing the Extension
+------------------------
 
-Procedure
----------
+Linux, Unix, and macOS users can either
+:php:`install the extension with PECL <manual/en/mongodb.installation.pecl.php>`
+(recommended) or
+:php:`manually compile from source <manual/en/mongodb.installation.manual.php>`.
+The following command may be used to install the extension with PECL:
 
-Install the Library
-~~~~~~~~~~~~~~~~~~~
+.. code-block:: sh
 
-The preferred method of installing |php-library| is with `Composer
-<https://getcomposer.org/>`_ by running the following from your project
-root:
+   sudo pecl install mongodb
+
+.. note::
+
+   If the build process for either installation method fails to find a TLS
+   library, check that the development packages (e.g. ``libssl-dev``) and
+   `pkg-config <https://en.wikipedia.org/wiki/Pkg-config>`_ are both installed.
+
+Once the extension is installed, add the following line to your ``php.ini``
+file:
+
+.. code-block:: ini
+
+   extension=mongodb.so
+
+Windows users can download precompiled binaries of the extension from
+`PECL <https://pecl.php.net/package/mongodb>`_. After extracting the
+``php_mongodb.dll`` file to PHP's extension directory, add the following line to
+your ``php.ini`` file:
+
+.. code-block:: ini
+
+   extension=php_mongodb.dll
+
+Windows binaries are available for various combinations of PHP version,
+thread-safety, and architecture. Failure to select the correct binary will
+result in an error attempting to load the extension DLL at runtime. Additional
+considerations for Windows are discussed in the
+:php:`Windows installation documentation <manual/en/mongodb.installation.windows.php>`.
+
+.. note::
+
+   If your system has multiple versions of PHP installed, each version will have
+   its own ``pecl`` command and ``php.ini`` file. Additionally, PHP may also use
+   separate ``php.ini`` files for its web and CLI environments. If the extension
+   has been installed but is not available at runtime, double-check that you
+   have used the correct ``pecl`` command (or binary in the case of Windows) and
+   have modified the appropriate ``php.ini`` file(s).
+
+Installing the Library
+----------------------
+
+The preferred method of installing the |php-library| is with
+`Composer <https://getcomposer.org/>`_ by running the following command from
+your project root:
 
 .. code-block:: sh
 
    composer require mongodb/mongodb
 
-While not recommended, you may also manually install the package via
-the source tarballs attached to the `GitHub releases
-<https://github.com/mongodb/mongo-php-library/releases>`_.
+While not recommended, you may also manually install the library using a source
+archive attached to the
+`GitHub releases <https://github.com/mongodb/mongo-php-library/releases>`_.
 
 Configure Autoloading
 ~~~~~~~~~~~~~~~~~~~~~
 
-Once you have installed the library, ensure that your application
-includes Composer's autoloader. The ``require_once``
-statement should point to Composer's autoloader, as in the following example:
+Once you have installed the library, ensure that your application includes
+Composer's autoloader as in the following example:
 
 .. code-block:: php
 
-   require_once __DIR__ . "/vendor/autoload.php";
+   <?php
+
+   require_once __DIR__ . '/vendor/autoload.php';
 
 Refer to Composer's `autoloading documentation
 <https://getcomposer.org/doc/01-basic-usage.md#autoloading>`_ for more
 information about setting up autoloading.
 
-If you installed the library manually from a source tarball, you
-will also need to manually configure autoloading:
+If you installed the library manually from a source archive, you will need to
+manually configure autoloading:
 
 #. Map the top-level ``MongoDB\`` namespace to the ``src/`` directory
    using your preferred autoloader implementation.
 
-#. Manually require the ``src/functions.php`` file, since PHP does not
-   yet support function autoloading.
+#. Manually require the ``src/functions.php`` file. This is necessary because
+   PHP does not support autoloading for functions.

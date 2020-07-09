@@ -82,7 +82,7 @@ exists.
 
    <?php
 
-   $collection = (new MongoDB\Client)->selectCollection('test, 'restaurants');
+   $collection = (new MongoDB\Client)->selectCollection('test', 'restaurants');
 
    $indexName = $collection->createIndex(
       ['borough' => 1],

@@ -8,45 +8,53 @@ The |php-library| provides a high-level abstraction around the lower-level
 `PHP driver <https://php.net/mongodb>`_, also known as the ``mongodb``
 extension.
 
-While the ``mongodb`` extension provides a limited API for executing commands,
-queries, and write operations, the |php-library| implements an API similar to
-that of the `legacy PHP driver <http://php.net/manual/en/book.mongo.php>`_. The
-library contains abstractions for client, database, and collection objects, and
-provides methods for CRUD operations and common commands such as index and
-collection management.
+The ``mongodb`` extension provides a limited API to connect to the database and
+execute generic commands, queries, and write operations. In contrast, the
+|php-library| provides a full-featured API and models client, database, and
+collection objects. Each of those classes provide various helper methods for
+performing operations in context. For example, :phpclass:`MongoDB\\Collection`
+implements methods for executing CRUD operations and managing indexes on the
+collection, among other things.
 
 If you are developing a PHP application with MongoDB, you should consider using
-this library, or another high-level abstraction, instead of the extension alone.
+the |php-library| instead of the extension alone.
 
-For additional information about this library and the ``mongodb`` extension, see
-the `Architecture Overview <http://php.net/manual/en/mongodb.overview.php>`_
-article in the extension documentation. `Derick Rethans
-<http://derickrethans.nl/>`_ has also written a series of blog posts entitled
-*New MongoDB Drivers for PHP and HHVM*:
+New to the PHP Library?
+-----------------------
 
-- `Part One: History <https://derickrethans.nl/new-drivers.html>`_
+If you have some experience with MongoDB but are new to the PHP library, the
+following pages should help you get started:
 
-- `Part Two: Architecture
-  <https://derickrethans.nl/new-drivers-part2.html>`_
+- :doc:`/tutorial/install-php-library`
 
-- `Part Three: Cursor Behaviour
-  <https://derickrethans.nl/new-drivers-part3-cursor.html>`_
+- :doc:`/tutorial/crud`
+
+- :doc:`/tutorial/commands`
+
+- :doc:`/tutorial/gridfs`
+
+- :doc:`/reference/bson`
+
+If you have previously worked with the
+`legacy PHP driver <http://php.net/manual/en/book.mongo.php>`_ (i.e. ``mongo``
+extension), it will be helpful to review the :doc:`/upgrade` for a summary of
+API changes between the old driver and this library.
 
 New to MongoDB?
 ---------------
 
-If you are a new MongoDB user, these links should help you become more familiar
-with MongoDB and introduce some of the concepts and terms you will encounter in
-this documentation:
+If you are a new MongoDB user, the following links should help you become more
+familiar with MongoDB and introduce some of the concepts and terms you will
+encounter in the library documentation:
 
-- :manual:`Introduction to CRUD operations in MongoDB </core/crud>`
+- :manual:`Introduction to MongoDB </introduction>`
 
-- :manual:`What is a MongoDB document? </core/document>`
+- :manual:`Databases and Collections </core/databases-and-collections>`
 
-- :manual:`Dot notation for accessing document properties
-  </core/document/#dot-notation>`
+- :manual:`Documents </core/document>` and
+  :manual:`BSON Types </reference/bson-types>`
 
-- :manual:`ObjectId: MongoDB's document identifier </reference/object-id/>`
+- :manual:`MongoDB CRUD Operations </crud>`
 
 .. class:: hidden
 
@@ -57,5 +65,3 @@ this documentation:
       /tutorial
       /upgrade
       /reference
-
-.. /getting-started

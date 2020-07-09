@@ -39,7 +39,7 @@ The output would then resemble::
 You may also import the datasets using :manual:`mongoimport
 </reference/program/mongoimport>`, which is included with MongoDB:
 
-.. code-block:: none
+.. code-block:: sh
 
-   $ mongoimport --db test --collection zips --file zips.json --drop
-   $ mongoimport --db test --collection restaurants --file primer-dataset.json --drop
+   mongoimport --db test --collection zips --file zips.json --drop
+   mongoimport --db test --collection restaurants --file primer-dataset.json --drop

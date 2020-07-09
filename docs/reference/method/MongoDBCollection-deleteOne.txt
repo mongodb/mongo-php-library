@@ -80,5 +80,5 @@ See Also
 - :phpmethod:`MongoDB\\Collection::deleteMany()`
 - :phpmethod:`MongoDB\\Collection::bulkWrite()`
 - :doc:`/tutorial/crud`
-- :manual:`delete </reference/command/delete` command reference  in the MongoDB
+- :manual:`delete </reference/command/delete>` command reference  in the MongoDB
   manual

@@ -42,6 +42,9 @@ class ChangeStream implements Iterator
      */
     const CURSOR_NOT_FOUND = 43;
 
+    /** @var int */
+    private static $cursorNotFound = 43;
+
     /** @var int[] */
     private static $resumableErrorCodes = [
         6, // HostUnreachable
@@ -195,6 +198,10 @@ class ChangeStream implements Iterator
 
         if (! $exception instanceof ServerException) {
             return false;
+        }
+
+        if ($exception->getCode() === self::$cursorNotFound) {
+            return true;
         }
 
         if (server_supports_feature($this->iterator->getServer(), self::$wireVersionForResumableChangeStreamError)) {

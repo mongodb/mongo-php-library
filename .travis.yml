@@ -61,7 +61,10 @@ jobs:
     # Test against lowest supported dependencies
     - stage: Test
       php: "7.0"
+      dist: trusty
       env:
+        - SERVER_DISTRO=enterprise-ubuntu1404
+        - SERVER_VERSION=3.0.15
         - COMPOSER_OPTIONS=--prefer-lowest
 
       # Test older standalone server versions (3.0-4.0)

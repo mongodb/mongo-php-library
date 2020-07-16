@@ -67,7 +67,7 @@ The output would then resemble::
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Database::listDatabases()`
+- :phpmethod:`MongoDB\\Client::listDatabases()`
 - :manual:`listDatabases </reference/command/listDatabases>` command reference
   in the MongoDB manual
 - `Enumerating Databases

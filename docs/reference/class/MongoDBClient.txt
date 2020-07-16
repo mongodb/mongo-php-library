@@ -37,6 +37,7 @@ Methods
    /reference/method/MongoDBClient-getReadPreference
    /reference/method/MongoDBClient-getTypeMap
    /reference/method/MongoDBClient-getWriteConcern
+   /reference/method/MongoDBClient-listDatabaseNames
    /reference/method/MongoDBClient-listDatabases
    /reference/method/MongoDBClient-selectCollection
    /reference/method/MongoDBClient-selectDatabase

@@ -54,9 +54,9 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
         $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
         $commandResult = $operation->execute($this->getPrimaryServer());
 
+        /* Avoid inspecting the result document as mongos returns {ok:1.0},
+         * which is inconsistent from the expected mongod response of {ok:0}. */
         $this->assertIsObject($commandResult);
-        $this->assertObjectHasAttribute('ok', $commandResult);
-        $this->assertEquals(0, $commandResult->ok);
     }
 
     public function testSessionOption()

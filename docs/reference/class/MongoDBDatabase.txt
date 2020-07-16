@@ -56,6 +56,7 @@ Methods
    /reference/method/MongoDBDatabase-getReadPreference
    /reference/method/MongoDBDatabase-getTypeMap
    /reference/method/MongoDBDatabase-getWriteConcern
+   /reference/method/MongoDBDatabase-listCollectionNames
    /reference/method/MongoDBDatabase-listCollections
    /reference/method/MongoDBDatabase-modifyCollection
    /reference/method/MongoDBDatabase-selectCollection

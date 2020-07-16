@@ -65,6 +65,7 @@ jobs:
       env:
         - SERVER_DISTRO=enterprise-ubuntu1404
         - SERVER_VERSION=3.0.15
+        - DEPLOYMENT=STANDALONE_OLD
         - COMPOSER_OPTIONS=--prefer-lowest
 
       # Test older standalone server versions (3.0-4.0)

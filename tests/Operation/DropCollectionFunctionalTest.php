@@ -38,8 +38,9 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
         $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($server);
+        $commandResult = $operation->execute($server);
 
+        $this->assertCommandSucceeded($commandResult);
         $this->assertCollectionDoesNotExist($this->getCollectionName());
     }
 
@@ -51,7 +52,11 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
         $this->assertCollectionDoesNotExist($this->getCollectionName());
 
         $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
+        $commandResult = $operation->execute($this->getPrimaryServer());
+
+        $this->assertIsObject($commandResult);
+        $this->assertObjectHasAttribute('ok', $commandResult);
+        $this->assertEquals(0, $commandResult->ok);
     }
 
     public function testSessionOption()

@@ -6,6 +6,9 @@ if [[ -z $TRAVIS_BUILD_DIR ]]; then
     export TRAVIS_BUILD_DIR=`pwd`;
 fi
 
+# Replace the default client certificate with the new one to make sure mo keeps working
+cp ${TRAVIS_BUILD_DIR}/mongo-orchestration/ssl/client.pem ${MO_PATH}/lib/client.pem
+
 URI_FIELD="mongodb_uri"
 URI_SUFFIX=""
 

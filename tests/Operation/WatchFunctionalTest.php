@@ -1204,7 +1204,11 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->configureFailPoint([
             'configureFailPoint' => 'failCommand',
             'mode' => ['times' => 1],
-            'data' => ['failCommands' => ['getMore'], 'errorCode' => self::NOT_MASTER],
+            'data' => [
+                'failCommands' => ['getMore'],
+                'errorCode' => self::NOT_MASTER,
+                'errorLabels' => ['ResumableChangeStreamError'],
+            ],
         ]);
 
         (new CommandObserver())->observe(
@@ -1551,12 +1555,16 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertEmpty($commands);
     }
 
-    private function forceChangeStreamResume(array $commands = ['getMore'], int $errorCode = self::NOT_MASTER)
+    private function forceChangeStreamResume()
     {
         $this->configureFailPoint([
             'configureFailPoint' => 'failCommand',
             'mode' => ['times' => 1],
-            'data' => ['failCommands' => $commands, 'errorCode' => $errorCode],
+            'data' => [
+                'failCommands' => ['getMore'],
+                'errorCode' => self::NOT_MASTER,
+                'errorLabels' => ['ResumableChangeStreamError'],
+            ],
         ]);
     }
 

@@ -6,44 +6,54 @@ if [[ -z $TRAVIS_BUILD_DIR ]]; then
     export TRAVIS_BUILD_DIR=`pwd`;
 fi
 
+# Replace the default client certificate with the new one to make sure mo keeps working
+cp ${TRAVIS_BUILD_DIR}/mongo-orchestration/ssl/client.pem ${MO_PATH}/lib/client.pem
+
+URI_FIELD="mongodb_uri"
+URI_SUFFIX=""
+
 case $DEPLOYMENT in
   SHARDED_CLUSTER)
-    ${TRAVIS_BUILD_DIR}/.travis/mo.sh ${TRAVIS_BUILD_DIR}/mongo-orchestration/sharded_clusters/cluster.json start > /tmp/mo-result.json
-    cat /tmp/mo-result.json | tail -n 1 | php -r 'echo json_decode(file_get_contents("php://stdin"))->mongodb_uri, "/?retryWrites=false";' > /tmp/uri.txt
+    CONFIG="sharded_clusters/cluster.json"
+    URI_SUFFIX="/?retryWrites=false"
     ;;
   SHARDED_CLUSTER_RS)
-    ${TRAVIS_BUILD_DIR}/.travis/mo.sh ${TRAVIS_BUILD_DIR}/mongo-orchestration/sharded_clusters/cluster_replset.json start > /tmp/mo-result.json
-    cat /tmp/mo-result.json | tail -n 1 | php -r 'echo json_decode(file_get_contents("php://stdin"))->mongodb_uri;' > /tmp/uri.txt
+    CONFIG="sharded_clusters/cluster_replset.json"
     ;;
   STANDALONE_AUTH)
-    ${TRAVIS_BUILD_DIR}/.travis/mo.sh ${TRAVIS_BUILD_DIR}/mongo-orchestration/standalone/standalone-auth.json start > /tmp/mo-result.json
-    cat /tmp/mo-result.json | tail -n 1 | php -r 'echo json_decode(file_get_contents("php://stdin"))->mongodb_auth_uri;' > /tmp/uri.txt
+    CONFIG="standalone/standalone-auth.json"
+    URI_FIELD="mongodb_auth_uri"
     ;;
   STANDALONE_OLD)
-    ${TRAVIS_BUILD_DIR}/.travis/mo.sh ${TRAVIS_BUILD_DIR}/mongo-orchestration/standalone/standalone-old.json start > /tmp/mo-result.json
-    cat /tmp/mo-result.json | tail -n 1 | php -r 'echo json_decode(file_get_contents("php://stdin"))->mongodb_uri;' > /tmp/uri.txt
+    CONFIG="standalone/standalone-old.json"
     ;;
   STANDALONE_SSL)
-    ${TRAVIS_BUILD_DIR}/.travis/mo.sh ${TRAVIS_BUILD_DIR}/mongo-orchestration/standalone/standalone-ssl.json start > /tmp/mo-result.json
-    cat /tmp/mo-result.json | tail -n 1 | php -r 'echo json_decode(file_get_contents("php://stdin"))->mongodb_uri, "/?ssl=true&sslallowinvalidcertificates=true";' > /tmp/uri.txt
+    CONFIG="standalone/standalone-ssl.json"
+    URI_SUFFIX="/?ssl=true&sslallowinvalidcertificates=true"
     ;;
   REPLICASET)
-    ${TRAVIS_BUILD_DIR}/.travis/mo.sh ${TRAVIS_BUILD_DIR}/mongo-orchestration/replica_sets/replicaset.json start > /tmp/mo-result.json
-    cat /tmp/mo-result.json | tail -n 1 | php -r 'echo json_decode(file_get_contents("php://stdin"))->mongodb_uri;' > /tmp/uri.txt
+    CONFIG="replica_sets/replicaset.json"
     ;;
   REPLICASET_SINGLE)
-    ${TRAVIS_BUILD_DIR}/.travis/mo.sh ${TRAVIS_BUILD_DIR}/mongo-orchestration/replica_sets/replicaset-one-node.json start > /tmp/mo-result.json
-    cat /tmp/mo-result.json | tail -n 1 | php -r 'echo json_decode(file_get_contents("php://stdin"))->mongodb_uri;' > /tmp/uri.txt
+    CONFIG="replica_sets/replicaset-one-node.json"
     ;;
   REPLICASET_OLD)
-    ${TRAVIS_BUILD_DIR}/.travis/mo.sh ${TRAVIS_BUILD_DIR}/mongo-orchestration/replica_sets/replicaset-old.json start > /tmp/mo-result.json
-    cat /tmp/mo-result.json | tail -n 1 | php -r 'echo json_decode(file_get_contents("php://stdin"))->mongodb_uri;' > /tmp/uri.txt
+    CONFIG="replica_sets/replicaset-old.json"
     ;;
   *)
-    ${TRAVIS_BUILD_DIR}/.travis/mo.sh ${TRAVIS_BUILD_DIR}/mongo-orchestration/standalone/standalone.json start > /tmp/mo-result.json
-    cat /tmp/mo-result.json | tail -n 1 | php -r 'echo json_decode(file_get_contents("php://stdin"))->mongodb_uri;' > /tmp/uri.txt
+    CONFIG="standalone/standalone.json"
     ;;
 esac
+
+${TRAVIS_BUILD_DIR}/.travis/mo.sh ${TRAVIS_BUILD_DIR}/mongo-orchestration/$CONFIG start > /tmp/mo-result.json
+
+if [ $? -ne 0 ]; then
+  cat /tmp/mo-result.json
+  cat ${TRAVIS_BUILD_DIR}/server.log
+  exit 1
+fi
+
+cat /tmp/mo-result.json | tail -n 1 | php ${TRAVIS_BUILD_DIR}/.travis/get_uri.php $URI_FIELD $URI_SUFFIX > /tmp/uri.txt
 
 echo -n "MongoDB Test URI: "
 cat /tmp/uri.txt

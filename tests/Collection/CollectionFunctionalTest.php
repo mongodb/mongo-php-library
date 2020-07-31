@@ -154,7 +154,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 $this->collection->createIndex(
                     ['x' => 1],
                     [
-                        'maxTimeMS' => 1000,
+                        'maxTimeMS' => 10000,
                         'session' => $this->manager->startSession(),
                         'sparse' => true,
                         'unique' => true,

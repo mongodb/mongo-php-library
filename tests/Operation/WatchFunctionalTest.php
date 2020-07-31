@@ -156,6 +156,8 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testNextResumesAfterConnectionException()
     {
+        $this->skipIfIsShardedCluster('initial aggregate command times out due to socketTimeoutMS');
+
         /* In order to trigger a dropped connection, we'll use a new client with
          * a socket timeout that is less than the change stream's maxAwaitTimeMS
          * option. */
@@ -1204,7 +1206,11 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->configureFailPoint([
             'configureFailPoint' => 'failCommand',
             'mode' => ['times' => 1],
-            'data' => ['failCommands' => ['getMore'], 'errorCode' => self::NOT_MASTER],
+            'data' => [
+                'failCommands' => ['getMore'],
+                'errorCode' => self::NOT_MASTER,
+                'errorLabels' => ['ResumableChangeStreamError'],
+            ],
         ]);
 
         (new CommandObserver())->observe(
@@ -1551,12 +1557,16 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertEmpty($commands);
     }
 
-    private function forceChangeStreamResume(array $commands = ['getMore'], int $errorCode = self::NOT_MASTER)
+    private function forceChangeStreamResume()
     {
         $this->configureFailPoint([
             'configureFailPoint' => 'failCommand',
             'mode' => ['times' => 1],
-            'data' => ['failCommands' => $commands, 'errorCode' => $errorCode],
+            'data' => [
+                'failCommands' => ['getMore'],
+                'errorCode' => self::NOT_MASTER,
+                'errorLabels' => ['ResumableChangeStreamError'],
+            ],
         ]);
     }
 
@@ -1592,7 +1602,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         return server_supports_feature($this->getPrimaryServer(), self::$wireVersionForStartAtOperationTime);
     }
 
-    private function advanceCursorUntilValid(Iterator $iterator, $limitOnShardedClusters = 5)
+    private function advanceCursorUntilValid(Iterator $iterator, $limitOnShardedClusters = 10)
     {
         if (! $this->isShardedCluster()) {
             $iterator->next();

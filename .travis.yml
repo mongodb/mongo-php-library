@@ -22,9 +22,9 @@ cache:
 
 env:
   global:
-    - DRIVER_VERSION=1.8.0RC1
+    - DRIVER_VERSION=1.8.0
     - SERVER_DISTRO=enterprise-ubuntu1604
-    - SERVER_VERSION=4.2.0
+    - SERVER_VERSION=4.4.0
     - DEPLOYMENT=STANDALONE
     - COMPOSER_OPTIONS=
 
@@ -84,22 +84,26 @@ jobs:
     - stage: Test
       php: "7.0"
       env:
-        - SERVER_VERSION=3.4.21
+        - SERVER_VERSION=3.4.24
         - DEPLOYMENT=STANDALONE_OLD
     - stage: Test
       php: "7.0"
       env:
-        - SERVER_VERSION=3.6.13
+        - SERVER_VERSION=3.6.19
     - stage: Test
       php: "7.3"
       env:
-        - SERVER_VERSION=4.0.12
+        - SERVER_VERSION=4.0.19
+    - stage: Test
+      php: "7.3"
+      env:
+        - SERVER_VERSION=4.2.8
 
     # Test upcoming server version
-    - stage: Test
-      php: "7.3"
-      env:
-        - SERVER_VERSION=4.3.4
+    #- stage: Test
+    #  php: "7.3"
+    #  env:
+    #    - SERVER_VERSION=4.5.0
 
     # Test other server configurations
     - stage: Test

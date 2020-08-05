@@ -57,6 +57,14 @@ class StreamWrapper
     /** @var ReadableStream|WritableStream|null */
     private $stream;
 
+    public function __destruct()
+    {
+        /* This destructor is a workaround for PHP trying to use the stream well
+         * after all objects have been destructed. This causes autoloading
+         * issues and possibly segmentation faults during PHP shutdown. */
+        $this->stream = null;
+    }
+
     /**
      * Return the stream's file document.
      *
@@ -88,6 +96,10 @@ class StreamWrapper
      */
     public function stream_close()
     {
+        if (! $this->stream) {
+            return;
+        }
+
         $this->stream->close();
     }
 

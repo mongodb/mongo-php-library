@@ -3,16 +3,38 @@
 namespace MongoDB\GridFS\Exception;
 
 use MongoDB\Exception\RuntimeException;
+use function MongoDB\BSON\fromPHP;
+use function MongoDB\BSON\toJSON;
+use function sprintf;
+use function stream_get_meta_data;
 
 class StreamException extends RuntimeException
 {
-    public static function downloadFailed() : self
+    /** @param resource $destination */
+    public static function downloadFromFilenameFailed(string $filename, $destination) : self
     {
-        return new static('Downloading file from GridFS failed: stream error.');
+        $metadata = stream_get_meta_data($destination);
+
+        return new static(sprintf('Downloading GridFS file "%s" to resource "%s" failed: stream error.', $filename, $metadata['uri']));
     }
 
-    public static function uploadFailed() : self
+    /**
+     * @param mixed    $id
+     * @param resource $destination
+     */
+    public static function downloadFromIdFailed($id, $destination) : self
     {
-        return new static('Uploading file to GridFS failed: stream error.');
+        $stringId = toJSON(fromPHP(['_id' => $id]));
+        $metadata = stream_get_meta_data($destination);
+
+        return new static(sprintf('Downloading GridFS file with identifier "%s" to resource "%s" failed: stream error.', $stringId, $metadata['uri']));
+    }
+
+    /** @param resource $source */
+    public static function uploadFailed(string $filename, $source) : self
+    {
+        $metadata = stream_get_meta_data($source);
+
+        return new static(sprintf('Uploading file from resource "%s" to GridFS file "%s" failed: stream error.', $metadata['uri'], $filename));
     }
 }

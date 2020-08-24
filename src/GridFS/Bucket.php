@@ -249,7 +249,7 @@ class Bucket
         }
 
         if (@stream_copy_to_stream($this->openDownloadStream($id), $destination) === false) {
-            throw StreamException::downloadFailed();
+            throw StreamException::downloadFromIdFailed($id, $destination);
         }
     }
 
@@ -287,7 +287,7 @@ class Bucket
         }
 
         if (@stream_copy_to_stream($this->openDownloadStreamByName($filename, $options), $destination) === false) {
-            throw StreamException::downloadFailed();
+            throw StreamException::downloadFromFilenameFailed($filename, $destination);
         }
     }
 
@@ -625,7 +625,7 @@ class Bucket
 
         $destination = $this->openUploadStream($filename, $options);
         if (@stream_copy_to_stream($source, $destination) === false) {
-            throw StreamException::uploadFailed();
+            throw StreamException::uploadFailed($filename, $source);
         }
 
         return $this->getFileIdForStream($destination);

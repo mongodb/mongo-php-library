@@ -10,6 +10,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Bucket;
 use MongoDB\GridFS\Exception\FileNotFoundException;
+use MongoDB\GridFS\Exception\StreamException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\ListCollections;
@@ -706,6 +707,34 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $this->assertIndexNotExists($this->filesCollection->getCollectionName(), 'filename_1_uploadDate_1');
         $this->assertIndexNotExists($this->chunksCollection->getCollectionName(), 'files_id_1_n_1');
+    }
+
+    public function testDownloadToStreamFails()
+    {
+        $this->bucket->uploadFromStream('filename', $this->createStream('foo'), ['_id' => ['foo' => 'bar']]);
+
+        $this->expectException(StreamException::class);
+        $this->expectExceptionMessageMatches('#^Downloading GridFS file from "gridfs://.*/.*/.*" to "php://temp" failed. GridFS identifier: "{ "_id" : { "foo" : "bar" } }$"#');
+        $this->bucket->downloadToStream(['foo' => 'bar'], fopen('php://temp', 'r'));
+    }
+
+    public function testDownloadToStreamByNameFails()
+    {
+        $this->bucket->uploadFromStream('filename', $this->createStream('foo'));
+
+        $this->expectException(StreamException::class);
+        $this->expectExceptionMessageMatches('#^Downloading GridFS file from "gridfs://.*/.*/.*" to "php://temp" failed. GridFS filename: "filename"$#');
+        $this->bucket->downloadToStreamByName('filename', fopen('php://temp', 'r'));
+    }
+
+    public function testUploadFromStreamFails()
+    {
+        UnusableStream::register();
+        $source = fopen('unusable://temp', 'w');
+
+        $this->expectException(StreamException::class);
+        $this->expectExceptionMessageMatches('#^Uploading file from "unusable://temp" to "gridfs://.*/.*/.*" failed. GridFS filename: "filename"$#');
+        $this->bucket->uploadFromStream('filename', $source);
     }
 
     /**

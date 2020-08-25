@@ -31,6 +31,7 @@ use function str_repeat;
 use function stream_get_contents;
 use function strlen;
 use function substr;
+use const PHP_VERSION_ID;
 
 /**
  * Functional tests for the Bucket class.
@@ -730,6 +731,10 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     public function testUploadFromStreamFails()
     {
+        if (PHP_VERSION_ID < 70400) {
+            $this->markTestSkipped('Test only works on PHP 7.4 and newer');
+        }
+
         UnusableStream::register();
         $source = fopen('unusable://temp', 'w');
 

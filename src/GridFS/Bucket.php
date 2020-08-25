@@ -248,8 +248,9 @@ class Bucket
             throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
         }
 
-        if (@stream_copy_to_stream($this->openDownloadStream($id), $destination) === false) {
-            throw StreamException::downloadFromIdFailed($id, $destination);
+        $source = $this->openDownloadStream($id);
+        if (@stream_copy_to_stream($source, $destination) === false) {
+            throw StreamException::downloadFromIdFailed($id, $source, $destination);
         }
     }
 
@@ -286,8 +287,9 @@ class Bucket
             throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
         }
 
-        if (@stream_copy_to_stream($this->openDownloadStreamByName($filename, $options), $destination) === false) {
-            throw StreamException::downloadFromFilenameFailed($filename, $destination);
+        $source = $this->openDownloadStreamByName($filename, $options);
+        if (@stream_copy_to_stream($source, $destination) === false) {
+            throw StreamException::downloadFromFilenameFailed($filename, $source, $destination);
         }
     }
 
@@ -624,8 +626,10 @@ class Bucket
         }
 
         $destination = $this->openUploadStream($filename, $options);
+
         if (@stream_copy_to_stream($source, $destination) === false) {
-            throw StreamException::uploadFailed($filename, $source);
+            $destinationUri = $this->createPathForFile($this->getRawFileDocumentForStream($destination));
+            throw StreamException::uploadFailed($filename, $source, $destinationUri);
         }
 
         return $this->getFileIdForStream($destination);

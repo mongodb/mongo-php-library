@@ -10,31 +10,37 @@ use function stream_get_meta_data;
 
 class StreamException extends RuntimeException
 {
-    /** @param resource $destination */
-    public static function downloadFromFilenameFailed(string $filename, $destination) : self
+    /**
+     * @param resource $source
+     * @param resource $destination
+     */
+    public static function downloadFromFilenameFailed(string $filename, $source, $destination) : self
     {
-        $metadata = stream_get_meta_data($destination);
+        $sourceMetadata = stream_get_meta_data($source);
+        $destinationMetadata = stream_get_meta_data($destination);
 
-        return new static(sprintf('Downloading GridFS file "%s" to resource "%s" failed: stream error.', $filename, $metadata['uri']));
+        return new static(sprintf('Downloading GridFS file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $filename));
     }
 
     /**
      * @param mixed    $id
+     * @param resource $source
      * @param resource $destination
      */
-    public static function downloadFromIdFailed($id, $destination) : self
+    public static function downloadFromIdFailed($id, $source, $destination) : self
     {
-        $stringId = toJSON(fromPHP(['_id' => $id]));
-        $metadata = stream_get_meta_data($destination);
+        $idString = toJSON(fromPHP(['_id' => $id]));
+        $sourceMetadata = stream_get_meta_data($source);
+        $destinationMetadata = stream_get_meta_data($destination);
 
-        return new static(sprintf('Downloading GridFS file with identifier "%s" to resource "%s" failed: stream error.', $stringId, $metadata['uri']));
+        return new static(sprintf('Downloading GridFS file from "%s" to "%s" failed. GridFS identifier: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $idString));
     }
 
     /** @param resource $source */
-    public static function uploadFailed(string $filename, $source) : self
+    public static function uploadFailed(string $filename, $source, string $destinationUri) : self
     {
-        $metadata = stream_get_meta_data($source);
+        $sourceMetadata = stream_get_meta_data($source);
 
-        return new static(sprintf('Uploading file from resource "%s" to GridFS file "%s" failed: stream error.', $metadata['uri'], $filename));
+        return new static(sprintf('Uploading file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationUri, $filename));
     }
 }

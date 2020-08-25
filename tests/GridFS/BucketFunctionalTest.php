@@ -20,6 +20,7 @@ use function array_merge;
 use function call_user_func;
 use function current;
 use function fclose;
+use function fopen;
 use function fread;
 use function fwrite;
 use function hash_init;

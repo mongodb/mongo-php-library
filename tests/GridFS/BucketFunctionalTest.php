@@ -10,6 +10,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Bucket;
 use MongoDB\GridFS\Exception\FileNotFoundException;
+use MongoDB\GridFS\Exception\StreamException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\ListCollections;
@@ -19,6 +20,7 @@ use function array_merge;
 use function call_user_func;
 use function current;
 use function fclose;
+use function fopen;
 use function fread;
 use function fwrite;
 use function hash_init;
@@ -29,6 +31,7 @@ use function str_repeat;
 use function stream_get_contents;
 use function strlen;
 use function substr;
+use const PHP_VERSION_ID;
 
 /**
  * Functional tests for the Bucket class.
@@ -706,6 +709,38 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $this->assertIndexNotExists($this->filesCollection->getCollectionName(), 'filename_1_uploadDate_1');
         $this->assertIndexNotExists($this->chunksCollection->getCollectionName(), 'files_id_1_n_1');
+    }
+
+    public function testDownloadToStreamFails()
+    {
+        $this->bucket->uploadFromStream('filename', $this->createStream('foo'), ['_id' => ['foo' => 'bar']]);
+
+        $this->expectException(StreamException::class);
+        $this->expectExceptionMessageRegExp('#^Downloading file from "gridfs://.*/.*/.*" to "php://temp" failed. GridFS identifier: "{ "_id" : { "foo" : "bar" } }"$#');
+        $this->bucket->downloadToStream(['foo' => 'bar'], fopen('php://temp', 'r'));
+    }
+
+    public function testDownloadToStreamByNameFails()
+    {
+        $this->bucket->uploadFromStream('filename', $this->createStream('foo'));
+
+        $this->expectException(StreamException::class);
+        $this->expectExceptionMessageRegExp('#^Downloading file from "gridfs://.*/.*/.*" to "php://temp" failed. GridFS filename: "filename"$#');
+        $this->bucket->downloadToStreamByName('filename', fopen('php://temp', 'r'));
+    }
+
+    public function testUploadFromStreamFails()
+    {
+        if (PHP_VERSION_ID < 70400) {
+            $this->markTestSkipped('Test only works on PHP 7.4 and newer');
+        }
+
+        UnusableStream::register();
+        $source = fopen('unusable://temp', 'w');
+
+        $this->expectException(StreamException::class);
+        $this->expectExceptionMessageRegExp('#^Uploading file from "unusable://temp" to "gridfs://.*/.*/.*" failed. GridFS filename: "filename"$#');
+        $this->bucket->uploadFromStream('filename', $source);
     }
 
     /**

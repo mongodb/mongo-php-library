@@ -716,7 +716,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->bucket->uploadFromStream('filename', $this->createStream('foo'), ['_id' => ['foo' => 'bar']]);
 
         $this->expectException(StreamException::class);
-        $this->expectExceptionMessageMatches('#^Downloading file from "gridfs://.*/.*/.*" to "php://temp" failed. GridFS identifier: "{ "_id" : { "foo" : "bar" } }"$#');
+        $this->expectExceptionMessageRegExp('#^Downloading file from "gridfs://.*/.*/.*" to "php://temp" failed. GridFS identifier: "{ "_id" : { "foo" : "bar" } }"$#');
         $this->bucket->downloadToStream(['foo' => 'bar'], fopen('php://temp', 'r'));
     }
 
@@ -725,7 +725,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->bucket->uploadFromStream('filename', $this->createStream('foo'));
 
         $this->expectException(StreamException::class);
-        $this->expectExceptionMessageMatches('#^Downloading file from "gridfs://.*/.*/.*" to "php://temp" failed. GridFS filename: "filename"$#');
+        $this->expectExceptionMessageRegExp('#^Downloading file from "gridfs://.*/.*/.*" to "php://temp" failed. GridFS filename: "filename"$#');
         $this->bucket->downloadToStreamByName('filename', fopen('php://temp', 'r'));
     }
 
@@ -739,7 +739,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $source = fopen('unusable://temp', 'w');
 
         $this->expectException(StreamException::class);
-        $this->expectExceptionMessageMatches('#^Uploading file from "unusable://temp" to "gridfs://.*/.*/.*" failed. GridFS filename: "filename"$#');
+        $this->expectExceptionMessageRegExp('#^Uploading file from "unusable://temp" to "gridfs://.*/.*/.*" failed. GridFS filename: "filename"$#');
         $this->bucket->uploadFromStream('filename', $source);
     }
 

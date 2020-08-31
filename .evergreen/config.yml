@@ -322,7 +322,6 @@ tasks:
       commands:
         - func: "bootstrap mongo-orchestration"
           vars:
-            VERSION: "2.4"
             TOPOLOGY: "sharded_cluster"
         - func: "run tests"
 

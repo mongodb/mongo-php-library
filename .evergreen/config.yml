@@ -149,7 +149,7 @@ functions:
         # EVG-1105: Use s3.get extract_to: ./
         script: "set -o xtrace && cd .. && rm -rf ${PROJECT_DIRECTORY} && mkdir ${PROJECT_DIRECTORY}/ && tar xf build.tar.gz -C ${PROJECT_DIRECTORY}/"
 
-  "exec compile script" :
+  "exec compile script":
     - command: shell.exec
       type: test
       params:
@@ -158,7 +158,7 @@ functions:
           ${PREPARE_SHELL}
           [ -f ${PROJECT_DIRECTORY}/${file} ] && BUILDTOOL="${buildtool}" sh ${PROJECT_DIRECTORY}/${file} || echo "${PROJECT_DIRECTORY}/${file} not available, skipping"
 
-  "exec script" :
+  "exec script":
     - command: shell.exec
       type: test
       params:
@@ -167,7 +167,7 @@ functions:
           ${PREPARE_SHELL}
           [ -f ${PROJECT_DIRECTORY}/${file} ] && sh ${PROJECT_DIRECTORY}/${file} || echo "${PROJECT_DIRECTORY}/${file} not available, skipping"
 
-  "upload docs" :
+  "upload docs":
     - command: shell.exec
       params:
         silent: true
@@ -186,7 +186,7 @@ functions:
         content_type: text/html
         display_name: "Rendered docs"
 
-  "upload coverage" :
+  "upload coverage":
     - command: shell.exec
       params:
         silent: true
@@ -205,7 +205,7 @@ functions:
         content_type: text/html
         display_name: "Coverage Report"
 
-  "upload scan artifacts" :
+  "upload scan artifacts":
     - command: shell.exec
       type: test
       params:

@@ -18,17 +18,22 @@ use PHPUnit\Framework\Error\Warning;
 use function array_merge;
 use function call_user_func;
 use function current;
+use function exec;
 use function fclose;
 use function fread;
 use function fwrite;
 use function hash_init;
+use function implode;
 use function is_callable;
 use function min;
 use function sprintf;
 use function str_repeat;
 use function stream_get_contents;
 use function strlen;
+use function strncasecmp;
 use function substr;
+use const PHP_EOL;
+use const PHP_OS;
 
 /**
  * Functional tests for the Bucket class.
@@ -706,6 +711,29 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $this->assertIndexNotExists($this->filesCollection->getCollectionName(), 'filename_1_uploadDate_1');
         $this->assertIndexNotExists($this->chunksCollection->getCollectionName(), 'files_id_1_n_1');
+    }
+
+    public function testDanglingOpenWritableStream()
+    {
+        if (! strncasecmp(PHP_OS, 'WIN', 3)) {
+            $this->markTestSkipped('Test does not apply to Windows');
+        }
+
+        $path = __DIR__ . '/../../vendor/autoload.php';
+        $command = <<<CMD
+php -r "require '$path'; \\\$stream = (new MongoDB\Client)->test->selectGridFSBucket()->openUploadStream('filename', ['disableMD5' => true]);" 2>&1
+CMD;
+
+        @exec(
+            $command,
+            $output,
+            $return
+        );
+
+        $this->assertSame(0, $return);
+        $output = implode(PHP_EOL, $output);
+
+        $this->assertSame('', $output);
     }
 
     /**

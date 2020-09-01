@@ -30,8 +30,10 @@ use function sprintf;
 use function str_repeat;
 use function stream_get_contents;
 use function strlen;
+use function strncasecmp;
 use function substr;
 use const PHP_EOL;
+use const PHP_OS;
 
 /**
  * Functional tests for the Bucket class.
@@ -713,14 +715,20 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     public function testDanglingOpenWritableStream()
     {
+        if (! strncasecmp(PHP_OS, 'WIN', 3)) {
+            $this->markTestSkipped('Test does not apply to Windows');
+        }
+
         $path = __DIR__ . '/../../vendor/autoload.php';
         @exec(
             <<<CMD
-php -r "require '$path'; class_exists(MongoDB\Operation\FindOne::class); \\\$stream = (new MongoDB\Client)->test->selectGridFSBucket()->openUploadStream('filename', ['disableMD5' => true]);" 2>&1
+php -r "require '$path'; \\\$stream = (new MongoDB\Client)->test->selectGridFSBucket()->openUploadStream('filename', ['disableMD5' => true]);" 2>&1
 CMD,
-            $output
+            $output,
+            $return
         );
 
+        $this->assertSame(0, $return);
         $output = implode(PHP_EOL, $output);
 
         $this->assertSame('', $output);

@@ -720,10 +720,12 @@ class BucketFunctionalTest extends FunctionalTestCase
         }
 
         $path = __DIR__ . '/../../vendor/autoload.php';
-        @exec(
-            <<<CMD
+        $command = <<<CMD
 php -r "require '$path'; \\\$stream = (new MongoDB\Client)->test->selectGridFSBucket()->openUploadStream('filename', ['disableMD5' => true]);" 2>&1
-CMD,
+CMD;
+
+        @exec(
+            $command,
             $output,
             $return
         );

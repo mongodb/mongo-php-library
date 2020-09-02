@@ -22,9 +22,4 @@ OLD_PATH=$PATH
 PATH=/opt/php/${PHP_VERSION}-64bit/bin:$OLD_PATH
 
 # Run the tests, and store the results in a Evergreen compatible JSON results file
-case "$OS" in
-   *)
-      php vendor/bin/phpunit -v
-      ;;
-esac
-
+php vendor/bin/phpunit

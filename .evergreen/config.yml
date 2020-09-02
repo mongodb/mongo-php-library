@@ -174,7 +174,7 @@ functions:
       params:
         script: |
           ${PREPARE_SHELL}
-          MONGODB_VERSION=${VERSION} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
+          MONGODB_VERSION=${VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} sh ${PROJECT_DIRECTORY}/.evergreen/run-orchestration.sh
     # run-orchestration generates expansion file with the MONGODB_URI for the cluster
     - command: expansions.update
       params:

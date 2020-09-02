@@ -198,6 +198,10 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     {
         $context = $this->getContext();
 
+        if ($context->databaseName === 'admin') {
+            return;
+        }
+
         if ($context->bucketName !== null) {
             $bucket = $context->getGridFSBucket($context->defaultWriteOptions);
             $bucket->drop();

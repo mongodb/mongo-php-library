@@ -505,10 +505,31 @@ axes:
 
 buildvariants:
 
-- matrix_name: "test-baseline"
-  matrix_spec: {"os-php7": ["debian92-test", "ubuntu1804-arm64-test", "rhel70-test"], "php-versions": "*", "versions": "4.4", "driver-versions": "latest-stable" }
+# Tests all PHP versions on all operating systems.
+# Only tests against latest MongoDB and ext-mongodb versions
+- matrix_name: "test-php-versions"
+  matrix_spec: {"os-php7": ["debian92-test", "ubuntu1804-arm64-test", "rhel70-test"], "php-versions": "*", "edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   exclude_spec:
-    - { "os-php7": ["debian92-test", "rhel70-test"], "php-versions": "7.0", versions: "*", "driver-versions": "*" }
-  display_name: "${os-php7}, PHP ${php-versions}, MongoDB ${versions}, ext-mongodb ${driver-versions}"
+    - { "os-php7": ["debian92-test", "rhel70-test"], "php-versions": "7.0", edge-versions: "*", "driver-versions": "*" }
+  display_name: "PHP ${php-versions}, ${os-php7}, MongoDB ${edge-versions}, ext-mongodb ${driver-versions}"
   tasks:
     - name: "test-standalone"
+
+# Tests all driver versions on all PHP versions
+# Only tests on Ubuntu 18.04 and latest MongoDB
+- matrix_name: "test-driver-versions"
+  matrix_spec: {"os-php7": "ubuntu1804-arm64-test", "php-versions": "*", "edge-versions": "latest-stable", "driver-versions": "*" }
+  display_name: "ext-mongodb ${driver-versions}, PHP ${php-versions}, ${os-php7}, MongoDB ${edge-versions}"
+  tasks:
+    - name: "test-standalone"
+
+# Tests all MongoDB versions
+# Only tests on Ubuntu 18.04, with latest stable PHP and driver versions
+# Tests against various topologies
+- matrix_name: "test-mongodb-versions"
+  matrix_spec: {"os-php7": "rhel70-test", "php-edge-versions": "latest-stable", "versions": "*", "driver-versions": "latest-stable" }
+  display_name: "MongoDB ${versions}, PHP ${php-edge-versions}, ${os-php7}, ext-mongodb ${driver-versions}"
+  tasks:
+    - name: "test-standalone"
+    - name: "test-replica_set"
+    - name: "test-sharded_cluster"

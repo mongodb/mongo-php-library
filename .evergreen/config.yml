@@ -514,6 +514,8 @@ buildvariants:
   display_name: "PHP ${php-versions}, ${os-php7}, MongoDB ${edge-versions}, ext-mongodb ${driver-versions}"
   tasks:
     - name: "test-standalone"
+    - name: "test-replica_set"
+    - name: "test-sharded_cluster"
 
 # Tests all driver versions on all PHP versions
 # Only tests on Ubuntu 18.04 and latest MongoDB
@@ -522,6 +524,8 @@ buildvariants:
   display_name: "ext-mongodb ${driver-versions}, PHP ${php-versions}, ${os-php7}, MongoDB ${edge-versions}"
   tasks:
     - name: "test-standalone"
+    - name: "test-replica_set"
+    - name: "test-sharded_cluster"
 
 # Tests all MongoDB versions
 # Only tests on Ubuntu 18.04, with latest stable PHP and driver versions

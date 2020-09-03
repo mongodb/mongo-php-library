@@ -12,6 +12,7 @@ set -o errexit  # Exit the script with error if any of the commands fail
 AUTH=${AUTH:-noauth}
 SSL=${SSL:-nossl}
 MONGODB_URI=${MONGODB_URI:-}
+TESTS=${TESTS:-}
 
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 [ -z "$MARCH" ] && MARCH=$(uname -m | tr '[:upper:]' '[:lower:]')
@@ -22,4 +23,13 @@ OLD_PATH=$PATH
 PATH=/opt/php/${PHP_VERSION}-64bit/bin:$OLD_PATH
 
 # Run the tests, and store the results in a Evergreen compatible JSON results file
-php vendor/bin/phpunit
+case "$TESTS" in
+   atlas-data-lake*)
+      MONGODB_URI="mongodb://mhuser:pencil@127.0.0.1:27017"
+      php vendor/bin/phpunit --testsuite "Atlas Data Lake Test Suite"
+      ;;
+
+   *)
+      php vendor/bin/phpunit
+      ;;
+esac

@@ -319,7 +319,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $keyId = $client
             ->selectCollection('keyvault', 'datakeys')
-            ->insertOne($this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/external/external-key.json')))
+            ->insertOne(
+                $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/external/external-key.json')),
+                ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]
+            )
             ->getInsertedId();
 
         $encryptionOpts = [

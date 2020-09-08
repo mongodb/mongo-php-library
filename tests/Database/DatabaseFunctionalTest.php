@@ -102,7 +102,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 
     public function testCommandDoesNotInheritReadPreference()
     {
-        if ($this->isReplicaSet()) {
+        if (! $this->isReplicaSet()) {
             $this->markTestSkipped('Test only applies to replica sets');
         }
 

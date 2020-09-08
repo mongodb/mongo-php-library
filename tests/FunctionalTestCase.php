@@ -303,7 +303,7 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function isReplicaSet()
     {
-        return $this->getPrimaryServer()->getType() !== Server::TYPE_RS_PRIMARY;
+        return $this->getPrimaryServer()->getType() == Server::TYPE_RS_PRIMARY;
     }
 
     protected function isShardedCluster()

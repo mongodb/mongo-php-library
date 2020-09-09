@@ -187,6 +187,17 @@ functions:
           ${PREPARE_SHELL}
           sh ${DRIVERS_TOOLS}/.evergreen/stop-orchestration.sh
 
+  "bootstrap mongohoused":
+    - command: shell.exec
+      params:
+        script: |
+          DRIVERS_TOOLS="${DRIVERS_TOOLS}" sh ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake/build-mongohouse-local.sh
+    - command: shell.exec
+      params:
+        background: true
+        script: |
+          DRIVERS_TOOLS="${DRIVERS_TOOLS}" sh ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake/run-mongohouse-local.sh
+
   "run tests":
     - command: shell.exec
       type: test
@@ -195,6 +206,15 @@ functions:
         script: |
           ${PREPARE_SHELL}
           PHP_VERSION=${PHP_VERSION} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+
+  "run atlas data lake test":
+     - command: shell.exec
+       type: test
+       params:
+         working_dir: "src"
+         script: |
+           ${PREPARE_SHELL}
+           PHP_VERSION=${PHP_VERSION} TESTS="atlas-data-lake" AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "cleanup":
     - command: shell.exec
@@ -324,6 +344,12 @@ tasks:
           vars:
             TOPOLOGY: "sharded_cluster"
         - func: "run tests"
+
+    - name: "test-atlas-data-lake"
+      commands:
+        - func: "bootstrap mongohoused"
+        - func: "run atlas data lake test"
+
 
 # }}}
 
@@ -537,3 +563,10 @@ buildvariants:
     - name: "test-standalone"
     - name: "test-replica_set"
     - name: "test-sharded_cluster"
+
+- matrix_name: "atlas-data-lake-test"
+  matrix_spec: { "php-edge-versions": "latest-stable" }
+  display_name: "Atlas Data Lake test"
+  run_on: rhel70
+  tasks:
+    - name: "test-atlas-data-lake"

@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
-use MongoDB\BSON\Unserializable;
 use stdClass;
 use UnexpectedValueException;
 use function in_array;
@@ -10,32 +9,43 @@ use function is_array;
 use function is_string;
 use function version_compare;
 
-class RunOnRequirement implements Unserializable
+class RunOnRequirement
 {
     const TOPOLOGY_SINGLE = 'single';
     const TOPOLOGY_REPLICASET = 'replicaset';
     const TOPOLOGY_SHARDED = 'sharded';
     const TOPOLOGY_SHARDED_REPLICASET = 'sharded-replicaset';
 
+    const VERSION_PATTERN = '/^[0-9]+(\\.[0-9]+){1,2}$/';
+
     private $minServerVersion;
     private $maxServerVersion;
     private $topologies;
 
-    public function __construct(stdClass $data)
+    public function __construct(stdClass $o)
     {
-        $this->bsonUnserialize((array) $data);
+        if (isset($o->minServerVersion)) {
+            assertIsString($o->minServerVersion);
+            assertRegExp(self::VERSION_PATTERN, $o->minServerVersion);
+            $this->minServerVersion = $o->minServerVersion;
+        }
+
+        if (isset($o->maxServerVersion)) {
+            assertIsString($o->maxServerVersion);
+            assertRegExp(self::VERSION_PATTERN, $o->maxServerVersion);
+            $this->maxServerVersion = $o->maxServerVersion;
+        }
+
+        if (isset($o->topologies)) {
+            assertIsArray($o->topologies);
+            assertContainsOnly('string', $o->topologies);
+            $this->topologies = $o->topologies;
+        }
     }
 
-    /**
-     * @see https://www.php.net/manual/en/mongodb-bson-unserializable.bsonunserialize.php
-     */
-    public function bsonUnserialize(array $data)
+    public static function fromObject(stdClass $o): self
     {
-        $this->minServerVersion = $data['minServerVersion'] ?? null;
-        $this->maxServerVersion = $data['maxServerVersion'] ?? null;
-        $this->topologies = $data['topologies'] ?? null;
-
-        $this->validate();
+        
     }
 
     /**
@@ -70,33 +80,5 @@ class RunOnRequirement implements Unserializable
         }
 
         return true;
-    }
-
-    /**
-     * @throws UnexpectedValueException if a property is invalid
-     */
-    private function validate()
-    {
-        if (isset($this->minServerVersion) && ! is_string($this->minServerVersion)) {
-            throw new UnexpectedValueException('minServerVersion is not a string');
-        }
-
-        if (isset($this->maxServerVersion) && ! is_string($this->maxServerVersion)) {
-            throw new UnexpectedValueException('maxServerVersion is not a string');
-        }
-
-        if (! isset($this->topologies)) {
-            return;
-        }
-
-        if (! is_array($this->topologies)) {
-            throw new UnexpectedValueException('topologies is not an array');
-        }
-
-        foreach ($this->topologies as $topology) {
-            if (! is_string($topology)) {
-                throw new UnexpectedValueException('topologies is not an array of strings');
-            }
-        }
     }
 }

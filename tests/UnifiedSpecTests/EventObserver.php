@@ -1,0 +1,102 @@
+<?php
+
+namespace MongoDB\Tests\UnifiedSpecTests;
+
+use MongoDB\Driver\Monitoring\CommandFailedEvent;
+use MongoDB\Driver\Monitoring\CommandStartedEvent;
+use MongoDB\Driver\Monitoring\CommandSubscriber;
+use MongoDB\Driver\Monitoring\CommandSucceededEvent;
+use function MongoDB\Driver\Monitoring\addSubscriber;
+use function MongoDB\Driver\Monitoring\removeSubscriber;
+
+class EventObserver implements CommandSubscriber
+{
+    private $actualEvents = [];
+    private $ignoreCommands = [];
+    private $observeEvents = [];
+
+    private static $commandMonitoringEvents = [
+        'commandStartedEvent' => CommandStartedEvent::class,
+        'commandSucceededEvent' => CommandSucceededEvent::class,
+        'commandFailedEvent' => CommandFailedEvent::class,
+    ];
+
+    public function __construct(array $observeEvents, array $ignoreCommands)
+    {
+        assertNotEmpty($observeEvents);
+
+        foreach ($observeEvents as $event) {
+            assertIsString($event);
+            assertArrayHasKey($event, self::$commandMonitoringEvents);
+            $this->observeEvents[self::$commandMonitoringEvents[$event]] = 1;
+        }
+
+        foreach ($ignoreCommands as $command) {
+            assertIsString($command);
+            $this->ignoreCommands[$command] = 1;
+        }
+    }
+
+    /**
+     * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php
+     */
+    public function commandFailed(CommandFailedEvent $event)
+    {
+        if (! isset($this->observeEvents[CommandFailedEvent::class])) {
+            return;
+        }
+
+        if (isset($this->ignoreCommands[$event->getCommandName()])) {
+            return;
+        }
+
+        $this->actualEvents[] = $event;
+    }
+
+    /**
+     * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandstarted.php
+     */
+    public function commandStarted(CommandStartedEvent $event)
+    {
+        if (! isset($this->observeEvents[CommandStartedEvent::class])) {
+            return;
+        }
+
+        if (isset($this->ignoreCommands[$event->getCommandName()])) {
+            return;
+        }
+
+        $this->actualEvents[] = $event;
+    }
+
+    /**
+     * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandsucceeded.php
+     */
+    public function commandSucceeded(CommandSucceededEvent $event)
+    {
+        if (! isset($this->observeEvents[CommandSucceededEvent::class])) {
+            return;
+        }
+
+        if (isset($this->ignoreCommands[$event->getCommandName()])) {
+            return;
+        }
+
+        $this->actualEvents[] = $event;
+    }
+
+    public function getActualEvents()
+    {
+        return $this->actualEvents;
+    }
+
+    public function start()
+    {
+        addSubscriber($this);
+    }
+
+    public function stop()
+    {
+        removeSubscriber($this);
+    }
+}

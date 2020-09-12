@@ -11,7 +11,7 @@ use function sprintf;
 
 class EntityMap implements ArrayAccess
 {
-    private $container = [];
+    private $map = [];
 
     /**
      * Check whether an entity exists in the map.
@@ -27,7 +27,7 @@ class EntityMap implements ArrayAccess
             throw new InvalidArgumentException('Key is not a string');
         }
 
-        return array_key_exists($key, $this->container);
+        return array_key_exists($key, $this->map);
     }
 
     /**
@@ -49,7 +49,7 @@ class EntityMap implements ArrayAccess
             throw new OutOfBoundsException(sprintf('No entity is defined for "%s"', $key));
         }
 
-        return $this->container[$key];
+        return $this->map[$key];
     }
 
     /**
@@ -71,7 +71,7 @@ class EntityMap implements ArrayAccess
             throw new OutOfBoundsException('Entity already exists for key "%s" and cannot be replaced');
         }
 
-        $this->container[$key] = $value;
+        $this->map[$key] = $value;
     }
 
     /**

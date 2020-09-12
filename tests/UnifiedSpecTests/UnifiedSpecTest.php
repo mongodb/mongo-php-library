@@ -2,10 +2,12 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
+use MongoDB\Client;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Tests\FunctionalTestCase;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use stdClass;
@@ -27,17 +29,21 @@ class UnifiedSpecTest extends FunctionalTestCase
 {
     use SetUpTearDownTrait;
 
-    const ERROR_CODE_INTERRUPTED = 11601;
+    const SERVER_ERROR_INTERRUPTED = 11601;
 
     const TOPOLOGY_SINGLE = 'single';
     const TOPOLOGY_REPLICASET = 'replicaset';
     const TOPOLOGY_SHARDED = 'sharded';
     const TOPOLOGY_SHARDED_REPLICASET = 'sharded-replicaset';
 
+    /** @var MongoDB\Client */
+    private static $internalClient;
+
     private static function doSetUpBeforeClass()
     {
         parent::setUpBeforeClass();
 
+        self::$internalClient = new Client(static::getUri());
         self::killAllSessions();
     }
 
@@ -59,13 +65,13 @@ class UnifiedSpecTest extends FunctionalTestCase
      * Execute an individual test case from the specification.
      *
      * @dataProvider provideTests
-     * @param stdClass $test           Individual "tests[]" document
-     * @param array    $runOn          Top-level "runOn" array with server requirements
-     * @param array    $data           Top-level "data" array to initialize collection
-     * @param string   $databaseName   Name of database under test
-     * @param string   $collectionName Name of collection under test
+     * @param stdClass $test              Individual object in "tests[]"
+     * @param string   $schemaVersion     Top-level "schemaVersion"
+     * @param array    $runOnRequirements Top-level "runOnRequirements"
+     * @param array    $createEntities    Top-level "createEntities"
+     * @param array    $initialData       Top-level "initialData"
      */
-    public function testCase(stdClass $test, $schemaVersion, array $runOnRequirements = null, array $createEntities = null, array $initialData = null)
+    public function testCase(stdClass $test, string $schemaVersion, array $runOnRequirements = null, array $createEntities = null, array $initialData = null)
     {
         if (! $this->isSchemaVersionSupported($schemaVersion)) {
             $this->markTestIncomplete(sprintf('Test format schema version "%s" is not supported', $schemaVersion));
@@ -84,8 +90,16 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
 
         if (isset($initialData)) {
-            // TODO
+            $this->prepareInitialData($initialData);
         }
+
+        $context = new Context(static::getUri());
+
+        if (isset($createEntities)) {
+            $context->createEntities($createEntities);
+        }
+
+        
     }
 
     public function provideTests()
@@ -95,14 +109,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         foreach (glob(__DIR__ . '/*.json') as $filename) {
             /* Decode the file through the driver's extended JSON parser to
              * ensure proper handling of special types. */
-            $json = toPHP(
-                fromJSON(file_get_contents($filename)),
-                /*
-                ['fieldPaths' => [
-                        'runOnRequirements.$' => RunOnRequirement::class,
-                        'tests.$.runOnRequirements.$' => RunOnRequirement::class,
-                ]]*/
-            );
+            $json = toPHP(fromJSON(file_get_contents($filename)));
 
             $description = $json->description;
             $schemaVersion = $json->schemaVersion;
@@ -132,9 +139,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         $serverVersion = $this->getCachedServerVersion();
         $topology = $this->getCachedTopology();
 
-        foreach ($runOnRequirements as $data) {
-            // $this->assertInstanceOf(RunOnRequirement::class, $runOnRequirement);
-            $runOnRequirement = new RunOnRequirement($data);
+        foreach ($runOnRequirements as $o) {
+            $runOnRequirement = new RunOnRequirement($o);
             if ($runOnRequirement->isSatisfied($serverVersion, $topology)) {
                 return;
             }
@@ -221,12 +227,9 @@ class UnifiedSpecTest extends FunctionalTestCase
      */
     private static function killAllSessions()
     {
-        $manager = new Manager(static::getUri());
-        $primary = $manager->selectServer(new ReadPreference('primary'));
-
-        $servers = $primary->getType() === Server::TYPE_MONGOS
-            ? $manager->getServers()
-            : [$primary];
+        $manager = self::$internalClient->getManager();
+        $primary = $manager->selectServer(new ReadPreference(ReadPreference::PRIMARY));
+        $servers = $primary->getType() === Server::TYPE_MONGOS ? $manager->getServers() : [$primary];
 
         foreach ($servers as $server) {
             try {
@@ -237,10 +240,20 @@ class UnifiedSpecTest extends FunctionalTestCase
                 $server->executeCommand('admin', new Command(['killAllSessions' => []]));
             } catch (ServerException $e) {
                 // Interrupted error is safe to ignore (see: SERVER-38335)
-                if ($e->getCode() != self::ERROR_CODE_INTERRUPTED) {
+                if ($e->getCode() != self::SERVER_ERROR_INTERRUPTED) {
                     throw $e;
                 }
             }
+        }
+    }
+
+    private function prepareInitialData(array $initialData)
+    {
+        $this->assertNotEmpty($initialData);
+
+        foreach ($initialData as $data) {
+            $collectionData = new CollectionData($data);
+            $collectionData->prepare(self::$internalClient);
         }
     }
 }

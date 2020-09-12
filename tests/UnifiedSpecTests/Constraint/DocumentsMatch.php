@@ -1,6 +1,6 @@
 <?php
 
-namespace MongoDB\Tests\SpecTests;
+namespace MongoDB\Tests\UnifiedSpecTests\Constraint;
 
 use ArrayObject;
 use InvalidArgumentException;
@@ -47,7 +47,7 @@ use const PHP_INT_SIZE;
  *
  * The expected value is passed in the constructor.
  */
-class DocumentsMatchConstraint extends Constraint
+class DocumentsMatch extends Constraint
 {
     use ConstraintTrait;
 

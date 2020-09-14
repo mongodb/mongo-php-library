@@ -12,7 +12,7 @@
         "php": "^7.0",
         "ext-hash": "*",
         "ext-json": "*",
-        "ext-mongodb": "^1.8",
+        "ext-mongodb": "^1.8.1",
         "jean85/pretty-package-versions": "^1.2"
     },
     "require-dev": {

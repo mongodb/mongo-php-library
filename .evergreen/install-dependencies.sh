@@ -13,6 +13,7 @@ install_extension ()
       echo "Compiling driver branch ${CHECKOUT_BRANCH} from repository ${CLONE_REPO}"
 
       mkdir -p /tmp/compile
+      rm -rf /tmp/compile/mongo-php-driver
       git clone ${CLONE_REPO} /tmp/compile/mongo-php-driver
       cd /tmp/compile/mongo-php-driver
 
@@ -22,6 +23,8 @@ install_extension ()
       ./configure --enable-mongodb-developer-flags
       make all -j20 > /dev/null
       make install
+
+      cd ${PROJECT_DIRECTORY}
    elif [ "x${DRIVER_VERSION}" != "x" ]; then
       echo "Installing driver version ${DRIVER_VERSION} from PECL"
       pecl install -f mongodb-${DRIVER_VERSION}

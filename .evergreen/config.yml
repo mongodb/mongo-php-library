@@ -268,7 +268,7 @@ functions:
           ${PREPARE_SHELL}
           file="${PROJECT_DIRECTORY}/.evergreen/install-dependencies.sh"
           # Don't use ${file} syntax here because evergreen treats it as an empty expansion.
-          [ -f "$file" ] && PHP_VERSION=${PHP_VERSION} DRIVER_VERSION=${DRIVER_VERSION} sh $file || echo "$file not available, skipping"
+          [ -f "$file" ] && PHP_VERSION=${PHP_VERSION} DRIVER_VERSION=${DRIVER_VERSION} DRIVER_REPO=${DRIVER_REPO} DRIVER_BRANCH=${DRIVER_BRANCH} sh $file || echo "$file not available, skipping"
 
 pre:
   - func: "fetch source"

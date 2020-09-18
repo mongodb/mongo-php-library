@@ -26,10 +26,10 @@ PATH=/opt/php/${PHP_VERSION}-64bit/bin:$OLD_PATH
 case "$TESTS" in
    atlas-data-lake*)
       MONGODB_URI="mongodb://mhuser:pencil@127.0.0.1:27017"
-      php vendor/bin/phpunit --testsuite "Atlas Data Lake Test Suite"
+      php vendor/bin/phpunit --configuration phpunit.evergreen.xml --testsuite "Atlas Data Lake Test Suite"
       ;;
 
    *)
-      php vendor/bin/phpunit
+      php vendor/bin/phpunit --configuration phpunit.evergreen.xml
       ;;
 esac

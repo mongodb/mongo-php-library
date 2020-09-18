@@ -459,7 +459,7 @@ axes:
         run_on: rhel71-power8-test
       - id: rhel74-zseries
         display_name: "RHEL 7.4 zSeries"
-        run_on: rhel72-zseries-test
+        run_on: rhel74-zseries-test
       - id: ubuntu1804-arm64-test
         display_name: "Ubuntu 18.04 ARM64"
         run_on: ubuntu1804-arm64-test
@@ -526,10 +526,8 @@ buildvariants:
 # Tests all PHP versions on all operating systems.
 # Only tests against latest MongoDB and ext-mongodb versions
 - matrix_name: "test-php-versions"
-  matrix_spec: {"os-php7": ["debian92-test", "ubuntu1804-arm64-test", "rhel70-test"], "php-versions": "*", "edge-versions": "latest-stable", "driver-versions": "latest-stable" }
-  exclude_spec:
-    - { "os-php7": ["debian92-test", "rhel70-test"], "php-versions": "7.0", edge-versions: "*", "driver-versions": "*" }
-  display_name: "PHP ${php-versions}, ${os-php7}, MongoDB ${edge-versions}, ext-mongodb ${driver-versions}"
+  matrix_spec: {"os-php7": "*", "php-versions": "*", "edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  display_name: "${os-php7}, PHP ${php-versions}, MongoDB ${edge-versions}, ext-mongodb ${driver-versions}"
   tasks:
     - name: "test-standalone"
     - name: "test-replica_set"

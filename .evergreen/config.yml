@@ -538,6 +538,11 @@ buildvariants:
 # Only tests against latest MongoDB and ext-mongodb versions
 - matrix_name: "test-php-versions"
   matrix_spec: {"os-php7": "*", "php-versions": "*", "edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  exclude_spec:
+    # rhel71-power8 fails due to not reaching pecl
+    - { "os-php7": "rhel71-power8", "php-versions": "*", edge-versions: "*", "driver-versions": "*" }
+    # rhel74-zseries doesn't start in a timely fashion - most likely missing executors
+    - { "os-php7": "rhel74-zseries", "php-versions": "*", edge-versions: "*", "driver-versions": "*" }
   display_name: "${os-php7}, PHP ${php-versions}, MongoDB ${edge-versions}, ext-mongodb ${driver-versions}"
   tasks:
     - name: "test-standalone"

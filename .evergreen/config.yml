@@ -261,7 +261,7 @@ functions:
           ${PREPARE_SHELL}
           file="${PROJECT_DIRECTORY}/.evergreen/install-dependencies.sh"
           # Don't use ${file} syntax here because evergreen treats it as an empty expansion.
-          [ -f "$file" ] && PHP_VERSION=${PHP_VERSION} DRIVER_VERSION=${DRIVER_VERSION} DRIVER_REPO=${DRIVER_REPO} DRIVER_BRANCH=${DRIVER_BRANCH} sh $file || echo "$file not available, skipping"
+          [ -f "$file" ] && PHP_VERSION=${PHP_VERSION} DRIVER_VERSION=${DRIVER_VERSION} DRIVER_REPO=${DRIVER_REPO} DRIVER_BRANCH=${DRIVER_BRANCH} DEPENDENCIES=${DEPENDENCIES} sh $file || echo "$file not available, skipping"
 
 pre:
   - func: "fetch source"
@@ -434,6 +434,10 @@ axes:
   - id: driver-versions
     display_name: Driver Version
     values:
+      - id: "lowest-supported"
+        display_name: "1.8.0"
+        variables:
+          DRIVER_VERSION: "1.8.0"
       - id: "latest-stable"
         display_name: "1.8-stable"
       - id: "latest-minor-dev"
@@ -520,6 +524,13 @@ axes:
         variables:
            STORAGE_ENGINE: "inmemory"
 
+  - id: dependencies
+    display_name: Dependencies
+    values:
+      - id: lowest
+        display_name: Lowest
+        variables:
+          DEPENDENCIES: "lowest"
 
 buildvariants:
 
@@ -549,6 +560,16 @@ buildvariants:
 - matrix_name: "test-mongodb-versions"
   matrix_spec: {"os-php7": "rhel70-test", "php-edge-versions": "latest-stable", "versions": "*", "driver-versions": "latest-stable" }
   display_name: "MongoDB ${versions}, PHP ${php-edge-versions}, ${os-php7}, ext-mongodb ${driver-versions}"
+  tasks:
+    - name: "test-standalone"
+    - name: "test-replica_set"
+    - name: "test-sharded_cluster"
+
+# Tests oldest supported version
+# Enables --prefer-lowest for composer to test oldest dependencies against all server versions
+- matrix_name: "test-dependencies"
+  matrix_spec: { "dependencies": "lowest", "os-php7": "rhel70-test", "php-edge-versions": "oldest-supported", "versions": "*", "driver-versions": "lowest-supported" }
+  display_name: "Dependencies: ${dependencies}, MongoDB ${versions}, PHP ${php-edge-versions}, ${os-php7}, ext-mongodb ${driver-versions}"
   tasks:
     - name: "test-standalone"
     - name: "test-replica_set"

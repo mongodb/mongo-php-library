@@ -72,6 +72,15 @@ case "$DISTRO" in
       ;;
 esac
 
+case "$DEPENDENCIES" in
+   lowest*)
+      COMPOSER_FLAGS="${COMPOSER_FLAGS} --prefer-lowest"
+      ;;
+
+   *)
+      ;;
+esac
+
 PHP_PATH=/opt/php/${PHP_VERSION}-64bit
 OLD_PATH=$PATH
 PATH=$PHP_PATH/bin:$OLD_PATH

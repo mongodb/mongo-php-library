@@ -315,7 +315,7 @@ class DocumentsMatchConstraint extends Constraint
             }
 
             $expectedType = is_object($expectedValue) ? get_class($expectedValue) : gettype($expectedValue);
-            $actualType = is_object($expectedValue) ? get_class($actualValue) : gettype($actualValue);
+            $actualType = is_object($actualValue) ? get_class($actualValue) : gettype($actualValue);
 
             // Workaround for ObjectComparator printing the whole actual object
             if ($expectedType !== $actualType) {

@@ -53,14 +53,14 @@
               "_id": 2
             }
           },
-          "expectedResult": {
+          "expectResult": {
             "insertedId": {
               "$$unsetOrMatches": 2
             }
           }
         }
       ],
-      "expectedEvents": [
+      "expectEvents": [
         {
           "client": "client0",
           "events": [

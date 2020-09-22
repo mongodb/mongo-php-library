@@ -33,9 +33,9 @@ tests:
         name: insertOne
         arguments:
           document: { _id: 2 }
-        expectedResult:
+        expectResult:
           insertedId: { $$unsetOrMatches: 2 }
-    expectedEvents:
+    expectEvents:
       - client: *client0
         events:
           - commandStartedEvent:

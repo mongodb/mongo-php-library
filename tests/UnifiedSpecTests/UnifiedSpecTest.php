@@ -93,13 +93,30 @@ class UnifiedSpecTest extends FunctionalTestCase
             $this->prepareInitialData($initialData);
         }
 
-        $context = new Context(static::getUri());
+        $context = new Context(self::$internalClient, static::getUri());
 
         if (isset($createEntities)) {
             $context->createEntities($createEntities);
         }
 
-        
+        // TODO handle distinct commands in sharded transactions
+
+        if (isset($test->expectedEvents)) {
+            $context->startEventObservers();
+        }
+
+        foreach ($test->operations as $o) {
+            $operation = new Operation($o);
+            $operation->assert($context);
+        }
+
+        if (isset($test->expectedEvents)) {
+            $context->stopEventObservers();
+        }
+
+        if (isset($test->outcome)) {
+            $this->assertOutcome($test->outcome);
+        }
     }
 
     public function provideTests()
@@ -244,6 +261,16 @@ class UnifiedSpecTest extends FunctionalTestCase
                     throw $e;
                 }
             }
+        }
+    }
+
+    private function assertOutcome(array $outcome)
+    {
+        $this->assertNotEmpty($outcome);
+
+        foreach ($outcome as $data) {
+            $collectionData = new CollectionData($data);
+            $collectionData->assertOutcome(self::$internalClient);
         }
     }
 

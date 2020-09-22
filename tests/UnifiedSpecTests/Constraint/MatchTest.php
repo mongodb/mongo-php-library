@@ -20,11 +20,11 @@ use function MongoDB\BSON\toPHP;
 use function unserialize;
 use const PHP_INT_SIZE;
 
-class DocumentsMatchTest extends TestCase
+class MatchTest extends TestCase
 {
     public function testIgnoreExtraKeysInRoot()
     {
-        $c = new DocumentsMatch(['x' => 1, 'y' => ['a' => 1, 'b' => 2]], true, false);
+        $c = new Match(['x' => 1, 'y' => ['a' => 1, 'b' => 2]], true, false);
 
         $this->assertResult(false, $c, ['x' => 1, 'y' => 2], 'Incorrect value');
         $this->assertResult(true, $c, ['x' => 1, 'y' => ['a' => 1, 'b' => 2]], 'Exact match');
@@ -33,7 +33,7 @@ class DocumentsMatchTest extends TestCase
         $this->assertResult(true, $c, ['y' => ['b' => 2, 'a' => 1], 'x' => 1], 'Root and embedded key order is not significant');
 
         // Arrays are always interpreted as root documents
-        $c = new DocumentsMatch([1, ['a' => 1]], true, false);
+        $c = new Match([1, ['a' => 1]], true, false);
 
         $this->assertResult(false, $c, [1, 2], 'Incorrect value');
         $this->assertResult(true, $c, [1, ['a' => 1]], 'Exact match');
@@ -43,7 +43,7 @@ class DocumentsMatchTest extends TestCase
 
     public function testIgnoreExtraKeysInEmbedded()
     {
-        $c = new DocumentsMatch(['x' => 1, 'y' => ['a' => 1, 'b' => 2]], false, true);
+        $c = new Match(['x' => 1, 'y' => ['a' => 1, 'b' => 2]], false, true);
 
         $this->assertResult(false, $c, ['x' => 1, 'y' => 2], 'Incorrect value');
         $this->assertResult(false, $c, ['x' => 1, 'y' => ['a' => 1, 'b' => 3]], 'Incorrect value');
@@ -53,7 +53,7 @@ class DocumentsMatchTest extends TestCase
         $this->assertResult(true, $c, ['y' => ['b' => 2, 'a' => 1], 'x' => 1], 'Root and embedded Key order is not significant');
 
         // Arrays are always interpreted as root documents
-        $c = new DocumentsMatch([1, ['a' => 1]], false, true);
+        $c = new Match([1, ['a' => 1]], false, true);
 
         $this->assertResult(false, $c, [1, 2], 'Incorrect value');
         $this->assertResult(true, $c, [1, ['a' => 1]], 'Exact match');
@@ -64,7 +64,7 @@ class DocumentsMatchTest extends TestCase
 
     public function testPlaceholders()
     {
-        $c = new DocumentsMatch(['x' => '42', 'y' => 42, 'z' => ['a' => 24]], false, false, [24, 42]);
+        $c = new Match(['x' => '42', 'y' => 42, 'z' => ['a' => 24]], false, false, [24, 42]);
 
         $this->assertResult(true, $c, ['x' => '42', 'y' => 'foo', 'z' => ['a' => 1]], 'Placeholders accept any value');
         $this->assertResult(false, $c, ['x' => 42, 'y' => 'foo', 'z' => ['a' => 1]], 'Placeholder type must match');
@@ -76,7 +76,7 @@ class DocumentsMatchTest extends TestCase
      */
     public function testBSONTypeAssertions($type, $value)
     {
-        $constraint = new DocumentsMatch(['x' => ['$$type' => $type]]);
+        $constraint = new Match(['x' => ['$$type' => $type]]);
 
         $this->assertResult(true, $constraint, ['x' => $value], 'Type matches');
     }
@@ -114,7 +114,7 @@ class DocumentsMatchTest extends TestCase
     /**
      * @dataProvider errorMessageProvider
      */
-    public function testErrorMessages($expectedMessagePart, DocumentsMatch $constraint, $actualValue)
+    public function testErrorMessages($expectedMessagePart, Match $constraint, $actualValue)
     {
         try {
             $constraint->evaluate($actualValue);
@@ -130,38 +130,38 @@ class DocumentsMatchTest extends TestCase
         return [
             'Root type mismatch' => [
                 'MongoDB\Model\BSONArray Object (...) is not instance of expected class "MongoDB\Model\BSONDocument"',
-                new DocumentsMatch(['foo' => 'bar']),
+                new Match(['foo' => 'bar']),
                 new BSONArray(['foo' => 'bar']),
             ],
             'Missing key' => [
                 '$actual is missing key: "foo.bar"',
-                new DocumentsMatch(['foo' => ['bar' => 'baz']]),
+                new Match(['foo' => ['bar' => 'baz']]),
                 ['foo' => ['foo' => 'bar']],
             ],
             'Extra key' => [
                 '$actual has extra key: "foo.foo"',
-                new DocumentsMatch(['foo' => ['bar' => 'baz']]),
+                new Match(['foo' => ['bar' => 'baz']]),
                 ['foo' => ['foo' => 'bar', 'bar' => 'baz']],
             ],
             'Scalar value not equal' => [
                 'Field path "foo": Failed asserting that two values are equal.',
-                new DocumentsMatch(['foo' => 'bar']),
+                new Match(['foo' => 'bar']),
                 ['foo' => 'baz'],
             ],
             'Scalar type mismatch' => [
                 'Field path "foo": Failed asserting that two values are equal.',
-                new DocumentsMatch(['foo' => 42]),
+                new Match(['foo' => 42]),
                 ['foo' => '42'],
             ],
             'Type mismatch' => [
                 'Field path "foo": MongoDB\Model\BSONDocument Object (...) is not instance of expected type "MongoDB\Model\BSONArray".',
-                new DocumentsMatch(['foo' => ['bar']]),
+                new Match(['foo' => ['bar']]),
                 ['foo' => (object) ['bar']],
             ],
         ];
     }
 
-    private function assertResult($expectedResult, DocumentsMatch $constraint, $value, $message)
+    private function assertResult($expectedResult, Match $constraint, $value, $message)
     {
         $this->assertSame($expectedResult, $constraint->evaluate($value, '', true), $message);
     }

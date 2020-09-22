@@ -11,6 +11,22 @@ use function MongoDB\Driver\Monitoring\removeSubscriber;
 
 class EventObserver implements CommandSubscriber
 {
+    private static $defaultIgnoreCommands = [
+        // failPoint and targetedFailPoint operations
+        'configureFailPoint',
+        // See: https://github.com/mongodb/specifications/blob/master/source/command-monitoring/command-monitoring.rst#security
+        'authenticate',
+        'saslStart',
+        'saslContinue',
+        'getnonce',
+        'createUser',
+        'updateUser',
+        'copydbgetnonce',
+        'copydbsaslstart',
+        'copydb',
+        'isMaster',
+    ];
+
     private $actualEvents = [];
     private $ignoreCommands = [];
     private $observeEvents = [];
@@ -30,6 +46,8 @@ class EventObserver implements CommandSubscriber
             assertArrayHasKey($event, self::$commandMonitoringEvents);
             $this->observeEvents[self::$commandMonitoringEvents[$event]] = 1;
         }
+
+        $this->ignoreCommands = array_fill_keys(self::$defaultIgnoreCommands, 1);
 
         foreach ($ignoreCommands as $command) {
             assertIsString($command);

@@ -43,11 +43,6 @@ class RunOnRequirement
         }
     }
 
-    public static function fromObject(stdClass $o): self
-    {
-        
-    }
-
     /**
      * Checks if the requirements are satisfied.
      *

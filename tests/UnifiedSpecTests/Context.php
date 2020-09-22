@@ -33,12 +33,16 @@ final class Context
     /** @var EventObserver[] */
     private $eventObserversByClient = [];
 
+    /** @var Client */
+    private $internalClient;
+
     /** @var string */
     private $uri;
 
-    public function __construct(string $uri)
+    public function __construct(Client $internalClient, string $uri)
     {
         $this->entityMap = new EntityMap;
+        $this->internalClient = $internalClient;
         $this->uri = $uri;
     }
 
@@ -65,10 +69,6 @@ final class Context
             switch ($type) {
                 case 'client':
                     $this->entityMap[$id] = $this->createClient($def);
-
-                    if (isset($def->observeEvents)) {
-                        $this->eventObserversByClient[$id] = $this->createEventObserver($def);  
-                    }
                     break;
 
                 case 'database':
@@ -85,6 +85,44 @@ final class Context
         }
     }
 
+    public function getEntityMap(): EntityMap
+    {
+        return $this->entityMap;
+    }
+    
+    public function getInternalClient(): Client
+    {
+        return $this->internalClient;
+    }
+
+    public static function prepareOperationArguments(array $args): array
+    {
+        if (array_key_exists('readConcern', $args)) {
+            assertIsObject($args['readConcern']);
+            $args['readConcern'] = self::prepareReadConcern($args['readConcern']);
+        }
+
+        if (array_key_exists('readPreference', $args)) {
+            assertIsObject($args['readPreference']);
+            $args['readPreference'] = self::prepareReadPreference($args['readPreference']);
+        }
+
+        if (array_key_exists('session', $args)) {
+            assertIsString($args['session']);
+            assertArrayHasKey($args['session'], $this->entityMap);
+            $session = $this->entityMap[$args['session']];
+            assertInstanceOf(Session::class, $session);
+            $args['session'] = $session;
+        }
+
+        if (array_key_exists('writeConcern', $args)) {
+            assertIsObject($args['writeConcern']);
+            $args['writeConcern'] = self::prepareWriteConcern($args['writeConcern']);
+        }
+
+        return $args;
+    }
+
     public function startEventObservers()
     {
         foreach ($this->eventObserversByClient as $eventObserver) {
@@ -99,14 +137,27 @@ final class Context
         }
     }
 
+    private static function assertHasOnlyKeys($arrayOrObject, array $keys)
+    {
+        assertThat($arrayOrObject, logicalOr(IsType('array'), IsType('object')));
+        $diff = array_diff_key((array) $arrayOrObject, array_fill_keys($keys, 1));
+        assertEmpty($diff, 'Unsupported keys: ' . implode(',', array_keys($diff)));
+    }
+
     private function createClient(stdClass $o): Client
     {
+        self::assertHasOnlyKeys($o, ['id', 'uriOptions', 'useMultipleMongoses', 'observeEvents', 'ignoreCommandMonitoringEvents']);
+
+        $useMultipleMongoses = $o->useMultipleMongoses ?? null;
+        $observeEvents = $o->observeEvents ?? null;
+        $ignoreCommandMonitoringEvents = $o->ignoreCommandMonitoringEvents ?? [];
+
         $uri = $this->uri;
 
-        if (isset($o->useMultipleMongoses)) {
-            assertIsBool($o->useMultipleMongoses);
+        if (isset($useMultipleMongoses)) {
+            assertIsBool($useMultipleMongoses);
 
-            if ($o->useMultipleMongoses) {
+            if ($useMultipleMongoses) {
                 self::requireMultipleMongoses($uri);
             } else {
                 $uri = self::removeMultipleMongoses($uri);
@@ -117,25 +168,26 @@ final class Context
 
         if (isset($o->uriOptions)) {
             assertIsObject($o->uriOptions);
+            /* TODO: If readPreferenceTags is set, assert it is an array of
+             * strings and convert to an array of documents expected by the
+             * PHP driver. */
             $uriOptions = (array) $o->uriOptions;
+        }
+
+        if (isset($observeEvents)) {
+            assertIsArray($observeEvents);
+            assertIsArray($ignoreCommandMonitoringEvents);
+
+            $this->eventObserversByClient[$o->id] = new EventObserver($observeEvents, $ignoreCommandMonitoringEvents);
         }
 
         return new Client($uri, $uriOptions);
     }
 
-    private function createEventObserver(stdClass $o): EventObserver
-    {
-        $observeEvents = $o->observeEvents ?? null;
-        $ignoreCommands = $o->ignoreCommandMonitoringEvents ?? [];
-
-        assertIsArray($observeEvents);
-        assertIsArray($ignoreCommands);
-
-        return new EventObserver($observeEvents, $ignoreCommands);
-    }
-
     private function createCollection(stdClass $o): Collection
     {
+        self::assertHasOnlyKeys($o, ['id', 'database', 'collectionName', 'collectionOptions']);
+
         $collectionName = $o->collectionName ?? null;
         $database = $o->database ?? null;
 
@@ -143,48 +195,60 @@ final class Context
         assertIsString($database);
         assertArrayHasKey($database, $this->entityMap);
 
-        $database = $this->entityMap[$o->database];
+        $database = $this->entityMap[$database];
         assertInstanceOf(Database::class, $database);
 
-        $options = isset($o->collectionOptions) ? self::prepareCollectionOrDatabaseOptions($o->collectionOptions) : [];
+        $options = [];
+
+        if (isset($o->collectionOptions)) {
+            assertIsObject($o->collectionOptions);
+            $options = self::prepareCollectionOrDatabaseOptions((array) $o->collectionOptions);
+        }
 
         return $database->selectCollection($o->collectionName, $options);
     }
 
     private function createDatabase(stdClass $o): Database
     {
-        assertObjectHasAttribute('databaseName', $o);
-        assertIsString($o->databaseName);
+        self::assertHasOnlyKeys($o, ['id', 'client', 'databaseName', 'databaseOptions']);
 
-        assertObjectHasAttribute('client', $o);
-        assertIsString($o->client);
-        assertArrayHasKey($o->client, $this->entityMap);
+        $databaseName = $o->databaseName ?? null;
+        $client = $o->client ?? null;
 
-        $client = $this->entityMap[$o->client];
+        assertIsString($databaseName);
+        assertIsString($client);
+        assertArrayHasKey($client, $this->entityMap);
+
+        $client = $this->entityMap[$client];
         assertInstanceOf(Client::class, $client);
 
-        $options = isset($o->databaseOptions) ? self::prepareCollectionOrDatabaseOptions($o->databaseOptions) : [];
-
-        return $client->selectDatabase($o->databaseName, $options);
-    }
-
-    private static function prepareCollectionOrDatabaseOptions(stdClass $o): array
-    {
         $options = [];
 
-        if (isset($o->readConcern)) {
-            assertIsObject($o->readConcern);
-            $options['readConcern'] = self::prepareReadConcern($o->readConcern);
+        if (isset($o->databaseOptions)) {
+            assertIsObject($o->databaseOptions);
+            $options = self::prepareCollectionOrDatabaseOptions((array) $o->databaseOptions);
         }
 
-        if (isset($o->readPreference)) {
-            assertIsObject($o->readPreference);
-            $options['readPreference'] = self::prepareReadPreference($o->readPreference);
+        return $client->selectDatabase($databaseName, $options);
+    }
+
+    private static function prepareCollectionOrDatabaseOptions(array $options): array
+    {
+        self::assertHasOnlyKeys($options, ['readConcern', 'readPreference', 'writeConcern']);
+
+        if (array_key_exists('readConcern', $options)) {
+            assertIsObject($options['readConcern']);
+            $options['readConcern'] = self::createReadConcern($options['readConcern']);
         }
 
-        if (isset($o->writeConcern)) {
-            assertIsObject($o->writeConcern);
-            $options['writeConcern'] = self::prepareWriteConcern($o->writeConcern);
+        if (array_key_exists('readPreference', $options)) {
+            assertIsObject($options['readPreference']);
+            $options['readPreference'] = self::createReadPreference($options['readPreference']);
+        }
+
+        if (array_key_exists('writeConcern', $options)) {
+            assertIsObject($options['writeConcern']);
+            $options['writeConcern'] = self::createWriteConcern($options['writeConcern']);
         }
 
         return $options;
@@ -192,6 +256,8 @@ final class Context
 
     private static function createReadConcern(stdClass $o): ReadConcern
     {
+        self::assertHasOnlyKeys($o, ['level']);
+
         $level = $o->level ?? null;
         assertIsString($level);
 
@@ -200,6 +266,8 @@ final class Context
 
     private static function createReadPreference(stdClass $o): ReadPreference
     {
+        self::assertHasOnlyKeys($o, ['mode', 'tagSets', 'maxStalenessSeconds', 'hedge']);
+
         $mode = $o->mode ?? null;
         $tagSets = $o->tagSets ?? null;
         $maxStalenessSeconds = $o->maxStalenessSeconds ?? null;
@@ -229,6 +297,8 @@ final class Context
 
     private static function createWriteConcern(stdClass $o): WriteConcern
     {
+        self::assertHasOnlyKeys($o, ['w', 'wtimeoutMS', 'journal']);
+
         $w = $o->w ?? -2 /* MONGOC_WRITE_CONCERN_W_DEFAULT */;
         $wtimeoutMS = $o->wtimeoutMS ?? 0;
         $journal = $o->journal ?? null;

@@ -4,6 +4,10 @@ set -o errexit  # Exit the script with error if any of the commands fail
 
 install_extension ()
 {
+   # Workaround to get PECL running on PHP 7.0
+   export PHP_PEAR_PHP_BIN=${PHP_PATH}/bin/php
+   export PHP_PEAR_INSTALL_DIR=${PHP_PATH}/lib/php
+
    rm -f ${PHP_PATH}/lib/php.ini
 
    if [ "x${DRIVER_BRANCH}" != "x" ] || [ "x${DRIVER_REPO}" != "x" ]; then
@@ -69,6 +73,15 @@ case "$DISTRO" in
 
    *)
       echo "All other platforms..."
+      ;;
+esac
+
+case "$DEPENDENCIES" in
+   lowest*)
+      COMPOSER_FLAGS="${COMPOSER_FLAGS} --prefer-lowest"
+      ;;
+
+   *)
       ;;
 esac
 

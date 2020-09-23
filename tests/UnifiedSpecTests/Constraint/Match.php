@@ -2,31 +2,32 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests\Constraint;
 
-use ArrayObject;
-use InvalidArgumentException;
+use LogicException;
+use MongoDB\BSON\Type;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
+use MongoDB\Tests\UnifiedSpecTests\EntityMap;
 use PHPUnit\Framework\Constraint\Constraint;
-use PHPUnit\Framework\Constraint\IsInstanceOf;
-use PHPUnit\Framework\Constraint\IsNull;
-use PHPUnit\Framework\Constraint\IsType;
-use PHPUnit\Framework\Constraint\LogicalAnd;
-use PHPUnit\Framework\Constraint\LogicalNot;
 use PHPUnit\Framework\Constraint\LogicalOr;
 use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
-use stdClass;
 use Symfony\Bridge\PhpUnit\ConstraintTrait;
 use function array_values;
+use function count;
 use function get_class;
+use function get_resource_type;
 use function gettype;
-use function in_array;
+use function hex2bin;
+use function implode;
 use function is_array;
+use function is_bool;
 use function is_object;
-use function is_scalar;
-use function method_exists;
+use function is_resource;
+use function is_string;
 use function sprintf;
+use function stream_get_contents;
+use function strpos;
 use const PHP_INT_SIZE;
 
 /**
@@ -37,6 +38,9 @@ use const PHP_INT_SIZE;
 class Match extends Constraint
 {
     use ConstraintTrait;
+
+    /** @var EntityMap */
+    private $entityMap;
 
     /** @var boolean */
     private $ignoreExtraKeysInRoot = false;
@@ -50,9 +54,10 @@ class Match extends Constraint
     /** @var ComparisonFailure|null */
     private $lastFailure;
 
-    public function __construct($value, $ignoreExtraKeysInRoot = false, $ignoreExtraKeysInEmbedded = false)
+    public function __construct($value, bool $ignoreExtraKeysInRoot = false, bool $ignoreExtraKeysInEmbedded = false, EntityMap $entityMap = null)
     {
         $this->value = self::prepare($value, true);
+        $this->entityMap = $entityMap ?? new EntityMap();
         $this->ignoreExtraKeysInRoot = $ignoreExtraKeysInRoot;
         $this->ignoreExtraKeysInEmbedded = $ignoreExtraKeysInEmbedded;
         $this->comparatorFactory = Factory::getInstance();
@@ -136,76 +141,224 @@ class Match extends Constraint
     {
         if (! $expected instanceof BSONDocument && ! $expected instanceof BSONArray) {
             $this->assertEquals($expected, $actual, $keyPath);
+
+            return;
         }
 
         if ($expected instanceof BSONArray) {
+            if (! $actual instanceof BSONArray) {
+                throw new RuntimeException(sprintf(
+                    '%s%s is not instance of expected class "%s"',
+                    (empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath)),
+                    $this->exporter()->shortenedExport($actual),
+                    BSONArray::class
+                ));
+            }
 
+            if (count($expected) !== count($actual)) {
+                throw new RuntimeException(sprintf(
+                    '%s%s has %d elements instead of %d expected',
+                    (empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath)),
+                    $this->exporter()->shortenedExport($actual),
+                    count($actual),
+                    count($expected)
+                ));
+            }
+
+            foreach ($expected as $key => $expectedValue) {
+                $this->assertMatches(
+                    $expectedValue,
+                    $actual[$key],
+                    $this->ignoreExtraKeysInEmbedded,
+                    (empty($keyPath) ? $key : $keyPath . '.' . $key)
+                );
+            }
+
+            return;
         }
 
         if ($expected instanceof BSONDocument) {
             if (self::isSpecialOperator($expected)) {
+                $operator = self::getSpecialOperator($expected);
 
-            }
-        }
+                // TODO: Validate structure of operators
+                if ($operator === '$$type') {
+                    $types = is_string($expected['$$type']) ? [$expected['$$type']] : $expected['$$type'];
+                    $constraints = [];
 
+                    foreach ($types as $type) {
+                        $constraints[] = new IsBsonType($type);
+                    }
 
-        if (get_class($expected) !== get_class($actual)) {
-            throw new RuntimeException(sprintf(
-                '%s is not instance of expected class "%s"',
-                $this->exporter()->shortenedExport($actual),
-                get_class($expected)
-            ));
-        }
+                    $constraint = LogicalOr::fromConstraints(...$constraints);
 
-        foreach ($expected as $key => $expectedValue) {
-            $actualHasKey = $actual->offsetExists($key);
+                    if (! $constraint->evaluate($actual, '', true)) {
+                        throw new RuntimeException(sprintf(
+                            '%s%s is not an expected type: %s',
+                            (empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath)),
+                            $this->exporter()->shortenedExport($actual),
+                            implode(', ', $types)
+                        ));
+                    }
 
-            if (! $actualHasKey) {
-                throw new RuntimeException(sprintf('$actual is missing key: "%s"', $keyPrefix . $key));
-            }
+                    return;
+                }
 
-            if (in_array($expectedValue, $this->placeholders, true)) {
-                continue;
-            }
+                if ($operator === '$$matchesEntity') {
+                    $entityMap = $this->getEntityMap();
 
-            $actualValue = $actual[$key];
+                    $this->assertMatches(
+                        $entityMap[$expected['$$matchesEntity']],
+                        $actual,
+                        $ignoreExtraKeys,
+                        $keyPath
+                    );
 
-            if ($expectedValue instanceof BSONDocument && isset($expectedValue['$$type'])) {
-                $this->assertBSONType($expectedValue['$$type'], $actualValue);
-                continue;
-            }
+                    return;
+                }
 
-            if (($expectedValue instanceof BSONArray && $actualValue instanceof BSONArray) ||
-                ($expectedValue instanceof BSONDocument && $actualValue instanceof BSONDocument)) {
-                $this->assertEquals($expectedValue, $actualValue, $this->ignoreExtraKeysInEmbedded, $keyPrefix . $key . '.');
-                continue;
-            }
+                if ($operator === '$$matchesHexBytes') {
+                    if (! is_resource($actual) || get_resource_type($actual) != "stream") {
+                        throw new RuntimeException(sprintf(
+                            '%s%s is not a stream',
+                            (empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath)),
+                            $this->exporter()->shortenedExport($actual),
+                        ));
+                    }
 
-            if (is_scalar($expectedValue) && is_scalar($actualValue)) {
-                if ($expectedValue !== $actualValue) {
-                    throw new ComparisonFailure(
-                        $expectedValue,
-                        $actualValue,
-                        '',
-                        '',
-                        false,
-                        sprintf('Field path "%s": %s', $keyPrefix . $key, 'Failed asserting that two values are equal.')
+                    if (stream_get_contents($actual, -1, 0) !== hex2bin($expected['$$matchesHexBytes'])) {
+                        throw new RuntimeException(sprintf(
+                            '%s%s does not match expected hex bytes: %s',
+                            (empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath)),
+                            $this->exporter()->shortenedExport($actual),
+                            $expected['$$matchesHexBytes']
+                        ));
+                    }
+
+                    return;
+                }
+
+                if ($operator === '$$unsetOrMatches') {
+                    /* If the operator is used at the top level, consider null
+                     * values for $actual to be unset. If the operator is nested
+                     * this check is done later document iteration. */
+                    if ($keyPath === '' && $actual === null) {
+                        return;
+                    }
+
+                    $this->assertMatches(
+                        $expected['$$unsetOrMatches'],
+                        $actual,
+                        $ignoreExtraKeys,
+                        $keyPath
+                    );
+
+                    return;
+                }
+
+                if ($operator === '$$sessionLsid') {
+                    $entityMap = $this->getEntityMap();
+                    $session = $entityMap['$$sessionLsid'];
+
+                    if (! $session instanceof Session) {
+                        throw new RuntimeException(sprintf(
+                            '%sentity "%s" is not a session',
+                            (empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath)),
+                            $entityMap['$$sessionLsid'],
+                        ));
+                    }
+
+                    $this->assertMatches(
+                        $this->prepare($session->getLogicalSessionId(), true),
+                        $actual,
+                        false, /* LSID document should match exactly */
+                        $keyPath
                     );
                 }
 
-                continue;
+                throw new LogicException('unsupported operator: ' . $operator);
             }
-        }
 
-        if ($ignoreExtraKeys) {
+            if (! $actual instanceof BSONDocument) {
+                throw new RuntimeException(sprintf(
+                    '%s%s is not instance of expected class "%s"',
+                    (empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath)),
+                    $this->exporter()->shortenedExport($actual),
+                    BSONDocument::class
+                ));
+            }
+
+            foreach ($expected as $key => $expectedValue) {
+                $actualKeyExists = $actual->offsetExists($key);
+
+                if ($expectedValue instanceof BSONDocument && self::isSpecialOperator($expectedValue)) {
+                    $operator = self::getSpecialOperator($expectedValue);
+
+                    if ($operator === '$$exists') {
+                        if (! is_bool($expectedValue['$$exists'])) {
+                            throw new RuntimeException('$$exists is malformed');
+                        }
+
+                        if ($expectedValue['$$exists'] && ! $actualKeyExists) {
+                            throw new RuntimeException(sprintf(
+                                '%s%s does not have expected key "%s"',
+                                (empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath)),
+                                $this->exporter()->shortenedExport($actual),
+                                $key
+                            ));
+                        }
+
+                        if (! $expectedValue['$$exists'] && $actualKeyExists) {
+                            throw new RuntimeException(sprintf(
+                                '%s%s has unexpected key "%s"',
+                                (empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath)),
+                                $this->exporter()->shortenedExport($actual),
+                                $key
+                            ));
+                        }
+
+                        continue;
+                    }
+
+                    if ($operator === '$$unsetOrMatches' && ! $actualKeyExists) {
+                        continue;
+                    }
+                }
+
+                if (! $actualKeyExists) {
+                    throw new RuntimeException(sprintf(
+                        '%s$actual does not have expected key "%s"',
+                        (empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath)),
+                        $key
+                    ));
+                }
+
+                $this->assertMatches(
+                    $expectedValue,
+                    $actual[$key],
+                    $this->ignoreExtraKeysInEmbedded,
+                    (empty($keyPath) ? $key : $keyPath . '.' . $key)
+                );
+            }
+
+            if ($ignoreExtraKeys) {
+                return;
+            }
+
+            foreach ($actual as $key => $_) {
+                if (! $expected->offsetExists($key)) {
+                    throw new RuntimeException(sprintf(
+                        '%s$actual has extra key "%s"',
+                        (empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath)),
+                        $key
+                    ));
+                }
+            }
+
             return;
         }
 
-        foreach ($actual as $key => $value) {
-            if (! $expected->offsetExists($key)) {
-                throw new RuntimeException(sprintf('$actual has extra key: "%s"', $keyPrefix . $key));
-            }
-        }
+        throw new LogicException('should not reach this point');
     }
 
     private function doAdditionalFailureDescription($other)
@@ -240,13 +393,28 @@ class Match extends Constraint
         return 'matches ' . $this->exporter()->export($this->value);
     }
 
-    private static function isSpecialOperator(BSONDocument $document): bool
+    private static function getSpecialOperator(BSONDocument $document) : string
     {
+        foreach ($document as $key => $_) {
+            if (strpos((string) $key, '$$') === 0) {
+                return $key;
+            }
+        }
+
+        throw new LogicException('should not reach this point');
+    }
+
+    private static function isSpecialOperator(BSONDocument $document) : bool
+    {
+        if (count($document) !== 1) {
+            return false;
+        }
+
         foreach ($document as $key => $_) {
             return strpos((string) $key, '$$') === 0;
         }
 
-        return false;
+        throw new LogicException('should not reach this point');
     }
 
     /**

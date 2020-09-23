@@ -2,23 +2,9 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests\Constraint;
 
-use MongoDB\BSON\Binary;
-use MongoDB\BSON\Decimal128;
-use MongoDB\BSON\Javascript;
-use MongoDB\BSON\MaxKey;
-use MongoDB\BSON\MinKey;
-use MongoDB\BSON\ObjectId;
-use MongoDB\BSON\Regex;
-use MongoDB\BSON\Timestamp;
-use MongoDB\BSON\UTCDateTime;
 use MongoDB\Model\BSONArray;
-use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
-use function MongoDB\BSON\fromJSON;
-use function MongoDB\BSON\toPHP;
-use function unserialize;
-use const PHP_INT_SIZE;
 
 class MatchTest extends TestCase
 {
@@ -62,53 +48,37 @@ class MatchTest extends TestCase
         $this->assertResult(false, $c, [1, ['a' => 2]], 'Keys must have the correct value');
     }
 
-    public function testPlaceholders()
+    public function testSpecialOperatorExists()
     {
-        $c = new Match(['x' => '42', 'y' => 42, 'z' => ['a' => 24]], false, false, [24, 42]);
+        $c = new Match(['x' => ['$$exists' => true]]);
+        $this->assertResult(true, $c, ['x' => '1'], 'top-level $$exists:true and field exists');
+        $this->assertResult(false, $c, [], 'top-level $$exists:true and field missing');
 
-        $this->assertResult(true, $c, ['x' => '42', 'y' => 'foo', 'z' => ['a' => 1]], 'Placeholders accept any value');
-        $this->assertResult(false, $c, ['x' => 42, 'y' => 'foo', 'z' => ['a' => 1]], 'Placeholder type must match');
-        $this->assertResult(true, $c, ['x' => '42', 'y' => 42, 'z' => ['a' => 24]], 'Exact match');
+        $c = new Match(['x' => ['$$exists' => false]]);
+        $this->assertResult(false, $c, ['x' => '1'], 'top-level $$exists:false and field exists');
+        $this->assertResult(true, $c, [], 'top-level $$exists:false and field missing');
+
+        $c = new Match(['x' => ['y' => ['$$exists' => true]]]);
+        $this->assertResult(true, $c, ['x' => ['y' => '1']], 'nested $$exists:true and field exists');
+        $this->assertResult(false, $c, ['x' => (object) []], 'nested $$exists:true and field missing');
+
+        $c = new Match(['x' => ['y' => ['$$exists' => false]]]);
+        $this->assertResult(false, $c, ['x' => ['y' => 1]], 'nested $$exists:false and field exists');
+        $this->assertResult(true, $c, ['x' => (object) []], 'nested $$exists:false and field missing');
     }
 
-    /**
-     * @dataProvider provideBSONTypes
-     */
-    public function testBSONTypeAssertions($type, $value)
+    public function testSpecialOperatorType()
     {
-        $constraint = new Match(['x' => ['$$type' => $type]]);
+        $c = new Match(['x' => ['$$type' => 'string']]);
 
-        $this->assertResult(true, $constraint, ['x' => $value], 'Type matches');
-    }
+        $this->assertResult(true, $c, ['x' => 'foo'], '$$type:string matches string');
+        $this->assertResult(false, $c, ['x' => 1], '$$type:string does not match int');
 
-    public function provideBSONTypes()
-    {
-        $undefined = toPHP(fromJSON('{ "undefined": {"$undefined": true} }'));
-        $symbol = toPHP(fromJSON('{ "symbol": {"$symbol": "test"} }'));
-        $dbPointer = toPHP(fromJSON('{ "dbPointer": {"$dbPointer": {"$ref": "phongo.test", "$id" : { "$oid" : "5a2e78accd485d55b405ac12" }  }} }'));
+        $c = new Match(['x' => ['$$type' => ['string', 'bool']]]);
 
-        return [
-            'double' => ['double', 1.4],
-            'string' => ['string', 'foo'],
-            'object' => ['object', new BSONDocument()],
-            'array' => ['array', ['foo']],
-            'binData' => ['binData', new Binary('', 0)],
-            'undefined' => ['undefined', $undefined->undefined],
-            'objectId' => ['objectId', new ObjectId()],
-            'boolean' => ['boolean', true],
-            'date' => ['date', new UTCDateTime()],
-            'null' => ['null', null],
-            'regex' => ['regex', new Regex('.*')],
-            'dbPointer' => ['dbPointer', $dbPointer->dbPointer],
-            'javascript' => ['javascript', new Javascript('foo = 1;')],
-            'symbol' => ['symbol', $symbol->symbol],
-            'int' => ['int', 1],
-            'timestamp' => ['timestamp', new Timestamp(0, 0)],
-            'long' => ['long', PHP_INT_SIZE == 4 ? unserialize('C:18:"MongoDB\BSON\Int64":38:{a:1:{s:7:"integer";s:10:"4294967296";}}') : 4294967296],
-            'decimal' => ['decimal', new Decimal128('18446744073709551616')],
-            'minKey' => ['minKey', new MinKey()],
-            'maxKey' => ['maxKey', new MaxKey()],
-        ];
+        $this->assertResult(true, $c, ['x' => 'foo'], '$$type:[string,bool] matches string');
+        $this->assertResult(true, $c, ['x' => true], '$$type:[string,bool] matches bool');
+        $this->assertResult(false, $c, ['x' => 1], '$$type:[string,bool] does not match int');
     }
 
     /**
@@ -120,7 +90,7 @@ class MatchTest extends TestCase
             $constraint->evaluate($actualValue);
             $this->fail('Expected a comparison failure');
         } catch (ExpectationFailedException $failure) {
-            $this->assertStringContainsString('Failed asserting that two BSON objects are equal.', $failure->getMessage());
+            $this->assertStringContainsString('Failed asserting that expected value matches actual value.', $failure->getMessage());
             $this->assertStringContainsString($expectedMessagePart, $failure->getMessage());
         }
     }
@@ -134,27 +104,27 @@ class MatchTest extends TestCase
                 new BSONArray(['foo' => 'bar']),
             ],
             'Missing key' => [
-                '$actual is missing key: "foo.bar"',
+                'Field path "foo": $actual does not have expected key "bar"',
                 new Match(['foo' => ['bar' => 'baz']]),
                 ['foo' => ['foo' => 'bar']],
             ],
             'Extra key' => [
-                '$actual has extra key: "foo.foo"',
+                'Field path "foo": $actual has extra key "foo"',
                 new Match(['foo' => ['bar' => 'baz']]),
                 ['foo' => ['foo' => 'bar', 'bar' => 'baz']],
             ],
             'Scalar value not equal' => [
-                'Field path "foo": Failed asserting that two values are equal.',
+                'Field path "foo": Failed asserting that two strings are equal.',
                 new Match(['foo' => 'bar']),
                 ['foo' => 'baz'],
             ],
             'Scalar type mismatch' => [
-                'Field path "foo": Failed asserting that two values are equal.',
+                'Field path "foo": \'42\' is not instance of expected type "integer".',
                 new Match(['foo' => 42]),
                 ['foo' => '42'],
             ],
             'Type mismatch' => [
-                'Field path "foo": MongoDB\Model\BSONDocument Object (...) is not instance of expected type "MongoDB\Model\BSONArray".',
+                'Field path "foo": MongoDB\Model\BSONDocument Object (...) is not instance of expected class "MongoDB\Model\BSONArray"',
                 new Match(['foo' => ['bar']]),
                 ['foo' => (object) ['bar']],
             ],

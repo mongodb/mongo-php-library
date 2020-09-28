@@ -43,14 +43,14 @@ final class Operation
 
     public function __construct(stdClass $o)
     {
-        assertIsString($o->name);
+        assertInternalType('string', $o->name);
         $this->name = $o->name;
 
-        assertIsString($o->object);
+        assertInternalType('string', $o->object);
         $this->object = $o->object;
 
         if (isset($o->arguments)) {
-            assertIsObject($o->arguments);
+            assertInternalType('object', $o->arguments);
             $this->arguments = (array) $o->arguments;
         }
 
@@ -60,14 +60,14 @@ final class Operation
             logicalOr(objectHasAttribute('expectResult'), objectHasAttribute('saveResultAsEntity'))
         ));
 
-        $o->expectError = ExpectedError::fromOperation($o);
+        $this->expectError = ExpectedError::fromOperation($o);
 
         if (isset($o->expectResult)) {
-            $o->expectResult = ExpectedResult::fromOperation($o);
+            $this->expectResult = ExpectedResult::fromOperation($o);
         }
 
         if (isset($o->saveResultAsEntity)) {
-            assertIsString($o->saveResultAsEntity);
+            assertInternalType('string', $o->saveResultAsEntity);
             $this->saveResultAsEntity = $o->saveResultAsEntity;
         }
     }
@@ -112,7 +112,7 @@ final class Operation
      */
     private function execute(Context $context)
     {
-        if ($this->object = self::OBJECT_TEST_RUNNER) {
+        if ($this->object == self::OBJECT_TEST_RUNNER) {
             return $this->executeForTestRunner($context);
         }
 
@@ -120,7 +120,7 @@ final class Operation
 
         assertArrayHasKey($this->object, $entityMap);
         $object = $entityMap[$this->object];
-        assertIsObject($object);
+        assertInternalType('object', $object);
 
         switch (get_class($object)) {
             case Client::class:
@@ -340,7 +340,7 @@ final class Operation
         }
     }
 
-    private function executeForTestRunner(FunctionalTestCase $test, Context $context)
+    private function executeForTestRunner(Context $context)
     {
         $args = Context::prepareOperationArguments($this->arguments);
 

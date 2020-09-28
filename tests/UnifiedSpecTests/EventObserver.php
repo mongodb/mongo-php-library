@@ -42,7 +42,7 @@ class EventObserver implements CommandSubscriber
         assertNotEmpty($observeEvents);
 
         foreach ($observeEvents as $event) {
-            assertIsString($event);
+            assertInternalType('string', $event);
             assertArrayHasKey($event, self::$commandMonitoringEvents);
             $this->observeEvents[self::$commandMonitoringEvents[$event]] = 1;
         }
@@ -50,7 +50,7 @@ class EventObserver implements CommandSubscriber
         $this->ignoreCommands = array_fill_keys(self::$defaultIgnoreCommands, 1);
 
         foreach ($ignoreCommands as $command) {
-            assertIsString($command);
+            assertInternalType('string', $command);
             $this->ignoreCommands[$command] = 1;
         }
     }

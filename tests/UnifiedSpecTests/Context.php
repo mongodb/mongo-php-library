@@ -54,16 +54,16 @@ final class Context
     public function createEntities(array $entities)
     {
         foreach ($entities as $entity) {
-            assertIsObject($entity);
+            assertInternalType('object', $entity);
             $entity = (array) $entity;
             assertCount(1, $entity);
 
             $type = key($entity);
             $def = current($entity);
-            assertIsObject($def);
+            assertInternalType('object', $def);
 
             $id = $def->id ?? null;
-            assertIsString($id);
+            assertInternalType('string', $id);
             assertArrayNotHasKey($id, $this->entityMap);
 
             switch ($type) {
@@ -98,17 +98,17 @@ final class Context
     public static function prepareOperationArguments(array $args): array
     {
         if (array_key_exists('readConcern', $args)) {
-            assertIsObject($args['readConcern']);
+            assertInternalType('object', $args['readConcern']);
             $args['readConcern'] = self::prepareReadConcern($args['readConcern']);
         }
 
         if (array_key_exists('readPreference', $args)) {
-            assertIsObject($args['readPreference']);
+            assertInternalType('object', $args['readPreference']);
             $args['readPreference'] = self::prepareReadPreference($args['readPreference']);
         }
 
         if (array_key_exists('session', $args)) {
-            assertIsString($args['session']);
+            assertInternalType('string', $args['session']);
             assertArrayHasKey($args['session'], $this->entityMap);
             $session = $this->entityMap[$args['session']];
             assertInstanceOf(Session::class, $session);
@@ -116,7 +116,7 @@ final class Context
         }
 
         if (array_key_exists('writeConcern', $args)) {
-            assertIsObject($args['writeConcern']);
+            assertInternalType('object', $args['writeConcern']);
             $args['writeConcern'] = self::prepareWriteConcern($args['writeConcern']);
         }
 
@@ -155,7 +155,7 @@ final class Context
         $uri = $this->uri;
 
         if (isset($useMultipleMongoses)) {
-            assertIsBool($useMultipleMongoses);
+            assertInternalType('bool', $useMultipleMongoses);
 
             if ($useMultipleMongoses) {
                 self::requireMultipleMongoses($uri);
@@ -167,7 +167,7 @@ final class Context
         $uriOptions = [];
 
         if (isset($o->uriOptions)) {
-            assertIsObject($o->uriOptions);
+            assertInternalType('object', $o->uriOptions);
             /* TODO: If readPreferenceTags is set, assert it is an array of
              * strings and convert to an array of documents expected by the
              * PHP driver. */
@@ -175,8 +175,8 @@ final class Context
         }
 
         if (isset($observeEvents)) {
-            assertIsArray($observeEvents);
-            assertIsArray($ignoreCommandMonitoringEvents);
+            assertInternalType('array', $observeEvents);
+            assertInternalType('array', $ignoreCommandMonitoringEvents);
 
             $this->eventObserversByClient[$o->id] = new EventObserver($observeEvents, $ignoreCommandMonitoringEvents);
         }
@@ -191,8 +191,8 @@ final class Context
         $collectionName = $o->collectionName ?? null;
         $database = $o->database ?? null;
 
-        assertIsString($collectionName);
-        assertIsString($database);
+        assertInternalType('string', $collectionName);
+        assertInternalType('string', $database);
         assertArrayHasKey($database, $this->entityMap);
 
         $database = $this->entityMap[$database];
@@ -201,7 +201,7 @@ final class Context
         $options = [];
 
         if (isset($o->collectionOptions)) {
-            assertIsObject($o->collectionOptions);
+            assertInternalType('object', $o->collectionOptions);
             $options = self::prepareCollectionOrDatabaseOptions((array) $o->collectionOptions);
         }
 
@@ -215,8 +215,8 @@ final class Context
         $databaseName = $o->databaseName ?? null;
         $client = $o->client ?? null;
 
-        assertIsString($databaseName);
-        assertIsString($client);
+        assertInternalType('string', $databaseName);
+        assertInternalType('string', $client);
         assertArrayHasKey($client, $this->entityMap);
 
         $client = $this->entityMap[$client];
@@ -225,7 +225,7 @@ final class Context
         $options = [];
 
         if (isset($o->databaseOptions)) {
-            assertIsObject($o->databaseOptions);
+            assertInternalType('object', $o->databaseOptions);
             $options = self::prepareCollectionOrDatabaseOptions((array) $o->databaseOptions);
         }
 
@@ -237,17 +237,17 @@ final class Context
         self::assertHasOnlyKeys($options, ['readConcern', 'readPreference', 'writeConcern']);
 
         if (array_key_exists('readConcern', $options)) {
-            assertIsObject($options['readConcern']);
+            assertInternalType('object', $options['readConcern']);
             $options['readConcern'] = self::createReadConcern($options['readConcern']);
         }
 
         if (array_key_exists('readPreference', $options)) {
-            assertIsObject($options['readPreference']);
+            assertInternalType('object', $options['readPreference']);
             $options['readPreference'] = self::createReadPreference($options['readPreference']);
         }
 
         if (array_key_exists('writeConcern', $options)) {
-            assertIsObject($options['writeConcern']);
+            assertInternalType('object', $options['writeConcern']);
             $options['writeConcern'] = self::createWriteConcern($options['writeConcern']);
         }
 
@@ -259,7 +259,7 @@ final class Context
         self::assertHasOnlyKeys($o, ['level']);
 
         $level = $o->level ?? null;
-        assertIsString($level);
+        assertInternalType('string', $level);
 
         return new ReadConcern($level);
     }
@@ -273,22 +273,22 @@ final class Context
         $maxStalenessSeconds = $o->maxStalenessSeconds ?? null;
         $hedge = $o->hedge ?? null;
 
-        assertIsString($mode);
+        assertInternalType('string', $mode);
 
         if (isset($tagSets)) {
-            assertIsArray($tagSets);
+            assertInternalType('array', $tagSets);
             assertContains('object', $tagSets);
         }
 
         $options = [];
 
         if (isset($maxStalenessSeconds)) {
-            assertIsInt($maxStalenessSeconds);
+            assertInternalType('int', $maxStalenessSeconds);
             $options['maxStalenessSeconds'] = $maxStalenessSeconds;
         }
 
         if (isset($hedge)) {
-            assertIsObject($hedge);
+            assertInternalType('object', $hedge);
             $options['hedge'] = $hedge;
         }
 
@@ -304,12 +304,12 @@ final class Context
         $journal = $o->journal ?? null;
 
         assertThat($w, logicalOr(new IsType('int'), new IsType('string')));
-        assertIsInt($wtimeoutMS);
+        assertInternalType('int', $wtimeoutMS);
 
         $args = [$w, $wtimeoutMS];
 
         if (isset($journal)) {
-            assertIsBool($journal);
+            assertInternalType('bool', $journal);
             $args[] = $journal;
         }
 
@@ -333,7 +333,7 @@ final class Context
 
         $parts = parse_url($uri);
 
-        assertIsArray($parts);
+        assertInternalType('array', $parts);
 
         $hosts = explode(',', $parts['host']);
 

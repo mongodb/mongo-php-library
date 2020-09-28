@@ -20,13 +20,13 @@ class CollectionData
 
     public function __construct(stdClass $o)
     {
-        assertIsString($o->collectionName);
+        assertInternalType('string', $o->collectionName);
         $this->collectionName = $o->collectionName;
 
-        assertIsString($o->databaseName);
+        assertInternalType('string', $o->databaseName);
         $this->databaseName = $o->databaseName;
 
-        assertIsArray($o->documents);
+        assertInternalType('array', $o->documents);
         assertContainsOnly('object', $o->documents);
         $this->documents = $o->documents;
     }

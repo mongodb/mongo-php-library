@@ -39,33 +39,33 @@ final class ExpectedError
         }
 
         if (isset($o->isClientError)) {
-            assertIsBool($o->isClientError);
+            assertInternalType('bool', $o->isClientError);
             $this->isClientError = $o->isClientError;
         }
 
         if (isset($o->errorContains)) {
-            assertIsString($o->errorContains);
+            assertInternalType('string', $o->errorContains);
             $this->messageContains = $o->errorContains;
         }
 
         if (isset($o->errorCode)) {
-            assertIsInt($o->errorCode);
+            assertInternalType('int', $o->errorCode);
             $this->code = $o->errorCode;
         }
 
         if (isset($o->errorCodeName)) {
-            assertIsString($o->errorCodeName);
+            assertInternalType('string', $o->errorCodeName);
             $this->codeName = $o->errorCodeName;
         }
 
         if (isset($o->errorLabelsContain)) {
-            assertIsArray($o->errorLabelsContain);
+            assertInternalType('array', $o->errorLabelsContain);
             assertContainsOnly('string', $o->errorLabelsContain);
             $o->includedLabels = $o->errorLabelsContain;
         }
 
         if (isset($o->errorLabelsOmit)) {
-            assertIsArray($o->errorLabelsOmit);
+            assertInternalType('array', $o->errorLabelsOmit);
             assertContainsOnly('string', $o->errorLabelsOmit);
             $o->excludedLabels = $o->errorLabelsOmit;
         }
@@ -98,12 +98,16 @@ final class ExpectedError
      */
     public function assert(Throwable $e = null)
     {
+        if (! $this->isError && $e !== null) {
+            Assert::fail(sprintf("Operation threw unexpected %s: %s\n%s", get_class($e), $e->getMessage(), $e->getTraceAsString()));
+        }
+
         if (! $this->isError) {
-            assertNull($e, sprintf("Operation threw unexpected %s: %s\n%s", get_class($e), $e->getMessage(), $e->getTraceAsString()));
+            assertNull($e);
             return;
         }
 
-        $assertNotNull($e);
+        assertNotNull($e);
 
         if (isset($this->messageContains)) {
             assertStringContainsStringIgnoringCase($this->messageContains, $e->getMessage());

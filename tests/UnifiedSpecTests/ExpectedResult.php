@@ -72,6 +72,14 @@ final class ExpectedResult
         $this->expectedValue = $expectedValue;
     }
 
+    public static function fromOperation(stdClass $o): self
+    {
+        // TODO: Infer assertion type from operation
+        $expectedResult = new self(self::ASSERT_NOTHING, $o->expectResult);
+
+        return $expectedResult;
+    }
+
     /**
      * Assert that the result expectation matches the actual outcome.
      *
@@ -79,7 +87,7 @@ final class ExpectedResult
      * @param mixed              $result Result (if any) from the actual outcome
      * @throws LogicException if the assertion type is unsupported
      */
-    public function assert(FunctionalTestCase $test, $actual)
+    public function assert($actual)
     {
         $expected = $this->expectedValue;
 
@@ -177,7 +185,7 @@ final class ExpectedResult
                 break;
 
             case self::ASSERT_MATCHES_DOCUMENT:
-                $test->assertIsObject($expected);
+                $test->assertInternalType('object', $expected);
                 $test->assertThat($actual, $test->logicalOr(
                     $test->isType('array'),
                     $test->isType('object')
@@ -197,7 +205,7 @@ final class ExpectedResult
                 break;
 
             case self::ASSERT_SAME_DOCUMENT:
-                $test->assertIsObject($expected);
+                $test->assertInternalType('object', $expected);
                 $test->assertThat($actual, $test->logicalOr(
                     $test->isType('array'),
                     $test->isType('object')

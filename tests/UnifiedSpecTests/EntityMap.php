@@ -27,7 +27,7 @@ class EntityMap implements ArrayAccess
      */
     public function offsetExists($key)
     {
-        assertIsString($key);
+        assertInternalType('string', $key);
 
         return array_key_exists($key, $this->map);
     }
@@ -37,7 +37,7 @@ class EntityMap implements ArrayAccess
      */
     public function offsetGet($key)
     {
-        assertIsString($key);
+        assertInternalType('string', $key);
         assertArrayHasKey($key, $this->map, sprintf('No entity is defined for "%s"', $key));
 
         return $this->map[$key];
@@ -48,7 +48,7 @@ class EntityMap implements ArrayAccess
      */
     public function offsetSet($key, $value)
     {
-        assertIsString($key);
+        assertInternalType('string', $key);
         assertArrayNotHasKey($key, $this->map, sprintf('Entity already exists for key "%s" and cannot be replaced', $key));
 
         $this->map[$key] = $value;

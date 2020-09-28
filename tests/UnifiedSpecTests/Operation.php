@@ -7,24 +7,17 @@ use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\Cursor;
-use MongoDB\Driver\Exception\BulkWriteException;
-use MongoDB\Driver\Exception\Exception;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
-use MongoDB\Driver\WriteConcern;
-use MongoDB\GridFS\Bucket;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
 use stdClass;
 use function array_diff_key;
 use function array_map;
-use function fclose;
-use function fopen;
+use function get_class;
 use function iterator_to_array;
 use function MongoDB\is_last_pipeline_operator_write;
-use function MongoDB\with_transaction;
-use function stream_get_contents;
 use function strtolower;
 
 /**
@@ -34,11 +27,22 @@ final class Operation
 {
     const OBJECT_TEST_RUNNER = 'testRunner';
 
+    /** @var string */
     private $name;
+
+    /** @var string */
     private $object;
+
+    /** @var array */
     private $arguments = [];
+
+    /** @var ExpectedError */
     private $expectedError;
+
+    /** @var ExpectedResult */
     private $expectedResult;
+
+    /** @var bool */
     private $saveResultAsEntity;
 
     public function __construct(stdClass $o)
@@ -125,13 +129,10 @@ final class Operation
         switch (get_class($object)) {
             case Client::class:
                 return $this->executeForClient($object, $context);
-
             case Database::class:
                 return $this->executeForDatabase($object, $context);
-
             case Collection::class:
                 return $this->executeForCollection($object, $context);
-
             default:
                 Assert::fail('Unsupported entity type: ' . get_class($object));
         }
@@ -139,21 +140,18 @@ final class Operation
 
     private function executeForClient(Client $client, Context $context)
     {
-        $args = Context::prepareOperationArguments($this->arguments);
+        $args = $context->prepareOperationArguments($this->arguments);
 
         switch ($this->name) {
             case 'listDatabaseNames':
                 return iterator_to_array($client->listDatabaseNames($args));
-
             case 'listDatabases':
                 return $client->listDatabases($args);
-
             case 'watch':
                 return $client->watch(
                     $args['pipeline'] ?? [],
                     array_diff_key($args, ['pipeline' => 1])
                 );
-
             default:
                 Assert::fail('Unsupported client operation: ' . $this->name);
         }
@@ -161,7 +159,7 @@ final class Operation
 
     private function executeForCollection(Collection $collection, Context $context)
     {
-        $args = Context::prepareOperationArguments($this->arguments);
+        $args = $context->prepareOperationArguments($this->arguments);
 
         switch ($this->name) {
             case 'aggregate':
@@ -169,7 +167,6 @@ final class Operation
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
-
             case 'bulkWrite':
                 // Merge nested and top-level options (see: SPEC-1158)
                 $options = isset($args['options']) ? (array) $args['options'] : [];
@@ -180,19 +177,16 @@ final class Operation
                     array_map([$this, 'prepareBulkWriteRequest'], $args['requests']),
                     $options
                 );
-
             case 'createIndex':
                 return $collection->createIndex(
                     $args['keys'],
                     array_diff_key($args, ['keys' => 1])
                 );
-
             case 'dropIndex':
                 return $collection->dropIndex(
                     $args['name'],
                     array_diff_key($args, ['name' => 1])
                 );
-
             case 'count':
             case 'countDocuments':
             case 'find':
@@ -200,10 +194,8 @@ final class Operation
                     $args['filter'] ?? [],
                     array_diff_key($args, ['filter' => 1])
                 );
-
             case 'estimatedDocumentCount':
                 return $collection->estimatedDocumentCount($args);
-
             case 'deleteMany':
             case 'deleteOne':
             case 'findOneAndDelete':
@@ -211,20 +203,16 @@ final class Operation
                     $args['filter'],
                     array_diff_key($args, ['filter' => 1])
                 );
-
             case 'distinct':
                 return $collection->distinct(
                     $args['fieldName'],
                     $args['filter'] ?? [],
                     array_diff_key($args, ['fieldName' => 1, 'filter' => 1])
                 );
-
             case 'drop':
                 return $collection->drop($args);
-
             case 'findOne':
                 return $collection->findOne($args['filter'], array_diff_key($args, ['filter' => 1]));
-
             case 'findOneAndReplace':
                 if (isset($args['returnDocument'])) {
                     $args['returnDocument'] = 'after' === strtolower($args['returnDocument'])
@@ -239,7 +227,6 @@ final class Operation
                     $args['replacement'],
                     array_diff_key($args, ['filter' => 1, 'replacement' => 1])
                 );
-
             case 'findOneAndUpdate':
                 if (isset($args['returnDocument'])) {
                     $args['returnDocument'] = 'after' === strtolower($args['returnDocument'])
@@ -255,7 +242,6 @@ final class Operation
                     $args['update'],
                     array_diff_key($args, ['filter' => 1, 'update' => 1])
                 );
-
             case 'insertMany':
                 // Merge nested and top-level options (see: SPEC-1158)
                 $options = isset($args['options']) ? (array) $args['options'] : [];
@@ -265,16 +251,13 @@ final class Operation
                     $args['documents'],
                     $options
                 );
-
             case 'insertOne':
                 return $collection->insertOne(
                     $args['document'],
                     array_diff_key($args, ['document' => 1])
                 );
-
             case 'listIndexes':
                 return $collection->listIndexes($args);
-
             case 'mapReduce':
                 return $collection->mapReduce(
                     $args['map'],
@@ -282,13 +265,11 @@ final class Operation
                     $args['out'],
                     array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1])
                 );
-
             case 'watch':
                 return $collection->watch(
                     $args['pipeline'] ?? [],
                     array_diff_key($args, ['pipeline' => 1])
                 );
-
             default:
                 Assert::fail('Unsupported collection operation: ' . $this->name);
         }
@@ -296,7 +277,7 @@ final class Operation
 
     private function executeForDatabase(Database $database, Context $context)
     {
-        $args = Context::prepareOperationArguments($this->arguments);
+        $args = $context->prepareOperationArguments($this->arguments);
 
         switch ($this->name) {
             case 'aggregate':
@@ -304,37 +285,30 @@ final class Operation
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
-
             case 'createCollection':
                 return $database->createCollection(
                     $args['collection'],
                     array_diff_key($args, ['collection' => 1])
                 );
-
             case 'dropCollection':
                 return $database->dropCollection(
                     $args['collection'],
                     array_diff_key($args, ['collection' => 1])
                 );
-
             case 'listCollectionNames':
                 return iterator_to_array($database->listCollectionNames($args));
-
             case 'listCollections':
                 return $database->listCollections($args);
-
             case 'runCommand':
                 return $database->command(
                     $args['command'],
                     array_diff_key($args, ['command' => 1])
                 )->toArray()[0];
-
             case 'watch':
                 return $database->watch(
                     $args['pipeline'] ?? [],
                     array_diff_key($args, ['pipeline' => 1])
                 );
-
             default:
                 Assert::fail('Unsupported database operation: ' . $this->name);
         }
@@ -342,7 +316,7 @@ final class Operation
 
     private function executeForTestRunner(Context $context)
     {
-        $args = Context::prepareOperationArguments($this->arguments);
+        $args = $context->prepareOperationArguments($this->arguments);
 
         switch ($this->name) {
             case 'assertCollectionExists':

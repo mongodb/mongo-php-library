@@ -9,11 +9,14 @@ use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
 use stdClass;
 use Throwable;
+use function get_class;
+use function sprintf;
 
 final class ExpectedError
 {
     /**
      * @see https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err
+     * @var array
      */
     private static $codeNameMap = [
         'Interrupted' => 11601,
@@ -23,14 +26,29 @@ final class ExpectedError
         'WriteConflict' => 112,
     ];
 
+    /** @var bool */
     private $isError = true;
+
+    /** @var bool */
     private $isClientError;
+
+    /** @var string */
     private $messageContains;
+
+    /** @var int */
     private $code;
+
+    /** @var string */
     private $codeName;
+
+    /** @var array */
     private $includedLabels = [];
+
+    /** @var array */
     private $excludedLabels = [];
-    private $expectResult;
+
+    /** @var ExpectedResult */
+    private $expectedResult;
 
     private function __construct(stdClass $o = null)
     {
@@ -70,15 +88,15 @@ final class ExpectedError
             $o->excludedLabels = $o->errorLabelsOmit;
         }
 
-        if (isset($o->expectResult)) {
-            $o->expectResult = new ExpectedResult($o->expectResult);
+        if (isset($o->expectedResult)) {
+            $o->expectedResult = new ExpectedResult($o->expectResult);
         }
     }
 
-    public static function fromOperation(stdClass $o): self
+    public static function fromOperation(stdClass $o) : self
     {
         if (! isset($o->expectError)) {
-            $expectedError = new self;
+            $expectedError = new self();
             $expectedError->isError = false;
 
             return $expectedError;
@@ -104,6 +122,7 @@ final class ExpectedError
 
         if (! $this->isError) {
             assertNull($e);
+
             return;
         }
 
@@ -135,9 +154,9 @@ final class ExpectedError
             }
         }
 
-        if (isset($this->expectResult)) {
+        if (isset($this->expectedResult)) {
             assertInstanceOf(BulkWriteException::class, $e);
-            $this->expectResult->assert($e->getWriteResult());
+            $this->expectedResult->assert($e->getWriteResult());
         }
     }
 

@@ -39,6 +39,7 @@ final class IsBsonType extends Constraint
 {
     use ConstraintTrait;
 
+    /** @var array */
     private static $knownTypes = [
         'double' => 1,
         'string' => 1,
@@ -63,6 +64,7 @@ final class IsBsonType extends Constraint
         'maxKey' => 1,
     ];
 
+    /** @var string */
     private $type;
 
     public function __construct(string $type)

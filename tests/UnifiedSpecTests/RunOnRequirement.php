@@ -3,10 +3,7 @@
 namespace MongoDB\Tests\UnifiedSpecTests;
 
 use stdClass;
-use UnexpectedValueException;
 use function in_array;
-use function is_array;
-use function is_string;
 use function version_compare;
 
 class RunOnRequirement
@@ -18,8 +15,13 @@ class RunOnRequirement
 
     const VERSION_PATTERN = '/^[0-9]+(\\.[0-9]+){1,2}$/';
 
+    /** @var string */
     private $minServerVersion;
+
+    /** @var string */
     private $maxServerVersion;
+
+    /** @var array */
     private $topologies;
 
     public function __construct(stdClass $o)

@@ -2,20 +2,26 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
+use ArrayIterator;
+use IteratorIterator;
 use MongoDB\Client;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Tests\UnifiedSpecTests\Constraint\DocumentsMatch;
-use ArrayIterator;
-use IteratorIterator;
 use MultipleIterator;
 use stdClass;
+use function sprintf;
 
 class CollectionData
 {
+    /** @var string */
     private $collectionName;
+
+    /** @var string */
     private $databaseName;
+
+    /** @var array */
     private $documents;
 
     public function __construct(stdClass $o)
@@ -47,6 +53,7 @@ class CollectionData
 
         if (empty($this->documents)) {
             $database->createCollection($this->collectionName);
+
             return;
         }
 

@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\UnifiedSpecTests\Constraint;
 
 use MongoDB\BSON\Binary;
-use MongoDB\Client;
 use MongoDB\Tests\FunctionalTestCase;
 use MongoDB\Tests\UnifiedSpecTests\EntityMap;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -12,6 +11,7 @@ use function fopen;
 use function fwrite;
 use function hex2bin;
 use function rewind;
+use function version_compare;
 
 class MatchesTest extends FunctionalTestCase
 {

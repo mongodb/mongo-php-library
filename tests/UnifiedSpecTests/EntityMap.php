@@ -2,13 +2,15 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
+use ArrayAccess;
 use MongoDB\Driver\Session;
 use PHPUnit\Framework\Assert;
-use ArrayAccess;
+use function array_key_exists;
 use function sprintf;
 
 class EntityMap implements ArrayAccess
 {
+    /** @var array */
     private $map = [];
 
     public function __destruct()

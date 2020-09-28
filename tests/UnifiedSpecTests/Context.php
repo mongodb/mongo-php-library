@@ -12,11 +12,18 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use stdClass;
 use function array_diff_key;
+use function array_fill_keys;
+use function array_key_exists;
 use function array_keys;
-use function getenv;
+use function count;
+use function current;
+use function explode;
 use function implode;
-use function mt_rand;
-use function uniqid;
+use function key;
+use function parse_url;
+use function strlen;
+use function strpos;
+use function substr_replace;
 use const PHP_URL_HOST;
 
 /**
@@ -41,7 +48,7 @@ final class Context
 
     public function __construct(Client $internalClient, string $uri)
     {
-        $this->entityMap = new EntityMap;
+        $this->entityMap = new EntityMap();
         $this->internalClient = $internalClient;
         $this->uri = $uri;
     }
@@ -85,17 +92,17 @@ final class Context
         }
     }
 
-    public function getEntityMap(): EntityMap
+    public function getEntityMap() : EntityMap
     {
         return $this->entityMap;
     }
-    
-    public function getInternalClient(): Client
+
+    public function getInternalClient() : Client
     {
         return $this->internalClient;
     }
 
-    public static function prepareOperationArguments(array $args): array
+    public function prepareOperationArguments(array $args) : array
     {
         if (array_key_exists('readConcern', $args)) {
             assertInternalType('object', $args['readConcern']);
@@ -144,7 +151,7 @@ final class Context
         assertEmpty($diff, 'Unsupported keys: ' . implode(',', array_keys($diff)));
     }
 
-    private function createClient(stdClass $o): Client
+    private function createClient(stdClass $o) : Client
     {
         self::assertHasOnlyKeys($o, ['id', 'uriOptions', 'useMultipleMongoses', 'observeEvents', 'ignoreCommandMonitoringEvents']);
 
@@ -184,7 +191,7 @@ final class Context
         return new Client($uri, $uriOptions);
     }
 
-    private function createCollection(stdClass $o): Collection
+    private function createCollection(stdClass $o) : Collection
     {
         self::assertHasOnlyKeys($o, ['id', 'database', 'collectionName', 'collectionOptions']);
 
@@ -208,7 +215,7 @@ final class Context
         return $database->selectCollection($o->collectionName, $options);
     }
 
-    private function createDatabase(stdClass $o): Database
+    private function createDatabase(stdClass $o) : Database
     {
         self::assertHasOnlyKeys($o, ['id', 'client', 'databaseName', 'databaseOptions']);
 
@@ -232,7 +239,7 @@ final class Context
         return $client->selectDatabase($databaseName, $options);
     }
 
-    private static function prepareCollectionOrDatabaseOptions(array $options): array
+    private static function prepareCollectionOrDatabaseOptions(array $options) : array
     {
         self::assertHasOnlyKeys($options, ['readConcern', 'readPreference', 'writeConcern']);
 
@@ -254,7 +261,7 @@ final class Context
         return $options;
     }
 
-    private static function createReadConcern(stdClass $o): ReadConcern
+    private static function createReadConcern(stdClass $o) : ReadConcern
     {
         self::assertHasOnlyKeys($o, ['level']);
 
@@ -264,7 +271,7 @@ final class Context
         return new ReadConcern($level);
     }
 
-    private static function createReadPreference(stdClass $o): ReadPreference
+    private static function createReadPreference(stdClass $o) : ReadPreference
     {
         self::assertHasOnlyKeys($o, ['mode', 'tagSets', 'maxStalenessSeconds', 'hedge']);
 
@@ -295,11 +302,11 @@ final class Context
         return new ReadPreference($mode, $tagSets, $options);
     }
 
-    private static function createWriteConcern(stdClass $o): WriteConcern
+    private static function createWriteConcern(stdClass $o) : WriteConcern
     {
         self::assertHasOnlyKeys($o, ['w', 'wtimeoutMS', 'journal']);
 
-        $w = $o->w ?? -2 /* MONGOC_WRITE_CONCERN_W_DEFAULT */;
+        $w = $o->w ?? -2; /* MONGOC_WRITE_CONCERN_W_DEFAULT */
         $wtimeoutMS = $o->wtimeoutMS ?? 0;
         $journal = $o->journal ?? null;
 
@@ -320,7 +327,7 @@ final class Context
      * Removes mongos hosts beyond the first if the URI refers to a sharded
      * cluster. Otherwise, the URI is returned as-is.
      */
-    private static function removeMultipleMongoses(string $uri): string
+    private static function removeMultipleMongoses(string $uri) : string
     {
         assertStringStartsWith('mongodb://', $uri);
 

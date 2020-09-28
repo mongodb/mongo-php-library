@@ -4,19 +4,16 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 
 use MongoDB\Client;
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Manager;
+use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
-use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Tests\FunctionalTestCase;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use stdClass;
-use function MongoDB\BSON\fromJSON;
-use function MongoDB\BSON\toPHP;
+use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function file_get_contents;
 use function glob;
-use function in_array;
-use function json_encode;
+use function MongoDB\BSON\fromJSON;
+use function MongoDB\BSON\toPHP;
 use function sprintf;
 use function version_compare;
 

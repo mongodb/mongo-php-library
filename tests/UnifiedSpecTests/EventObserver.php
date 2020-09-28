@@ -6,11 +6,13 @@ use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
+use function array_fill_keys;
 use function MongoDB\Driver\Monitoring\addSubscriber;
 use function MongoDB\Driver\Monitoring\removeSubscriber;
 
 class EventObserver implements CommandSubscriber
 {
+    /** @var array */
     private static $defaultIgnoreCommands = [
         // failPoint and targetedFailPoint operations
         'configureFailPoint',
@@ -27,10 +29,16 @@ class EventObserver implements CommandSubscriber
         'isMaster',
     ];
 
+    /** @var array */
     private $actualEvents = [];
+
+    /** @var array */
     private $ignoreCommands = [];
+
+    /** @var array */
     private $observeEvents = [];
 
+    /** @var array */
     private static $commandMonitoringEvents = [
         'commandStartedEvent' => CommandStartedEvent::class,
         'commandSucceededEvent' => CommandSucceededEvent::class,

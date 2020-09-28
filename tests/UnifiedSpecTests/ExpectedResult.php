@@ -72,19 +72,16 @@ final class ExpectedResult
         $this->expectedValue = $expectedValue;
     }
 
-    public static function fromOperation(stdClass $o): self
+    public static function fromOperation(stdClass $o) : self
     {
         // TODO: Infer assertion type from operation
-        $expectedResult = new self(self::ASSERT_NOTHING, $o->expectResult);
-
-        return $expectedResult;
+        return new self(self::ASSERT_NOTHING, $o->expectResult);
     }
 
     /**
      * Assert that the result expectation matches the actual outcome.
      *
-     * @param FunctionalTestCase $test   Test instance for performing assertions
-     * @param mixed              $result Result (if any) from the actual outcome
+     * @param mixed $actual Result (if any) from the actual outcome
      * @throws LogicException if the assertion type is unsupported
      */
     public function assert($actual)

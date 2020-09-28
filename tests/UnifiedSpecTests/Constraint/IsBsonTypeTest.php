@@ -9,6 +9,7 @@ use MongoDB\BSON\MaxKey;
 use MongoDB\BSON\MinKey;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\Regex;
+use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Model\BSONArray;
@@ -42,9 +43,11 @@ class IsBsonTypeTest extends TestCase
         return [
             'double' => ['double', 1.4],
             'string' => ['string', 'foo'],
+            // Note: additional tests in testTypeObject
             'object(stdClass)' => ['object', new stdClass()],
             'object(BSONDocument)' => ['object', new BSONDocument()],
-            'array(array)' => ['array', ['foo']],
+            // Note: additional tests tests in testTypeArray
+            'array(indexed array)' => ['array', ['foo']],
             'array(BSONArray)' => ['array', new BSONArray()],
             'binData' => ['binData', new Binary('', 0)],
             'undefined' => ['undefined', $undefined->undefined],
@@ -82,32 +85,71 @@ class IsBsonTypeTest extends TestCase
     {
         $c = new IsBsonType('array');
 
-        $this->assertFalse($c->evaluate(1, '', true));
-        $this->assertFalse($c->evaluate(['x' => 1], '', true));
-        $this->assertFalse($c->evaluate([0 => 'a', 2 => 'c'], '', true));
+        $this->assertResult(true, $c, [], 'empty array is array');
+        $this->assertResult(true, $c, ['foo'], 'indexed array is array');
+        $this->assertResult(true, $c, new BSONArray(), 'BSONArray is array');
+        $this->assertResult(true, $c, new SerializableArray(), 'SerializableArray is array');
+
+        $this->assertResult(false, $c, 1, 'integer is not array');
+        $this->assertResult(false, $c, ['x' => 1], 'associative array is not array');
+        $this->assertResult(false, $c, new BSONDocument(), 'BSONDocument is not array');
+        $this->assertResult(false, $c, new SerializableObject(), 'SerializableObject is not array');
     }
 
     public function testTypeObject()
     {
         $c = new IsBsonType('object');
 
-        $this->assertFalse($c->evaluate(1, '', true));
-        $this->assertFalse($c->evaluate(new BSONArray(), '', true));
+        $this->assertResult(true, $c, new stdClass(), 'stdClass is object');
+        $this->assertResult(true, $c, new BSONDocument(), 'BSONDocument is object');
+        $this->assertResult(true, $c, ['x' => 1], 'associative array is object');
+        $this->assertResult(true, $c, new SerializableObject(), 'SerializableObject is object');
+
+        $this->assertResult(false, $c, 1, 'integer is not object');
+        $this->assertResult(false, $c, [], 'empty array is not object');
+        $this->assertResult(false, $c, ['foo'], 'indexed array is not object');
+        $this->assertResult(false, $c, new BSONArray(), 'BSONArray is not object');
+        $this->assertResult(false, $c, new SerializableArray(), 'SerializableArray is not object');
+        $this->assertResult(false, $c, new ObjectId(), 'Type other than Serializable is not object');
     }
 
     public function testTypeJavascript()
     {
         $c = new IsBsonType('javascript');
 
-        $this->assertFalse($c->evaluate(1, '', true));
-        $this->assertFalse($c->evaluate(new Javascript('foo = 1;', ['x' => 1]), '', true));
+        $this->assertResult(false, $c, 1, 'integer is not javascript');
+        $this->assertResult(false, $c, new Javascript('foo = 1;', ['x' => 1]), 'javascriptWithScope is not javascript');
     }
 
     public function testTypeJavascriptWithScope()
     {
         $c = new IsBsonType('javascriptWithScope');
 
-        $this->assertFalse($c->evaluate(1, '', true));
-        $this->assertFalse($c->evaluate(new Javascript('foo = 1;'), '', true));
+        $this->assertResult(false, $c, 1, 'integer is not javascriptWithScope');
+        $this->assertResult(false, $c, new Javascript('foo = 1;'), 'javascript is not javascriptWithScope');
+    }
+
+    private function assertResult($expected, IsBsonType $constraint, $value, $message)
+    {
+        $this->assertSame($expected, $constraint->evaluate($value, '', true), $message);
     }
 }
+
+// phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
+// phpcs:disable Squiz.Classes.ClassFileName.NoMatch
+class SerializableArray implements Serializable
+{
+    public function bsonSerialize()
+    {
+        return ['foo'];
+    }
+}
+
+class SerializableObject implements Serializable
+{
+    public function bsonSerialize()
+    {
+        return ['x' => 1];
+    }
+}
+// phpcs:enable

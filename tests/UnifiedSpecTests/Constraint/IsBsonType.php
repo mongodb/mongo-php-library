@@ -12,11 +12,14 @@ use MongoDB\BSON\MaxKeyInterface;
 use MongoDB\BSON\MinKeyInterface;
 use MongoDB\BSON\ObjectIdInterface;
 use MongoDB\BSON\RegexInterface;
+use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Symbol;
 use MongoDB\BSON\TimestampInterface;
+use MongoDB\BSON\Type;
 use MongoDB\BSON\Undefined;
 use MongoDB\BSON\UTCDateTimeInterface;
 use MongoDB\Model\BSONArray;
+use MongoDB\Model\BSONDocument;
 use PHPUnit\Framework\Constraint\Constraint;
 use RuntimeException;
 use Symfony\Bridge\PhpUnit\ConstraintTrait;
@@ -79,7 +82,7 @@ final class IsBsonType extends Constraint
             case 'string':
                 return is_string($other);
             case 'object':
-                return is_object($other) && (! $other instanceof BSONArray);
+                return self::isObject($other);
             case 'array':
                 return self::isArray($other);
             case 'binData':
@@ -137,14 +140,50 @@ final class IsBsonType extends Constraint
             return true;
         }
 
+        // Serializable can produce an array or object, so recurse on its output
+        if ($other instanceof Serializable) {
+            return self::isArray($other->bsonSerialize());
+        }
+
         if (! is_array($other)) {
             return false;
         }
 
-        if (empty($other)) {
+        // Empty and indexed arrays serialize as BSON arrays
+        return self::isArrayEmptyOrIndexed($other);
+    }
+
+    private static function isObject($other) : bool
+    {
+        if ($other instanceof BSONDocument) {
             return true;
         }
 
-        return array_keys($other) === range(0, count($other) - 1);
+        // Serializable can produce an array or object, so recurse on its output
+        if ($other instanceof Serializable) {
+            return self::isObject($other->bsonSerialize());
+        }
+
+        // Non-empty, associative arrays serialize as BSON objects
+        if (is_array($other)) {
+            return ! self::isArrayEmptyOrIndexed($other);
+        }
+
+        if (! is_object($other)) {
+            return false;
+        }
+
+        /* Serializable has already been handled, so any remaining instances of
+         * Type will not serialize as BSON objects */
+        return ! $other instanceof Type;
+    }
+
+    private static function isArrayEmptyOrIndexed(array $a) : bool
+    {
+        if (empty($a)) {
+            return true;
+        }
+
+        return array_keys($a) === range(0, count($a) - 1);
     }
 }

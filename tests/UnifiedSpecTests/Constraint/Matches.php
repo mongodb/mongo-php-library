@@ -1,0 +1,422 @@
+<?php
+
+namespace MongoDB\Tests\UnifiedSpecTests\Constraint;
+
+use LogicException;
+use MongoDB\BSON\Serializable;
+use MongoDB\BSON\Type;
+use MongoDB\Driver\Session;
+use MongoDB\Model\BSONArray;
+use MongoDB\Model\BSONDocument;
+use MongoDB\Tests\UnifiedSpecTests\EntityMap;
+use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\Constraint\LogicalOr;
+use RuntimeException;
+use SebastianBergmann\Comparator\ComparisonFailure;
+use SebastianBergmann\Comparator\Factory;
+use Symfony\Bridge\PhpUnit\ConstraintTrait;
+use function array_keys;
+use function count;
+use function get_class;
+use function get_resource_type;
+use function gettype;
+use function hex2bin;
+use function implode;
+use function is_array;
+use function is_object;
+use function is_resource;
+use function is_string;
+use function range;
+use function sprintf;
+use function stream_get_contents;
+use function strpos;
+use const PHP_INT_SIZE;
+
+/**
+ * Constraint that checks if one document matches another.
+ *
+ * The expected value is passed in the constructor.
+ */
+class Matches extends Constraint
+{
+    use ConstraintTrait;
+
+    /** @var EntityMap */
+    private $entityMap;
+
+    /** @var mixed */
+    private $value;
+
+    /** @var ComparisonFailure|null */
+    private $lastFailure;
+
+    public function __construct($value, EntityMap $entityMap = null)
+    {
+        $this->value = self::prepare($value);
+        $this->entityMap = $entityMap ?? new EntityMap();
+        $this->comparatorFactory = Factory::getInstance();
+    }
+
+    public function evaluate($other, $description = '', $returnResult = false)
+    {
+        $other = self::prepare($other);
+        $success = false;
+        $this->lastFailure = null;
+
+        try {
+            $this->assertMatches($this->value, $other);
+            $success = true;
+        } catch (RuntimeException $e) {
+            $this->lastFailure = new ComparisonFailure(
+                $this->value,
+                $other,
+                $this->exporter()->export($this->value),
+                $this->exporter()->export($other),
+                false,
+                $e->getMessage()
+            );
+        }
+
+        if ($returnResult) {
+            return $success;
+        }
+
+        if (! $success) {
+            $this->fail($other, $description, $this->lastFailure);
+        }
+    }
+
+    private function assertEquals($expected, $actual, string $keyPath)
+    {
+        $expectedType = is_object($expected) ? get_class($expected) : gettype($expected);
+        $actualType = is_object($actual) ? get_class($actual) : gettype($actual);
+
+        // Workaround for ObjectComparator printing the whole actual object
+        if ($expectedType !== $actualType) {
+            self::failAt(sprintf('%s is not expected type "%s"', $actualType, $expectedType), $keyPath);
+        }
+
+        try {
+            $this->comparatorFactory->getComparatorFor($expected, $actual)->assertEquals($expected, $actual);
+        } catch (ComparisonFailure $failure) {
+            throw new ComparisonFailure(
+                $expected,
+                $actual,
+                // No diff is required
+                '',
+                '',
+                false,
+                (empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath)) . $failure->getMessage()
+            );
+        }
+    }
+
+    private function assertMatches($expected, $actual, string $keyPath = '')
+    {
+        if ($expected instanceof BSONArray) {
+            $this->assertMatchesArray($expected, $actual, $keyPath);
+
+            return;
+        }
+
+        if ($expected instanceof BSONDocument) {
+            $this->assertMatchesDocument($expected, $actual, $keyPath);
+
+            return;
+        }
+
+        $this->assertEquals($expected, $actual, $keyPath);
+    }
+
+    private function assertMatchesArray(BSONArray $expected, $actual, string $keyPath)
+    {
+        if (! $actual instanceof BSONArray) {
+            $actualType = is_object($actual) ? get_class($actual) : gettype($actual);
+            self::failAt(sprintf('%s is not instance of expected class "%s"', $actualType, BSONArray::class), $keyPath);
+        }
+
+        if (count($expected) !== count($actual)) {
+            self::failAt(sprintf('$actual count is %d, expected %d', count($actual), count($expected)), $keyPath);
+        }
+
+        foreach ($expected as $key => $expectedValue) {
+            $this->assertMatches(
+                $expectedValue,
+                $actual[$key],
+                (empty($keyPath) ? $key : $keyPath . '.' . $key)
+            );
+        }
+    }
+
+    private function assertMatchesDocument(BSONDocument $expected, $actual, string $keyPath)
+    {
+        if (self::isOperator($expected)) {
+            $this->assertMatchesOperator($expected, $actual, $keyPath);
+
+            return;
+        }
+
+        if (! $actual instanceof BSONDocument) {
+            $actualType = is_object($actual) ? get_class($actual) : gettype($actual);
+            self::failAt(sprintf('%s is not instance of expected class "%s"', $actualType, BSONDocument::class), $keyPath);
+        }
+
+        foreach ($expected as $key => $expectedValue) {
+            $actualKeyExists = $actual->offsetExists($key);
+
+            if ($expectedValue instanceof BSONDocument && self::isOperator($expectedValue)) {
+                $operatorName = self::getOperatorName($expectedValue);
+
+                // TODO: Validate structure of operators
+                if ($operatorName === '$$exists') {
+                    if ($expectedValue['$$exists'] && ! $actualKeyExists) {
+                        self::failAt(sprintf('$actual does not have expected key "%s"', $key), $keyPath);
+                    }
+
+                    if (! $expectedValue['$$exists'] && $actualKeyExists) {
+                        self::failAt(sprintf('$actual has unexpected key "%s"', $key), $keyPath);
+                    }
+
+                    continue;
+                }
+
+                if ($operatorName === '$$unsetOrMatches') {
+                    if (! $actualKeyExists) {
+                        continue;
+                    }
+
+                    $expectedValue = $expectedValue['$$unsetOrMatches'];
+                }
+            }
+
+            if (! $actualKeyExists) {
+                self::failAt(sprintf('$actual does not have expected key "%s"', $key), $keyPath);
+            }
+
+            $this->assertMatches(
+                $expectedValue,
+                $actual[$key],
+                (empty($keyPath) ? $key : $keyPath . '.' . $key)
+            );
+        }
+
+        // Ignore extra fields in root documents
+        if (empty($keyPath)) {
+            return;
+        }
+
+        foreach ($actual as $key => $_) {
+            if (! $expected->offsetExists($key)) {
+                self::failAt(sprintf('$actual has unexpected key "%s"', $key), $keyPath);
+            }
+        }
+    }
+
+    private function assertMatchesOperator(BSONDocument $operator, $actual, string $keyPath)
+    {
+        $name = self::getOperatorName($operator);
+
+        // TODO: Validate structure of operators
+        if ($name === '$$type') {
+            $types = is_string($operator['$$type']) ? [$operator['$$type']] : $operator['$$type'];
+            $constraints = [];
+
+            foreach ($types as $type) {
+                $constraints[] = new IsBsonType($type);
+            }
+
+            $constraint = LogicalOr::fromConstraints(...$constraints);
+
+            if (! $constraint->evaluate($actual, '', true)) {
+                self::failAt(sprintf('%s is not an expected BSON type: %s', $this->exporter()->shortenedExport($actual), implode(', ', $types)), $keyPath);
+            }
+
+            return;
+        }
+
+        if ($name === '$$matchesEntity') {
+            $this->assertMatches(
+                $this->prepare($this->entityMap[$operator['$$matchesEntity']]),
+                $actual,
+                $keyPath
+            );
+
+            return;
+        }
+
+        if ($name === '$$matchesHexBytes') {
+            if (! is_resource($actual) || get_resource_type($actual) != "stream") {
+                self::failAt(sprintf('%s is not a stream', $this->exporter()->shortenedExport($actual)), $keyPath);
+            }
+
+            if (stream_get_contents($actual, -1, 0) !== hex2bin($operator['$$matchesHexBytes'])) {
+                self::failAt(sprintf('%s does not match expected hex bytes: %s', $this->exporter()->shortenedExport($actual), $operator['$$matchesHexBytes']), $keyPath);
+            }
+
+            return;
+        }
+
+        if ($name === '$$unsetOrMatches') {
+            /* If the operator is used at the top level, consider null
+             * values for $actual to be unset. If the operator is nested
+             * this check is done later document iteration. */
+            if ($keyPath === '' && $actual === null) {
+                return;
+            }
+
+            $this->assertMatches(
+                self::prepare($operator['$$unsetOrMatches']),
+                $actual,
+                $keyPath
+            );
+
+            return;
+        }
+
+        if ($name === '$$sessionLsid') {
+            $session = $this->entityMap[$operator['$$sessionLsid']];
+
+            if (! $session instanceof Session) {
+                self::failAt(sprintf('entity "%s" is not a session', $operator['$$sessionLsid']), $keyPath);
+            }
+
+            $this->assertEquals(
+                self::prepare($session->getLogicalSessionId()),
+                $actual,
+                $keyPath
+            );
+
+            return;
+        }
+
+        throw new LogicException('unsupported operator: ' . $operator);
+    }
+
+    /** @see ConstraintTrait */
+    private function doAdditionalFailureDescription($other)
+    {
+        if ($this->lastFailure === null) {
+            return '';
+        }
+
+        return $this->lastFailure->getMessage();
+    }
+
+    /** @see ConstraintTrait */
+    private function doFailureDescription($other)
+    {
+        return 'expected value matches actual value';
+    }
+
+    /** @see ConstraintTrait */
+    private function doMatches($other)
+    {
+        $other = self::prepare($other);
+
+        try {
+            $this->assertMatches($this->value, $other);
+        } catch (RuntimeException $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /** @see ConstraintTrait */
+    private function doToString()
+    {
+        return 'matches ' . $this->exporter()->export($this->value);
+    }
+
+    private static function failAt(string $message, string $keyPath)
+    {
+        $prefix = empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath);
+
+        throw new RuntimeException($prefix . $message);
+    }
+
+    private static function getOperatorName(BSONDocument $document) : string
+    {
+        foreach ($document as $key => $_) {
+            if (strpos((string) $key, '$$') === 0) {
+                return $key;
+            }
+        }
+
+        throw new LogicException('should not reach this point');
+    }
+
+    private static function isOperator(BSONDocument $document) : bool
+    {
+        if (count($document) !== 1) {
+            return false;
+        }
+
+        foreach ($document as $key => $_) {
+            return strpos((string) $key, '$$') === 0;
+        }
+
+        throw new LogicException('should not reach this point');
+    }
+
+    /**
+     * Prepare a value for comparison.
+     *
+     * If the value is an array or object, it will be converted to a BSONArray
+     * or BSONDocument. If $value is an array and $isRoot is true, it will be
+     * converted to a BSONDocument; otherwise, it will be converted to a
+     * BSONArray or BSONDocument based on its keys. Each value within an array
+     * or document will then be prepared recursively.
+     *
+     * @param mixed $bson
+     * @return mixed
+     */
+    private static function prepare($bson)
+    {
+        if (! is_array($bson) && ! is_object($bson)) {
+            return $bson;
+        }
+
+        /* Convert Int64 objects to integers on 64-bit platforms for
+         * compatibility reasons. */
+        if ($bson instanceof Int64 && PHP_INT_SIZE != 4) {
+            return (int) ((string) $bson);
+        }
+
+        // Serializable can produce an array or object, so recurse on its output
+        if ($bson instanceof Serializable) {
+            return self::prepare($bson->bsonSerialize());
+        }
+
+        /* Serializable has already been handled, so any remaining instances of
+         * Type will not serialize as BSON arrays or objects */
+        if ($bson instanceof Type) {
+            return $bson;
+        }
+
+        if (is_array($bson) && self::isArrayEmptyOrIndexed($bson)) {
+            $bson = new BSONArray($bson);
+        }
+
+        if (! $bson instanceof BSONArray && ! $bson instanceof BSONDocument) {
+            $bson = new BSONDocument($bson);
+        }
+
+        foreach ($bson as $key => $value) {
+            if (is_array($value) || is_object($value)) {
+                $bson[$key] = self::prepare($value);
+            }
+        }
+
+        return $bson;
+    }
+
+    private static function isArrayEmptyOrIndexed(array $a) : bool
+    {
+        if (empty($a)) {
+            return true;
+        }
+
+        return array_keys($a) === range(0, count($a) - 1);
+    }
+}

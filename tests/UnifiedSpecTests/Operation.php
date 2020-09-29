@@ -81,7 +81,7 @@ final class Operation
      */
     public function assert(Context $context, bool $rethrowExceptions = false)
     {
-        $throwable = null;
+        $error = null;
         $result = null;
 
         try {
@@ -98,7 +98,7 @@ final class Operation
             $error = $e;
         }
 
-        $this->expectError->assert($throwable);
+        $this->expectError->assert($error);
         $this->expectResult->assert($result);
 
         // Rethrowing is primarily used for withTransaction callbacks

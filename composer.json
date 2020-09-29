@@ -26,7 +26,10 @@
         "files": [ "src/functions.php" ]
     },
     "autoload-dev": {
-        "psr-4": { "MongoDB\\Tests\\": "tests/" }
+        "psr-4": { "MongoDB\\Tests\\": "tests/" },
+        "// Manually include assertion functions for PHPUnit 8.x and earlier ":"",
+        "// See: https://github.com/sebastianbergmann/phpunit/issues/3746 ":"",
+        "files": [ "vendor/phpunit/phpunit/src/Framework/Assert/Functions.php" ]
     },
     "extra": {
         "branch-alias": {

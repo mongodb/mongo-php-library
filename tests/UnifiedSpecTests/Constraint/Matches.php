@@ -11,6 +11,7 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\UnifiedSpecTests\EntityMap;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\Constraint\LogicalOr;
+use PHPUnit\Framework\ExpectationFailedException;
 use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
@@ -47,13 +48,21 @@ class Matches extends Constraint
     /** @var mixed */
     private $value;
 
+    /** @var bool */
+    private $allowExtraRootKeys;
+
+    /** @var bool */
+    private $allowOperators;
+
     /** @var ComparisonFailure|null */
     private $lastFailure;
 
-    public function __construct($value, EntityMap $entityMap = null)
+    public function __construct($value, EntityMap $entityMap = null, $allowExtraRootKeys = true, $allowOperators = true)
     {
         $this->value = self::prepare($value);
         $this->entityMap = $entityMap ?? new EntityMap();
+        $this->allowExtraRootKeys = $allowExtraRootKeys;
+        $this->allowOperators = $allowOperators;
         $this->comparatorFactory = Factory::getInstance();
     }
 
@@ -66,7 +75,13 @@ class Matches extends Constraint
         try {
             $this->assertMatches($this->value, $other);
             $success = true;
+        } catch (ExpectationFailedException $e) {
+            /* Rethrow internal assertion failures (e.g. operator type checks,
+             * EntityMap errors), which are logical errors in the code/test. */
+            throw $e;
         } catch (RuntimeException $e) {
+            /* This will generally catch internal errors from failAt(), which
+             * include a key path to pinpoint the failure. */
             $this->lastFailure = new ComparisonFailure(
                 $this->value,
                 $other,
@@ -98,16 +113,10 @@ class Matches extends Constraint
 
         try {
             $this->comparatorFactory->getComparatorFor($expected, $actual)->assertEquals($expected, $actual);
-        } catch (ComparisonFailure $failure) {
-            throw new ComparisonFailure(
-                $expected,
-                $actual,
-                // No diff is required
-                '',
-                '',
-                false,
-                (empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath)) . $failure->getMessage()
-            );
+        } catch (ComparisonFailure $e) {
+            /* Disregard other ComparisonFailure fields, as evaluate() only uses
+             * the message when creating its own ComparisonFailure. */
+            self::failAt($e->getMessage(), $keyPath);
         }
     }
 
@@ -150,7 +159,7 @@ class Matches extends Constraint
 
     private function assertMatchesDocument(BSONDocument $expected, $actual, string $keyPath)
     {
-        if (self::isOperator($expected)) {
+        if ($this->allowOperators && self::isOperator($expected)) {
             $this->assertMatchesOperator($expected, $actual, $keyPath);
 
             return;
@@ -164,11 +173,12 @@ class Matches extends Constraint
         foreach ($expected as $key => $expectedValue) {
             $actualKeyExists = $actual->offsetExists($key);
 
-            if ($expectedValue instanceof BSONDocument && self::isOperator($expectedValue)) {
+            if ($this->allowOperators && $expectedValue instanceof BSONDocument && self::isOperator($expectedValue)) {
                 $operatorName = self::getOperatorName($expectedValue);
 
-                // TODO: Validate structure of operators
                 if ($operatorName === '$$exists') {
+                    assertInternalType('bool', $expectedValue['$$exists'], '$$exists requires bool');
+
                     if ($expectedValue['$$exists'] && ! $actualKeyExists) {
                         self::failAt(sprintf('$actual does not have expected key "%s"', $key), $keyPath);
                     }
@@ -200,8 +210,8 @@ class Matches extends Constraint
             );
         }
 
-        // Ignore extra fields in root documents
-        if (empty($keyPath)) {
+        // Ignore extra keys in root documents
+        if ($this->allowExtraRootKeys && empty($keyPath)) {
             return;
         }
 
@@ -216,8 +226,13 @@ class Matches extends Constraint
     {
         $name = self::getOperatorName($operator);
 
-        // TODO: Validate structure of operators
         if ($name === '$$type') {
+            assertThat(
+                $operator['$$type'],
+                logicalOr(isType('string'), logicalAnd(isInstanceOf(BSONArray::class), containsOnly('string'))),
+                '$$type requires string or string[]'
+            );
+
             $types = is_string($operator['$$type']) ? [$operator['$$type']] : $operator['$$type'];
             $constraints = [];
 
@@ -235,6 +250,8 @@ class Matches extends Constraint
         }
 
         if ($name === '$$matchesEntity') {
+            assertInternalType('string', $operator['$$matchesEntity'], '$$matchesEntity requires string');
+
             $this->assertMatches(
                 $this->prepare($this->entityMap[$operator['$$matchesEntity']]),
                 $actual,
@@ -245,6 +262,9 @@ class Matches extends Constraint
         }
 
         if ($name === '$$matchesHexBytes') {
+            assertInternalType('string', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires string');
+            assertRegExp('/^([0-9a-fA-F]{2})+$/', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires pairs of hex chars');
+
             if (! is_resource($actual) || get_resource_type($actual) != "stream") {
                 self::failAt(sprintf('%s is not a stream', $this->exporter()->shortenedExport($actual)), $keyPath);
             }
@@ -274,11 +294,11 @@ class Matches extends Constraint
         }
 
         if ($name === '$$sessionLsid') {
+            assertInternalType('string', $operator['$$sessionLsid'], '$$sessionLsid requires string');
+
             $session = $this->entityMap[$operator['$$sessionLsid']];
 
-            if (! $session instanceof Session) {
-                self::failAt(sprintf('entity "%s" is not a session', $operator['$$sessionLsid']), $keyPath);
-            }
+            assertInstanceOf(Session::class, $session, '$$sessionLsid requires session entity');
 
             $this->assertEquals(
                 self::prepare($session->getLogicalSessionId()),

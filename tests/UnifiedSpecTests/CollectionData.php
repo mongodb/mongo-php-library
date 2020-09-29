@@ -8,7 +8,7 @@ use MongoDB\Client;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Tests\UnifiedSpecTests\Constraint\DocumentsMatch;
+use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use MultipleIterator;
 use stdClass;
 use function sprintf;
@@ -88,7 +88,9 @@ class CollectionData
             assertNotNull($expectedDocument);
             assertNotNull($actualDocument);
 
-            $constraint = new DocumentsMatch($expectedDocument, false, false);
+            /* Disable extra root keys and operators when matching, which is
+             * effectively an exact match that allows key order variation. */
+            $constraint = new Matches($expectedDocument, null, false, false);
             assertThat($actualDocument, $constraint, sprintf('documents[%d] match', $i));
         }
     }

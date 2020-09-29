@@ -253,7 +253,7 @@ class Matches extends Constraint
             assertInternalType('string', $operator['$$matchesEntity'], '$$matchesEntity requires string');
 
             $this->assertMatches(
-                $this->prepare($this->entityMap[$operator['$$matchesEntity']]),
+                self::prepare($this->entityMap[$operator['$$matchesEntity']]),
                 $actual,
                 $keyPath
             );
@@ -263,7 +263,7 @@ class Matches extends Constraint
 
         if ($name === '$$matchesHexBytes') {
             assertInternalType('string', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires string');
-            assertRegExp('/^([0-9a-fA-F]{2})+$/', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires pairs of hex chars');
+            assertRegExp('/^([0-9a-fA-F]{2})*$/', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires pairs of hex chars');
 
             if (! is_resource($actual) || get_resource_type($actual) != "stream") {
                 self::failAt(sprintf('%s is not a stream', $this->exporter()->shortenedExport($actual)), $keyPath);

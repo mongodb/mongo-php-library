@@ -15,11 +15,23 @@ use function array_diff_key;
 use function array_fill_keys;
 use function array_key_exists;
 use function array_keys;
+use function assertArrayHasKey;
+use function assertArrayNotHasKey;
+use function assertContains;
+use function assertCount;
+use function assertEmpty;
+use function assertInstanceOf;
+use function assertInternalType;
+use function assertNotFalse;
+use function assertStringStartsWith;
+use function assertThat;
 use function count;
 use function current;
 use function explode;
 use function implode;
+use function isType;
 use function key;
+use function logicalOr;
 use function parse_url;
 use function strlen;
 use function strpos;
@@ -146,7 +158,7 @@ final class Context
 
     private static function assertHasOnlyKeys($arrayOrObject, array $keys)
     {
-        assertThat($arrayOrObject, logicalOr(IsType('array'), IsType('object')));
+        assertThat($arrayOrObject, logicalOr(isType('array'), isType('object')));
         $diff = array_diff_key((array) $arrayOrObject, array_fill_keys($keys, 1));
         assertEmpty($diff, 'Unsupported keys: ' . implode(',', array_keys($diff)));
     }
@@ -310,7 +322,7 @@ final class Context
         $wtimeoutMS = $o->wtimeoutMS ?? 0;
         $journal = $o->journal ?? null;
 
-        assertThat($w, logicalOr(new IsType('int'), new IsType('string')));
+        assertThat($w, logicalOr(isType('int'), isType('string')));
         assertInternalType('int', $wtimeoutMS);
 
         $args = [$w, $wtimeoutMS];

@@ -15,9 +15,15 @@ use MongoDB\Operation\FindOneAndUpdate;
 use stdClass;
 use function array_diff_key;
 use function array_map;
+use function assertArrayHasKey;
+use function assertInternalType;
+use function assertThat;
 use function get_class;
 use function iterator_to_array;
+use function logicalOr;
+use function logicalXor;
 use function MongoDB\is_last_pipeline_operator_write;
+use function objectHasAttribute;
 use function strtolower;
 
 /**

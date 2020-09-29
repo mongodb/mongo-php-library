@@ -9,6 +9,16 @@ use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
 use stdClass;
 use Throwable;
+use function assertArrayHasKey;
+use function assertContainsOnly;
+use function assertFalse;
+use function assertInstanceOf;
+use function assertInternalType;
+use function assertNotNull;
+use function assertNull;
+use function assertObjectHasAttribute;
+use function assertSame;
+use function assertTrue;
 use function get_class;
 use function sprintf;
 

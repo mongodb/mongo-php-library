@@ -6,6 +6,9 @@ use ArrayAccess;
 use MongoDB\Driver\Session;
 use PHPUnit\Framework\Assert;
 use function array_key_exists;
+use function assertArrayHasKey;
+use function assertArrayNotHasKey;
+use function assertInternalType;
 use function sprintf;
 
 class EntityMap implements ArrayAccess

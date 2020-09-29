@@ -11,6 +11,10 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use MultipleIterator;
 use stdClass;
+use function assertContainsOnly;
+use function assertInternalType;
+use function assertNotNull;
+use function assertThat;
 use function sprintf;
 
 class CollectionData

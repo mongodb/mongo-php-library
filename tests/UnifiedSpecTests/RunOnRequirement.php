@@ -3,6 +3,9 @@
 namespace MongoDB\Tests\UnifiedSpecTests;
 
 use stdClass;
+use function assertContainsOnly;
+use function assertInternalType;
+use function assertRegExp;
 use function in_array;
 use function version_compare;
 

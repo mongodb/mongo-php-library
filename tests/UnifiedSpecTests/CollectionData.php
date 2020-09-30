@@ -41,12 +41,7 @@ class CollectionData
         $this->documents = $o->documents;
     }
 
-    /**
-     * Prepare collection state for "initialData".
-     *
-     * @param Client $client
-     */
-    public function prepare(Client $client)
+    public function prepareInitialData(Client $client)
     {
         $database = $client->selectDatabase(
             $this->databaseName,
@@ -61,15 +56,9 @@ class CollectionData
             return;
         }
 
-        $collection = $database->selectCollection($this->collectionName);
-        $collection->insertMany($this->documents);
+        $database->selectCollection($this->collectionName)->insertMany($this->documents);
     }
 
-    /**
-     * Assert collection contents for "outcome".
-     *
-     * @param Client $client
-     */
     public function assertOutcome(Client $client)
     {
         $collection = $client->selectCollection(
@@ -92,8 +81,8 @@ class CollectionData
             assertNotNull($expectedDocument);
             assertNotNull($actualDocument);
 
-            /* Disable extra root keys and operators when matching, which is
-             * effectively an exact match that allows key order variation. */
+            /* Prohibit extra root keys and disable operators to enforce exact
+             * matching of documents. Key order variation is still allowed. */
             $constraint = new Matches($expectedDocument, null, false, false);
             assertThat($actualDocument, $constraint, sprintf('documents[%d] match', $i));
         }

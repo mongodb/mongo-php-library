@@ -15,8 +15,6 @@ use function array_diff_key;
 use function array_fill_keys;
 use function array_key_exists;
 use function array_keys;
-use function assertArrayHasKey;
-use function assertArrayNotHasKey;
 use function assertContains;
 use function assertCount;
 use function assertEmpty;
@@ -83,7 +81,6 @@ final class Context
 
             $id = $def->id ?? null;
             assertInternalType('string', $id);
-            assertArrayNotHasKey($id, $this->entityMap);
 
             switch ($type) {
                 case 'client':
@@ -128,7 +125,6 @@ final class Context
 
         if (array_key_exists('session', $args)) {
             assertInternalType('string', $args['session']);
-            assertArrayHasKey($args['session'], $this->entityMap);
             $session = $this->entityMap[$args['session']];
             assertInstanceOf(Session::class, $session);
             $args['session'] = $session;
@@ -212,7 +208,6 @@ final class Context
 
         assertInternalType('string', $collectionName);
         assertInternalType('string', $database);
-        assertArrayHasKey($database, $this->entityMap);
 
         $database = $this->entityMap[$database];
         assertInstanceOf(Database::class, $database);
@@ -236,7 +231,6 @@ final class Context
 
         assertInternalType('string', $databaseName);
         assertInternalType('string', $client);
-        assertArrayHasKey($client, $this->entityMap);
 
         $client = $this->entityMap[$client];
         assertInstanceOf(Client::class, $client);

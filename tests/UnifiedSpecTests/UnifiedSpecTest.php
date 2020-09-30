@@ -225,11 +225,7 @@ class UnifiedSpecTest extends FunctionalTestCase
      */
     private function isSchemaVersionSupported($schemaVersion)
     {
-        if (version_compare($schemaVersion, '1.0', '>=') && version_compare($schemaVersion, '1.1', '<')) {
-            return true;
-        }
-
-        return false;
+        return version_compare($schemaVersion, '1.0', '>=') && version_compare($schemaVersion, '1.1', '<');
     }
 
     /**
@@ -277,7 +273,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
         foreach ($initialData as $data) {
             $collectionData = new CollectionData($data);
-            $collectionData->prepare(self::$internalClient);
+            $collectionData->prepareInitialData(self::$internalClient);
         }
     }
 }

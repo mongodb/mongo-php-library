@@ -43,9 +43,11 @@ use function strpos;
 use const PHP_INT_SIZE;
 
 /**
- * Constraint that checks if one document matches another.
+ * Constraint that checks if one value matches another.
  *
- * The expected value is passed in the constructor.
+ * The expected value is passed in the constructor. An EntityMap may be supplied
+ * for resolving operators (e.g. $$matchesEntity). Behavior for allowing extra
+ * keys in root documents and processing operators is also configurable.
  */
 class Matches extends Constraint
 {
@@ -242,7 +244,7 @@ class Matches extends Constraint
                 '$$type requires string or string[]'
             );
 
-            $types = is_string($operator['$$type']) ? [$operator['$$type']] : $operator['$$type'];
+            $types = (array) $operator['$$type'];
             $constraints = [];
 
             foreach ($types as $type) {
@@ -286,9 +288,9 @@ class Matches extends Constraint
         }
 
         if ($name === '$$unsetOrMatches') {
-            /* If the operator is used at the top level, consider null
-             * values for $actual to be unset. If the operator is nested
-             * this check is done later document iteration. */
+            /* If the operator is used at the top level, consider null values
+             * for $actual to be unset. If the operator is nested, this check is
+             * done later during document iteration. */
             if ($keyPath === '' && $actual === null) {
                 return;
             }

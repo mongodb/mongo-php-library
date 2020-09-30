@@ -48,14 +48,7 @@ class RunOnRequirement
         }
     }
 
-    /**
-     * Checks if the requirements are satisfied.
-     *
-     * @param string $serverVersion
-     * @param string $topology
-     * @return boolean
-     */
-    public function isSatisfied(string $serverVersion, string $topology)
+    public function isSatisfied(string $serverVersion, string $topology) : bool
     {
         if (isset($this->minServerVersion) && version_compare($serverVersion, $this->minServerVersion, '<')) {
             return false;

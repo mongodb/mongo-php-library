@@ -7,6 +7,7 @@ use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\ExecutionTimeoutException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
+use PHPUnit\Framework\Assert;
 use stdClass;
 use Throwable;
 use function assertArrayHasKey;
@@ -20,6 +21,7 @@ use function assertObjectHasAttribute;
 use function assertSame;
 use function assertTrue;
 use function get_class;
+use function property_exists;
 use function sprintf;
 
 final class ExpectedError
@@ -37,7 +39,7 @@ final class ExpectedError
     ];
 
     /** @var bool */
-    private $isError = true;
+    private $isError = false;
 
     /** @var bool */
     private $isClientError;
@@ -60,8 +62,14 @@ final class ExpectedError
     /** @var ExpectedResult */
     private $expectedResult;
 
-    private function __construct(stdClass $o = null)
+    public function __construct(Context $context, stdClass $o = null)
     {
+        if ($o === null) {
+            return;
+        }
+
+        $this->isError = true;
+
         if (isset($o->isError)) {
             assertTrue($o->isError);
         }
@@ -89,33 +97,17 @@ final class ExpectedError
         if (isset($o->errorLabelsContain)) {
             assertInternalType('array', $o->errorLabelsContain);
             assertContainsOnly('string', $o->errorLabelsContain);
-            $o->includedLabels = $o->errorLabelsContain;
+            $this->includedLabels = $o->errorLabelsContain;
         }
 
         if (isset($o->errorLabelsOmit)) {
             assertInternalType('array', $o->errorLabelsOmit);
             assertContainsOnly('string', $o->errorLabelsOmit);
-            $o->excludedLabels = $o->errorLabelsOmit;
+            $this->excludedLabels = $o->errorLabelsOmit;
         }
 
-        if (isset($o->expectedResult)) {
-            $o->expectedResult = new ExpectedResult($o->expectResult);
-        }
-    }
-
-    public static function fromOperation(stdClass $o) : self
-    {
-        if (! isset($o->expectError)) {
-            $expectedError = new self();
-            $expectedError->isError = false;
-
-            return $expectedError;
-        }
-
-        $expectedError = new self($o->expectError);
-
-        if (isset($o->expectError->expectResult)) {
-            $o->expectResult = ExpectedResult::fromOperation($o);
+        if (property_exists($o, 'expectResult')) {
+            $this->expectedResult = new ExpectedResult($context, $o);
         }
     }
 

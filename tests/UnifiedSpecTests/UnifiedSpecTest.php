@@ -10,6 +10,8 @@ use MongoDB\Driver\Server;
 use MongoDB\Tests\FunctionalTestCase;
 use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use Throwable;
+use function basename;
 use function file_get_contents;
 use function glob;
 use function MongoDB\BSON\fromJSON;
@@ -59,16 +61,9 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Execute an individual test case from the specification.
-     *
-     * @dataProvider provideTests
-     * @param stdClass $test              Individual object in "tests[]"
-     * @param string   $schemaVersion     Top-level "schemaVersion"
-     * @param array    $runOnRequirements Top-level "runOnRequirements"
-     * @param array    $createEntities    Top-level "createEntities"
-     * @param array    $initialData       Top-level "initialData"
+     * @dataProvider providePassingTests
      */
-    public function testCase(stdClass $test, string $schemaVersion, array $runOnRequirements = null, array $createEntities = null, array $initialData = null)
+    public function testPassingTests(stdClass $test, string $schemaVersion, array $runOnRequirements = null, array $createEntities = null, array $initialData = null)
     {
         if (! $this->isSchemaVersionSupported($schemaVersion)) {
             $this->markTestIncomplete(sprintf('Test format schema version "%s" is not supported', $schemaVersion));
@@ -83,7 +78,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
 
         if (isset($test->runOnRequirements)) {
-            $this->checkRunOnRequirements($runOnRequirements);
+            $this->checkRunOnRequirements($test->runOnRequirements);
         }
 
         if (isset($initialData)) {
@@ -103,8 +98,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
 
         foreach ($test->operations as $o) {
-            $operation = new Operation($o);
-            $operation->assert($context);
+            $operation = new Operation($context, $o);
+            $operation->assert();
         }
 
         if (isset($test->expectedEvents)) {
@@ -116,11 +111,40 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
     }
 
-    public function provideTests()
+    public function providePassingTests()
+    {
+        return $this->provideTests('/home/jmikola/workspace/mongodb/specifications/source/unified-test-format/tests/valid-pass/');
+    }
+
+    /**
+     * @dataProvider provideFailingTests
+     */
+    public function testFailingTests(...$args)
+    {
+        // Cannot use expectException(), as it ignores PHPUnit Exceptions
+        $failed = false;
+
+        try {
+            $this->testCase(...$args);
+        } catch (Throwable $e) {
+            $failed = true;
+        }
+
+        if (! $failed) {
+            $this->fail('Expected test to throw an exception');
+        }
+    }
+
+    public function provideFailingTests()
+    {
+        return $this->provideTests('/home/jmikola/workspace/mongodb/specifications/source/unified-test-format/tests/valid-fail');
+    }
+
+    private function provideTests(string $dir)
     {
         $testArgs = [];
 
-        foreach (glob(__DIR__ . '/*.json') as $filename) {
+        foreach (glob($dir . '/poc-c*.json') as $filename) {
             /* Decode the file through the driver's extended JSON parser to
              * ensure proper handling of special types. */
             $json = toPHP(fromJSON(file_get_contents($filename)));
@@ -132,7 +156,7 @@ class UnifiedSpecTest extends FunctionalTestCase
             $initialData = $json->initialData ?? null;
 
             foreach ($json->tests as $test) {
-                $name = $description . ': ' . $test->description;
+                $name = basename($filename) . ': ' . $description . ': ' . $test->description;
                 $testArgs[$name] = [$test, $schemaVersion, $runOnRequirements, $createEntities, $initialData];
             }
         }

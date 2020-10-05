@@ -2,291 +2,118 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
-use LogicException;
 use MongoDB\BulkWriteResult;
 use MongoDB\DeleteResult;
 use MongoDB\Driver\WriteResult;
-use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\InsertManyResult;
 use MongoDB\InsertOneResult;
+use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use MongoDB\UpdateResult;
 use stdClass;
-use function call_user_func;
-use function is_array;
+use function assertThat;
 use function is_object;
 use function property_exists;
 
-/**
- * Spec test operation result expectation.
- */
 final class ExpectedResult
 {
-    const ASSERT_NOTHING = 0;
-    const ASSERT_BULKWRITE = 1;
-    const ASSERT_DELETE = 2;
-    const ASSERT_INSERTMANY = 3;
-    const ASSERT_INSERTONE = 4;
-    const ASSERT_UPDATE = 5;
-    const ASSERT_SAME = 6;
-    const ASSERT_SAME_DOCUMENT = 7;
-    const ASSERT_SAME_DOCUMENTS = 8;
-    const ASSERT_MATCHES_DOCUMENT = 9;
-    const ASSERT_NULL = 10;
-    const ASSERT_CALLABLE = 11;
-    const ASSERT_DOCUMENTS_MATCH = 12;
+    /** @var Context */
+    private $context;
 
-    /** @var integer */
-    private $assertionType = self::ASSERT_NOTHING;
+    /** @var Matches */
+    private $constraint;
 
-    /** @var mixed */
-    private $expectedValue;
-
-    /** @var callable */
-    private $assertionCallable;
-
-    /**
-     * @param integer $assertionType
-     * @param mixed   $expectedValue
-     */
-    private function __construct($assertionType, $expectedValue)
+    public function __construct(Context $context, stdClass $o)
     {
-        switch ($assertionType) {
-            case self::ASSERT_BULKWRITE:
-            case self::ASSERT_DELETE:
-            case self::ASSERT_INSERTMANY:
-            case self::ASSERT_INSERTONE:
-            case self::ASSERT_UPDATE:
-                if (! is_object($expectedValue)) {
-                    throw InvalidArgumentException::invalidType('$expectedValue', $expectedValue, 'object');
-                }
-                break;
-
-            case self::ASSERT_SAME_DOCUMENTS:
-                if (! self::isArrayOfObjects($expectedValue)) {
-                    throw InvalidArgumentException::invalidType('$expectedValue', $expectedValue, 'object[]');
-                }
-                break;
+        if (property_exists($o, 'expectResult')) {
+            $this->constraint = new Matches($o->expectResult, $context->getEntityMap());
         }
 
-        $this->assertionType = $assertionType;
-        $this->expectedValue = $expectedValue;
+        $this->context = $context;
     }
 
-    public static function fromOperation(stdClass $o) : self
+    public function assert($actual, string $saveResultAsEntity = null)
     {
-        // TODO: Infer assertion type from operation
-        return new self(self::ASSERT_NOTHING, $o->expectResult);
-    }
+        if ($this->constraint === null && $saveResultAsEntity === null) {
+            return;
+        }
 
-    /**
-     * Assert that the result expectation matches the actual outcome.
-     *
-     * @param mixed $actual Result (if any) from the actual outcome
-     * @throws LogicException if the assertion type is unsupported
-     */
-    public function assert($actual)
-    {
-        $expected = $this->expectedValue;
+        $actual = self::prepare($actual);
 
-        switch ($this->assertionType) {
-            case self::ASSERT_BULKWRITE:
-                /* If the bulk write was successful, the actual value should be
-                 * a BulkWriteResult; otherwise, expect a WriteResult extracted
-                 * from the BulkWriteException. */
-                $test->assertThat($actual, $test->logicalOr(
-                    $test->isInstanceOf(BulkWriteResult::class),
-                    $test->isInstanceOf(WriteResult::class)
-                ));
+        if ($this->constraint) {
+            assertThat($actual, $this->constraint);
+        }
 
-                if (! $actual->isAcknowledged()) {
-                    break;
-                }
-
-                if (isset($expected->deletedCount)) {
-                    $test->assertSame($expected->deletedCount, $actual->getDeletedCount());
-                }
-
-                if (isset($expected->insertedCount)) {
-                    $test->assertSame($expected->insertedCount, $actual->getInsertedCount());
-                }
-
-                // insertedIds are not available after BulkWriteException (see: PHPLIB-428)
-                if (isset($expected->insertedIds) && $actual instanceof BulkWriteResult) {
-                    $test->assertSameDocument($expected->insertedIds, $actual->getInsertedIds());
-                }
-
-                if (isset($expected->matchedCount)) {
-                    $test->assertSame($expected->matchedCount, $actual->getMatchedCount());
-                }
-
-                if (isset($expected->modifiedCount)) {
-                    $test->assertSame($expected->modifiedCount, $actual->getModifiedCount());
-                }
-
-                if (isset($expected->upsertedCount)) {
-                    $test->assertSame($expected->upsertedCount, $actual->getUpsertedCount());
-                }
-
-                if (isset($expected->upsertedIds)) {
-                    $test->assertSameDocument($expected->upsertedIds, $actual->getUpsertedIds());
-                }
-                break;
-
-            case self::ASSERT_CALLABLE:
-                call_user_func($this->assertionCallable, $expected, $actual);
-                break;
-
-            case self::ASSERT_DELETE:
-                $test->assertInstanceOf(DeleteResult::class, $actual);
-
-                if (isset($expected->deletedCount)) {
-                    $test->assertSame($expected->deletedCount, $actual->getDeletedCount());
-                }
-                break;
-
-            case self::ASSERT_INSERTMANY:
-                /* If the bulk insert was successful, the actual value should be
-                 * a InsertManyResult; otherwise, expect a WriteResult extracted
-                 * from the BulkWriteException. */
-                $test->assertThat($actual, $test->logicalOr(
-                    $test->isInstanceOf(InsertManyResult::class),
-                    $test->isInstanceOf(WriteResult::class)
-                ));
-
-                if (isset($expected->insertedCount)) {
-                    $test->assertSame($expected->insertedCount, $actual->getInsertedCount());
-                }
-
-                // insertedIds are not available after BulkWriteException (see: PHPLIB-428)
-                if (isset($expected->insertedIds) && $actual instanceof BulkWriteResult) {
-                    $test->assertSameDocument($expected->insertedIds, $actual->getInsertedIds());
-                }
-                break;
-
-            case self::ASSERT_INSERTONE:
-                $test->assertThat($actual, $test->logicalOr(
-                    $test->isInstanceOf(InsertOneResult::class),
-                    $test->isInstanceOf(WriteResult::class)
-                ));
-
-                if (isset($expected->insertedCount)) {
-                    $test->assertSame($expected->insertedCount, $actual->getInsertedCount());
-                }
-
-                if (property_exists($expected, 'insertedId')) {
-                    $test->assertSameDocument(
-                        ['insertedId' => $expected->insertedId],
-                        ['insertedId' => $actual->getInsertedId()]
-                    );
-                }
-                break;
-
-            case self::ASSERT_MATCHES_DOCUMENT:
-                $test->assertInternalType('object', $expected);
-                $test->assertThat($actual, $test->logicalOr(
-                    $test->isType('array'),
-                    $test->isType('object')
-                ));
-                $test->assertMatchesDocument($expected, $actual);
-                break;
-
-            case self::ASSERT_NOTHING:
-                break;
-
-            case self::ASSERT_NULL:
-                $test->assertNull($actual);
-                break;
-
-            case self::ASSERT_SAME:
-                $test->assertSame($expected, $actual);
-                break;
-
-            case self::ASSERT_SAME_DOCUMENT:
-                $test->assertInternalType('object', $expected);
-                $test->assertThat($actual, $test->logicalOr(
-                    $test->isType('array'),
-                    $test->isType('object')
-                ));
-                $test->assertSameDocument($expected, $actual);
-                break;
-
-            case self::ASSERT_SAME_DOCUMENTS:
-                $test->assertSameDocuments($expected, $actual);
-                break;
-
-            case self::ASSERT_DOCUMENTS_MATCH:
-                $test->assertDocumentsMatch($expected, $actual);
-                break;
-
-            case self::ASSERT_UPDATE:
-                $test->assertInstanceOf(UpdateResult::class, $actual);
-
-                if (isset($expected->matchedCount)) {
-                    $test->assertSame($expected->matchedCount, $actual->getMatchedCount());
-                }
-
-                if (isset($expected->modifiedCount)) {
-                    $test->assertSame($expected->modifiedCount, $actual->getModifiedCount());
-                }
-
-                if (isset($expected->upsertedCount)) {
-                    $test->assertSame($expected->upsertedCount, $actual->getUpsertedCount());
-                }
-
-                if (property_exists($expected, 'upsertedId')) {
-                    $test->assertSameDocument(
-                        ['upsertedId' => $expected->upsertedId],
-                        ['upsertedId' => $actual->getUpsertedId()]
-                    );
-                }
-                break;
-
-            default:
-                throw new LogicException('Unsupported assertion type: ' . $this->assertionType);
+        if ($saveResultAsEntity !== null) {
+            $entityMap[$saveResultAsEntity] = $actual;
         }
     }
 
-    public function isExpected()
+    public function saveResultAsEntity($actual, $id)
     {
-        return $this->assertionType !== self::ASSERT_NOTHING;
+        $this->context->getEntityMap()[$id] = self::prepare($actual);
     }
 
-    private static function isArrayOfObjects($array)
+    private static function prepare($value)
     {
-        if (! is_array($array)) {
-            return false;
+        if (! is_object($value)) {
+            return $value;
         }
 
-        foreach ($array as $object) {
-            if (! is_object($object)) {
-                return false;
-            }
+        if ($value instanceof BulkWriteResult ||
+            $value instanceof WriteResult ||
+            $value instanceof DeleteResult ||
+            $value instanceof InsertOneResult ||
+            $value instanceof InsertManyResult ||
+            $value instanceof UpdateResult) {
+            return self::prepareWriteResult($value);
         }
 
-        return true;
+        return $value;
     }
 
-    /**
-     * Determines whether the result is actually an error expectation.
-     *
-     * @see https://github.com/mongodb/specifications/blob/master/source/transactions/tests/README.rst#test-format
-     * @param mixed $result
-     * @return boolean
-     */
-    private static function isErrorResult($result)
+    private static function prepareWriteResult($value)
     {
-        if (! is_object($result)) {
-            return false;
+        $result = ['acknowledged' => $value->isAcknowledged()];
+
+        if (! $result['acknowledged']) {
+            return $result;
         }
 
-        $keys = ['errorContains', 'errorCodeName', 'errorLabelsContain', 'errorLabelsOmit'];
-
-        foreach ($keys as $key) {
-            if (isset($result->{$key})) {
-                return true;
-            }
+        if ($value instanceof BulkWriteResult || $value instanceof WriteResult) {
+            $result['deletedCount'] = $value->getDeletedCount();
+            $result['insertedCount'] = $value->getInsertedCount();
+            $result['matchedCount'] = $value->getMatchedCount();
+            $result['modifiedCount'] = $value->getModifiedCount();
+            $result['upsertedCount'] = $value->getUpsertedCount();
+            $result['upsertedIds'] = (object) $value->getUpsertedIds();
         }
 
-        return false;
+        // WriteResult does not provide insertedIds (see: PHPLIB-428)
+        if ($value instanceof BulkWriteResult) {
+            $result['insertedIds'] = (object) $value->getInsertedIds();
+        }
+
+        if ($value instanceof DeleteResult) {
+            $result['deletedCount'] = $value->getDeletedCount();
+        }
+
+        if ($value instanceof InsertManyResult) {
+            $result['insertedCount'] = $value->getInsertedCount();
+            $result['insertedIds'] = (object) $value->getInsertedIds();
+        }
+
+        if ($value instanceof InsertOneResult) {
+            $result['insertedCount'] = $value->getInsertedCount();
+            $result['insertedId'] = $value->getInsertedId();
+        }
+
+        if ($value instanceof UpdateResult) {
+            $result['matchedCount'] = $value->getMatchedCount();
+            $result['modifiedCount'] = $value->getModifiedCount();
+            $result['upsertedCount'] = $value->getUpsertedCount();
+            $result['upsertedId'] = $value->getUpsertedId();
+        }
+
+        return $result;
     }
 }

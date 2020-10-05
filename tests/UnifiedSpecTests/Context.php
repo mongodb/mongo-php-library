@@ -6,9 +6,10 @@ use LogicException;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
+use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\Session;
+use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use stdClass;
 use function array_diff_key;
@@ -101,6 +102,68 @@ final class Context
         }
     }
 
+    public static function createReadConcern(stdClass $o) : ReadConcern
+    {
+        self::assertHasOnlyKeys($o, ['level']);
+
+        $level = $o->level ?? null;
+        assertInternalType('string', $level);
+
+        return new ReadConcern($level);
+    }
+
+    public static function createReadPreference(stdClass $o) : ReadPreference
+    {
+        self::assertHasOnlyKeys($o, ['mode', 'tagSets', 'maxStalenessSeconds', 'hedge']);
+
+        $mode = $o->mode ?? null;
+        $tagSets = $o->tagSets ?? null;
+        $maxStalenessSeconds = $o->maxStalenessSeconds ?? null;
+        $hedge = $o->hedge ?? null;
+
+        assertInternalType('string', $mode);
+
+        if (isset($tagSets)) {
+            assertInternalType('array', $tagSets);
+            assertContains('object', $tagSets);
+        }
+
+        $options = [];
+
+        if (isset($maxStalenessSeconds)) {
+            assertInternalType('int', $maxStalenessSeconds);
+            $options['maxStalenessSeconds'] = $maxStalenessSeconds;
+        }
+
+        if (isset($hedge)) {
+            assertInternalType('object', $hedge);
+            $options['hedge'] = $hedge;
+        }
+
+        return new ReadPreference($mode, $tagSets, $options);
+    }
+
+    public static function createWriteConcern(stdClass $o) : WriteConcern
+    {
+        self::assertHasOnlyKeys($o, ['w', 'wtimeoutMS', 'journal']);
+
+        $w = $o->w ?? -2; /* MONGOC_WRITE_CONCERN_W_DEFAULT */
+        $wtimeoutMS = $o->wtimeoutMS ?? 0;
+        $journal = $o->journal ?? null;
+
+        assertThat($w, logicalOr(isType('int'), isType('string')));
+        assertInternalType('int', $wtimeoutMS);
+
+        $args = [$w, $wtimeoutMS];
+
+        if (isset($journal)) {
+            assertInternalType('bool', $journal);
+            $args[] = $journal;
+        }
+
+        return new WriteConcern(...$args);
+    }
+
     public function getEntityMap() : EntityMap
     {
         return $this->entityMap;
@@ -109,33 +172,6 @@ final class Context
     public function getInternalClient() : Client
     {
         return $this->internalClient;
-    }
-
-    public function prepareOperationArguments(array $args) : array
-    {
-        if (array_key_exists('readConcern', $args)) {
-            assertInternalType('object', $args['readConcern']);
-            $args['readConcern'] = self::prepareReadConcern($args['readConcern']);
-        }
-
-        if (array_key_exists('readPreference', $args)) {
-            assertInternalType('object', $args['readPreference']);
-            $args['readPreference'] = self::prepareReadPreference($args['readPreference']);
-        }
-
-        if (array_key_exists('session', $args)) {
-            assertInternalType('string', $args['session']);
-            $session = $this->entityMap[$args['session']];
-            assertInstanceOf(Session::class, $session);
-            $args['session'] = $session;
-        }
-
-        if (array_key_exists('writeConcern', $args)) {
-            assertInternalType('object', $args['writeConcern']);
-            $args['writeConcern'] = self::prepareWriteConcern($args['writeConcern']);
-        }
-
-        return $args;
     }
 
     public function startEventObservers()
@@ -265,68 +301,6 @@ final class Context
         }
 
         return $options;
-    }
-
-    private static function createReadConcern(stdClass $o) : ReadConcern
-    {
-        self::assertHasOnlyKeys($o, ['level']);
-
-        $level = $o->level ?? null;
-        assertInternalType('string', $level);
-
-        return new ReadConcern($level);
-    }
-
-    private static function createReadPreference(stdClass $o) : ReadPreference
-    {
-        self::assertHasOnlyKeys($o, ['mode', 'tagSets', 'maxStalenessSeconds', 'hedge']);
-
-        $mode = $o->mode ?? null;
-        $tagSets = $o->tagSets ?? null;
-        $maxStalenessSeconds = $o->maxStalenessSeconds ?? null;
-        $hedge = $o->hedge ?? null;
-
-        assertInternalType('string', $mode);
-
-        if (isset($tagSets)) {
-            assertInternalType('array', $tagSets);
-            assertContains('object', $tagSets);
-        }
-
-        $options = [];
-
-        if (isset($maxStalenessSeconds)) {
-            assertInternalType('int', $maxStalenessSeconds);
-            $options['maxStalenessSeconds'] = $maxStalenessSeconds;
-        }
-
-        if (isset($hedge)) {
-            assertInternalType('object', $hedge);
-            $options['hedge'] = $hedge;
-        }
-
-        return new ReadPreference($mode, $tagSets, $options);
-    }
-
-    private static function createWriteConcern(stdClass $o) : WriteConcern
-    {
-        self::assertHasOnlyKeys($o, ['w', 'wtimeoutMS', 'journal']);
-
-        $w = $o->w ?? -2; /* MONGOC_WRITE_CONCERN_W_DEFAULT */
-        $wtimeoutMS = $o->wtimeoutMS ?? 0;
-        $journal = $o->journal ?? null;
-
-        assertThat($w, logicalOr(isType('int'), isType('string')));
-        assertInternalType('int', $wtimeoutMS);
-
-        $args = [$w, $wtimeoutMS];
-
-        if (isset($journal)) {
-            assertInternalType('bool', $journal);
-            $args[] = $journal;
-        }
-
-        return new WriteConcern(...$args);
     }
 
     /**

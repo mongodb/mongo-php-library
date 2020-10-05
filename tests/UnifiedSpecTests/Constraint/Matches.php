@@ -416,7 +416,9 @@ class Matches extends Constraint
         }
 
         if (! $bson instanceof BSONArray && ! $bson instanceof BSONDocument) {
-            $bson = new BSONDocument($bson);
+            /* If $bson is an object, any numeric keys may become inaccessible.
+             * We can work around this by casting back to an array. */
+            $bson = new BSONDocument((array) $bson);
         }
 
         foreach ($bson as $key => $value) {

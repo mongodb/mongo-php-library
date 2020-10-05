@@ -2,33 +2,38 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
-use LogicException;
+use MongoDB\ChangeStream;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
-use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
+use PHPUnit\Framework\Assert;
 use stdClass;
+use Throwable;
+use Traversable;
 use function array_diff_key;
+use function array_key_exists;
 use function array_map;
-use function assertArrayHasKey;
+use function assertContains;
+use function assertCount;
+use function assertInstanceOf;
 use function assertInternalType;
+use function assertNotContains;
+use function assertNull;
+use function assertSame;
 use function assertThat;
+use function current;
 use function get_class;
 use function iterator_to_array;
+use function key;
 use function logicalOr;
-use function logicalXor;
-use function MongoDB\is_last_pipeline_operator_write;
-use function objectHasAttribute;
+use function property_exists;
 use function strtolower;
 
-/**
- * Spec test operation.
- */
 final class Operation
 {
     const OBJECT_TEST_RUNNER = 'testRunner';
@@ -42,17 +47,22 @@ final class Operation
     /** @var array */
     private $arguments = [];
 
+    /** @var EntityMap */
+    private $entityMap;
+
     /** @var ExpectedError */
     private $expectedError;
 
     /** @var ExpectedResult */
     private $expectedResult;
 
-    /** @var bool */
+    /** @var string */
     private $saveResultAsEntity;
 
-    public function __construct(stdClass $o)
+    public function __construct(Context $context, stdClass $o)
     {
+        $this->entityMap = $context->getEntityMap();
+
         assertInternalType('string', $o->name);
         $this->name = $o->name;
 
@@ -64,17 +74,12 @@ final class Operation
             $this->arguments = (array) $o->arguments;
         }
 
-        // expectError is mutually exclusive with expectResult and saveResultAsEntity
-        assertThat($o, logicalXor(
-            objectHasAttribute('expectError'),
-            logicalOr(objectHasAttribute('expectResult'), objectHasAttribute('saveResultAsEntity'))
-        ));
-
-        $this->expectError = ExpectedError::fromOperation($o);
-
-        if (isset($o->expectResult)) {
-            $this->expectResult = ExpectedResult::fromOperation($o);
+        if (isset($o->expectError) && (property_exists($o, 'expectResult') || isset($o->saveResultAsEntity))) {
+            Assert::fail('expectError is mutually exclusive with expectResult and saveResultAsEntity');
         }
+
+        $this->expectError = new ExpectedError($context, $o->expectError ?? null);
+        $this->expectResult = new ExpectedResult($context, $o);
 
         if (isset($o->saveResultAsEntity)) {
             assertInternalType('string', $o->saveResultAsEntity);
@@ -85,27 +90,22 @@ final class Operation
     /**
      * Execute the operation and assert its outcome.
      */
-    public function assert(Context $context, bool $rethrowExceptions = false)
+    public function assert(bool $rethrowExceptions = false)
     {
         $error = null;
         $result = null;
+        $saveResultAsEntity = null;
 
         try {
-            $result = $this->execute($context);
-
-            /* Eagerly iterate the results of a cursor. This both allows an
-             * exception to be thrown sooner and ensures that any expected
-             * getMore command(s) can be observed even if a ResultExpectation
-             * is not used (e.g. Command Monitoring spec). */
-            if ($result instanceof Cursor) {
-                $result = $result->toArray();
-            }
+            $result = $this->execute();
+            $saveResultAsEntity = $this->saveResultAsEntity;
         } catch (Throwable $e) {
             $error = $e;
         }
 
         $this->expectError->assert($error);
-        $this->expectResult->assert($result);
+        // TODO: Fix saveResultAsEntity behavior
+        $this->expectResult->assert($result, $saveResultAsEntity);
 
         // Rethrowing is primarily used for withTransaction callbacks
         if ($error && $rethrowExceptions) {
@@ -113,59 +113,58 @@ final class Operation
         }
     }
 
-    /**
-     * Executes the operation with a given context.
-     *
-     * @param Context $context
-     * @return mixed
-     * @throws LogicException if the entity type or operation is unsupported
-     */
-    private function execute(Context $context)
+    private function execute()
     {
         if ($this->object == self::OBJECT_TEST_RUNNER) {
-            return $this->executeForTestRunner($context);
+            return $this->executeForTestRunner();
         }
 
-        $entityMap = $context->getEntityMap();
-
-        assertArrayHasKey($this->object, $entityMap);
-        $object = $entityMap[$this->object];
+        $object = $this->entityMap[$this->object];
         assertInternalType('object', $object);
 
         switch (get_class($object)) {
             case Client::class:
-                return $this->executeForClient($object, $context);
+                $result = $this->executeForClient($object);
+                break;
             case Database::class:
-                return $this->executeForDatabase($object, $context);
+                $result = $this->executeForDatabase($object);
+                break;
             case Collection::class:
-                return $this->executeForCollection($object, $context);
+                $result = $this->executeForCollection($object);
+                break;
             default:
                 Assert::fail('Unsupported entity type: ' . get_class($object));
         }
+
+        if ($result instanceof Traversable && ! $result instanceof ChangeStream) {
+            return iterator_to_array($result);
+        }
+
+        return $result;
     }
 
-    private function executeForClient(Client $client, Context $context)
+    private function executeForClient(Client $client)
     {
-        $args = $context->prepareOperationArguments($this->arguments);
+        $args = $this->prepareArguments();
 
         switch ($this->name) {
-            case 'listDatabaseNames':
-                return iterator_to_array($client->listDatabaseNames($args));
-            case 'listDatabases':
-                return $client->listDatabases($args);
-            case 'watch':
+            case 'createChangeStream':
                 return $client->watch(
                     $args['pipeline'] ?? [],
                     array_diff_key($args, ['pipeline' => 1])
                 );
+            case 'listDatabaseNames':
+                return $client->listDatabaseNames($args);
+            case 'listDatabases':
+                return $client->listDatabases($args);
             default:
                 Assert::fail('Unsupported client operation: ' . $this->name);
         }
     }
 
-    private function executeForCollection(Collection $collection, Context $context)
+    private function executeForCollection(Collection $collection)
     {
-        $args = $context->prepareOperationArguments($this->arguments);
+        $args = $this->prepareArguments();
 
         switch ($this->name) {
             case 'aggregate':
@@ -174,14 +173,14 @@ final class Operation
                     array_diff_key($args, ['pipeline' => 1])
                 );
             case 'bulkWrite':
-                // Merge nested and top-level options (see: SPEC-1158)
-                $options = isset($args['options']) ? (array) $args['options'] : [];
-                $options += array_diff_key($args, ['requests' => 1]);
-
                 return $collection->bulkWrite(
-                    // TODO: Check if self can be used with a private static function
-                    array_map([$this, 'prepareBulkWriteRequest'], $args['requests']),
-                    $options
+                    array_map('self::prepareBulkWriteRequest', $args['requests']),
+                    array_diff_key($args, ['requests' => 1])
+                );
+            case 'createChangeStream':
+                return $collection->watch(
+                    $args['pipeline'] ?? [],
+                    array_diff_key($args, ['pipeline' => 1])
                 );
             case 'createIndex':
                 return $collection->createIndex(
@@ -221,7 +220,10 @@ final class Operation
                 return $collection->findOne($args['filter'], array_diff_key($args, ['filter' => 1]));
             case 'findOneAndReplace':
                 if (isset($args['returnDocument'])) {
-                    $args['returnDocument'] = 'after' === strtolower($args['returnDocument'])
+                    $args['returnDocument'] = strtolower($args['returnDocument']);
+                    assertThat($args['returnDocument'], logicalOr(isEqual('after'), isEqual('before')));
+
+                    $args['returnDocument'] = 'after' === $args['returnDocument']
                         ? FindOneAndReplace::RETURN_DOCUMENT_AFTER
                         : FindOneAndReplace::RETURN_DOCUMENT_BEFORE;
                 }
@@ -235,7 +237,10 @@ final class Operation
                 );
             case 'findOneAndUpdate':
                 if (isset($args['returnDocument'])) {
-                    $args['returnDocument'] = 'after' === strtolower($args['returnDocument'])
+                    $args['returnDocument'] = strtolower($args['returnDocument']);
+                    assertThat($args['returnDocument'], logicalOr(isEqual('after'), isEqual('before')));
+
+                    $args['returnDocument'] = 'after' === $args['returnDocument']
                         ? FindOneAndUpdate::RETURN_DOCUMENT_AFTER
                         : FindOneAndUpdate::RETURN_DOCUMENT_BEFORE;
                 }
@@ -271,24 +276,24 @@ final class Operation
                     $args['out'],
                     array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1])
                 );
-            case 'watch':
-                return $collection->watch(
-                    $args['pipeline'] ?? [],
-                    array_diff_key($args, ['pipeline' => 1])
-                );
             default:
                 Assert::fail('Unsupported collection operation: ' . $this->name);
         }
     }
 
-    private function executeForDatabase(Database $database, Context $context)
+    private function executeForDatabase(Database $database)
     {
-        $args = $context->prepareOperationArguments($this->arguments);
+        $args = $this->prepareArguments();
 
         switch ($this->name) {
             case 'aggregate':
                 return $database->aggregate(
                     $args['pipeline'],
+                    array_diff_key($args, ['pipeline' => 1])
+                );
+            case 'createChangeStream':
+                return $database->watch(
+                    $args['pipeline'] ?? [],
                     array_diff_key($args, ['pipeline' => 1])
                 );
             case 'createCollection':
@@ -302,7 +307,7 @@ final class Operation
                     array_diff_key($args, ['collection' => 1])
                 );
             case 'listCollectionNames':
-                return iterator_to_array($database->listCollectionNames($args));
+                return $database->listCollectionNames($args);
             case 'listCollections':
                 return $database->listCollections($args);
             case 'runCommand':
@@ -310,33 +315,28 @@ final class Operation
                     $args['command'],
                     array_diff_key($args, ['command' => 1])
                 )->toArray()[0];
-            case 'watch':
-                return $database->watch(
-                    $args['pipeline'] ?? [],
-                    array_diff_key($args, ['pipeline' => 1])
-                );
             default:
                 Assert::fail('Unsupported database operation: ' . $this->name);
         }
     }
 
-    private function executeForTestRunner(Context $context)
+    private function executeForTestRunner()
     {
-        $args = $context->prepareOperationArguments($this->arguments);
+        $args = $this->prepareArguments();
 
         switch ($this->name) {
             case 'assertCollectionExists':
                 $databaseName = $args['database'];
                 $collectionName = $args['collection'];
 
-                $test->assertContains($collectionName, $context->selectDatabase($databaseName)->listCollectionNames());
+                assertContains($collectionName, $context->selectDatabase($databaseName)->listCollectionNames());
 
                 return null;
             case 'assertCollectionNotExists':
                 $databaseName = $args['database'];
                 $collectionName = $args['collection'];
 
-                $test->assertNotContains($collectionName, $context->selectDatabase($databaseName)->listCollectionNames());
+                assertNotContains($collectionName, $context->selectDatabase($databaseName)->listCollectionNames());
 
                 return null;
             case 'assertIndexExists':
@@ -344,7 +344,7 @@ final class Operation
                 $collectionName = $args['collection'];
                 $indexName = $args['index'];
 
-                $test->assertContains($indexName, $this->getIndexNames($context, $databaseName, $collectionName));
+                assertContains($indexName, $this->getIndexNames($context, $databaseName, $collectionName));
 
                 return null;
             case 'assertIndexNotExists':
@@ -352,45 +352,43 @@ final class Operation
                 $collectionName = $args['collection'];
                 $indexName = $args['index'];
 
-                $test->assertNotContains($indexName, $this->getIndexNames($context, $databaseName, $collectionName));
+                assertNotContains($indexName, $this->getIndexNames($context, $databaseName, $collectionName));
 
                 return null;
             case 'assertSessionPinned':
-                $test->assertInstanceOf(Session::class, $args['session']);
-                $test->assertInstanceOf(Server::class, $args['session']->getServer());
+                assertInstanceOf(Session::class, $args['session']);
+                assertInstanceOf(Server::class, $args['session']->getServer());
 
                 return null;
             case 'assertSessionTransactionState':
-                $test->assertInstanceOf(Session::class, $args['session']);
-                /* PHPC currently does not expose the exact session state, but
-                 * instead exposes a bool to let us know whether a transaction
-                 * is currently in progress. This code may fail down the line
-                 * and should be adjusted once PHPC-1438 is implemented. */
-                $test->assertSame($this->arguments['state'], $args['session']->getTransactionState());
+                assertInstanceOf(Session::class, $args['session']);
+                assertSame($this->arguments['state'], $args['session']->getTransactionState());
 
                 return null;
             case 'assertSessionUnpinned':
-                $test->assertInstanceOf(Session::class, $args['session']);
-                $test->assertNull($args['session']->getServer());
+                assertInstanceOf(Session::class, $args['session']);
+                assertNull($args['session']->getServer());
+
+                return null;
+            case 'failPoint':
+                assertInternalType('string', $args['client']);
+                $client = $this->entityMap[$args['client']];
+                assertInstanceOf(Client::class, $client);
+
+                // TODO: configureFailPoint($this->arguments['failPoint'], $args['session']->getServer());
 
                 return null;
             case 'targetedFailPoint':
-                $test->assertInstanceOf(Session::class, $args['session']);
-                $test->configureFailPoint($this->arguments['failPoint'], $args['session']->getServer());
+                assertInstanceOf(Session::class, $args['session']);
+                // TODO: configureFailPoint($this->arguments['failPoint'], $args['session']->getServer());
 
                 return null;
             default:
-                throw new LogicException('Unsupported test runner operation: ' . $this->name);
+                Assert::fail('Unsupported test runner operation: ' . $this->name);
         }
     }
 
-    /**
-     * @param string $databaseName
-     * @param string $collectionName
-     *
-     * @return array
-     */
-    private function getIndexNames(Context $context, $databaseName, $collectionName)
+    private function getIndexNames(Context $context, string $databaseName, string $collectionName) : array
     {
         return array_map(
             function (IndexInfo $indexInfo) {
@@ -400,148 +398,56 @@ final class Operation
         );
     }
 
-    /**
-     * @throws LogicException if the operation object is unsupported
-     */
-    private function getResultAssertionType()
+    private function prepareArguments() : array
     {
-        switch ($this->object) {
-            case self::OBJECT_CLIENT:
-                return $this->getResultAssertionTypeForClient();
-            case self::OBJECT_COLLECTION:
-                return $this->getResultAssertionTypeForCollection();
-            case self::OBJECT_DATABASE:
-                return $this->getResultAssertionTypeForDatabase();
-            case self::OBJECT_GRIDFS_BUCKET:
-                return ResultExpectation::ASSERT_SAME;
-            case self::OBJECT_SESSION0:
-            case self::OBJECT_SESSION1:
-            case self::OBJECT_TEST_RUNNER:
-                return ResultExpectation::ASSERT_NOTHING;
-            default:
-                throw new LogicException('Unsupported object: ' . $this->object);
+        $args = $this->arguments;
+
+        if (array_key_exists('readConcern', $args)) {
+            assertInternalType('object', $args['readConcern']);
+            $args['readConcern'] = Context::createReadConcern($args['readConcern']);
         }
+
+        if (array_key_exists('readPreference', $args)) {
+            assertInternalType('object', $args['readPreference']);
+            $args['readPreference'] = Context::createReadPreference($args['readPreference']);
+        }
+
+        if (array_key_exists('session', $args)) {
+            assertInternalType('string', $args['session']);
+            $session = $this->entityMap[$args['session']];
+            assertInstanceOf(Session::class, $session);
+            $args['session'] = $session;
+        }
+
+        if (array_key_exists('writeConcern', $args)) {
+            assertInternalType('object', $args['writeConcern']);
+            $args['writeConcern'] = Context::createWriteConcern($args['writeConcern']);
+        }
+
+        return $args;
     }
 
-    /**
-     * @throws LogicException if the collection operation is unsupported
-     */
-    private function getResultAssertionTypeForClient()
+    private function prepareBulkWriteRequest(stdClass $request) : array
     {
-        switch ($this->name) {
-            case 'listDatabaseNames':
-                return ResultExpectation::ASSERT_SAME;
-            case 'listDatabases':
-                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
-            case 'watch':
-                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
-            default:
-                throw new LogicException('Unsupported client operation: ' . $this->name);
-        }
-    }
+        $request = (array) $request;
+        assertCount(1, $request);
 
-    /**
-     * @throws LogicException if the collection operation is unsupported
-     */
-    private function getResultAssertionTypeForCollection()
-    {
-        switch ($this->name) {
-            case 'aggregate':
-                /* Returning a cursor for the $out collection is optional per
-                 * the CRUD specification and is not implemented in the library
-                 * since we have no concept of lazy cursors. Rely on examining
-                 * the output collection rather than the operation result. */
-                if (is_last_pipeline_operator_write($this->arguments['pipeline'])) {
-                    return ResultExpectation::ASSERT_NOTHING;
-                }
+        $type = key($request);
+        $args = current($request);
+        assertInternalType('object', $args);
+        $args = (array) $args;
 
-                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
-            case 'bulkWrite':
-                return ResultExpectation::ASSERT_BULKWRITE;
-            case 'count':
-            case 'countDocuments':
-                return ResultExpectation::ASSERT_SAME;
-            case 'createIndex':
-            case 'dropIndex':
-                return ResultExpectation::ASSERT_MATCHES_DOCUMENT;
-            case 'distinct':
-            case 'estimatedDocumentCount':
-                return ResultExpectation::ASSERT_SAME;
-            case 'deleteMany':
-            case 'deleteOne':
-                return ResultExpectation::ASSERT_DELETE;
-            case 'drop':
-                return ResultExpectation::ASSERT_NOTHING;
-            case 'findOne':
-            case 'findOneAndDelete':
-            case 'findOneAndReplace':
-            case 'findOneAndUpdate':
-                return ResultExpectation::ASSERT_SAME_DOCUMENT;
-            case 'find':
-                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
-            case 'insertMany':
-                return ResultExpectation::ASSERT_INSERTMANY;
-            case 'insertOne':
-                return ResultExpectation::ASSERT_INSERTONE;
-            case 'listIndexes':
-                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
-            case 'mapReduce':
-                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
-            case 'replaceOne':
-            case 'updateMany':
-            case 'updateOne':
-                return ResultExpectation::ASSERT_UPDATE;
-            case 'watch':
-                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
-            default:
-                throw new LogicException('Unsupported collection operation: ' . $this->name);
-        }
-    }
-
-    /**
-     * @throws LogicException if the database operation is unsupported
-     */
-    private function getResultAssertionTypeForDatabase()
-    {
-        switch ($this->name) {
-            case 'aggregate':
-            case 'listCollections':
-                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
-            case 'listCollectionNames':
-                return ResultExpectation::ASSERT_SAME;
-            case 'createCollection':
-            case 'dropCollection':
-            case 'runCommand':
-                return ResultExpectation::ASSERT_MATCHES_DOCUMENT;
-            case 'watch':
-                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
-            default:
-                throw new LogicException('Unsupported database operation: ' . $this->name);
-        }
-    }
-
-    /**
-     * Prepares a request element for a bulkWrite operation.
-     *
-     * @param stdClass $request
-     * @return array
-     * @throws LogicException if the bulk write request is unsupported
-     */
-    private function prepareBulkWriteRequest(stdClass $request)
-    {
-        $args = (array) $request->arguments;
-
-        switch ($request->name) {
+        switch ($type) {
             case 'deleteMany':
             case 'deleteOne':
                 return [
-                    $request->name => [
+                    $type => [
                         $args['filter'],
                         array_diff_key($args, ['filter' => 1]),
                     ],
                 ];
             case 'insertOne':
-                return [ 'insertOne' => [ $args['document'] ]];
+                return [ 'insertOne' => [ $args['document']]];
             case 'replaceOne':
                 return [
                     'replaceOne' => [
@@ -553,14 +459,14 @@ final class Operation
             case 'updateMany':
             case 'updateOne':
                 return [
-                    $request->name => [
+                    $type => [
                         $args['filter'],
                         $args['update'],
                         array_diff_key($args, ['filter' => 1, 'update' => 1]),
                     ],
                 ];
             default:
-                throw new LogicException('Unsupported bulk write request: ' . $request->name);
+                Assert::fail('Unsupported bulk write request: ' . $type);
         }
     }
 }

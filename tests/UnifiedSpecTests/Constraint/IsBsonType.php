@@ -21,9 +21,11 @@ use MongoDB\BSON\UTCDateTimeInterface;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\Constraint\LogicalOr;
 use RuntimeException;
 use Symfony\Bridge\PhpUnit\ConstraintTrait;
 use function array_keys;
+use function array_map;
 use function count;
 use function is_array;
 use function is_bool;
@@ -74,6 +76,22 @@ final class IsBsonType extends Constraint
         }
 
         $this->type = $type;
+    }
+
+    public static function any() : LogicalOr
+    {
+        return self::anyOf(...array_keys(self::$knownTypes));
+    }
+
+    public static function anyOf(string ...$types) : Constraint
+    {
+        if (count($types) === 1) {
+            return new self(...$types);
+        }
+
+        return LogicalOr::fromConstraints(...array_map(function ($type) {
+            return new self($type);
+        }, $types));
     }
 
     private function doMatches($other) : bool

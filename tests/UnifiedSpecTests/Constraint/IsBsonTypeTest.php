@@ -15,8 +15,10 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\TestCase;
+use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
 use stdClass;
+use function fopen;
 use function MongoDB\BSON\fromJSON;
 use function MongoDB\BSON\toPHP;
 use function unserialize;
@@ -29,9 +31,7 @@ class IsBsonTypeTest extends TestCase
      */
     public function testConstraint($type, $value)
     {
-        $c = new IsBsonType($type);
-
-        $this->assertTrue($c->evaluate($value, '', true));
+        $this->assertResult(true, new IsBsonType($type), $value, $this->dataName() . ' is ' . $type);
     }
 
     public function provideTypes()
@@ -67,6 +67,28 @@ class IsBsonTypeTest extends TestCase
             'minKey' => ['minKey', new MinKey()],
             'maxKey' => ['maxKey', new MaxKey()],
         ];
+    }
+
+    /**
+     * @dataProvider provideTypes
+     */
+    public function testAny($type, $value)
+    {
+        $this->assertResult(true, IsBsonType::any(), $value, $this->dataName() . ' is a BSON type');
+    }
+
+    public function testAnyExcludesStream()
+    {
+        $this->assertResult(false, IsBsonType::any(), fopen('php://temp', 'w+b'), 'stream is not a BSON type');
+    }
+
+    public function testAnyOf()
+    {
+        $c = IsBsonType::anyOf('double', 'int');
+
+        $this->assertResult(true, $c, 1, 'int is double or int');
+        $this->assertResult(true, $c, 1.4, 'int is double or int');
+        $this->assertResult(false, $c, 'foo', 'string is not double or int');
     }
 
     public function testErrorMessage()
@@ -129,7 +151,7 @@ class IsBsonTypeTest extends TestCase
         $this->assertResult(false, $c, new Javascript('foo = 1;'), 'javascript is not javascriptWithScope');
     }
 
-    private function assertResult($expected, IsBsonType $constraint, $value, $message)
+    private function assertResult($expected, Constraint $constraint, $value, string $message = '')
     {
         $this->assertSame($expected, $constraint->evaluate($value, '', true), $message);
     }

@@ -108,12 +108,10 @@ class MatchesTest extends FunctionalTestCase
         $c = new Matches(['$$matchesHexBytes' => 'DEADBEEF']);
         $this->assertResult(true, $c, $stream1, 'value matches hex bytes (root-level)');
         $this->assertResult(false, $c, $stream2, 'value does not match hex bytes (root-level)');
-        $this->assertResult(false, $c, 1, 'value is not a stream');
 
         $c = new Matches(['x' => ['$$matchesHexBytes' => '90ABCDEF']]);
         $this->assertResult(true, $c, ['x' => $stream2], 'value matches hex bytes (embedded)');
         $this->assertResult(false, $c, ['x' => $stream1], 'value does not match hex bytes (embedded)');
-        $this->assertResult(false, $c, ['x' => 1], 'value is not a stream');
     }
 
     public function testOperatorUnsetOrMatches()
@@ -303,7 +301,7 @@ class MatchesTest extends FunctionalTestCase
         ];
     }
 
-    private function assertResult($expected, Matches $constraint, $value, $message)
+    private function assertResult($expected, Matches $constraint, $value, string $message = '')
     {
         $this->assertSame($expected, $constraint->evaluate($value, '', true), $message);
     }

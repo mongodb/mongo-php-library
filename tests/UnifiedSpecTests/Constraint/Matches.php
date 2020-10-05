@@ -10,7 +10,6 @@ use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\UnifiedSpecTests\EntityMap;
 use PHPUnit\Framework\Constraint\Constraint;
-use PHPUnit\Framework\Constraint\LogicalOr;
 use PHPUnit\Framework\ExpectationFailedException;
 use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
@@ -24,14 +23,11 @@ use function assertThat;
 use function containsOnly;
 use function count;
 use function get_class;
-use function get_resource_type;
 use function gettype;
 use function hex2bin;
 use function implode;
 use function is_array;
 use function is_object;
-use function is_resource;
-use function is_string;
 use function isInstanceOf;
 use function isType;
 use function logicalAnd;
@@ -244,14 +240,7 @@ class Matches extends Constraint
                 '$$type requires string or string[]'
             );
 
-            $types = (array) $operator['$$type'];
-            $constraints = [];
-
-            foreach ($types as $type) {
-                $constraints[] = new IsBsonType($type);
-            }
-
-            $constraint = LogicalOr::fromConstraints(...$constraints);
+            $constraint = IsBsonType::anyOf(...(array) $operator['$$type']);
 
             if (! $constraint->evaluate($actual, '', true)) {
                 self::failAt(sprintf('%s is not an expected BSON type: %s', $this->exporter()->shortenedExport($actual), implode(', ', $types)), $keyPath);
@@ -275,10 +264,7 @@ class Matches extends Constraint
         if ($name === '$$matchesHexBytes') {
             assertInternalType('string', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires string');
             assertRegExp('/^([0-9a-fA-F]{2})*$/', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires pairs of hex chars');
-
-            if (! is_resource($actual) || get_resource_type($actual) != "stream") {
-                self::failAt(sprintf('%s is not a stream', $this->exporter()->shortenedExport($actual)), $keyPath);
-            }
+            assertThat($actual, new IsStream());
 
             if (stream_get_contents($actual, -1, 0) !== hex2bin($operator['$$matchesHexBytes'])) {
                 self::failAt(sprintf('%s does not match expected hex bytes: %s', $this->exporter()->shortenedExport($actual), $operator['$$matchesHexBytes']), $keyPath);

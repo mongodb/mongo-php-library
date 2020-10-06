@@ -60,8 +60,8 @@ class EventObserver implements CommandSubscriber
     /** @var string */
     private $clientId;
 
-    /** @var EntityMap */
-    private $entityMap;
+    /** @var Context */
+    private $context;
 
     /** @var array */
     private $ignoreCommands = [];
@@ -69,7 +69,7 @@ class EventObserver implements CommandSubscriber
     /** @var array */
     private $observeEvents = [];
 
-    public function __construct(array $observeEvents, array $ignoreCommands, string $clientId, EntityMap $entityMap)
+    public function __construct(array $observeEvents, array $ignoreCommands, string $clientId, Context $context)
     {
         assertNotEmpty($observeEvents);
 
@@ -87,7 +87,7 @@ class EventObserver implements CommandSubscriber
         }
 
         $this->clientId = $clientId;
-        $this->entityMap = $entityMap;
+        $this->context = $context;
     }
 
     /**
@@ -95,6 +95,10 @@ class EventObserver implements CommandSubscriber
      */
     public function commandFailed(CommandFailedEvent $event)
     {
+        if (! $this->context->isActiveClient($this->clientId)) {
+            return;
+        }
+
         if (! isset($this->observeEvents[CommandFailedEvent::class])) {
             return;
         }
@@ -111,6 +115,10 @@ class EventObserver implements CommandSubscriber
      */
     public function commandStarted(CommandStartedEvent $event)
     {
+        if (! $this->context->isActiveClient($this->clientId)) {
+            return;
+        }
+
         if (! isset($this->observeEvents[CommandStartedEvent::class])) {
             return;
         }
@@ -127,6 +135,10 @@ class EventObserver implements CommandSubscriber
      */
     public function commandSucceeded(CommandSucceededEvent $event)
     {
+        if (! $this->context->isActiveClient($this->clientId)) {
+            return;
+        }
+
         if (! isset($this->observeEvents[CommandSucceededEvent::class])) {
             return;
         }
@@ -161,7 +173,7 @@ class EventObserver implements CommandSubscriber
         $mi->attachIterator(new ArrayIterator($expectedEvents));
         $mi->attachIterator(new ArrayIterator($this->actualEvents));
 
-        foreach ($mi as $i => $events) {
+        foreach ($mi as $keys => $events) {
             list($expectedEvent, $actualEvent) = $events;
             // TODO: assertNotNull may be redundant since counts are equal
             assertNotNull($expectedEvent);
@@ -177,7 +189,7 @@ class EventObserver implements CommandSubscriber
             assertInternalType('object', $data);
 
             // Message is used for actual event assertions (not test structure)
-            $message = sprintf('%s event[%d]', $this->clientId, $i);
+            $message = sprintf('%s event[%d]', $this->clientId, $keys[0]);
 
             assertInstanceOf(self::$supportedEvents[$type], $actualEvent, $message . ': type matches');
             $this->assertEvent($actualEvent, $data, $message);
@@ -206,7 +218,7 @@ class EventObserver implements CommandSubscriber
 
         if (isset($expected->command)) {
             assertInternalType('object', $expected->command);
-            $constraint = new Matches($expected->command, $this->entityMap);
+            $constraint = new Matches($expected->command, $this->context->getEntityMap());
             assertThat($actual->getCommand(), $constraint, $message . ': command matches');
         }
 
@@ -227,7 +239,7 @@ class EventObserver implements CommandSubscriber
 
         if (isset($expected->reply)) {
             assertInternalType('object', $expected->reply);
-            $constraint = new Matches($expected->reply, $this->entityMap);
+            $constraint = new Matches($expected->reply, $this->context->getEntityMap());
             assertThat($actual->getReply(), $constraint, $message . ': reply matches');
         }
 

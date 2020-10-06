@@ -35,8 +35,8 @@ class EntityMap implements ArrayAccess
         /* TODO: Determine if this is actually necessary. References to session
          * entities should not persist between tests. */
         foreach ($this->map as $entity) {
-            if ($entity instanceof Session) {
-                $entity->endSession();
+            if ($entity->value instanceof Session) {
+                $entity->value->endSession();
             }
         }
     }
@@ -44,42 +44,80 @@ class EntityMap implements ArrayAccess
     /**
      * @see http://php.net/arrayaccess.offsetexists
      */
-    public function offsetExists($key)
+    public function offsetExists($id)
     {
-        assertInternalType('string', $key);
+        assertInternalType('string', $id);
 
-        return array_key_exists($key, $this->map);
+        return array_key_exists($id, $this->map);
     }
 
     /**
      * @see http://php.net/arrayaccess.offsetget
      */
-    public function offsetGet($key)
+    public function offsetGet($id)
     {
-        assertInternalType('string', $key);
-        assertArrayHasKey($key, $this->map, sprintf('No entity is defined for "%s"', $key));
+        assertInternalType('string', $id);
+        assertArrayHasKey($id, $this->map, sprintf('No entity is defined for "%s"', $id));
 
-        return $this->map[$key];
+        return $this->map[$id]->value;
     }
 
     /**
      * @see http://php.net/arrayaccess.offsetset
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($id, $value)
     {
-        assertInternalType('string', $key);
-        assertArrayNotHasKey($key, $this->map, sprintf('Entity already exists for key "%s" and cannot be replaced', $key));
-        assertThat($value, self::isSupportedType());
-
-        $this->map[$key] = $value;
+        Assert::fail('Entities can only be set via register()');
     }
 
     /**
      * @see http://php.net/arrayaccess.offsetunset
      */
-    public function offsetUnset($key)
+    public function offsetUnset($id)
     {
         Assert::fail('Entities cannot be removed from the map');
+    }
+
+    public function set(string $id, $value, string $parentId = null)
+    {
+        assertArrayNotHasKey($id, $this->map, sprintf('Entity already exists for "%s" and cannot be replaced', $id));
+        assertThat($value, self::isSupportedType());
+
+        $parent = $parentId === null ? null : $this->map[$parentId];
+
+        $this->map[$id] = new class ($id, $value, $parent) {
+            /** @var string */
+            public $id;
+            /** @var mixed */
+            public $value;
+            /** @var self */
+            public $parent;
+
+            public function __construct(string $id, $value, self $parent = null)
+            {
+                $this->id = $id;
+                $this->value = $value;
+                $this->parent = $parent;
+            }
+
+            public function getRoot() : self
+            {
+                $root = $this;
+
+                while ($root->parent !== null) {
+                    $root = $root->parent;
+                }
+
+                return $root;
+            }
+        };
+    }
+
+    public function getRootClientIdOf(string $id) : ?string
+    {
+        $root = $this->map[$id]->getRoot();
+
+        return $root->value instanceof Client ? $root->id : null;
     }
 
     private static function isSupportedType() : Constraint

@@ -22,13 +22,22 @@ final class ExpectedResult
     /** @var EntityMap */
     private $entityMap;
 
-    public function __construct(stdClass $o, EntityMap $entityMap)
+    /**
+     * ID of the entity yielding the result. This is mainly used to associate
+     * entities with a root client for collation of observed events.
+     *
+     * @var ?string
+     */
+    private $yieldingEntityId;
+
+    public function __construct(stdClass $o, EntityMap $entityMap, string $yieldingEntityId = null)
     {
         if (property_exists($o, 'expectResult')) {
             $this->constraint = new Matches($o->expectResult, $entityMap);
         }
 
         $this->entityMap = $entityMap;
+        $this->yieldingEntityId = $yieldingEntityId;
     }
 
     public function assert($actual, string $saveResultAsEntity = null)
@@ -39,12 +48,12 @@ final class ExpectedResult
 
         $actual = self::prepare($actual);
 
-        if ($this->constraint) {
+        if ($this->constraint !== null) {
             assertThat($actual, $this->constraint);
         }
 
         if ($saveResultAsEntity !== null) {
-            $this->entityMap[$saveResultAsEntity] = $actual;
+            $this->entityMap->set($saveResultAsEntity, $actual, $this->yieldingEntityId);
         }
     }
 

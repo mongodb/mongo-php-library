@@ -268,9 +268,9 @@ class Matches extends Constraint
         if ($name === '$$matchesHexBytes') {
             assertInternalType('string', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires string');
             assertRegExp('/^([0-9a-fA-F]{2})*$/', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires pairs of hex chars');
-            assertThat($actual, new IsStream());
+            assertInternalType('string', $actual);
 
-            if (stream_get_contents($actual, -1, 0) !== hex2bin($operator['$$matchesHexBytes'])) {
+            if ($actual !== hex2bin($operator['$$matchesHexBytes'])) {
                 self::failAt(sprintf('%s does not match expected hex bytes: %s', $this->exporter()->shortenedExport($actual), $operator['$$matchesHexBytes']), $keyPath);
             }
 
@@ -310,7 +310,7 @@ class Matches extends Constraint
             return;
         }
 
-        throw new LogicException('unsupported operator: ' . $operator);
+        throw new LogicException('unsupported operator: ' . $name);
     }
 
     /** @see ConstraintTrait */

@@ -4,7 +4,6 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 
 use LogicException;
 use MongoDB\Client;
-use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
@@ -17,13 +16,18 @@ use function assertInstanceOf;
 use function assertInternalType;
 use function assertNotEmpty;
 use function assertNotFalse;
+use function assertRegExp;
 use function assertStringStartsWith;
 use function count;
 use function current;
 use function explode;
+use function fopen;
+use function fwrite;
+use function hex2bin;
 use function implode;
 use function key;
 use function parse_url;
+use function rewind;
 use function strlen;
 use function strpos;
 use function substr_replace;
@@ -77,15 +81,27 @@ final class Context
 
             switch ($type) {
                 case 'client':
-                    $this->entityMap[$id] = $this->createClient($def);
+                    $this->createClient($id, $def);
                     break;
 
                 case 'database':
-                    $this->entityMap[$id] = $this->createDatabase($def);
+                    $this->createDatabase($id, $def);
                     break;
 
                 case 'collection':
-                    $this->entityMap[$id] = $this->createCollection($def);
+                    $this->createCollection($id, $def);
+                    break;
+
+                case 'session':
+                    $this->createSession($id, $def);
+                    break;
+
+                case 'bucket':
+                    $this->createBucket($id, $def);
+                    break;
+
+                case 'stream':
+                    $this->createStream($id, $def);
                     break;
 
                 default:
@@ -102,6 +118,16 @@ final class Context
     public function getInternalClient() : Client
     {
         return $this->internalClient;
+    }
+
+    public function isActiveClient(string $clientId) : bool
+    {
+        return $this->activeClient === $clientId;
+    }
+
+    public function setActiveClient(string $clientId = null)
+    {
+        $this->activeClient = $clientId;
     }
 
     public function assertExpectedEventsForClients(array $expectedEventsForClients)
@@ -144,7 +170,7 @@ final class Context
         return $this->eventObserversByClient[$id];
     }
 
-    private function createClient(stdClass $o) : Client
+    private function createClient(string $id, stdClass $o)
     {
         Util::assertHasOnlyKeys($o, ['id', 'uriOptions', 'useMultipleMongoses', 'observeEvents', 'ignoreCommandMonitoringEvents']);
 
@@ -178,23 +204,23 @@ final class Context
             assertInternalType('array', $observeEvents);
             assertInternalType('array', $ignoreCommandMonitoringEvents);
 
-            $this->eventObserversByClient[$o->id] = new EventObserver($observeEvents, $ignoreCommandMonitoringEvents, $o->id, $this->entityMap);
+            $this->eventObserversByClient[$id] = new EventObserver($observeEvents, $ignoreCommandMonitoringEvents, $id, $this);
         }
 
-        return new Client($uri, $uriOptions);
+        $this->entityMap->set($id, new Client($uri, $uriOptions));
     }
 
-    private function createCollection(stdClass $o) : Collection
+    private function createCollection(string $id, stdClass $o)
     {
         Util::assertHasOnlyKeys($o, ['id', 'database', 'collectionName', 'collectionOptions']);
 
         $collectionName = $o->collectionName ?? null;
-        $database = $o->database ?? null;
+        $databaseId = $o->database ?? null;
 
         assertInternalType('string', $collectionName);
-        assertInternalType('string', $database);
+        assertInternalType('string', $databaseId);
 
-        $database = $this->entityMap[$database];
+        $database = $this->entityMap[$databaseId];
         assertInstanceOf(Database::class, $database);
 
         $options = [];
@@ -204,20 +230,20 @@ final class Context
             $options = self::prepareCollectionOrDatabaseOptions((array) $o->collectionOptions);
         }
 
-        return $database->selectCollection($o->collectionName, $options);
+        $this->entityMap->set($id, $database->selectCollection($o->collectionName, $options), $databaseId);
     }
 
-    private function createDatabase(stdClass $o) : Database
+    private function createDatabase(string $id, stdClass $o)
     {
         Util::assertHasOnlyKeys($o, ['id', 'client', 'databaseName', 'databaseOptions']);
 
         $databaseName = $o->databaseName ?? null;
-        $client = $o->client ?? null;
+        $clientId = $o->client ?? null;
 
         assertInternalType('string', $databaseName);
-        assertInternalType('string', $client);
+        assertInternalType('string', $clientId);
 
-        $client = $this->entityMap[$client];
+        $client = $this->entityMap[$clientId];
         assertInstanceOf(Client::class, $client);
 
         $options = [];
@@ -227,29 +253,113 @@ final class Context
             $options = self::prepareCollectionOrDatabaseOptions((array) $o->databaseOptions);
         }
 
-        return $client->selectDatabase($databaseName, $options);
+        $this->entityMap->set($id, $client->selectDatabase($databaseName, $options), $clientId);
+    }
+
+    private function createSession(string $id, stdClass $o)
+    {
+        Util::assertHasOnlyKeys($o, ['id', 'client', 'sessionOptions']);
+
+        $clientId = $o->client ?? null;
+        assertInternalType('string', $clientId);
+        $client = $this->entityMap[$clientId];
+        assertInstanceOf(Client::class, $client);
+
+        $options = [];
+
+        if (isset($o->sessionOptions)) {
+            assertInternalType('object', $o->sessionOptions);
+            $options = self::prepareSessionOptions((array) $o->sessionOptions);
+        }
+
+        $this->entityMap->set($id, $client->startSession($options), $clientId);
+    }
+
+    private function createBucket(string $id, stdClass $o)
+    {
+        Util::assertHasOnlyKeys($o, ['id', 'database', 'bucketOptions']);
+
+        $databaseId = $o->database ?? null;
+        assertInternalType('string', $databaseId);
+        $database = $this->entityMap[$databaseId];
+        assertInstanceOf(Database::class, $database);
+
+        $options = [];
+
+        if (isset($o->bucketOptions)) {
+            assertInternalType('object', $o->bucketOptions);
+            $options = self::prepareBucketOptions((array) $o->bucketOptions);
+        }
+
+        $this->entityMap->set($id, $database->selectGridFSBucket($options), $databaseId);
+    }
+
+    private function createStream(string $id, stdClass $o)
+    {
+        Util::assertHasOnlyKeys($o, ['id', 'hexBytes']);
+
+        $hexBytes = $o->hexBytes ?? null;
+        assertInternalType('string', $hexBytes);
+        assertRegExp('/^([0-9a-fA-F]{2})*$/', $hexBytes);
+
+        $stream = fopen('php://temp', 'w+b');
+        fwrite($stream, hex2bin($hexBytes));
+        rewind($stream);
+
+        $this->entityMap->set($id, $stream);
     }
 
     private static function prepareCollectionOrDatabaseOptions(array $options) : array
     {
         Util::assertHasOnlyKeys($options, ['readConcern', 'readPreference', 'writeConcern']);
 
-        if (array_key_exists('readConcern', $options)) {
-            assertInternalType('object', $options['readConcern']);
-            $options['readConcern'] = Util::createReadConcern($options['readConcern']);
+        return Util::prepareCommonOptions($options);
+    }
+
+    private static function prepareBucketOptions(array $options) : array
+    {
+        Util::assertHasOnlyKeys($options, ['bucketName', 'chunkSizeBytes', 'disableMD5', 'readConcern', 'readPreference', 'writeConcern']);
+
+        if (array_key_exists('bucketName', $options)) {
+            assertInternalType('string', $options['bucketName']);
         }
 
-        if (array_key_exists('readPreference', $options)) {
-            assertInternalType('object', $options['readPreference']);
-            $options['readPreference'] = Util::createReadPreference($options['readPreference']);
+        if (array_key_exists('chunkSizeBytes', $options)) {
+            assertInternalType('int', $options['chunkSizeBytes']);
         }
 
-        if (array_key_exists('writeConcern', $options)) {
-            assertInternalType('object', $options['writeConcern']);
-            $options['writeConcern'] = Util::createWriteConcern($options['writeConcern']);
+        if (array_key_exists('disableMD5', $options)) {
+            assertInternalType('bool', $options['disableMD5']);
+        }
+
+        return Util::prepareCommonOptions($options);
+    }
+
+    private static function prepareSessionOptions(array $options) : array
+    {
+        Util::assertHasOnlyKeys($options, ['causalConsistency', 'defaultTransactionOptions']);
+
+        if (array_key_exists('causalConsistency', $options)) {
+            assertInternalType('bool', $options['causalConsistency']);
+        }
+
+        if (array_key_exists('defaultTransactionOptions', $options)) {
+            assertInternalType('object', $options['defaultTransactionOptions']);
+            $options['defaultTransactionOptions'] = self::prepareDefaultTransactionOptions((array) $options['defaultTransactionOptions']);
         }
 
         return $options;
+    }
+
+    private static function prepareDefaultTransactionOptions(array $options) : array
+    {
+        Util::assertHasOnlyKeys($options, ['maxCommitTimeMS', 'readConcern', 'readPreference', 'writeConcern']);
+
+        if (array_key_exists('maxCommitTimeMS', $options)) {
+            assertInternalType('int', $options['maxCommitTimeMS']);
+        }
+
+        return Util::prepareCommonOptions($options);
     }
 
     /**

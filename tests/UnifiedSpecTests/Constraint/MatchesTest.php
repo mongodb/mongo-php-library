@@ -76,8 +76,8 @@ class MatchesTest extends FunctionalTestCase
     public function testOperatorMatchesEntity()
     {
         $entityMap = new EntityMap();
-        $entityMap['integer'] = 1;
-        $entityMap['object'] = ['y' => 1];
+        $entityMap->set('integer', 1);
+        $entityMap->set('object', ['y' => 1]);
 
         $c = new Matches(['x' => ['$$matchesEntity' => 'integer']], $entityMap);
         $this->assertResult(true, $c, ['x' => 1], 'value matches integer entity (embedded)');
@@ -138,7 +138,7 @@ class MatchesTest extends FunctionalTestCase
         $session = $this->manager->startSession();
 
         $entityMap = new EntityMap();
-        $entityMap['session'] = $session;
+        $entityMap->set('session', $session);
 
         $lsidWithWrongId = ['id' => new Binary('0123456789ABCDEF', Binary::TYPE_UUID)];
         $lsidWithExtraField = (array) $session->getLogicalSessionId() + ['y' => 1];
@@ -255,7 +255,7 @@ class MatchesTest extends FunctionalTestCase
     public function operatorErrorMessageProvider()
     {
         $entityMap = new EntityMap();
-        $entityMap['notSession'] = 1;
+        $entityMap->set('notSession', 1);
 
         return [
             '$$exists type' => [

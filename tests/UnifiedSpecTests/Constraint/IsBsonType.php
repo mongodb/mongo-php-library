@@ -27,6 +27,7 @@ use Symfony\Bridge\PhpUnit\ConstraintTrait;
 use function array_keys;
 use function array_map;
 use function count;
+use function in_array;
 use function is_array;
 use function is_bool;
 use function is_float;
@@ -42,28 +43,28 @@ final class IsBsonType extends Constraint
     use ConstraintTrait;
 
     /** @var array */
-    private static $knownTypes = [
-        'double' => 1,
-        'string' => 1,
-        'object' => 1,
-        'array' => 1,
-        'binData' => 1,
-        'undefined' => 1,
-        'objectId' => 1,
-        'bool' => 1,
-        'date' => 1,
-        'null' => 1,
-        'regex' => 1,
-        'dbPointer' => 1,
-        'javascript' => 1,
-        'symbol' => 1,
-        'javascriptWithScope' => 1,
-        'int' => 1,
-        'timestamp' => 1,
-        'long' => 1,
-        'decimal' => 1,
-        'minKey' => 1,
-        'maxKey' => 1,
+    private static $types = [
+        'double',
+        'string',
+        'object',
+        'array',
+        'binData',
+        'undefined',
+        'objectId',
+        'bool',
+        'date',
+        'null',
+        'regex',
+        'dbPointer',
+        'javascript',
+        'symbol',
+        'javascriptWithScope',
+        'int',
+        'timestamp',
+        'long',
+        'decimal',
+        'minKey',
+        'maxKey',
     ];
 
     /** @var string */
@@ -71,7 +72,7 @@ final class IsBsonType extends Constraint
 
     public function __construct(string $type)
     {
-        if (! isset(self::$knownTypes[$type])) {
+        if (! in_array($type, self::$types)) {
             throw new RuntimeException(sprintf('Type specified for %s <%s> is not a valid type', self::class, $type));
         }
 
@@ -80,7 +81,7 @@ final class IsBsonType extends Constraint
 
     public static function any() : LogicalOr
     {
-        return self::anyOf(...array_keys(self::$knownTypes));
+        return self::anyOf(...self::$types);
     }
 
     public static function anyOf(string ...$types) : Constraint

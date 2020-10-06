@@ -27,6 +27,8 @@ use function gettype;
 use function hex2bin;
 use function implode;
 use function is_array;
+use function is_float;
+use function is_int;
 use function is_object;
 use function isInstanceOf;
 use function isType;
@@ -113,8 +115,10 @@ class Matches extends Constraint
         $expectedType = is_object($expected) ? get_class($expected) : gettype($expected);
         $actualType = is_object($actual) ? get_class($actual) : gettype($actual);
 
-        // Workaround for ObjectComparator printing the whole actual object
-        if ($expectedType !== $actualType) {
+        /* Early check to work around ObjectComparator printing the entire value
+         * for a failed type comparison. Avoid doing this if either value is
+         * numeric to allow for flexible numeric comparisons (e.g. 1 == 1.0). */
+        if ($expectedType !== $actualType && ! (self::isNumeric($expected) || self::isNumeric($actual))) {
             self::failAt(sprintf('%s is not expected type "%s"', $actualType, $expectedType), $keyPath);
         }
 
@@ -363,6 +367,11 @@ class Matches extends Constraint
         throw new LogicException('should not reach this point');
     }
 
+    private static function isNumeric($value)
+    {
+        return is_int($value) || is_float($value) || $value instanceof Int64;
+    }
+
     private static function isOperator(BSONDocument $document) : bool
     {
         if (count($document) !== 1) {
@@ -399,6 +408,11 @@ class Matches extends Constraint
         if ($bson instanceof Int64 && PHP_INT_SIZE != 4) {
             return (int) ((string) $bson);
         }
+
+        /* TODO: Convert Int64 objects to integers on 32-bit platforms if they
+         * can be expressed as such. This is necessary to handle flexible
+         * numeric comparisons if the server returns 32-bit value as a 64-bit
+         * integer (e.g. cursor ID). */
 
         // Serializable can produce an array or object, so recurse on its output
         if ($bson instanceof Serializable) {

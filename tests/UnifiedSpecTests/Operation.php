@@ -47,6 +47,9 @@ final class Operation
     /** @var array */
     private $arguments = [];
 
+    /** @var Context */
+    private $context;
+
     /** @var EntityMap */
     private $entityMap;
 
@@ -59,8 +62,9 @@ final class Operation
     /** @var string */
     private $saveResultAsEntity;
 
-    public function __construct(Context $context, stdClass $o)
+    public function __construct(stdClass $o, Context $context)
     {
+        $this->context =$context;
         $this->entityMap = $context->getEntityMap();
 
         assertInternalType('string', $o->name);
@@ -78,8 +82,8 @@ final class Operation
             Assert::fail('expectError is mutually exclusive with expectResult and saveResultAsEntity');
         }
 
-        $this->expectError = new ExpectedError($context, $o->expectError ?? null);
-        $this->expectResult = new ExpectedResult($context, $o);
+        $this->expectError = new ExpectedError($o->expectError ?? null, $this->entityMap);
+        $this->expectResult = new ExpectedResult($o, $this->entityMap);
 
         if (isset($o->saveResultAsEntity)) {
             assertInternalType('string', $o->saveResultAsEntity);
@@ -132,6 +136,9 @@ final class Operation
             case Collection::class:
                 $result = $this->executeForCollection($object);
                 break;
+            case ChangeStream::class:
+                $result = $this->executeForChangeStream($object);
+                break;
             default:
                 Assert::fail('Unsupported entity type: ' . get_class($object));
         }
@@ -143,16 +150,50 @@ final class Operation
         return $result;
     }
 
+    private function executeForChangeStream(ChangeStream $changeStream)
+    {
+        $args = $this->prepareArguments();
+
+        switch ($this->name) {
+            case 'iterateUntilDocumentOrError':
+                /* Note: the first iteration should use rewind, otherwise we may
+                 * miss a document from the initial batch (possible if using a
+                 * resume token). We can infer this from a null key; however,
+                 * if a test ever calls this operation consecutively to expect
+                 * multiple errors from the same ChangeStream we will need a
+                 * different approach (e.g. examining internal hasAdvanced
+                 * property on the ChangeStream). */
+                if ($changeStream->key() === null) {
+                    $changeStream->rewind();
+
+                    if ($changeStream->valid()) {
+                        return $changeStream->current();
+                    }
+                }
+
+                do {
+                    $changeStream->next();
+                } while (! $changeStream->valid());
+
+                return $changeStream->current();
+            default:
+                Assert::fail('Unsupported client operation: ' . $this->name);
+        }
+    }
+
     private function executeForClient(Client $client)
     {
         $args = $this->prepareArguments();
 
         switch ($this->name) {
             case 'createChangeStream':
-                return $client->watch(
+                $changeStream = $client->watch(
                     $args['pipeline'] ?? [],
                     array_diff_key($args, ['pipeline' => 1])
                 );
+                $changeStream->rewind();
+
+                return $changeStream;
             case 'listDatabaseNames':
                 return $client->listDatabaseNames($args);
             case 'listDatabases':
@@ -178,10 +219,13 @@ final class Operation
                     array_diff_key($args, ['requests' => 1])
                 );
             case 'createChangeStream':
-                return $collection->watch(
+                $changeStream = $collection->watch(
                     $args['pipeline'] ?? [],
                     array_diff_key($args, ['pipeline' => 1])
                 );
+                $changeStream->rewind();
+
+                return $changeStream;
             case 'createIndex':
                 return $collection->createIndex(
                     $args['keys'],
@@ -292,10 +336,13 @@ final class Operation
                     array_diff_key($args, ['pipeline' => 1])
                 );
             case 'createChangeStream':
-                return $database->watch(
+                $changeStream = $database->watch(
                     $args['pipeline'] ?? [],
                     array_diff_key($args, ['pipeline' => 1])
                 );
+                $changeStream->rewind();
+
+                return $changeStream;
             case 'createCollection':
                 return $database->createCollection(
                     $args['collection'],

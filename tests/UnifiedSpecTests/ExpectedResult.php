@@ -16,19 +16,19 @@ use function property_exists;
 
 final class ExpectedResult
 {
-    /** @var Context */
-    private $context;
-
     /** @var Matches */
     private $constraint;
 
-    public function __construct(Context $context, stdClass $o)
+    /** @var EntityMap */
+    private $entityMap;
+
+    public function __construct(stdClass $o, EntityMap $entityMap)
     {
         if (property_exists($o, 'expectResult')) {
-            $this->constraint = new Matches($o->expectResult, $context->getEntityMap());
+            $this->constraint = new Matches($o->expectResult, $entityMap);
         }
 
-        $this->context = $context;
+        $this->entityMap = $entityMap;
     }
 
     public function assert($actual, string $saveResultAsEntity = null)
@@ -44,13 +44,8 @@ final class ExpectedResult
         }
 
         if ($saveResultAsEntity !== null) {
-            $entityMap[$saveResultAsEntity] = $actual;
+            $this->entityMap[$saveResultAsEntity] = $actual;
         }
-    }
-
-    public function saveResultAsEntity($actual, $id)
-    {
-        $this->context->getEntityMap()[$id] = self::prepare($actual);
     }
 
     private static function prepare($value)

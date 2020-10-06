@@ -74,10 +74,12 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
 
         if (isset($test->skipReason)) {
+            $this->assertInternalType('string', $test->skipReason);
             $this->markTestSkipped($test->skipReason);
         }
 
         if (isset($test->runOnRequirements)) {
+            $this->assertInternalType('array', $test->runOnRequirements);
             $this->checkRunOnRequirements($test->runOnRequirements);
         }
 
@@ -93,20 +95,24 @@ class UnifiedSpecTest extends FunctionalTestCase
 
         // TODO handle distinct commands in sharded transactions
 
-        if (isset($test->expectedEvents)) {
-            $context->startEventObservers();
-        }
+        $context->startEventObservers();
+
+        $this->assertInternalType('array', $test->operations);
 
         foreach ($test->operations as $o) {
-            $operation = new Operation($context, $o);
+            $operation = new Operation($o, $context);
             $operation->assert();
         }
 
-        if (isset($test->expectedEvents)) {
-            $context->stopEventObservers();
+        $context->stopEventObservers();
+
+        if (isset($test->expectEvents)) {
+            $this->assertInternalType('array', $test->expectEvents);
+            $context->assertExpectedEventsForClients($test->expectEvents);
         }
 
         if (isset($test->outcome)) {
+            $this->assertInternalType('array', $test->outcome);
             $this->assertOutcome($test->outcome);
         }
     }
@@ -173,6 +179,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     private function checkRunOnRequirements(array $runOnRequirements)
     {
         $this->assertNotEmpty($runOnRequirements);
+        $this->assertContainsOnly('object', $runOnRequirements);
 
         $serverVersion = $this->getCachedServerVersion();
         $topology = $this->getCachedTopology();
@@ -284,6 +291,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     private function assertOutcome(array $outcome)
     {
         $this->assertNotEmpty($outcome);
+        $this->assertContainsOnly('object', $outcome);
 
         foreach ($outcome as $data) {
             $collectionData = new CollectionData($data);
@@ -294,6 +302,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     private function prepareInitialData(array $initialData)
     {
         $this->assertNotEmpty($initialData);
+        $this->assertContainsOnly('object', $initialData);
 
         foreach ($initialData as $data) {
             $collectionData = new CollectionData($data);

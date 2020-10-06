@@ -7,30 +7,22 @@ use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\Manager;
-use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
-use MongoDB\Driver\WriteConcern;
 use stdClass;
-use function array_diff_key;
-use function array_fill_keys;
 use function array_key_exists;
-use function array_keys;
-use function assertContains;
+use function assertArrayHasKey;
 use function assertCount;
-use function assertEmpty;
 use function assertInstanceOf;
 use function assertInternalType;
+use function assertNotEmpty;
 use function assertNotFalse;
 use function assertStringStartsWith;
-use function assertThat;
 use function count;
 use function current;
 use function explode;
 use function implode;
-use function isType;
 use function key;
-use function logicalOr;
 use function parse_url;
 use function strlen;
 use function strpos;
@@ -102,68 +94,6 @@ final class Context
         }
     }
 
-    public static function createReadConcern(stdClass $o) : ReadConcern
-    {
-        self::assertHasOnlyKeys($o, ['level']);
-
-        $level = $o->level ?? null;
-        assertInternalType('string', $level);
-
-        return new ReadConcern($level);
-    }
-
-    public static function createReadPreference(stdClass $o) : ReadPreference
-    {
-        self::assertHasOnlyKeys($o, ['mode', 'tagSets', 'maxStalenessSeconds', 'hedge']);
-
-        $mode = $o->mode ?? null;
-        $tagSets = $o->tagSets ?? null;
-        $maxStalenessSeconds = $o->maxStalenessSeconds ?? null;
-        $hedge = $o->hedge ?? null;
-
-        assertInternalType('string', $mode);
-
-        if (isset($tagSets)) {
-            assertInternalType('array', $tagSets);
-            assertContains('object', $tagSets);
-        }
-
-        $options = [];
-
-        if (isset($maxStalenessSeconds)) {
-            assertInternalType('int', $maxStalenessSeconds);
-            $options['maxStalenessSeconds'] = $maxStalenessSeconds;
-        }
-
-        if (isset($hedge)) {
-            assertInternalType('object', $hedge);
-            $options['hedge'] = $hedge;
-        }
-
-        return new ReadPreference($mode, $tagSets, $options);
-    }
-
-    public static function createWriteConcern(stdClass $o) : WriteConcern
-    {
-        self::assertHasOnlyKeys($o, ['w', 'wtimeoutMS', 'journal']);
-
-        $w = $o->w ?? -2; /* MONGOC_WRITE_CONCERN_W_DEFAULT */
-        $wtimeoutMS = $o->wtimeoutMS ?? 0;
-        $journal = $o->journal ?? null;
-
-        assertThat($w, logicalOr(isType('int'), isType('string')));
-        assertInternalType('int', $wtimeoutMS);
-
-        $args = [$w, $wtimeoutMS];
-
-        if (isset($journal)) {
-            assertInternalType('bool', $journal);
-            $args[] = $journal;
-        }
-
-        return new WriteConcern(...$args);
-    }
-
     public function getEntityMap() : EntityMap
     {
         return $this->entityMap;
@@ -172,6 +102,25 @@ final class Context
     public function getInternalClient() : Client
     {
         return $this->internalClient;
+    }
+
+    public function assertExpectedEventsForClients(array $expectedEventsForClients)
+    {
+        assertNotEmpty($expectedEventsForClients);
+
+        foreach ($expectedEventsForClients as $expectedEventsForClient) {
+            assertInternalType('object', $expectedEventsForClient);
+            Util::assertHasOnlyKeys($expectedEventsForClient, ['client', 'events']);
+
+            $client = $expectedEventsForClient->client ?? null;
+            $expectedEvents = $expectedEventsForClient->events ?? null;
+
+            assertInternalType('string', $client);
+            assertArrayHasKey($client, $this->eventObserversByClient);
+            assertInternalType('array', $expectedEvents);
+
+            $this->eventObserversByClient[$client]->assert($expectedEvents);
+        }
     }
 
     public function startEventObservers()
@@ -188,16 +137,16 @@ final class Context
         }
     }
 
-    private static function assertHasOnlyKeys($arrayOrObject, array $keys)
+    public function getEventObserverForClient(string $id) : EventObserver
     {
-        assertThat($arrayOrObject, logicalOr(isType('array'), isType('object')));
-        $diff = array_diff_key((array) $arrayOrObject, array_fill_keys($keys, 1));
-        assertEmpty($diff, 'Unsupported keys: ' . implode(',', array_keys($diff)));
+        assertArrayHasKey($id, $this->eventObserversByClient);
+
+        return $this->eventObserversByClient[$id];
     }
 
     private function createClient(stdClass $o) : Client
     {
-        self::assertHasOnlyKeys($o, ['id', 'uriOptions', 'useMultipleMongoses', 'observeEvents', 'ignoreCommandMonitoringEvents']);
+        Util::assertHasOnlyKeys($o, ['id', 'uriOptions', 'useMultipleMongoses', 'observeEvents', 'ignoreCommandMonitoringEvents']);
 
         $useMultipleMongoses = $o->useMultipleMongoses ?? null;
         $observeEvents = $o->observeEvents ?? null;
@@ -229,7 +178,7 @@ final class Context
             assertInternalType('array', $observeEvents);
             assertInternalType('array', $ignoreCommandMonitoringEvents);
 
-            $this->eventObserversByClient[$o->id] = new EventObserver($observeEvents, $ignoreCommandMonitoringEvents);
+            $this->eventObserversByClient[$o->id] = new EventObserver($observeEvents, $ignoreCommandMonitoringEvents, $o->id, $this->entityMap);
         }
 
         return new Client($uri, $uriOptions);
@@ -237,7 +186,7 @@ final class Context
 
     private function createCollection(stdClass $o) : Collection
     {
-        self::assertHasOnlyKeys($o, ['id', 'database', 'collectionName', 'collectionOptions']);
+        Util::assertHasOnlyKeys($o, ['id', 'database', 'collectionName', 'collectionOptions']);
 
         $collectionName = $o->collectionName ?? null;
         $database = $o->database ?? null;
@@ -260,7 +209,7 @@ final class Context
 
     private function createDatabase(stdClass $o) : Database
     {
-        self::assertHasOnlyKeys($o, ['id', 'client', 'databaseName', 'databaseOptions']);
+        Util::assertHasOnlyKeys($o, ['id', 'client', 'databaseName', 'databaseOptions']);
 
         $databaseName = $o->databaseName ?? null;
         $client = $o->client ?? null;
@@ -283,21 +232,21 @@ final class Context
 
     private static function prepareCollectionOrDatabaseOptions(array $options) : array
     {
-        self::assertHasOnlyKeys($options, ['readConcern', 'readPreference', 'writeConcern']);
+        Util::assertHasOnlyKeys($options, ['readConcern', 'readPreference', 'writeConcern']);
 
         if (array_key_exists('readConcern', $options)) {
             assertInternalType('object', $options['readConcern']);
-            $options['readConcern'] = self::createReadConcern($options['readConcern']);
+            $options['readConcern'] = Util::createReadConcern($options['readConcern']);
         }
 
         if (array_key_exists('readPreference', $options)) {
             assertInternalType('object', $options['readPreference']);
-            $options['readPreference'] = self::createReadPreference($options['readPreference']);
+            $options['readPreference'] = Util::createReadPreference($options['readPreference']);
         }
 
         if (array_key_exists('writeConcern', $options)) {
             assertInternalType('object', $options['writeConcern']);
-            $options['writeConcern'] = self::createWriteConcern($options['writeConcern']);
+            $options['writeConcern'] = Util::createWriteConcern($options['writeConcern']);
         }
 
         return $options;

@@ -62,7 +62,7 @@ final class ExpectedError
     /** @var ExpectedResult */
     private $expectedResult;
 
-    public function __construct(Context $context, stdClass $o = null)
+    public function __construct(stdClass $o = null, EntityMap $entityMap)
     {
         if ($o === null) {
             return;
@@ -107,7 +107,7 @@ final class ExpectedError
         }
 
         if (property_exists($o, 'expectResult')) {
-            $this->expectedResult = new ExpectedResult($context, $o);
+            $this->expectedResult = new ExpectedResult($o, $entityMap);
         }
     }
 

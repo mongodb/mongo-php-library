@@ -41,7 +41,10 @@ class EntityMap implements ArrayAccess
     public function __destruct()
     {
         /* TODO: Determine if this is actually necessary. References to session
-         * entities should not persist between tests. */
+         * entities should not persist between tests.
+         *
+         * Note: This does not appear to trigger after a test due to cyclic
+         * references (see comment in UnifiedSpecTest.php). */
         foreach ($this->map as $entity) {
             if ($entity->value instanceof Session) {
                 $entity->value->endSession();

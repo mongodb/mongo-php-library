@@ -16,6 +16,7 @@ use SebastianBergmann\Comparator\Factory;
 use Symfony\Bridge\PhpUnit\ConstraintTrait;
 use function array_keys;
 use function assertInternalType;
+use function assertNotNull;
 use function assertRegExp;
 use function assertThat;
 use function containsOnly;

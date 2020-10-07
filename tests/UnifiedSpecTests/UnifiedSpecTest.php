@@ -3,10 +3,10 @@
 namespace MongoDB\Tests\UnifiedSpecTests;
 
 use MongoDB\Client;
-use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
+use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Tests\FunctionalTestCase;
 use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
@@ -45,15 +45,22 @@ class UnifiedSpecTest extends FunctionalTestCase
     {
         parent::setUpBeforeClass();
 
-        /* TODO: FunctionalTestCase::getUri() restricts to a single mongos by
-         * default. Determine if there's a need to override that. */
-        self::$internalClient = new Client(static::getUri());
+        /* Provide internal client unmodified URI, since it may need to execute
+         * commands on multiple mongoses (e.g. killAllSessions) */
+        self::$internalClient = new Client(static::getUri(true));
         self::killAllSessions();
     }
 
     private function doSetUp()
     {
         parent::setUp();
+
+        /* TODO: The transactions spec advises calling killAllSessions only at
+         * the start of the test suite and after failed tests; however, the
+         * "unpin after transient error within a transaction" pinning test
+         * causes the subsequent transaction test to block. This can be removed
+         * once that is addressed. */
+        self::killAllSessions();
 
         $this->failPointObserver = new FailPointObserver();
         $this->failPointObserver->start();
@@ -67,6 +74,10 @@ class UnifiedSpecTest extends FunctionalTestCase
 
         $this->failPointObserver->stop();
         $this->failPointObserver->disableFailPoints();
+
+        /* TODO: Consider manually invoking gc_collect_cycles since each test is
+         * prone to create cycles (perhaps due to EntityMap), which can leak and
+         * prevent sessions from being released back into the pool. */
 
         parent::tearDown();
     }
@@ -299,7 +310,9 @@ class UnifiedSpecTest extends FunctionalTestCase
                 if (! isset($server->getInfo()['logicalSessionTimeoutMinutes'])) {
                     continue;
                 }
-                $server->executeCommand('admin', new Command(['killAllSessions' => []]));
+
+                $command = new DatabaseCommand('admin', ['killAllSessions' => []]);
+                $command->execute($server);
             } catch (ServerException $e) {
                 // Interrupted error is safe to ignore (see: SERVER-38335)
                 if ($e->getCode() != self::SERVER_ERROR_INTERRUPTED) {

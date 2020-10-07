@@ -10,7 +10,6 @@ use MongoDB\Database;
 use MongoDB\Driver\Session;
 use MongoDB\GridFS\Bucket;
 use MongoDB\Tests\UnifiedSpecTests\Constraint\IsBsonType;
-use MongoDB\Tests\UnifiedSpecTests\Constraint\IsStream;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Constraint\Constraint;
 use function array_key_exists;
@@ -130,8 +129,7 @@ class EntityMap implements ArrayAccess
                 isInstanceOf(Session::class),
                 isInstanceOf(Bucket::class),
                 isInstanceOf(ChangeStream::class),
-                IsBsonType::any(),
-                new IsStream()
+                IsBsonType::any()
             );
         }
 

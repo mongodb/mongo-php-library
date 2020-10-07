@@ -6,9 +6,9 @@ use MongoDB\ChangeStream;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
-use MongoDB\GridFS\Bucket;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
+use MongoDB\GridFS\Bucket;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
@@ -26,16 +26,23 @@ use function assertInternalType;
 use function assertNotContains;
 use function assertNotNull;
 use function assertNull;
+use function assertObjectHasAttribute;
+use function assertRegExp;
 use function assertSame;
 use function assertThat;
 use function current;
 use function equalTo;
+use function fopen;
+use function fwrite;
 use function get_class;
+use function hex2bin;
 use function iterator_to_array;
 use function key;
 use function logicalOr;
 use function MongoDB\with_transaction;
 use function property_exists;
+use function rewind;
+use function stream_get_contents;
 use function strtolower;
 
 final class Operation
@@ -161,11 +168,7 @@ final class Operation
         }
 
         if ($result instanceof Traversable && ! $result instanceof ChangeStream) {
-            return iterator_to_array($result, false);
-        }
-
-        if (is_resource($result) && get_resource_type($result) === 'stream') {
-            return stream_get_contents($result, -1, 0);
+            return iterator_to_array($result);
         }
 
         return $result;
@@ -427,13 +430,26 @@ final class Operation
         switch ($this->name) {
             case 'delete':
                 return $bucket->delete($args['id']);
-            case 'openDownloadStream':
-                return $bucket->openDownloadStream($args['id']);
-            case 'uploadFromStream':
+            case 'downloadByName':
+                return stream_get_contents($bucket->openDownloadStream(
+                    $args['filename'],
+                    array_diff_key($args, ['filename' => 1])
+                ));
+            case 'download':
+                return stream_get_contents($bucket->openDownloadStream($args['id']));
+            case 'uploadWithId':
+                $args['_id'] = $args['id'];
+                unset($args['id']);
+
+                // Fall through
+
+            case 'upload':
+                $args = self::prepareUploadArguments($args);
+
                 return $bucket->uploadFromStream(
                     $args['filename'],
-                    $this->entityMap[$args['source']],
-                    array_diff_key($args, ['filename' => 1, 'source'])
+                    $args['source'],
+                    array_diff_key($args, ['filename' => 1, 'source' => 1])
                 );
             default:
                 Assert::fail('Unsupported bucket operation: ' . $this->name);
@@ -527,7 +543,7 @@ final class Operation
         return Util::prepareCommonOptions($args);
     }
 
-    private function prepareBulkWriteRequest(stdClass $request) : array
+    private static function prepareBulkWriteRequest(stdClass $request) : array
     {
         $request = (array) $request;
         assertCount(1, $request);
@@ -568,5 +584,24 @@ final class Operation
             default:
                 Assert::fail('Unsupported bulk write request: ' . $type);
         }
+    }
+
+    private static function prepareUploadArguments(array $args) : array
+    {
+        $source = $args['source'] ?? null;
+        assertInternalType('object', $source);
+        assertObjectHasAttribute('$$hexBytes', $source);
+        Util::assertHasOnlyKeys($source, ['$$hexBytes']);
+        $hexBytes = $source->{'$$hexBytes'};
+        assertInternalType('string', $hexBytes);
+        assertRegExp('/^([0-9a-fA-F]{2})*$/', $hexBytes);
+
+        $stream = fopen('php://temp', 'w+b');
+        fwrite($stream, hex2bin($hexBytes));
+        rewind($stream);
+
+        $args['source'] = $stream;
+
+        return $args;
     }
 }

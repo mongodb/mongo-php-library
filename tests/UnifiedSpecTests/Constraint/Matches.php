@@ -36,7 +36,6 @@ use function logicalAnd;
 use function logicalOr;
 use function range;
 use function sprintf;
-use function stream_get_contents;
 use function strpos;
 use const PHP_INT_SIZE;
 

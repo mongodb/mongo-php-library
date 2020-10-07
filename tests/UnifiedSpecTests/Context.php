@@ -16,18 +16,13 @@ use function assertInstanceOf;
 use function assertInternalType;
 use function assertNotEmpty;
 use function assertNotFalse;
-use function assertRegExp;
 use function assertStringStartsWith;
 use function count;
 use function current;
 use function explode;
-use function fopen;
-use function fwrite;
-use function hex2bin;
 use function implode;
 use function key;
 use function parse_url;
-use function rewind;
 use function strlen;
 use function strpos;
 use function substr_replace;
@@ -98,10 +93,6 @@ final class Context
 
                 case 'bucket':
                     $this->createBucket($id, $def);
-                    break;
-
-                case 'stream':
-                    $this->createStream($id, $def);
                     break;
 
                 default:
@@ -292,21 +283,6 @@ final class Context
         }
 
         $this->entityMap->set($id, $database->selectGridFSBucket($options), $databaseId);
-    }
-
-    private function createStream(string $id, stdClass $o)
-    {
-        Util::assertHasOnlyKeys($o, ['id', 'hexBytes']);
-
-        $hexBytes = $o->hexBytes ?? null;
-        assertInternalType('string', $hexBytes);
-        assertRegExp('/^([0-9a-fA-F]{2})*$/', $hexBytes);
-
-        $stream = fopen('php://temp', 'w+b');
-        fwrite($stream, hex2bin($hexBytes));
-        rewind($stream);
-
-        $this->entityMap->set($id, $stream);
     }
 
     private static function prepareCollectionOrDatabaseOptions(array $options) : array

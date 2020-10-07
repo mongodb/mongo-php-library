@@ -12,12 +12,14 @@ use MultipleIterator;
 use PHPUnit\Framework\Assert;
 use stdClass;
 use function array_fill_keys;
+use function array_reverse;
 use function assertArrayHasKey;
 use function assertCount;
 use function assertInstanceOf;
 use function assertInternalType;
 use function assertNotEmpty;
 use function assertNotNull;
+use function assertObjectHasAttribute;
 use function assertSame;
 use function assertThat;
 use function count;
@@ -150,11 +152,6 @@ class EventObserver implements CommandSubscriber
         $this->actualEvents[] = $event;
     }
 
-    public function getActualEvents()
-    {
-        return $this->actualEvents;
-    }
-
     public function start()
     {
         addSubscriber($this);
@@ -163,6 +160,27 @@ class EventObserver implements CommandSubscriber
     public function stop()
     {
         removeSubscriber($this);
+    }
+
+    public function getLsidsOnLastTwoCommands() : array
+    {
+        $lsids = [];
+
+        foreach (array_reverse($this->actualEvents) as $event) {
+            if (! $event instanceof CommandStartedEvent) {
+                continue;
+            }
+
+            $command = $event->getCommand();
+            assertObjectHasAttribute('lsid', $command);
+            $lsids[] = $command->lsid;
+
+            if (count($lsids) === 2) {
+                return $lsids;
+            }
+        }
+
+        Assert::fail('Not enough CommandStartedEvents observed');
     }
 
     public function assert(array $expectedEvents)

@@ -11,6 +11,7 @@ use MongoDB\Tests\FunctionalTestCase;
 use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use Throwable;
+use function assertTrue;
 use function file_get_contents;
 use function glob;
 use function MongoDB\BSON\fromJSON;

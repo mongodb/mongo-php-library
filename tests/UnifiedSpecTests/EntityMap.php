@@ -12,6 +12,7 @@ use MongoDB\GridFS\Bucket;
 use MongoDB\Tests\UnifiedSpecTests\Constraint\IsBsonType;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Constraint\Constraint;
+use stdClass;
 use function array_key_exists;
 use function assertArrayHasKey;
 use function assertArrayNotHasKey;
@@ -25,6 +26,14 @@ class EntityMap implements ArrayAccess
 {
     /** @var array */
     private $map = [];
+
+    /**
+     * Track lsids so they can be accessed after Session::getLogicalSessionId()
+     * has been called.
+     *
+     * @var stdClass[]
+     */
+    private $lsidsBySession = [];
 
     /** @var Constraint */
     private static $isSupportedType;
@@ -82,6 +91,10 @@ class EntityMap implements ArrayAccess
         assertArrayNotHasKey($id, $this->map, sprintf('Entity already exists for "%s" and cannot be replaced', $id));
         assertThat($value, self::isSupportedType());
 
+        if ($value instanceof Session) {
+            $this->lsidsBySession[$id] = $value->getLogicalSessionId();
+        }
+
         $parent = $parentId === null ? null : $this->map[$parentId];
 
         $this->map[$id] = new class ($id, $value, $parent) {
@@ -110,6 +123,31 @@ class EntityMap implements ArrayAccess
                 return $root;
             }
         };
+    }
+
+    public function getClient(string $clientId) : Client
+    {
+        return $this[$clientId];
+    }
+
+    public function getCollection(string $collectionId) : Collection
+    {
+        return $this[$collectionId];
+    }
+
+    public function getDatabase(string $databaseId) : Database
+    {
+        return $this[$databaseId];
+    }
+
+    public function getSession(string $sessionId) : Session
+    {
+        return $this[$sessionId];
+    }
+
+    public function getLogicalSessionId(string $sessionId) : stdClass
+    {
+        return $this->lsidsBySession[$sessionId];
     }
 
     public function getRootClientIdOf(string $id) : ?string

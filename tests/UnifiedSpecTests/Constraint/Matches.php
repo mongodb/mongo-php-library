@@ -5,7 +5,6 @@ namespace MongoDB\Tests\UnifiedSpecTests\Constraint;
 use LogicException;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
-use MongoDB\Driver\Session;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\UnifiedSpecTests\EntityMap;
@@ -16,7 +15,6 @@ use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
 use Symfony\Bridge\PhpUnit\ConstraintTrait;
 use function array_keys;
-use function assertInstanceOf;
 use function assertInternalType;
 use function assertRegExp;
 use function assertThat;
@@ -300,16 +298,9 @@ class Matches extends Constraint
 
         if ($name === '$$sessionLsid') {
             assertInternalType('string', $operator['$$sessionLsid'], '$$sessionLsid requires string');
+            $lsid = $this->entityMap->getLogicalSessionId($operator['$$sessionLsid']);
 
-            $session = $this->entityMap[$operator['$$sessionLsid']];
-
-            assertInstanceOf(Session::class, $session, '$$sessionLsid requires session entity');
-
-            $this->assertEquals(
-                self::prepare($session->getLogicalSessionId()),
-                $actual,
-                $keyPath
-            );
+            $this->assertEquals(self::prepare($lsid), $actual, $keyPath);
 
             return;
         }

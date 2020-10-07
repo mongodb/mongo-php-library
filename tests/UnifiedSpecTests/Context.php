@@ -4,7 +4,6 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 
 use LogicException;
 use MongoDB\Client;
-use MongoDB\Database;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
@@ -12,7 +11,6 @@ use stdClass;
 use function array_key_exists;
 use function assertArrayHasKey;
 use function assertCount;
-use function assertInstanceOf;
 use function assertInternalType;
 use function assertNotEmpty;
 use function assertNotFalse;
@@ -21,6 +19,7 @@ use function count;
 use function current;
 use function explode;
 use function implode;
+use function in_array;
 use function key;
 use function parse_url;
 use function strlen;
@@ -36,6 +35,12 @@ use const PHP_URL_HOST;
  */
 final class Context
 {
+    /** @var string */
+    private $activeClient;
+
+    /** @var string[] */
+    private $dirtySessions = [];
+
     /** @var EntityMap */
     private $entityMap;
 
@@ -109,6 +114,20 @@ final class Context
     public function getInternalClient() : Client
     {
         return $this->internalClient;
+    }
+
+    public function isDirtySession(string $sessionId) : bool
+    {
+        return in_array($sessionId, $this->dirtySessions);
+    }
+
+    public function markDirtySession(string $sessionId)
+    {
+        if ($this->isDirtySession($sessionId)) {
+            return;
+        }
+
+        $this->dirtySessions[] = $sessionId;
     }
 
     public function isActiveClient(string $clientId) : bool
@@ -198,7 +217,12 @@ final class Context
             $this->eventObserversByClient[$id] = new EventObserver($observeEvents, $ignoreCommandMonitoringEvents, $id, $this);
         }
 
-        $this->entityMap->set($id, new Client($uri, $uriOptions));
+        /* TODO: Remove this once PHPC-1645 is implemented. Each client needs
+         * its own libmongoc client to facilitate txnNumber assertions. */
+        static $i = 0;
+        $driverOptions = isset($observeEvents) ? ['i' => $i++] : [];
+
+        $this->entityMap->set($id, new Client($uri, $uriOptions, $driverOptions));
     }
 
     private function createCollection(string $id, stdClass $o)
@@ -211,8 +235,7 @@ final class Context
         assertInternalType('string', $collectionName);
         assertInternalType('string', $databaseId);
 
-        $database = $this->entityMap[$databaseId];
-        assertInstanceOf(Database::class, $database);
+        $database = $this->entityMap->getDatabase($databaseId);
 
         $options = [];
 
@@ -234,8 +257,7 @@ final class Context
         assertInternalType('string', $databaseName);
         assertInternalType('string', $clientId);
 
-        $client = $this->entityMap[$clientId];
-        assertInstanceOf(Client::class, $client);
+        $client = $this->entityMap->getClient($clientId);
 
         $options = [];
 
@@ -253,8 +275,7 @@ final class Context
 
         $clientId = $o->client ?? null;
         assertInternalType('string', $clientId);
-        $client = $this->entityMap[$clientId];
-        assertInstanceOf(Client::class, $client);
+        $client = $this->entityMap->getClient($clientId);
 
         $options = [];
 
@@ -272,8 +293,7 @@ final class Context
 
         $databaseId = $o->database ?? null;
         assertInternalType('string', $databaseId);
-        $database = $this->entityMap[$databaseId];
-        assertInstanceOf(Database::class, $database);
+        $database = $this->entityMap->getDatabase($databaseId);
 
         $options = [];
 

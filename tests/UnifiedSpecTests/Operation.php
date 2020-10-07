@@ -13,6 +13,7 @@ use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Exception as PHPUnitException;
 use stdClass;
 use Throwable;
 use Traversable;
@@ -21,15 +22,19 @@ use function array_key_exists;
 use function array_map;
 use function assertContains;
 use function assertCount;
+use function assertEquals;
+use function assertFalse;
 use function assertInstanceOf;
 use function assertInternalType;
 use function assertNotContains;
+use function assertNotEquals;
 use function assertNotNull;
 use function assertNull;
 use function assertObjectHasAttribute;
 use function assertRegExp;
 use function assertSame;
 use function assertThat;
+use function assertTrue;
 use function current;
 use function equalTo;
 use function fopen;
@@ -115,11 +120,32 @@ final class Operation
         $result = null;
         $saveResultAsEntity = null;
 
+        if (isset($this->arguments['session'])) {
+            $dirtySessionObserver = new DirtySessionObserver($this->entityMap->getLogicalSessionId($this->arguments['session']));
+            $dirtySessionObserver->start();
+        }
+
         try {
             $result = $this->execute();
             $saveResultAsEntity = $this->saveResultAsEntity;
         } catch (Throwable $e) {
+            /* TODO: Consider adding operation details (e.g. operations[] index)
+             * to the exception message. Alternatively, throw a new exception
+             * and include this as the previous, since PHPUnit will render the
+             * chain when reporting a test failure. */
+            if ($e instanceof PHPUnitException) {
+                throw $e;
+            }
+
             $error = $e;
+        }
+
+        if (isset($dirtySessionObserver)) {
+            $dirtySessionObserver->stop();
+
+            if ($dirtySessionObserver->observedNetworkError()) {
+                $this->context->markDirtySession($this->arguments['session']);
+            }
         }
 
         $this->expectError->assert($error);
@@ -400,6 +426,8 @@ final class Operation
                 return $session->abortTransaction();
             case 'commitTransaction':
                 return $session->commitTransaction();
+            case 'endSession':
+                return $session->endSession();
             case 'startTransaction':
                 return $session->startTransaction($args);
             case 'withTransaction':
@@ -460,59 +488,62 @@ final class Operation
     {
         $args = $this->prepareArguments();
 
+        if (array_key_exists('client', $args)) {
+            assertInternalType('string', $args['client']);
+            $args['client'] = $this->entityMap->getClient($args['client']);
+        }
+
+        // TODO: validate arguments
         switch ($this->name) {
             case 'assertCollectionExists':
                 $database = $this->context->getInternalClient()->selectDatabase($args['databaseName']);
                 assertContains($args['collectionName'], $database->listCollectionNames());
-
-                return null;
+                break;
             case 'assertCollectionNotExists':
                 $database = $this->context->getInternalClient()->selectDatabase($args['databaseName']);
                 assertNotContains($args['collectionName'], $database->listCollectionNames());
-
-                return null;
+                break;
             case 'assertIndexExists':
                 assertContains($args['indexName'], $this->getIndexNames($args['databaseName'], $args['collectionName']));
-
-                return null;
+                break;
             case 'assertIndexNotExists':
                 assertNotContains($args['indexName'], $this->getIndexNames($args['databaseName'], $args['collectionName']));
-
-                return null;
+                break;
+            case 'assertSameLsidOnLastTwoCommands':
+                $eventObserver = $this->context->getEventObserverForClient($this->arguments['client']);
+                assertEquals(...$eventObserver->getLsidsOnLastTwoCommands());
+                break;
+            case 'assertDifferentLsidOnLastTwoCommands':
+                $eventObserver = $this->context->getEventObserverForClient($this->arguments['client']);
+                assertNotEquals(...$eventObserver->getLsidsOnLastTwoCommands());
+                break;
+            case 'assertSessionDirty':
+                assertTrue($this->context->isDirtySession($this->arguments['session']));
+                break;
+            case 'assertSessionNotDirty':
+                assertFalse($this->context->isDirtySession($this->arguments['session']));
+                break;
             case 'assertSessionPinned':
-                assertInstanceOf(Session::class, $args['session']);
                 assertInstanceOf(Server::class, $args['session']->getServer());
-
-                return null;
+                break;
             case 'assertSessionTransactionState':
-                assertInstanceOf(Session::class, $args['session']);
                 assertSame($this->arguments['state'], $args['session']->getTransactionState());
-
-                return null;
+                break;
             case 'assertSessionUnpinned':
-                assertInstanceOf(Session::class, $args['session']);
                 assertNull($args['session']->getServer());
-
-                return null;
+                break;
             case 'failPoint':
-                assertInternalType('object', $args['failPoint']);
-                assertInternalType('string', $args['client']);
-                $client = $this->entityMap[$args['client']];
-                assertInstanceOf(Client::class, $client);
-
-                $client->selectDatabase('admin')->command($args['failPoint']);
-
-                return null;
+                $args['client']->selectDatabase('admin')->command($args['failPoint']);
+                break;
             case 'targetedFailPoint':
-                assertInstanceOf(Session::class, $args['session']);
-                assertNotNull($args['session']->getServer());
                 /* We could execute a command on the server directly, but using
                  * a client will exercise the library's pinning logic. */
-                $client = $this->entityMap[$this->entityMap->getRootClientIdOf($this->arguments['session'])];
-
+                assertNotNull($args['session']->getServer(), 'Session is pinned');
+                $client = $this->entityMap->getClient(
+                    $this->entityMap->getRootClientIdOf($this->arguments['session'])
+                );
                 $client->selectDatabase('admin')->command($args['failPoint']);
-
-                return null;
+                break;
             default:
                 Assert::fail('Unsupported test runner operation: ' . $this->name);
         }
@@ -534,9 +565,7 @@ final class Operation
 
         if (array_key_exists('session', $args)) {
             assertInternalType('string', $args['session']);
-            $session = $this->entityMap[$args['session']];
-            assertInstanceOf(Session::class, $session);
-            $args['session'] = $session;
+            $args['session'] = $this->entityMap->getSession($args['session']);
         }
 
         // Prepare readConcern, readPreference, and writeConcern

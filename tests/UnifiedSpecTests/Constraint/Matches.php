@@ -66,7 +66,7 @@ class Matches extends Constraint
     public function __construct($value, EntityMap $entityMap = null, $allowExtraRootKeys = true, $allowOperators = true)
     {
         $this->value = self::prepare($value);
-        $this->entityMap = $entityMap ?? new EntityMap();
+        $this->entityMap = $entityMap;
         $this->allowExtraRootKeys = $allowExtraRootKeys;
         $this->allowOperators = $allowOperators;
         $this->comparatorFactory = Factory::getInstance();
@@ -253,6 +253,7 @@ class Matches extends Constraint
         }
 
         if ($name === '$$matchesEntity') {
+            assertNotNull($this->entityMap, '$$matchesEntity requires EntityMap');
             assertInternalType('string', $operator['$$matchesEntity'], '$$matchesEntity requires string');
 
             /* TODO: Consider including the entity ID in any error message to
@@ -297,6 +298,7 @@ class Matches extends Constraint
         }
 
         if ($name === '$$sessionLsid') {
+            assertNotNull($this->entityMap, '$$sessionLsid requires EntityMap');
             assertInternalType('string', $operator['$$sessionLsid'], '$$sessionLsid requires string');
             $lsid = $this->entityMap->getLogicalSessionId($operator['$$sessionLsid']);
 

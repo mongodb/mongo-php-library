@@ -97,21 +97,13 @@ class MatchesTest extends FunctionalTestCase
 
     public function testOperatorMatchesHexBytes()
     {
-        $stream1 = fopen('php://temp', 'w+b');
-        fwrite($stream1, hex2bin('DEADBEEF'));
-        rewind($stream1);
-
-        $stream2 = fopen('php://temp', 'w+b');
-        fwrite($stream2, hex2bin('90ABCDEF'));
-        rewind($stream2);
-
         $c = new Matches(['$$matchesHexBytes' => 'DEADBEEF']);
-        $this->assertResult(true, $c, $stream1, 'value matches hex bytes (root-level)');
-        $this->assertResult(false, $c, $stream2, 'value does not match hex bytes (root-level)');
+        $this->assertResult(true, $c, hex2bin('DEADBEEF'), 'value matches hex bytes (root-level)');
+        $this->assertResult(false, $c, hex2bin('90ABCDEF'), 'value does not match hex bytes (root-level)');
 
         $c = new Matches(['x' => ['$$matchesHexBytes' => '90ABCDEF']]);
-        $this->assertResult(true, $c, ['x' => $stream2], 'value matches hex bytes (embedded)');
-        $this->assertResult(false, $c, ['x' => $stream1], 'value does not match hex bytes (embedded)');
+        $this->assertResult(true, $c, ['x' => hex2bin('90ABCDEF')], 'value matches hex bytes (embedded)');
+        $this->assertResult(false, $c, ['x' => hex2bin('DEADBEEF')], 'value does not match hex bytes (embedded)');
     }
 
     public function testOperatorUnsetOrMatches()
@@ -174,14 +166,14 @@ class MatchesTest extends FunctionalTestCase
     {
         return [
             'assertEquals: type check (root-level)' => [
-                'string is not expected type "integer"',
-                new Matches(1),
-                '1',
+                'boolean is not expected type "string"',
+                new Matches('foo'),
+                true,
             ],
             'assertEquals: type check (embedded)' => [
-                'Field path "x": string is not expected type "integer"',
-                new Matches(['x' => 1]),
-                ['x' => '1'],
+                'Field path "x": boolean is not expected type "string"',
+                new Matches(['x' => 'foo']),
+                ['x' => true],
             ],
             'assertEquals: comparison failure (root-level)' => [
                 'Failed asserting that two strings are equal.',
@@ -254,9 +246,6 @@ class MatchesTest extends FunctionalTestCase
 
     public function operatorErrorMessageProvider()
     {
-        $entityMap = new EntityMap();
-        $entityMap->set('notSession', 1);
-
         return [
             '$$exists type' => [
                 '$$exists requires bool',
@@ -270,13 +259,13 @@ class MatchesTest extends FunctionalTestCase
                 '$$type requires string or string[]',
                 new Matches(['x' => ['$$type' => [1]]]),
             ],
+            '$$matchesEntity requires EntityMap' => [
+                '$$matchesEntity requires EntityMap',
+                new Matches(['x' => ['$$matchesEntity' => 'foo']]),
+            ],
             '$$matchesEntity type' => [
                 '$$matchesEntity requires string',
-                new Matches(['x' => ['$$matchesEntity' => 1]]),
-            ],
-            '$$matchesEntity undefined entity' => [
-                'No entity is defined for "undefined"',
-                new Matches(['$$matchesEntity' => 'undefined']),
+                new Matches(['x' => ['$$matchesEntity' => 1]], new EntityMap()),
             ],
             '$$matchesHexBytes type' => [
                 '$$matchesHexBytes requires string',
@@ -286,17 +275,13 @@ class MatchesTest extends FunctionalTestCase
                 '$$matchesHexBytes requires pairs of hex chars',
                 new Matches(['$$matchesHexBytes' => 'f00']),
             ],
+            '$$sessionLsid requires EntityMap' => [
+                '$$sessionLsid requires EntityMap',
+                new Matches(['x' => ['$$sessionLsid' => 'foo']]),
+            ],
             '$$sessionLsid type' => [
                 '$$sessionLsid requires string',
-                new Matches(['x' => ['$$sessionLsid' => 1]]),
-            ],
-            '$$sessionLsid undefined entity' => [
-                'No entity is defined for "undefined"',
-                new Matches(['$$sessionLsid' => 'undefined']),
-            ],
-            '$$sessionLsid invalid entity' => [
-                '$$sessionLsid requires session entity',
-                new Matches(['x' => ['$$sessionLsid' => 'notSession']], $entityMap),
+                new Matches(['x' => ['$$sessionLsid' => 1]], new EntityMap()),
             ],
         ];
     }

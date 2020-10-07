@@ -10,6 +10,7 @@ use MongoDB\Driver\Server;
 use stdClass;
 use function array_key_exists;
 use function assertArrayHasKey;
+use function assertContains;
 use function assertCount;
 use function assertInternalType;
 use function assertNotEmpty;
@@ -413,6 +414,6 @@ final class Context
             return;
         }
 
-        assertStringContains(',', parse_url($uri, PHP_URL_HOST));
+        assertContains(',', parse_url($uri, PHP_URL_HOST));
     }
 }

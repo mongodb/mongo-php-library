@@ -38,10 +38,15 @@ class UnifiedSpecTest extends FunctionalTestCase
     /** @var MongoDB\Client */
     private static $internalClient;
 
+    /** @var FailPointObserver */
+    private $failPointObserver;
+
     private static function doSetUpBeforeClass()
     {
         parent::setUpBeforeClass();
 
+        /* TODO: FunctionalTestCase::getUri() restricts to a single mongos by
+         * default. Determine if there's a need to override that. */
         self::$internalClient = new Client(static::getUri());
         self::killAllSessions();
     }
@@ -49,6 +54,9 @@ class UnifiedSpecTest extends FunctionalTestCase
     private function doSetUp()
     {
         parent::setUp();
+
+        $this->failPointObserver = new FailPointObserver();
+        $this->failPointObserver->start();
     }
 
     private function doTearDown()
@@ -56,6 +64,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         if ($this->hasFailed()) {
             self::killAllSessions();
         }
+
+        $this->failPointObserver->stop();
+        $this->failPointObserver->disableFailPoints();
 
         parent::tearDown();
     }
@@ -87,7 +98,8 @@ class UnifiedSpecTest extends FunctionalTestCase
             $this->prepareInitialData($initialData);
         }
 
-        $context = new Context(self::$internalClient, static::getUri());
+        // Give Context unmodified URI so it can enforce useMultipleMongoses
+        $context = new Context(self::$internalClient, static::getUri(true));
 
         if (isset($createEntities)) {
             $context->createEntities($createEntities);

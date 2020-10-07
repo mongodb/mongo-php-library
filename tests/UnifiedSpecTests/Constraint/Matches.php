@@ -93,6 +93,8 @@ class Matches extends Constraint
             $this->lastFailure = new ComparisonFailure(
                 $this->value,
                 $other,
+                /* TODO: Improve the exporter to canonicalize documents by
+                 * sorting keys and remove spl_object_hash from output. */
                 $this->exporter()->export($this->value),
                 $this->exporter()->export($other),
                 false,
@@ -255,6 +257,9 @@ class Matches extends Constraint
         if ($name === '$$matchesEntity') {
             assertInternalType('string', $operator['$$matchesEntity'], '$$matchesEntity requires string');
 
+            /* TODO: Consider including the entity ID in any error message to
+             * assist with diagnosing errors. Also consider disabling operators
+             * within this match, since entities are unlikely to use them. */
             $this->assertMatches(
                 self::prepare($this->entityMap[$operator['$$matchesEntity']]),
                 $actual,

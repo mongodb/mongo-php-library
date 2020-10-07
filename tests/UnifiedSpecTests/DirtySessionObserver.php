@@ -27,6 +27,7 @@ class DirtySessionObserver implements CommandSubscriber
     /** @var array */
     private $requestIds = [];
 
+    /** @var bool */
     private $observedNetworkError = false;
 
     public function __construct(stdClass $lsid)

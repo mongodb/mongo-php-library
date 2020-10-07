@@ -10,6 +10,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\GridFS\Bucket;
 use MongoDB\Model\IndexInfo;
+use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
 use PHPUnit\Framework\Assert;
@@ -540,13 +541,9 @@ final class Operation
                 $args['client']->selectDatabase('admin')->command($args['failPoint']);
                 break;
             case 'targetedFailPoint':
-                /* We could execute a command on the server directly, but using
-                 * a client will exercise the library's pinning logic. */
                 assertNotNull($args['session']->getServer(), 'Session is pinned');
-                $client = $this->entityMap->getClient(
-                    $this->entityMap->getRootClientIdOf($this->arguments['session'])
-                );
-                $client->selectDatabase('admin')->command($args['failPoint']);
+                $operation = new DatabaseCommand('admin', $args['failPoint']);
+                $operation->execute($args['session']->getServer());
                 break;
             default:
                 Assert::fail('Unsupported test runner operation: ' . $this->name);

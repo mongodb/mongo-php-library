@@ -135,9 +135,7 @@ class UnifiedSpecTest extends FunctionalTestCase
             $failed = true;
         }
 
-        if (! $failed) {
-            $this->fail('Expected test to throw an exception');
-        }
+        assertTrue($failed, 'Expected test to throw an exception');
     }
 
     public function provideFailingTests()

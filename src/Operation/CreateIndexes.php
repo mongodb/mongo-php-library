@@ -110,10 +110,6 @@ class CreateIndexes implements Executable
                 throw InvalidArgumentException::invalidType(sprintf('$index[%d]', $i), $index, 'array');
             }
 
-            if (! isset($index['ns'])) {
-                $index['ns'] = $databaseName . '.' . $collectionName;
-            }
-
             if (isset($index['collation'])) {
                 $this->isCollationUsed = true;
             }

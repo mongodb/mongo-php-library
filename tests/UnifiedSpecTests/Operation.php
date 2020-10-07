@@ -13,7 +13,7 @@ use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\Exception as PHPUnitException;
+use PHPUnit\Framework\AssertionFailedError;
 use stdClass;
 use Throwable;
 use Traversable;
@@ -129,11 +129,15 @@ final class Operation
             $result = $this->execute();
             $saveResultAsEntity = $this->saveResultAsEntity;
         } catch (Throwable $e) {
-            /* TODO: Consider adding operation details (e.g. operations[] index)
+            /* Note: we must be selective about what PHPUnit exceptions to pass
+             * through, as PHPUnit's Warning exception must be considered for
+             * expectError in GridFS tests (see: PHPLIB-592).
+             *
+             * TODO: Consider adding operation details (e.g. operations[] index)
              * to the exception message. Alternatively, throw a new exception
              * and include this as the previous, since PHPUnit will render the
              * chain when reporting a test failure. */
-            if ($e instanceof PHPUnitException) {
+            if ($e instanceof AssertionFailedError) {
                 throw $e;
             }
 

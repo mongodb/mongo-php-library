@@ -11,7 +11,6 @@ use MongoDB\Tests\FunctionalTestCase;
 use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use Throwable;
-use function basename;
 use function file_get_contents;
 use function glob;
 use function MongoDB\BSON\fromJSON;
@@ -119,7 +118,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public function providePassingTests()
     {
-        return $this->provideTests('/home/jmikola/workspace/mongodb/specifications/source/unified-test-format/tests/valid-pass/');
+        return $this->provideTests('/home/jmikola/workspace/mongodb/specifications/source/unified-test-format/tests/valid-pass');
     }
 
     /**
@@ -150,7 +149,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     {
         $testArgs = [];
 
-        foreach (glob($dir . '/poc-c*.json') as $filename) {
+        foreach (glob($dir . '/*.json') as $filename) {
             /* Decode the file through the driver's extended JSON parser to
              * ensure proper handling of special types. */
             $json = toPHP(fromJSON(file_get_contents($filename)));
@@ -160,9 +159,20 @@ class UnifiedSpecTest extends FunctionalTestCase
             $runOnRequirements = $json->runOnRequirements ?? null;
             $createEntities = $json->createEntities ?? null;
             $initialData = $json->initialData ?? null;
+            $tests = $json->tests;
+
+            /* Assertions in data providers do not count towards test assertions
+             * but failures will interrupt the test suite with a warning. */
+            $message = 'Invalid test file: ' . $filename;
+            $this->assertInternalType('string', $description, $message);
+            $this->assertInternalType('string', $schemaVersion, $message);
+            $this->assertInternalType('array', $tests, $message);
 
             foreach ($json->tests as $test) {
-                $name = basename($filename) . ': ' . $description . ': ' . $test->description;
+                $this->assertInternalType('object', $test, $message);
+                $this->assertInternalType('string', $test->description, $message);
+
+                $name = $description . ': ' . $test->description;
                 $testArgs[$name] = [$test, $schemaVersion, $runOnRequirements, $createEntities, $initialData];
             }
         }

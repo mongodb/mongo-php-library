@@ -142,7 +142,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public function providePassingTests()
     {
-        return $this->provideTests('/home/jmikola/workspace/mongodb/specifications/source/unified-test-format/tests/valid-pass');
+        return $this->provideTests(__DIR__ . '/valid-pass');
     }
 
     /**
@@ -164,7 +164,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     public function provideFailingTests()
     {
-        return $this->provideTests('/home/jmikola/workspace/mongodb/specifications/source/unified-test-format/tests/valid-fail');
+        return $this->provideTests(__DIR__ . '/valid-fail');
     }
 
     private function provideTests(string $dir)

@@ -15,6 +15,7 @@ use function assertEmpty;
 use function assertInternalType;
 use function assertThat;
 use function implode;
+use function isInstanceOf;
 use function isType;
 use function logicalOr;
 

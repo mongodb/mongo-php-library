@@ -153,7 +153,7 @@ class EntityMap implements ArrayAccess
         return $this->lsidsBySession[$sessionId];
     }
 
-    public function getRootClientIdOf(string $id) : ?string
+    public function getRootClientIdOf(string $id)
     {
         $root = $this->map[$id]->getRoot();
 

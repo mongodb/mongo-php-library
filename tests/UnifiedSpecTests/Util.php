@@ -22,8 +22,7 @@ final class Util
 {
     public static function assertHasOnlyKeys($arrayOrObject, array $keys)
     {
-        // TODO: replace isType('object') with instanceOf(stdClass::class)
-        assertThat($arrayOrObject, logicalOr(isType('array'), isType('object')));
+        assertThat($arrayOrObject, logicalOr(isType('array'), isInstanceOf(stdClass::class)));
         $diff = array_diff_key((array) $arrayOrObject, array_fill_keys($keys, 1));
         assertEmpty($diff, 'Unsupported keys: ' . implode(',', array_keys($diff)));
     }

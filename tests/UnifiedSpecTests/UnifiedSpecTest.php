@@ -375,7 +375,7 @@ class UnifiedSpecTest extends FunctionalTestCase
                     break;
 
                 default:
-                    continue;
+                    continue 2;
             }
 
             if ($hasStartTransaction && $hasDistinct) {

@@ -308,6 +308,11 @@ final class Operation
                     array_diff_key($args, ['filter' => 1])
                 );
             case 'distinct':
+                if (isset($args['session']) && $args['session']->isInTransaction()) {
+                    // Transaction, but sharded cluster?
+                    $collection->distinct('foo');
+                }
+
                 return $collection->distinct(
                     $args['fieldName'],
                     $args['filter'] ?? [],
@@ -498,20 +503,29 @@ final class Operation
             $args['client'] = $this->entityMap->getClient($args['client']);
         }
 
-        // TODO: validate arguments
         switch ($this->name) {
             case 'assertCollectionExists':
+                assertInternalType('string', $args['databaseName']);
+                assertInternalType('string', $args['collectionName']);
                 $database = $this->context->getInternalClient()->selectDatabase($args['databaseName']);
                 assertContains($args['collectionName'], $database->listCollectionNames());
                 break;
             case 'assertCollectionNotExists':
+                assertInternalType('string', $args['databaseName']);
+                assertInternalType('string', $args['collectionName']);
                 $database = $this->context->getInternalClient()->selectDatabase($args['databaseName']);
                 assertNotContains($args['collectionName'], $database->listCollectionNames());
                 break;
             case 'assertIndexExists':
+                assertInternalType('string', $args['databaseName']);
+                assertInternalType('string', $args['collectionName']);
+                assertInternalType('string', $args['indexName']);
                 assertContains($args['indexName'], $this->getIndexNames($args['databaseName'], $args['collectionName']));
                 break;
             case 'assertIndexNotExists':
+                assertInternalType('string', $args['databaseName']);
+                assertInternalType('string', $args['collectionName']);
+                assertInternalType('string', $args['indexName']);
                 assertNotContains($args['indexName'], $this->getIndexNames($args['databaseName'], $args['collectionName']));
                 break;
             case 'assertSameLsidOnLastTwoCommands':
@@ -529,18 +543,24 @@ final class Operation
                 assertFalse($this->context->isDirtySession($this->arguments['session']));
                 break;
             case 'assertSessionPinned':
+                assertInstanceOf(Session::class, $args['session']);
                 assertInstanceOf(Server::class, $args['session']->getServer());
                 break;
             case 'assertSessionTransactionState':
+                assertInstanceOf(Session::class, $args['session']);
                 assertSame($this->arguments['state'], $args['session']->getTransactionState());
                 break;
             case 'assertSessionUnpinned':
+                assertInstanceOf(Session::class, $args['session']);
                 assertNull($args['session']->getServer());
                 break;
             case 'failPoint':
+                assertInternalType('array', $args['failPoint']);
                 $args['client']->selectDatabase('admin')->command($args['failPoint']);
                 break;
             case 'targetedFailPoint':
+                assertInstanceOf(Session::class, $args['session']);
+                assertInternalType('array', $args['failPoint']);
                 assertNotNull($args['session']->getServer(), 'Session is pinned');
                 $operation = new DatabaseCommand('admin', $args['failPoint']);
                 $operation->execute($args['session']->getServer());

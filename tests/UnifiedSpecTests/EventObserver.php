@@ -97,19 +97,7 @@ class EventObserver implements CommandSubscriber
      */
     public function commandFailed(CommandFailedEvent $event)
     {
-        if (! $this->context->isActiveClient($this->clientId)) {
-            return;
-        }
-
-        if (! isset($this->observeEvents[CommandFailedEvent::class])) {
-            return;
-        }
-
-        if (isset($this->ignoreCommands[$event->getCommandName()])) {
-            return;
-        }
-
-        $this->actualEvents[] = $event;
+        $this->handleEvent($event);
     }
 
     /**
@@ -117,19 +105,7 @@ class EventObserver implements CommandSubscriber
      */
     public function commandStarted(CommandStartedEvent $event)
     {
-        if (! $this->context->isActiveClient($this->clientId)) {
-            return;
-        }
-
-        if (! isset($this->observeEvents[CommandStartedEvent::class])) {
-            return;
-        }
-
-        if (isset($this->ignoreCommands[$event->getCommandName()])) {
-            return;
-        }
-
-        $this->actualEvents[] = $event;
+        $this->handleEvent($event);
     }
 
     /**
@@ -137,19 +113,7 @@ class EventObserver implements CommandSubscriber
      */
     public function commandSucceeded(CommandSucceededEvent $event)
     {
-        if (! $this->context->isActiveClient($this->clientId)) {
-            return;
-        }
-
-        if (! isset($this->observeEvents[CommandSucceededEvent::class])) {
-            return;
-        }
-
-        if (isset($this->ignoreCommands[$event->getCommandName()])) {
-            return;
-        }
-
-        $this->actualEvents[] = $event;
+        $this->handleEvent($event);
     }
 
     public function start()
@@ -193,9 +157,6 @@ class EventObserver implements CommandSubscriber
 
         foreach ($mi as $keys => $events) {
             list($expectedEvent, $actualEvent) = $events;
-            // TODO: assertNotNull may be redundant since counts are equal
-            assertNotNull($expectedEvent);
-            assertNotNull($actualEvent);
 
             assertInternalType('object', $expectedEvent);
             $expectedEvent = (array) $expectedEvent;
@@ -275,5 +236,27 @@ class EventObserver implements CommandSubscriber
             assertInternalType('string', $expected->commandName);
             assertSame($actual->getCommandName(), $expected->commandName, $message . ': commandName matches');
         }
+    }
+
+    /** @param CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event */
+    private function handleEvent($event)
+    {
+        if (! $this->context->isActiveClient($this->clientId)) {
+            return;
+        }
+
+        if (! is_object($event)) {
+            return;
+        }
+
+        if (! isset($this->observeEvents[get_class($event)])) {
+            return;
+        }
+
+        if (isset($this->ignoreCommands[$event->getCommandName()])) {
+            return;
+        }
+
+        $this->actualEvents[] = $event;
     }
 }

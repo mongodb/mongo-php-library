@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\UnifiedSpecTests;
 
 use MongoDB\Client;
+use MongoDB\Collection;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
@@ -13,6 +14,7 @@ use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use Throwable;
 use function assertTrue;
 use function file_get_contents;
+use function gc_collect_cycles;
 use function glob;
 use function MongoDB\BSON\fromJSON;
 use function MongoDB\BSON\toPHP;
@@ -29,6 +31,9 @@ class UnifiedSpecTest extends FunctionalTestCase
     use SetUpTearDownTrait;
 
     const SERVER_ERROR_INTERRUPTED = 11601;
+
+    const MIN_SCHEMA_VERSION = '1.0';
+    const MAX_SCHEMA_VERSION = '1.1';
 
     const TOPOLOGY_SINGLE = 'single';
     const TOPOLOGY_REPLICASET = 'replicaset';
@@ -55,11 +60,10 @@ class UnifiedSpecTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        /* TODO: The transactions spec advises calling killAllSessions only at
-         * the start of the test suite and after failed tests; however, the
-         * "unpin after transient error within a transaction" pinning test
-         * causes the subsequent transaction test to block. This can be removed
-         * once that is addressed. */
+        /* The transactions spec advises calling killAllSessions only at the
+         * start of the test suite and after failed tests; however, the "unpin
+         * after transient error within a transaction" pinning test causes the
+         * subsequent transaction test to block. */
         self::killAllSessions();
 
         $this->failPointObserver = new FailPointObserver();
@@ -75,9 +79,10 @@ class UnifiedSpecTest extends FunctionalTestCase
         $this->failPointObserver->stop();
         $this->failPointObserver->disableFailPoints();
 
-        /* TODO: Consider manually invoking gc_collect_cycles since each test is
-         * prone to create cycles (perhaps due to EntityMap), which can leak and
-         * prevent sessions from being released back into the pool. */
+        /* Manually invoking garbage collection since each test is prone to
+         * create cycles (perhaps due to EntityMap), which can leak and prevent
+         * sessions from being released back into the pool. */
+        gc_collect_cycles();
 
         parent::tearDown();
     }
@@ -116,11 +121,10 @@ class UnifiedSpecTest extends FunctionalTestCase
             $context->createEntities($createEntities);
         }
 
-        // TODO handle distinct commands in sharded transactions
+        $this->assertInternalType('array', $test->operations);
+        $this->preventStaleDbVersionError($test->operations, $context);
 
         $context->startEventObservers();
-
-        $this->assertInternalType('array', $test->operations);
 
         foreach ($test->operations as $o) {
             $operation = new Operation($o, $context);
@@ -288,7 +292,7 @@ class UnifiedSpecTest extends FunctionalTestCase
      */
     private function isSchemaVersionSupported($schemaVersion)
     {
-        return version_compare($schemaVersion, '1.0', '>=') && version_compare($schemaVersion, '1.1', '<');
+        return version_compare($schemaVersion, self::MIN_SCHEMA_VERSION, '>=') && version_compare($schemaVersion, self::MAX_SCHEMA_VERSION, '<');
     }
 
     /**
@@ -341,6 +345,45 @@ class UnifiedSpecTest extends FunctionalTestCase
         foreach ($initialData as $data) {
             $collectionData = new CollectionData($data);
             $collectionData->prepareInitialData(self::$internalClient);
+        }
+    }
+
+    /**
+     * Work around potential error executing distinct on sharded clusters.
+     *
+     * @see https://github.com/mongodb/specifications/tree/master/source/transactions/tests#why-do-tests-that-run-distinct-sometimes-fail-with-staledbversionts.
+     */
+    private function preventStaleDbVersionError(array $operations, Context $context)
+    {
+        if (! $this->isShardedCluster()) {
+            return;
+        }
+
+        $hasStartTransaction = false;
+        $hasDistinct = false;
+        $collection = null;
+
+        foreach ($operations as $operation) {
+            switch ($operation->name) {
+                case 'distinct':
+                    $hasDistinct = true;
+                    $collection = $context->getEntityMap()[$operation->object];
+                    break;
+
+                case 'startTransaction':
+                    $hasStartTransaction = true;
+                    break;
+
+                default:
+                    continue;
+            }
+
+            if ($hasStartTransaction && $hasDistinct) {
+                $this->assertInstanceOf(Collection::class, $collection);
+                $collection->distinct('foo');
+
+                return;
+            }
         }
     }
 }

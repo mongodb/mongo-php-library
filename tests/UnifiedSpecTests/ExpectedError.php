@@ -41,16 +41,16 @@ final class ExpectedError
     /** @var bool */
     private $isError = false;
 
-    /** @var bool */
+    /** @var bool|null */
     private $isClientError;
 
-    /** @var string */
+    /** @var string|null */
     private $messageContains;
 
-    /** @var int */
+    /** @var int|null */
     private $code;
 
-    /** @var string */
+    /** @var string|null */
     private $codeName;
 
     /** @var array */
@@ -59,7 +59,7 @@ final class ExpectedError
     /** @var array */
     private $excludedLabels = [];
 
-    /** @var ExpectedResult */
+    /** @var ExpectedResult|null */
     private $expectedResult;
 
     public function __construct(stdClass $o = null, EntityMap $entityMap)

@@ -555,12 +555,12 @@ final class Operation
                 assertNull($args['session']->getServer());
                 break;
             case 'failPoint':
-                assertInternalType('array', $args['failPoint']);
+                assertInstanceOf(stdClass::class, $args['failPoint']);
                 $args['client']->selectDatabase('admin')->command($args['failPoint']);
                 break;
             case 'targetedFailPoint':
                 assertInstanceOf(Session::class, $args['session']);
-                assertInternalType('array', $args['failPoint']);
+                assertInstanceOf(stdClass::class, $args['failPoint']);
                 assertNotNull($args['session']->getServer(), 'Session is pinned');
                 $operation = new DatabaseCommand('admin', $args['failPoint']);
                 $operation->execute($args['session']->getServer());

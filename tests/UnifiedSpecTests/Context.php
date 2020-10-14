@@ -9,6 +9,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use stdClass;
 use function array_key_exists;
+use function array_map;
 use function assertArrayHasKey;
 use function assertContains;
 use function assertCount;
@@ -181,6 +182,26 @@ final class Context
         return $this->eventObserversByClient[$id];
     }
 
+    /** @param string|array $readPreferenceTags */
+    private function convertReadPreferenceTags($readPreferenceTags) : array
+    {
+        return array_map(
+            static function (string $readPreferenceTagSet) : array {
+                $tags = explode(',', $readPreferenceTagSet);
+
+                return array_map(
+                    static function (string $tag) : array {
+                        list($key, $value) = explode(':', $tag);
+
+                        return [$key => $value];
+                    },
+                    $tags
+                );
+            },
+            (array) $readPreferenceTags
+        );
+    }
+
     private function createClient(string $id, stdClass $o)
     {
         Util::assertHasOnlyKeys($o, ['id', 'uriOptions', 'useMultipleMongoses', 'observeEvents', 'ignoreCommandMonitoringEvents']);
@@ -205,10 +226,18 @@ final class Context
 
         if (isset($o->uriOptions)) {
             assertInternalType('object', $o->uriOptions);
-            /* TODO: If readPreferenceTags is set, assert it is an array of
-             * strings and convert to an array of documents expected by the
-             * PHP driver. */
             $uriOptions = (array) $o->uriOptions;
+
+            if (! empty($uriOptions['readPreferenceTags'])) {
+                /* readPreferenceTags may take the following form:
+                 *
+                 * 1. A string containing multiple tags: "dc:ny,rack:1".
+                 *    Expected result: [["dc" => "ny", "rack" => "1"]]
+                 * 2. An array containing multiple strings as above: ["dc:ny,rack:1", "dc:la"].
+                 *    Expected result: [["dc" => "ny", "rack" => "1"], ["dc" => "la"]]
+                 */
+                $uriOptions['readPreferenceTags'] = $this->convertReadPreferenceTags($uriOptions['readPreferenceTags']);
+            }
         }
 
         if (isset($observeEvents)) {

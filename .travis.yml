@@ -144,6 +144,22 @@ jobs:
       env:
         - DRIVER_BRANCH="master"
 
+    # Test upcoming PHP version
+    - stage: Test
+      php: "nightly"
+      env:
+        - DRIVER_BRANCH="master"
+    - stage: Test
+      php: "nightly"
+      env:
+        - DRIVER_BRANCH="master"
+        - DEPLOYMENT=REPLICASET
+    - stage: Test
+      php: "nightly"
+      env:
+        - DRIVER_BRANCH="master"
+        - DEPLOYMENT=SHARDED_CLUSTER_RS
+
 before_install:
   - pip install "mongo-orchestration>=0.6.7,<1.0" --user `whoami`
   - export SERVER_FILENAME=mongodb-linux-x86_64-${SERVER_DISTRO}-${SERVER_VERSION}

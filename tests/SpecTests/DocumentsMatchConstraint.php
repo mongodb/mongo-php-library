@@ -19,6 +19,7 @@ use MongoDB\BSON\Undefined;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
+use MongoDB\Tests\PHPUnit\ConstraintTrait;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\Constraint\IsInstanceOf;
 use PHPUnit\Framework\Constraint\IsNull;
@@ -30,7 +31,6 @@ use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
 use stdClass;
-use Symfony\Bridge\PhpUnit\ConstraintTrait;
 use function array_values;
 use function get_class;
 use function gettype;
@@ -97,7 +97,7 @@ class DocumentsMatchConstraint extends Constraint
         $this->comparatorFactory = Factory::getInstance();
     }
 
-    public function evaluate($other, $description = '', $returnResult = false)
+    private function doEvaluate($other, $description = '', $returnResult = false)
     {
         /* TODO: If ignoreExtraKeys and sortKeys are both false, then we may be
          * able to skip preparation, convert both documents to extended JSON,

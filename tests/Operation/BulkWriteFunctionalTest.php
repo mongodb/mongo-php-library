@@ -171,7 +171,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesDeletedCount(BulkWriteResult $result)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getDeletedCount();
     }
 
@@ -181,7 +181,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesInsertCount(BulkWriteResult $result)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getInsertedCount();
     }
 
@@ -191,7 +191,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesMatchedCount(BulkWriteResult $result)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getMatchedCount();
     }
 
@@ -201,7 +201,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesModifiedCount(BulkWriteResult $result)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getModifiedCount();
     }
 
@@ -211,7 +211,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesUpsertedCount(BulkWriteResult $result)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getUpsertedCount();
     }
 
@@ -221,7 +221,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesUpsertedIds(BulkWriteResult $result)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getUpsertedIds();
     }
 

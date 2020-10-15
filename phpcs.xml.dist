@@ -113,6 +113,6 @@
     </rule>
 
     <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
-        <exclude-pattern>/tests/Compat/PolyfillAssertTrait.php</exclude-pattern>
+        <exclude-pattern>/tests/PHPUnit/ConstraintTrait.php</exclude-pattern>
     </rule>
 </ruleset>

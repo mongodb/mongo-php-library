@@ -6,6 +6,7 @@ use Closure;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Int64;
 use MongoDB\Client;
+use MongoDB\Collection;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\AuthenticationException;
 use MongoDB\Driver\Exception\BulkWriteException;
@@ -368,10 +369,96 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
     }
 
+    public static function provideBSONSizeLimitsAndBatchSplittingTests()
+    {
+        yield [static function (self $test, Collection $collection) {
+            // Test 1
+            $collection->insertOne(['_id' => 'over_2mib_under_16mib', 'unencrypted' => str_repeat('a', 2097152)]);
+            $test->assertCollectionCount($collection->getNamespace(), 1);
+        },
+        ];
+
+        yield [static function (self $test, Collection $collection, array $document) {
+            // Test 2
+            $collection->insertOne(
+                ['_id' => 'encryption_exceeds_2mib', 'unencrypted' => str_repeat('a', 2097152 - 2000)] + $document
+            );
+            $test->assertCollectionCount($collection->getNamespace(), 1);
+        },
+        ];
+
+        yield [static function (self $test, Collection $collection) {
+            // Test 3
+            $commands = [];
+            (new CommandObserver())->observe(
+                function () use ($collection) {
+                    $collection->insertMany([
+                        ['_id' => 'over_2mib_1', 'unencrypted' => str_repeat('a', 2097152)],
+                        ['_id' => 'over_2mib_2', 'unencrypted' => str_repeat('a', 2097152)],
+                    ]);
+                },
+                function ($command) use (&$commands) {
+                    $commands[] = $command;
+                }
+            );
+
+            $test->assertCount(2, $commands);
+            foreach ($commands as $command) {
+                $test->assertSame('insert', $command['started']->getCommandName());
+            }
+        },
+        ];
+
+        yield [static function (self $test, Collection $collection, array $document) {
+            // Test 4
+            $commands = [];
+            (new CommandObserver())->observe(
+                function () use ($collection, $document) {
+                    $collection->insertMany([
+                        [
+                            '_id' => 'encryption_exceeds_2mib_1',
+                            'unencrypted' => str_repeat('a', 2097152 - 2000),
+                        ] + $document,
+                        [
+                            '_id' => 'encryption_exceeds_2mib_2',
+                            'unencrypted' => str_repeat('a', 2097152 - 2000),
+                        ] + $document,
+                    ]);
+                },
+                function ($command) use (&$commands) {
+                    $commands[] = $command;
+                }
+            );
+
+            $test->assertCount(2, $commands);
+            foreach ($commands as $command) {
+                $test->assertSame('insert', $command['started']->getCommandName());
+            }
+        },
+        ];
+
+        yield [static function (self $test, Collection $collection) {
+            // Test 5
+            $collection->insertOne(['_id' => 'under_16mib', 'unencrypted' => str_repeat('a', 16777216 - 2000)]);
+            $test->assertCollectionCount($collection->getNamespace(), 1);
+        },
+        ];
+
+        yield [static function (self $test, Collection $collection, array $document) {
+            // Test 6
+            $test->expectException(BulkWriteException::class);
+            $test->expectExceptionMessageMatches('#object to insert too large#');
+            $collection->insertOne(['_id' => 'encryption_exceeds_16mib', 'unencrypted' => str_repeat('a', 16777216 - 2000)] + $document);
+        },
+        ];
+    }
+
     /**
      * Prose test: BSON size limits and batch splitting
+     *
+     * @dataProvider provideBSONSizeLimitsAndBatchSplittingTests
      */
-    public function testBSONSizeLimitsAndBatchSplitting()
+    public function testBSONSizeLimitsAndBatchSplitting(Closure $test)
     {
         $client = new Client(static::getUri());
 
@@ -395,65 +482,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $document = json_decode(file_get_contents(__DIR__ . '/client-side-encryption/limits/limits-doc.json'), true);
 
-        // Test 1
-        $collection->insertOne(['_id' => 'over_2mib_under_16mib', 'unencrypted' => str_repeat('a', 2097152)]);
-
-        // Test 2
-        $collection->insertOne(
-            ['_id' => 'encryption_exceeds_2mib', 'unencrypted' => str_repeat('a', 2097152 - 2000)] + $document
-        );
-
-        // Test 3
-        $commands = [];
-        (new CommandObserver())->observe(
-            function () use ($collection) {
-                $collection->insertMany([
-                    ['_id' => 'over_2mib_1', 'unencrypted' => str_repeat('a', 2097152)],
-                    ['_id' => 'over_2mib_2', 'unencrypted' => str_repeat('a', 2097152)],
-                ]);
-            },
-            function ($command) use (&$commands) {
-                $commands[] = $command;
-            }
-        );
-
-        $this->assertCount(2, $commands);
-        foreach ($commands as $command) {
-            $this->assertSame('insert', $command['started']->getCommandName());
-        }
-
-        // Test 4
-        $commands = [];
-        (new CommandObserver())->observe(
-            function () use ($collection, $document) {
-                $collection->insertMany([
-                    [
-                        '_id' => 'encryption_exceeds_2mib_1',
-                        'unencrypted' => str_repeat('a', 2097152 - 2000),
-                    ] + $document,
-                    [
-                        '_id' => 'encryption_exceeds_2mib_2',
-                        'unencrypted' => str_repeat('a', 2097152 - 2000),
-                    ] + $document,
-                ]);
-            },
-            function ($command) use (&$commands) {
-                $commands[] = $command;
-            }
-        );
-
-        $this->assertCount(2, $commands);
-        foreach ($commands as $command) {
-            $this->assertSame('insert', $command['started']->getCommandName());
-        }
-
-        // Test 5
-        $collection->insertOne(['_id' => 'under_16mib', 'unencrypted' => str_repeat('a', 16777216 - 2000)]);
-
-        // Test 6
-        $this->expectException(BulkWriteException::class);
-        $this->expectExceptionMessageRegExp('#object to insert too large#');
-        $collection->insertOne(['_id' => 'encryption_exceeds_16mib', 'unencrypted' => str_repeat('a', 16777216 - 2000)] + $document);
+        $test($this, $collection, $document);
     }
 
     /**

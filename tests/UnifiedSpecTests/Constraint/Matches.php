@@ -7,15 +7,16 @@ use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
+use MongoDB\Tests\PHPUnit\ConstraintTrait;
 use MongoDB\Tests\UnifiedSpecTests\EntityMap;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
 use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
-use Symfony\Bridge\PhpUnit\ConstraintTrait;
 use function array_keys;
-use function assertInternalType;
+use function assertIsBool;
+use function assertIsString;
 use function assertNotNull;
 use function assertRegExp;
 use function assertThat;
@@ -73,7 +74,7 @@ class Matches extends Constraint
         $this->comparatorFactory = Factory::getInstance();
     }
 
-    public function evaluate($other, $description = '', $returnResult = false)
+    private function doEvaluate($other, $description = '', $returnResult = false)
     {
         $other = self::prepare($other);
         $success = false;
@@ -188,7 +189,7 @@ class Matches extends Constraint
                 $operatorName = self::getOperatorName($expectedValue);
 
                 if ($operatorName === '$$exists') {
-                    assertInternalType('bool', $expectedValue['$$exists'], '$$exists requires bool');
+                    assertIsBool($expectedValue['$$exists'], '$$exists requires bool');
 
                     if ($expectedValue['$$exists'] && ! $actualKeyExists) {
                         self::failAt(sprintf('$actual does not have expected key "%s"', $key), $keyPath);
@@ -255,7 +256,7 @@ class Matches extends Constraint
 
         if ($name === '$$matchesEntity') {
             assertNotNull($this->entityMap, '$$matchesEntity requires EntityMap');
-            assertInternalType('string', $operator['$$matchesEntity'], '$$matchesEntity requires string');
+            assertIsString($operator['$$matchesEntity'], '$$matchesEntity requires string');
 
             /* TODO: Consider including the entity ID in any error message to
              * assist with diagnosing errors. Also consider disabling operators
@@ -270,9 +271,9 @@ class Matches extends Constraint
         }
 
         if ($name === '$$matchesHexBytes') {
-            assertInternalType('string', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires string');
+            assertIsString($operator['$$matchesHexBytes'], '$$matchesHexBytes requires string');
             assertRegExp('/^([0-9a-fA-F]{2})*$/', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires pairs of hex chars');
-            assertInternalType('string', $actual);
+            assertIsString($actual);
 
             if ($actual !== hex2bin($operator['$$matchesHexBytes'])) {
                 self::failAt(sprintf('%s does not match expected hex bytes: %s', $this->exporter()->shortenedExport($actual), $operator['$$matchesHexBytes']), $keyPath);
@@ -300,7 +301,7 @@ class Matches extends Constraint
 
         if ($name === '$$sessionLsid') {
             assertNotNull($this->entityMap, '$$sessionLsid requires EntityMap');
-            assertInternalType('string', $operator['$$sessionLsid'], '$$sessionLsid requires string');
+            assertIsString($operator['$$sessionLsid'], '$$sessionLsid requires string');
             $lsid = $this->entityMap->getLogicalSessionId($operator['$$sessionLsid']);
 
             $this->assertEquals(self::prepare($lsid), $actual, $keyPath);

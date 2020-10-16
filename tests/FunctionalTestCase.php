@@ -308,11 +308,7 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function isShardedCluster()
     {
-        if ($this->getPrimaryServer()->getType() == Server::TYPE_MONGOS) {
-            return true;
-        }
-
-        return false;
+        return $this->getPrimaryServer()->getType() == Server::TYPE_MONGOS;
     }
 
     protected function isShardedClusterUsingReplicasets()

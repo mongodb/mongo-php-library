@@ -26,11 +26,7 @@
         </testsuite>
     </testsuites>
 
-    <listeners>
-        <listener class="MongoDB\Tests\EvergreenLogListener">
-            <arguments>
-                <string>test-results.json</string>
-            </arguments>
-        </listener>
-    </listeners>
+    <logging>
+        <log type="junit" target="test-results.xml" />
+    </logging>
 </phpunit>

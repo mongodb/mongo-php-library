@@ -224,7 +224,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesMatchedCount(UpdateResult $result)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getMatchedCount();
     }
 
@@ -234,7 +234,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesModifiedCount(UpdateResult $result)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getModifiedCount();
     }
 
@@ -244,7 +244,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesUpsertedCount(UpdateResult $result)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getUpsertedCount();
     }
 
@@ -254,7 +254,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesUpsertedId(UpdateResult $result)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getUpsertedId();
     }
 

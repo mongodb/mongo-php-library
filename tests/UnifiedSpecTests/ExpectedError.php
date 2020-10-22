@@ -14,11 +14,15 @@ use function assertArrayHasKey;
 use function assertContainsOnly;
 use function assertFalse;
 use function assertInstanceOf;
-use function assertInternalType;
+use function assertIsArray;
+use function assertIsBool;
+use function assertIsInt;
+use function assertIsString;
 use function assertNotNull;
 use function assertNull;
 use function assertObjectHasAttribute;
 use function assertSame;
+use function assertStringContainsStringIgnoringCase;
 use function assertTrue;
 use function get_class;
 use function property_exists;
@@ -75,33 +79,33 @@ final class ExpectedError
         }
 
         if (isset($o->isClientError)) {
-            assertInternalType('bool', $o->isClientError);
+            assertIsBool($o->isClientError);
             $this->isClientError = $o->isClientError;
         }
 
         if (isset($o->errorContains)) {
-            assertInternalType('string', $o->errorContains);
+            assertIsString($o->errorContains);
             $this->messageContains = $o->errorContains;
         }
 
         if (isset($o->errorCode)) {
-            assertInternalType('int', $o->errorCode);
+            assertIsInt($o->errorCode);
             $this->code = $o->errorCode;
         }
 
         if (isset($o->errorCodeName)) {
-            assertInternalType('string', $o->errorCodeName);
+            assertIsString($o->errorCodeName);
             $this->codeName = $o->errorCodeName;
         }
 
         if (isset($o->errorLabelsContain)) {
-            assertInternalType('array', $o->errorLabelsContain);
+            assertIsArray($o->errorLabelsContain);
             assertContainsOnly('string', $o->errorLabelsContain);
             $this->includedLabels = $o->errorLabelsContain;
         }
 
         if (isset($o->errorLabelsOmit)) {
-            assertInternalType('array', $o->errorLabelsOmit);
+            assertIsArray($o->errorLabelsOmit);
             assertContainsOnly('string', $o->errorLabelsOmit);
             $this->excludedLabels = $o->errorLabelsOmit;
         }

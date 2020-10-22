@@ -16,7 +16,8 @@ use function array_reverse;
 use function assertArrayHasKey;
 use function assertCount;
 use function assertInstanceOf;
-use function assertInternalType;
+use function assertIsObject;
+use function assertIsString;
 use function assertNotEmpty;
 use function assertObjectHasAttribute;
 use function assertSame;
@@ -76,7 +77,7 @@ class EventObserver implements CommandSubscriber
         assertNotEmpty($observeEvents);
 
         foreach ($observeEvents as $event) {
-            assertInternalType('string', $event);
+            assertIsString($event);
             assertArrayHasKey($event, self::$supportedEvents);
             $this->observeEvents[self::$supportedEvents[$event]] = 1;
         }
@@ -84,7 +85,7 @@ class EventObserver implements CommandSubscriber
         $this->ignoreCommands = array_fill_keys(self::$defaultIgnoreCommands, 1);
 
         foreach ($ignoreCommands as $command) {
-            assertInternalType('string', $command);
+            assertIsString($command);
             $this->ignoreCommands[$command] = 1;
         }
 
@@ -158,14 +159,14 @@ class EventObserver implements CommandSubscriber
         foreach ($mi as $keys => $events) {
             list($expectedEvent, $actualEvent) = $events;
 
-            assertInternalType('object', $expectedEvent);
+            assertIsObject($expectedEvent);
             $expectedEvent = (array) $expectedEvent;
             assertCount(1, $expectedEvent);
 
             $type = key($expectedEvent);
             assertArrayHasKey($type, self::$supportedEvents);
             $data = current($expectedEvent);
-            assertInternalType('object', $data);
+            assertIsObject($data);
 
             // Message is used for actual event assertions (not test structure)
             $message = sprintf('%s event[%d]', $this->clientId, $keys[0]);
@@ -177,7 +178,7 @@ class EventObserver implements CommandSubscriber
 
     private function assertEvent($actual, stdClass $expected, string $message)
     {
-        assertInternalType('object', $actual);
+        assertIsObject($actual);
 
         switch (get_class($actual)) {
             case CommandStartedEvent::class:
@@ -196,18 +197,18 @@ class EventObserver implements CommandSubscriber
         Util::assertHasOnlyKeys($expected, ['command', 'commandName', 'databaseName']);
 
         if (isset($expected->command)) {
-            assertInternalType('object', $expected->command);
+            assertIsObject($expected->command);
             $constraint = new Matches($expected->command, $this->context->getEntityMap());
             assertThat($actual->getCommand(), $constraint, $message . ': command matches');
         }
 
         if (isset($expected->commandName)) {
-            assertInternalType('string', $expected->commandName);
+            assertIsString($expected->commandName);
             assertSame($actual->getCommandName(), $expected->commandName, $message . ': commandName matches');
         }
 
         if (isset($expected->databaseName)) {
-            assertInternalType('string', $expected->databaseName);
+            assertIsString($expected->databaseName);
             assertSame($actual->getDatabaseName(), $expected->databaseName, $message . ': databaseName matches');
         }
     }
@@ -217,13 +218,13 @@ class EventObserver implements CommandSubscriber
         Util::assertHasOnlyKeys($expected, ['reply', 'commandName']);
 
         if (isset($expected->reply)) {
-            assertInternalType('object', $expected->reply);
+            assertIsObject($expected->reply);
             $constraint = new Matches($expected->reply, $this->context->getEntityMap());
             assertThat($actual->getReply(), $constraint, $message . ': reply matches');
         }
 
         if (isset($expected->commandName)) {
-            assertInternalType('string', $expected->commandName);
+            assertIsString($expected->commandName);
             assertSame($actual->getCommandName(), $expected->commandName, $message . ': commandName matches');
         }
     }
@@ -233,7 +234,7 @@ class EventObserver implements CommandSubscriber
         Util::assertHasOnlyKeys($expected, ['commandName']);
 
         if (isset($expected->commandName)) {
-            assertInternalType('string', $expected->commandName);
+            assertIsString($expected->commandName);
             assertSame($actual->getCommandName(), $expected->commandName, $message . ': commandName matches');
         }
     }

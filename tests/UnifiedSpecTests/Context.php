@@ -13,7 +13,11 @@ use function array_map;
 use function assertArrayHasKey;
 use function assertContains;
 use function assertCount;
-use function assertInternalType;
+use function assertIsArray;
+use function assertIsBool;
+use function assertIsInt;
+use function assertIsObject;
+use function assertIsString;
 use function assertNotEmpty;
 use function assertNotFalse;
 use function assertStringStartsWith;
@@ -70,16 +74,16 @@ final class Context
     public function createEntities(array $entities)
     {
         foreach ($entities as $entity) {
-            assertInternalType('object', $entity);
+            assertIsObject($entity);
             $entity = (array) $entity;
             assertCount(1, $entity);
 
             $type = key($entity);
             $def = current($entity);
-            assertInternalType('object', $def);
+            assertIsObject($def);
 
             $id = $def->id ?? null;
-            assertInternalType('string', $id);
+            assertIsString($id);
 
             switch ($type) {
                 case 'client':
@@ -147,15 +151,15 @@ final class Context
         assertNotEmpty($expectedEventsForClients);
 
         foreach ($expectedEventsForClients as $expectedEventsForClient) {
-            assertInternalType('object', $expectedEventsForClient);
+            assertIsObject($expectedEventsForClient);
             Util::assertHasOnlyKeys($expectedEventsForClient, ['client', 'events']);
 
             $client = $expectedEventsForClient->client ?? null;
             $expectedEvents = $expectedEventsForClient->events ?? null;
 
-            assertInternalType('string', $client);
+            assertIsString($client);
             assertArrayHasKey($client, $this->eventObserversByClient);
-            assertInternalType('array', $expectedEvents);
+            assertIsArray($expectedEvents);
 
             $this->eventObserversByClient[$client]->assert($expectedEvents);
         }
@@ -213,7 +217,7 @@ final class Context
         $uri = $this->uri;
 
         if (isset($useMultipleMongoses)) {
-            assertInternalType('bool', $useMultipleMongoses);
+            assertIsBool($useMultipleMongoses);
 
             if ($useMultipleMongoses) {
                 self::requireMultipleMongoses($uri);
@@ -225,7 +229,7 @@ final class Context
         $uriOptions = [];
 
         if (isset($o->uriOptions)) {
-            assertInternalType('object', $o->uriOptions);
+            assertIsObject($o->uriOptions);
             $uriOptions = (array) $o->uriOptions;
 
             if (! empty($uriOptions['readPreferenceTags'])) {
@@ -241,8 +245,8 @@ final class Context
         }
 
         if (isset($observeEvents)) {
-            assertInternalType('array', $observeEvents);
-            assertInternalType('array', $ignoreCommandMonitoringEvents);
+            assertIsArray($observeEvents);
+            assertIsArray($ignoreCommandMonitoringEvents);
 
             $this->eventObserversByClient[$id] = new EventObserver($observeEvents, $ignoreCommandMonitoringEvents, $id, $this);
         }
@@ -262,15 +266,15 @@ final class Context
         $collectionName = $o->collectionName ?? null;
         $databaseId = $o->database ?? null;
 
-        assertInternalType('string', $collectionName);
-        assertInternalType('string', $databaseId);
+        assertIsString($collectionName);
+        assertIsString($databaseId);
 
         $database = $this->entityMap->getDatabase($databaseId);
 
         $options = [];
 
         if (isset($o->collectionOptions)) {
-            assertInternalType('object', $o->collectionOptions);
+            assertIsObject($o->collectionOptions);
             $options = self::prepareCollectionOrDatabaseOptions((array) $o->collectionOptions);
         }
 
@@ -284,15 +288,15 @@ final class Context
         $databaseName = $o->databaseName ?? null;
         $clientId = $o->client ?? null;
 
-        assertInternalType('string', $databaseName);
-        assertInternalType('string', $clientId);
+        assertIsString($databaseName);
+        assertIsString($clientId);
 
         $client = $this->entityMap->getClient($clientId);
 
         $options = [];
 
         if (isset($o->databaseOptions)) {
-            assertInternalType('object', $o->databaseOptions);
+            assertIsObject($o->databaseOptions);
             $options = self::prepareCollectionOrDatabaseOptions((array) $o->databaseOptions);
         }
 
@@ -304,13 +308,13 @@ final class Context
         Util::assertHasOnlyKeys($o, ['id', 'client', 'sessionOptions']);
 
         $clientId = $o->client ?? null;
-        assertInternalType('string', $clientId);
+        assertIsString($clientId);
         $client = $this->entityMap->getClient($clientId);
 
         $options = [];
 
         if (isset($o->sessionOptions)) {
-            assertInternalType('object', $o->sessionOptions);
+            assertIsObject($o->sessionOptions);
             $options = self::prepareSessionOptions((array) $o->sessionOptions);
         }
 
@@ -322,13 +326,13 @@ final class Context
         Util::assertHasOnlyKeys($o, ['id', 'database', 'bucketOptions']);
 
         $databaseId = $o->database ?? null;
-        assertInternalType('string', $databaseId);
+        assertIsString($databaseId);
         $database = $this->entityMap->getDatabase($databaseId);
 
         $options = [];
 
         if (isset($o->bucketOptions)) {
-            assertInternalType('object', $o->bucketOptions);
+            assertIsObject($o->bucketOptions);
             $options = self::prepareBucketOptions((array) $o->bucketOptions);
         }
 
@@ -347,15 +351,15 @@ final class Context
         Util::assertHasOnlyKeys($options, ['bucketName', 'chunkSizeBytes', 'disableMD5', 'readConcern', 'readPreference', 'writeConcern']);
 
         if (array_key_exists('bucketName', $options)) {
-            assertInternalType('string', $options['bucketName']);
+            assertIsString($options['bucketName']);
         }
 
         if (array_key_exists('chunkSizeBytes', $options)) {
-            assertInternalType('int', $options['chunkSizeBytes']);
+            assertIsInt($options['chunkSizeBytes']);
         }
 
         if (array_key_exists('disableMD5', $options)) {
-            assertInternalType('bool', $options['disableMD5']);
+            assertIsBool($options['disableMD5']);
         }
 
         return Util::prepareCommonOptions($options);
@@ -366,11 +370,11 @@ final class Context
         Util::assertHasOnlyKeys($options, ['causalConsistency', 'defaultTransactionOptions']);
 
         if (array_key_exists('causalConsistency', $options)) {
-            assertInternalType('bool', $options['causalConsistency']);
+            assertIsBool($options['causalConsistency']);
         }
 
         if (array_key_exists('defaultTransactionOptions', $options)) {
-            assertInternalType('object', $options['defaultTransactionOptions']);
+            assertIsObject($options['defaultTransactionOptions']);
             $options['defaultTransactionOptions'] = self::prepareDefaultTransactionOptions((array) $options['defaultTransactionOptions']);
         }
 
@@ -382,7 +386,7 @@ final class Context
         Util::assertHasOnlyKeys($options, ['maxCommitTimeMS', 'readConcern', 'readPreference', 'writeConcern']);
 
         if (array_key_exists('maxCommitTimeMS', $options)) {
-            assertInternalType('int', $options['maxCommitTimeMS']);
+            assertIsInt($options['maxCommitTimeMS']);
         }
 
         return Util::prepareCommonOptions($options);
@@ -405,7 +409,7 @@ final class Context
 
         $parts = parse_url($uri);
 
-        assertInternalType('array', $parts);
+        assertIsArray($parts);
 
         $hosts = explode(',', $parts['host']);
 

@@ -16,7 +16,7 @@ use stdClass;
 use function array_key_exists;
 use function assertArrayHasKey;
 use function assertArrayNotHasKey;
-use function assertInternalType;
+use function assertIsString;
 use function assertThat;
 use function isInstanceOf;
 use function logicalOr;
@@ -57,7 +57,7 @@ class EntityMap implements ArrayAccess
      */
     public function offsetExists($id)
     {
-        assertInternalType('string', $id);
+        assertIsString($id);
 
         return array_key_exists($id, $this->map);
     }
@@ -67,7 +67,7 @@ class EntityMap implements ArrayAccess
      */
     public function offsetGet($id)
     {
-        assertInternalType('string', $id);
+        assertIsString($id);
         assertArrayHasKey($id, $this->map, sprintf('No entity is defined for "%s"', $id));
 
         return $this->map[$id]->value;

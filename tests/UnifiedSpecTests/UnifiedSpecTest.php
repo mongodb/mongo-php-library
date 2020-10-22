@@ -101,12 +101,12 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
 
         if (isset($test->skipReason)) {
-            $this->assertInternalType('string', $test->skipReason);
+            $this->assertIsString($test->skipReason);
             $this->markTestSkipped($test->skipReason);
         }
 
         if (isset($test->runOnRequirements)) {
-            $this->assertInternalType('array', $test->runOnRequirements);
+            $this->assertIsArray($test->runOnRequirements);
             $this->checkRunOnRequirements($test->runOnRequirements);
         }
 
@@ -121,7 +121,7 @@ class UnifiedSpecTest extends FunctionalTestCase
             $context->createEntities($createEntities);
         }
 
-        $this->assertInternalType('array', $test->operations);
+        $this->assertIsArray($test->operations);
         $this->preventStaleDbVersionError($test->operations, $context);
 
         $context->startEventObservers();
@@ -134,12 +134,12 @@ class UnifiedSpecTest extends FunctionalTestCase
         $context->stopEventObservers();
 
         if (isset($test->expectEvents)) {
-            $this->assertInternalType('array', $test->expectEvents);
+            $this->assertIsArray($test->expectEvents);
             $context->assertExpectedEventsForClients($test->expectEvents);
         }
 
         if (isset($test->outcome)) {
-            $this->assertInternalType('array', $test->outcome);
+            $this->assertIsArray($test->outcome);
             $this->assertOutcome($test->outcome);
         }
     }
@@ -190,13 +190,13 @@ class UnifiedSpecTest extends FunctionalTestCase
             /* Assertions in data providers do not count towards test assertions
              * but failures will interrupt the test suite with a warning. */
             $message = 'Invalid test file: ' . $filename;
-            $this->assertInternalType('string', $description, $message);
-            $this->assertInternalType('string', $schemaVersion, $message);
-            $this->assertInternalType('array', $tests, $message);
+            $this->assertIsString($description, $message);
+            $this->assertIsString($schemaVersion, $message);
+            $this->assertIsArray($tests, $message);
 
             foreach ($json->tests as $test) {
-                $this->assertInternalType('object', $test, $message);
-                $this->assertInternalType('string', $test->description, $message);
+                $this->assertIsObject($test, $message);
+                $this->assertIsString($test->description, $message);
 
                 $name = $description . ': ' . $test->description;
                 $testArgs[$name] = [$test, $schemaVersion, $runOnRequirements, $createEntities, $initialData];

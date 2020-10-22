@@ -165,7 +165,7 @@ before_script:
 script:
   - export MONGODB_URI=`cat /tmp/uri.txt`
   - echo $MONGODB_URI
-  - vendor/bin/phpunit -v
+  - vendor/bin/simple-phpunit -v
 
 before_cache:
   - rm -f ${HOME}/.cache/pip/log/debug.log

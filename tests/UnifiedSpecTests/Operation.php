@@ -26,7 +26,9 @@ use function assertCount;
 use function assertEquals;
 use function assertFalse;
 use function assertInstanceOf;
-use function assertInternalType;
+use function assertIsArray;
+use function assertIsObject;
+use function assertIsString;
 use function assertNotContains;
 use function assertNotEquals;
 use function assertNotNull;
@@ -87,15 +89,15 @@ final class Operation
         $this->context =$context;
         $this->entityMap = $context->getEntityMap();
 
-        assertInternalType('string', $o->name);
+        assertIsString($o->name);
         $this->name = $o->name;
 
-        assertInternalType('string', $o->object);
+        assertIsString($o->object);
         $this->isTestRunnerOperation = $o->object === self::OBJECT_TEST_RUNNER;
         $this->object = $this->isTestRunnerOperation ? null : $o->object;
 
         if (isset($o->arguments)) {
-            assertInternalType('object', $o->arguments);
+            assertIsObject($o->arguments);
             $this->arguments = (array) $o->arguments;
         }
 
@@ -107,7 +109,7 @@ final class Operation
         $this->expectResult = new ExpectedResult($o, $this->entityMap, $this->object);
 
         if (isset($o->saveResultAsEntity)) {
-            assertInternalType('string', $o->saveResultAsEntity);
+            assertIsString($o->saveResultAsEntity);
             $this->saveResultAsEntity = $o->saveResultAsEntity;
         }
     }
@@ -171,7 +173,7 @@ final class Operation
         }
 
         $object = $this->entityMap[$this->object];
-        assertInternalType('object', $object);
+        assertIsObject($object);
 
         $this->context->setActiveClient($this->entityMap->getRootClientIdOf($this->object));
 
@@ -441,10 +443,10 @@ final class Operation
             case 'startTransaction':
                 return $session->startTransaction($args);
             case 'withTransaction':
-                assertInternalType('array', $args['callback']);
+                assertIsArray($args['callback']);
 
                 $operations = array_map(function ($o) {
-                    assertInternalType('object', $o);
+                    assertIsObject($o);
 
                     return new Operation($o, $this->context);
                 }, $args['callback']);
@@ -499,33 +501,33 @@ final class Operation
         $args = $this->prepareArguments();
 
         if (array_key_exists('client', $args)) {
-            assertInternalType('string', $args['client']);
+            assertIsString($args['client']);
             $args['client'] = $this->entityMap->getClient($args['client']);
         }
 
         switch ($this->name) {
             case 'assertCollectionExists':
-                assertInternalType('string', $args['databaseName']);
-                assertInternalType('string', $args['collectionName']);
+                assertIsString($args['databaseName']);
+                assertIsString($args['collectionName']);
                 $database = $this->context->getInternalClient()->selectDatabase($args['databaseName']);
                 assertContains($args['collectionName'], $database->listCollectionNames());
                 break;
             case 'assertCollectionNotExists':
-                assertInternalType('string', $args['databaseName']);
-                assertInternalType('string', $args['collectionName']);
+                assertIsString($args['databaseName']);
+                assertIsString($args['collectionName']);
                 $database = $this->context->getInternalClient()->selectDatabase($args['databaseName']);
                 assertNotContains($args['collectionName'], $database->listCollectionNames());
                 break;
             case 'assertIndexExists':
-                assertInternalType('string', $args['databaseName']);
-                assertInternalType('string', $args['collectionName']);
-                assertInternalType('string', $args['indexName']);
+                assertIsString($args['databaseName']);
+                assertIsString($args['collectionName']);
+                assertIsString($args['indexName']);
                 assertContains($args['indexName'], $this->getIndexNames($args['databaseName'], $args['collectionName']));
                 break;
             case 'assertIndexNotExists':
-                assertInternalType('string', $args['databaseName']);
-                assertInternalType('string', $args['collectionName']);
-                assertInternalType('string', $args['indexName']);
+                assertIsString($args['databaseName']);
+                assertIsString($args['collectionName']);
+                assertIsString($args['indexName']);
                 assertNotContains($args['indexName'], $this->getIndexNames($args['databaseName'], $args['collectionName']));
                 break;
             case 'assertSameLsidOnLastTwoCommands':
@@ -585,7 +587,7 @@ final class Operation
         $args = $this->arguments;
 
         if (array_key_exists('session', $args)) {
-            assertInternalType('string', $args['session']);
+            assertIsString($args['session']);
             $args['session'] = $this->entityMap->getSession($args['session']);
         }
 
@@ -600,7 +602,7 @@ final class Operation
 
         $type = key($request);
         $args = current($request);
-        assertInternalType('object', $args);
+        assertIsObject($args);
         $args = (array) $args;
 
         switch ($type) {
@@ -639,11 +641,11 @@ final class Operation
     private static function prepareUploadArguments(array $args) : array
     {
         $source = $args['source'] ?? null;
-        assertInternalType('object', $source);
+        assertIsObject($source);
         assertObjectHasAttribute('$$hexBytes', $source);
         Util::assertHasOnlyKeys($source, ['$$hexBytes']);
         $hexBytes = $source->{'$$hexBytes'};
-        assertInternalType('string', $hexBytes);
+        assertIsString($hexBytes);
         assertRegExp('/^([0-9a-fA-F]{2})*$/', $hexBytes);
 
         $stream = fopen('php://temp', 'w+b');

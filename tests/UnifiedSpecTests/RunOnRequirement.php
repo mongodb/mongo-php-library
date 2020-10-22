@@ -4,7 +4,8 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 
 use stdClass;
 use function assertContainsOnly;
-use function assertInternalType;
+use function assertIsArray;
+use function assertIsString;
 use function assertRegExp;
 use function in_array;
 use function version_compare;
@@ -30,19 +31,19 @@ class RunOnRequirement
     public function __construct(stdClass $o)
     {
         if (isset($o->minServerVersion)) {
-            assertInternalType('string', $o->minServerVersion);
+            assertIsString($o->minServerVersion);
             assertRegExp(self::VERSION_PATTERN, $o->minServerVersion);
             $this->minServerVersion = $o->minServerVersion;
         }
 
         if (isset($o->maxServerVersion)) {
-            assertInternalType('string', $o->maxServerVersion);
+            assertIsString($o->maxServerVersion);
             assertRegExp(self::VERSION_PATTERN, $o->maxServerVersion);
             $this->maxServerVersion = $o->maxServerVersion;
         }
 
         if (isset($o->topologies)) {
-            assertInternalType('array', $o->topologies);
+            assertIsArray($o->topologies);
             assertContainsOnly('string', $o->topologies);
             $this->topologies = $o->topologies;
         }

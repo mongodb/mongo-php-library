@@ -147,7 +147,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesInsertedCount(InsertManyResult $result)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getInsertedCount();
     }
 

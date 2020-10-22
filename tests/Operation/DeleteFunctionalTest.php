@@ -108,7 +108,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesDeletedCount(DeleteResult $result)
     {
         $this->expectException(BadMethodCallException::class);
-        $this->expectExceptionMessageRegExp('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
+        $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getDeletedCount();
     }
 

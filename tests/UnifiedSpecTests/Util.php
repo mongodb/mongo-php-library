@@ -12,7 +12,11 @@ use function array_key_exists;
 use function array_keys;
 use function assertContains;
 use function assertEmpty;
-use function assertInternalType;
+use function assertIsArray;
+use function assertIsBool;
+use function assertIsInt;
+use function assertIsObject;
+use function assertIsString;
 use function assertThat;
 use function implode;
 use function isInstanceOf;
@@ -33,7 +37,7 @@ final class Util
         self::assertHasOnlyKeys($o, ['level']);
 
         $level = $o->level ?? null;
-        assertInternalType('string', $level);
+        assertIsString($level);
 
         return new ReadConcern($level);
     }
@@ -47,22 +51,22 @@ final class Util
         $maxStalenessSeconds = $o->maxStalenessSeconds ?? null;
         $hedge = $o->hedge ?? null;
 
-        assertInternalType('string', $mode);
+        assertIsString($mode);
 
         if (isset($tagSets)) {
-            assertInternalType('array', $tagSets);
+            assertIsArray($tagSets);
             assertContains('object', $tagSets);
         }
 
         $options = [];
 
         if (isset($maxStalenessSeconds)) {
-            assertInternalType('int', $maxStalenessSeconds);
+            assertIsInt($maxStalenessSeconds);
             $options['maxStalenessSeconds'] = $maxStalenessSeconds;
         }
 
         if (isset($hedge)) {
-            assertInternalType('object', $hedge);
+            assertIsObject($hedge);
             $options['hedge'] = $hedge;
         }
 
@@ -78,12 +82,12 @@ final class Util
         $journal = $o->journal ?? null;
 
         assertThat($w, logicalOr(isType('int'), isType('string')));
-        assertInternalType('int', $wtimeoutMS);
+        assertIsInt($wtimeoutMS);
 
         $args = [$w, $wtimeoutMS];
 
         if (isset($journal)) {
-            assertInternalType('bool', $journal);
+            assertIsBool($journal);
             $args[] = $journal;
         }
 
@@ -93,17 +97,17 @@ final class Util
     public static function prepareCommonOptions(array $options) : array
     {
         if (array_key_exists('readConcern', $options)) {
-            assertInternalType('object', $options['readConcern']);
+            assertIsObject($options['readConcern']);
             $options['readConcern'] = self::createReadConcern($options['readConcern']);
         }
 
         if (array_key_exists('readPreference', $options)) {
-            assertInternalType('object', $options['readPreference']);
+            assertIsObject($options['readPreference']);
             $options['readPreference'] = self::createReadPreference($options['readPreference']);
         }
 
         if (array_key_exists('writeConcern', $options)) {
-            assertInternalType('object', $options['writeConcern']);
+            assertIsObject($options['writeConcern']);
             $options['writeConcern'] = self::createWriteConcern($options['writeConcern']);
         }
 

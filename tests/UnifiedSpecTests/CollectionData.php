@@ -12,7 +12,8 @@ use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use MultipleIterator;
 use stdClass;
 use function assertContainsOnly;
-use function assertInternalType;
+use function assertIsArray;
+use function assertIsString;
 use function assertNotNull;
 use function assertThat;
 use function sprintf;
@@ -30,13 +31,13 @@ class CollectionData
 
     public function __construct(stdClass $o)
     {
-        assertInternalType('string', $o->collectionName);
+        assertIsString($o->collectionName);
         $this->collectionName = $o->collectionName;
 
-        assertInternalType('string', $o->databaseName);
+        assertIsString($o->databaseName);
         $this->databaseName = $o->databaseName;
 
-        assertInternalType('array', $o->documents);
+        assertIsArray($o->documents);
         assertContainsOnly('object', $o->documents);
         $this->documents = $o->documents;
     }

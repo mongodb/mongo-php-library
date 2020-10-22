@@ -14,12 +14,12 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Constraint\Constraint;
 use stdClass;
 use function array_key_exists;
-use function assertArrayHasKey;
-use function assertArrayNotHasKey;
-use function assertIsString;
-use function assertThat;
-use function isInstanceOf;
-use function logicalOr;
+use function PHPUnit\Framework\assertArrayHasKey;
+use function PHPUnit\Framework\assertArrayNotHasKey;
+use function PHPUnit\Framework\assertIsString;
+use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\isInstanceOf;
+use function PHPUnit\Framework\logicalOr;
 use function sprintf;
 
 class EntityMap implements ArrayAccess

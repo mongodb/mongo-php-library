@@ -25,21 +25,11 @@
     },
     "autoload-dev": {
         "psr-4": { "MongoDB\\Tests\\": "tests/" },
-        "// Manually include assertion functions for PHPUnit 8.x and earlier ":"",
-        "// See: https://github.com/sebastianbergmann/phpunit/issues/3746 ":"",
-        "files": [
-            "vendor/bin/.phpunit/phpunit/src/Framework/Assert/Functions.php",
-            "tests/PHPUnit/FunctionsPolyfill.php"
-        ]
+        "files": [ "tests/PHPUnit/Functions.php" ]
     },
     "extra": {
         "branch-alias": {
             "dev-master": "1.8.x-dev"
         }
-    },
-    "scripts": {
-        "// Ensure PHPUnit is installed through the PHPUnit bridge before ":"",
-        "// dumping the autoloader to avoid errors due to missing files.":"",
-        "pre-autoload-dump": "if test -f vendor/bin/simple-phpunit; then vendor/bin/simple-phpunit --version > /dev/null; fi"
     }
 }

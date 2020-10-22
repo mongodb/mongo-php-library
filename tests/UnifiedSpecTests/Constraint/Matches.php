@@ -15,12 +15,6 @@ use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
 use function array_keys;
-use function assertIsBool;
-use function assertIsString;
-use function assertNotNull;
-use function assertRegExp;
-use function assertThat;
-use function containsOnly;
 use function count;
 use function get_class;
 use function gettype;
@@ -30,10 +24,16 @@ use function is_array;
 use function is_float;
 use function is_int;
 use function is_object;
-use function isInstanceOf;
-use function isType;
-use function logicalAnd;
-use function logicalOr;
+use function PHPUnit\Framework\assertIsBool;
+use function PHPUnit\Framework\assertIsString;
+use function PHPUnit\Framework\assertMatchesRegularExpression;
+use function PHPUnit\Framework\assertNotNull;
+use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\containsOnly;
+use function PHPUnit\Framework\isInstanceOf;
+use function PHPUnit\Framework\isType;
+use function PHPUnit\Framework\logicalAnd;
+use function PHPUnit\Framework\logicalOr;
 use function range;
 use function sprintf;
 use function strpos;
@@ -272,7 +272,7 @@ class Matches extends Constraint
 
         if ($name === '$$matchesHexBytes') {
             assertIsString($operator['$$matchesHexBytes'], '$$matchesHexBytes requires string');
-            assertRegExp('/^([0-9a-fA-F]{2})*$/', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires pairs of hex chars');
+            assertMatchesRegularExpression('/^([0-9a-fA-F]{2})*$/', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires pairs of hex chars');
             assertIsString($actual);
 
             if ($actual !== hex2bin($operator['$$matchesHexBytes'])) {

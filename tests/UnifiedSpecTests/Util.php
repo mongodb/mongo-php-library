@@ -10,18 +10,18 @@ use function array_diff_key;
 use function array_fill_keys;
 use function array_key_exists;
 use function array_keys;
-use function assertContains;
-use function assertEmpty;
-use function assertIsArray;
-use function assertIsBool;
-use function assertIsInt;
-use function assertIsObject;
-use function assertIsString;
-use function assertThat;
 use function implode;
-use function isInstanceOf;
-use function isType;
-use function logicalOr;
+use function PHPUnit\Framework\assertContains;
+use function PHPUnit\Framework\assertEmpty;
+use function PHPUnit\Framework\assertIsArray;
+use function PHPUnit\Framework\assertIsBool;
+use function PHPUnit\Framework\assertIsInt;
+use function PHPUnit\Framework\assertIsObject;
+use function PHPUnit\Framework\assertIsString;
+use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\isInstanceOf;
+use function PHPUnit\Framework\isType;
+use function PHPUnit\Framework\logicalOr;
 
 final class Util
 {

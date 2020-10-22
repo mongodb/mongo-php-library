@@ -10,8 +10,8 @@ use MongoDB\InsertOneResult;
 use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use MongoDB\UpdateResult;
 use stdClass;
-use function assertThat;
 use function is_object;
+use function PHPUnit\Framework\assertThat;
 use function property_exists;
 
 final class ExpectedResult

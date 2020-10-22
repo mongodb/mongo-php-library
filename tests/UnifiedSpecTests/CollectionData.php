@@ -11,11 +11,11 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use MultipleIterator;
 use stdClass;
-use function assertContainsOnly;
-use function assertIsArray;
-use function assertIsString;
-use function assertNotNull;
-use function assertThat;
+use function PHPUnit\Framework\assertContainsOnly;
+use function PHPUnit\Framework\assertIsArray;
+use function PHPUnit\Framework\assertIsString;
+use function PHPUnit\Framework\assertNotNull;
+use function PHPUnit\Framework\assertThat;
 use function sprintf;
 
 class CollectionData

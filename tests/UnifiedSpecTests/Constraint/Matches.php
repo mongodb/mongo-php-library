@@ -16,8 +16,7 @@ use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
 use function array_keys;
 use function count;
-use function get_class;
-use function gettype;
+use function get_debug_type;
 use function hex2bin;
 use function implode;
 use function is_array;
@@ -113,8 +112,8 @@ class Matches extends Constraint
 
     private function assertEquals($expected, $actual, string $keyPath)
     {
-        $expectedType = is_object($expected) ? get_class($expected) : gettype($expected);
-        $actualType = is_object($actual) ? get_class($actual) : gettype($actual);
+        $expectedType = get_debug_type($expected);
+        $actualType = get_debug_type($actual);
 
         /* Early check to work around ObjectComparator printing the entire value
          * for a failed type comparison. Avoid doing this if either value is
@@ -152,7 +151,7 @@ class Matches extends Constraint
     private function assertMatchesArray(BSONArray $expected, $actual, string $keyPath)
     {
         if (! $actual instanceof BSONArray) {
-            $actualType = is_object($actual) ? get_class($actual) : gettype($actual);
+            $actualType = get_debug_type($actual);
             self::failAt(sprintf('%s is not instance of expected class "%s"', $actualType, BSONArray::class), $keyPath);
         }
 
@@ -178,7 +177,7 @@ class Matches extends Constraint
         }
 
         if (! $actual instanceof BSONDocument) {
-            $actualType = is_object($actual) ? get_class($actual) : gettype($actual);
+            $actualType = get_debug_type($actual);
             self::failAt(sprintf('%s is not instance of expected class "%s"', $actualType, BSONDocument::class), $keyPath);
         }
 

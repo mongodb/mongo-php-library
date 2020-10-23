@@ -33,7 +33,7 @@ use SebastianBergmann\Comparator\Factory;
 use stdClass;
 use function array_values;
 use function get_class;
-use function gettype;
+use function get_debug_type;
 use function in_array;
 use function is_array;
 use function is_object;
@@ -314,8 +314,8 @@ class DocumentsMatchConstraint extends Constraint
                 continue;
             }
 
-            $expectedType = is_object($expectedValue) ? get_class($expectedValue) : gettype($expectedValue);
-            $actualType = is_object($actualValue) ? get_class($actualValue) : gettype($actualValue);
+            $expectedType = get_debug_type($expectedValue);
+            $actualType = get_debug_type($actualValue);
 
             // Workaround for ObjectComparator printing the whole actual object
             if ($expectedType !== $actualType) {

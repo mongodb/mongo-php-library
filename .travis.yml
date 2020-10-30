@@ -1,5 +1,6 @@
 language: php
 dist: xenial
+php: "7.4"
 
 addons:
   apt:
@@ -32,7 +33,6 @@ jobs:
   include:
 
     - stage: Smoke Testing
-      php: "7.3"
       env:
         - CHECKS=phpunit
     - stage: Smoke Testing
@@ -56,7 +56,7 @@ jobs:
     - stage: Test
       php: "7.2"
     - stage: Test
-      php: "7.4"
+      php: "7.3"
 
     # Test against lowest supported dependencies
     - stage: Test
@@ -91,56 +91,45 @@ jobs:
       env:
         - SERVER_VERSION=3.6.19
     - stage: Test
-      php: "7.3"
       env:
         - SERVER_VERSION=4.0.19
     - stage: Test
-      php: "7.3"
       env:
         - SERVER_VERSION=4.2.8
 
     # Test upcoming server version
     #- stage: Test
-    #  php: "7.3"
     #  env:
     #    - SERVER_VERSION=4.5.0
 
     # Test other server configurations
     - stage: Test
-      php: "7.3"
       env:
         - DEPLOYMENT=STANDALONE_AUTH
     - stage: Test
-      php: "7.3"
       env:
         - DEPLOYMENT=STANDALONE_SSL
     - stage: Test
-      php: "7.3"
       env:
         - SERVER_VERSION=3.6.13
         - DEPLOYMENT=REPLICASET
     - stage: Test
-      php: "7.3"
       env:
         - DEPLOYMENT=REPLICASET
     - stage: Test
-      php: "7.3"
       env:
         - DEPLOYMENT=SHARDED_CLUSTER
     - stage: Test
-      php: "7.3"
       env:
         - DEPLOYMENT=SHARDED_CLUSTER_RS
 
     # Test next patch release for driver
     - stage: Test
-      php: "7.3"
       env:
         - DRIVER_BRANCH="v1.8"
 
     # Test next minor release for driver
     - stage: Test
-      php: "7.3"
       env:
         - DRIVER_BRANCH="master"
 

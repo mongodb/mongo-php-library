@@ -36,6 +36,14 @@ test suite. In addition to various PHPUnit options, it defines required
 this configuration by creating your own `phpunit.xml` file based on the
 `phpunit.xml.dist` file we provide.
 
+By default, the `simple-phpunit` binary chooses the correct PHPUnit version for
+the PHP version you are running. To run tests against a specific PHPUnit version,
+use the `SYMFONY_PHPUNIT_VERSION` environment variable:
+
+```
+$ SYMFONY_PHPUNIT_VERSION=7.5 vendor/bin/simple-phpunit
+```
+
 ## Checking coding standards
 
 The library's code is checked using [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer),

@@ -18,7 +18,6 @@ use function in_array;
 use function key;
 use function parse_url;
 use function PHPUnit\Framework\assertArrayHasKey;
-use function PHPUnit\Framework\assertContains;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertIsArray;
 use function PHPUnit\Framework\assertIsBool;
@@ -27,6 +26,7 @@ use function PHPUnit\Framework\assertIsObject;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
 use function PHPUnit\Framework\assertNotFalse;
+use function PHPUnit\Framework\assertStringContainsString;
 use function PHPUnit\Framework\assertStringStartsWith;
 use function strlen;
 use function strpos;
@@ -447,6 +447,6 @@ final class Context
             return;
         }
 
-        assertContains(',', parse_url($uri, PHP_URL_HOST));
+        assertStringContainsString(',', parse_url($uri, PHP_URL_HOST));
     }
 }

@@ -28,6 +28,8 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         }
 
         $this->dropCollection();
+
+        parent::tearDown();
     }
 
     protected function createDefaultReadConcern()

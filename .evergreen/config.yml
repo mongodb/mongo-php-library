@@ -435,9 +435,9 @@ axes:
     display_name: Driver Version
     values:
       - id: "lowest-supported"
-        display_name: "1.8.0"
+        display_name: "1.8.1"
         variables:
-          DRIVER_VERSION: "1.8.0"
+          DRIVER_VERSION: "1.8.1"
       - id: "latest-stable"
         display_name: "1.8-stable"
       - id: "latest-minor-dev"

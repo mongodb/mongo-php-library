@@ -22,7 +22,7 @@ cache:
 
 env:
   global:
-    - DRIVER_VERSION=1.8.0
+    - DRIVER_VERSION=stable
     - SERVER_DISTRO=enterprise-ubuntu1604
     - SERVER_VERSION=4.4.0
     - DEPLOYMENT=STANDALONE
@@ -67,6 +67,7 @@ jobs:
         - SERVER_VERSION=3.0.15
         - DEPLOYMENT=STANDALONE_OLD
         - COMPOSER_OPTIONS=--prefer-lowest
+        - DRIVER_VERSION=1.8.0
 
       # Test older standalone server versions (3.0-4.0)
     - stage: Test

@@ -37,4 +37,7 @@ if [ "x${DRIVER_BRANCH}" != "x" ] || [ "x${DRIVER_REPO}" != "x" ]; then
 elif [ "x${DRIVER_VERSION}" != "x" ]; then
   echo "Installing driver version ${DRIVER_VERSION} from PECL"
   tpecl mongodb-${DRIVER_VERSION} mongodb.so
+else
+  echo "Installing latest driver version"
+  tpecl mongodb mongodb.so
 fi

@@ -3,11 +3,11 @@
 namespace MongoDB\Tests\UnifiedSpecTests;
 
 use stdClass;
-use function assertContainsOnly;
-use function assertIsArray;
-use function assertIsString;
-use function assertRegExp;
 use function in_array;
+use function PHPUnit\Framework\assertContainsOnly;
+use function PHPUnit\Framework\assertIsArray;
+use function PHPUnit\Framework\assertIsString;
+use function PHPUnit\Framework\assertMatchesRegularExpression;
 use function version_compare;
 
 class RunOnRequirement
@@ -32,13 +32,13 @@ class RunOnRequirement
     {
         if (isset($o->minServerVersion)) {
             assertIsString($o->minServerVersion);
-            assertRegExp(self::VERSION_PATTERN, $o->minServerVersion);
+            assertMatchesRegularExpression(self::VERSION_PATTERN, $o->minServerVersion);
             $this->minServerVersion = $o->minServerVersion;
         }
 
         if (isset($o->maxServerVersion)) {
             assertIsString($o->maxServerVersion);
-            assertRegExp(self::VERSION_PATTERN, $o->maxServerVersion);
+            assertMatchesRegularExpression(self::VERSION_PATTERN, $o->maxServerVersion);
             $this->maxServerVersion = $o->maxServerVersion;
         }
 

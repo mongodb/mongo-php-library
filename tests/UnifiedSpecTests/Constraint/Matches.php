@@ -7,33 +7,32 @@ use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Type;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
-use MongoDB\Tests\PHPUnit\ConstraintTrait;
 use MongoDB\Tests\UnifiedSpecTests\EntityMap;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
 use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
+use Symfony\Bridge\PhpUnit\ConstraintTrait;
 use function array_keys;
-use function assertIsBool;
-use function assertIsString;
-use function assertNotNull;
-use function assertRegExp;
-use function assertThat;
-use function containsOnly;
 use function count;
-use function get_class;
-use function gettype;
+use function get_debug_type;
 use function hex2bin;
 use function implode;
 use function is_array;
 use function is_float;
 use function is_int;
 use function is_object;
-use function isInstanceOf;
-use function isType;
-use function logicalAnd;
-use function logicalOr;
+use function PHPUnit\Framework\assertIsBool;
+use function PHPUnit\Framework\assertIsString;
+use function PHPUnit\Framework\assertMatchesRegularExpression;
+use function PHPUnit\Framework\assertNotNull;
+use function PHPUnit\Framework\assertThat;
+use function PHPUnit\Framework\containsOnly;
+use function PHPUnit\Framework\isInstanceOf;
+use function PHPUnit\Framework\isType;
+use function PHPUnit\Framework\logicalAnd;
+use function PHPUnit\Framework\logicalOr;
 use function range;
 use function sprintf;
 use function strpos;
@@ -113,8 +112,8 @@ class Matches extends Constraint
 
     private function assertEquals($expected, $actual, string $keyPath)
     {
-        $expectedType = is_object($expected) ? get_class($expected) : gettype($expected);
-        $actualType = is_object($actual) ? get_class($actual) : gettype($actual);
+        $expectedType = get_debug_type($expected);
+        $actualType = get_debug_type($actual);
 
         /* Early check to work around ObjectComparator printing the entire value
          * for a failed type comparison. Avoid doing this if either value is
@@ -152,7 +151,7 @@ class Matches extends Constraint
     private function assertMatchesArray(BSONArray $expected, $actual, string $keyPath)
     {
         if (! $actual instanceof BSONArray) {
-            $actualType = is_object($actual) ? get_class($actual) : gettype($actual);
+            $actualType = get_debug_type($actual);
             self::failAt(sprintf('%s is not instance of expected class "%s"', $actualType, BSONArray::class), $keyPath);
         }
 
@@ -178,7 +177,7 @@ class Matches extends Constraint
         }
 
         if (! $actual instanceof BSONDocument) {
-            $actualType = is_object($actual) ? get_class($actual) : gettype($actual);
+            $actualType = get_debug_type($actual);
             self::failAt(sprintf('%s is not instance of expected class "%s"', $actualType, BSONDocument::class), $keyPath);
         }
 
@@ -272,7 +271,7 @@ class Matches extends Constraint
 
         if ($name === '$$matchesHexBytes') {
             assertIsString($operator['$$matchesHexBytes'], '$$matchesHexBytes requires string');
-            assertRegExp('/^([0-9a-fA-F]{2})*$/', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires pairs of hex chars');
+            assertMatchesRegularExpression('/^([0-9a-fA-F]{2})*$/', $operator['$$matchesHexBytes'], '$$matchesHexBytes requires pairs of hex chars');
             assertIsString($actual);
 
             if ($actual !== hex2bin($operator['$$matchesHexBytes'])) {

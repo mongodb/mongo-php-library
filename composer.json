@@ -9,15 +9,16 @@
         { "name": "Jeremy Mikola", "email": "jmikola@gmail.com" }
     ],
     "require": {
-        "php": "^7.0",
+        "php": "^7.0 || ^8.0",
         "ext-hash": "*",
         "ext-json": "*",
         "ext-mongodb": "^1.8.1",
-        "jean85/pretty-package-versions": "^1.2"
+        "jean85/pretty-package-versions": "^1.2",
+        "symfony/polyfill-php80": "^1.19"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.5, <3.5.5",
-        "symfony/phpunit-bridge": "^5.2@beta"
+        "symfony/phpunit-bridge": "5.x-dev"
     },
     "autoload": {
         "psr-4": { "MongoDB\\": "src/" },
@@ -25,21 +26,11 @@
     },
     "autoload-dev": {
         "psr-4": { "MongoDB\\Tests\\": "tests/" },
-        "// Manually include assertion functions for PHPUnit 8.x and earlier ":"",
-        "// See: https://github.com/sebastianbergmann/phpunit/issues/3746 ":"",
-        "files": [
-            "vendor/bin/.phpunit/phpunit/src/Framework/Assert/Functions.php",
-            "tests/PHPUnit/FunctionsPolyfill.php"
-        ]
+        "files": [ "tests/PHPUnit/Functions.php" ]
     },
     "extra": {
         "branch-alias": {
             "dev-master": "1.8.x-dev"
         }
-    },
-    "scripts": {
-        "// Ensure PHPUnit is installed through the PHPUnit bridge before ":"",
-        "// dumping the autoloader to avoid errors due to missing files.":"",
-        "pre-autoload-dump": "if test -f vendor/bin/simple-phpunit; then vendor/bin/simple-phpunit --version > /dev/null; fi"
     }
 }

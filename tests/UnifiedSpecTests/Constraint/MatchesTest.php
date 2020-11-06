@@ -8,6 +8,7 @@ use MongoDB\Tests\UnifiedSpecTests\EntityMap;
 use PHPUnit\Framework\ExpectationFailedException;
 use stdClass;
 use function hex2bin;
+use function preg_quote;
 use function version_compare;
 
 class MatchesTest extends FunctionalTestCase
@@ -148,14 +149,14 @@ class MatchesTest extends FunctionalTestCase
     /**
      * @dataProvider errorMessageProvider
      */
-    public function testErrorMessages($expectedMessagePart, Matches $constraint, $actualValue)
+    public function testErrorMessages($expectedMessageRegex, Matches $constraint, $actualValue)
     {
         try {
             $constraint->evaluate($actualValue);
             $this->fail('Expected a comparison failure');
         } catch (ExpectationFailedException $e) {
             $this->assertStringContainsString('Failed asserting that expected value matches actual value.', $e->getMessage());
-            $this->assertStringContainsString($expectedMessagePart, $e->getMessage());
+            $this->assertMatchesRegularExpression($expectedMessageRegex, $e->getMessage());
         }
     }
 
@@ -163,67 +164,67 @@ class MatchesTest extends FunctionalTestCase
     {
         return [
             'assertEquals: type check (root-level)' => [
-                'boolean is not expected type "string"',
+                '#bool(ean)? is not expected type "string"#',
                 new Matches('foo'),
                 true,
             ],
             'assertEquals: type check (embedded)' => [
-                'Field path "x": boolean is not expected type "string"',
+                '#Field path "x": bool(ean)? is not expected type "string"#',
                 new Matches(['x' => 'foo']),
                 ['x' => true],
             ],
             'assertEquals: comparison failure (root-level)' => [
-                'Failed asserting that two strings are equal.',
+                '#' . preg_quote('Failed asserting that two strings are equal.', '#') . '#',
                 new Matches('foo'),
                 'bar',
             ],
             'assertEquals: comparison failure (embedded)' => [
-                'Field path "x": Failed asserting that two strings are equal.',
+                '#' . preg_quote('Field path "x": Failed asserting that two strings are equal.', '#') . '#',
                 new Matches(['x' => 'foo']),
                 ['x' => 'bar'],
             ],
             'assertMatchesArray: type check (root-level)' => [
-                'MongoDB\Model\BSONDocument is not instance of expected class "MongoDB\Model\BSONArray"',
+                '#' . preg_quote('MongoDB\Model\BSONDocument is not instance of expected class "MongoDB\Model\BSONArray"', '#') . '#',
                 new Matches([1, 2, 3]),
                 ['x' => 1],
             ],
             'assertMatchesArray: type check (embedded)' => [
-                'Field path "x": integer is not instance of expected class "MongoDB\Model\BSONArray"',
+                '#Field path "x": int(eger)? is not instance of expected class "MongoDB\\\\Model\\\\BSONArray"#',
                 new Matches(['x' => [1, 2, 3]]),
                 ['x' => 1],
             ],
             'assertMatchesArray: count check (root-level)' => [
-                '$actual count is 2, expected 3',
+                '#' . preg_quote('$actual count is 2, expected 3', '#') . '#',
                 new Matches(['x' => [1, 2, 3]]),
                 ['x' => [1, 2]],
             ],
             'assertMatchesArray: count check (embedded)' => [
-                'Field path "x": $actual count is 2, expected 3',
+                '#' . preg_quote('Field path "x": $actual count is 2, expected 3', '#') . '#',
                 new Matches(['x' => [1, 2, 3]]),
                 ['x' => [1, 2]],
             ],
             'assertMatchesDocument: type check (root-level)' => [
-                'integer is not instance of expected class "MongoDB\Model\BSONDocument"',
+                '#int(eger)? is not instance of expected class "MongoDB\\\\Model\\\\BSONDocument"#',
                 new Matches(['x' => 1]),
                 1,
             ],
             'assertMatchesDocument: type check (embedded)' => [
-                'Field path "x": integer is not instance of expected class "MongoDB\Model\BSONDocument"',
+                '#Field path "x": int(eger)? is not instance of expected class "MongoDB\\\\Model\\\\BSONDocument"#',
                 new Matches(['x' => ['y' => 1]]),
                 ['x' => 1],
             ],
             'assertMatchesDocument: expected key missing (root-level)' => [
-                '$actual does not have expected key "x"',
+                '#' . preg_quote('$actual does not have expected key "x"', '#') . '#',
                 new Matches(['x' => 1]),
                 new stdClass(),
             ],
             'assertMatchesDocument: expected key missing (embedded)' => [
-                'Field path "x": $actual does not have expected key "y"',
+                '#' . preg_quote('Field path "x": $actual does not have expected key "y"', '#') . '#',
                 new Matches(['x' => ['y' => 1]]),
                 ['x' => new stdClass()],
             ],
             'assertMatchesDocument: unexpected key present (embedded)' => [
-                'Field path "x": $actual has unexpected key "y',
+                '#' . preg_quote('Field path "x": $actual has unexpected key "y', '#') . '#',
                 new Matches(['x' => new stdClass()]),
                 ['x' => ['y' => 1]],
             ],

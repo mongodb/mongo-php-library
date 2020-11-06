@@ -19,7 +19,6 @@ use MongoDB\BSON\Undefined;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
-use MongoDB\Tests\PHPUnit\ConstraintTrait;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\Constraint\IsInstanceOf;
 use PHPUnit\Framework\Constraint\IsNull;
@@ -31,9 +30,10 @@ use RuntimeException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
 use stdClass;
+use Symfony\Bridge\PhpUnit\ConstraintTrait;
 use function array_values;
 use function get_class;
-use function gettype;
+use function get_debug_type;
 use function in_array;
 use function is_array;
 use function is_object;
@@ -314,8 +314,8 @@ class DocumentsMatchConstraint extends Constraint
                 continue;
             }
 
-            $expectedType = is_object($expectedValue) ? get_class($expectedValue) : gettype($expectedValue);
-            $actualType = is_object($actualValue) ? get_class($actualValue) : gettype($actualValue);
+            $expectedType = get_debug_type($expectedValue);
+            $actualType = get_debug_type($actualValue);
 
             // Workaround for ObjectComparator printing the whole actual object
             if ($expectedType !== $actualType) {

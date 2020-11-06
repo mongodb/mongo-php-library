@@ -12,12 +12,12 @@ use MongoDB\Tests\FunctionalTestCase;
 use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use Throwable;
-use function assertTrue;
 use function file_get_contents;
 use function gc_collect_cycles;
 use function glob;
 use function MongoDB\BSON\fromJSON;
 use function MongoDB\BSON\toPHP;
+use function PHPUnit\Framework\assertTrue;
 use function sprintf;
 use function version_compare;
 

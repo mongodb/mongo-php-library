@@ -133,11 +133,15 @@ jobs:
       env:
         - DEPLOYMENT=SHARDED_CLUSTER_RS
 
-    # Test next patch release for driver
+    # Test next patch releases for driver
     - stage: Test
       php: "7.3"
       env:
         - DRIVER_BRANCH="v1.8"
+    - stage: Test
+      php: "7.3"
+      env:
+        - DRIVER_BRANCH="v1.9"
 
     # Test next minor release for driver
     - stage: Test

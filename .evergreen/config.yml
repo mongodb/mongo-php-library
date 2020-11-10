@@ -440,12 +440,18 @@ axes:
           DRIVER_VERSION: "1.8.1"
       - id: "latest-stable"
         display_name: "1.8-stable"
-      - id: "latest-minor-dev"
+        variables:
+          DRIVER_VERSION: "stable"
+      - id: "1.8-dev"
         display_name: "1.8-dev"
         variables:
           DRIVER_BRANCH: "v1.8"
+      - id: "1.9-dev"
+        display_name: "1.9-dev"
+        variables:
+          DRIVER_BRANCH: "v1.9"
       - id: "latest-dev"
-        display_name: "1.9-dev (master)"
+        display_name: "1.10-dev (master)"
         variables:
           DRIVER_BRANCH: "master"
 

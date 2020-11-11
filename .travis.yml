@@ -50,16 +50,16 @@ jobs:
 
     # Test against PHP 8
     - stage: Test
-      php: "nightly"
+      php: "8.0snapshot"
       env:
         - DRIVER_VERSION="1.9.0RC1"
     - stage: Test
-      php: "nightly"
+      php: "8.0snapshot"
       env:
         - DRIVER_VERSION="1.9.0RC1"
         - DEPLOYMENT=REPLICASET
     - stage: Test
-      php: "nightly"
+      php: "8.0snapshot"
       env:
         - DRIVER_VERSION="1.9.0RC1"
         - DEPLOYMENT=SHARDED_CLUSTER_RS

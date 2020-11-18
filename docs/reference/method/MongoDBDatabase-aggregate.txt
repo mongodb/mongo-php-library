@@ -51,7 +51,25 @@ Errors/Exceptions
 
 .. _php-db-agg-method-behavior:
 
-.. todo: add examples
+Examples
+--------
+
+The following aggregation example lists all running commands using the
+``$currentOp`` aggregation pipeline stage, then filters this list to only show
+running command operations.
+
+.. code-block:: php
+
+   <?php
+
+   $database = (new MongoDB\Client)->admin;
+
+   $cursor = $database->aggregate(
+       [
+           ['$currentOp' => []],
+           ['$match' => ['op' => 'command'],
+       ]
+   );
 
 See Also
 --------

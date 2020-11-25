@@ -58,7 +58,25 @@ MongoDB server version and whether the ``useCursor`` option is specified. If
 ``result`` array from the command response document. In both cases, the return
 value will be :php:`Traversable <traversable>`.
 
-.. todo: add examples
+Examples
+--------
+
+The following aggregation example uses a collection called ``names`` and groups
+the ``first_name`` field together, counts the total number of results in each
+group, and sorts the results by name.
+
+.. code-block:: php
+
+   <?php
+
+   $collection = (new MongoDB\Client)->test->names;
+
+   $cursor = $collection->aggregate(
+       [
+           ['$group' => ['_id' => '$first_name', 'name_count' => ['$sum' => 1]]],
+           ['$sort' => ['_id' => 1]],
+       ]
+   );
 
 See Also
 --------

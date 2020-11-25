@@ -23,7 +23,7 @@ to convert to BSON and store in the database. That data will later be used to
 reconstruct the object upon reading from the database.
 
 As an example we present the ``LocalDateTime`` class. This class wraps around
-the :php:`MongoDB\\BSON\UTCDateTime <class.mongodb-bson-utcdatetime>` data
+the :php:`MongoDB\\BSON\\UTCDateTime <class.mongodb-bson-utcdatetime>` data
 type and a time zone.
 
 .. code-block:: php

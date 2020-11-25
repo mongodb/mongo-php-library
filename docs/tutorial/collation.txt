@@ -360,7 +360,7 @@ group, and sorts the results by German phonebook order.
 
    <?php
 
-   $collection = (new MongoDB\Client)->test->recipes;
+   $collection = (new MongoDB\Client)->test->names;
 
    $cursor = $collection->aggregate(
        [

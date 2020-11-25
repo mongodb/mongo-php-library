@@ -439,7 +439,7 @@ axes:
         variables:
           DRIVER_VERSION: "1.8.1"
       - id: "latest-stable"
-        display_name: "1.8-stable"
+        display_name: "1.9-stable"
         variables:
           DRIVER_VERSION: "stable"
       - id: "1.8-dev"

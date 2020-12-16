@@ -393,6 +393,13 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
+    protected function skipIfGeoHaystackIndexIsNotSupported()
+    {
+        if (version_compare($this->getServerVersion(), '4.9', '>=')) {
+            $this->markTestSkipped('GeoHaystack indexes cannot be created in version 4.9 and above');
+        }
+    }
+
     protected function skipIfTransactionsAreNotSupported()
     {
         if ($this->getPrimaryServer()->getType() === Server::TYPE_STANDALONE) {

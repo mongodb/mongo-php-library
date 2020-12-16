@@ -51,6 +51,8 @@ class IndexInfoFunctionalTest extends FunctionalTestCase
 
     public function testIsGeoHaystack()
     {
+        $this->skipIfGeoHaystackIndexIsNotSupported();
+
         $indexName = $this->collection->createIndex(['pos' => 'geoHaystack', 'x' => 1], ['bucketSize' => 5]);
         $result = $this->collection->listIndexes();
 

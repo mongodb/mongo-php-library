@@ -203,9 +203,22 @@ Release announcements should also be sent to the [MongoDB Product & Driver Annou
 Consider announcing each release on Twitter. Significant releases should also be
 announced via [@MongoDB](http://twitter.com/mongodb) as well.
 
-### Update compatibility tables in MongoDB docs
+### Documentation Updates for New Major and Minor Versions
 
-For minor releases, create a DOCSP ticket indicating whether there are changes to MongoDB Server or PHP version
-compatibility. The [compatibility tables](https://docs.mongodb.com/drivers/driver-compatibility-reference#php-driver-compatibility)
-in the MongoDB documentation must be updated to account for new releases. Make sure to update both MongoDB and Language
-compatibility tables, as shown in [this pull request](https://github.com/mongodb/docs-ecosystem/pull/642).
+New major and minor releases will also require documentation updates to other
+projects:
+
+ * Create a DOCSP ticket to add the new version to PHP's server and language
+   [compatibility tables](https://docs.mongodb.com/drivers/php/#compatibility)
+   in the driver docs portal. See
+   [mongodb/docs-ecosystem#642](https://github.com/mongodb/docs-ecosystem/pull/642)
+   for an example.
+
+ * Create a DOCSP ticket to update the "current" and "upcoming" navigation links
+   in the library's [documentation](https://docs.mongodb.com/php-library/). This
+   will require updating
+   [mongodb/docs-php-library](https://github.com/mongodb/docs-php-library).
+
+These tasks can be initiated prior to tagging a new release to ensure that the
+updated content becomes accessible soon after the release is published.
+

@@ -200,12 +200,13 @@ Thanks for our community contributors for this release:
 
 Release announcements should also be sent to the [MongoDB Product & Driver Announcements](https://community.mongodb.com/tags/c/community/release-notes/35/php-driver).
 
-Consider announcing each release on Twitter. Significant releases can also be
+Consider announcing each release on Twitter. Significant releases should also be
 announced via [@MongoDB](http://twitter.com/mongodb) as well.
 
-### Documentation Updates for New Minor Versions
+### Documentation Updates for New Major and Minor Versions
 
-New minor releases will also require documentation updates to other projects:
+New major and minor releases will also require documentation updates to other
+projects:
 
  * Create a DOCSP ticket to add the new version to PHP's server and language
    [compatibility tables](https://docs.mongodb.com/drivers/php/#compatibility)
@@ -220,3 +221,4 @@ New minor releases will also require documentation updates to other projects:
 
 These tasks can be initiated prior to tagging a new release to ensure that the
 updated content becomes accessible soon after the release is published.
+

@@ -23,7 +23,7 @@ OLD_PATH=$PATH
 PATH=/opt/php/${PHP_VERSION}-64bit/bin:$OLD_PATH
 
 # Disable failing PHPUnit due to deprecations
-SYMFONY_DEPRECATIONS_HELPER=999999
+export SYMFONY_DEPRECATIONS_HELPER=999999
 
 # Run the tests, and store the results in a Evergreen compatible JSON results file
 case "$TESTS" in

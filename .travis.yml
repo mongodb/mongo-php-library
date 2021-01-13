@@ -32,10 +32,6 @@ env:
 jobs:
   include:
 
-    - stage: Smoke Testing
-      env:
-        - CHECKS=phpunit
-
     # Test against PHP 8
     - stage: Test
       php: "8.0snapshot"

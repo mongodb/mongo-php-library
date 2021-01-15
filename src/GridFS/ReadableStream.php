@@ -17,7 +17,7 @@
 
 namespace MongoDB\GridFS;
 
-use IteratorIterator;
+use MongoDB\Driver\CursorInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Exception\CorruptFileException;
 use stdClass;
@@ -48,7 +48,7 @@ class ReadableStream
     /** @var integer */
     private $chunkOffset = 0;
 
-    /** @var IteratorIterator|null */
+    /** @var CursorInterface|null */
     private $chunksIterator;
 
     /** @var CollectionWrapper */
@@ -315,9 +315,7 @@ class ReadableStream
      */
     private function initChunksIterator()
     {
-        $cursor = $this->collectionWrapper->findChunksByFileId($this->file->_id, $this->chunkOffset);
-
-        $this->chunksIterator = new IteratorIterator($cursor);
+        $this->chunksIterator = $this->collectionWrapper->findChunksByFileId($this->file->_id, $this->chunkOffset);
         $this->chunksIterator->rewind();
     }
 }

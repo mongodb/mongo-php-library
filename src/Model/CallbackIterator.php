@@ -32,12 +32,12 @@ class CallbackIterator implements Iterator
     /** @var Closure */
     private $callback;
 
-    /** @var IteratorIterator */
+    /** @var Iterator */
     private $iterator;
 
     public function __construct(Traversable $traversable, Closure $callback)
     {
-        $this->iterator = new IteratorIterator($traversable);
+        $this->iterator = $traversable instanceof Iterator ? $traversable : new IteratorIterator($traversable);
         $this->callback = $callback;
     }
 

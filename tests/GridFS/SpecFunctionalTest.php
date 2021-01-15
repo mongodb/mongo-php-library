@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\GridFS;
 
 use DateTime;
-use IteratorIterator;
 use LogicException;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
@@ -121,8 +120,8 @@ class SpecFunctionalTest extends FunctionalTestCase
     private function assertEquivalentCollections($expectedCollection, $actualCollection, $actualResult)
     {
         $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);
-        $mi->attachIterator(new IteratorIterator($expectedCollection->find()));
-        $mi->attachIterator(new IteratorIterator($actualCollection->find()));
+        $mi->attachIterator($expectedCollection->find());
+        $mi->attachIterator($actualCollection->find());
 
         foreach ($mi as $documents) {
             list($expectedDocument, $actualDocument) = $documents;

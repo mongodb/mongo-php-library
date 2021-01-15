@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\UnifiedSpecTests;
 
 use ArrayIterator;
-use IteratorIterator;
 use MongoDB\Client;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -75,7 +74,7 @@ class CollectionData
 
         $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);
         $mi->attachIterator(new ArrayIterator($this->documents));
-        $mi->attachIterator(new IteratorIterator($cursor));
+        $mi->attachIterator($cursor);
 
         foreach ($mi as $i => $documents) {
             list($expectedDocument, $actualDocument) = $documents;

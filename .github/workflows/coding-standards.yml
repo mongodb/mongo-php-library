@@ -6,6 +6,9 @@ on:
       - "v*.*"
       - "master"
   push:
+    branches:
+      - "v*.*"
+      - "master"
 
 jobs:
   coding-standards:

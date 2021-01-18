@@ -7,15 +7,13 @@ on:
       - "master"
   push:
 
-env:
-  fail-fast: true
-
 jobs:
   phpunit:
     name: "PHPUnit tests"
     runs-on: "${{ matrix.os }}"
 
     strategy:
+      fail-fast: true
       matrix:
         os:
           - "ubuntu-20.04"

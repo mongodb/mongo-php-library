@@ -29,13 +29,13 @@ jobs:
         topology:
           - "server"
         include:
-          - php-version: "8.0"
-            os: "ubuntu-20.04"
+          - os: "ubuntu-20.04"
+            php-version: "8.0"
             mongodb-version: "4.4"
             driver-version: "stable"
             topology: "replica_set"
-          - php-version: "8.0"
-            os: "ubuntu-20.04"
+          - os: "ubuntu-20.04"
+            php-version: "8.0"
             mongodb-version: "4.4"
             driver-version: "stable"
             topology: "sharded_cluster"

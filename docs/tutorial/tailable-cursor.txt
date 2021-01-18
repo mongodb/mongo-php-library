@@ -35,25 +35,21 @@ While normal cursors can be iterated once with ``foreach``, that approach will
 not work with tailable cursors. When ``foreach`` is used with a tailable cursor,
 the loop will stop upon reaching the end of the initial result set. Attempting
 to continue iteration on the cursor with a second ``foreach`` would throw an
-exception, since PHP attempts to rewind the cursor.
-
-In order to continuously read from a tailable cursor, we will need to directly
-control the cursor's iteration (e.g. call ``next()``), avoid inadvertently
-rewinding the cursor, and decide when to wait for new results or stop iteration
-entirely.
+exception, since PHP attempts to rewind the cursor. Therefore, reading from a
+tailable cursor will require direct usage of the :php:`Iterator <iterator>` API.
 
 .. note::
 
     Before version 1.9.0 of the ``ext-mongodb`` extension, the cursor class does
     not implement the :php:`Iterator <iterator>` interface. To manually iterate
-    cursors using the method described below, cursors must be wrapped in a
+    a cursor using the method below, it must first be wrapped with an
     :php:`IteratorIterator <iteratoriterator>`.
 
 Manually Iterating a Normal Cursor
 ----------------------------------
 
 Before looking at how a tailable cursor can be iterated, we'll start by
-examining how the class interacts with a normal cursor.
+examining how the ``Iterator`` methods interact with a normal cursor.
 
 The following example finds five restaurants and uses ``foreach`` to view the
 results:

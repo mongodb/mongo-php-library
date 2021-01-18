@@ -26,6 +26,19 @@ jobs:
           - "4.4"
         driver-version:
           - "stable"
+        topology:
+          - "server"
+        include:
+          - php-version: "8.0"
+            os: "ubuntu-20.04"
+            mongodb-version: "4.4"
+            driver-version: "stable"
+            topology: "replica_set"
+          - php-version: "8.0"
+            os: "ubuntu-20.04"
+            mongodb-version: "4.4"
+            driver-version: "stable"
+            topology: "sharded_cluster"
 
     steps:
       - name: "Checkout"
@@ -37,6 +50,7 @@ jobs:
         uses: mongodb-labs/drivers-evergreen-tools@master
         with:
           version: ${{ matrix.mongodb-version }}
+          topology: ${{ matrix.topology }}
 
       - name: Setup cache environment
         id: extcache

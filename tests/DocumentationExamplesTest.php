@@ -7,7 +7,7 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\Client;
 use MongoDB\Database;
 use MongoDB\Driver\Cursor;
-use MongoDB\Driver\Exception\ConnectionTimeoutException;
+use MongoDB\Driver\Exception\Exception;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
@@ -1466,12 +1466,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
     {
         $this->skipIfCausalConsistencyIsNotSupported();
 
-        try {
-            $this->manager->selectServer(new ReadPreference('secondary'));
-        } catch (ConnectionTimeoutException $e) {
-            $this->markTestSkipped('Secondary is not available');
-        }
-
         $this->assertNotNull('This test intentionally performs no assertions');
 
         // Prep
@@ -1485,6 +1479,16 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $items->insertOne(
             [ 'sku' => '111', 'name' => 'Peanuts', 'start' => new UTCDateTime() ]
         );
+
+        try {
+            /* In sharded clusters, server selection ignores the read preference
+             * mode, so using $manager->selectServer does not work here. To work
+             * around this, we run a query on a secondary and rely on an
+             * exception to let us know that no secondary is available. */
+            $items->countDocuments([], ['readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY)]);
+        } catch (Exception $e) {
+            $this->markTestSkipped('Secondary is not available');
+        }
 
         // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
         // Start Causal Consistency Example 1

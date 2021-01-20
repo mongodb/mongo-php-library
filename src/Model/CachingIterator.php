@@ -41,7 +41,7 @@ class CachingIterator implements Countable, Iterator
     /** @var array */
     private $items = [];
 
-    /** @var IteratorIterator */
+    /** @var Iterator */
     private $iterator;
 
     /** @var boolean */
@@ -53,14 +53,14 @@ class CachingIterator implements Countable, Iterator
     /**
      * Initialize the iterator and stores the first item in the cache. This
      * effectively rewinds the Traversable and the wrapping IteratorIterator.
-     *  Additionally, this mimics behavior of the SPL iterators and allows users
-     * to omit an explicit call * to rewind() before using the other methods.
+     * Additionally, this mimics behavior of the SPL iterators and allows users
+     * to omit an explicit call to rewind() before using the other methods.
      *
      * @param Traversable $traversable
      */
     public function __construct(Traversable $traversable)
     {
-        $this->iterator = new IteratorIterator($traversable);
+        $this->iterator = $traversable instanceof Iterator ? $traversable : new IteratorIterator($traversable);
 
         $this->iterator->rewind();
         $this->storeCurrentItem();

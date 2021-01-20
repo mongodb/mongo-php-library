@@ -12,7 +12,7 @@
         "php": "^7.0 || ^8.0",
         "ext-hash": "*",
         "ext-json": "*",
-        "ext-mongodb": "^1.8.1",
+        "ext-mongodb": "^1.9.0",
         "jean85/pretty-package-versions": "^1.2",
         "symfony/polyfill-php80": "^1.19"
     },

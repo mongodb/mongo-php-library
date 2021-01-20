@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\SpecTests;
 
-use IteratorIterator;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Driver\Command;
@@ -205,12 +204,11 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         // Start a find operation on the collection with a batch size of 2, and retrieve the first batch of results.
         $cursor = $this->collection->find([], ['batchSize' => 2]);
 
-        $iterator = new IteratorIterator($cursor);
-        $iterator->rewind();
-        $this->assertTrue($iterator->valid());
+        $cursor->rewind();
+        $this->assertTrue($cursor->valid());
 
-        $iterator->next();
-        $this->assertTrue($iterator->valid());
+        $cursor->next();
+        $this->assertTrue($cursor->valid());
 
         $totalConnectionsCreated = $this->getTotalConnectionsCreated();
 
@@ -235,14 +233,14 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         $events = [];
         $observer = new CommandObserver();
         $observer->observe(
-            function () use ($iterator) {
-                $iterator->next();
+            function () use ($cursor) {
+                $cursor->next();
             },
             function ($event) use (&$events) {
                 $events[] = $event;
             }
         );
-        $this->assertTrue($iterator->valid());
+        $this->assertTrue($cursor->valid());
         $this->assertCount(1, $events);
         $this->assertSame('getMore', $events[0]['started']->getCommandName());
 

@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\Operation;
 
-use IteratorIterator;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Operation\CreateCollection;
@@ -183,27 +182,26 @@ class FindFunctionalTest extends FunctionalTestCase
 
         $operation = new Find($databaseName, $cappedCollectionName, [], ['cursorType' => Find::TAILABLE_AWAIT, 'maxAwaitTimeMS' => $maxAwaitTimeMS]);
         $cursor = $operation->execute($this->getPrimaryServer());
-        $it = new IteratorIterator($cursor);
 
         /* The initial query includes the one and only document in its result
          * batch, so we should not expect a delay. */
         $startTime = microtime(true);
-        $it->rewind();
+        $cursor->rewind();
         $duration = microtime(true) - $startTime;
         $this->assertLessThan($pivot, $duration);
 
-        $this->assertTrue($it->valid());
-        $this->assertSameDocument(['_id' => 1], $it->current());
+        $this->assertTrue($cursor->valid());
+        $this->assertSameDocument(['_id' => 1], $cursor->current());
 
         /* Advancing again takes us to the last document of the result batch,
          * but still should not issue a getMore */
         $startTime = microtime(true);
-        $it->next();
+        $cursor->next();
         $duration = microtime(true) - $startTime;
         $this->assertLessThan($pivot, $duration);
 
-        $this->assertTrue($it->valid());
-        $this->assertSameDocument(['_id' => 2], $it->current());
+        $this->assertTrue($cursor->valid());
+        $this->assertSameDocument(['_id' => 2], $cursor->current());
 
         /* Now that we've reached the end of the initial result batch, advancing
          * again will issue a getMore. Expect to wait at least maxAwaitTimeMS,
@@ -211,12 +209,12 @@ class FindFunctionalTest extends FunctionalTestCase
          * query thread. Also ensure we don't wait too long (server default is
          * one second). */
         $startTime = microtime(true);
-        $it->next();
+        $cursor->next();
         $duration = microtime(true) - $startTime;
         $this->assertGreaterThan($pivot, $duration);
         $this->assertLessThan(0.5, $duration);
 
-        $this->assertFalse($it->valid());
+        $this->assertFalse($cursor->valid());
     }
 
     public function testReadPreferenceWithinTransaction()

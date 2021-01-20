@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\Collection;
 
-use IteratorIterator;
 use LogicException;
 use MongoDB\BulkWriteResult;
 use MongoDB\Collection;
@@ -105,8 +104,8 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     private function assertEquivalentCollections($expectedCollection, $actualCollection)
     {
         $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);
-        $mi->attachIterator(new IteratorIterator($expectedCollection->find()));
-        $mi->attachIterator(new IteratorIterator($actualCollection->find()));
+        $mi->attachIterator($expectedCollection->find());
+        $mi->attachIterator($actualCollection->find());
 
         foreach ($mi as $documents) {
             list($expectedDocument, $actualDocument) = $documents;

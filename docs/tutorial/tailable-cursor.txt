@@ -18,7 +18,7 @@ Overview
 When the driver executes a query or command (e.g.
 :manual:`aggregate </reference/command/aggregate>`), results from the operation
 are returned via a :php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>`
-object. The Cursor class implements PHP's :php:`Traversable <traversable>`
+object. The Cursor class implements PHP's :php:`Iterator <iterator>`
 interface, which allows it to be iterated with ``foreach`` and interface with
 any PHP functions that work with :php:`iterables <types.iterable>`. Similar to
 result objects in other database drivers, cursors in MongoDB only support
@@ -35,20 +35,21 @@ While normal cursors can be iterated once with ``foreach``, that approach will
 not work with tailable cursors. When ``foreach`` is used with a tailable cursor,
 the loop will stop upon reaching the end of the initial result set. Attempting
 to continue iteration on the cursor with a second ``foreach`` would throw an
-exception, since PHP attempts to rewind the cursor.
+exception, since PHP attempts to rewind the cursor. Therefore, reading from a
+tailable cursor will require direct usage of the :php:`Iterator <iterator>` API.
 
-In order to continuously read from a tailable cursor, we will need to wrap the
-Cursor object with an :php:`IteratorIterator <iteratoriterator>`. This will
-allow us to directly control the cursor's iteration (e.g. call ``next()``),
-avoid inadvertently rewinding the cursor, and decide when to wait for new
-results or stop iteration entirely.
+.. note::
 
-Wrapping a Normal Cursor
-------------------------
+    Before version 1.9.0 of the ``ext-mongodb`` extension, the cursor class does
+    not implement the :php:`Iterator <iterator>` interface. To manually iterate
+    a cursor using the method below, it must first be wrapped with an
+    :php:`IteratorIterator <iteratoriterator>`.
 
-Before looking at how a tailable cursor can be wrapped with
-:php:`IteratorIterator <iteratoriterator>`, we'll start by examining how the
-class interacts with a normal cursor.
+Manually Iterating a Normal Cursor
+----------------------------------
+
+Before looking at how a tailable cursor can be iterated, we'll start by
+examining how the ``Iterator`` methods interact with a normal cursor.
 
 The following example finds five restaurants and uses ``foreach`` to view the
 results:
@@ -74,7 +75,7 @@ not occurred, the iterator then advances to the next position, control jumps
 back to the validity check, and the loop continues.
 
 With the inner workings of ``foreach`` under our belt, we can now translate the
-preceding example to use IteratorIterator:
+preceding example to use the Iterator methods directly:
 
 .. code-block:: php
 
@@ -84,28 +85,26 @@ preceding example to use IteratorIterator:
 
    $cursor = $collection->find([], ['limit' => 5]);
 
-   $iterator = new IteratorIterator($cursor);
+   $cursor->rewind();
 
-   $iterator->rewind();
-
-   while ($iterator->valid()) {
-      $document = $iterator->current();
+   while ($cursor->valid()) {
+      $document = $cursor->current();
       var_dump($document);
-      $iterator->next();
+      $cursor->next();
    }
 
 .. note::
 
-   Calling ``$iterator->next()`` after the ``while`` loop naturally ends would
+   Calling ``$cursor->next()`` after the ``while`` loop naturally ends would
    throw an exception, since all results on the cursor have been exhausted.
 
 The purpose of this example is simply to demonstrate the functional equivalence
 between ``foreach`` and manual iteration with PHP's :php:`Iterator <iterator>`
-API. For normal cursors, there is little reason to use IteratorIterator instead
-of a concise ``foreach`` loop.
+API. For normal cursors, there is little reason to manually iterate results
+instead of a concise ``foreach`` loop.
 
-Wrapping a Tailable Cursor
---------------------------
+Iterating a Tailable Cursor
+---------------------------
 
 In order to demonstrate a tailable cursor in action, we'll need two scripts: a
 "producer" and a "consumer". The producer script will create a new capped
@@ -154,7 +153,7 @@ If you execute this consumer script, you'll notice that it quickly exhausts all
 results in the capped collection and then terminates. We cannot add a second
 ``foreach``, as that would throw an exception when attempting to rewind the
 cursor. This is a ripe use case for directly controlling the iteration process
-using :php:`IteratorIterator <iteratoriterator>`.
+using the :php:`Iterator <iterator>` interface.
 
 .. code-block:: php
 
@@ -167,17 +166,15 @@ using :php:`IteratorIterator <iteratoriterator>`.
        'maxAwaitTimeMS' => 100,
    ]);
 
-   $iterator = new IteratorIterator($cursor);
-
-   $iterator->rewind();
+   $cursor->rewind();
 
    while (true) {
-      if ($iterator->valid()) {
-         $document = $iterator->current();
+      if ($cursor->valid()) {
+         $document = $cursor->current();
          printf("Consumed document created at: %s\n", $document->createdAt);
       }
 
-      $iterator->next();
+      $cursor->next();
    }
 
 Much like the ``foreach`` example, this version on the consumer script will

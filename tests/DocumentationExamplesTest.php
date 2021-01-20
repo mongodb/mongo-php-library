@@ -1481,6 +1481,10 @@ class DocumentationExamplesTest extends FunctionalTestCase
         );
 
         try {
+            /* In sharded clusters, server selection ignores the read preference
+             * mode, so using $manager->selectServer does not work here. To work
+             * around this, we run a query on a secondary and rely on an
+             * exception to let us know that no secondary is available. */
             $items->countDocuments([], ['readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY)]);
         } catch (Exception $e) {
             $this->markTestSkipped('Secondary is not available');

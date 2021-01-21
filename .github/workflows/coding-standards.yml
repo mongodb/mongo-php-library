@@ -19,6 +19,8 @@ jobs:
       matrix:
         php-version:
           - "7.4"
+        driver-version:
+          - "mongodb/mongo-php-driver@master"
 
     steps:
       - name: "Checkout"
@@ -29,7 +31,7 @@ jobs:
         uses: shivammathur/cache-extensions@v1
         with:
           php-version: ${{ matrix.php-version }}
-          extensions: "mongodb"
+          extensions: "mongodb-${{ matrix.driver-version }}"
           key: "extcache-v1"
 
       - name: Cache extensions
@@ -40,10 +42,11 @@ jobs:
           restore-keys: ${{ steps.extcache.outputs.key }}
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+        # Todo: switch to @v2 once a tag has been created
+        uses: "shivammathur/setup-php@develop"
         with:
           coverage: "none"
-          extensions: "mongodb"
+          extensions: "mongodb-${{ matrix.driver-version }}"
           php-version: "${{ matrix.php-version }}"
           tools: "cs2pr"
 

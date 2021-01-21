@@ -26,19 +26,19 @@ jobs:
         mongodb-version:
           - "4.4"
         driver-version:
-          - "stable"
+          - "mongodb/mongo-php-driver@master"
         topology:
           - "server"
         include:
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "4.4"
-            driver-version: "stable"
+            driver-version: "mongodb/mongo-php-driver@master"
             topology: "replica_set"
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "4.4"
-            driver-version: "stable"
+            driver-version: "mongodb/mongo-php-driver@master"
             topology: "sharded_cluster"
 
     steps:
@@ -69,7 +69,8 @@ jobs:
           restore-keys: ${{ steps.extcache.outputs.key }}
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+        # Todo: switch to @v2 once a tag has been created
+        uses: "shivammathur/setup-php@develop"
         with:
           php-version: "${{ matrix.php-version }}"
           tools: "pecl"

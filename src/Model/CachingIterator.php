@@ -157,8 +157,6 @@ class CachingIterator implements Countable, Iterator
             return;
         }
 
-        $key = $this->iterator->key();
-
-        $this->items[$key] = $this->iterator->current();
+        $this->items[$this->iterator->key()] = $this->iterator->current();
     }
 }

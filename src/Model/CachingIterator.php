@@ -153,12 +153,10 @@ class CachingIterator implements Countable, Iterator
      */
     private function storeCurrentItem()
     {
-        $key = $this->iterator->key();
-
-        if ($key === null) {
+        if (! $this->iterator->valid()) {
             return;
         }
 
-        $this->items[$key] = $this->iterator->current();
+        $this->items[$this->iterator->key()] = $this->iterator->current();
     }
 }

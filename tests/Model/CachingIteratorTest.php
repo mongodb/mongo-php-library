@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\Model;
 
 use Exception;
+use Iterator;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Tests\TestCase;
 use Throwable;
@@ -108,6 +109,46 @@ class CachingIteratorTest extends TestCase
     {
         $iterator = new CachingIterator($this->getTraversable([]));
         $this->assertCount(0, $iterator);
+    }
+
+    /**
+     * This protects against iterators that return valid keys on invalid
+     * positions, which was the case in ext-mongodb until PHPC-1748 was fixed.
+     */
+    public function testWithWrongIterator()
+    {
+        $nestedIterator = new class implements Iterator {
+            /** @var int */
+            private $i = 0;
+
+            public function current()
+            {
+                return $this->i;
+            }
+
+            public function next()
+            {
+                $this->i++;
+            }
+
+            public function key()
+            {
+                return $this->i;
+            }
+
+            public function valid()
+            {
+                return $this->i == 0;
+            }
+
+            public function rewind()
+            {
+                $this->i = 0;
+            }
+        };
+
+        $iterator = new CachingIterator($nestedIterator);
+        $this->assertCount(1, $iterator);
     }
 
     private function getTraversable($items)

@@ -167,7 +167,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      *
      * @dataProvider dataKeyProvider
      */
-    public function testDataKeyAndDoubleEncryption(Closure $test)
+    public function testDataKeyAndDoubleEncryption(string $providerName, $masterKey)
     {
         $client = new Client(static::getUri());
 
@@ -203,104 +203,70 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $clientEncrypted = new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
         $clientEncryption = $clientEncrypted->createClientEncryption($encryptionOpts);
 
-        $test($clientEncryption, $client, $clientEncrypted, $this);
+        $commands = [];
+
+        $dataKeyId = null;
+        $keyAltName = $providerName . '_altname';
+
+        (new CommandObserver())->observe(
+            function () use ($clientEncryption, &$dataKeyId, $keyAltName, $providerName, $masterKey) {
+                $keyData = ['keyAltNames' => [$keyAltName]];
+                if ($masterKey !== null) {
+                    $keyData['masterKey'] = $masterKey;
+                }
+
+                $dataKeyId = $clientEncryption->createDataKey($providerName, $keyData);
+            },
+            function ($command) use (&$commands) {
+                $commands[] = $command;
+            }
+        );
+
+        $this->assertInstanceOf(Binary::class, $dataKeyId);
+        $this->assertSame(Binary::TYPE_UUID, $dataKeyId->getType());
+
+        $this->assertCount(2, $commands);
+        $insert = $commands[1]['started'];
+        $this->assertSame('insert', $insert->getCommandName());
+        $this->assertSame(WriteConcern::MAJORITY, $insert->getCommand()->writeConcern->w);
+
+        $keys = $client->selectCollection('keyvault', 'datakeys')->find(['_id' => $dataKeyId]);
+        $keys = iterator_to_array($keys);
+        $this->assertCount(1, $keys);
+
+        $key = $keys[0];
+        $this->assertNotNull($key);
+        $this->assertSame($providerName, $key['masterKey']['provider']);
+
+        $encrypted = $clientEncryption->encrypt('hello ' . $providerName, ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $dataKeyId]);
+        $this->assertInstanceOf(Binary::class, $encrypted);
+        $this->assertSame(Binary::TYPE_ENCRYPTED, $encrypted->getType());
+
+        $clientEncrypted->selectCollection('db', 'coll')->insertOne(['_id' => 'local', 'value' => $encrypted]);
+        $hello = $clientEncrypted->selectCollection('db', 'coll')->findOne(['_id' => 'local']);
+        $this->assertNotNull($hello);
+        $this->assertSame('hello ' . $providerName, $hello['value']);
+
+        $encryptedAltName = $clientEncryption->encrypt('hello ' . $providerName, ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyAltName' => $keyAltName]);
+        $this->assertEquals($encrypted, $encryptedAltName);
+
+        $this->expectException(BulkWriteException::class);
+        $clientEncrypted->selectCollection('db', 'coll')->insertOne(['encrypted_placeholder' => $encrypted]);
     }
 
     public static function dataKeyProvider()
     {
         return [
             'local' => [
-                static function (ClientEncryption $clientEncryption, Client $client, Client $clientEncrypted, self $test) {
-                    $commands = [];
-
-                    $localDatakeyId = null;
-
-                    (new CommandObserver())->observe(
-                        function () use ($clientEncryption, &$localDatakeyId) {
-                            $localDatakeyId = $clientEncryption->createDataKey('local', ['keyAltNames' => ['local_altname']]);
-                        },
-                        function ($command) use (&$commands) {
-                            $commands[] = $command;
-                        }
-                    );
-
-                    $test->assertInstanceOf(Binary::class, $localDatakeyId);
-                    $test->assertSame(Binary::TYPE_UUID, $localDatakeyId->getType());
-
-                    $test->assertCount(2, $commands);
-                    $insert = $commands[1]['started'];
-                    $test->assertSame('insert', $insert->getCommandName());
-                    $test->assertSame(WriteConcern::MAJORITY, $insert->getCommand()->writeConcern->w);
-
-                    $keys = $client->selectCollection('keyvault', 'datakeys')->find(['_id' => $localDatakeyId]);
-                    $keys = iterator_to_array($keys);
-                    $test->assertCount(1, $keys);
-
-                    $key = $keys[0];
-                    $test->assertNotNull($key);
-                    $test->assertSame('local', $key['masterKey']['provider']);
-
-                    $localEncrypted = $clientEncryption->encrypt('hello local', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $localDatakeyId]);
-                    $test->assertInstanceOf(Binary::class, $localEncrypted);
-                    $test->assertSame(Binary::TYPE_ENCRYPTED, $localEncrypted->getType());
-
-                    $clientEncrypted->selectCollection('db', 'coll')->insertOne(['_id' => 'local', 'value' => $localEncrypted]);
-                    $helloLocal = $clientEncrypted->selectCollection('db', 'coll')->findOne(['_id' => 'local']);
-                    $test->assertNotNull($helloLocal);
-                    $test->assertSame('hello local', $helloLocal['value']);
-
-                    $localEncryptedAltName = $clientEncryption->encrypt('hello local', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyAltName' => 'local_altname']);
-                    $test->assertEquals($localEncrypted, $localEncryptedAltName);
-
-                    $test->expectException(BulkWriteException::class);
-                    $clientEncrypted->selectCollection('db', 'coll')->insertOne(['encrypted_placeholder' => $localEncrypted]);
-                },
+                'providerName' => 'local',
+                'masterKey' => null,
             ],
             'aws' => [
-                static function (ClientEncryption $clientEncryption, Client $client, Client $clientEncrypted, self $test) {
-                    $commands = [];
-                    $awsDatakeyId = null;
-
-                    (new CommandObserver())->observe(
-                        function () use ($clientEncryption, &$awsDatakeyId) {
-                            $awsDatakeyId = $clientEncryption->createDataKey('aws', ['keyAltNames' => ['aws_altname'], 'masterKey' => ['region' => 'us-east-1', 'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0']]);
-                        },
-                        function ($command) use (&$commands) {
-                            $commands[] = $command;
-                        }
-                    );
-
-                    $test->assertInstanceOf(Binary::class, $awsDatakeyId);
-                    $test->assertSame(Binary::TYPE_UUID, $awsDatakeyId->getType());
-
-                    $test->assertCount(2, $commands);
-                    $insert = $commands[1]['started'];
-                    $test->assertSame('insert', $insert->getCommandName());
-                    $test->assertSame(WriteConcern::MAJORITY, $insert->getCommand()->writeConcern->w);
-
-                    $keys = $client->selectCollection('keyvault', 'datakeys')->find(['_id' => $awsDatakeyId]);
-                    $keys = iterator_to_array($keys);
-                    $test->assertCount(1, $keys);
-
-                    $key = $keys[0];
-                    $test->assertNotNull($key);
-                    $test->assertSame('aws', $key['masterKey']['provider']);
-
-                    $awsEncrypted = $clientEncryption->encrypt('hello aws', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $awsDatakeyId]);
-                    $test->assertInstanceOf(Binary::class, $awsEncrypted);
-                    $test->assertSame(Binary::TYPE_ENCRYPTED, $awsEncrypted->getType());
-
-                    $clientEncrypted->selectCollection('db', 'coll')->insertOne(['_id' => 'aws', 'value' => $awsEncrypted]);
-                    $helloAws = $clientEncrypted->selectCollection('db', 'coll')->findOne(['_id' => 'aws']);
-                    $test->assertNotNull($helloAws);
-                    $test->assertSame('hello aws', $helloAws['value']);
-
-                    $awsEncryptedAltName = $clientEncryption->encrypt('hello aws', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyAltName' => 'aws_altname']);
-                    $test->assertEquals($awsEncrypted, $awsEncryptedAltName);
-
-                    $test->expectException(BulkWriteException::class);
-                    $clientEncrypted->selectCollection('db', 'coll')->insertOne(['encrypted_placeholder' => $awsEncrypted]);
-                },
+                'providerName' => 'aws',
+                'masterKey' => [
+                    'region' => 'us-east-1',
+                    'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0',
+                ],
             ],
         ];
     }

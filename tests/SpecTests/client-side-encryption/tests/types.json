@@ -106,6 +106,18 @@
         {
           "command_started_event": {
             "command": {
+              "listCollections": 1,
+              "filter": {
+                "name": "datakeys"
+              },
+              "$db": "keyvault"
+            },
+            "command_name": "listCollections"
+          }
+        },
+        {
+          "command_started_event": {
+            "command": {
               "find": "datakeys",
               "filter": {
                 "$or": [
@@ -245,6 +257,18 @@
         {
           "command_started_event": {
             "command": {
+              "listCollections": 1,
+              "filter": {
+                "name": "datakeys"
+              },
+              "$db": "keyvault"
+            },
+            "command_name": "listCollections"
+          }
+        },
+        {
+          "command_started_event": {
+            "command": {
               "find": "datakeys",
               "filter": {
                 "$or": [
@@ -381,6 +405,18 @@
         }
       ],
       "expectations": [
+        {
+          "command_started_event": {
+            "command": {
+              "listCollections": 1,
+              "filter": {
+                "name": "datakeys"
+              },
+              "$db": "keyvault"
+            },
+            "command_name": "listCollections"
+          }
+        },
         {
           "command_started_event": {
             "command": {
@@ -623,6 +659,18 @@
         {
           "command_started_event": {
             "command": {
+              "listCollections": 1,
+              "filter": {
+                "name": "datakeys"
+              },
+              "$db": "keyvault"
+            },
+            "command_name": "listCollections"
+          }
+        },
+        {
+          "command_started_event": {
+            "command": {
               "find": "datakeys",
               "filter": {
                 "$or": [
@@ -759,6 +807,18 @@
         }
       ],
       "expectations": [
+        {
+          "command_started_event": {
+            "command": {
+              "listCollections": 1,
+              "filter": {
+                "name": "datakeys"
+              },
+              "$db": "keyvault"
+            },
+            "command_name": "listCollections"
+          }
+        },
         {
           "command_started_event": {
             "command": {
@@ -1000,6 +1060,18 @@
         {
           "command_started_event": {
             "command": {
+              "listCollections": 1,
+              "filter": {
+                "name": "datakeys"
+              },
+              "$db": "keyvault"
+            },
+            "command_name": "listCollections"
+          }
+        },
+        {
+          "command_started_event": {
+            "command": {
               "find": "datakeys",
               "filter": {
                 "$or": [
@@ -1145,6 +1217,18 @@
         {
           "command_started_event": {
             "command": {
+              "listCollections": 1,
+              "filter": {
+                "name": "datakeys"
+              },
+              "$db": "keyvault"
+            },
+            "command_name": "listCollections"
+          }
+        },
+        {
+          "command_started_event": {
+            "command": {
               "find": "datakeys",
               "filter": {
                 "$or": [
@@ -1285,6 +1369,18 @@
         }
       ],
       "expectations": [
+        {
+          "command_started_event": {
+            "command": {
+              "listCollections": 1,
+              "filter": {
+                "name": "datakeys"
+              },
+              "$db": "keyvault"
+            },
+            "command_name": "listCollections"
+          }
+        },
         {
           "command_started_event": {
             "command": {

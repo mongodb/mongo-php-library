@@ -147,6 +147,18 @@
         {
           "command_started_event": {
             "command": {
+              "listCollections": 1,
+              "filter": {
+                "name": "datakeys"
+              },
+              "$db": "keyvault"
+            },
+            "command_name": "listCollections"
+          }
+        },
+        {
+          "command_started_event": {
+            "command": {
               "find": "datakeys",
               "filter": {
                 "$or": [
@@ -267,6 +279,18 @@
               "filter": {
                 "name": "default"
               }
+            },
+            "command_name": "listCollections"
+          }
+        },
+        {
+          "command_started_event": {
+            "command": {
+              "listCollections": 1,
+              "filter": {
+                "name": "datakeys"
+              },
+              "$db": "keyvault"
             },
             "command_name": "listCollections"
           }

@@ -118,6 +118,14 @@ final class Context
             if (isset($autoEncryptionOptions['kmsProviders']->aws)) {
                 $autoEncryptionOptions['kmsProviders']->aws = self::getAWSCredentials();
             }
+
+            if (isset($autoEncryptionOptions['kmsProviders']->azure)) {
+                $autoEncryptionOptions['kmsProviders']->azure = self::getAzureCredentials();
+            }
+
+            if (isset($autoEncryptionOptions['kmsProviders']->gcp)) {
+                $autoEncryptionOptions['kmsProviders']->gcp = self::getGCPCredentials();
+            }
         }
 
         if (isset($test->outcome->collection->name)) {
@@ -257,6 +265,41 @@ final class Context
         return [
             'accessKeyId' => getenv('AWS_ACCESS_KEY_ID'),
             'secretAccessKey' => getenv('AWS_SECRET_ACCESS_KEY'),
+        ];
+    }
+
+    /**
+     * @return array
+     *
+     * @throws SkippedTestError
+     */
+    public static function getAzureCredentials()
+    {
+        if (! getenv('AZURE_TENANT_ID') || ! getenv('AZURE_CLIENT_ID') || ! getenv('AZURE_CLIENT_SECRET')) {
+            throw new SkippedTestError('Please configure Azure credentials to use Azure KMS provider.');
+        }
+
+        return [
+            'tenantId' => getenv('AZURE_TENANT_ID'),
+            'clientId' => getenv('AZURE_CLIENT_ID'),
+            'clientSecret' => getenv('AZURE_CLIENT_SECRET'),
+        ];
+    }
+
+    /**
+     * @return array
+     *
+     * @throws SkippedTestError
+     */
+    public static function getGCPCredentials()
+    {
+        if (! getenv('GCP_EMAIL') || ! getenv('GCP_PRIVATE_KEY')) {
+            throw new SkippedTestError('Please configure GCP credentials to use GCP KMS provider.');
+        }
+
+        return [
+            'email' => getenv('GCP_EMAIL'),
+            'privateKey' => getenv('GCP_PRIVATE_KEY'),
         ];
     }
 

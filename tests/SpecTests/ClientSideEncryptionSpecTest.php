@@ -552,59 +552,80 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
     /**
      * Prose test: Custom Endpoint
+     *
+     * @dataProvider customEndpointProvider
      */
-    public function testCustomEndpoint()
+    public function testCustomEndpoint(Closure $test)
     {
-        // Test 1
         $client = new Client(static::getUri());
 
-        $encryptionOpts = [
+        $clientEncryption = $client->createClientEncryption([
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
                 'aws' => Context::getAWSCredentials(),
+                'azure' => Context::getAzureCredentials() + ['identityPlatformEndpoint' => 'login.microsoftonline.com:443'],
+                'gcp' => Context::getGCPCredentials() + ['endpoint' => 'oauth2.googleapis.com:443'],
+            ],
+        ]);
+
+        $clientEncryptionInvalid = $client->createClientEncryption([
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => [
+                'azure' => Context::getAzureCredentials() + ['identityPlatformEndpoint' => 'example.com:443'],
+                'gcp' => Context::getGCPCredentials() + ['endpoint' => 'example.com:443'],
+            ],
+        ]);
+
+        $test($this, $clientEncryption, $clientEncryptionInvalid);
+    }
+
+    public static function customEndpointProvider()
+    {
+        $awsMasterKey = ['region' => 'us-east-1', 'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0'];
+
+        return [
+            'Test 1' => [
+                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
+                    $keyId = $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey]);
+                    $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                    $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+                },
+            ],
+            'Test 2' => [
+                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
+                    $keyId = $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'kms.us-east-1.amazonaws.com']]);
+                    $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                    $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+                },
+            ],
+            'Test 3' => [
+                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
+                    $keyId = $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + [ 'endpoint' => 'kms.us-east-1.amazonaws.com:443']]);
+                    $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                    $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+                },
+            ],
+            'Test 4' => [
+                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
+                    $test->expectException(ConnectionException::class);
+                    $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'kms.us-east-1.amazonaws.com:12345']]);
+                },
+            ],
+            'Test 5' => [
+                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
+                    $test->expectException(RuntimeException::class);
+                    $test->expectExceptionMessageMatches('#us-east-1#');
+                    $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'kms.us-east-2.amazonaws.com']]);
+                },
+            ],
+            'Test 6' => [
+                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
+                    $test->expectException(RuntimeException::class);
+                    $test->expectExceptionMessageMatches('#parse error#');
+                    $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'example.com']]);
+                },
             ],
         ];
-
-        $clientEncryption = $client->createClientEncryption($encryptionOpts);
-
-        // Test 2
-        $masterKeyConfig = ['region' => 'us-east-1', 'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0'];
-        $keyId = $clientEncryption->createDataKey('aws', ['masterKey' => $masterKeyConfig]);
-        $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
-        $this->assertSame('test', $clientEncryption->decrypt($encrypted));
-
-        // Test 3
-        $keyId = $clientEncryption->createDataKey('aws', ['masterKey' => $masterKeyConfig + ['endpoint' => 'kms.us-east-1.amazonaws.com']]);
-        $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
-        $this->assertSame('test', $clientEncryption->decrypt($encrypted));
-
-        // Test 4
-        $keyId = $clientEncryption->createDataKey('aws', ['masterKey' => $masterKeyConfig + [ 'endpoint' => 'kms.us-east-1.amazonaws.com:443']]);
-        $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
-        $this->assertSame('test', $clientEncryption->decrypt($encrypted));
-
-        // Test 5
-        try {
-            $clientEncryption->createDataKey('aws', ['masterKey' => $masterKeyConfig + [ 'endpoint' => 'kms.us-east-1.amazonaws.com:12345']]);
-            $this->fail('Expected exception to be thrown');
-        } catch (ConnectionException $e) {
-        }
-
-        // Test 6
-        try {
-            $clientEncryption->createDataKey('aws', ['masterKey' => $masterKeyConfig + [ 'endpoint' => 'kms.us-east-2.amazonaws.com']]);
-            $this->fail('Expected exception to be thrown');
-        } catch (RuntimeException $e) {
-            $this->assertStringContainsString('us-east-1', $e->getMessage());
-        }
-
-        // Test 7
-        try {
-            $clientEncryption->createDataKey('aws', ['masterKey' => $masterKeyConfig + [ 'endpoint' => 'example.com']]);
-            $this->fail('Expected exception to be thrown');
-        } catch (RuntimeException $e) {
-            $this->assertStringContainsString('parse error', $e->getMessage());
-        }
     }
 
     /**

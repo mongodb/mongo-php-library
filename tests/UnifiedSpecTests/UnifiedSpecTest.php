@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
+use Exception;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Driver\Exception\ServerException;
@@ -11,7 +12,6 @@ use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Tests\FunctionalTestCase;
 use stdClass;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
-use Throwable;
 use function file_get_contents;
 use function gc_collect_cycles;
 use function glob;
@@ -87,10 +87,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider providePassingTests
-     */
-    public function testPassingTests(stdClass $test, string $schemaVersion, array $runOnRequirements = null, array $createEntities = null, array $initialData = null)
+    private function doTestCase(stdClass $test, string $schemaVersion, array $runOnRequirements = null, array $createEntities = null, array $initialData = null)
     {
         if (! $this->isSchemaVersionSupported($schemaVersion)) {
             $this->markTestIncomplete(sprintf('Test format schema version "%s" is not supported', $schemaVersion));
@@ -144,6 +141,14 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
     }
 
+    /**
+     * @dataProvider providePassingTests
+     */
+    public function testPassingTests(...$args)
+    {
+        $this->doTestCase(...$args);
+    }
+
     public function providePassingTests()
     {
         return $this->provideTests(__DIR__ . '/valid-pass');
@@ -157,11 +162,13 @@ class UnifiedSpecTest extends FunctionalTestCase
         // Cannot use expectException(), as it ignores PHPUnit Exceptions
         $failed = false;
 
+        // phpcs:disable SlevomatCodingStandard.Exceptions.ReferenceThrowableOnly.ReferencedGeneralException
         try {
-            $this->testCase(...$args);
-        } catch (Throwable $e) {
+            $this->doTestCase(...$args);
+        } catch (Exception $e) {
             $failed = true;
         }
+        // phpcs:enable
 
         assertTrue($failed, 'Expected test to throw an exception');
     }

@@ -7,6 +7,7 @@ use MongoDB\Client;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\ServerApi;
+use MongoDB\Tests\FunctionalTestCase;
 use stdClass;
 use function array_key_exists;
 use function array_map;
@@ -266,7 +267,7 @@ final class Context
             );
         }
 
-        $this->entityMap->set($id, UnifiedSpecTest::createTestClient($uri, $uriOptions, $driverOptions));
+        $this->entityMap->set($id, FunctionalTestCase::createTestClient($uri, $uriOptions, $driverOptions));
     }
 
     private function createCollection(string $id, stdClass $o)
@@ -410,7 +411,7 @@ final class Context
     {
         assertStringStartsWith('mongodb://', $uri);
 
-        $manager = UnifiedSpecTest::createTestManager($uri);
+        $manager = FunctionalTestCase::createTestManager($uri);
 
         // Nothing to do if the URI does not refer to a sharded cluster
         if ($manager->selectServer(new ReadPreference(ReadPreference::PRIMARY))->getType() !== Server::TYPE_MONGOS) {
@@ -450,7 +451,7 @@ final class Context
     {
         assertStringStartsWith('mongodb://', $uri);
 
-        $manager = UnifiedSpecTest::createTestManager($uri);
+        $manager = FunctionalTestCase::createTestManager($uri);
 
         // Nothing to do if the URI does not refer to a sharded cluster
         if ($manager->selectServer(new ReadPreference(ReadPreference::PRIMARY))->getType() !== Server::TYPE_MONGOS) {

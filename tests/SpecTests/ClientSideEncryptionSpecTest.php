@@ -178,6 +178,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
                 'aws' => Context::getAWSCredentials(),
+                'azure' => Context::getAzureCredentials(),
+                'gcp' => Context::getGCPCredentials(),
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
             ],
         ];
@@ -266,6 +268,22 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 'masterKey' => [
                     'region' => 'us-east-1',
                     'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0',
+                ],
+            ],
+            'azure' => [
+                'providerName' => 'azure',
+                'masterKey' => [
+                    'keyVaultEndpoint' => 'key-vault-csfle.vault.azure.net',
+                    'keyName' => 'key-name-csfle',
+                ],
+            ],
+            'gcp' => [
+                'providerName' => 'gcp',
+                'masterKey' => [
+                    'projectId' => 'devprod-drivers',
+                    'location' => 'global',
+                    'keyRing' => 'key-ring-csfle',
+                    'keyName' => 'key-name-csfle',
                 ],
             ],
         ];
@@ -505,12 +523,16 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $client->selectCollection('keyvault', 'datakeys')->insertMany([
             $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-local.json')),
             $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-aws.json')),
+            $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-azure.json')),
+            $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-gcp.json')),
         ]);
 
         $encryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
                 'aws' => Context::getAWSCredentials(),
+                'azure' => Context::getAzureCredentials(),
+                'gcp' => Context::getGCPCredentials(),
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
             ],
         ];
@@ -535,12 +557,14 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             switch ($fieldName) {
                 case '_id':
                 case 'altname_aws':
+                case 'altname_azure':
+                case 'altname_gcp':
                 case 'altname_local':
                     $corpusCopied[$fieldName] = $data;
                     break;
 
                 default:
-                    $corpusCopied[$fieldName] = $this->prepareCorpusData($data, $clientEncryption);
+                    $corpusCopied[$fieldName] = $this->prepareCorpusData($fieldName, $data, $clientEncryption);
             }
         }
 
@@ -548,6 +572,40 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $corpusDecrypted = $collection->findOne(['_id' => 'client_side_encryption_corpus']);
 
         $this->assertDocumentsMatch($corpus, $corpusDecrypted);
+
+        $corpusEncryptedExpected = (array) $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-encrypted.json'));
+        $corpusEncryptedActual = $client->selectCollection('db', 'coll')->findOne(['_id' => 'client_side_encryption_corpus'], ['typeMap' => ['root' => 'array', 'document' => stdClass::class, 'array' => 'array']]);
+
+        foreach ($corpusEncryptedExpected as $fieldName => $expectedData) {
+            switch ($fieldName) {
+                case '_id':
+                case 'altname_aws':
+                case 'altname_azure':
+                case 'altname_gcp':
+                case 'altname_local':
+                    continue 2;
+            }
+
+            $actualData = $corpusEncryptedActual[$fieldName];
+
+            if ($expectedData->algo === 'det') {
+                $this->assertEquals($expectedData->value, $actualData->value, 'Value for field ' . $fieldName . ' does not match expected value.');
+            }
+
+            if ($expectedData->allowed) {
+                if ($expectedData->algo === 'rand') {
+                    $this->assertNotEquals($expectedData->value, $actualData->value, 'Value for field ' . $fieldName . ' does not differ from expected value.');
+                }
+
+                $this->assertEquals(
+                    $clientEncryption->decrypt($expectedData->value),
+                    $clientEncryption->decrypt($actualData->value),
+                    'Decrypted value for field ' . $fieldName . ' does not match.'
+                );
+            } else {
+                $this->assertEquals($corpus[$fieldName]->value, $actualData->value, 'Value for field ' . $fieldName . ' does not match original value.');
+            }
+        }
     }
 
     /**
@@ -582,6 +640,14 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     public static function customEndpointProvider()
     {
         $awsMasterKey = ['region' => 'us-east-1', 'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0'];
+        $azureMasterKey = ['keyVaultEndpoint' => 'key-vault-csfle.vault.azure.net', 'keyName' => 'key-name-csfle'];
+        $gcpMasterKey = [
+            'projectId' => 'devprod-drivers',
+            'location' => 'global',
+            'keyRing' => 'key-ring-csfle',
+            'keyName' => 'key-name-csfle',
+            'endpoint' => 'cloudkms.googleapis.com:443',
+        ];
 
         return [
             'Test 1' => [
@@ -623,6 +689,38 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                     $test->expectException(RuntimeException::class);
                     $test->expectExceptionMessageMatches('#parse error#');
                     $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'example.com']]);
+                },
+            ],
+            'Test 7' => [
+                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($azureMasterKey) {
+                    $keyId = $clientEncryption->createDataKey('azure', ['masterKey' => $azureMasterKey]);
+                    $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                    $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+
+                    $test->expectException(RuntimeException::class);
+                    $test->expectExceptionMessageMatches('#parse error#');
+                    $clientEncryptionInvalid->createDataKey('azure', ['masterKey' => $azureMasterKey]);
+                },
+            ],
+            'Test 8' => [
+                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($gcpMasterKey) {
+                    $keyId = $clientEncryption->createDataKey('gcp', ['masterKey' => $gcpMasterKey]);
+                    $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                    $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+
+                    $test->expectException(RuntimeException::class);
+                    $test->expectExceptionMessageMatches('#parse error#');
+                    $clientEncryptionInvalid->createDataKey('gcp', ['masterKey' => $gcpMasterKey]);
+                },
+            ],
+            'Test 9' => [
+                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($gcpMasterKey) {
+                    $masterKey = $gcpMasterKey;
+                    $masterKey['endpoint'] = 'example.com:443';
+
+                    $test->expectException(RuntimeException::class);
+                    $test->expectExceptionMessageMatches('#Invalid KMS response#');
+                    $clientEncryption->createDataKey('gcp', ['masterKey' => $masterKey]);
                 },
             ],
         ];
@@ -719,20 +817,41 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $operation->execute($this->getPrimaryServer());
     }
 
-    private function encryptCorpusValue(stdClass $data, ClientEncryption $clientEncryption)
+    private function encryptCorpusValue(string $fieldName, stdClass $data, ClientEncryption $clientEncryption)
     {
         $encryptionOptions = [
             'algorithm' => $data->algo === 'rand' ? ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_RANDOM : ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC,
         ];
 
+        switch ($data->kms) {
+            case 'local':
+                $keyId = 'LOCALAAAAAAAAAAAAAAAAA==';
+                $keyAltName = 'local';
+                break;
+            case 'aws':
+                $keyId = 'AWSAAAAAAAAAAAAAAAAAAA==';
+                $keyAltName = 'aws';
+                break;
+            case 'azure':
+                $keyId = 'AZUREAAAAAAAAAAAAAAAAA==';
+                $keyAltName = 'azure';
+                break;
+            case 'gcp':
+                $keyId = 'GCPAAAAAAAAAAAAAAAAAAA==';
+                $keyAltName = 'gcp';
+                break;
+
+            default:
+                throw new UnexpectedValueException('Unexpected KMS "%s"', $data->kms);
+        }
+
         switch ($data->identifier) {
             case 'id':
-                $keyId = $data->kms === 'local' ? 'LOCALAAAAAAAAAAAAAAAAA==' : 'AWSAAAAAAAAAAAAAAAAAAA==';
                 $encryptionOptions['keyId'] = new Binary(base64_decode($keyId), 4);
                 break;
 
             case 'altname':
-                $encryptionOptions['keyAltName'] = $data->kms === 'local' ? 'local' : 'aws';
+                $encryptionOptions['keyAltName'] = $keyAltName;
                 break;
 
             default:
@@ -740,7 +859,12 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         }
 
         if ($data->allowed) {
-            $encrypted = $clientEncryption->encrypt($this->craftInt64($data), $encryptionOptions);
+            try {
+                $encrypted = $clientEncryption->encrypt($this->craftInt64($data), $encryptionOptions);
+            } catch (EncryptionException $e) {
+                $this->fail('Could not encrypt value for field ' . $fieldName . ': ' . $e->getMessage());
+            }
+
             $this->assertEquals($data->value, $clientEncryption->decrypt($encrypted));
 
             return $encrypted;
@@ -769,7 +893,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         return;
     }
 
-    private function prepareCorpusData(stdClass $data, ClientEncryption $clientEncryption)
+    private function prepareCorpusData(string $fieldName, stdClass $data, ClientEncryption $clientEncryption)
     {
         if ($data->method === 'auto') {
             $data->value = $this->craftInt64($data);
@@ -778,7 +902,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         }
 
         $returnData = clone $data;
-        $returnData->value = $this->encryptCorpusValue($data, $clientEncryption);
+        $returnData->value = $this->encryptCorpusValue($fieldName, $data, $clientEncryption);
 
         return $data->allowed ? $returnData : $data;
     }

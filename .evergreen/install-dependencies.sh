@@ -40,14 +40,12 @@ install_extension ()
    sudo cp ${PROJECT_DIRECTORY}/.evergreen/config/php.ini ${PHP_PATH}/lib/php.ini
 }
 
-DIR=$(dirname $0)
 # Functions to fetch MongoDB binaries
-. $DIR/download-mongodb.sh
+. ${DRIVERS_TOOLS}/.evergreen/download-mongodb.sh
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
 get_distro
 
-# See .evergreen/download-mongodb.sh for most possible values
 case "$DISTRO" in
    cygwin*)
       echo "Install Windows dependencies"

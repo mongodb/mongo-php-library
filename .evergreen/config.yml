@@ -444,10 +444,10 @@ axes:
     display_name: Driver Version
     values:
       # TODO: Update matrix once v1.10 has been branched
-      - id: "lowest-supported"
-        display_name: "1.10-dev (master)"
-        variables:
-          DRIVER_BRANCH: "master"
+#      - id: "lowest-supported"
+#        display_name: "1.10-dev (master)"
+#        variables:
+#          DRIVER_BRANCH: "master"
       - id: "latest-stable"
         display_name: "1.10-dev (master)"
         variables:
@@ -456,10 +456,10 @@ axes:
 #        display_name: "1.9-dev"
 #        variables:
 #          DRIVER_BRANCH: "v1.9"
-      - id: "latest-dev"
-        display_name: "1.10-dev (master)"
-        variables:
-          DRIVER_BRANCH: "master"
+#      - id: "latest-dev"
+#        display_name: "1.10-dev (master)"
+#        variables:
+#          DRIVER_BRANCH: "master"
 
   - id: os-php7
     display_name: OS
@@ -584,8 +584,9 @@ buildvariants:
 
 # Tests oldest supported version
 # Enables --prefer-lowest for composer to test oldest dependencies against all server versions
+# TODO: Update driver-versions entry once v1.10 has been branched
 - matrix_name: "test-dependencies"
-  matrix_spec: { "dependencies": "lowest", "os-php7": "rhel70-test", "php-edge-versions": "oldest-supported", "versions": "*", "driver-versions": "lowest-supported" }
+  matrix_spec: { "dependencies": "lowest", "os-php7": "rhel70-test", "php-edge-versions": "oldest-supported", "versions": "*", "driver-versions": "latest-stable" }
   display_name: "Dependencies: ${dependencies}, MongoDB ${versions}, PHP ${php-edge-versions}, ${os-php7}, ext-mongodb ${driver-versions}"
   tasks:
     - name: "test-standalone"

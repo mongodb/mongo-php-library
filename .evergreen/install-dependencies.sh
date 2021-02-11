@@ -55,9 +55,7 @@ install_composer ()
   fi
 
   php composer-setup.php --quiet
-  RESULT=$?
   rm composer-setup.php
-  exit $RESULT
 }
 
 # Functions to fetch MongoDB binaries

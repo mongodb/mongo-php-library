@@ -8,7 +8,7 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
-use PHPUnit\Framework\SkippedTestError;
+use PHPUnit\Framework\Assert;
 use stdClass;
 use function array_diff_key;
 use function array_keys;
@@ -251,15 +251,10 @@ final class Context
         return $o;
     }
 
-    /**
-     * @return array
-     *
-     * @throws SkippedTestError
-     */
-    public static function getAWSCredentials()
+    public static function getAWSCredentials(): array
     {
         if (! getenv('AWS_ACCESS_KEY_ID') || ! getenv('AWS_SECRET_ACCESS_KEY')) {
-            throw new SkippedTestError('Please configure AWS credentials to use AWS KMS provider.');
+            Assert::markTestSkipped('Please configure AWS credentials to use AWS KMS provider.');
         }
 
         return [
@@ -268,15 +263,10 @@ final class Context
         ];
     }
 
-    /**
-     * @return array
-     *
-     * @throws SkippedTestError
-     */
-    public static function getAzureCredentials()
+    public static function getAzureCredentials(): array
     {
         if (! getenv('AZURE_TENANT_ID') || ! getenv('AZURE_CLIENT_ID') || ! getenv('AZURE_CLIENT_SECRET')) {
-            throw new SkippedTestError('Please configure Azure credentials to use Azure KMS provider.');
+            Assert::markTestSkipped('Please configure Azure credentials to use Azure KMS provider.');
         }
 
         return [
@@ -286,15 +276,10 @@ final class Context
         ];
     }
 
-    /**
-     * @return array
-     *
-     * @throws SkippedTestError
-     */
-    public static function getGCPCredentials()
+    public static function getGCPCredentials(): array
     {
         if (! getenv('GCP_EMAIL') || ! getenv('GCP_PRIVATE_KEY')) {
-            throw new SkippedTestError('Please configure GCP credentials to use GCP KMS provider.');
+            Assert::markTestSkipped('Please configure GCP credentials to use GCP KMS provider.');
         }
 
         return [

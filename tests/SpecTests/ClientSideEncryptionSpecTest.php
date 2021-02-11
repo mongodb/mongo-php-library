@@ -26,6 +26,7 @@ use function base64_decode;
 use function basename;
 use function file_get_contents;
 use function glob;
+use function in_array;
 use function iterator_to_array;
 use function json_decode;
 use function sprintf;
@@ -355,85 +356,85 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
     public static function provideBSONSizeLimitsAndBatchSplittingTests()
     {
-        yield [static function (self $test, Collection $collection) {
-            // Test 1
-            $collection->insertOne(['_id' => 'over_2mib_under_16mib', 'unencrypted' => str_repeat('a', 2097152)]);
-            $test->assertCollectionCount($collection->getNamespace(), 1);
-        },
+        yield 'Test 1' => [
+            static function (self $test, Collection $collection) {
+                $collection->insertOne(['_id' => 'over_2mib_under_16mib', 'unencrypted' => str_repeat('a', 2097152)]);
+                $test->assertCollectionCount($collection->getNamespace(), 1);
+            },
         ];
 
-        yield [static function (self $test, Collection $collection, array $document) {
-            // Test 2
-            $collection->insertOne(
-                ['_id' => 'encryption_exceeds_2mib', 'unencrypted' => str_repeat('a', 2097152 - 2000)] + $document
-            );
-            $test->assertCollectionCount($collection->getNamespace(), 1);
-        },
+        yield 'Test 2' => [
+            static function (self $test, Collection $collection, array $document) {
+                $collection->insertOne(
+                    ['_id' => 'encryption_exceeds_2mib', 'unencrypted' => str_repeat('a', 2097152 - 2000)] + $document
+                );
+                $test->assertCollectionCount($collection->getNamespace(), 1);
+            },
         ];
 
-        yield [static function (self $test, Collection $collection) {
-            // Test 3
-            $commands = [];
-            (new CommandObserver())->observe(
-                function () use ($collection) {
-                    $collection->insertMany([
-                        ['_id' => 'over_2mib_1', 'unencrypted' => str_repeat('a', 2097152)],
-                        ['_id' => 'over_2mib_2', 'unencrypted' => str_repeat('a', 2097152)],
-                    ]);
-                },
-                function ($command) use (&$commands) {
-                    $commands[] = $command;
+        yield 'Test 3' => [
+            static function (self $test, Collection $collection) {
+                $commands = [];
+                (new CommandObserver())->observe(
+                    function () use ($collection) {
+                        $collection->insertMany([
+                            ['_id' => 'over_2mib_1', 'unencrypted' => str_repeat('a', 2097152)],
+                            ['_id' => 'over_2mib_2', 'unencrypted' => str_repeat('a', 2097152)],
+                        ]);
+                    },
+                    function ($command) use (&$commands) {
+                        $commands[] = $command;
+                    }
+                );
+
+                $test->assertCount(2, $commands);
+                foreach ($commands as $command) {
+                    $test->assertSame('insert', $command['started']->getCommandName());
                 }
-            );
-
-            $test->assertCount(2, $commands);
-            foreach ($commands as $command) {
-                $test->assertSame('insert', $command['started']->getCommandName());
-            }
-        },
+            },
         ];
 
-        yield [static function (self $test, Collection $collection, array $document) {
-            // Test 4
-            $commands = [];
-            (new CommandObserver())->observe(
-                function () use ($collection, $document) {
-                    $collection->insertMany([
-                        [
-                            '_id' => 'encryption_exceeds_2mib_1',
-                            'unencrypted' => str_repeat('a', 2097152 - 2000),
-                        ] + $document,
-                        [
-                            '_id' => 'encryption_exceeds_2mib_2',
-                            'unencrypted' => str_repeat('a', 2097152 - 2000),
-                        ] + $document,
-                    ]);
-                },
-                function ($command) use (&$commands) {
-                    $commands[] = $command;
+        yield 'Test 4' => [
+            static function (self $test, Collection $collection, array $document) {
+                $commands = [];
+                (new CommandObserver())->observe(
+                    function () use ($collection, $document) {
+                        $collection->insertMany([
+                            [
+                                '_id' => 'encryption_exceeds_2mib_1',
+                                'unencrypted' => str_repeat('a', 2097152 - 2000),
+                            ] + $document,
+                            [
+                                '_id' => 'encryption_exceeds_2mib_2',
+                                'unencrypted' => str_repeat('a', 2097152 - 2000),
+                            ] + $document,
+                        ]);
+                    },
+                    function ($command) use (&$commands) {
+                        $commands[] = $command;
+                    }
+                );
+
+                $test->assertCount(2, $commands);
+                foreach ($commands as $command) {
+                    $test->assertSame('insert', $command['started']->getCommandName());
                 }
-            );
-
-            $test->assertCount(2, $commands);
-            foreach ($commands as $command) {
-                $test->assertSame('insert', $command['started']->getCommandName());
-            }
-        },
+            },
         ];
 
-        yield [static function (self $test, Collection $collection) {
-            // Test 5
-            $collection->insertOne(['_id' => 'under_16mib', 'unencrypted' => str_repeat('a', 16777216 - 2000)]);
-            $test->assertCollectionCount($collection->getNamespace(), 1);
-        },
+        yield 'Test 5' => [
+            static function (self $test, Collection $collection) {
+                $collection->insertOne(['_id' => 'under_16mib', 'unencrypted' => str_repeat('a', 16777216 - 2000)]);
+                $test->assertCollectionCount($collection->getNamespace(), 1);
+            },
         ];
 
-        yield [static function (self $test, Collection $collection, array $document) {
-            // Test 6
-            $test->expectException(BulkWriteException::class);
-            $test->expectExceptionMessageMatches('#object to insert too large#');
-            $collection->insertOne(['_id' => 'encryption_exceeds_16mib', 'unencrypted' => str_repeat('a', 16777216 - 2000)] + $document);
-        },
+        yield 'Test 6' => [
+            static function (self $test, Collection $collection, array $document) {
+                $test->expectException(BulkWriteException::class);
+                $test->expectExceptionMessageMatches('#object to insert too large#');
+                $collection->insertOne(['_id' => 'encryption_exceeds_16mib', 'unencrypted' => str_repeat('a', 16777216 - 2000)] + $document);
+            },
         ];
     }
 
@@ -553,19 +554,21 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $collection = $clientEncrypted->selectCollection('db', 'coll');
 
-        foreach ($corpus as $fieldName => $data) {
-            switch ($fieldName) {
-                case '_id':
-                case 'altname_aws':
-                case 'altname_azure':
-                case 'altname_gcp':
-                case 'altname_local':
-                    $corpusCopied[$fieldName] = $data;
-                    break;
+        $unpreparedFieldNames = [
+            '_id',
+            'altname_aws',
+            'altname_azure',
+            'altname_gcp',
+            'altname_local',
+        ];
 
-                default:
-                    $corpusCopied[$fieldName] = $this->prepareCorpusData($fieldName, $data, $clientEncryption);
+        foreach ($corpus as $fieldName => $data) {
+            if (in_array($fieldName, $unpreparedFieldNames, true)) {
+                $corpusCopied[$fieldName] = $data;
+                continue;
             }
+
+            $corpusCopied[$fieldName] = $this->prepareCorpusData($fieldName, $data, $clientEncryption);
         }
 
         $collection->insertOne($corpusCopied);
@@ -577,13 +580,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $corpusEncryptedActual = $client->selectCollection('db', 'coll')->findOne(['_id' => 'client_side_encryption_corpus'], ['typeMap' => ['root' => 'array', 'document' => stdClass::class, 'array' => 'array']]);
 
         foreach ($corpusEncryptedExpected as $fieldName => $expectedData) {
-            switch ($fieldName) {
-                case '_id':
-                case 'altname_aws':
-                case 'altname_azure':
-                case 'altname_gcp':
-                case 'altname_local':
-                    continue 2;
+            if (in_array($fieldName, $unpreparedFieldNames, true)) {
+                continue;
             }
 
             $actualData = $corpusEncryptedActual[$fieldName];
@@ -649,80 +647,86 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             'endpoint' => 'cloudkms.googleapis.com:443',
         ];
 
-        return [
-            'Test 1' => [
-                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
-                    $keyId = $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey]);
-                    $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
-                    $test->assertSame('test', $clientEncryption->decrypt($encrypted));
-                },
-            ],
-            'Test 2' => [
-                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
-                    $keyId = $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'kms.us-east-1.amazonaws.com']]);
-                    $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
-                    $test->assertSame('test', $clientEncryption->decrypt($encrypted));
-                },
-            ],
-            'Test 3' => [
-                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
-                    $keyId = $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + [ 'endpoint' => 'kms.us-east-1.amazonaws.com:443']]);
-                    $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
-                    $test->assertSame('test', $clientEncryption->decrypt($encrypted));
-                },
-            ],
-            'Test 4' => [
-                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
-                    $test->expectException(ConnectionException::class);
-                    $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'kms.us-east-1.amazonaws.com:12345']]);
-                },
-            ],
-            'Test 5' => [
-                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
-                    $test->expectException(RuntimeException::class);
-                    $test->expectExceptionMessageMatches('#us-east-1#');
-                    $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'kms.us-east-2.amazonaws.com']]);
-                },
-            ],
-            'Test 6' => [
-                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
-                    $test->expectException(RuntimeException::class);
-                    $test->expectExceptionMessageMatches('#parse error#');
-                    $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'example.com']]);
-                },
-            ],
-            'Test 7' => [
-                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($azureMasterKey) {
-                    $keyId = $clientEncryption->createDataKey('azure', ['masterKey' => $azureMasterKey]);
-                    $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
-                    $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+        yield 'Test 1' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
+                $keyId = $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey]);
+                $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+            },
+        ];
 
-                    $test->expectException(RuntimeException::class);
-                    $test->expectExceptionMessageMatches('#parse error#');
-                    $clientEncryptionInvalid->createDataKey('azure', ['masterKey' => $azureMasterKey]);
-                },
-            ],
-            'Test 8' => [
-                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($gcpMasterKey) {
-                    $keyId = $clientEncryption->createDataKey('gcp', ['masterKey' => $gcpMasterKey]);
-                    $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
-                    $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+        yield 'Test 2' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
+                $keyId = $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'kms.us-east-1.amazonaws.com']]);
+                $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+            },
+        ];
 
-                    $test->expectException(RuntimeException::class);
-                    $test->expectExceptionMessageMatches('#parse error#');
-                    $clientEncryptionInvalid->createDataKey('gcp', ['masterKey' => $gcpMasterKey]);
-                },
-            ],
-            'Test 9' => [
-                static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($gcpMasterKey) {
-                    $masterKey = $gcpMasterKey;
-                    $masterKey['endpoint'] = 'example.com:443';
+        yield 'Test 3' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
+                $keyId = $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + [ 'endpoint' => 'kms.us-east-1.amazonaws.com:443']]);
+                $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+            },
+        ];
 
-                    $test->expectException(RuntimeException::class);
-                    $test->expectExceptionMessageMatches('#Invalid KMS response#');
-                    $clientEncryption->createDataKey('gcp', ['masterKey' => $masterKey]);
-                },
-            ],
+        yield 'Test 4' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
+                $test->expectException(ConnectionException::class);
+                $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'kms.us-east-1.amazonaws.com:12345']]);
+            },
+        ];
+
+        yield 'Test 5' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
+                $test->expectException(RuntimeException::class);
+                $test->expectExceptionMessageMatches('#us-east-1#');
+                $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'kms.us-east-2.amazonaws.com']]);
+            },
+        ];
+
+        yield 'Test 6' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey) {
+                $test->expectException(RuntimeException::class);
+                $test->expectExceptionMessageMatches('#parse error#');
+                $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'example.com']]);
+            },
+        ];
+
+        yield 'Test 7' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($azureMasterKey) {
+                $keyId = $clientEncryption->createDataKey('azure', ['masterKey' => $azureMasterKey]);
+                $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+
+                $test->expectException(RuntimeException::class);
+                $test->expectExceptionMessageMatches('#parse error#');
+                $clientEncryptionInvalid->createDataKey('azure', ['masterKey' => $azureMasterKey]);
+            },
+        ];
+
+        yield 'Test 8' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($gcpMasterKey) {
+                $keyId = $clientEncryption->createDataKey('gcp', ['masterKey' => $gcpMasterKey]);
+                $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+
+                $test->expectException(RuntimeException::class);
+                $test->expectExceptionMessageMatches('#parse error#');
+                $clientEncryptionInvalid->createDataKey('gcp', ['masterKey' => $gcpMasterKey]);
+            },
+        ];
+
+        yield 'Test 9' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($gcpMasterKey) {
+                $masterKey = $gcpMasterKey;
+                $masterKey['endpoint'] = 'example.com:443';
+
+                $test->expectException(RuntimeException::class);
+                $test->expectExceptionMessageMatches('#Invalid KMS response#');
+                $clientEncryption->createDataKey('gcp', ['masterKey' => $masterKey]);
+            },
         ];
     }
 

@@ -13,13 +13,30 @@ AUTH=${AUTH:-noauth}
 SSL=${SSL:-nossl}
 MONGODB_URI=${MONGODB_URI:-}
 TESTS=${TESTS:-}
-PHP_VERSION=${PHP_VERSION:-7.2.21}
+PHP_IS_MATRIX_TESTING=${PHP_IS_MATRIX_TESTING:-false}
 
-# The PLATFORM environment variable is used by the matrix testing project.
-# For the time being, we can use that to install the correct extension version
-if [ "x${PLATFORM}" != "x" ]; then
-  DIR=$(dirname $0)
-  DRIVER_VERSION=1.5.5 . $DIR/install-dependencies.sh
+# For matrix testing, we have to determine the correct driver version
+if [ "$PHP_IS_MATRIX_TESTING" == "true" ]; then
+   set_extension_version () {
+      case $1 in
+         '4.4')
+             export DRIVER_VERSION='1.8.2'
+             ;;
+         '4.2')
+            export DRIVER_VERSION='1.6.1'
+            ;;
+         '4.0')
+            export DRIVER_VERSION='1.5.5'
+            ;;
+      esac
+   }
+
+   set_extension_version "${DRIVER_MONGODB_VERSION}"
+
+   echo $DRIVER_VERSION
+
+   DIR=$(dirname $0)
+   . $DIR/install-dependencies.sh
 fi
 
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')

@@ -251,7 +251,7 @@ final class Context
         return $o;
     }
 
-    public static function getAWSCredentials(): array
+    public static function getAWSCredentials() : array
     {
         if (! getenv('AWS_ACCESS_KEY_ID') || ! getenv('AWS_SECRET_ACCESS_KEY')) {
             Assert::markTestSkipped('Please configure AWS credentials to use AWS KMS provider.');
@@ -263,7 +263,7 @@ final class Context
         ];
     }
 
-    public static function getAzureCredentials(): array
+    public static function getAzureCredentials() : array
     {
         if (! getenv('AZURE_TENANT_ID') || ! getenv('AZURE_CLIENT_ID') || ! getenv('AZURE_CLIENT_SECRET')) {
             Assert::markTestSkipped('Please configure Azure credentials to use Azure KMS provider.');
@@ -276,7 +276,7 @@ final class Context
         ];
     }
 
-    public static function getGCPCredentials(): array
+    public static function getGCPCredentials() : array
     {
         if (! getenv('GCP_EMAIL') || ! getenv('GCP_PRIVATE_KEY')) {
             Assert::markTestSkipped('Please configure GCP credentials to use GCP KMS provider.');

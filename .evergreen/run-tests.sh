@@ -13,10 +13,10 @@ AUTH=${AUTH:-noauth}
 SSL=${SSL:-nossl}
 MONGODB_URI=${MONGODB_URI:-}
 TESTS=${TESTS:-}
-PHP_IS_MATRIX_TESTING=${PHP_IS_MATRIX_TESTING:-false}
+IS_MATRIX_TESTING=${IS_MATRIX_TESTING:-false}
 
 # For matrix testing, we have to determine the correct driver version
-if [ "$PHP_IS_MATRIX_TESTING" == "true" ]; then
+if [ "$IS_MATRIX_TESTING" == "true" ]; then
    set_extension_version () {
       case $1 in
          '4.4')

@@ -17,23 +17,17 @@ IS_MATRIX_TESTING=${IS_MATRIX_TESTING:-false}
 
 # For matrix testing, we have to determine the correct driver version
 if [ "$IS_MATRIX_TESTING" == "true" ]; then
-   set_extension_version () {
-      case $1 in
-         '4.4')
-             export DRIVER_VERSION='1.8.2'
-             ;;
-         '4.2')
-            export DRIVER_VERSION='1.6.1'
-            ;;
-         '4.0')
-            export DRIVER_VERSION='1.5.5'
-            ;;
-      esac
-   }
-
-   set_extension_version "${DRIVER_MONGODB_VERSION}"
-
-   echo $DRIVER_VERSION
+   case "${DRIVER_MONGODB_VERSION}" in
+      '4.4')
+          export DRIVER_VERSION='1.8.2'
+          ;;
+      '4.2')
+         export DRIVER_VERSION='1.6.1'
+         ;;
+      '4.0')
+         export DRIVER_VERSION='1.5.5'
+         ;;
+   esac
 
    DIR=$(dirname $0)
    . $DIR/install-dependencies.sh

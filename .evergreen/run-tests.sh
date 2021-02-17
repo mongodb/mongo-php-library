@@ -19,13 +19,13 @@ IS_MATRIX_TESTING=${IS_MATRIX_TESTING:-false}
 if [ "$IS_MATRIX_TESTING" == "true" ]; then
    case "${DRIVER_MONGODB_VERSION}" in
       '4.4')
-          export DRIVER_VERSION='1.8.2'
-          ;;
+         export EXTENSION_VERSION='1.8.2'
+         ;;
       '4.2')
-         export DRIVER_VERSION='1.6.1'
+         export EXTENSION_VERSION='1.6.1'
          ;;
       '4.0')
-         export DRIVER_VERSION='1.5.5'
+         export EXTENSION_VERSION='1.5.5'
          ;;
    esac
 

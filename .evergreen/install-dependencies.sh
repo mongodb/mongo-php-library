@@ -10,9 +10,9 @@ install_extension ()
 
    rm -f ${PHP_PATH}/lib/php.ini
 
-   if [ "x${DRIVER_BRANCH}" != "x" ] || [ "x${DRIVER_REPO}" != "x" ]; then
-      CLONE_REPO=${DRIVER_REPO:-https://github.com/mongodb/mongo-php-driver}
-      CHECKOUT_BRANCH=${DRIVER_BRANCH:-master}
+   if [ "x${EXTENSION_BRANCH}" != "x" ] || [ "x${EXTENSION_REPO}" != "x" ]; then
+      CLONE_REPO=${EXTENSION_REPO:-https://github.com/mongodb/mongo-php-driver}
+      CHECKOUT_BRANCH=${EXTENSION_BRANCH:-master}
 
       echo "Compiling driver branch ${CHECKOUT_BRANCH} from repository ${CLONE_REPO}"
 
@@ -29,9 +29,9 @@ install_extension ()
       make install
 
       cd ${PROJECT_DIRECTORY}
-   elif [ "x${DRIVER_VERSION}" != "x" ]; then
-      echo "Installing driver version ${DRIVER_VERSION} from PECL"
-      pecl install -f mongodb-${DRIVER_VERSION}
+   elif [ "x${EXTENSION_VERSION}" != "x" ]; then
+      echo "Installing driver version ${EXTENSION_VERSION} from PECL"
+      pecl install -f mongodb-${EXTENSION_VERSION}
    else
       echo "Installing latest driver version from PECL"
       pecl install -f mongodb

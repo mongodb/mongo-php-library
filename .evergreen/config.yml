@@ -443,21 +443,25 @@ axes:
   - id: driver-versions
     display_name: Driver Version
     values:
-      # TODO: Update matrix once v1.10 has been branched
+      # TODO: this axis can be cleaned up as we move towards a 1.10 release:
+      # * lowest-supported can be enabled once a 1.10 patch release has been tagged
+      # * latest-stable can be updated when we start tagging 1.10 releases (even beta)
+      # * 1.10-dev can be enabled once 1.10 has been branched
+      # * latest-dev can be enabled once 1.10 has been branched
 #      - id: "lowest-supported"
 #        display_name: "1.10-dev (master)"
 #        variables:
 #          DRIVER_BRANCH: "master"
-      - id: "latest-stable"
+      - id: "latest"
         display_name: "1.10-dev (master)"
         variables:
           DRIVER_BRANCH: "master"
-#      - id: "1.9-dev"
-#        display_name: "1.9-dev"
+#      - id: "1.10-dev"
+#        display_name: "1.10-dev"
 #        variables:
-#          DRIVER_BRANCH: "v1.9"
+#          DRIVER_BRANCH: "v1.10"
 #      - id: "latest-dev"
-#        display_name: "1.10-dev (master)"
+#        display_name: "1.11-dev (master)"
 #        variables:
 #          DRIVER_BRANCH: "master"
 
@@ -549,7 +553,7 @@ buildvariants:
 # Tests all PHP versions on all operating systems.
 # Only tests against latest MongoDB and ext-mongodb versions
 - matrix_name: "test-php-versions"
-  matrix_spec: {"os-php7": "*", "php-versions": "*", "edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  matrix_spec: {"os-php7": "*", "php-versions": "*", "edge-versions": "latest-stable", "driver-versions": "latest" }
   exclude_spec:
     # rhel71-power8 fails due to not reaching pecl
     - { "os-php7": "rhel71-power8", "php-versions": "*", edge-versions: "*", "driver-versions": "*" }
@@ -575,7 +579,7 @@ buildvariants:
 # Only tests on Ubuntu 18.04, with latest stable PHP and driver versions
 # Tests against various topologies
 - matrix_name: "test-mongodb-versions"
-  matrix_spec: {"os-php7": "rhel70-test", "php-edge-versions": "latest-stable", "versions": "*", "driver-versions": "latest-stable" }
+  matrix_spec: {"os-php7": "rhel70-test", "php-edge-versions": "latest-stable", "versions": "*", "driver-versions": "latest" }
   display_name: "MongoDB ${versions}, PHP ${php-edge-versions}, ${os-php7}, ext-mongodb ${driver-versions}"
   tasks:
     - name: "test-standalone"
@@ -584,9 +588,9 @@ buildvariants:
 
 # Tests oldest supported version
 # Enables --prefer-lowest for composer to test oldest dependencies against all server versions
-# TODO: Update driver-versions entry once v1.10 has been branched
+# TODO: driver-versions can be changed back to lowest-supported when that version is enabled in the axis
 - matrix_name: "test-dependencies"
-  matrix_spec: { "dependencies": "lowest", "os-php7": "rhel70-test", "php-edge-versions": "oldest-supported", "versions": "*", "driver-versions": "latest-stable" }
+  matrix_spec: { "dependencies": "lowest", "os-php7": "rhel70-test", "php-edge-versions": "oldest-supported", "versions": "*", "driver-versions": "latest" }
   display_name: "Dependencies: ${dependencies}, MongoDB ${versions}, PHP ${php-edge-versions}, ${os-php7}, ext-mongodb ${driver-versions}"
   tasks:
     - name: "test-standalone"

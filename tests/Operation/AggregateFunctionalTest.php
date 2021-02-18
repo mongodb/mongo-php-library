@@ -162,7 +162,13 @@ class AggregateFunctionalTest extends FunctionalTestCase
         $results = iterator_to_array($operation->execute($this->getPrimaryServer()));
 
         $this->assertCount(1, $results);
-        $this->assertArrayHasKey('stages', $results[0]);
+
+        /* MongoDB 4.2 may optimize aggregate pipelines into queries, which can
+         * result in different explain output (see: SERVER-24860) */
+        $this->assertThat($results[0], $this->logicalOr(
+            $this->arrayHasKey('stages'),
+            $this->arrayHasKey('queryPlanner')
+        ));
     }
 
     public function testExplainOptionWithWriteConcern()
@@ -183,7 +189,17 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 $results = iterator_to_array($operation->execute($this->getPrimaryServer()));
 
                 $this->assertCount(1, $results);
-                $this->assertObjectHasAttribute('stages', current($results));
+                $result = current($results);
+
+                /* MongoDB 4.2 may optimize aggregate pipelines into queries, which can
+                 * result in different explain output (see: SERVER-24860) */
+                if (isset($result->shards)) {
+                    foreach ($result->shards as $shard) {
+                        $this->assertObjectHasAttribute('stages', $shard);
+                    }
+                } else {
+                    $this->assertObjectHasAttribute('stages', $result);
+                }
             },
             function(array $event) {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());

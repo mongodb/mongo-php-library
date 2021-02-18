@@ -28,6 +28,17 @@ if [ "$IS_MATRIX_TESTING" == "true" ]; then
          ;;
    esac
 
+   case "${MONGODB_VERSION}" in
+      latest)
+         MONGODB_VERSION_NUMBER='5.0'
+         ;;
+      *)
+         MONGODB_VERSION_NUMBER=$MONGODB_VERSION
+         ;;
+   esac
+
+   PHPUNIT_OPTS="--dont-report-useless-tests --exclude-group matrix-testing-server-${MONGODB_VERSION_NUMBER}-driver-${DRIVER_MONGODB_VERSION},matrix-testing-server-${MONGODB_VERSION_NUMBER}-driver-${DRIVER_MONGODB_VERSION}-topology-${TOPOLOGY}"
+
    DIR=$(dirname $0)
    . $DIR/install-dependencies.sh
 fi
@@ -43,6 +54,6 @@ export SYMFONY_DEPRECATIONS_HELPER=999999
 # Run the tests, and store the results in a Evergreen compatible JSON results file
 case "$TESTS" in
    *)
-      php vendor/bin/phpunit --configuration phpunit.evergreen.xml
+      php vendor/bin/phpunit --configuration phpunit.evergreen.xml $PHPUNIT_OPTS
       ;;
 esac

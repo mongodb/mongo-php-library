@@ -12,6 +12,8 @@ use MultipleIterator;
  * CRUD spec functional tests.
  *
  * @see https://github.com/mongodb/specifications/tree/master/source/crud/tests
+ *
+ * @group matrix-testing-server-5.0-driver-4.0
  */
 class CrudSpecFunctionalTest extends FunctionalTestCase
 {

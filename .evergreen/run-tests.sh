@@ -36,7 +36,7 @@ fi
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 [ -z "$MARCH" ] && MARCH=$(uname -m | tr '[:upper:]' '[:lower:]')
 
-echo "Running $AUTH tests over $SSL, connecting to $MONGODB_URI"
+echo "Running tests with $AUTH and $SSL, connecting to: $MONGODB_URI"
 
 OLD_PATH=$PATH
 PATH=/opt/php/${PHP_VERSION}-64bit/bin:$OLD_PATH

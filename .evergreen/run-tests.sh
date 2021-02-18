@@ -37,9 +37,6 @@ OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
 echo "Running tests with $AUTH and $SSL, connecting to: $MONGODB_URI"
 
-OLD_PATH=$PATH
-PATH=/opt/php/${PHP_VERSION}-64bit/bin:$OLD_PATH
-
 # Disable failing PHPUnit due to deprecations
 export SYMFONY_DEPRECATIONS_HELPER=999999
 

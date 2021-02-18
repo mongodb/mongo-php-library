@@ -1,11 +1,36 @@
 #!/bin/sh
 set -o errexit  # Exit the script with error if any of the commands fail
 
+set_php_version ()
+{
+   PHP_VERSION=$1
+
+   if [ ! -d "/opt/php" ]; then
+      echo "PHP is not available"
+      exit 1
+   fi
+
+   if [ -d "/opt/php/${PHP_VERSION}-64bit/bin" ]; then
+      export PHP_PATH="/opt/php/${PHP_VERSION}-64bit/bin"
+   else
+      # Try to find the newest version matching our constant
+      export PHP_PATH=`find /opt/php/ -maxdepth 1 -type d -name "${PHP_VERSION}.*-64bit" -print | sort -V -r | head -1`
+   fi
+
+   if [ ! -d "$PHP_PATH" ]; then
+      echo "Could not find PHP binaries for version ${PHP_VERSION}. Listing available versions..."
+      ls -1 /opt/php
+      exit 1
+   fi
+
+   export PATH=$PHP_PATH/bin:$PATH
+}
+
 install_extension ()
 {
    # Workaround to get PECL running on PHP 7.0
-   export PHP_PEAR_PHP_BIN=${PHP_PATH}/bin/php
-   export PHP_PEAR_INSTALL_DIR=${PHP_PATH}/lib/php
+#   export PHP_PEAR_PHP_BIN=${PHP_PATH}/bin/php
+#   export PHP_PEAR_INSTALL_DIR=${PHP_PATH}/bin/php
 
    rm -f ${PHP_PATH}/lib/php.ini
 
@@ -100,10 +125,7 @@ case "$DEPENDENCIES" in
       ;;
 esac
 
-PHP_PATH=/opt/php/${PHP_VERSION}-64bit
-OLD_PATH=$PATH
-PATH=$PHP_PATH/bin:$OLD_PATH
-
+set_php_version $PHP_VERSION
 install_extension
 install_composer
 

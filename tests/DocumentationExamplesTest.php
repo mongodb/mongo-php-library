@@ -919,6 +919,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertInventoryCount(0);
     }
 
+    /** @group matrix-testing-server-5.0-driver-4.0-topology-sharded_cluster */
     public function testChangeStreamExample_1_4()
     {
         if ($this->getPrimaryServer()->getType() === Server::TYPE_STANDALONE) {

@@ -19,6 +19,11 @@ use MongoDB\Tests\CommandObserver;
 use stdClass;
 use ReflectionClass;
 
+/**
+ * @group matrix-testing-server-4.2-driver-4.0-topology-sharded_cluster
+ * @group matrix-testing-server-4.4-driver-4.0-topology-sharded_cluster
+ * @group matrix-testing-server-5.0-driver-4.0-topology-sharded_cluster
+ */
 class WatchFunctionalTest extends FunctionalTestCase
 {
     private static $wireVersionForStartAtOperationTime = 7;
@@ -590,6 +595,11 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertFalse($cursor->isDead());
     }
 
+    /**
+     * @group matrix-testing-server-4.2-driver-4.0-topology-replica_set
+     * @group matrix-testing-server-4.4-driver-4.0-topology-replica_set
+     * @group matrix-testing-server-5.0-driver-4.0-topology-replica_set
+     */
     public function testNextResumeTokenNotFound()
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
@@ -606,6 +616,11 @@ class WatchFunctionalTest extends FunctionalTestCase
         $changeStream->next();
     }
 
+    /**
+     * @group matrix-testing-server-4.2-driver-4.0-topology-replica_set
+     * @group matrix-testing-server-4.4-driver-4.0-topology-replica_set
+     * @group matrix-testing-server-5.0-driver-4.0-topology-replica_set
+     */
     public function testRewindResumeTokenNotFound()
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];
@@ -620,6 +635,11 @@ class WatchFunctionalTest extends FunctionalTestCase
         $changeStream->rewind();
     }
 
+    /**
+     * @group matrix-testing-server-4.2-driver-4.0-topology-replica_set
+     * @group matrix-testing-server-4.4-driver-4.0-topology-replica_set
+     * @group matrix-testing-server-5.0-driver-4.0-topology-replica_set
+     */
     public function testNextResumeTokenInvalidType()
     {
         $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
@@ -636,6 +656,11 @@ class WatchFunctionalTest extends FunctionalTestCase
         $changeStream->next();
     }
 
+    /**
+     * @group matrix-testing-server-4.2-driver-4.0-topology-replica_set
+     * @group matrix-testing-server-4.4-driver-4.0-topology-replica_set
+     * @group matrix-testing-server-5.0-driver-4.0-topology-replica_set
+     */
     public function testRewindResumeTokenInvalidType()
     {
         $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
@@ -822,6 +847,11 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $changeStream->key());
     }
 
+    /**
+     * @group matrix-testing-server-4.2-driver-4.0-topology-replica_set
+     * @group matrix-testing-server-4.4-driver-4.0-topology-replica_set
+     * @group matrix-testing-server-5.0-driver-4.0-topology-replica_set
+     */
     public function testResumeTokenNotFoundAdvancesKey()
     {
         $pipeline =  [['$project' => ['_id' => 0 ]]];

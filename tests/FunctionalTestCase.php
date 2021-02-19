@@ -48,6 +48,10 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function getFeatureCompatibilityVersion(ReadPreference $readPreference = null)
     {
+        if ($this->isShardedCluster()) {
+            return $this->getServerVersion($readPreference);
+        }
+
         if (version_compare($this->getServerVersion(), '3.4.0', '<')) {
             return $this->getServerVersion($readPreference);
         }
@@ -132,5 +136,10 @@ abstract class FunctionalTestCase extends TestCase
         if ($this->getServerStorageEngine() !== 'wiredTiger') {
             $this->markTestSkipped('Transactions require WiredTiger storage engine');
         }
+    }
+
+    protected function isShardedCluster()
+    {
+        return $this->getPrimaryServer()->getType() == Server::TYPE_MONGOS;
     }
 }

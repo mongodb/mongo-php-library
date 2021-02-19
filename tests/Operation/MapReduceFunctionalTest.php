@@ -11,6 +11,10 @@ use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
 
+/**
+ * @group matrix-testing-server-4.4-driver-4.0
+ * @group matrix-testing-server-5.0-driver-4.0
+ */
 class MapReduceFunctionalTest extends FunctionalTestCase
 {
     public function testDefaultReadConcernIsOmitted()

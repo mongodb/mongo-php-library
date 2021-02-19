@@ -227,6 +227,10 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
+    /**
+     * @group matrix-testing-server-4.4-driver-4.0
+     * @group matrix-testing-server-5.0-driver-4.0
+     */
     public function testMapReduce()
     {
         $this->createFixtures(3);

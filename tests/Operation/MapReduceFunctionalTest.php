@@ -14,7 +14,9 @@ use function version_compare;
 
 /**
  * @group matrix-testing-server-4.4-driver-4.0
+ * @group matrix-testing-server-4.4-driver-4.2
  * @group matrix-testing-server-5.0-driver-4.0
+ * @group matrix-testing-server-5.0-driver-4.2
  */
 class MapReduceFunctionalTest extends FunctionalTestCase
 {

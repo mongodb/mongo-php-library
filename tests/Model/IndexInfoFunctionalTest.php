@@ -47,6 +47,7 @@ class IndexInfoFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expectedVersion, $index['2dsphereIndexVersion']);
     }
 
+    /** @group matrix-testing-server-5.0-driver-4.0 */
     public function testIsGeoHaystack()
     {
         $indexName = $this->collection->createIndex(['pos' => 'geoHaystack', 'x' => 1], ['bucketSize' => 5]);

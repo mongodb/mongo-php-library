@@ -33,7 +33,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     const SERVER_ERROR_INTERRUPTED = 11601;
 
     const MIN_SCHEMA_VERSION = '1.0';
-    const MAX_SCHEMA_VERSION = '1.1';
+    const MAX_SCHEMA_VERSION = '1.2';
 
     const TOPOLOGY_SINGLE = 'single';
     const TOPOLOGY_REPLICASET = 'replicaset';
@@ -252,15 +252,33 @@ class UnifiedSpecTest extends FunctionalTestCase
 
         $serverVersion = $this->getCachedServerVersion();
         $topology = $this->getCachedTopology();
+        $serverParameters = $this->getCachedServerParameters();
 
         foreach ($runOnRequirements as $o) {
             $runOnRequirement = new RunOnRequirement($o);
-            if ($runOnRequirement->isSatisfied($serverVersion, $topology)) {
+            if ($runOnRequirement->isSatisfied($serverVersion, $topology, $serverParameters)) {
                 return;
             }
         }
 
+        // @todo Add server parameter requirements?
         $this->markTestSkipped(sprintf('Server version "%s" and topology "%s" do not meet test requirements', $serverVersion, $topology));
+    }
+
+    /**
+     * Return the server parameters (cached for subsequent calls).
+     */
+    private function getCachedServerParameters()
+    {
+        static $cachedServerParameters;
+
+        if (isset($cachedServerParameters)) {
+            return $cachedServerParameters;
+        }
+
+        $cachedServerParameters = $this->getServerParameters();
+
+        return $cachedServerParameters;
     }
 
     /**

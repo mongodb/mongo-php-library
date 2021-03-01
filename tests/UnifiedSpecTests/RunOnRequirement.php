@@ -2,10 +2,12 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
+use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use stdClass;
 use function in_array;
 use function PHPUnit\Framework\assertContainsOnly;
 use function PHPUnit\Framework\assertIsArray;
+use function PHPUnit\Framework\assertIsObject;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertMatchesRegularExpression;
 use function version_compare;
@@ -28,6 +30,9 @@ class RunOnRequirement
     /** @var array */
     private $topologies;
 
+    /** @var stdClass */
+    private $serverParameters;
+
     public function __construct(stdClass $o)
     {
         if (isset($o->minServerVersion)) {
@@ -47,9 +52,14 @@ class RunOnRequirement
             assertContainsOnly('string', $o->topologies);
             $this->topologies = $o->topologies;
         }
+
+        if (isset($o->serverParameters)) {
+            assertIsObject($o->serverParameters);
+            $this->serverParameters = $o->serverParameters;
+        }
     }
 
-    public function isSatisfied(string $serverVersion, string $topology) : bool
+    public function isSatisfied(string $serverVersion, string $topology, stdClass $serverParameters) : bool
     {
         if (isset($this->minServerVersion) && version_compare($serverVersion, $this->minServerVersion, '<')) {
             return false;
@@ -71,6 +81,13 @@ class RunOnRequirement
             }
 
             return false;
+        }
+
+        if (isset($this->serverParameters)) {
+            $constraint = new Matches($this->serverParameters, null, true, false);
+            if (! $constraint->evaluate($serverParameters, '', true)) {
+                return false;
+            }
         }
 
         return true;

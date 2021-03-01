@@ -267,6 +267,19 @@ abstract class FunctionalTestCase extends TestCase
         return $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
     }
 
+    protected function getServerParameters()
+    {
+        $cursor = $this->manager->executeCommand(
+            'admin',
+            new Command(['getParameter' => '*']),
+            new ReadPreference(ReadPreference::RP_PRIMARY)
+        );
+
+        $cursor->rewind();
+
+        return $cursor->current();
+    }
+
     protected function getServerVersion(ReadPreference $readPreference = null)
     {
         $cursor = $this->manager->executeCommand(

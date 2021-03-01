@@ -7,6 +7,7 @@ use MongoDB\Client;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\ServerApi;
 use stdClass;
 use function array_key_exists;
 use function array_map;
@@ -208,11 +209,12 @@ final class Context
 
     private function createClient(string $id, stdClass $o)
     {
-        Util::assertHasOnlyKeys($o, ['id', 'uriOptions', 'useMultipleMongoses', 'observeEvents', 'ignoreCommandMonitoringEvents']);
+        Util::assertHasOnlyKeys($o, ['id', 'uriOptions', 'useMultipleMongoses', 'observeEvents', 'ignoreCommandMonitoringEvents', 'serverApi']);
 
         $useMultipleMongoses = $o->useMultipleMongoses ?? null;
         $observeEvents = $o->observeEvents ?? null;
         $ignoreCommandMonitoringEvents = $o->ignoreCommandMonitoringEvents ?? [];
+        $serverApi = $o->serverApi ?? null;
 
         $uri = $this->uri;
 
@@ -255,6 +257,14 @@ final class Context
          * its own libmongoc client to facilitate txnNumber assertions. */
         static $i = 0;
         $driverOptions = isset($observeEvents) ? ['i' => $i++] : [];
+
+        if ($serverApi !== null) {
+            $driverOptions['serverApi'] = new ServerApi(
+                $serverApi->version,
+                $serverApi->strict ?? null,
+                $serverApi->deprecationErrors ?? null
+            );
+        }
 
         $this->entityMap->set($id, new Client($uri, $uriOptions, $driverOptions));
     }

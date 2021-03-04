@@ -40,6 +40,9 @@ class RetryableReadsSpecTest extends FunctionalTestCase
      * Execute an individual test case from the specification.
      *
      * @dataProvider provideTests
+     * @group matrix-testing-exclude-server-4.4-driver-4.2
+     * @group matrix-testing-exclude-server-5.0-driver-4.2
+     *
      * @param stdClass     $test           Individual "tests[]" document
      * @param array        $runOn          Top-level "runOn" array with server requirements
      * @param array|object $data           Top-level "data" array to initialize collection

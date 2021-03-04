@@ -37,7 +37,7 @@ if [ "$IS_MATRIX_TESTING" == "true" ]; then
          ;;
    esac
 
-   PHPUNIT_OPTS="--dont-report-useless-tests --exclude-group matrix-testing-server-${MONGODB_VERSION_NUMBER}-driver-${DRIVER_MONGODB_VERSION},matrix-testing-server-${MONGODB_VERSION_NUMBER}-driver-${DRIVER_MONGODB_VERSION}-topology-${TOPOLOGY}"
+   PHPUNIT_OPTS="--dont-report-useless-tests --exclude-group matrix-testing-exclude-server-${MONGODB_VERSION_NUMBER}-driver-${DRIVER_MONGODB_VERSION},matrix-testing-exclude-server-${MONGODB_VERSION_NUMBER}-driver-${DRIVER_MONGODB_VERSION}-topology-${TOPOLOGY}"
 
    DIR=$(dirname $0)
    . $DIR/install-dependencies.sh

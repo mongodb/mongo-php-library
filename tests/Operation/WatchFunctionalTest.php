@@ -31,9 +31,9 @@ use function sprintf;
 use function version_compare;
 
 /**
- * @group matrix-testing-server-4.2-driver-4.0-topology-sharded_cluster
- * @group matrix-testing-server-4.4-driver-4.0-topology-sharded_cluster
- * @group matrix-testing-server-5.0-driver-4.0-topology-sharded_cluster
+ * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster
+ * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster
+ * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster
  */
 class WatchFunctionalTest extends FunctionalTestCase
 {

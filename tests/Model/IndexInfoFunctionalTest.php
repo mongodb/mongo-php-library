@@ -48,8 +48,8 @@ class IndexInfoFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @group matrix-testing-server-5.0-driver-4.0
-     * @group matrix-testing-server-5.0-driver-4.2
+     * @group matrix-testing-exclude-server-5.0-driver-4.0
+     * @group matrix-testing-exclude-server-5.0-driver-4.2
      */
     public function testIsGeoHaystack()
     {

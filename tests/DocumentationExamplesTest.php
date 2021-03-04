@@ -931,6 +931,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertInventoryCount(0);
     }
 
+    /** @group matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster */
     public function testChangeStreamExample_1_4()
     {
         $this->skipIfChangeStreamIsNotSupported();

@@ -20,9 +20,9 @@ use stdClass;
 use ReflectionClass;
 
 /**
- * @group matrix-testing-server-4.2-driver-4.0-topology-sharded_cluster
- * @group matrix-testing-server-4.4-driver-4.0-topology-sharded_cluster
- * @group matrix-testing-server-5.0-driver-4.0-topology-sharded_cluster
+ * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster
+ * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster
+ * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster
  */
 class WatchFunctionalTest extends FunctionalTestCase
 {
@@ -596,9 +596,9 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @group matrix-testing-server-4.2-driver-4.0-topology-replica_set
-     * @group matrix-testing-server-4.4-driver-4.0-topology-replica_set
-     * @group matrix-testing-server-5.0-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-replica_set
      */
     public function testNextResumeTokenNotFound()
     {
@@ -617,9 +617,9 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @group matrix-testing-server-4.2-driver-4.0-topology-replica_set
-     * @group matrix-testing-server-4.4-driver-4.0-topology-replica_set
-     * @group matrix-testing-server-5.0-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-replica_set
      */
     public function testRewindResumeTokenNotFound()
     {
@@ -636,9 +636,9 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @group matrix-testing-server-4.2-driver-4.0-topology-replica_set
-     * @group matrix-testing-server-4.4-driver-4.0-topology-replica_set
-     * @group matrix-testing-server-5.0-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-replica_set
      */
     public function testNextResumeTokenInvalidType()
     {
@@ -657,9 +657,9 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @group matrix-testing-server-4.2-driver-4.0-topology-replica_set
-     * @group matrix-testing-server-4.4-driver-4.0-topology-replica_set
-     * @group matrix-testing-server-5.0-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-replica_set
      */
     public function testRewindResumeTokenInvalidType()
     {
@@ -848,9 +848,9 @@ class WatchFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @group matrix-testing-server-4.2-driver-4.0-topology-replica_set
-     * @group matrix-testing-server-4.4-driver-4.0-topology-replica_set
-     * @group matrix-testing-server-5.0-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-replica_set
+     * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-replica_set
      */
     public function testResumeTokenNotFoundAdvancesKey()
     {

@@ -63,19 +63,19 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 3
         $insertManyResult = $db->inventory->insertMany([
             [
-                'item' => 'journal', 
+                'item' => 'journal',
                 'qty' => 25,
                 'tags' => ['blank', 'red'],
                 'size' => ['h' => 14, 'w' => 21, 'uom' => 'cm'],
             ],
             [
-                'item' => 'mat', 
+                'item' => 'mat',
                 'qty' => 85,
                 'tags' => ['gray'],
                 'size' => ['h' => 27.9, 'w' => 35.5, 'uom' => 'cm'],
             ],
             [
-                'item' => 'mousepad', 
+                'item' => 'mousepad',
                 'qty' => 25,
                 'tags' => ['gel', 'blue'],
                 'size' => ['h' => 19, 'w' => 22.85, 'uom' => 'cm'],
@@ -97,31 +97,31 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 6
         $insertManyResult = $db->inventory->insertMany([
             [
-                'item' => 'journal', 
+                'item' => 'journal',
                 'qty' => 25,
                 'size' => ['h' => 14, 'w' => 21, 'uom' => 'cm'],
                 'status' => 'A',
             ],
             [
-                'item' => 'notebook', 
+                'item' => 'notebook',
                 'qty' => 50,
                 'size' => ['h' => 8.5, 'w' => 11, 'uom' => 'in'],
                 'status' => 'A',
             ],
             [
-                'item' => 'paper', 
+                'item' => 'paper',
                 'qty' => 100,
                 'size' => ['h' => 8.5, 'w' => 11, 'uom' => 'in'],
                 'status' => 'D',
             ],
             [
-                'item' => 'planner', 
+                'item' => 'planner',
                 'qty' => 75,
                 'size' => ['h' => 22.85, 'w' => 30, 'uom' => 'cm'],
                 'status' => 'D',
             ],
             [
-                'item' => 'postcard', 
+                'item' => 'postcard',
                 'qty' => 45,
                 'size' => ['h' => 10, 'w' => 15.25, 'uom' => 'cm'],
                 'status' => 'A',
@@ -200,31 +200,31 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 14
         $insertManyResult = $db->inventory->insertMany([
             [
-                'item' => 'journal', 
+                'item' => 'journal',
                 'qty' => 25,
                 'size' => ['h' => 14, 'w' => 21, 'uom' => 'cm'],
                 'status' => 'A',
             ],
             [
-                'item' => 'notebook', 
+                'item' => 'notebook',
                 'qty' => 50,
                 'size' => ['h' => 8.5, 'w' => 11, 'uom' => 'in'],
                 'status' => 'A',
             ],
             [
-                'item' => 'paper', 
+                'item' => 'paper',
                 'qty' => 100,
                 'size' => ['h' => 8.5, 'w' => 11, 'uom' => 'in'],
                 'status' => 'D',
             ],
             [
-                'item' => 'planner', 
+                'item' => 'planner',
                 'qty' => 75,
                 'size' => ['h' => 22.85, 'w' => 30, 'uom' => 'cm'],
                 'status' => 'D',
             ],
             [
-                'item' => 'postcard', 
+                'item' => 'postcard',
                 'qty' => 45,
                 'size' => ['h' => 10, 'w' => 15.25, 'uom' => 'cm'],
                 'status' => 'A',
@@ -280,31 +280,31 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 20
         $insertManyResult = $db->inventory->insertMany([
             [
-                'item' => 'journal', 
+                'item' => 'journal',
                 'qty' => 25,
                 'tags' => ['blank', 'red'],
                 'dim_cm' => [14, 21],
             ],
             [
-                'item' => 'notebook', 
+                'item' => 'notebook',
                 'qty' => 50,
                 'tags' => ['red', 'blank'],
                 'dim_cm' => [14, 21],
             ],
             [
-                'item' => 'paper', 
+                'item' => 'paper',
                 'qty' => 100,
                 'tags' => ['red', 'blank', 'plain'],
                 'dim_cm' => [14, 21],
             ],
             [
-                'item' => 'planner', 
+                'item' => 'planner',
                 'qty' => 75,
                 'tags' => ['blank', 'red'],
                 'dim_cm' => [22.85, 30],
             ],
             [
-                'item' => 'postcard', 
+                'item' => 'postcard',
                 'qty' => 45,
                 'tags' => ['blue'],
                 'dim_cm' => [10, 15.25],
@@ -386,34 +386,34 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 29
         $insertManyResult = $db->inventory->insertMany([
             [
-                'item' => 'journal', 
+                'item' => 'journal',
                 'instock' => [
                     ['warehouse' => 'A',  'qty' => 5],
                     ['warehouse' => 'C',  'qty' => 15],
                 ],
             ],
             [
-                'item' => 'notebook', 
+                'item' => 'notebook',
                 'instock' => [
                     ['warehouse' => 'C',  'qty' => 5],
                 ],
             ],
             [
-                'item' => 'paper', 
+                'item' => 'paper',
                 'instock' => [
                     ['warehouse' => 'A',  'qty' => 60],
                     ['warehouse' => 'B',  'qty' => 15],
                 ],
             ],
             [
-                'item' => 'planner', 
+                'item' => 'planner',
                 'instock' => [
                     ['warehouse' => 'A',  'qty' => 40],
                     ['warehouse' => 'B',  'qty' => 5],
                 ],
             ],
             [
-                'item' => 'postcard', 
+                'item' => 'postcard',
                 'instock' => [
                     ['warehouse' => 'B',  'qty' => 15],
                     ['warehouse' => 'C',  'qty' => 35],
@@ -919,7 +919,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertInventoryCount(0);
     }
 
-    /** @group matrix-testing-server-5.0-driver-4.0-topology-sharded_cluster */
+    /** @group matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster */
     public function testChangeStreamExample_1_4()
     {
         if ($this->getPrimaryServer()->getType() === Server::TYPE_STANDALONE) {

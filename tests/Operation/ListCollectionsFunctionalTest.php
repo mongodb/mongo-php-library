@@ -35,8 +35,8 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * @group matrix-testing-server-4.4-driver-4.0
-     * @group matrix-testing-server-5.0-driver-4.0
+     * @group matrix-testing-exclude-server-4.4-driver-4.0
+     * @group matrix-testing-exclude-server-5.0-driver-4.0
      */
     public function testIdIndexAndInfo()
     {

@@ -15,6 +15,7 @@ use PHPUnit\Framework\Warning;
 use stdClass;
 use Throwable;
 use UnexpectedValueException;
+use function call_user_func;
 use function gc_collect_cycles;
 use function is_string;
 use function PHPUnit\Framework\assertContainsOnly;
@@ -44,6 +45,12 @@ final class UnifiedTestRunner
     /** @var string */
     private $internalClientUri;
 
+    /** @var EntityMap */
+    private $entityMap;
+
+    /** @var callable(EntityMap):void */
+    private $entityMapObserver;
+
     /** @var FailPointObserver */
     private $failPointObserver;
 
@@ -70,8 +77,29 @@ final class UnifiedTestRunner
 
             throw $e;
         } finally {
-            $this->doTearDown($hasFailed);
+            /* An EntityMap observer should be invoked irrespective of the test
+             * succeeding or failing. Since the callable itself might throw, we
+             * need to ensure doTearDown() will still be called. */
+            try {
+                if (isset($this->entityMapObserver)) {
+                    call_user_func($this->entityMapObserver, $this->entityMap);
+                }
+            } finally {
+                $this->doTearDown($hasFailed);
+            }
         }
+    }
+
+    /**
+     * Defines a callable to receive the EntityMap after each test.
+     *
+     * This function is primarily used by the Atlas testing workload executor.
+     *
+     * @param callable(EntityMap):void $entityMapObserver
+     */
+    public function setEntityMapObserver(callable $entityMapObserver)
+    {
+        $this->entityMapObserver = $entityMapObserver;
     }
 
     private function doSetUp()
@@ -88,6 +116,8 @@ final class UnifiedTestRunner
 
     private function doTearDown(bool $hasFailed)
     {
+        $this->entityMap = null;
+
         if ($hasFailed) {
             $this->killAllSessions();
         }
@@ -127,6 +157,13 @@ final class UnifiedTestRunner
 
         // Give Context unmodified URI so it can enforce useMultipleMongoses
         $context = new Context($this->internalClient, $this->internalClientUri);
+
+        /* If an EntityMap observer has been configured, assign the Context's
+         * EntityMap to a class property so it can later be accessed from run(),
+         * irrespective of whether this test succeeds or fails. */
+        if (isset($this->entityMapObserver)) {
+            $this->entityMap = $context->getEntityMap();
+        }
 
         if (isset($createEntities)) {
             $context->createEntities($createEntities);

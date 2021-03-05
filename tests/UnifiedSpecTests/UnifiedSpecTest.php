@@ -178,6 +178,19 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/valid-fail');
     }
 
+    /**
+     * @dataProvider provideChangeStreamsTests
+     */
+    public function testChangeStreams(...$args)
+    {
+        $this->doTestCase(...$args);
+    }
+
+    public function provideChangeStreamsTests()
+    {
+        return $this->provideTests(__DIR__ . '/change-streams');
+    }
+
     private function provideTests(string $dir)
     {
         $testArgs = [];

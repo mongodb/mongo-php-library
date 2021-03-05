@@ -291,7 +291,7 @@ final class UnifiedTestRunner
      */
     private function isSchemaVersionSupported(string $schemaVersion) : bool
     {
-        return version_compare($schemaVersion, self::MIN_SCHEMA_VERSION, '>=') && version_compare($schemaVersion, self::MAX_SCHEMA_VERSION, '<');
+        return version_compare($schemaVersion, self::MIN_SCHEMA_VERSION, '>=') && version_compare($schemaVersion, self::MAX_SCHEMA_VERSION, '<=');
     }
 
     private function isShardedClusterUsingReplicasets() : bool

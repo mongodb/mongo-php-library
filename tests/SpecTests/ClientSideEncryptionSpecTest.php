@@ -168,9 +168,12 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testDataKeyAndDoubleEncryption(Closure $test)
     {
-        $client = new Client(static::getUri());
+        $this->setContext(Context::fromClientSideEncryption((object) [], 'db', 'coll'));
+        $client = $this->getContext()->getClient();
 
-        $client->selectCollection('keyvault', 'datakeys')->drop();
+        // This empty call ensures that the key vault is dropped with a majority
+        // write concern
+        $this->insertKeyVaultData([]);
         $client->selectCollection('db', 'coll')->drop();
 
         $encryptionOpts = [
@@ -312,13 +315,17 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testExternalKeyVault($withExternalKeyVault)
     {
-        $client = new Client(static::getUri());
-
-        $client->selectCollection('keyvault', 'datakeys')->drop();
+        $this->setContext(Context::fromClientSideEncryption((object) [], 'db', 'coll'));
+        $client = $this->getContext()->getClient();
         $client->selectCollection('db', 'coll')->drop();
 
-        $keyId = $client
-            ->selectCollection('keyvault', 'datakeys')
+        $keyVaultCollection = $client->selectCollection(
+            'keyvault',
+            'datakeys',
+            ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)] + $this->getContext()->defaultWriteOptions
+        );
+        $keyVaultCollection->drop();
+        $keyId = $keyVaultCollection
             ->insertOne($this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/external/external-key.json')))
             ->getInsertedId();
 
@@ -370,13 +377,15 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testBSONSizeLimitsAndBatchSplitting()
     {
-        $client = new Client(static::getUri());
+        $this->setContext(Context::fromClientSideEncryption((object) [], 'db', 'coll'));
+        $client = $this->getContext()->getClient();
 
-        $client->selectCollection('keyvault', 'datakeys')->drop();
         $client->selectCollection('db', 'coll')->drop();
-
         $client->selectDatabase('db')->createCollection('coll', ['validator' => ['$jsonSchema' => $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/limits/limits-schema.json'))]]);
-        $client->selectCollection('keyvault', 'datakeys')->insertOne($this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/limits/limits-key.json')));
+
+        $this->insertKeyVaultData([
+            $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/limits/limits-key.json')),
+        ]);
 
         $autoEncryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
@@ -491,7 +500,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testCorpus($schemaMap = true)
     {
-        $client = new Client(static::getUri());
+        $this->setContext(Context::fromClientSideEncryption((object) [], 'db', 'coll'));
+        $client = $this->getContext()->getClient();
 
         $client->selectDatabase('db')->dropCollection('coll');
 
@@ -503,8 +513,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 ->createCollection('coll', ['validator' => ['$jsonSchema' => $schema]]);
         }
 
-        $client->selectDatabase('keyvault')->dropCollection('datakeys');
-        $client->selectCollection('keyvault', 'datakeys')->insertMany([
+        $this->insertKeyVaultData([
             $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-local.json')),
             $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-aws.json')),
         ]);
@@ -738,16 +747,15 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
     private function insertKeyVaultData(array $keyVaultData = null)
     {
+        $context = $this->getContext();
+        $collection = $context->selectCollection('keyvault', 'datakeys', ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)] + $context->defaultWriteOptions);
+        $collection->drop();
+
         if (empty($keyVaultData)) {
             return;
         }
 
-        $context = $this->getContext();
-        $collection = $context->selectCollection('keyvault', 'datakeys', ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)] + $context->defaultWriteOptions);
-        $collection->drop();
         $collection->insertMany($keyVaultData);
-
-        return;
     }
 
     private function prepareCorpusData(stdClass $data, ClientEncryption $clientEncryption)

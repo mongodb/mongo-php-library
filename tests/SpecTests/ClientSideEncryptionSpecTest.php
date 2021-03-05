@@ -751,11 +751,11 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $collection = $context->selectCollection('keyvault', 'datakeys', ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)] + $context->defaultWriteOptions);
         $collection->drop();
 
-        if (!empty($keyVaultData)) {
-            $collection->insertMany($keyVaultData);
+        if (empty($keyVaultData)) {
+            return;
         }
 
-        return;
+        $collection->insertMany($keyVaultData);
     }
 
     private function prepareCorpusData(stdClass $data, ClientEncryption $clientEncryption)

@@ -31,7 +31,11 @@ use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertThat;
 use function sprintf;
 
-class EventObserver implements CommandSubscriber
+/**
+ * EventObserver handles "observeEvents" for client entities and assertions for
+ * "expectEvents" and special operations (e.g. assertSameLsidOnLastTwoCommands).
+ */
+final class EventObserver implements CommandSubscriber
 {
     /** @var array */
     private static $defaultIgnoreCommands = [

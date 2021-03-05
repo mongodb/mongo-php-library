@@ -136,6 +136,7 @@ final class UnifiedTestRunner
         $this->preventStaleDbVersionError($test->operations, $context);
 
         $context->startEventObservers();
+        $context->startEventCollectors();
 
         foreach ($test->operations as $o) {
             $operation = new Operation($o, $context);
@@ -143,6 +144,7 @@ final class UnifiedTestRunner
         }
 
         $context->stopEventObservers();
+        $context->stopEventCollectors();
 
         if (isset($test->expectEvents)) {
             assertIsArray($test->expectEvents);

@@ -1,6 +1,30 @@
 #!/bin/sh
-set -o xtrace   # Write all commands first to stderr
 set -o errexit  # Exit the script with error if any of the commands fail
+
+set_php_version ()
+{
+   PHP_VERSION=$1
+
+   if [ ! -d "/opt/php" ]; then
+      echo "PHP is not available"
+      exit 1
+   fi
+
+   if [ -d "/opt/php/${PHP_VERSION}-64bit/bin" ]; then
+      export PHP_PATH="/opt/php/${PHP_VERSION}-64bit/bin"
+   else
+      # Try to find the newest version matching our constant
+      export PHP_PATH=`find /opt/php/ -maxdepth 1 -type d -name "${PHP_VERSION}.*-64bit" -print | sort -V -r | head -1`
+   fi
+
+   if [ ! -d "$PHP_PATH" ]; then
+      echo "Could not find PHP binaries for version ${PHP_VERSION}. Listing available versions..."
+      ls -1 /opt/php
+      exit 1
+   fi
+
+   export PATH=$PHP_PATH/bin:$PATH
+}
 
 install_extension ()
 {
@@ -10,9 +34,9 @@ install_extension ()
 
    rm -f ${PHP_PATH}/lib/php.ini
 
-   if [ "x${DRIVER_BRANCH}" != "x" ] || [ "x${DRIVER_REPO}" != "x" ]; then
-      CLONE_REPO=${DRIVER_REPO:-https://github.com/mongodb/mongo-php-driver}
-      CHECKOUT_BRANCH=${DRIVER_BRANCH:-master}
+   if [ "x${EXTENSION_BRANCH}" != "x" ] || [ "x${EXTENSION_REPO}" != "x" ]; then
+      CLONE_REPO=${EXTENSION_REPO:-https://github.com/mongodb/mongo-php-driver}
+      CHECKOUT_BRANCH=${EXTENSION_BRANCH:-master}
 
       echo "Compiling driver branch ${CHECKOUT_BRANCH} from repository ${CLONE_REPO}"
 
@@ -29,25 +53,41 @@ install_extension ()
       make install
 
       cd ${PROJECT_DIRECTORY}
-   elif [ "x${DRIVER_VERSION}" != "x" ]; then
-      echo "Installing driver version ${DRIVER_VERSION} from PECL"
-      pecl install -f mongodb-${DRIVER_VERSION}
+   elif [ "x${EXTENSION_VERSION}" != "x" ]; then
+      echo "Installing driver version ${EXTENSION_VERSION} from PECL"
+      pecl install -f mongodb-${EXTENSION_VERSION}
    else
       echo "Installing latest driver version from PECL"
       pecl install -f mongodb
    fi
 
    sudo cp ${PROJECT_DIRECTORY}/.evergreen/config/php.ini ${PHP_PATH}/lib/php.ini
+
+   php --ri mongodb
 }
 
-DIR=$(dirname $0)
+install_composer ()
+{
+  EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
+  php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+  ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+
+  if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]; then
+    >&2 echo 'ERROR: Invalid installer checksum'
+    rm composer-setup.php
+    exit 1
+  fi
+
+  php composer-setup.php --quiet
+  rm composer-setup.php
+}
+
 # Functions to fetch MongoDB binaries
-. $DIR/download-mongodb.sh
+. ${DRIVERS_TOOLS}/.evergreen/download-mongodb.sh
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
 get_distro
 
-# See .evergreen/download-mongodb.sh for most possible values
 case "$DISTRO" in
    cygwin*)
       echo "Install Windows dependencies"
@@ -85,17 +125,8 @@ case "$DEPENDENCIES" in
       ;;
 esac
 
-PHP_PATH=/opt/php/${PHP_VERSION}-64bit
-OLD_PATH=$PATH
-PATH=$PHP_PATH/bin:$OLD_PATH
-
+set_php_version $PHP_VERSION
 install_extension
-
-php --ri mongodb
-
-# Install composer
-php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php composer-setup.php
-php -r "unlink('composer-setup.php');"
+install_composer
 
 php composer.phar update $COMPOSER_FLAGS

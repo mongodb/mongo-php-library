@@ -261,7 +261,7 @@ functions:
           ${PREPARE_SHELL}
           file="${PROJECT_DIRECTORY}/.evergreen/install-dependencies.sh"
           # Don't use ${file} syntax here because evergreen treats it as an empty expansion.
-          [ -f "$file" ] && PHP_VERSION=${PHP_VERSION} DRIVER_VERSION=${DRIVER_VERSION} DRIVER_REPO=${DRIVER_REPO} DRIVER_BRANCH=${DRIVER_BRANCH} DEPENDENCIES=${DEPENDENCIES} sh $file || echo "$file not available, skipping"
+          [ -f "$file" ] && PHP_VERSION=${PHP_VERSION} EXTENSION_VERSION=${EXTENSION_VERSION} EXTENSION_REPO=${EXTENSION_REPO} EXTENSION_BRANCH=${EXTENSION_BRANCH} DEPENDENCIES=${DEPENDENCIES} sh $file || echo "$file not available, skipping"
 
 pre:
   - func: "fetch source"
@@ -437,23 +437,23 @@ axes:
       - id: "lowest-supported"
         display_name: "1.8.1"
         variables:
-          DRIVER_VERSION: "1.8.1"
+          EXTENSION_VERSION: "1.8.1"
       - id: "latest-stable"
         display_name: "1.9-stable"
         variables:
-          DRIVER_VERSION: "stable"
+          EXTENSION_VERSION: "stable"
       - id: "1.8-dev"
         display_name: "1.8-dev"
         variables:
-          DRIVER_BRANCH: "v1.8"
+          EXTENSION_BRANCH: "v1.8"
       - id: "1.9-dev"
         display_name: "1.9-dev"
         variables:
-          DRIVER_BRANCH: "v1.9"
+          EXTENSION_BRANCH: "v1.9"
       - id: "latest-dev"
         display_name: "1.10-dev (master)"
         variables:
-          DRIVER_BRANCH: "master"
+          EXTENSION_BRANCH: "master"
 
   - id: os-php7
     display_name: OS

@@ -214,6 +214,7 @@ functions:
           export AZURE_CLIENT_SECRET="${client_side_encryption_azure_client_secret}"
           export GCP_EMAIL="${client_side_encryption_gcp_email}"
           export GCP_PRIVATEKEY="${client_side_encryption_gcp_privatekey}"
+          export PATH="${PHP_PATH}/bin:$PATH"
           PHP_VERSION=${PHP_VERSION} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "run atlas data lake test":
@@ -270,7 +271,11 @@ functions:
           ${PREPARE_SHELL}
           file="${PROJECT_DIRECTORY}/.evergreen/install-dependencies.sh"
           # Don't use ${file} syntax here because evergreen treats it as an empty expansion.
-          [ -f "$file" ] && PHP_VERSION=${PHP_VERSION} DRIVER_VERSION=${DRIVER_VERSION} DRIVER_REPO=${DRIVER_REPO} DRIVER_BRANCH=${DRIVER_BRANCH} DEPENDENCIES=${DEPENDENCIES} sh $file || echo "$file not available, skipping"
+          [ -f "$file" ] && PHP_VERSION=${PHP_VERSION} EXTENSION_VERSION=${EXTENSION_VERSION} EXTENSION_REPO=${EXTENSION_REPO} EXTENSION_BRANCH=${EXTENSION_BRANCH} DEPENDENCIES=${DEPENDENCIES} sh $file || echo "$file not available, skipping"
+    # install-dependencies generates expansion file with the PHP_PATH for the chosen PHP version
+    - command: expansions.update
+      params:
+        file: src/php-expansion.yml
 
 pre:
   - func: "fetch source"
@@ -451,19 +456,19 @@ axes:
 #      - id: "lowest-supported"
 #        display_name: "1.10-dev (master)"
 #        variables:
-#          DRIVER_BRANCH: "master"
+#          EXTENSION_BRANCH: "master"
       - id: "latest"
         display_name: "1.10-dev (master)"
         variables:
-          DRIVER_BRANCH: "master"
+          EXTENSION_BRANCH: "master"
 #      - id: "1.10-dev"
 #        display_name: "1.10-dev"
 #        variables:
-#          DRIVER_BRANCH: "v1.10"
+#          EXTENSION_BRANCH: "v1.10"
 #      - id: "latest-dev"
 #        display_name: "1.11-dev (master)"
 #        variables:
-#          DRIVER_BRANCH: "master"
+#          EXTENSION_BRANCH: "master"
 
   - id: os-php7
     display_name: OS

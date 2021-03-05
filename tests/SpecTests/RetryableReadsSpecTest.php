@@ -37,13 +37,16 @@ class RetryableReadsSpecTest extends FunctionalTestCase
     /**
      * Execute an individual test case from the specification.
      *
-     * @dataProvider provideTests
      * @param stdClass     $test           Individual "tests[]" document
      * @param array        $runOn          Top-level "runOn" array with server requirements
      * @param array|object $data           Top-level "data" array to initialize collection
      * @param string       $databaseName   Name of database under test
      * @param string|null  $collectionName Name of collection under test
      * @param string|null  $bucketName     Name of GridFS bucket under test
+     *
+     * @dataProvider provideTests
+     * @group matrix-testing-exclude-server-4.4-driver-4.2
+     * @group matrix-testing-exclude-server-5.0-driver-4.2
      */
     public function testRetryableReads(stdClass $test, array $runOn = null, $data, $databaseName, $collectionName, $bucketName)
     {

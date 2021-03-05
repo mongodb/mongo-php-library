@@ -172,6 +172,11 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
+    /**
+     * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster
+     * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster
+     * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster
+     */
     public function testModifyCollection()
     {
         $this->database->createCollection($this->getCollectionName());

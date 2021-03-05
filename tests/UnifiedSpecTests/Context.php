@@ -57,6 +57,9 @@ final class Context
     /** @var Client */
     private $internalClient;
 
+    /** @var boolean */
+    private $inLoop = false;
+
     /** @var string */
     private $uri;
 
@@ -145,6 +148,16 @@ final class Context
     public function setActiveClient(string $clientId = null)
     {
         $this->activeClient = $clientId;
+    }
+
+    public function isInLoop() : bool
+    {
+        return $this->inLoop;
+    }
+
+    public function setInLoop(bool $inLoop)
+    {
+        $this->inLoop = $inLoop;
     }
 
     public function assertExpectedEventsForClients(array $expectedEventsForClients)

@@ -571,6 +571,16 @@ final class Operation
                 $operation = new DatabaseCommand('admin', $args['failPoint']);
                 $operation->execute($args['session']->getServer());
                 break;
+            case 'loop':
+                assertIsArray($args['operations']);
+
+                $operations = array_map(function ($o) {
+                    assertIsObject($o);
+
+                    return new Operation($o, $this->context);
+                }, $args['operations']);
+
+                return (new Loop($operations, $this->context, array_diff_key($args, ['operations' => 1])))->execute();
             default:
                 Assert::fail('Unsupported test runner operation: ' . $this->name);
         }

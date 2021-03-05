@@ -12,7 +12,7 @@ AUTH=${AUTH:-noauth}
 SSL=${SSL:-nossl}
 MONGODB_URI=${MONGODB_URI:-}
 TESTS=${TESTS:-}
-IS_MATRIX_TESTING=${IS_MATRIX_TESTING:-false}
+IS_MATRIX_TESTING=${IS_MATRIX_TESTING:-}
 
 # For matrix testing, we have to determine the correct driver version
 if [ "$IS_MATRIX_TESTING" == "true" ]; then

@@ -320,12 +320,14 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $client = $this->getContext()->getClient();
         $client->selectCollection('db', 'coll')->drop();
 
-        $keyId = $client
-            ->selectCollection('keyvault', 'datakeys')
-            ->insertOne(
-                $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/external/external-key.json')),
-                ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]
-            )
+        $keyVaultCollection = $client->selectCollection(
+            'keyvault',
+            'datakeys',
+            ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)] + $this->getContext()->defaultWriteOptions
+        );
+        $keyVaultCollection->drop();
+        $keyId = $keyVaultCollection
+            ->insertOne($this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/external/external-key.json')))
             ->getInsertedId();
 
         $encryptionOpts = [
@@ -400,14 +402,15 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                     ]);
                 },
                 function ($command) use (&$commands) {
+                    if ($command['started']->getCommandName() !== 'insert') {
+                        return;
+                    }
+
                     $commands[] = $command;
                 }
             );
 
             $test->assertCount(2, $commands);
-            foreach ($commands as $command) {
-                $test->assertSame('insert', $command['started']->getCommandName());
-            }
         },
         ];
 
@@ -428,14 +431,15 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                     ]);
                 },
                 function ($command) use (&$commands) {
+                    if ($command['started']->getCommandName() !== 'insert') {
+                        return;
+                    }
+
                     $commands[] = $command;
                 }
             );
 
             $test->assertCount(2, $commands);
-            foreach ($commands as $command) {
-                $test->assertSame('insert', $command['started']->getCommandName());
-            }
         },
         ];
 

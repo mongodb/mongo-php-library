@@ -234,7 +234,7 @@ final class Operation
 
                 return $changeStream->current();
             default:
-                Assert::fail('Unsupported client operation: ' . $this->name);
+                Assert::fail('Unsupported change stream operation: ' . $this->name);
         }
     }
 

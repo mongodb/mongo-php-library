@@ -224,6 +224,7 @@ functions:
          working_dir: "src"
          script: |
            ${PREPARE_SHELL}
+           export PATH="${PHP_PATH}/bin:$PATH"
            PHP_VERSION=${PHP_VERSION} TESTS="atlas-data-lake" AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "cleanup":
@@ -603,7 +604,7 @@ buildvariants:
     - name: "test-sharded_cluster"
 
 - matrix_name: "atlas-data-lake-test"
-  matrix_spec: { "php-edge-versions": "latest-stable" }
+  matrix_spec: { "php-edge-versions": "latest-stable", "driver-versions": "latest" }
   display_name: "Atlas Data Lake test"
   run_on: rhel70
   tasks:

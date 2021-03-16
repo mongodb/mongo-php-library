@@ -7,6 +7,7 @@ use MongoDB\Client;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\ServerApi;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
@@ -45,12 +46,12 @@ abstract class TestCase extends BaseTestCase
 
     public static function createTestClient(string $uri = null, array $options = [], array $driverOptions = []) : Client
     {
-        return new Client($uri ?? static::getUri(), $options, $driverOptions);
+        return new Client($uri ?? static::getUri(), $options, static::appendServerApiOption($driverOptions));
     }
 
     public static function createTestManager(string $uri = null, array $options = [], array $driverOptions = []) : Manager
     {
-        return new Manager($uri ?? static::getUri(), $options, $driverOptions);
+        return new Manager($uri ?? static::getUri(), $options, static::appendServerApiOption($driverOptions));
     }
 
     /**
@@ -312,6 +313,15 @@ abstract class TestCase extends BaseTestCase
         return array_map(function ($value) {
             return [$value];
         }, $values);
+    }
+
+    private static function appendServerApiOption(array $driverOptions) : array
+    {
+        if (getenv('API_VERSION') && ! isset($driverOptions['serverApi'])) {
+            $driverOptions['serverApi'] = new ServerApi(getenv('API_VERSION'));
+        }
+
+        return $driverOptions;
     }
 
     /**

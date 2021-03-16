@@ -176,7 +176,7 @@ functions:
       params:
         script: |
           ${PREPARE_SHELL}
-          MONGODB_VERSION=${VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
+          MONGODB_VERSION=${VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
     # run-orchestration generates expansion file with the MONGODB_URI for the cluster
     - command: expansions.update
       params:
@@ -215,7 +215,7 @@ functions:
           export GCP_EMAIL="${client_side_encryption_gcp_email}"
           export GCP_PRIVATEKEY="${client_side_encryption_gcp_privatekey}"
           export PATH="${PHP_PATH}/bin:$PATH"
-          PHP_VERSION=${PHP_VERSION} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+          API_VERSION=${API_VERSION} PHP_VERSION=${PHP_VERSION} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "run atlas data lake test":
      - command: shell.exec
@@ -357,6 +357,17 @@ tasks:
         - func: "bootstrap mongohoused"
         - func: "run atlas data lake test"
 
+    - name: "test-requireApiVersion"
+      tags: ["versioned_api"]
+      commands:
+        - func: "bootstrap mongo-orchestration"
+          vars:
+            TOPOLOGY: "server"
+            AUTH: "auth"
+            REQUIRE_API_VERSION: "yes"
+        - func: "run tests"
+          vars:
+            API_VERSION: "1"
 
 # }}}
 
@@ -609,3 +620,10 @@ buildvariants:
   run_on: rhel70
   tasks:
     - name: "test-atlas-data-lake"
+
+- matrix_name: "test-requireApiVersion"
+  matrix_spec: { "php-edge-versions": "latest-stable", "versions": "latest", "driver-versions": "latest" }
+  display_name: "Versioned API - ${versions}"
+  run_on: rhel70
+  tasks:
+    - name: "test-requireApiVersion"

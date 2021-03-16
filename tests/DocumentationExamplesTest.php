@@ -4,7 +4,6 @@ namespace MongoDB\Tests;
 
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\Client;
 use MongoDB\Database;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\Exception;
@@ -1270,7 +1269,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertNotNull('This test intentionally performs no assertions');
 
-        $client = new Client(static::getUri());
+        $client = static::createTestClient();
 
         /* The WC is required: https://docs.mongodb.com/manual/core/transactions/#transactions-and-locks */
         $client->hr->dropCollection('employees', ['writeConcern' => new WriteConcern('majority')]);
@@ -1445,7 +1444,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertNotNull('This test intentionally performs no assertions');
 
-        $client = new Client(static::getUri());
+        $client = static::createTestClient();
 
         /* The WC is required: https://docs.mongodb.com/manual/core/transactions/#transactions-and-locks */
         $client->hr->dropCollection('employees', ['writeConcern' => new WriteConcern('majority')]);
@@ -1470,7 +1469,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertNotNull('This test intentionally performs no assertions');
 
         // Prep
-        $client = new Client(static::getUri());
+        $client = static::createTestClient();
         $items = $client->selectDatabase(
             'test',
             [ 'writeConcern' => new WriteConcern(WriteConcern::MAJORITY) ]

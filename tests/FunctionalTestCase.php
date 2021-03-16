@@ -51,7 +51,7 @@ abstract class FunctionalTestCase extends TestCase
     {
         parent::setUp();
 
-        $this->manager = new Manager(static::getUri());
+        $this->manager = static::createTestManager();
         $this->configuredFailPoints = [];
     }
 
@@ -86,7 +86,7 @@ abstract class FunctionalTestCase extends TestCase
             return $uri;
         }
 
-        $manager = new Manager($uri);
+        $manager = static::createTestManager($uri);
         if ($manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY))->getType() !== Server::TYPE_MONGOS) {
             return $uri;
         }

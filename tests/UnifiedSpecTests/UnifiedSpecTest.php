@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\UnifiedSpecTests;
 
 use Exception;
-use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\ReadPreference;
@@ -52,7 +51,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
         /* Provide internal client unmodified URI, since it may need to execute
          * commands on multiple mongoses (e.g. killAllSessions) */
-        self::$internalClient = new Client(static::getUri(true));
+        self::$internalClient = self::createTestClient(static::getUri(true));
         self::killAllSessions();
     }
 

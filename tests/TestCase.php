@@ -3,6 +3,8 @@
 namespace MongoDB\Tests;
 
 use InvalidArgumentException;
+use MongoDB\Client;
+use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -39,6 +41,16 @@ abstract class TestCase extends BaseTestCase
     public static function getUri()
     {
         return getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1:27017';
+    }
+
+    public static function createTestClient(string $uri = null, array $options = [], array $driverOptions = []) : Client
+    {
+        return new Client($uri ?? static::getUri(), $options, $driverOptions);
+    }
+
+    public static function createTestManager(string $uri = null, array $options = [], array $driverOptions = []) : Manager
+    {
+        return new Manager($uri ?? static::getUri(), $options, $driverOptions);
     }
 
     /**

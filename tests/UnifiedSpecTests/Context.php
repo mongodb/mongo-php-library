@@ -4,7 +4,6 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 
 use LogicException;
 use MongoDB\Client;
-use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\ServerApi;
@@ -266,7 +265,7 @@ final class Context
             );
         }
 
-        $this->entityMap->set($id, new Client($uri, $uriOptions, $driverOptions));
+        $this->entityMap->set($id, UnifiedSpecTest::createTestClient($uri, $uriOptions, $driverOptions));
     }
 
     private function createCollection(string $id, stdClass $o)
@@ -410,7 +409,7 @@ final class Context
     {
         assertStringStartsWith('mongodb://', $uri);
 
-        $manager = new Manager($uri);
+        $manager = UnifiedSpecTest::createTestManager($uri);
 
         // Nothing to do if the URI does not refer to a sharded cluster
         if ($manager->selectServer(new ReadPreference(ReadPreference::PRIMARY))->getType() !== Server::TYPE_MONGOS) {
@@ -450,7 +449,7 @@ final class Context
     {
         assertStringStartsWith('mongodb://', $uri);
 
-        $manager = new Manager($uri);
+        $manager = UnifiedSpecTest::createTestManager($uri);
 
         // Nothing to do if the URI does not refer to a sharded cluster
         if ($manager->selectServer(new ReadPreference(ReadPreference::PRIMARY))->getType() !== Server::TYPE_MONGOS) {

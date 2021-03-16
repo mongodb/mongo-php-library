@@ -93,7 +93,7 @@ final class Context
     {
         $o = new self($databaseName, $collectionName);
 
-        $o->client = new Client(FunctionalTestCase::getUri());
+        $o->client = FunctionalTestCase::createTestClient();
 
         return $o;
     }
@@ -132,10 +132,10 @@ final class Context
             $o->outcomeCollectionName = $test->outcome->collection->name;
         }
 
-        $o->client = new Client(FunctionalTestCase::getUri(), $clientOptions, $driverOptions);
+        $o->client = FunctionalTestCase::createTestClient(null, $clientOptions, $driverOptions);
 
         if ($autoEncryptionOptions !== []) {
-            $o->encryptedClient = new Client(FunctionalTestCase::getUri(), $clientOptions, $driverOptions + ['autoEncryption' => $autoEncryptionOptions]);
+            $o->encryptedClient = FunctionalTestCase::createTestClient(null, $clientOptions, $driverOptions + ['autoEncryption' => $autoEncryptionOptions]);
         }
 
         return $o;
@@ -145,7 +145,7 @@ final class Context
     {
         $o = new self($databaseName, $collectionName);
 
-        $o->client = new Client(FunctionalTestCase::getUri());
+        $o->client = FunctionalTestCase::createTestClient();
 
         return $o;
     }
@@ -169,7 +169,7 @@ final class Context
             'readPreference' => new ReadPreference('primary'),
         ];
 
-        $o->client = new Client(FunctionalTestCase::getUri(), $clientOptions);
+        $o->client = FunctionalTestCase::createTestClient(null, $clientOptions);
 
         return $o;
     }
@@ -184,7 +184,7 @@ final class Context
 
         $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
 
-        $o->client = new Client(FunctionalTestCase::getUri(), $clientOptions);
+        $o->client = FunctionalTestCase::createTestClient(null, $clientOptions);
 
         return $o;
     }
@@ -197,7 +197,7 @@ final class Context
 
         $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
 
-        $o->client = new Client(FunctionalTestCase::getUri(), $clientOptions);
+        $o->client = FunctionalTestCase::createTestClient(null, $clientOptions);
 
         return $o;
     }
@@ -212,7 +212,7 @@ final class Context
             $o->outcomeCollectionName = $test->outcome->collection->name;
         }
 
-        $o->client = new Client(FunctionalTestCase::getUri($useMultipleMongoses), $clientOptions);
+        $o->client = FunctionalTestCase::createTestClient(FunctionalTestCase::getUri($useMultipleMongoses), $clientOptions);
 
         return $o;
     }
@@ -237,7 +237,7 @@ final class Context
          * re-using a previously persisted libmongoc client object. */
         $clientOptions += ['p' => mt_rand()];
 
-        $o->client = new Client(FunctionalTestCase::getUri($useMultipleMongoses), $clientOptions);
+        $o->client = FunctionalTestCase::createTestClient(FunctionalTestCase::getUri($useMultipleMongoses), $clientOptions);
 
         $session0Options = isset($test->sessionOptions->session0) ? (array) $test->sessionOptions->session0 : [];
         $session1Options = isset($test->sessionOptions->session1) ? (array) $test->sessionOptions->session1 : [];

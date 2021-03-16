@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\SpecTests;
 
-use MongoDB\Client;
 use MongoDB\Driver\Exception\BulkWriteException;
 use stdClass;
 use function basename;
@@ -144,7 +143,7 @@ class CrudSpecTest extends FunctionalTestCase
             ],
         ]);
 
-        $client = new Client(static::getUri());
+        $client = FunctionalTestCase::createTestClient();
 
         try {
             $client->selectCollection($this->getDatabaseName(), $this->getCollectionName())->insertOne(['fail' => 1]);

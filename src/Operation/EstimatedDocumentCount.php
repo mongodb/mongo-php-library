@@ -116,6 +116,7 @@ class EstimatedDocumentCount implements Executable, Explainable
     public function execute(Server $server)
     {
         $command = $this->createCommand($server);
+
         if ($command instanceof Aggregate) {
             try {
                 $cursor = $command->execute($server);

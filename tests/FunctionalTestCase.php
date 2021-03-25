@@ -32,6 +32,7 @@ use function parse_url;
 use function phpinfo;
 use function preg_match;
 use function preg_quote;
+use function preg_replace;
 use function sprintf;
 use function version_compare;
 use const INFO_MODULES;
@@ -278,7 +279,7 @@ abstract class FunctionalTestCase extends TestCase
         $document = current($cursor->toArray());
 
         if (isset($document['version']) && is_string($document['version'])) {
-            return $document['version'];
+            return preg_replace('#^(\d+\.\d+\.\d+).*$#', '\1', $document['version']);
         }
 
         throw new UnexpectedValueException('Could not determine server version');

@@ -142,6 +142,19 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     /**
+     * @dataProvider provideCrudTests
+     */
+    public function testCrud(...$args)
+    {
+        $this->doTestCase(...$args);
+    }
+
+    public function provideCrudTests()
+    {
+        return $this->provideTests(__DIR__ . '/crud');
+    }
+
+    /**
      * @dataProvider providePassingTests
      */
     public function testPassingTests(...$args)

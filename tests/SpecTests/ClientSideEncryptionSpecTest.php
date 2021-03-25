@@ -395,8 +395,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                     }
                 );
 
-            $test->assertCount(2, $commands);
-        },
+                $test->assertCount(2, $commands);
+            },
         ];
 
         yield 'Test 4' => [
@@ -424,8 +424,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                     }
                 );
 
-            $test->assertCount(2, $commands);
-        },
+                $test->assertCount(2, $commands);
+            },
         ];
 
         yield 'Test 5' => [

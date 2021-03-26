@@ -4,12 +4,14 @@ namespace MongoDB\Tests;
 
 use InvalidArgumentException;
 use MongoDB\BSON\ObjectId;
+use MongoDB\Client;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\ServerApi;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
@@ -21,6 +23,7 @@ use function array_merge;
 use function count;
 use function current;
 use function explode;
+use function getenv;
 use function implode;
 use function is_array;
 use function is_object;
@@ -60,6 +63,16 @@ abstract class FunctionalTestCase extends TestCase
         $this->disableFailPoints();
 
         parent::tearDown();
+    }
+
+    public static function createTestClient(string $uri = null, array $options = [], array $driverOptions = []) : Client
+    {
+        return new Client($uri ?? static::getUri(), $options, static::appendServerApiOption($driverOptions));
+    }
+
+    public static function createTestManager(string $uri = null, array $options = [], array $driverOptions = []) : Manager
+    {
+        return new Manager($uri ?? static::getUri(), $options, static::appendServerApiOption($driverOptions));
     }
 
     public static function getUri($allowMultipleMongoses = false)
@@ -267,19 +280,6 @@ abstract class FunctionalTestCase extends TestCase
         return $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
     }
 
-    protected function getServerParameters()
-    {
-        $cursor = $this->manager->executeCommand(
-            'admin',
-            new Command(['getParameter' => '*']),
-            new ReadPreference(ReadPreference::RP_PRIMARY)
-        );
-
-        $cursor->rewind();
-
-        return $cursor->current();
-    }
-
     protected function getServerVersion(ReadPreference $readPreference = null)
     {
         $cursor = $this->manager->executeCommand(
@@ -439,6 +439,15 @@ abstract class FunctionalTestCase extends TestCase
         if ($this->getServerStorageEngine() !== 'wiredTiger') {
             $this->markTestSkipped('Transactions require WiredTiger storage engine');
         }
+    }
+
+    private static function appendServerApiOption(array $driverOptions) : array
+    {
+        if (getenv('API_VERSION') && ! isset($driverOptions['serverApi'])) {
+            $driverOptions['serverApi'] = new ServerApi(getenv('API_VERSION'));
+        }
+
+        return $driverOptions;
     }
 
     /**

@@ -258,6 +258,7 @@ final class Context
         $driverOptions = isset($observeEvents) ? ['i' => $i++] : [];
 
         if ($serverApi !== null) {
+            assertIsObject($serverApi);
             $driverOptions['serverApi'] = new ServerApi(
                 $serverApi->version,
                 $serverApi->strict ?? null,

@@ -4,6 +4,7 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 
 use Exception;
 use MongoDB\Collection;
+use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
@@ -345,6 +346,19 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
 
         return $cachedTopology;
+    }
+
+    private function getServerParameters()
+    {
+        $cursor = $this->manager->executeCommand(
+            'admin',
+            new Command(['getParameter' => '*']),
+            new ReadPreference(ReadPreference::RP_PRIMARY)
+        );
+
+        $cursor->rewind();
+
+        return $cursor->current();
     }
 
     /**

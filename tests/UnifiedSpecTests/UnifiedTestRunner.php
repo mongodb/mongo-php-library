@@ -17,6 +17,7 @@ use Throwable;
 use UnexpectedValueException;
 use function call_user_func;
 use function gc_collect_cycles;
+use function in_array;
 use function is_string;
 use function PHPUnit\Framework\assertContainsOnly;
 use function PHPUnit\Framework\assertInstanceOf;
@@ -25,6 +26,7 @@ use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
 use function preg_match;
 use function sprintf;
+use function strpos;
 use function version_compare;
 
 /**
@@ -34,7 +36,10 @@ use function version_compare;
  */
 final class UnifiedTestRunner
 {
+    const ATLAS_TLD = 'mongodb.net';
+
     const SERVER_ERROR_INTERRUPTED = 11601;
+    const SERVER_ERROR_UNAUTHORIZED = 13;
 
     const MIN_SCHEMA_VERSION = '1.0';
     const MAX_SCHEMA_VERSION = '1.2';
@@ -44,6 +49,9 @@ final class UnifiedTestRunner
 
     /** @var string */
     private $internalClientUri;
+
+    /** @var bool */
+    private $allowKillAllSessions = true;
 
     /** @var EntityMap */
     private $entityMap;
@@ -58,6 +66,13 @@ final class UnifiedTestRunner
     {
         $this->internalClient = FunctionalTestCase::createTestClient($internalClientUri);
         $this->internalClientUri = $internalClientUri;
+
+        /* Atlas prohibits killAllSessions. Inspect the connection string to
+         * determine if we should avoid calling killAllSessions(). This does
+         * mean that lingering transactions could block test execution. */
+        if (strpos($internalClientUri, self::ATLAS_TLD) !== false) {
+            $this->allowKillAllSessions = false;
+        }
     }
 
     public function run(UnifiedTestCase $test)
@@ -354,16 +369,28 @@ final class UnifiedTestRunner
      * This will clean up any open transactions that may remain from a
      * previously failed test. For sharded clusters, this command will be run
      * on all mongos nodes.
+     *
+     * This method is a NOP if allowKillAllSessions is false.
      */
     private function killAllSessions()
     {
+        static $ignoreErrorCodes = [
+            self::SERVER_ERROR_INTERRUPTED, // SERVER-38335
+            self::SERVER_ERROR_UNAUTHORIZED, // SERVER-54216
+        ];
+
+        if (! $this->allowKillAllSessions) {
+            return;
+        }
+
         $manager = $this->internalClient->getManager();
         $primary = $manager->selectServer(new ReadPreference(ReadPreference::PRIMARY));
         $servers = $primary->getType() === Server::TYPE_MONGOS ? $manager->getServers() : [$primary];
 
         foreach ($servers as $server) {
             try {
-                // Skip servers that do not support sessions
+                /* Skip servers that do not support sessions instead of always
+                 * attempting the command and ignoring CommandNotFound(59) */
                 if (! isset($server->getInfo()['logicalSessionTimeoutMinutes'])) {
                     continue;
                 }
@@ -371,8 +398,7 @@ final class UnifiedTestRunner
                 $command = new DatabaseCommand('admin', ['killAllSessions' => []]);
                 $command->execute($server);
             } catch (ServerException $e) {
-                // Interrupted error is safe to ignore (see: SERVER-38335)
-                if ($e->getCode() != self::SERVER_ERROR_INTERRUPTED) {
+                if (! in_array($e->getCode(), $ignoreErrorCodes)) {
                     throw $e;
                 }
             }

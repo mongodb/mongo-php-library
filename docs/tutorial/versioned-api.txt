@@ -14,9 +14,11 @@ Declaring an API version
 ------------------------
 
 To declare an API version, pass a ``serverApi`` driver option when creating your
-manager. The value is a
+client. The value is a
 :php:`MongoDB\\Driver\\ServerApi <class.mongodb-driver-serverapi>` instance that
-contains API version information. The only available API version is ``"1"``.
+contains API version information. This feature is introduced in MongoDB 5.0,
+which will initially support only API version "1". Additional versions may be
+introduced in future versions of the server.
 
 .. code-block:: php
 
@@ -42,7 +44,8 @@ Strict API
 
 By default, declaring an API version guarantees behavior for commands that are
 part of the versioned API, but does not forbid using commands that are not part
-of the API version. To only allow commands that are part of an API version,
+of the API version. To only allow commands and options that are part of the
+versioned API, specify the ``strict`` option when creating the
 specify the ``strict`` option when creating the
 :php:`MongoDB\\Driver\\ServerApi <class.mongodb-driver-serverapi>` instance:
 

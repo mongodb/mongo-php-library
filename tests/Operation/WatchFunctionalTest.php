@@ -11,7 +11,6 @@ use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Driver\Exception\ServerException;
-use MongoDB\Driver\Manager;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -166,7 +165,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         /* In order to trigger a dropped connection, we'll use a new client with
          * a socket timeout that is less than the change stream's maxAwaitTimeMS
          * option. */
-        $manager = new Manager(static::getUri(), ['socketTimeoutMS' => 50]);
+        $manager = static::createTestManager(null, ['socketTimeoutMS' => 50]);
         $primaryServer = $manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         $operation = new Watch($manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);

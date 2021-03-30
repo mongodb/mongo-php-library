@@ -4,10 +4,8 @@ namespace MongoDB\Tests\SpecTests;
 
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\Timestamp;
-use MongoDB\Client;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\ServerException;
-use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use stdClass;
@@ -209,7 +207,7 @@ class TransactionsSpecTest extends FunctionalTestCase
             $this->markTestSkipped('Mongos pinning tests can only run on sharded clusters using replica sets');
         }
 
-        $client = new Client($this->getUri(true));
+        $client = self::createTestClient($this->getUri(true));
 
         $session = $client->startSession();
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
@@ -247,7 +245,7 @@ class TransactionsSpecTest extends FunctionalTestCase
             $this->markTestSkipped('Mongos pinning tests can only run on sharded clusters using replica sets');
         }
 
-        $client = new Client($this->getUri(true));
+        $client = self::createTestClient($this->getUri(true));
 
         $session = $client->startSession();
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
@@ -292,7 +290,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      */
     private static function killAllSessions()
     {
-        $manager = new Manager(static::getUri());
+        $manager = static::createTestManager();
         $primary = $manager->selectServer(new ReadPreference('primary'));
 
         $servers = $primary->getType() === Server::TYPE_MONGOS

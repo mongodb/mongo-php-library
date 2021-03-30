@@ -38,7 +38,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->client = new Client(static::getUri(), ['retryWrites' => false, 'heartbeatFrequencyMS' => 500, 'serverSelectionTimeoutMS' => 20000, 'serverSelectionTryOnce' => false]);
+        $this->client = self::createTestClient(null, ['retryWrites' => false, 'heartbeatFrequencyMS' => 500, 'serverSelectionTimeoutMS' => 20000, 'serverSelectionTryOnce' => false]);
 
         $this->dropAndRecreateCollection();
         $this->collection = $this->client->selectCollection($this->getDatabaseName(), $this->getCollectionName());

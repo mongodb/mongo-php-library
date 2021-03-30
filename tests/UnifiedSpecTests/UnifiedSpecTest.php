@@ -3,8 +3,8 @@
 namespace MongoDB\Tests\UnifiedSpecTests;
 
 use Exception;
-use MongoDB\Client;
 use MongoDB\Collection;
+use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
@@ -33,7 +33,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     const SERVER_ERROR_INTERRUPTED = 11601;
 
     const MIN_SCHEMA_VERSION = '1.0';
-    const MAX_SCHEMA_VERSION = '1.1';
+    const MAX_SCHEMA_VERSION = '1.2';
 
     const TOPOLOGY_SINGLE = 'single';
     const TOPOLOGY_REPLICASET = 'replicaset';
@@ -52,7 +52,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
         /* Provide internal client unmodified URI, since it may need to execute
          * commands on multiple mongoses (e.g. killAllSessions) */
-        self::$internalClient = new Client(static::getUri(true));
+        self::$internalClient = self::createTestClient(static::getUri(true));
         self::killAllSessions();
     }
 
@@ -155,6 +155,19 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     /**
+     * @dataProvider provideVersionedApiTests
+     */
+    public function testVersionedApi(...$args)
+    {
+        $this->doTestCase(...$args);
+    }
+
+    public function provideVersionedApiTests()
+    {
+        return $this->provideTests(__DIR__ . '/versioned-api');
+    }
+
+    /**
      * @dataProvider providePassingTests
      */
     public function testPassingTests(...$args)
@@ -252,15 +265,33 @@ class UnifiedSpecTest extends FunctionalTestCase
 
         $serverVersion = $this->getCachedServerVersion();
         $topology = $this->getCachedTopology();
+        $serverParameters = $this->getCachedServerParameters();
 
         foreach ($runOnRequirements as $o) {
             $runOnRequirement = new RunOnRequirement($o);
-            if ($runOnRequirement->isSatisfied($serverVersion, $topology)) {
+            if ($runOnRequirement->isSatisfied($serverVersion, $topology, $serverParameters)) {
                 return;
             }
         }
 
+        // @todo Add server parameter requirements?
         $this->markTestSkipped(sprintf('Server version "%s" and topology "%s" do not meet test requirements', $serverVersion, $topology));
+    }
+
+    /**
+     * Return the server parameters (cached for subsequent calls).
+     */
+    private function getCachedServerParameters()
+    {
+        static $cachedServerParameters;
+
+        if (isset($cachedServerParameters)) {
+            return $cachedServerParameters;
+        }
+
+        $cachedServerParameters = $this->getServerParameters();
+
+        return $cachedServerParameters;
     }
 
     /**
@@ -315,6 +346,19 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
 
         return $cachedTopology;
+    }
+
+    private function getServerParameters()
+    {
+        $cursor = $this->manager->executeCommand(
+            'admin',
+            new Command(['getParameter' => '*']),
+            new ReadPreference(ReadPreference::RP_PRIMARY)
+        );
+
+        $cursor->rewind();
+
+        return $cursor->current();
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\SpecTests;
 
-use MongoDB\Client;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Tests\CommandObserver;
@@ -135,7 +134,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
 
         (new CommandObserver())->observe(
             function () {
-                $client = new Client(static::getUri());
+                $client = static::createTestClient();
                 $client->test->driverdata->find([], ['batchSize' => 2, 'limit' => 3]);
             },
             function (array $event) use (&$cursorId, &$cursorNamespace) {
@@ -205,7 +204,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
 
         $uri = $parts['scheme'] . '://' . $parts['host'] . $port . $path . $query;
 
-        $client = new Client($uri);
+        $client = static::createTestClient($uri);
         $cursor = $client->selectDatabase($this->getDatabaseName())->command(['ping' => 1]);
 
         $this->assertInstanceOf(Cursor::class, $cursor);
@@ -217,7 +216,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
      */
     public function testConnectwithSCRAMSHA1()
     {
-        $client = new Client(static::getUri(), ['authMechanism' => 'SCRAM-SHA-1']);
+        $client = static::createTestClient(null, ['authMechanism' => 'SCRAM-SHA-1']);
         $cursor = $client->selectDatabase($this->getDatabaseName())->command(['ping' => 1]);
 
         $this->assertInstanceOf(Cursor::class, $cursor);
@@ -229,7 +228,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
      */
     public function testConnectwithSCRAMSHA256()
     {
-        $client = new Client(static::getUri(), ['authMechanism' => 'SCRAM-SHA-256']);
+        $client = static::createTestClient(null, ['authMechanism' => 'SCRAM-SHA-256']);
         $cursor = $client->selectDatabase($this->getDatabaseName())->command(['ping' => 1]);
 
         $this->assertInstanceOf(Cursor::class, $cursor);

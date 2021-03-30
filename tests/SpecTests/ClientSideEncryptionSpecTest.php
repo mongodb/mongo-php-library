@@ -5,7 +5,6 @@ namespace MongoDB\Tests\SpecTests;
 use Closure;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Int64;
-use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\AuthenticationException;
@@ -206,7 +205,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             'keyVaultClient' => $client,
         ];
 
-        $clientEncrypted = new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
+        $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
         $clientEncryption = $clientEncrypted->createClientEncryption($encryptionOpts);
 
         $commands = [];
@@ -323,7 +322,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         ];
 
         if ($withExternalKeyVault) {
-            $encryptionOpts['keyVaultClient'] = new Client(static::getUri(), ['username' => 'fake-user', 'password' => 'fake-pwd']);
+            $encryptionOpts['keyVaultClient'] = static::createTestClient(null, ['username' => 'fake-user', 'password' => 'fake-pwd']);
         }
 
         $autoEncryptionOpts = $encryptionOpts + [
@@ -332,7 +331,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             ],
         ];
 
-        $clientEncrypted = new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
+        $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
         $clientEncryption = $clientEncrypted->createClientEncryption($encryptionOpts);
 
         try {
@@ -469,7 +468,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             'keyVaultClient' => $client,
         ];
 
-        $clientEncrypted = new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
+        $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
 
         $collection = $clientEncrypted->selectCollection('db', 'coll');
 
@@ -483,7 +482,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testViewsAreProhibited()
     {
-        $client = new Client(static::getUri());
+        $client = static::createTestClient();
 
         $client->selectCollection('db', 'view')->drop();
         $client->selectDatabase('db')->command(['create' => 'view', 'viewOn' => 'coll']);
@@ -495,7 +494,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             ],
         ];
 
-        $clientEncrypted = new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
+        $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
 
         try {
             $clientEncrypted->selectCollection('db', 'view')->insertOne(['foo' => 'bar']);
@@ -557,7 +556,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $corpus = (array) $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus.json'));
         $corpusCopied = [];
 
-        $clientEncrypted = new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
+        $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
         $clientEncryption = $clientEncrypted->createClientEncryption($encryptionOpts);
 
         $collection = $clientEncrypted->selectCollection('db', 'coll');
@@ -621,7 +620,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testCustomEndpoint(Closure $test)
     {
-        $client = new Client(static::getUri());
+        $client = static::createTestClient();
 
         $clientEncryption = $client->createClientEncryption([
             'keyVaultNamespace' => 'keyvault.datakeys',
@@ -758,7 +757,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             ],
         ];
 
-        $clientEncrypted = new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
+        $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
 
         try {
             $clientEncrypted->selectCollection('db', 'coll')->insertOne(['encrypted' => 'test']);
@@ -787,11 +786,11 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             ],
         ];
 
-        $clientEncrypted = new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
+        $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
 
         $clientEncrypted->selectCollection('db', 'coll')->insertOne(['encrypted' => 'test']);
 
-        $clientMongocryptd = new Client('mongodb://localhost:27021');
+        $clientMongocryptd = static::createTestClient('mongodb://localhost:27021');
 
         $this->expectException(ConnectionTimeoutException::class);
         $clientMongocryptd->selectDatabase('db')->command(['isMaster' => true]);

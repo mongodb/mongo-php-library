@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
-use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\FindAndModify;
@@ -17,7 +16,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
      */
     public function testManagerReadConcernIsOmitted()
     {
-        $manager = new Manager(static::getUri(), ['readConcernLevel' => 'majority']);
+        $manager = static::createTestManager(null, ['readConcernLevel' => 'majority']);
         $server = $manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
 
         (new CommandObserver())->observe(

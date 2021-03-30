@@ -12,7 +12,7 @@ AUTH=${AUTH:-noauth}
 SSL=${SSL:-nossl}
 MONGODB_URI=${MONGODB_URI:-}
 TESTS=${TESTS:-}
-export API_VERSION=${API_VERSION:-}
+API_VERSION=${API_VERSION:-}
 IS_MATRIX_TESTING=${IS_MATRIX_TESTING:-}
 
 # For matrix testing, we have to determine the correct driver version

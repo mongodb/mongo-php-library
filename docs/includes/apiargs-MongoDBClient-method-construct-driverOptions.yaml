@@ -1,4 +1,58 @@
 arg_name: option
+name: autoEncryption
+type: array
+description: |
+  Options to configure client-side field-level encryption in the driver. The
+  encryption options are documented in the :php:`extension documentation
+  <manual/en/mongodb-driver-manager.construct.php#mongodb-driver-manager.construct-driveroptions>`.
+  For the ``keyVaultClient`` option, you may pass a :phpclass:`MongoDB\\Client`
+  instance, which will be unwrapped to provide a :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>`
+  to the extension.
+  .. versionadded:: 1.6
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: driver
+type: array
+description: |
+  Additional driver metadata to be passed on to the server handshake. This is an
+  array containing ``name``, ``version``, and ``platform`` fields:
+
+  .. code-block:: php
+
+     [
+         'name' => 'my-driver',
+         'version' => '1.2.3-dev',
+         'platform' => 'some-platform',
+     ]
+
+  .. note::
+
+     This feature is primarily designed for custom drivers and ODMs, which may
+     want to identify themselves to the server for diagnostic purposes.
+     Applications should use the ``appName`` URI option instead of driver
+     metadata.
+
+  .. versionadded:: 1.7
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: serverApi
+type: :php:`MongoDB\\Driver\\ServerApi <class.mongodb-driver-serverapi>`
+description: |
+  Used to declare an API version on the client. See the
+  :manual:`Versioned API tutorial </tutorial/versioned-api>` for usage.
+
+  .. versionadded:: 1.9
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: typeMap
 type: array
 description: |
@@ -128,48 +182,6 @@ description: |
 
   This option is supported for backwards compatibility, but should be considered
   deprecated.
-interface: phpmethod
-operation: ~
-optional: true
----
-arg_name: option
-name: autoEncryption
-type: array
-description: |
-  Options to configure client-side field-level encryption in the driver. The
-  encryption options are documented in the :php:`extension documentation
-  <manual/en/mongodb-driver-manager.construct.php#mongodb-driver-manager.construct-driveroptions>`.
-  For the ``keyVaultClient`` option, you may pass a :phpclass:`MongoDB\\Client`
-  instance, which will be unwrapped to provide a :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>`
-  to the extension.
-  .. versionadded:: 1.6
-interface: phpmethod
-operation: ~
-optional: true
----
-arg_name: option
-name: driver
-type: array
-description: |
-  Additional driver metadata to be passed on to the server handshake. This is an
-  array containing ``name``, ``version``, and ``platform`` fields:
-
-  .. code-block:: php
-
-     [
-         'name' => 'my-driver',
-         'version' => '1.2.3-dev',
-         'platform' => 'some-platform',
-     ]
-
-  .. note::
-
-     This feature is primarily designed for custom drivers and ODMs, which may
-     want to identify themselves to the server for diagnostic purposes.
-     Applications should use the ``appName`` URI option instead of driver
-     metadata.
-
-  .. versionadded:: 1.7
 interface: phpmethod
 operation: ~
 optional: true

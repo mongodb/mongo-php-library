@@ -1,0 +1,94 @@
+=============
+Versioned API
+=============
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Declaring an API version
+------------------------
+
+To declare an API version, pass a ``serverApi`` driver option when creating your
+client. The value is a
+:php:`MongoDB\\Driver\\ServerApi <class.mongodb-driver-serverapi>` instance that
+contains API version information. This feature is introduced in MongoDB 5.0,
+which will initially support only API version "1". Additional versions may be
+introduced in future versions of the server.
+
+.. code-block:: php
+
+   <?php
+
+   use MongoDB\Client;
+   use MongoDB\Driver\ServerApi;
+
+   $serverApi = new ServerApi(ServerApi::V1);
+   $client = new Client('mongodb://127.0.0.1', [], ['serverApi' => $serverApi]);
+
+   // Command includes the declared API version
+   $client->database->collection->find([]);
+
+.. note::
+
+   Only declare an API version when connecting to a deployment that has no
+   pre-5.0 members. Older servers will error when encountering commands with a
+   declared API version.
+
+Strict API
+----------
+
+By default, declaring an API version guarantees behavior for commands that are
+part of the versioned API, but does not forbid using commands that are not part
+of the API version. To only allow commands and options that are part of the
+versioned API, specify the ``strict`` option when creating the
+specify the ``strict`` option when creating the
+:php:`MongoDB\\Driver\\ServerApi <class.mongodb-driver-serverapi>` instance:
+
+.. code-block:: php
+
+   <?php
+
+   use MongoDB\Client;
+   use MongoDB\Driver\ServerApi;
+
+   $serverApi = new ServerApi(ServerApi::V1, true);
+   $client = new Client('mongodb://127.0.0.1', [], ['serverApi' => $serverApi]);
+
+   // Will fail as the tailable option is not supported in versioned API
+   $client->database->collection->find([], ['tailable' => true]);
+
+Fail on Deprecated Commands
+---------------------------
+
+The optional ``deprecationErrors`` option causes MongoDB to fail all commands
+or behaviors that have been deprecated in the API version. This can be used in
+testing to ensure a smooth transition to a future API version.
+
+.. code-block:: php
+
+   <?php
+
+   use MongoDB\Client;
+   use MongoDB\Driver\ServerApi;
+
+   $serverApi = new ServerApi(ServerApi::V1, null, true);
+   $client = new Client('mongodb://127.0.0.1', [], ['serverApi' => $serverApi]);
+
+.. note::
+
+   At the time of this writing, no part of API version "1" has been deprecated.
+
+Usage with the command helper
+-----------------------------
+
+When using the :phpmethod:`MongoDB\\Database::command()` method to run arbitrary
+commands, the API version declared to the client is automatically appended to
+the command document. Setting any of the ``apiVersion``, ``apiStrict``, or
+``apiDeprecationErrors`` command options in the command document and calling
+:phpmethod:`MongoDB\\Database::command()` from a client with a declared API
+version is not supported and will lead to undefined behavior.

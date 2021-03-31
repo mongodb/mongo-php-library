@@ -28,7 +28,6 @@
 # MONGODB_VERSION - version of MongoDB to download and use. For Atlas
 # Proxy, must be "3.4" or "latest".  Defaults to "3.4".
 
-set -o xtrace   # Write all commands first to stderr
 set -o errexit  # Exit the script with error if any of the commands fail
 
 MONGODB_VERSION=${MONGODB_VERSION:-"3.4"}

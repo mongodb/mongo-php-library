@@ -64,7 +64,6 @@ functions:
            PROJECT_DIRECTORY: "$PROJECT_DIRECTORY"
            PREPARE_SHELL: |
               set -o errexit
-              set -o xtrace
               export DRIVERS_TOOLS="$DRIVERS_TOOLS"
               export MONGO_ORCHESTRATION_HOME="$MONGO_ORCHESTRATION_HOME"
               export MONGODB_BINARIES="$MONGODB_BINARIES"
@@ -304,7 +303,6 @@ tasks:
           type: test
           params:
             script: |
-               set -o xtrace
                . ${DRIVERS_TOOLS}/.evergreen/download-mongodb.sh || true
                get_distro || true
                echo $DISTRO

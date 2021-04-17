@@ -155,6 +155,19 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     /**
+     * @dataProvider provideGridFSTests
+     */
+    public function testGridFS(...$args)
+    {
+        $this->doTestCase(...$args);
+    }
+
+    public function provideGridFSTests()
+    {
+        return $this->provideTests(__DIR__ . '/gridfs');
+    }
+
+    /**
      * @dataProvider provideVersionedApiTests
      */
     public function testVersionedApi(...$args)

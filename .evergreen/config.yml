@@ -463,10 +463,10 @@ axes:
       # * latest-stable can be updated when we start tagging 1.10 releases (even beta)
       # * 1.10-dev can be enabled once 1.10 has been branched
       # * latest-dev can be enabled once 1.10 has been branched
-      - id: "lowest-supported"
-        display_name: "1.10.0-alpha1"
-        variables:
-          EXTENSION_VERSION: "1.10.0alpha1"
+#      - id: "lowest-supported"
+#        display_name: "1.10.0-alpha1"
+#        variables:
+#          EXTENSION_VERSION: "1.10.0alpha1"
       - id: "latest"
         display_name: "1.10-dev (master)"
         variables:

@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Create a report to help us improve
+about: Report a bug for the MongoDB PHP library.
 title: ''
 labels: ''
 assignees: ''

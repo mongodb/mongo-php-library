@@ -471,7 +471,7 @@ final class Operation
             case 'delete':
                 return $bucket->delete($args['id']);
             case 'downloadByName':
-                return stream_get_contents($bucket->openDownloadStream(
+                return stream_get_contents($bucket->openDownloadStreamByName(
                     $args['filename'],
                     array_diff_key($args, ['filename' => 1])
                 ));

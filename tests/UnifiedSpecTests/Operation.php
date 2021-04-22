@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
+use Error;
 use MongoDB\ChangeStream;
 use MongoDB\Client;
 use MongoDB\Collection;
@@ -132,7 +133,10 @@ final class Operation
             $result = $this->execute();
             $saveResultAsEntity = $this->saveResultAsEntity;
         } catch (Throwable $e) {
-            /* Note: we must be selective about what PHPUnit exceptions to pass
+            /* Rethrow any internal PHP errors and PHPUnit assertion failures,
+             * since those are never expected for "expectError".
+             *
+             * Note: we must be selective about what PHPUnit exceptions to pass
              * through, as PHPUnit's Warning exception must be considered for
              * expectError in GridFS tests (see: PHPLIB-592).
              *
@@ -140,7 +144,7 @@ final class Operation
              * to the exception message. Alternatively, throw a new exception
              * and include this as the previous, since PHPUnit will render the
              * chain when reporting a test failure. */
-            if ($e instanceof AssertionFailedError) {
+            if ($e instanceof Error || $e instanceof AssertionFailedError) {
                 throw $e;
             }
 
@@ -234,7 +238,7 @@ final class Operation
 
                 return $changeStream->current();
             default:
-                Assert::fail('Unsupported client operation: ' . $this->name);
+                Assert::fail('Unsupported change stream operation: ' . $this->name);
         }
     }
 
@@ -567,6 +571,16 @@ final class Operation
                 $operation = new DatabaseCommand('admin', $args['failPoint']);
                 $operation->execute($args['session']->getServer());
                 break;
+            case 'loop':
+                assertIsArray($args['operations']);
+
+                $operations = array_map(function ($o) {
+                    assertIsObject($o);
+
+                    return new Operation($o, $this->context);
+                }, $args['operations']);
+
+                return (new Loop($operations, $this->context, array_diff_key($args, ['operations' => 1])))->execute();
             default:
                 Assert::fail('Unsupported test runner operation: ' . $this->name);
         }

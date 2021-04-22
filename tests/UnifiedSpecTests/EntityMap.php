@@ -78,7 +78,7 @@ class EntityMap implements ArrayAccess
      */
     public function offsetSet($id, $value)
     {
-        Assert::fail('Entities can only be set via register()');
+        Assert::fail('Entities can only be set via set()');
     }
 
     /**

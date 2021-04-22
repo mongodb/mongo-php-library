@@ -7,6 +7,8 @@ use MongoDB\Client;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\ServerApi;
+use MongoDB\Model\BSONArray;
+use MongoDB\Tests\FunctionalTestCase;
 use stdClass;
 use function array_key_exists;
 use function array_map;
@@ -26,6 +28,7 @@ use function PHPUnit\Framework\assertIsObject;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
 use function PHPUnit\Framework\assertNotFalse;
+use function PHPUnit\Framework\assertNotSame;
 use function PHPUnit\Framework\assertStringContainsString;
 use function PHPUnit\Framework\assertStringStartsWith;
 use function strlen;
@@ -50,11 +53,17 @@ final class Context
     /** @var EntityMap */
     private $entityMap;
 
+    /** @var EventCollector[] */
+    private $eventCollectors = [];
+
     /** @var EventObserver[] */
     private $eventObserversByClient = [];
 
     /** @var Client */
     private $internalClient;
+
+    /** @var boolean */
+    private $inLoop = false;
 
     /** @var string */
     private $uri;
@@ -146,6 +155,16 @@ final class Context
         $this->activeClient = $clientId;
     }
 
+    public function isInLoop() : bool
+    {
+        return $this->inLoop;
+    }
+
+    public function setInLoop(bool $inLoop)
+    {
+        $this->inLoop = $inLoop;
+    }
+
     public function assertExpectedEventsForClients(array $expectedEventsForClients)
     {
         assertNotEmpty($expectedEventsForClients);
@@ -186,6 +205,20 @@ final class Context
         return $this->eventObserversByClient[$id];
     }
 
+    public function startEventCollectors()
+    {
+        foreach ($this->eventCollectors as $eventCollector) {
+            $eventCollector->start();
+        }
+    }
+
+    public function stopEventCollectors()
+    {
+        foreach ($this->eventCollectors as $eventCollector) {
+            $eventCollector->stop();
+        }
+    }
+
     /** @param string|array $readPreferenceTags */
     private function convertReadPreferenceTags($readPreferenceTags) : array
     {
@@ -208,12 +241,13 @@ final class Context
 
     private function createClient(string $id, stdClass $o)
     {
-        Util::assertHasOnlyKeys($o, ['id', 'uriOptions', 'useMultipleMongoses', 'observeEvents', 'ignoreCommandMonitoringEvents', 'serverApi']);
+        Util::assertHasOnlyKeys($o, ['id', 'uriOptions', 'useMultipleMongoses', 'observeEvents', 'ignoreCommandMonitoringEvents', 'serverApi', 'storeEventsAsEntities']);
 
         $useMultipleMongoses = $o->useMultipleMongoses ?? null;
         $observeEvents = $o->observeEvents ?? null;
         $ignoreCommandMonitoringEvents = $o->ignoreCommandMonitoringEvents ?? [];
         $serverApi = $o->serverApi ?? null;
+        $storeEventsAsEntities = $o->storeEventsAsEntities ?? null;
 
         $uri = $this->uri;
 
@@ -252,6 +286,14 @@ final class Context
             $this->eventObserversByClient[$id] = new EventObserver($observeEvents, $ignoreCommandMonitoringEvents, $id, $this);
         }
 
+        if (isset($storeEventsAsEntities)) {
+            assertIsArray($storeEventsAsEntities);
+
+            foreach ($storeEventsAsEntities as $storeEventsAsEntity) {
+                $this->createEntityCollector($id, $storeEventsAsEntity);
+            }
+        }
+
         /* TODO: Remove this once PHPC-1645 is implemented. Each client needs
          * its own libmongoc client to facilitate txnNumber assertions. */
         static $i = 0;
@@ -266,7 +308,22 @@ final class Context
             );
         }
 
-        $this->entityMap->set($id, UnifiedSpecTest::createTestClient($uri, $uriOptions, $driverOptions));
+        $this->entityMap->set($id, FunctionalTestCase::createTestClient($uri, $uriOptions, $driverOptions));
+    }
+
+    private function createEntityCollector(string $clientId, stdClass $o)
+    {
+        Util::assertHasOnlyKeys($o, ['id', 'events']);
+
+        $eventListId = $o->id ?? null;
+        $events = $o->events ?? null;
+
+        assertNotSame($eventListId, $clientId);
+        assertIsArray($events);
+
+        $eventList = new BSONArray();
+        $this->entityMap->set($eventListId, $eventList);
+        $this->eventCollectors[] = new EventCollector($eventList, $events, $clientId, $this);
     }
 
     private function createCollection(string $id, stdClass $o)
@@ -410,7 +467,7 @@ final class Context
     {
         assertStringStartsWith('mongodb://', $uri);
 
-        $manager = UnifiedSpecTest::createTestManager($uri);
+        $manager = FunctionalTestCase::createTestManager($uri);
 
         // Nothing to do if the URI does not refer to a sharded cluster
         if ($manager->selectServer(new ReadPreference(ReadPreference::PRIMARY))->getType() !== Server::TYPE_MONGOS) {
@@ -450,7 +507,7 @@ final class Context
     {
         assertStringStartsWith('mongodb://', $uri);
 
-        $manager = UnifiedSpecTest::createTestManager($uri);
+        $manager = FunctionalTestCase::createTestManager($uri);
 
         // Nothing to do if the URI does not refer to a sharded cluster
         if ($manager->selectServer(new ReadPreference(ReadPreference::PRIMARY))->getType() !== Server::TYPE_MONGOS) {

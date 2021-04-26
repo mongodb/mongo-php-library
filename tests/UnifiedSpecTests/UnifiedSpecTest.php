@@ -71,6 +71,19 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     /**
+     * @dataProvider provideTransactionsTests
+     */
+    public function testTransactions(...$args)
+    {
+        $this->doTestCase(...$args);
+    }
+
+    public function provideTransactionsTests()
+    {
+        return $this->provideTests(__DIR__ . '/transactions');
+    }
+
+    /**
      * @dataProvider provideVersionedApiTests
      */
     public function testVersionedApi(UnifiedTestCase $test)

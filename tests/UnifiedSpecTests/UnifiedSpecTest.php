@@ -73,14 +73,14 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideTransactionsTests
      */
-    public function testTransactions(...$args)
+    public function testTransactions(UnifiedTestCase $test)
     {
-        $this->doTestCase(...$args);
+        self::$runner->run($test);
     }
 
     public function provideTransactionsTests()
     {
-        return $this->provideTests(__DIR__ . '/transactions');
+        return $this->provideTests(__DIR__ . '/transactions/*.json');
     }
 
     /**

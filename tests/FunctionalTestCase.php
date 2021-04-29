@@ -282,17 +282,14 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function getServerVersion(ReadPreference $readPreference = null)
     {
-        $cursor = $this->manager->executeCommand(
+        $buildInfo = $this->manager->executeCommand(
             $this->getDatabaseName(),
             new Command(['buildInfo' => 1]),
             $readPreference ?: new ReadPreference(ReadPreference::RP_PRIMARY)
-        );
+        )->toArray()[0];
 
-        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
-        $document = current($cursor->toArray());
-
-        if (isset($document['version']) && is_string($document['version'])) {
-            return preg_replace('#^(\d+\.\d+\.\d+).*$#', '\1', $document['version']);
+        if (isset($buildInfo->version) && is_string($buildInfo->version)) {
+            return preg_replace('#^(\d+\.\d+\.\d+).*$#', '\1', $buildInfo->version);
         }
 
         throw new UnexpectedValueException('Could not determine server version');

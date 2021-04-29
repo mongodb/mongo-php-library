@@ -25,6 +25,7 @@ use function PHPUnit\Framework\assertIsArray;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
 use function preg_match;
+use function preg_replace;
 use function sprintf;
 use function strpos;
 use function version_compare;
@@ -332,7 +333,7 @@ final class UnifiedTestRunner
         $buildInfo = $database->command(['buildInfo' => 1])->toArray()[0];
 
         if (isset($buildInfo->version) && is_string($buildInfo->version)) {
-            return $buildInfo->version;
+            return preg_replace('#^(\d+\.\d+\.\d+).*$#', '\1', $buildInfo->version);
         }
 
         throw new UnexpectedValueException('Could not determine server version');

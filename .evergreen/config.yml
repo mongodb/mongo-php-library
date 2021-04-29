@@ -356,7 +356,7 @@ tasks:
         - func: "run atlas data lake test"
 
     - name: "test-requireApiVersion"
-      tags: ["versioned_api"]
+      tags: ["versioned-api"]
       commands:
         - func: "bootstrap mongo-orchestration"
           vars:
@@ -367,6 +367,16 @@ tasks:
           vars:
             API_VERSION: "1"
 
+    - name: "test-acceptApiVersion2"
+      tags: ["versioned-api"]
+      commands:
+        - func: "bootstrap mongo-orchestration"
+          vars:
+            TOPOLOGY: "server"
+            ORCHESTRATION_FILE: "versioned-api-testing.json"
+        - func: "run tests"
+          vars:
+            TESTS: "versioned-api"
 # }}}
 
 
@@ -619,9 +629,9 @@ buildvariants:
   tasks:
     - name: "test-atlas-data-lake"
 
-- matrix_name: "test-requireApiVersion"
+- matrix_name: "test-versioned-api"
   matrix_spec: { "php-edge-versions": "latest-stable", "versions": "latest", "driver-versions": "latest" }
   display_name: "Versioned API - ${versions}"
   run_on: rhel70
   tasks:
-    - name: "test-requireApiVersion"
+    - .versioned-api

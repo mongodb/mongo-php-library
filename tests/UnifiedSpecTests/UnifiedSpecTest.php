@@ -85,6 +85,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     /**
      * @dataProvider provideVersionedApiTests
+     * @group versioned-api
      */
     public function testVersionedApi(UnifiedTestCase $test)
     {

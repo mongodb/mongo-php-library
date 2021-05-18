@@ -8,6 +8,8 @@ use MongoDB\Tests\FunctionalTestCase;
 use PHPUnit\Framework\SkippedTest;
 use PHPUnit\Framework\Warning;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function basename;
+use function dirname;
 use function glob;
 
 /**
@@ -19,6 +21,9 @@ class UnifiedSpecTest extends FunctionalTestCase
 {
     use SetUpTearDownTrait;
 
+    /** @var array */
+    private static $incompleteTests = [];
+
     /** @var UnifiedTestRunner */
     private static $runner;
 
@@ -29,6 +34,15 @@ class UnifiedSpecTest extends FunctionalTestCase
         /* Provide unmodified URI for internal client, since it may need to
          * execute commands on multiple mongoses (e.g. killAllSessions) */
         self::$runner = new UnifiedTestRunner(static::getUri(true));
+    }
+
+    private function doSetUp()
+    {
+        parent::setUp();
+
+        if (isset(self::$incompleteTests[$this->dataDescription()])) {
+            $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
+        }
     }
 
     /**
@@ -147,8 +161,10 @@ class UnifiedSpecTest extends FunctionalTestCase
     private function provideTests(string $pattern) : Generator
     {
         foreach (glob($pattern) as $filename) {
+            $group = basename(dirname($filename));
+
             foreach (UnifiedTestCase::fromFile($filename) as $name => $test) {
-                yield $name => [$test];
+                yield $group . '/' . $name => [$test];
             }
         }
     }

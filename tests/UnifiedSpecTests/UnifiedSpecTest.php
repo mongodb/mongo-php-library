@@ -8,6 +8,8 @@ use MongoDB\Tests\FunctionalTestCase;
 use PHPUnit\Framework\SkippedTest;
 use PHPUnit\Framework\Warning;
 use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
+use function basename;
+use function dirname;
 use function glob;
 
 /**
@@ -19,6 +21,31 @@ class UnifiedSpecTest extends FunctionalTestCase
 {
     use SetUpTearDownTrait;
 
+    /** @var array */
+    private static $incompleteTests = [
+        'crud/unacknowledged-bulkWrite-delete-hint-clientError: Unacknowledged bulkWrite deleteOne with hints fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-bulkWrite-delete-hint-clientError: Unacknowledged bulkWrite deleteMany with hints fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-bulkWrite-update-hint-clientError: Unacknowledged bulkWrite updateOne with hints fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-bulkWrite-update-hint-clientError: Unacknowledged bulkWrite updateMany with hints fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-bulkWrite-update-hint-clientError: Unacknowledged bulkWrite replaceOne with hints fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-deleteMany-hint-clientError: Unacknowledged deleteMany with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-deleteMany-hint-clientError: Unacknowledged deleteMany with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-deleteOne-hint-clientError: Unacknowledged deleteOne with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-deleteOne-hint-clientError: Unacknowledged deleteOne with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-findOneAndDelete-hint-clientError: Unacknowledged findOneAndDelete with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-findOneAndDelete-hint-clientError: Unacknowledged findOneAndDelete with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-findOneAndReplace-hint-clientError: Unacknowledged findOneAndReplace with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-findOneAndReplace-hint-clientError: Unacknowledged findOneAndReplace with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-findOneAndUpdate-hint-clientError: Unacknowledged findOneAndUpdate with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-findOneAndUpdate-hint-clientError: Unacknowledged findOneAndUpdate with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-replaceOne-hint-clientError: Unacknowledged ReplaceOne with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-replaceOne-hint-clientError: Unacknowledged ReplaceOne with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-updateMany-hint-clientError: Unacknowledged updateMany with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-updateMany-hint-clientError: Unacknowledged updateMany with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-updateOne-hint-clientError: Unacknowledged updateOne with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-updateOne-hint-clientError: Unacknowledged updateOne with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+    ];
+
     /** @var UnifiedTestRunner */
     private static $runner;
 
@@ -29,6 +56,15 @@ class UnifiedSpecTest extends FunctionalTestCase
         /* Provide unmodified URI for internal client, since it may need to
          * execute commands on multiple mongoses (e.g. killAllSessions) */
         self::$runner = new UnifiedTestRunner(static::getUri(true));
+    }
+
+    private function doSetUp()
+    {
+        parent::setUp();
+
+        if (isset(self::$incompleteTests[$this->dataDescription()])) {
+            $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
+        }
     }
 
     /**
@@ -147,8 +183,10 @@ class UnifiedSpecTest extends FunctionalTestCase
     private function provideTests(string $pattern) : Generator
     {
         foreach (glob($pattern) as $filename) {
+            $group = basename(dirname($filename));
+
             foreach (UnifiedTestCase::fromFile($filename) as $name => $test) {
-                yield $name => [$test];
+                yield $group . '/' . $name => [$test];
             }
         }
     }

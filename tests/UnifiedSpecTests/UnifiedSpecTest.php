@@ -22,7 +22,29 @@ class UnifiedSpecTest extends FunctionalTestCase
     use SetUpTearDownTrait;
 
     /** @var array */
-    private static $incompleteTests = [];
+    private static $incompleteTests = [
+        'crud/unacknowledged-bulkWrite-delete-hint-clientError: Unacknowledged bulkWrite deleteOne with hints fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-bulkWrite-delete-hint-clientError: Unacknowledged bulkWrite deleteMany with hints fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-bulkWrite-update-hint-clientError: Unacknowledged bulkWrite updateOne with hints fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-bulkWrite-update-hint-clientError: Unacknowledged bulkWrite updateMany with hints fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-bulkWrite-update-hint-clientError: Unacknowledged bulkWrite replaceOne with hints fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-deleteMany-hint-clientError: Unacknowledged deleteMany with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-deleteMany-hint-clientError: Unacknowledged deleteMany with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-deleteOne-hint-clientError: Unacknowledged deleteOne with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-deleteOne-hint-clientError: Unacknowledged deleteOne with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-findOneAndDelete-hint-clientError: Unacknowledged findOneAndDelete with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-findOneAndDelete-hint-clientError: Unacknowledged findOneAndDelete with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-findOneAndReplace-hint-clientError: Unacknowledged findOneAndReplace with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-findOneAndReplace-hint-clientError: Unacknowledged findOneAndReplace with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-findOneAndUpdate-hint-clientError: Unacknowledged findOneAndUpdate with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-findOneAndUpdate-hint-clientError: Unacknowledged findOneAndUpdate with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-replaceOne-hint-clientError: Unacknowledged ReplaceOne with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-replaceOne-hint-clientError: Unacknowledged ReplaceOne with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-updateMany-hint-clientError: Unacknowledged updateMany with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-updateMany-hint-clientError: Unacknowledged updateMany with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-updateOne-hint-clientError: Unacknowledged updateOne with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        'crud/unacknowledged-updateOne-hint-clientError: Unacknowledged updateOne with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+    ];
 
     /** @var UnifiedTestRunner */
     private static $runner;

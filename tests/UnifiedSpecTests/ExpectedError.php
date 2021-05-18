@@ -19,6 +19,7 @@ use function PHPUnit\Framework\assertIsArray;
 use function PHPUnit\Framework\assertIsBool;
 use function PHPUnit\Framework\assertIsInt;
 use function PHPUnit\Framework\assertIsString;
+use function PHPUnit\Framework\assertNotInstanceOf;
 use function PHPUnit\Framework\assertNotNull;
 use function PHPUnit\Framework\assertNull;
 use function PHPUnit\Framework\assertObjectHasAttribute;
@@ -133,6 +134,14 @@ final class ExpectedError
         }
 
         assertNotNull($e);
+
+        if (isset($this->isClientError)) {
+            if ($this->isClientError) {
+                assertNotInstanceOf(ServerException::class, $e);
+            } else {
+                assertInstanceOf(ServerException::class, $e);
+            }
+        }
 
         if (isset($this->messageContains)) {
             assertStringContainsStringIgnoringCase($this->messageContains, $e->getMessage());

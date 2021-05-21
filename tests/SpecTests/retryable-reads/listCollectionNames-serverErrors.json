@@ -93,7 +93,7 @@
       ]
     },
     {
-      "description": "ListCollectionNames succeeds after NotMaster",
+      "description": "ListCollectionNames succeeds after NotWritablePrimary",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -130,7 +130,7 @@
       ]
     },
     {
-      "description": "ListCollectionNames succeeds after NotMasterNoSlaveOk",
+      "description": "ListCollectionNames succeeds after NotPrimaryNoSecondaryOk",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -167,7 +167,7 @@
       ]
     },
     {
-      "description": "ListCollectionNames succeeds after NotMasterOrSecondary",
+      "description": "ListCollectionNames succeeds after NotPrimaryOrSecondary",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -426,7 +426,7 @@
       ]
     },
     {
-      "description": "ListCollectionNames fails after two NotMaster errors",
+      "description": "ListCollectionNames fails after two NotWritablePrimary errors",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -464,7 +464,7 @@
       ]
     },
     {
-      "description": "ListCollectionNames fails after NotMaster when retryReads is false",
+      "description": "ListCollectionNames fails after NotWritablePrimary when retryReads is false",
       "clientOptions": {
         "retryReads": false
       },

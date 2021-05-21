@@ -40,7 +40,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     use SetUpTearDownTrait;
 
     const INTERRUPTED = 11601;
-    const NOT_MASTER = 10107;
+    const NOT_PRIMARY = 10107;
 
     /** @var integer */
     private static $wireVersionForStartAtOperationTime = 7;
@@ -1198,7 +1198,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     /**
      * Prose test 3: "ChangeStream will automatically resume one time on a
-     * resumable error (including not master) with the initial pipeline and
+     * resumable error (including not primary) with the initial pipeline and
      * options, except for the addition/update of a resumeToken."
      */
     public function testResumeRepeatsOriginalPipelineAndOptions()
@@ -1212,7 +1212,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'mode' => ['times' => 1],
             'data' => [
                 'failCommands' => ['getMore'],
-                'errorCode' => self::NOT_MASTER,
+                'errorCode' => self::NOT_PRIMARY,
                 'errorLabels' => ['ResumableChangeStreamError'],
             ],
         ]);
@@ -1568,7 +1568,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             'mode' => ['times' => 1],
             'data' => [
                 'failCommands' => ['getMore'],
-                'errorCode' => self::NOT_MASTER,
+                'errorCode' => self::NOT_PRIMARY,
                 'errorLabels' => ['ResumableChangeStreamError'],
             ],
         ]);

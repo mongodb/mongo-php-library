@@ -54,11 +54,11 @@ class ChangeStream implements Iterator
         189, // PrimarySteppedDown
         262, // ExceededTimeLimit
         9001, // SocketException
-        10107, // NotMaster
+        10107, // NotPrimary
         11600, // InterruptedAtShutdown
         11602, // InterruptedDueToReplStateChange
-        13435, // NotMasterNoSlaveOk
-        13436, // NotMasterOrSecondary
+        13435, // NotPrimaryNoSecondaryOk
+        13436, // NotPrimaryOrSecondary
         63, // StaleShardVersion
         150, // StaleEpoch
         13388, // StaleConfig

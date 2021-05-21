@@ -85,7 +85,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 
     public function testCommand()
     {
-        $command = ['isMaster' => 1];
+        $command = ['ping' => 1];
         $options = [
             'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
         ];
@@ -96,8 +96,8 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $commandResult = current($cursor->toArray());
 
         $this->assertCommandSucceeded($commandResult);
-        $this->assertObjectHasAttribute('ismaster', $commandResult);
-        $this->assertTrue($commandResult->ismaster);
+        $this->assertObjectHasAttribute('ok', $commandResult);
+        $this->assertSame(1, (int) $commandResult->ok);
     }
 
     public function testCommandDoesNotInheritReadPreference()
@@ -118,7 +118,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 
     public function testCommandAppliesTypeMapToCursor()
     {
-        $command = ['isMaster' => 1];
+        $command = ['ping' => 1];
         $options = [
             'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
             'typeMap' => ['root' => 'array'],
@@ -131,8 +131,8 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 
         $this->assertCommandSucceeded($commandResult);
         $this->assertIsArray($commandResult);
-        $this->assertArrayHasKey('ismaster', $commandResult);
-        $this->assertTrue($commandResult['ismaster']);
+        $this->assertArrayHasKey('ok', $commandResult);
+        $this->assertSame(1, (int) $commandResult['ok']);
     }
 
     /**

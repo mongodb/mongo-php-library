@@ -1553,6 +1553,36 @@ class DocumentationExamplesTest extends FunctionalTestCase
     /**
      * @doesNotPerformAssertions
      */
+    public function testVersionedApi()
+    {
+        $uriString = static::getUri(true);
+
+        // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
+        // Start Versioned API Example 1
+        $serverApi = new \MongoDB\Driver\ServerApi('1');
+        $client = new \MongoDB\Client($uriString, [], ['serverApi' => $serverApi]);
+        // End Versioned API Example 1
+
+        // Start Versioned API Example 2
+        $serverApi = new \MongoDB\Driver\ServerApi('1', true);
+        $client = new \MongoDB\Client($uriString, [], ['serverApi' => $serverApi]);
+        // End Versioned API Example 2
+
+        // Start Versioned API Example 3
+        $serverApi = new \MongoDB\Driver\ServerApi('1', false);
+        $client = new \MongoDB\Client($uriString, [], ['serverApi' => $serverApi]);
+        // End Versioned API Example 3
+
+        // Start Versioned API Example 4
+        $serverApi = new \MongoDB\Driver\ServerApi('1', false, true);
+        $client = new \MongoDB\Client($uriString, [], ['serverApi' => $serverApi]);
+        // End Versioned API Example 4
+        // phpcs:enable
+    }
+
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testWithTransactionExample()
     {
         $this->skipIfTransactionsAreNotSupported();

@@ -32,6 +32,11 @@ jobs:
         include:
           - os: "ubuntu-20.04"
             php-version: "8.0"
+            mongodb-version: "5.0"
+            driver-version: "mongodb/mongo-php-driver@master"
+            topology: "server"
+          - os: "ubuntu-20.04"
+            php-version: "8.0"
             mongodb-version: "4.4"
             driver-version: "mongodb/mongo-php-driver@master"
             topology: "replica_set"

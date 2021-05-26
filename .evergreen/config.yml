@@ -420,6 +420,10 @@ axes:
         display_name: "latest"
         variables:
            VERSION: "latest"
+      - id: "5.0"
+        display_name: "5.0"
+        variables:
+           VERSION: "5.0"
       - id: "4.4"
         display_name: "4.4"
         variables:
@@ -626,7 +630,7 @@ buildvariants:
     - name: "test-atlas-data-lake"
 
 - matrix_name: "test-versioned-api"
-  matrix_spec: { "php-edge-versions": "latest-stable", "versions": "latest", "driver-versions": "latest" }
+  matrix_spec: { "php-edge-versions": "latest-stable", "versions": ["5.0", "latest"], "driver-versions": "latest" }
   display_name: "Versioned API - ${versions}"
   run_on: rhel70
   tasks:

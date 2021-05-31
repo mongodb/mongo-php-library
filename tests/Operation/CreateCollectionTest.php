@@ -33,6 +33,10 @@ class CreateCollectionTest extends TestCase
         }
 
         foreach ($this->getInvalidIntegerValues() as $value) {
+            $options[][] = ['expireAfterSeconds' => $value];
+        }
+
+        foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['flags' => $value];
         }
 
@@ -58,6 +62,10 @@ class CreateCollectionTest extends TestCase
 
         foreach ($this->getInvalidDocumentValues() as $value) {
             $options[][] = ['storageEngine' => $value];
+        }
+
+        foreach ($this->getInvalidDocumentValues() as $value) {
+            $options[][] = ['timeseries' => $value];
         }
 
         foreach ($this->getInvalidArrayValues() as $value) {

@@ -51,6 +51,10 @@ class AggregateTest extends TestCase
             $options[][] = ['hint' => $value];
         }
 
+        foreach ($this->getInvalidDocumentValues() as $value) {
+            $options[][] = ['let' => $value];
+        }
+
         foreach ($this->getInvalidBooleanValues() as $value) {
             $options[][] = ['explain' => $value];
         }

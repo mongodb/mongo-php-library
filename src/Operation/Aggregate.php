@@ -107,6 +107,14 @@ class Aggregate implements Executable, Explainable
      *    name as a string or the index key pattern as a document. If specified,
      *    then the query system will only consider plans using the hinted index.
      *
+     *  * let (document): Map of parameter names and values. Values must be
+     *    constant or closed expressions that do not reference document fields.
+     *    Parameters can then be accessed as variables in an aggregate
+     *    expression context (e.g. "$$var").
+     *
+     *    This is not supported for server versions < 5.0 and will result in an
+     *    exception at execution time if used.
+     *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
      *
@@ -194,6 +202,10 @@ class Aggregate implements Executable, Explainable
 
         if (isset($options['hint']) && ! is_string($options['hint']) && ! is_array($options['hint']) && ! is_object($options['hint'])) {
             throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], 'string or array or object');
+        }
+
+        if (isset($options['let']) && ! is_array($options['let']) && ! is_object($options['let'])) {
+            throw InvalidArgumentException::invalidType('"let" option', $options['let'], ['array', 'object']);
         }
 
         if (isset($options['maxAwaitTimeMS']) && ! is_integer($options['maxAwaitTimeMS'])) {
@@ -344,8 +356,10 @@ class Aggregate implements Executable, Explainable
             }
         }
 
-        if (isset($this->options['collation'])) {
-            $cmd['collation'] = (object) $this->options['collation'];
+        foreach (['collation', 'let'] as $option) {
+            if (isset($this->options[$option])) {
+                $cmd[$option] = (object) $this->options[$option];
+            }
         }
 
         if (isset($this->options['hint'])) {

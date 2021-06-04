@@ -142,6 +142,19 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     /**
+     * @dataProvider provideCommandMonitoringTests
+     */
+    public function testCommandMonitoring(UnifiedTestCase $test)
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideCommandMonitoringTests()
+    {
+        return $this->provideTests(__DIR__ . '/command-monitoring/*.json');
+    }
+
+    /**
      * @dataProvider provideCrudTests
      */
     public function testCrud(UnifiedTestCase $test)

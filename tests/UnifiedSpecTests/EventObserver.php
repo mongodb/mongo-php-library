@@ -41,17 +41,6 @@ final class EventObserver implements CommandSubscriber
     private static $defaultIgnoreCommands = [
         // failPoint and targetedFailPoint operations
         'configureFailPoint',
-        // See: https://github.com/mongodb/specifications/blob/master/source/command-monitoring/command-monitoring.rst#security
-        'authenticate',
-        'saslStart',
-        'saslContinue',
-        'getnonce',
-        'createUser',
-        'updateUser',
-        'copydbgetnonce',
-        'copydbsaslstart',
-        'copydb',
-        'isMaster',
     ];
 
     /** @var array */

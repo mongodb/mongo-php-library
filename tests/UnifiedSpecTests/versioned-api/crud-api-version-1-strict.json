@@ -1,6 +1,6 @@
 {
   "description": "CRUD Api Version 1 (strict)",
-  "schemaVersion": "1.1",
+  "schemaVersion": "1.4",
   "runOnRequirements": [
     {
       "minServerVersion": "4.9"
@@ -141,6 +141,11 @@
     },
     {
       "description": "aggregate on database appends declared API version",
+      "runOnRequirements": [
+        {
+          "serverless": "forbid"
+        }
+      ],
       "operations": [
         {
           "name": "aggregate",
@@ -608,7 +613,6 @@
     },
     {
       "description": "estimatedDocumentCount appends declared API version",
-      "skipReason": "DRIVERS-1561 collStats is not in API version 1",
       "operations": [
         {
           "name": "estimatedDocumentCount",
@@ -652,7 +656,7 @@
       ]
     },
     {
-      "description": "find command with declared API version appends to the command, but getMore does not",
+      "description": "find and getMore append API version",
       "operations": [
         {
           "name": "find",
@@ -713,14 +717,10 @@
                       "long"
                     ]
                   },
-                  "apiVersion": {
-                    "$$exists": false
-                  },
-                  "apiStrict": {
-                    "$$exists": false
-                  },
+                  "apiVersion": "1",
+                  "apiStrict": true,
                   "apiDeprecationErrors": {
-                    "$$exists": false
+                    "$$unsetOrMatches": false
                   }
                 }
               }

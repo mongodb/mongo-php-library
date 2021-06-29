@@ -38,15 +38,16 @@ arg_name: option
 name: expireAfterSeconds
 type: integer
 description: |
-  Available on 5.0+ servers only
-
   Allows specifying a TTL after which documents will be removed from a
   time-series collection.
+
+  This option is available in MongoDB 5.0+ and will result in an exception at
+  execution time if specified for an older server version.
+
+  .. versionadded:: 1.9
 interface: phpmethod
 operation: ~
 optional: true
-post: |
-  .. versionadded:: 1.9
 ---
 arg_name: option
 name: flags
@@ -151,14 +152,15 @@ arg_name: option
 name: timeseries
 type: array|object
 description: |
-  Available on 5.0+ servers only
-
   Allows users to specify options for time-series collections.
+
+  This option is available in MongoDB 5.0+ and will result in an exception at
+  execution time if specified for an older server version.
+
+  .. versionadded:: 1.9
 interface: phpmethod
 operation: ~
 optional: true
-post: |
-  .. versionadded:: 1.9
 ---
 source:
   file: apiargs-MongoDBDatabase-common-option.yaml

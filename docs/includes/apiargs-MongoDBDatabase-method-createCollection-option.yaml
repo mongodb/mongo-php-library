@@ -35,6 +35,21 @@ pre: |
   </reference/bson-type-comparison-order/#collation>` for the collection.
 ---
 arg_name: option
+name: expireAfterSeconds
+type: integer
+description: |
+  Allows specifying a TTL after which documents will be removed from a
+  time-series collection.
+
+  This option is available in MongoDB 5.0+ and will result in an exception at
+  execution time if specified for an older server version.
+
+  .. versionadded:: 1.9
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: flags
 type: integer
 description: |
@@ -129,6 +144,20 @@ description: |
   Storage engine configurations specified when creating collections are
   validated and logged to the :term:`oplog` during replication to support
   replica sets with members that use different storage engines.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: timeseries
+type: array|object
+description: |
+  Allows users to specify options for time-series collections.
+
+  This option is available in MongoDB 5.0+ and will result in an exception at
+  execution time if specified for an older server version.
+
+  .. versionadded:: 1.9
 interface: phpmethod
 operation: ~
 optional: true

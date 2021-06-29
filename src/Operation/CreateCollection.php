@@ -82,6 +82,10 @@ class CreateCollection implements Executable
      *    This is not supported for server versions < 3.4 and will result in an
      *    exception at execution time if used.
      *
+     *  * expireAfterSeconds: The TTL for documents in time series collections.
+     *
+     *    This is not supported for servers versions < 5.0.
+     *
      *  * flags (integer): Options for the MMAPv1 storage engine only. Must be a
      *    bitwise combination CreateCollection::USE_POWER_OF_2_SIZES and
      *    CreateCollection::NO_PADDING. The default is
@@ -103,6 +107,10 @@ class CreateCollection implements Executable
      *  * size (integer): The maximum number of bytes for a capped collection.
      *
      *  * storageEngine (document): Storage engine options.
+     *
+     *  * timeseries (document): Options for time series collections.
+     *
+     *    This is not supported for servers versions < 5.0.
      *
      *  * typeMap (array): Type map for BSON deserialization. This will only be
      *    used for the returned command result document.
@@ -139,6 +147,10 @@ class CreateCollection implements Executable
             throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
         }
 
+        if (isset($options['expireAfterSeconds']) && ! is_integer($options['expireAfterSeconds'])) {
+            throw InvalidArgumentException::invalidType('"expireAfterSeconds" option', $options['expireAfterSeconds'], 'integer');
+        }
+
         if (isset($options['flags']) && ! is_integer($options['flags'])) {
             throw InvalidArgumentException::invalidType('"flags" option', $options['flags'], 'integer');
         }
@@ -165,6 +177,10 @@ class CreateCollection implements Executable
 
         if (isset($options['storageEngine']) && ! is_array($options['storageEngine']) && ! is_object($options['storageEngine'])) {
             throw InvalidArgumentException::invalidType('"storageEngine" option', $options['storageEngine'], 'array or object');
+        }
+
+        if (isset($options['timeseries']) && ! is_array($options['timeseries']) && ! is_object($options['timeseries'])) {
+            throw InvalidArgumentException::invalidType('"timeseries" option', $options['timeseries'], ['array', 'object']);
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
@@ -237,13 +253,13 @@ class CreateCollection implements Executable
     {
         $cmd = ['create' => $this->collectionName];
 
-        foreach (['autoIndexId', 'capped', 'flags', 'max', 'maxTimeMS', 'size', 'validationAction', 'validationLevel'] as $option) {
+        foreach (['autoIndexId', 'capped', 'expireAfterSeconds', 'flags', 'max', 'maxTimeMS', 'size', 'validationAction', 'validationLevel'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }
         }
 
-        foreach (['collation', 'indexOptionDefaults', 'storageEngine', 'validator'] as $option) {
+        foreach (['collation', 'indexOptionDefaults', 'storageEngine', 'timeseries', 'validator'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = (object) $this->options[$option];
             }

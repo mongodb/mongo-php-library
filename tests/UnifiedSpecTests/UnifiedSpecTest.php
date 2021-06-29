@@ -142,6 +142,19 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     /**
+     * @dataProvider provideCollectionManagementTests
+     */
+    public function testCollectionManagement(UnifiedTestCase $test)
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideCollectionManagementTests()
+    {
+        return $this->provideTests(__DIR__ . '/collection-management/*.json');
+    }
+
+    /**
      * @dataProvider provideCrudTests
      */
     public function testCrud(UnifiedTestCase $test)

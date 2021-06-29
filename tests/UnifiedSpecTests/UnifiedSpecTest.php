@@ -105,6 +105,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         'crud/updateOne-dots_and_dollars: Updating document to set top-level dotted key on 5.0+ server' => 'CDRIVER-3895 and PHPC-1765',
         'crud/updateOne-dots_and_dollars: Updating document to set dollar-prefixed key in embedded doc on 5.0+ server' => 'CDRIVER-3895 and PHPC-1765',
         'crud/updateOne-dots_and_dollars: Updating document to set dotted key in embedded doc on 5.0+ server' => 'CDRIVER-3895 and PHPC-1765',
+        'valid-pass/poc-transactions: Client side error in command starting transaction' => 'PHPLIB-665',
     ];
 
     /** @var UnifiedTestRunner */

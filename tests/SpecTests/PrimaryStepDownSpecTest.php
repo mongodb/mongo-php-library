@@ -25,7 +25,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
     use SetUpTearDownTrait;
 
     const INTERRUPTED_AT_SHUTDOWN = 11600;
-    const NOT_MASTER = 10107;
+    const NOT_PRIMARY = 10107;
     const SHUTDOWN_IN_PROGRESS = 91;
 
     /** @var Client */
@@ -47,7 +47,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
     /**
      * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#id10
      */
-    public function testNotMasterKeepsConnectionPool()
+    public function testNotPrimaryKeepsConnectionPool()
     {
         $runOn = [(object) ['minServerVersion' => '4.1.11', 'topology' => [self::TOPOLOGY_REPLICASET]]];
         $this->checkServerRequirements($runOn);
@@ -58,7 +58,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
             'mode' => ['times' => 1],
             'data' => [
                 'failCommands' => ['insert'],
-                'errorCode' => self::NOT_MASTER,
+                'errorCode' => self::NOT_PRIMARY,
             ],
         ]);
 
@@ -69,7 +69,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
             $this->insertDocuments(1);
         } catch (BulkWriteException $e) {
             // Verify that the insert failed with an operation failure with 10107 code.
-            $this->assertSame(self::NOT_MASTER, $e->getCode());
+            $this->assertSame(self::NOT_PRIMARY, $e->getCode());
         }
 
         // Execute an insert into the test collection of a {test: 1} document and verify that it succeeds.
@@ -83,7 +83,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
     /**
      * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#id11
      */
-    public function testNotMasterResetConnectionPool()
+    public function testNotPrimaryResetConnectionPool()
     {
         $runOn = [(object) ['minServerVersion' => '4.0.0', 'maxServerVersion' => '4.0.999', 'topology' => [self::TOPOLOGY_REPLICASET]]];
         $this->checkServerRequirements($runOn);
@@ -94,7 +94,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
             'mode' => ['times' => 1],
             'data' => [
                 'failCommands' => ['insert'],
-                'errorCode' => self::NOT_MASTER,
+                'errorCode' => self::NOT_PRIMARY,
             ],
         ]);
 
@@ -105,7 +105,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
             $this->insertDocuments(1);
         } catch (BulkWriteException $e) {
             // Verify that the insert failed with an operation failure with 10107 code.
-            $this->assertSame(self::NOT_MASTER, $e->getCode());
+            $this->assertSame(self::NOT_PRIMARY, $e->getCode());
         }
 
         // Verify that the connection pool has been cleared
@@ -248,7 +248,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         $this->assertSame($totalConnectionsCreated, $this->getTotalConnectionsCreated($cursor->getServer()));
 
         // Wait to allow primary election to complete and prevent subsequent test failures
-        $this->waitForMasterReelection();
+        $this->waitForPrimaryReelection();
     }
 
     private function insertDocuments($count)
@@ -290,7 +290,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         throw new UnexpectedValueException('Could not determine number of total connections');
     }
 
-    private function waitForMasterReelection()
+    private function waitForPrimaryReelection()
     {
         try {
             $this->insertDocuments(1);

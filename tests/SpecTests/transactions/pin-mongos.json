@@ -1106,7 +1106,8 @@
               "data": {
                 "failCommands": [
                   "insert",
-                  "isMaster"
+                  "isMaster",
+                  "hello"
                 ],
                 "closeConnection": true
               }

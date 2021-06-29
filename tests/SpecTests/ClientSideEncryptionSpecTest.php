@@ -793,7 +793,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $clientMongocryptd = static::createTestClient('mongodb://localhost:27021');
 
         $this->expectException(ConnectionTimeoutException::class);
-        $clientMongocryptd->selectDatabase('db')->command(['isMaster' => true]);
+        $clientMongocryptd->selectDatabase('db')->command(['ping' => 1]);
     }
 
     /**

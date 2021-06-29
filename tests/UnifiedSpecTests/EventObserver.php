@@ -52,6 +52,7 @@ final class EventObserver implements CommandSubscriber
         'copydbsaslstart',
         'copydb',
         'isMaster',
+        'hello',
     ];
 
     /** @var array */

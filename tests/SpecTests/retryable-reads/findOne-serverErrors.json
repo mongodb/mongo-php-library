@@ -148,7 +148,7 @@
       ]
     },
     {
-      "description": "FindOne succeeds after NotMaster",
+      "description": "FindOne succeeds after NotWritablePrimary",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -202,7 +202,7 @@
       ]
     },
     {
-      "description": "FindOne succeeds after NotMasterNoSlaveOk",
+      "description": "FindOne succeeds after NotPrimaryNoSecondaryOk",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -256,7 +256,7 @@
       ]
     },
     {
-      "description": "FindOne succeeds after NotMasterOrSecondary",
+      "description": "FindOne succeeds after NotPrimaryOrSecondary",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -634,7 +634,7 @@
       ]
     },
     {
-      "description": "FindOne fails after two NotMaster errors",
+      "description": "FindOne fails after two NotWritablePrimary errors",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -685,7 +685,7 @@
       ]
     },
     {
-      "description": "FindOne fails after NotMaster when retryReads is false",
+      "description": "FindOne fails after NotWritablePrimary when retryReads is false",
       "clientOptions": {
         "retryReads": false
       },

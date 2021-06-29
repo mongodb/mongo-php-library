@@ -133,7 +133,7 @@
       ]
     },
     {
-      "description": "db.coll.watch succeeds after NotMaster",
+      "description": "db.coll.watch succeeds after NotWritablePrimary",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -184,7 +184,7 @@
       ]
     },
     {
-      "description": "db.coll.watch succeeds after NotMasterNoSlaveOk",
+      "description": "db.coll.watch succeeds after NotPrimaryNoSecondaryOk",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -235,7 +235,7 @@
       ]
     },
     {
-      "description": "db.coll.watch succeeds after NotMasterOrSecondary",
+      "description": "db.coll.watch succeeds after NotPrimaryOrSecondary",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -592,7 +592,7 @@
       ]
     },
     {
-      "description": "db.coll.watch fails after two NotMaster errors",
+      "description": "db.coll.watch fails after two NotWritablePrimary errors",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -644,7 +644,7 @@
       ]
     },
     {
-      "description": "db.coll.watch fails after NotMaster when retryReads is false",
+      "description": "db.coll.watch fails after NotWritablePrimary when retryReads is false",
       "clientOptions": {
         "retryReads": false
       },

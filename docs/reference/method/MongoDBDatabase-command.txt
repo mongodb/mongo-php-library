@@ -43,8 +43,8 @@ Errors/Exceptions
 Example
 -------
 
-The following example executes an :manual:`isMaster
-</reference/command/isMaster>` command, which returns a cursor with a single
+The following example executes a :manual:`ping
+</reference/command/ping>` command, which returns a cursor with a single
 result document:
 
 .. code-block:: php
@@ -53,7 +53,7 @@ result document:
 
    $database = (new MongoDB\Client)->test;
 
-   $cursor = $database->command(['isMaster' => 1]);
+   $cursor = $database->command(['ping' => 1]);
 
    var_dump($c->toArray()[0]);
 
@@ -61,24 +61,7 @@ The output would resemble::
 
    object(MongoDB\Model\BSONDocument)#11 (1) {
      ["storage":"ArrayObject":private]=>
-     array(8) {
-       ["ismaster"]=>
-       bool(true)
-       ["maxBsonObjectSize"]=>
-       int(16777216)
-       ["maxMessageSizeBytes"]=>
-       int(48000000)
-       ["maxWriteBatchSize"]=>
-       int(1000)
-       ["localTime"]=>
-       object(MongoDB\BSON\UTCDateTime)#3 (1) {
-         ["milliseconds"]=>
-         string(13) "1477608046464"
-       }
-       ["maxWireVersion"]=>
-       int(4)
-       ["minWireVersion"]=>
-       int(0)
+     array(1) {
        ["ok"]=>
        float(1)
      }
@@ -94,7 +77,7 @@ multiple result documents:
 
    $database = (new MongoDB\Client)->test;
 
-   $cursor = $database->command(['isMaster' => 1]);
+   $cursor = $database->command(['listCollections' => 1]);
 
    var_dump($c->toArray());
 

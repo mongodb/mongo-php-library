@@ -39,6 +39,8 @@ class TransactionsSpecTest extends FunctionalTestCase
         'transactions/mongos-recovery-token: commitTransaction retry fails on new mongos' => 'isMaster failpoints cannot be disabled',
         'transactions/pin-mongos: remain pinned after non-transient error on commit' => 'Blocked on SPEC-1320',
         'transactions/pin-mongos: unpin after transient error within a transaction and commit' => 'isMaster failpoints cannot be disabled',
+        'transactions/errors-client: Client side error in command starting transaction' => 'PHPLIB-665',
+        'transactions/errors-client: Client side error when transaction is in progress' => 'PHPLIB-665',
     ];
 
     private function doSetUp()

@@ -29,10 +29,6 @@ set_php_version ()
 
 install_extension ()
 {
-   # Workaround to get PECL running on PHP 7.0
-   export PHP_PEAR_PHP_BIN=${PHP_PATH}/bin/php
-   export PHP_PEAR_INSTALL_DIR=${PHP_PATH}/lib/php
-
    rm -f ${PHP_PATH}/lib/php.ini
 
    if [ "x${EXTENSION_BRANCH}" != "x" ] || [ "x${EXTENSION_REPO}" != "x" ]; then

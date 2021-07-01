@@ -9,7 +9,7 @@
         { "name": "Jeremy Mikola", "email": "jmikola@gmail.com" }
     ],
     "require": {
-        "php": "^7.0 || ^8.0",
+        "php": "^7.1 || ^8.0",
         "ext-hash": "*",
         "ext-json": "*",
         "ext-mongodb": "^1.10.0",

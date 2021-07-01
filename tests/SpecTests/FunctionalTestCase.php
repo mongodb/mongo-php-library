@@ -10,7 +10,6 @@ use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
 use MultipleIterator;
 use PHPUnit\Framework\SkippedTest;
 use stdClass;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use UnexpectedValueException;
 use function in_array;
 use function json_encode;
@@ -26,8 +25,6 @@ use function version_compare;
  */
 class FunctionalTestCase extends BaseFunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     const TOPOLOGY_SINGLE = 'single';
     const TOPOLOGY_REPLICASET = 'replicaset';
     const TOPOLOGY_SHARDED = 'sharded';
@@ -35,14 +32,14 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     /** @var Context|null */
     private $context;
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 
         $this->context = null;
     }
 
-    private function doTearDown()
+    public function tearDown() : void
     {
         $this->context = null;
 

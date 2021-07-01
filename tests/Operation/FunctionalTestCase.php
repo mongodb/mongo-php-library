@@ -5,23 +5,20 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 
 /**
  * Base class for Operation functional tests.
  */
 abstract class FunctionalTestCase extends BaseFunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 
         $this->dropCollection();
     }
 
-    private function doTearDown()
+    public function tearDown() : void
     {
         if ($this->hasFailed()) {
             return;

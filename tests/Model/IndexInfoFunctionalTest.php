@@ -4,17 +4,14 @@ namespace MongoDB\Tests\Model;
 
 use MongoDB\Collection;
 use MongoDB\Tests\FunctionalTestCase;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function version_compare;
 
 class IndexInfoFunctionalTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     /** @var Collection */
     private $collection;
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -22,7 +19,7 @@ class IndexInfoFunctionalTest extends FunctionalTestCase
         $this->collection->drop();
     }
 
-    private function doTearDown()
+    public function tearDown() : void
     {
         if ($this->hasFailed()) {
             return;

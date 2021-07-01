@@ -9,7 +9,6 @@ use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\Exception;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function in_array;
 use function ob_end_clean;
 use function ob_start;
@@ -25,16 +24,14 @@ use function version_compare;
  */
 class DocumentationExamplesTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 
         $this->dropCollection();
     }
 
-    private function doTearDown()
+    public function tearDown() : void
     {
         if ($this->hasFailed()) {
             return;

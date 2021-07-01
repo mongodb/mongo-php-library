@@ -14,7 +14,6 @@ use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\UpdateResult;
 use MultipleIterator;
 use PHPUnit_Framework_SkippedTestError;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function array_diff_key;
 use function array_key_exists;
 use function array_map;
@@ -36,12 +35,10 @@ use function version_compare;
  */
 class CrudSpecFunctionalTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     /** @var Collection */
     private $expectedCollection;
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

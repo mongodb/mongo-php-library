@@ -21,7 +21,6 @@ use MongoDB\Tests\CommandObserver;
 use PHPUnit\Framework\ExpectationFailedException;
 use ReflectionClass;
 use stdClass;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function array_diff_key;
 use function array_map;
 use function bin2hex;
@@ -37,8 +36,6 @@ use function version_compare;
  */
 class WatchFunctionalTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     const INTERRUPTED = 11601;
     const NOT_PRIMARY = 10107;
 
@@ -48,7 +45,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     /** @var array */
     private $defaultOptions = ['maxAwaitTimeMS' => 500];
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

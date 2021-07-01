@@ -8,7 +8,6 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\Session;
 use MongoDB\Model\DatabaseInfo;
 use MongoDB\Model\DatabaseInfoIterator;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function call_user_func;
 use function is_callable;
 use function sprintf;
@@ -19,12 +18,10 @@ use function version_compare;
  */
 class ClientFunctionalTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     /** @var Client */
     private $client;
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

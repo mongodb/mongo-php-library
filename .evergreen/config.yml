@@ -400,10 +400,6 @@ axes:
         display_name: "7.1"
         variables:
           PHP_VERSION: "7.1.31"
-      - id: "7.0"
-        display_name: "7.0"
-        variables:
-          PHP_VERSION: "7.0.32"
 
   - id: php-edge-versions
     display_name: PHP Version
@@ -413,9 +409,9 @@ axes:
         variables:
           PHP_VERSION: "7.4.7"
       - id: "oldest-supported"
-        display_name: "7.0"
+        display_name: "7.1"
         variables:
-          PHP_VERSION: "7.0.32"
+          PHP_VERSION: "7.1.31"
 
   - id: versions
     display_name: MongoDB Version

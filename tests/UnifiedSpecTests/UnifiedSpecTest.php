@@ -7,7 +7,6 @@ use Generator;
 use MongoDB\Tests\FunctionalTestCase;
 use PHPUnit\Framework\SkippedTest;
 use PHPUnit\Framework\Warning;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function basename;
 use function dirname;
 use function glob;
@@ -19,8 +18,6 @@ use function glob;
  */
 class UnifiedSpecTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     /** @var array */
     private static $incompleteTests = [
         // PHPLIB-573 and DRIVERS-1340
@@ -111,7 +108,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /** @var UnifiedTestRunner */
     private static $runner;
 
-    private static function doSetUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         parent::setUpBeforeClass();
 
@@ -120,7 +117,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner = new UnifiedTestRunner(static::getUri(true));
     }
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

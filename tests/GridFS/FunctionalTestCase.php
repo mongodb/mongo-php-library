@@ -5,7 +5,6 @@ namespace MongoDB\Tests\GridFS;
 use MongoDB\Collection;
 use MongoDB\GridFS\Bucket;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function fopen;
 use function fwrite;
 use function get_resource_type;
@@ -17,8 +16,6 @@ use function stream_get_contents;
  */
 abstract class FunctionalTestCase extends BaseFunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     /** @var Bucket */
     protected $bucket;
 
@@ -28,7 +25,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     /** @var Collection */
     protected $filesCollection;
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

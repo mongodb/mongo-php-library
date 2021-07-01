@@ -4,7 +4,6 @@ namespace MongoDB\Tests\GridFS;
 
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\UTCDateTime;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function fclose;
 use function feof;
 use function fread;
@@ -20,9 +19,7 @@ use const SEEK_SET;
  */
 class StreamWrapperFunctionalTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

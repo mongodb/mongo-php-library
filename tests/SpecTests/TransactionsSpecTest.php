@@ -9,7 +9,6 @@ use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use stdClass;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function array_unique;
 use function basename;
 use function count;
@@ -25,8 +24,6 @@ use function glob;
  */
 class TransactionsSpecTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     const INTERRUPTED = 11601;
 
     /**
@@ -43,7 +40,7 @@ class TransactionsSpecTest extends FunctionalTestCase
         'transactions/errors-client: Client side error when transaction is in progress' => 'PHPLIB-665',
     ];
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -52,7 +49,7 @@ class TransactionsSpecTest extends FunctionalTestCase
         $this->skipIfTransactionsAreNotSupported();
     }
 
-    private function doTearDown()
+    public function tearDown() : void
     {
         if ($this->hasFailed()) {
             static::killAllSessions();

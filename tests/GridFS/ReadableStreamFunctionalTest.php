@@ -8,7 +8,6 @@ use MongoDB\GridFS\CollectionWrapper;
 use MongoDB\GridFS\Exception\CorruptFileException;
 use MongoDB\GridFS\ReadableStream;
 use MongoDB\Tests\CommandObserver;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function array_filter;
 
 /**
@@ -16,12 +15,10 @@ use function array_filter;
  */
 class ReadableStreamFunctionalTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     /** @var CollectionWrapper */
     private $collectionWrapper;
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

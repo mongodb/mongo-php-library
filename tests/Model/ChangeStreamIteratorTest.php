@@ -11,18 +11,15 @@ use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\FunctionalTestCase;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function array_merge;
 use function sprintf;
 
 class ChangeStreamIteratorTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     /** @var Collection */
     private $collection;
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

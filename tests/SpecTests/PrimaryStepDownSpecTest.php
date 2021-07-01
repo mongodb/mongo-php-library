@@ -12,7 +12,6 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\BulkWrite;
 use MongoDB\Tests\CommandObserver;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use UnexpectedValueException;
 use function current;
 use function sprintf;
@@ -22,8 +21,6 @@ use function sprintf;
  */
 class PrimaryStepDownSpecTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     const INTERRUPTED_AT_SHUTDOWN = 11600;
     const NOT_PRIMARY = 10107;
     const SHUTDOWN_IN_PROGRESS = 91;
@@ -34,7 +31,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
     /** @var Collection */
     private $collection;
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

@@ -6,7 +6,6 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function basename;
 use function current;
 use function explode;
@@ -21,9 +20,7 @@ use function parse_url;
  */
 class AtlasDataLakeSpecTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

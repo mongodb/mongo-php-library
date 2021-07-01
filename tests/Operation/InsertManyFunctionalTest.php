@@ -10,17 +10,14 @@ use MongoDB\InsertManyResult;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\CommandObserver;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function version_compare;
 
 class InsertManyFunctionalTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     /** @var Collection */
     private $collection;
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

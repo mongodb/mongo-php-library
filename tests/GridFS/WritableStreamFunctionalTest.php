@@ -5,7 +5,6 @@ namespace MongoDB\Tests\GridFS;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\CollectionWrapper;
 use MongoDB\GridFS\WritableStream;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function str_repeat;
 
 /**
@@ -13,12 +12,10 @@ use function str_repeat;
  */
 class WritableStreamFunctionalTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     /** @var CollectionWrapper */
     private $collectionWrapper;
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

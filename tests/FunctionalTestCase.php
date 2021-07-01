@@ -17,7 +17,6 @@ use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
 use stdClass;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use UnexpectedValueException;
 use function array_merge;
 use function count;
@@ -42,15 +41,13 @@ use const INFO_MODULES;
 
 abstract class FunctionalTestCase extends TestCase
 {
-    use SetUpTearDownTrait;
-
     /** @var Manager */
     protected $manager;
 
     /** @var array */
     private $configuredFailPoints = [];
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -58,7 +55,7 @@ abstract class FunctionalTestCase extends TestCase
         $this->configuredFailPoints = [];
     }
 
-    private function doTearDown()
+    public function tearDown() : void
     {
         $this->disableFailPoints();
 

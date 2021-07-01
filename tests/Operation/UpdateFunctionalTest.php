@@ -10,17 +10,14 @@ use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Operation\Update;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\UpdateResult;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function version_compare;
 
 class UpdateFunctionalTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     /** @var Collection */
     private $collection;
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

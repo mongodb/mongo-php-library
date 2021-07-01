@@ -9,17 +9,14 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Operation\Delete;
 use MongoDB\Tests\CommandObserver;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use function version_compare;
 
 class DeleteFunctionalTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     /** @var Collection */
     private $collection;
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

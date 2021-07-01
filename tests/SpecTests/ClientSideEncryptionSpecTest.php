@@ -18,7 +18,6 @@ use MongoDB\Operation\CreateCollection;
 use MongoDB\Tests\CommandObserver;
 use PHPUnit\Framework\SkippedTestError;
 use stdClass;
-use Symfony\Bridge\PhpUnit\SetUpTearDownTrait;
 use Throwable;
 use UnexpectedValueException;
 use function base64_decode;
@@ -40,11 +39,9 @@ use function unserialize;
  */
 class ClientSideEncryptionSpecTest extends FunctionalTestCase
 {
-    use SetUpTearDownTrait;
-
     const LOCAL_MASTERKEY = 'Mng0NCt4ZHVUYUJCa1kxNkVyNUR1QURhZ2h2UzR2d2RrZzh0cFBwM3R6NmdWMDFBMUN3YkQ5aXRRMkhGRGdQV09wOGVNYUMxT2k3NjZKelhaQmRCZGJkTXVyZG9uSjFk';
 
-    private function doSetUp()
+    public function setUp() : void
     {
         parent::setUp();
 

@@ -413,7 +413,7 @@ class Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function listCollectionNames(array $options = []) : Iterator
+    public function listCollectionNames(array $options = []): Iterator
     {
         $operation = new ListCollectionNames($this->databaseName, $options);
         $server = select_server($this->manager, $options);

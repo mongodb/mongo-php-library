@@ -165,7 +165,7 @@ final class Loop
         ]);
     }
 
-    private function initializeListEntity(string $id) : BSONArray
+    private function initializeListEntity(string $id): BSONArray
     {
         $entityMap = $this->context->getEntityMap();
 

@@ -122,17 +122,17 @@ final class Context
         }
     }
 
-    public function getEntityMap() : EntityMap
+    public function getEntityMap(): EntityMap
     {
         return $this->entityMap;
     }
 
-    public function getInternalClient() : Client
+    public function getInternalClient(): Client
     {
         return $this->internalClient;
     }
 
-    public function isDirtySession(string $sessionId) : bool
+    public function isDirtySession(string $sessionId): bool
     {
         return in_array($sessionId, $this->dirtySessions);
     }
@@ -146,7 +146,7 @@ final class Context
         $this->dirtySessions[] = $sessionId;
     }
 
-    public function isActiveClient(string $clientId) : bool
+    public function isActiveClient(string $clientId): bool
     {
         return $this->activeClient === $clientId;
     }
@@ -156,7 +156,7 @@ final class Context
         $this->activeClient = $clientId;
     }
 
-    public function isInLoop() : bool
+    public function isInLoop(): bool
     {
         return $this->inLoop;
     }
@@ -203,7 +203,7 @@ final class Context
         }
     }
 
-    public function getEventObserverForClient(string $id) : EventObserver
+    public function getEventObserverForClient(string $id): EventObserver
     {
         assertArrayHasKey($id, $this->eventObserversByClient);
 
@@ -225,14 +225,14 @@ final class Context
     }
 
     /** @param string|array $readPreferenceTags */
-    private function convertReadPreferenceTags($readPreferenceTags) : array
+    private function convertReadPreferenceTags($readPreferenceTags): array
     {
         return array_map(
-            static function (string $readPreferenceTagSet) : array {
+            static function (string $readPreferenceTagSet): array {
                 $tags = explode(',', $readPreferenceTagSet);
 
                 return array_map(
-                    static function (string $tag) : array {
+                    static function (string $tag): array {
                         list($key, $value) = explode(':', $tag);
 
                         return [$key => $value];
@@ -411,14 +411,14 @@ final class Context
         $this->entityMap->set($id, $database->selectGridFSBucket($options), $databaseId);
     }
 
-    private static function prepareCollectionOrDatabaseOptions(array $options) : array
+    private static function prepareCollectionOrDatabaseOptions(array $options): array
     {
         Util::assertHasOnlyKeys($options, ['readConcern', 'readPreference', 'writeConcern']);
 
         return Util::prepareCommonOptions($options);
     }
 
-    private static function prepareBucketOptions(array $options) : array
+    private static function prepareBucketOptions(array $options): array
     {
         Util::assertHasOnlyKeys($options, ['bucketName', 'chunkSizeBytes', 'disableMD5', 'readConcern', 'readPreference', 'writeConcern']);
 
@@ -437,7 +437,7 @@ final class Context
         return Util::prepareCommonOptions($options);
     }
 
-    private static function prepareSessionOptions(array $options) : array
+    private static function prepareSessionOptions(array $options): array
     {
         Util::assertHasOnlyKeys($options, ['causalConsistency', 'defaultTransactionOptions']);
 
@@ -453,7 +453,7 @@ final class Context
         return $options;
     }
 
-    private static function prepareDefaultTransactionOptions(array $options) : array
+    private static function prepareDefaultTransactionOptions(array $options): array
     {
         Util::assertHasOnlyKeys($options, ['maxCommitTimeMS', 'readConcern', 'readPreference', 'writeConcern']);
 
@@ -468,7 +468,7 @@ final class Context
      * Removes mongos hosts beyond the first if the URI refers to a sharded
      * cluster. Otherwise, the URI is returned as-is.
      */
-    private static function removeMultipleMongoses(string $uri) : string
+    private static function removeMultipleMongoses(string $uri): string
     {
         assertStringStartsWith('mongodb://', $uri);
 

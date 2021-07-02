@@ -155,7 +155,7 @@ final class EventCollector implements CommandSubscriber
     }
 
     /** @param CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event */
-    private static function getConnectionId($event) : string
+    private static function getConnectionId($event): string
     {
         $server = $event->getServer();
 
@@ -163,7 +163,7 @@ final class EventCollector implements CommandSubscriber
     }
 
     /** @param object $event */
-    private static function getEventName($event) : string
+    private static function getEventName($event): string
     {
         static $eventNamesByClass = null;
 

@@ -11,7 +11,7 @@ class IndexInfoFunctionalTest extends FunctionalTestCase
     /** @var Collection */
     private $collection;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -19,7 +19,7 @@ class IndexInfoFunctionalTest extends FunctionalTestCase
         $this->collection->drop();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         if ($this->hasFailed()) {
             return;

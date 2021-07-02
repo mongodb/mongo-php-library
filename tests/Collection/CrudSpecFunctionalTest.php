@@ -38,7 +38,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     /** @var Collection */
     private $expectedCollection;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

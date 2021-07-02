@@ -767,7 +767,7 @@ final class Operation
         }
     }
 
-    private function getIndexNames(string $databaseName, string $collectionName) : array
+    private function getIndexNames(string $databaseName, string $collectionName): array
     {
         return array_map(
             function (IndexInfo $indexInfo) {
@@ -777,7 +777,7 @@ final class Operation
         );
     }
 
-    private function prepareArguments() : array
+    private function prepareArguments(): array
     {
         $args = $this->arguments;
 
@@ -795,7 +795,7 @@ final class Operation
         return Util::prepareCommonOptions($args);
     }
 
-    private static function prepareBulkWriteRequest(stdClass $request) : array
+    private static function prepareBulkWriteRequest(stdClass $request): array
     {
         $request = (array) $request;
         assertCount(1, $request);
@@ -853,7 +853,7 @@ final class Operation
         }
     }
 
-    private static function prepareUploadArguments(array $args) : array
+    private static function prepareUploadArguments(array $args): array
     {
         $source = $args['source'] ?? null;
         assertIsObject($source);

@@ -45,7 +45,7 @@ class WatchFunctionalTest extends FunctionalTestCase
     /** @var array */
     private $defaultOptions = ['maxAwaitTimeMS' => 500];
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

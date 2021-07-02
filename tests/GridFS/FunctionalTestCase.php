@@ -25,7 +25,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     /** @var Collection */
     protected $filesCollection;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

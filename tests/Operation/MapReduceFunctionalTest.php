@@ -322,9 +322,9 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $this->assertEquals($n * 2, $result->getInsertedCount());
     }
 
-    private function sortResults(array $results) : array
+    private function sortResults(array $results): array
     {
-        $sortFunction = static function ($resultA, $resultB) : int {
+        $sortFunction = static function ($resultA, $resultB): int {
             $idA = is_object($resultA) ? $resultA->_id : $resultA['_id'];
             $idB = is_object($resultB) ? $resultB->_id : $resultB['_id'];
 

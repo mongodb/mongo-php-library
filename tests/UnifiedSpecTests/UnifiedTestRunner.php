@@ -252,14 +252,14 @@ final class UnifiedTestRunner
         ));
     }
 
-    private function getPrimaryServer() : Server
+    private function getPrimaryServer(): Server
     {
         $manager = $this->internalClient->getManager();
 
         return $manager->selectServer(new ReadPreference(ReadPreference::PRIMARY));
     }
 
-    private function getServerParameters() : stdClass
+    private function getServerParameters(): stdClass
     {
         $database = $this->internalClient->selectDatabase('admin');
         $cursor = $database->command(
@@ -277,7 +277,7 @@ final class UnifiedTestRunner
         return $cursor->toArray()[0];
     }
 
-    private function getServerVersion() : string
+    private function getServerVersion(): string
     {
         $database = $this->internalClient->selectDatabase('admin');
         $buildInfo = $database->command(['buildInfo' => 1])->toArray()[0];
@@ -294,7 +294,7 @@ final class UnifiedTestRunner
      *
      * @throws UnexpectedValueException if topology is neither single nor RS nor sharded
      */
-    private function getTopology() : string
+    private function getTopology(): string
     {
         // TODO: detect load-balanced topologies once PHPLIB-671 is implemented
         switch ($this->getPrimaryServer()->getType()) {
@@ -318,7 +318,7 @@ final class UnifiedTestRunner
      * may be necessary to rewrite this to instead inspect the connection string
      * or consult an environment variable, as is done in libmongoc.
      */
-    private function isAuthenticated() : bool
+    private function isAuthenticated(): bool
     {
         $database = $this->internalClient->selectDatabase('admin');
         $connectionStatus = $database->command(['connectionStatus' => 1])->toArray()[0];
@@ -333,7 +333,7 @@ final class UnifiedTestRunner
     /**
      * Return whether serverless (i.e. proxy as mongos) is being utilized.
      */
-    private function isServerless() : bool
+    private function isServerless(): bool
     {
         // TODO: detect serverless once PHPC-1755 is implemented
         return false;
@@ -342,12 +342,12 @@ final class UnifiedTestRunner
     /**
      * Checks is a test format schema version is supported.
      */
-    private function isSchemaVersionSupported(string $schemaVersion) : bool
+    private function isSchemaVersionSupported(string $schemaVersion): bool
     {
         return version_compare($schemaVersion, self::MIN_SCHEMA_VERSION, '>=') && version_compare($schemaVersion, self::MAX_SCHEMA_VERSION, '<=');
     }
 
-    private function isShardedClusterUsingReplicasets() : bool
+    private function isShardedClusterUsingReplicasets(): bool
     {
         $collection = $this->internalClient->selectCollection('config', 'shards');
         $config = $collection->findOne();

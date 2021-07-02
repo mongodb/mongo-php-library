@@ -17,7 +17,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
     /** @var Collection */
     private $collection;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

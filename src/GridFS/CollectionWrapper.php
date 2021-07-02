@@ -342,7 +342,7 @@ class CollectionWrapper
         $this->ensureChunksIndex();
     }
 
-    private function indexKeysMatch(array $expectedKeys, array $actualKeys) : bool
+    private function indexKeysMatch(array $expectedKeys, array $actualKeys): bool
     {
         if (count($expectedKeys) !== count($actualKeys)) {
             return false;

@@ -24,14 +24,14 @@ use function version_compare;
  */
 class DocumentationExamplesTest extends FunctionalTestCase
 {
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->dropCollection();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         if ($this->hasFailed()) {
             return;

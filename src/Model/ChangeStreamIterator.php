@@ -160,7 +160,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     /**
      * Returns the server the cursor is running on.
      */
-    public function getServer() : Server
+    public function getServer(): Server
     {
         return $this->server;
     }

@@ -117,7 +117,7 @@ class EntityMap implements ArrayAccess
                 $this->parent = $parent;
             }
 
-            public function getRoot() : self
+            public function getRoot(): self
             {
                 $root = $this;
 
@@ -141,27 +141,27 @@ class EntityMap implements ArrayAccess
         unset($this->map[$cursorId]);
     }
 
-    public function getClient(string $clientId) : Client
+    public function getClient(string $clientId): Client
     {
         return $this[$clientId];
     }
 
-    public function getCollection(string $collectionId) : Collection
+    public function getCollection(string $collectionId): Collection
     {
         return $this[$collectionId];
     }
 
-    public function getDatabase(string $databaseId) : Database
+    public function getDatabase(string $databaseId): Database
     {
         return $this[$databaseId];
     }
 
-    public function getSession(string $sessionId) : Session
+    public function getSession(string $sessionId): Session
     {
         return $this[$sessionId];
     }
 
-    public function getLogicalSessionId(string $sessionId) : stdClass
+    public function getLogicalSessionId(string $sessionId): stdClass
     {
         return $this->lsidsBySession[$sessionId];
     }
@@ -173,7 +173,7 @@ class EntityMap implements ArrayAccess
         return $root->value instanceof Client ? $root->id : null;
     }
 
-    private static function isSupportedType() : Constraint
+    private static function isSupportedType(): Constraint
     {
         if (self::$isSupportedType === null) {
             self::$isSupportedType = logicalOr(

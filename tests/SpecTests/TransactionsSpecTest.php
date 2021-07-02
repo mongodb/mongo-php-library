@@ -38,7 +38,7 @@ class TransactionsSpecTest extends FunctionalTestCase
         'transactions/pin-mongos: unpin after transient error within a transaction and commit' => 'isMaster failpoints cannot be disabled',
     ];
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -47,7 +47,7 @@ class TransactionsSpecTest extends FunctionalTestCase
         $this->skipIfTransactionsAreNotSupported();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         if ($this->hasFailed()) {
             static::killAllSessions();

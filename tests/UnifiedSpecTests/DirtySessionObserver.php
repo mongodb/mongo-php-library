@@ -66,7 +66,7 @@ class DirtySessionObserver implements CommandSubscriber
     {
     }
 
-    public function observedNetworkError() : bool
+    public function observedNetworkError(): bool
     {
         return $this->observedNetworkError;
     }

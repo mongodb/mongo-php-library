@@ -335,7 +335,7 @@ class Aggregate implements Executable, Explainable
         return $this->createCommandDocument($server, $this->hasWriteStage());
     }
 
-    private function createCommandDocument(Server $server, bool $hasWriteStage) : array
+    private function createCommandDocument(Server $server, bool $hasWriteStage): array
     {
         $cmd = [
             'aggregate' => $this->collectionName ?? 1,
@@ -378,7 +378,7 @@ class Aggregate implements Executable, Explainable
         return $cmd;
     }
 
-    private function createCommandOptions() : array
+    private function createCommandOptions(): array
     {
         $cmdOptions = [];
 
@@ -421,7 +421,7 @@ class Aggregate implements Executable, Explainable
         return $options;
     }
 
-    private function hasWriteStage() : bool
+    private function hasWriteStage(): bool
     {
         return is_last_pipeline_operator_write($this->pipeline);
     }

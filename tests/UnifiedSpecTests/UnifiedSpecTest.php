@@ -52,7 +52,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /** @var UnifiedTestRunner */
     private static $runner;
 
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -61,7 +61,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner = new UnifiedTestRunner(static::getUri(true));
     }
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -196,7 +196,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         yield from $this->provideTests(__DIR__ . '/valid-fail/*.json');
     }
 
-    private function provideTests(string $pattern) : Generator
+    private function provideTests(string $pattern): Generator
     {
         foreach (glob($pattern) as $filename) {
             $group = basename(dirname($filename));

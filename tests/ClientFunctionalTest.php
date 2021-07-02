@@ -21,7 +21,7 @@ class ClientFunctionalTest extends FunctionalTestCase
     /** @var Client */
     private $client;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

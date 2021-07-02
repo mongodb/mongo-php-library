@@ -19,7 +19,7 @@ use const SEEK_SET;
  */
 class StreamWrapperFunctionalTest extends FunctionalTestCase
 {
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -354,7 +354,7 @@ class Matches extends Constraint
         throw new RuntimeException($prefix . $message);
     }
 
-    private static function getOperatorName(BSONDocument $document) : string
+    private static function getOperatorName(BSONDocument $document): string
     {
         foreach ($document as $key => $_) {
             if (strpos((string) $key, '$$') === 0) {
@@ -370,7 +370,7 @@ class Matches extends Constraint
         return is_int($value) || is_float($value) || $value instanceof Int64;
     }
 
-    private static function isOperator(BSONDocument $document) : bool
+    private static function isOperator(BSONDocument $document): bool
     {
         if (count($document) !== 1) {
             return false;
@@ -442,7 +442,7 @@ class Matches extends Constraint
         return $bson;
     }
 
-    private static function isArrayEmptyOrIndexed(array $a) : bool
+    private static function isArrayEmptyOrIndexed(array $a): bool
     {
         if (empty($a)) {
             return true;

@@ -68,7 +68,7 @@ final class UnifiedTestCase implements IteratorAggregate
     /**
      * Yields UnifiedTestCase objects for a JSON file.
      */
-    public static function fromFile(string $filename) : Generator
+    public static function fromFile(string $filename): Generator
     {
         /* Decode the file through the driver's extended JSON parser to ensure
          * proper handling of special types. */
@@ -83,7 +83,7 @@ final class UnifiedTestCase implements IteratorAggregate
      * The top-level and test-level "description" fields will be concatenated
      * and used as the key for each yielded value.
      */
-    public static function fromJSON(stdClass $json) : Generator
+    public static function fromJSON(stdClass $json): Generator
     {
         $description = $json->description;
         $schemaVersion = $json->schemaVersion;

@@ -342,7 +342,7 @@ class FindAndModify implements Executable, Explainable
         return $options;
     }
 
-    private function isAcknowledgedWriteConcern() : bool
+    private function isAcknowledgedWriteConcern(): bool
     {
         if (! isset($this->options['writeConcern'])) {
             return true;
@@ -351,7 +351,7 @@ class FindAndModify implements Executable, Explainable
         return $this->options['writeConcern']->getW() > 1 || $this->options['writeConcern']->getJournal();
     }
 
-    private function isHintSupported(Server $server) : bool
+    private function isHintSupported(Server $server): bool
     {
         $requiredWireVersion = $this->isAcknowledgedWriteConcern() ? self::$wireVersionForHintServerSideError : self::$wireVersionForHint;
 

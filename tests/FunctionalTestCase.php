@@ -47,7 +47,7 @@ abstract class FunctionalTestCase extends TestCase
     /** @var array */
     private $configuredFailPoints = [];
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -55,19 +55,19 @@ abstract class FunctionalTestCase extends TestCase
         $this->configuredFailPoints = [];
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         $this->disableFailPoints();
 
         parent::tearDown();
     }
 
-    public static function createTestClient(string $uri = null, array $options = [], array $driverOptions = []) : Client
+    public static function createTestClient(string $uri = null, array $options = [], array $driverOptions = []): Client
     {
         return new Client($uri ?? static::getUri(), $options, static::appendServerApiOption($driverOptions));
     }
 
-    public static function createTestManager(string $uri = null, array $options = [], array $driverOptions = []) : Manager
+    public static function createTestManager(string $uri = null, array $options = [], array $driverOptions = []): Manager
     {
         return new Manager($uri ?? static::getUri(), $options, static::appendServerApiOption($driverOptions));
     }
@@ -435,7 +435,7 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
-    private static function appendServerApiOption(array $driverOptions) : array
+    private static function appendServerApiOption(array $driverOptions): array
     {
         if (getenv('API_VERSION') && ! isset($driverOptions['serverApi'])) {
             $driverOptions['serverApi'] = new ServerApi(getenv('API_VERSION'));

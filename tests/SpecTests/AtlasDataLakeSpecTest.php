@@ -20,7 +20,7 @@ use function parse_url;
  */
 class AtlasDataLakeSpecTest extends FunctionalTestCase
 {
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -232,7 +232,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
         $this->assertCommandSucceeded(current($cursor->toArray()));
     }
 
-    private function isAtlasDataLake() : bool
+    private function isAtlasDataLake(): bool
     {
         $cursor = $this->manager->executeCommand(
             $this->getDatabaseName(),

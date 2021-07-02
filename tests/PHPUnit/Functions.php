@@ -2292,301 +2292,301 @@ if (! function_exists('PHPUnit\Framework\assertJsonFileNotEqualsJsonFile')) {
 }
 
 if (! function_exists('PHPUnit\Framework\logicalAnd')) {
-    function logicalAnd() : LogicalAnd
+    function logicalAnd(): LogicalAnd
     {
         return Assert::logicalAnd(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\logicalOr')) {
-    function logicalOr() : LogicalOr
+    function logicalOr(): LogicalOr
     {
         return Assert::logicalOr(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\logicalNot')) {
-    function logicalNot(Constraint $constraint) : LogicalNot
+    function logicalNot(Constraint $constraint): LogicalNot
     {
         return Assert::logicalNot(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\logicalXor')) {
-    function logicalXor() : LogicalXor
+    function logicalXor(): LogicalXor
     {
         return Assert::logicalXor(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\anything')) {
-    function anything() : IsAnything
+    function anything(): IsAnything
     {
         return Assert::anything(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\isTrue')) {
-    function isTrue() : IsTrue
+    function isTrue(): IsTrue
     {
         return Assert::isTrue(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\callback')) {
-    function callback(callable $callback) : Callback
+    function callback(callable $callback): Callback
     {
         return Assert::callback(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\isFalse')) {
-    function isFalse() : IsFalse
+    function isFalse(): IsFalse
     {
         return Assert::isFalse(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\isJson')) {
-    function isJson() : IsJson
+    function isJson(): IsJson
     {
         return Assert::isJson(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\isNull')) {
-    function isNull() : IsNull
+    function isNull(): IsNull
     {
         return Assert::isNull(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\isFinite')) {
-    function isFinite() : IsFinite
+    function isFinite(): IsFinite
     {
         return Assert::isFinite(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\isInfinite')) {
-    function isInfinite() : IsInfinite
+    function isInfinite(): IsInfinite
     {
         return Assert::isInfinite(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\isNan')) {
-    function isNan() : IsNan
+    function isNan(): IsNan
     {
         return Assert::isNan(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\containsEqual')) {
-    function containsEqual($value) : TraversableContainsEqual
+    function containsEqual($value): TraversableContainsEqual
     {
         return Assert::containsEqual(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\containsIdentical')) {
-    function containsIdentical($value) : TraversableContainsIdentical
+    function containsIdentical($value): TraversableContainsIdentical
     {
         return Assert::containsIdentical(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\containsOnly')) {
-    function containsOnly(string $type) : TraversableContainsOnly
+    function containsOnly(string $type): TraversableContainsOnly
     {
         return Assert::containsOnly(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\containsOnlyInstancesOf')) {
-    function containsOnlyInstancesOf(string $className) : TraversableContainsOnly
+    function containsOnlyInstancesOf(string $className): TraversableContainsOnly
     {
         return Assert::containsOnlyInstancesOf(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\arrayHasKey')) {
-    function arrayHasKey($key) : ArrayHasKey
+    function arrayHasKey($key): ArrayHasKey
     {
         return Assert::arrayHasKey(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\equalTo')) {
-    function equalTo($value) : IsEqual
+    function equalTo($value): IsEqual
     {
         return Assert::equalTo(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\equalToCanonicalizing')) {
-    function equalToCanonicalizing($value) : IsEqualCanonicalizing
+    function equalToCanonicalizing($value): IsEqualCanonicalizing
     {
         return Assert::equalToCanonicalizing(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\equalToIgnoringCase')) {
-    function equalToIgnoringCase($value) : IsEqualIgnoringCase
+    function equalToIgnoringCase($value): IsEqualIgnoringCase
     {
         return Assert::equalToIgnoringCase(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\equalToWithDelta')) {
-    function equalToWithDelta($value, float $delta) : IsEqualWithDelta
+    function equalToWithDelta($value, float $delta): IsEqualWithDelta
     {
         return Assert::equalToWithDelta(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\isEmpty')) {
-    function isEmpty() : IsEmpty
+    function isEmpty(): IsEmpty
     {
         return Assert::isEmpty(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\isWritable')) {
-    function isWritable() : IsWritable
+    function isWritable(): IsWritable
     {
         return Assert::isWritable(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\isReadable')) {
-    function isReadable() : IsReadable
+    function isReadable(): IsReadable
     {
         return Assert::isReadable(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\directoryExists')) {
-    function directoryExists() : DirectoryExists
+    function directoryExists(): DirectoryExists
     {
         return Assert::directoryExists(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\fileExists')) {
-    function fileExists() : FileExists
+    function fileExists(): FileExists
     {
         return Assert::fileExists(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\greaterThan')) {
-    function greaterThan($value) : GreaterThan
+    function greaterThan($value): GreaterThan
     {
         return Assert::greaterThan(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\greaterThanOrEqual')) {
-    function greaterThanOrEqual($value) : LogicalOr
+    function greaterThanOrEqual($value): LogicalOr
     {
         return Assert::greaterThanOrEqual(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\classHasAttribute')) {
-    function classHasAttribute(string $attributeName) : ClassHasAttribute
+    function classHasAttribute(string $attributeName): ClassHasAttribute
     {
         return Assert::classHasAttribute(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\classHasStaticAttribute')) {
-    function classHasStaticAttribute(string $attributeName) : ClassHasStaticAttribute
+    function classHasStaticAttribute(string $attributeName): ClassHasStaticAttribute
     {
         return Assert::classHasStaticAttribute(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\objectHasAttribute')) {
-    function objectHasAttribute($attributeName) : ObjectHasAttribute
+    function objectHasAttribute($attributeName): ObjectHasAttribute
     {
         return Assert::objectHasAttribute(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\identicalTo')) {
-    function identicalTo($value) : IsIdentical
+    function identicalTo($value): IsIdentical
     {
         return Assert::identicalTo(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\isInstanceOf')) {
-    function isInstanceOf(string $className) : IsInstanceOf
+    function isInstanceOf(string $className): IsInstanceOf
     {
         return Assert::isInstanceOf(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\isType')) {
-    function isType(string $type) : IsType
+    function isType(string $type): IsType
     {
         return Assert::isType(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\lessThan')) {
-    function lessThan($value) : LessThan
+    function lessThan($value): LessThan
     {
         return Assert::lessThan(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\lessThanOrEqual')) {
-    function lessThanOrEqual($value) : LogicalOr
+    function lessThanOrEqual($value): LogicalOr
     {
         return Assert::lessThanOrEqual(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\matchesRegularExpression')) {
-    function matchesRegularExpression(string $pattern) : RegularExpression
+    function matchesRegularExpression(string $pattern): RegularExpression
     {
         return Assert::matchesRegularExpression(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\matches')) {
-    function matches(string $string) : StringMatchesFormatDescription
+    function matches(string $string): StringMatchesFormatDescription
     {
         return Assert::matches(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\stringStartsWith')) {
-    function stringStartsWith($prefix) : StringStartsWith
+    function stringStartsWith($prefix): StringStartsWith
     {
         return Assert::stringStartsWith(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\stringContains')) {
-    function stringContains(string $string, bool $case = true) : StringContains
+    function stringContains(string $string, bool $case = true): StringContains
     {
         return Assert::stringContains(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\stringEndsWith')) {
-    function stringEndsWith(string $suffix) : StringEndsWith
+    function stringEndsWith(string $suffix): StringEndsWith
     {
         return Assert::stringEndsWith(...func_get_args());
     }
 }
 
 if (! function_exists('PHPUnit\Framework\countOf')) {
-    function countOf(int $count) : Count
+    function countOf(int $count): Count
     {
         return Assert::countOf(...func_get_args());
     }
@@ -2597,7 +2597,7 @@ if (! function_exists('PHPUnit\Framework\any')) {
      * Returns a matcher that matches when the method is executed
      * zero or more times.
      */
-    function any() : AnyInvokedCountMatcher
+    function any(): AnyInvokedCountMatcher
     {
         return new AnyInvokedCountMatcher();
     }
@@ -2607,7 +2607,7 @@ if (! function_exists('PHPUnit\Framework\never')) {
     /**
      * Returns a matcher that matches when the method is never executed.
      */
-    function never() : InvokedCountMatcher
+    function never(): InvokedCountMatcher
     {
         return new InvokedCountMatcher(0);
     }
@@ -2618,7 +2618,7 @@ if (! function_exists('PHPUnit\Framework\atLeast')) {
      * Returns a matcher that matches when the method is executed
      * at least N times.
      */
-    function atLeast(int $requiredInvocations) : InvokedAtLeastCountMatcher
+    function atLeast(int $requiredInvocations): InvokedAtLeastCountMatcher
     {
         return new InvokedAtLeastCountMatcher(
             $requiredInvocations
@@ -2630,7 +2630,7 @@ if (! function_exists('PHPUnit\Framework\atLeastOnce')) {
     /**
      * Returns a matcher that matches when the method is executed at least once.
      */
-    function atLeastOnce() : InvokedAtLeastOnceMatcher
+    function atLeastOnce(): InvokedAtLeastOnceMatcher
     {
         return new InvokedAtLeastOnceMatcher();
     }
@@ -2640,7 +2640,7 @@ if (! function_exists('PHPUnit\Framework\once')) {
     /**
      * Returns a matcher that matches when the method is executed exactly once.
      */
-    function once() : InvokedCountMatcher
+    function once(): InvokedCountMatcher
     {
         return new InvokedCountMatcher(1);
     }
@@ -2651,7 +2651,7 @@ if (! function_exists('PHPUnit\Framework\exactly')) {
      * Returns a matcher that matches when the method is executed
      * exactly $count times.
      */
-    function exactly(int $count) : InvokedCountMatcher
+    function exactly(int $count): InvokedCountMatcher
     {
         return new InvokedCountMatcher($count);
     }
@@ -2662,7 +2662,7 @@ if (! function_exists('PHPUnit\Framework\atMost')) {
      * Returns a matcher that matches when the method is executed
      * at most N times.
      */
-    function atMost(int $allowedInvocations) : InvokedAtMostCountMatcher
+    function atMost(int $allowedInvocations): InvokedAtMostCountMatcher
     {
         return new InvokedAtMostCountMatcher($allowedInvocations);
     }
@@ -2673,35 +2673,35 @@ if (! function_exists('PHPUnit\Framework\at')) {
      * Returns a matcher that matches when the method is executed
      * at the given index.
      */
-    function at(int $index) : InvokedAtIndexMatcher
+    function at(int $index): InvokedAtIndexMatcher
     {
         return new InvokedAtIndexMatcher($index);
     }
 }
 
 if (! function_exists('PHPUnit\Framework\returnValue')) {
-    function returnValue($value) : ReturnStub
+    function returnValue($value): ReturnStub
     {
         return new ReturnStub($value);
     }
 }
 
 if (! function_exists('PHPUnit\Framework\returnValueMap')) {
-    function returnValueMap(array $valueMap) : ReturnValueMapStub
+    function returnValueMap(array $valueMap): ReturnValueMapStub
     {
         return new ReturnValueMapStub($valueMap);
     }
 }
 
 if (! function_exists('PHPUnit\Framework\returnArgument')) {
-    function returnArgument(int $argumentIndex) : ReturnArgumentStub
+    function returnArgument(int $argumentIndex): ReturnArgumentStub
     {
         return new ReturnArgumentStub($argumentIndex);
     }
 }
 
 if (! function_exists('PHPUnit\Framework\returnCallback')) {
-    function returnCallback($callback) : ReturnCallbackStub
+    function returnCallback($callback): ReturnCallbackStub
     {
         return new ReturnCallbackStub($callback);
     }
@@ -2713,21 +2713,21 @@ if (! function_exists('PHPUnit\Framework\returnSelf')) {
      *
      * This method is useful when mocking a fluent interface.
      */
-    function returnSelf() : ReturnSelfStub
+    function returnSelf(): ReturnSelfStub
     {
         return new ReturnSelfStub();
     }
 }
 
 if (! function_exists('PHPUnit\Framework\throwException')) {
-    function throwException(Throwable $exception) : ExceptionStub
+    function throwException(Throwable $exception): ExceptionStub
     {
         return new ExceptionStub($exception);
     }
 }
 
 if (! function_exists('PHPUnit\Framework\onConsecutiveCalls')) {
-    function onConsecutiveCalls() : ConsecutiveCallsStub
+    function onConsecutiveCalls(): ConsecutiveCallsStub
     {
         $args = func_get_args();
 

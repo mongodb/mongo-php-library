@@ -103,7 +103,7 @@ class RunOnRequirement
         }
     }
 
-    public function isSatisfied(string $serverVersion, string $topology, stdClass $serverParameters, bool $isAuthenticated, bool $isServerless) : bool
+    public function isSatisfied(string $serverVersion, string $topology, stdClass $serverParameters, bool $isAuthenticated, bool $isServerless): bool
     {
         if (isset($this->minServerVersion) && version_compare($serverVersion, $this->minServerVersion, '<')) {
             return false;
@@ -141,7 +141,7 @@ class RunOnRequirement
         return true;
     }
 
-    private function isTopologySatisfied(string $topology) : bool
+    private function isTopologySatisfied(string $topology): bool
     {
         if (in_array($topology, $this->topologies)) {
             return true;

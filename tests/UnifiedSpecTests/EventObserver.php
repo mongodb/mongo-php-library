@@ -132,7 +132,7 @@ final class EventObserver implements CommandSubscriber
         removeSubscriber($this);
     }
 
-    public function getLsidsOnLastTwoCommands() : array
+    public function getLsidsOnLastTwoCommands(): array
     {
         $lsids = [];
 

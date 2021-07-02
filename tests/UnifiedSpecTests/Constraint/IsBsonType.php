@@ -79,12 +79,12 @@ final class IsBsonType extends Constraint
         $this->type = $type;
     }
 
-    public static function any() : LogicalOr
+    public static function any(): LogicalOr
     {
         return self::anyOf(...self::$types);
     }
 
-    public static function anyOf(string ...$types) : Constraint
+    public static function anyOf(string ...$types): Constraint
     {
         if (count($types) === 1) {
             return new self(...$types);
@@ -95,7 +95,7 @@ final class IsBsonType extends Constraint
         }, $types));
     }
 
-    private function doMatches($other) : bool
+    private function doMatches($other): bool
     {
         switch ($this->type) {
             case 'double':
@@ -150,12 +150,12 @@ final class IsBsonType extends Constraint
         }
     }
 
-    private function doToString() : string
+    private function doToString(): string
     {
         return sprintf('is of BSON type "%s"', $this->type);
     }
 
-    private static function isArray($other) : bool
+    private static function isArray($other): bool
     {
         if ($other instanceof BSONArray) {
             return true;
@@ -174,7 +174,7 @@ final class IsBsonType extends Constraint
         return self::isArrayEmptyOrIndexed($other);
     }
 
-    private static function isObject($other) : bool
+    private static function isObject($other): bool
     {
         if ($other instanceof BSONDocument) {
             return true;
@@ -199,7 +199,7 @@ final class IsBsonType extends Constraint
         return ! $other instanceof Type;
     }
 
-    private static function isArrayEmptyOrIndexed(array $a) : bool
+    private static function isArrayEmptyOrIndexed(array $a): bool
     {
         if (empty($a)) {
             return true;

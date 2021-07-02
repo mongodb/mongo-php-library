@@ -32,14 +32,14 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     /** @var Context|null */
     private $context;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->context = null;
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         $this->context = null;
 

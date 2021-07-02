@@ -115,7 +115,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Compatibility method as PHPUnit 9 no longer includes this method.
      */
-    public function dataDescription() : string
+    public function dataDescription(): string
     {
         $dataName = $this->dataName();
 

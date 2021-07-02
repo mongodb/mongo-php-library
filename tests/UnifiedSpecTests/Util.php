@@ -32,7 +32,7 @@ final class Util
         assertEmpty($diff, 'Unsupported keys: ' . implode(',', array_keys($diff)));
     }
 
-    public static function createReadConcern(stdClass $o) : ReadConcern
+    public static function createReadConcern(stdClass $o): ReadConcern
     {
         self::assertHasOnlyKeys($o, ['level']);
 
@@ -42,7 +42,7 @@ final class Util
         return new ReadConcern($level);
     }
 
-    public static function createReadPreference(stdClass $o) : ReadPreference
+    public static function createReadPreference(stdClass $o): ReadPreference
     {
         self::assertHasOnlyKeys($o, ['mode', 'tagSets', 'maxStalenessSeconds', 'hedge']);
 
@@ -73,7 +73,7 @@ final class Util
         return new ReadPreference($mode, $tagSets, $options);
     }
 
-    public static function createWriteConcern(stdClass $o) : WriteConcern
+    public static function createWriteConcern(stdClass $o): WriteConcern
     {
         self::assertHasOnlyKeys($o, ['w', 'wtimeoutMS', 'journal']);
 
@@ -94,7 +94,7 @@ final class Util
         return new WriteConcern(...$args);
     }
 
-    public static function prepareCommonOptions(array $options) : array
+    public static function prepareCommonOptions(array $options): array
     {
         if (array_key_exists('readConcern', $options)) {
             assertIsObject($options['readConcern']);

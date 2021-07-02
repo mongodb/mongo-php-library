@@ -13,7 +13,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     /** @var Collection */
     protected $collection;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -22,7 +22,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         $this->dropCollection();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         if ($this->hasFailed()) {
             return;

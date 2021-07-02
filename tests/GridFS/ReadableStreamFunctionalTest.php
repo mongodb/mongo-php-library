@@ -18,7 +18,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
     /** @var CollectionWrapper */
     private $collectionWrapper;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 

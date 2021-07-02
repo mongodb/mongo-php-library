@@ -141,7 +141,7 @@ class EstimatedDocumentCount implements Executable, Explainable
         return $this->createCommand($server)->getCommandDocument($server);
     }
 
-    private function createAggregate() : Aggregate
+    private function createAggregate(): Aggregate
     {
         return new Aggregate(
             $this->databaseName,
@@ -162,7 +162,7 @@ class EstimatedDocumentCount implements Executable, Explainable
             : $this->createCount();
     }
 
-    private function createCount() : Count
+    private function createCount(): Count
     {
         return new Count($this->databaseName, $this->collectionName, [], $this->options);
     }

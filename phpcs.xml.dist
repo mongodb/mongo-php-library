@@ -57,9 +57,6 @@
         <exclude name="SlevomatCodingStandard.Commenting.DocCommentSpacing.IncorrectAnnotationsGroup" />
         <exclude name="Squiz.Strings.DoubleQuoteUsage" />
 
-        <!-- Sniff currently breaks, see https://github.com/slevomat/coding-standard/issues/727 -->
-        <exclude name="SlevomatCodingStandard.Namespaces.NamespaceSpacing" />
-
         <!-- Sniff currently broken when casting arrays, see https://github.com/squizlabs/PHP_CodeSniffer/issues/2937#issuecomment-615498860 -->
         <exclude name="Squiz.Arrays.ArrayDeclaration.ValueNoNewline" />
     </rule>

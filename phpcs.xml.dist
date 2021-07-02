@@ -14,6 +14,11 @@
 
     <rule ref="Doctrine">
         <!-- Exclude sniffs that require newer PHP versions -->
+        <!-- Requires PHP 7.4 -->
+        <exclude name="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator" />
+
+        <!-- Requires PHP 8.0 -->
+        <exclude name="SlevomatCodingStandard.Classes.ModernClassNameReference.ClassNameReferencedViaFunctionCall" />
 
         <!-- Can cause subtle BC breaks, disabled for now -->
         <exclude name="SlevomatCodingStandard.TypeHints.DeclareStrictTypes" />
@@ -57,12 +62,6 @@
 
         <!-- Sniff currently broken when casting arrays, see https://github.com/squizlabs/PHP_CodeSniffer/issues/2937#issuecomment-615498860 -->
         <exclude name="Squiz.Arrays.ArrayDeclaration.ValueNoNewline" />
-
-        <!-- Requires PHP 7.4 -->
-        <exclude name="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator" />
-
-        <!-- Requires PHP 8.0 -->
-        <exclude name="SlevomatCodingStandard.Classes.ModernClassNameReference.ClassNameReferencedViaFunctionCall" />
     </rule>
 
     <!-- Change use statement sorting to be compatible with PSR-12 -->

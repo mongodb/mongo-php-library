@@ -146,10 +146,12 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
             $runOn = $json->runOn ?? null;
             $data = $json->data ?? [];
+            // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
             $keyVaultData = $json->key_vault_data ?? null;
             $jsonSchema = $json->json_schema ?? null;
             $databaseName = $json->database_name ?? null;
             $collectionName = $json->collection_name ?? null;
+            // phpcs:enable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;

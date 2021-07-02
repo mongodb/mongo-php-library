@@ -228,6 +228,7 @@ class Matches extends Constraint
             return;
         }
 
+        // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
         foreach ($actual as $key => $_) {
             if (! $expected->offsetExists($key)) {
                 self::failAt(sprintf('$actual has unexpected key "%s"', $key), $keyPath);
@@ -358,6 +359,7 @@ class Matches extends Constraint
 
     private static function getOperatorName(BSONDocument $document): string
     {
+        // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
         foreach ($document as $key => $_) {
             if (strpos((string) $key, '$$') === 0) {
                 return $key;
@@ -378,6 +380,7 @@ class Matches extends Constraint
             return false;
         }
 
+        // phpcs:ignore Squiz.NamingConventions.ValidVariableName.NotCamelCaps
         foreach ($document as $key => $_) {
             return strpos((string) $key, '$$') === 0;
         }

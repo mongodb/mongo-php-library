@@ -47,14 +47,17 @@ class CommandExpectations implements CommandSubscriber
         foreach ($events as $event) {
             switch (key($event)) {
                 case 'command_failed_event':
+                    // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
                     $this->expectedEvents[] = [$event->command_failed_event, CommandFailedEvent::class];
                     break;
 
                 case 'command_started_event':
+                    // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
                     $this->expectedEvents[] = [$event->command_started_event, CommandStartedEvent::class];
                     break;
 
                 case 'command_succeeded_event':
+                    // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
                     $this->expectedEvents[] = [$event->command_succeeded_event, CommandSucceededEvent::class];
                     break;
 
@@ -224,6 +227,7 @@ class CommandExpectations implements CommandSubscriber
 
             $test->assertInstanceOf($expectedClass, $actualEvent);
 
+            // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
             if (isset($expectedEvent->command_name)) {
                 $test->assertSame($expectedEvent->command_name, $actualEvent->getCommandName());
             }
@@ -231,6 +235,8 @@ class CommandExpectations implements CommandSubscriber
             if (isset($expectedEvent->database_name)) {
                 $test->assertSame($expectedEvent->database_name, $actualEvent->getDatabaseName());
             }
+
+            // phpcs:enable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
             if (isset($expectedEvent->command)) {
                 $test->assertInstanceOf(CommandStartedEvent::class, $actualEvent);

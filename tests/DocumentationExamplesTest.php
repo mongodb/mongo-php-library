@@ -1141,6 +1141,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $db = new Database($this->manager, $this->getDatabaseName());
 
+        // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
         // Start Aggregation Example 4
         $cursor = $db->air_alliances->aggregate([
             [
@@ -1171,6 +1172,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             ],
         ]);
         // End Aggregation Example 4
+        // phpcs:enable
 
         $this->assertInstanceOf(Cursor::class, $cursor);
     }

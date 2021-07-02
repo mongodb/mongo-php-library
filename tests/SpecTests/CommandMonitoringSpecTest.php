@@ -176,8 +176,10 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
             $json = $this->decodeJson(file_get_contents($filename));
             $group = basename($filename, '.json');
             $data = $json->data ?? [];
+            // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
             $databaseName = $json->database_name ?? null;
             $collectionName = $json->collection_name ?? null;
+            // phpcs:enable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;
@@ -205,6 +207,7 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
             self::TOPOLOGY_SHARDED,
         ];
 
+        // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
         /* Append ".99" as patch version, since command monitoring tests expect
          * the minor version to be an inclusive upper bound. */
         if (isset($test->ignore_if_server_version_greater_than)) {
@@ -218,6 +221,8 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
         if (isset($test->ignore_if_topology_type)) {
             $req->topology = array_diff($topologies, $test->ignore_if_topology_type);
         }
+
+        // phpcs:enable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
         return [$req];
     }

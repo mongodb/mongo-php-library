@@ -169,10 +169,12 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
         foreach (glob(__DIR__ . '/change-streams/*.json') as $filename) {
             $json = $this->decodeJson(file_get_contents($filename));
             $group = basename($filename, '.json');
+            // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
             $databaseName = $json->database_name ?? null;
             $database2Name = $json->database2_name ?? null;
             $collectionName = $json->collection_name ?? null;
             $collection2Name = $json->collection2_name ?? null;
+            // phpcs:enable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;

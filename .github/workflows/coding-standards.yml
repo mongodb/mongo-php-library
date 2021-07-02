@@ -60,9 +60,6 @@ jobs:
           key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
 
-      - name: "Require doctrine/coding-standard"
-        run: "composer require --no-update doctrine/coding-standard=^6.0"
-
       - name: "Install dependencies with Composer"
         run: "composer install --no-interaction --no-progress --no-suggest"
 

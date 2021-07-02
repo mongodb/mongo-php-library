@@ -19,6 +19,7 @@ namespace MongoDB\Operation;
 
 use EmptyIterator;
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
@@ -90,7 +91,7 @@ class ListIndexes implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return IndexInfoIterator
-     * @throws CommandException for other driver errors (e.g. connection errors)
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
@@ -123,7 +124,7 @@ class ListIndexes implements Executable
      *
      * @param Server $server
      * @return IndexInfoIteratorIterator
-     * @throws CommandException for other driver errors (e.g. connection errors)
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     private function executeCommand(Server $server)
     {

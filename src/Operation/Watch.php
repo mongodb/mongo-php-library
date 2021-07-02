@@ -265,8 +265,10 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             $this->postBatchResumeToken = $reply->cursor->postBatchResumeToken;
         }
 
-        if ($this->shouldCaptureOperationTime($event->getServer()) &&
-            isset($reply->operationTime) && $reply->operationTime instanceof TimestampInterface) {
+        if (
+            $this->shouldCaptureOperationTime($event->getServer()) &&
+            isset($reply->operationTime) && $reply->operationTime instanceof TimestampInterface
+        ) {
             $this->operationTime = $reply->operationTime;
         }
     }
@@ -420,9 +422,11 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             return false;
         }
 
-        if (isset($this->changeStreamOptions['resumeAfter']) ||
+        if (
+            isset($this->changeStreamOptions['resumeAfter']) ||
             isset($this->changeStreamOptions['startAfter']) ||
-            isset($this->changeStreamOptions['startAtOperationTime'])) {
+            isset($this->changeStreamOptions['startAtOperationTime'])
+        ) {
             return false;
         }
 

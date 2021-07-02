@@ -345,7 +345,8 @@ class Aggregate implements Executable, Explainable
 
         $cmd['allowDiskUse'] = $this->options['allowDiskUse'];
 
-        if (! empty($this->options['bypassDocumentValidation']) &&
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
             server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];

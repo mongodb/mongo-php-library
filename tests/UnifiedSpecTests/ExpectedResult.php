@@ -64,12 +64,14 @@ final class ExpectedResult
             return $value;
         }
 
-        if ($value instanceof BulkWriteResult ||
+        if (
+            $value instanceof BulkWriteResult ||
             $value instanceof WriteResult ||
             $value instanceof DeleteResult ||
             $value instanceof InsertOneResult ||
             $value instanceof InsertManyResult ||
-            $value instanceof UpdateResult) {
+            $value instanceof UpdateResult
+        ) {
             return self::prepareWriteResult($value);
         }
 

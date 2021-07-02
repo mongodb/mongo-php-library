@@ -128,8 +128,10 @@ class FindOneAndReplace implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"returnDocument" option', $options['returnDocument'], 'integer');
         }
 
-        if ($options['returnDocument'] !== self::RETURN_DOCUMENT_AFTER &&
-            $options['returnDocument'] !== self::RETURN_DOCUMENT_BEFORE) {
+        if (
+            $options['returnDocument'] !== self::RETURN_DOCUMENT_AFTER &&
+            $options['returnDocument'] !== self::RETURN_DOCUMENT_BEFORE
+        ) {
             throw new InvalidArgumentException('Invalid value for "returnDocument" option: ' . $options['returnDocument']);
         }
 

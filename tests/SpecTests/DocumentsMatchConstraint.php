@@ -295,8 +295,10 @@ class DocumentsMatchConstraint extends Constraint
                 continue;
             }
 
-            if (($expectedValue instanceof BSONArray && $actualValue instanceof BSONArray) ||
-                ($expectedValue instanceof BSONDocument && $actualValue instanceof BSONDocument)) {
+            if (
+                ($expectedValue instanceof BSONArray && $actualValue instanceof BSONArray) ||
+                ($expectedValue instanceof BSONDocument && $actualValue instanceof BSONDocument)
+            ) {
                 $this->assertEquals($expectedValue, $actualValue, $this->ignoreExtraKeysInEmbedded, $keyPrefix . $key . '.');
                 continue;
             }

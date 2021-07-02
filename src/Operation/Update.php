@@ -217,7 +217,8 @@ class Update implements Executable, Explainable
 
         $bulkOptions = [];
 
-        if (! empty($this->options['bypassDocumentValidation']) &&
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
             server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $bulkOptions['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
@@ -239,7 +240,8 @@ class Update implements Executable, Explainable
             $cmd['writeConcern'] = $this->options['writeConcern'];
         }
 
-        if (! empty($this->options['bypassDocumentValidation']) &&
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
             server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];

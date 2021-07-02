@@ -70,7 +70,8 @@ class WithTransaction
                     $session->abortTransaction();
                 }
 
-                if ($e instanceof RuntimeException &&
+                if (
+                    $e instanceof RuntimeException &&
                     $e->hasErrorLabel('TransientTransactionError') &&
                     ! $this->isTransactionTimeLimitExceeded($startTime)
                 ) {
@@ -89,7 +90,8 @@ class WithTransaction
                 try {
                     $session->commitTransaction();
                 } catch (RuntimeException $e) {
-                    if ($e->getCode() !== 50 /* MaxTimeMSExpired */ &&
+                    if (
+                        $e->getCode() !== 50 /* MaxTimeMSExpired */ &&
                         $e->hasErrorLabel('UnknownTransactionCommitResult') &&
                         ! $this->isTransactionTimeLimitExceeded($startTime)
                     ) {
@@ -97,7 +99,8 @@ class WithTransaction
                         continue;
                     }
 
-                    if ($e->hasErrorLabel('TransientTransactionError') &&
+                    if (
+                        $e->hasErrorLabel('TransientTransactionError') &&
                         ! $this->isTransactionTimeLimitExceeded($startTime)
                     ) {
                         // Restart the transaction, invoking the callback again

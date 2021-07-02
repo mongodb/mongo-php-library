@@ -235,7 +235,8 @@ class Collection
          *
          * A read concern is also not compatible with transactions.
          */
-        if (! isset($options['readConcern']) &&
+        if (
+            ! isset($options['readConcern']) &&
             server_supports_feature($server, self::$wireVersionForReadConcern) &&
             ! is_in_transaction($options) &&
             ( ! $hasWriteStage || server_supports_feature($server, self::$wireVersionForReadConcernWithWriteStage))
@@ -247,10 +248,12 @@ class Collection
             $options['typeMap'] = $this->typeMap;
         }
 
-        if ($hasWriteStage &&
+        if (
+            $hasWriteStage &&
             ! isset($options['writeConcern']) &&
             server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) &&
-            ! is_in_transaction($options)) {
+            ! is_in_transaction($options)
+        ) {
             $options['writeConcern'] = $this->writeConcern;
         }
 

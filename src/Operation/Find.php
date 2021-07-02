@@ -203,9 +203,11 @@ class Find implements Executable, Explainable
                 throw InvalidArgumentException::invalidType('"cursorType" option', $options['cursorType'], 'integer');
             }
 
-            if ($options['cursorType'] !== self::NON_TAILABLE &&
+            if (
+                $options['cursorType'] !== self::NON_TAILABLE &&
                 $options['cursorType'] !== self::TAILABLE &&
-                $options['cursorType'] !== self::TAILABLE_AWAIT) {
+                $options['cursorType'] !== self::TAILABLE_AWAIT
+            ) {
                 throw new InvalidArgumentException('Invalid value for "cursorType" option: ' . $options['cursorType']);
             }
         }

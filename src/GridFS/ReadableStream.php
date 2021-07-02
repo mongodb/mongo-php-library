@@ -96,7 +96,7 @@ class ReadableStream
 
         if ($this->length > 0) {
             $this->numChunks = (integer) ceil($this->length / $this->chunkSize);
-            $this->expectedLastChunkSize = ($this->length - (($this->numChunks - 1) * $this->chunkSize));
+            $this->expectedLastChunkSize = $this->length - (($this->numChunks - 1) * $this->chunkSize);
         }
     }
 

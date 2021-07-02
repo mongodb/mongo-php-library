@@ -24,6 +24,7 @@ use stdClass;
 
 use function array_diff_key;
 use function array_map;
+use function assert;
 use function bin2hex;
 use function microtime;
 use function MongoDB\server_supports_feature;
@@ -1343,8 +1344,8 @@ class WatchFunctionalTest extends FunctionalTestCase
             $changeStream,
             ChangeStream::class
         );
-        /** @var Cursor $cursor */
         $cursor = $getCursor();
+        assert($cursor instanceof Cursor);
         self::assertTrue($cursor->getServer()->isSecondary());
     }
 

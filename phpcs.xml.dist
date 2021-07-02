@@ -61,13 +61,6 @@
         <exclude name="Squiz.Arrays.ArrayDeclaration.ValueNoNewline" />
     </rule>
 
-    <!-- Change use statement sorting to be compatible with PSR-12 -->
-    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses">
-        <properties>
-            <property name="psr12Compatible" value="true"/>
-        </properties>
-    </rule>
-
     <!-- Forbid fully qualified names even for colliding names -->
     <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly">
         <properties>

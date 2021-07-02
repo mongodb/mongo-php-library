@@ -78,7 +78,7 @@ class CollectionData
         $mi->attachIterator($cursor);
 
         foreach ($mi as $i => $documents) {
-            list($expectedDocument, $actualDocument) = $documents;
+            [$expectedDocument, $actualDocument] = $documents;
             assertNotNull($expectedDocument);
             assertNotNull($actualDocument);
 

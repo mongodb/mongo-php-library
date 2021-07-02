@@ -165,7 +165,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
                 $this->assertIsInt($cursorId);
                 $this->assertIsString($cursorNamespace);
 
-                list($databaseName, $collectionName) = explode('.', $cursorNamespace, 2);
+                [$databaseName, $collectionName] = explode('.', $cursorNamespace, 2);
                 $command = $event['started']->getCommand();
 
                 /* Assert that the killCursors command uses the namespace and

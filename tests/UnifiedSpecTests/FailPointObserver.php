@@ -50,7 +50,7 @@ class FailPointObserver implements CommandSubscriber
 
     public function disableFailPoints(): void
     {
-        foreach ($this->failPointsAndServers as list($failPoint, $server)) {
+        foreach ($this->failPointsAndServers as [$failPoint, $server]) {
             $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
             $operation->execute($server);
         }

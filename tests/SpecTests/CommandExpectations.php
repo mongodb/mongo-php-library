@@ -222,8 +222,8 @@ class CommandExpectations implements CommandSubscriber
         $mi->attachIterator(new ArrayIterator($this->actualEvents));
 
         foreach ($mi as $events) {
-            list($expectedEventAndClass, $actualEvent) = $events;
-            list($expectedEvent, $expectedClass) = $expectedEventAndClass;
+            [$expectedEventAndClass, $actualEvent] = $events;
+            [$expectedEvent, $expectedClass] = $expectedEventAndClass;
 
             $test->assertInstanceOf($expectedClass, $actualEvent);
 

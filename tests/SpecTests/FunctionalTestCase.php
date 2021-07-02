@@ -106,7 +106,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
         $mi->attachIterator($outcomeCollection->find([], ['sort' => ['_id' => 1]]));
 
         foreach ($mi as $documents) {
-            list($expectedDocument, $actualDocument) = $documents;
+            [$expectedDocument, $actualDocument] = $documents;
             $this->assertNotNull($expectedDocument);
             $this->assertNotNull($actualDocument);
 

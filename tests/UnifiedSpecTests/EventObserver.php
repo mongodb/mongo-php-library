@@ -163,7 +163,7 @@ final class EventObserver implements CommandSubscriber
         $mi->attachIterator(new ArrayIterator($this->actualEvents));
 
         foreach ($mi as $keys => $events) {
-            list($expectedEvent, $actualEvent) = $events;
+            [$expectedEvent, $actualEvent] = $events;
 
             assertIsObject($expectedEvent);
             $expectedEvent = (array) $expectedEvent;

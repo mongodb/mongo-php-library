@@ -142,7 +142,7 @@ class BSONIterator implements Iterator
             throw new UnexpectedValueException(sprintf('Expected at least %d bytes; %d remaining', self::$bsonSize, $this->bufferLength - $this->position));
         }
 
-        list(,$documentLength) = unpack('V', substr($this->buffer, $this->position, self::$bsonSize));
+        [, $documentLength] = unpack('V', substr($this->buffer, $this->position, self::$bsonSize));
 
         if ($this->bufferLength - $this->position < $documentLength) {
             throw new UnexpectedValueException(sprintf('Expected %d bytes; %d remaining', $documentLength, $this->bufferLength - $this->position));

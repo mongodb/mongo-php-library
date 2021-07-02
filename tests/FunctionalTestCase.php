@@ -137,7 +137,7 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function assertCollectionCount($namespace, $count): void
     {
-        list($databaseName, $collectionName) = explode('.', $namespace, 2);
+        [$databaseName, $collectionName] = explode('.', $namespace, 2);
 
         $cursor = $this->manager->executeCommand($databaseName, new Command(['count' => $collectionName]));
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
@@ -466,7 +466,7 @@ abstract class FunctionalTestCase extends TestCase
             return;
         }
 
-        foreach ($this->configuredFailPoints as list($failPoint, $server)) {
+        foreach ($this->configuredFailPoints as [$failPoint, $server]) {
             $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
             $operation->execute($server);
         }

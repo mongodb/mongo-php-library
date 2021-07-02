@@ -235,7 +235,7 @@ final class Context
 
                 return array_map(
                     static function (string $tag): array {
-                        list($key, $value) = explode(':', $tag);
+                        [$key, $value] = explode(':', $tag);
 
                         return [$key => $value];
                     },

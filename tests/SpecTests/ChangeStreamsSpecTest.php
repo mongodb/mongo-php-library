@@ -63,7 +63,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
         $mi->attachIterator(new ArrayIterator($actualDocuments));
 
         foreach ($mi as $documents) {
-            list($expectedDocument, $actualDocument) = $documents;
+            [$expectedDocument, $actualDocument] = $documents;
 
             $constraint = new DocumentsMatchConstraint($expectedDocument, true, true, ['42']);
 

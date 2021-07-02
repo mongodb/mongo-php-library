@@ -354,8 +354,8 @@ class CollectionWrapper
         $iterator->attachIterator(new ArrayIterator($actualKeys));
 
         foreach ($iterator as $key => $value) {
-            list($expectedKey, $actualKey)     = $key;
-            list($expectedValue, $actualValue) = $value;
+            [$expectedKey, $actualKey]     = $key;
+            [$expectedValue, $actualValue] = $value;
 
             if ($expectedKey !== $actualKey) {
                 return false;

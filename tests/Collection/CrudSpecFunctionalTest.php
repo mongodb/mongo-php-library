@@ -108,7 +108,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
         $mi->attachIterator($actualCollection->find());
 
         foreach ($mi as $documents) {
-            list($expectedDocument, $actualDocument) = $documents;
+            [$expectedDocument, $actualDocument] = $documents;
             $this->assertSameDocument($expectedDocument, $actualDocument);
         }
     }

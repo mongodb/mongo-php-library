@@ -31,7 +31,7 @@ final class ExpectedResult
      */
     private $yieldingEntityId;
 
-    public function __construct(stdClass $o, EntityMap $entityMap, string $yieldingEntityId = null)
+    public function __construct(stdClass $o, EntityMap $entityMap, ?string $yieldingEntityId = null)
     {
         if (property_exists($o, 'expectResult')) {
             $this->constraint = new Matches($o->expectResult, $entityMap);
@@ -41,7 +41,7 @@ final class ExpectedResult
         $this->yieldingEntityId = $yieldingEntityId;
     }
 
-    public function assert($actual, string $saveResultAsEntity = null): void
+    public function assert($actual, ?string $saveResultAsEntity = null): void
     {
         if ($this->constraint === null && $saveResultAsEntity === null) {
             return;

@@ -64,12 +64,12 @@ abstract class FunctionalTestCase extends TestCase
         parent::tearDown();
     }
 
-    public static function createTestClient(string $uri = null, array $options = [], array $driverOptions = []): Client
+    public static function createTestClient(?string $uri = null, array $options = [], array $driverOptions = []): Client
     {
         return new Client($uri ?? static::getUri(), $options, static::appendServerApiOption($driverOptions));
     }
 
-    public static function createTestManager(string $uri = null, array $options = [], array $driverOptions = []): Manager
+    public static function createTestManager(?string $uri = null, array $options = [], array $driverOptions = []): Manager
     {
         return new Manager($uri ?? static::getUri(), $options, static::appendServerApiOption($driverOptions));
     }
@@ -171,7 +171,7 @@ abstract class FunctionalTestCase extends TestCase
      * @param array|stdClass $command configureFailPoint command document
      * @throws InvalidArgumentException if $command is not a configureFailPoint command
      */
-    public function configureFailPoint($command, Server $server = null): void
+    public function configureFailPoint($command, ?Server $server = null): void
     {
         if (! $this->isFailCommandSupported()) {
             $this->markTestSkipped('failCommand is only supported on mongod >= 4.0.0 and mongos >= 4.1.5.');
@@ -243,7 +243,7 @@ abstract class FunctionalTestCase extends TestCase
         $operation->execute($this->getPrimaryServer());
     }
 
-    protected function getFeatureCompatibilityVersion(ReadPreference $readPreference = null)
+    protected function getFeatureCompatibilityVersion(?ReadPreference $readPreference = null)
     {
         if ($this->isShardedCluster()) {
             return $this->getServerVersion($readPreference);
@@ -280,7 +280,7 @@ abstract class FunctionalTestCase extends TestCase
         return $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
     }
 
-    protected function getServerVersion(ReadPreference $readPreference = null)
+    protected function getServerVersion(?ReadPreference $readPreference = null)
     {
         $buildInfo = $this->manager->executeCommand(
             $this->getDatabaseName(),
@@ -295,7 +295,7 @@ abstract class FunctionalTestCase extends TestCase
         throw new UnexpectedValueException('Could not determine server version');
     }
 
-    protected function getServerStorageEngine(ReadPreference $readPreference = null)
+    protected function getServerStorageEngine(?ReadPreference $readPreference = null)
     {
         $cursor = $this->manager->executeCommand(
             $this->getDatabaseName(),

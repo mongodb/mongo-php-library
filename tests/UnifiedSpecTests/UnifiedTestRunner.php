@@ -150,7 +150,7 @@ final class UnifiedTestRunner
         gc_collect_cycles();
     }
 
-    private function doTestCase(stdClass $test, string $schemaVersion, array $runOnRequirements = null, array $createEntities = null, array $initialData = null): void
+    private function doTestCase(stdClass $test, string $schemaVersion, ?array $runOnRequirements = null, ?array $createEntities = null, ?array $initialData = null): void
     {
         if (! $this->isSchemaVersionSupported($schemaVersion)) {
             Assert::markTestIncomplete(sprintf('Test format schema version "%s" is not supported', $schemaVersion));

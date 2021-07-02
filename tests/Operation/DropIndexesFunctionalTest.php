@@ -157,7 +157,7 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
      *
      * @param callable $callback
      */
-    private function assertIndexExists($indexName, callable $callback = null): void
+    private function assertIndexExists($indexName, ?callable $callback = null): void
     {
         if ($callback !== null && ! is_callable($callback)) {
             throw new InvalidArgumentException('$callback is not a callable');

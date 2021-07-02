@@ -153,7 +153,7 @@ final class Context
         return $this->activeClient === $clientId;
     }
 
-    public function setActiveClient(string $clientId = null): void
+    public function setActiveClient(?string $clientId = null): void
     {
         $this->activeClient = $clientId;
     }

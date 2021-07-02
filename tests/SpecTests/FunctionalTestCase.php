@@ -279,7 +279,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      * @param array|null  $topologies
      * @return boolean
      */
-    private function isServerRequirementSatisifed(?string $minServerVersion, ?string $maxServerVersion, array $topologies = null): bool
+    private function isServerRequirementSatisifed(?string $minServerVersion, ?string $maxServerVersion, ?array $topologies = null): bool
     {
         $serverVersion = $this->getServerVersion();
 

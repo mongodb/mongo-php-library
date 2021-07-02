@@ -92,7 +92,7 @@ class EntityMap implements ArrayAccess
         Assert::fail('Entities cannot be removed from the map');
     }
 
-    public function set(string $id, $value, string $parentId = null): void
+    public function set(string $id, $value, ?string $parentId = null): void
     {
         assertArrayNotHasKey($id, $this->map, sprintf('Entity already exists for "%s" and cannot be replaced', $id));
         assertThat($value, self::isSupportedType());
@@ -111,7 +111,7 @@ class EntityMap implements ArrayAccess
             /** @var self */
             public $parent;
 
-            public function __construct(string $id, $value, self $parent = null)
+            public function __construct(string $id, $value, ?self $parent = null)
             {
                 $this->id = $id;
                 $this->value = $value;

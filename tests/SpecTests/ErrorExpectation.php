@@ -158,7 +158,7 @@ final class ErrorExpectation
      * @param TestCase       $test   Test instance for performing assertions
      * @param Exception|null $actual Exception (if any) from the actual outcome
      */
-    public function assert(TestCase $test, Throwable $actual = null): void
+    public function assert(TestCase $test, ?Throwable $actual = null): void
     {
         if (! $this->isExpected) {
             if ($actual !== null) {
@@ -202,7 +202,7 @@ final class ErrorExpectation
      * @param TestCase       $test   Test instance for performing assertions
      * @param Exception|null $actual Exception (if any) from the actual outcome
      */
-    private function assertCodeName(TestCase $test, Throwable $actual = null): void
+    private function assertCodeName(TestCase $test, ?Throwable $actual = null): void
     {
         /* BulkWriteException does not expose codeName for server errors. Work
          * around this be comparing the error code against a map.

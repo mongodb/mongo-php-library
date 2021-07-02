@@ -66,7 +66,7 @@ class Matches extends Constraint
     /** @var ComparisonFailure|null */
     private $lastFailure;
 
-    public function __construct($value, EntityMap $entityMap = null, $allowExtraRootKeys = true, $allowOperators = true)
+    public function __construct($value, ?EntityMap $entityMap = null, $allowExtraRootKeys = true, $allowOperators = true)
     {
         $this->value = self::prepare($value);
         $this->entityMap = $entityMap;

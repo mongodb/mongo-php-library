@@ -231,7 +231,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
      * @return mixed
      * @throws LogicException if the operation is unsupported
      */
-    private function executeOutcome(array $operation, array $outcome, $result, RuntimeException $exception = null)
+    private function executeOutcome(array $operation, array $outcome, $result, ?RuntimeException $exception = null)
     {
         $expectedError = array_key_exists('error', $outcome) ? $outcome['error'] : false;
 
@@ -466,7 +466,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
      * @param array $initialData
      * @param array $expectedData
      */
-    private function initializeData(array $initialData, array $expectedData = null): void
+    private function initializeData(array $initialData, ?array $expectedData = null): void
     {
         if (! empty($initialData)) {
             $this->collection->insertMany($initialData);

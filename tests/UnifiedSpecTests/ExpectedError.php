@@ -68,7 +68,7 @@ final class ExpectedError
     /** @var ExpectedResult|null */
     private $expectedResult;
 
-    public function __construct(stdClass $o = null, EntityMap $entityMap)
+    public function __construct(?stdClass $o = null, EntityMap $entityMap)
     {
         if ($o === null) {
             return;
@@ -122,7 +122,7 @@ final class ExpectedError
      *
      * @param Throwable|null $e Exception (if any) from executing an operation
      */
-    public function assert(Throwable $e = null): void
+    public function assert(?Throwable $e = null): void
     {
         if (! $this->isError && $e !== null) {
             Assert::fail(sprintf("Operation threw unexpected %s: %s\n%s", get_class($e), $e->getMessage(), $e->getTraceAsString()));

@@ -142,7 +142,7 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
      * @param string   $databaseName   Name of database under test
      * @param string   $collectionName Name of collection under test
      */
-    public function testCommandMonitoring(stdClass $test, array $data, string $databaseName = null, string $collectionName = null): void
+    public function testCommandMonitoring(stdClass $test, array $data, ?string $databaseName = null, ?string $collectionName = null): void
     {
         $this->checkServerRequirements($this->createRunOn($test));
 

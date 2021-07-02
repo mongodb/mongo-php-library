@@ -268,7 +268,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         $this->client->selectDatabase($this->getDatabaseName())->command(['create' => $this->getCollectionName()]);
     }
 
-    private function getTotalConnectionsCreated(Server $server = null)
+    private function getTotalConnectionsCreated(?Server $server = null)
     {
         $server = $server ?: $this->client->getManager()->selectServer(new ReadPreference('primary'));
 

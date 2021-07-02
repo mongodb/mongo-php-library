@@ -81,7 +81,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
      * @param string   $database2Name   Name of alternate database under test
      * @param string   $collection2Name Name of alternate collection under test
      */
-    public function testChangeStreams(stdClass $test, string $databaseName = null, string $collectionName = null, string $database2Name = null, string $collection2Name = null): void
+    public function testChangeStreams(stdClass $test, ?string $databaseName = null, ?string $collectionName = null, ?string $database2Name = null, ?string $collection2Name = null): void
     {
         if (isset(self::$incompleteTests[$this->dataDescription()])) {
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);

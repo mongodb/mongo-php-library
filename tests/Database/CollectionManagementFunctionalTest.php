@@ -123,7 +123,7 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
      *
      * @param callable $callback
      */
-    private function assertCollectionExists($collectionName, callable $callback = null): void
+    private function assertCollectionExists($collectionName, ?callable $callback = null): void
     {
         if ($callback !== null && ! is_callable($callback)) {
             throw new InvalidArgumentException('$callback is not a callable');

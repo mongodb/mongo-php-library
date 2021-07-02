@@ -17,7 +17,6 @@
         <!-- Available with PHP 7.1 -->
         <exclude name="SlevomatCodingStandard.Classes.ClassConstantVisibility" />
         <exclude name="SlevomatCodingStandard.PHP.ShortList.LongListUsed" />
-        <exclude name="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue" />
 
         <!-- Can cause subtle BC breaks, disabled for now -->
         <exclude name="SlevomatCodingStandard.TypeHints.DeclareStrictTypes" />

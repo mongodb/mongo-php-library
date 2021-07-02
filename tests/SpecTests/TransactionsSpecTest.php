@@ -120,7 +120,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @param string   $databaseName   Name of database under test
      * @param string   $collectionName Name of collection under test
      */
-    public function testTransactions(stdClass $test, array $runOn = null, array $data, string $databaseName = null, string $collectionName = null): void
+    public function testTransactions(stdClass $test, ?array $runOn = null, array $data, ?string $databaseName = null, ?string $collectionName = null): void
     {
         if (isset(self::$incompleteTests[$this->dataDescription()])) {
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);

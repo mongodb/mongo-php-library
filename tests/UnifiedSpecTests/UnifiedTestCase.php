@@ -39,7 +39,7 @@ final class UnifiedTestCase implements IteratorAggregate
     /** @var array|null */
     private $initialData;
 
-    private function __construct(stdClass $test, string $schemaVersion, array $runOnRequirements = null, array $createEntities = null, array $initialData = null)
+    private function __construct(stdClass $test, string $schemaVersion, ?array $runOnRequirements = null, ?array $createEntities = null, ?array $initialData = null)
     {
         $this->test = $test;
         $this->schemaVersion = $schemaVersion;

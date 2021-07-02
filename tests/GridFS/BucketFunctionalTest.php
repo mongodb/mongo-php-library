@@ -808,7 +808,7 @@ CMD;
      * @param string   $indexName
      * @param callable $callback
      */
-    private function assertIndexExists(string $collectionName, string $indexName, callable $callback = null): void
+    private function assertIndexExists(string $collectionName, string $indexName, ?callable $callback = null): void
     {
         if ($callback !== null && ! is_callable($callback)) {
             throw new InvalidArgumentException('$callback is not a callable');

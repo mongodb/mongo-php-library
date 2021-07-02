@@ -96,7 +96,7 @@ class ClientFunctionalTest extends FunctionalTestCase
      * @param string   $databaseName
      * @param callable $callback
      */
-    private function assertDatabaseExists(string $databaseName, callable $callback = null): void
+    private function assertDatabaseExists(string $databaseName, ?callable $callback = null): void
     {
         if ($callback !== null && ! is_callable($callback)) {
             throw new InvalidArgumentException('$callback is not a callable');

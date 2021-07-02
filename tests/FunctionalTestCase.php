@@ -105,7 +105,7 @@ abstract class FunctionalTestCase extends TestCase
 
         // Re-append port to last host
         if (isset($urlParts['port'])) {
-            $hosts[$numHosts-1] .= ':' . $urlParts['port'];
+            $hosts[$numHosts - 1] .= ':' . $urlParts['port'];
         }
 
         $parts = ['mongodb://'];

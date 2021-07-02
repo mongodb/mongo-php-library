@@ -95,7 +95,7 @@ final class Operation
 
     public function __construct(stdClass $o, Context $context)
     {
-        $this->context =$context;
+        $this->context = $context;
         $this->entityMap = $context->getEntityMap();
 
         assertIsString($o->name);

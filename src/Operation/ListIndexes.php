@@ -19,6 +19,7 @@ namespace MongoDB\Operation;
 
 use EmptyIterator;
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
@@ -135,7 +136,7 @@ class ListIndexes implements Executable
 
         try {
             $cursor = $server->executeReadCommand($this->databaseName, new Command($cmd), $this->createOptions());
-        } catch (DriverRuntimeException $e) {
+        } catch (CommandException $e) {
             /* The server may return an error if the collection does not exist.
              * Check for possible error codes (see: SERVER-20463) and return an
              * empty iterator instead of throwing.

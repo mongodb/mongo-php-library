@@ -83,7 +83,7 @@ final class Context
      *
      * @param array $createEntities
      */
-    public function createEntities(array $entities)
+    public function createEntities(array $entities): void
     {
         foreach ($entities as $entity) {
             assertIsObject($entity);
@@ -139,7 +139,7 @@ final class Context
         return in_array($sessionId, $this->dirtySessions);
     }
 
-    public function markDirtySession(string $sessionId)
+    public function markDirtySession(string $sessionId): void
     {
         if ($this->isDirtySession($sessionId)) {
             return;
@@ -153,7 +153,7 @@ final class Context
         return $this->activeClient === $clientId;
     }
 
-    public function setActiveClient(string $clientId = null)
+    public function setActiveClient(string $clientId = null): void
     {
         $this->activeClient = $clientId;
     }
@@ -163,12 +163,12 @@ final class Context
         return $this->inLoop;
     }
 
-    public function setInLoop(bool $inLoop)
+    public function setInLoop(bool $inLoop): void
     {
         $this->inLoop = $inLoop;
     }
 
-    public function assertExpectedEventsForClients(array $expectedEventsForClients)
+    public function assertExpectedEventsForClients(array $expectedEventsForClients): void
     {
         assertNotEmpty($expectedEventsForClients);
 
@@ -191,14 +191,14 @@ final class Context
         }
     }
 
-    public function startEventObservers()
+    public function startEventObservers(): void
     {
         foreach ($this->eventObserversByClient as $eventObserver) {
             $eventObserver->start();
         }
     }
 
-    public function stopEventObservers()
+    public function stopEventObservers(): void
     {
         foreach ($this->eventObserversByClient as $eventObserver) {
             $eventObserver->stop();
@@ -212,14 +212,14 @@ final class Context
         return $this->eventObserversByClient[$id];
     }
 
-    public function startEventCollectors()
+    public function startEventCollectors(): void
     {
         foreach ($this->eventCollectors as $eventCollector) {
             $eventCollector->start();
         }
     }
 
-    public function stopEventCollectors()
+    public function stopEventCollectors(): void
     {
         foreach ($this->eventCollectors as $eventCollector) {
             $eventCollector->stop();
@@ -246,7 +246,7 @@ final class Context
         );
     }
 
-    private function createClient(string $id, stdClass $o)
+    private function createClient(string $id, stdClass $o): void
     {
         Util::assertHasOnlyKeys($o, ['id', 'uriOptions', 'useMultipleMongoses', 'observeEvents', 'ignoreCommandMonitoringEvents', 'serverApi', 'storeEventsAsEntities']);
 
@@ -318,7 +318,7 @@ final class Context
         $this->entityMap->set($id, FunctionalTestCase::createTestClient($uri, $uriOptions, $driverOptions));
     }
 
-    private function createEntityCollector(string $clientId, stdClass $o)
+    private function createEntityCollector(string $clientId, stdClass $o): void
     {
         Util::assertHasOnlyKeys($o, ['id', 'events']);
 
@@ -333,7 +333,7 @@ final class Context
         $this->eventCollectors[] = new EventCollector($eventList, $events, $clientId, $this);
     }
 
-    private function createCollection(string $id, stdClass $o)
+    private function createCollection(string $id, stdClass $o): void
     {
         Util::assertHasOnlyKeys($o, ['id', 'database', 'collectionName', 'collectionOptions']);
 
@@ -355,7 +355,7 @@ final class Context
         $this->entityMap->set($id, $database->selectCollection($o->collectionName, $options), $databaseId);
     }
 
-    private function createDatabase(string $id, stdClass $o)
+    private function createDatabase(string $id, stdClass $o): void
     {
         Util::assertHasOnlyKeys($o, ['id', 'client', 'databaseName', 'databaseOptions']);
 
@@ -377,7 +377,7 @@ final class Context
         $this->entityMap->set($id, $client->selectDatabase($databaseName, $options), $clientId);
     }
 
-    private function createSession(string $id, stdClass $o)
+    private function createSession(string $id, stdClass $o): void
     {
         Util::assertHasOnlyKeys($o, ['id', 'client', 'sessionOptions']);
 
@@ -395,7 +395,7 @@ final class Context
         $this->entityMap->set($id, $client->startSession($options), $clientId);
     }
 
-    private function createBucket(string $id, stdClass $o)
+    private function createBucket(string $id, stdClass $o): void
     {
         Util::assertHasOnlyKeys($o, ['id', 'database', 'bucketOptions']);
 
@@ -510,7 +510,7 @@ final class Context
     /**
      * Requires multiple mongos hosts if the URI refers to a sharded cluster.
      */
-    private static function requireMultipleMongoses(string $uri)
+    private static function requireMultipleMongoses(string $uri): void
     {
         assertStringStartsWith('mongodb://', $uri);
 

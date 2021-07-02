@@ -24,7 +24,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
     }
 
-    public function testDeleteOne()
+    public function testDeleteOne(): void
     {
         $this->createFixtures(3);
 
@@ -44,7 +44,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
-    public function testDeleteMany()
+    public function testDeleteMany(): void
     {
         $this->createFixtures(3);
 
@@ -63,14 +63,14 @@ class DeleteFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
-    public function testSessionOption()
+    public function testSessionOption(): void
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
             $this->markTestSkipped('Sessions are not supported');
         }
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new Delete(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -81,7 +81,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
@@ -103,7 +103,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
     /**
      * @depends testUnacknowledgedWriteConcern
      */
-    public function testUnacknowledgedWriteConcernAccessesDeletedCount(DeleteResult $result)
+    public function testUnacknowledgedWriteConcernAccessesDeletedCount(DeleteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
@@ -115,7 +115,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
      *
      * @param integer $n
      */
-    private function createFixtures($n)
+    private function createFixtures(int $n): void
     {
         $bulkWrite = new BulkWrite(['ordered' => true]);
 

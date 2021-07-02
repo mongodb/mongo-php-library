@@ -12,10 +12,10 @@ use function version_compare;
 
 class DropCollectionFunctionalTest extends FunctionalTestCase
 {
-    public function testDefaultWriteConcernIsOmitted()
+    public function testDefaultWriteConcernIsOmitted(): void
     {
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new DropCollection(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -24,13 +24,13 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
             }
         );
     }
 
-    public function testDropExistingCollection()
+    public function testDropExistingCollection(): void
     {
         $server = $this->getPrimaryServer();
 
@@ -48,7 +48,7 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
     /**
      * @depends testDropExistingCollection
      */
-    public function testDropNonexistentCollection()
+    public function testDropNonexistentCollection(): void
     {
         $this->assertCollectionDoesNotExist($this->getCollectionName());
 
@@ -60,14 +60,14 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
         $this->assertIsObject($commandResult);
     }
 
-    public function testSessionOption()
+    public function testSessionOption(): void
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
             $this->markTestSkipped('Sessions are not supported');
         }
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new DropCollection(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -76,7 +76,7 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
@@ -88,7 +88,7 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
      *
      * @param string $collectionName
      */
-    private function assertCollectionDoesNotExist($collectionName)
+    private function assertCollectionDoesNotExist(string $collectionName): void
     {
         $operation = new ListCollections($this->getDatabaseName());
         $collections = $operation->execute($this->getPrimaryServer());

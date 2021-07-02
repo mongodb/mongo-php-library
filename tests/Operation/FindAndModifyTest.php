@@ -10,7 +10,7 @@ class FindAndModifyTest extends TestCase
     /**
      * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorOptionTypeChecks(array $options)
+    public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new FindAndModify($this->getDatabaseName(), $this->getCollectionName(), $options);
@@ -79,7 +79,7 @@ class FindAndModifyTest extends TestCase
         return $options;
     }
 
-    public function testConstructorUpdateAndRemoveOptionsAreMutuallyExclusive()
+    public function testConstructorUpdateAndRemoveOptionsAreMutuallyExclusive(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "remove" option must be true or an "update" document must be specified, but not both');

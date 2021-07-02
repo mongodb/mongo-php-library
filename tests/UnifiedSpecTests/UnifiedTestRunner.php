@@ -79,7 +79,7 @@ final class UnifiedTestRunner
         }
     }
 
-    public function run(UnifiedTestCase $test)
+    public function run(UnifiedTestCase $test): void
     {
         $this->doSetUp();
         $hasFailed = false;
@@ -116,12 +116,12 @@ final class UnifiedTestRunner
      *
      * @param callable(EntityMap):void $entityMapObserver
      */
-    public function setEntityMapObserver(callable $entityMapObserver)
+    public function setEntityMapObserver(callable $entityMapObserver): void
     {
         $this->entityMapObserver = $entityMapObserver;
     }
 
-    private function doSetUp()
+    private function doSetUp(): void
     {
         /* The transactions spec advises calling killAllSessions only at the
          * start of the test suite and after failed tests; however, the "unpin
@@ -133,7 +133,7 @@ final class UnifiedTestRunner
         $this->failPointObserver->start();
     }
 
-    private function doTearDown(bool $hasFailed)
+    private function doTearDown(bool $hasFailed): void
     {
         $this->entityMap = null;
 
@@ -150,7 +150,7 @@ final class UnifiedTestRunner
         gc_collect_cycles();
     }
 
-    private function doTestCase(stdClass $test, string $schemaVersion, array $runOnRequirements = null, array $createEntities = null, array $initialData = null)
+    private function doTestCase(stdClass $test, string $schemaVersion, array $runOnRequirements = null, array $createEntities = null, array $initialData = null): void
     {
         if (! $this->isSchemaVersionSupported($schemaVersion)) {
             Assert::markTestIncomplete(sprintf('Test format schema version "%s" is not supported', $schemaVersion));
@@ -220,7 +220,7 @@ final class UnifiedTestRunner
      *
      * @throws SkippedTest unless one or more runOnRequirements are met
      */
-    private function checkRunOnRequirements(array $runOnRequirements)
+    private function checkRunOnRequirements(array $runOnRequirements): void
     {
         static $cachedIsSatisfiedArgs;
 
@@ -377,7 +377,7 @@ final class UnifiedTestRunner
      *
      * This method is a NOP if allowKillAllSessions is false.
      */
-    private function killAllSessions()
+    private function killAllSessions(): void
     {
         static $ignoreErrorCodes = [
             self::SERVER_ERROR_INTERRUPTED, // SERVER-38335
@@ -410,7 +410,7 @@ final class UnifiedTestRunner
         }
     }
 
-    private function assertOutcome(array $outcome)
+    private function assertOutcome(array $outcome): void
     {
         assertNotEmpty($outcome);
         assertContainsOnly('object', $outcome);
@@ -421,7 +421,7 @@ final class UnifiedTestRunner
         }
     }
 
-    private function prepareInitialData(array $initialData)
+    private function prepareInitialData(array $initialData): void
     {
         assertNotEmpty($initialData);
         assertContainsOnly('object', $initialData);
@@ -437,7 +437,7 @@ final class UnifiedTestRunner
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/transactions/tests/README.rst#why-do-tests-that-run-distinct-sometimes-fail-with-staledbversion
      */
-    private function preventStaleDbVersionError(array $operations, Context $context)
+    private function preventStaleDbVersionError(array $operations, Context $context): void
     {
         if ($this->getPrimaryServer()->getType() !== Server::TYPE_MONGOS) {
             return;

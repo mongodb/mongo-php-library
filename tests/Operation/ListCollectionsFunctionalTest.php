@@ -13,7 +13,7 @@ use function version_compare;
 
 class ListCollectionsFunctionalTest extends FunctionalTestCase
 {
-    public function testListCollectionsForNewlyCreatedDatabase()
+    public function testListCollectionsForNewlyCreatedDatabase(): void
     {
         $server = $this->getPrimaryServer();
 
@@ -43,7 +43,7 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
      * @group matrix-testing-exclude-server-5.0-driver-4.0
      * @group matrix-testing-exclude-server-5.0-driver-4.2
      */
-    public function testIdIndexAndInfo()
+    public function testIdIndexAndInfo(): void
     {
         if (version_compare($this->getServerVersion(), '3.4.0', '<')) {
             $this->markTestSkipped('idIndex and info are not supported');
@@ -67,7 +67,7 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testListCollectionsForNonexistentDatabase()
+    public function testListCollectionsForNonexistentDatabase(): void
     {
         $server = $this->getPrimaryServer();
 
@@ -80,14 +80,14 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
         $this->assertCount(0, $collections);
     }
 
-    public function testSessionOption()
+    public function testSessionOption(): void
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
             $this->markTestSkipped('Sessions are not supported');
         }
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new ListCollections(
                     $this->getDatabaseName(),
                     ['session' => $this->createSession()]
@@ -95,7 +95,7 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );

@@ -41,7 +41,7 @@ final class ExpectedResult
         $this->yieldingEntityId = $yieldingEntityId;
     }
 
-    public function assert($actual, string $saveResultAsEntity = null)
+    public function assert($actual, string $saveResultAsEntity = null): void
     {
         if ($this->constraint === null && $saveResultAsEntity === null) {
             return;

@@ -112,7 +112,7 @@ class Matches extends Constraint
         }
     }
 
-    private function assertEquals($expected, $actual, string $keyPath)
+    private function assertEquals($expected, $actual, string $keyPath): void
     {
         $expectedType = get_debug_type($expected);
         $actualType = get_debug_type($actual);
@@ -133,7 +133,7 @@ class Matches extends Constraint
         }
     }
 
-    private function assertMatches($expected, $actual, string $keyPath = '')
+    private function assertMatches($expected, $actual, string $keyPath = ''): void
     {
         if ($expected instanceof BSONArray) {
             $this->assertMatchesArray($expected, $actual, $keyPath);
@@ -150,7 +150,7 @@ class Matches extends Constraint
         $this->assertEquals($expected, $actual, $keyPath);
     }
 
-    private function assertMatchesArray(BSONArray $expected, $actual, string $keyPath)
+    private function assertMatchesArray(BSONArray $expected, $actual, string $keyPath): void
     {
         if (! $actual instanceof BSONArray) {
             $actualType = get_debug_type($actual);
@@ -170,7 +170,7 @@ class Matches extends Constraint
         }
     }
 
-    private function assertMatchesDocument(BSONDocument $expected, $actual, string $keyPath)
+    private function assertMatchesDocument(BSONDocument $expected, $actual, string $keyPath): void
     {
         if ($this->allowOperators && self::isOperator($expected)) {
             $this->assertMatchesOperator($expected, $actual, $keyPath);
@@ -236,7 +236,7 @@ class Matches extends Constraint
         }
     }
 
-    private function assertMatchesOperator(BSONDocument $operator, $actual, string $keyPath)
+    private function assertMatchesOperator(BSONDocument $operator, $actual, string $keyPath): void
     {
         $name = self::getOperatorName($operator);
 
@@ -350,7 +350,7 @@ class Matches extends Constraint
         return 'matches ' . $this->exporter()->export($this->value);
     }
 
-    private static function failAt(string $message, string $keyPath)
+    private static function failAt(string $message, string $keyPath): void
     {
         $prefix = empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath);
 

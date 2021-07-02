@@ -156,7 +156,7 @@ final class Operation
      *
      * @return Operation
      */
-    private static function fromConvenientTransactions(stdClass $operation)
+    private static function fromConvenientTransactions(stdClass $operation): Operation
     {
         $o = new self($operation);
 
@@ -246,7 +246,7 @@ final class Operation
      * @param Context            $context          Execution context
      * @param bool               $bubbleExceptions If true, any exception that was caught is rethrown
      */
-    public function assert(FunctionalTestCase $test, Context $context, $bubbleExceptions = false)
+    public function assert(FunctionalTestCase $test, Context $context, bool $bubbleExceptions = false): void
     {
         $result = null;
         $exception = null;
@@ -637,7 +637,7 @@ final class Operation
                     return self::fromConvenientTransactions($operation);
                 }, $this->arguments['callback']->operations);
 
-                $callback = function () use ($callbackOperations, $test, $context) {
+                $callback = function () use ($callbackOperations, $test, $context): void {
                     foreach ($callbackOperations as $operation) {
                         $operation->assert($test, $context, true);
                     }
@@ -727,7 +727,7 @@ final class Operation
      *
      * @return array
      */
-    private function getIndexNames(Context $context, $databaseName, $collectionName)
+    private function getIndexNames(Context $context, string $databaseName, string $collectionName): array
     {
         return array_map(
             function (IndexInfo $indexInfo) {
@@ -891,7 +891,7 @@ final class Operation
      * @return array
      * @throws LogicException if the bulk write request is unsupported
      */
-    private function prepareBulkWriteRequest(stdClass $request)
+    private function prepareBulkWriteRequest(stdClass $request): array
     {
         $args = (array) $request->arguments;
 

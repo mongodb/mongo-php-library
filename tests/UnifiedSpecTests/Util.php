@@ -26,7 +26,7 @@ use function PHPUnit\Framework\logicalOr;
 
 final class Util
 {
-    public static function assertHasOnlyKeys($arrayOrObject, array $keys)
+    public static function assertHasOnlyKeys($arrayOrObject, array $keys): void
     {
         assertThat($arrayOrObject, logicalOr(isType('array'), isInstanceOf(stdClass::class)));
         $diff = array_diff_key((array) $arrayOrObject, array_fill_keys($keys, 1));

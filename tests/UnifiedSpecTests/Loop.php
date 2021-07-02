@@ -74,14 +74,14 @@ final class Loop
         $this->numIterationsEntityId = $options['storeIterationsAsEntity'] ?? null;
     }
 
-    public function execute()
+    public function execute(): void
     {
         assertFalse($this->context->isInLoop(), 'Nested loops are unsupported');
 
         $numIterations = 0;
         $numSuccessfulOperations = 0;
 
-        $callback = function () use (&$numSuccessfulOperations) {
+        $callback = function () use (&$numSuccessfulOperations): void {
             foreach ($this->operations as $operation) {
                 $operation->assert();
                 $numSuccessfulOperations++;
@@ -129,7 +129,7 @@ final class Loop
      *
      * This function is primarily used by the Atlas testing workload executor.
      */
-    public static function allowIteration(bool $allowIteration = true)
+    public static function allowIteration(bool $allowIteration = true): void
     {
         self::$allowIteration = $allowIteration;
     }
@@ -139,14 +139,14 @@ final class Loop
      *
      * This can be used to limit CPU usage during workload execution.
      */
-    public static function setSleepUsecBetweenIterations(int $usec)
+    public static function setSleepUsecBetweenIterations(int $usec): void
     {
         assertGreaterThanOrEqual(0, $usec);
 
         self::$sleepUsecBetweenIterations = $usec;
     }
 
-    private function handleErrorOrFailure(Throwable $e)
+    private function handleErrorOrFailure(Throwable $e): void
     {
         /* The constructor will either initialize both lists or leave them both
          * unset. If unset, exceptions should not be logged and instead

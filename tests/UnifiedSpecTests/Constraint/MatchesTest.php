@@ -14,7 +14,7 @@ use function version_compare;
 
 class MatchesTest extends FunctionalTestCase
 {
-    public function testMatchesDocument()
+    public function testMatchesDocument(): void
     {
         $c = new Matches(['x' => 1, 'y' => ['a' => 1, 'b' => 2]]);
         $this->assertResult(false, $c, ['x' => 1, 'y' => 2], 'Incorrect value');
@@ -24,20 +24,20 @@ class MatchesTest extends FunctionalTestCase
         $this->assertResult(true, $c, ['y' => ['b' => 2, 'a' => 1], 'x' => 1], 'Root and embedded key order is not significant');
     }
 
-    public function testDoNotAllowExtraRootKeys()
+    public function testDoNotAllowExtraRootKeys(): void
     {
         $c = new Matches(['x' => 1], null, false);
         $this->assertResult(false, $c, ['x' => 1, 'y' => 1], 'Extra keys in root are prohibited');
     }
 
-    public function testDoNotAllowOperators()
+    public function testDoNotAllowOperators(): void
     {
         $c = new Matches(['x' => ['$$exists' => true]], null, true, false);
         $this->assertResult(false, $c, ['x' => 1], 'Operators are not processed');
         $this->assertResult(true, $c, ['x' => ['$$exists' => true]], 'Operators are not processed but compared as-is');
     }
 
-    public function testOperatorExists()
+    public function testOperatorExists(): void
     {
         $c = new Matches(['x' => ['$$exists' => true]]);
         $this->assertResult(true, $c, ['x' => '1'], 'root-level key exists');
@@ -60,7 +60,7 @@ class MatchesTest extends FunctionalTestCase
         $this->assertResult(true, $c, ['x' => new stdClass()], 'embedded key missing');
     }
 
-    public function testOperatorType()
+    public function testOperatorType(): void
     {
         $c = new Matches(['x' => ['$$type' => 'string']]);
         $this->assertResult(true, $c, ['x' => 'foo'], 'string matches string type');
@@ -72,7 +72,7 @@ class MatchesTest extends FunctionalTestCase
         $this->assertResult(false, $c, ['x' => 1], 'integer does not match [string,bool] type');
     }
 
-    public function testOperatorMatchesEntity()
+    public function testOperatorMatchesEntity(): void
     {
         $entityMap = new EntityMap();
         $entityMap->set('integer', 1);
@@ -94,7 +94,7 @@ class MatchesTest extends FunctionalTestCase
         $this->assertResult(false, $c, ['x' => ['y' => 1, 'z' => 2]], 'value does not match object entity (root-level)');
     }
 
-    public function testOperatorMatchesHexBytes()
+    public function testOperatorMatchesHexBytes(): void
     {
         $c = new Matches(['$$matchesHexBytes' => 'DEADBEEF']);
         $this->assertResult(true, $c, hex2bin('DEADBEEF'), 'value matches hex bytes (root-level)');
@@ -105,7 +105,7 @@ class MatchesTest extends FunctionalTestCase
         $this->assertResult(false, $c, ['x' => hex2bin('DEADBEEF')], 'value does not match hex bytes (embedded)');
     }
 
-    public function testOperatorUnsetOrMatches()
+    public function testOperatorUnsetOrMatches(): void
     {
         $c = new Matches(['$$unsetOrMatches' => ['x' => 1]]);
         $this->assertResult(true, $c, null, 'null value is considered unset (root-level)');
@@ -120,7 +120,7 @@ class MatchesTest extends FunctionalTestCase
         $this->assertResult(false, $c, ['x' => ['y' => 1, 'z' => 2]], 'value does not match (embedded)');
     }
 
-    public function testOperatorSessionLsid()
+    public function testOperatorSessionLsid(): void
     {
         if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
             $this->markTestSkipped('startSession() is only supported on FCV 3.6 or higher');
@@ -150,7 +150,7 @@ class MatchesTest extends FunctionalTestCase
     /**
      * @dataProvider errorMessageProvider
      */
-    public function testErrorMessages($expectedMessageRegex, Matches $constraint, $actualValue)
+    public function testErrorMessages($expectedMessageRegex, Matches $constraint, $actualValue): void
     {
         try {
             $constraint->evaluate($actualValue);
@@ -235,7 +235,7 @@ class MatchesTest extends FunctionalTestCase
     /**
      * @dataProvider operatorErrorMessageProvider
      */
-    public function testOperatorSyntaxValidation($expectedMessage, Matches $constraint)
+    public function testOperatorSyntaxValidation($expectedMessage, Matches $constraint): void
     {
         $this->expectException(ExpectationFailedException::class);
         $this->expectExceptionMessage($expectedMessage);
@@ -285,7 +285,7 @@ class MatchesTest extends FunctionalTestCase
         ];
     }
 
-    private function assertResult($expected, Matches $constraint, $value, string $message = '')
+    private function assertResult($expected, Matches $constraint, $value, string $message = ''): void
     {
         $this->assertSame($expected, $constraint->evaluate($value, '', true), $message);
     }

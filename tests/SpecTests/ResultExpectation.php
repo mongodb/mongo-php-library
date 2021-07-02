@@ -49,7 +49,7 @@ final class ResultExpectation
      * @param integer $assertionType
      * @param mixed   $expectedValue
      */
-    private function __construct($assertionType, $expectedValue)
+    private function __construct(int $assertionType, $expectedValue)
     {
         switch ($assertionType) {
             case self::ASSERT_BULKWRITE:
@@ -173,7 +173,7 @@ final class ResultExpectation
      * @param mixed              $result Result (if any) from the actual outcome
      * @throws LogicException if the assertion type is unsupported
      */
-    public function assert(FunctionalTestCase $test, $actual)
+    public function assert(FunctionalTestCase $test, $actual): void
     {
         $expected = $this->expectedValue;
 
@@ -367,7 +367,7 @@ final class ResultExpectation
      * @param mixed $result
      * @return boolean
      */
-    private static function isErrorResult($result)
+    private static function isErrorResult($result): bool
     {
         if (! is_object($result)) {
             return false;

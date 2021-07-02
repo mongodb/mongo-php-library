@@ -135,7 +135,7 @@ abstract class FunctionalTestCase extends TestCase
         return implode('', $parts);
     }
 
-    protected function assertCollectionCount($namespace, $count)
+    protected function assertCollectionCount($namespace, $count): void
     {
         list($databaseName, $collectionName) = explode('.', $namespace, 2);
 
@@ -147,7 +147,7 @@ abstract class FunctionalTestCase extends TestCase
         $this->assertEquals($count, $document['n']);
     }
 
-    protected function assertCommandSucceeded($document)
+    protected function assertCommandSucceeded($document): void
     {
         $document = is_object($document) ? (array) $document : $document;
 
@@ -155,7 +155,7 @@ abstract class FunctionalTestCase extends TestCase
         $this->assertEquals(1, $document['ok']);
     }
 
-    protected function assertSameObjectId($expectedObjectId, $actualObjectId)
+    protected function assertSameObjectId($expectedObjectId, $actualObjectId): void
     {
         $this->assertInstanceOf(ObjectId::class, $expectedObjectId);
         $this->assertInstanceOf(ObjectId::class, $actualObjectId);
@@ -171,7 +171,7 @@ abstract class FunctionalTestCase extends TestCase
      * @param array|stdClass $command configureFailPoint command document
      * @throws InvalidArgumentException if $command is not a configureFailPoint command
      */
-    public function configureFailPoint($command, Server $server = null)
+    public function configureFailPoint($command, Server $server = null): void
     {
         if (! $this->isFailCommandSupported()) {
             $this->markTestSkipped('failCommand is only supported on mongod >= 4.0.0 and mongos >= 4.1.5.');
@@ -214,7 +214,7 @@ abstract class FunctionalTestCase extends TestCase
      *
      * @param array $options
      */
-    protected function createCollection(array $options = [])
+    protected function createCollection(array $options = []): void
     {
         if (version_compare($this->getServerVersion(), '3.4.0', '>=')) {
             $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
@@ -233,7 +233,7 @@ abstract class FunctionalTestCase extends TestCase
      *
      * @param array $options
      */
-    protected function dropCollection(array $options = [])
+    protected function dropCollection(array $options = []): void
     {
         if (version_compare($this->getServerVersion(), '3.4.0', '>=')) {
             $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
@@ -344,7 +344,7 @@ abstract class FunctionalTestCase extends TestCase
         return preg_match('@^.*/.*:\d+@', $document['host']);
     }
 
-    protected function skipIfChangeStreamIsNotSupported()
+    protected function skipIfChangeStreamIsNotSupported(): void
     {
         switch ($this->getPrimaryServer()->getType()) {
             case Server::TYPE_MONGOS:
@@ -370,7 +370,7 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
-    protected function skipIfCausalConsistencyIsNotSupported()
+    protected function skipIfCausalConsistencyIsNotSupported(): void
     {
         switch ($this->getPrimaryServer()->getType()) {
             case Server::TYPE_MONGOS:
@@ -400,7 +400,7 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
-    protected function skipIfClientSideEncryptionIsNotSupported()
+    protected function skipIfClientSideEncryptionIsNotSupported(): void
     {
         if (version_compare($this->getFeatureCompatibilityVersion(), '4.2', '<')) {
             $this->markTestSkipped('Client Side Encryption only supported on FCV 4.2 or higher');
@@ -411,14 +411,14 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
-    protected function skipIfGeoHaystackIndexIsNotSupported()
+    protected function skipIfGeoHaystackIndexIsNotSupported(): void
     {
         if (version_compare($this->getServerVersion(), '4.9', '>=')) {
             $this->markTestSkipped('GeoHaystack indexes cannot be created in version 4.9 and above');
         }
     }
 
-    protected function skipIfTransactionsAreNotSupported()
+    protected function skipIfTransactionsAreNotSupported(): void
     {
         if ($this->getPrimaryServer()->getType() === Server::TYPE_STANDALONE) {
             $this->markTestSkipped('Transactions are not supported on standalone servers');
@@ -460,7 +460,7 @@ abstract class FunctionalTestCase extends TestCase
      * This tracks fail points set via configureFailPoint() and should be called
      * during tearDown().
      */
-    private function disableFailPoints()
+    private function disableFailPoints(): void
     {
         if (empty($this->configuredFailPoints)) {
             return;
@@ -472,12 +472,7 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
-    /**
-     * @param string $row
-     *
-     * @return string|null
-     */
-    private function getModuleInfo($row)
+    private function getModuleInfo(string $row): ?string
     {
         ob_start();
         phpinfo(INFO_MODULES);
@@ -497,7 +492,7 @@ abstract class FunctionalTestCase extends TestCase
      *
      * @return bool
      */
-    private function isFailCommandSupported()
+    private function isFailCommandSupported(): bool
     {
         $minVersion = $this->isShardedCluster() ? '4.1.5' : '4.0.0';
 
@@ -509,7 +504,7 @@ abstract class FunctionalTestCase extends TestCase
      *
      * @return bool
      */
-    private function isFailCommandEnabled()
+    private function isFailCommandEnabled(): bool
     {
         try {
             $cursor = $this->manager->executeCommand(

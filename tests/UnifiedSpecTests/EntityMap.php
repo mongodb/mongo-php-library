@@ -79,7 +79,7 @@ class EntityMap implements ArrayAccess
     /**
      * @see http://php.net/arrayaccess.offsetset
      */
-    public function offsetSet($id, $value)
+    public function offsetSet($id, $value): void
     {
         Assert::fail('Entities can only be set via set()');
     }
@@ -87,12 +87,12 @@ class EntityMap implements ArrayAccess
     /**
      * @see http://php.net/arrayaccess.offsetunset
      */
-    public function offsetUnset($id)
+    public function offsetUnset($id): void
     {
         Assert::fail('Entities cannot be removed from the map');
     }
 
-    public function set(string $id, $value, string $parentId = null)
+    public function set(string $id, $value, string $parentId = null): void
     {
         assertArrayNotHasKey($id, $this->map, sprintf('Entity already exists for "%s" and cannot be replaced', $id));
         assertThat($value, self::isSupportedType());
@@ -136,7 +136,7 @@ class EntityMap implements ArrayAccess
      *
      * @see Operation::executeForCursor()
      */
-    public function closeCursor(string $cursorId)
+    public function closeCursor(string $cursorId): void
     {
         assertInstanceOf(Cursor::class, $this[$cursorId]);
         unset($this->map[$cursorId]);

@@ -39,7 +39,7 @@ class DirtySessionObserver implements CommandSubscriber
     /**
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php
      */
-    public function commandFailed(CommandFailedEvent $event)
+    public function commandFailed(CommandFailedEvent $event): void
     {
         if (! in_array($event->getRequestId(), $this->requestIds)) {
             return;
@@ -53,7 +53,7 @@ class DirtySessionObserver implements CommandSubscriber
     /**
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandstarted.php
      */
-    public function commandStarted(CommandStartedEvent $event)
+    public function commandStarted(CommandStartedEvent $event): void
     {
         if ($this->lsid == ($event->getCommand()->lsid ?? null)) {
             $this->requestIds[] = $event->getRequestId();
@@ -63,7 +63,7 @@ class DirtySessionObserver implements CommandSubscriber
     /**
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandsucceeded.php
      */
-    public function commandSucceeded(CommandSucceededEvent $event)
+    public function commandSucceeded(CommandSucceededEvent $event): void
     {
     }
 
@@ -72,12 +72,12 @@ class DirtySessionObserver implements CommandSubscriber
         return $this->observedNetworkError;
     }
 
-    public function start()
+    public function start(): void
     {
         addSubscriber($this);
     }
 
-    public function stop()
+    public function stop(): void
     {
         removeSubscriber($this);
     }

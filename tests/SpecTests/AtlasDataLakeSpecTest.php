@@ -36,7 +36,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
      * @param stdClass $expected Expected command document
      * @param stdClass $actual   Actual command document
      */
-    public static function assertCommandMatches(stdClass $expected, stdClass $actual)
+    public static function assertCommandMatches(stdClass $expected, stdClass $actual): void
     {
         foreach ($expected as $key => $value) {
             if ($value === null) {
@@ -58,7 +58,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
      * @param string   $databaseName   Name of database under test
      * @param string   $collectionName Name of collection under test
      */
-    public function testAtlasDataLake(stdClass $test, array $runOn = null, array $data, $databaseName = null, $collectionName = null)
+    public function testAtlasDataLake(stdClass $test, array $runOn = null, array $data, string $databaseName = null, string $collectionName = null): void
     {
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
@@ -127,17 +127,17 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
     /**
      * Prose test 1: Connect without authentication
      */
-    public function testKillCursors()
+    public function testKillCursors(): void
     {
         $cursorId = null;
         $cursorNamespace = null;
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $client = static::createTestClient();
                 $client->test->driverdata->find([], ['batchSize' => 2, 'limit' => 3]);
             },
-            function (array $event) use (&$cursorId, &$cursorNamespace) {
+            function (array $event) use (&$cursorId, &$cursorNamespace): void {
                 if ($event['started']->getCommandName() === 'find') {
                     $this->assertArrayHasKey('succeeded', $event);
 
@@ -193,7 +193,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
     /**
      * Prose test 2: Connect without authentication
      */
-    public function testConnectWithoutAuth()
+    public function testConnectWithoutAuth(): void
     {
         /* Parse URI to remove userinfo component. The query string is left
          * as-is and must not include authMechanism or credentials. */
@@ -214,7 +214,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
     /**
      * Prose test 3: Connect with SCRAM-SHA-1 authentication
      */
-    public function testConnectwithSCRAMSHA1()
+    public function testConnectwithSCRAMSHA1(): void
     {
         $client = static::createTestClient(null, ['authMechanism' => 'SCRAM-SHA-1']);
         $cursor = $client->selectDatabase($this->getDatabaseName())->command(['ping' => 1]);
@@ -226,7 +226,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
     /**
      * Prose test 4: Connect with SCRAM-SHA-256 authentication
      */
-    public function testConnectwithSCRAMSHA256()
+    public function testConnectwithSCRAMSHA256(): void
     {
         $client = static::createTestClient(null, ['authMechanism' => 'SCRAM-SHA-256']);
         $cursor = $client->selectDatabase($this->getDatabaseName())->command(['ping' => 1]);

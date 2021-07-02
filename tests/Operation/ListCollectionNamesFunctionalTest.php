@@ -11,7 +11,7 @@ use function version_compare;
 
 class ListCollectionNamesFunctionalTest extends FunctionalTestCase
 {
-    public function testListCollectionNamesForNewlyCreatedDatabase()
+    public function testListCollectionNamesForNewlyCreatedDatabase(): void
     {
         $server = $this->getPrimaryServer();
 
@@ -31,14 +31,14 @@ class ListCollectionNamesFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testSessionOption()
+    public function testSessionOption(): void
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
             $this->markTestSkipped('Sessions are not supported');
         }
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new ListCollectionNames(
                     $this->getDatabaseName(),
                     ['session' => $this->createSession()]
@@ -46,7 +46,7 @@ class ListCollectionNamesFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );

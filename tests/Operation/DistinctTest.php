@@ -10,7 +10,7 @@ class DistinctTest extends TestCase
     /**
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorFilterArgumentTypeCheck($filter)
+    public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', $filter);
@@ -19,7 +19,7 @@ class DistinctTest extends TestCase
     /**
      * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorOptionTypeChecks(array $options)
+    public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', [], $options);

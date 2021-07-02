@@ -27,7 +27,7 @@ class PedantryTest extends TestCase
     /**
      * @dataProvider provideProjectClassNames
      */
-    public function testMethodsAreOrderedAlphabeticallyByVisibility($className)
+    public function testMethodsAreOrderedAlphabeticallyByVisibility($className): void
     {
         $class = new ReflectionClass($className);
         $methods = $class->getMethods();

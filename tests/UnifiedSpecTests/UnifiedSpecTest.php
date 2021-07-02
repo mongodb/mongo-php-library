@@ -74,7 +74,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideChangeStreamsTests
      */
-    public function testChangeStreams(UnifiedTestCase $test)
+    public function testChangeStreams(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -87,7 +87,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideCollectionManagementTests
      */
-    public function testCollectionManagement(UnifiedTestCase $test)
+    public function testCollectionManagement(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -100,7 +100,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideCrudTests
      */
-    public function testCrud(UnifiedTestCase $test)
+    public function testCrud(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -113,7 +113,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideGridFSTests
      */
-    public function testGridFS(UnifiedTestCase $test)
+    public function testGridFS(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -126,7 +126,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideTransactionsTests
      */
-    public function testTransactions(UnifiedTestCase $test)
+    public function testTransactions(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -140,7 +140,7 @@ class UnifiedSpecTest extends FunctionalTestCase
      * @dataProvider provideVersionedApiTests
      * @group versioned-api
      */
-    public function testVersionedApi(UnifiedTestCase $test)
+    public function testVersionedApi(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -153,7 +153,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider providePassingTests
      */
-    public function testPassingTests(UnifiedTestCase $test)
+    public function testPassingTests(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -166,7 +166,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideFailingTests
      */
-    public function testFailingTests(UnifiedTestCase $test)
+    public function testFailingTests(UnifiedTestCase $test): void
     {
         // Cannot use expectException(), as it ignores PHPUnit Exceptions
         $failed = false;

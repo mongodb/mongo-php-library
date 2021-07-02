@@ -17,7 +17,7 @@ class BSONIteratorTest extends TestCase
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocuments
      */
-    public function testValidValues(array $typeMap = null, $binaryString, array $expectedDocuments)
+    public function testValidValues(array $typeMap = null, $binaryString, array $expectedDocuments): void
     {
         $bsonIt = new BSONIterator($binaryString, ['typeMap' => $typeMap]);
 
@@ -88,7 +88,7 @@ class BSONIteratorTest extends TestCase
         ];
     }
 
-    public function testCannotReadLengthFromFirstDocument()
+    public function testCannotReadLengthFromFirstDocument(): void
     {
         $binaryString = substr(fromPHP([]), 0, 3);
 
@@ -99,7 +99,7 @@ class BSONIteratorTest extends TestCase
         $bsonIt->rewind();
     }
 
-    public function testCannotReadLengthFromSubsequentDocument()
+    public function testCannotReadLengthFromSubsequentDocument(): void
     {
         $binaryString = fromPHP([]) . substr(fromPHP([]), 0, 3);
 
@@ -111,7 +111,7 @@ class BSONIteratorTest extends TestCase
         $bsonIt->next();
     }
 
-    public function testCannotReadFirstDocument()
+    public function testCannotReadFirstDocument(): void
     {
         $binaryString = substr(fromPHP([]), 0, 4);
 
@@ -122,7 +122,7 @@ class BSONIteratorTest extends TestCase
         $bsonIt->rewind();
     }
 
-    public function testCannotReadSecondDocument()
+    public function testCannotReadSecondDocument(): void
     {
         $binaryString = fromPHP([]) . substr(fromPHP([]), 0, 4);
 

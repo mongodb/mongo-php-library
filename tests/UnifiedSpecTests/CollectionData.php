@@ -42,7 +42,7 @@ class CollectionData
         $this->documents = $o->documents;
     }
 
-    public function prepareInitialData(Client $client)
+    public function prepareInitialData(Client $client): void
     {
         $database = $client->selectDatabase(
             $this->databaseName,
@@ -60,7 +60,7 @@ class CollectionData
         $database->selectCollection($this->collectionName)->insertMany($this->documents);
     }
 
-    public function assertOutcome(Client $client)
+    public function assertOutcome(Client $client): void
     {
         $collection = $client->selectCollection(
             $this->databaseName,

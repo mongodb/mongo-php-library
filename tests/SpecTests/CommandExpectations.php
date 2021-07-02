@@ -154,7 +154,7 @@ class CommandExpectations implements CommandSubscriber
      *
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php
      */
-    public function commandFailed(CommandFailedEvent $event)
+    public function commandFailed(CommandFailedEvent $event): void
     {
         if ($this->ignoreCommandFailed || $this->isEventIgnored($event)) {
             return;
@@ -168,7 +168,7 @@ class CommandExpectations implements CommandSubscriber
      *
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandstarted.php
      */
-    public function commandStarted(CommandStartedEvent $event)
+    public function commandStarted(CommandStartedEvent $event): void
     {
         if ($this->ignoreCommandStarted || $this->isEventIgnored($event)) {
             return;
@@ -182,7 +182,7 @@ class CommandExpectations implements CommandSubscriber
      *
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandsucceeded.php
      */
-    public function commandSucceeded(CommandSucceededEvent $event)
+    public function commandSucceeded(CommandSucceededEvent $event): void
     {
         if ($this->ignoreCommandSucceeded || $this->isEventIgnored($event)) {
             return;
@@ -194,7 +194,7 @@ class CommandExpectations implements CommandSubscriber
     /**
      * Start command monitoring.
      */
-    public function startMonitoring()
+    public function startMonitoring(): void
     {
         addSubscriber($this);
     }
@@ -202,7 +202,7 @@ class CommandExpectations implements CommandSubscriber
     /**
      * Stop command monitoring.
      */
-    public function stopMonitoring()
+    public function stopMonitoring(): void
     {
         removeSubscriber($this);
     }
@@ -213,7 +213,7 @@ class CommandExpectations implements CommandSubscriber
      * @param FunctionalTestCase $test    Test instance
      * @param Context            $context Execution context
      */
-    public function assert(FunctionalTestCase $test, Context $context)
+    public function assert(FunctionalTestCase $test, Context $context): void
     {
         $test->assertCount(count($this->expectedEvents), $this->actualEvents);
 

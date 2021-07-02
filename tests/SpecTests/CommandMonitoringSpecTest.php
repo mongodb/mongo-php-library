@@ -26,7 +26,7 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
      * @param stdClass $expected Expected command document
      * @param stdClass $actual   Actual command document
      */
-    public static function assertCommandMatches(stdClass $expected, stdClass $actual)
+    public static function assertCommandMatches(stdClass $expected, stdClass $actual): void
     {
         if (isset($expected->getMore) && $expected->getMore === 42) {
             static::assertObjectHasAttribute('getMore', $actual);
@@ -66,7 +66,7 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
      * @param stdClass $expected Expected command reply document
      * @param stdClass $actual   Actual command reply document
      */
-    public static function assertCommandReplyMatches(stdClass $expected, stdClass $actual)
+    public static function assertCommandReplyMatches(stdClass $expected, stdClass $actual): void
     {
         if (isset($expected->cursor->id) && $expected->cursor->id === 42) {
             static::assertObjectHasAttribute('cursor', $actual);
@@ -142,7 +142,7 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
      * @param string   $databaseName   Name of database under test
      * @param string   $collectionName Name of collection under test
      */
-    public function testCommandMonitoring(stdClass $test, array $data, $databaseName = null, $collectionName = null)
+    public function testCommandMonitoring(stdClass $test, array $data, string $databaseName = null, string $collectionName = null): void
     {
         $this->checkServerRequirements($this->createRunOn($test));
 
@@ -197,7 +197,7 @@ class CommandMonitoringSpecTest extends FunctionalTestCase
      * @param stdClass $test
      * @return array
      */
-    private function createRunOn(stdClass $test)
+    private function createRunOn(stdClass $test): array
     {
         $req = new stdClass();
 

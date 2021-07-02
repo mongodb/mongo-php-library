@@ -65,7 +65,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @param stdClass $expected Expected command document
      * @param stdClass $actual   Actual command document
      */
-    public static function assertCommandMatches(stdClass $expected, stdClass $actual)
+    public static function assertCommandMatches(stdClass $expected, stdClass $actual): void
     {
         if (isset($expected->getMore) && $expected->getMore === 42) {
             static::assertObjectHasAttribute('getMore', $actual);
@@ -120,7 +120,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @param string   $databaseName   Name of database under test
      * @param string   $collectionName Name of collection under test
      */
-    public function testTransactions(stdClass $test, array $runOn = null, array $data, $databaseName = null, $collectionName = null)
+    public function testTransactions(stdClass $test, array $runOn = null, array $data, string $databaseName = null, string $collectionName = null): void
     {
         if (isset(self::$incompleteTests[$this->dataDescription()])) {
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
@@ -201,7 +201,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * ClientSession unpins the session and normal server selection is performed
      * for the next operation.
      */
-    public function testStartingNewTransactionOnPinnedSessionUnpinsSession()
+    public function testStartingNewTransactionOnPinnedSessionUnpinsSession(): void
     {
         if (! $this->isShardedClusterUsingReplicasets()) {
             $this->markTestSkipped('Mongos pinning tests can only run on sharded clusters using replica sets');
@@ -239,7 +239,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * ClientSession unpins the session and normal server selection is
      * performed.
      */
-    public function testRunningNonTransactionOperationOnPinnedSessionUnpinsSession()
+    public function testRunningNonTransactionOperationOnPinnedSessionUnpinsSession(): void
     {
         if (! $this->isShardedClusterUsingReplicasets()) {
             $this->markTestSkipped('Mongos pinning tests can only run on sharded clusters using replica sets');
@@ -273,7 +273,7 @@ class TransactionsSpecTest extends FunctionalTestCase
     /**
      * Create the collection, since it cannot be created within a transaction.
      */
-    protected function createTestCollection()
+    protected function createTestCollection(): void
     {
         $context = $this->getContext();
 
@@ -288,7 +288,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * previously failed test. For sharded clusters, this command will be run
      * on all mongos nodes.
      */
-    private static function killAllSessions()
+    private static function killAllSessions(): void
     {
         $manager = static::createTestManager();
         $primary = $manager->selectServer(new ReadPreference('primary'));
@@ -320,7 +320,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @param array $operations
      * @see https://github.com/mongodb/specifications/tree/master/source/transactions/tests#why-do-tests-that-run-distinct-sometimes-fail-with-staledbversionts.
      */
-    private function preventStaleDbVersionError(array $operations)
+    private function preventStaleDbVersionError(array $operations): void
     {
         if (! $this->isShardedCluster()) {
             return;

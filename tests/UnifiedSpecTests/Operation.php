@@ -131,7 +131,7 @@ final class Operation
     /**
      * Execute the operation and assert its outcome.
      */
-    public function assert(bool $rethrowExceptions = false)
+    public function assert(bool $rethrowExceptions = false): void
     {
         $error = null;
         $result = null;
@@ -628,7 +628,7 @@ final class Operation
                     return new Operation($o, $this->context);
                 }, $args['callback']);
 
-                $callback = function () use ($operations) {
+                $callback = function () use ($operations): void {
                     foreach ($operations as $operation) {
                         $operation->assert(true); // rethrow exceptions
                     }

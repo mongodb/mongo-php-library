@@ -90,7 +90,7 @@ class DocumentsMatchConstraint extends Constraint
      * @param boolean      $ignoreExtraKeysInEmbedded If true, ignore extra keys within embedded documents
      * @param array        $placeholders              Placeholders for any value
      */
-    public function __construct($value, $ignoreExtraKeysInRoot = false, $ignoreExtraKeysInEmbedded = false, array $placeholders = [])
+    public function __construct($value, bool $ignoreExtraKeysInRoot = false, bool $ignoreExtraKeysInEmbedded = false, array $placeholders = [])
     {
         $this->value = $this->prepareBSON($value, true, $this->sortKeys);
         $this->ignoreExtraKeysInRoot = $ignoreExtraKeysInRoot;
@@ -140,7 +140,7 @@ class DocumentsMatchConstraint extends Constraint
      * @param string $expectedType
      * @param mixed  $actualValue
      */
-    private function assertBSONType($expectedType, $actualValue)
+    private function assertBSONType(string $expectedType, $actualValue): void
     {
         switch ($expectedType) {
             case 'double':
@@ -286,7 +286,7 @@ class DocumentsMatchConstraint extends Constraint
      * @param string      $keyPrefix
      * @throws RuntimeException if the documents do not match
      */
-    private function assertEquals(ArrayObject $expected, ArrayObject $actual, $ignoreExtraKeys, $keyPrefix = '')
+    private function assertEquals(ArrayObject $expected, ArrayObject $actual, bool $ignoreExtraKeys, string $keyPrefix = ''): void
     {
         if (get_class($expected) !== get_class($actual)) {
             throw new RuntimeException(sprintf(
@@ -434,7 +434,7 @@ class DocumentsMatchConstraint extends Constraint
      * @return BSONDocument|BSONArray
      * @throws InvalidArgumentException if $bson is not an array or object
      */
-    private function prepareBSON($bson, $isRoot, $sortKeys = false)
+    private function prepareBSON($bson, bool $isRoot, bool $sortKeys = false)
     {
         if (! is_array($bson) && ! is_object($bson)) {
             throw new InvalidArgumentException('$bson is not an array or object');

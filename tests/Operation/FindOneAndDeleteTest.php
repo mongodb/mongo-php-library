@@ -10,7 +10,7 @@ class FindOneAndDeleteTest extends TestCase
     /**
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorFilterArgumentTypeCheck($filter)
+    public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
         new FindOneAndDelete($this->getDatabaseName(), $this->getCollectionName(), $filter);
@@ -19,7 +19,7 @@ class FindOneAndDeleteTest extends TestCase
     /**
      * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorOptionTypeChecks(array $options)
+    public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new FindOneAndDelete($this->getDatabaseName(), $this->getCollectionName(), [], $options);

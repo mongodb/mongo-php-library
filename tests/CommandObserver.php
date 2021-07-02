@@ -20,7 +20,7 @@ class CommandObserver implements CommandSubscriber
     /** @var array */
     private $commands = [];
 
-    public function observe(callable $execution, callable $commandCallback)
+    public function observe(callable $execution, callable $commandCallback): void
     {
         $this->commands = [];
 
@@ -42,17 +42,17 @@ class CommandObserver implements CommandSubscriber
         }
     }
 
-    public function commandStarted(CommandStartedEvent $event)
+    public function commandStarted(CommandStartedEvent $event): void
     {
         $this->commands[$event->getRequestId()]['started'] = $event;
     }
 
-    public function commandSucceeded(CommandSucceededEvent $event)
+    public function commandSucceeded(CommandSucceededEvent $event): void
     {
         $this->commands[$event->getRequestId()]['succeeded'] = $event;
     }
 
-    public function commandFailed(CommandFailedEvent $event)
+    public function commandFailed(CommandFailedEvent $event): void
     {
         $this->commands[$event->getRequestId()]['failed'] = $event;
     }

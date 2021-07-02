@@ -122,7 +122,7 @@ final class ExpectedError
      *
      * @param Throwable|null $e Exception (if any) from executing an operation
      */
-    public function assert(Throwable $e = null)
+    public function assert(Throwable $e = null): void
     {
         if (! $this->isError && $e !== null) {
             Assert::fail(sprintf("Operation threw unexpected %s: %s\n%s", get_class($e), $e->getMessage(), $e->getTraceAsString()));
@@ -176,7 +176,7 @@ final class ExpectedError
         }
     }
 
-    private function assertCodeName(ServerException $e)
+    private function assertCodeName(ServerException $e): void
     {
         /* BulkWriteException and ExecutionTimeoutException do not expose
          * codeName. Work around this by translating it to a numeric code.

@@ -12,7 +12,7 @@ use const STREAM_IS_URL;
 
 final class UnusableStream
 {
-    public static function register($protocol = 'unusable')
+    public static function register($protocol = 'unusable'): void
     {
         if (in_array($protocol, stream_get_wrappers())) {
             stream_wrapper_unregister($protocol);
@@ -21,7 +21,7 @@ final class UnusableStream
         stream_wrapper_register($protocol, static::class, STREAM_IS_URL);
     }
 
-    public function stream_close()
+    public function stream_close(): void
     {
     }
 

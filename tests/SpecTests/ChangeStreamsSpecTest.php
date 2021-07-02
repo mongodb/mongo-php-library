@@ -34,7 +34,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
      * @param stdClass $expected Expected command document
      * @param stdClass $actual   Actual command document
      */
-    public static function assertCommandMatches(stdClass $expected, stdClass $actual)
+    public static function assertCommandMatches(stdClass $expected, stdClass $actual): void
     {
         if (isset($expected->getMore) && $expected->getMore === 42) {
             static::assertObjectHasAttribute('getMore', $actual);
@@ -54,7 +54,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
      * @param array $expectedDocuments Expected documents
      * @param array $actualDocuments   Actual documents
      */
-    public static function assertResult(array $expectedDocuments, array $actualDocuments)
+    public static function assertResult(array $expectedDocuments, array $actualDocuments): void
     {
         static::assertCount(count($expectedDocuments), $actualDocuments);
 
@@ -81,7 +81,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
      * @param string   $database2Name   Name of alternate database under test
      * @param string   $collection2Name Name of alternate collection under test
      */
-    public function testChangeStreams(stdClass $test, $databaseName = null, $collectionName = null, $database2Name = null, $collection2Name = null)
+    public function testChangeStreams(stdClass $test, string $databaseName = null, string $collectionName = null, string $database2Name = null, string $collection2Name = null): void
     {
         if (isset(self::$incompleteTests[$this->dataDescription()])) {
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
@@ -192,7 +192,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
      * @return ChangeStream
      * @throws LogicException if the target is unsupported
      */
-    private function createChangeStream(stdClass $test)
+    private function createChangeStream(stdClass $test): ChangeStream
     {
         $context = $this->getContext();
         $pipeline = $test->changeStreamPipeline ?? [];
@@ -220,7 +220,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
      * @param stdClass $test
      * @return array
      */
-    private function createRunOn(stdClass $test)
+    private function createRunOn(stdClass $test): array
     {
         $req = new stdClass();
 
@@ -247,7 +247,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
      * @param string $databaseName
      * @param string $collectionName
      */
-    private function dropDatabasesAndCreateCollection($databaseName, $collectionName)
+    private function dropDatabasesAndCreateCollection(string $databaseName, string $collectionName): void
     {
         $context = $this->getContext();
 
@@ -263,7 +263,7 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
      * @param integer      $limit
      * @return BSONDocument[]
      */
-    private function iterateChangeStream(ChangeStream $changeStream, $limit = 0)
+    private function iterateChangeStream(ChangeStream $changeStream, int $limit = 0): array
     {
         if ($limit < 0) {
             throw new LogicException('$limit is negative');

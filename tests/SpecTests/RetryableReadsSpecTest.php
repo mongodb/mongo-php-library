@@ -30,7 +30,7 @@ class RetryableReadsSpecTest extends FunctionalTestCase
      * @param stdClass $expected Expected command document
      * @param stdClass $actual   Actual command document
      */
-    public static function assertCommandMatches(stdClass $expected, stdClass $actual)
+    public static function assertCommandMatches(stdClass $expected, stdClass $actual): void
     {
         static::assertDocumentsMatch($expected, $actual);
     }
@@ -49,7 +49,7 @@ class RetryableReadsSpecTest extends FunctionalTestCase
      * @group matrix-testing-exclude-server-4.4-driver-4.2
      * @group matrix-testing-exclude-server-5.0-driver-4.2
      */
-    public function testRetryableReads(stdClass $test, array $runOn = null, $data, $databaseName, $collectionName, $bucketName)
+    public function testRetryableReads(stdClass $test, array $runOn = null, $data, string $databaseName, ?string $collectionName, ?string $bucketName): void
     {
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);

@@ -26,7 +26,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
     }
 
-    public function testInserts()
+    public function testInserts(): void
     {
         $ops = [
             ['insertOne' => [['_id' => 1, 'x' => 11]]],
@@ -57,7 +57,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
-    public function testUpdates()
+    public function testUpdates(): void
     {
         $this->createFixtures(4);
 
@@ -93,7 +93,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
-    public function testDeletes()
+    public function testDeletes(): void
     {
         $this->createFixtures(4);
 
@@ -115,7 +115,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
-    public function testMixedOrderedOperations()
+    public function testMixedOrderedOperations(): void
     {
         $this->createFixtures(3);
 
@@ -166,7 +166,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     /**
      * @depends testUnacknowledgedWriteConcern
      */
-    public function testUnacknowledgedWriteConcernAccessesDeletedCount(BulkWriteResult $result)
+    public function testUnacknowledgedWriteConcernAccessesDeletedCount(BulkWriteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
@@ -176,7 +176,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     /**
      * @depends testUnacknowledgedWriteConcern
      */
-    public function testUnacknowledgedWriteConcernAccessesInsertCount(BulkWriteResult $result)
+    public function testUnacknowledgedWriteConcernAccessesInsertCount(BulkWriteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
@@ -186,7 +186,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     /**
      * @depends testUnacknowledgedWriteConcern
      */
-    public function testUnacknowledgedWriteConcernAccessesMatchedCount(BulkWriteResult $result)
+    public function testUnacknowledgedWriteConcernAccessesMatchedCount(BulkWriteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
@@ -196,7 +196,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     /**
      * @depends testUnacknowledgedWriteConcern
      */
-    public function testUnacknowledgedWriteConcernAccessesModifiedCount(BulkWriteResult $result)
+    public function testUnacknowledgedWriteConcernAccessesModifiedCount(BulkWriteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
@@ -206,7 +206,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     /**
      * @depends testUnacknowledgedWriteConcern
      */
-    public function testUnacknowledgedWriteConcernAccessesUpsertedCount(BulkWriteResult $result)
+    public function testUnacknowledgedWriteConcernAccessesUpsertedCount(BulkWriteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
@@ -216,21 +216,21 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
     /**
      * @depends testUnacknowledgedWriteConcern
      */
-    public function testUnacknowledgedWriteConcernAccessesUpsertedIds(BulkWriteResult $result)
+    public function testUnacknowledgedWriteConcernAccessesUpsertedIds(BulkWriteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
         $result->getUpsertedIds();
     }
 
-    public function testSessionOption()
+    public function testSessionOption(): void
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
             $this->markTestSkipped('Sessions are not supported');
         }
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new BulkWrite(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -240,20 +240,20 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
     }
 
-    public function testBypassDocumentValidationSetWhenTrue()
+    public function testBypassDocumentValidationSetWhenTrue(): void
     {
         if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
             $this->markTestSkipped('bypassDocumentValidation is not supported');
         }
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new BulkWrite(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -263,21 +263,21 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
             }
         );
     }
 
-    public function testBypassDocumentValidationUnsetWhenFalse()
+    public function testBypassDocumentValidationUnsetWhenFalse(): void
     {
         if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
             $this->markTestSkipped('bypassDocumentValidation is not supported');
         }
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new BulkWrite(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -287,13 +287,13 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
             }
         );
     }
 
-    public function testBulkWriteWithPipelineUpdates()
+    public function testBulkWriteWithPipelineUpdates(): void
     {
         if (version_compare($this->getServerVersion(), '4.2.0', '<')) {
             $this->markTestSkipped('Pipeline-style updates are not supported');
@@ -328,7 +328,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
      *
      * @param integer $n
      */
-    private function createFixtures($n)
+    private function createFixtures(int $n): void
     {
         $bulkWrite = new Bulk(['ordered' => true]);
 

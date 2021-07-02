@@ -102,7 +102,7 @@ final class EventObserver implements CommandSubscriber
     /**
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php
      */
-    public function commandFailed(CommandFailedEvent $event)
+    public function commandFailed(CommandFailedEvent $event): void
     {
         $this->handleEvent($event);
     }
@@ -110,7 +110,7 @@ final class EventObserver implements CommandSubscriber
     /**
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandstarted.php
      */
-    public function commandStarted(CommandStartedEvent $event)
+    public function commandStarted(CommandStartedEvent $event): void
     {
         $this->handleEvent($event);
     }
@@ -118,17 +118,17 @@ final class EventObserver implements CommandSubscriber
     /**
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandsucceeded.php
      */
-    public function commandSucceeded(CommandSucceededEvent $event)
+    public function commandSucceeded(CommandSucceededEvent $event): void
     {
         $this->handleEvent($event);
     }
 
-    public function start()
+    public function start(): void
     {
         addSubscriber($this);
     }
 
-    public function stop()
+    public function stop(): void
     {
         removeSubscriber($this);
     }
@@ -154,7 +154,7 @@ final class EventObserver implements CommandSubscriber
         Assert::fail('Not enough CommandStartedEvents observed');
     }
 
-    public function assert(array $expectedEvents)
+    public function assert(array $expectedEvents): void
     {
         assertCount(count($expectedEvents), $this->actualEvents);
 
@@ -201,7 +201,7 @@ final class EventObserver implements CommandSubscriber
         }
     }
 
-    private function assertCommandStartedEvent(CommandStartedEvent $actual, stdClass $expected, string $message)
+    private function assertCommandStartedEvent(CommandStartedEvent $actual, stdClass $expected, string $message): void
     {
         // TODO: Assert hasServiceId (blocked on PHPC-1752)
         Util::assertHasOnlyKeys($expected, ['command', 'commandName', 'databaseName']);
@@ -223,7 +223,7 @@ final class EventObserver implements CommandSubscriber
         }
     }
 
-    private function assertCommandSucceededEvent(CommandSucceededEvent $actual, stdClass $expected, string $message)
+    private function assertCommandSucceededEvent(CommandSucceededEvent $actual, stdClass $expected, string $message): void
     {
         // TODO: Assert hasServiceId (blocked on PHPC-1752)
         Util::assertHasOnlyKeys($expected, ['reply', 'commandName']);
@@ -240,7 +240,7 @@ final class EventObserver implements CommandSubscriber
         }
     }
 
-    private function assertCommandFailedEvent(CommandFailedEvent $actual, stdClass $expected, string $message)
+    private function assertCommandFailedEvent(CommandFailedEvent $actual, stdClass $expected, string $message): void
     {
         // TODO: Assert hasServiceId (blocked on PHPC-1752)
         Util::assertHasOnlyKeys($expected, ['commandName']);
@@ -252,7 +252,7 @@ final class EventObserver implements CommandSubscriber
     }
 
     /** @param CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event */
-    private function handleEvent($event)
+    private function handleEvent($event): void
     {
         if (! $this->context->isActiveClient($this->clientId)) {
             return;

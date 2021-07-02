@@ -16,13 +16,13 @@ use function version_compare;
 
 class DropIndexesFunctionalTest extends FunctionalTestCase
 {
-    public function testDefaultWriteConcernIsOmitted()
+    public function testDefaultWriteConcernIsOmitted(): void
     {
         $operation = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => ['x' => 1]]]);
         $operation->execute($this->getPrimaryServer());
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new DropIndexes(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -32,13 +32,13 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
             }
         );
     }
 
-    public function testDropOneIndexByName()
+    public function testDropOneIndexByName(): void
     {
         $indexes = [['key' => ['x' => 1]]];
 
@@ -61,7 +61,7 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testDropAllIndexesByWildcard()
+    public function testDropAllIndexesByWildcard(): void
     {
         $indexes = [
             ['key' => ['x' => 1]],
@@ -93,7 +93,7 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testDropByIndexInfo()
+    public function testDropByIndexInfo(): void
     {
         $info = new IndexInfo([
             'v' => 1,
@@ -121,7 +121,7 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testSessionOption()
+    public function testSessionOption(): void
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
             $this->markTestSkipped('Sessions are not supported');
@@ -131,7 +131,7 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
         $operation->execute($this->getPrimaryServer());
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new DropIndexes(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -141,7 +141,7 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
@@ -157,7 +157,7 @@ class DropIndexesFunctionalTest extends FunctionalTestCase
      *
      * @param callable $callback
      */
-    private function assertIndexExists($indexName, $callback = null)
+    private function assertIndexExists($indexName, callable $callback = null): void
     {
         if ($callback !== null && ! is_callable($callback)) {
             throw new InvalidArgumentException('$callback is not a callable');

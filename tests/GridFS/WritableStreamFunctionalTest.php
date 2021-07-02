@@ -26,7 +26,7 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
     /**
      * @doesNotPerformAssertions
      */
-    public function testValidConstructorOptions()
+    public function testValidConstructorOptions(): void
     {
         new WritableStream($this->collectionWrapper, 'filename', [
             '_id' => 'custom-id',
@@ -38,7 +38,7 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorOptionTypeChecks(array $options)
+    public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new WritableStream($this->collectionWrapper, 'filename', $options);
@@ -63,14 +63,14 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
         return $options;
     }
 
-    public function testConstructorShouldRequireChunkSizeBytesOptionToBePositive()
+    public function testConstructorShouldRequireChunkSizeBytesOptionToBePositive(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected "chunkSizeBytes" option to be >= 1, 0 given');
         new WritableStream($this->collectionWrapper, 'filename', ['chunkSizeBytes' => 0]);
     }
 
-    public function testWriteBytesAlwaysUpdatesFileSize()
+    public function testWriteBytesAlwaysUpdatesFileSize(): void
     {
         $stream = new WritableStream($this->collectionWrapper, 'filename', ['chunkSizeBytes' => 1024]);
 
@@ -89,7 +89,7 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideInputDataAndExpectedMD5
      */
-    public function testWriteBytesCalculatesMD5($input, $expectedMD5)
+    public function testWriteBytesCalculatesMD5($input, $expectedMD5): void
     {
         $stream = new WritableStream($this->collectionWrapper, 'filename');
         $stream->writeBytes($input);

@@ -50,7 +50,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideSpecificationTests
      */
-    public function testSpecification(array $initialData, array $test, $minServerVersion, $maxServerVersion)
+    public function testSpecification(array $initialData, array $test, $minServerVersion, $maxServerVersion): void
     {
         if (isset($minServerVersion) || isset($maxServerVersion)) {
             $this->checkServerVersion($minServerVersion, $maxServerVersion);
@@ -101,7 +101,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
      * @param Collection $expectedCollection
      * @param Collection $actualCollection
      */
-    private function assertEquivalentCollections($expectedCollection, $actualCollection)
+    private function assertEquivalentCollections(Collection $expectedCollection, Collection $actualCollection): void
     {
         $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);
         $mi->attachIterator($expectedCollection->find());
@@ -120,7 +120,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
      * @param string|null $maxServerVersion
      * @throws PHPUnit_Framework_SkippedTestError
      */
-    private function checkServerVersion($minServerVersion, $maxServerVersion)
+    private function checkServerVersion(?string $minServerVersion, ?string $maxServerVersion): void
     {
         $serverVersion = $this->getServerVersion();
 
@@ -301,7 +301,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
      * @param mixed $actualResult
      * @throws LogicException if the operation is unsupported
      */
-    private function executeAssertResult(array $operation, $expectedResult, $actualResult)
+    private function executeAssertResult(array $operation, $expectedResult, $actualResult): void
     {
         switch ($operation['name']) {
             case 'aggregate':
@@ -466,7 +466,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
      * @param array $initialData
      * @param array $expectedData
      */
-    private function initializeData(array $initialData, array $expectedData = null)
+    private function initializeData(array $initialData, array $expectedData = null): void
     {
         if (! empty($initialData)) {
             $this->collection->insertMany($initialData);
@@ -483,7 +483,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
      * @param array $request
      * @return array
      */
-    private function prepareBulkWriteRequest(array $request)
+    private function prepareBulkWriteRequest(array $request): array
     {
         switch ($request['name']) {
             case 'deleteMany':
@@ -528,7 +528,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
      * @param array $arguments
      * @return array
      */
-    private function prepareFindAndModifyArguments(array $arguments)
+    private function prepareFindAndModifyArguments(array $arguments): array
     {
         if (isset($arguments['returnDocument'])) {
             $arguments['returnDocument'] = 'after' === strtolower($arguments['returnDocument'])

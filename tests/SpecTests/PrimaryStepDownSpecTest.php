@@ -45,7 +45,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
     /**
      * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#id10
      */
-    public function testNotPrimaryKeepsConnectionPool()
+    public function testNotPrimaryKeepsConnectionPool(): void
     {
         $runOn = [(object) ['minServerVersion' => '4.1.11', 'topology' => [self::TOPOLOGY_REPLICASET]]];
         $this->checkServerRequirements($runOn);
@@ -81,7 +81,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
     /**
      * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#id11
      */
-    public function testNotPrimaryResetConnectionPool()
+    public function testNotPrimaryResetConnectionPool(): void
     {
         $runOn = [(object) ['minServerVersion' => '4.0.0', 'maxServerVersion' => '4.0.999', 'topology' => [self::TOPOLOGY_REPLICASET]]];
         $this->checkServerRequirements($runOn);
@@ -117,7 +117,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
     /**
      * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#id12
      */
-    public function testShutdownResetConnectionPool()
+    public function testShutdownResetConnectionPool(): void
     {
         $runOn = [(object) ['minServerVersion' => '4.0.0']];
         $this->checkServerRequirements($runOn);
@@ -153,7 +153,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
     /**
      * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#id13
      */
-    public function testInterruptedAtShutdownResetConnectionPool()
+    public function testInterruptedAtShutdownResetConnectionPool(): void
     {
         $runOn = [(object) ['minServerVersion' => '4.0.0']];
         $this->checkServerRequirements($runOn);
@@ -189,7 +189,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
     /**
      * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#id9
      */
-    public function testGetMoreIteration()
+    public function testGetMoreIteration(): void
     {
         $this->markTestSkipped('Test causes subsequent failures in other tests (see PHPLIB-471)');
 
@@ -231,10 +231,10 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         $events = [];
         $observer = new CommandObserver();
         $observer->observe(
-            function () use ($cursor) {
+            function () use ($cursor): void {
                 $cursor->next();
             },
-            function ($event) use (&$events) {
+            function ($event) use (&$events): void {
                 $events[] = $event;
             }
         );
@@ -262,7 +262,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         return $this->collection->bulkWrite($operations, ['writeConcern' => new WriteConcern('majority')]);
     }
 
-    private function dropAndRecreateCollection()
+    private function dropAndRecreateCollection(): void
     {
         $this->client->selectCollection($this->getDatabaseName(), $this->getCollectionName())->drop();
         $this->client->selectDatabase($this->getDatabaseName())->command(['create' => $this->getCollectionName()]);
@@ -288,7 +288,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         throw new UnexpectedValueException('Could not determine number of total connections');
     }
 
-    private function waitForPrimaryReelection()
+    private function waitForPrimaryReelection(): void
     {
         try {
             $this->insertDocuments(1);

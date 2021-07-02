@@ -189,10 +189,13 @@ final class EventObserver implements CommandSubscriber
         switch (get_class($actual)) {
             case CommandStartedEvent::class:
                 return $this->assertCommandStartedEvent($actual, $expected, $message);
+
             case CommandSucceededEvent::class:
                 return $this->assertCommandSucceededEvent($actual, $expected, $message);
+
             case CommandFailedEvent::class:
                 return $this->assertCommandFailedEvent($actual, $expected, $message);
+
             default:
                 Assert::fail($message . ': Unsupported event type: ' . get_class($actual));
         }

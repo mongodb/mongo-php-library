@@ -1234,6 +1234,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         } catch (\MongoDB\Driver\Exception\Exception $error) {
             echo "Caught exception during transaction, aborting.\n";
             $session->abortTransaction();
+
             throw $error;
         }
 
@@ -1250,10 +1251,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
                     continue;
                 } else {
                     echo "Error during commit ...\n";
+
                     throw $error;
                 }
             } catch (\MongoDB\Driver\Exception\Exception $error) {
                 echo "Error during commit ...\n";
+
                 throw $error;
             }
         }
@@ -1335,10 +1338,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
                     continue;
                 } else {
                     echo "Error during commit ...\n";
+
                     throw $error;
                 }
             } catch (\MongoDB\Driver\Exception\Exception $error) {
                 echo "Error during commit ...\n";
+
                 throw $error;
             }
         }
@@ -1386,10 +1391,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
                     continue;
                 } else {
                     echo "Error during commit ...\n";
+
                     throw $error;
                 }
             } catch (\MongoDB\Driver\Exception\Exception $error) {
                 echo "Error during commit ...\n";
+
                 throw $error;
             }
         }
@@ -1416,6 +1423,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         } catch (\MongoDB\Driver\Exception\Exception $error) {
             echo "Caught exception during transaction, aborting.\n";
             $session->abortTransaction();
+
             throw $error;
         }
 

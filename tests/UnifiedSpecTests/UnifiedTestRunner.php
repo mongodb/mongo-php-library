@@ -301,12 +301,15 @@ final class UnifiedTestRunner
         switch ($this->getPrimaryServer()->getType()) {
             case Server::TYPE_STANDALONE:
                 return RunOnRequirement::TOPOLOGY_SINGLE;
+
             case Server::TYPE_RS_PRIMARY:
                 return RunOnRequirement::TOPOLOGY_REPLICASET;
+
             case Server::TYPE_MONGOS:
                 return $this->isShardedClusterUsingReplicasets()
                     ? RunOnRequirement::TOPOLOGY_SHARDED_REPLICASET
                     : RunOnRequirement::TOPOLOGY_SHARDED;
+
             default:
                 throw new UnexpectedValueException('Toplogy is neither single nor RS nor sharded');
         }

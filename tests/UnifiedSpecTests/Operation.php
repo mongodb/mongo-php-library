@@ -251,6 +251,7 @@ final class Operation
                 } while (! $changeStream->valid());
 
                 return $changeStream->current();
+
             default:
                 Assert::fail('Unsupported change stream operation: ' . $this->name);
         }
@@ -269,10 +270,13 @@ final class Operation
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
+
             case 'listDatabaseNames':
                 return iterator_to_array($client->listDatabaseNames($args));
+
             case 'listDatabases':
                 return iterator_to_array($client->listDatabases($args));
+
             default:
                 Assert::fail('Unsupported client operation: ' . $this->name);
         }
@@ -291,6 +295,7 @@ final class Operation
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 ));
+
             case 'bulkWrite':
                 assertArrayHasKey('requests', $args);
                 assertIsArray($args['requests']);
@@ -299,6 +304,7 @@ final class Operation
                     array_map('self::prepareBulkWriteRequest', $args['requests']),
                     array_diff_key($args, ['requests' => 1])
                 );
+
             case 'createChangeStream':
                 assertArrayHasKey('pipeline', $args);
                 assertIsArray($args['pipeline']);
@@ -307,6 +313,7 @@ final class Operation
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
+
             case 'createFindCursor':
                 assertArrayHasKey('filter', $args);
                 assertInstanceOf(stdClass::class, $args['filter']);
@@ -315,6 +322,7 @@ final class Operation
                     $args['filter'],
                     array_diff_key($args, ['filter' => 1])
                 );
+
             case 'createIndex':
                 assertArrayHasKey('keys', $args);
                 assertInstanceOf(stdClass::class, $args['keys']);
@@ -323,6 +331,7 @@ final class Operation
                     $args['keys'],
                     array_diff_key($args, ['keys' => 1])
                 );
+
             case 'dropIndex':
                 assertArrayHasKey('name', $args);
                 assertIsString($args['name']);
@@ -331,6 +340,7 @@ final class Operation
                     $args['name'],
                     array_diff_key($args, ['name' => 1])
                 );
+
             case 'count':
             case 'countDocuments':
                 assertArrayHasKey('filter', $args);
@@ -340,8 +350,10 @@ final class Operation
                     $args['filter'],
                     array_diff_key($args, ['filter' => 1])
                 );
+
             case 'estimatedDocumentCount':
                 return $collection->estimatedDocumentCount($args);
+
             case 'deleteMany':
             case 'deleteOne':
             case 'findOneAndDelete':
@@ -352,6 +364,7 @@ final class Operation
                     $args['filter'],
                     array_diff_key($args, ['filter' => 1])
                 );
+
             case 'distinct':
                 if (isset($args['session']) && $args['session']->isInTransaction()) {
                     // Transaction, but sharded cluster?
@@ -368,8 +381,10 @@ final class Operation
                     $args['filter'],
                     array_diff_key($args, ['fieldName' => 1, 'filter' => 1])
                 );
+
             case 'drop':
                 return $collection->drop($args);
+
             case 'find':
                 assertArrayHasKey('filter', $args);
                 assertInstanceOf(stdClass::class, $args['filter']);
@@ -378,6 +393,7 @@ final class Operation
                     $args['filter'],
                     array_diff_key($args, ['filter' => 1])
                 ));
+
             case 'findOne':
                 assertArrayHasKey('filter', $args);
                 assertInstanceOf(stdClass::class, $args['filter']);
@@ -386,6 +402,7 @@ final class Operation
                     $args['filter'],
                     array_diff_key($args, ['filter' => 1])
                 );
+
             case 'findOneAndReplace':
                 if (isset($args['returnDocument'])) {
                     $args['returnDocument'] = strtolower($args['returnDocument']);
@@ -408,6 +425,7 @@ final class Operation
                     $args['replacement'],
                     array_diff_key($args, ['filter' => 1, 'replacement' => 1])
                 );
+
             case 'findOneAndUpdate':
                 if (isset($args['returnDocument'])) {
                     $args['returnDocument'] = strtolower($args['returnDocument']);
@@ -431,6 +449,7 @@ final class Operation
                     $args['update'],
                     array_diff_key($args, ['filter' => 1, 'update' => 1])
                 );
+
             case 'insertMany':
                 // Merge nested and top-level options (see: SPEC-1158)
                 $options = isset($args['options']) ? (array) $args['options'] : [];
@@ -443,6 +462,7 @@ final class Operation
                     $args['documents'],
                     $options
                 );
+
             case 'insertOne':
                 assertArrayHasKey('document', $args);
                 assertInstanceOf(stdClass::class, $args['document']);
@@ -451,8 +471,10 @@ final class Operation
                     $args['document'],
                     array_diff_key($args, ['document' => 1])
                 );
+
             case 'listIndexes':
                 return iterator_to_array($collection->listIndexes($args));
+
             case 'mapReduce':
                 assertArrayHasKey('map', $args);
                 assertArrayHasKey('reduce', $args);
@@ -467,6 +489,7 @@ final class Operation
                     $args['out'],
                     array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1])
                 );
+
             default:
                 Assert::fail('Unsupported collection operation: ' . $this->name);
         }
@@ -513,6 +536,7 @@ final class Operation
                 } while (! $cursor->valid());
 
                 return $cursor->current();
+
             default:
                 Assert::fail('Unsupported cursor operation: ' . $this->name);
         }
@@ -531,6 +555,7 @@ final class Operation
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 ));
+
             case 'createChangeStream':
                 assertArrayHasKey('pipeline', $args);
                 assertIsArray($args['pipeline']);
@@ -539,6 +564,7 @@ final class Operation
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
+
             case 'createCollection':
                 assertArrayHasKey('collection', $args);
                 assertIsString($args['collection']);
@@ -547,6 +573,7 @@ final class Operation
                     $args['collection'],
                     array_diff_key($args, ['collection' => 1])
                 );
+
             case 'dropCollection':
                 assertArrayHasKey('collection', $args);
                 assertIsString($args['collection']);
@@ -555,10 +582,13 @@ final class Operation
                     $args['collection'],
                     array_diff_key($args, ['collection' => 1])
                 );
+
             case 'listCollectionNames':
                 return iterator_to_array($database->listCollectionNames($args));
+
             case 'listCollections':
                 return iterator_to_array($database->listCollections($args));
+
             case 'runCommand':
                 assertArrayHasKey('command', $args);
                 assertInstanceOf(stdClass::class, $args['command']);
@@ -567,6 +597,7 @@ final class Operation
                     $args['command'],
                     array_diff_key($args, ['command' => 1])
                 )->toArray()[0];
+
             default:
                 Assert::fail('Unsupported database operation: ' . $this->name);
         }
@@ -579,12 +610,16 @@ final class Operation
         switch ($this->name) {
             case 'abortTransaction':
                 return $session->abortTransaction();
+
             case 'commitTransaction':
                 return $session->commitTransaction();
+
             case 'endSession':
                 return $session->endSession();
+
             case 'startTransaction':
                 return $session->startTransaction($args);
+
             case 'withTransaction':
                 assertArrayHasKey('callback', $args);
                 assertIsArray($args['callback']);
@@ -602,6 +637,7 @@ final class Operation
                 };
 
                 return with_transaction($session, $callback, array_diff_key($args, ['callback' => 1]));
+
             default:
                 Assert::fail('Unsupported session operation: ' . $this->name);
         }
@@ -616,6 +652,7 @@ final class Operation
                 assertArrayHasKey('id', $args);
 
                 return $bucket->delete($args['id']);
+
             case 'downloadByName':
                 assertArrayHasKey('filename', $args);
                 assertIsString($args['filename']);
@@ -624,10 +661,12 @@ final class Operation
                     $args['filename'],
                     array_diff_key($args, ['filename' => 1])
                 ));
+
             case 'download':
                 assertArrayHasKey('id', $args);
 
                 return stream_get_contents($bucket->openDownloadStream($args['id']));
+
             case 'uploadWithId':
                 assertArrayHasKey('id', $args);
                 $args['_id'] = $args['id'];
@@ -643,6 +682,7 @@ final class Operation
                     $args['source'],
                     array_diff_key($args, ['filename' => 1, 'source' => 1])
                 );
+
             default:
                 Assert::fail('Unsupported bucket operation: ' . $this->name);
         }
@@ -763,6 +803,7 @@ final class Operation
                 }, $args['operations']);
 
                 return (new Loop($operations, $this->context, array_diff_key($args, ['operations' => 1])))->execute();
+
             default:
                 Assert::fail('Unsupported test runner operation: ' . $this->name);
         }
@@ -818,10 +859,12 @@ final class Operation
                         array_diff_key($args, ['filter' => 1]),
                     ],
                 ];
+
             case 'insertOne':
                 assertArrayHasKey('document', $args);
 
                 return [ 'insertOne' => [ $args['document']]];
+
             case 'replaceOne':
                 assertArrayHasKey('filter', $args);
                 assertArrayHasKey('replacement', $args);
@@ -835,6 +878,7 @@ final class Operation
                         array_diff_key($args, ['filter' => 1, 'replacement' => 1]),
                     ],
                 ];
+
             case 'updateMany':
             case 'updateOne':
                 assertArrayHasKey('filter', $args);
@@ -849,6 +893,7 @@ final class Operation
                         array_diff_key($args, ['filter' => 1, 'update' => 1]),
                     ],
                 ];
+
             default:
                 Assert::fail('Unsupported bulk write request: ' . $type);
         }

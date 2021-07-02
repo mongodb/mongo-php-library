@@ -199,10 +199,13 @@ class ChangeStreamsSpecTest extends FunctionalTestCase
         switch ($test->target) {
             case 'client':
                 return $context->getClient()->watch($pipeline, $options);
+
             case 'database':
                 return $context->getDatabase()->watch($pipeline, $options);
+
             case 'collection':
                 return $context->getCollection()->watch($pipeline, $options);
+
             default:
                 throw new LogicException('Unsupported target: ' . $test->target);
         }

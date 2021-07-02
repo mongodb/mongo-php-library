@@ -147,10 +147,12 @@ class DocumentsMatchConstraint extends Constraint
                 (new IsType('float'))->evaluate($actualValue);
 
                 return;
+
             case 'string':
                 (new IsType('string'))->evaluate($actualValue);
 
                 return;
+
             case 'object':
                 $constraints = [
                     new IsType('object'),
@@ -169,6 +171,7 @@ class DocumentsMatchConstraint extends Constraint
                 $constraint->evaluate($actualValue);
 
                 return;
+
             case 'array':
                 $constraints = [
                     new IsType('array'),
@@ -187,54 +190,67 @@ class DocumentsMatchConstraint extends Constraint
                 $constraint->evaluate($actualValue);
 
                 return;
+
             case 'binData':
                 (new IsInstanceOf(BinaryInterface::class))->evaluate($actualValue);
 
                 return;
+
             case 'undefined':
                 (new IsInstanceOf(Undefined::class))->evaluate($actualValue);
 
                 return;
+
             case 'objectId':
                 (new IsInstanceOf(ObjectId::class))->evaluate($actualValue);
 
                 return;
+
             case 'boolean':
                 (new IsType('bool'))->evaluate($actualValue);
 
                 return;
+
             case 'date':
                 (new IsInstanceOf(UTCDateTime::class))->evaluate($actualValue);
 
                 return;
+
             case 'null':
                 (new IsNull())->evaluate($actualValue);
 
                 return;
+
             case 'regex':
                 (new IsInstanceOf(Regex::class))->evaluate($actualValue);
 
                 return;
+
             case 'dbPointer':
                 (new IsInstanceOf(DBPointer::class))->evaluate($actualValue);
 
                 return;
+
             case 'javascript':
                 (new IsInstanceOf(Javascript::class))->evaluate($actualValue);
 
                 return;
+
             case 'symbol':
                 (new IsInstanceOf(Symbol::class))->evaluate($actualValue);
 
                 return;
+
             case 'int':
                 (new IsType('int'))->evaluate($actualValue);
 
                 return;
+
             case 'timestamp':
                 (new IsInstanceOf(Timestamp::class))->evaluate($actualValue);
 
                 return;
+
             case 'long':
                 if (PHP_INT_SIZE == 4) {
                     (new IsInstanceOf(Int64::class))->evaluate($actualValue);
@@ -243,14 +259,17 @@ class DocumentsMatchConstraint extends Constraint
                 }
 
                 return;
+
             case 'decimal':
                 (new IsInstanceOf(Decimal128::class))->evaluate($actualValue);
 
                 return;
+
             case 'minKey':
                 (new IsInstanceOf(MinKey::class))->evaluate($actualValue);
 
                 return;
+
             case 'maxKey':
                 (new IsInstanceOf(MaxKey::class))->evaluate($actualValue);
 

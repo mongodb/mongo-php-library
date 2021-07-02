@@ -249,11 +249,13 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
         if (! isset($resumeToken)) {
             $this->isValid = false;
+
             throw ResumeTokenException::notFound();
         }
 
         if (! is_array($resumeToken) && ! is_object($resumeToken)) {
             $this->isValid = false;
+
             throw ResumeTokenException::invalidType($resumeToken);
         }
 

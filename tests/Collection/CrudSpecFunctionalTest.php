@@ -148,11 +148,13 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                     $operation['arguments']['pipeline'],
                     array_diff_key($operation['arguments'], ['pipeline' => 1])
                 );
+
             case 'bulkWrite':
                 return $this->collection->bulkWrite(
                     array_map([$this, 'prepareBulkWriteRequest'], $operation['arguments']['requests']),
                     $operation['arguments']['options'] ?? []
                 );
+
             case 'count':
             case 'countDocuments':
             case 'find':
@@ -160,8 +162,10 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                     $operation['arguments']['filter'] ?? [],
                     array_diff_key($operation['arguments'], ['filter' => 1])
                 );
+
             case 'estimatedDocumentCount':
                 return $this->collection->estimatedDocumentCount($operation['arguments']);
+
             case 'deleteMany':
             case 'deleteOne':
             case 'findOneAndDelete':
@@ -169,12 +173,14 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                     $operation['arguments']['filter'],
                     array_diff_key($operation['arguments'], ['filter' => 1])
                 );
+
             case 'distinct':
                 return $this->collection->distinct(
                     $operation['arguments']['fieldName'],
                     $operation['arguments']['filter'] ?? [],
                     array_diff_key($operation['arguments'], ['fieldName' => 1, 'filter' => 1])
                 );
+
             case 'findOneAndReplace':
                 $operation['arguments'] = $this->prepareFindAndModifyArguments($operation['arguments']);
                 // Fall through
@@ -185,6 +191,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                     $operation['arguments']['replacement'],
                     array_diff_key($operation['arguments'], ['filter' => 1, 'replacement' => 1])
                 );
+
             case 'findOneAndUpdate':
                 $operation['arguments'] = $this->prepareFindAndModifyArguments($operation['arguments']);
                 // Fall through
@@ -196,16 +203,19 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                     $operation['arguments']['update'],
                     array_diff_key($operation['arguments'], ['filter' => 1, 'update' => 1])
                 );
+
             case 'insertMany':
                 return $this->collection->insertMany(
                     $operation['arguments']['documents'],
                     $operation['arguments']['options'] ?? []
                 );
+
             case 'insertOne':
                 return $this->collection->insertOne(
                     $operation['arguments']['document'],
                     array_diff_key($operation['arguments'], ['document' => 1])
                 );
+
             default:
                 throw new LogicException('Unsupported operation: ' . $operation['name']);
         }
@@ -476,8 +486,10 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                         array_diff_key($request['arguments'], ['filter' => 1]),
                     ],
                 ];
+
             case 'insertOne':
                 return [ 'insertOne' => [ $request['arguments']['document'] ]];
+
             case 'replaceOne':
                 return [
                     'replaceOne' => [
@@ -486,6 +498,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                         array_diff_key($request['arguments'], ['filter' => 1, 'replacement' => 1]),
                     ],
                 ];
+
             case 'updateMany':
             case 'updateOne':
                 return [
@@ -495,6 +508,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                         array_diff_key($request['arguments'], ['filter' => 1, 'update' => 1]),
                     ],
                 ];
+
             default:
                 throw new LogicException('Unsupported bulk write request: ' . $request['name']);
         }

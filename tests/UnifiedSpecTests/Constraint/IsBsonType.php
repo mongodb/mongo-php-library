@@ -102,50 +102,71 @@ final class IsBsonType extends Constraint
         switch ($this->type) {
             case 'double':
                 return is_float($other);
+
             case 'string':
                 return is_string($other);
+
             case 'object':
                 return self::isObject($other);
+
             case 'array':
                 return self::isArray($other);
+
             case 'binData':
                 return $other instanceof BinaryInterface;
+
             case 'undefined':
                 return $other instanceof Undefined;
+
             case 'objectId':
                 return $other instanceof ObjectIdInterface;
+
             case 'bool':
                 return is_bool($other);
+
             case 'date':
                 return $other instanceof UTCDateTimeInterface;
+
             case 'null':
                 return $other === null;
+
             case 'regex':
                 return $other instanceof RegexInterface;
+
             case 'dbPointer':
                 return $other instanceof DBPointer;
+
             case 'javascript':
                 return $other instanceof JavascriptInterface && $other->getScope() === null;
+
             case 'symbol':
                 return $other instanceof Symbol;
+
             case 'javascriptWithScope':
                 return $other instanceof JavascriptInterface && $other->getScope() !== null;
+
             case 'int':
                 return is_int($other);
+
             case 'timestamp':
                 return $other instanceof TimestampInterface;
+
             case 'long':
                 if (PHP_INT_SIZE == 4) {
                     return $other instanceof Int64;
                 }
 
                 return is_int($other);
+
             case 'decimal':
                 return $other instanceof Decimal128Interface;
+
             case 'minKey':
                 return $other instanceof MinKeyInterface;
+
             case 'maxKey':
                 return $other instanceof MaxKeyInterface;
+
             default:
                 // This should already have been caught in the constructor
                 throw new LogicException('Unsupported type: ' . $this->type);

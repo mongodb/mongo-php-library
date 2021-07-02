@@ -1244,7 +1244,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
                 ['session' => $session]
             );
             $client->reporting->events->insertOne(
-                ['employee' => 3, 'status' => [ 'new' => 'Inactive', 'old' => 'Active']],
+                ['employee' => 3, 'status' => ['new' => 'Inactive', 'old' => 'Active']],
                 ['session' => $session]
             );
         } catch (\MongoDB\Driver\Exception\Exception $error) {
@@ -1433,7 +1433,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
                 ['session' => $session]
             );
             $client->reporting->events->insertOne(
-                ['employee' => 3, 'status' => [ 'new' => 'Inactive', 'old' => 'Active']],
+                ['employee' => 3, 'status' => ['new' => 'Inactive', 'old' => 'Active']],
                 ['session' => $session]
             );
         } catch (\MongoDB\Driver\Exception\Exception $error) {
@@ -1494,12 +1494,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $client = static::createTestClient();
         $items = $client->selectDatabase(
             'test',
-            [ 'writeConcern' => new WriteConcern(WriteConcern::MAJORITY) ]
+            ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]
         )->items;
 
         $items->drop();
         $items->insertOne(
-            [ 'sku' => '111', 'name' => 'Peanuts', 'start' => new UTCDateTime() ]
+            ['sku' => '111', 'name' => 'Peanuts', 'start' => new UTCDateTime()]
         );
 
         try {
@@ -1523,19 +1523,19 @@ class DocumentationExamplesTest extends FunctionalTestCase
         )->items;
 
         $s1 = $client->startSession(
-            [ 'causalConsistency' => true ]
+            ['causalConsistency' => true]
         );
 
         $currentDate = new \MongoDB\BSON\UTCDateTime();
 
         $items->updateOne(
-            [ 'sku' => '111', 'end' => [ '$exists' => false ] ],
-            [ '$set' => [ 'end' => $currentDate ] ],
-            [ 'session' => $s1 ]
+            ['sku' => '111', 'end' => ['$exists' => false]],
+            ['$set' => ['end' => $currentDate]],
+            ['session' => $s1]
         );
         $items->insertOne(
-            [ 'sku' => '111-nuts', 'name' => 'Pecans', 'start' => $currentDate ],
-            [ 'session' => $s1 ]
+            ['sku' => '111-nuts', 'name' => 'Pecans', 'start' => $currentDate],
+            ['session' => $s1]
         );
         // End Causal Consistency Example 1
         // phpcs:enable
@@ -1545,7 +1545,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
         // Start Causal Consistency Example 2
         $s2 = $client->startSession(
-            [ 'causalConsistency' => true ]
+            ['causalConsistency' => true]
         );
         $s2->advanceClusterTime($s1->getClusterTime());
         $s2->advanceOperationTime($s1->getOperationTime());
@@ -1560,8 +1560,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
         )->items;
 
         $result = $items->find(
-            [ 'end' => [ '$exists' => false ] ],
-            [ 'session' => $s2 ]
+            ['end' => ['$exists' => false]],
+            ['session' => $s2]
         );
         foreach ($result as $item) {
             var_dump($item);

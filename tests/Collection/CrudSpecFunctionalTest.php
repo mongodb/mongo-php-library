@@ -496,7 +496,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 ];
 
             case 'insertOne':
-                return [ 'insertOne' => [ $request['arguments']['document'] ]];
+                return ['insertOne' => [$request['arguments']['document']]];
 
             case 'replaceOne':
                 return [

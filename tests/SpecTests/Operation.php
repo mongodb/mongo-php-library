@@ -906,7 +906,7 @@ final class Operation
                 ];
 
             case 'insertOne':
-                return [ 'insertOne' => [ $args['document'] ]];
+                return ['insertOne' => [$args['document']]];
 
             case 'replaceOne':
                 return [

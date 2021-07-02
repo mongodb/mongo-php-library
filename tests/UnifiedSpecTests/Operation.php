@@ -861,7 +861,7 @@ final class Operation
             case 'insertOne':
                 assertArrayHasKey('document', $args);
 
-                return [ 'insertOne' => [ $args['document']]];
+                return ['insertOne' => [$args['document']]];
 
             case 'replaceOne':
                 assertArrayHasKey('filter', $args);

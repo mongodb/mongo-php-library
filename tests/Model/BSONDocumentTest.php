@@ -9,6 +9,7 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\TestCase;
 use ReflectionClass;
 use stdClass;
+
 use function json_encode;
 
 class BSONDocumentTest extends TestCase

@@ -11,6 +11,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Tests\TestCase;
 use stdClass;
 use Throwable;
+
 use function get_class;
 use function is_array;
 use function is_string;

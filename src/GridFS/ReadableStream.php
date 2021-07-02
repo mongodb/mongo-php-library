@@ -21,6 +21,7 @@ use MongoDB\Driver\CursorInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Exception\CorruptFileException;
 use stdClass;
+
 use function ceil;
 use function floor;
 use function is_integer;

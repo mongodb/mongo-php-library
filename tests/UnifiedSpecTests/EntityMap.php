@@ -14,6 +14,7 @@ use MongoDB\Tests\UnifiedSpecTests\Constraint\IsBsonType;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Constraint\Constraint;
 use stdClass;
+
 use function array_key_exists;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertArrayNotHasKey;

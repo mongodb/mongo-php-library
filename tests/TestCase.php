@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 use ReflectionClass;
 use stdClass;
 use Traversable;
+
 use function array_map;
 use function array_merge;
 use function array_values;
@@ -27,6 +28,7 @@ use function MongoDB\BSON\toJSON;
 use function restore_error_handler;
 use function set_error_handler;
 use function sprintf;
+
 use const E_USER_DEPRECATED;
 
 abstract class TestCase extends BaseTestCase

@@ -19,6 +19,7 @@ namespace MongoDB\Model;
 
 use ArrayAccess;
 use MongoDB\Exception\BadMethodCallException;
+
 use function array_key_exists;
 use function array_search;
 

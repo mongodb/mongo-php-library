@@ -4,12 +4,14 @@ namespace MongoDB\Tests\GridFS;
 
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\UTCDateTime;
+
 use function fclose;
 use function feof;
 use function fread;
 use function fseek;
 use function fstat;
 use function fwrite;
+
 use const SEEK_CUR;
 use const SEEK_END;
 use const SEEK_SET;

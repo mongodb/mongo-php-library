@@ -7,6 +7,7 @@ use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Model\BSONArray;
+
 use function array_filter;
 use function array_flip;
 use function get_class;

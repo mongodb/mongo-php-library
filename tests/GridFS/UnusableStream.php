@@ -6,6 +6,7 @@ use function in_array;
 use function stream_get_wrappers;
 use function stream_wrapper_register;
 use function stream_wrapper_unregister;
+
 use const SEEK_SET;
 use const STREAM_IS_URL;
 

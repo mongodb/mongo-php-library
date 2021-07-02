@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Tests\CommandObserver;
+
 use function version_compare;
 
 class DatabaseCommandFunctionalTest extends FunctionalTestCase

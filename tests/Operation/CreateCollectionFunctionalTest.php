@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Tests\CommandObserver;
+
 use function version_compare;
 
 class CreateCollectionFunctionalTest extends FunctionalTestCase

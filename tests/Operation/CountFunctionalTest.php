@@ -6,6 +6,7 @@ use MongoDB\Operation\Count;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\CommandObserver;
+
 use function version_compare;
 
 class CountFunctionalTest extends FunctionalTestCase

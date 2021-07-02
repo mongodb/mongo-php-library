@@ -9,6 +9,7 @@ use PHPUnit\Framework\IncompleteTest;
 use PHPUnit\Framework\SkippedTest;
 use PHPUnit\Framework\Warning;
 use Throwable;
+
 use function array_key_exists;
 use function call_user_func;
 use function microtime;

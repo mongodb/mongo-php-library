@@ -7,6 +7,7 @@ use Iterator;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Tests\TestCase;
 use Throwable;
+
 use function iterator_to_array;
 
 class CachingIteratorTest extends TestCase

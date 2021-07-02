@@ -23,6 +23,7 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
+
 use function array_intersect_key;
 use function hash_final;
 use function hash_init;

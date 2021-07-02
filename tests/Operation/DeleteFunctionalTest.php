@@ -9,6 +9,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Operation\Delete;
 use MongoDB\Tests\CommandObserver;
+
 use function version_compare;
 
 class DeleteFunctionalTest extends FunctionalTestCase

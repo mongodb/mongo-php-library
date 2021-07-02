@@ -26,6 +26,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+
 use function is_array;
 use function is_bool;
 use function is_integer;
@@ -33,6 +34,7 @@ use function is_object;
 use function is_string;
 use function MongoDB\server_supports_feature;
 use function trigger_error;
+
 use const E_USER_DEPRECATED;
 
 /**

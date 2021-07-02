@@ -10,6 +10,7 @@ use MongoDB\Driver\ServerApi;
 use MongoDB\Model\BSONArray;
 use MongoDB\Tests\FunctionalTestCase;
 use stdClass;
+
 use function array_key_exists;
 use function array_map;
 use function count;
@@ -35,6 +36,7 @@ use function PHPUnit\Framework\assertStringStartsWith;
 use function strlen;
 use function strpos;
 use function substr_replace;
+
 use const PHP_URL_HOST;
 
 /**

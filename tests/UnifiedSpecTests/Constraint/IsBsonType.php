@@ -24,6 +24,7 @@ use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\Constraint\LogicalOr;
 use RuntimeException;
 use Symfony\Bridge\PhpUnit\ConstraintTrait;
+
 use function array_keys;
 use function array_map;
 use function count;
@@ -36,6 +37,7 @@ use function is_object;
 use function is_string;
 use function range;
 use function sprintf;
+
 use const PHP_INT_SIZE;
 
 final class IsBsonType extends Constraint

@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Model\CollectionInfo;
 use MongoDB\Model\CollectionInfoIterator;
+
 use function call_user_func;
 use function is_callable;
 use function sprintf;

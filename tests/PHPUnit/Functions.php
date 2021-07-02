@@ -71,6 +71,7 @@ use PHPUnit\Util\Exception;
 use PHPUnit\Util\Xml\Exception as XmlException;
 use SebastianBergmann\RecursionContext\InvalidArgumentException;
 use Throwable;
+
 use function func_get_args;
 use function function_exists;
 

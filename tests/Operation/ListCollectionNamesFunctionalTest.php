@@ -6,6 +6,7 @@ use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListCollectionNames;
 use MongoDB\Tests\CommandObserver;
+
 use function version_compare;
 
 class ListCollectionNamesFunctionalTest extends FunctionalTestCase

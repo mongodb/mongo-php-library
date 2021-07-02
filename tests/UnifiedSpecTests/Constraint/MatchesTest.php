@@ -7,6 +7,7 @@ use MongoDB\Tests\FunctionalTestCase;
 use MongoDB\Tests\UnifiedSpecTests\EntityMap;
 use PHPUnit\Framework\ExpectationFailedException;
 use stdClass;
+
 use function hex2bin;
 use function preg_quote;
 use function version_compare;

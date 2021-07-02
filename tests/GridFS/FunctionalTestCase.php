@@ -5,6 +5,7 @@ namespace MongoDB\Tests\GridFS;
 use MongoDB\Collection;
 use MongoDB\GridFS\Bucket;
 use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
+
 use function fopen;
 use function fwrite;
 use function get_resource_type;

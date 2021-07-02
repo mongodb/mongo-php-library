@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Model;
 
 use MongoDB\Collection;
 use MongoDB\Tests\FunctionalTestCase;
+
 use function version_compare;
 
 class IndexInfoFunctionalTest extends FunctionalTestCase

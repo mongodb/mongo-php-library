@@ -21,6 +21,7 @@ use MongoDB\Operation\Update;
 use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
 use MongoDB\Tests\CommandObserver;
+
 use function version_compare;
 
 class ExplainFunctionalTest extends FunctionalTestCase

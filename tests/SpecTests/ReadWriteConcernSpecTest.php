@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\SpecTests;
 
 use stdClass;
+
 use function basename;
 use function dirname;
 use function file_get_contents;

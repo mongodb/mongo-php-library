@@ -58,6 +58,7 @@ use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
 use MongoDB\Operation\Watch;
 use Traversable;
+
 use function array_diff_key;
 use function array_intersect_key;
 use function current;

@@ -14,6 +14,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\MapReduceResult;
 use MongoDB\Operation\Count;
 use MongoDB\Tests\CommandObserver;
+
 use function array_filter;
 use function call_user_func;
 use function is_scalar;

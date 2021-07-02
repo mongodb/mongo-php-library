@@ -5,6 +5,7 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListDatabaseNames;
 use MongoDB\Tests\CommandObserver;
+
 use function version_compare;
 
 class ListDatabaseNamesFunctionalTest extends FunctionalTestCase

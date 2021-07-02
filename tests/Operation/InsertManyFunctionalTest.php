@@ -10,6 +10,7 @@ use MongoDB\InsertManyResult;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\CommandObserver;
+
 use function version_compare;
 
 class InsertManyFunctionalTest extends FunctionalTestCase

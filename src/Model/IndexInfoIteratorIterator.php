@@ -19,6 +19,7 @@ namespace MongoDB\Model;
 
 use IteratorIterator;
 use Traversable;
+
 use function array_key_exists;
 
 /**

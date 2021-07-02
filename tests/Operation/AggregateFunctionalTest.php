@@ -11,6 +11,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
+
 use function current;
 use function iterator_to_array;
 use function version_compare;

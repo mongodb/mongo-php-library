@@ -9,6 +9,7 @@ use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
+
 use function is_object;
 use function iterator_to_array;
 use function usort;

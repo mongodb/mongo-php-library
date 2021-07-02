@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\ModifyCollection;
+
 use function array_key_exists;
 
 class ModifyCollectionFunctionalTest extends FunctionalTestCase

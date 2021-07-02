@@ -9,6 +9,7 @@ use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use stdClass;
+
 use function array_unique;
 use function basename;
 use function count;

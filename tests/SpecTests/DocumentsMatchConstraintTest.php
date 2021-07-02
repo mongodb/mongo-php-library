@@ -15,9 +15,11 @@ use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
+
 use function MongoDB\BSON\fromJSON;
 use function MongoDB\BSON\toPHP;
 use function unserialize;
+
 use const PHP_INT_SIZE;
 
 class DocumentsMatchConstraintTest extends TestCase

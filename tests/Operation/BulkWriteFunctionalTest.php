@@ -11,6 +11,7 @@ use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\BulkWrite;
 use MongoDB\Tests\CommandObserver;
+
 use function version_compare;
 
 class BulkWriteFunctionalTest extends FunctionalTestCase

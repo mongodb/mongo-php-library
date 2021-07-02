@@ -32,6 +32,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\ChangeStreamIterator;
+
 use function array_intersect_key;
 use function array_unshift;
 use function count;

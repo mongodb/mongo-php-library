@@ -6,6 +6,7 @@ use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
+
 use function basename;
 use function current;
 use function explode;

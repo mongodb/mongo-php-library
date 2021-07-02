@@ -21,6 +21,7 @@ use MongoDB\Tests\CommandObserver;
 use PHPUnit\Framework\ExpectationFailedException;
 use ReflectionClass;
 use stdClass;
+
 use function array_diff_key;
 use function array_map;
 use function bin2hex;

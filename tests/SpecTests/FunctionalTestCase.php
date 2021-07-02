@@ -11,6 +11,7 @@ use MultipleIterator;
 use PHPUnit\Framework\SkippedTest;
 use stdClass;
 use UnexpectedValueException;
+
 use function in_array;
 use function json_encode;
 use function MongoDB\BSON\fromJSON;

@@ -31,6 +31,7 @@ use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
 use stdClass;
 use Symfony\Bridge\PhpUnit\ConstraintTrait;
+
 use function array_values;
 use function get_class;
 use function get_debug_type;
@@ -40,6 +41,7 @@ use function is_object;
 use function is_scalar;
 use function method_exists;
 use function sprintf;
+
 use const PHP_INT_SIZE;
 
 /**

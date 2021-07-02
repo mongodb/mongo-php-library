@@ -10,6 +10,7 @@ use MongoDB\InsertOneResult;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Tests\CommandObserver;
+
 use function version_compare;
 
 class InsertOneFunctionalTest extends FunctionalTestCase

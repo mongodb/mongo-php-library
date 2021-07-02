@@ -9,6 +9,7 @@ use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MultipleIterator;
+
 use function count;
 use function in_array;
 use function key;

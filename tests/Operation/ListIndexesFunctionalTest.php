@@ -8,6 +8,7 @@ use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListIndexes;
 use MongoDB\Tests\CommandObserver;
+
 use function version_compare;
 
 class ListIndexesFunctionalTest extends FunctionalTestCase

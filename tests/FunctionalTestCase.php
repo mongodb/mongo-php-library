@@ -18,6 +18,7 @@ use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
 use stdClass;
 use UnexpectedValueException;
+
 use function array_merge;
 use function count;
 use function current;
@@ -37,6 +38,7 @@ use function preg_quote;
 use function preg_replace;
 use function sprintf;
 use function version_compare;
+
 use const INFO_MODULES;
 
 abstract class FunctionalTestCase extends TestCase

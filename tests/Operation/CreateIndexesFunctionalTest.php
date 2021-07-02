@@ -10,6 +10,7 @@ use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\ListIndexes;
 use MongoDB\Tests\CommandObserver;
+
 use function call_user_func;
 use function is_callable;
 use function sprintf;

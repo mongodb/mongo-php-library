@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\SpecTests;
 
 use stdClass;
+
 use function array_diff;
 use function basename;
 use function file_get_contents;

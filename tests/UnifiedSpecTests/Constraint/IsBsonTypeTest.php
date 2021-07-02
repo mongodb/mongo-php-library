@@ -18,10 +18,12 @@ use MongoDB\Tests\TestCase;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
 use stdClass;
+
 use function fopen;
 use function MongoDB\BSON\fromJSON;
 use function MongoDB\BSON\toPHP;
 use function unserialize;
+
 use const PHP_INT_SIZE;
 
 class IsBsonTypeTest extends TestCase

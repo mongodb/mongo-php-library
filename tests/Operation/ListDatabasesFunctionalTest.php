@@ -7,6 +7,7 @@ use MongoDB\Model\DatabaseInfoIterator;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListDatabases;
 use MongoDB\Tests\CommandObserver;
+
 use function version_compare;
 
 class ListDatabasesFunctionalTest extends FunctionalTestCase

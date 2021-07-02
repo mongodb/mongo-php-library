@@ -18,6 +18,7 @@
 namespace MongoDB\Exception;
 
 use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
+
 use function array_pop;
 use function count;
 use function get_debug_type;

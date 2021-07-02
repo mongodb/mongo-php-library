@@ -10,6 +10,7 @@ use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Operation\Update;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\UpdateResult;
+
 use function version_compare;
 
 class UpdateFunctionalTest extends FunctionalTestCase

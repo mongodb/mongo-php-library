@@ -11,6 +11,7 @@ use MongoDB\InsertManyResult;
 use MongoDB\InsertOneResult;
 use MongoDB\UpdateResult;
 use stdClass;
+
 use function call_user_func;
 use function is_array;
 use function is_object;

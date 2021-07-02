@@ -7,6 +7,7 @@ use RecursiveIteratorIterator;
 use ReflectionClass;
 use ReflectionMethod;
 use RegexIterator;
+
 use function array_filter;
 use function array_map;
 use function realpath;
@@ -15,6 +16,7 @@ use function strcasecmp;
 use function strlen;
 use function substr;
 use function usort;
+
 use const DIRECTORY_SEPARATOR;
 
 /**

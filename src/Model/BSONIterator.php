@@ -20,6 +20,7 @@ namespace MongoDB\Model;
 use Iterator;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
+
 use function is_array;
 use function MongoDB\BSON\toPHP;
 use function sprintf;

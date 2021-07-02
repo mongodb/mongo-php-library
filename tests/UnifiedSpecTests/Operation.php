@@ -413,7 +413,6 @@ final class Operation
                         : FindOneAndReplace::RETURN_DOCUMENT_BEFORE;
                 }
                 // Fall through
-
             case 'replaceOne':
                 assertArrayHasKey('filter', $args);
                 assertArrayHasKey('replacement', $args);
@@ -436,7 +435,6 @@ final class Operation
                         : FindOneAndUpdate::RETURN_DOCUMENT_BEFORE;
                 }
                 // Fall through
-
             case 'updateMany':
             case 'updateOne':
                 assertArrayHasKey('filter', $args);

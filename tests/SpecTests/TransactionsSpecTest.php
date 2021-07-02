@@ -301,6 +301,7 @@ class TransactionsSpecTest extends FunctionalTestCase
                 if (! isset($server->getInfo()['logicalSessionTimeoutMinutes'])) {
                     continue;
                 }
+
                 $server->executeCommand('admin', new Command(['killAllSessions' => []]));
             } catch (ServerException $e) {
                 // Interrupted error is safe to ignore (see: SERVER-38335)

@@ -277,6 +277,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 if ($exception instanceof BulkWriteException) {
                     return new BulkWriteResult($exception->getWriteResult(), $insertedIds);
                 }
+
                 break;
 
             case 'insertMany':
@@ -285,6 +286,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 if ($exception instanceof BulkWriteException) {
                     return new InsertManyResult($exception->getWriteResult(), $insertedIds);
                 }
+
                 break;
         }
 
@@ -312,6 +314,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 if (! is_last_pipeline_operator_write($operation['arguments']['pipeline'])) {
                     $this->assertSameDocuments($expectedResult, $actualResult);
                 }
+
                 break;
 
             case 'bulkWrite':
@@ -351,6 +354,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                         ['upsertedIds' => $actualResult->getUpsertedIds()]
                     );
                 }
+
                 break;
 
             case 'count':
@@ -378,6 +382,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 if (isset($expectedResult['deletedCount'])) {
                     $this->assertSame($expectedResult['deletedCount'], $actualResult->getDeletedCount());
                 }
+
                 break;
 
             case 'findOneAndDelete':
@@ -403,6 +408,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                         ['insertedIds' => $actualResult->getInsertedIds()]
                     );
                 }
+
                 break;
 
             case 'insertOne':
@@ -419,6 +425,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                         ['insertedId' => $actualResult->getInsertedId()]
                     );
                 }
+
                 break;
 
             case 'replaceOne':
@@ -445,6 +452,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                         ['upsertedId' => $actualResult->getUpsertedId()]
                     );
                 }
+
                 break;
 
             default:

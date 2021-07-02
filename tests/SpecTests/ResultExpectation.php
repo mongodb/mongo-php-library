@@ -60,12 +60,14 @@ final class ResultExpectation
                 if (! is_object($expectedValue)) {
                     throw InvalidArgumentException::invalidType('$expectedValue', $expectedValue, 'object');
                 }
+
                 break;
 
             case self::ASSERT_SAME_DOCUMENTS:
                 if (! self::isArrayOfObjects($expectedValue)) {
                     throw InvalidArgumentException::invalidType('$expectedValue', $expectedValue, 'object[]');
                 }
+
                 break;
         }
 
@@ -217,6 +219,7 @@ final class ResultExpectation
                 if (isset($expected->upsertedIds)) {
                     $test->assertSameDocument($expected->upsertedIds, $actual->getUpsertedIds());
                 }
+
                 break;
 
             case self::ASSERT_CALLABLE:
@@ -229,6 +232,7 @@ final class ResultExpectation
                 if (isset($expected->deletedCount)) {
                     $test->assertSame($expected->deletedCount, $actual->getDeletedCount());
                 }
+
                 break;
 
             case self::ASSERT_INSERTMANY:
@@ -248,6 +252,7 @@ final class ResultExpectation
                 if (isset($expected->insertedIds) && $actual instanceof BulkWriteResult) {
                     $test->assertSameDocument($expected->insertedIds, $actual->getInsertedIds());
                 }
+
                 break;
 
             case self::ASSERT_INSERTONE:
@@ -266,6 +271,7 @@ final class ResultExpectation
                         ['insertedId' => $actual->getInsertedId()]
                     );
                 }
+
                 break;
 
             case self::ASSERT_MATCHES_DOCUMENT:
@@ -326,6 +332,7 @@ final class ResultExpectation
                         ['upsertedId' => $actual->getUpsertedId()]
                     );
                 }
+
                 break;
 
             default:

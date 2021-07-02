@@ -261,6 +261,7 @@ function is_string_array($input)
     if (! is_array($input)) {
         return false;
     }
+
     foreach ($input as $item) {
         if (! is_string($item)) {
             return false;

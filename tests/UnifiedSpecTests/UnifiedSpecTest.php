@@ -187,6 +187,7 @@ class UnifiedSpecTest extends FunctionalTestCase
              */
             $failed = ! ($e instanceof SkippedTest || $e instanceof Warning);
         }
+
         // phpcs:enable
 
         $this->assertTrue($failed, 'Expected test to throw an exception');

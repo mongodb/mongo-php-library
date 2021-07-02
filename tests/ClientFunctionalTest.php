@@ -125,6 +125,7 @@ class ClientFunctionalTest extends FunctionalTestCase
         if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
             $this->markTestSkipped('startSession() is only supported on FCV 3.6 or higher');
         }
+
         $this->assertInstanceOf(Session::class, $this->client->startSession());
     }
 }

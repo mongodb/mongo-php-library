@@ -98,6 +98,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         foreach ($insertManyResult->getInsertedIds() as $id) {
             $this->assertInstanceOf(ObjectId::class, $id);
         }
+
         $this->assertInventoryCount(3);
     }
 
@@ -144,6 +145,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         foreach ($insertManyResult->getInsertedIds() as $id) {
             $this->assertInstanceOf(ObjectId::class, $id);
         }
+
         $this->assertInventoryCount(5);
 
         // Start Example 7
@@ -247,6 +249,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         foreach ($insertManyResult->getInsertedIds() as $id) {
             $this->assertInstanceOf(ObjectId::class, $id);
         }
+
         $this->assertInventoryCount(5);
 
         // Start Example 15
@@ -327,6 +330,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         foreach ($insertManyResult->getInsertedIds() as $id) {
             $this->assertInstanceOf(ObjectId::class, $id);
         }
+
         $this->assertInventoryCount(5);
 
         // Start Example 21
@@ -437,6 +441,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         foreach ($insertManyResult->getInsertedIds() as $id) {
             $this->assertInstanceOf(ObjectId::class, $id);
         }
+
         $this->assertInventoryCount(5);
 
         // Start Example 30
@@ -503,6 +508,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         foreach ($insertManyResult->getInsertedIds() as $id) {
             $this->assertIsInt($id);
         }
+
         $this->assertInventoryCount(2);
 
         // Start Example 39
@@ -578,6 +584,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         foreach ($insertManyResult->getInsertedIds() as $id) {
             $this->assertInstanceOf(ObjectId::class, $id);
         }
+
         $this->assertInventoryCount(5);
 
         // Start Example 43
@@ -605,6 +612,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             foreach (['_id', 'item', 'status'] as $field) {
                 $this->assertObjectHasAttribute($field, $document);
             }
+
             foreach (['size', 'instock'] as $field) {
                 $this->assertObjectNotHasAttribute($field, $document);
             }
@@ -623,6 +631,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             foreach (['item', 'status'] as $field) {
                 $this->assertObjectHasAttribute($field, $document);
             }
+
             foreach (['_id', 'size', 'instock'] as $field) {
                 $this->assertObjectNotHasAttribute($field, $document);
             }
@@ -641,6 +650,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             foreach (['_id', 'item', 'size'] as $field) {
                 $this->assertObjectHasAttribute($field, $document);
             }
+
             foreach (['status', 'instock'] as $field) {
                 $this->assertObjectNotHasAttribute($field, $document);
             }
@@ -659,6 +669,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             foreach (['_id', 'item', 'status', 'size'] as $field) {
                 $this->assertObjectHasAttribute($field, $document);
             }
+
             $this->assertObjectNotHasAttribute('instock', $document);
             $this->assertObjectHasAttribute('uom', $document->size);
             $this->assertObjectNotHasAttribute('h', $document->size);
@@ -678,6 +689,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             foreach (['_id', 'item', 'status', 'size', 'instock'] as $field) {
                 $this->assertObjectHasAttribute($field, $document);
             }
+
             $this->assertObjectHasAttribute('h', $document->size);
             $this->assertObjectHasAttribute('w', $document->size);
             $this->assertObjectNotHasAttribute('uom', $document->size);
@@ -696,6 +708,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             foreach (['_id', 'item', 'status', 'instock'] as $field) {
                 $this->assertObjectHasAttribute($field, $document);
             }
+
             $this->assertObjectNotHasAttribute('size', $document);
             foreach ($document->instock as $instock) {
                 $this->assertObjectHasAttribute('qty', $instock);
@@ -716,6 +729,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             foreach (['_id', 'item', 'status', 'instock'] as $field) {
                 $this->assertObjectHasAttribute($field, $document);
             }
+
             $this->assertObjectNotHasAttribute('size', $document);
             $this->assertCount(1, $document->instock);
         }
@@ -794,6 +808,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         foreach ($insertManyResult->getInsertedIds() as $id) {
             $this->assertInstanceOf(ObjectId::class, $id);
         }
+
         $this->assertInventoryCount(10);
 
         // Start Example 52
@@ -904,6 +919,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         foreach ($insertManyResult->getInsertedIds() as $id) {
             $this->assertInstanceOf(ObjectId::class, $id);
         }
+
         $this->assertInventoryCount(5);
 
         // Start Example 57
@@ -1550,6 +1566,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         foreach ($result as $item) {
             var_dump($item);
         }
+
         // End Causal Consistency Example 2
         // phpcs:enable
 

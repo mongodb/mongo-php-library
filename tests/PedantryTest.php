@@ -43,9 +43,11 @@ class PedantryTest extends TestCase
             if ($method->getModifiers() & ReflectionMethod::IS_PRIVATE) {
                 return '2' . $method->getName();
             }
+
             if ($method->getModifiers() & ReflectionMethod::IS_PROTECTED) {
                 return '1' . $method->getName();
             }
+
             if ($method->getModifiers() & ReflectionMethod::IS_PUBLIC) {
                 return '0' . $method->getName();
             }

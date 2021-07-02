@@ -70,6 +70,7 @@ final class ErrorExpectation
             if (! self::isArrayOfStrings($result->error->errorLabels)) {
                 throw InvalidArgumentException::invalidType('errorLabels', $result->error->errorLabels, 'string[]');
             }
+
             $o->includedLabels = $result->error->errorLabels;
             $o->isExpected = true;
         }
@@ -123,6 +124,7 @@ final class ErrorExpectation
             if (! self::isArrayOfStrings($outcome->result->errorLabelsContain)) {
                 throw InvalidArgumentException::invalidType('errorLabelsContain', $outcome->result->errorLabelsContain, 'string[]');
             }
+
             $o->includedLabels = $outcome->result->errorLabelsContain;
         }
 
@@ -130,6 +132,7 @@ final class ErrorExpectation
             if (! self::isArrayOfStrings($outcome->result->errorLabelsOmit)) {
                 throw InvalidArgumentException::invalidType('errorLabelsOmit', $outcome->result->errorLabelsOmit, 'string[]');
             }
+
             $o->excludedLabels = $outcome->result->errorLabelsOmit;
         }
 
@@ -253,6 +256,7 @@ final class ErrorExpectation
             if (! self::isArrayOfStrings($result->errorLabelsContain)) {
                 throw InvalidArgumentException::invalidType('errorLabelsContain', $result->errorLabelsContain, 'string[]');
             }
+
             $o->includedLabels = $result->errorLabelsContain;
             $o->isExpected = true;
         }
@@ -261,6 +265,7 @@ final class ErrorExpectation
             if (! self::isArrayOfStrings($result->errorLabelsOmit)) {
                 throw InvalidArgumentException::invalidType('errorLabelsOmit', $result->errorLabelsOmit, 'string[]');
             }
+
             $o->excludedLabels = $result->errorLabelsOmit;
             $o->isExpected = true;
         }

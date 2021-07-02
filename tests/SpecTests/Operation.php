@@ -450,7 +450,6 @@ final class Operation
                         : FindOneAndReplace::RETURN_DOCUMENT_BEFORE;
                 }
                 // Fall through
-
             case 'replaceOne':
                 return $collection->{$this->name}(
                     $args['filter'],
@@ -465,7 +464,6 @@ final class Operation
                         : FindOneAndUpdate::RETURN_DOCUMENT_BEFORE;
                 }
                 // Fall through
-
             case 'updateMany':
             case 'updateOne':
                 return $collection->{$this->name}(
@@ -590,6 +588,7 @@ final class Operation
                 } finally {
                     fclose($stream);
                 }
+
                 break;
 
             case 'download_by_name':
@@ -601,6 +600,7 @@ final class Operation
                 } finally {
                     fclose($stream);
                 }
+
                 break;
 
             default:

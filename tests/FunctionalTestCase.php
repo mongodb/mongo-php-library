@@ -124,6 +124,7 @@ abstract class FunctionalTestCase extends TestCase
         if (isset($urlParts['path'])) {
             $parts[] = $urlParts['path'];
         }
+
         if (isset($urlParts['query'])) {
             $parts = array_merge($parts, [
                 '?',
@@ -350,15 +351,18 @@ abstract class FunctionalTestCase extends TestCase
                 if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
                     $this->markTestSkipped('$changeStream is only supported on MongoDB 3.6 or higher');
                 }
+
                 if (! $this->isShardedClusterUsingReplicasets()) {
                     $this->markTestSkipped('$changeStream is only supported with replicasets');
                 }
+
                 break;
 
             case Server::TYPE_RS_PRIMARY:
                 if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
                     $this->markTestSkipped('$changeStream is only supported on FCV 3.6 or higher');
                 }
+
                 break;
 
             default:
@@ -373,18 +377,22 @@ abstract class FunctionalTestCase extends TestCase
                 if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
                     $this->markTestSkipped('Causal Consistency is only supported on MongoDB 3.6 or higher');
                 }
+
                 if (! $this->isShardedClusterUsingReplicasets()) {
                     $this->markTestSkipped('Causal Consistency is only supported with replicasets');
                 }
+
                 break;
 
             case Server::TYPE_RS_PRIMARY:
                 if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
                     $this->markTestSkipped('Causal Consistency is only supported on FCV 3.6 or higher');
                 }
+
                 if ($this->getServerStorageEngine() !== 'wiredTiger') {
                     $this->markTestSkipped('Causal Consistency requires WiredTiger storage engine');
                 }
+
                 break;
 
             default:

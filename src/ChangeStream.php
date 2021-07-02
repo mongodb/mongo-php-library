@@ -41,7 +41,7 @@ class ChangeStream implements Iterator
      * @deprecated 1.4
      * @todo Remove this in 2.0 (see: PHPLIB-360)
      */
-    const CURSOR_NOT_FOUND = 43;
+    public const CURSOR_NOT_FOUND = 43;
 
     /** @var int */
     private static $cursorNotFound = 43;

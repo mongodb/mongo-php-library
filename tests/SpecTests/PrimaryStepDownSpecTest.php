@@ -22,9 +22,9 @@ use function sprintf;
  */
 class PrimaryStepDownSpecTest extends FunctionalTestCase
 {
-    const INTERRUPTED_AT_SHUTDOWN = 11600;
-    const NOT_PRIMARY = 10107;
-    const SHUTDOWN_IN_PROGRESS = 91;
+    public const INTERRUPTED_AT_SHUTDOWN = 11600;
+    public const NOT_PRIMARY = 10107;
+    public const SHUTDOWN_IN_PROGRESS = 91;
 
     /** @var Client */
     private $client;

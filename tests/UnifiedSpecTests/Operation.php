@@ -61,7 +61,7 @@ use function strtolower;
 
 final class Operation
 {
-    const OBJECT_TEST_RUNNER = 'testRunner';
+    public const OBJECT_TEST_RUNNER = 'testRunner';
 
     /** @var bool */
     private $isTestRunnerOperation;

@@ -47,9 +47,9 @@ use const E_USER_DEPRECATED;
  */
 class Find implements Executable, Explainable
 {
-    const NON_TAILABLE = 1;
-    const TAILABLE = 2;
-    const TAILABLE_AWAIT = 3;
+    public const NON_TAILABLE = 1;
+    public const TAILABLE = 2;
+    public const TAILABLE_AWAIT = 3;
 
     /** @var integer */
     private static $wireVersionForCollation = 5;

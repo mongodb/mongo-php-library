@@ -26,9 +26,9 @@ use function version_compare;
  */
 class FunctionalTestCase extends BaseFunctionalTestCase
 {
-    const TOPOLOGY_SINGLE = 'single';
-    const TOPOLOGY_REPLICASET = 'replicaset';
-    const TOPOLOGY_SHARDED = 'sharded';
+    public const TOPOLOGY_SINGLE = 'single';
+    public const TOPOLOGY_REPLICASET = 'replicaset';
+    public const TOPOLOGY_SHARDED = 'sharded';
 
     /** @var Context|null */
     private $context;

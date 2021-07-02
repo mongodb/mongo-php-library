@@ -46,12 +46,12 @@ use function sprintf;
  */
 class BulkWrite implements Executable
 {
-    const DELETE_MANY = 'deleteMany';
-    const DELETE_ONE  = 'deleteOne';
-    const INSERT_ONE  = 'insertOne';
-    const REPLACE_ONE = 'replaceOne';
-    const UPDATE_MANY = 'updateMany';
-    const UPDATE_ONE  = 'updateOne';
+    public const DELETE_MANY = 'deleteMany';
+    public const DELETE_ONE  = 'deleteOne';
+    public const INSERT_ONE  = 'insertOne';
+    public const REPLACE_ONE = 'replaceOne';
+    public const UPDATE_MANY = 'updateMany';
+    public const UPDATE_ONE  = 'updateOne';
 
     /** @var integer */
     private static $wireVersionForArrayFilters = 6;

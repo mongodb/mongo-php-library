@@ -14,8 +14,6 @@
 
     <rule ref="Doctrine">
         <!-- Exclude sniffs that require newer PHP versions -->
-        <!-- Available with PHP 7.1 -->
-        <exclude name="SlevomatCodingStandard.Classes.ClassConstantVisibility" />
 
         <!-- Can cause subtle BC breaks, disabled for now -->
         <exclude name="SlevomatCodingStandard.TypeHints.DeclareStrictTypes" />

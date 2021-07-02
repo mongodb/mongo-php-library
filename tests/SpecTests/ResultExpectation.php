@@ -22,19 +22,19 @@ use function property_exists;
  */
 final class ResultExpectation
 {
-    const ASSERT_NOTHING = 0;
-    const ASSERT_BULKWRITE = 1;
-    const ASSERT_DELETE = 2;
-    const ASSERT_INSERTMANY = 3;
-    const ASSERT_INSERTONE = 4;
-    const ASSERT_UPDATE = 5;
-    const ASSERT_SAME = 6;
-    const ASSERT_SAME_DOCUMENT = 7;
-    const ASSERT_SAME_DOCUMENTS = 8;
-    const ASSERT_MATCHES_DOCUMENT = 9;
-    const ASSERT_NULL = 10;
-    const ASSERT_CALLABLE = 11;
-    const ASSERT_DOCUMENTS_MATCH = 12;
+    public const ASSERT_NOTHING = 0;
+    public const ASSERT_BULKWRITE = 1;
+    public const ASSERT_DELETE = 2;
+    public const ASSERT_INSERTMANY = 3;
+    public const ASSERT_INSERTONE = 4;
+    public const ASSERT_UPDATE = 5;
+    public const ASSERT_SAME = 6;
+    public const ASSERT_SAME_DOCUMENT = 7;
+    public const ASSERT_SAME_DOCUMENTS = 8;
+    public const ASSERT_MATCHES_DOCUMENT = 9;
+    public const ASSERT_NULL = 10;
+    public const ASSERT_CALLABLE = 11;
+    public const ASSERT_DOCUMENTS_MATCH = 12;
 
     /** @var integer */
     private $assertionType = self::ASSERT_NOTHING;

@@ -38,9 +38,9 @@ use function MongoDB\server_supports_feature;
  */
 class Explain implements Executable
 {
-    const VERBOSITY_ALL_PLANS = 'allPlansExecution';
-    const VERBOSITY_EXEC_STATS = 'executionStats';
-    const VERBOSITY_QUERY = 'queryPlanner';
+    public const VERBOSITY_ALL_PLANS = 'allPlansExecution';
+    public const VERBOSITY_EXEC_STATS = 'executionStats';
+    public const VERBOSITY_QUERY = 'queryPlanner';
 
     /** @var integer */
     private static $wireVersionForAggregate = 7;

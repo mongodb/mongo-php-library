@@ -40,13 +40,13 @@ use function version_compare;
  */
 final class UnifiedTestRunner
 {
-    const ATLAS_TLD = 'mongodb.net';
+    public const ATLAS_TLD = 'mongodb.net';
 
-    const SERVER_ERROR_INTERRUPTED = 11601;
-    const SERVER_ERROR_UNAUTHORIZED = 13;
+    public const SERVER_ERROR_INTERRUPTED = 11601;
+    public const SERVER_ERROR_UNAUTHORIZED = 13;
 
-    const MIN_SCHEMA_VERSION = '1.0';
-    const MAX_SCHEMA_VERSION = '1.4';
+    public const MIN_SCHEMA_VERSION = '1.0';
+    public const MAX_SCHEMA_VERSION = '1.4';
 
     /** @var MongoDB\Client */
     private $internalClient;

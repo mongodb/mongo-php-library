@@ -36,8 +36,8 @@ use function MongoDB\is_first_key_operator;
  */
 class FindOneAndReplace implements Executable, Explainable
 {
-    const RETURN_DOCUMENT_BEFORE = 1;
-    const RETURN_DOCUMENT_AFTER = 2;
+    public const RETURN_DOCUMENT_BEFORE = 1;
+    public const RETURN_DOCUMENT_AFTER = 2;
 
     /** @var FindAndModify */
     private $findAndModify;

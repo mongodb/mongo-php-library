@@ -25,7 +25,7 @@ use function glob;
  */
 class TransactionsSpecTest extends FunctionalTestCase
 {
-    const INTERRUPTED = 11601;
+    public const INTERRUPTED = 11601;
 
     /**
      * In addition to the useMultipleMongoses tests, these should all pass

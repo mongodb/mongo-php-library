@@ -38,8 +38,8 @@ use function version_compare;
  */
 class WatchFunctionalTest extends FunctionalTestCase
 {
-    const INTERRUPTED = 11601;
-    const NOT_PRIMARY = 10107;
+    public const INTERRUPTED = 11601;
+    public const NOT_PRIMARY = 10107;
 
     /** @var integer */
     private static $wireVersionForStartAtOperationTime = 7;

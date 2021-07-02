@@ -33,15 +33,15 @@ use function strtolower;
  */
 final class Operation
 {
-    const OBJECT_CLIENT = 'client';
-    const OBJECT_COLLECTION = 'collection';
-    const OBJECT_DATABASE = 'database';
-    const OBJECT_GRIDFS_BUCKET = 'gridfsbucket';
-    const OBJECT_SELECT_COLLECTION = 'selectCollection';
-    const OBJECT_SELECT_DATABASE = 'selectDatabase';
-    const OBJECT_SESSION0 = 'session0';
-    const OBJECT_SESSION1 = 'session1';
-    const OBJECT_TEST_RUNNER = 'testRunner';
+    public const OBJECT_CLIENT = 'client';
+    public const OBJECT_COLLECTION = 'collection';
+    public const OBJECT_DATABASE = 'database';
+    public const OBJECT_GRIDFS_BUCKET = 'gridfsbucket';
+    public const OBJECT_SELECT_COLLECTION = 'selectCollection';
+    public const OBJECT_SELECT_DATABASE = 'selectDatabase';
+    public const OBJECT_SESSION0 = 'session0';
+    public const OBJECT_SESSION1 = 'session1';
+    public const OBJECT_TEST_RUNNER = 'testRunner';
 
     /** @var ErrorExpectation|null */
     public $errorExpectation;

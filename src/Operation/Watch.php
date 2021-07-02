@@ -56,8 +56,8 @@ use function MongoDB\server_supports_feature;
  */
 class Watch implements Executable, /* @internal */ CommandSubscriber
 {
-    const FULL_DOCUMENT_DEFAULT = 'default';
-    const FULL_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
+    public const FULL_DOCUMENT_DEFAULT = 'default';
+    public const FULL_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
 
     /** @var integer */
     private static $wireVersionForStartAtOperationTime = 7;

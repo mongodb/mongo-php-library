@@ -347,6 +347,13 @@ class Find implements Executable, Explainable
         return $cursor;
     }
 
+    /**
+     * Returns the command document for this operation.
+     *
+     * @see Explainable::getCommandDocument()
+     * @param Server $server
+     * @return array
+     */
     public function getCommandDocument(Server $server)
     {
         return $this->createCommandDocument();
@@ -355,7 +362,7 @@ class Find implements Executable, Explainable
     /**
      * Construct a command document for Find
      */
-    private function createCommandDocument()
+    private function createCommandDocument(): array
     {
         $cmd = ['find' => $this->collectionName, 'filter' => (object) $this->filter];
 

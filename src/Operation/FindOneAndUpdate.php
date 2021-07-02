@@ -168,6 +168,13 @@ class FindOneAndUpdate implements Executable, Explainable
         return $this->findAndModify->execute($server);
     }
 
+    /**
+     * Returns the command document for this operation.
+     *
+     * @see Explainable::getCommandDocument()
+     * @param Server $server
+     * @return array
+     */
     public function getCommandDocument(Server $server)
     {
         return $this->findAndModify->getCommandDocument($server);

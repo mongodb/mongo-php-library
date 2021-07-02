@@ -262,6 +262,9 @@ class WritableStream
         $this->isClosed = true;
     }
 
+    /**
+     * @return mixed
+     */
     private function fileCollectionInsert()
     {
         $this->file['length'] = $this->length;

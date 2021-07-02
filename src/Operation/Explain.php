@@ -18,6 +18,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
@@ -102,6 +103,15 @@ class Explain implements Executable
         $this->options = $options;
     }
 
+    /**
+     * Execute the operation.
+     *
+     * @see Executable::execute()
+     * @param Server $server
+     * @return array|object
+     * @throws UnsupportedException if the server does not support explaining the operation
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
     public function execute(Server $server)
     {
         if ($this->explainable instanceof Distinct && ! server_supports_feature($server, self::$wireVersionForDistinct)) {
@@ -152,7 +162,7 @@ class Explain implements Executable
         return $options;
     }
 
-    private function isFindAndModify($explainable)
+    private function isFindAndModify(Explainable $explainable): bool
     {
         if ($explainable instanceof FindAndModify || $explainable instanceof FindOneAndDelete || $explainable instanceof FindOneAndReplace || $explainable instanceof FindOneAndUpdate) {
             return true;

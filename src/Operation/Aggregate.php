@@ -332,6 +332,13 @@ class Aggregate implements Executable, Explainable
         return new ArrayIterator($result->result);
     }
 
+    /**
+     * Returns the command document for this operation.
+     *
+     * @see Explainable::getCommandDocument()
+     * @param Server $server
+     * @return array
+     */
     public function getCommandDocument(Server $server)
     {
         return $this->createCommandDocument($server, $this->hasWriteStage());

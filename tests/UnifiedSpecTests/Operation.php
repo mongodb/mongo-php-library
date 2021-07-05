@@ -18,7 +18,6 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use stdClass;
 use Throwable;
-use Traversable;
 use function array_diff_key;
 use function array_key_exists;
 use function array_map;
@@ -204,10 +203,6 @@ final class Operation
                 Assert::fail('Unsupported entity type: ' . get_class($object));
         }
 
-        if ($result instanceof Traversable && ! $result instanceof ChangeStream) {
-            return iterator_to_array($result);
-        }
-
         return $result;
     }
 
@@ -249,16 +244,16 @@ final class Operation
         switch ($this->name) {
             case 'createChangeStream':
                 $changeStream = $client->watch(
-                    $args['pipeline'] ?? [],
+                    $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
                 $changeStream->rewind();
 
                 return $changeStream;
             case 'listDatabaseNames':
-                return $client->listDatabaseNames($args);
+                return iterator_to_array($client->listDatabaseNames($args));
             case 'listDatabases':
-                return $client->listDatabases($args);
+                return iterator_to_array($client->listDatabases($args));
             default:
                 Assert::fail('Unsupported client operation: ' . $this->name);
         }
@@ -270,10 +265,10 @@ final class Operation
 
         switch ($this->name) {
             case 'aggregate':
-                return $collection->aggregate(
+                return iterator_to_array($collection->aggregate(
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
-                );
+                ));
             case 'bulkWrite':
                 return $collection->bulkWrite(
                     array_map('self::prepareBulkWriteRequest', $args['requests']),
@@ -281,7 +276,7 @@ final class Operation
                 );
             case 'createChangeStream':
                 $changeStream = $collection->watch(
-                    $args['pipeline'] ?? [],
+                    $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
                 $changeStream->rewind();
@@ -299,9 +294,8 @@ final class Operation
                 );
             case 'count':
             case 'countDocuments':
-            case 'find':
                 return $collection->{$this->name}(
-                    $args['filter'] ?? [],
+                    $args['filter'],
                     array_diff_key($args, ['filter' => 1])
                 );
             case 'estimatedDocumentCount':
@@ -321,11 +315,16 @@ final class Operation
 
                 return $collection->distinct(
                     $args['fieldName'],
-                    $args['filter'] ?? [],
+                    $args['filter'],
                     array_diff_key($args, ['fieldName' => 1, 'filter' => 1])
                 );
             case 'drop':
                 return $collection->drop($args);
+            case 'find':
+                return iterator_to_array($collection->find(
+                    $args['filter'],
+                    array_diff_key($args, ['filter' => 1])
+                ));
             case 'findOne':
                 return $collection->findOne($args['filter'], array_diff_key($args, ['filter' => 1]));
             case 'findOneAndReplace':
@@ -378,7 +377,7 @@ final class Operation
                     array_diff_key($args, ['document' => 1])
                 );
             case 'listIndexes':
-                return $collection->listIndexes($args);
+                return iterator_to_array($collection->listIndexes($args));
             case 'mapReduce':
                 return $collection->mapReduce(
                     $args['map'],
@@ -397,13 +396,13 @@ final class Operation
 
         switch ($this->name) {
             case 'aggregate':
-                return $database->aggregate(
+                return iterator_to_array($database->aggregate(
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
-                );
+                ));
             case 'createChangeStream':
                 $changeStream = $database->watch(
-                    $args['pipeline'] ?? [],
+                    $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
                 $changeStream->rewind();
@@ -420,9 +419,9 @@ final class Operation
                     array_diff_key($args, ['collection' => 1])
                 );
             case 'listCollectionNames':
-                return $database->listCollectionNames($args);
+                return iterator_to_array($database->listCollectionNames($args));
             case 'listCollections':
-                return $database->listCollections($args);
+                return iterator_to_array($database->listCollections($args));
             case 'runCommand':
                 return $database->command(
                     $args['command'],

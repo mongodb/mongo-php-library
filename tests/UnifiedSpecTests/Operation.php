@@ -651,11 +651,6 @@ final class Operation
     {
         $args = $this->prepareArguments();
 
-        if (array_key_exists('client', $args)) {
-            assertIsString($args['client']);
-            $args['client'] = $this->entityMap->getClient($args['client']);
-        }
-
         switch ($this->name) {
             case 'assertCollectionExists':
                 assertArrayHasKey('databaseName', $args);
@@ -785,6 +780,11 @@ final class Operation
     private function prepareArguments() : array
     {
         $args = $this->arguments;
+
+        if (array_key_exists('client', $args)) {
+            assertIsString($args['client']);
+            $args['client'] = $this->entityMap->getClient($args['client']);
+        }
 
         if (array_key_exists('session', $args)) {
             assertIsString($args['session']);

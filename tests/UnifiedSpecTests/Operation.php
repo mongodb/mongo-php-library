@@ -7,6 +7,7 @@ use MongoDB\ChangeStream;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\GridFS\Bucket;
@@ -35,6 +36,7 @@ use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\assertIsArray;
+use function PHPUnit\Framework\assertIsInt;
 use function PHPUnit\Framework\assertIsObject;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertMatchesRegularExpression;
@@ -81,6 +83,9 @@ final class Operation
     /** @var ExpectedResult */
     private $expectedResult;
 
+    /** @var bool */
+    private $ignoreResultAndError;
+
     /** @var string */
     private $saveResultAsEntity;
 
@@ -101,10 +106,15 @@ final class Operation
             $this->arguments = (array) $o->arguments;
         }
 
+        if (isset($o->ignoreResultAndError) && (isset($o->expectError) || property_exists($o, 'expectResult') || isset($o->saveResultAsEntity))) {
+            Assert::fail('ignoreResultAndError is mutually exclusive with expectError, expectResult, and saveResultAsEntity');
+        }
+
         if (isset($o->expectError) && (property_exists($o, 'expectResult') || isset($o->saveResultAsEntity))) {
             Assert::fail('expectError is mutually exclusive with expectResult and saveResultAsEntity');
         }
 
+        $this->ignoreResultAndError = $o->ignoreResultAndError ?? false;
         $this->expectError = new ExpectedError($o->expectError ?? null, $this->entityMap);
         $this->expectResult = new ExpectedResult($o, $this->entityMap, $this->object);
 
@@ -158,8 +168,10 @@ final class Operation
             }
         }
 
-        $this->expectError->assert($error);
-        $this->expectResult->assert($result, $saveResultAsEntity);
+        if (! $this->ignoreResultAndError) {
+            $this->expectError->assert($error);
+            $this->expectResult->assert($result, $saveResultAsEntity);
+        }
 
         // Rethrowing is primarily used for withTransaction callbacks
         if ($error && $rethrowExceptions) {
@@ -192,6 +204,9 @@ final class Operation
                 break;
             case ChangeStream::class:
                 $result = $this->executeForChangeStream($object);
+                break;
+            case Cursor::class:
+                $result = $this->executeForCursor($object);
                 break;
             case Session::class:
                 $result = $this->executeForSession($object);
@@ -275,6 +290,11 @@ final class Operation
                 return $collection->watch(
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
+                );
+            case 'createFindCursor':
+                return $collection->find(
+                    $args['filter'],
+                    array_diff_key($args, ['filter' => 1])
                 );
             case 'createIndex':
                 return $collection->createIndex(
@@ -381,6 +401,52 @@ final class Operation
                 );
             default:
                 Assert::fail('Unsupported collection operation: ' . $this->name);
+        }
+    }
+
+    private function executeForCursor(Cursor $cursor)
+    {
+        $args = $this->prepareArguments();
+
+        switch ($this->name) {
+            case 'close':
+                /* PHPC does not provide an API to directly close a cursor.
+                 * mongoc_cursor_destroy is only invoked from the Cursor's
+                 * free_object handler, which requires unsetting the object from
+                 * the entity map to trigger garbage collection. This will need
+                 * a different approach if tests ever attempt to access the
+                 * cursor entity after calling the "close" operation. */
+                $this->entityMap->closeCursor($this->object);
+                assertFalse($this->entityMap->offsetExists($this->object));
+                break;
+            case 'iterateUntilDocumentOrError':
+                /* Note: the first iteration should use rewind, otherwise we may
+                 * miss a document from the initial batch (possible if using a
+                 * resume token). We can infer this from a null key; however,
+                 * if a test ever calls this operation consecutively to expect
+                 * multiple errors from the same ChangeStream we will need a
+                 * different approach (e.g. examining internal hasAdvanced
+                 * property on the ChangeStream). */
+
+                /* Note: similar to iterateUntilDocumentOrError for ChangeStream
+                 * entities, a different approach will be needed if a test ever
+                 * calls this operation consecutively to expect multiple errors.
+                 */
+                if ($cursor->key() === null) {
+                    $cursor->rewind();
+
+                    if ($cursor->valid()) {
+                        return $cursor->current();
+                    }
+                }
+
+                do {
+                    $cursor->next();
+                } while (! $cursor->valid());
+
+                return $cursor->current();
+            default:
+                Assert::fail('Unsupported cursor operation: ' . $this->name);
         }
     }
 
@@ -531,6 +597,13 @@ final class Operation
             case 'assertDifferentLsidOnLastTwoCommands':
                 $eventObserver = $this->context->getEventObserverForClient($this->arguments['client']);
                 assertNotEquals(...$eventObserver->getLsidsOnLastTwoCommands());
+                break;
+            case 'assertNumberConnectionsCheckedOut':
+                assertIsInt($args['connections']);
+                /* PHP does not implement connection pooling. Check parameters
+                 * for the sake of valid-fail tests, but otherwise raise an
+                 * error. */
+                Assert::fail('Tests using assertNumberConnectionsCheckedOut should be skipped');
                 break;
             case 'assertSessionDirty':
                 assertTrue($this->context->isDirtySession($this->arguments['session']));

@@ -199,6 +199,7 @@ final class EventObserver implements CommandSubscriber
 
     private function assertCommandStartedEvent(CommandStartedEvent $actual, stdClass $expected, string $message)
     {
+        // TODO: Assert hasServiceId (blocked on PHPC-1752)
         Util::assertHasOnlyKeys($expected, ['command', 'commandName', 'databaseName']);
 
         if (isset($expected->command)) {
@@ -220,6 +221,7 @@ final class EventObserver implements CommandSubscriber
 
     private function assertCommandSucceededEvent(CommandSucceededEvent $actual, stdClass $expected, string $message)
     {
+        // TODO: Assert hasServiceId (blocked on PHPC-1752)
         Util::assertHasOnlyKeys($expected, ['reply', 'commandName']);
 
         if (isset($expected->reply)) {
@@ -236,6 +238,7 @@ final class EventObserver implements CommandSubscriber
 
     private function assertCommandFailedEvent(CommandFailedEvent $actual, stdClass $expected, string $message)
     {
+        // TODO: Assert hasServiceId (blocked on PHPC-1752)
         Util::assertHasOnlyKeys($expected, ['commandName']);
 
         if (isset($expected->commandName)) {

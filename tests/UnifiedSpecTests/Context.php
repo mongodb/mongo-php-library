@@ -29,6 +29,7 @@ use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
 use function PHPUnit\Framework\assertNotFalse;
 use function PHPUnit\Framework\assertNotSame;
+use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertStringContainsString;
 use function PHPUnit\Framework\assertStringStartsWith;
 use function strlen;
@@ -171,13 +172,17 @@ final class Context
 
         foreach ($expectedEventsForClients as $expectedEventsForClient) {
             assertIsObject($expectedEventsForClient);
-            Util::assertHasOnlyKeys($expectedEventsForClient, ['client', 'events']);
+            Util::assertHasOnlyKeys($expectedEventsForClient, ['client', 'events', 'eventType']);
 
             $client = $expectedEventsForClient->client ?? null;
+            $eventType = $expectedEventsForClient->eventType ?? 'command';
             $expectedEvents = $expectedEventsForClient->events ?? null;
 
             assertIsString($client);
             assertArrayHasKey($client, $this->eventObserversByClient);
+            /* Note: PHPC does not implement CMAP. Any tests expecting CMAP
+             * events should be skipped explicitly. */
+            assertSame('command', $eventType);
             assertIsArray($expectedEvents);
 
             $this->eventObserversByClient[$client]->assert($expectedEvents);

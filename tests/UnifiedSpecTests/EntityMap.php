@@ -7,6 +7,7 @@ use MongoDB\ChangeStream;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Session;
 use MongoDB\GridFS\Bucket;
 use MongoDB\Tests\UnifiedSpecTests\Constraint\IsBsonType;
@@ -16,6 +17,7 @@ use stdClass;
 use function array_key_exists;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertArrayNotHasKey;
+use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertThat;
 use function PHPUnit\Framework\isInstanceOf;
@@ -128,6 +130,17 @@ class EntityMap implements ArrayAccess
         };
     }
 
+    /**
+     * Closes a cursor by removing it from the entity map.
+     *
+     * @see Operation::executeForCursor()
+     */
+    public function closeCursor(string $cursorId)
+    {
+        assertInstanceOf(Cursor::class, $this[$cursorId]);
+        unset($this->map[$cursorId]);
+    }
+
     public function getClient(string $clientId) : Client
     {
         return $this[$clientId];
@@ -170,6 +183,7 @@ class EntityMap implements ArrayAccess
                 isInstanceOf(Session::class),
                 isInstanceOf(Bucket::class),
                 isInstanceOf(ChangeStream::class),
+                isInstanceOf(Cursor::class),
                 IsBsonType::any()
             );
         }

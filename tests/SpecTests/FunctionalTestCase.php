@@ -156,9 +156,9 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      * proper handling of special types.
      *
      * @param string $json
-     * @return array
+     * @return array|object
      */
-    protected function decodeJson(string $json): array
+    protected function decodeJson(string $json)
     {
         return toPHP(fromJSON($json));
     }

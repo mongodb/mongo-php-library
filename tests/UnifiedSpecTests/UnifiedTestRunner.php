@@ -6,6 +6,7 @@ use MongoDB\Collection;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
+use MongoDB\Model\BSONArray;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Tests\FunctionalTestCase;
 use PHPUnit\Framework\Assert;
@@ -16,6 +17,7 @@ use stdClass;
 use Throwable;
 use UnexpectedValueException;
 use function call_user_func;
+use function count;
 use function gc_collect_cycles;
 use function in_array;
 use function is_string;
@@ -43,7 +45,7 @@ final class UnifiedTestRunner
     const SERVER_ERROR_UNAUTHORIZED = 13;
 
     const MIN_SCHEMA_VERSION = '1.0';
-    const MAX_SCHEMA_VERSION = '1.2';
+    const MAX_SCHEMA_VERSION = '1.3';
 
     /** @var MongoDB\Client */
     private $internalClient;
@@ -213,93 +215,40 @@ final class UnifiedTestRunner
     /**
      * Checks server version and topology requirements.
      *
+     * Arguments for RunOnRequirement::isSatisfied() will be cached internally.
+     *
      * @throws SkippedTest unless one or more runOnRequirements are met
      */
     private function checkRunOnRequirements(array $runOnRequirements)
     {
+        static $cachedIsSatisfiedArgs;
+
         assertNotEmpty($runOnRequirements);
         assertContainsOnly('object', $runOnRequirements);
 
-        $serverVersion = $this->getCachedServerVersion();
-        $topology = $this->getCachedTopology();
-        $serverParameters = $this->getCachedServerParameters();
+        if (! isset($cachedIsSatisfiedArgs)) {
+            $cachedIsSatisfiedArgs = [
+                $this->getServerVersion(),
+                $this->getTopology(),
+                $this->getServerParameters(),
+                $this->isAuthenticated(),
+            ];
+        }
 
         foreach ($runOnRequirements as $o) {
             $runOnRequirement = new RunOnRequirement($o);
-            if ($runOnRequirement->isSatisfied($serverVersion, $topology, $serverParameters)) {
+            if ($runOnRequirement->isSatisfied(...$cachedIsSatisfiedArgs)) {
                 return;
             }
         }
 
         // @todo Add server parameter requirements?
-        Assert::markTestSkipped(sprintf('Server version "%s" and topology "%s" do not meet test requirements', $serverVersion, $topology));
-    }
-
-    /**
-     * Return the server parameters (cached for subsequent calls).
-     */
-    private function getCachedServerParameters() : stdClass
-    {
-        static $cachedServerParameters;
-
-        if (isset($cachedServerParameters)) {
-            return $cachedServerParameters;
-        }
-
-        $cachedServerParameters = $this->getServerParameters();
-
-        return $cachedServerParameters;
-    }
-
-    /**
-     * Return the server version (cached for subsequent calls).
-     */
-    private function getCachedServerVersion() : string
-    {
-        static $cachedServerVersion;
-
-        if (isset($cachedServerVersion)) {
-            return $cachedServerVersion;
-        }
-
-        $cachedServerVersion = $this->getServerVersion();
-
-        return $cachedServerVersion;
-    }
-
-    /**
-     * Return the topology type (cached for subsequent calls).
-     *
-     * @throws UnexpectedValueException if topology is neither single nor RS nor sharded
-     */
-    private function getCachedTopology() : string
-    {
-        static $cachedTopology = null;
-
-        if (isset($cachedTopology)) {
-            return $cachedTopology;
-        }
-
-        switch ($this->getPrimaryServer()->getType()) {
-            case Server::TYPE_STANDALONE:
-                $cachedTopology = RunOnRequirement::TOPOLOGY_SINGLE;
-                break;
-
-            case Server::TYPE_RS_PRIMARY:
-                $cachedTopology = RunOnRequirement::TOPOLOGY_REPLICASET;
-                break;
-
-            case Server::TYPE_MONGOS:
-                $cachedTopology = $this->isShardedClusterUsingReplicasets()
-                    ? RunOnRequirement::TOPOLOGY_SHARDED_REPLICASET
-                    : RunOnRequirement::TOPOLOGY_SHARDED;
-                break;
-
-            default:
-                throw new UnexpectedValueException('Toplogy is neither single nor RS nor sharded');
-        }
-
-        return $cachedTopology;
+        Assert::markTestSkipped(sprintf(
+            'Server (version=%s, toplogy=%s, auth=%s) does not meet test requirements',
+            $cachedIsSatisfiedArgs[0],
+            $cachedIsSatisfiedArgs[1],
+            $cachedIsSatisfiedArgs[3] ? 'yes' : 'no'
+        ));
     }
 
     private function getPrimaryServer() : Server
@@ -337,6 +286,47 @@ final class UnifiedTestRunner
         }
 
         throw new UnexpectedValueException('Could not determine server version');
+    }
+
+    /**
+     * Return the topology type.
+     *
+     * @throws UnexpectedValueException if topology is neither single nor RS nor sharded
+     */
+    private function getTopology() : string
+    {
+        // TODO: detect load-balanced topologies once PHPLIB-671 is implemented
+        switch ($this->getPrimaryServer()->getType()) {
+            case Server::TYPE_STANDALONE:
+                return RunOnRequirement::TOPOLOGY_SINGLE;
+            case Server::TYPE_RS_PRIMARY:
+                return RunOnRequirement::TOPOLOGY_REPLICASET;
+            case Server::TYPE_MONGOS:
+                return $this->isShardedClusterUsingReplicasets()
+                    ? RunOnRequirement::TOPOLOGY_SHARDED_REPLICASET
+                    : RunOnRequirement::TOPOLOGY_SHARDED;
+            default:
+                throw new UnexpectedValueException('Toplogy is neither single nor RS nor sharded');
+        }
+    }
+
+    /**
+     * Return whether the connection is authenticated.
+     *
+     * Note: if the connectionStatus command is not portable for serverless, it
+     * may be necessary to rewrite this to instead inspect the connection string
+     * or consult an environment variable, as is done in libmongoc.
+     */
+    private function isAuthenticated() : bool
+    {
+        $database = $this->internalClient->selectDatabase('admin');
+        $connectionStatus = $database->command(['connectionStatus' => 1])->toArray()[0];
+
+        if (isset($connectionStatus->authInfo->authenticatedUsers) && $connectionStatus->authInfo->authenticatedUsers instanceof BSONArray) {
+            return count($connectionStatus->authInfo->authenticatedUsers) > 0;
+        }
+
+        throw new UnexpectedValueException('Could not determine authentication status');
     }
 
     /**

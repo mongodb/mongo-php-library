@@ -42,6 +42,11 @@ class UnifiedSpecTest extends FunctionalTestCase
         'crud/unacknowledged-updateMany-hint-clientError: Unacknowledged updateMany with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
         'crud/unacknowledged-updateOne-hint-clientError: Unacknowledged updateOne with hint string fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
         'crud/unacknowledged-updateOne-hint-clientError: Unacknowledged updateOne with hint document fails with client-side error' => 'PHPLIB-573 and DRIVERS-1340',
+        // PHPC does not implement CMAP
+        'valid-pass/assertNumberConnectionsCheckedOut: basic assertion succeeds' => 'PHPC does not implement CMAP',
+        'valid-pass/entity-client-cmap-events: events are captured during an operation' => 'PHPC does not implement CMAP',
+        'valid-pass/expectedEventsForClient-eventType: eventType can be set to command and cmap' => 'PHPC does not implement CMAP',
+        'valid-pass/expectedEventsForClient-eventType: eventType defaults to command if unset' => 'PHPC does not implement CMAP',
     ];
 
     /** @var UnifiedTestRunner */

@@ -243,13 +243,10 @@ final class Operation
 
         switch ($this->name) {
             case 'createChangeStream':
-                $changeStream = $client->watch(
+                return $client->watch(
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
-                $changeStream->rewind();
-
-                return $changeStream;
             case 'listDatabaseNames':
                 return iterator_to_array($client->listDatabaseNames($args));
             case 'listDatabases':
@@ -275,13 +272,10 @@ final class Operation
                     array_diff_key($args, ['requests' => 1])
                 );
             case 'createChangeStream':
-                $changeStream = $collection->watch(
+                return $collection->watch(
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
-                $changeStream->rewind();
-
-                return $changeStream;
             case 'createIndex':
                 return $collection->createIndex(
                     $args['keys'],
@@ -401,13 +395,10 @@ final class Operation
                     array_diff_key($args, ['pipeline' => 1])
                 ));
             case 'createChangeStream':
-                $changeStream = $database->watch(
+                return $database->watch(
                     $args['pipeline'],
                     array_diff_key($args, ['pipeline' => 1])
                 );
-                $changeStream->rewind();
-
-                return $changeStream;
             case 'createCollection':
                 return $database->createCollection(
                     $args['collection'],

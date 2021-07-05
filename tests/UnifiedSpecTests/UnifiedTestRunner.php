@@ -45,7 +45,7 @@ final class UnifiedTestRunner
     const SERVER_ERROR_UNAUTHORIZED = 13;
 
     const MIN_SCHEMA_VERSION = '1.0';
-    const MAX_SCHEMA_VERSION = '1.3';
+    const MAX_SCHEMA_VERSION = '1.4';
 
     /** @var MongoDB\Client */
     private $internalClient;
@@ -232,6 +232,7 @@ final class UnifiedTestRunner
                 $this->getTopology(),
                 $this->getServerParameters(),
                 $this->isAuthenticated(),
+                $this->isServerless(),
             ];
         }
 
@@ -327,6 +328,15 @@ final class UnifiedTestRunner
         }
 
         throw new UnexpectedValueException('Could not determine authentication status');
+    }
+
+    /**
+     * Return whether serverless (i.e. proxy as mongos) is being utilized.
+     */
+    private function isServerless() : bool
+    {
+        // TODO: detect serverless once PHPC-1755 is implemented
+        return false;
     }
 
     /**

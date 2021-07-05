@@ -6,6 +6,7 @@ use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use stdClass;
 use function array_diff;
 use function in_array;
+use function PHPUnit\Framework\assertContains;
 use function PHPUnit\Framework\assertContainsOnly;
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertIsArray;
@@ -21,6 +22,10 @@ class RunOnRequirement
     const TOPOLOGY_SHARDED = 'sharded';
     const TOPOLOGY_SHARDED_REPLICASET = 'sharded-replicaset';
     const TOPOLOGY_LOAD_BALANCED = 'load-balanced';
+
+    const SERVERLESS_REQUIRE = 'require';
+    const SERVERLESS_FORBID = 'forbid';
+    const SERVERLESS_ALLOW = 'allow';
 
     const VERSION_PATTERN = '/^[0-9]+(\\.[0-9]+){1,2}$/';
 
@@ -39,6 +44,9 @@ class RunOnRequirement
     /** @var bool */
     private $auth;
 
+    /** @var string */
+    private $serverless;
+
     /** @var array */
     private static $supportedTopologies = [
         self::TOPOLOGY_SINGLE,
@@ -48,9 +56,16 @@ class RunOnRequirement
         self::TOPOLOGY_LOAD_BALANCED,
     ];
 
+    /** @var array */
+    private static $supportedServerless = [
+        self::SERVERLESS_REQUIRE,
+        self::SERVERLESS_FORBID,
+        self::SERVERLESS_ALLOW,
+    ];
+
     public function __construct(stdClass $o)
     {
-        Util::assertHasOnlyKeys($o, ['minServerVersion', 'maxServerVersion', 'topologies', 'serverParameters', 'auth']);
+        Util::assertHasOnlyKeys($o, ['minServerVersion', 'maxServerVersion', 'topologies', 'serverParameters', 'auth', 'serverless']);
 
         if (isset($o->minServerVersion)) {
             assertIsString($o->minServerVersion);
@@ -80,9 +95,15 @@ class RunOnRequirement
             assertIsBool($o->auth);
             $this->auth = $o->auth;
         }
+
+        if (isset($o->serverless)) {
+            assertIsString($o->serverless);
+            assertContains($o->serverless, self::$supportedServerless);
+            $this->serverless = $o->serverless;
+        }
     }
 
-    public function isSatisfied(string $serverVersion, string $topology, stdClass $serverParameters, bool $isAuthenticated) : bool
+    public function isSatisfied(string $serverVersion, string $topology, stdClass $serverParameters, bool $isAuthenticated, bool $isServerless) : bool
     {
         if (isset($this->minServerVersion) && version_compare($serverVersion, $this->minServerVersion, '<')) {
             return false;
@@ -105,6 +126,16 @@ class RunOnRequirement
 
         if (isset($this->auth) && $isAuthenticated !== $this->auth) {
             return false;
+        }
+
+        if (isset($this->serverless)) {
+            if (! $isServerless && $this->serverless === self::SERVERLESS_REQUIRE) {
+                return false;
+            }
+
+            if ($isServerless && $this->serverless === self::SERVERLESS_FORBID) {
+                return false;
+            }
         }
 
         return true;

@@ -74,7 +74,7 @@ abstract class FunctionalTestCase extends TestCase
         return new Manager($uri ?? static::getUri(), $options, static::appendServerApiOption($driverOptions));
     }
 
-    public static function getUri($allowMultipleMongoses = false)
+    public static function getUri($allowMultipleMongoses = false): string
     {
         $uri = parent::getUri();
 

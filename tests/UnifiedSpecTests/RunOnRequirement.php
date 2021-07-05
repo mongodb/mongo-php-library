@@ -92,17 +92,7 @@ class RunOnRequirement
             return false;
         }
 
-        if (isset($this->topologies)) {
-            if (in_array($topology, $this->topologies)) {
-                return true;
-            }
-
-            /* Ensure "sharded-replicaset" is also accepted for topologies that
-             * only include "sharded" (agnostic about the shard topology) */
-            if ($topology === self::TOPOLOGY_SHARDED_REPLICASET && in_array(self::TOPOLOGY_SHARDED, $this->topologies)) {
-                return true;
-            }
-
+        if (isset($this->topologies) && ! $this->isTopologySatisfied($topology)) {
             return false;
         }
 
@@ -118,5 +108,20 @@ class RunOnRequirement
         }
 
         return true;
+    }
+
+    private function isTopologySatisfied(string $topology) : bool
+    {
+        if (in_array($topology, $this->topologies)) {
+            return true;
+        }
+
+        /* Ensure "sharded-replicaset" is also accepted for topologies that
+         * only include "sharded" (agnostic about the shard topology) */
+        if ($topology === self::TOPOLOGY_SHARDED_REPLICASET && in_array(self::TOPOLOGY_SHARDED, $this->topologies)) {
+            return true;
+        }
+
+        return false;
     }
 }

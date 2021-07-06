@@ -53,6 +53,7 @@ use MongoDB\Operation\InsertMany;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListIndexes;
 use MongoDB\Operation\MapReduce;
+use MongoDB\Operation\RenameCollection;
 use MongoDB\Operation\ReplaceOne;
 use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
@@ -1000,6 +1001,34 @@ class Collection
         }
 
         $operation = new MapReduce($this->databaseName, $this->collectionName, $map, $reduce, $out, $options);
+
+        return $operation->execute($server);
+    }
+
+    /**
+     * Renames the collection.
+     *
+     * @see RenameCollection::__construct() for supported options
+     * @param string $newCollectionName New name for this collection
+     * @param array $options Additional options
+     * @return array|object Command result document
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function renameCollection($newCollectionName, array $options = [])
+    {
+        if (! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        $server = select_server($this->manager, $options);
+
+        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! is_in_transaction($options)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new RenameCollection($this->databaseName, $this->collectionName, $newCollectionName, $options);
 
         return $operation->execute($server);
     }

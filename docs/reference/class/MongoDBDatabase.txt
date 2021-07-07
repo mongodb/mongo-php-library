@@ -59,6 +59,7 @@ Methods
    /reference/method/MongoDBDatabase-listCollectionNames
    /reference/method/MongoDBDatabase-listCollections
    /reference/method/MongoDBDatabase-modifyCollection
+   /reference/method/MongoDBDatabase-renameCollection
    /reference/method/MongoDBDatabase-selectCollection
    /reference/method/MongoDBDatabase-selectGridFSBucket
    /reference/method/MongoDBDatabase-watch

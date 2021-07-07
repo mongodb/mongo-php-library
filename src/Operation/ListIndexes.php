@@ -27,6 +27,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Model\IndexInfoIteratorIterator;
+
 use function is_integer;
 
 /**

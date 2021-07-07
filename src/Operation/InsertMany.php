@@ -25,6 +25,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\InsertManyResult;
+
 use function is_array;
 use function is_bool;
 use function is_object;
@@ -147,7 +148,8 @@ class InsertMany implements Executable
 
         $options = ['ordered' => $this->options['ordered']];
 
-        if (! empty($this->options['bypassDocumentValidation']) &&
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
             server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];

@@ -26,6 +26,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\UpdateResult;
 use MultipleIterator;
 use stdClass;
+
 use function abs;
 use function count;
 use function is_numeric;
@@ -342,7 +343,7 @@ class CollectionWrapper
         $this->ensureChunksIndex();
     }
 
-    private function indexKeysMatch(array $expectedKeys, array $actualKeys) : bool
+    private function indexKeysMatch(array $expectedKeys, array $actualKeys): bool
     {
         if (count($expectedKeys) !== count($actualKeys)) {
             return false;
@@ -353,8 +354,8 @@ class CollectionWrapper
         $iterator->attachIterator(new ArrayIterator($actualKeys));
 
         foreach ($iterator as $key => $value) {
-            list($expectedKey, $actualKey)     = $key;
-            list($expectedValue, $actualValue) = $value;
+            [$expectedKey, $actualKey]     = $key;
+            [$expectedValue, $actualValue] = $value;
 
             if ($expectedKey !== $actualKey) {
                 return false;

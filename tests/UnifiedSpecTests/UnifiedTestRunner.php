@@ -16,6 +16,7 @@ use PHPUnit\Framework\Warning;
 use stdClass;
 use Throwable;
 use UnexpectedValueException;
+
 use function call_user_func;
 use function count;
 use function gc_collect_cycles;
@@ -39,13 +40,13 @@ use function version_compare;
  */
 final class UnifiedTestRunner
 {
-    const ATLAS_TLD = 'mongodb.net';
+    public const ATLAS_TLD = 'mongodb.net';
 
-    const SERVER_ERROR_INTERRUPTED = 11601;
-    const SERVER_ERROR_UNAUTHORIZED = 13;
+    public const SERVER_ERROR_INTERRUPTED = 11601;
+    public const SERVER_ERROR_UNAUTHORIZED = 13;
 
-    const MIN_SCHEMA_VERSION = '1.0';
-    const MAX_SCHEMA_VERSION = '1.4';
+    public const MIN_SCHEMA_VERSION = '1.0';
+    public const MAX_SCHEMA_VERSION = '1.4';
 
     /** @var MongoDB\Client */
     private $internalClient;
@@ -78,7 +79,7 @@ final class UnifiedTestRunner
         }
     }
 
-    public function run(UnifiedTestCase $test)
+    public function run(UnifiedTestCase $test): void
     {
         $this->doSetUp();
         $hasFailed = false;
@@ -115,12 +116,12 @@ final class UnifiedTestRunner
      *
      * @param callable(EntityMap):void $entityMapObserver
      */
-    public function setEntityMapObserver(callable $entityMapObserver)
+    public function setEntityMapObserver(callable $entityMapObserver): void
     {
         $this->entityMapObserver = $entityMapObserver;
     }
 
-    private function doSetUp()
+    private function doSetUp(): void
     {
         /* The transactions spec advises calling killAllSessions only at the
          * start of the test suite and after failed tests; however, the "unpin
@@ -132,7 +133,7 @@ final class UnifiedTestRunner
         $this->failPointObserver->start();
     }
 
-    private function doTearDown(bool $hasFailed)
+    private function doTearDown(bool $hasFailed): void
     {
         $this->entityMap = null;
 
@@ -149,7 +150,7 @@ final class UnifiedTestRunner
         gc_collect_cycles();
     }
 
-    private function doTestCase(stdClass $test, string $schemaVersion, array $runOnRequirements = null, array $createEntities = null, array $initialData = null)
+    private function doTestCase(stdClass $test, string $schemaVersion, ?array $runOnRequirements = null, ?array $createEntities = null, ?array $initialData = null): void
     {
         if (! $this->isSchemaVersionSupported($schemaVersion)) {
             Assert::markTestIncomplete(sprintf('Test format schema version "%s" is not supported', $schemaVersion));
@@ -219,7 +220,7 @@ final class UnifiedTestRunner
      *
      * @throws SkippedTest unless one or more runOnRequirements are met
      */
-    private function checkRunOnRequirements(array $runOnRequirements)
+    private function checkRunOnRequirements(array $runOnRequirements): void
     {
         static $cachedIsSatisfiedArgs;
 
@@ -252,14 +253,14 @@ final class UnifiedTestRunner
         ));
     }
 
-    private function getPrimaryServer() : Server
+    private function getPrimaryServer(): Server
     {
         $manager = $this->internalClient->getManager();
 
         return $manager->selectServer(new ReadPreference(ReadPreference::PRIMARY));
     }
 
-    private function getServerParameters() : stdClass
+    private function getServerParameters(): stdClass
     {
         $database = $this->internalClient->selectDatabase('admin');
         $cursor = $database->command(
@@ -277,7 +278,7 @@ final class UnifiedTestRunner
         return $cursor->toArray()[0];
     }
 
-    private function getServerVersion() : string
+    private function getServerVersion(): string
     {
         $database = $this->internalClient->selectDatabase('admin');
         $buildInfo = $database->command(['buildInfo' => 1])->toArray()[0];
@@ -294,18 +295,21 @@ final class UnifiedTestRunner
      *
      * @throws UnexpectedValueException if topology is neither single nor RS nor sharded
      */
-    private function getTopology() : string
+    private function getTopology(): string
     {
         // TODO: detect load-balanced topologies once PHPLIB-671 is implemented
         switch ($this->getPrimaryServer()->getType()) {
             case Server::TYPE_STANDALONE:
                 return RunOnRequirement::TOPOLOGY_SINGLE;
+
             case Server::TYPE_RS_PRIMARY:
                 return RunOnRequirement::TOPOLOGY_REPLICASET;
+
             case Server::TYPE_MONGOS:
                 return $this->isShardedClusterUsingReplicasets()
                     ? RunOnRequirement::TOPOLOGY_SHARDED_REPLICASET
                     : RunOnRequirement::TOPOLOGY_SHARDED;
+
             default:
                 throw new UnexpectedValueException('Toplogy is neither single nor RS nor sharded');
         }
@@ -318,7 +322,7 @@ final class UnifiedTestRunner
      * may be necessary to rewrite this to instead inspect the connection string
      * or consult an environment variable, as is done in libmongoc.
      */
-    private function isAuthenticated() : bool
+    private function isAuthenticated(): bool
     {
         $database = $this->internalClient->selectDatabase('admin');
         $connectionStatus = $database->command(['connectionStatus' => 1])->toArray()[0];
@@ -333,7 +337,7 @@ final class UnifiedTestRunner
     /**
      * Return whether serverless (i.e. proxy as mongos) is being utilized.
      */
-    private function isServerless() : bool
+    private function isServerless(): bool
     {
         // TODO: detect serverless once PHPC-1755 is implemented
         return false;
@@ -342,12 +346,12 @@ final class UnifiedTestRunner
     /**
      * Checks is a test format schema version is supported.
      */
-    private function isSchemaVersionSupported(string $schemaVersion) : bool
+    private function isSchemaVersionSupported(string $schemaVersion): bool
     {
         return version_compare($schemaVersion, self::MIN_SCHEMA_VERSION, '>=') && version_compare($schemaVersion, self::MAX_SCHEMA_VERSION, '<=');
     }
 
-    private function isShardedClusterUsingReplicasets() : bool
+    private function isShardedClusterUsingReplicasets(): bool
     {
         $collection = $this->internalClient->selectCollection('config', 'shards');
         $config = $collection->findOne();
@@ -373,7 +377,7 @@ final class UnifiedTestRunner
      *
      * This method is a NOP if allowKillAllSessions is false.
      */
-    private function killAllSessions()
+    private function killAllSessions(): void
     {
         static $ignoreErrorCodes = [
             self::SERVER_ERROR_INTERRUPTED, // SERVER-38335
@@ -406,7 +410,7 @@ final class UnifiedTestRunner
         }
     }
 
-    private function assertOutcome(array $outcome)
+    private function assertOutcome(array $outcome): void
     {
         assertNotEmpty($outcome);
         assertContainsOnly('object', $outcome);
@@ -417,7 +421,7 @@ final class UnifiedTestRunner
         }
     }
 
-    private function prepareInitialData(array $initialData)
+    private function prepareInitialData(array $initialData): void
     {
         assertNotEmpty($initialData);
         assertContainsOnly('object', $initialData);
@@ -433,7 +437,7 @@ final class UnifiedTestRunner
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/transactions/tests/README.rst#why-do-tests-that-run-distinct-sometimes-fail-with-staledbversion
      */
-    private function preventStaleDbVersionError(array $operations, Context $context)
+    private function preventStaleDbVersionError(array $operations, Context $context): void
     {
         if ($this->getPrimaryServer()->getType() !== Server::TYPE_MONGOS) {
             return;

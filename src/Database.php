@@ -41,6 +41,7 @@ use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\ModifyCollection;
 use MongoDB\Operation\Watch;
 use Traversable;
+
 use function is_array;
 use function strlen;
 
@@ -215,7 +216,8 @@ class Database
          *
          * A read concern is also not compatible with transactions.
          */
-        if (! isset($options['readConcern']) &&
+        if (
+            ! isset($options['readConcern']) &&
             server_supports_feature($server, self::$wireVersionForReadConcern) &&
             ! is_in_transaction($options) &&
             ( ! $hasWriteStage || server_supports_feature($server, self::$wireVersionForReadConcernWithWriteStage))
@@ -227,10 +229,12 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        if ($hasWriteStage &&
+        if (
+            $hasWriteStage &&
             ! isset($options['writeConcern']) &&
             server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) &&
-            ! is_in_transaction($options)) {
+            ! is_in_transaction($options)
+        ) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -413,7 +417,7 @@ class Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function listCollectionNames(array $options = []) : Iterator
+    public function listCollectionNames(array $options = []): Iterator
     {
         $operation = new ListCollectionNames($this->databaseName, $options);
         $server = select_server($this->manager, $options);

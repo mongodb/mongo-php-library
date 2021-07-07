@@ -8,11 +8,12 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\TestCase;
 use ReflectionClass;
 use stdClass;
+
 use function json_encode;
 
 class BSONArrayTest extends TestCase
 {
-    public function testBsonSerializeReindexesKeys()
+    public function testBsonSerializeReindexesKeys(): void
     {
         $data = [0 => 'foo', 2 => 'bar'];
 
@@ -21,7 +22,7 @@ class BSONArrayTest extends TestCase
         $this->assertSame(['foo', 'bar'], $array->bsonSerialize());
     }
 
-    public function testClone()
+    public function testClone(): void
     {
         $array = new BSONArray([
             [
@@ -46,7 +47,7 @@ class BSONArrayTest extends TestCase
         $this->assertNotSame($array[1][2][1], $arrayClone[1][2][1]);
     }
 
-    public function testCloneRespectsUncloneableObjects()
+    public function testCloneRespectsUncloneableObjects(): void
     {
         $this->assertFalse((new ReflectionClass(UncloneableObject::class))->isCloneable());
 
@@ -62,7 +63,7 @@ class BSONArrayTest extends TestCase
         $this->assertSame($array[1][0], $arrayClone[1][0]);
     }
 
-    public function testCloneSupportsBSONTypes()
+    public function testCloneSupportsBSONTypes(): void
     {
         /* Note: this test does not check that the BSON type itself is cloned,
          * as that is not yet supported in the driver (see: PHPC-1230). */
@@ -76,7 +77,7 @@ class BSONArrayTest extends TestCase
         $this->assertNotSame($array[1], $arrayClone[1]);
     }
 
-    public function testJsonSerialize()
+    public function testJsonSerialize(): void
     {
         $document = new BSONArray([
             'foo',
@@ -90,7 +91,7 @@ class BSONArrayTest extends TestCase
         $this->assertSame($expectedJson, json_encode($document));
     }
 
-    public function testJsonSerializeReindexesKeys()
+    public function testJsonSerializeReindexesKeys(): void
     {
         $data = [0 => 'foo', 2 => 'bar'];
 
@@ -99,7 +100,7 @@ class BSONArrayTest extends TestCase
         $this->assertSame(['foo', 'bar'], $array->jsonSerialize());
     }
 
-    public function testSetState()
+    public function testSetState(): void
     {
         $data = ['foo', 'bar'];
 

@@ -25,6 +25,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+
 use function is_array;
 use function is_object;
 use function is_string;
@@ -165,6 +166,13 @@ class Delete implements Executable, Explainable
         return new DeleteResult($writeResult);
     }
 
+    /**
+     * Returns the command document for this operation.
+     *
+     * @see Explainable::getCommandDocument()
+     * @param Server $server
+     * @return array
+     */
     public function getCommandDocument(Server $server)
     {
         $cmd = ['delete' => $this->collectionName, 'deletes' => [['q' => $this->filter] + $this->createDeleteOptions()]];

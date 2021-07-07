@@ -25,6 +25,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\InsertOneResult;
+
 use function is_array;
 use function is_bool;
 use function is_object;
@@ -122,7 +123,8 @@ class InsertOne implements Executable
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
         }
 
-        if (! empty($this->options['bypassDocumentValidation']) &&
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
             server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];

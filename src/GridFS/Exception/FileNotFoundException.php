@@ -18,6 +18,7 @@
 namespace MongoDB\GridFS\Exception;
 
 use MongoDB\Exception\RuntimeException;
+
 use function MongoDB\BSON\fromPHP;
 use function MongoDB\BSON\toJSON;
 use function sprintf;

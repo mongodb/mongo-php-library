@@ -11,7 +11,7 @@ class UpdateManyTest extends TestCase
     /**
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorFilterArgumentTypeCheck($filter)
+    public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
         new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), $filter, ['$set' => ['x' => 1]]);
@@ -20,7 +20,7 @@ class UpdateManyTest extends TestCase
     /**
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorUpdateArgumentTypeCheck($update)
+    public function testConstructorUpdateArgumentTypeCheck($update): void
     {
         $this->expectException(InvalidArgumentException::class);
         new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update);
@@ -30,7 +30,7 @@ class UpdateManyTest extends TestCase
      * @dataProvider provideUpdateDocuments
      * @doesNotPerformAssertions
      */
-    public function testConstructorUpdateArgument($update)
+    public function testConstructorUpdateArgument($update): void
     {
         new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update);
     }
@@ -38,7 +38,7 @@ class UpdateManyTest extends TestCase
     /**
      * @dataProvider provideReplacementDocuments
      */
-    public function testConstructorUpdateArgumentRequiresOperators($replacement)
+    public function testConstructorUpdateArgumentRequiresOperators($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected an update document with operator as first key or a pipeline');

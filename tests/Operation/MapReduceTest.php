@@ -13,7 +13,7 @@ class MapReduceTest extends TestCase
     /**
      * @dataProvider provideInvalidOutValues
      */
-    public function testConstructorOutArgumentTypeCheck($out)
+    public function testConstructorOutArgumentTypeCheck($out): void
     {
         $map = new Javascript('function() { emit(this.x, this.y); }');
         $reduce = new Javascript('function(key, values) { return Array.sum(values); }');
@@ -30,7 +30,7 @@ class MapReduceTest extends TestCase
     /**
      * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorOptionTypeChecks(array $options)
+    public function testConstructorOptionTypeChecks(array $options): void
     {
         $map = new Javascript('function() { emit(this.x, this.y); }');
         $reduce = new Javascript('function(key, values) { return Array.sum(values); }');

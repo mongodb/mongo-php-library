@@ -5,6 +5,7 @@ namespace MongoDB\Tests;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
+
 use function MongoDB\apply_type_map_to_document;
 use function MongoDB\create_field_path_type_map;
 use function MongoDB\generate_index_name;
@@ -20,7 +21,7 @@ class FunctionsTest extends TestCase
     /**
      * @dataProvider provideDocumentAndTypeMap
      */
-    public function testApplyTypeMapToDocument($document, array $typeMap, $expectedDocument)
+    public function testApplyTypeMapToDocument($document, array $typeMap, $expectedDocument): void
     {
         $this->assertEquals($expectedDocument, apply_type_map_to_document($document, $typeMap));
     }
@@ -92,7 +93,7 @@ class FunctionsTest extends TestCase
     /**
      * @dataProvider provideIndexSpecificationDocumentsAndGeneratedNames
      */
-    public function testGenerateIndexName($document, $expectedName)
+    public function testGenerateIndexName($document, $expectedName): void
     {
         $this->assertSame($expectedName, generate_index_name($document));
     }
@@ -111,7 +112,7 @@ class FunctionsTest extends TestCase
     /**
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testGenerateIndexNameArgumentTypeCheck($document)
+    public function testGenerateIndexNameArgumentTypeCheck($document): void
     {
         $this->expectException(InvalidArgumentException::class);
         generate_index_name($document);
@@ -120,7 +121,7 @@ class FunctionsTest extends TestCase
     /**
      * @dataProvider provideIsFirstKeyOperatorDocuments
      */
-    public function testIsFirstKeyOperator($document, $isFirstKeyOperator)
+    public function testIsFirstKeyOperator($document, $isFirstKeyOperator): void
     {
         $this->assertSame($isFirstKeyOperator, is_first_key_operator($document));
     }
@@ -140,7 +141,7 @@ class FunctionsTest extends TestCase
     /**
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testIsFirstKeyOperatorArgumentTypeCheck($document)
+    public function testIsFirstKeyOperatorArgumentTypeCheck($document): void
     {
         $this->expectException(InvalidArgumentException::class);
         is_first_key_operator($document);
@@ -149,7 +150,7 @@ class FunctionsTest extends TestCase
     /**
      * @dataProvider provideMapReduceOutValues
      */
-    public function testIsMapReduceOutputInline($out, $isInline)
+    public function testIsMapReduceOutputInline($out, $isInline): void
     {
         $this->assertSame($isInline, is_mapreduce_output_inline($out));
     }
@@ -167,7 +168,7 @@ class FunctionsTest extends TestCase
     /**
      * @dataProvider provideTypeMapValues
      */
-    public function testCreateFieldPathTypeMap(array $expected, array $typeMap, $fieldPath = 'field')
+    public function testCreateFieldPathTypeMap(array $expected, array $typeMap, $fieldPath = 'field'): void
     {
         $this->assertEquals($expected, create_field_path_type_map($typeMap, $fieldPath));
     }
@@ -229,7 +230,7 @@ class FunctionsTest extends TestCase
     /**
      * @dataProvider providePipelines
      */
-    public function testIsPipeline($expected, $pipeline)
+    public function testIsPipeline($expected, $pipeline): void
     {
         $this->assertSame($expected, is_pipeline($pipeline));
     }

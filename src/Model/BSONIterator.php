@@ -20,6 +20,7 @@ namespace MongoDB\Model;
 use Iterator;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
+
 use function is_array;
 use function MongoDB\BSON\toPHP;
 use function sprintf;
@@ -137,13 +138,13 @@ class BSONIterator implements Iterator
             return;
         }
 
-        if (($this->bufferLength - $this->position) < self::$bsonSize) {
+        if ($this->bufferLength - $this->position < self::$bsonSize) {
             throw new UnexpectedValueException(sprintf('Expected at least %d bytes; %d remaining', self::$bsonSize, $this->bufferLength - $this->position));
         }
 
-        list(,$documentLength) = unpack('V', substr($this->buffer, $this->position, self::$bsonSize));
+        [, $documentLength] = unpack('V', substr($this->buffer, $this->position, self::$bsonSize));
 
-        if (($this->bufferLength - $this->position) < $documentLength) {
+        if ($this->bufferLength - $this->position < $documentLength) {
             throw new UnexpectedValueException(sprintf('Expected %d bytes; %d remaining', $documentLength, $this->bufferLength - $this->position));
         }
 

@@ -23,6 +23,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
+
 use function is_array;
 use function is_object;
 

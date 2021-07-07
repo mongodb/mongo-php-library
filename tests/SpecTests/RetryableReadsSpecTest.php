@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\SpecTests;
 
 use stdClass;
+
 use function basename;
 use function file_get_contents;
 use function glob;
@@ -29,7 +30,7 @@ class RetryableReadsSpecTest extends FunctionalTestCase
      * @param stdClass $expected Expected command document
      * @param stdClass $actual   Actual command document
      */
-    public static function assertCommandMatches(stdClass $expected, stdClass $actual)
+    public static function assertCommandMatches(stdClass $expected, stdClass $actual): void
     {
         static::assertDocumentsMatch($expected, $actual);
     }
@@ -48,7 +49,7 @@ class RetryableReadsSpecTest extends FunctionalTestCase
      * @group matrix-testing-exclude-server-4.4-driver-4.2
      * @group matrix-testing-exclude-server-5.0-driver-4.2
      */
-    public function testRetryableReads(stdClass $test, array $runOn = null, $data, $databaseName, $collectionName, $bucketName)
+    public function testRetryableReads(stdClass $test, ?array $runOn = null, $data, string $databaseName, ?string $collectionName, ?string $bucketName): void
     {
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
@@ -110,9 +111,11 @@ class RetryableReadsSpecTest extends FunctionalTestCase
             $group = basename($filename, '.json');
             $runOn = $json->runOn ?? null;
             $data = $json->data ?? [];
+            // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
             $databaseName = $json->database_name ?? null;
             $collectionName = $json->collection_name ?? null;
             $bucketName = $json->bucket_name ?? null;
+            // phpcs:enable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;

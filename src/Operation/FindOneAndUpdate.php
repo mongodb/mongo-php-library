@@ -21,6 +21,7 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+
 use function is_array;
 use function is_integer;
 use function is_object;
@@ -36,8 +37,8 @@ use function MongoDB\is_pipeline;
  */
 class FindOneAndUpdate implements Executable, Explainable
 {
-    const RETURN_DOCUMENT_BEFORE = 1;
-    const RETURN_DOCUMENT_AFTER = 2;
+    public const RETURN_DOCUMENT_BEFORE = 1;
+    public const RETURN_DOCUMENT_AFTER = 2;
 
     /** @var FindAndModify */
     private $findAndModify;
@@ -131,8 +132,10 @@ class FindOneAndUpdate implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"returnDocument" option', $options['returnDocument'], 'integer');
         }
 
-        if ($options['returnDocument'] !== self::RETURN_DOCUMENT_AFTER &&
-            $options['returnDocument'] !== self::RETURN_DOCUMENT_BEFORE) {
+        if (
+            $options['returnDocument'] !== self::RETURN_DOCUMENT_AFTER &&
+            $options['returnDocument'] !== self::RETURN_DOCUMENT_BEFORE
+        ) {
             throw new InvalidArgumentException('Invalid value for "returnDocument" option: ' . $options['returnDocument']);
         }
 
@@ -165,6 +168,13 @@ class FindOneAndUpdate implements Executable, Explainable
         return $this->findAndModify->execute($server);
     }
 
+    /**
+     * Returns the command document for this operation.
+     *
+     * @see Explainable::getCommandDocument()
+     * @param Server $server
+     * @return array
+     */
     public function getCommandDocument(Server $server)
     {
         return $this->findAndModify->getCommandDocument($server);

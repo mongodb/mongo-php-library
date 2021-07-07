@@ -14,6 +14,7 @@ use MongoDB\Tests\UnifiedSpecTests\Constraint\IsBsonType;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Constraint\Constraint;
 use stdClass;
+
 use function array_key_exists;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertArrayNotHasKey;
@@ -78,7 +79,7 @@ class EntityMap implements ArrayAccess
     /**
      * @see http://php.net/arrayaccess.offsetset
      */
-    public function offsetSet($id, $value)
+    public function offsetSet($id, $value): void
     {
         Assert::fail('Entities can only be set via set()');
     }
@@ -86,12 +87,12 @@ class EntityMap implements ArrayAccess
     /**
      * @see http://php.net/arrayaccess.offsetunset
      */
-    public function offsetUnset($id)
+    public function offsetUnset($id): void
     {
         Assert::fail('Entities cannot be removed from the map');
     }
 
-    public function set(string $id, $value, string $parentId = null)
+    public function set(string $id, $value, ?string $parentId = null): void
     {
         assertArrayNotHasKey($id, $this->map, sprintf('Entity already exists for "%s" and cannot be replaced', $id));
         assertThat($value, self::isSupportedType());
@@ -110,14 +111,14 @@ class EntityMap implements ArrayAccess
             /** @var self */
             public $parent;
 
-            public function __construct(string $id, $value, self $parent = null)
+            public function __construct(string $id, $value, ?self $parent = null)
             {
                 $this->id = $id;
                 $this->value = $value;
                 $this->parent = $parent;
             }
 
-            public function getRoot() : self
+            public function getRoot(): self
             {
                 $root = $this;
 
@@ -135,33 +136,33 @@ class EntityMap implements ArrayAccess
      *
      * @see Operation::executeForCursor()
      */
-    public function closeCursor(string $cursorId)
+    public function closeCursor(string $cursorId): void
     {
         assertInstanceOf(Cursor::class, $this[$cursorId]);
         unset($this->map[$cursorId]);
     }
 
-    public function getClient(string $clientId) : Client
+    public function getClient(string $clientId): Client
     {
         return $this[$clientId];
     }
 
-    public function getCollection(string $collectionId) : Collection
+    public function getCollection(string $collectionId): Collection
     {
         return $this[$collectionId];
     }
 
-    public function getDatabase(string $databaseId) : Database
+    public function getDatabase(string $databaseId): Database
     {
         return $this[$databaseId];
     }
 
-    public function getSession(string $sessionId) : Session
+    public function getSession(string $sessionId): Session
     {
         return $this[$sessionId];
     }
 
-    public function getLogicalSessionId(string $sessionId) : stdClass
+    public function getLogicalSessionId(string $sessionId): stdClass
     {
         return $this->lsidsBySession[$sessionId];
     }
@@ -173,7 +174,7 @@ class EntityMap implements ArrayAccess
         return $root->value instanceof Client ? $root->id : null;
     }
 
-    private static function isSupportedType() : Constraint
+    private static function isSupportedType(): Constraint
     {
         if (self::$isSupportedType === null) {
             self::$isSupportedType = logicalOr(

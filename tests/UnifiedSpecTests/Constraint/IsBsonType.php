@@ -24,6 +24,7 @@ use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\Constraint\LogicalOr;
 use RuntimeException;
 use Symfony\Bridge\PhpUnit\ConstraintTrait;
+
 use function array_keys;
 use function array_map;
 use function count;
@@ -36,6 +37,7 @@ use function is_object;
 use function is_string;
 use function range;
 use function sprintf;
+
 use const PHP_INT_SIZE;
 
 final class IsBsonType extends Constraint
@@ -79,12 +81,12 @@ final class IsBsonType extends Constraint
         $this->type = $type;
     }
 
-    public static function any() : LogicalOr
+    public static function any(): LogicalOr
     {
         return self::anyOf(...self::$types);
     }
 
-    public static function anyOf(string ...$types) : Constraint
+    public static function anyOf(string ...$types): Constraint
     {
         if (count($types) === 1) {
             return new self(...$types);
@@ -95,67 +97,88 @@ final class IsBsonType extends Constraint
         }, $types));
     }
 
-    private function doMatches($other) : bool
+    private function doMatches($other): bool
     {
         switch ($this->type) {
             case 'double':
                 return is_float($other);
+
             case 'string':
                 return is_string($other);
+
             case 'object':
                 return self::isObject($other);
+
             case 'array':
                 return self::isArray($other);
+
             case 'binData':
                 return $other instanceof BinaryInterface;
+
             case 'undefined':
                 return $other instanceof Undefined;
+
             case 'objectId':
                 return $other instanceof ObjectIdInterface;
+
             case 'bool':
                 return is_bool($other);
+
             case 'date':
                 return $other instanceof UTCDateTimeInterface;
+
             case 'null':
                 return $other === null;
+
             case 'regex':
                 return $other instanceof RegexInterface;
+
             case 'dbPointer':
                 return $other instanceof DBPointer;
+
             case 'javascript':
                 return $other instanceof JavascriptInterface && $other->getScope() === null;
+
             case 'symbol':
                 return $other instanceof Symbol;
+
             case 'javascriptWithScope':
                 return $other instanceof JavascriptInterface && $other->getScope() !== null;
+
             case 'int':
                 return is_int($other);
+
             case 'timestamp':
                 return $other instanceof TimestampInterface;
+
             case 'long':
                 if (PHP_INT_SIZE == 4) {
                     return $other instanceof Int64;
                 }
 
                 return is_int($other);
+
             case 'decimal':
                 return $other instanceof Decimal128Interface;
+
             case 'minKey':
                 return $other instanceof MinKeyInterface;
+
             case 'maxKey':
                 return $other instanceof MaxKeyInterface;
+
             default:
                 // This should already have been caught in the constructor
                 throw new LogicException('Unsupported type: ' . $this->type);
         }
     }
 
-    private function doToString() : string
+    private function doToString(): string
     {
         return sprintf('is of BSON type "%s"', $this->type);
     }
 
-    private static function isArray($other) : bool
+    private static function isArray($other): bool
     {
         if ($other instanceof BSONArray) {
             return true;
@@ -174,7 +197,7 @@ final class IsBsonType extends Constraint
         return self::isArrayEmptyOrIndexed($other);
     }
 
-    private static function isObject($other) : bool
+    private static function isObject($other): bool
     {
         if ($other instanceof BSONDocument) {
             return true;
@@ -199,7 +222,7 @@ final class IsBsonType extends Constraint
         return ! $other instanceof Type;
     }
 
-    private static function isArrayEmptyOrIndexed(array $a) : bool
+    private static function isArrayEmptyOrIndexed(array $a): bool
     {
         if (empty($a)) {
             return true;

@@ -10,6 +10,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use PHPUnit\Framework\Assert;
 use stdClass;
+
 use function array_diff_key;
 use function array_keys;
 use function getenv;
@@ -31,7 +32,7 @@ final class Context
     /** @var Client|null */
     private $client;
 
-    /** @var string */
+    /** @var string|null */
     public $collectionName;
 
     /** @var string */
@@ -43,7 +44,7 @@ final class Context
     /** @var array */
     public $outcomeReadOptions = [];
 
-    /** @var string */
+    /** @var string|null */
     public $outcomeCollectionName;
 
     /** @var Session|null */
@@ -64,23 +65,19 @@ final class Context
     /** @var bool */
     private $useEncryptedClient = false;
 
-    /**
-     * @param string $databaseName
-     * @param string $collectionName
-     */
-    private function __construct($databaseName, $collectionName)
+    private function __construct(string $databaseName, ?string $collectionName)
     {
         $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;
         $this->outcomeCollectionName = $collectionName;
     }
 
-    public function disableEncryption()
+    public function disableEncryption(): void
     {
         $this->useEncryptedClient = false;
     }
 
-    public function enableEncryption()
+    public function enableEncryption(): void
     {
         if (! $this->encryptedClient instanceof Client) {
             throw new LogicException('Cannot enable encryption without autoEncryption options');
@@ -251,7 +248,7 @@ final class Context
         return $o;
     }
 
-    public static function getAWSCredentials() : array
+    public static function getAWSCredentials(): array
     {
         if (! getenv('AWS_ACCESS_KEY_ID') || ! getenv('AWS_SECRET_ACCESS_KEY')) {
             Assert::markTestSkipped('Please configure AWS credentials to use AWS KMS provider.');
@@ -263,7 +260,7 @@ final class Context
         ];
     }
 
-    public static function getAzureCredentials() : array
+    public static function getAzureCredentials(): array
     {
         if (! getenv('AZURE_TENANT_ID') || ! getenv('AZURE_CLIENT_ID') || ! getenv('AZURE_CLIENT_SECRET')) {
             Assert::markTestSkipped('Please configure Azure credentials to use Azure KMS provider.');
@@ -276,7 +273,7 @@ final class Context
         ];
     }
 
-    public static function getGCPCredentials() : array
+    public static function getGCPCredentials(): array
     {
         if (! getenv('GCP_EMAIL') || ! getenv('GCP_PRIVATE_KEY')) {
             Assert::markTestSkipped('Please configure GCP credentials to use GCP KMS provider.');
@@ -288,10 +285,7 @@ final class Context
         ];
     }
 
-    /**
-     * @return Client
-     */
-    public function getClient()
+    public function getClient(): Client
     {
         return $this->useEncryptedClient && $this->encryptedClient ? $this->encryptedClient : $this->client;
     }
@@ -324,7 +318,7 @@ final class Context
      * @return array
      * @throws LogicException if any option keys are unsupported
      */
-    public function prepareOptions(array $options)
+    public function prepareOptions(array $options): array
     {
         if (isset($options['readConcern']) && ! ($options['readConcern'] instanceof ReadConcern)) {
             $readConcern = (array) $options['readConcern'];
@@ -380,7 +374,7 @@ final class Context
      * @param array $args Operation arguments
      * @throws LogicException if the session placeholder is unsupported
      */
-    public function replaceArgumentSessionPlaceholder(array &$args)
+    public function replaceArgumentSessionPlaceholder(array &$args): void
     {
         if (! isset($args['session'])) {
             return;
@@ -408,7 +402,7 @@ final class Context
      * @param stdClass $command Command document
      * @throws LogicException if the session placeholder is unsupported
      */
-    public function replaceCommandSessionPlaceholder(stdClass $command)
+    public function replaceCommandSessionPlaceholder(stdClass $command): void
     {
         if (! isset($command->lsid)) {
             return;

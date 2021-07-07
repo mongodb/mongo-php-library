@@ -11,14 +11,14 @@ use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
  */
 abstract class FunctionalTestCase extends BaseFunctionalTestCase
 {
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->dropCollection();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         if ($this->hasFailed()) {
             return;

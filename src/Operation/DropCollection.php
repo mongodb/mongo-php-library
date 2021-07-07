@@ -24,6 +24,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+
 use function current;
 use function is_array;
 use function MongoDB\server_supports_feature;
@@ -129,8 +130,10 @@ class DropCollection implements Executable
             /* The server may return an error if the collection does not exist.
              * Check for an error code (or message for pre-3.2 servers) and
              * return the command reply instead of throwing. */
-            if ($e->getCode() === self::$errorCodeNamespaceNotFound ||
-                $e->getMessage() === self::$errorMessageNamespaceNotFound) {
+            if (
+                $e->getCode() === self::$errorCodeNamespaceNotFound ||
+                $e->getMessage() === self::$errorMessageNamespaceNotFound
+            ) {
                 return $e->getResultDocument();
             }
 

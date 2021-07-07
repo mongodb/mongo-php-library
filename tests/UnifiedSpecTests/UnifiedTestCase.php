@@ -5,6 +5,7 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 use Generator;
 use IteratorAggregate;
 use stdClass;
+
 use function file_get_contents;
 use function MongoDB\BSON\fromJSON;
 use function MongoDB\BSON\toPHP;
@@ -38,7 +39,7 @@ final class UnifiedTestCase implements IteratorAggregate
     /** @var array|null */
     private $initialData;
 
-    private function __construct(stdClass $test, string $schemaVersion, array $runOnRequirements = null, array $createEntities = null, array $initialData = null)
+    private function __construct(stdClass $test, string $schemaVersion, ?array $runOnRequirements = null, ?array $createEntities = null, ?array $initialData = null)
     {
         $this->test = $test;
         $this->schemaVersion = $schemaVersion;
@@ -68,7 +69,7 @@ final class UnifiedTestCase implements IteratorAggregate
     /**
      * Yields UnifiedTestCase objects for a JSON file.
      */
-    public static function fromFile(string $filename) : Generator
+    public static function fromFile(string $filename): Generator
     {
         /* Decode the file through the driver's extended JSON parser to ensure
          * proper handling of special types. */
@@ -83,7 +84,7 @@ final class UnifiedTestCase implements IteratorAggregate
      * The top-level and test-level "description" fields will be concatenated
      * and used as the key for each yielded value.
      */
-    public static function fromJSON(stdClass $json) : Generator
+    public static function fromJSON(stdClass $json): Generator
     {
         $description = $json->description;
         $schemaVersion = $json->schemaVersion;

@@ -10,6 +10,7 @@ use MongoDB\InsertOneResult;
 use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use MongoDB\UpdateResult;
 use stdClass;
+
 use function is_object;
 use function PHPUnit\Framework\assertThat;
 use function property_exists;
@@ -30,7 +31,7 @@ final class ExpectedResult
      */
     private $yieldingEntityId;
 
-    public function __construct(stdClass $o, EntityMap $entityMap, string $yieldingEntityId = null)
+    public function __construct(stdClass $o, EntityMap $entityMap, ?string $yieldingEntityId = null)
     {
         if (property_exists($o, 'expectResult')) {
             $this->constraint = new Matches($o->expectResult, $entityMap);
@@ -40,7 +41,7 @@ final class ExpectedResult
         $this->yieldingEntityId = $yieldingEntityId;
     }
 
-    public function assert($actual, string $saveResultAsEntity = null)
+    public function assert($actual, ?string $saveResultAsEntity = null): void
     {
         if ($this->constraint === null && $saveResultAsEntity === null) {
             return;
@@ -63,12 +64,14 @@ final class ExpectedResult
             return $value;
         }
 
-        if ($value instanceof BulkWriteResult ||
+        if (
+            $value instanceof BulkWriteResult ||
             $value instanceof WriteResult ||
             $value instanceof DeleteResult ||
             $value instanceof InsertOneResult ||
             $value instanceof InsertManyResult ||
-            $value instanceof UpdateResult) {
+            $value instanceof UpdateResult
+        ) {
             return self::prepareWriteResult($value);
         }
 

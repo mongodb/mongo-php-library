@@ -31,6 +31,7 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\MapReduceResult;
 use stdClass;
+
 use function current;
 use function is_array;
 use function is_bool;
@@ -41,6 +42,7 @@ use function MongoDB\create_field_path_type_map;
 use function MongoDB\is_mapreduce_output_inline;
 use function MongoDB\server_supports_feature;
 use function trigger_error;
+
 use const E_USER_DEPRECATED;
 
 /**
@@ -305,6 +307,7 @@ class MapReduce implements Executable
             if (isset($this->options['readConcern'])) {
                 throw UnsupportedException::readConcernNotSupportedInTransaction();
             }
+
             if (isset($this->options['writeConcern'])) {
                 throw UnsupportedException::writeConcernNotSupportedInTransaction();
             }
@@ -384,7 +387,8 @@ class MapReduce implements Executable
             }
         }
 
-        if (! empty($this->options['bypassDocumentValidation']) &&
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
             server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];

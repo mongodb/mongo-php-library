@@ -28,6 +28,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Exception\UnexpectedValueException;
+
 use function count;
 use function is_array;
 use function is_integer;
@@ -160,7 +161,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     /**
      * Returns the server the cursor is running on.
      */
-    public function getServer() : Server
+    public function getServer(): Server
     {
         return $this->server;
     }
@@ -248,11 +249,13 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
         if (! isset($resumeToken)) {
             $this->isValid = false;
+
             throw ResumeTokenException::notFound();
         }
 
         if (! is_array($resumeToken) && ! is_object($resumeToken)) {
             $this->isValid = false;
+
             throw ResumeTokenException::invalidType($resumeToken);
         }
 

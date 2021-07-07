@@ -15,14 +15,16 @@ use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Tests\TestCase;
 use PHPUnit\Framework\ExpectationFailedException;
+
 use function MongoDB\BSON\fromJSON;
 use function MongoDB\BSON\toPHP;
 use function unserialize;
+
 use const PHP_INT_SIZE;
 
 class DocumentsMatchConstraintTest extends TestCase
 {
-    public function testIgnoreExtraKeysInRoot()
+    public function testIgnoreExtraKeysInRoot(): void
     {
         $c = new DocumentsMatchConstraint(['x' => 1, 'y' => ['a' => 1, 'b' => 2]], true, false);
 
@@ -41,7 +43,7 @@ class DocumentsMatchConstraintTest extends TestCase
         $this->assertResult(false, $c, [1, ['a' => 1, 'b' => 2]], 'Extra keys in embedded are not permitted');
     }
 
-    public function testIgnoreExtraKeysInEmbedded()
+    public function testIgnoreExtraKeysInEmbedded(): void
     {
         $c = new DocumentsMatchConstraint(['x' => 1, 'y' => ['a' => 1, 'b' => 2]], false, true);
 
@@ -62,7 +64,7 @@ class DocumentsMatchConstraintTest extends TestCase
         $this->assertResult(false, $c, [1, ['a' => 2]], 'Keys must have the correct value');
     }
 
-    public function testPlaceholders()
+    public function testPlaceholders(): void
     {
         $c = new DocumentsMatchConstraint(['x' => '42', 'y' => 42, 'z' => ['a' => 24]], false, false, [24, 42]);
 
@@ -74,7 +76,7 @@ class DocumentsMatchConstraintTest extends TestCase
     /**
      * @dataProvider provideBSONTypes
      */
-    public function testBSONTypeAssertions($type, $value)
+    public function testBSONTypeAssertions($type, $value): void
     {
         $constraint = new DocumentsMatchConstraint(['x' => ['$$type' => $type]]);
 
@@ -114,7 +116,7 @@ class DocumentsMatchConstraintTest extends TestCase
     /**
      * @dataProvider errorMessageProvider
      */
-    public function testErrorMessages($expectedMessagePart, DocumentsMatchConstraint $constraint, $actualValue)
+    public function testErrorMessages($expectedMessagePart, DocumentsMatchConstraint $constraint, $actualValue): void
     {
         try {
             $constraint->evaluate($actualValue);
@@ -161,7 +163,7 @@ class DocumentsMatchConstraintTest extends TestCase
         ];
     }
 
-    private function assertResult($expectedResult, DocumentsMatchConstraint $constraint, $value, $message)
+    private function assertResult($expectedResult, DocumentsMatchConstraint $constraint, $value, $message): void
     {
         $this->assertSame($expectedResult, $constraint->evaluate($value, '', true), $message);
     }

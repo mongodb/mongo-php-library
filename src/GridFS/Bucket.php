@@ -33,6 +33,7 @@ use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Find;
 use stdClass;
+
 use function array_intersect_key;
 use function fopen;
 use function get_resource_type;
@@ -629,6 +630,7 @@ class Bucket
 
         if (@stream_copy_to_stream($source, $destination) === false) {
             $destinationUri = $this->createPathForFile($this->getRawFileDocumentForStream($destination));
+
             throw StreamException::uploadFailed($filename, $source, $destinationUri);
         }
 

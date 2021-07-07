@@ -7,11 +7,12 @@ use Iterator;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Tests\TestCase;
 use Throwable;
+
 use function iterator_to_array;
 
 class CachingIteratorTest extends TestCase
 {
-    public function testTraversingGeneratorConsumesIt()
+    public function testTraversingGeneratorConsumesIt(): void
     {
         $iterator = $this->getTraversable([1, 2, 3]);
         $this->assertSame([1, 2, 3], iterator_to_array($iterator));
@@ -21,7 +22,7 @@ class CachingIteratorTest extends TestCase
         iterator_to_array($iterator);
     }
 
-    public function testConstructorRewinds()
+    public function testConstructorRewinds(): void
     {
         $iterator = new CachingIterator($this->getTraversable([1, 2, 3]));
 
@@ -30,7 +31,7 @@ class CachingIteratorTest extends TestCase
         $this->assertSame(1, $iterator->current());
     }
 
-    public function testIteration()
+    public function testIteration(): void
     {
         $iterator = new CachingIterator($this->getTraversable([1, 2, 3]));
 
@@ -45,7 +46,7 @@ class CachingIteratorTest extends TestCase
         $this->assertFalse($iterator->valid());
     }
 
-    public function testIterationWithEmptySet()
+    public function testIterationWithEmptySet(): void
     {
         $iterator = new CachingIterator($this->getTraversable([]));
 
@@ -53,7 +54,7 @@ class CachingIteratorTest extends TestCase
         $this->assertFalse($iterator->valid());
     }
 
-    public function testPartialIterationDoesNotExhaust()
+    public function testPartialIterationDoesNotExhaust(): void
     {
         $traversable = $this->getTraversable([1, 2, new Exception()]);
         $iterator = new CachingIterator($traversable);
@@ -73,7 +74,7 @@ class CachingIteratorTest extends TestCase
         $this->assertTrue($iterator->valid());
     }
 
-    public function testRewindAfterPartialIteration()
+    public function testRewindAfterPartialIteration(): void
     {
         $iterator = new CachingIterator($this->getTraversable([1, 2, 3]));
 
@@ -86,13 +87,13 @@ class CachingIteratorTest extends TestCase
         $this->assertSame([1, 2, 3], iterator_to_array($iterator));
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $iterator = new CachingIterator($this->getTraversable([1, 2, 3]));
         $this->assertCount(3, $iterator);
     }
 
-    public function testCountAfterPartialIteration()
+    public function testCountAfterPartialIteration(): void
     {
         $iterator = new CachingIterator($this->getTraversable([1, 2, 3]));
 
@@ -105,7 +106,7 @@ class CachingIteratorTest extends TestCase
         $this->assertCount(3, $iterator);
     }
 
-    public function testCountWithEmptySet()
+    public function testCountWithEmptySet(): void
     {
         $iterator = new CachingIterator($this->getTraversable([]));
         $this->assertCount(0, $iterator);
@@ -115,7 +116,7 @@ class CachingIteratorTest extends TestCase
      * This protects against iterators that return valid keys on invalid
      * positions, which was the case in ext-mongodb until PHPC-1748 was fixed.
      */
-    public function testWithWrongIterator()
+    public function testWithWrongIterator(): void
     {
         $nestedIterator = new class implements Iterator {
             /** @var int */
@@ -126,7 +127,7 @@ class CachingIteratorTest extends TestCase
                 return $this->i;
             }
 
-            public function next()
+            public function next(): void
             {
                 $this->i++;
             }
@@ -141,7 +142,7 @@ class CachingIteratorTest extends TestCase
                 return $this->i == 0;
             }
 
-            public function rewind()
+            public function rewind(): void
             {
                 $this->i = 0;
             }

@@ -25,6 +25,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
+
 use function current;
 use function is_array;
 use function is_bool;
@@ -272,6 +273,13 @@ class FindAndModify implements Executable, Explainable
         return $result->value ?? null;
     }
 
+    /**
+     * Returns the command document for this operation.
+     *
+     * @see Explainable::getCommandDocument()
+     * @param Server $server
+     * @return array
+     */
     public function getCommandDocument(Server $server)
     {
         return $this->createCommandDocument($server);
@@ -312,7 +320,8 @@ class FindAndModify implements Executable, Explainable
             }
         }
 
-        if (! empty($this->options['bypassDocumentValidation']) &&
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
             server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
@@ -342,7 +351,7 @@ class FindAndModify implements Executable, Explainable
         return $options;
     }
 
-    private function isAcknowledgedWriteConcern() : bool
+    private function isAcknowledgedWriteConcern(): bool
     {
         if (! isset($this->options['writeConcern'])) {
             return true;
@@ -351,7 +360,7 @@ class FindAndModify implements Executable, Explainable
         return $this->options['writeConcern']->getW() > 1 || $this->options['writeConcern']->getJournal();
     }
 
-    private function isHintSupported(Server $server) : bool
+    private function isHintSupported(Server $server): bool
     {
         $requiredWireVersion = $this->isAcknowledgedWriteConcern() ? self::$wireVersionForHintServerSideError : self::$wireVersionForHint;
 

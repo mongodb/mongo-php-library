@@ -7,6 +7,7 @@ use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Model\BSONArray;
+
 use function array_filter;
 use function array_flip;
 use function get_class;
@@ -82,7 +83,7 @@ final class EventCollector implements CommandSubscriber
     /**
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php
      */
-    public function commandFailed(CommandFailedEvent $event)
+    public function commandFailed(CommandFailedEvent $event): void
     {
         $this->handleCommandMonitoringEvent($event);
     }
@@ -90,7 +91,7 @@ final class EventCollector implements CommandSubscriber
     /**
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandstarted.php
      */
-    public function commandStarted(CommandStartedEvent $event)
+    public function commandStarted(CommandStartedEvent $event): void
     {
         $this->handleCommandMonitoringEvent($event);
     }
@@ -98,23 +99,23 @@ final class EventCollector implements CommandSubscriber
     /**
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandsucceeded.php
      */
-    public function commandSucceeded(CommandSucceededEvent $event)
+    public function commandSucceeded(CommandSucceededEvent $event): void
     {
         $this->handleCommandMonitoringEvent($event);
     }
 
-    public function start()
+    public function start(): void
     {
         addSubscriber($this);
     }
 
-    public function stop()
+    public function stop(): void
     {
         removeSubscriber($this);
     }
 
     /** @param CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event */
-    private function handleCommandMonitoringEvent($event)
+    private function handleCommandMonitoringEvent($event): void
     {
         assertIsObject($event);
 
@@ -155,7 +156,7 @@ final class EventCollector implements CommandSubscriber
     }
 
     /** @param CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event */
-    private static function getConnectionId($event) : string
+    private static function getConnectionId($event): string
     {
         $server = $event->getServer();
 
@@ -163,7 +164,7 @@ final class EventCollector implements CommandSubscriber
     }
 
     /** @param object $event */
-    private static function getEventName($event) : string
+    private static function getEventName($event): string
     {
         static $eventNamesByClass = null;
 

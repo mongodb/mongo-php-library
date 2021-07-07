@@ -47,16 +47,8 @@ $ SYMFONY_PHPUNIT_VERSION=7.5 vendor/bin/simple-phpunit
 ## Checking coding standards
 
 The library's code is checked using [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer),
-which is installed as a development dependency by Composer. Due to the PHP
-requirement, the base version of the coding standard is not installed and needs
-to be added manually if you plan to contributing code:
-
-```
-$ composer require --dev doctrine/coding-standard=^6.0
-```
-
-Once the coding standard has been installed, you can check the code for style
-errors:
+which is installed as a development dependency by Composer. To check the code
+for style errors, run the `phpcs` binary:
 
 
 ```

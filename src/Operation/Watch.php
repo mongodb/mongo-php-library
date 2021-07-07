@@ -32,6 +32,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\ChangeStreamIterator;
+
 use function array_intersect_key;
 use function array_unshift;
 use function count;
@@ -55,8 +56,8 @@ use function MongoDB\server_supports_feature;
  */
 class Watch implements Executable, /* @internal */ CommandSubscriber
 {
-    const FULL_DOCUMENT_DEFAULT = 'default';
-    const FULL_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
+    public const FULL_DOCUMENT_DEFAULT = 'default';
+    public const FULL_DOCUMENT_UPDATE_LOOKUP = 'updateLookup';
 
     /** @var integer */
     private static $wireVersionForStartAtOperationTime = 7;
@@ -264,8 +265,10 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             $this->postBatchResumeToken = $reply->cursor->postBatchResumeToken;
         }
 
-        if ($this->shouldCaptureOperationTime($event->getServer()) &&
-            isset($reply->operationTime) && $reply->operationTime instanceof TimestampInterface) {
+        if (
+            $this->shouldCaptureOperationTime($event->getServer()) &&
+            isset($reply->operationTime) && $reply->operationTime instanceof TimestampInterface
+        ) {
             $this->operationTime = $reply->operationTime;
         }
     }
@@ -419,9 +422,11 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             return false;
         }
 
-        if (isset($this->changeStreamOptions['resumeAfter']) ||
+        if (
+            isset($this->changeStreamOptions['resumeAfter']) ||
             isset($this->changeStreamOptions['startAfter']) ||
-            isset($this->changeStreamOptions['startAtOperationTime'])) {
+            isset($this->changeStreamOptions['startAtOperationTime'])
+        ) {
             return false;
         }
 

@@ -21,6 +21,7 @@ use MongoDB\Driver\CursorInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Exception\CorruptFileException;
 use stdClass;
+
 use function ceil;
 use function floor;
 use function is_integer;
@@ -95,7 +96,7 @@ class ReadableStream
 
         if ($this->length > 0) {
             $this->numChunks = (integer) ceil($this->length / $this->chunkSize);
-            $this->expectedLastChunkSize = ($this->length - (($this->numChunks - 1) * $this->chunkSize));
+            $this->expectedLastChunkSize = $this->length - (($this->numChunks - 1) * $this->chunkSize);
         }
     }
 

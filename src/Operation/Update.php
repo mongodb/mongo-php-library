@@ -25,6 +25,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\UpdateResult;
+
 use function is_array;
 use function is_bool;
 use function is_object;
@@ -216,7 +217,8 @@ class Update implements Executable, Explainable
 
         $bulkOptions = [];
 
-        if (! empty($this->options['bypassDocumentValidation']) &&
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
             server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $bulkOptions['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
@@ -230,6 +232,13 @@ class Update implements Executable, Explainable
         return new UpdateResult($writeResult);
     }
 
+    /**
+     * Returns the command document for this operation.
+     *
+     * @see Explainable::getCommandDocument()
+     * @param Server $server
+     * @return array
+     */
     public function getCommandDocument(Server $server)
     {
         $cmd = ['update' => $this->collectionName, 'updates' => [['q' => $this->filter, 'u' => $this->update] + $this->createUpdateOptions()]];
@@ -238,7 +247,8 @@ class Update implements Executable, Explainable
             $cmd['writeConcern'] = $this->options['writeConcern'];
         }
 
-        if (! empty($this->options['bypassDocumentValidation']) &&
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
             server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];

@@ -26,6 +26,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
+
 use function array_intersect_key;
 use function is_integer;
 use function MongoDB\server_supports_feature;
@@ -136,12 +137,19 @@ class EstimatedDocumentCount implements Executable, Explainable
         return $command->execute($server);
     }
 
+    /**
+     * Returns the command document for this operation.
+     *
+     * @see Explainable::getCommandDocument()
+     * @param Server $server
+     * @return array
+     */
     public function getCommandDocument(Server $server)
     {
         return $this->createCommand($server)->getCommandDocument($server);
     }
 
-    private function createAggregate() : Aggregate
+    private function createAggregate(): Aggregate
     {
         return new Aggregate(
             $this->databaseName,
@@ -162,7 +170,7 @@ class EstimatedDocumentCount implements Executable, Explainable
             : $this->createCount();
     }
 
-    private function createCount() : Count
+    private function createCount(): Count
     {
         return new Count($this->databaseName, $this->collectionName, [], $this->options);
     }

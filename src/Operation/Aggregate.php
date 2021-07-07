@@ -30,6 +30,7 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use stdClass;
 use Traversable;
+
 use function current;
 use function is_array;
 use function is_bool;
@@ -291,6 +292,7 @@ class Aggregate implements Executable, Explainable
             if (isset($this->options['readConcern'])) {
                 throw UnsupportedException::readConcernNotSupportedInTransaction();
             }
+
             if (isset($this->options['writeConcern'])) {
                 throw UnsupportedException::writeConcernNotSupportedInTransaction();
             }
@@ -330,12 +332,19 @@ class Aggregate implements Executable, Explainable
         return new ArrayIterator($result->result);
     }
 
+    /**
+     * Returns the command document for this operation.
+     *
+     * @see Explainable::getCommandDocument()
+     * @param Server $server
+     * @return array
+     */
     public function getCommandDocument(Server $server)
     {
         return $this->createCommandDocument($server, $this->hasWriteStage());
     }
 
-    private function createCommandDocument(Server $server, bool $hasWriteStage) : array
+    private function createCommandDocument(Server $server, bool $hasWriteStage): array
     {
         $cmd = [
             'aggregate' => $this->collectionName ?? 1,
@@ -344,7 +353,8 @@ class Aggregate implements Executable, Explainable
 
         $cmd['allowDiskUse'] = $this->options['allowDiskUse'];
 
-        if (! empty($this->options['bypassDocumentValidation']) &&
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
             server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
@@ -378,7 +388,7 @@ class Aggregate implements Executable, Explainable
         return $cmd;
     }
 
-    private function createCommandOptions() : array
+    private function createCommandOptions(): array
     {
         $cmdOptions = [];
 
@@ -421,7 +431,7 @@ class Aggregate implements Executable, Explainable
         return $options;
     }
 
-    private function hasWriteStage() : bool
+    private function hasWriteStage(): bool
     {
         return is_last_pipeline_operator_write($this->pipeline);
     }

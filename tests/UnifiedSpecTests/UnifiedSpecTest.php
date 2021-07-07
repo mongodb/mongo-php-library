@@ -7,6 +7,7 @@ use Generator;
 use MongoDB\Tests\FunctionalTestCase;
 use PHPUnit\Framework\SkippedTest;
 use PHPUnit\Framework\Warning;
+
 use function basename;
 use function dirname;
 use function glob;
@@ -52,7 +53,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /** @var UnifiedTestRunner */
     private static $runner;
 
-    public static function setUpBeforeClass() : void
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -61,7 +62,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         self::$runner = new UnifiedTestRunner(static::getUri(true));
     }
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -73,7 +74,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideChangeStreamsTests
      */
-    public function testChangeStreams(UnifiedTestCase $test)
+    public function testChangeStreams(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -86,7 +87,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideCollectionManagementTests
      */
-    public function testCollectionManagement(UnifiedTestCase $test)
+    public function testCollectionManagement(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -99,7 +100,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideCrudTests
      */
-    public function testCrud(UnifiedTestCase $test)
+    public function testCrud(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -112,7 +113,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideGridFSTests
      */
-    public function testGridFS(UnifiedTestCase $test)
+    public function testGridFS(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -125,7 +126,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideTransactionsTests
      */
-    public function testTransactions(UnifiedTestCase $test)
+    public function testTransactions(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -139,7 +140,7 @@ class UnifiedSpecTest extends FunctionalTestCase
      * @dataProvider provideVersionedApiTests
      * @group versioned-api
      */
-    public function testVersionedApi(UnifiedTestCase $test)
+    public function testVersionedApi(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -152,7 +153,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider providePassingTests
      */
-    public function testPassingTests(UnifiedTestCase $test)
+    public function testPassingTests(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
@@ -165,7 +166,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideFailingTests
      */
-    public function testFailingTests(UnifiedTestCase $test)
+    public function testFailingTests(UnifiedTestCase $test): void
     {
         // Cannot use expectException(), as it ignores PHPUnit Exceptions
         $failed = false;
@@ -186,6 +187,7 @@ class UnifiedSpecTest extends FunctionalTestCase
              */
             $failed = ! ($e instanceof SkippedTest || $e instanceof Warning);
         }
+
         // phpcs:enable
 
         $this->assertTrue($failed, 'Expected test to throw an exception');
@@ -196,7 +198,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         yield from $this->provideTests(__DIR__ . '/valid-fail/*.json');
     }
 
-    private function provideTests(string $pattern) : Generator
+    private function provideTests(string $pattern): Generator
     {
         foreach (glob($pattern) as $filename) {
             $group = basename(dirname($filename));

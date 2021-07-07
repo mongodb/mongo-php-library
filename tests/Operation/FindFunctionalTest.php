@@ -8,15 +8,16 @@ use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
+
 use function microtime;
 use function version_compare;
 
 class FindFunctionalTest extends FunctionalTestCase
 {
-    public function testDefaultReadConcernIsOmitted()
+    public function testDefaultReadConcernIsOmitted(): void
     {
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new Find(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -26,13 +27,13 @@ class FindFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
             }
         );
     }
 
-    public function testHintOption()
+    public function testHintOption(): void
     {
         $bulkWrite = new BulkWrite();
         $bulkWrite->insert(['_id' => 1, 'x' => 1]);
@@ -83,14 +84,14 @@ class FindFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testSessionOption()
+    public function testSessionOption(): void
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
             $this->markTestSkipped('Sessions are not supported');
         }
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new Find(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -100,7 +101,7 @@ class FindFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
@@ -109,7 +110,7 @@ class FindFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocuments
      */
-    public function testTypeMapOption(array $typeMap, array $expectedDocuments)
+    public function testTypeMapOption(array $typeMap, array $expectedDocuments): void
     {
         $this->createFixtures(3);
 
@@ -149,7 +150,7 @@ class FindFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    public function testMaxAwaitTimeMS()
+    public function testMaxAwaitTimeMS(): void
     {
         if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
             $this->markTestSkipped('maxAwaitTimeMS option is not supported');
@@ -217,7 +218,7 @@ class FindFunctionalTest extends FunctionalTestCase
         $this->assertFalse($cursor->valid());
     }
 
-    public function testReadPreferenceWithinTransaction()
+    public function testReadPreferenceWithinTransaction(): void
     {
         $this->skipIfTransactionsAreNotSupported();
 
@@ -258,7 +259,7 @@ class FindFunctionalTest extends FunctionalTestCase
      * @param integer $n
      * @param array   $executeBulkWriteOptions
      */
-    private function createFixtures($n, array $executeBulkWriteOptions = [])
+    private function createFixtures(int $n, array $executeBulkWriteOptions = []): void
     {
         $bulkWrite = new BulkWrite(['ordered' => true]);
 

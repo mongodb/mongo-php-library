@@ -10,7 +10,7 @@ class DatabaseCommandTest extends TestCase
     /**
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorCommandArgumentTypeCheck($command)
+    public function testConstructorCommandArgumentTypeCheck($command): void
     {
         $this->expectException(InvalidArgumentException::class);
         new DatabaseCommand($this->getDatabaseName(), $command);
@@ -19,7 +19,7 @@ class DatabaseCommandTest extends TestCase
     /**
      * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorOptionTypeChecks(array $options)
+    public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new DatabaseCommand($this->getDatabaseName(), ['ping' => 1], $options);

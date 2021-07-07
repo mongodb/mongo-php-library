@@ -10,7 +10,7 @@ class CreateCollectionTest extends TestCase
     /**
      * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorOptionTypeChecks(array $options)
+    public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
@@ -91,13 +91,13 @@ class CreateCollectionTest extends TestCase
         return $options;
     }
 
-    public function testAutoIndexIdOptionIsDeprecated()
+    public function testAutoIndexIdOptionIsDeprecated(): void
     {
-        $this->assertDeprecated(function () {
+        $this->assertDeprecated(function (): void {
             new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['autoIndexId' => true]);
         });
 
-        $this->assertDeprecated(function () {
+        $this->assertDeprecated(function (): void {
             new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['autoIndexId' => false]);
         });
     }

@@ -25,6 +25,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+
 use function array_key_exists;
 use function count;
 use function current;
@@ -45,12 +46,12 @@ use function sprintf;
  */
 class BulkWrite implements Executable
 {
-    const DELETE_MANY = 'deleteMany';
-    const DELETE_ONE  = 'deleteOne';
-    const INSERT_ONE  = 'insertOne';
-    const REPLACE_ONE = 'replaceOne';
-    const UPDATE_MANY = 'updateMany';
-    const UPDATE_ONE  = 'updateOne';
+    public const DELETE_MANY = 'deleteMany';
+    public const DELETE_ONE  = 'deleteOne';
+    public const INSERT_ONE  = 'insertOne';
+    public const REPLACE_ONE = 'replaceOne';
+    public const UPDATE_MANY = 'updateMany';
+    public const UPDATE_ONE  = 'updateOne';
 
     /** @var integer */
     private static $wireVersionForArrayFilters = 6;
@@ -356,7 +357,8 @@ class BulkWrite implements Executable
 
         $options = ['ordered' => $this->options['ordered']];
 
-        if (! empty($this->options['bypassDocumentValidation']) &&
+        if (
+            ! empty($this->options['bypassDocumentValidation']) &&
             server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
         ) {
             $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];

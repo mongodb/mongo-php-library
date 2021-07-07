@@ -38,6 +38,7 @@ use MongoDB\Operation\ListDatabaseNames;
 use MongoDB\Operation\ListDatabases;
 use MongoDB\Operation\Watch;
 use Throwable;
+
 use function is_array;
 use function is_string;
 
@@ -283,7 +284,7 @@ class Client
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function listDatabaseNames(array $options = []) : Iterator
+    public function listDatabaseNames(array $options = []): Iterator
     {
         $operation = new ListDatabaseNames($options);
         $server = select_server($this->manager, $options);
@@ -384,7 +385,7 @@ class Client
         return $operation->execute($server);
     }
 
-    private static function getVersion() : string
+    private static function getVersion(): string
     {
         if (self::$version === null) {
             try {
@@ -397,7 +398,7 @@ class Client
         return self::$version;
     }
 
-    private function mergeDriverInfo(array $driver) : array
+    private function mergeDriverInfo(array $driver): array
     {
         $mergedDriver = [
             'name' => 'PHPLIB',

@@ -10,7 +10,7 @@ class FindOneAndReplaceTest extends TestCase
     /**
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorFilterArgumentTypeCheck($filter)
+    public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), $filter, []);
@@ -19,13 +19,13 @@ class FindOneAndReplaceTest extends TestCase
     /**
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorReplacementArgumentTypeCheck($replacement)
+    public function testConstructorReplacementArgumentTypeCheck($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 
-    public function testConstructorReplacementArgumentRequiresNoOperators()
+    public function testConstructorReplacementArgumentRequiresNoOperators(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('First key in $replacement argument is an update operator');
@@ -35,7 +35,7 @@ class FindOneAndReplaceTest extends TestCase
     /**
      * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorOptionTypeChecks(array $options)
+    public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], [], $options);
@@ -59,7 +59,7 @@ class FindOneAndReplaceTest extends TestCase
     /**
      * @dataProvider provideInvalidConstructorReturnDocumentOptions
      */
-    public function testConstructorReturnDocumentOption($returnDocument)
+    public function testConstructorReturnDocumentOption($returnDocument): void
     {
         $this->expectException(InvalidArgumentException::class);
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], [], ['returnDocument' => $returnDocument]);

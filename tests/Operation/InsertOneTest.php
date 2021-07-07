@@ -10,7 +10,7 @@ class InsertOneTest extends TestCase
     /**
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorDocumentArgumentTypeCheck($document)
+    public function testConstructorDocumentArgumentTypeCheck($document): void
     {
         $this->expectException(InvalidArgumentException::class);
         new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
@@ -19,7 +19,7 @@ class InsertOneTest extends TestCase
     /**
      * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorOptionTypeChecks(array $options)
+    public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $options);

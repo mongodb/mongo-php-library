@@ -31,6 +31,7 @@ use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory;
 use stdClass;
 use Symfony\Bridge\PhpUnit\ConstraintTrait;
+
 use function array_values;
 use function get_class;
 use function get_debug_type;
@@ -40,6 +41,7 @@ use function is_object;
 use function is_scalar;
 use function method_exists;
 use function sprintf;
+
 use const PHP_INT_SIZE;
 
 /**
@@ -88,7 +90,7 @@ class DocumentsMatchConstraint extends Constraint
      * @param boolean      $ignoreExtraKeysInEmbedded If true, ignore extra keys within embedded documents
      * @param array        $placeholders              Placeholders for any value
      */
-    public function __construct($value, $ignoreExtraKeysInRoot = false, $ignoreExtraKeysInEmbedded = false, array $placeholders = [])
+    public function __construct($value, bool $ignoreExtraKeysInRoot = false, bool $ignoreExtraKeysInEmbedded = false, array $placeholders = [])
     {
         $this->value = $this->prepareBSON($value, true, $this->sortKeys);
         $this->ignoreExtraKeysInRoot = $ignoreExtraKeysInRoot;
@@ -138,17 +140,19 @@ class DocumentsMatchConstraint extends Constraint
      * @param string $expectedType
      * @param mixed  $actualValue
      */
-    private function assertBSONType($expectedType, $actualValue)
+    private function assertBSONType(string $expectedType, $actualValue): void
     {
         switch ($expectedType) {
             case 'double':
                 (new IsType('float'))->evaluate($actualValue);
 
                 return;
+
             case 'string':
                 (new IsType('string'))->evaluate($actualValue);
 
                 return;
+
             case 'object':
                 $constraints = [
                     new IsType('object'),
@@ -167,6 +171,7 @@ class DocumentsMatchConstraint extends Constraint
                 $constraint->evaluate($actualValue);
 
                 return;
+
             case 'array':
                 $constraints = [
                     new IsType('array'),
@@ -185,54 +190,67 @@ class DocumentsMatchConstraint extends Constraint
                 $constraint->evaluate($actualValue);
 
                 return;
+
             case 'binData':
                 (new IsInstanceOf(BinaryInterface::class))->evaluate($actualValue);
 
                 return;
+
             case 'undefined':
                 (new IsInstanceOf(Undefined::class))->evaluate($actualValue);
 
                 return;
+
             case 'objectId':
                 (new IsInstanceOf(ObjectId::class))->evaluate($actualValue);
 
                 return;
+
             case 'boolean':
                 (new IsType('bool'))->evaluate($actualValue);
 
                 return;
+
             case 'date':
                 (new IsInstanceOf(UTCDateTime::class))->evaluate($actualValue);
 
                 return;
+
             case 'null':
                 (new IsNull())->evaluate($actualValue);
 
                 return;
+
             case 'regex':
                 (new IsInstanceOf(Regex::class))->evaluate($actualValue);
 
                 return;
+
             case 'dbPointer':
                 (new IsInstanceOf(DBPointer::class))->evaluate($actualValue);
 
                 return;
+
             case 'javascript':
                 (new IsInstanceOf(Javascript::class))->evaluate($actualValue);
 
                 return;
+
             case 'symbol':
                 (new IsInstanceOf(Symbol::class))->evaluate($actualValue);
 
                 return;
+
             case 'int':
                 (new IsType('int'))->evaluate($actualValue);
 
                 return;
+
             case 'timestamp':
                 (new IsInstanceOf(Timestamp::class))->evaluate($actualValue);
 
                 return;
+
             case 'long':
                 if (PHP_INT_SIZE == 4) {
                     (new IsInstanceOf(Int64::class))->evaluate($actualValue);
@@ -241,14 +259,17 @@ class DocumentsMatchConstraint extends Constraint
                 }
 
                 return;
+
             case 'decimal':
                 (new IsInstanceOf(Decimal128::class))->evaluate($actualValue);
 
                 return;
+
             case 'minKey':
                 (new IsInstanceOf(MinKey::class))->evaluate($actualValue);
 
                 return;
+
             case 'maxKey':
                 (new IsInstanceOf(MaxKey::class))->evaluate($actualValue);
 
@@ -265,7 +286,7 @@ class DocumentsMatchConstraint extends Constraint
      * @param string      $keyPrefix
      * @throws RuntimeException if the documents do not match
      */
-    private function assertEquals(ArrayObject $expected, ArrayObject $actual, $ignoreExtraKeys, $keyPrefix = '')
+    private function assertEquals(ArrayObject $expected, ArrayObject $actual, bool $ignoreExtraKeys, string $keyPrefix = ''): void
     {
         if (get_class($expected) !== get_class($actual)) {
             throw new RuntimeException(sprintf(
@@ -293,8 +314,10 @@ class DocumentsMatchConstraint extends Constraint
                 continue;
             }
 
-            if (($expectedValue instanceof BSONArray && $actualValue instanceof BSONArray) ||
-                ($expectedValue instanceof BSONDocument && $actualValue instanceof BSONDocument)) {
+            if (
+                ($expectedValue instanceof BSONArray && $actualValue instanceof BSONArray) ||
+                ($expectedValue instanceof BSONDocument && $actualValue instanceof BSONDocument)
+            ) {
                 $this->assertEquals($expectedValue, $actualValue, $this->ignoreExtraKeysInEmbedded, $keyPrefix . $key . '.');
                 continue;
             }
@@ -411,7 +434,7 @@ class DocumentsMatchConstraint extends Constraint
      * @return BSONDocument|BSONArray
      * @throws InvalidArgumentException if $bson is not an array or object
      */
-    private function prepareBSON($bson, $isRoot, $sortKeys = false)
+    private function prepareBSON($bson, bool $isRoot, bool $sortKeys = false)
     {
         if (! is_array($bson) && ! is_object($bson)) {
             throw new InvalidArgumentException('$bson is not an array or object');

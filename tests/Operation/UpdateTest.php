@@ -10,7 +10,7 @@ class UpdateTest extends TestCase
     /**
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorFilterArgumentTypeCheck($filter)
+    public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('/Expected \$filter to have type "array or object" but found "[\w ]+"/');
@@ -20,7 +20,7 @@ class UpdateTest extends TestCase
     /**
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testConstructorUpdateArgumentTypeCheck($update)
+    public function testConstructorUpdateArgumentTypeCheck($update): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('/Expected \$update to have type "array or object" but found "[\w ]+"/');
@@ -30,7 +30,7 @@ class UpdateTest extends TestCase
     /**
      * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorOptionTypeChecks(array $options)
+    public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['y' => 1], $options);

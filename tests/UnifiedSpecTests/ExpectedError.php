@@ -10,6 +10,7 @@ use MongoDB\Driver\Exception\ServerException;
 use PHPUnit\Framework\Assert;
 use stdClass;
 use Throwable;
+
 use function get_class;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertContainsOnly;
@@ -67,7 +68,7 @@ final class ExpectedError
     /** @var ExpectedResult|null */
     private $expectedResult;
 
-    public function __construct(stdClass $o = null, EntityMap $entityMap)
+    public function __construct(?stdClass $o = null, EntityMap $entityMap)
     {
         if ($o === null) {
             return;
@@ -121,7 +122,7 @@ final class ExpectedError
      *
      * @param Throwable|null $e Exception (if any) from executing an operation
      */
-    public function assert(Throwable $e = null)
+    public function assert(?Throwable $e = null): void
     {
         if (! $this->isError && $e !== null) {
             Assert::fail(sprintf("Operation threw unexpected %s: %s\n%s", get_class($e), $e->getMessage(), $e->getTraceAsString()));
@@ -175,7 +176,7 @@ final class ExpectedError
         }
     }
 
-    private function assertCodeName(ServerException $e)
+    private function assertCodeName(ServerException $e): void
     {
         /* BulkWriteException and ExecutionTimeoutException do not expose
          * codeName. Work around this by translating it to a numeric code.

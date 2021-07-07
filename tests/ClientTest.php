@@ -15,7 +15,7 @@ use MongoDB\Exception\InvalidArgumentException;
  */
 class ClientTest extends TestCase
 {
-    public function testConstructorDefaultUri()
+    public function testConstructorDefaultUri(): void
     {
         $client = new Client();
 
@@ -25,7 +25,7 @@ class ClientTest extends TestCase
     /**
      * @doesNotPerformAssertions
      */
-    public function testConstructorAutoEncryptionOpts()
+    public function testConstructorAutoEncryptionOpts(): void
     {
         $autoEncryptionOpts = [
             'keyVaultClient' => new Client(static::getUri()),
@@ -39,7 +39,7 @@ class ClientTest extends TestCase
     /**
      * @dataProvider provideInvalidConstructorDriverOptions
      */
-    public function testConstructorDriverOptionTypeChecks(array $driverOptions, string $exception = InvalidArgumentException::class)
+    public function testConstructorDriverOptionTypeChecks(array $driverOptions, string $exception = InvalidArgumentException::class): void
     {
         $this->expectException($exception);
         new Client(static::getUri(), [], $driverOptions);
@@ -73,14 +73,14 @@ class ClientTest extends TestCase
         return $options;
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         $client = new Client(static::getUri());
 
         $this->assertSame(static::getUri(), (string) $client);
     }
 
-    public function testSelectCollectionInheritsOptions()
+    public function testSelectCollectionInheritsOptions(): void
     {
         $uriOptions = [
             'readConcernLevel' => ReadConcern::LOCAL,
@@ -106,7 +106,7 @@ class ClientTest extends TestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    public function testSelectCollectionPassesOptions()
+    public function testSelectCollectionPassesOptions(): void
     {
         $collectionOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
@@ -129,7 +129,7 @@ class ClientTest extends TestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    public function testGetSelectsDatabaseAndInheritsOptions()
+    public function testGetSelectsDatabaseAndInheritsOptions(): void
     {
         $uriOptions = ['w' => WriteConcern::MAJORITY];
 
@@ -142,7 +142,7 @@ class ClientTest extends TestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    public function testSelectDatabaseInheritsOptions()
+    public function testSelectDatabaseInheritsOptions(): void
     {
         $uriOptions = [
             'readConcernLevel' => ReadConcern::LOCAL,
@@ -168,7 +168,7 @@ class ClientTest extends TestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    public function testSelectDatabasePassesOptions()
+    public function testSelectDatabasePassesOptions(): void
     {
         $databaseOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
@@ -191,7 +191,7 @@ class ClientTest extends TestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    public function testCreateClientEncryption()
+    public function testCreateClientEncryption(): void
     {
         $client = new Client(static::getUri());
 
@@ -204,7 +204,7 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(ClientEncryption::class, $clientEncryption);
     }
 
-    public function testCreateClientEncryptionWithKeyVaultClient()
+    public function testCreateClientEncryptionWithKeyVaultClient(): void
     {
         $client = new Client(static::getUri());
 
@@ -218,7 +218,7 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(ClientEncryption::class, $clientEncryption);
     }
 
-    public function testCreateClientEncryptionWithManager()
+    public function testCreateClientEncryptionWithManager(): void
     {
         $client = new Client(static::getUri());
 
@@ -232,7 +232,7 @@ class ClientTest extends TestCase
         $this->assertInstanceOf(ClientEncryption::class, $clientEncryption);
     }
 
-    public function testCreateClientEncryptionWithInvalidKeyVaultClient()
+    public function testCreateClientEncryptionWithInvalidKeyVaultClient(): void
     {
         $client = new Client(static::getUri());
 

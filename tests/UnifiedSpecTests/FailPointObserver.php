@@ -7,6 +7,7 @@ use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Operation\DatabaseCommand;
+
 use function MongoDB\Driver\Monitoring\addSubscriber;
 use function MongoDB\Driver\Monitoring\removeSubscriber;
 
@@ -18,14 +19,14 @@ class FailPointObserver implements CommandSubscriber
     /**
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php
      */
-    public function commandFailed(CommandFailedEvent $event)
+    public function commandFailed(CommandFailedEvent $event): void
     {
     }
 
     /**
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandstarted.php
      */
-    public function commandStarted(CommandStartedEvent $event)
+    public function commandStarted(CommandStartedEvent $event): void
     {
         $command = $event->getCommand();
 
@@ -43,13 +44,13 @@ class FailPointObserver implements CommandSubscriber
     /**
      * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandsucceeded.php
      */
-    public function commandSucceeded(CommandSucceededEvent $event)
+    public function commandSucceeded(CommandSucceededEvent $event): void
     {
     }
 
-    public function disableFailPoints()
+    public function disableFailPoints(): void
     {
-        foreach ($this->failPointsAndServers as list($failPoint, $server)) {
+        foreach ($this->failPointsAndServers as [$failPoint, $server]) {
             $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
             $operation->execute($server);
         }
@@ -57,12 +58,12 @@ class FailPointObserver implements CommandSubscriber
         $this->failPointsAndServers = [];
     }
 
-    public function start()
+    public function start(): void
     {
         addSubscriber($this);
     }
 
-    public function stop()
+    public function stop(): void
     {
         removeSubscriber($this);
     }

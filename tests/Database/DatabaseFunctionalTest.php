@@ -10,6 +10,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CreateIndexes;
+
 use function array_key_exists;
 use function current;
 
@@ -21,7 +22,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideInvalidDatabaseNames
      */
-    public function testConstructorDatabaseNameArgument($databaseName)
+    public function testConstructorDatabaseNameArgument($databaseName): void
     {
         $this->expectException(InvalidArgumentException::class);
         // TODO: Move to unit test once ManagerInterface can be mocked (PHPC-378)
@@ -39,7 +40,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideInvalidConstructorOptions
      */
-    public function testConstructorOptionTypeChecks(array $options)
+    public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Database($this->manager, $this->getDatabaseName(), $options);
@@ -68,22 +69,22 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         return $options;
     }
 
-    public function testGetManager()
+    public function testGetManager(): void
     {
         $this->assertSame($this->manager, $this->database->getManager());
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         $this->assertEquals($this->getDatabaseName(), (string) $this->database);
     }
 
-    public function getGetDatabaseName()
+    public function getGetDatabaseName(): void
     {
         $this->assertEquals($this->getDatabaseName(), $this->database->getDatabaseName());
     }
 
-    public function testCommand()
+    public function testCommand(): void
     {
         $command = ['ping' => 1];
         $options = [
@@ -100,7 +101,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, (int) $commandResult->ok);
     }
 
-    public function testCommandDoesNotInheritReadPreference()
+    public function testCommandDoesNotInheritReadPreference(): void
     {
         if (! $this->isReplicaSet()) {
             $this->markTestSkipped('Test only applies to replica sets');
@@ -116,7 +117,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertTrue($cursor->getServer()->isPrimary());
     }
 
-    public function testCommandAppliesTypeMapToCursor()
+    public function testCommandAppliesTypeMapToCursor(): void
     {
         $command = ['ping' => 1];
         $options = [
@@ -138,13 +139,13 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideInvalidDocumentValues
      */
-    public function testCommandCommandArgumentTypeCheck($command)
+    public function testCommandCommandArgumentTypeCheck($command): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->database->command($command);
     }
 
-    public function testDrop()
+    public function testDrop(): void
     {
         $bulkWrite = new BulkWrite();
         $bulkWrite->insert(['x' => 1]);
@@ -157,7 +158,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertCollectionCount($this->getNamespace(), 0);
     }
 
-    public function testGetSelectsCollectionAndInheritsOptions()
+    public function testGetSelectsCollectionAndInheritsOptions(): void
     {
         $databaseOptions = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
 
@@ -177,7 +178,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
      * @group matrix-testing-exclude-server-4.4-driver-4.0-topology-sharded_cluster
      * @group matrix-testing-exclude-server-5.0-driver-4.0-topology-sharded_cluster
      */
-    public function testModifyCollection()
+    public function testModifyCollection(): void
     {
         $this->database->createCollection($this->getCollectionName());
 
@@ -210,7 +211,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testSelectCollectionInheritsOptions()
+    public function testSelectCollectionInheritsOptions(): void
     {
         $databaseOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
@@ -236,7 +237,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    public function testSelectCollectionPassesOptions()
+    public function testSelectCollectionPassesOptions(): void
     {
         $collectionOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
@@ -258,7 +259,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    public function testSelectGridFSBucketInheritsOptions()
+    public function testSelectGridFSBucketInheritsOptions(): void
     {
         $databaseOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
@@ -282,7 +283,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    public function testSelectGridFSBucketPassesOptions()
+    public function testSelectGridFSBucketPassesOptions(): void
     {
         $bucketOptions = [
             'bucketName' => 'custom_fs',
@@ -307,7 +308,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    public function testWithOptionsInheritsOptions()
+    public function testWithOptionsInheritsOptions(): void
     {
         $databaseOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
@@ -332,7 +333,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(WriteConcern::MAJORITY, $debug['writeConcern']->getW());
     }
 
-    public function testWithOptionsPassesOptions()
+    public function testWithOptionsPassesOptions(): void
     {
         $databaseOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),

@@ -4,6 +4,7 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 
 use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use stdClass;
+
 use function array_diff;
 use function in_array;
 use function PHPUnit\Framework\assertContains;
@@ -17,17 +18,17 @@ use function version_compare;
 
 class RunOnRequirement
 {
-    const TOPOLOGY_SINGLE = 'single';
-    const TOPOLOGY_REPLICASET = 'replicaset';
-    const TOPOLOGY_SHARDED = 'sharded';
-    const TOPOLOGY_SHARDED_REPLICASET = 'sharded-replicaset';
-    const TOPOLOGY_LOAD_BALANCED = 'load-balanced';
+    public const TOPOLOGY_SINGLE = 'single';
+    public const TOPOLOGY_REPLICASET = 'replicaset';
+    public const TOPOLOGY_SHARDED = 'sharded';
+    public const TOPOLOGY_SHARDED_REPLICASET = 'sharded-replicaset';
+    public const TOPOLOGY_LOAD_BALANCED = 'load-balanced';
 
-    const SERVERLESS_REQUIRE = 'require';
-    const SERVERLESS_FORBID = 'forbid';
-    const SERVERLESS_ALLOW = 'allow';
+    public const SERVERLESS_REQUIRE = 'require';
+    public const SERVERLESS_FORBID = 'forbid';
+    public const SERVERLESS_ALLOW = 'allow';
 
-    const VERSION_PATTERN = '/^[0-9]+(\\.[0-9]+){1,2}$/';
+    public const VERSION_PATTERN = '/^[0-9]+(\\.[0-9]+){1,2}$/';
 
     /** @var string */
     private $minServerVersion;
@@ -103,7 +104,7 @@ class RunOnRequirement
         }
     }
 
-    public function isSatisfied(string $serverVersion, string $topology, stdClass $serverParameters, bool $isAuthenticated, bool $isServerless) : bool
+    public function isSatisfied(string $serverVersion, string $topology, stdClass $serverParameters, bool $isAuthenticated, bool $isServerless): bool
     {
         if (isset($this->minServerVersion) && version_compare($serverVersion, $this->minServerVersion, '<')) {
             return false;
@@ -141,7 +142,7 @@ class RunOnRequirement
         return true;
     }
 
-    private function isTopologySatisfied(string $topology) : bool
+    private function isTopologySatisfied(string $topology): bool
     {
         if (in_array($topology, $this->topologies)) {
             return true;

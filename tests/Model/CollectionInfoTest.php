@@ -8,13 +8,13 @@ use MongoDB\Tests\TestCase;
 
 class CollectionInfoTest extends TestCase
 {
-    public function testGetName()
+    public function testGetName(): void
     {
         $info = new CollectionInfo(['name' => 'foo']);
         $this->assertSame('foo', $info->getName());
     }
 
-    public function testGetOptions()
+    public function testGetOptions(): void
     {
         $info = new CollectionInfo(['name' => 'foo']);
         $this->assertSame([], $info->getOptions());
@@ -23,7 +23,7 @@ class CollectionInfoTest extends TestCase
         $this->assertSame(['capped' => true, 'size' => 1048576], $info->getOptions());
     }
 
-    public function testCappedCollectionMethods()
+    public function testCappedCollectionMethods(): void
     {
         $info = new CollectionInfo(['name' => 'foo']);
         $this->assertFalse($info->isCapped());
@@ -41,7 +41,7 @@ class CollectionInfoTest extends TestCase
         $this->assertSame(1048576, $info->getCappedSize());
     }
 
-    public function testDebugInfo()
+    public function testDebugInfo(): void
     {
         $expectedInfo = [
             'name' => 'foo',
@@ -52,7 +52,7 @@ class CollectionInfoTest extends TestCase
         $this->assertSame($expectedInfo, $info->__debugInfo());
     }
 
-    public function testImplementsArrayAccess()
+    public function testImplementsArrayAccess(): void
     {
         $info = new CollectionInfo(['name' => 'foo']);
         $this->assertInstanceOf('ArrayAccess', $info);
@@ -60,7 +60,7 @@ class CollectionInfoTest extends TestCase
         $this->assertSame('foo', $info['name']);
     }
 
-    public function testOffsetSetCannotBeCalled()
+    public function testOffsetSetCannotBeCalled(): void
     {
         $info = new CollectionInfo(['name' => 'foo', 'options' => ['capped' => true, 'size' => 1048576]]);
         $this->expectException(BadMethodCallException::class);
@@ -68,7 +68,7 @@ class CollectionInfoTest extends TestCase
         $info['options'] = ['capped' => false];
     }
 
-    public function testOffsetUnsetCannotBeCalled()
+    public function testOffsetUnsetCannotBeCalled(): void
     {
         $info = new CollectionInfo(['name' => 'foo', 'options' => ['capped' => true, 'size' => 1048576]]);
         $this->expectException(BadMethodCallException::class);

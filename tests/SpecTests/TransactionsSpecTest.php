@@ -9,6 +9,7 @@ use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use stdClass;
+
 use function array_unique;
 use function basename;
 use function count;
@@ -24,7 +25,7 @@ use function glob;
  */
 class TransactionsSpecTest extends FunctionalTestCase
 {
-    const INTERRUPTED = 11601;
+    public const INTERRUPTED = 11601;
 
     /**
      * In addition to the useMultipleMongoses tests, these should all pass
@@ -38,7 +39,7 @@ class TransactionsSpecTest extends FunctionalTestCase
         'transactions/pin-mongos: unpin after transient error within a transaction and commit' => 'isMaster failpoints cannot be disabled',
     ];
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -47,7 +48,7 @@ class TransactionsSpecTest extends FunctionalTestCase
         $this->skipIfTransactionsAreNotSupported();
     }
 
-    public function tearDown() : void
+    public function tearDown(): void
     {
         if ($this->hasFailed()) {
             static::killAllSessions();
@@ -64,7 +65,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @param stdClass $expected Expected command document
      * @param stdClass $actual   Actual command document
      */
-    public static function assertCommandMatches(stdClass $expected, stdClass $actual)
+    public static function assertCommandMatches(stdClass $expected, stdClass $actual): void
     {
         if (isset($expected->getMore) && $expected->getMore === 42) {
             static::assertObjectHasAttribute('getMore', $actual);
@@ -119,7 +120,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @param string   $databaseName   Name of database under test
      * @param string   $collectionName Name of collection under test
      */
-    public function testTransactions(stdClass $test, array $runOn = null, array $data, $databaseName = null, $collectionName = null)
+    public function testTransactions(stdClass $test, ?array $runOn = null, array $data, ?string $databaseName = null, ?string $collectionName = null): void
     {
         if (isset(self::$incompleteTests[$this->dataDescription()])) {
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
@@ -181,8 +182,10 @@ class TransactionsSpecTest extends FunctionalTestCase
             $group = basename(dirname($filename)) . '/' . basename($filename, '.json');
             $runOn = $json->runOn ?? null;
             $data = $json->data ?? [];
+            // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
             $databaseName = $json->database_name ?? null;
             $collectionName = $json->collection_name ?? null;
+            // phpcs:enable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;
@@ -198,7 +201,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * ClientSession unpins the session and normal server selection is performed
      * for the next operation.
      */
-    public function testStartingNewTransactionOnPinnedSessionUnpinsSession()
+    public function testStartingNewTransactionOnPinnedSessionUnpinsSession(): void
     {
         if (! $this->isShardedClusterUsingReplicasets()) {
             $this->markTestSkipped('Mongos pinning tests can only run on sharded clusters using replica sets');
@@ -236,7 +239,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * ClientSession unpins the session and normal server selection is
      * performed.
      */
-    public function testRunningNonTransactionOperationOnPinnedSessionUnpinsSession()
+    public function testRunningNonTransactionOperationOnPinnedSessionUnpinsSession(): void
     {
         if (! $this->isShardedClusterUsingReplicasets()) {
             $this->markTestSkipped('Mongos pinning tests can only run on sharded clusters using replica sets');
@@ -270,7 +273,7 @@ class TransactionsSpecTest extends FunctionalTestCase
     /**
      * Create the collection, since it cannot be created within a transaction.
      */
-    protected function createTestCollection()
+    protected function createTestCollection(): void
     {
         $context = $this->getContext();
 
@@ -285,7 +288,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * previously failed test. For sharded clusters, this command will be run
      * on all mongos nodes.
      */
-    private static function killAllSessions()
+    private static function killAllSessions(): void
     {
         $manager = static::createTestManager();
         $primary = $manager->selectServer(new ReadPreference('primary'));
@@ -300,6 +303,7 @@ class TransactionsSpecTest extends FunctionalTestCase
                 if (! isset($server->getInfo()['logicalSessionTimeoutMinutes'])) {
                     continue;
                 }
+
                 $server->executeCommand('admin', new Command(['killAllSessions' => []]));
             } catch (ServerException $e) {
                 // Interrupted error is safe to ignore (see: SERVER-38335)
@@ -316,7 +320,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @param array $operations
      * @see https://github.com/mongodb/specifications/tree/master/source/transactions/tests#why-do-tests-that-run-distinct-sometimes-fail-with-staledbversionts.
      */
-    private function preventStaleDbVersionError(array $operations)
+    private function preventStaleDbVersionError(array $operations): void
     {
         if (! $this->isShardedCluster()) {
             return;

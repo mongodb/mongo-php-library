@@ -20,6 +20,7 @@ namespace MongoDB;
 use IteratorAggregate;
 use stdClass;
 use Traversable;
+
 use function call_user_func;
 
 /**

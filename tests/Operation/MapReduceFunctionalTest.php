@@ -9,6 +9,7 @@ use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
+
 use function is_object;
 use function iterator_to_array;
 use function usort;
@@ -22,13 +23,13 @@ use function version_compare;
  */
 class MapReduceFunctionalTest extends FunctionalTestCase
 {
-    public function testDefaultReadConcernIsOmitted()
+    public function testDefaultReadConcernIsOmitted(): void
     {
         // Collection must exist for mapReduce command
         $this->createCollection();
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new MapReduce(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -40,19 +41,19 @@ class MapReduceFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
             }
         );
     }
 
-    public function testDefaultWriteConcernIsOmitted()
+    public function testDefaultWriteConcernIsOmitted(): void
     {
         // Collection must exist for mapReduce command
         $this->createCollection();
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new MapReduce(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -64,7 +65,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
             }
         );
@@ -73,7 +74,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $operation->execute($this->getPrimaryServer());
     }
 
-    public function testFinalize()
+    public function testFinalize(): void
     {
         $this->createFixtures(3);
 
@@ -88,7 +89,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $this->assertNotNull($result);
     }
 
-    public function testResult()
+    public function testResult(): void
     {
         $this->createFixtures(3);
 
@@ -107,7 +108,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testResultIncludesTimingWithVerboseOption()
+    public function testResultIncludesTimingWithVerboseOption(): void
     {
         if (version_compare($this->getServerVersion(), '4.3.0', '>=')) {
             $this->markTestSkipped('mapReduce statistics are no longer exposed');
@@ -128,7 +129,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $this->assertNotEmpty($result->getTiming());
     }
 
-    public function testResultDoesNotIncludeTimingWithoutVerboseOption()
+    public function testResultDoesNotIncludeTimingWithoutVerboseOption(): void
     {
         if (version_compare($this->getServerVersion(), '4.3.0', '>=')) {
             $this->markTestSkipped('mapReduce statistics are no longer exposed');
@@ -149,7 +150,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $this->assertEmpty($result->getTiming());
     }
 
-    public function testSessionOption()
+    public function testSessionOption(): void
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
             $this->markTestSkipped('Sessions are not supported');
@@ -158,7 +159,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $this->createFixtures(3);
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new MapReduce(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -170,13 +171,13 @@ class MapReduceFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
     }
 
-    public function testBypassDocumentValidationSetWhenTrue()
+    public function testBypassDocumentValidationSetWhenTrue(): void
     {
         if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
             $this->markTestSkipped('bypassDocumentValidation is not supported');
@@ -185,7 +186,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $this->createFixtures(1);
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new MapReduce(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -197,14 +198,14 @@ class MapReduceFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
             }
         );
     }
 
-    public function testBypassDocumentValidationUnsetWhenFalse()
+    public function testBypassDocumentValidationUnsetWhenFalse(): void
     {
         if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
             $this->markTestSkipped('bypassDocumentValidation is not supported');
@@ -213,7 +214,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $this->createFixtures(1);
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new MapReduce(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -225,7 +226,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
             }
         );
@@ -234,7 +235,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocuments
      */
-    public function testTypeMapOptionWithInlineResults(array $typeMap = null, array $expectedDocuments)
+    public function testTypeMapOptionWithInlineResults(?array $typeMap = null, array $expectedDocuments): void
     {
         $this->createFixtures(3);
 
@@ -281,7 +282,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocuments
      */
-    public function testTypeMapOptionWithOutputCollection(array $typeMap = null, array $expectedDocuments)
+    public function testTypeMapOptionWithOutputCollection(?array $typeMap = null, array $expectedDocuments): void
     {
         $this->createFixtures(3);
 
@@ -308,7 +309,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
      *
      * @param integer $n
      */
-    private function createFixtures($n)
+    private function createFixtures(int $n): void
     {
         $bulkWrite = new BulkWrite(['ordered' => true]);
 
@@ -322,9 +323,9 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $this->assertEquals($n * 2, $result->getInsertedCount());
     }
 
-    private function sortResults(array $results) : array
+    private function sortResults(array $results): array
     {
-        $sortFunction = static function ($resultA, $resultB) : int {
+        $sortFunction = static function ($resultA, $resultB): int {
             $idA = is_object($resultA) ? $resultA->_id : $resultA['_id'];
             $idB = is_object($resultB) ? $resultB->_id : $resultB['_id'];
 

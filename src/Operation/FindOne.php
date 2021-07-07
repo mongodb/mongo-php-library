@@ -21,6 +21,7 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+
 use function current;
 
 /**
@@ -131,6 +132,13 @@ class FindOne implements Executable, Explainable
         return $document === false ? null : $document;
     }
 
+    /**
+     * Returns the command document for this operation.
+     *
+     * @see Explainable::getCommandDocument()
+     * @param Server $server
+     * @return array
+     */
     public function getCommandDocument(Server $server)
     {
         return $this->find->getCommandDocument($server);

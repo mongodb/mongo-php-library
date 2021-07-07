@@ -28,6 +28,7 @@ use MongoDB\Exception\RuntimeException;
 use MongoDB\Operation\WithTransaction;
 use ReflectionClass;
 use ReflectionException;
+
 use function end;
 use function get_object_vars;
 use function in_array;
@@ -71,7 +72,7 @@ function apply_type_map_to_document($document, array $typeMap)
  * @return string
  * @throws InvalidArgumentException
  */
-function generate_index_name($document)
+function generate_index_name($document): string
 {
     if ($document instanceof Serializable) {
         $document = $document->bsonSerialize();
@@ -104,7 +105,7 @@ function generate_index_name($document)
  * @return boolean
  * @throws InvalidArgumentException
  */
-function is_first_key_operator($document)
+function is_first_key_operator($document): bool
 {
     if ($document instanceof Serializable) {
         $document = $document->bsonSerialize();
@@ -131,7 +132,7 @@ function is_first_key_operator($document)
  * @param mixed $pipeline
  * @return boolean
  */
-function is_pipeline($pipeline)
+function is_pipeline($pipeline): bool
 {
     if (! is_array($pipeline)) {
         return false;
@@ -172,7 +173,7 @@ function is_pipeline($pipeline)
  * @param array $options Command options
  * @return boolean
  */
-function is_in_transaction(array $options)
+function is_in_transaction(array $options): bool
 {
     if (isset($options['session']) && $options['session'] instanceof Session && $options['session']->isInTransaction()) {
         return true;
@@ -191,7 +192,7 @@ function is_in_transaction(array $options)
  * @param array $pipeline List of pipeline operations
  * @return boolean
  */
-function is_last_pipeline_operator_write(array $pipeline)
+function is_last_pipeline_operator_write(array $pipeline): bool
 {
     $lastOp = end($pipeline);
 
@@ -215,7 +216,7 @@ function is_last_pipeline_operator_write(array $pipeline)
  * @return boolean
  * @throws InvalidArgumentException
  */
-function is_mapreduce_output_inline($out)
+function is_mapreduce_output_inline($out): bool
 {
     if (! is_array($out) && ! is_object($out)) {
         return false;
@@ -246,7 +247,7 @@ function is_mapreduce_output_inline($out)
  * @param integer $feature Feature constant (i.e. wire protocol version)
  * @return boolean
  */
-function server_supports_feature(Server $server, $feature)
+function server_supports_feature(Server $server, int $feature): bool
 {
     $info = $server->getInfo();
     $maxWireVersion = isset($info['maxWireVersion']) ? (integer) $info['maxWireVersion'] : 0;
@@ -255,11 +256,19 @@ function server_supports_feature(Server $server, $feature)
     return $minWireVersion <= $feature && $maxWireVersion >= $feature;
 }
 
-function is_string_array($input)
+/**
+ * Return whether the input is an array of strings.
+ *
+ * @internal
+ * @param mixed $input
+ * @return boolean
+ */
+function is_string_array($input): bool
 {
     if (! is_array($input)) {
         return false;
     }
+
     foreach ($input as $item) {
         if (! is_string($item)) {
             return false;
@@ -315,7 +324,7 @@ function recursive_copy($element)
  * @param string $fieldPath The field path to apply the root type to
  * @return array
  */
-function create_field_path_type_map(array $typeMap, $fieldPath)
+function create_field_path_type_map(array $typeMap, string $fieldPath): array
 {
     // If some field paths already exist, we prefix them with the field path we are assuming as the new root
     if (isset($typeMap['fieldPaths']) && is_array($typeMap['fieldPaths'])) {
@@ -383,7 +392,7 @@ function with_transaction(Session $session, callable $callback, array $transacti
  * @param array $options
  * @return Session|null
  */
-function extract_session_from_options(array $options)
+function extract_session_from_options(array $options): ?Session
 {
     if (! isset($options['session']) || ! $options['session'] instanceof Session) {
         return null;
@@ -399,7 +408,7 @@ function extract_session_from_options(array $options)
  * @param array $options
  * @return ReadPreference|null
  */
-function extract_read_preference_from_options(array $options)
+function extract_read_preference_from_options(array $options): ?ReadPreference
 {
     if (! isset($options['readPreference']) || ! $options['readPreference'] instanceof ReadPreference) {
         return null;
@@ -415,7 +424,7 @@ function extract_read_preference_from_options(array $options)
  * @internal
  * @return Server
  */
-function select_server(Manager $manager, array $options)
+function select_server(Manager $manager, array $options): Server
 {
     $session = extract_session_from_options($options);
     if ($session instanceof Session && $session->getServer() !== null) {

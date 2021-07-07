@@ -10,6 +10,7 @@ use MongoDB\InsertManyResult;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\CommandObserver;
+
 use function version_compare;
 
 class InsertManyFunctionalTest extends FunctionalTestCase
@@ -17,14 +18,14 @@ class InsertManyFunctionalTest extends FunctionalTestCase
     /** @var Collection */
     private $collection;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
     }
 
-    public function testInsertMany()
+    public function testInsertMany(): void
     {
         $documents = [
             ['_id' => 'foo', 'x' => 11],
@@ -55,14 +56,14 @@ class InsertManyFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
-    public function testSessionOption()
+    public function testSessionOption(): void
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
             $this->markTestSkipped('Sessions are not supported');
         }
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new InsertMany(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -72,20 +73,20 @@ class InsertManyFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
     }
 
-    public function testBypassDocumentValidationSetWhenTrue()
+    public function testBypassDocumentValidationSetWhenTrue(): void
     {
         if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
             $this->markTestSkipped('bypassDocumentValidation is not supported');
         }
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new InsertMany(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -95,21 +96,21 @@ class InsertManyFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
             }
         );
     }
 
-    public function testBypassDocumentValidationUnsetWhenFalse()
+    public function testBypassDocumentValidationUnsetWhenFalse(): void
     {
         if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
             $this->markTestSkipped('bypassDocumentValidation is not supported');
         }
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new InsertMany(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
@@ -119,7 +120,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
             }
         );
@@ -141,7 +142,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
     /**
      * @depends testUnacknowledgedWriteConcern
      */
-    public function testUnacknowledgedWriteConcernAccessesInsertedCount(InsertManyResult $result)
+    public function testUnacknowledgedWriteConcernAccessesInsertedCount(InsertManyResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessageMatches('/[\w:\\\\]+ should not be called for an unacknowledged write result/');
@@ -151,7 +152,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
     /**
      * @depends testUnacknowledgedWriteConcern
      */
-    public function testUnacknowledgedWriteConcernAccessesInsertedId(InsertManyResult $result)
+    public function testUnacknowledgedWriteConcernAccessesInsertedId(InsertManyResult $result): void
     {
         $this->assertInstanceOf(ObjectId::class, $result->getInsertedIds()[0]);
     }

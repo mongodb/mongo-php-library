@@ -67,7 +67,7 @@ class ListCollectionNames implements Executable
      * @return Iterator
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server) : Iterator
+    public function execute(Server $server): Iterator
     {
         return new CallbackIterator(
             $this->listCollections->execute($server),

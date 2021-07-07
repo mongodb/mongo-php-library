@@ -26,6 +26,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+
 use function is_array;
 use function is_bool;
 use function is_integer;
@@ -33,6 +34,7 @@ use function is_object;
 use function is_string;
 use function MongoDB\server_supports_feature;
 use function trigger_error;
+
 use const E_USER_DEPRECATED;
 
 /**
@@ -45,9 +47,9 @@ use const E_USER_DEPRECATED;
  */
 class Find implements Executable, Explainable
 {
-    const NON_TAILABLE = 1;
-    const TAILABLE = 2;
-    const TAILABLE_AWAIT = 3;
+    public const NON_TAILABLE = 1;
+    public const TAILABLE = 2;
+    public const TAILABLE_AWAIT = 3;
 
     /** @var integer */
     private static $wireVersionForCollation = 5;
@@ -201,9 +203,11 @@ class Find implements Executable, Explainable
                 throw InvalidArgumentException::invalidType('"cursorType" option', $options['cursorType'], 'integer');
             }
 
-            if ($options['cursorType'] !== self::NON_TAILABLE &&
+            if (
+                $options['cursorType'] !== self::NON_TAILABLE &&
                 $options['cursorType'] !== self::TAILABLE &&
-                $options['cursorType'] !== self::TAILABLE_AWAIT) {
+                $options['cursorType'] !== self::TAILABLE_AWAIT
+            ) {
                 throw new InvalidArgumentException('Invalid value for "cursorType" option: ' . $options['cursorType']);
             }
         }
@@ -343,6 +347,13 @@ class Find implements Executable, Explainable
         return $cursor;
     }
 
+    /**
+     * Returns the command document for this operation.
+     *
+     * @see Explainable::getCommandDocument()
+     * @param Server $server
+     * @return array
+     */
     public function getCommandDocument(Server $server)
     {
         return $this->createCommandDocument();
@@ -351,7 +362,7 @@ class Find implements Executable, Explainable
     /**
      * Construct a command document for Find
      */
-    private function createCommandDocument()
+    private function createCommandDocument(): array
     {
         $cmd = ['find' => $this->collectionName, 'filter' => (object) $this->filter];
 
@@ -383,6 +394,7 @@ class Find implements Executable, Explainable
                 $options[$modifier[0]] = $options['modifiers'][$modifier[1]];
             }
         }
+
         unset($options['modifiers']);
 
         return $cmd + $options;
@@ -425,6 +437,7 @@ class Find implements Executable, Explainable
             if ($this->options['cursorType'] === self::TAILABLE) {
                 $options['tailable'] = true;
             }
+
             if ($this->options['cursorType'] === self::TAILABLE_AWAIT) {
                 $options['tailable'] = true;
                 $options['awaitData'] = true;

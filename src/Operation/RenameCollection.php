@@ -24,8 +24,10 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+
 use function current;
 use function is_array;
+use function is_bool;
 use function MongoDB\server_supports_feature;
 
 /**
@@ -79,9 +81,10 @@ class RenameCollection implements Executable
      *    This is not supported for server versions < 3.4 and will result in an
      *    exception at execution time if used.
      *
-     * @param string $databaseName   Database name
-     * @param string $collectionName Collection name
-     * @param array  $options        Command options
+     * @param string $databaseName      Database name
+     * @param string $collectionName    Collection name
+     * @param string $newCollectionName New name for the collection
+     * @param array  $options           Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($databaseName, $collectionName, $newCollectionName, array $options = [])
@@ -149,8 +152,10 @@ class RenameCollection implements Executable
             /* The server may return an error if the collection does not exist.
              * Check for an error code (or message for pre-3.2 servers) and
              * return the command reply instead of throwing. */
-            if ($e->getCode() === self::$errorCodeNamespaceNotFound ||
-                $e->getMessage() === self::$errorMessageNamespaceNotFound) {
+            if (
+                $e->getCode() === self::$errorCodeNamespaceNotFound ||
+                $e->getMessage() === self::$errorMessageNamespaceNotFound
+            ) {
                 return $e->getResultDocument();
             }
 

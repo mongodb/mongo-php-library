@@ -2,21 +2,22 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\Model\CollectionInfo;
-use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\RenameCollection;
 use MongoDB\Tests\CommandObserver;
+
+use function call_user_func;
+use function is_callable;
 use function sprintf;
 use function version_compare;
 
 class RenameCollectionFunctionalTest extends FunctionalTestCase
 {
-    public function testDefaultWriteConcernIsOmitted()
+    public function testDefaultWriteConcernIsOmitted(): void
     {
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new RenameCollection(
                     'admin',
                     $this->getCollectionName(),
@@ -26,13 +27,13 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
             }
         );
     }
 
-    public function testRenameExistingCollection()
+    public function testRenameExistingCollection(): void
     {
         $that = $this;
         $renamedCollectionName = $this->getCollectionName() . '.renamed';
@@ -56,7 +57,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
     /**
      * @depends testRenameExistingCollection
      */
-    public function testRenameNonexistentCollection()
+    public function testRenameNonexistentCollection(): void
     {
         $this->assertCollectionDoesNotExist($this->getCollectionName());
 
@@ -68,14 +69,14 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
         $this->assertIsObject($commandResult);
     }
 
-    public function testSessionOption()
+    public function testSessionOption(): void
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
             $this->markTestSkipped('Sessions are not supported');
         }
 
         (new CommandObserver())->observe(
-            function () {
+            function (): void {
                 $operation = new RenameCollection(
                     'admin',
                     $this->getCollectionName(),
@@ -85,7 +86,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
 
                 $operation->execute($this->getPrimaryServer());
             },
-            function (array $event) {
+            function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
@@ -97,7 +98,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
      *
      * @param string $collectionName
      */
-    private function assertCollectionDoesNotExist($collectionName)
+    private function assertCollectionDoesNotExist(string $collectionName): void
     {
         $operation = new ListCollections('admin');
         $collections = $operation->execute($this->getPrimaryServer());
@@ -124,7 +125,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
      *
      * @param callable $callback
      */
-    private function assertCollectionExists($collectionName, $callback = null)
+    private function assertCollectionExists($collectionName, ?callable $callback = null): void
     {
         if ($callback !== null && ! is_callable($callback)) {
             throw new InvalidArgumentException('$callback is not a callable');

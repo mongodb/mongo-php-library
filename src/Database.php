@@ -475,8 +475,9 @@ class Database
      * Rename a collection within this database.
      *
      * @see RenameCollection::__construct() for supported options
+     * @param string $collectionName    Collection name
      * @param string $newCollectionName New name for this collection
-     * @param array  $options        Additional options
+     * @param array  $options           Additional options
      * @return array|object Command result document
      * @throws UnsupportedException if options are unsupported on the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors

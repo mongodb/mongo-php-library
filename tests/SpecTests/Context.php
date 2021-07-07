@@ -32,7 +32,7 @@ final class Context
     /** @var Client|null */
     private $client;
 
-    /** @var string */
+    /** @var string|null */
     public $collectionName;
 
     /** @var string */
@@ -44,7 +44,7 @@ final class Context
     /** @var array */
     public $outcomeReadOptions = [];
 
-    /** @var string */
+    /** @var string|null */
     public $outcomeCollectionName;
 
     /** @var Session|null */
@@ -65,7 +65,7 @@ final class Context
     /** @var bool */
     private $useEncryptedClient = false;
 
-    private function __construct(string $databaseName, string $collectionName)
+    private function __construct(string $databaseName, ?string $collectionName)
     {
         $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;

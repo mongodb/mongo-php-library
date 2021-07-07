@@ -1028,7 +1028,7 @@ class Collection
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation = new RenameCollection($this->databaseName, $this->collectionName, $newCollectionName, $options);
+        $operation = new RenameCollection('admin', $this->collectionName, $newCollectionName, $options);
 
         return $operation->execute($server);
     }

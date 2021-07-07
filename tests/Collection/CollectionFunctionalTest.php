@@ -332,7 +332,16 @@ class CollectionFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testWithOptionsInheritsOptions(): void
+    public function testRenameCollection()
+    {
+        $writeResult = $this->collection->insertOne(['x' => 1]);
+        $this->assertEquals(1, $writeResult->getInsertedCount());
+
+        $commandResult = $this->collection->renameCollection($this->getCollectionName() . 'renamed');
+        $this->assertCommandSucceeded($commandResult);
+    }
+
+    public function testWithOptionsInheritsOptions()
     {
         $collectionOptions = [
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),

@@ -2,7 +2,9 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\Operation\Find;
+use MongoDB\Driver\Exception\CommandException;
+use MongoDB\Operation\DropCollection;
+use MongoDB\Operation\FindOne;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\RenameCollection;
@@ -15,17 +17,39 @@ use function version_compare;
 
 class RenameCollectionFunctionalTest extends FunctionalTestCase
 {
+    /** @var string */
+    private $renamedCollection;
+
+    /** @var string */
+    private $renamedNamespace;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->renamedCollection = $this->getCollectionName() . '.renamed';
+        $this->renamedNamespace = $this->getNamespace() . '.renamed';
+        $operation = new DropCollection($this->getDatabaseName(), $this->renamedCollection);
+        $operation->execute($this->getPrimaryServer());
+    }
+
     public function testDefaultWriteConcernIsOmitted(): void
     {
         (new CommandObserver())->observe(
             function (): void {
+                $server = $this->getPrimaryServer();
+
+                $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1]);
+                $writeResult = $insertOne->execute($server);
+                $this->assertEquals(1, $writeResult->getInsertedCount());
+
                 $operation = new RenameCollection(
                     $this->getNamespace(),
-                    $this->getNamespace() . '.renamed',
+                    $this->renamedNamespace,
                     ['writeConcern' => $this->createDefaultWriteConcern()]
                 );
 
-                $operation->execute($this->getPrimaryServer());
+                $operation->execute($server);
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
@@ -35,24 +59,22 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
 
     public function testRenameExistingCollection(): void
     {
-        $renamedNamespace = $this->getNamespace() . '.renamed';
         $server = $this->getPrimaryServer();
 
-        $insertOne = new InsertOne('admin', $this->getNamespace(), ['_id' => 1]);
+        $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['_id' => 1, 'x' => 'foo']);
         $writeResult = $insertOne->execute($server);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $operation = new RenameCollection($this->getNamespace(), $renamedNamespace);
+        $operation = new RenameCollection($this->getNamespace(), $this->renamedNamespace);
         $commandResult = $operation->execute($server);
 
         $this->assertCommandSucceeded($commandResult);
-        $this->assertCollectionDoesNotExist($this->getNamespace());
-        $this->assertCollectionExists($renamedNamespace);
+        $this->assertCollectionDoesNotExist($this->getCollectionName());
+        $this->assertCollectionExists($this->renamedCollection);
 
-        $filter = [];
-        $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), $filter);
+        $operation = new FindOne($this->getDatabaseName(), $this->renamedCollection, []);
         $cursor = $operation->execute($server);
-        $this->assertSameDocument(['_id' => 1], $cursor->current());
+        $this->assertSameDocument(['_id' => 1, 'x' => 'foo'], $cursor);
     }
 
     /**
@@ -60,10 +82,10 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
      */
     public function testRenameNonexistentCollection(): void
     {
-        // expectexception
         $this->assertCollectionDoesNotExist($this->getNamespace());
 
-        $operation = new RenameCollection($this->getNamespace(), $this->getNamespace() . '.renamed');
+        $this->expectException(CommandException::class);
+        $operation = new RenameCollection($this->getNamespace(), $this->renamedNamespace);
         $commandResult = $operation->execute($this->getPrimaryServer());
 
         /* Avoid inspecting the result document as mongos returns {ok:1.0},
@@ -79,18 +101,36 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
 
         (new CommandObserver())->observe(
             function (): void {
+                $server = $this->getPrimaryServer();
+
+                $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1]);
+                $writeResult = $insertOne->execute($server);
+                $this->assertEquals(1, $writeResult->getInsertedCount());
+
                 $operation = new RenameCollection(
                     $this->getNamespace(),
-                    $this->getNamespace() . '.renamed',
+                    $this->renamedNamespace,
                     ['session' => $this->createSession()]
                 );
 
-                $operation->execute($this->getPrimaryServer());
+                $operation->execute($server);
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
+    }
+
+    public function tearDown(): void
+    {
+        if ($this->hasFailed()) {
+            return;
+        }
+
+        $operation = new DropCollection($this->getDatabaseName(), $this->renamedCollection);
+        $operation->execute($this->getPrimaryServer());
+
+        parent::tearDown();
     }
 
     /**
@@ -101,7 +141,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
      */
     private function assertCollectionDoesNotExist(string $collectionName): void
     {
-        $operation = new ListCollections('admin');
+        $operation = new ListCollections($this->getDatabaseName());
         $collections = $operation->execute($this->getPrimaryServer());
 
         $foundCollection = null;
@@ -117,7 +157,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
     }
 
     /**
-     * Asserts that a collection with the given name exists on the serv er.
+     * Asserts that a collection with the given name exists on the server.
      *
      * An optional $callback may be provided, which should take a CollectionInfo
      * argument as its first and only parameter. If a CollectionInfo matching
@@ -132,7 +172,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
             throw new InvalidArgumentException('$callback is not a callable');
         }
 
-        $operation = new ListCollections('admin');
+        $operation = new ListCollections($this->getDatabaseName());
         $collections = $operation->execute($this->getPrimaryServer());
 
         $foundCollection = null;

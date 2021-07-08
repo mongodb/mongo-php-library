@@ -50,13 +50,10 @@ class RenameCollection implements Executable
     private static $wireVersionForWriteConcern = 5;
 
     /** @var string */
-    private $databaseName;
+    private $sourceNamespace;
 
     /** @var string */
-    private $collectionName;
-
-    /** @var string */
-    private $newCollectionName;
+    private $targetNamespace;
 
     /** @var array */
     private $options;
@@ -81,20 +78,13 @@ class RenameCollection implements Executable
      *    This is not supported for server versions < 3.4 and will result in an
      *    exception at execution time if used.
      *
-     * @param string $databaseName      Database name
-     * @param string $collectionName    Collection name
-     * @param string $newCollectionName New name for the collection
+     * @param string $sourceNamespace   Namespace of the collection to rename
+     * @param string $targetNamespace   New namespace of the collection
      * @param array  $options           Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($databaseName, $collectionName, $newCollectionName, array $options = [])
+    public function __construct($sourceNamespace, $targetNamespace, array $options = [])
     {
-        $newCollectionName = (string) $newCollectionName;
-
-        if ($newCollectionName === '') {
-            throw new InvalidArgumentException('$newCollectionName cannot be empty');
-        }
-
         if (isset($options['session']) && ! $options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
         }
@@ -115,9 +105,8 @@ class RenameCollection implements Executable
             throw InvalidArgumentException::invalidType('"dropTarget" option', $options['dropTarget'], 'boolean');
         }
 
-        $this->databaseName = (string) $databaseName;
-        $this->collectionName = (string) $collectionName;
-        $this->newCollectionName = (string) $newCollectionName;
+        $this->sourceNamespace = (string) $sourceNamespace;
+        $this->targetNamespace = (string) $targetNamespace;
         $this->options = $options;
     }
 
@@ -142,25 +131,11 @@ class RenameCollection implements Executable
         }
 
         $command = new Command([
-            'renameCollection' => $this->collectionName,
-            'to' => $this->newCollectionName,
+            'renameCollection' => $this->sourceNamespace,
+            'to' => $this->targetNamespace,
         ]);
 
-        try {
-            $cursor = $server->executeWriteCommand($this->databaseName, $command, $this->createOptions());
-        } catch (CommandException $e) {
-            /* The server may return an error if the collection does not exist.
-             * Check for an error code (or message for pre-3.2 servers) and
-             * return the command reply instead of throwing. */
-            if (
-                $e->getCode() === self::$errorCodeNamespaceNotFound ||
-                $e->getMessage() === self::$errorMessageNamespaceNotFound
-            ) {
-                return $e->getResultDocument();
-            }
-
-            throw $e;
-        }
+        $cursor = $server->executeWriteCommand('admin', $command, $this->createOptions());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);

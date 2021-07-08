@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Operation\Find;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\RenameCollection;
@@ -19,9 +20,8 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new RenameCollection(
-                    'admin',
-                    $this->getCollectionName(),
-                    $this->getCollectionName() . '.renamed',
+                    $this->getNamespace(),
+                    $this->getNamespace() . '.renamed',
                     ['writeConcern' => $this->createDefaultWriteConcern()]
                 );
 
@@ -35,23 +35,24 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
 
     public function testRenameExistingCollection(): void
     {
-        $that = $this;
-        $renamedCollectionName = $this->getCollectionName() . '.renamed';
+        $renamedNamespace = $this->getNamespace() . '.renamed';
         $server = $this->getPrimaryServer();
 
-        $insertOne = new InsertOne('admin', $this->getCollectionName(), ['x' => 1]);
+        $insertOne = new InsertOne('admin', $this->getNamespace(), ['_id' => 1]);
         $writeResult = $insertOne->execute($server);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $operation = new RenameCollection('admin', $this->getCollectionName(), $renamedCollectionName);
+        $operation = new RenameCollection($this->getNamespace(), $renamedNamespace);
         $commandResult = $operation->execute($server);
 
         $this->assertCommandSucceeded($commandResult);
-        $this->assertCollectionDoesNotExist($this->getCollectionName());
-        $this->assertCollectionExists($renamedCollectionName);
-        // $this->assertCollectionExists($renamedCollectionName, function (CollectionInfo $info) use ($that) {
-        //     $this->assertSame(1, $info->offsetGet('x'));
-        // });
+        $this->assertCollectionDoesNotExist($this->getNamespace());
+        $this->assertCollectionExists($renamedNamespace);
+
+        $filter = [];
+        $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), $filter);
+        $cursor = $operation->execute($server);
+        $this->assertSameDocument(['_id' => 1], $cursor->current());
     }
 
     /**
@@ -59,9 +60,10 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
      */
     public function testRenameNonexistentCollection(): void
     {
-        $this->assertCollectionDoesNotExist($this->getCollectionName());
+        // expectexception
+        $this->assertCollectionDoesNotExist($this->getNamespace());
 
-        $operation = new RenameCollection('admin', $this->getCollectionName(), $this->getCollectionName() . '.renamed');
+        $operation = new RenameCollection($this->getNamespace(), $this->getNamespace() . '.renamed');
         $commandResult = $operation->execute($this->getPrimaryServer());
 
         /* Avoid inspecting the result document as mongos returns {ok:1.0},
@@ -78,9 +80,8 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new RenameCollection(
-                    'admin',
-                    $this->getCollectionName(),
-                    $this->getCollectionName() . '.renamed',
+                    $this->getNamespace(),
+                    $this->getNamespace() . '.renamed',
                     ['session' => $this->createSession()]
                 );
 

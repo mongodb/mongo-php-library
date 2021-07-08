@@ -13,6 +13,8 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\MapReduceResult;
 use MongoDB\Operation\Count;
+use MongoDB\Operation\DropCollection;
+use MongoDB\Operation\FindOne;
 use MongoDB\Tests\CommandObserver;
 
 use function array_filter;
@@ -332,13 +334,21 @@ class CollectionFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testRenameCollection(): void
+    public function testRename(): void
     {
-        $writeResult = $this->collection->insertOne(['x' => 1]);
+        $renamedCollection = $this->getCollectionName() . '.renamed';
+        $operation = new DropCollection($this->getDatabaseName(), $renamedCollection);
+        $operation->execute($this->getPrimaryServer());
+
+        $writeResult = $this->collection->insertOne(['_id' => 1, 'x' => 'foo']);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->collection->renameCollection($this->getCollectionName() . 'renamed');
+        $commandResult = $this->collection->rename($this->getDatabaseName() . '.' . $renamedCollection);
         $this->assertCommandSucceeded($commandResult);
+
+        $operation = new FindOne($this->getDatabaseName(), $renamedCollection, []);
+        $cursor = $operation->execute($this->getPrimaryServer());
+        $this->assertSameDocument(['_id' => 1, 'x' => 'foo'], $cursor);
     }
 
     public function testWithOptionsInheritsOptions(): void

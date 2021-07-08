@@ -60,7 +60,7 @@ class CollectionInfo implements ArrayAccess
     /**
      * Return the maximum number of documents to keep in the capped collection.
      *
-     * @deprecated Deprecated in favor of using getOptions
+     * @deprecated 1.0 Deprecated in favor of using getOptions
      *
      * @return integer|null
      */
@@ -73,7 +73,7 @@ class CollectionInfo implements ArrayAccess
     /**
      * Return the maximum size (in bytes) of the capped collection.
      *
-     * @deprecated Deprecated in favor of using getOptions
+     * @deprecated 1.0 Deprecated in favor of using getOptions
      *
      * @return integer|null
      */
@@ -140,7 +140,7 @@ class CollectionInfo implements ArrayAccess
     /**
      * Return whether the collection is a capped collection.
      *
-     * @deprecated Deprecated in favor of using getOptions
+     * @deprecated 1.0 Deprecated in favor of using getOptions
      *
      * @return boolean
      */

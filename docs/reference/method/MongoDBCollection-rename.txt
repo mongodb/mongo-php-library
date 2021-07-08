@@ -1,6 +1,6 @@
-===========================
-MongoDB\\Collection::renameCollection()
-===========================
+=============================
+MongoDB\\Collection::rename()
+=============================
 
 .. default-domain:: mongodb
 
@@ -13,21 +13,21 @@ MongoDB\\Collection::renameCollection()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::renameCollection()
+.. phpmethod:: MongoDB\\Collection::rename()
 
    Rename the collection.
 
    .. code-block:: php
 
-      function renameCollection(string $newCollectionName, array $options = []): array|object
+      function rename(string $toNamespace, array $options = []): array|object
 
    This method has the following parameters:
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-renameCollection-param.rst
+   .. include:: /includes/apiargs/MongoDBCollection-method-rename-param.rst
 
    The ``$options`` parameter supports the following options:
 
-   .. include:: /includes/apiargs/MongoDBCollection-method-renameCollection-option.rst
+   .. include:: /includes/apiargs/MongoDBCollection-method-rename-option.rst
 
 Return Values
 -------------
@@ -46,16 +46,16 @@ Errors/Exceptions
 Example
 -------
 
-The following operation renames the ``restaurants`` collection in the ``admin``
-database to ``zips``:
+The following operation renames the ``restaurants`` collection in the ``test``
+database to ``places``:
 
 .. code-block:: php
 
    <?php
 
-   $collection = (new MongoDB\Client)->admin->restaurants;
+   $collection = (new MongoDB\Client)->test->restaurants;
 
-   $result = $collection->renameCollection('zips');
+   $result = $collection->renameCollection('places');
 
    var_dump($result);
 

@@ -1,0 +1,15 @@
+arg_name: param
+name: $toNamespace
+type: string
+description: |
+  The new namespace of the collection. If the new namespace specifies a
+  different database, the command copies the collection to the new database
+  and drops the source collection.
+interface: phpmethod
+operation: ~
+optional: false
+---
+source:
+  file: apiargs-common-param.yaml
+  ref: $options
+...

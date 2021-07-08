@@ -42,13 +42,13 @@ class CollectionInfoTest extends TestCase
         ]);
 
         $this->assertSame([], $info->getOptions());
-        $this->assertFalse(isset($info['options']));
+        $this->assertArrayNotHasKey('options', $info);
 
         $this->assertSame([], $info->getInfo());
-        $this->assertFalse(isset($info['info']));
+        $this->assertArrayNotHasKey('info', $info);
 
         $this->assertSame([], $info->getIdIndex());
-        $this->assertFalse(isset($info['idIndex']));
+        $this->assertArrayNotHasKey('idIndex', $info);
     }
 
     public function testCappedCollectionMethods(): void

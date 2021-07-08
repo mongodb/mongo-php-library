@@ -18,7 +18,6 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
@@ -50,10 +49,10 @@ class RenameCollection implements Executable
     private static $wireVersionForWriteConcern = 5;
 
     /** @var string */
-    private $sourceNamespace;
+    private $fromNamespace;
 
     /** @var string */
-    private $targetNamespace;
+    private $toNamespace;
 
     /** @var array */
     private $options;
@@ -78,12 +77,12 @@ class RenameCollection implements Executable
      *    This is not supported for server versions < 3.4 and will result in an
      *    exception at execution time if used.
      *
-     * @param string $sourceNamespace   Namespace of the collection to rename
-     * @param string $targetNamespace   New namespace of the collection
-     * @param array  $options           Command options
+     * @param string $fromNamespace Namespace of the collection to rename
+     * @param string $toNamespace New namespace of the collection
+     * @param array  $options         Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($sourceNamespace, $targetNamespace, array $options = [])
+    public function __construct($fromNamespace, $toNamespace, array $options = [])
     {
         if (isset($options['session']) && ! $options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
@@ -105,8 +104,8 @@ class RenameCollection implements Executable
             throw InvalidArgumentException::invalidType('"dropTarget" option', $options['dropTarget'], 'boolean');
         }
 
-        $this->sourceNamespace = (string) $sourceNamespace;
-        $this->targetNamespace = (string) $targetNamespace;
+        $this->fromNamespace = (string) $fromNamespace;
+        $this->toNamespace = (string) $toNamespace;
         $this->options = $options;
     }
 
@@ -131,8 +130,8 @@ class RenameCollection implements Executable
         }
 
         $command = new Command([
-            'renameCollection' => $this->sourceNamespace,
-            'to' => $this->targetNamespace,
+            'renameCollection' => $this->fromNamespace,
+            'to' => $this->toNamespace,
         ]);
 
         $cursor = $server->executeWriteCommand('admin', $command, $this->createOptions());

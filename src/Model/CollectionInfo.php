@@ -60,6 +60,8 @@ class CollectionInfo implements ArrayAccess
     /**
      * Return the maximum number of documents to keep in the capped collection.
      *
+     * @deprecated 1.0 Deprecated in favor of using getOptions
+     *
      * @return integer|null
      */
     public function getCappedMax()
@@ -71,6 +73,8 @@ class CollectionInfo implements ArrayAccess
     /**
      * Return the maximum size (in bytes) of the capped collection.
      *
+     * @deprecated 1.0 Deprecated in favor of using getOptions
+     *
      * @return integer|null
      */
     public function getCappedSize()
@@ -80,8 +84,30 @@ class CollectionInfo implements ArrayAccess
     }
 
     /**
+     * Return information about the _id index for the collection.
+     *
+     * @return array
+     */
+    public function getIdIndex(): array
+    {
+        return (array) ($this->info['idIndex'] ?? []);
+    }
+
+    /**
+     * Return the "info" property of the server response.
+     *
+     * @see https://docs.mongodb.com/manual/reference/command/listCollections/#output
+     * @return array
+     */
+    public function getInfo(): array
+    {
+        return (array) ($this->info['info'] ?? []);
+    }
+
+    /**
      * Return the collection name.
      *
+     * @see https://docs.mongodb.com/manual/reference/command/listCollections/#output
      * @return string
      */
     public function getName()
@@ -92,15 +118,29 @@ class CollectionInfo implements ArrayAccess
     /**
      * Return the collection options.
      *
+     * @see https://docs.mongodb.com/manual/reference/command/listCollections/#output
      * @return array
      */
     public function getOptions()
     {
-        return isset($this->info['options']) ? (array) $this->info['options'] : [];
+        return (array) ($this->info['options'] ?? []);
+    }
+
+    /**
+     * Return the collection type.
+     *
+     * @see https://docs.mongodb.com/manual/reference/command/listCollections/#output
+     * @return string
+     */
+    public function getType(): string
+    {
+        return (string) $this->info['type'];
     }
 
     /**
      * Return whether the collection is a capped collection.
+     *
+     * @deprecated 1.0 Deprecated in favor of using getOptions
      *
      * @return boolean
      */

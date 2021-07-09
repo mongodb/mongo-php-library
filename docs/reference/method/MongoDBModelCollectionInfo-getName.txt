@@ -24,7 +24,8 @@ Definition
 Return Values
 -------------
 
-The collection name.
+The collection name. This corresponds to the ``name`` field returned in the
+``listCollections`` command reply.
 
 Examples
 --------

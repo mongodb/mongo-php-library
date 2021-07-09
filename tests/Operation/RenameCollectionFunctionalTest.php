@@ -6,13 +6,9 @@ use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\FindOne;
 use MongoDB\Operation\InsertOne;
-use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\RenameCollection;
 use MongoDB\Tests\CommandObserver;
 
-use function call_user_func;
-use function is_callable;
-use function sprintf;
 use function version_compare;
 
 class RenameCollectionFunctionalTest extends FunctionalTestCase
@@ -131,63 +127,5 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
         $operation->execute($this->getPrimaryServer());
 
         parent::tearDown();
-    }
-
-    /**
-     * Asserts that a collection with the given name does not exist on the
-     * server.
-     *
-     * @param string $collectionName
-     */
-    private function assertCollectionDoesNotExist(string $collectionName): void
-    {
-        $operation = new ListCollections($this->getDatabaseName());
-        $collections = $operation->execute($this->getPrimaryServer());
-
-        $foundCollection = null;
-
-        foreach ($collections as $collection) {
-            if ($collection->getName() === $collectionName) {
-                $foundCollection = $collection;
-                break;
-            }
-        }
-
-        $this->assertNull($foundCollection, sprintf('Collection %s exists', $collectionName));
-    }
-
-    /**
-     * Asserts that a collection with the given name exists on the server.
-     *
-     * An optional $callback may be provided, which should take a CollectionInfo
-     * argument as its first and only parameter. If a CollectionInfo matching
-     * the given name is found, it will be passed to the callback, which may
-     * perform additional assertions.
-     *
-     * @param callable $callback
-     */
-    private function assertCollectionExists($collectionName, ?callable $callback = null): void
-    {
-        if ($callback !== null && ! is_callable($callback)) {
-            throw new InvalidArgumentException('$callback is not a callable');
-        }
-
-        $operation = new ListCollections($this->getDatabaseName());
-        $collections = $operation->execute($this->getPrimaryServer());
-
-        $foundCollection = null;
-
-        foreach ($collections as $collection) {
-            if ($collection->getName() === $collectionName) {
-                $foundCollection = $collection;
-                break;
-            }
-        }
-
-        $this->assertNotNull($foundCollection, sprintf('Found %s collection in the database', $collectionName));
-
-        if ($callback !== null) {
-            call_user_func($callback, $foundCollection);
-        }
     }
 }

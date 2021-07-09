@@ -16,16 +16,19 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
+use MongoDB\Operation\ListCollections;
 use stdClass;
 use UnexpectedValueException;
 
 use function array_merge;
+use function call_user_func;
 use function count;
 use function current;
 use function explode;
 use function getenv;
 use function implode;
 use function is_array;
+use function is_callable;
 use function is_object;
 use function is_string;
 use function key;
@@ -145,6 +148,64 @@ abstract class FunctionalTestCase extends TestCase
 
         $this->assertArrayHasKey('n', $document);
         $this->assertEquals($count, $document['n']);
+    }
+
+    /**
+     * Asserts that a collection with the given name does not exist on the
+     * server.
+     *
+     * @param string $collectionName
+     */
+    protected function assertCollectionDoesNotExist(string $collectionName): void
+    {
+        $operation = new ListCollections($this->getDatabaseName());
+        $collections = $operation->execute($this->getPrimaryServer());
+
+        $foundCollection = null;
+
+        foreach ($collections as $collection) {
+            if ($collection->getName() === $collectionName) {
+                $foundCollection = $collection;
+                break;
+            }
+        }
+
+        $this->assertNull($foundCollection, sprintf('Collection %s exists', $collectionName));
+    }
+
+    /**
+     * Asserts that a collection with the given name exists on the server.
+     *
+     * An optional $callback may be provided, which should take a CollectionInfo
+     * argument as its first and only parameter. If a CollectionInfo matching
+     * the given name is found, it will be passed to the callback, which may
+     * perform additional assertions.
+     *
+     * @param callable $callback
+     */
+    protected function assertCollectionExists($collectionName, ?callable $callback = null): void
+    {
+        if ($callback !== null && ! is_callable($callback)) {
+            throw new InvalidArgumentException('$callback is not a callable');
+        }
+
+        $operation = new ListCollections($this->getDatabaseName());
+        $collections = $operation->execute($this->getPrimaryServer());
+
+        $foundCollection = null;
+
+        foreach ($collections as $collection) {
+            if ($collection->getName() === $collectionName) {
+                $foundCollection = $collection;
+                break;
+            }
+        }
+
+        $this->assertNotNull($foundCollection, sprintf('Found %s collection in the database', $collectionName));
+
+        if ($callback !== null) {
+            call_user_func($callback, $foundCollection);
+        }
     }
 
     protected function assertCommandSucceeded($document): void

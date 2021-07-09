@@ -345,6 +345,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
         $commandResult = $this->collection->rename($this->getDatabaseName() . '.' . $renamedCollection);
         $this->assertCommandSucceeded($commandResult);
+        $this->assertCollectionDoesNotExist($this->getCollectionName());
+        $this->assertCollectionExists($renamedCollection);
 
         $operation = new FindOne($this->getDatabaseName(), $renamedCollection, []);
         $cursor = $operation->execute($this->getPrimaryServer());

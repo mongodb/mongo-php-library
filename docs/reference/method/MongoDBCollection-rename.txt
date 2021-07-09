@@ -63,11 +63,7 @@ The output would then resemble::
 
    object(MongoDB\Model\BSONDocument)#9 (1) {
      ["storage":"ArrayObject":private]=>
-     array(3) {
-       ["ns"]=>
-       string(16) "test.restaurants"
-       ["nIndexesWas"]=>
-       int(3)
+     array(1) {
        ["ok"]=>
        float(1)
      }

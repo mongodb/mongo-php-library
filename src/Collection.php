@@ -1010,7 +1010,7 @@ class Collection
      *
      * @see RenameCollection::__construct() for supported options
      * @param string $toNamespace New namespace of the collection
-     * @param array  $options         Additional options
+     * @param array  $options     Additional options
      * @return array|object Command result document
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors

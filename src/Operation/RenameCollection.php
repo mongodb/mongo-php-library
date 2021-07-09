@@ -78,8 +78,8 @@ class RenameCollection implements Executable
      *    exception at execution time if used.
      *
      * @param string $fromNamespace Namespace of the collection to rename
-     * @param string $toNamespace New namespace of the collection
-     * @param array  $options         Command options
+     * @param string $toNamespace   New namespace of the collection
+     * @param array  $options       Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct($fromNamespace, $toNamespace, array $options = [])

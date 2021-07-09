@@ -476,8 +476,8 @@ class Database
      *
      * @see RenameCollection::__construct() for supported options
      * @param string $fromNamespace Namespace of the collection to rename
-     * @param string $toNamespace New namespace of the collection
-     * @param array  $options         Additional options
+     * @param string $toNamespace   New namespace of the collection
+     * @param array  $options       Additional options
      * @return array|object Command result document
      * @throws UnsupportedException if options are unsupported on the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors

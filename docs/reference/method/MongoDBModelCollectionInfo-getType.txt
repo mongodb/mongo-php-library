@@ -1,0 +1,50 @@
+=========================================
+MongoDB\\Model\\CollectionInfo::getType()
+=========================================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Model\\CollectionInfo::getType()
+
+   Return the collection type.
+
+   .. code-block:: php
+
+      function getType(): string
+
+Return Values
+-------------
+
+The collection type. This corresponds to the ``type`` field returned in the
+``listCollections`` command reply.
+
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new CollectionInfo(['type' => 'collection', 'name' => 'foo']);
+
+   echo $info->getType();
+
+The output would then resemble::
+
+   collection
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Database::createCollection()`
+- :manual:`listCollections </reference/command/listCollections>` command
+  reference in the MongoDB manual

@@ -10,6 +10,8 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CreateIndexes;
+use MongoDB\Operation\DropCollection;
+use MongoDB\Operation\FindOne;
 
 use function array_key_exists;
 use function current;
@@ -209,6 +211,29 @@ class DatabaseFunctionalTest extends FunctionalTestCase
             $this->assertSame(3, $commandResult['expireAfterSeconds_old']);
             $this->assertSame(1000, $commandResult['expireAfterSeconds_new']);
         }
+    }
+
+    public function testRenameCollection(): void
+    {
+        $renamedCollection = $this->getCollectionName() . '.renamed';
+        $renamedNamespace = $this->getDatabaseName() . '.' . $renamedCollection;
+        $operation = new DropCollection($this->getDatabaseName(), $renamedCollection);
+        $operation->execute($this->getPrimaryServer());
+
+        $bulkWrite = new BulkWrite();
+        $bulkWrite->insert(['_id' => 1, 'x' => 'foo']);
+
+        $writeResult = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
+        $this->assertEquals(1, $writeResult->getInsertedCount());
+
+        $commandResult = $this->database->renameCollection($this->getNamespace(), $renamedNamespace);
+        $this->assertCommandSucceeded($commandResult);
+        $this->assertCollectionCount($this->getNamespace(), 0);
+        $this->assertCollectionCount($renamedNamespace, 1);
+
+        $operation = new FindOne($this->getDatabaseName(), $renamedCollection, []);
+        $cursor = $operation->execute($this->getPrimaryServer());
+        $this->assertSameDocument(['_id' => 1, 'x' => 'foo'], $cursor);
     }
 
     public function testSelectCollectionInheritsOptions(): void

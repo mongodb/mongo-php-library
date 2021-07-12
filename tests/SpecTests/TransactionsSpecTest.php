@@ -112,6 +112,7 @@ class TransactionsSpecTest extends FunctionalTestCase
 
     /**
      * @dataProvider provideTransactionsTests
+     * @group serverless
      */
     public function testTransactions(stdClass $test, ?array $runOn = null, array $data, ?string $databaseName = null, ?string $collectionName = null): void
     {

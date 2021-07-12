@@ -14,6 +14,7 @@ use function strpos;
  * Retryable reads spec tests.
  *
  * @see https://github.com/mongodb/specifications/tree/master/source/retryable-reads
+ * @group serverless
  */
 class RetryableReadsSpecTest extends FunctionalTestCase
 {

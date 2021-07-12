@@ -12,6 +12,7 @@ use function glob;
  * Retryable writes spec tests.
  *
  * @see https://github.com/mongodb/specifications/tree/master/source/retryable-writes
+ * @group serverless
  */
 class RetryableWritesSpecTest extends FunctionalTestCase
 {

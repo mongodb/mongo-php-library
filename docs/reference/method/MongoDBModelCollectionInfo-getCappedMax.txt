@@ -31,7 +31,8 @@ The document limit for the capped collection. If the collection is not capped,
 ``null`` will be returned.
 
 This method is deprecated in favor of using
-:phpmethod:`MongoDB\\Model\\CollectionInfo::getOptions()`.
+:phpmethod:`MongoDB\\Model\\CollectionInfo::getOptions()` and accessing the
+`max` key.
 
 Examples
 --------

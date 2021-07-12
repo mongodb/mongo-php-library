@@ -25,6 +25,7 @@ use function call_user_func;
 use function count;
 use function current;
 use function explode;
+use function filter_var;
 use function getenv;
 use function implode;
 use function is_array;
@@ -42,6 +43,7 @@ use function preg_replace;
 use function sprintf;
 use function version_compare;
 
+use const FILTER_VALIDATE_BOOLEAN;
 use const INFO_MODULES;
 
 abstract class FunctionalTestCase extends TestCase
@@ -391,6 +393,16 @@ abstract class FunctionalTestCase extends TestCase
     protected function isReplicaSet()
     {
         return $this->getPrimaryServer()->getType() == Server::TYPE_RS_PRIMARY;
+    }
+
+    /**
+     * Return whether serverless (i.e. proxy as mongos) is being utilized.
+     */
+    protected static function isServerless(): bool
+    {
+        $isServerless = getenv('MONGODB_IS_SERVERLESS');
+
+        return $isServerless !== false ? filter_var($isServerless, FILTER_VALIDATE_BOOLEAN) : false;
     }
 
     protected function isShardedCluster()

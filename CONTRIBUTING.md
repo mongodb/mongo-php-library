@@ -37,6 +37,11 @@ this configuration by creating your own `phpunit.xml` file based on the
 `phpunit.xml.dist` file we provide. To run the tests in serverless mode, set the
 `MONGODB_IS_SERVERLESS` environment variable to `on`.
 
+To run tests against a cluster that requires authentication, either include the
+credentials in the connection string given in the `MONGODB_URI` environment
+variable, or set the `MONGODB_USERNAME` and `MONGODB_PASSWORD` environment
+variables accordingly.
+
 By default, the `simple-phpunit` binary chooses the correct PHPUnit version for
 the PHP version you are running. To run tests against a specific PHPUnit version,
 use the `SYMFONY_PHPUNIT_VERSION` environment variable:

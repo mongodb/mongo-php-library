@@ -69,12 +69,20 @@ abstract class FunctionalTestCase extends TestCase
 
     public static function createTestClient(?string $uri = null, array $options = [], array $driverOptions = []): Client
     {
-        return new Client($uri ?? static::getUri(), $options, static::appendServerApiOption($driverOptions));
+        return new Client(
+            $uri ?? static::getUri(),
+            static::appendAuthenticationOptions($options),
+            static::appendServerApiOption($driverOptions)
+        );
     }
 
     public static function createTestManager(?string $uri = null, array $options = [], array $driverOptions = []): Manager
     {
-        return new Manager($uri ?? static::getUri(), $options, static::appendServerApiOption($driverOptions));
+        return new Manager(
+            $uri ?? static::getUri(),
+            static::appendAuthenticationOptions($options),
+            static::appendServerApiOption($driverOptions)
+        );
     }
 
     public static function getUri($allowMultipleMongoses = false): string
@@ -511,6 +519,26 @@ abstract class FunctionalTestCase extends TestCase
         if ($this->getServerStorageEngine() !== 'wiredTiger') {
             $this->markTestSkipped('Transactions require WiredTiger storage engine');
         }
+    }
+
+    private static function appendAuthenticationOptions(array $options): array
+    {
+        if (isset($options['username']) || isset($options['password'])) {
+            return $options;
+        }
+
+        $username = getenv('MONGODB_USERNAME') ?: null;
+        $password = getenv('MONGODB_PASSWORD') ?: null;
+
+        if ($username !== null) {
+            $options['username'] = $username;
+        }
+
+        if ($password !== null) {
+            $options['password'] = $password;
+        }
+
+        return $options;
     }
 
     private static function appendServerApiOption(array $driverOptions): array

@@ -199,6 +199,38 @@ functions:
         script: |
           DRIVERS_TOOLS="${DRIVERS_TOOLS}" sh ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake/run-mongohouse-local.sh
 
+  "create serverless instance":
+    - command: shell.exec
+      params:
+        working_dir: "src"
+        shell: bash
+        script: |-
+          ${PREPARE_SHELL}
+          export PROJECT=${PROJECT}
+          export SERVERLESS_DRIVERS_GROUP=${SERVERLESS_DRIVERS_GROUP}
+          export SERVERLESS_API_PUBLIC_KEY=${SERVERLESS_API_PUBLIC_KEY}
+          export SERVERLESS_API_PRIVATE_KEY=${SERVERLESS_API_PRIVATE_KEY}
+          export SERVERLESS_ATLAS_USER=${SERVERLESS_ATLAS_USER}
+          export SERVERLESS_ATLAS_PASSWORD=${SERVERLESS_ATLAS_PASSWORD}
+          DRIVERS_TOOLS="${DRIVERS_TOOLS}" sh ${DRIVERS_TOOLS}/.evergreen/serverless/create-instance.sh
+    - command: expansions.update
+      params:
+        file: src/serverless-expansion.yml
+
+  "delete serverless instance":
+    - command: shell.exec
+      params:
+        shell: bash
+        script: |-
+          set -o errexit
+          export SERVERLESS_DRIVERS_GROUP=${SERVERLESS_DRIVERS_GROUP}
+          export SERVERLESS_API_PUBLIC_KEY=${SERVERLESS_API_PUBLIC_KEY}
+          export SERVERLESS_API_PRIVATE_KEY=${SERVERLESS_API_PRIVATE_KEY}
+          export SERVERLESS_ATLAS_USER=${SERVERLESS_ATLAS_USER}
+          export SERVERLESS_ATLAS_PASSWORD=${SERVERLESS_ATLAS_PASSWORD}
+          export SERVERLESS_INSTANCE_NAME=${SERVERLESS_INSTANCE_NAME}
+          DRIVERS_TOOLS="${DRIVERS_TOOLS}" sh ${DRIVERS_TOOLS}/.evergreen/serverless/delete-instance.sh
+
   "run tests":
     - command: shell.exec
       type: test
@@ -225,6 +257,20 @@ functions:
            ${PREPARE_SHELL}
            export PATH="${PHP_PATH}/bin:$PATH"
            PHP_VERSION=${PHP_VERSION} TESTS="atlas-data-lake" AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+
+  "run serverless tests":
+    - command: shell.exec
+      type: test
+      params:
+        working_dir: "src"
+        shell: bash
+        script: |-
+          ${PREPARE_SHELL}
+          export MONGODB_IS_SERVERLESS=on
+          export MONGODB_USERNAME=${SERVERLESS_ATLAS_USER}
+          export MONGODB_PASSWORD=${SERVERLESS_ATLAS_PASSWORD}
+          export PATH="${PHP_PATH}/bin:$PATH"
+          PHP_VERSION=${PHP_VERSION} TESTS="serverless" MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "cleanup":
     - command: shell.exec
@@ -377,6 +423,15 @@ tasks:
         - func: "run tests"
           vars:
             TESTS: "versioned-api"
+
+    - name: "test-serverless"
+      tags: ["serverless"]
+      commands:
+        - func: "create serverless instance"
+          vars:
+            PROJECT: "mongo-php-library"
+        - func: "run serverless tests"
+        - func: "delete serverless instance"
 # }}}
 
 
@@ -631,3 +686,10 @@ buildvariants:
   run_on: rhel70
   tasks:
     - .versioned-api
+
+- matrix_name: "serverless"
+  matrix_spec: { "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  display_name: "Serverless"
+  run_on: rhel70
+  tasks:
+    - .serverless

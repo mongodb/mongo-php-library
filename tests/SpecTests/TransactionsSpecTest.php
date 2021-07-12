@@ -111,16 +111,41 @@ class TransactionsSpecTest extends FunctionalTestCase
     }
 
     /**
+     * @dataProvider provideTransactionsTests
+     */
+    public function testTransactions(stdClass $test, ?array $runOn = null, array $data, ?string $databaseName = null, ?string $collectionName = null): void
+    {
+        $this->runTransactionTest($test, $runOn, $data, $databaseName, $collectionName);
+    }
+
+    public function provideTransactionsTests(): array
+    {
+        return $this->provideTests('transactions');
+    }
+
+    /**
+     * @dataProvider provideTransactionsConvenientApiTests
+     */
+    public function testTransactionsConvenientApi(stdClass $test, ?array $runOn = null, array $data, ?string $databaseName = null, ?string $collectionName = null): void
+    {
+        $this->runTransactionTest($test, $runOn, $data, $databaseName, $collectionName);
+    }
+
+    public function provideTransactionsConvenientApiTests(): array
+    {
+        return $this->provideTests('transactions-convenient-api');
+    }
+
+    /**
      * Execute an individual test case from the specification.
      *
-     * @dataProvider provideTests
      * @param stdClass $test           Individual "tests[]" document
      * @param array    $runOn          Top-level "runOn" array with server requirements
      * @param array    $data           Top-level "data" array to initialize collection
      * @param string   $databaseName   Name of database under test
      * @param string   $collectionName Name of collection under test
      */
-    public function testTransactions(stdClass $test, ?array $runOn = null, array $data, ?string $databaseName = null, ?string $collectionName = null): void
+    private function runTransactionTest(stdClass $test, ?array $runOn = null, array $data, ?string $databaseName = null, ?string $collectionName = null): void
     {
         if (isset(self::$incompleteTests[$this->dataDescription()])) {
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
@@ -173,11 +198,11 @@ class TransactionsSpecTest extends FunctionalTestCase
         }
     }
 
-    public function provideTests()
+    private function provideTests(string $dir): array
     {
         $testArgs = [];
 
-        foreach (glob(__DIR__ . '/transactions*/*.json') as $filename) {
+        foreach (glob(__DIR__ . '/' . $dir . '/*.json') as $filename) {
             $json = $this->decodeJson(file_get_contents($filename));
             $group = basename(dirname($filename)) . '/' . basename($filename, '.json');
             $runOn = $json->runOn ?? null;

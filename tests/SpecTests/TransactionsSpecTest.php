@@ -316,6 +316,11 @@ class TransactionsSpecTest extends FunctionalTestCase
      */
     private static function killAllSessions(): void
     {
+        // killAllSessions is not supported on serverless, see CLOUDP-84298
+        if (static::isServerless()) {
+            return;
+        }
+
         $manager = static::createTestManager();
         $primary = $manager->selectServer(new ReadPreference('primary'));
 

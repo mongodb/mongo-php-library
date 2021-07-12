@@ -78,7 +78,7 @@ final class UnifiedTestRunner
         /* Atlas prohibits killAllSessions. Inspect the connection string to
          * determine if we should avoid calling killAllSessions(). This does
          * mean that lingering transactions could block test execution. */
-        if (strpos($internalClientUri, self::ATLAS_TLD) !== false) {
+        if ($this->isServerless() || strpos($internalClientUri, self::ATLAS_TLD) !== false) {
             $this->allowKillAllSessions = false;
         }
     }

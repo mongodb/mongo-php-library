@@ -18,7 +18,7 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
 
         $commandResult = $this->database->createCollection($basicCollectionName);
         $this->assertCommandSucceeded($commandResult);
-        $this->assertCollectionExists($basicCollectionName, function (CollectionInfo $info) use ($that): void {
+        $this->assertCollectionExists($basicCollectionName, null, function (CollectionInfo $info) use ($that): void {
             $that->assertFalse($info->isCapped());
         });
 
@@ -31,7 +31,7 @@ class CollectionManagementFunctionalTest extends FunctionalTestCase
 
         $commandResult = $this->database->createCollection($cappedCollectionName, $cappedCollectionOptions);
         $this->assertCommandSucceeded($commandResult);
-        $this->assertCollectionExists($cappedCollectionName, function (CollectionInfo $info) use ($that): void {
+        $this->assertCollectionExists($cappedCollectionName, null, function (CollectionInfo $info) use ($that): void {
             $that->assertTrue($info->isCapped());
             $that->assertEquals(100, $info->getCappedMax());
             $that->assertEquals(1048576, $info->getCappedSize());

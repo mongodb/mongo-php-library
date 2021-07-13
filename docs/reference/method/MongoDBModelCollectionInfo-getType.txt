@@ -1,6 +1,8 @@
 =========================================
-MongoDB\\Model\\CollectionInfo::getName()
+MongoDB\\Model\\CollectionInfo::getType()
 =========================================
+
+.. versionadded:: 1.9
 
 .. default-domain:: mongodb
 
@@ -13,18 +15,18 @@ MongoDB\\Model\\CollectionInfo::getName()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Model\\CollectionInfo::getName()
+.. phpmethod:: MongoDB\\Model\\CollectionInfo::getType()
 
-   Return the collection name.
+   Return the collection type.
 
    .. code-block:: php
 
-      function getName(): string
+      function getType(): string
 
 Return Values
 -------------
 
-The collection name. This corresponds to the ``name`` field returned in the
+The collection type. This corresponds to the ``type`` field returned in the
 ``listCollections`` command reply.
 
 Examples
@@ -34,17 +36,17 @@ Examples
 
    <?php
 
-   $info = new CollectionInfo(['name' => 'foo']);
+   $info = new CollectionInfo(['type' => 'collection', 'name' => 'foo']);
 
-   echo $info->getName();
+   echo $info->getType();
 
 The output would then resemble::
 
-   foo
+   collection
 
 See Also
 --------
 
-- :phpmethod:`MongoDB\\Collection::getCollectionName()`
+- :phpmethod:`MongoDB\\Database::createCollection()`
 - :manual:`listCollections </reference/command/listCollections>` command
   reference in the MongoDB manual

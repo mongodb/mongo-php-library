@@ -1,0 +1,59 @@
+=========================================
+MongoDB\\Model\\CollectionInfo::getInfo()
+=========================================
+
+.. versionadded:: 1.9
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Model\\CollectionInfo::getInfo()
+
+   Returns additional information about the collection.
+
+   .. code-block:: php
+
+      function getInfo(): array
+
+Return Values
+-------------
+
+An array containing extra information about the collection. This corresponds to
+the ``info`` field returned in the ``listCollections`` command reply.
+
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new CollectionInfo([
+     'type' => 'view',
+     'name' => 'foo',
+     'info' => ['readOnly' => true]
+   ]);
+
+   var_dump($info->getInfo());
+
+The output would then resemble::
+
+   array(1) {
+     ["readOnly"]=>
+     bool(true)
+   }
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Database::createCollection()`
+- :manual:`listCollections </reference/command/listCollections>` command
+  reference in the MongoDB manual

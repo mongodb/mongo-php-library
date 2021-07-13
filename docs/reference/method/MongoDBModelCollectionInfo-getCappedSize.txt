@@ -2,6 +2,8 @@
 MongoDB\\Model\\CollectionInfo::getCappedSize()
 ===============================================
 
+.. deprecated:: 1.9
+
 .. default-domain:: mongodb
 
 .. contents:: On this page
@@ -28,6 +30,10 @@ Return Values
 
 The size limit for the capped collection in bytes. If the collection is not
 capped, ``null`` will be returned.
+
+This method is deprecated in favor of using
+:phpmethod:`MongoDB\\Model\\CollectionInfo::getOptions()` and accessing the
+``size`` key.
 
 Examples
 --------

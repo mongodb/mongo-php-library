@@ -26,7 +26,8 @@ Definition
 Return Values
 -------------
 
-The collection options.
+The collection options. This corresponds to the ``options`` field returned in
+the ``listCollections`` command reply.
 
 Examples
 --------

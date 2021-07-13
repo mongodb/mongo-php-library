@@ -1,0 +1,73 @@
+============================================
+MongoDB\\Model\\CollectionInfo::getIdIndex()
+============================================
+
+.. versionadded:: 1.9
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 1
+   :class: singlecol
+
+Definition
+----------
+
+.. phpmethod:: MongoDB\\Model\\CollectionInfo::getIdIndex()
+
+   Returns information about the ``_id`` field index.
+
+   .. code-block:: php
+
+      function getIdIndex(): array
+
+Return Values
+-------------
+
+An array containing information on the ``_id`` index. This corresponds to the
+``idIndex`` field returned in the ``listCollections`` command reply.
+
+Examples
+--------
+
+.. code-block:: php
+
+   <?php
+
+   $info = new CollectionInfo([
+     'type' => 'view',
+     'name' => 'foo',
+     'idIndex' => [
+        'v' => 2,
+        'key' => ['_id' => 1],
+        'name' => '_id',
+        'ns' => 'test.foo',
+     ],
+   ]);
+
+   var_dump($info->getIdIndex());
+
+The output would then resemble::
+
+   array(4) {
+     ["v"]=>
+     int(2)
+     ["key"]=>
+     array(1) {
+       ["_id"]=>
+       int(1)
+     }
+     ["name"]=>
+     string(3) "_id"
+     ["ns"]=>
+     string(8) "test.foo"
+   }
+
+See Also
+--------
+
+- :phpmethod:`MongoDB\\Database::createCollection()`
+- :manual:`listCollections </reference/command/listCollections>` command
+  reference in the MongoDB manual

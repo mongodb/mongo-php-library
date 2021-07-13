@@ -43,8 +43,11 @@ Methods
 
    /reference/method/MongoDBModelCollectionInfo-getCappedMax
    /reference/method/MongoDBModelCollectionInfo-getCappedSize
+   /reference/method/MongoDBModelCollectionInfo-getIdIndex
+   /reference/method/MongoDBModelCollectionInfo-getInfo
    /reference/method/MongoDBModelCollectionInfo-getName
    /reference/method/MongoDBModelCollectionInfo-getOptions
+   /reference/method/MongoDBModelCollectionInfo-getType
    /reference/method/MongoDBModelCollectionInfo-isCapped
 
 ----

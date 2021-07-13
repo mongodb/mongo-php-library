@@ -39,7 +39,7 @@ name: expireAfterSeconds
 type: integer
 description: |
   Used to automatically delete documents in time series collections. See the
-  :manual:`create command documentation </reference/command/create>` for more
+  :manual:`create </reference/command/create>` command documentation for more
   information.
 
   This option is available in MongoDB 5.0+ and will result in an exception at
@@ -154,7 +154,7 @@ name: timeseries
 type: array|object
 description: |
   An object containing options for creating time series collections. See the
-  :manual:`create command documentation </reference/command/create>` for
+  :manual:`create </reference/command/create>` command documentation for
   supported options.
 
   This option is available in MongoDB 5.0+ and will result in an exception at

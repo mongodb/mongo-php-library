@@ -154,10 +154,17 @@ abstract class FunctionalTestCase extends TestCase
      * Asserts that a collection with the given name does not exist on the
      * server.
      *
+     * If $databaseName is not specified, the current database will be used.
+     *
      * @param string $collectionName
+     * @param string $databaseName
      */
-    protected function assertCollectionDoesNotExist(string $collectionName): void
+    protected function assertCollectionDoesNotExist(string $collectionName, ?string $databaseName = null): void
     {
+        if (! isset($databaseName)) {
+            $databaseName = $this->getDatabaseName();
+        }
+
         $operation = new ListCollections($this->getDatabaseName());
         $collections = $operation->execute($this->getPrimaryServer());
 
@@ -176,20 +183,27 @@ abstract class FunctionalTestCase extends TestCase
     /**
      * Asserts that a collection with the given name exists on the server.
      *
+     * If $databaseName is not specified, the current database will be used.
      * An optional $callback may be provided, which should take a CollectionInfo
      * argument as its first and only parameter. If a CollectionInfo matching
      * the given name is found, it will be passed to the callback, which may
      * perform additional assertions.
      *
+     * @param string   $collectionName
+     * @param string   $databaseName
      * @param callable $callback
      */
-    protected function assertCollectionExists($collectionName, ?callable $callback = null): void
+    protected function assertCollectionExists(string $collectionName, ?string $databaseName = null, ?callable $callback = null): void
     {
+        if (! isset($databaseName)) {
+            $databaseName = $this->getDatabaseName();
+        }
+
         if ($callback !== null && ! is_callable($callback)) {
             throw new InvalidArgumentException('$callback is not a callable');
         }
 
-        $operation = new ListCollections($this->getDatabaseName());
+        $operation = new ListCollections($databaseName);
         $collections = $operation->execute($this->getPrimaryServer());
 
         $foundCollection = null;

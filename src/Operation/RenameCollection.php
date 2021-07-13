@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2015-2017 MongoDB, Inc.
+ * Copyright 2021-present MongoDB, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ use function is_bool;
 use function MongoDB\server_supports_feature;
 
 /**
- * Operation for the rename command.
+ * Operation for the renameCollection command.
  *
  * @api
  * @see \MongoDB\Collection::rename()
@@ -39,12 +39,6 @@ use function MongoDB\server_supports_feature;
  */
 class RenameCollection implements Executable
 {
-    /** @var integer */
-    private static $errorCodeNamespaceNotFound = 26;
-
-    /** @var string */
-    private static $errorMessageNamespaceNotFound = 'ns not found';
-
     /** @var integer */
     private static $wireVersionForWriteConcern = 5;
 
@@ -58,7 +52,7 @@ class RenameCollection implements Executable
     private $options;
 
     /**
-     * Constructs a rename command.
+     * Constructs a renameCollection command.
      *
      * Supported options:
      *
@@ -71,18 +65,20 @@ class RenameCollection implements Executable
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
-     *  * dropTarget (boolean): If true, mongod will drop the target of
-     *    renameCollection prior to renaming the collection.
-     *
      *    This is not supported for server versions < 3.4 and will result in an
      *    exception at execution time if used.
      *
-     * @param string $fromNamespace Namespace of the collection to rename
-     * @param string $toNamespace   New namespace of the collection
-     * @param array  $options       Command options
+     *  * dropTarget (boolean): If true, MongoDB will drop the target before
+     *    renaming the collection.
+     *
+     * @param string $fromDatabaseName   Database name
+     * @param string $fromCollectionName Collection name
+     * @param string $toDatabaseName     New database name
+     * @param string $toCollectionName   New collection name
+     * @param array  $options            Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($fromNamespace, $toNamespace, array $options = [])
+    public function __construct($fromDatabaseName, $fromCollectionName, $toDatabaseName, $toCollectionName, array $options = [])
     {
         if (isset($options['session']) && ! $options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
@@ -104,8 +100,8 @@ class RenameCollection implements Executable
             throw InvalidArgumentException::invalidType('"dropTarget" option', $options['dropTarget'], 'boolean');
         }
 
-        $this->fromNamespace = (string) $fromNamespace;
-        $this->toNamespace = (string) $toNamespace;
+        $this->fromNamespace = (string) $fromDatabaseName . '.' . (string) $fromCollectionName;
+        $this->toNamespace = (string) $toDatabaseName . '.' . (string) $toCollectionName;
         $this->options = $options;
     }
 
@@ -129,10 +125,16 @@ class RenameCollection implements Executable
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
         }
 
-        $command = new Command([
+        $commandOptions = [
             'renameCollection' => $this->fromNamespace,
             'to' => $this->toNamespace,
-        ]);
+        ];
+
+        if (isset($this->options['dropTarget'])) {
+            $commandOptions['dropTarget'] = $this->options['dropTarget'];
+        }
+
+        $command = new Command($commandOptions);
 
         $cursor = $server->executeWriteCommand('admin', $command, $this->createOptions());
 
@@ -159,10 +161,6 @@ class RenameCollection implements Executable
 
         if (isset($this->options['writeConcern'])) {
             $options['writeConcern'] = $this->options['writeConcern'];
-        }
-
-        if (isset($this->options['dropTarget'])) {
-            $options['dropTarget'] = $this->options['dropTarget'];
         }
 
         return $options;

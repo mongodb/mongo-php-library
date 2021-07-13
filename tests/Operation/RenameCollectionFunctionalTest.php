@@ -13,20 +13,34 @@ use function version_compare;
 
 class RenameCollectionFunctionalTest extends FunctionalTestCase
 {
-    /** @var string */
-    private $renamedCollection;
+    /** @var integer */
+    private static $errorCodeNamespaceNotFound = 26;
+
+    /** @var integer */
+    private static $errorCodeNamespaceExists = 48;
 
     /** @var string */
-    private $renamedNamespace;
+    private $toCollectionName;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->renamedCollection = $this->getCollectionName() . '.renamed';
-        $this->renamedNamespace = $this->getNamespace() . '.renamed';
-        $operation = new DropCollection($this->getDatabaseName(), $this->renamedCollection);
+        $this->toCollectionName = $this->getCollectionName() . '.renamed';
+        $operation = new DropCollection($this->getDatabaseName(), $this->toCollectionName);
         $operation->execute($this->getPrimaryServer());
+    }
+
+    public function tearDown(): void
+    {
+        if ($this->hasFailed()) {
+            return;
+        }
+
+        $operation = new DropCollection($this->getDatabaseName(), $this->toCollectionName);
+        $operation->execute($this->getPrimaryServer());
+
+        parent::tearDown();
     }
 
     public function testDefaultWriteConcernIsOmitted(): void
@@ -40,8 +54,10 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
                 $this->assertEquals(1, $writeResult->getInsertedCount());
 
                 $operation = new RenameCollection(
-                    $this->getNamespace(),
-                    $this->renamedNamespace,
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    $this->getDatabaseName(),
+                    $this->toCollectionName,
                     ['writeConcern' => $this->createDefaultWriteConcern()]
                 );
 
@@ -57,20 +73,48 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
     {
         $server = $this->getPrimaryServer();
 
-        $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['_id' => 1, 'x' => 'foo']);
+        $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['_id' => 1]);
         $writeResult = $insertOne->execute($server);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $operation = new RenameCollection($this->getNamespace(), $this->renamedNamespace);
+        $operation = new RenameCollection(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            $this->getDatabaseName(),
+            $this->toCollectionName,
+        );
         $commandResult = $operation->execute($server);
 
         $this->assertCommandSucceeded($commandResult);
         $this->assertCollectionDoesNotExist($this->getCollectionName());
-        $this->assertCollectionExists($this->renamedCollection);
+        $this->assertCollectionExists($this->toCollectionName);
 
-        $operation = new FindOne($this->getDatabaseName(), $this->renamedCollection, []);
+        $operation = new FindOne($this->getDatabaseName(), $this->toCollectionName, []);
         $cursor = $operation->execute($server);
-        $this->assertSameDocument(['_id' => 1, 'x' => 'foo'], $cursor);
+        $this->assertSameDocument(['_id' => 1], $cursor);
+    }
+
+    public function testRenameExistingCollectionExistingTarget(): void
+    {
+        $server = $this->getPrimaryServer();
+
+        $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['_id' => 1]);
+        $writeResult = $insertOne->execute($server);
+        $this->assertEquals(1, $writeResult->getInsertedCount());
+
+        $insertOne = new InsertOne($this->getDatabaseName(), $this->toCollectionName, ['_id' => 1]);
+        $writeResult = $insertOne->execute($server);
+        $this->assertEquals(1, $writeResult->getInsertedCount());
+
+        $this->expectException(CommandException::class);
+        $this->expectExceptionCode(self::$errorCodeNamespaceExists);
+        $operation = new RenameCollection(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            $this->getDatabaseName(),
+            $this->toCollectionName,
+        );
+        $commandResult = $operation->execute($server);
     }
 
     /**
@@ -81,12 +125,15 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
         $this->assertCollectionDoesNotExist($this->getNamespace());
 
         $this->expectException(CommandException::class);
-        $operation = new RenameCollection($this->getNamespace(), $this->renamedNamespace);
+        $this->expectExceptionCode(self::$errorCodeNamespaceNotFound);
+        $operation = new RenameCollection(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            $this->getDatabaseName(),
+            $this->toCollectionName,
+            ['writeConcern' => $this->createDefaultWriteConcern()]
+        );
         $commandResult = $operation->execute($this->getPrimaryServer());
-
-        /* Avoid inspecting the result document as mongos returns {ok:1.0},
-         * which is inconsistent from the expected mongod response of {ok:0}. */
-        $this->assertIsObject($commandResult);
     }
 
     public function testSessionOption(): void
@@ -104,8 +151,10 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
                 $this->assertEquals(1, $writeResult->getInsertedCount());
 
                 $operation = new RenameCollection(
-                    $this->getNamespace(),
-                    $this->renamedNamespace,
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    $this->getDatabaseName(),
+                    $this->toCollectionName,
                     ['session' => $this->createSession()]
                 );
 
@@ -115,17 +164,5 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
             }
         );
-    }
-
-    public function tearDown(): void
-    {
-        if ($this->hasFailed()) {
-            return;
-        }
-
-        $operation = new DropCollection($this->getDatabaseName(), $this->renamedCollection);
-        $operation->execute($this->getPrimaryServer());
-
-        parent::tearDown();
     }
 }

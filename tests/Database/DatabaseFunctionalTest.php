@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Database;
 
+use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Cursor;
@@ -10,8 +11,6 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CreateIndexes;
-use MongoDB\Operation\DropCollection;
-use MongoDB\Operation\FindOne;
 
 use function array_key_exists;
 use function current;
@@ -213,27 +212,57 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testRenameCollection(): void
+    public function testRenameCollectionToSameDatabase(): void
     {
-        $renamedCollection = $this->getCollectionName() . '.renamed';
-        $renamedNamespace = $this->getDatabaseName() . '.' . $renamedCollection;
-        $operation = new DropCollection($this->getDatabaseName(), $renamedCollection);
-        $operation->execute($this->getPrimaryServer());
+        $toCollectionName = $this->getCollectionName() . '.renamed';
+        $toCollection = new Collection($this->manager, $this->getDatabaseName(), $toCollectionName);
 
         $bulkWrite = new BulkWrite();
-        $bulkWrite->insert(['_id' => 1, 'x' => 'foo']);
+        $bulkWrite->insert(['_id' => 1]);
 
         $writeResult = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->database->renameCollection($this->getNamespace(), $renamedNamespace);
+        $commandResult = $this->database->renameCollection(
+            $this->getCollectionName(),
+            $toCollectionName,
+            null,
+            ['dropTarget' => true]
+        );
         $this->assertCommandSucceeded($commandResult);
-        $this->assertCollectionCount($this->getNamespace(), 0);
-        $this->assertCollectionCount($renamedNamespace, 1);
+        $this->assertCollectionDoesNotExist($this->getCollectionName());
+        $this->assertCollectionExists($toCollectionName);
 
-        $operation = new FindOne($this->getDatabaseName(), $renamedCollection, []);
-        $cursor = $operation->execute($this->getPrimaryServer());
-        $this->assertSameDocument(['_id' => 1, 'x' => 'foo'], $cursor);
+        $document = $toCollection->findOne();
+        $this->assertSameDocument(['_id' => 1], $document);
+        $toCollection->drop();
+    }
+
+    public function testRenameCollectionToDifferentDatabase(): void
+    {
+        $toCollectionName = $this->getCollectionName() . '.renamed';
+        $toDatabaseName = $this->getDatabaseName() . '_renamed';
+        $toCollection = new Collection($this->manager, $toDatabaseName, $toCollectionName);
+
+        $bulkWrite = new BulkWrite();
+        $bulkWrite->insert(['_id' => 1]);
+
+        $writeResult = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
+        $this->assertEquals(1, $writeResult->getInsertedCount());
+
+        $commandResult = $this->database->renameCollection(
+            $this->getCollectionName(),
+            $toCollectionName,
+            $toDatabaseName,
+            ['dropTarget' => true]
+        );
+        $this->assertCommandSucceeded($commandResult);
+        $this->assertCollectionDoesNotExist($this->getCollectionName());
+        $this->assertCollectionExists($toCollectionName, $toDatabaseName);
+
+        $document = $toCollection->findOne();
+        $this->assertSameDocument(['_id' => 1], $document);
+        $toCollection->drop();
     }
 
     public function testSelectCollectionInheritsOptions(): void

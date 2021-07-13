@@ -13,8 +13,6 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\MapReduceResult;
 use MongoDB\Operation\Count;
-use MongoDB\Operation\DropCollection;
-use MongoDB\Operation\FindOne;
 use MongoDB\Tests\CommandObserver;
 
 use function array_filter;
@@ -334,23 +332,41 @@ class CollectionFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testRename(): void
+    public function testRenameToSameDatabase(): void
     {
-        $renamedCollection = $this->getCollectionName() . '.renamed';
-        $operation = new DropCollection($this->getDatabaseName(), $renamedCollection);
-        $operation->execute($this->getPrimaryServer());
+        $toCollectionName = $this->getCollectionName() . '.renamed';
+        $toCollection = new Collection($this->manager, $this->getDatabaseName(), $toCollectionName);
 
-        $writeResult = $this->collection->insertOne(['_id' => 1, 'x' => 'foo']);
+        $writeResult = $this->collection->insertOne(['_id' => 1]);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->collection->rename($this->getDatabaseName() . '.' . $renamedCollection);
+        $commandResult = $this->collection->rename($toCollectionName, null, ['dropTarget' => true]);
         $this->assertCommandSucceeded($commandResult);
         $this->assertCollectionDoesNotExist($this->getCollectionName());
-        $this->assertCollectionExists($renamedCollection);
+        $this->assertCollectionExists($toCollectionName);
 
-        $operation = new FindOne($this->getDatabaseName(), $renamedCollection, []);
-        $cursor = $operation->execute($this->getPrimaryServer());
-        $this->assertSameDocument(['_id' => 1, 'x' => 'foo'], $cursor);
+        $document = $toCollection->findOne();
+        $this->assertSameDocument(['_id' => 1], $document);
+        $toCollection->drop();
+    }
+
+    public function testRenameToDifferentDatabase(): void
+    {
+        $toCollectionName = $this->getCollectionName() . '.renamed';
+        $toDatabaseName = $this->getDatabaseName() . '_renamed';
+        $toCollection = new Collection($this->manager, $toDatabaseName, $toCollectionName);
+
+        $writeResult = $this->collection->insertOne(['_id' => 1]);
+        $this->assertEquals(1, $writeResult->getInsertedCount());
+
+        $commandResult = $this->collection->rename($toCollectionName, $toDatabaseName, ['dropTarget' => true]);
+        $this->assertCommandSucceeded($commandResult);
+        $this->assertCollectionDoesNotExist($this->getCollectionName());
+        $this->assertCollectionExists($toCollectionName, $toDatabaseName);
+
+        $document = $toCollection->findOne();
+        $this->assertSameDocument(['_id' => 1], $document);
+        $toCollection->drop();
     }
 
     public function testWithOptionsInheritsOptions(): void

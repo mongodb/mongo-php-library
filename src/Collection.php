@@ -1009,15 +1009,20 @@ class Collection
      * Renames the collection.
      *
      * @see RenameCollection::__construct() for supported options
-     * @param string $toNamespace New namespace of the collection
-     * @param array  $options     Additional options
+     * @param string $toCollectionName New name of the collection
+     * @param string $toDatabaseName   New database name of the collection
+     * @param array  $options          Additional options
      * @return array|object Command result document
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function rename($toNamespace, array $options = [])
+    public function rename(string $toCollectionName, ?string $toDatabaseName = null, array $options = [])
     {
+        if (! isset($toDatabaseName)) {
+            $toDatabaseName = $this->getDatabaseName();
+        }
+
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }
@@ -1028,7 +1033,7 @@ class Collection
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation = new RenameCollection($this->getNamespace(), $toNamespace, $options);
+        $operation = new RenameCollection($this->getDatabaseName(), $this->getCollectionName(), $toDatabaseName, $toCollectionName, $options);
 
         return $operation->execute($server);
     }

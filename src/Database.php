@@ -475,16 +475,21 @@ class Database
      * Rename a collection within this database.
      *
      * @see RenameCollection::__construct() for supported options
-     * @param string $fromNamespace Namespace of the collection to rename
-     * @param string $toNamespace   New namespace of the collection
-     * @param array  $options       Additional options
+     * @param string $fromCollectionName Collection name
+     * @param string $toCollectionName   New name of the collection
+     * @param string $toDatabaseName     New database name of the collection
+     * @param array  $options            Additional options
      * @return array|object Command result document
      * @throws UnsupportedException if options are unsupported on the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function renameCollection($fromNamespace, $toNamespace, array $options = [])
+    public function renameCollection(string $fromCollectionName, string $toCollectionName, ?string $toDatabaseName = null, array $options = [])
     {
+        if (! isset($toDatabaseName)) {
+            $toDatabaseName = $this->getDatabaseName();
+        }
+
         if (! isset($options['typeMap'])) {
             $options['typeMap'] = $this->typeMap;
         }
@@ -495,7 +500,7 @@ class Database
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation = new RenameCollection($fromNamespace, $toNamespace, $options);
+        $operation = new RenameCollection($this->getDatabaseName(), $fromCollectionName, $toDatabaseName, $toCollectionName, $options);
 
         return $operation->execute($server);
     }

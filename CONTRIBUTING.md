@@ -147,7 +147,7 @@ The following template should be used for creating GitHub release notes via
 [this form](https://github.com/mongodb/mongo-php-library/releases/new).
 
 ```
-The PHP team is happy to announce that version X.Y.Z of the MongoDB PHP library is now available. This library is a high-level abstraction for the [`mongodb`](http://php.net/mongodb) extension.
+The PHP team is happy to announce that version X.Y.Z of the MongoDB PHP library is now available.
 
 **Release Highlights**
 
@@ -160,11 +160,6 @@ $JIRA_URL
 
 Documentation for this library may be found at:
 https://docs.mongodb.com/php-library/
-
-**Feedback**
-
-If you encounter any bugs or issues with this library, please report them via this form:
-https://jira.mongodb.org/secure/CreateIssue.jspa?pid=12483&issuetype=1
 
 **Installation**
 

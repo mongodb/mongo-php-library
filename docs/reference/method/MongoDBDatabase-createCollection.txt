@@ -97,3 +97,4 @@ See Also
 - :manual:`create </reference/command/create>` command reference in the MongoDB
   manual
 - :manual:`db.createCollection() </reference/method/db.createCollection>`
+- :manual:`Time Series Collections </core/timeseries-collections>`

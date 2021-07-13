@@ -13,7 +13,13 @@ class RenameCollectionTest extends TestCase
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
-        new RenameCollection($this->getNamespace(), $this->getNamespace() . '.renamed', $options);
+        new RenameCollection(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            $this->getDatabaseName(),
+            $this->getCollectionName() . '.renamed',
+            $options
+        );
     }
 
     public function provideInvalidConstructorOptions()

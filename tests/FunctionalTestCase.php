@@ -406,7 +406,7 @@ abstract class FunctionalTestCase extends TestCase
             $this->markTestSkipped('Client Side Encryption only supported on FCV 4.2 or higher');
         }
 
-        if ($this->getModuleInfo('libmongocrypt') === 'disabled') {
+        if ($this->getModuleInfo('libmongocrypt crypto') === 'disabled') {
             $this->markTestSkipped('Client Side Encryption is not enabled in the MongoDB extension');
         }
     }

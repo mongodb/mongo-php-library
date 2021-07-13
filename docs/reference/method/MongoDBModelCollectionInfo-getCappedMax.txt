@@ -32,7 +32,7 @@ The document limit for the capped collection. If the collection is not capped,
 
 This method is deprecated in favor of using
 :phpmethod:`MongoDB\\Model\\CollectionInfo::getOptions()` and accessing the
-`max` key.
+``max`` key.
 
 Examples
 --------

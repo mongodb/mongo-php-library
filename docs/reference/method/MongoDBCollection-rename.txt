@@ -2,6 +2,8 @@
 MongoDB\\Collection::rename()
 =============================
 
+.. versionadded:: 1.9
+
 .. default-domain:: mongodb
 
 .. contents:: On this page
@@ -19,7 +21,7 @@ Definition
 
    .. code-block:: php
 
-      function rename(string $toNamespace, array $options = []): array|object
+      function rename(string $toCollectionName, ?string $toDatabaseName = null, array $options = []): array|object
 
    This method has the following parameters:
 
@@ -55,7 +57,7 @@ database to ``places``:
 
    $collection = (new MongoDB\Client)->test->restaurants;
 
-   $result = $collection->renameCollection('places');
+   $result = $collection->rename('places');
 
    var_dump($result);
 

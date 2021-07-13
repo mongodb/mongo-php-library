@@ -19,8 +19,8 @@ arg_name: option
 name: dropTarget
 type: boolean
 description: |
-  If ``true``, ``mongod`` will drop the ``target`` of ``renameCollection`` prior
-  to renaming the collection. The default value is ``false``.
+  If ``true``, MongoDB will drop the target before renaming the collection. The
+  default value is ``false``.
 interface: phpmethod
 operation: ~
 optional: true

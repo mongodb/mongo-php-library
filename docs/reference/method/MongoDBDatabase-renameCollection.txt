@@ -1,6 +1,8 @@
-===================================
+=====================================
 MongoDB\\Database::renameCollection()
-===================================
+=====================================
+
+.. versionadded:: 1.9
 
 .. default-domain:: mongodb
 
@@ -15,11 +17,11 @@ Definition
 
 .. phpmethod:: MongoDB\\Database::renameCollection()
 
-   Changes the name of an existing collection.
+   Rename a collection within the current database.
 
    .. code-block:: php
 
-      function renameCollection($fromNamespace, $toNamespace, array $options = []): array|object
+      function renameCollection(string $fromCollectionName, string $toCollectionName, ?string $toDatabaseName = null, array $options = []): array|object
 
    This method has the following parameters:
 
@@ -46,7 +48,8 @@ Errors/Exceptions
 Example
 -------
 
-The following example renames the ``users`` collection in the ``test`` database:
+The following example renames the ``restaurants`` collection in the ``test``
+database to ``places``:
 
 .. code-block:: php
 
@@ -54,7 +57,7 @@ The following example renames the ``users`` collection in the ``test`` database:
 
    $db = (new MongoDB\Client)->test;
 
-   $result = $db->renameCollection('users', 'restaurants');
+   $result = $db->renameCollection('restaurants', 'places');
 
    var_dump($result);
 

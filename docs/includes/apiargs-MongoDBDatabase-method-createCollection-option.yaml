@@ -38,8 +38,9 @@ arg_name: option
 name: expireAfterSeconds
 type: integer
 description: |
-  Allows specifying a TTL after which documents will be removed from a
-  time-series collection.
+  Used to automatically delete documents in time series collections. See the
+  :manual:`create </reference/command/create>` command documentation for more
+  information.
 
   This option is available in MongoDB 5.0+ and will result in an exception at
   execution time if specified for an older server version.
@@ -152,7 +153,9 @@ arg_name: option
 name: timeseries
 type: array|object
 description: |
-  Allows users to specify options for time-series collections.
+  An object containing options for creating time series collections. See the
+  :manual:`create </reference/command/create>` command documentation for
+  supported options.
 
   This option is available in MongoDB 5.0+ and will result in an exception at
   execution time if specified for an older server version.

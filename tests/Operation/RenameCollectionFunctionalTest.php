@@ -81,7 +81,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
             $this->getDatabaseName(),
             $this->getCollectionName(),
             $this->getDatabaseName(),
-            $this->toCollectionName,
+            $this->toCollectionName
         );
         $commandResult = $operation->execute($server);
 
@@ -112,7 +112,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
             $this->getDatabaseName(),
             $this->getCollectionName(),
             $this->getDatabaseName(),
-            $this->toCollectionName,
+            $this->toCollectionName
         );
         $commandResult = $operation->execute($server);
     }

@@ -22,7 +22,7 @@ name: jsMode
 type: boolean
 description: |
   Specifies whether to convert intermediate data into BSON format between the
-  execution of the map and reduce functions. The default is ``false``.
+  execution of the map and reduce functions.
 interface: phpmethod
 operation: ~
 optional: true
@@ -89,7 +89,6 @@ name: verbose
 type: boolean
 description: |
   Specifies whether to include the timing information in the result information.
-  The default is ``true``.
 interface: phpmethod
 operation: ~
 optional: true

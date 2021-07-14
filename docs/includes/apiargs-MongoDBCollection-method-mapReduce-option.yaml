@@ -27,7 +27,7 @@ name: jsMode
 type: boolean
 description: |
   Specifies whether to convert intermediate data into BSON format between the
-  execution of the map and reduce functions. The default is ``false``.
+  execution of the map and reduce functions.
 interface: phpmethod
 operation: ~
 optional: true
@@ -47,7 +47,7 @@ source:
 ---
 arg_name: option
 name: query
-type: document
+type: array|object
 description: |
   Specifies the selection criteria using query operators for determining the
   documents input to the map function.
@@ -67,7 +67,7 @@ post: |
 ---
 arg_name: option
 name: scope
-type: document
+type: array|object
 description: |
   Specifies global variables that are accessible in the map, reduce, and finalize
   functions.
@@ -94,7 +94,6 @@ name: verbose
 type: boolean
 description: |
   Specifies whether to include the timing information in the result information.
-  The default is ``true``.
 interface: phpmethod
 operation: ~
 optional: true

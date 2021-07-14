@@ -115,7 +115,7 @@ See Also
 --------
 
 - :phpmethod:`MongoDB\\Database::listCollectionNames()`
-- :manual:`listCollections </reference/command/listCollections` command
+- :manual:`listCollections </reference/command/listCollections>` command
   reference in the MongoDB manual
 - `Enumerating Collections
   <https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst>`_

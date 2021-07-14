@@ -30,7 +30,7 @@ optional: false
 ---
 arg_name: param
 name: $out
-type: string|document
+type: string|array|object
 description: |
   Specifies where to output the result of the map-reduce operation. You can
   either output to a collection or return the result inline. On a primary member

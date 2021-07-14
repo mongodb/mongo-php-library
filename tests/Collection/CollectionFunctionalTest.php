@@ -5,6 +5,7 @@ namespace MongoDB\Tests\Collection;
 use Closure;
 use MongoDB\BSON\Javascript;
 use MongoDB\Collection;
+use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -352,21 +353,28 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
     public function testRenameToDifferentDatabase(): void
     {
-        $toCollectionName = $this->getCollectionName() . '.renamed';
+        if ($this->isShardedCluster()) {
+            $this->markTestSkipped('Test does not apply on sharded clusters: need source and target databases to be on the same primary shard.');
+        }
+
         $toDatabaseName = $this->getDatabaseName() . '_renamed';
+        $toCollectionName = $this->getCollectionName() . '.renamed';
+        $toDatabase = new Database($this->manager, $toDatabaseName);
         $toCollection = new Collection($this->manager, $toDatabaseName, $toCollectionName);
 
         $writeResult = $this->collection->insertOne(['_id' => 1]);
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
-        $commandResult = $this->collection->rename($toCollectionName, $toDatabaseName, ['dropTarget' => true]);
+        $commandResult = $this->collection->rename($toCollectionName, $toDatabaseName);
         $this->assertCommandSucceeded($commandResult);
         $this->assertCollectionDoesNotExist($this->getCollectionName());
         $this->assertCollectionExists($toCollectionName, $toDatabaseName);
 
         $document = $toCollection->findOne();
         $this->assertSameDocument(['_id' => 1], $document);
+
         $toCollection->drop();
+        $toDatabase->drop();
     }
 
     public function testWithOptionsInheritsOptions(): void

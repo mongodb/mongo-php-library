@@ -240,8 +240,13 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 
     public function testRenameCollectionToDifferentDatabase(): void
     {
-        $toCollectionName = $this->getCollectionName() . '.renamed';
+        if ($this->isShardedCluster()) {
+            $this->markTestSkipped('Test does not apply on sharded clusters: need source and target databases to be on the same primary shard.');
+        }
+
         $toDatabaseName = $this->getDatabaseName() . '_renamed';
+        $toCollectionName = $this->getCollectionName() . '.renamed';
+        $toDatabase = new Database($this->manager, $toDatabaseName);
         $toCollection = new Collection($this->manager, $toDatabaseName, $toCollectionName);
 
         $bulkWrite = new BulkWrite();
@@ -253,8 +258,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $commandResult = $this->database->renameCollection(
             $this->getCollectionName(),
             $toCollectionName,
-            $toDatabaseName,
-            ['dropTarget' => true]
+            $toDatabaseName
         );
         $this->assertCommandSucceeded($commandResult);
         $this->assertCollectionDoesNotExist($this->getCollectionName());
@@ -262,7 +266,9 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 
         $document = $toCollection->findOne();
         $this->assertSameDocument(['_id' => 1], $document);
+
         $toCollection->drop();
+        $toDatabase->drop();
     }
 
     public function testSelectCollectionInheritsOptions(): void

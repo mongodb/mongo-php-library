@@ -38,22 +38,36 @@ use function sprintf;
  */
 final class EventObserver implements CommandSubscriber
 {
-    /** @var array */
-    private static $defaultIgnoreCommands = [
-        // failPoint and targetedFailPoint operations
-        'configureFailPoint',
-        // See: https://github.com/mongodb/specifications/blob/master/source/command-monitoring/command-monitoring.rst#security
-        'authenticate',
-        'saslStart',
-        'saslContinue',
-        'getnonce',
-        'createUser',
-        'updateUser',
-        'copydbgetnonce',
-        'copydbsaslstart',
-        'copydb',
-        'isMaster',
-        'hello',
+    /**
+     * These commands are always considered sensitive (i.e. command and reply
+     * documents should be redacted).
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/command-monitoring/command-monitoring.rst#security
+     * @var array
+     */
+    private static $sensitiveCommands = [
+        'authenticate' => 1,
+        'saslStart' => 1,
+        'saslContinue' => 1,
+        'getnonce' => 1,
+        'createUser' => 1,
+        'updateUser' => 1,
+        'copydbgetnonce' => 1,
+        'copydbsaslstart' => 1,
+        'copydb' => 1,
+    ];
+
+    /**
+     * These commands are only considered sensitive when the command or reply
+     * document includes a speculativeAuthenticate field.
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/command-monitoring/command-monitoring.rst#security
+     * @var array
+     */
+    private static $sensitiveCommandsWithSpeculativeAuthenticate = [
+        'ismaster' => 1,
+        'isMaster' => 1,
+        'hello' => 1,
     ];
 
     /** @var array */
@@ -72,13 +86,21 @@ final class EventObserver implements CommandSubscriber
     /** @var Context */
     private $context;
 
-    /** @var array */
-    private $ignoreCommands = [];
+    /**
+     * The configureFailPoint command (used by failPoint and targetedFailPoint
+     * operations) is always ignored.
+     *
+     * @var array
+     */
+    private $ignoreCommands = ['configureFailPoint' => 1];
 
     /** @var array */
     private $observeEvents = [];
 
-    public function __construct(array $observeEvents, array $ignoreCommands, string $clientId, Context $context)
+    /** @var bool */
+    private $observeSensitiveCommands;
+
+    public function __construct(array $observeEvents, array $ignoreCommands, bool $observeSensitiveCommands, string $clientId, Context $context)
     {
         assertNotEmpty($observeEvents);
 
@@ -88,13 +110,12 @@ final class EventObserver implements CommandSubscriber
             $this->observeEvents[self::$supportedEvents[$event]] = 1;
         }
 
-        $this->ignoreCommands = array_fill_keys(self::$defaultIgnoreCommands, 1);
-
         foreach ($ignoreCommands as $command) {
             assertIsString($command);
             $this->ignoreCommands[$command] = 1;
         }
 
+        $this->observeSensitiveCommands = $observeSensitiveCommands;
         $this->clientId = $clientId;
         $this->context = $context;
     }
@@ -270,6 +291,30 @@ final class EventObserver implements CommandSubscriber
             return;
         }
 
+        if (!$this->observeSensitiveCommands && $this->isSensistiveCommand($event)) {
+            return;
+        }
+
         $this->actualEvents[] = $event;
+    }
+
+    /** @param CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event */
+    private function isSensistiveCommand($event): bool
+    {
+        if (isset(self::$sensitiveCommands[$event->getCommandName()])) {
+            return true;
+        }
+
+        /* If the command or reply included a speculativeAuthenticate field,
+         * libmongoc will already have redacted it (CDRIVER-4000). Therefore, we
+         * can infer that the command was sensitive if its command or reply is
+         * empty. */
+        if (isset(self::$sensitiveCommandsWithSpeculativeAuthenticate[$event->getCommandName()])) {
+            $commandOrReply = $event instanceof CommandStartedEvent ? $event->getCommand() : $event->getReply();
+
+            return ((array) $commandOrReply === []);
+        }
+
+        return false;
     }
 }

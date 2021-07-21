@@ -352,13 +352,19 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
     public function testRenameToDifferentDatabase(): void
     {
+        $toDatabaseName = $this->getDatabaseName() . '_renamed';
+        $toDatabase = new Database($this->manager, $toDatabaseName);
+
+        /* When renaming an unsharded collection, mongos requires the source
+        * and target database to both exist on the primary shard. In practice, this
+        * means we need to create the target database explicitly.
+        * See: https://docs.mongodb.com/manual/reference/command/renameCollection/#unsharded-collections
+        */
         if ($this->isShardedCluster()) {
-            $this->markTestSkipped('TODO: mongos requires the target database to exist');
+            $toDatabase->foo->insertOne(['_id' => 1]);
         }
 
-        $toDatabaseName = $this->getDatabaseName() . '_renamed';
         $toCollectionName = $this->getCollectionName() . '.renamed';
-        $toDatabase = new Database($this->manager, $toDatabaseName);
         $toCollection = new Collection($this->manager, $toDatabaseName, $toCollectionName);
 
         $writeResult = $this->collection->insertOne(['_id' => 1]);

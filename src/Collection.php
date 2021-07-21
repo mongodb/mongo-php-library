@@ -1020,7 +1020,7 @@ class Collection
     public function rename(string $toCollectionName, ?string $toDatabaseName = null, array $options = [])
     {
         if (! isset($toDatabaseName)) {
-            $toDatabaseName = $this->getDatabaseName();
+            $toDatabaseName = $this->databaseName;
         }
 
         if (! isset($options['typeMap'])) {
@@ -1033,7 +1033,7 @@ class Collection
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation = new RenameCollection($this->getDatabaseName(), $this->getCollectionName(), $toDatabaseName, $toCollectionName, $options);
+        $operation = new RenameCollection($this->databaseName, $this->collectionName, $toDatabaseName, $toCollectionName, $options);
 
         return $operation->execute($server);
     }

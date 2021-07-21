@@ -346,15 +346,14 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertCollectionDoesNotExist($this->getCollectionName());
         $this->assertCollectionExists($toCollectionName);
 
-        $document = $toCollection->findOne();
-        $this->assertSameDocument(['_id' => 1], $document);
+        $this->assertSameDocument(['_id' => 1], $toCollection->findOne());
         $toCollection->drop();
     }
 
     public function testRenameToDifferentDatabase(): void
     {
         if ($this->isShardedCluster()) {
-            $this->markTestSkipped('Test does not apply on sharded clusters: need source and target databases to be on the same primary shard.');
+            $this->markTestSkipped('TODO: mongos requires the target database to exist');
         }
 
         $toDatabaseName = $this->getDatabaseName() . '_renamed';
@@ -370,10 +369,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertCollectionDoesNotExist($this->getCollectionName());
         $this->assertCollectionExists($toCollectionName, $toDatabaseName);
 
-        $document = $toCollection->findOne();
-        $this->assertSameDocument(['_id' => 1], $document);
+        $this->assertSameDocument(['_id' => 1], $toCollection->findOne());
 
-        $toCollection->drop();
         $toDatabase->drop();
     }
 

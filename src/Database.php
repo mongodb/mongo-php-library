@@ -487,7 +487,7 @@ class Database
     public function renameCollection(string $fromCollectionName, string $toCollectionName, ?string $toDatabaseName = null, array $options = [])
     {
         if (! isset($toDatabaseName)) {
-            $toDatabaseName = $this->getDatabaseName();
+            $toDatabaseName = $this->databaseName;
         }
 
         if (! isset($options['typeMap'])) {
@@ -500,7 +500,7 @@ class Database
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation = new RenameCollection($this->getDatabaseName(), $fromCollectionName, $toDatabaseName, $toCollectionName, $options);
+        $operation = new RenameCollection($this->databaseName, $fromCollectionName, $toDatabaseName, $toCollectionName, $options);
 
         return $operation->execute($server);
     }

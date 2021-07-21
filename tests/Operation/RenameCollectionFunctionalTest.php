@@ -69,7 +69,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function testRenameExistingCollection(): void
+    public function testRenameCollectionToNonexistentTarget(): void
     {
         $server = $this->getPrimaryServer();
 
@@ -90,11 +90,10 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
         $this->assertCollectionExists($this->toCollectionName);
 
         $operation = new FindOne($this->getDatabaseName(), $this->toCollectionName, []);
-        $cursor = $operation->execute($server);
-        $this->assertSameDocument(['_id' => 1], $cursor);
+        $this->assertSameDocument(['_id' => 1], $operation->execute($server));
     }
 
-    public function testRenameExistingCollectionExistingTarget(): void
+    public function testRenameCollectionExistingTarget(): void
     {
         $server = $this->getPrimaryServer();
 
@@ -114,26 +113,20 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
             $this->getDatabaseName(),
             $this->toCollectionName
         );
-        $commandResult = $operation->execute($server);
+        $operation->execute($server);
     }
 
-    /**
-     * @depends testRenameExistingCollection
-     */
     public function testRenameNonexistentCollection(): void
     {
-        $this->assertCollectionDoesNotExist($this->getNamespace());
-
         $this->expectException(CommandException::class);
         $this->expectExceptionCode(self::$errorCodeNamespaceNotFound);
         $operation = new RenameCollection(
             $this->getDatabaseName(),
             $this->getCollectionName(),
             $this->getDatabaseName(),
-            $this->toCollectionName,
-            ['writeConcern' => $this->createDefaultWriteConcern()]
+            $this->toCollectionName
         );
-        $commandResult = $operation->execute($this->getPrimaryServer());
+        $operation->execute($this->getPrimaryServer());
     }
 
     public function testSessionOption(): void

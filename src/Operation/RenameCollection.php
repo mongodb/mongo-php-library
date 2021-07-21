@@ -125,18 +125,16 @@ class RenameCollection implements Executable
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
         }
 
-        $commandOptions = [
+        $cmd = [
             'renameCollection' => $this->fromNamespace,
             'to' => $this->toNamespace,
         ];
 
         if (isset($this->options['dropTarget'])) {
-            $commandOptions['dropTarget'] = $this->options['dropTarget'];
+            $cmd['dropTarget'] = $this->options['dropTarget'];
         }
 
-        $command = new Command($commandOptions);
-
-        $cursor = $server->executeWriteCommand('admin', $command, $this->createOptions());
+        $cursor = $server->executeWriteCommand('admin', new Command($cmd), $this->createOptions());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);

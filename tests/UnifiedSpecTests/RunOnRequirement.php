@@ -11,6 +11,7 @@ use function PHPUnit\Framework\assertContains;
 use function PHPUnit\Framework\assertContainsOnly;
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertIsArray;
+use function PHPUnit\Framework\assertIsBool;
 use function PHPUnit\Framework\assertIsObject;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertMatchesRegularExpression;

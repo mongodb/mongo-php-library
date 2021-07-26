@@ -169,7 +169,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
 
         $commandResult = $this->database->dropCollection($this->getCollectionName());
         $this->assertCommandSucceeded($commandResult);
-        $this->assertCollectionCount($this->getNamespace(), 0);
+        $this->assertCollectionDoesNotExist($this->getCollectionName());
     }
 
     public function testGetSelectsCollectionAndInheritsOptions(): void

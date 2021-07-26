@@ -13,7 +13,6 @@ use MongoDB\GridFS\Exception\FileNotFoundException;
 use MongoDB\GridFS\Exception\StreamException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\IndexInfo;
-use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\ListIndexes;
 use PHPUnit\Framework\Error\Warning;
 
@@ -771,29 +770,6 @@ CMD;
         $output = implode(PHP_EOL, $output);
 
         $this->assertSame('', $output);
-    }
-
-    /**
-     * Asserts that a collection with the given name does not exist on the
-     * server.
-     *
-     * @param string $collectionName
-     */
-    private function assertCollectionDoesNotExist(string $collectionName): void
-    {
-        $operation = new ListCollections($this->getDatabaseName());
-        $collections = $operation->execute($this->getPrimaryServer());
-
-        $foundCollection = null;
-
-        foreach ($collections as $collection) {
-            if ($collection->getName() === $collectionName) {
-                $foundCollection = $collection;
-                break;
-            }
-        }
-
-        $this->assertNull($foundCollection, sprintf('Collection %s exists', $collectionName));
     }
 
     /**

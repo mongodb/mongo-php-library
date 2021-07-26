@@ -91,6 +91,7 @@ Methods
    /reference/method/MongoDBCollection-insertOne
    /reference/method/MongoDBCollection-listIndexes
    /reference/method/MongoDBCollection-mapReduce
+   /reference/method/MongoDBCollection-rename
    /reference/method/MongoDBCollection-replaceOne
    /reference/method/MongoDBCollection-updateMany
    /reference/method/MongoDBCollection-updateOne

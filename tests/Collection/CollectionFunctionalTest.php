@@ -5,6 +5,7 @@ namespace MongoDB\Tests\Collection;
 use Closure;
 use MongoDB\BSON\Javascript;
 use MongoDB\Collection;
+use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -330,6 +331,53 @@ class CollectionFunctionalTest extends FunctionalTestCase
         } finally {
             $session->endSession();
         }
+    }
+
+    public function testRenameToSameDatabase(): void
+    {
+        $toCollectionName = $this->getCollectionName() . '.renamed';
+        $toCollection = new Collection($this->manager, $this->getDatabaseName(), $toCollectionName);
+
+        $writeResult = $this->collection->insertOne(['_id' => 1]);
+        $this->assertEquals(1, $writeResult->getInsertedCount());
+
+        $commandResult = $this->collection->rename($toCollectionName, null, ['dropTarget' => true]);
+        $this->assertCommandSucceeded($commandResult);
+        $this->assertCollectionDoesNotExist($this->getCollectionName());
+        $this->assertCollectionExists($toCollectionName);
+
+        $this->assertSameDocument(['_id' => 1], $toCollection->findOne());
+        $toCollection->drop();
+    }
+
+    public function testRenameToDifferentDatabase(): void
+    {
+        $toDatabaseName = $this->getDatabaseName() . '_renamed';
+        $toDatabase = new Database($this->manager, $toDatabaseName);
+
+        /* When renaming an unsharded collection, mongos requires the source
+        * and target database to both exist on the primary shard. In practice, this
+        * means we need to create the target database explicitly.
+        * See: https://docs.mongodb.com/manual/reference/command/renameCollection/#unsharded-collections
+        */
+        if ($this->isShardedCluster()) {
+            $toDatabase->foo->insertOne(['_id' => 1]);
+        }
+
+        $toCollectionName = $this->getCollectionName() . '.renamed';
+        $toCollection = new Collection($this->manager, $toDatabaseName, $toCollectionName);
+
+        $writeResult = $this->collection->insertOne(['_id' => 1]);
+        $this->assertEquals(1, $writeResult->getInsertedCount());
+
+        $commandResult = $this->collection->rename($toCollectionName, $toDatabaseName);
+        $this->assertCommandSucceeded($commandResult);
+        $this->assertCollectionDoesNotExist($this->getCollectionName());
+        $this->assertCollectionExists($toCollectionName, $toDatabaseName);
+
+        $this->assertSameDocument(['_id' => 1], $toCollection->findOne());
+
+        $toDatabase->drop();
     }
 
     public function testWithOptionsInheritsOptions(): void

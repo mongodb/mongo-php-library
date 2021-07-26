@@ -39,6 +39,7 @@ use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListCollectionNames;
 use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\ModifyCollection;
+use MongoDB\Operation\RenameCollection;
 use MongoDB\Operation\Watch;
 use Traversable;
 
@@ -466,6 +467,40 @@ class Database
         }
 
         $operation = new ModifyCollection($this->databaseName, $collectionName, $collectionOptions, $options);
+
+        return $operation->execute($server);
+    }
+
+    /**
+     * Rename a collection within this database.
+     *
+     * @see RenameCollection::__construct() for supported options
+     * @param string  $fromCollectionName Collection name
+     * @param string  $toCollectionName   New name of the collection
+     * @param ?string $toDatabaseName     New database name of the collection. Defaults to the original database.
+     * @param array   $options            Additional options
+     * @return array|object Command result document
+     * @throws UnsupportedException if options are unsupported on the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function renameCollection(string $fromCollectionName, string $toCollectionName, ?string $toDatabaseName = null, array $options = [])
+    {
+        if (! isset($toDatabaseName)) {
+            $toDatabaseName = $this->databaseName;
+        }
+
+        if (! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        $server = select_server($this->manager, $options);
+
+        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! is_in_transaction($options)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $operation = new RenameCollection($this->databaseName, $fromCollectionName, $toDatabaseName, $toCollectionName, $options);
 
         return $operation->execute($server);
     }

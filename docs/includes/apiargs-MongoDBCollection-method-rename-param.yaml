@@ -2,10 +2,7 @@ arg_name: param
 name: $toCollectionName
 type: string
 description: |
-  The new name of the collection. If a full namespace is not
-  specified, the database of the original collection will be used. If the new
-  namespace specifies a different database, the command copies the collection
-  to the new database and drops the source collection.
+  The new name of the collection.
 interface: phpmethod
 operation: ~
 optional: false

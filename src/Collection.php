@@ -1009,9 +1009,9 @@ class Collection
      * Renames the collection.
      *
      * @see RenameCollection::__construct() for supported options
-     * @param string $toCollectionName New name of the collection
-     * @param string $toDatabaseName   New database name of the collection
-     * @param array  $options          Additional options
+     * @param string  $toCollectionName New name of the collection
+     * @param ?string $toDatabaseName   New database name of the collection. Defaults to the original database.
+     * @param array   $options          Additional options
      * @return array|object Command result document
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors

@@ -186,8 +186,6 @@ abstract class FunctionalTestCase extends TestCase
      * the given name is found, it will be passed to the callback, which may
      * perform additional assertions.
      *
-     * @param string   $collectionName
-     * @param string   $databaseName   Defaults to TestCase::getDatabaseName()
      * @param callable $callback
      */
     protected function assertCollectionExists(string $collectionName, ?string $databaseName = null, ?callable $callback = null): void

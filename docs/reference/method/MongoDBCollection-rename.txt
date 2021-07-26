@@ -2,7 +2,7 @@
 MongoDB\\Collection::rename()
 =============================
 
-.. versionadded:: 1.9
+.. versionadded:: 1.10
 
 .. default-domain:: mongodb
 

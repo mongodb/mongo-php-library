@@ -78,7 +78,7 @@ class RenameCollection implements Executable
      * @param array  $options            Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($fromDatabaseName, $fromCollectionName, $toDatabaseName, $toCollectionName, array $options = [])
+    public function __construct(string $fromDatabaseName, string $fromCollectionName, string $toDatabaseName, string $toCollectionName, array $options = [])
     {
         if (isset($options['session']) && ! $options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
@@ -100,8 +100,8 @@ class RenameCollection implements Executable
             throw InvalidArgumentException::invalidType('"dropTarget" option', $options['dropTarget'], 'boolean');
         }
 
-        $this->fromNamespace = (string) $fromDatabaseName . '.' . (string) $fromCollectionName;
-        $this->toNamespace = (string) $toDatabaseName . '.' . (string) $toCollectionName;
+        $this->fromNamespace = $fromDatabaseName . '.' . $fromCollectionName;
+        $this->toNamespace = $toDatabaseName . '.' . $toCollectionName;
         $this->options = $options;
     }
 

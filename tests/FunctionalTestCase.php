@@ -154,8 +154,7 @@ abstract class FunctionalTestCase extends TestCase
      * Asserts that a collection with the given name does not exist on the
      * server.
      *
-     * @param string $collectionName
-     * @param string $databaseName   Defaults to TestCase::getDatabaseName()
+     * $databaseName defaults to TestCase::getDatabaseName() if unspecified.
      */
     protected function assertCollectionDoesNotExist(string $collectionName, ?string $databaseName = null): void
     {
@@ -181,12 +180,11 @@ abstract class FunctionalTestCase extends TestCase
     /**
      * Asserts that a collection with the given name exists on the server.
      *
+     * $databaseName defaults to TestCase::getDatabaseName() if unspecified.
      * An optional $callback may be provided, which should take a CollectionInfo
      * argument as its first and only parameter. If a CollectionInfo matching
      * the given name is found, it will be passed to the callback, which may
      * perform additional assertions.
-     *
-     * @param callable $callback
      */
     protected function assertCollectionExists(string $collectionName, ?string $databaseName = null, ?callable $callback = null): void
     {

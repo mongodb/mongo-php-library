@@ -12,7 +12,6 @@ use MultipleIterator;
 use PHPUnit\Framework\Assert;
 use stdClass;
 
-use function array_fill_keys;
 use function array_reverse;
 use function count;
 use function current;
@@ -291,7 +290,7 @@ final class EventObserver implements CommandSubscriber
             return;
         }
 
-        if (!$this->observeSensitiveCommands && $this->isSensistiveCommand($event)) {
+        if (! $this->observeSensitiveCommands && $this->isSensistiveCommand($event)) {
             return;
         }
 

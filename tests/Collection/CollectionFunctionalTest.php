@@ -264,7 +264,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
         $commandResult = $this->collection->drop();
         $this->assertCommandSucceeded($commandResult);
-        $this->assertCollectionCount($this->getNamespace(), 0);
+        $this->assertCollectionDoesNotExist($this->getCollectionName());
     }
 
     /**

@@ -159,6 +159,19 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertCollectionCount($this->getNamespace(), 0);
     }
 
+    public function testDropCollection(): void
+    {
+        $bulkWrite = new BulkWrite();
+        $bulkWrite->insert(['x' => 1]);
+
+        $writeResult = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite);
+        $this->assertEquals(1, $writeResult->getInsertedCount());
+
+        $commandResult = $this->database->dropCollection($this->getCollectionName());
+        $this->assertCommandSucceeded($commandResult);
+        $this->assertCollectionDoesNotExist($this->getCollectionName());
+    }
+
     public function testGetSelectsCollectionAndInheritsOptions(): void
     {
         $databaseOptions = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];

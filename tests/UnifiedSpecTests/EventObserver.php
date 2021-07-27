@@ -299,7 +299,7 @@ final class EventObserver implements CommandSubscriber
     }
 
     /** @param CommandStartedEvent|CommandSucceededEvent|CommandFailedEvent $event */
-    private function isSensistiveCommand($event): bool
+    private function isSensitiveCommand($event): bool
     {
         if (isset(self::$sensitiveCommands[$event->getCommandName()])) {
             return true;
@@ -312,7 +312,7 @@ final class EventObserver implements CommandSubscriber
         if (isset(self::$sensitiveCommandsWithSpeculativeAuthenticate[$event->getCommandName()])) {
             $commandOrReply = $event instanceof CommandStartedEvent ? $event->getCommand() : $event->getReply();
 
-            return ((array) $commandOrReply === []);
+            return (array) $commandOrReply === [];
         }
 
         return false;

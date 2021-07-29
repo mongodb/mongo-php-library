@@ -290,7 +290,7 @@ final class EventObserver implements CommandSubscriber
             return;
         }
 
-        if (! $this->observeSensitiveCommands && $this->isSensistiveCommand($event)) {
+        if (! $this->observeSensitiveCommands && $this->isSensitiveCommand($event)) {
             return;
         }
 

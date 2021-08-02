@@ -46,7 +46,7 @@ final class UnifiedTestRunner
     public const SERVER_ERROR_UNAUTHORIZED = 13;
 
     public const MIN_SCHEMA_VERSION = '1.0';
-    public const MAX_SCHEMA_VERSION = '1.4';
+    public const MAX_SCHEMA_VERSION = '1.5';
 
     /** @var MongoDB\Client */
     private $internalClient;

@@ -248,11 +248,21 @@ final class Context
 
     private function createClient(string $id, stdClass $o): void
     {
-        Util::assertHasOnlyKeys($o, ['id', 'uriOptions', 'useMultipleMongoses', 'observeEvents', 'ignoreCommandMonitoringEvents', 'serverApi', 'storeEventsAsEntities']);
+        Util::assertHasOnlyKeys($o, [
+            'id',
+            'uriOptions',
+            'useMultipleMongoses',
+            'observeEvents',
+            'ignoreCommandMonitoringEvents',
+            'observeSensitiveCommands',
+            'serverApi',
+            'storeEventsAsEntities',
+        ]);
 
         $useMultipleMongoses = $o->useMultipleMongoses ?? null;
         $observeEvents = $o->observeEvents ?? null;
         $ignoreCommandMonitoringEvents = $o->ignoreCommandMonitoringEvents ?? [];
+        $observeSensitiveCommands = $o->observeSensitiveCommands ?? false;
         $serverApi = $o->serverApi ?? null;
         $storeEventsAsEntities = $o->storeEventsAsEntities ?? null;
 
@@ -289,8 +299,9 @@ final class Context
         if (isset($observeEvents)) {
             assertIsArray($observeEvents);
             assertIsArray($ignoreCommandMonitoringEvents);
+            assertIsBool($observeSensitiveCommands);
 
-            $this->eventObserversByClient[$id] = new EventObserver($observeEvents, $ignoreCommandMonitoringEvents, $id, $this);
+            $this->eventObserversByClient[$id] = new EventObserver($observeEvents, $ignoreCommandMonitoringEvents, $observeSensitiveCommands, $id, $this);
         }
 
         if (isset($storeEventsAsEntities)) {

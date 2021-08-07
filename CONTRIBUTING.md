@@ -83,6 +83,37 @@ repository:
    informational log messages with the `--level warning` option.
  * Generated documentation may be found in the `build/master/html` directory.
 
+## Creating a maintenance branch and updating master branch alias
+
+After releasing a new major or minor version (e.g. 1.9.0), a maintenance branch
+(e.g. v1.9) should be created. Any development towards a patch release (e.g.
+1.9.1) would then be done within that branch and any development for the next
+major or minor release can continue in master.
+
+After creating a maintenance branch, the `extra.branch-alias.dev-master` field
+in the master branch's `composer.json` file should be updated. For example,
+after branching v1.9, `composer.json` in the master branch may still read:
+
+```
+"branch-alias": {
+    "dev-master": "1.9.x-dev"
+}
+```
+
+The above would be changed to:
+
+```
+"branch-alias": {
+    "dev-master": "1.10.x-dev"
+}
+```
+
+Commit this change:
+
+```
+$ git commit -m "Master is now 1.10-dev" composer.json
+```
+
 ## Releasing
 
 The follow steps outline the release process for a maintenance branch (e.g.

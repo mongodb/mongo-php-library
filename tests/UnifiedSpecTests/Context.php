@@ -452,7 +452,7 @@ final class Context
 
     private static function prepareSessionOptions(array $options): array
     {
-        Util::assertHasOnlyKeys($options, ['causalConsistency', 'defaultTransactionOptions']);
+        Util::assertHasOnlyKeys($options, ['causalConsistency', 'defaultTransactionOptions', 'snapshot']);
 
         if (array_key_exists('causalConsistency', $options)) {
             assertIsBool($options['causalConsistency']);
@@ -461,6 +461,10 @@ final class Context
         if (array_key_exists('defaultTransactionOptions', $options)) {
             assertIsObject($options['defaultTransactionOptions']);
             $options['defaultTransactionOptions'] = self::prepareDefaultTransactionOptions((array) $options['defaultTransactionOptions']);
+        }
+
+        if (array_key_exists('snapshot', $options)) {
+            assertIsBool($options['snapshot']);
         }
 
         return $options;

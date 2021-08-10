@@ -137,6 +137,19 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     /**
+     * @dataProvider provideSessionsTests
+     */
+    public function testSessions(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideSessionsTests()
+    {
+        return $this->provideTests(__DIR__ . '/sessions/*.json');
+    }
+
+    /**
      * @dataProvider provideTransactionsTests
      */
     public function testTransactions(UnifiedTestCase $test): void

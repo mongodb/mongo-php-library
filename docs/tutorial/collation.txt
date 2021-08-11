@@ -206,7 +206,7 @@ specify a collation.
    $collection = (new MongoDB\Client)->test->names;
 
    $document = $collection->findOneAndUpdate(
-       ['first_name' => ['$lt' =-> 'Gunter']],
+       ['first_name' => ['$lt' => 'Gunter']],
        ['$set' => ['verified' => true]]
    );
 
@@ -231,7 +231,7 @@ specified, which uses the locale ``de@collation=phonebook``.
    $collection = (new MongoDB\Client)->test->names;
 
    $document = $collection->findOneAndUpdate(
-       ['first_name' => ['$lt' =-> 'Gunter']],
+       ['first_name' => ['$lt' => 'Gunter']],
        ['$set' => ['verified' => true]],
        [
            'collation' => ['locale' => 'de@collation=phonebook'],

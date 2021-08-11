@@ -13,6 +13,7 @@ use MongoDB\GridFS\Bucket;
 use MongoDB\Tests\UnifiedSpecTests\Constraint\IsBsonType;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Constraint\Constraint;
+use ReturnTypeWillChange;
 use stdClass;
 
 use function array_key_exists;
@@ -58,7 +59,7 @@ class EntityMap implements ArrayAccess
     /**
      * @see http://php.net/arrayaccess.offsetexists
      */
-    public function offsetExists($id)
+    public function offsetExists($id): bool
     {
         assertIsString($id);
 
@@ -67,7 +68,9 @@ class EntityMap implements ArrayAccess
 
     /**
      * @see http://php.net/arrayaccess.offsetget
+     * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($id)
     {
         assertIsString($id);

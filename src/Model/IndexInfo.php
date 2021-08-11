@@ -19,6 +19,7 @@ namespace MongoDB\Model;
 
 use ArrayAccess;
 use MongoDB\Exception\BadMethodCallException;
+use ReturnTypeWillChange;
 
 use function array_key_exists;
 use function array_search;
@@ -182,6 +183,7 @@ class IndexInfo implements ArrayAccess
      * @param mixed $key
      * @return boolean
      */
+    #[ReturnTypeWillChange]
     public function offsetExists($key)
     {
         return array_key_exists($key, $this->info);
@@ -199,6 +201,7 @@ class IndexInfo implements ArrayAccess
      * @param mixed $key
      * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function offsetGet($key)
     {
         return $this->info[$key];
@@ -211,7 +214,9 @@ class IndexInfo implements ArrayAccess
      * @param mixed $key
      * @param mixed $value
      * @throws BadMethodCallException
+     * @return void
      */
+    #[ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         throw BadMethodCallException::classIsImmutable(self::class);
@@ -223,7 +228,9 @@ class IndexInfo implements ArrayAccess
      * @see http://php.net/arrayaccess.offsetunset
      * @param mixed $key
      * @throws BadMethodCallException
+     * @return void
      */
+    #[ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         throw BadMethodCallException::classIsImmutable(self::class);

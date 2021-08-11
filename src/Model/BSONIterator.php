@@ -20,6 +20,7 @@ namespace MongoDB\Model;
 use Iterator;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
+use ReturnTypeWillChange;
 
 use function is_array;
 use function MongoDB\BSON\toPHP;
@@ -86,6 +87,7 @@ class BSONIterator implements Iterator
      * @see http://php.net/iterator.current
      * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function current()
     {
         return $this->current;
@@ -95,6 +97,7 @@ class BSONIterator implements Iterator
      * @see http://php.net/iterator.key
      * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function key()
     {
         return $this->key;
@@ -104,6 +107,7 @@ class BSONIterator implements Iterator
      * @see http://php.net/iterator.next
      * @return void
      */
+    #[ReturnTypeWillChange]
     public function next()
     {
         $this->key++;
@@ -115,6 +119,7 @@ class BSONIterator implements Iterator
      * @see http://php.net/iterator.rewind
      * @return void
      */
+    #[ReturnTypeWillChange]
     public function rewind()
     {
         $this->key = 0;
@@ -127,6 +132,7 @@ class BSONIterator implements Iterator
      * @see http://php.net/iterator.valid
      * @return boolean
      */
+    #[ReturnTypeWillChange]
     public function valid()
     {
         return $this->current !== null;

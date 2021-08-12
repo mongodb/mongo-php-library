@@ -40,7 +40,8 @@ this configuration by creating your own `phpunit.xml` file based on the
 To run tests against a cluster that requires authentication, either include the
 credentials in the connection string given in the `MONGODB_URI` environment
 variable, or set the `MONGODB_USERNAME` and `MONGODB_PASSWORD` environment
-variables accordingly.
+variables accordingly. Note that values defined through the environment override
+credentials present in the URI.
 
 By default, the `simple-phpunit` binary chooses the correct PHPUnit version for
 the PHP version you are running. To run tests against a specific PHPUnit version,

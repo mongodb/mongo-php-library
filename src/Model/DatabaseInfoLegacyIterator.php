@@ -17,6 +17,8 @@
 
 namespace MongoDB\Model;
 
+use ReturnTypeWillChange;
+
 use function current;
 use function key;
 use function next;
@@ -63,6 +65,7 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
      * @see http://php.net/iterator.key
      * @return integer
      */
+    #[ReturnTypeWillChange]
     public function key()
     {
         return key($this->databases);
@@ -72,7 +75,9 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
      * Move forward to next element.
      *
      * @see http://php.net/iterator.next
+     * @return void
      */
+    #[ReturnTypeWillChange]
     public function next()
     {
         next($this->databases);
@@ -82,7 +87,9 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
      * Rewind the Iterator to the first element.
      *
      * @see http://php.net/iterator.rewind
+     * @return void
      */
+    #[ReturnTypeWillChange]
     public function rewind()
     {
         reset($this->databases);
@@ -94,6 +101,7 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
      * @see http://php.net/iterator.valid
      * @return boolean
      */
+    #[ReturnTypeWillChange]
     public function valid()
     {
         return key($this->databases) !== null;

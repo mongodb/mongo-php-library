@@ -20,6 +20,7 @@ namespace MongoDB\Model;
 use Closure;
 use Iterator;
 use IteratorIterator;
+use ReturnTypeWillChange;
 use Traversable;
 
 /**
@@ -45,6 +46,7 @@ class CallbackIterator implements Iterator
      * @see http://php.net/iterator.current
      * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function current()
     {
         return ($this->callback)($this->iterator->current());
@@ -54,6 +56,7 @@ class CallbackIterator implements Iterator
      * @see http://php.net/iterator.key
      * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function key()
     {
         return $this->iterator->key();
@@ -63,6 +66,7 @@ class CallbackIterator implements Iterator
      * @see http://php.net/iterator.next
      * @return void
      */
+    #[ReturnTypeWillChange]
     public function next()
     {
         $this->iterator->next();
@@ -72,6 +76,7 @@ class CallbackIterator implements Iterator
      * @see http://php.net/iterator.rewind
      * @return void
      */
+    #[ReturnTypeWillChange]
     public function rewind()
     {
         $this->iterator->rewind();
@@ -81,6 +86,7 @@ class CallbackIterator implements Iterator
      * @see http://php.net/iterator.valid
      * @return boolean
      */
+    #[ReturnTypeWillChange]
     public function valid()
     {
         return $this->iterator->valid();

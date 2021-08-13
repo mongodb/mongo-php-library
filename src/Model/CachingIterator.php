@@ -20,6 +20,7 @@ namespace MongoDB\Model;
 use Countable;
 use Iterator;
 use IteratorIterator;
+use ReturnTypeWillChange;
 use Traversable;
 
 use function count;
@@ -71,6 +72,7 @@ class CachingIterator implements Countable, Iterator
      * @see http://php.net/countable.count
      * @return integer
      */
+    #[ReturnTypeWillChange]
     public function count()
     {
         $this->exhaustIterator();
@@ -82,6 +84,7 @@ class CachingIterator implements Countable, Iterator
      * @see http://php.net/iterator.current
      * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function current()
     {
         return current($this->items);
@@ -91,6 +94,7 @@ class CachingIterator implements Countable, Iterator
      * @see http://php.net/iterator.key
      * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function key()
     {
         return key($this->items);
@@ -100,6 +104,7 @@ class CachingIterator implements Countable, Iterator
      * @see http://php.net/iterator.next
      * @return void
      */
+    #[ReturnTypeWillChange]
     public function next()
     {
         if (! $this->iteratorExhausted) {
@@ -118,6 +123,7 @@ class CachingIterator implements Countable, Iterator
      * @see http://php.net/iterator.rewind
      * @return void
      */
+    #[ReturnTypeWillChange]
     public function rewind()
     {
         /* If the iterator has advanced, exhaust it now so that future iteration
@@ -134,6 +140,7 @@ class CachingIterator implements Countable, Iterator
      * @see http://php.net/iterator.valid
      * @return boolean
      */
+    #[ReturnTypeWillChange]
     public function valid()
     {
         return $this->key() !== null;

@@ -18,6 +18,7 @@
 namespace MongoDB;
 
 use IteratorAggregate;
+use ReturnTypeWillChange;
 use stdClass;
 use Traversable;
 
@@ -87,6 +88,7 @@ class MapReduceResult implements IteratorAggregate
      * @see http://php.net/iteratoraggregate.getiterator
      * @return Traversable
      */
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         return call_user_func($this->getIterator);

@@ -21,6 +21,7 @@ use ArrayObject;
 use JsonSerializable;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Unserializable;
+use ReturnTypeWillChange;
 
 use function array_values;
 use function MongoDB\recursive_copy;
@@ -95,6 +96,7 @@ class BSONArray extends ArrayObject implements JsonSerializable, Serializable, U
      * @see http://php.net/jsonserializable.jsonserialize
      * @return array
      */
+    #[ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return array_values($this->getArrayCopy());

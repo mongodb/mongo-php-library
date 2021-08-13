@@ -18,6 +18,7 @@
 namespace MongoDB\Model;
 
 use Iterator;
+use ReturnTypeWillChange;
 
 /**
  * DatabaseInfoIterator interface.
@@ -34,5 +35,6 @@ interface DatabaseInfoIterator extends Iterator
      *
      * @return DatabaseInfo
      */
+    #[ReturnTypeWillChange]
     public function current();
 }

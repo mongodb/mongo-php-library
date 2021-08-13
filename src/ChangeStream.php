@@ -24,6 +24,7 @@ use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Model\ChangeStreamIterator;
+use ReturnTypeWillChange;
 
 use function call_user_func;
 use function in_array;
@@ -102,6 +103,7 @@ class ChangeStream implements Iterator
      * @see http://php.net/iterator.current
      * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function current()
     {
         return $this->iterator->current();
@@ -133,6 +135,7 @@ class ChangeStream implements Iterator
      * @see http://php.net/iterator.key
      * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function key()
     {
         if ($this->valid()) {
@@ -147,6 +150,7 @@ class ChangeStream implements Iterator
      * @return void
      * @throws ResumeTokenException
      */
+    #[ReturnTypeWillChange]
     public function next()
     {
         try {
@@ -162,6 +166,7 @@ class ChangeStream implements Iterator
      * @return void
      * @throws ResumeTokenException
      */
+    #[ReturnTypeWillChange]
     public function rewind()
     {
         try {
@@ -179,6 +184,7 @@ class ChangeStream implements Iterator
      * @see http://php.net/iterator.valid
      * @return boolean
      */
+    #[ReturnTypeWillChange]
     public function valid()
     {
         return $this->iterator->valid();

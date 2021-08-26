@@ -137,11 +137,7 @@ final class ExpectedError
         assertNotNull($e);
 
         if (isset($this->isClientError)) {
-            if ($this->isClientError) {
-                assertNotInstanceOf(ServerException::class, $e);
-            } else {
-                assertInstanceOf(ServerException::class, $e);
-            }
+            $this->assertIsClientError($e);
         }
 
         if (isset($this->messageContains)) {
@@ -173,6 +169,21 @@ final class ExpectedError
         if (isset($this->expectedResult)) {
             assertInstanceOf(BulkWriteException::class, $e);
             $this->expectedResult->assert($e->getWriteResult());
+        }
+    }
+
+    private function assertIsClientError(Throwable $e): void
+    {
+        /* Note: BulkWriteException may proxy a previous exception. Unwrap it
+         * to check the original error. */
+        if ($e instanceof BulkWriteException && $e->getPrevious() !== null) {
+            $e = $e->getPrevious();
+        }
+
+        if ($this->isClientError) {
+            assertNotInstanceOf(ServerException::class, $e);
+        } else {
+            assertInstanceOf(ServerException::class, $e);
         }
     }
 

@@ -23,6 +23,7 @@ use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\RuntimeException;
 use MongoDB\Operation\WithTransaction;
@@ -237,6 +238,25 @@ function is_mapreduce_output_inline($out): bool
     reset($out);
 
     return key($out) === 'inline';
+}
+
+/**
+ * Return whether the write concern is acknowledged.
+ *
+ * This function is similar to mongoc_write_concern_is_acknowledged but does not
+ * check the fsync option since that was never supported in the PHP driver.
+ *
+ * @internal
+ * @see https://docs.mongodb.com/manual/reference/write-concern/
+ * @param WriteConcern $writeConcern
+ * @return boolean
+ */
+function is_write_concern_acknowledged(WriteConcern $writeConcern): bool
+{
+    /* Note: -1 corresponds to MONGOC_WRITE_CONCERN_W_ERRORS_IGNORED, which is
+     * deprecated synonym of MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED and slated
+     * for removal in libmongoc 2.0. */
+    return ($writeConcern->getW() !== 0 && $writeConcern->getW() !== -1) || $writeConcern->getJournal() === true;
 }
 
 /**

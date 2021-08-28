@@ -4,6 +4,8 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\WriteConcern;
+use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\FindAndModify;
 use MongoDB\Tests\CommandObserver;
@@ -52,6 +54,42 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
             }
         );
+    }
+
+    public function testHintOptionUnsupportedClientSideError(): void
+    {
+        if (version_compare($this->getServerVersion(), '4.2.0', '>=')) {
+            $this->markTestSkipped('server reports error for unsupported findAndModify options');
+        }
+
+        $operation = new FindAndModify(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            ['remove' => true, 'hint' => '_id_']
+        );
+
+        $this->expectException(UnsupportedException::class);
+        $this->expectExceptionMessage('Hint is not supported by the server executing this operation');
+
+        $operation->execute($this->getPrimaryServer());
+    }
+
+    public function testHintOptionAndUnacknowledgedWriteConcernUnsupportedClientSideError(): void
+    {
+        if (version_compare($this->getServerVersion(), '4.4.0', '>=')) {
+            $this->markTestSkipped('hint is supported');
+        }
+
+        $operation = new FindAndModify(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            ['remove' => true, 'hint' => '_id_', 'writeConcern' => new WriteConcern(0)]
+        );
+
+        $this->expectException(UnsupportedException::class);
+        $this->expectExceptionMessage('Hint is not supported by the server executing this operation');
+
+        $operation->execute($this->getPrimaryServer());
     }
 
     public function testSessionOption(): void

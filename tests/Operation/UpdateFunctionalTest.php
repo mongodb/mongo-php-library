@@ -7,6 +7,7 @@ use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\BadMethodCallException;
+use MongoDB\Exception\UnsupportedException;
 use MongoDB\Operation\Update;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\UpdateResult;
@@ -96,6 +97,46 @@ class UpdateFunctionalTest extends FunctionalTestCase
                 $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
             }
         );
+    }
+
+    public function testHintOptionUnsupportedClientSideError(): void
+    {
+        if (version_compare($this->getServerVersion(), '3.4.0', '>=')) {
+            $this->markTestSkipped('server reports error for unsupported update options');
+        }
+
+        $operation = new Update(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            ['_id' => 1],
+            ['$inc' => ['x' => 1]],
+            ['hint' => '_id_']
+        );
+
+        $this->expectException(UnsupportedException::class);
+        $this->expectExceptionMessage('Hint is not supported by the server executing this operation');
+
+        $operation->execute($this->getPrimaryServer());
+    }
+
+    public function testHintOptionAndUnacknowledgedWriteConcernUnsupportedClientSideError(): void
+    {
+        if (version_compare($this->getServerVersion(), '4.2.0', '>=')) {
+            $this->markTestSkipped('hint is supported');
+        }
+
+        $operation = new Update(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            ['_id' => 1],
+            ['$inc' => ['x' => 1]],
+            ['hint' => '_id_', 'writeConcern' => new WriteConcern(0)]
+        );
+
+        $this->expectException(UnsupportedException::class);
+        $this->expectExceptionMessage('Hint is not supported by the server executing this operation');
+
+        $operation->execute($this->getPrimaryServer());
     }
 
     public function testUpdateOne(): void

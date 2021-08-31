@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests;
 
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
@@ -12,6 +13,7 @@ use function MongoDB\generate_index_name;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_mapreduce_output_inline;
 use function MongoDB\is_pipeline;
+use function MongoDB\is_write_concern_acknowledged;
 
 /**
  * Unit tests for utility functions.
@@ -253,6 +255,33 @@ class FunctionsTest extends TestCase
             ],
             'False positive with DbRef in numeric field' => [true, ['0' => ['$ref' => 'foo', '$id' => 'bar']]],
             'DbRef in numeric field as object' => [false, (object) ['0' => ['$ref' => 'foo', '$id' => 'bar']]],
+        ];
+    }
+
+    /**
+     * @dataProvider provideWriteConcerns
+     */
+    public function testIsWriteConcernAcknowledged($expected, WriteConcern $writeConcern): void
+    {
+        $this->assertSame($expected, is_write_concern_acknowledged($writeConcern));
+    }
+
+    public function provideWriteConcerns(): array
+    {
+        // Note: WriteConcern constructor prohibits w=-1 or w=0 and journal=true
+        return [
+            'MONGOC_WRITE_CONCERN_W_MAJORITY' => [true, new WriteConcern(-3)],
+            'MONGOC_WRITE_CONCERN_W_DEFAULT' => [true, new WriteConcern(-2)],
+            'MONGOC_WRITE_CONCERN_W_DEFAULT and journal=true' => [true, new WriteConcern(-2, 0, true)],
+            'MONGOC_WRITE_CONCERN_W_ERRORS_IGNORED' => [false, new WriteConcern(-1)],
+            'MONGOC_WRITE_CONCERN_W_ERRORS_IGNORED and journal=false' => [false, new WriteConcern(-1, 0, false)],
+            'MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED' => [false, new WriteConcern(0)],
+            'MONGOC_WRITE_CONCERN_W_UNACKNOWLEDGED and journal=false' => [false, new WriteConcern(0, 0, false)],
+            'w=1' => [true, new WriteConcern(1)],
+            'w=1 and journal=false' => [true, new WriteConcern(1, 0, false)],
+            'w=1 and journal=true' => [true, new WriteConcern(1, 0, true)],
+            'majority' => [true, new WriteConcern(WriteConcern::MAJORITY)],
+            'tag' => [true, new WriteConcern('tag')],
         ];
     }
 }

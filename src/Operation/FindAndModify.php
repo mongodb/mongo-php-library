@@ -34,6 +34,7 @@ use function is_object;
 use function is_string;
 use function MongoDB\create_field_path_type_map;
 use function MongoDB\is_pipeline;
+use function MongoDB\is_write_concern_acknowledged;
 use function MongoDB\server_supports_feature;
 
 /**
@@ -60,7 +61,7 @@ class FindAndModify implements Executable, Explainable
     private static $wireVersionForHint = 9;
 
     /** @var integer */
-    private static $wireVersionForHintServerSideError = 8;
+    private static $wireVersionForUnsupportedOptionServerSideError = 8;
 
     /** @var integer */
     private static $wireVersionForWriteConcern = 4;
@@ -245,11 +246,18 @@ class FindAndModify implements Executable, Explainable
             throw UnsupportedException::collationNotSupported();
         }
 
-        /* Server versions >= 4.1.10 raise errors for unknown findAndModify
-         * options (SERVER-40005), but the CRUD spec requires client-side errors
-         * for server versions < 4.2. For later versions, we'll rely on the
-         * server to either utilize the option or report its own error. */
-        if (isset($this->options['hint']) && ! $this->isHintSupported($server)) {
+        /* Server versions >= 4.2.0 raise errors for unsupported update options.
+         * For previous versions, the CRUD spec requires a client-side error. */
+        if (isset($this->options['hint']) && ! server_supports_feature($server, self::$wireVersionForUnsupportedOptionServerSideError)) {
+            throw UnsupportedException::hintNotSupported();
+        }
+
+        /* CRUD spec requires a client-side error when using "hint" with an
+         * unacknowledged write concern on an unsupported server. */
+        if (
+            isset($this->options['writeConcern']) && ! is_write_concern_acknowledged($this->options['writeConcern']) &&
+            isset($this->options['hint']) && ! server_supports_feature($server, self::$wireVersionForHint)
+        ) {
             throw UnsupportedException::hintNotSupported();
         }
 
@@ -349,21 +357,5 @@ class FindAndModify implements Executable, Explainable
         }
 
         return $options;
-    }
-
-    private function isAcknowledgedWriteConcern(): bool
-    {
-        if (! isset($this->options['writeConcern'])) {
-            return true;
-        }
-
-        return $this->options['writeConcern']->getW() > 1 || $this->options['writeConcern']->getJournal();
-    }
-
-    private function isHintSupported(Server $server): bool
-    {
-        $requiredWireVersion = $this->isAcknowledgedWriteConcern() ? self::$wireVersionForHintServerSideError : self::$wireVersionForHint;
-
-        return server_supports_feature($server, $requiredWireVersion);
     }
 }

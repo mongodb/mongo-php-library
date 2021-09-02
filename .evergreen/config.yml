@@ -688,7 +688,7 @@ buildvariants:
     - .versioned-api
 
 - matrix_name: "serverless"
-  matrix_spec: { "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  matrix_spec: { "php-edge-versions": "latest-stable", "driver-versions": "latest-dev" }
   display_name: "Serverless"
   run_on: rhel70
   tasks:

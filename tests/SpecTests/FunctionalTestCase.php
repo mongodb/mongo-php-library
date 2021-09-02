@@ -30,6 +30,10 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     public const TOPOLOGY_REPLICASET = 'replicaset';
     public const TOPOLOGY_SHARDED = 'sharded';
 
+    public const SERVERLESS_ALLOW = 'allow';
+    public const SERVERLESS_FORBID = 'forbid';
+    public const SERVERLESS_REQUIRE = 'require';
+
     /** @var Context|null */
     private $context;
 
@@ -137,8 +141,9 @@ class FunctionalTestCase extends BaseFunctionalTestCase
             $minServerVersion = $req->minServerVersion ?? null;
             $maxServerVersion = $req->maxServerVersion ?? null;
             $topologies = $req->topology ?? null;
+            $serverlessMode = $req->serverless ?? null;
 
-            if ($this->isServerRequirementSatisifed($minServerVersion, $maxServerVersion, $topologies)) {
+            if ($this->isServerRequirementSatisifed($minServerVersion, $maxServerVersion, $topologies, $serverlessMode)) {
                 return;
             }
         }
@@ -268,7 +273,27 @@ class FunctionalTestCase extends BaseFunctionalTestCase
             return $topologyTypeMap[$primaryType];
         }
 
-        throw new UnexpectedValueException('Toplogy is neither single nor RS nor sharded');
+        throw new UnexpectedValueException(sprintf('Cannot find topology for primary of type "%s".', $primaryType));
+    }
+
+    private function isServerlessRequirementSatisfied(?string $serverlessMode): bool
+    {
+        if ($serverlessMode === null) {
+            return true;
+        }
+
+        switch ($serverlessMode) {
+            case self::SERVERLESS_ALLOW:
+                return true;
+
+            case self::SERVERLESS_FORBID:
+                return ! static::isServerless();
+
+            case self::SERVERLESS_REQUIRE:
+                return static::isServerless();
+        }
+
+        throw new UnexpectedValueException(sprintf('Invalid serverless requirement "%s" found.', $serverlessMode));
     }
 
     /**
@@ -279,7 +304,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      * @param array|null  $topologies
      * @return boolean
      */
-    private function isServerRequirementSatisifed(?string $minServerVersion, ?string $maxServerVersion, ?array $topologies = null): bool
+    private function isServerRequirementSatisifed(?string $minServerVersion, ?string $maxServerVersion, ?array $topologies = null, ?string $serverlessMode = null): bool
     {
         $serverVersion = $this->getServerVersion();
 
@@ -294,6 +319,10 @@ class FunctionalTestCase extends BaseFunctionalTestCase
         $topology = $this->getTopology();
 
         if (isset($topologies) && ! in_array($topology, $topologies)) {
+            return false;
+        }
+
+        if (! $this->isServerlessRequirementSatisfied($serverlessMode)) {
             return false;
         }
 

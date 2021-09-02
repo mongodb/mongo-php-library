@@ -63,6 +63,10 @@ case "$TESTS" in
       php vendor/bin/simple-phpunit --configuration phpunit.evergreen.xml --group versioned-api $PHPUNIT_OPTS
       ;;
 
+   serverless)
+      php vendor/bin/simple-phpunit --configuration phpunit.evergreen.xml --group serverless $PHPUNIT_OPTS
+      ;;
+
    *)
       php vendor/bin/simple-phpunit --configuration phpunit.evergreen.xml $PHPUNIT_OPTS
       ;;

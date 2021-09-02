@@ -25,6 +25,7 @@ use function call_user_func;
 use function count;
 use function current;
 use function explode;
+use function filter_var;
 use function getenv;
 use function implode;
 use function is_array;
@@ -42,6 +43,7 @@ use function preg_replace;
 use function sprintf;
 use function version_compare;
 
+use const FILTER_VALIDATE_BOOLEAN;
 use const INFO_MODULES;
 
 abstract class FunctionalTestCase extends TestCase
@@ -69,12 +71,20 @@ abstract class FunctionalTestCase extends TestCase
 
     public static function createTestClient(?string $uri = null, array $options = [], array $driverOptions = []): Client
     {
-        return new Client($uri ?? static::getUri(), $options, static::appendServerApiOption($driverOptions));
+        return new Client(
+            $uri ?? static::getUri(),
+            static::appendAuthenticationOptions($options),
+            static::appendServerApiOption($driverOptions)
+        );
     }
 
     public static function createTestManager(?string $uri = null, array $options = [], array $driverOptions = []): Manager
     {
-        return new Manager($uri ?? static::getUri(), $options, static::appendServerApiOption($driverOptions));
+        return new Manager(
+            $uri ?? static::getUri(),
+            static::appendAuthenticationOptions($options),
+            static::appendServerApiOption($driverOptions)
+        );
     }
 
     public static function getUri($allowMultipleMongoses = false): string
@@ -385,6 +395,16 @@ abstract class FunctionalTestCase extends TestCase
         return $this->getPrimaryServer()->getType() == Server::TYPE_RS_PRIMARY;
     }
 
+    /**
+     * Return whether serverless (i.e. proxy as mongos) is being utilized.
+     */
+    protected static function isServerless(): bool
+    {
+        $isServerless = getenv('MONGODB_IS_SERVERLESS');
+
+        return $isServerless !== false ? filter_var($isServerless, FILTER_VALIDATE_BOOLEAN) : false;
+    }
+
     protected function isShardedCluster()
     {
         return $this->getPrimaryServer()->getType() == Server::TYPE_MONGOS;
@@ -511,6 +531,26 @@ abstract class FunctionalTestCase extends TestCase
         if ($this->getServerStorageEngine() !== 'wiredTiger') {
             $this->markTestSkipped('Transactions require WiredTiger storage engine');
         }
+    }
+
+    private static function appendAuthenticationOptions(array $options): array
+    {
+        if (isset($options['username']) || isset($options['password'])) {
+            return $options;
+        }
+
+        $username = getenv('MONGODB_USERNAME') ?: null;
+        $password = getenv('MONGODB_PASSWORD') ?: null;
+
+        if ($username !== null) {
+            $options['username'] = $username;
+        }
+
+        if ($password !== null) {
+            $options['password'] = $password;
+        }
+
+        return $options;
     }
 
     private static function appendServerApiOption(array $driverOptions): array

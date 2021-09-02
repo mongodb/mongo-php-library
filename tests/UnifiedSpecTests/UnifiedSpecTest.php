@@ -90,6 +90,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     /**
      * @dataProvider provideCrudTests
+     * @group serverless
      */
     public function testCrud(UnifiedTestCase $test): void
     {
@@ -129,6 +130,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     /**
      * @dataProvider provideTransactionsTests
+     * @group serverless
      */
     public function testTransactions(UnifiedTestCase $test): void
     {
@@ -143,6 +145,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideVersionedApiTests
      * @group versioned-api
+     * @group serverless
      */
     public function testVersionedApi(UnifiedTestCase $test): void
     {

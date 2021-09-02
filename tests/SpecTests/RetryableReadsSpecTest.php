@@ -14,6 +14,7 @@ use function strpos;
  * Retryable reads spec tests.
  *
  * @see https://github.com/mongodb/specifications/tree/master/source/retryable-reads
+ * @group serverless
  */
 class RetryableReadsSpecTest extends FunctionalTestCase
 {
@@ -23,6 +24,9 @@ class RetryableReadsSpecTest extends FunctionalTestCase
         'listDatabaseObjects' => 'Not implemented',
         'listIndexNames' => 'Not implemented',
     ];
+
+    /** @var array */
+    private static $incompleteTests = ['mapReduce: MapReduce succeeds with retry on' => 'PHPLIB-715'];
 
     /**
      * Assert that the expected and actual command documents match.
@@ -63,6 +67,10 @@ class RetryableReadsSpecTest extends FunctionalTestCase
 
         if (strpos($this->dataDescription(), 'changeStreams-') === 0) {
             $this->skipIfChangeStreamIsNotSupported();
+        }
+
+        if (isset(self::$incompleteTests[$this->dataDescription()])) {
+            $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
         }
 
         $context = Context::fromRetryableReads($test, $databaseName, $collectionName, $bucketName);

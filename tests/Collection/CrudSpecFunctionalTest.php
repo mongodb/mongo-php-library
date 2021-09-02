@@ -32,10 +32,15 @@ use function version_compare;
  *
  * @see https://github.com/mongodb/specifications/tree/master/source/crud/tests
  *
+ * @group serverless
  * @group matrix-testing-exclude-server-5.0-driver-4.0
  */
 class CrudSpecFunctionalTest extends FunctionalTestCase
 {
+    public const SERVERLESS_ALLOW = 'allow';
+    public const SERVERLESS_FORBID = 'forbid';
+    public const SERVERLESS_REQUIRE = 'require';
+
     /** @var Collection */
     private $expectedCollection;
 
@@ -50,11 +55,13 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideSpecificationTests
      */
-    public function testSpecification(array $initialData, array $test, $minServerVersion, $maxServerVersion): void
+    public function testSpecification(array $initialData, array $test, $minServerVersion, $maxServerVersion, $serverless): void
     {
         if (isset($minServerVersion) || isset($maxServerVersion)) {
             $this->checkServerVersion($minServerVersion, $maxServerVersion);
         }
+
+        $this->checkServerlessRequirement($serverless);
 
         $expectedData = $test['outcome']['collection']['data'] ?? null;
         $this->initializeData($initialData, $expectedData);
@@ -83,12 +90,15 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
         foreach (glob(__DIR__ . '/spec-tests/*/*.json') as $filename) {
             $json = json_decode(file_get_contents($filename), true);
 
-            $minServerVersion = $json['minServerVersion'] ?? null;
-            $maxServerVersion = $json['maxServerVersion'] ?? null;
-
             foreach ($json['tests'] as $test) {
                 $name = str_replace(' ', '_', $test['description']);
-                $testArgs[$name] = [$json['data'], $test, $minServerVersion, $maxServerVersion];
+                $testArgs[$name] = [
+                    $json['data'],
+                    $test,
+                    $json['minServerVersion'] ?? null,
+                    $json['maxServerVersion'] ?? null,
+                    $json['serverless'] ?? null,
+                ];
             }
         }
 
@@ -110,6 +120,32 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
         foreach ($mi as $documents) {
             [$expectedDocument, $actualDocument] = $documents;
             $this->assertSameDocument($expectedDocument, $actualDocument);
+        }
+    }
+
+    private function checkServerlessRequirement(?string $serverless): void
+    {
+        switch ($serverless) {
+            case null:
+            case self::SERVERLESS_ALLOW:
+                return;
+
+            case self::SERVERLESS_FORBID:
+                if ($this->isServerless()) {
+                    $this->markTestSkipped('Test does not apply on serverless');
+                }
+
+                return;
+
+            case self::SERVERLESS_REQUIRE:
+                if (! $this->isServerless()) {
+                    $this->markTestSkipped('Test requires serverless');
+                }
+
+                return;
+
+            default:
+                $this->fail(sprintf('Unknown serverless requirement "%s".', $serverless));
         }
     }
 

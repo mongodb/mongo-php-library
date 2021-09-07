@@ -23,6 +23,7 @@ jobs:
         php-version:
           - "7.4"
           - "8.0"
+          - "8.1"
         mongodb-version:
           - "4.4"
         driver-version:

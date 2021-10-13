@@ -301,7 +301,6 @@ final class UnifiedTestRunner
      */
     private function getTopology(): string
     {
-        // TODO: detect load-balanced topologies once PHPLIB-671 is implemented
         switch ($this->getPrimaryServer()->getType()) {
             case Server::TYPE_STANDALONE:
                 return RunOnRequirement::TOPOLOGY_SINGLE;
@@ -313,6 +312,9 @@ final class UnifiedTestRunner
                 return $this->isShardedClusterUsingReplicasets()
                     ? RunOnRequirement::TOPOLOGY_SHARDED_REPLICASET
                     : RunOnRequirement::TOPOLOGY_SHARDED;
+
+            case Server::TYPE_LOAD_BALANCER:
+                return RunOnRequirement::TOPOLOGY_LOAD_BALANCED;
 
             default:
                 throw new UnexpectedValueException('Toplogy is neither single nor RS nor sharded');

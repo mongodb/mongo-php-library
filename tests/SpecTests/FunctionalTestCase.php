@@ -29,6 +29,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     public const TOPOLOGY_SINGLE = 'single';
     public const TOPOLOGY_REPLICASET = 'replicaset';
     public const TOPOLOGY_SHARDED = 'sharded';
+    public const TOPOLOGY_LOAD_BALANCED = 'load-balanced';
 
     public const SERVERLESS_ALLOW = 'allow';
     public const SERVERLESS_FORBID = 'forbid';
@@ -265,6 +266,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
             Server::TYPE_STANDALONE => self::TOPOLOGY_SINGLE,
             Server::TYPE_RS_PRIMARY => self::TOPOLOGY_REPLICASET,
             Server::TYPE_MONGOS => self::TOPOLOGY_SHARDED,
+            Server::TYPE_LOAD_BALANCER => self::TOPOLOGY_LOAD_BALANCED,
         ];
 
         $primaryType = $this->getPrimaryServer()->getType();
@@ -273,7 +275,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
             return $topologyTypeMap[$primaryType];
         }
 
-        throw new UnexpectedValueException(sprintf('Cannot find topology for primary of type "%s".', $primaryType));
+        throw new UnexpectedValueException(sprintf('Cannot find topology for primary of type "%d".', $primaryType));
     }
 
     private function isServerlessRequirementSatisfied(?string $serverlessMode): bool

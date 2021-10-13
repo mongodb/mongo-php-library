@@ -1178,6 +1178,10 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testSessionFreed(): void
     {
+        if ($this->isShardedCluster() && version_compare($this->getServerVersion(), '5.1.0', '>=')) {
+            $this->markTestSkipped('mongos still reports non-zero cursor ID for invalidated change stream (SERVER-60764)');
+        }
+
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
 

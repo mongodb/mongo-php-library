@@ -246,7 +246,7 @@ functions:
           export GCP_EMAIL="${client_side_encryption_gcp_email}"
           export GCP_PRIVATEKEY="${client_side_encryption_gcp_privatekey}"
           export PATH="${PHP_PATH}/bin:$PATH"
-          API_VERSION=${API_VERSION} PHP_VERSION=${PHP_VERSION} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+          MOCK_SERVICE_ID=${MOCK_SERVICE_ID} API_VERSION=${API_VERSION} PHP_VERSION=${PHP_VERSION} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "run atlas data lake test":
      - command: shell.exec
@@ -323,6 +323,24 @@ functions:
       params:
         file: src/php-expansion.yml
 
+  "start load balancer":
+    - command: shell.exec
+      params:
+        script: |
+          MONGODB_URI="${MONGODB_URI}" ${DRIVERS_TOOLS}/.evergreen/run-load-balancer.sh start
+    - command: expansions.update
+      params:
+        file: lb-expansion.yml
+
+  "stop load balancer":
+    - command: shell.exec
+      params:
+        script: |
+          # Only run if a load balancer was started
+          if [ -n "${SINGLE_MONGOS_LB_URI}" ]; then
+            ${DRIVERS_TOOLS}/.evergreen/run-load-balancer.sh stop
+          fi
+
 pre:
   - func: "fetch source"
   - func: "prepare resources"
@@ -336,6 +354,7 @@ post:
   # - func: "upload working dir"
   - func: "upload mo artifacts"
   - func: "upload test results"
+  - func: "stop load balancer"
   - func: "stop mongo-orchestration"
   - func: "cleanup"
 
@@ -432,6 +451,23 @@ tasks:
             PROJECT: "mongo-php-library"
         - func: "run serverless tests"
         - func: "delete serverless instance"
+
+    - name: "test-loadBalanced"
+      tags: ["loadbalanced"]
+      commands:
+        - func: "bootstrap mongo-orchestration"
+          vars:
+            TOPOLOGY: "sharded_cluster"
+            SSL: "yes"
+        - func: "start load balancer"
+        - func: "run tests"
+          vars:
+            # Testing with HAProxy requires service ID mocking
+            MOCK_SERVICE_ID: 1
+            # Note: loadBalanced=true should already be appended to SINGLE_MONGOS_LB_URI
+            MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
+            SSL: "yes"
+        # Note: "stop load balancer" will be called from "post"
 # }}}
 
 
@@ -693,3 +729,9 @@ buildvariants:
   run_on: rhel70
   tasks:
     - .serverless
+
+- matrix_name: "test-loadBalanced"
+  matrix_spec: { "os-php7": "debian92-test", "php-versions": "7.3", "versions": ["5.0", "latest"], "driver-versions": "latest-dev" }
+  display_name: "Load balanced - ${versions}"
+  tasks:
+    - name: "test-loadBalanced"

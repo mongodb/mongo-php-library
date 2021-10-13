@@ -152,7 +152,7 @@ class TransactionsSpecTest extends FunctionalTestCase
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
         }
 
-        $useMultipleMongoses = isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster();
+        $useMultipleMongoses = isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isMongos();
 
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
@@ -229,8 +229,10 @@ class TransactionsSpecTest extends FunctionalTestCase
      */
     public function testStartingNewTransactionOnPinnedSessionUnpinsSession(): void
     {
-        if (! $this->isShardedClusterUsingReplicasets()) {
-            $this->markTestSkipped('Mongos pinning tests can only run on sharded clusters using replica sets');
+        $this->skipIfTransactionsAreNotSupported();
+
+        if (! $this->isMongos()) {
+            $this->markTestSkipped('Pinning tests require mongos');
         }
 
         $client = self::createTestClient($this->getUri(true));
@@ -267,8 +269,10 @@ class TransactionsSpecTest extends FunctionalTestCase
      */
     public function testRunningNonTransactionOperationOnPinnedSessionUnpinsSession(): void
     {
-        if (! $this->isShardedClusterUsingReplicasets()) {
-            $this->markTestSkipped('Mongos pinning tests can only run on sharded clusters using replica sets');
+        $this->skipIfTransactionsAreNotSupported();
+
+        if (! $this->isMongos()) {
+            $this->markTestSkipped('Pinning tests require mongos');
         }
 
         $client = self::createTestClient($this->getUri(true));

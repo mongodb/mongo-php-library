@@ -106,7 +106,12 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
         $this->assertEquals(1, $writeResult->getInsertedCount());
 
         $this->expectException(CommandException::class);
-        $this->expectExceptionCode(self::$errorCodeNamespaceExists);
+
+        // mongos returns an inconsistent error code (see: SERVER-60632)
+        if (! $this->isShardedCluster()) {
+            $this->expectExceptionCode(self::$errorCodeNamespaceExists);
+        }
+
         $operation = new RenameCollection(
             $this->getDatabaseName(),
             $this->getCollectionName(),

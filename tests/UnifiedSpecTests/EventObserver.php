@@ -23,6 +23,7 @@ use function MongoDB\Driver\Monitoring\removeSubscriber;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertInstanceOf;
+use function PHPUnit\Framework\assertIsBool;
 use function PHPUnit\Framework\assertIsObject;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
@@ -76,6 +77,26 @@ final class EventObserver implements CommandSubscriber
         'commandFailedEvent' => CommandFailedEvent::class,
     ];
 
+    /**
+     * These events are defined in the specification but unsupported by PHPLIB
+     * (e.g. CMAP events).
+     *
+     * @var array
+     */
+    private static $unsupportedEvents = [
+        'poolCreatedEvent' => 1,
+        'poolReadyEvent' => 1,
+        'poolClearedEvent' => 1,
+        'poolClosedEvent' => 1,
+        'connectionCreatedEvent' => 1,
+        'connectionReadyEvent' => 1,
+        'connectionClosedEvent' => 1,
+        'connectionCheckOutStartedEvent' => 1,
+        'connectionCheckOutFailedEvent' => 1,
+        'connectionCheckedOutEvent' => 1,
+        'connectionCheckedInEvent' => 1,
+    ];
+
     /** @var array */
     private $actualEvents = [];
 
@@ -105,6 +126,15 @@ final class EventObserver implements CommandSubscriber
 
         foreach ($observeEvents as $event) {
             assertIsString($event);
+
+            /* Unlike Context::assertExpectedEventsForClients, which runs within
+             * a test, EventObserver is constructed via createEntities (before
+             * all tests). Ignoring events here allows tests within the file
+             * that don't assert these events to still execute. */
+            if (isset(self::$unsupportedEvents[$event])) {
+                continue;
+            }
+
             assertArrayHasKey($event, self::$supportedEvents);
             $this->observeEvents[self::$supportedEvents[$event]] = 1;
         }
@@ -223,8 +253,7 @@ final class EventObserver implements CommandSubscriber
 
     private function assertCommandStartedEvent(CommandStartedEvent $actual, stdClass $expected, string $message): void
     {
-        // TODO: Assert hasServiceId (blocked on PHPC-1752)
-        Util::assertHasOnlyKeys($expected, ['command', 'commandName', 'databaseName']);
+        Util::assertHasOnlyKeys($expected, ['command', 'commandName', 'databaseName', 'hasServiceId']);
 
         if (isset($expected->command)) {
             assertIsObject($expected->command);
@@ -241,12 +270,16 @@ final class EventObserver implements CommandSubscriber
             assertIsString($expected->databaseName);
             assertSame($actual->getDatabaseName(), $expected->databaseName, $message . ': databaseName matches');
         }
+
+        if (isset($expected->hasServiceId)) {
+            assertIsBool($expected->hasServiceId);
+            assertSame($actual->getServiceId() !== null, $expected->hasServiceId, $message . ': hasServiceId matches');
+        }
     }
 
     private function assertCommandSucceededEvent(CommandSucceededEvent $actual, stdClass $expected, string $message): void
     {
-        // TODO: Assert hasServiceId (blocked on PHPC-1752)
-        Util::assertHasOnlyKeys($expected, ['reply', 'commandName']);
+        Util::assertHasOnlyKeys($expected, ['reply', 'commandName', 'hasServiceId']);
 
         if (isset($expected->reply)) {
             assertIsObject($expected->reply);
@@ -258,16 +291,25 @@ final class EventObserver implements CommandSubscriber
             assertIsString($expected->commandName);
             assertSame($actual->getCommandName(), $expected->commandName, $message . ': commandName matches');
         }
+
+        if (isset($expected->hasServiceId)) {
+            assertIsBool($expected->hasServiceId);
+            assertSame($actual->getServiceId() !== null, $expected->hasServiceId, $message . ': hasServiceId matches');
+        }
     }
 
     private function assertCommandFailedEvent(CommandFailedEvent $actual, stdClass $expected, string $message): void
     {
-        // TODO: Assert hasServiceId (blocked on PHPC-1752)
-        Util::assertHasOnlyKeys($expected, ['commandName']);
+        Util::assertHasOnlyKeys($expected, ['commandName', 'hasServiceId']);
 
         if (isset($expected->commandName)) {
             assertIsString($expected->commandName);
             assertSame($actual->getCommandName(), $expected->commandName, $message . ': commandName matches');
+        }
+
+        if (isset($expected->hasServiceId)) {
+            assertIsBool($expected->hasServiceId);
+            assertSame($actual->getServiceId() !== null, $expected->hasServiceId, $message . ': hasServiceId matches');
         }
     }
 

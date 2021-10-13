@@ -2,18 +2,17 @@
 set -o errexit  # Exit the script with error if any of the commands fail
 
 # Supported/used environment variables:
-#       AUTH                    Set to enable authentication. Defaults to "noauth"
-#       SSL                     Set to enable SSL. Defaults to "nossl"
-#       MONGODB_URI             Set the suggested connection MONGODB_URI (including credentials and topology info)
-#       MARCH                   Machine Architecture. Defaults to lowercase uname -m
+#   SSL               Set to "yes" to enable SSL. Defaults to "nossl"
+#   MONGODB_URI       Set the suggested connection MONGODB_URI (including credentials and topology info)
+#   API_VERSION       Optional API_VERSION environment variable for run-tests.php
+#   IS_MATRIX_TESTING Set to "true" to enable matrix testing. Defaults to empty string. If "true", DRIVER_MONGODB_VERSION and MONGODB_VERSION will also be checked.
+#   MOCK_SERVICE_ID   Set to "1" to enable service ID mocking for load balancers. Defaults to empty string.
 
-
-AUTH=${AUTH:-noauth}
 SSL=${SSL:-nossl}
 MONGODB_URI=${MONGODB_URI:-}
-TESTS=${TESTS:-}
 API_VERSION=${API_VERSION:-}
 IS_MATRIX_TESTING=${IS_MATRIX_TESTING:-}
+MOCK_SERVICE_ID=${MOCK_SERVICE_ID:-}
 
 # For matrix testing, we have to determine the correct driver version
 if [ "${IS_MATRIX_TESTING}" = "true" ]; then
@@ -44,10 +43,23 @@ if [ "${IS_MATRIX_TESTING}" = "true" ]; then
    . $DIR/install-dependencies.sh
 fi
 
-OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-[ -z "$MARCH" ] && MARCH=$(uname -m | tr '[:upper:]' '[:lower:]')
+# For load balancer testing, we need to enable service ID mocking
+if [ "${MOCK_SERVICE_ID}" = "1" ]; then
+   PHPUNIT_OPTS="${PHPUNIT_OPTS} -d mongodb.mock_service_id=1"
+fi
 
-echo "Running tests with $AUTH and $SSL, connecting to: $MONGODB_URI"
+# Determine if MONGODB_URI already has a query string
+SUFFIX=$(echo "$MONGODB_URI" | grep -Eo "\?(.*)" | cat)
+
+if [ "$SSL" = "yes" ]; then
+   if [ -z "$SUFFIX" ]; then
+      MONGODB_URI="${MONGODB_URI}/?ssl=true&sslallowinvalidcertificates=true"
+   else
+      MONGODB_URI="${MONGODB_URI}&ssl=true&sslallowinvalidcertificates=true"
+   fi
+fi
+
+echo "Running tests with URI: $MONGODB_URI"
 
 # Disable failing PHPUnit due to deprecations
 export SYMFONY_DEPRECATIONS_HELPER=999999

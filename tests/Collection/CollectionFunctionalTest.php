@@ -356,8 +356,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $toDatabase = new Database($this->manager, $toDatabaseName);
 
         /* When renaming an unsharded collection, mongos requires the source
-        * and target database to both exist on the primary shard. In practice, this
-        * means we need to create the target database explicitly.
+        * and target database to both exist on the primary shard. In practice,
+        * this means we need to create the target database explicitly.
         * See: https://docs.mongodb.com/manual/reference/command/renameCollection/#unsharded-collections
         */
         if ($this->isShardedCluster()) {

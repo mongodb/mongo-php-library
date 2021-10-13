@@ -109,7 +109,6 @@
   "tests": [
     {
       "description": "Insert a document with auto encryption using Azure KMS provider",
-      "skipReason": "PHPLIB-619 RHEL platform is missing Azure root certificate",
       "clientOptions": {
         "autoEncryptOpts": {
           "kmsProviders": {
@@ -136,18 +135,6 @@
               "filter": {
                 "name": "default"
               }
-            },
-            "command_name": "listCollections"
-          }
-        },
-        {
-          "command_started_event": {
-            "command": {
-              "listCollections": 1,
-              "filter": {
-                "name": "datakeys"
-              },
-              "$db": "keyvault"
             },
             "command_name": "listCollections"
           }

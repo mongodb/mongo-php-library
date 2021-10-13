@@ -42,6 +42,13 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 {
     public const LOCAL_MASTERKEY = 'Mng0NCt4ZHVUYUJCa1kxNkVyNUR1QURhZ2h2UzR2d2RrZzh0cFBwM3R6NmdWMDFBMUN3YkQ5aXRRMkhGRGdQV09wOGVNYUMxT2k3NjZKelhaQmRCZGJkTXVyZG9uSjFk';
 
+    /** @var array */
+    private static $incompleteTests = [
+        'awsTemporary: Insert a document with auto encryption using the AWS provider with temporary credentials' => 'Not yet implemented (PHPC-1751)',
+        'awsTemporary: Insert with invalid temporary credentials' => 'Not yet implemented (PHPC-1751)',
+        'azureKMS: Insert a document with auto encryption using Azure KMS provider' => 'RHEL platform is missing Azure root certificate (PHPLIB-619)',
+    ];
+
     public function setUp(): void
     {
         parent::setUp();
@@ -74,6 +81,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testClientSideEncryption(stdClass $test, ?array $runOn = null, array $data, ?array $keyVaultData = null, $jsonSchema = null, ?string $databaseName = null, ?string $collectionName = null): void
     {
+        if (isset(self::$incompleteTests[$this->dataDescription()])) {
+            $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
+        }
+
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
         }

@@ -390,9 +390,19 @@ abstract class FunctionalTestCase extends TestCase
         throw new UnexpectedValueException('Could not determine server storage engine');
     }
 
+    protected function isLoadBalanced()
+    {
+        return $this->getPrimaryServer()->getType() == Server::TYPE_LOAD_BALANCER;
+    }
+
     protected function isReplicaSet()
     {
         return $this->getPrimaryServer()->getType() == Server::TYPE_RS_PRIMARY;
+    }
+
+    protected function isMongos()
+    {
+        return $this->getPrimaryServer()->getType() == Server::TYPE_MONGOS;
     }
 
     /**
@@ -407,7 +417,18 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function isShardedCluster()
     {
-        return $this->getPrimaryServer()->getType() == Server::TYPE_MONGOS;
+        $type = $this->getPrimaryServer()->getType();
+
+        if ($type == Server::TYPE_MONGOS) {
+            return true;
+        }
+
+        // Assume that load balancers are properly configured and front mongos
+        if ($type == Server::TYPE_LOAD_BALANCER) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function isShardedClusterUsingReplicasets()
@@ -436,6 +457,7 @@ abstract class FunctionalTestCase extends TestCase
     {
         switch ($this->getPrimaryServer()->getType()) {
             case Server::TYPE_MONGOS:
+            case Server::TYPE_LOAD_BALANCER:
                 if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
                     $this->markTestSkipped('$changeStream is only supported on MongoDB 3.6 or higher');
                 }
@@ -462,6 +484,7 @@ abstract class FunctionalTestCase extends TestCase
     {
         switch ($this->getPrimaryServer()->getType()) {
             case Server::TYPE_MONGOS:
+            case Server::TYPE_LOAD_BALANCER:
                 if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
                     $this->markTestSkipped('Causal Consistency is only supported on MongoDB 3.6 or higher');
                 }

@@ -30,7 +30,7 @@ class RetryableWritesSpecTest extends FunctionalTestCase
             $this->markTestSkipped('Transaction numbers are only allowed on a replica set member or mongos (PHPC-1415)');
         }
 
-        $useMultipleMongoses = isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isShardedCluster();
+        $useMultipleMongoses = isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isMongos();
 
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);

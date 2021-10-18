@@ -152,7 +152,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocuments
      */
-    public function testTypeMapOption(?array $typeMap = null, array $expectedDocuments): void
+    public function testTypeMapOption(?array $typeMap, array $expectedDocuments): void
     {
         $this->createFixtures(3);
 
@@ -167,7 +167,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocuments
      */
-    public function testTypeMapOptionWithoutCursor(?array $typeMap = null, array $expectedDocuments): void
+    public function testTypeMapOptionWithoutCursor(?array $typeMap, array $expectedDocuments): void
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '>=')) {
             $this->markTestSkipped('Aggregations with useCursor == false are not supported');

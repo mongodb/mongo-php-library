@@ -114,7 +114,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @dataProvider provideTransactionsTests
      * @group serverless
      */
-    public function testTransactions(stdClass $test, ?array $runOn = null, array $data, ?string $databaseName = null, ?string $collectionName = null): void
+    public function testTransactions(stdClass $test, ?array $runOn, array $data, ?string $databaseName = null, ?string $collectionName = null): void
     {
         $this->runTransactionTest($test, $runOn, $data, $databaseName, $collectionName);
     }
@@ -127,7 +127,7 @@ class TransactionsSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideTransactionsConvenientApiTests
      */
-    public function testTransactionsConvenientApi(stdClass $test, ?array $runOn = null, array $data, ?string $databaseName = null, ?string $collectionName = null): void
+    public function testTransactionsConvenientApi(stdClass $test, ?array $runOn, array $data, ?string $databaseName = null, ?string $collectionName = null): void
     {
         $this->runTransactionTest($test, $runOn, $data, $databaseName, $collectionName);
     }
@@ -146,7 +146,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * @param string   $databaseName   Name of database under test
      * @param string   $collectionName Name of collection under test
      */
-    private function runTransactionTest(stdClass $test, ?array $runOn = null, array $data, ?string $databaseName = null, ?string $collectionName = null): void
+    private function runTransactionTest(stdClass $test, ?array $runOn, array $data, ?string $databaseName = null, ?string $collectionName = null): void
     {
         if (isset(self::$incompleteTests[$this->dataDescription()])) {
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);

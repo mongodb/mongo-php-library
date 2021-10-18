@@ -68,7 +68,7 @@ final class ExpectedError
     /** @var ExpectedResult|null */
     private $expectedResult;
 
-    public function __construct(?stdClass $o = null, EntityMap $entityMap)
+    public function __construct(?stdClass $o, EntityMap $entityMap)
     {
         if ($o === null) {
             return;

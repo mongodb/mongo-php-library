@@ -72,7 +72,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * @param string      $databaseName   Name of database under test
      * @param string      $collectionName Name of collection under test
      */
-    public function testClientSideEncryption(stdClass $test, ?array $runOn = null, array $data, ?array $keyVaultData = null, $jsonSchema = null, ?string $databaseName = null, ?string $collectionName = null): void
+    public function testClientSideEncryption(stdClass $test, ?array $runOn, array $data, ?array $keyVaultData = null, $jsonSchema = null, ?string $databaseName = null, ?string $collectionName = null): void
     {
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);

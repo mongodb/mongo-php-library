@@ -17,7 +17,7 @@ class BSONIteratorTest extends TestCase
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocuments
      */
-    public function testValidValues(?array $typeMap = null, $binaryString, array $expectedDocuments): void
+    public function testValidValues(?array $typeMap, $binaryString, array $expectedDocuments): void
     {
         $bsonIt = new BSONIterator($binaryString, ['typeMap' => $typeMap]);
 

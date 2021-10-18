@@ -53,7 +53,7 @@ class RetryableReadsSpecTest extends FunctionalTestCase
      * @group matrix-testing-exclude-server-4.4-driver-4.2
      * @group matrix-testing-exclude-server-5.0-driver-4.2
      */
-    public function testRetryableReads(stdClass $test, ?array $runOn = null, $data, string $databaseName, ?string $collectionName, ?string $bucketName): void
+    public function testRetryableReads(stdClass $test, ?array $runOn, $data, string $databaseName, ?string $collectionName, ?string $bucketName): void
     {
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);

@@ -19,6 +19,7 @@ namespace MongoDB\Operation;
 
 use ArrayIterator;
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -74,6 +75,12 @@ class Aggregate implements Executable, Explainable
 
     /** @var array */
     private $options;
+
+    /** @var bool */
+    private $isExplain;
+
+    /** @var bool */
+    private $isWrite;
 
     /**
      * Constructs an aggregate command.
@@ -253,8 +260,19 @@ class Aggregate implements Executable, Explainable
             unset($options['writeConcern']);
         }
 
-        if (! empty($options['explain'])) {
+        $this->isExplain = ! empty($options['explain']);
+        $this->isWrite = is_last_pipeline_operator_write($pipeline) && ! $this->isExplain;
+
+        // Explain does not use a cursor
+        if ($this->isExplain) {
             $options['useCursor'] = false;
+            unset($options['batchSize']);
+        }
+
+        /* Ignore batchSize for writes, since no documents are returned and a
+         * batchSize of zero could prevent the pipeline from executing. */
+        if ($this->isWrite) {
+            unset($options['batchSize']);
         }
 
         $this->databaseName = (string) $databaseName;
@@ -298,20 +316,14 @@ class Aggregate implements Executable, Explainable
             }
         }
 
-        $hasExplain = ! empty($this->options['explain']);
-        $hasWriteStage = $this->hasWriteStage();
-
         $command = new Command(
-            $this->createCommandDocument($server, $hasWriteStage),
+            $this->createCommandDocument($server),
             $this->createCommandOptions()
         );
-        $options = $this->createOptions($hasWriteStage, $hasExplain);
 
-        $cursor = $hasWriteStage && ! $hasExplain
-            ? $server->executeReadWriteCommand($this->databaseName, $command, $options)
-            : $server->executeReadCommand($this->databaseName, $command, $options);
+        $cursor = $this->executeCommand($server, $command);
 
-        if ($this->options['useCursor'] || $hasExplain) {
+        if ($this->options['useCursor'] || $this->isExplain) {
             if (isset($this->options['typeMap'])) {
                 $cursor->setTypeMap($this->options['typeMap']);
             }
@@ -341,10 +353,10 @@ class Aggregate implements Executable, Explainable
      */
     public function getCommandDocument(Server $server)
     {
-        return $this->createCommandDocument($server, $this->hasWriteStage());
+        return $this->createCommandDocument($server);
     }
 
-    private function createCommandDocument(Server $server, bool $hasWriteStage): array
+    private function createCommandDocument(Server $server): array
     {
         $cmd = [
             'aggregate' => $this->collectionName ?? 1,
@@ -377,10 +389,7 @@ class Aggregate implements Executable, Explainable
         }
 
         if ($this->options['useCursor']) {
-            /* Ignore batchSize if pipeline includes an $out or $merge stage, as
-             * no documents will be returned and sending a batchSize of zero
-             * could prevent the pipeline from executing at all. */
-            $cmd['cursor'] = isset($this->options["batchSize"]) && ! $hasWriteStage
+            $cmd['cursor'] = isset($this->options["batchSize"])
                 ? ['batchSize' => $this->options["batchSize"]]
                 : new stdClass();
         }
@@ -400,39 +409,38 @@ class Aggregate implements Executable, Explainable
     }
 
     /**
-     * Create options for executing the command.
+     * Execute the aggregate command using the appropriate Server method.
      *
+     * @see http://php.net/manual/en/mongodb-driver-server.executecommand.php
      * @see http://php.net/manual/en/mongodb-driver-server.executereadcommand.php
      * @see http://php.net/manual/en/mongodb-driver-server.executereadwritecommand.php
-     * @param boolean $hasWriteStage
-     * @param boolean $hasExplain
-     * @return array
      */
-    private function createOptions($hasWriteStage, $hasExplain)
+    private function executeCommand(Server $server, Command $command): Cursor
     {
         $options = [];
 
-        if (isset($this->options['readConcern'])) {
-            $options['readConcern'] = $this->options['readConcern'];
+        foreach (['readConcern', 'readPreference', 'session'] as $option) {
+            if (isset($this->options[$option])) {
+                $options[$option] = $this->options[$option];
+            }
         }
 
-        if (! $hasWriteStage && isset($this->options['readPreference'])) {
-            $options['readPreference'] = $this->options['readPreference'];
-        }
-
-        if (isset($this->options['session'])) {
-            $options['session'] = $this->options['session'];
-        }
-
-        if ($hasWriteStage && ! $hasExplain && isset($this->options['writeConcern'])) {
+        if ($this->isWrite && isset($this->options['writeConcern'])) {
             $options['writeConcern'] = $this->options['writeConcern'];
         }
 
-        return $options;
-    }
+        if (! $this->isWrite) {
+            return $server->executeReadCommand($this->databaseName, $command, $options);
+        }
 
-    private function hasWriteStage(): bool
-    {
-        return is_last_pipeline_operator_write($this->pipeline);
+        /* Server::executeReadWriteCommand() does not support a "readPreference"
+         * option, so fall back to executeCommand(). This means that libmongoc
+         * will not apply any client-level options (e.g. writeConcern), but that
+         * should not be an issue as PHPLIB handles inheritance on its own. */
+        if (isset($options['readPreference'])) {
+            return $server->executeCommand($this->databaseName, $command, $options);
+        }
+
+        return $server->executeReadWriteCommand($this->databaseName, $command, $options);
     }
 }

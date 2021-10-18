@@ -111,6 +111,8 @@ class Database
      */
     public function __construct(Manager $manager, $databaseName, array $options = [])
     {
+        $databaseName = (string) $databaseName;
+
         if (strlen($databaseName) < 1) {
             throw new InvalidArgumentException('$databaseName is invalid: ' . $databaseName);
         }
@@ -132,7 +134,7 @@ class Database
         }
 
         $this->manager = $manager;
-        $this->databaseName = (string) $databaseName;
+        $this->databaseName = $databaseName;
         $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();
         $this->readPreference = $options['readPreference'] ?? $this->manager->getReadPreference();
         $this->typeMap = $options['typeMap'] ?? self::$defaultTypeMap;

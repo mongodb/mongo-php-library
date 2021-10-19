@@ -39,6 +39,9 @@ class CommandExpectations implements CommandSubscriber
     /** @var boolean */
     private $ignoreExtraEvents = false;
 
+    /** @var boolean */
+    private $ignoreKeyVaultListCollections = false;
+
     /** @var string[] */
     private $ignoredCommandNames = [];
 
@@ -87,6 +90,7 @@ class CommandExpectations implements CommandSubscriber
 
         $o->ignoreCommandFailed = true;
         $o->ignoreCommandSucceeded = true;
+        $o->ignoreKeyVaultListCollections = true;
 
         return $o;
     }
@@ -254,7 +258,24 @@ class CommandExpectations implements CommandSubscriber
 
     private function isEventIgnored($event)
     {
-        return ($this->ignoreExtraEvents && count($this->actualEvents) === count($this->expectedEvents))
-            || in_array($event->getCommandName(), $this->ignoredCommandNames);
+        if ($this->ignoreExtraEvents && count($this->actualEvents) === count($this->expectedEvents)) {
+            return true;
+        }
+
+        if (in_array($event->getCommandName(), $this->ignoredCommandNames)) {
+            return true;
+        }
+
+        /* Note: libmongoc does not use a separate MongoClient to query for
+         * CSFLE metadata (DRIVERS-1459). Since the tests do not expect this
+         * command, we must ignore it. */
+        if (
+            $this->ignoreKeyVaultListCollections && $event instanceof CommandStartedEvent &&
+            $event->getCommandName() === 'listCollections' && $event->getDatabaseName() === 'keyvault'
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

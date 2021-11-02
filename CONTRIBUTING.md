@@ -203,9 +203,9 @@ https://docs.mongodb.com/php-library/
 
 This library may be installed or upgraded with:
 
-    composer require mongodb/mongodb
+    composer require mongodb/mongodb^X.Y.Z
 
-Installation instructions for the `mongodb` extension may be found in the [PHP.net documentation](http://php.net/manual/en/mongodb.installation.php).
+Installation instructions for the `mongodb` extension may be found in the [PHP.net documentation](https://www.php.net/manual/en/mongodb.installation.php).
 ```
 
 The URL for the list of resolved JIRA issues will need to be updated with each
@@ -223,10 +223,7 @@ Thanks for our community contributors for this release:
  * [$CONTRIBUTOR_NAME](https://github.com/$GITHUB_USERNAME)
 ```
 
-Release announcements should also be sent to the [MongoDB Product & Driver Announcements](https://community.mongodb.com/tags/c/community/release-notes/35/php-driver).
-
-Consider announcing each release on Twitter. Significant releases should also be
-announced via [@MongoDB](http://twitter.com/mongodb) as well.
+Release announcements should also be posted in the [MongoDB Product & Driver Announcements: Driver Releases](https://www.mongodb.com/community/forums/tags/c/announcements/driver-releases/110/php) forum and shared on Twitter.
 
 ### Documentation Updates for New Major and Minor Versions
 

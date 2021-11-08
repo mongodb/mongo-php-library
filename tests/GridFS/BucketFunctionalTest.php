@@ -14,7 +14,6 @@ use MongoDB\GridFS\Exception\StreamException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\ListIndexes;
-use PHPUnit\Framework\Error\Warning;
 
 use function array_merge;
 use function call_user_func;
@@ -174,7 +173,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $this->chunksCollection->deleteOne(['files_id' => $id, 'n' => 0]);
 
-        $this->expectException(Warning::class);
+        $this->expectWarning();
         stream_get_contents($this->bucket->openDownloadStream($id));
     }
 
@@ -187,7 +186,7 @@ class BucketFunctionalTest extends FunctionalTestCase
             ['$set' => ['n' => 1]]
         );
 
-        $this->expectException(Warning::class);
+        $this->expectWarning();
         stream_get_contents($this->bucket->openDownloadStream($id));
     }
 
@@ -200,7 +199,7 @@ class BucketFunctionalTest extends FunctionalTestCase
             ['$set' => ['data' => new Binary('fooba', Binary::TYPE_GENERIC)]]
         );
 
-        $this->expectException(Warning::class);
+        $this->expectWarning();
         stream_get_contents($this->bucket->openDownloadStream($id));
     }
 

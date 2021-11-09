@@ -212,7 +212,7 @@ functions:
           export SERVERLESS_API_PRIVATE_KEY=${SERVERLESS_API_PRIVATE_KEY}
           export SERVERLESS_ATLAS_USER=${SERVERLESS_ATLAS_USER}
           export SERVERLESS_ATLAS_PASSWORD=${SERVERLESS_ATLAS_PASSWORD}
-          sh ${PROJECT_DIRECTORY}/.evergreen/serverless/create-instance.sh
+          bash ${PROJECT_DIRECTORY}/.evergreen/serverless/create-instance.sh
     - command: expansions.update
       params:
         file: src/serverless-expansion.yml
@@ -229,7 +229,7 @@ functions:
           export SERVERLESS_ATLAS_USER=${SERVERLESS_ATLAS_USER}
           export SERVERLESS_ATLAS_PASSWORD=${SERVERLESS_ATLAS_PASSWORD}
           export SERVERLESS_INSTANCE_NAME=${SERVERLESS_INSTANCE_NAME}
-          sh ${PROJECT_DIRECTORY}/.evergreen/serverless/delete-instance.sh
+          bash ${PROJECT_DIRECTORY}/.evergreen/serverless/delete-instance.sh
 
   "run tests":
     - command: shell.exec

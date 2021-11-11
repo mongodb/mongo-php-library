@@ -17,8 +17,8 @@ use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Constraint\IsType;
+use PHPUnit\Framework\Exception as PHPUnitException;
 use stdClass;
 use Throwable;
 
@@ -146,18 +146,14 @@ final class Operation
             $result = $this->execute();
             $saveResultAsEntity = $this->saveResultAsEntity;
         } catch (Throwable $e) {
-            /* Rethrow any internal PHP errors and PHPUnit assertion failures,
-             * since those are never expected for "expectError".
-             *
-             * Note: we must be selective about what PHPUnit exceptions to pass
-             * through, as PHPUnit's Warning exception must be considered for
-             * expectError in GridFS tests (see: PHPLIB-592).
+            /* Rethrow any internal PHP errors and PHPUnit exceptions, since
+             * those are never expected for "expectError".
              *
              * TODO: Consider adding operation details (e.g. operations[] index)
              * to the exception message. Alternatively, throw a new exception
              * and include this as the previous, since PHPUnit will render the
              * chain when reporting a test failure. */
-            if ($e instanceof Error || $e instanceof AssertionFailedError) {
+            if ($e instanceof Error || $e instanceof PHPUnitException) {
                 throw $e;
             }
 

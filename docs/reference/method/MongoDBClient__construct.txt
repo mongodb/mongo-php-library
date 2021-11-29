@@ -113,7 +113,7 @@ By default, the |php-library| deserializes BSON documents and arrays
 as :phpclass:`MongoDB\\Model\\BSONDocument` and
 :phpclass:`MongoDB\\Model\\BSONArray` objects, respectively. The following
 example demonstrates how to have the library unserialize everything as a PHP
-array, as was done in the legacy :php:`mongo extension <mongo>`.
+array, as was done in the legacy ``mongo`` extension.
 
 .. code-block:: php
 

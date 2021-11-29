@@ -199,9 +199,9 @@ The same document in the MongoDB shell might display as:
 Emulating the Legacy Driver
 ---------------------------
 
-The legacy :php:`mongo extension <mongo>` returned both BSON documents and
-arrays as PHP arrays. While PHP arrays are convenient to work with, this
-behavior was problematic:
+The legacy ``mongo`` extension returned both BSON documents and arrays as PHP
+arrays. While PHP arrays are convenient to work with, this behavior was
+problematic:
 
 - Different BSON types could deserialize to the same PHP value (e.g.
   ``{"0": "foo"}`` and ``["foo"]``), which made it impossible to infer the

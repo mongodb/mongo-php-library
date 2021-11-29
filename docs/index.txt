@@ -35,10 +35,9 @@ following pages should help you get started:
 
 - :doc:`/reference/bson`
 
-If you have previously worked with the
-`legacy PHP driver <http://php.net/manual/en/book.mongo.php>`_ (i.e. ``mongo``
-extension), it will be helpful to review the :doc:`/upgrade` for a summary of
-API changes between the old driver and this library.
+If you have previously worked with the legacy ``mongo`` extension, it will be
+helpful to review the :doc:`/upgrade` for a summary of API changes between the
+old driver and this library.
 
 New to MongoDB?
 ---------------

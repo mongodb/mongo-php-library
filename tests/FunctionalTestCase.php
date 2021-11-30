@@ -267,7 +267,7 @@ abstract class FunctionalTestCase extends TestCase
             throw new InvalidArgumentException('$command is not an array or stdClass instance');
         }
 
-        if (key($command) !== 'configureFailPoint') {
+        if (key((array) $command) !== 'configureFailPoint') {
             throw new InvalidArgumentException('$command is not a configureFailPoint command');
         }
 

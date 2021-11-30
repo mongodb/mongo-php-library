@@ -48,7 +48,7 @@ class CommandExpectations implements CommandSubscriber
     private function __construct(array $events)
     {
         foreach ($events as $event) {
-            switch (key($event)) {
+            switch (key((array) $event)) {
                 case 'command_failed_event':
                     // phpcs:ignore Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
                     $this->expectedEvents[] = [$event->command_failed_event, CommandFailedEvent::class];

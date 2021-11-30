@@ -51,8 +51,7 @@ name: allowDiskUse
 type: boolean
 description: |
   Enables writing to temporary files. When set to ``true``, queries can write
-  data to the ``_tmp`` sub-directory in the ``dbPath`` directory. The default is
-  ``false``.
+  data to the ``_tmp`` sub-directory in the ``dbPath`` directory.
 interface: phpmethod
 operation: ~
 optional: true

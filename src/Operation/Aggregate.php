@@ -89,7 +89,7 @@ class Aggregate implements Executable, Explainable
      *
      *  * allowDiskUse (boolean): Enables writing to temporary files. When set
      *    to true, aggregation stages can write data to the _tmp sub-directory
-     *    in the dbPath directory. The default is false.
+     *    in the dbPath directory.
      *
      *  * batchSize (integer): The number of documents to return per batch.
      *
@@ -179,12 +179,9 @@ class Aggregate implements Executable, Explainable
             $expectedIndex += 1;
         }
 
-        $options += [
-            'allowDiskUse' => false,
-            'useCursor' => true,
-        ];
+        $options += ['useCursor' => true];
 
-        if (! is_bool($options['allowDiskUse'])) {
+        if (isset($options['allowDiskUse']) && ! is_bool($options['allowDiskUse'])) {
             throw InvalidArgumentException::invalidType('"allowDiskUse" option', $options['allowDiskUse'], 'boolean');
         }
 
@@ -363,8 +360,6 @@ class Aggregate implements Executable, Explainable
             'pipeline' => $this->pipeline,
         ];
 
-        $cmd['allowDiskUse'] = $this->options['allowDiskUse'];
-
         if (
             ! empty($this->options['bypassDocumentValidation']) &&
             server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
@@ -372,7 +367,7 @@ class Aggregate implements Executable, Explainable
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 
-        foreach (['comment', 'explain', 'maxTimeMS'] as $option) {
+        foreach (['allowDiskUse', 'comment', 'explain', 'maxTimeMS'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }

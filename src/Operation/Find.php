@@ -79,7 +79,7 @@ class Find implements Executable, Explainable
      *
      *  * allowDiskUse (boolean): Enables writing to temporary files. When set
      *    to true, queries can write data to the _tmp sub-directory in the
-     *    dbPath directory. The default is false.
+     *    dbPath directory.
      *
      *  * allowPartialResults (boolean): Get partial results from a mongos if
      *    some shards are inaccessible (instead of throwing an error).

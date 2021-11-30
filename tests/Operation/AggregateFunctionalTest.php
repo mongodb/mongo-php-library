@@ -18,6 +18,24 @@ use function version_compare;
 
 class AggregateFunctionalTest extends FunctionalTestCase
 {
+    public function testAllowDiskUseIsOmittedByDefault(): void
+    {
+        (new CommandObserver())->observe(
+            function (): void {
+                $operation = new Aggregate(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [['$match' => ['x' => 1]]]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event): void {
+                $this->assertObjectNotHasAttribute('allowDiskUse', $event['started']->getCommand());
+            }
+        );
+    }
+
     public function testBatchSizeIsIgnoredIfPipelineIncludesOutStage(): void
     {
         (new CommandObserver())->observe(

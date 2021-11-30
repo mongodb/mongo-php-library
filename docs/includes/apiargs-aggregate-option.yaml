@@ -3,8 +3,7 @@ name: allowDiskUse
 type: boolean
 description: |
   Enables writing to temporary files. When set to ``true``, aggregation stages
-  can write data to the ``_tmp`` sub-directory in the ``dbPath`` directory. The
-  default is ``false``.
+  can write data to the ``_tmp`` sub-directory in the ``dbPath`` directory.
 interface: phpmethod
 operation: ~
 optional: true

@@ -140,11 +140,11 @@ class Collection
      */
     public function __construct(Manager $manager, $databaseName, $collectionName, array $options = [])
     {
-        if (strlen($databaseName) < 1) {
+        if (strlen((string) $databaseName) < 1) {
             throw new InvalidArgumentException('$databaseName is invalid: ' . $databaseName);
         }
 
-        if (strlen($collectionName) < 1) {
+        if (strlen((string) $collectionName) < 1) {
             throw new InvalidArgumentException('$collectionName is invalid: ' . $collectionName);
         }
 

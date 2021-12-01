@@ -162,7 +162,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideTypeMapOptionsAndExpectedDocument
      */
-    public function testTypeMapOption(?array $typeMap = null, $expectedDocument): void
+    public function testTypeMapOption(?array $typeMap, $expectedDocument): void
     {
         $this->createFixtures(1);
 

@@ -114,7 +114,7 @@ class Database
      */
     public function __construct(Manager $manager, $databaseName, array $options = [])
     {
-        if (strlen($databaseName) < 1) {
+        if (strlen((string) $databaseName) < 1) {
             throw new InvalidArgumentException('$databaseName is invalid: ' . $databaseName);
         }
 

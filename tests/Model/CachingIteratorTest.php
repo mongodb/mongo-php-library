@@ -122,7 +122,7 @@ class CachingIteratorTest extends TestCase
             /** @var int */
             private $i = 0;
 
-            public function current()
+            public function current(): int
             {
                 return $this->i;
             }
@@ -132,12 +132,12 @@ class CachingIteratorTest extends TestCase
                 $this->i++;
             }
 
-            public function key()
+            public function key(): int
             {
                 return $this->i;
             }
 
-            public function valid()
+            public function valid(): bool
             {
                 return $this->i == 0;
             }

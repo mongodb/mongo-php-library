@@ -544,6 +544,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-aws.json')),
             $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-azure.json')),
             $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-gcp.json')),
+            $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-kmip.json')),
         ]);
 
         $encryptionOpts = [
@@ -553,6 +554,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 'azure' => Context::getAzureCredentials(),
                 'gcp' => Context::getGCPCredentials(),
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'kmip' => ['endpoint' => Context::getKmipEndpoint()],
+            ],
+            'tlsOptions' => [
+                'kmip' => Context::getKmipTlsOptions(),
             ],
         ];
 
@@ -578,6 +583,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             'altname_azure',
             'altname_gcp',
             'altname_local',
+            'altname_kmip',
         ];
 
         foreach ($corpus as $fieldName => $data) {
@@ -639,6 +645,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 'aws' => Context::getAWSCredentials(),
                 'azure' => Context::getAzureCredentials() + ['identityPlatformEndpoint' => 'login.microsoftonline.com:443'],
                 'gcp' => Context::getGCPCredentials() + ['endpoint' => 'oauth2.googleapis.com:443'],
+                'kmip' => ['endpoint' => Context::getKmipEndpoint()],
+            ],
+            'tlsOptions' => [
+                'kmip' => Context::getKmipTlsOptions(),
             ],
         ]);
 
@@ -647,6 +657,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             'kmsProviders' => [
                 'azure' => Context::getAzureCredentials() + ['identityPlatformEndpoint' => 'example.com:443'],
                 'gcp' => Context::getGCPCredentials() + ['endpoint' => 'example.com:443'],
+                'kmip' => ['endpoint' => 'doesnotexist.local:5698'],
+            ],
+            'tlsOptions' => [
+                'kmip' => Context::getKmipTlsOptions(),
             ],
         ]);
 
@@ -664,6 +678,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             'keyName' => 'key-name-csfle',
             'endpoint' => 'cloudkms.googleapis.com:443',
         ];
+        $kmipMasterKey = ['keyId' => '1'];
 
         yield 'Test 1' => [
             static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey): void {
@@ -744,6 +759,38 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $test->expectException(RuntimeException::class);
                 $test->expectExceptionMessageMatches('#Invalid KMS response#');
                 $clientEncryption->createDataKey('gcp', ['masterKey' => $masterKey]);
+            },
+        ];
+
+        yield 'Test 10' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($kmipMasterKey): void {
+                $keyId = $clientEncryption->createDataKey('kmip', ['masterKey' => $kmipMasterKey]);
+                $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+
+                $test->expectException(RuntimeException::class);
+                $test->expectExceptionMessageMatches('#doesnotexist.local#');
+                $clientEncryptionInvalid->createDataKey('kmip', ['masterKey' => $kmipMasterKey]);
+            },
+        ];
+
+        yield 'Test 11' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($kmipMasterKey): void {
+                $kmipMasterKey['endpoint'] = Context::getKmipEndpoint();
+
+                $keyId = $clientEncryption->createDataKey('kmip', ['masterKey' => $kmipMasterKey]);
+                $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+            },
+        ];
+
+        yield 'Test 12' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($kmipMasterKey): void {
+                $kmipMasterKey['endpoint'] = 'doesnotexist.local:5698';
+
+                $test->expectException(RuntimeException::class);
+                $test->expectExceptionMessageMatches('#doesnotexist.local#');
+                $clientEncryption->createDataKey('kmip', ['masterKey' => $kmipMasterKey]);
             },
         ];
     }
@@ -861,6 +908,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             case 'gcp':
                 $keyId = 'GCPAAAAAAAAAAAAAAAAAAA==';
                 $keyAltName = 'gcp';
+                break;
+            case 'kmip':
+                $keyId = 'KMIPAAAAAAAAAAAAAAAAAA==';
+                $keyAltName = 'kmip';
                 break;
 
             default:

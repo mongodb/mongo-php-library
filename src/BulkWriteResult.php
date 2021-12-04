@@ -189,4 +189,13 @@ class BulkWriteResult
     {
         return $this->isAcknowledged;
     }
+
+    /**
+     * Returns an array of WriteResult with errors ocurred during insert
+     * or empty if there was none
+     */
+    public function getWriteErrors()
+    {
+        return $this->writeResult->getWriteErrors();
+    }
 }

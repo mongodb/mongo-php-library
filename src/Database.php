@@ -64,9 +64,6 @@ class Database
     /** @var integer */
     private static $wireVersionForReadConcernWithWriteStage = 8;
 
-    /** @var integer */
-    private static $wireVersionForSecondarySupportsWriteStage = 13;
-
     /** @var string */
     private $databaseName;
 
@@ -209,21 +206,9 @@ class Database
             $options['readPreference'] = $this->readPreference;
         }
 
-        $server = select_server($this->manager, $options);
-
-        /* If a write stage is being used with a read preference (explicit or
-         * inherited), check that the wire version supports it. If not, force a
-         * primary read preference and select a new server if necessary. */
-        if (
-            $hasWriteStage && isset($options['readPreference']) &&
-            ! server_supports_feature($server, self::$wireVersionForSecondarySupportsWriteStage)
-        ) {
-            $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
-
-            if ($server->isSecondary()) {
-                $server = select_server($this->manager, $options);
-            }
-        }
+        $server = $hasWriteStage
+            ? select_server_for_aggregate_write_stage($this->manager, $options)
+            : select_server($this->manager, $options);
 
         /* MongoDB 4.2 and later supports a read concern when an $out stage is
          * being used, but earlier versions do not.

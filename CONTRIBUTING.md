@@ -182,7 +182,7 @@ will be ignored.
 ### Publish release notes
 
 The following template should be used for creating GitHub release notes via
-[this form](https://github.com/mongodb/mongo-php-library/releases/new).
+[this form](https://github.com/mongodb/mongo-php-library/releases/).
 
 ```
 The PHP team is happy to announce that version X.Y.Z of the MongoDB PHP library is now available.

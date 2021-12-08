@@ -244,7 +244,7 @@ functions:
           export AZURE_CLIENT_ID="${client_side_encryption_azure_client_id}"
           export AZURE_CLIENT_SECRET="${client_side_encryption_azure_client_secret}"
           export GCP_EMAIL="${client_side_encryption_gcp_email}"
-          export GCP_PRIVATEKEY="${client_side_encryption_gcp_privatekey}"
+          export GCP_PRIVATE_KEY="${client_side_encryption_gcp_privatekey}"
           export PATH="${PHP_PATH}/bin:$PATH"
           MOCK_SERVICE_ID=${MOCK_SERVICE_ID} API_VERSION=${API_VERSION} PHP_VERSION=${PHP_VERSION} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 

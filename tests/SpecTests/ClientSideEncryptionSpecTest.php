@@ -864,7 +864,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 break;
 
             default:
-                throw new UnexpectedValueException('Unexpected KMS "%s"', $data->kms);
+                throw new UnexpectedValueException(sprintf('Unexpected KMS "%s"', $data->kms));
         }
 
         switch ($data->identifier) {
@@ -877,7 +877,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 break;
 
             default:
-                throw new UnexpectedValueException('Unexpected value "%s" for identifier', $data->identifier);
+                throw new UnexpectedValueException(sprintf('Unexpected value "%s" for identifier', $data->identifier));
         }
 
         if ($data->allowed) {

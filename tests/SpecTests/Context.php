@@ -131,7 +131,7 @@ final class Context
                     $autoEncryptionOptions['tlsOptions'] = new stdClass();
                 }
 
-                $autoEncryptionOptions['tlsOptions']->kmip = self::getKmipTlsOptions();
+                $autoEncryptionOptions['tlsOptions']->kmip = self::getKmsTlsOptions();
             }
         }
 
@@ -292,15 +292,15 @@ final class Context
         return getenv('KMIP_ENDPOINT');
     }
 
-    public static function getKmipTlsOptions(): array
+    public static function getKmsTlsOptions(): array
     {
-        if (! getenv('KMIP_TLS_CA_FILE') || ! getenv('KMIP_TLS_CERTIFICATE_KEY_FILE')) {
-            Assert::markTestSkipped('Please configure KMIP TLS options to use KMIP KMS provider.');
+        if (! getenv('KMS_TLS_CA_FILE') || ! getenv('KMS_TLS_CERTIFICATE_KEY_FILE')) {
+            Assert::markTestSkipped('Please configure KMS TLS options.');
         }
 
         return [
-            'tlsCAFile' => getenv('KMIP_TLS_CA_FILE'),
-            'tlsCertificateKeyFile' => getenv('KMIP_TLS_CERTIFICATE_KEY_FILE'),
+            'tlsCAFile' => getenv('KMS_TLS_CA_FILE'),
+            'tlsCertificateKeyFile' => getenv('KMS_TLS_CERTIFICATE_KEY_FILE'),
         ];
     }
 

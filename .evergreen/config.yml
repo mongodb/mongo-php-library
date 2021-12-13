@@ -246,8 +246,11 @@ functions:
           export GCP_EMAIL="${client_side_encryption_gcp_email}"
           export GCP_PRIVATE_KEY="${client_side_encryption_gcp_privatekey}"
           export KMIP_ENDPOINT="${client_side_encryption_kmip_endpoint}"
-          export KMIP_TLS_CA_FILE="${client_side_encryption_kmip_tls_ca_file}"
-          export KMIP_TLS_CERTIFICATE_KEY_FILE="${client_side_encryption_kmip_tls_certificate_key_file}"
+          export KMS_ENDPOINT_EXPIRED="${client_side_encryption_kms_endpoint_expired}"
+          export KMS_ENDPOINT_WRONG_HOST="${client_side_encryption_kms_endpoint_wrong_host}"
+          export KMS_ENDPOINT_REQUIRE_CLIENT_CERT="${client_side_encryption_kms_endpoint_require_client_cert}"
+          export KMS_TLS_CA_FILE="${client_side_encryption_kms_tls_ca_file}"
+          export KMS_TLS_CERTIFICATE_KEY_FILE="${client_side_encryption_kms_tls_certificate_key_file}"
           export PATH="${PHP_PATH}/bin:$PATH"
           MOCK_SERVICE_ID=${MOCK_SERVICE_ID} API_VERSION=${API_VERSION} PHP_VERSION=${PHP_VERSION} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
@@ -348,23 +351,30 @@ functions:
     - command: shell.exec
       params:
         background: true
+        # Use different ports for KMS HTTP servers to avoid conflicts with load balancers
         script: |-
           set -o errexit
           cd ${DRIVERS_TOOLS}/.evergreen/csfle
           . ./activate_venv.sh
-          python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/expired.pem --port 8000 &
-          python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/wrong-host.pem --port 8001 &
-          python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/server.pem --port 8002 --require_client_cert &
+          python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/expired.pem --port 8100 &
+          python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/wrong-host.pem --port 8101 &
+          python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/server.pem --port 8102 --require_client_cert &
           python -u kms_kmip_server.py --port 5698 &
     - command: expansions.update
       params:
         updates:
+          - key: client_side_encryption_kms_tls_ca_file
+            value: ${DRIVERS_TOOLS}/.evergreen/x509gen/ca.pem
+          - key: client_side_encryption_kms_tls_certificate_key_file
+            value: ${DRIVERS_TOOLS}/.evergreen/x509gen/client.pem
+          - key: client_side_encryption_kms_endpoint_expired
+            value: 127.0.0.1:8100
+          - key: client_side_encryption_kms_endpoint_wrong_host
+            value: 127.0.0.1:8101
+          - key: client_side_encryption_kms_endpoint_require_client_cert
+            value: 127.0.0.1:8102
           - key: client_side_encryption_kmip_endpoint
             value: localhost:5698
-          - key: client_side_encryption_kmip_tls_ca_file
-            value: ${DRIVERS_TOOLS}/.evergreen/x509gen/ca.pem
-          - key: client_side_encryption_kmip_tls_certificate_key_file
-            value: ${DRIVERS_TOOLS}/.evergreen/x509gen/client.pem
 
 pre:
   - func: "fetch source"
@@ -419,28 +429,28 @@ tasks:
     - name: "test-standalone"
       tags: ["standalone"]
       commands:
-        - func: "start kms servers"
         - func: "bootstrap mongo-orchestration"
           vars:
             TOPOLOGY: "server"
+        - func: "start kms servers"
         - func: "run tests"
 
     - name: "test-replica_set"
       tags: ["replica_set"]
       commands:
-        - func: "start kms servers"
         - func: "bootstrap mongo-orchestration"
           vars:
             TOPOLOGY: "replica_set"
+        - func: "start kms servers"
         - func: "run tests"
 
     - name: "test-sharded_cluster"
       tags: ["sharded_cluster"]
       commands:
-        - func: "start kms servers"
         - func: "bootstrap mongo-orchestration"
           vars:
             TOPOLOGY: "sharded_cluster"
+        - func: "start kms servers"
         - func: "run tests"
 
     - name: "test-atlas-data-lake"
@@ -451,12 +461,12 @@ tasks:
     - name: "test-requireApiVersion"
       tags: ["versioned-api"]
       commands:
-        - func: "start kms servers"
         - func: "bootstrap mongo-orchestration"
           vars:
             TOPOLOGY: "server"
             AUTH: "auth"
             REQUIRE_API_VERSION: "yes"
+        - func: "start kms servers"
         - func: "run tests"
           vars:
             API_VERSION: "1"
@@ -464,11 +474,11 @@ tasks:
     - name: "test-acceptApiVersion2"
       tags: ["versioned-api"]
       commands:
-        - func: "start kms servers"
         - func: "bootstrap mongo-orchestration"
           vars:
             TOPOLOGY: "server"
             ORCHESTRATION_FILE: "versioned-api-testing.json"
+        - func: "start kms servers"
         - func: "run tests"
           vars:
             TESTS: "versioned-api"
@@ -485,12 +495,12 @@ tasks:
     - name: "test-loadBalanced"
       tags: ["loadbalanced"]
       commands:
-        - func: "start kms servers"
         - func: "bootstrap mongo-orchestration"
           vars:
             TOPOLOGY: "sharded_cluster"
             SSL: "yes"
         - func: "start load balancer"
+        - func: "start kms servers"
         - func: "run tests"
           vars:
             # Testing with HAProxy requires service ID mocking

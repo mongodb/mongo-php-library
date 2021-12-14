@@ -609,21 +609,16 @@ axes:
   - id: driver-versions
     display_name: Driver Version
     values:
-      # TODO: Update references to master branch after PHPC 1.12 is released
-      - id: "lowest-supported"
-        # display_name: "1.11.0"
-        display_name: "1.12-dev"
+      - id: "oldest-supported"
+        display_name: "1.12.0"
         variables:
-          EXTENSION_BRANCH: "master"
+          EXTENSION_VERSION: "1.12.0"
       - id: "latest-stable"
-        # display_name: "Latest Stable (1.11.x)"
-        display_name: "1.12-dev"
+        display_name: "1.12.x"
         variables:
-          # EXTENSION_VERSION: "stable"
-          EXTENSION_BRANCH: "master"
+          EXTENSION_VERSION: "stable"
       - id: "latest-dev"
-        # display_name: "1.12-dev (master)"
-        display_name: "1.12-dev"
+        display_name: "1.13-dev (master)"
         variables:
           EXTENSION_BRANCH: "master"
 
@@ -728,20 +723,6 @@ buildvariants:
     - name: "test-replica_set"
     - name: "test-sharded_cluster"
 
-# Tests all driver versions on all PHP versions using latest MongoDB and Ubuntu 18.04
-- matrix_name: "test-driver-versions"
-  matrix_spec: { "os": "ubuntu1804-arm64-test", "edge-versions": "latest-stable", "php-versions": "*", "driver-versions": "*" }
-  exclude_spec:
-    # Avoid duplicate build variants from test-php-versions
-    - { "os": "ubuntu1804-arm64-test", "edge-versions": "latest-stable", "php-versions": "*", "driver-versions": "lowest-supported" }
-    - { "os": "ubuntu1804-arm64-test", "edge-versions": "latest-stable", "php-versions": "*", "driver-versions": "latest-stable" }
-    - { "os": "ubuntu1804-arm64-test", "edge-versions": "latest-stable", "php-versions": "*", "driver-versions": "latest-dev" }
-  display_name: "${os}, MongoDB ${edge-versions}, PHP ${php-versions}, ext-mongodb ${driver-versions}"
-  tasks:
-    - name: "test-standalone"
-    - name: "test-replica_set"
-    - name: "test-sharded_cluster"
-
 # Tests all MongoDB versions with latest stable PHP and driver versions
 - matrix_name: "test-mongodb-versions"
   matrix_spec: { "os": "debian92-test", "versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
@@ -754,10 +735,10 @@ buildvariants:
     - name: "test-replica_set"
     - name: "test-sharded_cluster"
 
-# Tests all MongoDB versions with lowest supported PHP and driver versions
+# Tests all MongoDB versions with oldest supported PHP and driver versions
 # Enables --prefer-lowest for composer to test oldest dependencies against all server versions
 - matrix_name: "test-dependencies"
-  matrix_spec: { "os": "debian92-test", "versions": "*", "php-edge-versions": "oldest-supported", "driver-versions": "lowest-supported", "dependencies": "lowest" }
+  matrix_spec: { "os": "debian92-test", "versions": "*", "php-edge-versions": "oldest-supported", "driver-versions": "oldest-supported", "dependencies": "lowest" }
   display_name: "Lowest Dependencies: ${os}, MongoDB ${versions}, PHP ${php-edge-versions}, ext-mongodb ${driver-versions}"
   tasks:
     - name: "test-standalone"

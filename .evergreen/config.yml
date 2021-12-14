@@ -349,6 +349,13 @@ functions:
 
   "start kms servers":
     - command: shell.exec
+      # Init venv without background:true to install dependencies
+      params:
+        script: |-
+          set -o errexit
+          cd ${DRIVERS_TOOLS}/.evergreen/csfle
+          . ./activate_venv.sh
+    - command: shell.exec
       params:
         background: true
         # Use different ports for KMS HTTP servers to avoid conflicts with load balancers

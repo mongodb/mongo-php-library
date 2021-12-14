@@ -27,24 +27,24 @@ jobs:
         mongodb-version:
           - "4.4"
         driver-version:
-          - "mongodb/mongo-php-driver@master"
+          - "stable"
         topology:
           - "server"
         include:
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "5.0"
-            driver-version: "mongodb/mongo-php-driver@master"
+            driver-version: "stable"
             topology: "server"
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "4.4"
-            driver-version: "mongodb/mongo-php-driver@master"
+            driver-version: "stable"
             topology: "replica_set"
           - os: "ubuntu-20.04"
             php-version: "8.0"
             mongodb-version: "4.4"
-            driver-version: "mongodb/mongo-php-driver@master"
+            driver-version: "stable"
             topology: "sharded_cluster"
 
     steps:

@@ -43,6 +43,9 @@ if [ "${IS_MATRIX_TESTING}" = "true" ]; then
    . $DIR/install-dependencies.sh
 fi
 
+# Enable verbose output to see skipped and incomplete tests
+PHPUNIT_OPTS="${PHPUNIT_OPTS} -v"
+
 # For load balancer testing, we need to enable service ID mocking
 if [ "${MOCK_SERVICE_ID}" = "1" ]; then
    PHPUNIT_OPTS="${PHPUNIT_OPTS} -d mongodb.mock_service_id=1"

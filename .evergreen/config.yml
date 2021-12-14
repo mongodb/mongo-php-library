@@ -245,6 +245,12 @@ functions:
           export AZURE_CLIENT_SECRET="${client_side_encryption_azure_client_secret}"
           export GCP_EMAIL="${client_side_encryption_gcp_email}"
           export GCP_PRIVATE_KEY="${client_side_encryption_gcp_privatekey}"
+          export KMIP_ENDPOINT="${client_side_encryption_kmip_endpoint}"
+          export KMS_ENDPOINT_EXPIRED="${client_side_encryption_kms_endpoint_expired}"
+          export KMS_ENDPOINT_WRONG_HOST="${client_side_encryption_kms_endpoint_wrong_host}"
+          export KMS_ENDPOINT_REQUIRE_CLIENT_CERT="${client_side_encryption_kms_endpoint_require_client_cert}"
+          export KMS_TLS_CA_FILE="${client_side_encryption_kms_tls_ca_file}"
+          export KMS_TLS_CERTIFICATE_KEY_FILE="${client_side_encryption_kms_tls_certificate_key_file}"
           export PATH="${PHP_PATH}/bin:$PATH"
           MOCK_SERVICE_ID=${MOCK_SERVICE_ID} API_VERSION=${API_VERSION} PHP_VERSION=${PHP_VERSION} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
@@ -341,6 +347,42 @@ functions:
             ${DRIVERS_TOOLS}/.evergreen/run-load-balancer.sh stop
           fi
 
+  "start kms servers":
+    - command: shell.exec
+      # Init venv without background:true to install dependencies
+      params:
+        script: |-
+          set -o errexit
+          cd ${DRIVERS_TOOLS}/.evergreen/csfle
+          . ./activate_venv.sh
+    - command: shell.exec
+      params:
+        background: true
+        # Use different ports for KMS HTTP servers to avoid conflicts with load balancers
+        script: |-
+          set -o errexit
+          cd ${DRIVERS_TOOLS}/.evergreen/csfle
+          . ./activate_venv.sh
+          python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/expired.pem --port 8100 &
+          python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/wrong-host.pem --port 8101 &
+          python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/server.pem --port 8102 --require_client_cert &
+          python -u kms_kmip_server.py --port 5698 &
+    - command: expansions.update
+      params:
+        updates:
+          - key: client_side_encryption_kms_tls_ca_file
+            value: ${DRIVERS_TOOLS}/.evergreen/x509gen/ca.pem
+          - key: client_side_encryption_kms_tls_certificate_key_file
+            value: ${DRIVERS_TOOLS}/.evergreen/x509gen/client.pem
+          - key: client_side_encryption_kms_endpoint_expired
+            value: 127.0.0.1:8100
+          - key: client_side_encryption_kms_endpoint_wrong_host
+            value: 127.0.0.1:8101
+          - key: client_side_encryption_kms_endpoint_require_client_cert
+            value: 127.0.0.1:8102
+          - key: client_side_encryption_kmip_endpoint
+            value: localhost:5698
+
 pre:
   - func: "fetch source"
   - func: "prepare resources"
@@ -397,6 +439,7 @@ tasks:
         - func: "bootstrap mongo-orchestration"
           vars:
             TOPOLOGY: "server"
+        - func: "start kms servers"
         - func: "run tests"
 
     - name: "test-replica_set"
@@ -405,6 +448,7 @@ tasks:
         - func: "bootstrap mongo-orchestration"
           vars:
             TOPOLOGY: "replica_set"
+        - func: "start kms servers"
         - func: "run tests"
 
     - name: "test-sharded_cluster"
@@ -413,6 +457,7 @@ tasks:
         - func: "bootstrap mongo-orchestration"
           vars:
             TOPOLOGY: "sharded_cluster"
+        - func: "start kms servers"
         - func: "run tests"
 
     - name: "test-atlas-data-lake"
@@ -428,6 +473,7 @@ tasks:
             TOPOLOGY: "server"
             AUTH: "auth"
             REQUIRE_API_VERSION: "yes"
+        - func: "start kms servers"
         - func: "run tests"
           vars:
             API_VERSION: "1"
@@ -439,6 +485,7 @@ tasks:
           vars:
             TOPOLOGY: "server"
             ORCHESTRATION_FILE: "versioned-api-testing.json"
+        - func: "start kms servers"
         - func: "run tests"
           vars:
             TESTS: "versioned-api"
@@ -460,6 +507,7 @@ tasks:
             TOPOLOGY: "sharded_cluster"
             SSL: "yes"
         - func: "start load balancer"
+        - func: "start kms servers"
         - func: "run tests"
           vars:
             # Testing with HAProxy requires service ID mocking
@@ -561,20 +609,21 @@ axes:
   - id: driver-versions
     display_name: Driver Version
     values:
+      # TODO: Update references to master branch after PHPC 1.12 is released
       - id: "lowest-supported"
-        display_name: "1.11.0"
+        # display_name: "1.11.0"
+        display_name: "1.12-dev"
         variables:
-          EXTENSION_VERSION: "1.11.0"
+          EXTENSION_BRANCH: "master"
       - id: "latest-stable"
-        display_name: "Latest Stable (1.11.x)"
+        # display_name: "Latest Stable (1.11.x)"
+        display_name: "1.12-dev"
         variables:
-          EXTENSION_VERSION: "stable"
-      - id: "upcoming-stable"
-        display_name: "1.11-dev"
-        variables:
-          EXTENSION_BRANCH: "v1.11"
+          # EXTENSION_VERSION: "stable"
+          EXTENSION_BRANCH: "master"
       - id: "latest-dev"
-        display_name: "1.12-dev (master)"
+        # display_name: "1.12-dev (master)"
+        display_name: "1.12-dev"
         variables:
           EXTENSION_BRANCH: "master"
 
@@ -684,7 +733,9 @@ buildvariants:
   matrix_spec: { "os": "ubuntu1804-arm64-test", "edge-versions": "latest-stable", "php-versions": "*", "driver-versions": "*" }
   exclude_spec:
     # Avoid duplicate build variants from test-php-versions
+    - { "os": "ubuntu1804-arm64-test", "edge-versions": "latest-stable", "php-versions": "*", "driver-versions": "lowest-supported" }
     - { "os": "ubuntu1804-arm64-test", "edge-versions": "latest-stable", "php-versions": "*", "driver-versions": "latest-stable" }
+    - { "os": "ubuntu1804-arm64-test", "edge-versions": "latest-stable", "php-versions": "*", "driver-versions": "latest-dev" }
   display_name: "${os}, MongoDB ${edge-versions}, PHP ${php-versions}, ext-mongodb ${driver-versions}"
   tasks:
     - name: "test-standalone"

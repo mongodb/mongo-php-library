@@ -16,6 +16,7 @@ use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Tests\CommandObserver;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\SkippedTestError;
 use stdClass;
 use Throwable;
@@ -24,6 +25,7 @@ use UnexpectedValueException;
 use function base64_decode;
 use function basename;
 use function file_get_contents;
+use function getenv;
 use function glob;
 use function in_array;
 use function iterator_to_array;
@@ -195,6 +197,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 'azure' => Context::getAzureCredentials(),
                 'gcp' => Context::getGCPCredentials(),
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'kmip' => ['endpoint' => Context::getKmipEndpoint()],
+            ],
+            'tlsOptions' => [
+                'kmip' => Context::getKmsTlsOptions(),
             ],
         ];
 
@@ -299,6 +305,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                     'keyRing' => 'key-ring-csfle',
                     'keyName' => 'key-name-csfle',
                 ],
+            ],
+            'kmip' => [
+                'providerName' => 'kmip',
+                'masterKey' => [],
             ],
         ];
     }
@@ -544,6 +554,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-aws.json')),
             $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-azure.json')),
             $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-gcp.json')),
+            $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/corpus/corpus-key-kmip.json')),
         ]);
 
         $encryptionOpts = [
@@ -553,6 +564,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 'azure' => Context::getAzureCredentials(),
                 'gcp' => Context::getGCPCredentials(),
                 'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'kmip' => ['endpoint' => Context::getKmipEndpoint()],
+            ],
+            'tlsOptions' => [
+                'kmip' => Context::getKmsTlsOptions(),
             ],
         ];
 
@@ -578,6 +593,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             'altname_azure',
             'altname_gcp',
             'altname_local',
+            'altname_kmip',
         ];
 
         foreach ($corpus as $fieldName => $data) {
@@ -639,6 +655,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 'aws' => Context::getAWSCredentials(),
                 'azure' => Context::getAzureCredentials() + ['identityPlatformEndpoint' => 'login.microsoftonline.com:443'],
                 'gcp' => Context::getGCPCredentials() + ['endpoint' => 'oauth2.googleapis.com:443'],
+                'kmip' => ['endpoint' => Context::getKmipEndpoint()],
+            ],
+            'tlsOptions' => [
+                'kmip' => Context::getKmsTlsOptions(),
             ],
         ]);
 
@@ -647,6 +667,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             'kmsProviders' => [
                 'azure' => Context::getAzureCredentials() + ['identityPlatformEndpoint' => 'example.com:443'],
                 'gcp' => Context::getGCPCredentials() + ['endpoint' => 'example.com:443'],
+                'kmip' => ['endpoint' => 'doesnotexist.local:5698'],
+            ],
+            'tlsOptions' => [
+                'kmip' => Context::getKmsTlsOptions(),
             ],
         ]);
 
@@ -664,6 +688,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             'keyName' => 'key-name-csfle',
             'endpoint' => 'cloudkms.googleapis.com:443',
         ];
+        $kmipMasterKey = ['keyId' => '1'];
 
         yield 'Test 1' => [
             static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey): void {
@@ -746,6 +771,38 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $clientEncryption->createDataKey('gcp', ['masterKey' => $masterKey]);
             },
         ];
+
+        yield 'Test 10' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($kmipMasterKey): void {
+                $keyId = $clientEncryption->createDataKey('kmip', ['masterKey' => $kmipMasterKey]);
+                $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+
+                $test->expectException(RuntimeException::class);
+                $test->expectExceptionMessageMatches('#doesnotexist.local#');
+                $clientEncryptionInvalid->createDataKey('kmip', ['masterKey' => $kmipMasterKey]);
+            },
+        ];
+
+        yield 'Test 11' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($kmipMasterKey): void {
+                $kmipMasterKey['endpoint'] = Context::getKmipEndpoint();
+
+                $keyId = $clientEncryption->createDataKey('kmip', ['masterKey' => $kmipMasterKey]);
+                $encrypted = $clientEncryption->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+                $test->assertSame('test', $clientEncryption->decrypt($encrypted));
+            },
+        ];
+
+        yield 'Test 12' => [
+            static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($kmipMasterKey): void {
+                $kmipMasterKey['endpoint'] = 'doesnotexist.local:5698';
+
+                $test->expectException(RuntimeException::class);
+                $test->expectExceptionMessageMatches('#doesnotexist.local#');
+                $clientEncryption->createDataKey('kmip', ['masterKey' => $kmipMasterKey]);
+            },
+        ];
     }
 
     /**
@@ -808,6 +865,280 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
+     * Prose test: Invalid KMS Certificate
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#invalid-kms-certificate
+     */
+    public function testInvalidKmsCertificate(): void
+    {
+        $client = static::createTestClient();
+
+        $clientEncryption = $client->createClientEncryption([
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => ['aws' => Context::getAWSCredentials()],
+            'tlsOptions' => ['aws' => Context::getKmsTlsOptions()],
+        ]);
+
+        $this->expectException(ConnectionException::class);
+        // Note: this assumes an OpenSSL error message
+        $this->expectExceptionMessageMatches('#certificate has expired#');
+
+        $clientEncryption->createDataKey('aws', [
+            'masterKey' => [
+                'region' => 'us-east-1',
+                'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0',
+                'endpoint' => self::getEnv('KMS_ENDPOINT_EXPIRED'),
+            ],
+        ]);
+    }
+
+    /**
+     * Prose test: Invalid Hostname in KMS Certificate
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#invalid-hostname-in-kms-certificate
+     */
+    public function testInvalidHostnameInKmsCertificate(): void
+    {
+        $client = static::createTestClient();
+
+        $clientEncryption = $client->createClientEncryption([
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => ['aws' => Context::getAWSCredentials()],
+            'tlsOptions' => ['aws' => Context::getKmsTlsOptions()],
+        ]);
+
+        $this->expectException(ConnectionException::class);
+        // Note: this assumes an OpenSSL error message
+        $this->expectExceptionMessageMatches('#IP address mismatch#');
+
+        $clientEncryption->createDataKey('aws', [
+            'masterKey' => [
+                'region' => 'us-east-1',
+                'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0',
+                'endpoint' => self::getEnv('KMS_ENDPOINT_WRONG_HOST'),
+            ],
+        ]);
+    }
+
+    /**
+     * Prose test: KMS TLS Options
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#kms-tls-options-tests
+     * @dataProvider provideKmsTlsOptionsTests
+     */
+    public function testKmsTlsOptions(Closure $test): void
+    {
+        $client = static::createTestClient();
+
+        $clientEncryptionNoClientCert = $client->createClientEncryption([
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => [
+                'aws' => Context::getAWSCredentials(),
+                'azure' => Context::getAzureCredentials() + ['identityPlatformEndpoint' => self::getEnv('KMS_ENDPOINT_REQUIRE_CLIENT_CERT')],
+                'gcp' => Context::getGCPCredentials() + ['endpoint' => self::getEnv('KMS_ENDPOINT_REQUIRE_CLIENT_CERT')],
+                'kmip' => ['endpoint' => Context::getKmipEndpoint()],
+            ],
+            'tlsOptions' => [
+                'aws' => ['tlsCAFile' => getenv('KMS_TLS_CA_FILE')],
+                'azure' => ['tlsCAFile' => getenv('KMS_TLS_CA_FILE')],
+                'gcp' => ['tlsCAFile' => getenv('KMS_TLS_CA_FILE')],
+                'kmip' => ['tlsCAFile' => getenv('KMS_TLS_CA_FILE')],
+            ],
+        ]);
+
+        $clientEncryptionWithTls = $client->createClientEncryption([
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => [
+                'aws' => Context::getAWSCredentials(),
+                'azure' => Context::getAzureCredentials() + ['identityPlatformEndpoint' => self::getEnv('KMS_ENDPOINT_REQUIRE_CLIENT_CERT')],
+                'gcp' => Context::getGCPCredentials() + ['endpoint' => self::getEnv('KMS_ENDPOINT_REQUIRE_CLIENT_CERT')],
+                'kmip' => ['endpoint' => Context::getKmipEndpoint()],
+            ],
+            'tlsOptions' => [
+                'aws' => Context::getKmsTlsOptions(),
+                'azure' => Context::getKmsTlsOptions(),
+                'gcp' => Context::getKmsTlsOptions(),
+                'kmip' => Context::getKmsTlsOptions(),
+            ],
+        ]);
+
+        $clientEncryptionExpired = $client->createClientEncryption([
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => [
+                'aws' => Context::getAWSCredentials(),
+                'azure' => Context::getAzureCredentials() + ['identityPlatformEndpoint' => self::getEnv('KMS_ENDPOINT_EXPIRED')],
+                'gcp' => Context::getGCPCredentials() + ['endpoint' => self::getEnv('KMS_ENDPOINT_EXPIRED')],
+                'kmip' => ['endpoint' => self::getEnv('KMS_ENDPOINT_EXPIRED')],
+            ],
+            'tlsOptions' => [
+                'aws' => ['tlsCAFile' => getenv('KMS_TLS_CA_FILE')],
+                'azure' => ['tlsCAFile' => getenv('KMS_TLS_CA_FILE')],
+                'gcp' => ['tlsCAFile' => getenv('KMS_TLS_CA_FILE')],
+                'kmip' => ['tlsCAFile' => getenv('KMS_TLS_CA_FILE')],
+            ],
+        ]);
+
+        $clientEncryptionInvalidHostname = $client->createClientEncryption([
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => [
+                'aws' => Context::getAWSCredentials(),
+                'azure' => Context::getAzureCredentials() + ['identityPlatformEndpoint' => self::getEnv('KMS_ENDPOINT_WRONG_HOST')],
+                'gcp' => Context::getGCPCredentials() + ['endpoint' => self::getEnv('KMS_ENDPOINT_WRONG_HOST')],
+                'kmip' => ['endpoint' => self::getEnv('KMS_ENDPOINT_WRONG_HOST')],
+            ],
+            'tlsOptions' => [
+                'aws' => ['tlsCAFile' => getenv('KMS_TLS_CA_FILE')],
+                'azure' => ['tlsCAFile' => getenv('KMS_TLS_CA_FILE')],
+                'gcp' => ['tlsCAFile' => getenv('KMS_TLS_CA_FILE')],
+                'kmip' => ['tlsCAFile' => getenv('KMS_TLS_CA_FILE')],
+            ],
+        ]);
+
+        $test($this, $clientEncryptionNoClientCert, $clientEncryptionWithTls, $clientEncryptionExpired, $clientEncryptionInvalidHostname);
+    }
+
+    public static function provideKmsTlsOptionsTests()
+    {
+        $awsMasterKey = ['region' => 'us-east-1', 'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0'];
+        $azureMasterKey = ['keyVaultEndpoint' => 'doesnotexist.local', 'keyName' => 'foo'];
+        $gcpMasterKey = ['projectId' => 'foo', 'location' => 'bar', 'keyRing' => 'baz', 'keyName' => 'foo'];
+        $kmipMasterKey = [];
+
+        // Note: expected exception messages below assume OpenSSL is used
+
+        // See: https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-1-aws
+        yield 'AWS: client_encryption_no_client_cert' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($awsMasterKey): void {
+                $test->expectException(ConnectionException::class);
+                // Avoid asserting exception message for failed TLS handshake since it may be inconsistent
+                $clientEncryptionNoClientCert->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => self::getEnv('KMS_ENDPOINT_REQUIRE_CLIENT_CERT')]]);
+            },
+        ];
+
+        yield 'AWS: client_encryption_with_tls' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($awsMasterKey): void {
+                $test->expectException(EncryptionException::class);
+                $test->expectExceptionMessageMatches('#parse error#');
+                $clientEncryptionWithTls->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => self::getEnv('KMS_ENDPOINT_REQUIRE_CLIENT_CERT')]]);
+            },
+        ];
+
+        yield 'AWS: client_encryption_expired' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($awsMasterKey): void {
+                $test->expectException(ConnectionException::class);
+                $test->expectExceptionMessageMatches('#certificate has expired#');
+                $clientEncryptionExpired->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => self::getEnv('KMS_ENDPOINT_EXPIRED')]]);
+            },
+        ];
+
+        yield 'AWS: client_encryption_invalid_hostname' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($awsMasterKey): void {
+                $test->expectException(ConnectionException::class);
+                $test->expectExceptionMessageMatches('#IP address mismatch#');
+                $clientEncryptionInvalidHostname->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => self::getEnv('KMS_ENDPOINT_WRONG_HOST')]]);
+            },
+        ];
+
+        // See: https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-2-azure
+        yield 'Azure: client_encryption_no_client_cert' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($azureMasterKey): void {
+                $test->expectException(ConnectionException::class);
+                // Avoid asserting exception message for failed TLS handshake since it may be inconsistent
+                $clientEncryptionNoClientCert->createDataKey('azure', ['masterKey' => $azureMasterKey]);
+            },
+        ];
+
+        yield 'Azure: client_encryption_with_tls' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($azureMasterKey): void {
+                $test->expectException(EncryptionException::class);
+                $test->expectExceptionMessageMatches('#HTTP status=404#');
+                $clientEncryptionWithTls->createDataKey('azure', ['masterKey' => $azureMasterKey]);
+            },
+        ];
+
+        yield 'Azure: client_encryption_expired' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($azureMasterKey): void {
+                $test->expectException(ConnectionException::class);
+                $test->expectExceptionMessageMatches('#certificate has expired#');
+                $clientEncryptionExpired->createDataKey('azure', ['masterKey' => $azureMasterKey]);
+            },
+        ];
+
+        yield 'Azure: client_encryption_invalid_hostname' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($azureMasterKey): void {
+                $test->expectException(ConnectionException::class);
+                $test->expectExceptionMessageMatches('#IP address mismatch#');
+                $clientEncryptionInvalidHostname->createDataKey('azure', ['masterKey' => $azureMasterKey]);
+            },
+        ];
+
+        // See: https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-3-gcp
+        yield 'GCP: client_encryption_no_client_cert' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($gcpMasterKey): void {
+                $test->expectException(ConnectionException::class);
+                // Avoid asserting exception message for failed TLS handshake since it may be inconsistent
+                $clientEncryptionNoClientCert->createDataKey('gcp', ['masterKey' => $gcpMasterKey]);
+            },
+        ];
+
+        yield 'GCP: client_encryption_with_tls' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($gcpMasterKey): void {
+                $test->expectException(EncryptionException::class);
+                $test->expectExceptionMessageMatches('#HTTP status=404#');
+                $clientEncryptionWithTls->createDataKey('gcp', ['masterKey' => $gcpMasterKey]);
+            },
+        ];
+
+        yield 'GCP: client_encryption_expired' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($gcpMasterKey): void {
+                $test->expectException(ConnectionException::class);
+                $test->expectExceptionMessageMatches('#certificate has expired#');
+                $clientEncryptionExpired->createDataKey('gcp', ['masterKey' => $gcpMasterKey]);
+            },
+        ];
+
+        yield 'GCP: client_encryption_invalid_hostname' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($gcpMasterKey): void {
+                $test->expectException(ConnectionException::class);
+                $test->expectExceptionMessageMatches('#IP address mismatch#');
+                $clientEncryptionInvalidHostname->createDataKey('gcp', ['masterKey' => $gcpMasterKey]);
+            },
+        ];
+
+        // See: https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-4-kmip
+        yield 'KMIP: client_encryption_no_client_cert' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($kmipMasterKey): void {
+                $test->expectException(ConnectionException::class);
+                // Avoid asserting exception message for failed TLS handshake since it may be inconsistent
+                $clientEncryptionNoClientCert->createDataKey('kmip', ['masterKey' => $kmipMasterKey]);
+            },
+        ];
+
+        yield 'KMIP: client_encryption_with_tls' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($kmipMasterKey): void {
+                $keyId = $clientEncryptionWithTls->createDataKey('kmip', ['masterKey' => $kmipMasterKey]);
+                $test->assertInstanceOf(Binary::class, $keyId);
+            },
+        ];
+
+        yield 'KMIP: client_encryption_expired' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($kmipMasterKey): void {
+                $test->expectException(ConnectionException::class);
+                $test->expectExceptionMessageMatches('#certificate has expired#');
+                $clientEncryptionExpired->createDataKey('kmip', ['masterKey' => $kmipMasterKey]);
+            },
+        ];
+
+        yield 'KMIP: client_encryption_invalid_hostname' => [
+            static function (self $test, ClientEncryption $clientEncryptionNoClientCert, ClientEncryption $clientEncryptionWithTls, ClientEncryption $clientEncryptionExpired, ClientEncryption $clientEncryptionInvalidHostname) use ($kmipMasterKey): void {
+                $test->expectException(ConnectionException::class);
+                $test->expectExceptionMessageMatches('#IP address mismatch#');
+                $clientEncryptionInvalidHostname->createDataKey('kmip', ['masterKey' => $kmipMasterKey]);
+            },
+        ];
+    }
+
+    /**
      * Casts the value for a BSON corpus structure to int64 if necessary.
      *
      * This is a workaround for an issue in mongocryptd which refuses to encrypt
@@ -862,9 +1193,13 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $keyId = 'GCPAAAAAAAAAAAAAAAAAAA==';
                 $keyAltName = 'gcp';
                 break;
+            case 'kmip':
+                $keyId = 'KMIPAAAAAAAAAAAAAAAAAA==';
+                $keyAltName = 'kmip';
+                break;
 
             default:
-                throw new UnexpectedValueException('Unexpected KMS "%s"', $data->kms);
+                throw new UnexpectedValueException(sprintf('Unexpected KMS "%s"', $data->kms));
         }
 
         switch ($data->identifier) {
@@ -877,7 +1212,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 break;
 
             default:
-                throw new UnexpectedValueException('Unexpected value "%s" for identifier', $data->identifier);
+                throw new UnexpectedValueException(sprintf('Unexpected value "%s" for identifier', $data->identifier));
         }
 
         if ($data->allowed) {
@@ -899,6 +1234,17 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         }
 
         return $data->value;
+    }
+
+    private static function getEnv(string $name): string
+    {
+        $value = getenv($name);
+
+        if ($value === false) {
+            Assert::markTestSkipped(sprintf('Environment variable "%s" is not defined', $name));
+        }
+
+        return $value;
     }
 
     private function insertKeyVaultData(?array $keyVaultData = null): void

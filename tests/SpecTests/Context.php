@@ -123,6 +123,16 @@ final class Context
             if (isset($autoEncryptionOptions['kmsProviders']->gcp)) {
                 $autoEncryptionOptions['kmsProviders']->gcp = self::getGCPCredentials();
             }
+
+            if (isset($autoEncryptionOptions['kmsProviders']->kmip)) {
+                $autoEncryptionOptions['kmsProviders']->kmip = ['endpoint' => self::getKmipEndpoint()];
+
+                if (empty($autoEncryptionOptions['tlsOptions'])) {
+                    $autoEncryptionOptions['tlsOptions'] = new stdClass();
+                }
+
+                $autoEncryptionOptions['tlsOptions']->kmip = self::getKmsTlsOptions();
+            }
         }
 
         if (isset($test->outcome->collection->name)) {
@@ -270,6 +280,27 @@ final class Context
             'tenantId' => getenv('AZURE_TENANT_ID'),
             'clientId' => getenv('AZURE_CLIENT_ID'),
             'clientSecret' => getenv('AZURE_CLIENT_SECRET'),
+        ];
+    }
+
+    public static function getKmipEndpoint(): string
+    {
+        if (! getenv('KMIP_ENDPOINT')) {
+            Assert::markTestSkipped('Please configure KMIP endpoint to use KMIP KMS provider.');
+        }
+
+        return getenv('KMIP_ENDPOINT');
+    }
+
+    public static function getKmsTlsOptions(): array
+    {
+        if (! getenv('KMS_TLS_CA_FILE') || ! getenv('KMS_TLS_CERTIFICATE_KEY_FILE')) {
+            Assert::markTestSkipped('Please configure KMS TLS options.');
+        }
+
+        return [
+            'tlsCAFile' => getenv('KMS_TLS_CA_FILE'),
+            'tlsCertificateKeyFile' => getenv('KMS_TLS_CERTIFICATE_KEY_FILE'),
         ];
     }
 

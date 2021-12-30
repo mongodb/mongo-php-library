@@ -80,6 +80,24 @@ class ListCollectionsFunctionalTest extends FunctionalTestCase
         $this->assertCount(0, $collections);
     }
 
+    public function testAuthorizedCollectionsOption(): void
+    {
+        (new CommandObserver())->observe(
+            function (): void {
+                $operation = new ListCollections(
+                    $this->getDatabaseName(),
+                    ['authorizedCollections' => true]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event): void {
+                $this->assertObjectHasAttribute('authorizedCollections', $event['started']->getCommand());
+                $this->assertSame(true, $event['started']->getCommand()->authorizedCollections);
+            }
+        );
+    }
+
     public function testSessionOption(): void
     {
         if (version_compare($this->getServerVersion(), '3.6.0', '<')) {

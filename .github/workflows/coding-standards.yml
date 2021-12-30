@@ -20,7 +20,7 @@ jobs:
         php-version:
           - "7.4"
         driver-version:
-          - "mongodb/mongo-php-driver@master"
+          - "stable"
 
     steps:
       - name: "Checkout"
@@ -42,8 +42,7 @@ jobs:
           restore-keys: ${{ steps.extcache.outputs.key }}
 
       - name: "Install PHP"
-        # Todo: switch to @v2 once a tag has been created
-        uses: "shivammathur/setup-php@develop"
+        uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           extensions: "mongodb-${{ matrix.driver-version }}"

@@ -1,4 +1,19 @@
 arg_name: option
+name: authorizedCollections
+type: boolean
+description: |
+  A flag that determines which collections are returned based on the user
+  privileges when access control is enabled. For more information, see the
+  `listCollections command documentation <https://docs.mongodb.com/manual/reference/command/listCollections/>`_.
+
+  For servers < 4.0, this option is ignored.
+
+  .. versionadded:: 1.12
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: filter
 type: array|object
 description: |

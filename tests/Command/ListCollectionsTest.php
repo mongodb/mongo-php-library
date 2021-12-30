@@ -21,6 +21,10 @@ class ListCollectionsTest extends TestCase
     {
         $options = [];
 
+        foreach ($this->getInvalidBooleanValues() as $value) {
+            $options[][] = ['authorizedCollections' => $value];
+        }
+
         foreach ($this->getInvalidDocumentValues() as $value) {
             $options[][] = ['filter' => $value];
         }

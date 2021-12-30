@@ -108,20 +108,14 @@ class ListDatabases implements Executable
     {
         $cmd = ['listDatabases' => 1];
 
-        if (isset($this->options['authorizedDatabases'])) {
-            $cmd['authorizedDatabases'] = $this->options['authorizedDatabases'];
-        }
-
         if (! empty($this->options['filter'])) {
             $cmd['filter'] = (object) $this->options['filter'];
         }
 
-        if (isset($this->options['maxTimeMS'])) {
-            $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
-        }
-
-        if (isset($this->options['nameOnly'])) {
-            $cmd['nameOnly'] = $this->options['nameOnly'];
+        foreach (['authorizedDatabases', 'maxTimeMS', 'nameOnly'] as $option) {
+            if (isset($this->options[$option])) {
+                $cmd[$option] = $this->options[$option];
+            }
         }
 
         $cursor = $server->executeReadCommand('admin', new Command($cmd), $this->createOptions());

@@ -51,6 +51,7 @@ class ListDatabasesFunctionalTest extends FunctionalTestCase
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('authorizedDatabases', $event['started']->getCommand());
+                $this->assertSame(true, $event['started']->getCommand()->authorizedDatabases);
             }
         );
     }

@@ -2,6 +2,8 @@
 MongoDB\\Collection::mapReduce()
 =================================
 
+.. deprecated:: 1.12
+
 .. versionadded:: 1.2
 
 .. default-domain:: mongodb

@@ -175,7 +175,7 @@ functions:
       params:
         script: |
           ${PREPARE_SHELL}
-          MONGODB_VERSION=${VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
+          MONGODB_VERSION=${VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} LOAD_BALANCER=${LOAD_BALANCER} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
     # run-orchestration generates expansion file with the MONGODB_URI for the cluster
     - command: expansions.update
       params:
@@ -505,13 +505,12 @@ tasks:
         - func: "bootstrap mongo-orchestration"
           vars:
             TOPOLOGY: "sharded_cluster"
+            LOAD_BALANCER: "true"
             SSL: "yes"
         - func: "start load balancer"
         - func: "start kms servers"
         - func: "run tests"
           vars:
-            # Testing with HAProxy requires service ID mocking
-            MOCK_SERVICE_ID: 1
             # Note: loadBalanced=true should already be appended to SINGLE_MONGOS_LB_URI
             MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
             SSL: "yes"
@@ -767,7 +766,8 @@ buildvariants:
     - .serverless
 
 - matrix_name: "test-loadBalanced"
-  matrix_spec: { "versions": ["5.0", "latest"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  # TODO: Add "5.2" server version alongside "latest" following its GA release
+  matrix_spec: { "versions": "latest", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   display_name: "Load balanced - ${versions}"
   run_on: debian92-test
   tasks:

@@ -767,7 +767,8 @@ buildvariants:
 
 - matrix_name: "test-loadBalanced"
   # TODO: Add "5.2" server version alongside "latest" following its GA release
-  matrix_spec: { "versions": "latest", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  # TODO: Revert driver-version to latest-stable after PHPC 1.13.0 is released (for CDRIVER-4207)
+  matrix_spec: { "versions": "latest", "php-edge-versions": "latest-stable", "driver-versions": "latest-dev" }
   display_name: "Load balanced - ${versions}"
   run_on: debian92-test
   tasks:

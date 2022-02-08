@@ -665,8 +665,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $clientEncryptionInvalid = $client->createClientEncryption([
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
-                'azure' => Context::getAzureCredentials() + ['identityPlatformEndpoint' => 'example.com:443'],
-                'gcp' => Context::getGCPCredentials() + ['endpoint' => 'example.com:443'],
+                'azure' => Context::getAzureCredentials() + ['identityPlatformEndpoint' => 'doesnotexist.invalid:443'],
+                'gcp' => Context::getGCPCredentials() + ['endpoint' => 'doesnotexist.invalid:443'],
                 'kmip' => ['endpoint' => 'doesnotexist.local:5698'],
             ],
             'tlsOptions' => [
@@ -732,8 +732,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         yield 'Test 6' => [
             static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey): void {
                 $test->expectException(RuntimeException::class);
-                $test->expectExceptionMessageMatches('#parse error#');
-                $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'example.com']]);
+                $test->expectExceptionMessageMatches('#doesnotexist.invalid#');
+                $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'doesnotexist.invalid']]);
             },
         ];
 
@@ -744,7 +744,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $test->assertSame('test', $clientEncryption->decrypt($encrypted));
 
                 $test->expectException(RuntimeException::class);
-                $test->expectExceptionMessageMatches('#parse error#');
+                $test->expectExceptionMessageMatches('#doesnotexist.invalid#');
                 $clientEncryptionInvalid->createDataKey('azure', ['masterKey' => $azureMasterKey]);
             },
         ];
@@ -756,7 +756,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $test->assertSame('test', $clientEncryption->decrypt($encrypted));
 
                 $test->expectException(RuntimeException::class);
-                $test->expectExceptionMessageMatches('#parse error#');
+                $test->expectExceptionMessageMatches('#doesnotexist.invalid#');
                 $clientEncryptionInvalid->createDataKey('gcp', ['masterKey' => $gcpMasterKey]);
             },
         ];
@@ -764,7 +764,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         yield 'Test 9' => [
             static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($gcpMasterKey): void {
                 $masterKey = $gcpMasterKey;
-                $masterKey['endpoint'] = 'example.com:443';
+                $masterKey['endpoint'] = 'doesnotexist.invalid:443';
 
                 $test->expectException(RuntimeException::class);
                 $test->expectExceptionMessageMatches('#Invalid KMS response#');

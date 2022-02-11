@@ -15,4 +15,4 @@ Tutorials
    /tutorial/indexes
    /tutorial/tailable-cursor
    /tutorial/example-data
-   /tutorial/versioned-api
+   /tutorial/stable-api

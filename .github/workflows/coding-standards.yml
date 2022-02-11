@@ -20,7 +20,7 @@ jobs:
         php-version:
           - "7.4"
         driver-version:
-          - "stable"
+          - "mongodb/mongo-php-driver@master"
 
     steps:
       - name: "Checkout"

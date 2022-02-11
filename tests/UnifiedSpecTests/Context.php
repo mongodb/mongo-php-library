@@ -17,7 +17,6 @@ use function count;
 use function current;
 use function explode;
 use function implode;
-use function in_array;
 use function key;
 use function parse_url;
 use function PHPUnit\Framework\assertArrayHasKey;
@@ -49,9 +48,6 @@ final class Context
 {
     /** @var string */
     private $activeClient;
-
-    /** @var string[] */
-    private $dirtySessions = [];
 
     /** @var EntityMap */
     private $entityMap;
@@ -132,20 +128,6 @@ final class Context
     public function getInternalClient(): Client
     {
         return $this->internalClient;
-    }
-
-    public function isDirtySession(string $sessionId): bool
-    {
-        return in_array($sessionId, $this->dirtySessions);
-    }
-
-    public function markDirtySession(string $sessionId): void
-    {
-        if ($this->isDirtySession($sessionId)) {
-            return;
-        }
-
-        $this->dirtySessions[] = $sessionId;
     }
 
     public function isActiveClient(string $clientId): bool

@@ -101,10 +101,3 @@ jobs:
         env:
           SYMFONY_DEPRECATIONS_HELPER: 999999
           MONGODB_URI: ${{ steps.setup-mongodb.outputs.cluster-uri }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          GCP_EMAIL: ${{ secrets.GCP_EMAIL }}
-          GCP_PRIVATE_KEY: ${{ secrets.GCP_PRIVATE_KEY }}

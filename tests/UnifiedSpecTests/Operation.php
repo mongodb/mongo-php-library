@@ -137,11 +137,6 @@ final class Operation
         $result = null;
         $saveResultAsEntity = null;
 
-        if (isset($this->arguments['session'])) {
-            $dirtySessionObserver = new DirtySessionObserver($this->entityMap->getLogicalSessionId($this->arguments['session']));
-            $dirtySessionObserver->start();
-        }
-
         try {
             $result = $this->execute();
             $saveResultAsEntity = $this->saveResultAsEntity;
@@ -158,14 +153,6 @@ final class Operation
             }
 
             $error = $e;
-        }
-
-        if (isset($dirtySessionObserver)) {
-            $dirtySessionObserver->stop();
-
-            if ($dirtySessionObserver->observedNetworkError()) {
-                $this->context->markDirtySession($this->arguments['session']);
-            }
         }
 
         if (! $this->ignoreResultAndError) {
@@ -744,16 +731,12 @@ final class Operation
                 Assert::fail('Tests using assertNumberConnectionsCheckedOut should be skipped');
                 break;
             case 'assertSessionDirty':
-                /* Context::isDirtySession() requires the session ID. Avoid
-                 * checking $args['session'], which is already resolved. */
-                assertArrayHasKey('session', $this->arguments);
-                assertTrue($this->context->isDirtySession($this->arguments['session']));
+                assertArrayHasKey('session', $args);
+                assertTrue($args['session']->isDirty());
                 break;
             case 'assertSessionNotDirty':
-                /* Context::isDirtySession() requires the session ID. Avoid
-                 * checking $args['session'], which is already resolved. */
-                assertArrayHasKey('session', $this->arguments);
-                assertFalse($this->context->isDirtySession($this->arguments['session']));
+                assertArrayHasKey('session', $args);
+                assertFalse($args['session']->isDirty());
                 break;
             case 'assertSessionPinned':
                 assertArrayHasKey('session', $args);

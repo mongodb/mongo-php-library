@@ -608,14 +608,20 @@ axes:
   - id: driver-versions
     display_name: Driver Version
     values:
+      # TODO: Update to "1.13.0" once PHPC 1.13.0 is released
       - id: "oldest-supported"
-        display_name: "1.12.0"
+        # display_name: "1.13.0"
+        display_name: "1.13-dev (master)"
         variables:
-          EXTENSION_VERSION: "1.12.0"
+          # EXTENSION_VERSION: "1.13.0"
+          EXTENSION_BRANCH: "master"
+      # TODO: Update to "1.13.x"/"stable" once PHPC 1.13.0 is released
       - id: "latest-stable"
-        display_name: "1.12.x"
+        # display_name: "1.13.x"
+        display_name: "1.13-dev (master)"
         variables:
-          EXTENSION_VERSION: "stable"
+          # EXTENSION_VERSION: "stable"
+          EXTENSION_BRANCH: "master"
       - id: "latest-dev"
         display_name: "1.13-dev (master)"
         variables:

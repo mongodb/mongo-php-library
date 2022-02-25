@@ -203,16 +203,13 @@ functions:
     - command: shell.exec
       params:
         working_dir: "src"
-        shell: bash
-        script: |-
+        script: |
           ${PREPARE_SHELL}
-          export PROJECT=${PROJECT}
-          export SERVERLESS_DRIVERS_GROUP=${SERVERLESS_DRIVERS_GROUP}
-          export SERVERLESS_API_PUBLIC_KEY=${SERVERLESS_API_PUBLIC_KEY}
-          export SERVERLESS_API_PRIVATE_KEY=${SERVERLESS_API_PRIVATE_KEY}
-          export SERVERLESS_ATLAS_USER=${SERVERLESS_ATLAS_USER}
-          export SERVERLESS_ATLAS_PASSWORD=${SERVERLESS_ATLAS_PASSWORD}
-          bash ${PROJECT_DIRECTORY}/.evergreen/serverless/create-instance.sh
+          LOADBALANCED=ON \
+          SERVERLESS_DRIVERS_GROUP=${SERVERLESS_DRIVERS_GROUP} \
+          SERVERLESS_API_PUBLIC_KEY=${SERVERLESS_API_PUBLIC_KEY} \
+          SERVERLESS_API_PRIVATE_KEY=${SERVERLESS_API_PRIVATE_KEY} \
+          bash ${DRIVERS_TOOLS}/.evergreen/serverless/create-instance.sh
     - command: expansions.update
       params:
         file: src/serverless-expansion.yml
@@ -220,16 +217,15 @@ functions:
   "delete serverless instance":
     - command: shell.exec
       params:
-        shell: bash
-        script: |-
-          set -o errexit
-          export SERVERLESS_DRIVERS_GROUP=${SERVERLESS_DRIVERS_GROUP}
-          export SERVERLESS_API_PUBLIC_KEY=${SERVERLESS_API_PUBLIC_KEY}
-          export SERVERLESS_API_PRIVATE_KEY=${SERVERLESS_API_PRIVATE_KEY}
-          export SERVERLESS_ATLAS_USER=${SERVERLESS_ATLAS_USER}
-          export SERVERLESS_ATLAS_PASSWORD=${SERVERLESS_ATLAS_PASSWORD}
-          export SERVERLESS_INSTANCE_NAME=${SERVERLESS_INSTANCE_NAME}
-          bash ${PROJECT_DIRECTORY}/.evergreen/serverless/delete-instance.sh
+        script: |
+          # Only run if a serverless instance was started
+          if [ -n "${SERVERLESS_INSTANCE_NAME}" ]; then
+            SERVERLESS_DRIVERS_GROUP=${SERVERLESS_DRIVERS_GROUP} \
+            SERVERLESS_API_PUBLIC_KEY=${SERVERLESS_API_PUBLIC_KEY} \
+            SERVERLESS_API_PRIVATE_KEY=${SERVERLESS_API_PRIVATE_KEY} \
+            SERVERLESS_INSTANCE_NAME=${SERVERLESS_INSTANCE_NAME} \
+            bash ${DRIVERS_TOOLS}/.evergreen/serverless/delete-instance.sh
+          fi
 
   "run tests":
     - command: shell.exec
@@ -269,8 +265,7 @@ functions:
       type: test
       params:
         working_dir: "src"
-        shell: bash
-        script: |-
+        script: |
           ${PREPARE_SHELL}
           export MONGODB_IS_SERVERLESS=on
           export MONGODB_USERNAME=${SERVERLESS_ATLAS_USER}
@@ -396,6 +391,7 @@ post:
   # - func: "upload working dir"
   - func: "upload mo artifacts"
   - func: "upload test results"
+  - func: "delete serverless instance"
   - func: "stop load balancer"
   - func: "stop mongo-orchestration"
   - func: "cleanup"
@@ -494,10 +490,9 @@ tasks:
       tags: ["serverless"]
       commands:
         - func: "create serverless instance"
-          vars:
-            PROJECT: "mongo-php-library"
         - func: "run serverless tests"
-        - func: "delete serverless instance"
+          vars:
+            MONGODB_URI: "${SINGLE_ATLASPROXY_SERVERLESS_URI}"
 
     - name: "test-loadBalanced"
       tags: ["loadbalanced"]

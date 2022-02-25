@@ -423,7 +423,7 @@ abstract class FunctionalTestCase extends TestCase
             return true;
         }
 
-        // Assume that load balancers are properly configured and front mongos
+        // Assume that load balancers are properly configured and front sharded clusters
         if ($type == Server::TYPE_LOAD_BALANCER) {
             return true;
         }
@@ -433,6 +433,11 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function isShardedClusterUsingReplicasets()
     {
+        // Assume serverless is a sharded cluster using replica sets
+        if (static::isServerless()) {
+            return true;
+        }
+
         $cursor = $this->getPrimaryServer()->executeQuery(
             'config.shards',
             new Query([], ['limit' => 1])

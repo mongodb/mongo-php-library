@@ -9,7 +9,6 @@ use MongoDB\Tests\CommandObserver;
 use function is_scalar;
 use function json_encode;
 use function usort;
-use function version_compare;
 
 class DistinctFunctionalTest extends FunctionalTestCase
 {
@@ -35,10 +34,6 @@ class DistinctFunctionalTest extends FunctionalTestCase
 
     public function testSessionOption(): void
     {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('Sessions are not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new Distinct(

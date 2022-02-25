@@ -1135,10 +1135,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testAggregation_example_4(): void
     {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('$lookup does not support "let" option');
-        }
-
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps

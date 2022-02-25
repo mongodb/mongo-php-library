@@ -5,8 +5,6 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Tests\CommandObserver;
 
-use function version_compare;
-
 class CreateCollectionFunctionalTest extends FunctionalTestCase
 {
     public function testDefaultWriteConcernIsOmitted(): void
@@ -29,10 +27,6 @@ class CreateCollectionFunctionalTest extends FunctionalTestCase
 
     public function testSessionOption(): void
     {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('Sessions are not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new CreateCollection(

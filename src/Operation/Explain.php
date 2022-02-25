@@ -46,12 +46,6 @@ class Explain implements Executable
     /** @var integer */
     private static $wireVersionForAggregate = 7;
 
-    /** @var integer */
-    private static $wireVersionForDistinct = 4;
-
-    /** @var integer */
-    private static $wireVersionForFindAndModify = 4;
-
     /** @var string */
     private $databaseName;
 
@@ -114,14 +108,6 @@ class Explain implements Executable
      */
     public function execute(Server $server)
     {
-        if ($this->explainable instanceof Distinct && ! server_supports_feature($server, self::$wireVersionForDistinct)) {
-            throw UnsupportedException::explainNotSupported();
-        }
-
-        if ($this->isFindAndModify($this->explainable) && ! server_supports_feature($server, self::$wireVersionForFindAndModify)) {
-            throw UnsupportedException::explainNotSupported();
-        }
-
         if ($this->explainable instanceof Aggregate && ! server_supports_feature($server, self::$wireVersionForAggregate)) {
             throw UnsupportedException::explainNotSupported();
         }

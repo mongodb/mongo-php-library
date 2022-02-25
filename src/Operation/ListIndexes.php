@@ -64,8 +64,6 @@ class ListIndexes implements Executable
      *
      *  * session (MongoDB\Driver\Session): Client session.
      *
-     *    Sessions are not supported for server versions < 3.6.
-     *
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
      * @param array  $options        Command options

@@ -49,14 +49,10 @@ class ListDatabases implements Executable
      *
      *  * filter (document): Query by which to filter databases.
      *
-     *    For servers < 3.6, this option is ignored.
-     *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
      *
      *  * session (MongoDB\Driver\Session): Client session.
-     *
-     *    Sessions are not supported for server versions < 3.6.
      *
      * @param array $options Command options
      * @throws InvalidArgumentException for parameter/option parsing errors

@@ -35,7 +35,6 @@ use function is_object;
 use function key;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_pipeline;
-use function MongoDB\server_supports_feature;
 use function sprintf;
 
 /**
@@ -53,15 +52,6 @@ class BulkWrite implements Executable
     public const UPDATE_MANY = 'updateMany';
     public const UPDATE_ONE  = 'updateOne';
 
-    /** @var integer */
-    private static $wireVersionForArrayFilters = 6;
-
-    /** @var integer */
-    private static $wireVersionForCollation = 5;
-
-    /** @var integer */
-    private static $wireVersionForDocumentLevelValidation = 4;
-
     /** @var string */
     private $databaseName;
 
@@ -73,12 +63,6 @@ class BulkWrite implements Executable
 
     /** @var array */
     private $options;
-
-    /** @var boolean */
-    private $isArrayFiltersUsed = false;
-
-    /** @var boolean */
-    private $isCollationUsed = false;
 
     /**
      * Constructs a bulk write operation.
@@ -102,15 +86,9 @@ class BulkWrite implements Executable
      *
      *  * collation (document): Collation specification.
      *
-     *    This is not supported for server versions < 3.4 and will result in an
-     *    exception at execution time if used.
-     *
      * Supported options for replaceOne, updateMany, and updateOne operations:
      *
      *  * collation (document): Collation specification.
-     *
-     *    This is not supported for server versions < 3.4 and will result in an
-     *    exception at execution time if used.
      *
      *  * upsert (boolean): When true, a new document is created if no document
      *    matches the query. The default is false.
@@ -120,24 +98,16 @@ class BulkWrite implements Executable
      *  * arrayFilters (document array): A set of filters specifying to which
      *    array elements an update should apply.
      *
-     *    This is not supported for server versions < 3.6 and will result in an
-     *    exception at execution time if used.
-     *
      * Supported options for the bulk write operation:
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation. The default is false.
-     *
-     *    For servers < 3.2, this option is ignored as document level validation
-     *    is not available.
      *
      *  * ordered (boolean): If true, when an insert fails, return without
      *    performing the remaining writes. If false, when a write fails,
      *    continue with the remaining writes, if any. The default is true.
      *
      *  * session (MongoDB\Driver\Session): Client session.
-     *
-     *    Sessions are not supported for server versions < 3.6.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
@@ -195,12 +165,8 @@ class BulkWrite implements Executable
 
                     $args[1]['limit'] = ($type === self::DELETE_ONE ? 1 : 0);
 
-                    if (isset($args[1]['collation'])) {
-                        $this->isCollationUsed = true;
-
-                        if (! is_array($args[1]['collation']) && ! is_object($args[1]['collation'])) {
-                            throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]["collation"]', $i, $type), $args[1]['collation'], 'array or object');
-                        }
+                    if (isset($args[1]['collation']) && ! is_array($args[1]['collation']) && ! is_object($args[1]['collation'])) {
+                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]["collation"]', $i, $type), $args[1]['collation'], 'array or object');
                     }
 
                     $operations[$i][$type][1] = $args[1];
@@ -231,12 +197,8 @@ class BulkWrite implements Executable
                     $args[2]['multi'] = false;
                     $args[2] += ['upsert' => false];
 
-                    if (isset($args[2]['collation'])) {
-                        $this->isCollationUsed = true;
-
-                        if (! is_array($args[2]['collation']) && ! is_object($args[2]['collation'])) {
-                            throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation'], 'array or object');
-                        }
+                    if (isset($args[2]['collation']) && ! is_array($args[2]['collation']) && ! is_object($args[2]['collation'])) {
+                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation'], 'array or object');
                     }
 
                     if (! is_bool($args[2]['upsert'])) {
@@ -272,20 +234,12 @@ class BulkWrite implements Executable
                     $args[2]['multi'] = ($type === self::UPDATE_MANY);
                     $args[2] += ['upsert' => false];
 
-                    if (isset($args[2]['arrayFilters'])) {
-                        $this->isArrayFiltersUsed = true;
-
-                        if (! is_array($args[2]['arrayFilters'])) {
-                            throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["arrayFilters"]', $i, $type), $args[2]['arrayFilters'], 'array');
-                        }
+                    if (isset($args[2]['arrayFilters']) && ! is_array($args[2]['arrayFilters'])) {
+                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["arrayFilters"]', $i, $type), $args[2]['arrayFilters'], 'array');
                     }
 
-                    if (isset($args[2]['collation'])) {
-                        $this->isCollationUsed = true;
-
-                        if (! is_array($args[2]['collation']) && ! is_object($args[2]['collation'])) {
-                            throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation'], 'array or object');
-                        }
+                    if (isset($args[2]['collation']) && ! is_array($args[2]['collation']) && ! is_object($args[2]['collation'])) {
+                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation'], 'array or object');
                     }
 
                     if (! is_bool($args[2]['upsert'])) {
@@ -321,6 +275,10 @@ class BulkWrite implements Executable
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
 
+        if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {
+            unset($options['bypassDocumentValidation']);
+        }
+
         if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
             unset($options['writeConcern']);
         }
@@ -337,34 +295,17 @@ class BulkWrite implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return BulkWriteResult
-     * @throws UnsupportedException if array filters or collation is used and unsupported
+     * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
-        if ($this->isArrayFiltersUsed && ! server_supports_feature($server, self::$wireVersionForArrayFilters)) {
-            throw UnsupportedException::arrayFiltersNotSupported();
-        }
-
-        if ($this->isCollationUsed && ! server_supports_feature($server, self::$wireVersionForCollation)) {
-            throw UnsupportedException::collationNotSupported();
-        }
-
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['writeConcern'])) {
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
         }
 
-        $options = ['ordered' => $this->options['ordered']];
-
-        if (
-            ! empty($this->options['bypassDocumentValidation']) &&
-            server_supports_feature($server, self::$wireVersionForDocumentLevelValidation)
-        ) {
-            $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
-        }
-
-        $bulk = new Bulk($options);
+        $bulk = new Bulk($this->createBulkWriteOptions());
         $insertedIds = [];
 
         foreach ($this->operations as $i => $operation) {
@@ -388,9 +329,26 @@ class BulkWrite implements Executable
             }
         }
 
-        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createOptions());
+        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createExecuteOptions());
 
         return new BulkWriteResult($writeResult, $insertedIds);
+    }
+
+    /**
+     * Create options for constructing the bulk write.
+     *
+     * @see https://www.php.net/manual/en/mongodb-driver-bulkwrite.construct.php
+     * @return array
+     */
+    private function createBulkWriteOptions()
+    {
+        $options = ['ordered' => $this->options['ordered']];
+
+        if (isset($this->options['bypassDocumentValidation'])) {
+            $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
+        }
+
+        return $options;
     }
 
     /**
@@ -399,7 +357,7 @@ class BulkWrite implements Executable
      * @see http://php.net/manual/en/mongodb-driver-server.executebulkwrite.php
      * @return array
      */
-    private function createOptions()
+    private function createExecuteOptions()
     {
         $options = [];
 

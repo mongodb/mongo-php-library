@@ -70,12 +70,6 @@ MongoDB\\Exception\\UnsupportedException
    selected server. It is used sparingly in cases where silently ignoring the
    unsupported option might otherwise lead to unexpected behavior.
 
-   For example, the ``collation`` option for
-   :phpmethod:`MongoDB\\Collection::deleteOne()` is only supported by
-   MongoDB 3.4+. Since collation determines how a document is matched, silently
-   ignoring the option for an older server version could result in an
-   unintended document being deleted.
-
    This class extends the library's :phpclass:`RuntimeException
    <MongoDB\\Exception\\RuntimeException>` class.
 

@@ -4,9 +4,6 @@ type: :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
 description: |
    :manual:`Read concern </reference/read-concern>` to use for the operation.
    Defaults to the database's read concern.
-
-   This is not supported for server versions prior to 3.2 and will result in an
-   exception at execution time if used.
 interface: phpmethod
 operation: ~
 optional: true

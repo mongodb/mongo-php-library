@@ -4,9 +4,6 @@ type: array
 description: |
    An array of filter documents that determines which array elements to modify
    for an update operation on an array field.
-
-   This is not supported for server versions prior to 3.6 and will result in an
-   exception at execution time if used.
 interface: phpmethod
 operation: ~
 optional: true
@@ -17,9 +14,6 @@ type: boolean
 description: |
    If ``true``, allows the write operation to circumvent document level
    validation. Defaults to ``false``.
-
-   This option is available in MongoDB 3.2+ and is ignored for older server
-   versions, which do not support document level validation.
 interface: phpmethod
 operation: ~
 optional: true
@@ -39,9 +33,6 @@ type: :php:`MongoDB\\Driver\\ReadConcern <class.mongodb-driver-readconcern>`
 description: |
    :manual:`Read concern </reference/read-concern>` to use for the operation.
    Defaults to the collection's read concern.
-
-   This is not supported for server versions prior to 3.2 and will result in an
-   exception at execution time if used.
 
    It is not possible to specify a :manual:`read concern
    </reference/read-concern>` for individual operations as part of a

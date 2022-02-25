@@ -13,7 +13,4 @@ post: |
 source:
   file: apiargs-MongoDBDatabase-common-option.yaml
   ref: writeConcern
-post: |
-  This is not supported for server versions prior to 3.4 and will result in an
-  exception at execution time if used.
 ...

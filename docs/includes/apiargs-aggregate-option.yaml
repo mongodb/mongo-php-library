@@ -25,9 +25,6 @@ source:
 post: |
   This only applies when using the :ref:`$out <agg-out>` and
   :ref:`$out <agg-merge>` stages.
-
-  Document validation requires MongoDB 3.2 or later: if you are using an earlier
-  version of MongoDB, this option will be ignored.
 ---
 arg_name: option
 name: comment

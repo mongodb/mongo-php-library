@@ -57,8 +57,6 @@ class DatabaseCommand implements Executable
      *
      *  * session (MongoDB\Driver\Session): Client session.
      *
-     *    Sessions are not supported for server versions < 3.6.
-     *
      *  * typeMap (array): Type map for BSON deserialization. This will be
      *    applied to the returned Cursor (it is not sent to the server).
      *

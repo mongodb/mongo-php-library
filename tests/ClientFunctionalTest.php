@@ -12,7 +12,6 @@ use MongoDB\Model\DatabaseInfoIterator;
 use function call_user_func;
 use function is_callable;
 use function sprintf;
-use function version_compare;
 
 /**
  * Functional tests for the Client class.
@@ -122,10 +121,6 @@ class ClientFunctionalTest extends FunctionalTestCase
 
     public function testStartSession(): void
     {
-        if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
-            $this->markTestSkipped('startSession() is only supported on FCV 3.6 or higher');
-        }
-
         $this->assertInstanceOf(Session::class, $this->client->startSession());
     }
 }

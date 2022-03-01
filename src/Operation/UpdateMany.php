@@ -48,19 +48,10 @@ class UpdateMany implements Executable, Explainable
      *  * arrayFilters (document array): A set of filters specifying to which
      *    array elements an update should apply.
      *
-     *    This is not supported for server versions < 3.6 and will result in an$
-     *    exception at execution time if used.
-     *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.
      *
-     *    For servers < 3.2, this option is ignored as document level validation
-     *    is not available.
-     *
      *  * collation (document): Collation specification.
-     *
-     *    This is not supported for server versions < 3.4 and will result in an
-     *    exception at execution time if used.
      *
      *  * hint (string|document): The index to use. Specify either the index
      *    name as a string or the index key pattern as a document. If specified,
@@ -70,8 +61,6 @@ class UpdateMany implements Executable, Explainable
      *    exception at execution time if used.
      *
      *  * session (MongoDB\Driver\Session): Client session.
-     *
-     *    Sessions are not supported for server versions < 3.6.
      *
      *  * upsert (boolean): When true, a new document is created if no document
      *    matches the query. The default is false.

@@ -575,18 +575,6 @@ axes:
         display_name: "3.6"
         variables:
            VERSION: "3.6"
-      - id: "3.4"
-        display_name: "3.4"
-        variables:
-           VERSION: "3.4"
-      - id: "3.2"
-        display_name: "3.2"
-        variables:
-           VERSION: "3.2"
-      - id: "3.0"
-        display_name: "3.0"
-        variables:
-           VERSION: "3.0"
 
   - id: edge-versions
     display_name: MongoDB Version
@@ -596,9 +584,9 @@ axes:
         variables:
           VERSION: "5.0"
       - id: "oldest-supported"
-        display_name: "3.0"
+        display_name: "3.6"
         variables:
-          VERSION: "3.0"
+          VERSION: "3.6"
 
   - id: driver-versions
     display_name: Driver Version

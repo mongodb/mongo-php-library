@@ -78,7 +78,4 @@ source:
 post: |
   This only applies when a :ref:`$out <agg-out>` or :ref:`$merge <agg-merge>`
   stage is specified.
-
-  This is not supported for server versions prior to 3.4 and will result in an
-  exception at execution time if used.
 ...

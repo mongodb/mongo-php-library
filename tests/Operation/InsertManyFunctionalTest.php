@@ -11,8 +11,6 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\CommandObserver;
 
-use function version_compare;
-
 class InsertManyFunctionalTest extends FunctionalTestCase
 {
     /** @var Collection */
@@ -58,10 +56,6 @@ class InsertManyFunctionalTest extends FunctionalTestCase
 
     public function testSessionOption(): void
     {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('Sessions are not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new InsertMany(
@@ -81,10 +75,6 @@ class InsertManyFunctionalTest extends FunctionalTestCase
 
     public function testBypassDocumentValidationSetWhenTrue(): void
     {
-        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
-            $this->markTestSkipped('bypassDocumentValidation is not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new InsertMany(
@@ -105,10 +95,6 @@ class InsertManyFunctionalTest extends FunctionalTestCase
 
     public function testBypassDocumentValidationUnsetWhenFalse(): void
     {
-        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
-            $this->markTestSkipped('bypassDocumentValidation is not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new InsertMany(

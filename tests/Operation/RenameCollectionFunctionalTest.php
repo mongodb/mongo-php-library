@@ -9,8 +9,6 @@ use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\RenameCollection;
 use MongoDB\Tests\CommandObserver;
 
-use function version_compare;
-
 class RenameCollectionFunctionalTest extends FunctionalTestCase
 {
     /** @var integer */
@@ -107,11 +105,8 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
 
         $this->expectException(CommandException::class);
 
-        /* TODO: mongos returns an inconsistent error code (see: SERVER-60632)
-         *
-         * Note: pre-3.2 server versions omit an error code. libmongoc will
-         * substitute MONGOC_ERROR_QUERY_FAILURE in _mongoc_cmd_check_ok. */
-        if (! $this->isShardedCluster() && version_compare($this->getServerVersion(), '3.2.0', '>=')) {
+        // TODO: mongos returns an inconsistent error code (see: SERVER-60632)
+        if (! $this->isShardedCluster()) {
             $this->expectExceptionCode(self::$errorCodeNamespaceExists);
         }
 
@@ -127,12 +122,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
     public function testRenameNonexistentCollection(): void
     {
         $this->expectException(CommandException::class);
-
-        /* Note: pre-3.2 server versions omit an error code. libmongoc will
-         * substitute MONGOC_ERROR_QUERY_FAILURE in _mongoc_cmd_check_ok */
-        if (version_compare($this->getServerVersion(), '3.2.0', '>=')) {
-            $this->expectExceptionCode(self::$errorCodeNamespaceNotFound);
-        }
+        $this->expectExceptionCode(self::$errorCodeNamespaceNotFound);
 
         $operation = new RenameCollection(
             $this->getDatabaseName(),
@@ -145,10 +135,6 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
 
     public function testSessionOption(): void
     {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('Sessions are not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $server = $this->getPrimaryServer();

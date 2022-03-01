@@ -5,8 +5,6 @@ namespace MongoDB\Tests\Model;
 use MongoDB\Collection;
 use MongoDB\Tests\FunctionalTestCase;
 
-use function version_compare;
-
 class IndexInfoFunctionalTest extends FunctionalTestCase
 {
     /** @var Collection */
@@ -43,8 +41,8 @@ class IndexInfoFunctionalTest extends FunctionalTestCase
         $this->assertEquals($indexName, $index->getName());
         $this->assertTrue($index->is2dSphere());
 
-        $expectedVersion = version_compare($this->getServerVersion(), '3.2.0', '<') ? 2 : 3;
-        $this->assertEquals($expectedVersion, $index['2dsphereIndexVersion']);
+        // MongoDB 3.2+ reports index version 3
+        $this->assertEquals(3, $index['2dsphereIndexVersion']);
     }
 
     /**
@@ -82,8 +80,8 @@ class IndexInfoFunctionalTest extends FunctionalTestCase
         $this->assertEquals('english', $index['default_language']);
         $this->assertEquals('language', $index['language_override']);
 
-        $expectedVersion = version_compare($this->getServerVersion(), '3.2.0', '<') ? 2 : 3;
-        $this->assertEquals($expectedVersion, $index['textIndexVersion']);
+        // MongoDB 3.2+ reports index version 3
+        $this->assertEquals(3, $index['textIndexVersion']);
 
         $this->assertSameDocument(['x' => 1], $index['weights']);
     }

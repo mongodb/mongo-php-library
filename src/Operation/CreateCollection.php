@@ -23,7 +23,6 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\UnsupportedException;
 
 use function current;
 use function is_array;
@@ -31,7 +30,6 @@ use function is_bool;
 use function is_integer;
 use function is_object;
 use function is_string;
-use function MongoDB\server_supports_feature;
 use function trigger_error;
 
 use const E_USER_DEPRECATED;
@@ -47,12 +45,6 @@ class CreateCollection implements Executable
 {
     public const USE_POWER_OF_2_SIZES = 1;
     public const NO_PADDING = 2;
-
-    /** @var integer */
-    private static $wireVersionForCollation = 5;
-
-    /** @var integer */
-    private static $wireVersionForWriteConcern = 5;
 
     /** @var string */
     private $databaseName;
@@ -81,9 +73,6 @@ class CreateCollection implements Executable
      *
      *  * collation (document): Collation specification.
      *
-     *    This is not supported for server versions < 3.4 and will result in an
-     *    exception at execution time if used.
-     *
      *  * expireAfterSeconds: The TTL for documents in time series collections.
      *
      *    This is not supported for servers versions < 5.0.
@@ -104,8 +93,6 @@ class CreateCollection implements Executable
      *
      *  * session (MongoDB\Driver\Session): Client session.
      *
-     *    Sessions are not supported for server versions < 3.6.
-     *
      *  * size (integer): The maximum number of bytes for a capped collection.
      *
      *  * storageEngine (document): Storage engine options.
@@ -124,9 +111,6 @@ class CreateCollection implements Executable
      *  * validator (document): Validation rules or expressions.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
-     *
-     *    This is not supported for server versions < 3.4 and will result in an
-     *    exception at execution time if used.
      *
      * @see http://source.wiredtiger.com/2.4.1/struct_w_t___s_e_s_s_i_o_n.html#a358ca4141d59c345f401c58501276bbb
      * @see https://docs.mongodb.org/manual/core/document-validation/
@@ -224,19 +208,10 @@ class CreateCollection implements Executable
      * @see Executable::execute()
      * @param Server $server
      * @return array|object Command result document
-     * @throws UnsupportedException if collation or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
-        if (isset($this->options['collation']) && ! server_supports_feature($server, self::$wireVersionForCollation)) {
-            throw UnsupportedException::collationNotSupported();
-        }
-
-        if (isset($this->options['writeConcern']) && ! server_supports_feature($server, self::$wireVersionForWriteConcern)) {
-            throw UnsupportedException::writeConcernNotSupported();
-        }
-
         $cursor = $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
 
         if (isset($this->options['typeMap'])) {

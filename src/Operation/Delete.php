@@ -44,13 +44,7 @@ use function MongoDB\server_supports_feature;
 class Delete implements Executable, Explainable
 {
     /** @var integer */
-    private static $wireVersionForCollation = 5;
-
-    /** @var integer */
     private static $wireVersionForHint = 9;
-
-    /** @var int */
-    private static $wireVersionForUnsupportedOptionServerSideError = 5;
 
     /** @var string */
     private $databaseName;
@@ -74,9 +68,6 @@ class Delete implements Executable, Explainable
      *
      *  * collation (document): Collation specification.
      *
-     *    This is not supported for server versions < 3.4 and will result in an
-     *    exception at execution time if used.
-     *
      *  * hint (string|document): The index to use. Specify either the index
      *    name as a string or the index key pattern as a document. If specified,
      *    then the query system will only consider plans using the hinted index.
@@ -85,8 +76,6 @@ class Delete implements Executable, Explainable
      *    exception at execution time if used.
      *
      *  * session (MongoDB\Driver\Session): Client session.
-     *
-     *    Sessions are not supported for server versions < 3.6.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
@@ -142,20 +131,11 @@ class Delete implements Executable, Explainable
      * @see Executable::execute()
      * @param Server $server
      * @return DeleteResult
+     * @throws UnsupportedException if hint or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
-        if (isset($this->options['collation']) && ! server_supports_feature($server, self::$wireVersionForCollation)) {
-            throw UnsupportedException::collationNotSupported();
-        }
-
-        /* Server versions >= 3.4.0 raise errors for unsupported update options.
-         * For previous versions, the CRUD spec requires a client-side error. */
-        if (isset($this->options['hint']) && ! server_supports_feature($server, self::$wireVersionForUnsupportedOptionServerSideError)) {
-            throw UnsupportedException::hintNotSupported();
-        }
-
         /* CRUD spec requires a client-side error when using "hint" with an
          * unacknowledged write concern on an unsupported server. */
         if (

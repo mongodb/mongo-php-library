@@ -9,8 +9,6 @@ use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListIndexes;
 use MongoDB\Tests\CommandObserver;
 
-use function version_compare;
-
 class ListIndexesFunctionalTest extends FunctionalTestCase
 {
     public function testListIndexesForNewlyCreatedCollection(): void
@@ -49,10 +47,6 @@ class ListIndexesFunctionalTest extends FunctionalTestCase
 
     public function testSessionOption(): void
     {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('Sessions are not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new ListIndexes(

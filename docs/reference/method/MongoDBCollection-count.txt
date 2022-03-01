@@ -56,8 +56,7 @@ metadata. Even when provided with a query filter the ``count`` command can
 return inaccurate results with a sharded cluster if orphaned documents exist or
 if a chunk migration is in progress. The
 :phpmethod:`MongoDB\\Collection::countDocuments()` method avoids these sharded
-cluster problems entirely when used with MongoDB 3.6+, and when a primary read
-preference with older sharded clusters.
+cluster problems entirely.
 
 .. include:: /includes/extracts/note-bson-comparison.rst
 

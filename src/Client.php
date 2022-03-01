@@ -51,12 +51,6 @@ class Client
         'root' => BSONDocument::class,
     ];
 
-    /** @var integer */
-    private static $wireVersionForReadConcern = 4;
-
-    /** @var integer */
-    private static $wireVersionForWritableCommandWriteConcern = 5;
-
     /** @var string */
     private static $handshakeSeparator = ' / ';
 
@@ -215,7 +209,7 @@ class Client
 
         $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && server_supports_feature($server, self::$wireVersionForWritableCommandWriteConcern) && ! is_in_transaction($options)) {
+        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
@@ -372,7 +366,7 @@ class Client
 
         $server = select_server($this->manager, $options);
 
-        if (! isset($options['readConcern']) && server_supports_feature($server, self::$wireVersionForReadConcern) && ! is_in_transaction($options)) {
+        if (! isset($options['readConcern']) && ! is_in_transaction($options)) {
             $options['readConcern'] = $this->readConcern;
         }
 

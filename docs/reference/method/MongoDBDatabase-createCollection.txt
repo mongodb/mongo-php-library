@@ -41,11 +41,9 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBDatabase-method-createCollection-option.rst
 
-   Note that not all options are available on all versions of MongoDB. Document
-   validation, for example, was added in MongoDB 3.2; similarly, the WiredTiger
-   storage engine is available only for MongoDB 3.0 and later. Refer to the
-   :manual:`create </reference/command/create>` command reference in the MongoDB
-   manual for compatibility considerations.
+   Note that not all options are available on all versions of MongoDB. Refer to
+   the :manual:`create </reference/command/create>` command reference in the
+   MongoDB manual for compatibility considerations.
 
 Return Values
 -------------

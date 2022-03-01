@@ -7,8 +7,6 @@ use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\CommandObserver;
 
-use function version_compare;
-
 class CountFunctionalTest extends FunctionalTestCase
 {
     public function testDefaultReadConcernIsOmitted(): void
@@ -50,12 +48,8 @@ class CountFunctionalTest extends FunctionalTestCase
             'sparse_x',
         ];
 
-        /* Per SERVER-22041, the count command in server versions before 3.3.2
-         * may ignore the hint option if its query predicate is empty. */
-        $filter = ['_id' => ['$exists' => true]];
-
         foreach ($hintsUsingSparseIndex as $hint) {
-            $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), $filter, ['hint' => $hint]);
+            $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), [], ['hint' => $hint]);
             $this->assertSame(2, $operation->execute($this->getPrimaryServer()));
         }
 
@@ -66,17 +60,13 @@ class CountFunctionalTest extends FunctionalTestCase
         ];
 
         foreach ($hintsNotUsingSparseIndex as $hint) {
-            $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), $filter, ['hint' => $hint]);
+            $operation = new Count($this->getDatabaseName(), $this->getCollectionName(), [], ['hint' => $hint]);
             $this->assertSame(3, $operation->execute($this->getPrimaryServer()));
         }
     }
 
     public function testSessionOption(): void
     {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('Sessions are not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new Count(

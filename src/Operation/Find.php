@@ -32,7 +32,6 @@ use function is_bool;
 use function is_integer;
 use function is_object;
 use function is_string;
-use function MongoDB\server_supports_feature;
 use function trigger_error;
 
 use const E_USER_DEPRECATED;
@@ -50,15 +49,6 @@ class Find implements Executable, Explainable
     public const NON_TAILABLE = 1;
     public const TAILABLE = 2;
     public const TAILABLE_AWAIT = 3;
-
-    /** @var integer */
-    private static $wireVersionForCollation = 5;
-
-    /** @var integer */
-    private static $wireVersionForReadConcern = 4;
-
-    /** @var integer */
-    private static $wireVersionForAllowDiskUseServerSideError = 4;
 
     /** @var string */
     private $databaseName;
@@ -87,9 +77,6 @@ class Find implements Executable, Explainable
      *  * batchSize (integer): The number of documents to return per batch.
      *
      *  * collation (document): Collation specification.
-     *
-     *    This is not supported for server versions < 3.4 and will result in an
-     *    exception at execution time if used.
      *
      *  * comment (string): Attaches a comment to the query. If "$comment" also
      *    exists in the modifiers document, this option will take precedence.
@@ -136,17 +123,12 @@ class Find implements Executable, Explainable
      *
      *  * readConcern (MongoDB\Driver\ReadConcern): Read concern.
      *
-     *    This is not supported for server versions < 3.2 and will result in an
-     *    exception at execution time if used.
-     *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
      *  * returnKey (boolean): If true, returns only the index keys in the
      *    resulting documents.
      *
      *  * session (MongoDB\Driver\Session): Client session.
-     *
-     *    Sessions are not supported for server versions < 3.6.
      *
      *  * showRecordId (boolean): Determines whether to return the record
      *    identifier for each document. If true, adds a field $recordId to the
@@ -316,23 +298,11 @@ class Find implements Executable, Explainable
      * @see Executable::execute()
      * @param Server $server
      * @return Cursor
-     * @throws UnsupportedException if collation or read concern is used and unsupported
+     * @throws UnsupportedException if read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server)
     {
-        if (isset($this->options['collation']) && ! server_supports_feature($server, self::$wireVersionForCollation)) {
-            throw UnsupportedException::collationNotSupported();
-        }
-
-        if (isset($this->options['readConcern']) && ! server_supports_feature($server, self::$wireVersionForReadConcern)) {
-            throw UnsupportedException::readConcernNotSupported();
-        }
-
-        if (isset($this->options['allowDiskUse']) && ! server_supports_feature($server, self::$wireVersionForAllowDiskUseServerSideError)) {
-            throw UnsupportedException::allowDiskUseNotSupported();
-        }
-
         $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
         if ($inTransaction && isset($this->options['readConcern'])) {
             throw UnsupportedException::readConcernNotSupportedInTransaction();

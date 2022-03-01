@@ -6,8 +6,6 @@ use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListDatabaseNames;
 use MongoDB\Tests\CommandObserver;
 
-use function version_compare;
-
 class ListDatabaseNamesFunctionalTest extends FunctionalTestCase
 {
     public function testListDatabaseNames(): void
@@ -55,10 +53,6 @@ class ListDatabaseNamesFunctionalTest extends FunctionalTestCase
 
     public function testFilterOption(): void
     {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('listDatabase command "filter" option is not supported');
-        }
-
         $server = $this->getPrimaryServer();
 
         $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1]);
@@ -76,10 +70,6 @@ class ListDatabaseNamesFunctionalTest extends FunctionalTestCase
 
     public function testSessionOption(): void
     {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('Sessions are not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new ListDatabaseNames(

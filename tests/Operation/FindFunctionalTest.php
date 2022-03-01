@@ -10,7 +10,6 @@ use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
 
 use function microtime;
-use function version_compare;
 
 class FindFunctionalTest extends FunctionalTestCase
 {
@@ -86,10 +85,6 @@ class FindFunctionalTest extends FunctionalTestCase
 
     public function testSessionOption(): void
     {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('Sessions are not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new Find(
@@ -152,10 +147,6 @@ class FindFunctionalTest extends FunctionalTestCase
 
     public function testMaxAwaitTimeMS(): void
     {
-        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
-            $this->markTestSkipped('maxAwaitTimeMS option is not supported');
-        }
-
         $maxAwaitTimeMS = 100;
 
         /* Calculate an approximate pivot to use for time assertions. We will

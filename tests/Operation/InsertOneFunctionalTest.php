@@ -11,8 +11,6 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Tests\CommandObserver;
 
-use function version_compare;
-
 class InsertOneFunctionalTest extends FunctionalTestCase
 {
     /** @var Collection */
@@ -73,10 +71,6 @@ class InsertOneFunctionalTest extends FunctionalTestCase
 
     public function testSessionOption(): void
     {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('Sessions are not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new InsertOne(
@@ -96,10 +90,6 @@ class InsertOneFunctionalTest extends FunctionalTestCase
 
     public function testBypassDocumentValidationSetWhenTrue(): void
     {
-        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
-            $this->markTestSkipped('bypassDocumentValidation is not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new InsertOne(
@@ -120,10 +110,6 @@ class InsertOneFunctionalTest extends FunctionalTestCase
 
     public function testBypassDocumentValidationUnsetWhenFalse(): void
     {
-        if (version_compare($this->getServerVersion(), '3.2.0', '<')) {
-            $this->markTestSkipped('bypassDocumentValidation is not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new InsertOne(

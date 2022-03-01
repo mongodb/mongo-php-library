@@ -147,10 +147,6 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
     public function testCreateIndexSplitsCommandOptions(): void
     {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('Sessions are not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $this->collection->createIndex(

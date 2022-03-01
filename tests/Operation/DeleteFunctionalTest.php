@@ -64,26 +64,6 @@ class DeleteFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
-    public function testHintOptionUnsupportedClientSideError(): void
-    {
-        if (version_compare($this->getServerVersion(), '3.4.0', '>=')) {
-            $this->markTestSkipped('server reports error for unsupported delete options');
-        }
-
-        $operation = new Delete(
-            $this->getDatabaseName(),
-            $this->getCollectionName(),
-            [],
-            0,
-            ['hint' => '_id_']
-        );
-
-        $this->expectException(UnsupportedException::class);
-        $this->expectExceptionMessage('Hint is not supported by the server executing this operation');
-
-        $operation->execute($this->getPrimaryServer());
-    }
-
     public function testHintOptionAndUnacknowledgedWriteConcernUnsupportedClientSideError(): void
     {
         if (version_compare($this->getServerVersion(), '4.4.0', '>=')) {
@@ -106,10 +86,6 @@ class DeleteFunctionalTest extends FunctionalTestCase
 
     public function testSessionOption(): void
     {
-        if (version_compare($this->getServerVersion(), '3.6.0', '<')) {
-            $this->markTestSkipped('Sessions are not supported');
-        }
-
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new Delete(

@@ -10,7 +10,6 @@ use stdClass;
 
 use function hex2bin;
 use function preg_quote;
-use function version_compare;
 
 class MatchesTest extends FunctionalTestCase
 {
@@ -122,10 +121,6 @@ class MatchesTest extends FunctionalTestCase
 
     public function testOperatorSessionLsid(): void
     {
-        if (version_compare($this->getFeatureCompatibilityVersion(), '3.6', '<')) {
-            $this->markTestSkipped('startSession() is only supported on FCV 3.6 or higher');
-        }
-
         $session = $this->manager->startSession();
 
         $entityMap = new EntityMap();

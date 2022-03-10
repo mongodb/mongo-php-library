@@ -40,8 +40,8 @@ use function reset;
  */
 class CachingIterator implements Countable, Iterator
 {
-    private const FIELD_KEY = 'key';
-    private const FIELD_VALUE = 'value';
+    private const FIELD_KEY = 0;
+    private const FIELD_VALUE = 1;
 
     /** @var array */
     private $items = [];
@@ -90,8 +90,8 @@ class CachingIterator implements Countable, Iterator
     #[ReturnTypeWillChange]
     public function current()
     {
-        /* Fetching current item */
         $currentItem = current($this->items);
+
         return $currentItem !== false ? $currentItem[self::FIELD_VALUE] : false;
     }
 
@@ -102,8 +102,8 @@ class CachingIterator implements Countable, Iterator
     #[ReturnTypeWillChange]
     public function key()
     {
-        /* Fetching current item */
         $currentItem = current($this->items);
+
         return $currentItem !== false ? $currentItem[self::FIELD_KEY] : null;
     }
 
@@ -172,7 +172,7 @@ class CachingIterator implements Countable, Iterator
             return;
         }
 
-        /* Storing a new item in the internal cache */
+        // Storing a new item in the internal cache
         $this->items[] = [
             self::FIELD_KEY => $this->iterator->key(),
             self::FIELD_VALUE => $this->iterator->current(),

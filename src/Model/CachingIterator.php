@@ -25,7 +25,6 @@ use Traversable;
 
 use function count;
 use function current;
-use function key;
 use function next;
 use function reset;
 

@@ -152,10 +152,24 @@ class CachingIteratorTest extends TestCase
         $this->assertCount(1, $iterator);
     }
 
-    public function testNonUniqueKeys(): void
+    public function testCountNonUniqueKeys(): void
     {
         $iterator = new CachingIterator($this->getNonUniqueTraversable([1, 2, 3]));
         $this->assertCount(3, $iterator);
+    }
+
+    public function testIterationNonUniqueKeys(): void
+    {
+        $iterator = new CachingIterator($this->getNonUniqueTraversable([1, 2, 3]));
+
+        $expectedItem = 1;
+
+        foreach ($iterator as $key => $item) {
+            $this->assertSame(0, $key);
+            $this->assertSame($expectedItem++, $item);
+        }
+
+        $this->assertFalse($iterator->valid());
     }
 
     private function getTraversable($items)

@@ -5,6 +5,7 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Tests\MethodsParams;
 use stdClass;
 
 use function array_diff_key;
@@ -31,6 +32,19 @@ final class Util
         assertThat($arrayOrObject, logicalOr(isType('array'), isInstanceOf(stdClass::class)));
         $diff = array_diff_key((array) $arrayOrObject, array_fill_keys($keys, 1));
         assertEmpty($diff, 'Unsupported keys: ' . implode(',', array_keys($diff)));
+    }
+
+    /**
+     * @param string $executingObjectName
+     * @param string $operation
+     * @param array  $args
+     * @return void
+     */
+    public static function assertParamsBySchema(string $executingObjectName, string $operation, array $args): void
+    {
+        if (isset(MethodsParams::$args[$executingObjectName][$operation])) {
+            self::assertHasOnlyKeys($args, MethodsParams::$args[$executingObjectName][$operation]);
+        }
     }
 
     public static function createReadConcern(stdClass $o): ReadConcern

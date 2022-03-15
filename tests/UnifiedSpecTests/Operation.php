@@ -211,7 +211,7 @@ final class Operation
     private function executeForChangeStream(ChangeStream $changeStream)
     {
         $args = $this->prepareArguments();
-        Util::assertParamsBySchema(get_class($changeStream), $this->name, $args);
+        Util::assertArgumentsBySchema(ChangeStream::class, $this->name, $args);
 
         switch ($this->name) {
             case 'iterateUntilDocumentOrError':
@@ -244,7 +244,7 @@ final class Operation
     private function executeForClient(Client $client)
     {
         $args = $this->prepareArguments();
-        Util::assertParamsBySchema(get_class($client), $this->name, $args);
+        Util::assertArgumentsBySchema(Client::class, $this->name, $args);
 
         switch ($this->name) {
             case 'createChangeStream':
@@ -270,7 +270,7 @@ final class Operation
     private function executeForCollection(Collection $collection)
     {
         $args = $this->prepareArguments();
-        Util::assertParamsBySchema(get_class($collection), $this->name, $args);
+        Util::assertArgumentsBySchema(Collection::class, $this->name, $args);
 
         switch ($this->name) {
             case 'aggregate':
@@ -482,7 +482,7 @@ final class Operation
     private function executeForCursor(Cursor $cursor)
     {
         $args = $this->prepareArguments();
-        Util::assertParamsBySchema(get_class($cursor), $this->name, $args);
+        Util::assertArgumentsBySchema(Cursor::class, $this->name, $args);
 
         switch ($this->name) {
             case 'close':
@@ -530,7 +530,7 @@ final class Operation
     private function executeForDatabase(Database $database)
     {
         $args = $this->prepareArguments();
-        Util::assertParamsBySchema(get_class($database), $this->name, $args);
+        Util::assertArgumentsBySchema(Database::class, $this->name, $args);
 
         switch ($this->name) {
             case 'aggregate':
@@ -592,7 +592,7 @@ final class Operation
     private function executeForSession(Session $session)
     {
         $args = $this->prepareArguments();
-        Util::assertParamsBySchema(get_class($session), $this->name, $args);
+        Util::assertArgumentsBySchema(Session::class, $this->name, $args);
 
         switch ($this->name) {
             case 'abortTransaction':
@@ -633,7 +633,7 @@ final class Operation
     private function executeForBucket(Bucket $bucket)
     {
         $args = $this->prepareArguments();
-        Util::assertParamsBySchema(get_class($bucket), $this->name, $args);
+        Util::assertArgumentsBySchema(Bucket::class, $this->name, $args);
 
         switch ($this->name) {
             case 'delete':
@@ -679,7 +679,7 @@ final class Operation
     private function executeForTestRunner()
     {
         $args = $this->prepareArguments();
-        Util::assertParamsBySchema(self::OBJECT_TEST_RUNNER, $this->name, $args);
+        Util::assertArgumentsBySchema(self::OBJECT_TEST_RUNNER, $this->name, $args);
 
         switch ($this->name) {
             case 'assertCollectionExists':

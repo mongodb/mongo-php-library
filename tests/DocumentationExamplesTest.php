@@ -4,13 +4,16 @@ namespace MongoDB\Tests;
 
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
+use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\Cursor;
+use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\Exception;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 
 use function in_array;
+use function microtime;
 use function ob_end_clean;
 use function ob_start;
 use function var_dump;
@@ -1575,6 +1578,119 @@ class DocumentationExamplesTest extends FunctionalTestCase
         ob_end_clean();
     }
 
+    public function testSnapshotQueries(): void
+    {
+        if (version_compare($this->getServerVersion(), '5.0.0', '<')) {
+            $this->markTestSkipped('Snapshot queries outside of transactions are not supported');
+        }
+
+        if (! ($this->isReplicaSet() || $this->isShardedClusterUsingReplicasets())) {
+            $this->markTestSkipped('Snapshot read concern is only supported with replicasets');
+        }
+
+        $client = static::createTestClient();
+
+        $catsCollection = $client->selectCollection('pets', 'cats');
+        $catsCollection->drop();
+        $catsCollection->insertMany([
+            ['name' => 'Whiskers', 'color' => 'white', 'adoptable' => true],
+            ['name' => 'Garfield', 'color' => 'orange', 'adoptable' => false],
+        ]);
+
+        $dogsCollection = $client->selectCollection('pets', 'dogs');
+        $dogsCollection->drop();
+        $dogsCollection->insertMany([
+            ['name' => 'Toto', 'color' => 'black',  'adoptable' => true],
+            ['name' => 'Milo', 'color' => 'black', 'adoptable' => false],
+            ['name' => 'Brian', 'color' => 'white', 'adoptable' => true],
+        ]);
+
+        if ($this->isShardedCluster()) {
+            $this->preventStaleDbVersionError('pets', 'cats');
+            $this->preventStaleDbVersionError('pets', 'dogs');
+        } else {
+            $this->waitForSnapshot('pets', 'cats');
+            $this->waitForSnapshot('pets', 'dogs');
+        }
+
+        ob_start();
+
+        // Start Snapshot Query Example 1
+        $catsCollection = $client->selectCollection('pets', 'cats');
+        $dogsCollection = $client->selectCollection('pets', 'dogs');
+
+        $session = $client->startSession(['snapshot' => true]);
+
+        $adoptablePetsCount = $catsCollection->aggregate(
+            [
+                ['$match' => ['adoptable' => true]],
+                ['$count' => 'adoptableCatsCount'],
+            ],
+            ['session' => $session]
+        )->toArray()[0]->adoptableCatsCount;
+
+        $adoptablePetsCount += $dogsCollection->aggregate(
+            [
+                ['$match' => ['adoptable' => true]],
+                ['$count' => 'adoptableDogsCount'],
+            ],
+            ['session' => $session]
+        )->toArray()[0]->adoptableDogsCount;
+
+        var_dump($adoptablePetsCount);
+        // End Snapshot Query Example 1
+
+        ob_end_clean();
+
+        $this->assertSame(3, $adoptablePetsCount);
+
+        $catsCollection->drop();
+        $dogsCollection->drop();
+
+        $salesCollection = $client->selectCollection('retail', 'sales');
+        $salesCollection->drop();
+        $salesCollection->insertMany([
+            ['shoeType' => 'boot', 'price' => 30, 'saleDate' => new UTCDateTime()],
+        ]);
+
+        if ($this->isShardedCluster()) {
+            $this->preventStaleDbVersionError('retail', 'sales');
+        } else {
+            $this->waitForSnapshot('retail', 'sales');
+        }
+
+        // Start Snapshot Query Example 2
+        $salesCollection = $client->selectCollection('retail', 'sales');
+
+        $session = $client->startSession(['snapshot' => true]);
+
+        $totalDailySales = $salesCollection->aggregate(
+            [
+                [
+                    '$match' => [
+                        '$expr' => [
+                            '$gt' => ['$saleDate', [
+                                '$dateSubtract' => [
+                                    'startDate' => '$$NOW',
+                                    'unit' => 'day',
+                                    'amount' => 1,
+                                ],
+                            ],
+                            ],
+                        ],
+                    ],
+                ],
+                ['$count' => 'totalDailySales'],
+            ],
+            ['session' => $session]
+        )->toArray()[0]->totalDailySales;
+        // End Snapshot Query Example 2
+
+        $this->assertSame(1, $totalDailySales);
+
+        $salesCollection->drop();
+    }
+
     /**
      * @doesNotPerformAssertions
      */
@@ -1750,5 +1866,40 @@ class DocumentationExamplesTest extends FunctionalTestCase
     private function assertInventoryCount($count): void
     {
         $this->assertCollectionCount($this->getDatabaseName() . '.' . $this->getCollectionName(), $count);
+    }
+
+    private function waitForSnapshot(string $databaseName, string $collectionName): void
+    {
+        $collection = new Collection($this->manager, $databaseName, $collectionName);
+        $session = $this->manager->startSession(['snapshot' => true]);
+
+        // TODO: use hrtime() once the library requires PHP 7.3+
+        $startTime = microtime(true);
+
+        do {
+            try {
+                $collection->aggregate(
+                    [['$match' => ['_id' => ['$exists' => true]]]],
+                    ['session' => $session]
+                );
+
+                break;
+            } catch (CommandException $e) {
+                if ($e->getCode() === 246 /* SnapshotUnavailable */) {
+                    continue;
+                }
+
+                throw $e;
+            }
+        } while (microtime(true) < $startTime + 10);
+    }
+
+    /**
+     * @see https://jira.mongodb.org/browse/SERVER-39704
+     */
+    private function preventStaleDbVersionError(string $databaseName, string $collectionName): void
+    {
+        $collection = new Collection($this->manager, $databaseName, $collectionName);
+        $collection->distinct('foo');
     }
 }

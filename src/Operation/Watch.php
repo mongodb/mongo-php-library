@@ -34,6 +34,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\ChangeStreamIterator;
 
 use function array_intersect_key;
+use function array_key_exists;
 use function array_unshift;
 use function count;
 use function is_array;

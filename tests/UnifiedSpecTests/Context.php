@@ -294,11 +294,8 @@ final class Context
             }
         }
 
-        /* TODO: Remove this once PHPC-1645 is implemented. Each client needs
-         * its own libmongoc client to facilitate txnNumber assertions. */
-        static $i = 0;
-        $driverOptions = isset($observeEvents) ? ['i' => $i++] : [];
-
+        $driverOptions = [];
+        
         if ($serverApi !== null) {
             assertIsObject($serverApi);
             $driverOptions['serverApi'] = new ServerApi(

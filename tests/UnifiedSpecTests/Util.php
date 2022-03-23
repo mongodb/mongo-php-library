@@ -19,7 +19,6 @@ use function array_fill_keys;
 use function array_key_exists;
 use function array_keys;
 use function implode;
-use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertContains;
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertIsArray;
@@ -56,46 +55,46 @@ final class Util
             'loop' => ['operations', 'storeErrorsAsEntity', 'storeFailuresAsEntity', 'storeSuccessesAsEntity', 'storeIterationsAsEntity'],
         ],
         Client::class => [
-            'createChangeStream' => ['pipeline', 'typeMap', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS'],
+            'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS'],
             'listDatabaseNames' => ['authorizedDatabases', 'filter', 'maxTimeMS', 'session'],
             'listDatabases' => ['authorizedDatabases', 'filter', 'maxTimeMS', 'session'],
         ],
         Database::class => [
-            'aggregate' => ['pipeline', 'typeMap', 'session', 'useCursor', 'allowDiskUse', 'batchSize', 'bypassDocumentValidation', 'collation', 'comment', 'explain', 'hint', 'let', 'maxAwaitTimeMS', 'maxTimeMS'],
-            'createChangeStream' => ['pipeline', 'typeMap', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS'],
-            'createCollection' => ['collection', 'typeMap', 'session', 'autoIndexId', 'capped', 'collation', 'expireAfterSeconds', 'flags', 'indexOptionDefaults', 'max', 'maxTimeMS', 'size', 'storageEngine', 'timeseries', 'validationAction', 'validationLevel', 'validator'],
-            'dropCollection' => ['collection', 'typeMap', 'session'],
+            'aggregate' => ['pipeline', 'session', 'useCursor', 'allowDiskUse', 'batchSize', 'bypassDocumentValidation', 'collation', 'comment', 'explain', 'hint', 'let', 'maxAwaitTimeMS', 'maxTimeMS'],
+            'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS'],
+            'createCollection' => ['collection', 'session', 'autoIndexId', 'capped', 'collation', 'expireAfterSeconds', 'flags', 'indexOptionDefaults', 'max', 'maxTimeMS', 'size', 'storageEngine', 'timeseries', 'validationAction', 'validationLevel', 'validator'],
+            'dropCollection' => ['collection', 'session'],
             'listCollectionNames' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
             'listCollections' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
             // Note: commandName is not used by PHP
-            'runCommand' => ['command', 'typeMap', 'session', 'commandName'],
+            'runCommand' => ['command', 'session', 'commandName'],
         ],
         Collection::class => [
-            'aggregate' => ['pipeline', 'typeMap', 'session', 'useCursor', 'allowDiskUse', 'batchSize', 'bypassDocumentValidation', 'collation', 'comment', 'explain', 'hint', 'let', 'maxAwaitTimeMS', 'maxTimeMS'],
+            'aggregate' => ['pipeline', 'session', 'useCursor', 'allowDiskUse', 'batchSize', 'bypassDocumentValidation', 'collation', 'comment', 'explain', 'hint', 'let', 'maxAwaitTimeMS', 'maxTimeMS'],
             'bulkWrite' => ['requests', 'session', 'ordered', 'bypassDocumentValidation'],
-            'createChangeStream' => ['pipeline', 'typeMap', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS'],
-            'createFindCursor' => ['filter', 'typeMap', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
+            'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS'],
+            'createFindCursor' => ['filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
             'createIndex' => ['keys', 'commitQuorum', 'maxTimeMS', 'name', 'session'],
-            'dropIndex' => ['name', 'typeMap', 'session', 'maxTimeMS'],
+            'dropIndex' => ['name', 'session', 'maxTimeMS'],
             'count' => ['filter', 'session', 'collation', 'hint', 'limit', 'maxTimeMS', 'skip'],
             'countDocuments' => ['filter', 'session', 'limit', 'skip', 'collation', 'hint', 'maxTimeMS'],
             'estimatedDocumentCount' => ['session', 'maxTimeMS'],
             'deleteMany' => ['filter', 'session', 'collation', 'hint'],
             'deleteOne' => ['filter', 'session', 'collation', 'hint'],
-            'findOneAndDelete' => ['filter', 'session', 'typeMap', 'projection', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'new', 'sort', 'update', 'upsert'],
-            'distinct' => ['fieldName', 'filter', 'session', 'typeMap', 'collation', 'maxTimeMS'],
-            'drop' => ['session', 'typeMap'],
-            'find' => ['filter', 'session', 'typeMap', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
-            'findOne' => ['filter', 'session', 'typeMap', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
-            'findOneAndReplace' => ['returnDocument', 'filter', 'replacement', 'session', 'typeMap', 'projection', 'returnDocument', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'new', 'remove', 'sort'],
+            'findOneAndDelete' => ['filter', 'session', 'projection', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'new', 'sort', 'update', 'upsert'],
+            'distinct' => ['fieldName', 'filter', 'session', 'collation', 'maxTimeMS'],
+            'drop' => ['session'],
+            'find' => ['filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
+            'findOne' => ['filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
+            'findOneAndReplace' => ['returnDocument', 'filter', 'replacement', 'session', 'projection', 'returnDocument', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'new', 'remove', 'sort'],
             'replaceOne' => ['filter', 'replacement', 'session', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint'],
-            'findOneAndUpdate' => ['returnDocument', 'filter', 'update', 'session', 'typeMap', 'upsert', 'projection', 'remove', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'sort'],
+            'findOneAndUpdate' => ['returnDocument', 'filter', 'update', 'session', 'upsert', 'projection', 'remove', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'sort'],
             'updateMany' => ['filter', 'update', 'session', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint'],
             'updateOne' => ['filter', 'update', 'session', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint'],
             'insertMany' => ['options', 'documents', 'session', 'ordered', 'bypassDocumentValidation'],
             'insertOne' => ['document', 'session', 'bypassDocumentValidation'],
             'listIndexes' => ['session', 'maxTimeMS'],
-            'mapReduce' => ['map', 'reduce', 'out', 'session', 'typeMap', 'bypassDocumentValidation', 'collation', 'finalize', 'jsMode', 'limit', 'maxTimeMS', 'query', 'scope', 'sort', 'verbose'],
+            'mapReduce' => ['map', 'reduce', 'out', 'session', 'bypassDocumentValidation', 'collation', 'finalize', 'jsMode', 'limit', 'maxTimeMS', 'query', 'scope', 'sort', 'verbose'],
         ],
         ChangeStream::class => [
             'iterateUntilDocumentOrError' => [],
@@ -108,7 +107,7 @@ final class Util
             'abortTransaction' => [],
             'commitTransaction' => [],
             'endSession' => [],
-           'startTransaction' => ['maxCommitTimeMS', 'readConcern', 'readPreference', 'writeConcern'],
+            'startTransaction' => ['maxCommitTimeMS', 'readConcern', 'readPreference', 'writeConcern'],
             'withTransaction' => ['callback', 'maxCommitTimeMS', 'readConcern', 'readPreference', 'writeConcern'],
         ],
         Bucket::class => [

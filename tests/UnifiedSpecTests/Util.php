@@ -67,20 +67,15 @@ final class Util
             'dropCollection' => ['collection', 'typeMap', 'session'],
             'listCollectionNames' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
             'listCollections' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
-            'runCommand' => [
-                'command', 'typeMap', 'session',
-                'commandName', // Argument is not used in PHPLib
-            ],
+            // Note: commandName is not used by PHP
+            'runCommand' => ['command', 'typeMap', 'session', 'commandName'],
         ],
         Collection::class => [
             'aggregate' => ['pipeline', 'typeMap', 'session', 'useCursor', 'allowDiskUse', 'batchSize', 'bypassDocumentValidation', 'collation', 'comment', 'explain', 'hint', 'let', 'maxAwaitTimeMS', 'maxTimeMS'],
             'bulkWrite' => ['requests', 'session', 'ordered', 'bypassDocumentValidation'],
             'createChangeStream' => ['pipeline', 'typeMap', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS'],
             'createFindCursor' => ['filter', 'typeMap', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
-            'createIndex' => [
-                'keys', 'commitQuorum', 'maxTimeMS', 'session',
-                'name', // Argument is not used in PHPLib
-            ],
+            'createIndex' => ['keys', 'commitQuorum', 'maxTimeMS', 'name', 'session'],
             'dropIndex' => ['name', 'typeMap', 'session', 'maxTimeMS'],
             'count' => ['filter', 'session', 'collation', 'hint', 'limit', 'maxTimeMS', 'skip'],
             'countDocuments' => ['filter', 'session', 'limit', 'skip', 'collation', 'hint', 'maxTimeMS'],
@@ -113,8 +108,8 @@ final class Util
             'abortTransaction' => [],
             'commitTransaction' => [],
             'endSession' => [],
-            'startTransaction' => [],
-            'withTransaction' => ['callback', 'readConcern', 'writeConcern'],
+           'startTransaction' => ['maxCommitTimeMS', 'readConcern', 'readPreference', 'writeConcern'],
+            'withTransaction' => ['callback', 'maxCommitTimeMS', 'readConcern', 'readPreference', 'writeConcern'],
         ],
         Bucket::class => [
             'delete' => ['id'],
@@ -134,10 +129,6 @@ final class Util
 
     public static function assertArgumentsBySchema(string $executingObjectName, string $operation, array $args): void
     {
-        assertArrayHasKey($executingObjectName, self::$args, 'Missing object "' . $executingObjectName . '" definition. The list of allowed objects, operation names and arguments should be defined at ' . self::class);
-        assertIsArray(self::$args[$executingObjectName], 'Object "' . $executingObjectName . '" is not correctly defined. The list of allowed objects, operation names and arguments should be defined at ' . self::class . '. ');
-        assertArrayHasKey($operation, self::$args[$executingObjectName], 'Missing operation "' . $operation . '" definition for object "' . $executingObjectName . '". The list of allowed objects, operation names and arguments should be defined at ' . self::class);
-        assertIsArray(self::$args[$executingObjectName][$operation], 'Operation "' . $operation . '" for object "' . $executingObjectName . '" is not correctly defined. The list of allowed objects, operation names and arguments should be defined at ' . self::class);
         self::assertHasOnlyKeys($args, self::$args[$executingObjectName][$operation]);
     }
 

@@ -52,7 +52,7 @@ use function MongoDB\server_supports_feature;
  *
  * @api
  * @see \MongoDB\Collection::watch()
- * @see https://docs.mongodb.com/manual/changeStreams/
+ * @see https://mongodb.com/docs/manual/changeStreams/
  */
 class Watch implements Executable, /* @internal */ CommandSubscriber
 {

@@ -258,7 +258,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         /* When renaming an unsharded collection, mongos requires the source
         * and target database to both exist on the primary shard. In practice, this
         * means we need to create the target database explicitly.
-        * See: https://docs.mongodb.com/manual/reference/command/renameCollection/#unsharded-collections
+        * See: https://mongodb.com/docs/manual/reference/command/renameCollection/#unsharded-collections
         */
         if ($this->isShardedCluster()) {
             $toDatabase->foo->insertOne(['_id' => 1]);

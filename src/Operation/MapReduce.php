@@ -49,7 +49,7 @@ use const E_USER_DEPRECATED;
  *
  * @api
  * @see \MongoDB\Collection::mapReduce()
- * @see https://docs.mongodb.com/manual/reference/command/mapReduce/
+ * @see https://mongodb.com/docs/manual/reference/command/mapReduce/
  */
 class MapReduce implements Executable
 {

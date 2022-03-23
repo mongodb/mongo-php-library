@@ -97,7 +97,7 @@ class CollectionInfo implements ArrayAccess
     /**
      * Return the "info" property of the server response.
      *
-     * @see https://docs.mongodb.com/manual/reference/command/listCollections/#output
+     * @see https://mongodb.com/docs/manual/reference/command/listCollections/#output
      * @return array
      */
     public function getInfo(): array
@@ -108,7 +108,7 @@ class CollectionInfo implements ArrayAccess
     /**
      * Return the collection name.
      *
-     * @see https://docs.mongodb.com/manual/reference/command/listCollections/#output
+     * @see https://mongodb.com/docs/manual/reference/command/listCollections/#output
      * @return string
      */
     public function getName()
@@ -119,7 +119,7 @@ class CollectionInfo implements ArrayAccess
     /**
      * Return the collection options.
      *
-     * @see https://docs.mongodb.com/manual/reference/command/listCollections/#output
+     * @see https://mongodb.com/docs/manual/reference/command/listCollections/#output
      * @return array
      */
     public function getOptions()
@@ -130,7 +130,7 @@ class CollectionInfo implements ArrayAccess
     /**
      * Return the collection type.
      *
-     * @see https://docs.mongodb.com/manual/reference/command/listCollections/#output
+     * @see https://mongodb.com/docs/manual/reference/command/listCollections/#output
      * @return string
      */
     public function getType(): string

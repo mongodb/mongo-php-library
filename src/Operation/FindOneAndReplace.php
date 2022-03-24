@@ -104,20 +104,16 @@ class FindOneAndReplace implements Executable, Explainable
             throw new InvalidArgumentException('First key in $replacement argument is an update operator');
         }
 
-        $options += [
-            'returnDocument' => self::RETURN_DOCUMENT_BEFORE,
-            'upsert' => false,
-        ];
-
         if (isset($options['projection']) && ! is_array($options['projection']) && ! is_object($options['projection'])) {
             throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
         }
 
-        if (! is_integer($options['returnDocument'])) {
+        if (isset($options['returnDocument']) && ! is_integer($options['returnDocument'])) {
             throw InvalidArgumentException::invalidType('"returnDocument" option', $options['returnDocument'], 'integer');
         }
 
         if (
+            isset($options['returnDocument']) &&
             $options['returnDocument'] !== self::RETURN_DOCUMENT_AFTER &&
             $options['returnDocument'] !== self::RETURN_DOCUMENT_BEFORE
         ) {
@@ -128,7 +124,9 @@ class FindOneAndReplace implements Executable, Explainable
             $options['fields'] = $options['projection'];
         }
 
-        $options['new'] = $options['returnDocument'] === self::RETURN_DOCUMENT_AFTER;
+        if (isset($options['returnDocument'])) {
+            $options['new'] = $options['returnDocument'] === self::RETURN_DOCUMENT_AFTER;
+        }
 
         unset($options['projection'], $options['returnDocument']);
 

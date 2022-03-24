@@ -121,11 +121,7 @@ class FindAndModify implements Executable, Explainable
      */
     public function __construct($databaseName, $collectionName, array $options)
     {
-        $options += [
-            'new' => false,
-            'remove' => false,
-            'upsert' => false,
-        ];
+        $options += ['remove' => false];
 
         if (isset($options['arrayFilters']) && ! is_array($options['arrayFilters'])) {
             throw InvalidArgumentException::invalidType('"arrayFilters" option', $options['arrayFilters'], 'array');
@@ -151,7 +147,7 @@ class FindAndModify implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
-        if (! is_bool($options['new'])) {
+        if (isset($options['new']) && ! is_bool($options['new'])) {
             throw InvalidArgumentException::invalidType('"new" option', $options['new'], 'boolean');
         }
 
@@ -183,7 +179,7 @@ class FindAndModify implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
 
-        if (! is_bool($options['upsert'])) {
+        if (isset($options['upsert']) && ! is_bool($options['upsert'])) {
             throw InvalidArgumentException::invalidType('"upsert" option', $options['upsert'], 'boolean');
         }
 
@@ -271,8 +267,13 @@ class FindAndModify implements Executable, Explainable
         if ($this->options['remove']) {
             $cmd['remove'] = true;
         } else {
-            $cmd['new'] = $this->options['new'];
-            $cmd['upsert'] = $this->options['upsert'];
+            if (isset($this->options['new'])) {
+                $cmd['new'] = $this->options['new'];
+            }
+
+            if (isset($this->options['upsert'])) {
+                $cmd['upsert'] = $this->options['upsert'];
+            }
         }
 
         foreach (['collation', 'fields', 'query', 'sort'] as $option) {

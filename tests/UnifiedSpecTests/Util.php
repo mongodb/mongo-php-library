@@ -2,9 +2,16 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
+use MongoDB\ChangeStream;
+use MongoDB\Client;
+use MongoDB\Collection;
+use MongoDB\Database;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\GridFS\Bucket;
 use stdClass;
 
 use function array_diff_key;
@@ -26,11 +33,102 @@ use function PHPUnit\Framework\logicalOr;
 
 final class Util
 {
+    /**
+     * Array to fill, which contains the schema of allowed attributes for operations.
+     */
+    private static $args = [
+        Operation::OBJECT_TEST_RUNNER => [
+            'assertCollectionExists' => ['databaseName', 'collectionName'],
+            'assertCollectionNotExists' => ['databaseName', 'collectionName'],
+            'assertIndexExists' => ['databaseName', 'collectionName', 'indexName'],
+            'assertIndexNotExists' => ['databaseName', 'collectionName', 'indexName'],
+            'assertSameLsidOnLastTwoCommands' => ['client'],
+            'assertDifferentLsidOnLastTwoCommands' => ['client'],
+            'assertNumberConnectionsCheckedOut' => ['connections'],
+            'assertSessionDirty' => ['session'],
+            'assertSessionNotDirty' => ['session'],
+            'assertSessionPinned' => ['session'],
+            'assertSessionTransactionState' => ['session', 'state'],
+            'assertSessionUnpinned' => ['session'],
+            'failPoint' => ['client', 'failPoint'],
+            'targetedFailPoint' => ['session', 'failPoint'],
+            'loop' => ['operations', 'storeErrorsAsEntity', 'storeFailuresAsEntity', 'storeSuccessesAsEntity', 'storeIterationsAsEntity'],
+        ],
+        Client::class => [
+            'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS'],
+            'listDatabaseNames' => ['authorizedDatabases', 'filter', 'maxTimeMS', 'session'],
+            'listDatabases' => ['authorizedDatabases', 'filter', 'maxTimeMS', 'session'],
+        ],
+        Database::class => [
+            'aggregate' => ['pipeline', 'session', 'useCursor', 'allowDiskUse', 'batchSize', 'bypassDocumentValidation', 'collation', 'comment', 'explain', 'hint', 'let', 'maxAwaitTimeMS', 'maxTimeMS'],
+            'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS'],
+            'createCollection' => ['collection', 'session', 'autoIndexId', 'capped', 'collation', 'expireAfterSeconds', 'flags', 'indexOptionDefaults', 'max', 'maxTimeMS', 'size', 'storageEngine', 'timeseries', 'validationAction', 'validationLevel', 'validator'],
+            'dropCollection' => ['collection', 'session'],
+            'listCollectionNames' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
+            'listCollections' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
+            // Note: commandName is not used by PHP
+            'runCommand' => ['command', 'session', 'commandName'],
+        ],
+        Collection::class => [
+            'aggregate' => ['pipeline', 'session', 'useCursor', 'allowDiskUse', 'batchSize', 'bypassDocumentValidation', 'collation', 'comment', 'explain', 'hint', 'let', 'maxAwaitTimeMS', 'maxTimeMS'],
+            'bulkWrite' => ['requests', 'session', 'ordered', 'bypassDocumentValidation'],
+            'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS'],
+            'createFindCursor' => ['filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
+            'createIndex' => ['keys', 'commitQuorum', 'maxTimeMS', 'name', 'session'],
+            'dropIndex' => ['name', 'session', 'maxTimeMS'],
+            'count' => ['filter', 'session', 'collation', 'hint', 'limit', 'maxTimeMS', 'skip'],
+            'countDocuments' => ['filter', 'session', 'limit', 'skip', 'collation', 'hint', 'maxTimeMS'],
+            'estimatedDocumentCount' => ['session', 'maxTimeMS'],
+            'deleteMany' => ['filter', 'session', 'collation', 'hint'],
+            'deleteOne' => ['filter', 'session', 'collation', 'hint'],
+            'findOneAndDelete' => ['filter', 'session', 'projection', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'new', 'sort', 'update', 'upsert'],
+            'distinct' => ['fieldName', 'filter', 'session', 'collation', 'maxTimeMS'],
+            'drop' => ['session'],
+            'find' => ['filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
+            'findOne' => ['filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
+            'findOneAndReplace' => ['returnDocument', 'filter', 'replacement', 'session', 'projection', 'returnDocument', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'new', 'remove', 'sort'],
+            'replaceOne' => ['filter', 'replacement', 'session', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint'],
+            'findOneAndUpdate' => ['returnDocument', 'filter', 'update', 'session', 'upsert', 'projection', 'remove', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'sort'],
+            'updateMany' => ['filter', 'update', 'session', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint'],
+            'updateOne' => ['filter', 'update', 'session', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint'],
+            'insertMany' => ['options', 'documents', 'session', 'ordered', 'bypassDocumentValidation'],
+            'insertOne' => ['document', 'session', 'bypassDocumentValidation'],
+            'listIndexes' => ['session', 'maxTimeMS'],
+            'mapReduce' => ['map', 'reduce', 'out', 'session', 'bypassDocumentValidation', 'collation', 'finalize', 'jsMode', 'limit', 'maxTimeMS', 'query', 'scope', 'sort', 'verbose'],
+        ],
+        ChangeStream::class => [
+            'iterateUntilDocumentOrError' => [],
+        ],
+        Cursor::class => [
+            'close' => [],
+            'iterateUntilDocumentOrError' => [],
+        ],
+        Session::class => [
+            'abortTransaction' => [],
+            'commitTransaction' => [],
+            'endSession' => [],
+            'startTransaction' => ['maxCommitTimeMS', 'readConcern', 'readPreference', 'writeConcern'],
+            'withTransaction' => ['callback', 'maxCommitTimeMS', 'readConcern', 'readPreference', 'writeConcern'],
+        ],
+        Bucket::class => [
+            'delete' => ['id'],
+            'downloadByName' => ['filename', 'revision'],
+            'download' => ['id'],
+            'uploadWithId' => ['id', 'filename', 'source', 'chunkSizeBytes', 'disableMD5', 'contentType', 'metadata'],
+            'upload' => ['filename', 'source', 'chunkSizeBytes', 'disableMD5', 'contentType', 'metadata'],
+        ],
+    ];
+
     public static function assertHasOnlyKeys($arrayOrObject, array $keys): void
     {
         assertThat($arrayOrObject, logicalOr(isType('array'), isInstanceOf(stdClass::class)));
         $diff = array_diff_key((array) $arrayOrObject, array_fill_keys($keys, 1));
         assertEmpty($diff, 'Unsupported keys: ' . implode(',', array_keys($diff)));
+    }
+
+    public static function assertArgumentsBySchema(string $executingObjectName, string $operation, array $args): void
+    {
+        self::assertHasOnlyKeys($args, self::$args[$executingObjectName][$operation]);
     }
 
     public static function createReadConcern(stdClass $o): ReadConcern

@@ -25,7 +25,6 @@ use Traversable;
 
 use function count;
 use function current;
-use function key;
 use function next;
 use function reset;
 
@@ -40,6 +39,9 @@ use function reset;
  */
 class CachingIterator implements Countable, Iterator
 {
+    private const FIELD_KEY = 0;
+    private const FIELD_VALUE = 1;
+
     /** @var array */
     private $items = [];
 
@@ -87,7 +89,9 @@ class CachingIterator implements Countable, Iterator
     #[ReturnTypeWillChange]
     public function current()
     {
-        return current($this->items);
+        $currentItem = current($this->items);
+
+        return $currentItem !== false ? $currentItem[self::FIELD_VALUE] : false;
     }
 
     /**
@@ -97,7 +101,9 @@ class CachingIterator implements Countable, Iterator
     #[ReturnTypeWillChange]
     public function key()
     {
-        return key($this->items);
+        $currentItem = current($this->items);
+
+        return $currentItem !== false ? $currentItem[self::FIELD_KEY] : null;
     }
 
     /**
@@ -165,6 +171,10 @@ class CachingIterator implements Countable, Iterator
             return;
         }
 
-        $this->items[$this->iterator->key()] = $this->iterator->current();
+        // Storing a new item in the internal cache
+        $this->items[] = [
+            self::FIELD_KEY => $this->iterator->key(),
+            self::FIELD_VALUE => $this->iterator->current(),
+        ];
     }
 }

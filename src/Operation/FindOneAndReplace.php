@@ -130,6 +130,7 @@ class FindOneAndReplace implements Executable, Explainable
 
         unset($options['projection'], $options['returnDocument']);
 
+
         $this->findAndModify = new FindAndModify(
             $databaseName,
             $collectionName,

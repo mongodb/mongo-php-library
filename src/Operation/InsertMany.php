@@ -36,7 +36,7 @@ use function sprintf;
  *
  * @api
  * @see \MongoDB\Collection::insertMany()
- * @see http://docs.mongodb.org/manual/reference/command/insert/
+ * @see http://mongodb.com/docs/manual/reference/command/insert/
  */
 class InsertMany implements Executable
 {

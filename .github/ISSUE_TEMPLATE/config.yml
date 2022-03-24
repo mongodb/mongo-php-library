@@ -8,5 +8,5 @@ contact_links:
     url: https://developer.mongodb.com/community/forums/
     about: For questions, discussions, or general technical support, visit the MongoDB Community Forums. The MongoDB Community Forums are a centralized place to connect with other MongoDB users, ask questions, and get answers.
   - name: Report a Security Vulnerability
-    url: https://docs.mongodb.org/manual/tutorial/create-a-vulnerability-report
+    url: https://mongodb.com/docs/manual/tutorial/create-a-vulnerability-report
     about: If you believe you have discovered a vulnerability in MongoDB products or have experienced a security incident related to MongoDB products, please report the issue to aid in its resolution.

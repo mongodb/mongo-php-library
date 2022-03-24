@@ -35,7 +35,7 @@ use function MongoDB\server_supports_feature;
  *
  * @api
  * @see \MongoDB\Collection::explain()
- * @see http://docs.mongodb.org/manual/reference/command/explain/
+ * @see http://mongodb.com/docs/manual/reference/command/explain/
  */
 class Explain implements Executable
 {

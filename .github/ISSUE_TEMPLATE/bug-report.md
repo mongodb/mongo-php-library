@@ -16,7 +16,7 @@ If you've identified a security vulnerability in a driver or any other MongoDB
 project, please create a vulnerability report[^2].
 
 [^1]: https://github.com/mongodb/mongo-php-driver
-[^2]: https://docs.mongodb.org/manual/tutorial/create-a-vulnerability-report
+[^2]: https://mongodb.com/docs/manual/tutorial/create-a-vulnerability-report
 -->
 
 ### Bug Report

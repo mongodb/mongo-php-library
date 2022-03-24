@@ -34,7 +34,7 @@ use function is_array;
  * @api
  * @see \MongoDB\Collection::drop()
  * @see \MongoDB\Database::dropCollection()
- * @see http://docs.mongodb.org/manual/reference/command/drop/
+ * @see http://mongodb.com/docs/manual/reference/command/drop/
  */
 class DropCollection implements Executable
 {

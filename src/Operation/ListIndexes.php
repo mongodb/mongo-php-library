@@ -35,7 +35,7 @@ use function is_integer;
  *
  * @api
  * @see \MongoDB\Collection::listIndexes()
- * @see http://docs.mongodb.org/manual/reference/command/listIndexes/
+ * @see http://mongodb.com/docs/manual/reference/command/listIndexes/
  */
 class ListIndexes implements Executable
 {

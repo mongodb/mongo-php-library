@@ -41,8 +41,8 @@ use const E_USER_DEPRECATED;
  *
  * @api
  * @see \MongoDB\Collection::find()
- * @see http://docs.mongodb.org/manual/tutorial/query-documents/
- * @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
+ * @see http://mongodb.com/docs/manual/tutorial/query-documents/
+ * @see http://mongodb.com/docs/manual/reference/operator/query-modifier/
  */
 class Find implements Executable, Explainable
 {

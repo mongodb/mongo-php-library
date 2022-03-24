@@ -35,7 +35,7 @@ use function is_object;
  * Wrapper for the ListDatabases command.
  *
  * @internal
- * @see http://docs.mongodb.org/manual/reference/command/listDatabases/
+ * @see http://mongodb.com/docs/manual/reference/command/listDatabases/
  */
 class ListDatabases implements Executable
 {

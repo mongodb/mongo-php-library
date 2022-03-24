@@ -35,7 +35,7 @@ use function is_object;
  *
  * @api
  * @see \MongoDB\Collection::insertOne()
- * @see http://docs.mongodb.org/manual/reference/command/insert/
+ * @see http://mongodb.com/docs/manual/reference/command/insert/
  */
 class InsertOne implements Executable
 {

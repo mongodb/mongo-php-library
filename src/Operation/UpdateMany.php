@@ -33,7 +33,7 @@ use function MongoDB\is_pipeline;
  *
  * @api
  * @see \MongoDB\Collection::updateMany()
- * @see http://docs.mongodb.org/manual/reference/command/update/
+ * @see http://mongodb.com/docs/manual/reference/command/update/
  */
 class UpdateMany implements Executable, Explainable
 {

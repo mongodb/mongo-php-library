@@ -33,7 +33,7 @@ use function MongoDB\is_pipeline;
  *
  * @api
  * @see \MongoDB\Collection::findOneAndUpdate()
- * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+ * @see http://mongodb.com/docs/manual/reference/command/findAndModify/
  */
 class FindOneAndUpdate implements Executable, Explainable
 {

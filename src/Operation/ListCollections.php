@@ -29,7 +29,7 @@ use MongoDB\Model\CollectionInfoIterator;
  *
  * @api
  * @see \MongoDB\Database::listCollections()
- * @see http://docs.mongodb.org/manual/reference/command/listCollections/
+ * @see http://mongodb.com/docs/manual/reference/command/listCollections/
  */
 class ListCollections implements Executable
 {

@@ -88,7 +88,7 @@ class Client
      *
      * Other options are documented in MongoDB\Driver\Manager::__construct().
      *
-     * @see http://docs.mongodb.org/manual/reference/connection-string/
+     * @see http://mongodb.com/docs/manual/reference/connection-string/
      * @see http://php.net/manual/en/mongodb-driver-manager.construct.php
      * @see http://php.net/manual/en/mongodb.persistence.php#mongodb.persistence.typemaps
      * @param string $uri           MongoDB connection string

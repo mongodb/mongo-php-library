@@ -39,7 +39,7 @@ use const E_USER_DEPRECATED;
  *
  * @api
  * @see \MongoDB\Database::createCollection()
- * @see http://docs.mongodb.org/manual/reference/command/create/
+ * @see http://mongodb.com/docs/manual/reference/command/create/
  */
 class CreateCollection implements Executable
 {

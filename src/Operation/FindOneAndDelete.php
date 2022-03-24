@@ -30,7 +30,7 @@ use function is_object;
  *
  * @api
  * @see \MongoDB\Collection::findOneAndDelete()
- * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+ * @see http://mongodb.com/docs/manual/reference/command/findAndModify/
  */
 class FindOneAndDelete implements Executable, Explainable
 {

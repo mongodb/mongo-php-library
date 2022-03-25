@@ -147,7 +147,7 @@ class FindAndModify implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
-        if (isset($options['new']) && ! is_bool($options['new'])) {
+        if (array_key_exists('new', $options) && ! is_bool($options['new'])) {
             throw InvalidArgumentException::invalidType('"new" option', $options['new'], 'boolean');
         }
 
@@ -179,7 +179,7 @@ class FindAndModify implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
 
-        if (isset($options['upsert']) && ! is_bool($options['upsert'])) {
+        if (array_key_exists('upsert', $options) && ! is_bool($options['upsert'])) {
             throw InvalidArgumentException::invalidType('"upsert" option', $options['upsert'], 'boolean');
         }
 

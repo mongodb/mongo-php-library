@@ -108,7 +108,7 @@ class FindOneAndReplace implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
         }
 
-        if (isset($options['returnDocument']) && ! is_integer($options['returnDocument'])) {
+        if (array_key_exists('returnDocument', $options) && ! is_integer($options['returnDocument'])) {
             throw InvalidArgumentException::invalidType('"returnDocument" option', $options['returnDocument'], 'integer');
         }
 

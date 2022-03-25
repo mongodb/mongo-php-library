@@ -22,6 +22,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
+use function array_key_exists;
 use function is_array;
 use function is_integer;
 use function is_object;

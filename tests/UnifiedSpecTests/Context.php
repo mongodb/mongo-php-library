@@ -294,8 +294,9 @@ final class Context
             }
         }
 
-        $driverOptions = [];
-        
+        // Transaction tests expect a new client for each test so that txnNumber values are deterministic.
+        $driverOptions = isset($observeEvents) ? ['disableClientPersistence' => true] : [];
+
         if ($serverApi !== null) {
             assertIsObject($serverApi);
             $driverOptions['serverApi'] = new ServerApi(

@@ -1873,8 +1873,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $collection = new Collection($this->manager, $databaseName, $collectionName);
         $session = $this->manager->startSession(['snapshot' => true]);
 
-        // TODO: use hrtime() once the library requires PHP 7.3+
-        $startTime = microtime(true);
+        /* Retry until a snapshot query succeeds or ten seconds elapse,
+         * whichwever comes first.
+         *
+         * TODO: use hrtime() once the library requires PHP 7.3+ */
+        $retryUntil = microtime(true) + 10;
 
         do {
             try {
@@ -1891,7 +1894,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
                 throw $e;
             }
-        } while (microtime(true) < $startTime + 10);
+        } while (microtime(true) < $retryUntil);
     }
 
     /**

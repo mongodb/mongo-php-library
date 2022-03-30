@@ -39,7 +39,7 @@ use function MongoDB\server_supports_feature;
  * classes.
  *
  * @internal
- * @see http://docs.mongodb.org/manual/reference/command/delete/
+ * @see http://mongodb.com/docs/manual/reference/command/delete/
  */
 class Delete implements Executable, Explainable
 {

@@ -47,7 +47,7 @@ use function sprintf;
  *
  * @api
  * @see \MongoDB\Collection::aggregate()
- * @see http://docs.mongodb.org/manual/reference/command/aggregate/
+ * @see http://mongodb.com/docs/manual/reference/command/aggregate/
  */
 class Aggregate implements Executable, Explainable
 {

@@ -239,7 +239,7 @@ function is_last_pipeline_operator_write(array $pipeline): bool
  * This is used to determine if a mapReduce command requires a primary.
  *
  * @internal
- * @see https://docs.mongodb.com/manual/reference/command/mapReduce/#output-inline
+ * @see https://mongodb.com/docs/manual/reference/command/mapReduce/#output-inline
  * @param string|array|object $out Output specification
  * @return boolean
  * @throws InvalidArgumentException
@@ -274,7 +274,7 @@ function is_mapreduce_output_inline($out): bool
  * check the fsync option since that was never supported in the PHP driver.
  *
  * @internal
- * @see https://docs.mongodb.com/manual/reference/write-concern/
+ * @see https://mongodb.com/docs/manual/reference/write-concern/
  * @param WriteConcern $writeConcern
  * @return boolean
  */

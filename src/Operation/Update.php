@@ -42,7 +42,7 @@ use function MongoDB\server_supports_feature;
  * operation classes.
  *
  * @internal
- * @see http://docs.mongodb.org/manual/reference/command/update/
+ * @see http://mongodb.com/docs/manual/reference/command/update/
  */
 class Update implements Executable, Explainable
 {

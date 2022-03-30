@@ -34,7 +34,7 @@ use function is_integer;
  *
  * @api
  * @see \MongoDB\Collection::dropIndexes()
- * @see http://docs.mongodb.org/manual/reference/command/dropIndexes/
+ * @see http://mongodb.com/docs/manual/reference/command/dropIndexes/
  */
 class DropIndexes implements Executable
 {

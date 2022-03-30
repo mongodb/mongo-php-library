@@ -197,7 +197,7 @@ $JIRA_URL
 **Documentation**
 
 Documentation for this library may be found at:
-https://docs.mongodb.com/php-library/
+https://mongodb.com/docs/php-library/current/
 
 **Installation**
 
@@ -231,13 +231,13 @@ New major and minor releases will also require documentation updates to other
 projects:
 
  * Create a DOCSP ticket to add the new version to PHP's server and language
-   [compatibility tables](https://docs.mongodb.com/drivers/php/#compatibility)
+   [compatibility tables](https://mongodb.com/docs/drivers/php/#compatibility)
    in the driver docs portal. See
    [mongodb/docs-ecosystem#642](https://github.com/mongodb/docs-ecosystem/pull/642)
    for an example.
 
  * Create a DOCSP ticket to update the "current" and "upcoming" navigation links
-   in the library's [documentation](https://docs.mongodb.com/php-library/). This
+   in the library's [documentation](https://mongodb.com/docs/php-library/current). This
    will require updating
    [mongodb/docs-php-library](https://github.com/mongodb/docs-php-library).
 

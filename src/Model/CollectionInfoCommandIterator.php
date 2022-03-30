@@ -30,7 +30,7 @@ use Traversable;
  * @internal
  * @see \MongoDB\Database::listCollections()
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst
- * @see http://docs.mongodb.org/manual/reference/command/listCollections/
+ * @see http://mongodb.com/docs/manual/reference/command/listCollections/
  */
 class CollectionInfoCommandIterator extends IteratorIterator implements CollectionInfoIterator
 {

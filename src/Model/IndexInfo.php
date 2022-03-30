@@ -37,7 +37,7 @@ use function array_search;
  * @api
  * @see \MongoDB\Collection::listIndexes()
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst
- * @see http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/
+ * @see http://mongodb.com/docs/manual/reference/method/db.collection.createIndex/
  */
 class IndexInfo implements ArrayAccess
 {
@@ -136,7 +136,7 @@ class IndexInfo implements ArrayAccess
     /**
      * Return whether this is a sparse index.
      *
-     * @see http://docs.mongodb.org/manual/core/index-sparse/
+     * @see http://mongodb.com/docs/manual/core/index-sparse/
      * @return boolean
      */
     public function isSparse()
@@ -157,7 +157,7 @@ class IndexInfo implements ArrayAccess
     /**
      * Return whether this is a TTL index.
      *
-     * @see http://docs.mongodb.org/manual/core/index-ttl/
+     * @see http://mongodb.com/docs/manual/core/index-ttl/
      * @return boolean
      */
     public function isTtl()
@@ -168,7 +168,7 @@ class IndexInfo implements ArrayAccess
     /**
      * Return whether this is a unique index.
      *
-     * @see http://docs.mongodb.org/manual/core/index-unique/
+     * @see http://mongodb.com/docs/manual/core/index-unique/
      * @return boolean
      */
     public function isUnique()

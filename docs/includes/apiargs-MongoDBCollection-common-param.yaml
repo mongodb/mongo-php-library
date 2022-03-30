@@ -25,7 +25,7 @@ description: |
   Specifies the field and value combinations to update and any relevant update
   operators. ``$update`` uses MongoDB's :method:`update operators
   </reference/operator/update>`. Starting with MongoDB 4.2, an `aggregation
-  pipeline <https://docs.mongodb.com/master/reference/command/update/#update-with-an-aggregation-pipeline>`_
+  pipeline <https://mongodb.com/docs/master/reference/command/update/#update-with-an-aggregation-pipeline>`_
   can be passed as this parameter.
 interface: phpmethod
 operation: ~

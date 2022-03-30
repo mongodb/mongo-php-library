@@ -1289,7 +1289,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $client = static::createTestClient();
 
-        /* The WC is required: https://docs.mongodb.com/manual/core/transactions/#transactions-and-locks */
+        /* The WC is required: https://mongodb.com/docs/manual/core/transactions/#transactions-and-locks */
         $client->hr->dropCollection('employees', ['writeConcern' => new WriteConcern('majority')]);
         $client->reporting->dropCollection('events', ['writeConcern' => new WriteConcern('majority')]);
 
@@ -1469,7 +1469,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $client = static::createTestClient();
 
-        /* The WC is required: https://docs.mongodb.com/manual/core/transactions/#transactions-and-locks */
+        /* The WC is required: https://mongodb.com/docs/manual/core/transactions/#transactions-and-locks */
         $client->hr->dropCollection('employees', ['writeConcern' => new WriteConcern('majority')]);
         $client->reporting->dropCollection('events', ['writeConcern' => new WriteConcern('majority')]);
 

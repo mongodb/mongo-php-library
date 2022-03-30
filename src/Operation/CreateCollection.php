@@ -39,7 +39,7 @@ use const E_USER_DEPRECATED;
  *
  * @api
  * @see \MongoDB\Database::createCollection()
- * @see http://docs.mongodb.org/manual/reference/command/create/
+ * @see http://mongodb.com/docs/manual/reference/command/create/
  */
 class CreateCollection implements Executable
 {
@@ -113,7 +113,7 @@ class CreateCollection implements Executable
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
      * @see http://source.wiredtiger.com/2.4.1/struct_w_t___s_e_s_s_i_o_n.html#a358ca4141d59c345f401c58501276bbb
-     * @see https://docs.mongodb.org/manual/core/document-validation/
+     * @see https://mongodb.com/docs/manual/core/schema-validation/
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
      * @param array  $options        Command options

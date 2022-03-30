@@ -34,7 +34,7 @@ use function is_object;
  * Wrapper for the listCollections command.
  *
  * @internal
- * @see http://docs.mongodb.org/manual/reference/command/listCollections/
+ * @see http://mongodb.com/docs/manual/reference/command/listCollections/
  */
 class ListCollections implements Executable
 {

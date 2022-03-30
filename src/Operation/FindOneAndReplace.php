@@ -32,7 +32,7 @@ use function MongoDB\is_first_key_operator;
  *
  * @api
  * @see \MongoDB\Collection::findOneAndReplace()
- * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+ * @see http://mongodb.com/docs/manual/reference/command/findAndModify/
  */
 class FindOneAndReplace implements Executable, Explainable
 {

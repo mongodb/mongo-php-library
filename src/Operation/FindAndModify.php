@@ -44,7 +44,7 @@ use function MongoDB\server_supports_feature;
  * FindOneAndUpdate operation classes.
  *
  * @internal
- * @see http://docs.mongodb.org/manual/reference/command/findAndModify/
+ * @see http://mongodb.com/docs/manual/reference/command/findAndModify/
  */
 class FindAndModify implements Executable, Explainable
 {

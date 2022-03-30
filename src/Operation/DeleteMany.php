@@ -28,7 +28,7 @@ use MongoDB\Exception\UnsupportedException;
  *
  * @api
  * @see \MongoDB\Collection::deleteOne()
- * @see http://docs.mongodb.org/manual/reference/command/delete/
+ * @see http://mongodb.com/docs/manual/reference/command/delete/
  */
 class DeleteMany implements Executable, Explainable
 {

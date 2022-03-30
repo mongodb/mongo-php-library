@@ -34,7 +34,7 @@ use function is_bool;
  * @api
  * @see \MongoDB\Collection::rename()
  * @see \MongoDB\Database::renameCollection()
- * @see https://docs.mongodb.org/manual/reference/command/renameCollection/
+ * @see https://mongodb.com/docs/manual/reference/command/renameCollection/
  */
 class RenameCollection implements Executable
 {

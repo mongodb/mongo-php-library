@@ -31,7 +31,7 @@ use function array_key_exists;
  *
  * @api
  * @see \MongoDB\Client::listDatabases()
- * @see http://docs.mongodb.org/manual/reference/command/listDatabases/
+ * @see http://mongodb.com/docs/manual/reference/command/listDatabases/
  */
 class DatabaseInfo implements ArrayAccess
 {

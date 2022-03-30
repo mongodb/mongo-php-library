@@ -21,8 +21,8 @@ extension may be found in
 
 ## Documentation
 
- - https://docs.mongodb.com/php-library/
- - https://docs.mongodb.com/ecosystem/drivers/php/
+ - https://mongodb.com/docs/php-library/current
+ - https://mongodb.com/docs/ecosystem/drivers/php/
 
 ## Installation
 
@@ -33,7 +33,7 @@ root:
     $ composer require mongodb/mongodb
 
 Additional installation instructions may be found in the
-[library documentation](https://docs.mongodb.com/php-library/current/tutorial/install-php-library/).
+[library documentation](https://mongodb.com/docs/php-library/current/tutorial/install-php-library/).
 
 Since this library is a high-level abstraction for the driver, it also requires
 that the `mongodb` extension be installed:
@@ -53,13 +53,13 @@ project in MongoDB's JIRA. Extension-related issues should be reported in the
 project.
 
 For general questions and support requests, please use one of MongoDB's
-[Technical Support](https://docs.mongodb.com/manual/support/) channels.
+[Technical Support](https://mongodb.com/docs/manual/support/) channels.
 
 ### Security Vulnerabilities
 
 If you've identified a security vulnerability in a driver or any other MongoDB
 project, please report it according to the instructions in
-[Create a Vulnerability Report](https://docs.mongodb.org/manual/tutorial/create-a-vulnerability-report).
+[Create a Vulnerability Report](https://mongodb.com/docs/manual/tutorial/create-a-vulnerability-report).
 
 ## Development
 

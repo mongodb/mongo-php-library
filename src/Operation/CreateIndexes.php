@@ -39,7 +39,7 @@ use function sprintf;
  * @api
  * @see \MongoDB\Collection::createIndex()
  * @see \MongoDB\Collection::createIndexes()
- * @see http://docs.mongodb.org/manual/reference/command/createIndexes/
+ * @see http://mongodb.com/docs/manual/reference/command/createIndexes/
  */
 class CreateIndexes implements Executable
 {

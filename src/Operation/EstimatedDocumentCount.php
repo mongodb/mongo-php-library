@@ -36,7 +36,7 @@ use function MongoDB\server_supports_feature;
  *
  * @api
  * @see \MongoDB\Collection::estimatedDocumentCount()
- * @see http://docs.mongodb.org/manual/reference/command/count/
+ * @see http://mongodb.com/docs/manual/reference/command/count/
  */
 class EstimatedDocumentCount implements Executable, Explainable
 {

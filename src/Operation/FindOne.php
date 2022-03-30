@@ -29,8 +29,8 @@ use function current;
  *
  * @api
  * @see \MongoDB\Collection::findOne()
- * @see http://docs.mongodb.org/manual/tutorial/query-documents/
- * @see http://docs.mongodb.org/manual/reference/operator/query-modifier/
+ * @see http://mongodb.com/docs/manual/tutorial/query-documents/
+ * @see http://mongodb.com/docs/manual/reference/operator/query-modifier/
  */
 class FindOne implements Executable, Explainable
 {

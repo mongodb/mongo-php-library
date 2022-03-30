@@ -33,7 +33,7 @@ use function call_user_func;
  *
  * @api
  * @see \MongoDB\Collection::mapReduce()
- * @see https://docs.mongodb.com/manual/reference/command/mapReduce/
+ * @see https://mongodb.com/docs/manual/reference/command/mapReduce/
  */
 class MapReduceResult implements IteratorAggregate
 {

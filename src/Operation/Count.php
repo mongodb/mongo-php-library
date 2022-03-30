@@ -39,7 +39,7 @@ use function is_string;
  *
  * @api
  * @see \MongoDB\Collection::count()
- * @see http://docs.mongodb.org/manual/reference/command/count/
+ * @see http://mongodb.com/docs/manual/reference/command/count/
  */
 class Count implements Executable, Explainable
 {

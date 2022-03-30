@@ -183,7 +183,7 @@ class Collection
     /**
      * Return the collection namespace (e.g. "db.collection").
      *
-     * @see https://www.mongodb.com/docs/manual/core/databases-and-collections/
+     * @see https://mongodb.com/docs/manual/core/databases-and-collections/
      * @return string
      */
     public function __toString()
@@ -622,7 +622,7 @@ class Collection
      * Finds documents matching the query.
      *
      * @see Find::__construct() for supported options
-     * @see https://www.mongodb.com/docs/manual/crud/#read-operations
+     * @see https://mongodb.com/docs/manual/crud/#read-operations
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
      * @return Cursor
@@ -655,7 +655,7 @@ class Collection
      * Finds a single document matching the query.
      *
      * @see FindOne::__construct() for supported options
-     * @see https://www.mongodb.com/docs/manual/crud/#read-operations
+     * @see https://mongodb.com/docs/manual/crud/#read-operations
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
      * @return array|object|null

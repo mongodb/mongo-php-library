@@ -34,7 +34,7 @@ use function in_array;
  *
  * @api
  * @see \MongoDB\Collection::watch()
- * @see https://www.mongodb.com/docs/manual/reference/method/db.watch/#mongodb-method-db.watch
+ * @see https://mongodb.com/docs/manual/reference/method/db.watch/#mongodb-method-db.watch
  */
 class ChangeStream implements Iterator
 {

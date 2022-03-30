@@ -156,7 +156,7 @@ class CommandExpectations implements CommandSubscriber
     /**
      * Not used.
      *
-     * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php
+     * @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php
      */
     public function commandFailed(CommandFailedEvent $event): void
     {
@@ -170,7 +170,7 @@ class CommandExpectations implements CommandSubscriber
     /**
      * Tracks outgoing commands for spec test APM assertions.
      *
-     * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandstarted.php
+     * @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandstarted.php
      */
     public function commandStarted(CommandStartedEvent $event): void
     {
@@ -184,7 +184,7 @@ class CommandExpectations implements CommandSubscriber
     /**
      * Not used.
      *
-     * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandsucceeded.php
+     * @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandsucceeded.php
      */
     public function commandSucceeded(CommandSucceededEvent $event): void
     {

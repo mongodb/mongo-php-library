@@ -227,7 +227,7 @@ class Update implements Executable, Explainable
     /**
      * Create options for constructing the bulk write.
      *
-     * @see https://www.php.net/manual/en/mongodb-driver-bulkwrite.construct.php
+     * @see https://php.net/manual/en/mongodb-driver-bulkwrite.construct.php
      * @return array
      */
     private function createBulkWriteOptions()

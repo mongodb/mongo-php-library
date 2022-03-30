@@ -55,8 +55,8 @@ final class UnifiedTestCase implements IteratorAggregate
      * This allows the UnifiedTest object to be used directly with the argument
      * unpacking operator (i.e. "...").
      *
-     * @see https://www.php.net/manual/en/iteratoraggregate.getiterator.php
-     * @see https://www.php.net/manual/en/functions.arguments.php#functions.variable-arg-list
+     * @see https://php.net/manual/en/iteratoraggregate.getiterator.php
+     * @see https://php.net/manual/en/functions.arguments.php#functions.variable-arg-list
      */
     public function getIterator(): Traversable
     {

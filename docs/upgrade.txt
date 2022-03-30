@@ -28,7 +28,7 @@ BSON Type Classes
 
 When upgrading from the legacy driver, type classes such as MongoId must be
 replaced with classes in the
-`MongoDB\\BSON namespace <https://www.php.net/manual/en/book.bson.php>`_. The
+`MongoDB\\BSON namespace <https://php.net/manual/en/book.bson.php>`_. The
 new driver also introduces interfaces for its BSON types, which should be
 preferred if applications need to type hint against BSON values.
 

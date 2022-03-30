@@ -81,7 +81,7 @@ final class EventCollector implements CommandSubscriber
     }
 
     /**
-     * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php
+     * @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php
      */
     public function commandFailed(CommandFailedEvent $event): void
     {
@@ -89,7 +89,7 @@ final class EventCollector implements CommandSubscriber
     }
 
     /**
-     * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandstarted.php
+     * @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandstarted.php
      */
     public function commandStarted(CommandStartedEvent $event): void
     {
@@ -97,7 +97,7 @@ final class EventCollector implements CommandSubscriber
     }
 
     /**
-     * @see https://www.php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandsucceeded.php
+     * @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandsucceeded.php
      */
     public function commandSucceeded(CommandSucceededEvent $event): void
     {

@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *   https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,7 +36,7 @@ use function sprintf;
  * @internal
  * @see \MongoDB\Collection::createIndexes()
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst
- * @see http://mongodb.com/docs/manual/reference/method/db.collection.createIndex/
+ * @see https://mongodb.com/docs/manual/reference/method/db.collection.createIndex/
  */
 class IndexInput implements Serializable
 {
@@ -88,7 +88,7 @@ class IndexInput implements Serializable
      * Serialize the index information to BSON for index creation.
      *
      * @see \MongoDB\Collection::createIndexes()
-     * @see http://php.net/mongodb-bson-serializable.bsonserialize
+     * @see https://php.net/mongodb-bson-serializable.bsonserialize
      * @return array
      */
     public function bsonSerialize()

@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *   https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,8 +33,8 @@ use function array_key_exists;
  * @internal
  * @see \MongoDB\Collection::listIndexes()
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst
- * @see http://mongodb.com/docs/manual/reference/command/listIndexes/
- * @see http://mongodb.com/docs/manual/reference/system-collections/
+ * @see https://mongodb.com/docs/manual/reference/command/listIndexes/
+ * @see https://mongodb.com/docs/manual/reference/system-collections/
  */
 class IndexInfoIteratorIterator extends IteratorIterator implements IndexInfoIterator
 {
@@ -55,7 +55,7 @@ class IndexInfoIteratorIterator extends IteratorIterator implements IndexInfoIte
      * Return the current element as an IndexInfo instance.
      *
      * @see IndexInfoIterator::current()
-     * @see http://php.net/iterator.current
+     * @see https://php.net/iterator.current
      * @return IndexInfo
      */
     #[ReturnTypeWillChange]

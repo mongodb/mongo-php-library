@@ -67,7 +67,7 @@ reproduced with PHP's built-in web server[^3]. If not, please share your web
 server version and any relevant configuration details in the Environment section
 above.
 
-[^3]: http://php.net/manual/en/features.commandline.webserver.php
+[^3]: https://php.net/manual/en/features.commandline.webserver.php
 -->
 
 ### Expected and Actual Behavior

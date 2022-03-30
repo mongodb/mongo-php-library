@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *   https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -88,9 +88,9 @@ class Client
      *
      * Other options are documented in MongoDB\Driver\Manager::__construct().
      *
-     * @see http://mongodb.com/docs/manual/reference/connection-string/
-     * @see http://php.net/manual/en/mongodb-driver-manager.construct.php
-     * @see http://php.net/manual/en/mongodb.persistence.php#mongodb.persistence.typemaps
+     * @see https://mongodb.com/docs/manual/reference/connection-string/
+     * @see https://php.net/manual/en/mongodb-driver-manager.construct.php
+     * @see https://php.net/manual/en/mongodb.persistence.php#mongodb.persistence.typemaps
      * @param string $uri           MongoDB connection string
      * @param array  $uriOptions    Additional connection string options
      * @param array  $driverOptions Driver-specific options
@@ -130,7 +130,7 @@ class Client
     /**
      * Return internal properties for debugging purposes.
      *
-     * @see http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
+     * @see https://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
      * @return array
      */
     public function __debugInfo()
@@ -150,8 +150,8 @@ class Client
      * be selected with complex syntax (e.g. $client->{"that-database"}) or
      * {@link selectDatabase()}.
      *
-     * @see http://php.net/oop5.overloading#object.get
-     * @see http://php.net/types.string#language.types.string.parsing.complex
+     * @see https://php.net/oop5.overloading#object.get
+     * @see https://php.net/types.string#language.types.string.parsing.complex
      * @param string $databaseName Name of the database to select
      * @return Database
      */
@@ -231,7 +231,7 @@ class Client
     /**
      * Return the read concern for this client.
      *
-     * @see http://php.net/manual/en/mongodb-driver-readconcern.isdefault.php
+     * @see https://php.net/manual/en/mongodb-driver-readconcern.isdefault.php
      * @return ReadConcern
      */
     public function getReadConcern()
@@ -262,7 +262,7 @@ class Client
     /**
      * Return the write concern for this client.
      *
-     * @see http://php.net/manual/en/mongodb-driver-writeconcern.isdefault.php
+     * @see https://php.net/manual/en/mongodb-driver-writeconcern.isdefault.php
      * @return WriteConcern
      */
     public function getWriteConcern()
@@ -340,7 +340,7 @@ class Client
     /**
      * Start a new client session.
      *
-     * @see http://php.net/manual/en/mongodb-driver-manager.startsession.php
+     * @see https://php.net/manual/en/mongodb-driver-manager.startsession.php
      * @param array $options Session options
      * @return Session
      */

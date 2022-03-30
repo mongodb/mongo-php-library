@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *   https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,7 @@ use function array_key_exists;
  *
  * @api
  * @see \MongoDB\Client::listDatabases()
- * @see http://mongodb.com/docs/manual/reference/command/listDatabases/
+ * @see https://mongodb.com/docs/manual/reference/command/listDatabases/
  */
 class DatabaseInfo implements ArrayAccess
 {
@@ -49,7 +49,7 @@ class DatabaseInfo implements ArrayAccess
     /**
      * Return the database info as an array.
      *
-     * @see http://php.net/oop5.magic#language.oop5.magic.debuginfo
+     * @see https://php.net/oop5.magic#language.oop5.magic.debuginfo
      * @return array
      */
     public function __debugInfo()
@@ -91,7 +91,7 @@ class DatabaseInfo implements ArrayAccess
     /**
      * Check whether a field exists in the database information.
      *
-     * @see http://php.net/arrayaccess.offsetexists
+     * @see https://php.net/arrayaccess.offsetexists
      * @param mixed $key
      * @return boolean
      */
@@ -104,7 +104,7 @@ class DatabaseInfo implements ArrayAccess
     /**
      * Return the field's value from the database information.
      *
-     * @see http://php.net/arrayaccess.offsetget
+     * @see https://php.net/arrayaccess.offsetget
      * @param mixed $key
      * @return mixed
      */
@@ -117,7 +117,7 @@ class DatabaseInfo implements ArrayAccess
     /**
      * Not supported.
      *
-     * @see http://php.net/arrayaccess.offsetset
+     * @see https://php.net/arrayaccess.offsetset
      * @param mixed $key
      * @param mixed $value
      * @throws BadMethodCallException
@@ -132,7 +132,7 @@ class DatabaseInfo implements ArrayAccess
     /**
      * Not supported.
      *
-     * @see http://php.net/arrayaccess.offsetunset
+     * @see https://php.net/arrayaccess.offsetunset
      * @param mixed $key
      * @throws BadMethodCallException
      * @return void

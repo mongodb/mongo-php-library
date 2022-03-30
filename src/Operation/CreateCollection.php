@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *   https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,7 +39,7 @@ use const E_USER_DEPRECATED;
  *
  * @api
  * @see \MongoDB\Database::createCollection()
- * @see http://mongodb.com/docs/manual/reference/command/create/
+ * @see https://mongodb.com/docs/manual/reference/command/create/
  */
 class CreateCollection implements Executable
 {
@@ -112,7 +112,7 @@ class CreateCollection implements Executable
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
-     * @see http://source.wiredtiger.com/2.4.1/struct_w_t___s_e_s_s_i_o_n.html#a358ca4141d59c345f401c58501276bbb
+     * @see https://source.wiredtiger.com/2.4.1/struct_w_t___s_e_s_s_i_o_n.html#a358ca4141d59c345f401c58501276bbb
      * @see https://mongodb.com/docs/manual/core/schema-validation/
      * @param string $databaseName   Database name
      * @param string $collectionName Collection name
@@ -248,7 +248,7 @@ class CreateCollection implements Executable
     /**
      * Create options for executing the command.
      *
-     * @see http://php.net/manual/en/mongodb-driver-server.executewritecommand.php
+     * @see https://php.net/manual/en/mongodb-driver-server.executewritecommand.php
      * @return array
      */
     private function createOptions()

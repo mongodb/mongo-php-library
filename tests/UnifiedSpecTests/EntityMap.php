@@ -57,7 +57,7 @@ class EntityMap implements ArrayAccess
     }
 
     /**
-     * @see http://php.net/arrayaccess.offsetexists
+     * @see https://php.net/arrayaccess.offsetexists
      */
     public function offsetExists($id): bool
     {
@@ -67,7 +67,7 @@ class EntityMap implements ArrayAccess
     }
 
     /**
-     * @see http://php.net/arrayaccess.offsetget
+     * @see https://php.net/arrayaccess.offsetget
      * @return mixed
      */
     #[ReturnTypeWillChange]
@@ -80,7 +80,7 @@ class EntityMap implements ArrayAccess
     }
 
     /**
-     * @see http://php.net/arrayaccess.offsetset
+     * @see https://php.net/arrayaccess.offsetset
      */
     public function offsetSet($id, $value): void
     {
@@ -88,7 +88,7 @@ class EntityMap implements ArrayAccess
     }
 
     /**
-     * @see http://php.net/arrayaccess.offsetunset
+     * @see https://php.net/arrayaccess.offsetunset
      */
     public function offsetUnset($id): void
     {

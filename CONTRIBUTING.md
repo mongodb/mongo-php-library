@@ -13,7 +13,7 @@ $ composer update
 
 In addition to installing project dependencies, Composer will check that the
 required extension version is installed. Directions for installing the extension
-may be found [here](http://php.net/manual/en/mongodb.installation.php).
+may be found [here](https://php.net/manual/en/mongodb.installation.php).
 
 Installation directions for Composer may be found in its
 [Getting Started](https://getcomposer.org/doc/00-intro.md) guide.
@@ -146,7 +146,7 @@ page.
 
 ### Update version info
 
-The PHP library uses [semantic versioning](http://semver.org/). Do not break
+The PHP library uses [semantic versioning](https://semver.org/). Do not break
 backwards compatibility in a non-major release or your users will kill you.
 
 Before proceeding, ensure that the `master` branch is up-to-date with all code

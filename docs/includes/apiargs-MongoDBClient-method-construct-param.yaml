@@ -9,7 +9,7 @@ description: |
   Defaults to ``"mongodb://127.0.0.1:27017"`` if unspecified.
 
   Any special characters in the URI components need to be encoded according to
-  `RFC 3986 <http://www.faqs.org/rfcs/rfc3986.html>`_. This is particularly
+  `RFC 3986 <https://www.rfc-editor.org/info/rfc3986>`_. This is particularly
   relevant to the username and password, which can often include special
   characters such as ``@``, ``:``, or ``%``. When connecting via a Unix domain
   socket, the socket path may contain special characters such as slashes and
@@ -26,7 +26,7 @@ description: |
   Specifies additional URI options, such as authentication credentials or query
   string parameters. The options specified in ``$uriOptions`` take precedence
   over any analogous options present in the ``$uri`` string and do not need to
-  be encoded according to `RFC 3986 <http://www.faqs.org/rfcs/rfc3986.html>`_.
+  be encoded according to `RFC 3986 <https://www.rfc-editor.org/info/rfc3986>`_.
 
   Refer to the :php:`MongoDB\\Driver\\Manager::__construct()
   <mongodb-driver-manager.construct>` extension reference and :manual:`MongoDB

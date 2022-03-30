@@ -353,7 +353,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      * Work around potential error executing distinct on sharded clusters.
      *
      * @param array $operations
-     * @see https://github.com/mongodb/specifications/tree/master/source/transactions/tests#why-do-tests-that-run-distinct-sometimes-fail-with-staledbversionts.
+     * @see https://github.com/mongodb/specifications/tree/master/source/transactions/tests#why-do-tests-that-run-distinct-sometimes-fail-with-staledbversion
      */
     private function preventStaleDbVersionError(array $operations): void
     {

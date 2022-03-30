@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *   https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -136,7 +136,7 @@ class Database
     /**
      * Return internal properties for debugging purposes.
      *
-     * @see http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
+     * @see https://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
      * @return array
      */
     public function __debugInfo()
@@ -158,8 +158,8 @@ class Database
      * be selected with complex syntax (e.g. $database->{"system.profile"}) or
      * {@link selectCollection()}.
      *
-     * @see http://php.net/oop5.overloading#object.get
-     * @see http://php.net/types.string#language.types.string.parsing.complex
+     * @see https://php.net/oop5.overloading#object.get
+     * @see https://php.net/types.string#language.types.string.parsing.complex
      * @param string $collectionName Name of the collection to select
      * @return Collection
      */
@@ -358,7 +358,7 @@ class Database
     /**
      * Return the read concern for this database.
      *
-     * @see http://php.net/manual/en/mongodb-driver-readconcern.isdefault.php
+     * @see https://php.net/manual/en/mongodb-driver-readconcern.isdefault.php
      * @return ReadConcern
      */
     public function getReadConcern()
@@ -389,7 +389,7 @@ class Database
     /**
      * Return the write concern for this database.
      *
-     * @see http://php.net/manual/en/mongodb-driver-writeconcern.isdefault.php
+     * @see https://php.net/manual/en/mongodb-driver-writeconcern.isdefault.php
      * @return WriteConcern
      */
     public function getWriteConcern()

@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *   https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -44,7 +44,7 @@ use function MongoDB\server_supports_feature;
  * FindOneAndUpdate operation classes.
  *
  * @internal
- * @see http://mongodb.com/docs/manual/reference/command/findAndModify/
+ * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
  */
 class FindAndModify implements Executable, Explainable
 {
@@ -299,7 +299,7 @@ class FindAndModify implements Executable, Explainable
     /**
      * Create options for executing the command.
      *
-     * @see http://php.net/manual/en/mongodb-driver-server.executewritecommand.php
+     * @see https://php.net/manual/en/mongodb-driver-server.executewritecommand.php
      * @return array
      */
     private function createOptions()

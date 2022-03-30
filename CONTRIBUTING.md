@@ -13,7 +13,7 @@ $ composer update
 
 In addition to installing project dependencies, Composer will check that the
 required extension version is installed. Directions for installing the extension
-may be found [here](http://php.net/manual/en/mongodb.installation.php).
+may be found [here](https://php.net/manual/en/mongodb.installation.php).
 
 Installation directions for Composer may be found in its
 [Getting Started](https://getcomposer.org/doc/00-intro.md) guide.
@@ -146,7 +146,7 @@ page.
 
 ### Update version info
 
-The PHP library uses [semantic versioning](http://semver.org/). Do not break
+The PHP library uses [semantic versioning](https://semver.org/). Do not break
 backwards compatibility in a non-major release or your users will kill you.
 
 Before proceeding, ensure that the `master` branch is up-to-date with all code
@@ -205,7 +205,7 @@ This library may be installed or upgraded with:
 
     composer require mongodb/mongodb^X.Y.Z
 
-Installation instructions for the `mongodb` extension may be found in the [PHP.net documentation](https://www.php.net/manual/en/mongodb.installation.php).
+Installation instructions for the `mongodb` extension may be found in the [PHP.net documentation](https://php.net/manual/en/mongodb.installation.php).
 ```
 
 The URL for the list of resolved JIRA issues will need to be updated with each
@@ -223,7 +223,7 @@ Thanks for our community contributors for this release:
  * [$CONTRIBUTOR_NAME](https://github.com/$GITHUB_USERNAME)
 ```
 
-Release announcements should also be posted in the [MongoDB Product & Driver Announcements: Driver Releases](https://www.mongodb.com/community/forums/tags/c/announcements/driver-releases/110/php) forum and shared on Twitter.
+Release announcements should also be posted in the [MongoDB Product & Driver Announcements: Driver Releases](https://mongodb.com/community/forums/tags/c/announcements/driver-releases/110/php) forum and shared on Twitter.
 
 ### Documentation Updates for New Major and Minor Versions
 

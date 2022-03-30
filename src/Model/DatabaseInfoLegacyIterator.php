@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *   https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,7 +32,7 @@ use function reset;
  *
  * @internal
  * @see \MongoDB\Client::listDatabases()
- * @see http://mongodb.com/docs/manual/reference/command/listDatabases/
+ * @see https://mongodb.com/docs/manual/reference/command/listDatabases/
  */
 class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
 {
@@ -51,7 +51,7 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
      * Return the current element as a DatabaseInfo instance.
      *
      * @see DatabaseInfoIterator::current()
-     * @see http://php.net/iterator.current
+     * @see https://php.net/iterator.current
      * @return DatabaseInfo
      */
     public function current()
@@ -62,7 +62,7 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
     /**
      * Return the key of the current element.
      *
-     * @see http://php.net/iterator.key
+     * @see https://php.net/iterator.key
      * @return integer
      */
     #[ReturnTypeWillChange]
@@ -74,7 +74,7 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
     /**
      * Move forward to next element.
      *
-     * @see http://php.net/iterator.next
+     * @see https://php.net/iterator.next
      * @return void
      */
     #[ReturnTypeWillChange]
@@ -86,7 +86,7 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
     /**
      * Rewind the Iterator to the first element.
      *
-     * @see http://php.net/iterator.rewind
+     * @see https://php.net/iterator.rewind
      * @return void
      */
     #[ReturnTypeWillChange]
@@ -98,7 +98,7 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
     /**
      * Checks if current position is valid.
      *
-     * @see http://php.net/iterator.valid
+     * @see https://php.net/iterator.valid
      * @return boolean
      */
     #[ReturnTypeWillChange]

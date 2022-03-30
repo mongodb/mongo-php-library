@@ -66,7 +66,7 @@ Collation Parameters
    ]
 
 The only required parameter is ``locale``, which the server parses as an `ICU
-format locale ID <http://userguide.icu-project.org/locale>`_. For example, set
+format locale ID <https://unicode-org.github.io/icu/userguide/locale/>`_. For example, set
 ``locale`` to ``en_US`` to represent US English or ``fr_CA`` to represent
 Canadian French.
 

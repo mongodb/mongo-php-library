@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *   https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,8 +41,8 @@ use const E_USER_DEPRECATED;
  *
  * @api
  * @see \MongoDB\Collection::find()
- * @see http://mongodb.com/docs/manual/tutorial/query-documents/
- * @see http://mongodb.com/docs/manual/reference/operator/query-modifier/
+ * @see https://mongodb.com/docs/manual/tutorial/query-documents/
+ * @see https://mongodb.com/docs/manual/reference/operator/query-modifier/
  */
 class Find implements Executable, Explainable
 {
@@ -373,7 +373,7 @@ class Find implements Executable, Explainable
     /**
      * Create options for executing the command.
      *
-     * @see http://php.net/manual/en/mongodb-driver-server.executequery.php
+     * @see https://php.net/manual/en/mongodb-driver-server.executequery.php
      * @return array
      */
     private function createExecuteOptions()

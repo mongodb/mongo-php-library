@@ -15,7 +15,6 @@ use function array_diff_key;
 use function array_keys;
 use function getenv;
 use function implode;
-use function mt_rand;
 use function uniqid;
 
 /**
@@ -239,12 +238,10 @@ final class Context
 
         $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
 
-        /* Transaction spec tests expect a new client for each test so that
-         * txnNumber values are deterministic. Append a random option to avoid
-         * re-using a previously persisted libmongoc client object. */
-        $clientOptions += ['p' => mt_rand()];
+        // Transaction spec tests expect a new client for each test so that txnNumber values are deterministic.
+        $driverOptions = ['disableClientPersistence' => true];
 
-        $o->client = FunctionalTestCase::createTestClient(FunctionalTestCase::getUri($useMultipleMongoses), $clientOptions);
+        $o->client = FunctionalTestCase::createTestClient(FunctionalTestCase::getUri($useMultipleMongoses), $clientOptions, $driverOptions);
 
         $session0Options = isset($test->sessionOptions->session0) ? (array) $test->sessionOptions->session0 : [];
         $session1Options = isset($test->sessionOptions->session1) ? (array) $test->sessionOptions->session1 : [];

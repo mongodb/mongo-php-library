@@ -34,6 +34,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\ChangeStreamIterator;
 
 use function array_intersect_key;
+use function array_key_exists;
 use function array_unshift;
 use function count;
 use function is_array;
@@ -173,11 +174,10 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         }
 
         $options += [
-            'fullDocument' => self::FULL_DOCUMENT_DEFAULT,
             'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
         ];
 
-        if (! is_string($options['fullDocument'])) {
+        if (array_key_exists('fullDocument', $options) && ! is_string($options['fullDocument'])) {
             throw InvalidArgumentException::invalidType('"fullDocument" option', $options['fullDocument'], 'string');
         }
 

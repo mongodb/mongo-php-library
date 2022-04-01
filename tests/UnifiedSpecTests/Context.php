@@ -156,11 +156,12 @@ final class Context
 
         foreach ($expectedEventsForClients as $expectedEventsForClient) {
             assertIsObject($expectedEventsForClient);
-            Util::assertHasOnlyKeys($expectedEventsForClient, ['client', 'events', 'eventType']);
+            Util::assertHasOnlyKeys($expectedEventsForClient, ['client', 'events', 'eventType', 'ignoreExtraEvents']);
 
             $client = $expectedEventsForClient->client ?? null;
             $eventType = $expectedEventsForClient->eventType ?? 'command';
             $expectedEvents = $expectedEventsForClient->events ?? null;
+            $ignoreExtraEvents = $expectedEventsForClient->ignoreExtraEvents ?? false;
 
             assertIsString($client);
             assertArrayHasKey($client, $this->eventObserversByClient);
@@ -169,7 +170,7 @@ final class Context
             assertSame('command', $eventType);
             assertIsArray($expectedEvents);
 
-            $this->eventObserversByClient[$client]->assert($expectedEvents);
+            $this->eventObserversByClient[$client]->assert($expectedEvents, $ignoreExtraEvents);
         }
     }
 

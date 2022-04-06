@@ -119,6 +119,26 @@ class MatchesTest extends FunctionalTestCase
         $this->assertResult(false, $c, ['x' => ['y' => 1, 'z' => 2]], 'value does not match (embedded)');
     }
 
+    public function testOperatorUnsetOrMatchesWithNestedOperator(): void
+    {
+        // Nested $$unsetOrMatches is redundant, but should behave the same as if it was omitted
+        $c = new Matches(['x' => ['$$unsetOrMatches' => ['$$unsetOrMatches' => ['y' => 1]]]]);
+        $this->assertResult(true, $c, new stdClass(), 'missing value is considered unset (embedded)');
+        $this->assertResult(false, $c, ['x' => null], 'null value is not considered unset (embedded)');
+        $this->assertResult(true, $c, ['x' => ['y' => 1]], 'value matches (embedded)');
+        $this->assertResult(false, $c, ['x' => ['y' => 1, 'z' => 2]], 'value does not match (embedded)');
+
+        $c = new Matches(['x' => ['$$unsetOrMatches' => ['$$exists' => true]]]);
+        $this->assertResult(true, $c, new stdClass(), 'missing value is considered unset (embedded)');
+        $this->assertResult(true, $c, ['x' => null], 'null value is not considered unset (embedded)');
+        $this->assertResult(true, $c, ['x' => ['y' => 1]], 'non-null value is not considered unset (embedded)');
+
+        $c = new Matches(['x' => ['$$unsetOrMatches' => ['$$exists' => false]]]);
+        $this->assertResult(true, $c, new stdClass(), 'missing value is considered unset (embedded)');
+        $this->assertResult(false, $c, ['x' => null], 'null value is not considered unset (embedded)');
+        $this->assertResult(false, $c, ['x' => ['y' => 1]], 'non-null value is not considered unset (embedded)');
+    }
+
     public function testOperatorSessionLsid(): void
     {
         $session = $this->manager->startSession();

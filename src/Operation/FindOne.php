@@ -89,6 +89,11 @@ class FindOne implements Executable, Explainable
      *    "$orderby" also exists in the modifiers document, this option will
      *    take precedence.
      *
+     *  * let (document): Map of parameter names and values. Values must be
+     *    constant or closed expressions that do not reference document fields.
+     *    Parameters can then be accessed as variables in an aggregate
+     *    expression context (e.g. "$$var").
+     *
      *  * typeMap (array): Type map for BSON deserialization.
      *
      * @param string       $databaseName   Database name

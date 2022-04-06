@@ -75,6 +75,11 @@ class Delete implements Executable, Explainable
      *    This is not supported for server versions < 4.4 and will result in an
      *    exception at execution time if used.
      *
+     *  * let (document): Map of parameter names and values. Values must be
+     *    constant or closed expressions that do not reference document fields.
+     *    Parameters can then be accessed as variables in an aggregate
+     *    expression context (e.g. "$$var").
+     *
      *  * session (MongoDB\Driver\Session): Client session.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
@@ -114,6 +119,10 @@ class Delete implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
 
+        if (isset($options['let']) && ! is_array($options['let']) && ! is_object($options['let'])) {
+            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'array or object');
+        }
+
         if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
             unset($options['writeConcern']);
         }
@@ -150,7 +159,7 @@ class Delete implements Executable, Explainable
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
         }
 
-        $bulk = new Bulk();
+        $bulk = new Bulk($this->createBulkWriteOptions());
         $bulk->delete($this->filter, $this->createDeleteOptions());
 
         $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createExecuteOptions());
@@ -174,6 +183,23 @@ class Delete implements Executable, Explainable
         }
 
         return $cmd;
+    }
+
+    /**
+     * Create options for constructing the bulk write.
+     *
+     * @see https://php.net/manual/en/mongodb-driver-bulkwrite.construct.php
+     * @return array
+     */
+    private function createBulkWriteOptions()
+    {
+        $options = [];
+
+        if (isset($this->options['let'])) {
+            $options['let'] = (object) $this->options['let'];
+        }
+
+        return $options;
     }
 
     /**

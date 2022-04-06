@@ -62,6 +62,11 @@ class FindOneAndDelete implements Executable, Explainable
      *  * sort (document): Determines which document the operation modifies if
      *    the query selects multiple documents.
      *
+     *  * let (document): Map of parameter names and values. Values must be
+     *    constant or closed expressions that do not reference document fields.
+     *    Parameters can then be accessed as variables in an aggregate
+     *    expression context (e.g. "$$var").
+     *
      *  * typeMap (array): Type map for BSON deserialization.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.

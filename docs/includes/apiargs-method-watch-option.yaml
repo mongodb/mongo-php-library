@@ -13,14 +13,53 @@ arg_name: option
 name: fullDocument
 type: string
 description: |
-  Allowed values are 'default' and 'updateLookup'. Defaults to 'default'.
-  When set to 'updateLookup', the change notification for partial updates will
-  include both a delta describing the changes to the document, as well as a
-  copy of the entire document that was changed from some time after the change
-  occurred. The following values are supported:
+  Determines how the "fullDocument" response field will be populated for update
+  operations.
 
-  - ``MongoDB\Operation\Watch::FULL_DOCUMENT_DEFAULT`` (*default*)
+  By default, change streams only return the delta of fields (via an
+  "udateDescription" field) for update operations and "fullDocument" is omitted.
+  Insert and replace operations always include the "fullDocument" field. Delete
+  operations omit the field as the document no longer exists.
+
+  Specify "updateLookup" to return the current majority-committed version of the
+  updated document.
+
+  MongoDB 6.0+ allows returning the post-image of the modified document if the
+  collection has ``changeStreamPreAndPostImages`` enabled. Specify
+  "whenAvailable" to return the post-image if available or a null value if not.
+  Specify "required" to return the post-image if available or raise an error if
+  not.
+
+  The following values are supported:
+
   - ``MongoDB\Operation\Watch::FULL_DOCUMENT_UPDATE_LOOKUP``
+  - ``MongoDB\Operation\Watch::FULL_DOCUMENT_WHEN_AVAILABLE``
+  - ``MongoDB\Operation\Watch::FULL_DOCUMENT_REQUIRED``
+
+  .. note::
+
+     This is an option of the ``$changeStream`` pipeline stage.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: fullDocumentBeforeChange
+type: string
+description: |
+  Determines how the "fullDocumentBeforeChange" response field will be
+  populated. By default, the field is omitted.
+
+  MongoDB 6.0+ allows returning the pre-image of the modified document if the
+  collection has ``changeStreamPreAndPostImages`` enabled. Specify
+  "whenAvailable" to return the pre-image if available or a null value if not.
+  Specify "required" to return the pre-image if available or raise an error if
+  not.
+
+  The following values are supported:
+
+  - ``MongoDB\Operation\Watch::FULL_DOCUMENT_BEFORE_CHANGE_WHEN_AVAILABLE``
+  - ``MongoDB\Operation\Watch::FULL_DOCUMENT_BEFORE_CHANGE_REQUIRED``
 
   .. note::
 

@@ -429,7 +429,7 @@ class Find implements Executable, Explainable
             }
         }
 
-        foreach (['collation', 'max', 'min', 'let'] as $option) {
+        foreach (['collation', 'let', 'max', 'min'] as $option) {
             if (isset($this->options[$option])) {
                 $options[$option] = (object) $this->options[$option];
             }

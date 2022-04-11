@@ -724,7 +724,6 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         yield 'Test 5' => [
             static function (self $test, ClientEncryption $clientEncryption, ClientEncryption $clientEncryptionInvalid) use ($awsMasterKey): void {
                 $test->expectException(RuntimeException::class);
-                $test->expectExceptionMessageMatches('#us-east-1#');
                 $clientEncryption->createDataKey('aws', ['masterKey' => $awsMasterKey + ['endpoint' => 'kms.us-east-2.amazonaws.com']]);
             },
         ];

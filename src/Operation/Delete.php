@@ -189,9 +189,8 @@ class Delete implements Executable, Explainable
      * Create options for constructing the bulk write.
      *
      * @see https://php.net/manual/en/mongodb-driver-bulkwrite.construct.php
-     * @return array
      */
-    private function createBulkWriteOptions()
+    private function createBulkWriteOptions(): array
     {
         $options = [];
 

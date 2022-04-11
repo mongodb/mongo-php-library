@@ -286,7 +286,7 @@ class FindAndModify implements Executable, Explainable
             }
         }
 
-        foreach (['collation', 'fields', 'query', 'sort', 'let'] as $option) {
+        foreach (['collation', 'fields', 'let', 'query', 'sort'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = (object) $this->options[$option];
             }

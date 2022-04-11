@@ -102,15 +102,6 @@ class UnifiedSpecTest extends FunctionalTestCase
         'crud/aggregate: aggregate with comment sets comment on getMore' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/aggregate: aggregate with a document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/aggregate: aggregate with a document comment - pre 4.4' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
-        // Some crud operations tests for "let" option don't specify "multi" and "upsert" fields in the expected events
-        'crud/updateOne-let: UpdateOne with let option' => 'Not yet implemented (DRIVERS-2270)',
-        'crud/updateOne-let: UpdateOne with let option unsupported (server-side error)' => 'Not yet implemented (DRIVERS-2270)',
-        'crud/updateMany-let: updateMany with let option' => 'Not yet implemented (DRIVERS-2270)',
-        'crud/updateMany-let: updateMany with let option unsupported (server-side error)' => 'Not yet implemented (DRIVERS-2270)',
-        'crud/replaceOne-let: ReplaceOne with let option' => 'Not yet implemented (DRIVERS-2270)',
-        'crud/replaceOne-let: ReplaceOne with let option unsupported (server-side error)' => 'Not yet implemented (DRIVERS-2270)',
-        'crud/BulkWrite replaceOne-let: BulkWrite replaceOne with let option' => 'Not yet implemented (DRIVERS-2270)',
-        'crud/BulkWrite replaceOne-let: BulkWrite replaceOne with let option unsupported (server-side error)' => 'Not yet implemented (DRIVERS-2270)',
     ];
 
     /** @var UnifiedTestRunner */

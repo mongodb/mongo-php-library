@@ -87,6 +87,7 @@ final class Util
             'find' => ['let', 'filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
             'findOne' => ['let', 'filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
             'findOneAndReplace' => ['let', 'returnDocument', 'filter', 'replacement', 'session', 'projection', 'returnDocument', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'new', 'remove', 'sort'],
+            'rename' => ['to'],
             'replaceOne' => ['let', 'filter', 'replacement', 'session', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint'],
             'findOneAndUpdate' => ['let', 'returnDocument', 'filter', 'update', 'session', 'upsert', 'projection', 'remove', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'sort'],
             'updateMany' => ['let', 'filter', 'update', 'session', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint'],

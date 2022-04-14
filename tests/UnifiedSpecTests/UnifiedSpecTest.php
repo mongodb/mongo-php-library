@@ -21,6 +21,9 @@ class UnifiedSpecTest extends FunctionalTestCase
 {
     /** @var array */
     private static $incompleteTests = [
+        'change-streams/change-streams: Test with document comment' => 'Not yet implemented (PHPLIB-749)',
+        'change-streams/change-streams: Test with string comment' => 'Not yet implemented (PHPLIB-749)',
+        'change-streams/change-streams: Test that comment is set on getMore' => 'Not yet implemented (PHPLIB-749)',
         'command-monitoring/pre-42-server-connection-id: command events do not include server connection id' => 'Not yet implemented (PHPC-1899, PHPLIB-718)',
         'command-monitoring/server-connection-id: command events include server connection id' => 'Not yet implemented (PHPC-1899, PHPLIB-718)',
         // Many load balancer tests use CMAP events and/or assertNumberConnectionsCheckedOut
@@ -61,7 +64,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/entity-client-cmap-events: events are captured during an operation' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType can be set to command and cmap' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType defaults to command if unset' => 'PHPC does not implement CMAP',
-        // New option "comment" for crud operations is not yet implemented
+        // CRUD "comment" option is not yet implemented
         'crud/bulkWrite-comment: BulkWrite with string comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/bulkWrite-comment: BulkWrite with document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/bulkWrite-comment: BulkWrite with comment - pre 4.4' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',

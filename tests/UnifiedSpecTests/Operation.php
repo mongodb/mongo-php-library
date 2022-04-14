@@ -474,6 +474,12 @@ final class Operation
                     array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1])
                 );
 
+            case 'rename':
+                assertArrayHasKey('to', $args);
+                assertIsString($args['to']);
+
+                return $collection->rename($args['to']);
+
             default:
                 Assert::fail('Unsupported collection operation: ' . $this->name);
         }

@@ -70,20 +70,6 @@ class CommandExpectations implements CommandSubscriber
         }
     }
 
-    public static function fromChangeStreams(array $expectedEvents)
-    {
-        $o = new self($expectedEvents);
-
-        $o->ignoreCommandFailed = true;
-        $o->ignoreCommandSucceeded = true;
-        /* Change Streams spec tests do not include getMore commands in the
-         * list of expected events, so ignore any observed events beyond the
-         * number that are expected. */
-        $o->ignoreExtraEvents = true;
-
-        return $o;
-    }
-
     public static function fromClientSideEncryption(array $expectedEvents)
     {
         $o = new self($expectedEvents);

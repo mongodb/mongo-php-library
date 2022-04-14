@@ -13,6 +13,12 @@ post: |
 ---
 source:
   file: apiargs-common-option.yaml
+  ref: let
+post: |
+  .. versionadded:: 1.13
+---
+source:
+  file: apiargs-common-option.yaml
   ref: session
 post: |
   .. versionadded:: 1.3

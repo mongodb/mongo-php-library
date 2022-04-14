@@ -75,4 +75,10 @@ source:
 source:
   file: apiargs-MongoDBCollection-method-find-option.yaml
   ref: modifiers
+---
+source:
+  file: apiargs-common-option.yaml
+  ref: let
+post: |
+  .. versionadded:: 1.13
 ...

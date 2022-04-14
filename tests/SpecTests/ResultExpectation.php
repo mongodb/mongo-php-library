@@ -75,19 +75,6 @@ final class ResultExpectation
         $this->expectedValue = $expectedValue;
     }
 
-    public static function fromChangeStreams(stdClass $result, callable $assertionCallable)
-    {
-        if (! property_exists($result, 'success')) {
-            return new self(self::ASSERT_NOTHING, null);
-        }
-
-        $o = new self(self::ASSERT_CALLABLE, $result->success);
-
-        $o->assertionCallable = $assertionCallable;
-
-        return $o;
-    }
-
     public static function fromClientSideEncryption(stdClass $operation, $defaultAssertionType)
     {
         if (property_exists($operation, 'result') && ! self::isErrorResult($operation->result)) {

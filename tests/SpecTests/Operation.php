@@ -11,7 +11,6 @@ use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\Exception;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
-use MongoDB\Driver\WriteConcern;
 use MongoDB\GridFS\Bucket;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\FindOneAndReplace;
@@ -81,45 +80,6 @@ final class Operation
         if (isset($operation->object)) {
             $this->object = $operation->object;
         }
-    }
-
-    public static function fromChangeStreams(stdClass $operation)
-    {
-        $o = new self($operation);
-
-        /* Note: change streams only return majority-committed writes, so ensure
-         * each operation applies that write concern. This will avoid spurious
-         * test failures. */
-        $writeConcern = new WriteConcern(WriteConcern::MAJORITY);
-
-        // Expect all operations to succeed
-        $o->errorExpectation = ErrorExpectation::noError();
-
-        /* The Change Streams spec tests include a unique "rename" operation,
-         * which we should convert to a renameCollection command to be run
-         * against the admin database. */
-        if ($operation->name === 'rename') {
-            $o->object = self::OBJECT_SELECT_DATABASE;
-            $o->databaseName = 'admin';
-            $o->name = 'runCommand';
-            $o->arguments = [
-                'command' => [
-                    'renameCollection' => $operation->database . '.' . $operation->collection,
-                    'to' => $operation->database . '.' . $operation->arguments->to,
-                // Note: Database::command() does not inherit WC, so be explicit
-                    'writeConcern' => $writeConcern,
-                ],
-            ];
-
-            return $o;
-        }
-
-        $o->databaseName = $operation->database;
-        $o->collectionName = $operation->collection;
-        $o->collectionOptions = ['writeConcern' => $writeConcern];
-        $o->object = self::OBJECT_SELECT_COLLECTION;
-
-        return $o;
     }
 
     public static function fromClientSideEncryption(stdClass $operation)

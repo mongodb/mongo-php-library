@@ -22,6 +22,7 @@ use function MongoDB\Driver\Monitoring\addSubscriber;
 use function MongoDB\Driver\Monitoring\removeSubscriber;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertCount;
+use function PHPUnit\Framework\assertGreaterThanOrEqual;
 use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\assertIsBool;
 use function PHPUnit\Framework\assertIsObject;
@@ -204,9 +205,13 @@ final class EventObserver implements CommandSubscriber
         Assert::fail('Not enough CommandStartedEvents observed');
     }
 
-    public function assert(array $expectedEvents): void
+    public function assert(array $expectedEvents, bool $ignoreExtraEvents): void
     {
-        assertCount(count($expectedEvents), $this->actualEvents);
+        if ($ignoreExtraEvents) {
+            assertGreaterThanOrEqual(count($expectedEvents), count($this->actualEvents));
+        } else {
+            assertCount(count($expectedEvents), $this->actualEvents);
+        }
 
         $mi = new MultipleIterator(MultipleIterator::MIT_NEED_ANY);
         $mi->attachIterator(new ArrayIterator($expectedEvents));
@@ -214,6 +219,10 @@ final class EventObserver implements CommandSubscriber
 
         foreach ($mi as $keys => $events) {
             [$expectedEvent, $actualEvent] = $events;
+
+            if ($ignoreExtraEvents && $expectedEvent === null) {
+                break;
+            }
 
             assertIsObject($expectedEvent);
             $expectedEvent = (array) $expectedEvent;

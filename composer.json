@@ -33,5 +33,10 @@
         "branch-alias": {
             "dev-master": "1.13.x-dev"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }

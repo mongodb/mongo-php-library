@@ -1723,6 +1723,10 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Versioned API is not supported');
         }
 
+        if (version_compare($this->getServerVersion(), '5.9', '>=')) {
+            $this->markTestIncomplete('SERVER-63850 added count command to API version 1 in MongoDB 6.0.0-rc0 (see: PHPLIB-810)');
+        }
+
         $uriString = static::getUri(true);
 
         // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly

@@ -145,6 +145,11 @@ class Find implements Executable, Explainable
      *    "$orderby" also exists in the modifiers document, this option will
      *    take precedence.
      *
+     *  * let (document): Map of parameter names and values. Values must be
+     *    constant or closed expressions that do not reference document fields.
+     *    Parameters can then be accessed as variables in an aggregate
+     *    expression context (e.g. "$$var").
+     *
      *  * typeMap (array): Type map for BSON deserialization. This will be
      *    applied to the returned Cursor (it is not sent to the server).
      *
@@ -272,6 +277,10 @@ class Find implements Executable, Explainable
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        }
+
+        if (isset($options['let']) && ! is_array($options['let']) && ! is_object($options['let'])) {
+            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'array or object');
         }
 
         if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
@@ -420,7 +429,7 @@ class Find implements Executable, Explainable
             }
         }
 
-        foreach (['collation', 'max', 'min'] as $option) {
+        foreach (['collation', 'let', 'max', 'min'] as $option) {
             if (isset($this->options[$option])) {
                 $options[$option] = (object) $this->options[$option];
             }

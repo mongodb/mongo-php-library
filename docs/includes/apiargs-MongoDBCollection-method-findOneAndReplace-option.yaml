@@ -27,6 +27,12 @@ source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: bypassDocumentValidation
 ---
+source:
+  file: apiargs-common-option.yaml
+  ref: let
+post: |
+  .. versionadded:: 1.13
+---
 arg_name: option
 name: returnDocument
 type: integer

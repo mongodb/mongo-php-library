@@ -49,6 +49,11 @@ class DeleteMany implements Executable, Explainable
      *    This is not supported for server versions < 4.4 and will result in an
      *    exception at execution time if used.
      *
+     *  * let (document): Map of parameter names and values. Values must be
+     *    constant or closed expressions that do not reference document fields.
+     *    Parameters can then be accessed as variables in an aggregate
+     *    expression context (e.g. "$$var").
+     *
      *  * session (MongoDB\Driver\Session): Client session.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.

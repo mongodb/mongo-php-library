@@ -113,6 +113,11 @@ class FindAndModify implements Executable, Explainable
      *    matches the query. This option is ignored for remove operations. The
      *    default is false.
      *
+     *  * let (document): Map of parameter names and values. Values must be
+     *    constant or closed expressions that do not reference document fields.
+     *    Parameters can then be accessed as variables in an aggregate
+     *    expression context (e.g. "$$var").
+     *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
      * @param string $databaseName   Database name
@@ -182,6 +187,10 @@ class FindAndModify implements Executable, Explainable
 
         if (array_key_exists('upsert', $options) && ! is_bool($options['upsert'])) {
             throw InvalidArgumentException::invalidType('"upsert" option', $options['upsert'], 'boolean');
+        }
+
+        if (isset($options['let']) && ! is_array($options['let']) && ! is_object($options['let'])) {
+            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'array or object');
         }
 
         if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {
@@ -277,7 +286,7 @@ class FindAndModify implements Executable, Explainable
             }
         }
 
-        foreach (['collation', 'fields', 'query', 'sort'] as $option) {
+        foreach (['collation', 'fields', 'let', 'query', 'sort'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = (object) $this->options[$option];
             }

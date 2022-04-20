@@ -13,6 +13,12 @@ source:
 ---
 source:
   file: apiargs-method-watch-option.yaml
+  ref: fullDocumentBeforeChange
+post: |
+  .. versionadded: 1.13
+---
+source:
+  file: apiargs-method-watch-option.yaml
   ref: maxAwaitTimeMS
 ---
 source:

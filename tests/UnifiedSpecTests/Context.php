@@ -4,8 +4,6 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 
 use LogicException;
 use MongoDB\Client;
-use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\Server;
 use MongoDB\Driver\ServerApi;
 use MongoDB\Model\BSONArray;
 use MongoDB\Tests\FunctionalTestCase;
@@ -13,12 +11,9 @@ use stdClass;
 
 use function array_key_exists;
 use function array_map;
-use function count;
 use function current;
 use function explode;
-use function implode;
 use function key;
-use function parse_url;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertIsArray;
@@ -27,16 +22,8 @@ use function PHPUnit\Framework\assertIsInt;
 use function PHPUnit\Framework\assertIsObject;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
-use function PHPUnit\Framework\assertNotFalse;
 use function PHPUnit\Framework\assertNotSame;
 use function PHPUnit\Framework\assertSame;
-use function PHPUnit\Framework\assertStringContainsString;
-use function PHPUnit\Framework\assertStringStartsWith;
-use function strlen;
-use function strpos;
-use function substr_replace;
-
-use const PHP_URL_HOST;
 
 /**
  * Execution context for spec tests.
@@ -67,11 +54,34 @@ final class Context
     /** @var string */
     private $uri;
 
+    /** @var string */
+    private $singleMongosUri;
+
+    /** @var string */
+    private $multiMongosUri;
+
     public function __construct(Client $internalClient, string $uri)
     {
         $this->entityMap = new EntityMap();
         $this->internalClient = $internalClient;
         $this->uri = $uri;
+
+        /* TODO: Consider leaving these unset, although that might require
+         * redundant topology/serverless checks in Context::createClient(). */
+        $this->singleMongosUri = $uri;
+        $this->multiMongosUri = $uri;
+    }
+
+    /**
+     * Set single and multi-mongos URIs for useMultipleMongoses. This should be
+     * called for sharded cluster and non-serverless load balanced topologies.
+     *
+     * @see UnifiedTestRunner::createContext()
+     */
+    public function setUrisForUseMultipleMongoses(string $singleMongosUri, string $multiMongosUri): void
+    {
+        $this->singleMongosUri = $singleMongosUri;
+        $this->multiMongosUri = $multiMongosUri;
     }
 
     /**
@@ -254,11 +264,7 @@ final class Context
         if (isset($useMultipleMongoses)) {
             assertIsBool($useMultipleMongoses);
 
-            if ($useMultipleMongoses) {
-                self::requireMultipleMongoses($uri);
-            } else {
-                $uri = self::removeMultipleMongoses($uri);
-            }
+            $uri = $useMultipleMongoses ? $this->multiMongosUri : $this->singleMongosUri;
         }
 
         $uriOptions = [];
@@ -460,63 +466,5 @@ final class Context
         }
 
         return Util::prepareCommonOptions($options);
-    }
-
-    /**
-     * Removes mongos hosts beyond the first if the URI refers to a sharded
-     * cluster. Otherwise, the URI is returned as-is.
-     */
-    private static function removeMultipleMongoses(string $uri): string
-    {
-        assertStringStartsWith('mongodb://', $uri);
-
-        $manager = FunctionalTestCase::createTestManager($uri);
-
-        // Nothing to do if the URI does not refer to a sharded cluster
-        if ($manager->selectServer(new ReadPreference(ReadPreference::PRIMARY))->getType() !== Server::TYPE_MONGOS) {
-            return $uri;
-        }
-
-        $parts = parse_url($uri);
-
-        assertIsArray($parts);
-
-        $hosts = explode(',', $parts['host']);
-
-        // Nothing to do if the URI already has a single mongos host
-        if (count($hosts) === 1) {
-            return $uri;
-        }
-
-        // Re-append port to last host
-        if (isset($parts['port'])) {
-            $hosts[count($hosts) - 1] .= ':' . $parts['port'];
-        }
-
-        $singleHost = $hosts[0];
-        $multipleHosts = implode(',', $hosts);
-
-        $pos = strpos($uri, $multipleHosts);
-
-        assertNotFalse($pos);
-
-        return substr_replace($uri, $singleHost, $pos, strlen($multipleHosts));
-    }
-
-    /**
-     * Requires multiple mongos hosts if the URI refers to a sharded cluster.
-     */
-    private static function requireMultipleMongoses(string $uri): void
-    {
-        assertStringStartsWith('mongodb://', $uri);
-
-        $manager = FunctionalTestCase::createTestManager($uri);
-
-        // Nothing to do if the URI does not refer to a sharded cluster
-        if ($manager->selectServer(new ReadPreference(ReadPreference::PRIMARY))->getType() !== Server::TYPE_MONGOS) {
-            return;
-        }
-
-        assertStringContainsString(',', parse_url($uri, PHP_URL_HOST));
     }
 }

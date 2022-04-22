@@ -95,6 +95,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             $this->markTestSkipped($test->skipReason);
         }
 
+        // Checking for mongocryptd availability
+        $this->skipIfMongocryptdIsUnavailableByTest($test);
+
         $databaseName = $databaseName ?? $this->getDatabaseName();
         $collectionName = $collectionName ?? $this->getCollectionName();
 
@@ -182,6 +185,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testDataKeyAndDoubleEncryption(string $providerName, $masterKey): void
     {
+        // Checking for mongocryptd availability
+        $this->skipIfMongocryptdIsUnavailable();
+
         $this->setContext(Context::fromClientSideEncryption((object) [], 'db', 'coll'));
         $client = $this->getContext()->getClient();
 
@@ -321,6 +327,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testExternalKeyVault($withExternalKeyVault): void
     {
+        // Checking for mongocryptd availability
+        $this->skipIfMongocryptdIsUnavailable();
+
         $this->setContext(Context::fromClientSideEncryption((object) [], 'db', 'coll'));
         $client = $this->getContext()->getClient();
         $client->selectCollection('db', 'coll')->drop();
@@ -471,6 +480,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testBSONSizeLimitsAndBatchSplitting(Closure $test): void
     {
+        // Checking for mongocryptd availability
+        $this->skipIfMongocryptdIsUnavailable();
+
         $this->setContext(Context::fromClientSideEncryption((object) [], 'db', 'coll'));
         $client = $this->getContext()->getClient();
 
@@ -503,6 +515,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testViewsAreProhibited(): void
     {
+        // Checking for mongocryptd availability
+        $this->skipIfMongocryptdIsUnavailable();
+
         $client = static::createTestClient();
 
         $client->selectCollection('db', 'view')->drop();
@@ -536,6 +551,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testCorpus($schemaMap = true): void
     {
+        // Checking for mongocryptd availability
+        $this->skipIfMongocryptdIsUnavailable();
+
         $this->setContext(Context::fromClientSideEncryption((object) [], 'db', 'coll'));
         $client = $this->getContext()->getClient();
 
@@ -647,6 +665,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testCustomEndpoint(Closure $test): void
     {
+        // Checking for mongocryptd availability
+        $this->skipIfMongocryptdIsUnavailable();
+
         $client = static::createTestClient();
 
         $clientEncryption = $client->createClientEncryption([
@@ -824,6 +845,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             ],
         ];
 
+        // Checking for mongocryptd availability
+        $this->skipIfMongocryptdIsUnavailableByAutoEncryptOpts($autoEncryptionOpts);
+
         $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
 
         try {
@@ -853,6 +877,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             ],
         ];
 
+        // Checking for mongocryptd availability
+        $this->skipIfMongocryptdIsUnavailableByAutoEncryptOpts($autoEncryptionOpts);
+
         $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
 
         $clientEncrypted->selectCollection('db', 'coll')->insertOne(['encrypted' => 'test']);
@@ -870,6 +897,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testInvalidKmsCertificate(): void
     {
+        // Checking for mongocryptd availability
+        $this->skipIfMongocryptdIsUnavailable();
+
         $client = static::createTestClient();
 
         $clientEncryption = $client->createClientEncryption([
@@ -898,6 +928,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testInvalidHostnameInKmsCertificate(): void
     {
+        // Checking for mongocryptd availability
+        $this->skipIfMongocryptdIsUnavailable();
+
         $client = static::createTestClient();
 
         $clientEncryption = $client->createClientEncryption([
@@ -927,6 +960,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testKmsTlsOptions(Closure $test): void
     {
+        // Checking for mongocryptd availability
+        $this->skipIfMongocryptdIsUnavailable();
+
         $client = static::createTestClient();
 
         $clientEncryptionNoClientCert = $client->createClientEncryption([

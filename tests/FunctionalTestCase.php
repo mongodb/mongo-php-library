@@ -21,6 +21,7 @@ use stdClass;
 use UnexpectedValueException;
 
 use function array_merge;
+use function basename;
 use function call_user_func;
 use function count;
 use function current;
@@ -30,6 +31,7 @@ use function getenv;
 use function implode;
 use function is_array;
 use function is_callable;
+use function is_executable;
 use function is_object;
 use function is_string;
 use function key;
@@ -41,10 +43,13 @@ use function preg_match;
 use function preg_quote;
 use function preg_replace;
 use function sprintf;
+use function strpos;
 use function version_compare;
 
+use const DIRECTORY_SEPARATOR;
 use const FILTER_VALIDATE_BOOLEAN;
 use const INFO_MODULES;
+use const PATH_SEPARATOR;
 
 abstract class FunctionalTestCase extends TestCase
 {
@@ -497,6 +502,33 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
+    protected function skipIfMongocryptdIsUnavailableByTest(stdClass $test): void
+    {
+        $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
+        $autoEncryptionOptions = isset($clientOptions['autoEncryptOpts']) ? (array) $clientOptions['autoEncryptOpts'] : [];
+        $extraOptions = isset($autoEncryptionOptions['extraOptions']) ? (array) $autoEncryptionOptions['extraOptions'] : [];
+        $mongocryptdURI = $extraOptions['mongocryptdURI'] ?? null;
+
+        $this->skipIfMongocryptdIsUnavailable($mongocryptdURI);
+    }
+
+    protected function skipIfMongocryptdIsUnavailableByAutoEncryptOpts(array $autoEncryptionOpts): void
+    {
+        $mongocryptdURI = $autoEncryptionOpts['extraOptions']['mongocryptdURI'] ?? null;
+
+        $this->skipIfMongocryptdIsUnavailable($mongocryptdURI);
+    }
+
+    protected function skipIfMongocryptdIsUnavailable(?string $mongocryptdURI = null): void
+    {
+        // Assuming that in specific cases with remote mongocryptd developer is responsible for mongocryptd to be available
+        if (! $mongocryptdURI || strpos($mongocryptdURI, 'mongodb://localhost') === 0) {
+            if (! $this->isExecutablePathenv('mongocryptd')) {
+                $this->markTestSkipped('Mongocryptd is not available on the localhost');
+            }
+        }
+    }
+
     protected function skipIfGeoHaystackIndexIsNotSupported(): void
     {
         if (version_compare($this->getServerVersion(), '4.9', '>=')) {
@@ -624,5 +656,32 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         return isset($document->enableTestCommands) && $document->enableTestCommands === true;
+    }
+
+    /**
+     * Checks whether the specified file exists in the system PATH and is executable
+     *
+     * @param string $filename
+     * @return bool
+     */
+    private function isExecutablePathenv(string $filename): bool
+    {
+        if (is_executable($filename)) {
+            return true;
+        }
+
+        if ($filename !== basename($filename)) {
+            return false;
+        }
+
+        $paths = explode(PATH_SEPARATOR, getenv("PATH"));
+
+        foreach ($paths as $path) {
+            if (is_executable($path . DIRECTORY_SEPARATOR . $filename)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

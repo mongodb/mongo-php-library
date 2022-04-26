@@ -24,16 +24,21 @@ use UnexpectedValueException;
 
 use function base64_decode;
 use function basename;
+use function explode;
 use function file_get_contents;
 use function getenv;
 use function glob;
 use function in_array;
+use function is_executable;
 use function iterator_to_array;
 use function json_decode;
 use function sprintf;
 use function str_repeat;
 use function strlen;
 use function unserialize;
+
+use const DIRECTORY_SEPARATOR;
+use const PATH_SEPARATOR;
 
 /**
  * Client-side encryption spec tests.

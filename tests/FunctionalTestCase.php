@@ -30,7 +30,6 @@ use function getenv;
 use function implode;
 use function is_array;
 use function is_callable;
-use function is_executable;
 use function is_object;
 use function is_string;
 use function key;
@@ -44,10 +43,8 @@ use function preg_replace;
 use function sprintf;
 use function version_compare;
 
-use const DIRECTORY_SEPARATOR;
 use const FILTER_VALIDATE_BOOLEAN;
 use const INFO_MODULES;
-use const PATH_SEPARATOR;
 
 abstract class FunctionalTestCase extends TestCase
 {

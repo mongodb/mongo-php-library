@@ -641,23 +641,4 @@ abstract class FunctionalTestCase extends TestCase
 
         return isset($document->enableTestCommands) && $document->enableTestCommands === true;
     }
-
-    /**
-     * Checks whether the specified file exists in the system PATH and is executable
-     *
-     * @param string $filename
-     * @return bool
-     */
-    private function isExecutablePathenv(string $filename): bool
-    {
-        $paths = explode(PATH_SEPARATOR, getenv("PATH"));
-
-        foreach ($paths as $path) {
-            if (is_executable($path . DIRECTORY_SEPARATOR . $filename)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

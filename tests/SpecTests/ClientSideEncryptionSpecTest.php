@@ -24,16 +24,21 @@ use UnexpectedValueException;
 
 use function base64_decode;
 use function basename;
+use function explode;
 use function file_get_contents;
 use function getenv;
 use function glob;
 use function in_array;
+use function is_executable;
 use function iterator_to_array;
 use function json_decode;
 use function sprintf;
 use function str_repeat;
 use function strlen;
 use function unserialize;
+
+use const DIRECTORY_SEPARATOR;
+use const PATH_SEPARATOR;
 
 /**
  * Client-side encryption spec tests.
@@ -56,6 +61,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         parent::setUp();
 
         $this->skipIfClientSideEncryptionIsNotSupported();
+        $this->skipIfLocalMongocryptdIsUnavailable();
     }
 
     /**
@@ -1271,5 +1277,18 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $returnData->value = $this->encryptCorpusValue($fieldName, $data, $clientEncryption);
 
         return $data->allowed ? $returnData : $data;
+    }
+
+    private function skipIfLocalMongocryptdIsUnavailable(): void
+    {
+        $paths = explode(PATH_SEPARATOR, getenv("PATH"));
+
+        foreach ($paths as $path) {
+            if (is_executable($path . DIRECTORY_SEPARATOR . 'mongocryptd')) {
+                return;
+            }
+        }
+
+        $this->markTestSkipped('Mongocryptd is not available on the localhost');
     }
 }

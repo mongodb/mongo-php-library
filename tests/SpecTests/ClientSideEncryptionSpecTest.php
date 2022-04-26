@@ -1273,4 +1273,17 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         return $data->allowed ? $returnData : $data;
     }
+
+    private function skipIfLocalMongocryptdIsUnavailable(): void
+    {
+        $paths = explode(PATH_SEPARATOR, getenv("PATH"));
+
+        foreach ($paths as $path) {
+            if (is_executable($path . DIRECTORY_SEPARATOR . 'mongocryptd')) {
+                return;
+            }
+        }
+
+        $this->markTestSkipped('Mongocryptd is not available on the localhost');
+    }
 }

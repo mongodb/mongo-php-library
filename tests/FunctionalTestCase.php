@@ -500,19 +500,6 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
-    protected function skipIfLocalMongocryptdIsUnavailable(): void
-    {
-        $paths = explode(PATH_SEPARATOR, getenv("PATH"));
-
-        foreach ($paths as $path) {
-            if (is_executable($path . DIRECTORY_SEPARATOR . 'mongocryptd')) {
-                return;
-            }
-        }
-
-        $this->markTestSkipped('Mongocryptd is not available on the localhost');
-    }
-
     protected function skipIfGeoHaystackIndexIsNotSupported(): void
     {
         if (version_compare($this->getServerVersion(), '4.9', '>=')) {

@@ -27,16 +27,6 @@ post: |
   :ref:`$out <agg-merge>` stages.
 ---
 arg_name: option
-name: comment
-type: string
-description: |
-  Users can specify an arbitrary string to help trace the operation through the
-  database profiler, currentOp, and logs.
-interface: phpmethod
-operation: ~
-optional: true
----
-arg_name: option
 name: explain
 type: boolean
 description: |

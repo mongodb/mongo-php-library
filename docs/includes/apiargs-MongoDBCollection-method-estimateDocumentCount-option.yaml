@@ -1,5 +1,11 @@
 source:
   file: apiargs-common-option.yaml
+  ref: comment
+post: |
+  .. versionadded:: 1.13
+---
+source:
+  file: apiargs-common-option.yaml
   ref: maxTimeMS
 ---
 source:

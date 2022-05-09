@@ -11,7 +11,7 @@ source:
   ref: bypassDocumentValidation
 ---
 source:
-  file: apiargs-aggregate-option.yaml
+  file: apiargs-common-option.yaml
   ref: comment
 ---
 source:

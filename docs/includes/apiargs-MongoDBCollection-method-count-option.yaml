@@ -2,6 +2,12 @@ source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: collation
 ---
+source:
+  file: apiargs-common-option.yaml
+  ref: comment
+post: |
+  .. versionadded:: 1.13
+---
 arg_name: option
 name: hint
 type: string|array|object

@@ -167,12 +167,9 @@ class EstimatedDocumentCount implements Executable, Explainable
         );
     }
 
-    /** @return Aggregate|Count */
-    private function createCommand(Server $server)
+    private function createCommand(Server $server): Count
     {
-        return server_supports_feature($server, self::$wireVersionForCollStats)
-            ? $this->createAggregate()
-            : $this->createCount();
+        return $this->createCount();
     }
 
     private function createCount(): Count

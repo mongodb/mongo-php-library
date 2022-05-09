@@ -109,6 +109,12 @@ class UnifiedSpecTest extends FunctionalTestCase
         'crud/aggregate: aggregate with comment sets comment on getMore' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/aggregate: aggregate with a document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/aggregate: aggregate with a document comment - pre 4.4' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        // Incorrect tests data: field "count" instead of field "aggregate"
+        'crud/estimatedDocumentCount: estimatedDocumentCount always uses count' => 'Incorrect test data: test contains field "count" instead of "aggregate"',
+        'crud/estimatedDocumentCount: estimatedDocumentCount with maxTimeMS' => 'Incorrect test data: test contains field "count" instead of "aggregate"',
+        'crud/estimatedDocumentCount: estimatedDocumentCount on non-existent collection' => 'Incorrect test data: test contains field "count" instead of "aggregate"',
+        'crud/estimatedDocumentCount-comment: estimatedDocumentCount with document comment' => 'Incorrect test data: test contains field "count" instead of "aggregate"',
+        'crud/estimatedDocumentCount-comment: estimatedDocumentCount with string comment' => 'Incorrect test data: test contains field "count" instead of "aggregate"',
     ];
 
     /** @var UnifiedTestRunner */

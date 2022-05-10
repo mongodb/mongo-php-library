@@ -110,11 +110,13 @@ class UnifiedSpecTest extends FunctionalTestCase
         'crud/aggregate: aggregate with a document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/aggregate: aggregate with a document comment - pre 4.4' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         // Incorrect tests data: field "count" instead of field "aggregate"
-        'crud/estimatedDocumentCount: estimatedDocumentCount always uses count' => 'Incorrect test data: test contains field "count" instead of "aggregate"',
-        'crud/estimatedDocumentCount: estimatedDocumentCount with maxTimeMS' => 'Incorrect test data: test contains field "count" instead of "aggregate"',
-        'crud/estimatedDocumentCount: estimatedDocumentCount on non-existent collection' => 'Incorrect test data: test contains field "count" instead of "aggregate"',
-        'crud/estimatedDocumentCount-comment: estimatedDocumentCount with document comment' => 'Incorrect test data: test contains field "count" instead of "aggregate"',
-        'crud/estimatedDocumentCount-comment: estimatedDocumentCount with string comment' => 'Incorrect test data: test contains field "count" instead of "aggregate"',
+        'crud/estimatedDocumentCount: estimatedDocumentCount always uses count' => 'EstimatedDocumentCount with Aggregate (PHPLIB-810)',
+        'crud/estimatedDocumentCount: estimatedDocumentCount with maxTimeMS' => 'EstimatedDocumentCount with Aggregate (PHPLIB-810)',
+        'crud/estimatedDocumentCount: estimatedDocumentCount on non-existent collection' => 'EstimatedDocumentCount with Aggregate (PHPLIB-810)',
+        'crud/estimatedDocumentCount-comment: estimatedDocumentCount with document comment' => 'EstimatedDocumentCount with Aggregate (PHPLIB-810)',
+        'crud/estimatedDocumentCount-comment: estimatedDocumentCount with string comment' => 'EstimatedDocumentCount with Aggregate (PHPLIB-810)',
+        'crud/estimatedDocumentCount: estimatedDocumentCount errors correctly--command error' => 'EstimatedDocumentCount with Aggregate (PHPLIB-810)',
+        'crud/estimatedDocumentCount: estimatedDocumentCount errors correctly--socket error' => 'EstimatedDocumentCount with Aggregate (PHPLIB-810)',
     ];
 
     /** @var UnifiedTestRunner */

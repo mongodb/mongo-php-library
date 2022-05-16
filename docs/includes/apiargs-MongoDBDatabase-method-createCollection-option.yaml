@@ -27,6 +27,23 @@ interface: phpmethod
 operation: ~
 optional: true
 ---
+arg_name: option
+name: clusteredIndex
+type: document
+description: |
+  A clustered index specification. See
+  :manual:`Clustered Collections </core/clustered-collections>` or the
+  :manual:`create </reference/command/create>` command documentation for more
+  information.
+
+  This option is available in MongoDB 5.3+ and will result in an exception at
+  execution time if specified for an older server version.
+
+  .. versionadded:: 1.13
+interface: phpmethod
+operation: ~
+optional: true
+---
 source:
   file: apiargs-common-option.yaml
   ref: collation

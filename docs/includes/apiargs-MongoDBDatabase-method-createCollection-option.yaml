@@ -28,6 +28,22 @@ operation: ~
 optional: true
 ---
 arg_name: option
+name: changeStreamPreAndPostImages
+type: document
+description: |
+  Used to configure support for pre- and post-images in change streams. See the
+  :manual:`create </reference/command/create>` command documentation for more
+  information.
+
+  This option is available in MongoDB 6.0+ and will result in an exception at
+  execution time if specified for an older server version.
+
+  .. versionadded:: 1.13
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: clusteredIndex
 type: document
 description: |

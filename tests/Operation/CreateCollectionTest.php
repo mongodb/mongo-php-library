@@ -29,6 +29,10 @@ class CreateCollectionTest extends TestCase
         }
 
         foreach ($this->getInvalidDocumentValues() as $value) {
+            $options[][] = ['changeStreamPreAndPostImages' => $value];
+        }
+
+        foreach ($this->getInvalidDocumentValues() as $value) {
             $options[][] = ['clusteredIndex' => $value];
         }
 

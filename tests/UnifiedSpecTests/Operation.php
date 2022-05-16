@@ -12,6 +12,8 @@ use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\GridFS\Bucket;
+use MongoDB\Model\CollectionInfo;
+use MongoDB\Model\DatabaseInfo;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\FindOneAndReplace;
@@ -23,6 +25,7 @@ use stdClass;
 use Throwable;
 
 use function array_diff_key;
+use function array_intersect_key;
 use function array_key_exists;
 use function array_map;
 use function current;
@@ -260,7 +263,12 @@ final class Operation
                 return iterator_to_array($client->listDatabaseNames($args));
 
             case 'listDatabases':
-                return iterator_to_array($client->listDatabases($args));
+                return array_map(
+                    function (DatabaseInfo $info) {
+                        return $info->__debugInfo();
+                    },
+                    iterator_to_array($client->listDatabases($args))
+                );
 
             default:
                 Assert::fail('Unsupported client operation: ' . $this->name);
@@ -457,7 +465,12 @@ final class Operation
                 );
 
             case 'listIndexes':
-                return iterator_to_array($collection->listIndexes($args));
+                return array_map(
+                    function (IndexInfo $info) {
+                        return $info->__debugInfo();
+                    },
+                    iterator_to_array($collection->listIndexes($args))
+                );
 
             case 'mapReduce':
                 assertArrayHasKey('map', $args);
@@ -579,7 +592,12 @@ final class Operation
                 return iterator_to_array($database->listCollectionNames($args));
 
             case 'listCollections':
-                return iterator_to_array($database->listCollections($args));
+                return array_map(
+                    function (CollectionInfo $info) {
+                        return $info->__debugInfo();
+                    },
+                    iterator_to_array($database->listCollections($args))
+                );
 
             case 'runCommand':
                 assertArrayHasKey('command', $args);

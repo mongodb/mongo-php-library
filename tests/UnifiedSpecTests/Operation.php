@@ -599,6 +599,22 @@ final class Operation
                     iterator_to_array($database->listCollections($args))
                 );
 
+            case 'modifyCollection':
+                assertArrayHasKey('collection', $args);
+                assertIsString($args['collection']);
+
+                /* ModifyCollection takes collection and command options
+                 * separately, so we must split the array after initially
+                 * filtering out the collection name.
+                 *
+                 * The typeMap option is intentionally omitted since it is
+                 * specific to PHPLIB and will never appear in spec tests. */
+                $options = array_diff_key($args, ['collection' => 1]);
+                $collectionOptions = array_diff_key($options, ['session' => 1, 'writeConcern' => 1]);
+                $options = array_intersect_key($options, ['session' => 1, 'writeConcern' => 1]);
+
+                return $database->modifyCollection($args['collection'], $collectionOptions, $options);
+
             case 'runCommand':
                 assertArrayHasKey('command', $args);
                 assertInstanceOf(stdClass::class, $args['command']);

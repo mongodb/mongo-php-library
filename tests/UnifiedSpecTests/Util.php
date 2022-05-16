@@ -66,6 +66,7 @@ final class Util
             'dropCollection' => ['collection', 'session'],
             'listCollectionNames' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
             'listCollections' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
+            'modifyCollection' => ['collection', 'changeStreamPreAndPostImages'],
             // Note: commandName is not used by PHP
             'runCommand' => ['command', 'session', 'commandName'],
         ],

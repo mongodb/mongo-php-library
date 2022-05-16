@@ -262,7 +262,7 @@ final class EventObserver implements CommandSubscriber
 
     private function assertCommandStartedEvent(CommandStartedEvent $actual, stdClass $expected, string $message): void
     {
-        Util::assertHasOnlyKeys($expected, ['command', 'commandName', 'databaseName', 'hasServiceId']);
+        Util::assertHasOnlyKeys($expected, ['command', 'commandName', 'databaseName', 'hasServiceId', 'hasServerConnectionId']);
 
         if (isset($expected->command)) {
             assertIsObject($expected->command);
@@ -284,11 +284,16 @@ final class EventObserver implements CommandSubscriber
             assertIsBool($expected->hasServiceId);
             assertSame($actual->getServiceId() !== null, $expected->hasServiceId, $message . ': hasServiceId matches');
         }
+
+        if (isset($expected->hasServerConnectionId)) {
+            assertIsBool($expected->hasServerConnectionId);
+            assertSame($actual->getServerConnectionId() !== null, $expected->hasServerConnectionId, $message . ': hasServerConnectionId matches');
+        }
     }
 
     private function assertCommandSucceededEvent(CommandSucceededEvent $actual, stdClass $expected, string $message): void
     {
-        Util::assertHasOnlyKeys($expected, ['reply', 'commandName', 'hasServiceId']);
+        Util::assertHasOnlyKeys($expected, ['reply', 'commandName', 'hasServiceId', 'hasServerConnectionId']);
 
         if (isset($expected->reply)) {
             assertIsObject($expected->reply);
@@ -305,11 +310,16 @@ final class EventObserver implements CommandSubscriber
             assertIsBool($expected->hasServiceId);
             assertSame($actual->getServiceId() !== null, $expected->hasServiceId, $message . ': hasServiceId matches');
         }
+
+        if (isset($expected->hasServerConnectionId)) {
+            assertIsBool($expected->hasServerConnectionId);
+            assertSame($actual->getServerConnectionId() !== null, $expected->hasServerConnectionId, $message . ': hasServerConnectionId matches');
+        }
     }
 
     private function assertCommandFailedEvent(CommandFailedEvent $actual, stdClass $expected, string $message): void
     {
-        Util::assertHasOnlyKeys($expected, ['commandName', 'hasServiceId']);
+        Util::assertHasOnlyKeys($expected, ['commandName', 'hasServiceId', 'hasServerConnectionId']);
 
         if (isset($expected->commandName)) {
             assertIsString($expected->commandName);
@@ -319,6 +329,11 @@ final class EventObserver implements CommandSubscriber
         if (isset($expected->hasServiceId)) {
             assertIsBool($expected->hasServiceId);
             assertSame($actual->getServiceId() !== null, $expected->hasServiceId, $message . ': hasServiceId matches');
+        }
+
+        if (isset($expected->hasServerConnectionId)) {
+            assertIsBool($expected->hasServerConnectionId);
+            assertSame($actual->getServerConnectionId() !== null, $expected->hasServerConnectionId, $message . ': hasServerConnectionId matches');
         }
     }
 

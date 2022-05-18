@@ -60,16 +60,6 @@ class EstimatedDocumentCount implements Executable, Explainable
      *
      * Supported options:
      *
-     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
-     *    the operation through the database profiler, currentOp and logs. The
-     *    default is to not send a value.
-     *
-     *    The comment can be any valid BSON type for server versions 4.4 and above.
-     *    Server versions between 3.6 and 4.2 only support string as comment,
-     *    and providing a non-string type will result in a server-side error.
-     *    Older server versions do not support comment for aggregate command at all,
-     *    and providing one will result in a server-side error.
-     *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
      *
@@ -105,7 +95,7 @@ class EstimatedDocumentCount implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
         }
 
-        $this->options = array_intersect_key($options, ['comment' => 1, 'maxTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1]);
+        $this->options = array_intersect_key($options, ['maxTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1]);
     }
 
     /**
@@ -120,7 +110,7 @@ class EstimatedDocumentCount implements Executable, Explainable
      */
     public function execute(Server $server)
     {
-        $command = $this->createCommand($server);
+        $command = $this->createCount();
 
         if ($command instanceof Aggregate) {
             try {
@@ -150,25 +140,7 @@ class EstimatedDocumentCount implements Executable, Explainable
      */
     public function getCommandDocument(Server $server)
     {
-        return $this->createCommand($server)->getCommandDocument($server);
-    }
-
-    private function createAggregate(): Aggregate
-    {
-        return new Aggregate(
-            $this->databaseName,
-            $this->collectionName,
-            [
-                ['$collStats' => ['count' => (object) []]],
-                ['$group' => ['_id' => 1, 'n' => ['$sum' => '$count']]],
-            ],
-            $this->options
-        );
-    }
-
-    private function createCommand(Server $server): Count
-    {
-        return $this->createCount();
+        return $this->$this->createCount()->getCommandDocument($server);
     }
 
     private function createCount(): Count

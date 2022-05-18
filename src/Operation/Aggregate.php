@@ -86,15 +86,8 @@ class Aggregate implements Executable, Explainable
      *
      *  * collation (document): Collation specification.
      *
-     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
-     *    the operation through the database profiler, currentOp and logs. The
-     *    default is to not send a value.
-     *
-     *    The comment can be any valid BSON type for server versions 4.4 and above.
-     *    Server versions between 3.6 and 4.2 only support string as comment,
-     *    and providing a non-string type will result in a server-side error.
-     *    Older server versions do not support comment for aggregate command at all,
-     *    and providing one will result in a server-side error.
+     *  * comment (string): An arbitrary string to help trace the operation
+     *    through the database profiler, currentOp, and logs.
      *
      *  * explain (boolean): Specifies whether or not to return the information
      *    on the processing of the pipeline.
@@ -175,6 +168,10 @@ class Aggregate implements Executable, Explainable
 
         if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
             throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
+        }
+
+        if (isset($options['comment']) && ! is_string($options['comment'])) {
+            throw InvalidArgumentException::invalidType('"comment" option', $options['comment'], 'string');
         }
 
         if (isset($options['explain']) && ! is_bool($options['explain'])) {

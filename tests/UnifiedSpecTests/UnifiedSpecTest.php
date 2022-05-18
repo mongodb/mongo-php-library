@@ -76,6 +76,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         'crud/countDocuments-comment: countDocuments with string comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/estimatedDocumentCount-comment: estimatedDocumentCount with document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/estimatedDocumentCount-comment: estimatedDocumentCount with string comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        'crud/estimatedDocumentCount-comment: estimatedDocumentCount with document comment - pre 4.4.14, server error' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/deleteMany-comment: deleteMany with string comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/deleteMany-comment: deleteMany with document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/deleteMany-comment: deleteMany with comment - pre 4.4' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',

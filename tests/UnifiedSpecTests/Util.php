@@ -62,10 +62,11 @@ final class Util
         Database::class => [
             'aggregate' => ['pipeline', 'session', 'useCursor', 'allowDiskUse', 'batchSize', 'bypassDocumentValidation', 'collation', 'comment', 'explain', 'hint', 'let', 'maxAwaitTimeMS', 'maxTimeMS'],
             'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS'],
-            'createCollection' => ['collection', 'session', 'autoIndexId', 'capped', 'collation', 'expireAfterSeconds', 'flags', 'indexOptionDefaults', 'max', 'maxTimeMS', 'size', 'storageEngine', 'timeseries', 'validationAction', 'validationLevel', 'validator'],
+            'createCollection' => ['collection', 'session', 'autoIndexId', 'capped', 'changeStreamPreAndPostImages', 'clusteredIndex', 'collation', 'expireAfterSeconds', 'flags', 'indexOptionDefaults', 'max', 'maxTimeMS', 'size', 'storageEngine', 'timeseries', 'validationAction', 'validationLevel', 'validator'],
             'dropCollection' => ['collection', 'session'],
             'listCollectionNames' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
             'listCollections' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
+            'modifyCollection' => ['collection', 'changeStreamPreAndPostImages'],
             // Note: commandName is not used by PHP
             'runCommand' => ['command', 'session', 'commandName'],
         ],

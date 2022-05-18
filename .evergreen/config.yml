@@ -247,7 +247,7 @@ functions:
           export KMS_TLS_CA_FILE="${client_side_encryption_kms_tls_ca_file}"
           export KMS_TLS_CERTIFICATE_KEY_FILE="${client_side_encryption_kms_tls_certificate_key_file}"
           export PATH="${PHP_PATH}/bin:$PATH"
-          MOCK_SERVICE_ID=${MOCK_SERVICE_ID} API_VERSION=${API_VERSION} PHP_VERSION=${PHP_VERSION} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+          API_VERSION=${API_VERSION} PHP_VERSION=${PHP_VERSION} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "run atlas data lake test":
      - command: shell.exec
@@ -752,9 +752,7 @@ buildvariants:
     - .serverless
 
 - matrix_name: "test-loadBalanced"
-  # TODO: Add "5.2" server version alongside "latest" following its GA release
-  # TODO: Revert driver-version to latest-stable after PHPC 1.13.0 is released (for CDRIVER-4207)
-  matrix_spec: { "versions": "latest", "php-edge-versions": "latest-stable", "driver-versions": "latest-dev" }
+  matrix_spec: { "versions": ["5.0", "latest"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   display_name: "Load balanced - ${versions}"
   run_on: debian92-test
   tasks:

@@ -140,7 +140,7 @@ class EstimatedDocumentCount implements Executable, Explainable
      */
     public function getCommandDocument(Server $server)
     {
-        return $this->$this->createCount()->getCommandDocument($server);
+        return $this->createCount()->getCommandDocument($server);
     }
 
     private function createCount(): Count

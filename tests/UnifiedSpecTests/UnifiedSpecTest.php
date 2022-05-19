@@ -69,6 +69,11 @@ class UnifiedSpecTest extends FunctionalTestCase
         'crud/bulkWrite-comment: BulkWrite with string comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/bulkWrite-comment: BulkWrite with document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/bulkWrite-comment: BulkWrite with comment - pre 4.4' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        'crud/countDocuments-comment: countDocuments with document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        'crud/countDocuments-comment: countDocuments with string comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        'crud/estimatedDocumentCount-comment: estimatedDocumentCount with document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        'crud/estimatedDocumentCount-comment: estimatedDocumentCount with string comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        'crud/estimatedDocumentCount-comment: estimatedDocumentCount with document comment - pre 4.4.14, server error' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/deleteMany-comment: deleteMany with string comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/deleteMany-comment: deleteMany with document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/deleteMany-comment: deleteMany with comment - pre 4.4' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
@@ -106,6 +111,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         'crud/aggregate: aggregate with comment sets comment on getMore' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/aggregate: aggregate with a document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/aggregate: aggregate with a document comment - pre 4.4' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        // CreateCollection "viewOn" and "pipeline" options are not yet implemented
+        'crud/estimatedDocumentCount: estimatedDocumentCount works correctly on views' => 'Not yet implemented (PHPLIB-869)',
     ];
 
     /** @var UnifiedTestRunner */

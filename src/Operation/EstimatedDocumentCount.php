@@ -17,7 +17,6 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -29,7 +28,6 @@ use MongoDB\Exception\UnsupportedException;
 
 use function array_intersect_key;
 use function is_integer;
-use function MongoDB\server_supports_feature;
 
 /**
  * Operation for obtaining an estimated count of documents in a collection
@@ -111,25 +109,7 @@ class EstimatedDocumentCount implements Executable, Explainable
      */
     public function execute(Server $server)
     {
-        $command = $this->createCommand($server);
-
-        if ($command instanceof Aggregate) {
-            try {
-                $cursor = $command->execute($server);
-            } catch (CommandException $e) {
-                if ($e->getCode() == self::$errorCodeCollectionNotFound) {
-                    return 0;
-                }
-
-                throw $e;
-            }
-
-            $cursor->rewind();
-
-            return $cursor->current()->n;
-        }
-
-        return $command->execute($server);
+        return $this->createCount()->execute($server);
     }
 
     /**
@@ -141,28 +121,7 @@ class EstimatedDocumentCount implements Executable, Explainable
      */
     public function getCommandDocument(Server $server)
     {
-        return $this->createCommand($server)->getCommandDocument($server);
-    }
-
-    private function createAggregate(): Aggregate
-    {
-        return new Aggregate(
-            $this->databaseName,
-            $this->collectionName,
-            [
-                ['$collStats' => ['count' => (object) []]],
-                ['$group' => ['_id' => 1, 'n' => ['$sum' => '$count']]],
-            ],
-            $this->options
-        );
-    }
-
-    /** @return Aggregate|Count */
-    private function createCommand(Server $server)
-    {
-        return server_supports_feature($server, self::$wireVersionForCollStats)
-            ? $this->createAggregate()
-            : $this->createCount();
+        return $this->createCount()->getCommandDocument($server);
     }
 
     private function createCount(): Count

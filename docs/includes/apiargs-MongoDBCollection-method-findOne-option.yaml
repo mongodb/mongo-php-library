@@ -19,8 +19,10 @@ source:
   ref: collation
 ---
 source:
-  file: apiargs-MongoDBCollection-method-find-option.yaml
+  file: apiargs-common-option.yaml
   ref: comment
+post: |
+  .. versionadded:: 1.13
 ---
 source:
   file: apiargs-common-option.yaml

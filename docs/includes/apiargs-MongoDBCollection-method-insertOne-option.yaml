@@ -4,6 +4,12 @@ source:
 ---
 source:
   file: apiargs-common-option.yaml
+  ref: comment
+post: |
+  .. versionadded:: 1.13
+---
+source:
+  file: apiargs-common-option.yaml
   ref: session
 post: |
   .. versionadded:: 1.3

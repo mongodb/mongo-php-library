@@ -103,6 +103,16 @@ class BulkWrite implements Executable
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation. The default is false.
      *
+     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
+     *    the operation through the database profiler, currentOp and logs. The
+     *    default is to not send a value.
+     *
+     *    The comment can be any valid BSON type for server versions 4.4 and above.
+     *    Server versions between 3.6 and 4.2 only support string as comment,
+     *    and providing a non-string type will result in a server-side error.
+     *    Older server versions do not support comment for aggregate command at all,
+     *    and providing one will result in a server-side error.
+     *
      *  * ordered (boolean): If true, when an insert fails, return without
      *    performing the remaining writes. If false, when a write fails,
      *    continue with the remaining writes, if any. The default is true.
@@ -353,8 +363,10 @@ class BulkWrite implements Executable
     {
         $options = ['ordered' => $this->options['ordered']];
 
-        if (isset($this->options['bypassDocumentValidation'])) {
-            $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
+        foreach (['bypassDocumentValidation', 'comment'] as $option) {
+            if (isset($this->options[$option])) {
+                $options[$option] = $this->options[$option];
+            }
         }
 
         if (isset($this->options['let'])) {

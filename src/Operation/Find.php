@@ -78,8 +78,15 @@ class Find implements Executable, Explainable
      *
      *  * collation (document): Collation specification.
      *
-     *  * comment (string): Attaches a comment to the query. If "$comment" also
-     *    exists in the modifiers document, this option will take precedence.
+     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
+     *    the operation through the database profiler, currentOp and logs. The
+     *    default is to not send a value.
+     *
+     *    The comment can be any valid BSON type for server versions 4.4 and above.
+     *    Server versions between 3.6 and 4.2 only support string as comment,
+     *    and providing a non-string type will result in a server-side error.
+     *    Older server versions do not support comment for aggregate command at all,
+     *    and providing one will result in a server-side error.
      *
      *  * cursorType (enum): Indicates the type of cursor to use. Must be either
      *    NON_TAILABLE, TAILABLE, or TAILABLE_AWAIT. The default is
@@ -179,10 +186,6 @@ class Find implements Executable, Explainable
 
         if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
             throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
-        }
-
-        if (isset($options['comment']) && ! is_string($options['comment'])) {
-            throw InvalidArgumentException::invalidType('"comment" option', $options['comment'], 'comment');
         }
 
         if (isset($options['cursorType'])) {

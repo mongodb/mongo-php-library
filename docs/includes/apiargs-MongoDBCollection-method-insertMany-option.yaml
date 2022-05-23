@@ -3,6 +3,12 @@ source:
   ref: bypassDocumentValidation
 ---
 source:
+  file: apiargs-common-option.yaml
+  ref: comment
+post: |
+  .. versionadded:: 1.13
+---
+source:
   file: apiargs-MongoDBCollection-method-bulkWrite-option.yaml
   ref: ordered
 ---

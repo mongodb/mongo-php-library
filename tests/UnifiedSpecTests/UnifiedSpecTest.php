@@ -111,8 +111,6 @@ class UnifiedSpecTest extends FunctionalTestCase
         'crud/aggregate: aggregate with comment sets comment on getMore' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/aggregate: aggregate with a document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/aggregate: aggregate with a document comment - pre 4.4' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
-        // CreateCollection "viewOn" and "pipeline" options are not yet implemented
-        'crud/estimatedDocumentCount: estimatedDocumentCount works correctly on views' => 'Not yet implemented (PHPLIB-869)',
     ];
 
     /** @var UnifiedTestRunner */

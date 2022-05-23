@@ -96,20 +96,6 @@ final class Operation
         return $o;
     }
 
-    public static function fromCommandMonitoring(stdClass $operation)
-    {
-        $o = new self($operation);
-
-        if (isset($operation->collectionOptions)) {
-            $o->collectionOptions = (array) $operation->collectionOptions;
-        }
-
-        /* We purposefully avoid setting a default error expectation, because
-         * some tests may trigger a write or command error. */
-
-        return $o;
-    }
-
     /**
      * This method is exclusively used to prepare nested operations for the
      * withTransaction session operation

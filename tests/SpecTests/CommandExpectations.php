@@ -81,11 +81,6 @@ class CommandExpectations implements CommandSubscriber
         return $o;
     }
 
-    public static function fromCommandMonitoring(array $expectedEvents)
-    {
-        return new self($expectedEvents);
-    }
-
     public static function fromCrud(array $expectedEvents)
     {
         $o = new self($expectedEvents);

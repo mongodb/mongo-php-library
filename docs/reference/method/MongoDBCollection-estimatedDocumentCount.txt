@@ -50,7 +50,15 @@ Behavior
 This method returns an estimate of the count of documents in the collection
 using collection metadata, rather than counting the documents or consulting an
 index. This method does not take a ``session`` option and cannot be executed
-within a transaction.
+within a transaction. See
+`Count: Behavior <https://www.mongodb.com/docs/manual/reference/command/count/#behavior>`_
+in the MongoDB manual for more information.
+
+This method is implemented using the :manual:`count </reference/command/count>`
+command. Due to an oversight in versions 5.0.0-5.0.8 of MongoDB, the ``count``
+command was not included in version "1" of the Stable API. Applications using
+this method with the Stable API are recommended to upgrade their server version
+to 5.0.9+ or disable strict mode to avoid encountering errors.
 
 See Also
 --------

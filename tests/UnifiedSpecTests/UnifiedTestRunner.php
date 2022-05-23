@@ -60,7 +60,6 @@ final class UnifiedTestRunner
 
     public const MIN_SCHEMA_VERSION = '1.0';
 
-    // Note: schema version 1.6 is not yet implemented (see: PHPLIB-718)
     public const MAX_SCHEMA_VERSION = '1.7';
 
     /** @var MongoDB\Client */

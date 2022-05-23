@@ -59,9 +59,6 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/entity-client-cmap-events: events are captured during an operation' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType can be set to command and cmap' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType defaults to command if unset' => 'PHPC does not implement CMAP',
-        // Command monitoring event serverConnectionId is not yet implemented
-        'command-monitoring/pre-42-server-connection-id: command events do not include server connection id' => 'Not yet implemented (PHPC-1899, PHPLIB-718)',
-        'command-monitoring/server-connection-id: command events include server connection id' => 'Not yet implemented (PHPC-1899, PHPLIB-718)',
         // Change stream "comment" option is not yet implemented
         'change-streams/change-streams: Test with document comment' => 'Not yet implemented (PHPLIB-749)',
         'change-streams/change-streams: Test with document comment - pre 4.4' => 'Not yet implemented (PHPLIB-749)',
@@ -72,6 +69,11 @@ class UnifiedSpecTest extends FunctionalTestCase
         'crud/bulkWrite-comment: BulkWrite with string comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/bulkWrite-comment: BulkWrite with document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/bulkWrite-comment: BulkWrite with comment - pre 4.4' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        'crud/countDocuments-comment: countDocuments with document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        'crud/countDocuments-comment: countDocuments with string comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        'crud/estimatedDocumentCount-comment: estimatedDocumentCount with document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        'crud/estimatedDocumentCount-comment: estimatedDocumentCount with string comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        'crud/estimatedDocumentCount-comment: estimatedDocumentCount with document comment - pre 4.4.14, server error' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/deleteMany-comment: deleteMany with string comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/deleteMany-comment: deleteMany with document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/deleteMany-comment: deleteMany with comment - pre 4.4' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
@@ -109,6 +111,8 @@ class UnifiedSpecTest extends FunctionalTestCase
         'crud/aggregate: aggregate with comment sets comment on getMore' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/aggregate: aggregate with a document comment' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         'crud/aggregate: aggregate with a document comment - pre 4.4' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
+        // CreateCollection "viewOn" and "pipeline" options are not yet implemented
+        'crud/estimatedDocumentCount: estimatedDocumentCount works correctly on views' => 'Not yet implemented (PHPLIB-869)',
         // Incorrect tests data: field "count" instead of field "aggregate"
         'crud/estimatedDocumentCount: estimatedDocumentCount always uses count' => 'EstimatedDocumentCount with Aggregate (PHPLIB-810)',
         'crud/estimatedDocumentCount: estimatedDocumentCount with maxTimeMS' => 'EstimatedDocumentCount with Aggregate (PHPLIB-810)',

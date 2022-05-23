@@ -71,6 +71,15 @@ class CreateCollection implements Executable
      *  * capped (boolean): Specify true to create a capped collection. If set,
      *    the size option must also be specified. The default is false.
      *
+     *  * changeStreamPreAndPostImages (document): Used to configure support for
+     *    pre- and post-images in change streams.
+     *
+     *    This is not supported for server versions < 6.0.
+     *
+     *  * clusteredIndex (document): A clustered index specification.
+     *
+     *    This is not supported for server versions < 5.3.
+     *
      *  * collation (document): Collation specification.
      *
      *  * expireAfterSeconds: The TTL for documents in time series collections.
@@ -127,6 +136,14 @@ class CreateCollection implements Executable
 
         if (isset($options['capped']) && ! is_bool($options['capped'])) {
             throw InvalidArgumentException::invalidType('"capped" option', $options['capped'], 'boolean');
+        }
+
+        if (isset($options['changeStreamPreAndPostImages']) && ! is_array($options['changeStreamPreAndPostImages']) && ! is_object($options['changeStreamPreAndPostImages'])) {
+            throw InvalidArgumentException::invalidType('"changeStreamPreAndPostImages" option', $options['changeStreamPreAndPostImages'], 'array or object');
+        }
+
+        if (isset($options['clusteredIndex']) && ! is_array($options['clusteredIndex']) && ! is_object($options['clusteredIndex'])) {
+            throw InvalidArgumentException::invalidType('"clusteredIndex" option', $options['clusteredIndex'], 'array or object');
         }
 
         if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
@@ -236,7 +253,7 @@ class CreateCollection implements Executable
             }
         }
 
-        foreach (['collation', 'indexOptionDefaults', 'storageEngine', 'timeseries', 'validator'] as $option) {
+        foreach (['changeStreamPreAndPostImages', 'clusteredIndex', 'collation', 'indexOptionDefaults', 'storageEngine', 'timeseries', 'validator'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = (object) $this->options[$option];
             }

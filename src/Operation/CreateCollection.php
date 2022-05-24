@@ -124,10 +124,7 @@ class CreateCollection implements Executable
      *  * validator (document): Validation rules or expressions.
      *
      *  * viewOn (string): The name of the source collection or view from which
-     *    to create the view. The name is not the full namespace of the collection
-     *    or view; i.e. does not include the database name and implies the same
-     *    database as the view to create. You must create views in the same database
-     *    as the source collection.
+     *    to create the view.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *

@@ -311,10 +311,13 @@ arg_name: option
 name: viewOn
 type: string
 description: |
-  The name of the source collection or view from which to create the view. The
-  name is not the full namespace of the collection or view; i.e. does not 
-  include the database name and implies the same database as the view to 
-  create. You must create views in the same database as the source collection.
+  The name of the source collection or view from which to create the view.
+
+  .. note::
+
+     The name is not the full namespace of the collection or view (i.e. it does
+     not include the database name). Views must be created in the same databases
+     as the source collection or view.
 interface: phpmethod
 operation: ~
 optional: true

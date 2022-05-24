@@ -102,7 +102,8 @@ class CreateCollection implements Executable
      *    run.
      *
      *  * pipeline (array): An array that consists of the aggregation pipeline
-     *    stage(s).
+     *    stage(s), which will be applied to the collection or view specified by
+     *    viewOn.
      *
      *  * session (MongoDB\Driver\Session): Client session.
      *

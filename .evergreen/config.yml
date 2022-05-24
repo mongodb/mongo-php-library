@@ -552,10 +552,6 @@ axes:
         display_name: "latest"
         variables:
            VERSION: "latest"
-      - id: "6.0"
-        display_name: "6.0"
-        variables:
-           VERSION: "6.0"
       - id: "5.0"
         display_name: "5.0"
         variables:
@@ -742,7 +738,7 @@ buildvariants:
     - name: "test-atlas-data-lake"
 
 - matrix_name: "test-versioned-api"
-  matrix_spec: { "versions": ["5.0", "6.0", "latest"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  matrix_spec: { "versions": ["5.0", "latest"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   display_name: "Versioned API - ${versions}"
   run_on: debian92-test
   tasks:

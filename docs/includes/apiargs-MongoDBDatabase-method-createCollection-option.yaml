@@ -149,8 +149,10 @@ arg_name: option
 name: pipeline
 type: array
 description: |
-  An array that consists of the aggregation pipeline stage(s). "create" creates
-  the view by applying the specified pipeline to the "viewOn" collection
+  An array that consists of the aggregation pipeline stage(s), which will be
+  applied to the collection or view specified by ``viewOn``. See the
+  :manual:`create </reference/command/create>` command documentation for more
+  information.
 interface: phpmethod
 operation: ~
 optional: true

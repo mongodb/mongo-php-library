@@ -58,9 +58,7 @@ class UpdateOne implements Executable, Explainable
      *    default is to not send a value.
      *
      *    The comment can be any valid BSON type for server versions 4.4 and above.
-     *    Server versions between 3.6 and 4.2 only support string as comment,
-     *    and providing a non-string type will result in a server-side error.
-     *    Older server versions do not support comment for aggregate command at all,
+     *    Server versions prior to 4.4 do not support comment for update command,
      *    and providing one will result in a server-side error.
      *
      *  * hint (string|document): The index to use. Specify either the index

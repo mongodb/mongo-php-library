@@ -60,6 +60,12 @@ class Explain implements Executable
      *
      * Supported options:
      *
+     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
+     *    the operation through the database profiler, currentOp and logs. The
+     *    default is to not send a value.
+     *
+     *    The comment can be any valid BSON type for server versions 4.4 and above.
+     *
      *  * readPreference (MongoDB\Driver\ReadPreference): Read preference.
      *
      *  * session (MongoDB\Driver\Session): Client session.
@@ -112,19 +118,32 @@ class Explain implements Executable
             throw UnsupportedException::explainNotSupported();
         }
 
-        $cmd = ['explain' => $this->explainable->getCommandDocument($server)];
-
-        if (isset($this->options['verbosity'])) {
-            $cmd['verbosity'] = $this->options['verbosity'];
-        }
-
-        $cursor = $server->executeCommand($this->databaseName, new Command($cmd), $this->createOptions());
+        $cursor = $server->executeCommand($this->databaseName, $this->createCommand($server), $this->createOptions());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
         }
 
         return current($cursor->toArray());
+    }
+
+    /**
+     * Create the explain command.
+     *
+     * @param Server $server
+     * @return Command
+     */
+    private function createCommand(Server $server)
+    {
+        $cmd = ['explain' => $this->explainable->getCommandDocument($server)];
+
+        foreach (['comment', 'verbosity'] as $option) {
+            if (isset($this->options[$option])) {
+                $cmd[$option] = $this->options[$option];
+            }
+        }
+
+        return new Command($cmd);
     }
 
     /**

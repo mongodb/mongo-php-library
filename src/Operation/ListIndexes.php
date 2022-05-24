@@ -59,6 +59,12 @@ class ListIndexes implements Executable
      *
      * Supported options:
      *
+     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
+     *    the operation through the database profiler, currentOp and logs. The
+     *    default is to not send a value.
+     *
+     *    The comment can be any valid BSON type for server versions 4.4 and above.
+     *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
      *
@@ -129,8 +135,10 @@ class ListIndexes implements Executable
     {
         $cmd = ['listIndexes' => $this->collectionName];
 
-        if (isset($this->options['maxTimeMS'])) {
-            $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
+        foreach (['comment', 'maxTimeMS'] as $option) {
+            if (isset($this->options[$option])) {
+                $cmd[$option] = $this->options[$option];
+            }
         }
 
         try {

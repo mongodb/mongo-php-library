@@ -64,6 +64,14 @@ class Distinct implements Executable, Explainable
      *
      *  * collation (document): Collation specification.
      *
+     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
+     *    the operation through the database profiler, currentOp and logs. The
+     *    default is to not send a value.
+     *
+     *    The comment can be any valid BSON type for server versions 4.4 and above.
+     *    Server versions prior to 4.4 do not support comment for distinct command,
+     *    and providing one will result in a server-side error.
+     *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
      *
@@ -187,8 +195,10 @@ class Distinct implements Executable, Explainable
             $cmd['collation'] = (object) $this->options['collation'];
         }
 
-        if (isset($this->options['maxTimeMS'])) {
-            $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
+        foreach (['comment', 'maxTimeMS'] as $option) {
+            if (isset($this->options[$option])) {
+                $cmd[$option] = $this->options[$option];
+            }
         }
 
         return $cmd;

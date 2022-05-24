@@ -102,6 +102,12 @@ class MapReduce implements Executable
      *
      *  * collation (document): Collation specification.
      *
+     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
+     *    the operation through the database profiler, currentOp and logs. The
+     *    default is to not send a value.
+     *
+     *    The comment can be any valid BSON type for server versions 4.4 and above.
+     *
      *  * finalize (MongoDB\BSON\JavascriptInterface): Follows the reduce method
      *    and modifies the output.
      *
@@ -339,7 +345,7 @@ class MapReduce implements Executable
             'out' => $this->out,
         ];
 
-        foreach (['bypassDocumentValidation', 'finalize', 'jsMode', 'limit', 'maxTimeMS', 'verbose'] as $option) {
+        foreach (['bypassDocumentValidation', 'comment', 'finalize', 'jsMode', 'limit', 'maxTimeMS', 'verbose'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }

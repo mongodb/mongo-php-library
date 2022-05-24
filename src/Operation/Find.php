@@ -83,10 +83,8 @@ class Find implements Executable, Explainable
      *    default is to not send a value.
      *
      *    The comment can be any valid BSON type for server versions 4.4 and above.
-     *    Server versions between 3.6 and 4.2 only support string as comment,
+     *    Server versions prior to 4.4 only support string as comment,
      *    and providing a non-string type will result in a server-side error.
-     *    Older server versions do not support comment for aggregate command at all,
-     *    and providing one will result in a server-side error.
      *
      *  * cursorType (enum): Indicates the type of cursor to use. Must be either
      *    NON_TAILABLE, TAILABLE, or TAILABLE_AWAIT. The default is

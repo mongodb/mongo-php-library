@@ -55,6 +55,12 @@ class DropCollection implements Executable
      *
      * Supported options:
      *
+     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
+     *    the operation through the database profiler, currentOp and logs. The
+     *    default is to not send a value.
+     *
+     *    The comment can be any valid BSON type for server versions 4.4 and above.
+     *
      *  * session (MongoDB\Driver\Session): Client session.
      *
      *  * typeMap (array): Type map for BSON deserialization. This will be used
@@ -106,10 +112,8 @@ class DropCollection implements Executable
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
         }
 
-        $command = new Command(['drop' => $this->collectionName]);
-
         try {
-            $cursor = $server->executeWriteCommand($this->databaseName, $command, $this->createOptions());
+            $cursor = $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
         } catch (CommandException $e) {
             /* The server may return an error if the collection does not exist.
              * Check for an error code and return the command reply instead of
@@ -126,6 +130,22 @@ class DropCollection implements Executable
         }
 
         return current($cursor->toArray());
+    }
+
+    /**
+     * Create the drop command.
+     *
+     * @return Command
+     */
+    private function createCommand()
+    {
+        $cmd = ['drop' => $this->collectionName];
+
+        if (isset($this->options['comment'])) {
+            $cmd['comment'] = $this->options['comment'];
+        }
+
+        return new Command($cmd);
     }
 
     /**

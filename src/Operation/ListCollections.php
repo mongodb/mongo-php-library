@@ -49,6 +49,12 @@ class ListCollections implements Executable
      *
      *    For servers < 4.0, this option is ignored.
      *
+     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
+     *    the operation through the database profiler, currentOp and logs. The
+     *    default is to not send a value.
+     *
+     *    The comment can be any valid BSON type for server versions 4.4 and above.
+     *
      *  * filter (document): Query by which to filter collections.
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to

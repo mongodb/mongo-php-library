@@ -235,7 +235,7 @@ class CreateCollection implements Executable
 
             foreach ($options['pipeline'] as $i => $operation) {
                 if ($i !== $expectedIndex) {
-                    throw new InvalidArgumentException(sprintf('$pipeline is not a list (unexpected index: "%s")', $i));
+                    throw new InvalidArgumentException(sprintf('The "pipeline" option is not a list (unexpected index: "%s")', $i));
                 }
 
                 if (! is_array($operation) && ! is_object($operation)) {

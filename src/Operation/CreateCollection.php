@@ -239,7 +239,7 @@ class CreateCollection implements Executable
                 }
 
                 if (! is_array($operation) && ! is_object($operation)) {
-                    throw InvalidArgumentException::invalidType(sprintf('$pipeline[%d]', $i), $operation, 'array or object');
+                    throw InvalidArgumentException::invalidType(sprintf('$options["pipeline"][%d]', $i), $operation, 'array or object');
                 }
 
                 $expectedIndex += 1;

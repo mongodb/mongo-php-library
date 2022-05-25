@@ -153,6 +153,8 @@ description: |
   applied to the collection or view specified by ``viewOn``. See the
   :manual:`create </reference/command/create>` command documentation for more
   information.
+  
+  .. versionadded:: 1.13
 interface: phpmethod
 operation: ~
 optional: true

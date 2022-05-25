@@ -182,8 +182,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: Data key and double encryption
+     * Prose test 2: Data Key and Double Encryption
      *
+     * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#data-key-and-double-encryption
      * @dataProvider dataKeyProvider
      */
     public function testDataKeyAndDoubleEncryption(string $providerName, $masterKey): void
@@ -320,8 +321,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: External Key Vault
+     * Prose test 3: External Key Vault
      *
+     * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#external-key-vault-test
      * @testWith [false]
      *           [true]
      */
@@ -471,8 +473,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: BSON size limits and batch splitting
+     * Prose test 4: BSON Size Limits and Batch Splitting
      *
+     * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#bson-size-limits-and-batch-splitting
      * @dataProvider provideBSONSizeLimitsAndBatchSplittingTests
      */
     public function testBSONSizeLimitsAndBatchSplitting(Closure $test): void
@@ -505,7 +508,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: Views are prohibited
+     * Prose test 5: Views Are Prohibited
+     *
+     * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#views-are-prohibited
      */
     public function testViewsAreProhibited(): void
     {
@@ -535,8 +540,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: BSON Corpus
+     * Prose test 6: BSON Corpus
      *
+     * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#corpus-test
      * @testWith [true]
      *           [false]
      */
@@ -647,8 +653,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: Custom Endpoint
+     * Prose test 7: Custom Endpoint
      *
+     * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#custom-endpoint-test
      * @dataProvider customEndpointProvider
      */
     public function testCustomEndpoint(Closure $test): void
@@ -811,7 +818,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: Bypass spawning mongocryptd (via mongocryptdBypassSpawn)
+     * Prose test 8: Bypass Spawning mongocryptd (via mongocryptdBypassSpawn)
+     *
+     * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#via-mongocryptdbypassspawn
      */
     public function testBypassSpawningMongocryptdViaBypassSpawn(): void
     {
@@ -844,7 +853,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Bypass spawning mongocryptd (via bypassAutoEncryption)
+     * Prose test 8: Bypass spawning mongocryptd (via bypassAutoEncryption)
+     *
+     * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#via-bypassautoencryption
      */
     public function testBypassSpawningMongocryptdViaBypassAutoEncryption(): void
     {
@@ -870,7 +881,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: Invalid KMS Certificate
+     * Prose test 10: KMS TLS Tests (Invalid KMS Certificate)
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#invalid-kms-certificate
      */
@@ -898,7 +909,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: Invalid Hostname in KMS Certificate
+     * Prose test 10: KMS TLS Tests (Invalid Hostname in KMS Certificate)
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#invalid-hostname-in-kms-certificate
      */
@@ -926,7 +937,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
-     * Prose test: KMS TLS Options
+     * Prose test 11: KMS TLS Options
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#kms-tls-options-tests
      * @dataProvider provideKmsTlsOptionsTests

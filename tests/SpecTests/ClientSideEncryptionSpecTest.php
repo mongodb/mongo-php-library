@@ -1154,27 +1154,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * Casts the value for a BSON corpus structure to int64 if necessary.
-     *
-     * This is a workaround for an issue in mongocryptd which refuses to encrypt
-     * int32 values if the schemaMap defines a "long" bsonType for an object.
-     *
-     * @param object $data
-     *
-     * @return Int64|mixed
-     */
-    private function craftInt64($data)
+    private function createInt64(string $value): Int64
     {
-        if ($data->type !== 'long' || $data->value instanceof Int64) {
-            return $data->value;
-        }
-
-        $class = Int64::class;
-
-        $intAsString = sprintf((string) $data->value);
-        $array = sprintf('a:1:{s:7:"integer";s:%d:"%s";}', strlen($intAsString), $intAsString);
-        $int64 = sprintf('C:%d:"%s":%d:{%s}', strlen($class), $class, strlen($array), $array);
+        $array = sprintf('a:1:{s:7:"integer";s:%d:"%s";}', strlen($value), $value);
+        $int64 = sprintf('C:%d:"%s":%d:{%s}', strlen(Int64::class), Int64::class, strlen($array), $array);
 
         return unserialize($int64);
     }
@@ -1233,7 +1216,13 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         if ($data->allowed) {
             try {
-                $encrypted = $clientEncryption->encrypt($this->craftInt64($data), $encryptionOptions);
+                /* Note: workaround issue where mongocryptd refuses to encrypt
+                 * 32-bit integers if schemaMap defines a "long" BSON type. */
+                $value = $data->type === 'long' && ! $data->value instanceof Int64
+                    ? $this->createInt64($data->value)
+                    : $data->value;
+
+                $encrypted = $clientEncryption->encrypt($value, $encryptionOptions);
             } catch (EncryptionException $e) {
                 $this->fail('Could not encrypt value for field ' . $fieldName . ': ' . $e->getMessage());
             }
@@ -1279,7 +1268,11 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     private function prepareCorpusData(string $fieldName, stdClass $data, ClientEncryption $clientEncryption)
     {
         if ($data->method === 'auto') {
-            $data->value = $this->craftInt64($data);
+            /* Note: workaround issue where mongocryptd refuses to encrypt
+             * 32-bit integers if schemaMap defines a "long" BSON type. */
+            if ($data->type === 'long' && ! $data->value instanceof Int64) {
+                $data->value = $this->createInt64($data->value);
+            }
 
             return $data;
         }

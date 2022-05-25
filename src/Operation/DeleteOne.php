@@ -47,7 +47,7 @@ class DeleteOne implements Executable, Explainable
      *    default is to not send a value.
      *
      *    The comment can be any valid BSON type for server versions 4.4 and above.
-     *    SServer versions prior to 4.4 do not support comment for delete command,
+     *    Server versions prior to 4.4 do not support comment for delete command,
      *    and providing one will result in a server-side error.
      *
      *  * hint (string|document): The index to use. Specify either the index

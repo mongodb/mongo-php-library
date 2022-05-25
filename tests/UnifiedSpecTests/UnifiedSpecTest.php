@@ -59,11 +59,6 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/entity-client-cmap-events: events are captured during an operation' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType can be set to command and cmap' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType defaults to command if unset' => 'PHPC does not implement CMAP',
-        // Change stream "comment" option is not yet implemented
-        'change-streams/change-streams: Test that comment is set on getMore' => 'Not yet implemented (PHPLIB-749)',
-        'change-streams/change-streams: Test that comment is not set on getMore - pre 4.4' => 'Not yet implemented (PHPLIB-749)',
-        // CRUD "comment" option is not yet implemented
-        'crud/aggregate: aggregate with comment sets comment on getMore' => 'Not yet implemented (PHPC-2049, PHPLIB-749)',
         // CreateCollection "viewOn" and "pipeline" options are not yet implemented
         'crud/estimatedDocumentCount: estimatedDocumentCount works correctly on views' => 'Not yet implemented (PHPLIB-869)',
     ];

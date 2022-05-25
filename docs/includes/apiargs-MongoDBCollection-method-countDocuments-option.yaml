@@ -3,10 +3,8 @@ source:
   ref: collation
 ---
 source:
-  file: apiargs-common-option.yaml
+  file: apiargs-aggregate-option.yaml
   ref: comment
-post: |
-  .. versionadded:: 1.13
 ---
 arg_name: option
 name: hint

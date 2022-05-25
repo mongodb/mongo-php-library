@@ -67,6 +67,10 @@ pre: |
   Specifies the :manual:`collation
   </reference/bson-type-comparison-order/#collation>` for the collection.
 ---
+source:
+  file: apiargs-common-option.yaml
+  ref: comment
+---
 arg_name: option
 name: expireAfterSeconds
 type: integer

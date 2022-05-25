@@ -27,6 +27,22 @@ post: |
   :ref:`$out <agg-merge>` stages.
 ---
 arg_name: option
+name: comment
+type: mixed
+description: |
+  Enables users to specify an arbitrary comment to help trace the operation through
+  the database profiler, currentOp and logs. The default is to not send a value.
+
+  The comment can be any valid BSON type for server versions 4.4 and above.
+  Server versions between 3.6 and 4.2 only support string as comment,
+  and providing a non-string type will result in a server-side error.
+  Older server versions do not support comment for aggregate command at all,
+  and providing one will result in a server-side error.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: explain
 type: boolean
 description: |

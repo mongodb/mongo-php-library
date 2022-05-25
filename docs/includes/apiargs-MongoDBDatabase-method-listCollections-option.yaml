@@ -13,6 +13,10 @@ interface: phpmethod
 operation: ~
 optional: true
 ---
+source:
+  file: apiargs-common-option.yaml
+  ref: comment
+---
 arg_name: option
 name: filter
 type: array|object

@@ -1,4 +1,8 @@
 source:
+  file: apiargs-common-option.yaml
+  ref: comment
+---
+source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: readPreference
 ---

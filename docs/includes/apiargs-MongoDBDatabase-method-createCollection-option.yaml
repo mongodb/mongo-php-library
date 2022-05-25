@@ -320,6 +320,8 @@ description: |
      The name is not the full namespace of the collection or view (i.e. it does
      not include the database name). Views must be created in the same databases
      as the source collection or view.
+     
+     .. versionadded:: 1.13
 interface: phpmethod
 operation: ~
 optional: true

@@ -68,6 +68,24 @@ pre: |
   </reference/bson-type-comparison-order/#collation>` for the collection.
 ---
 arg_name: option
+name: encryptedFields
+type: document
+description: |
+  A document describing encrypted fields for queryable encryption. If omitted,
+  the ``encryptedFieldsMap`` option within the ``autoEncryption`` driver option
+  will be consulted. See the
+  `Client Side Encryption specification <https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst>`_
+  for more information.
+
+  This option is available in MongoDB 6.0+ and will result in an exception at
+  execution time if specified for an older server version.
+
+  .. versionadded:: 1.13
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: expireAfterSeconds
 type: integer
 description: |

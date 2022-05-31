@@ -40,6 +40,10 @@ class CreateCollectionTest extends TestCase
             $options[][] = ['collation' => $value];
         }
 
+        foreach ($this->getInvalidDocumentValues() as $value) {
+            $options[][] = ['encryptedFields' => $value];
+        }
+
         foreach ($this->getInvalidIntegerValues() as $value) {
             $options[][] = ['expireAfterSeconds' => $value];
         }

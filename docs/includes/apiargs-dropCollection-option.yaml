@@ -1,0 +1,15 @@
+arg_name: option
+name: encryptedFields
+type: array|object
+description: |
+  A document describing encrypted fields for queryable encryption. If omitted,
+  the ``encryptedFieldsMap`` option within the ``autoEncryption`` driver option
+  will be consulted. If ``encryptedFieldsMap`` was defined but does not specify
+  this collection, the library will make a final attempt to consult the
+  server-side value for ``encryptedFields``. See the
+  `Client Side Encryption specification <https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst>`_
+  for more information.
+interface: phpmethod
+operation: ~
+optional: true
+...

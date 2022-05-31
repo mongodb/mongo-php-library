@@ -5,6 +5,7 @@ namespace MongoDB\Tests\SpecTests;
 use Closure;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Int64;
+use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\AuthenticationException;
@@ -24,6 +25,7 @@ use UnexpectedValueException;
 
 use function base64_decode;
 use function basename;
+use function count;
 use function explode;
 use function file_get_contents;
 use function getenv;
@@ -36,6 +38,7 @@ use function sprintf;
 use function str_repeat;
 use function strlen;
 use function unserialize;
+use function version_compare;
 
 use const DIRECTORY_SEPARATOR;
 use const PATH_SEPARATOR;
@@ -1154,6 +1157,183 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         ];
     }
 
+    /**
+     * Prose test 12: Explicit Encryption
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#explicit-encryption
+     * @dataProvider provideExplicitEncryptionTests
+     */
+    public function testExplicitEncryption(Closure $test): void
+    {
+        if ($this->isStandalone() || ($this->isShardedCluster() && ! $this->isShardedClusterUsingReplicasets())) {
+            $this->markTestSkipped('Explicit encryption tests require replica sets');
+        }
+
+        if (version_compare($this->getServerVersion(), '6.0.0', '<')) {
+            $this->markTestSkipped('Explicit encryption tests require MongoDB 6.0 or later');
+        }
+
+        // Test setup
+        $encryptedFields = $this->prepareEncryptedFields($this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/etc/data/encryptedFields.json')));
+        $key1Document = $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/etc/data/keys/key1-document.json'));
+        $key1Id = $key1Document->_id;
+
+        $client = static::createTestClient();
+
+        $database = $client->selectDatabase('db');
+        $database->dropCollection('explicit_encryption', ['encryptedFields' => $encryptedFields]);
+        $database->createCollection('explicit_encryption', ['encryptedFields' => $encryptedFields]);
+
+        $database = $client->selectDatabase('keyvault');
+        $database->dropCollection('datakeys');
+        $database->createCollection('datakeys');
+
+        $client->selectCollection('keyvault', 'datakeys')->insertOne($key1Document, ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]);
+
+        $keyVaultClient = static::createTestClient();
+
+        $clientEncryption = new ClientEncryption([
+            'keyVaultClient' => $keyVaultClient->getManager(),
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)]],
+        ]);
+
+        $autoEncryptionOpts = [
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)]],
+            'bypassQueryAnalysis' => true,
+        ];
+
+        $encryptedClient = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
+
+        $test($this, $clientEncryption, $encryptedClient, $keyVaultClient, $key1Id);
+    }
+
+    public static function provideExplicitEncryptionTests()
+    {
+        // See: https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-1-can-insert-encrypted-indexed-and-find
+        yield 'Case 1: can insert encrypted indexed and find' => [
+            static function (self $test, ClientEncryption $clientEncryption, Client $encryptedClient, Client $keyVaultClient, Binary $key1Id): void {
+                $value = 'encrypted indexed value';
+
+                $insertPayload = $clientEncryption->encrypt($value, [
+                    'keyId' => $key1Id,
+                    'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
+                ]);
+
+                $collection = $encryptedClient->selectCollection('db', 'explicit_encryption');
+                $collection->insertOne(['encryptedIndexed' => $insertPayload]);
+
+                $findPayload = $clientEncryption->encrypt($value, [
+                    'keyId' => $key1Id,
+                    'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
+                    'queryType' => ClientEncryption::QUERY_TYPE_EQUALITY,
+                ]);
+
+                $results = $collection->find(['encryptedIndexed' => $findPayload])->toArray();
+
+                $test->assertCount(1, $results);
+                $test->assertSame($value, $results[0]['encryptedIndexed']);
+            },
+        ];
+
+        // See: https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-2-can-insert-encrypted-indexed-and-find-with-non-zero-contention
+        yield 'Case 2: can insert encrypted indexed and find with non-zero contention' => [
+            static function (self $test, ClientEncryption $clientEncryption, Client $encryptedClient, Client $keyVaultClient, Binary $key1Id): void {
+                $value = 'encrypted indexed value';
+
+                $collection = $encryptedClient->selectCollection('db', 'explicit_encryption');
+
+                for ($i = 0; $i < 10; $i++) {
+                    $insertPayload = $clientEncryption->encrypt($value, [
+                        'keyId' => $key1Id,
+                        'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
+                        'contentionFactor' => 10,
+                    ]);
+
+                    $collection->insertOne(['encryptedIndexed' => $insertPayload]);
+                }
+
+                $findPayload = $clientEncryption->encrypt($value, [
+                    'keyId' => $key1Id,
+                    'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
+                    'queryType' => ClientEncryption::QUERY_TYPE_EQUALITY,
+                ]);
+
+                $results = $collection->find(['encryptedIndexed' => $findPayload])->toArray();
+
+                $test->assertLessThan(10, count($results));
+
+                foreach ($results as $result) {
+                    $test->assertSame($value, $result['encryptedIndexed']);
+                }
+
+                $findPayload2 = $clientEncryption->encrypt($value, [
+                    'keyId' => $key1Id,
+                    'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
+                    'queryType' => ClientEncryption::QUERY_TYPE_EQUALITY,
+                    'contentionFactor' => 10,
+                ]);
+
+                $results = $collection->find(['encryptedIndexed' => $findPayload2])->toArray();
+
+                $test->assertCount(10, $results);
+
+                foreach ($results as $result) {
+                    $test->assertSame($value, $result['encryptedIndexed']);
+                }
+            },
+        ];
+
+        // See: https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-3-can-insert-encrypted-unindexed
+        yield 'Case 3: can insert encrypted unindexed' => [
+            static function (self $test, ClientEncryption $clientEncryption, Client $encryptedClient, Client $keyVaultClient, Binary $key1Id): void {
+                $value = 'encrypted unindexed value';
+
+                $insertPayload = $clientEncryption->encrypt($value, [
+                    'keyId' => $key1Id,
+                    'algorithm' => ClientEncryption::ALGORITHM_UNINDEXED,
+                ]);
+
+                $collection = $encryptedClient->selectCollection('db', 'explicit_encryption');
+                $collection->insertOne(['_id' => 1, 'encryptedUnindexed' => $insertPayload]);
+
+                $results = $collection->find(['_id' => 1])->toArray();
+
+                $test->assertCount(1, $results);
+                $test->assertSame($value, $results[0]['encryptedUnindexed']);
+            },
+        ];
+
+        // See: https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-4-can-roundtrip-encrypted-indexed
+        yield 'Case 4: can roundtrip encrypted indexed' => [
+            static function (self $test, ClientEncryption $clientEncryption, Client $encryptedClient, Client $keyVaultClient, Binary $key1Id): void {
+                $value = 'encrypted indexed value';
+
+                $payload = $clientEncryption->encrypt($value, [
+                    'keyId' => $key1Id,
+                    'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
+                ]);
+
+                $test->assertSame($value, $clientEncryption->decrypt($payload));
+            },
+        ];
+
+        // See: https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-5-can-roundtrip-encrypted-unindexed
+        yield 'Case 5: can roundtrip encrypted unindexed' => [
+            static function (self $test, ClientEncryption $clientEncryption, Client $encryptedClient, Client $keyVaultClient, Binary $key1Id): void {
+                $value = 'encrypted unindexed value';
+
+                $payload = $clientEncryption->encrypt($value, [
+                    'keyId' => $key1Id,
+                    'algorithm' => ClientEncryption::ALGORITHM_UNINDEXED,
+                ]);
+
+                $test->assertSame($value, $clientEncryption->decrypt($payload));
+            },
+        ];
+    }
+
     private function createInt64(string $value): Int64
     {
         $array = sprintf('a:1:{s:7:"integer";s:%d:"%s";}', strlen($value), $value);
@@ -1281,6 +1461,21 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $returnData->value = $this->encryptCorpusValue($fieldName, $data, $clientEncryption);
 
         return $data->allowed ? $returnData : $data;
+    }
+
+    /**
+     * @todo Remove this once SERVER-66901 is implemented
+     * @see https://jira.mongodb.org/browse/PHPLIB-884
+     */
+    private function prepareEncryptedFields(stdClass $encryptedFields): stdClass
+    {
+        foreach ($encryptedFields->fields as $field) {
+            if (isset($field->queries->contention)) {
+                $field->queries->contention = $this->createInt64($field->queries->contention);
+            }
+        }
+
+        return $encryptedFields;
     }
 
     private function skipIfLocalMongocryptdIsUnavailable(): void

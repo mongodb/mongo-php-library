@@ -391,6 +391,11 @@ abstract class FunctionalTestCase extends TestCase
         return $this->getPrimaryServer()->getType() == Server::TYPE_MONGOS;
     }
 
+    protected function isStandalone()
+    {
+        return $this->getPrimaryServer()->getType() == Server::TYPE_STANDALONE;
+    }
+
     /**
      * Return whether serverless (i.e. proxy as mongos) is being utilized.
      */

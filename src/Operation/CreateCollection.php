@@ -83,6 +83,8 @@ class CreateCollection implements Executable
      *
      *  * collation (document): Collation specification.
      *
+     *  * encryptedFields (document): CSFLE specification.
+     *
      *  * expireAfterSeconds: The TTL for documents in time series collections.
      *
      *    This is not supported for servers versions < 5.0.
@@ -156,6 +158,10 @@ class CreateCollection implements Executable
 
         if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
             throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
+        }
+
+        if (isset($options['encryptedFields']) && ! is_array($options['encryptedFields']) && ! is_object($options['encryptedFields'])) {
+            throw InvalidArgumentException::invalidType('"encryptedFields" option', $options['encryptedFields'], 'array or object');
         }
 
         if (isset($options['expireAfterSeconds']) && ! is_integer($options['expireAfterSeconds'])) {
@@ -285,7 +291,7 @@ class CreateCollection implements Executable
             }
         }
 
-        foreach (['changeStreamPreAndPostImages', 'clusteredIndex', 'collation', 'indexOptionDefaults', 'storageEngine', 'timeseries', 'validator'] as $option) {
+        foreach (['changeStreamPreAndPostImages', 'clusteredIndex', 'collation', 'encryptedFields', 'indexOptionDefaults', 'storageEngine', 'timeseries', 'validator'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = (object) $this->options[$option];
             }

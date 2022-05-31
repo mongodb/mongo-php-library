@@ -1,4 +1,10 @@
 source:
+  file: apiargs-dropCollection-option.yaml
+  ref: encryptedFields
+post: |
+  .. versionadded:: 1.13
+---
+source:
   file: apiargs-common-option.yaml
   ref: session
 post: |

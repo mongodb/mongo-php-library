@@ -92,7 +92,7 @@ class RetryableReadsSpecTest extends FunctionalTestCase
         }
 
         if (isset($test->expectations)) {
-            $commandExpectations = CommandExpectations::fromRetryableReads($test->expectations);
+            $commandExpectations = CommandExpectations::fromRetryableReads($context->getClient(), $test->expectations);
             $commandExpectations->startMonitoring();
         }
 

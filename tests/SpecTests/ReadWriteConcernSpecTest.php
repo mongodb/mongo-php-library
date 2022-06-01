@@ -73,7 +73,7 @@ class ReadWriteConcernSpecTest extends FunctionalTestCase
         }
 
         if (isset($test->expectations)) {
-            $commandExpectations = CommandExpectations::fromReadWriteConcern($test->expectations);
+            $commandExpectations = CommandExpectations::fromReadWriteConcern($context->getClient(), $test->expectations);
             $commandExpectations->startMonitoring();
         }
 

@@ -83,7 +83,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
         }
 
         if (isset($test->expectations)) {
-            $commandExpectations = CommandExpectations::fromCrud((array) $test->expectations);
+            $commandExpectations = CommandExpectations::fromCrud($context->getClient(), (array) $test->expectations);
             $commandExpectations->startMonitoring();
         }
 

@@ -144,6 +144,8 @@ final class ErrorExpectation
                 $test->fail(sprintf("Operation threw unexpected %s: %s\n%s", get_class($actual), $actual->getMessage(), $actual->getTraceAsString()));
             }
 
+            $test->addToAssertionCount(1);
+
             return;
         }
 

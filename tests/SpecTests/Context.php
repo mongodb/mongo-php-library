@@ -57,14 +57,14 @@ final class Context
     /** @var object */
     public $session1Lsid;
 
+    /** @var bool */
+    public $useEncryptedClientIfConfigured = false;
+
     /** @var Client */
     private $internalClient;
 
     /** @var Client|null */
     private $encryptedClient;
-
-    /** @var bool */
-    private $useEncryptedClient = false;
 
     private function __construct(string $databaseName, ?string $collectionName)
     {
@@ -72,20 +72,6 @@ final class Context
         $this->collectionName = $collectionName;
         $this->outcomeCollectionName = $collectionName;
         $this->internalClient = FunctionalTestCase::createTestClient();
-    }
-
-    public function disableEncryption(): void
-    {
-        $this->useEncryptedClient = false;
-    }
-
-    public function enableEncryption(): void
-    {
-        if (! $this->encryptedClient instanceof Client) {
-            throw new LogicException('Cannot enable encryption without autoEncryption options');
-        }
-
-        $this->useEncryptedClient = true;
     }
 
     public static function fromClientSideEncryption(stdClass $test, $databaseName, $collectionName)
@@ -126,6 +112,8 @@ final class Context
         if (isset($test->outcome->collection->name)) {
             $o->outcomeCollectionName = $test->outcome->collection->name;
         }
+
+        $o->defaultWriteOptions = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
 
         $o->client = self::createTestClient(null, $clientOptions);
 
@@ -292,7 +280,7 @@ final class Context
 
     public function getClient(): Client
     {
-        return $this->useEncryptedClient && $this->encryptedClient ? $this->encryptedClient : $this->client;
+        return $this->useEncryptedClientIfConfigured && $this->encryptedClient ? $this->encryptedClient : $this->client;
     }
 
     public function getCollection(array $collectionOptions = [], array $databaseOptions = [])

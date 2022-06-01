@@ -197,7 +197,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     /**
      * Drop the test and outcome collections by dropping them.
      */
-    protected function dropTestAndOutcomeCollections(): void
+    protected function dropTestAndOutcomeCollections(array $testCollectionDropOptions = []): void
     {
         $context = $this->getContext();
 
@@ -213,7 +213,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
         $collection = null;
         if ($context->collectionName !== null) {
             $collection = $context->getCollection($context->defaultWriteOptions);
-            $collection->drop();
+            $collection->drop($testCollectionDropOptions);
         }
 
         if ($context->outcomeCollectionName !== null) {

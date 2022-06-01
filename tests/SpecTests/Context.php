@@ -88,15 +88,6 @@ final class Context
         $this->useEncryptedClient = true;
     }
 
-    public static function fromChangeStreams(stdClass $test, $databaseName, $collectionName)
-    {
-        $o = new self($databaseName, $collectionName);
-
-        $o->client = FunctionalTestCase::createTestClient();
-
-        return $o;
-    }
-
     public static function fromClientSideEncryption(stdClass $test, $databaseName, $collectionName)
     {
         $o = new self($databaseName, $collectionName);
@@ -141,15 +132,6 @@ final class Context
         if ($autoEncryptionOptions !== []) {
             $o->encryptedClient = self::createTestClient(null, $clientOptions, ['autoEncryption' => $autoEncryptionOptions]);
         }
-
-        return $o;
-    }
-
-    public static function fromCommandMonitoring(stdClass $test, $databaseName, $collectionName)
-    {
-        $o = new self($databaseName, $collectionName);
-
-        $o->client = FunctionalTestCase::createTestClient();
 
         return $o;
     }

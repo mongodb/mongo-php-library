@@ -15,7 +15,6 @@ use function array_diff_key;
 use function array_keys;
 use function getenv;
 use function implode;
-use function uniqid;
 
 /**
  * Execution context for spec tests.
@@ -58,6 +57,9 @@ final class Context
     /** @var object */
     public $session1Lsid;
 
+    /** @var Client */
+    private $internalClient;
+
     /** @var Client|null */
     private $encryptedClient;
 
@@ -69,6 +71,7 @@ final class Context
         $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;
         $this->outcomeCollectionName = $collectionName;
+        $this->internalClient = FunctionalTestCase::createTestClient();
     }
 
     public function disableEncryption(): void
@@ -99,11 +102,6 @@ final class Context
         $o = new self($databaseName, $collectionName);
 
         $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
-
-        /* mongocryptd caches collection information, which causes test failures
-         * if we reuse the client. Thus, we add a random value to ensure we're
-         * creating a new client for each test. */
-        $driverOptions = ['random' => uniqid()];
 
         $autoEncryptionOptions = [];
 
@@ -138,10 +136,10 @@ final class Context
             $o->outcomeCollectionName = $test->outcome->collection->name;
         }
 
-        $o->client = FunctionalTestCase::createTestClient(null, $clientOptions, $driverOptions);
+        $o->client = self::createTestClient(null, $clientOptions);
 
         if ($autoEncryptionOptions !== []) {
-            $o->encryptedClient = FunctionalTestCase::createTestClient(null, $clientOptions, $driverOptions + ['autoEncryption' => $autoEncryptionOptions]);
+            $o->encryptedClient = self::createTestClient(null, $clientOptions, ['autoEncryption' => $autoEncryptionOptions]);
         }
 
         return $o;
@@ -175,7 +173,7 @@ final class Context
             'readPreference' => new ReadPreference('primary'),
         ];
 
-        $o->client = FunctionalTestCase::createTestClient(null, $clientOptions);
+        $o->client = self::createTestClient(null, $clientOptions);
 
         return $o;
     }
@@ -190,7 +188,7 @@ final class Context
 
         $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
 
-        $o->client = FunctionalTestCase::createTestClient(null, $clientOptions);
+        $o->client = self::createTestClient(null, $clientOptions);
 
         return $o;
     }
@@ -203,7 +201,7 @@ final class Context
 
         $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
 
-        $o->client = FunctionalTestCase::createTestClient(null, $clientOptions);
+        $o->client = self::createTestClient(null, $clientOptions);
 
         return $o;
     }
@@ -218,7 +216,7 @@ final class Context
             $o->outcomeCollectionName = $test->outcome->collection->name;
         }
 
-        $o->client = FunctionalTestCase::createTestClient(FunctionalTestCase::getUri($useMultipleMongoses), $clientOptions);
+        $o->client = self::createTestClient(FunctionalTestCase::getUri($useMultipleMongoses), $clientOptions);
 
         return $o;
     }
@@ -238,10 +236,7 @@ final class Context
 
         $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];
 
-        // Transaction spec tests expect a new client for each test so that txnNumber values are deterministic.
-        $driverOptions = ['disableClientPersistence' => true];
-
-        $o->client = FunctionalTestCase::createTestClient(FunctionalTestCase::getUri($useMultipleMongoses), $clientOptions, $driverOptions);
+        $o->client = self::createTestClient(FunctionalTestCase::getUri($useMultipleMongoses), $clientOptions);
 
         $session0Options = isset($test->sessionOptions->session0) ? (array) $test->sessionOptions->session0 : [];
         $session1Options = isset($test->sessionOptions->session1) ? (array) $test->sessionOptions->session1 : [];
@@ -336,6 +331,11 @@ final class Context
     public function getGridFSBucket(array $bucketOptions = [])
     {
         return $this->selectGridFSBucket($this->databaseName, $this->bucketName, $bucketOptions);
+    }
+
+    public function getInternalClient(): Client
+    {
+        return $this->internalClient;
     }
 
     /**
@@ -468,6 +468,16 @@ final class Context
     public function selectGridFSBucket($databaseName, $bucketName, array $bucketOptions = [])
     {
         return $this->selectDatabase($databaseName)->selectGridFSBucket($this->prepareGridFSBucketOptions($bucketOptions, $bucketName));
+    }
+
+    private static function createTestClient(?string $uri = null, array $options = [], array $driverOptions = []): Client
+    {
+        /* Default to using a dedicated client. This was already necessary for
+         * CSFLE and Transaction spec tests, but is generally useful for any
+         * test that observes command monitoring events. */
+        $driverOptions += ['disableClientPersistence' => true];
+
+        return FunctionalTestCase::createTestClient($uri, $options, $driverOptions);
     }
 
     private function prepareGridFSBucketOptions(array $options, $bucketPrefix)

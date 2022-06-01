@@ -15,7 +15,6 @@ use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Driver\Exception\EncryptionException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Operation\CreateCollection;
 use MongoDB\Tests\CommandObserver;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\SkippedTestError;
@@ -57,6 +56,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         'awsTemporary: Insert a document with auto encryption using the AWS provider with temporary credentials' => 'Not yet implemented (PHPC-1751)',
         'awsTemporary: Insert with invalid temporary credentials' => 'Not yet implemented (PHPC-1751)',
         'azureKMS: Insert a document with auto encryption using Azure KMS provider' => 'RHEL platform is missing Azure root certificate (PHPLIB-619)',
+        'timeoutMS: timeoutMS applied to listCollections to get collection schema' => 'Not yet implemented (PHPC-1760)',
+        'timeoutMS: remaining timeoutMS applied to find to get keyvault data' => 'Not yet implemented (PHPC-1760)',
     ];
 
     public function setUp(): void
@@ -90,7 +91,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * @param string      $databaseName   Name of database under test
      * @param string      $collectionName Name of collection under test
      */
-    public function testClientSideEncryption(stdClass $test, ?array $runOn, array $data, ?array $keyVaultData = null, $jsonSchema = null, ?string $databaseName = null, ?string $collectionName = null): void
+    public function testClientSideEncryption(stdClass $test, ?array $runOn, array $data, ?stdClass $encryptedFields = null, ?array $keyVaultData = null, ?stdClass $jsonSchema = null, ?string $databaseName = null, ?string $collectionName = null): void
     {
         if (isset(self::$incompleteTests[$this->dataDescription()])) {
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
@@ -107,6 +108,11 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $databaseName = $databaseName ?? $this->getDatabaseName();
         $collectionName = $collectionName ?? $this->getCollectionName();
 
+        // TODO: Remove this once SERVER-66901 is implemented (see: PHPLIB-884)
+        if (isset($test->clientOptions->autoEncryptOpts->encryptedFieldsMap)) {
+            $test->clientOptions->autoEncryptOpts->encryptedFieldsMap = $this->prepareEncryptedFieldsMap($test->clientOptions->autoEncryptOpts->encryptedFieldsMap);
+        }
+
         try {
             $context = Context::fromClientSideEncryption($test, $databaseName, $collectionName);
         } catch (SkippedTestError $e) {
@@ -116,15 +122,15 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $this->setContext($context);
 
         self::insertKeyVaultData($context->getClient(), $keyVaultData);
-        $this->dropTestAndOutcomeCollections();
-        $this->createTestCollection($jsonSchema);
+        $this->dropTestAndOutcomeCollections(empty($encryptedFields) ? [] : ['encryptedFields' => $encryptedFields]);
+        $this->createTestCollection($encryptedFields, $jsonSchema);
         $this->insertDataFixtures($data);
 
         if (isset($test->failPoint)) {
             $this->configureFailPoint($test->failPoint);
         }
 
-        $context->enableEncryption();
+        $context->useEncryptedClientIfConfigured = true;
 
         if (isset($test->expectations)) {
             $commandExpectations = CommandExpectations::fromClientSideEncryption($context->getClient(), $test->expectations);
@@ -140,7 +146,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             $commandExpectations->assert($this, $context);
         }
 
-        $context->disableEncryption();
+        $context->useEncryptedClientIfConfigured = false;
 
         if (isset($test->outcome->collection->data)) {
             $this->assertOutcomeCollectionData($test->outcome->collection->data, ResultExpectation::ASSERT_DOCUMENTS_MATCH);
@@ -169,6 +175,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             $runOn = $json->runOn ?? null;
             $data = $json->data ?? [];
             // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
+            $encryptedFields = $json->encrypted_fields ?? null;
             $keyVaultData = $json->key_vault_data ?? null;
             $jsonSchema = $json->json_schema ?? null;
             $databaseName = $json->database_name ?? null;
@@ -177,7 +184,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
             foreach ($json->tests as $test) {
                 $name = $group . ': ' . $test->description;
-                $testArgs[$name] = [$test, $runOn, $data, $keyVaultData, $jsonSchema, $databaseName, $collectionName];
+                $testArgs[$name] = [$test, $runOn, $data, $encryptedFields, $keyVaultData, $jsonSchema, $databaseName, $collectionName];
             }
         }
 
@@ -1331,11 +1338,20 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         return unserialize($int64);
     }
 
-    private function createTestCollection($jsonSchema): void
+    private function createTestCollection(?stdClass $encryptedFields = null, ?stdClass $jsonSchema = null): void
     {
-        $options = empty($jsonSchema) ? [] : ['validator' => ['$jsonSchema' => $jsonSchema]];
-        $operation = new CreateCollection($this->getContext()->databaseName, $this->getContext()->collectionName, $options);
-        $operation->execute($this->getPrimaryServer());
+        $context = $this->getContext();
+        $options = $context->defaultWriteOptions;
+
+        if (! empty($encryptedFields)) {
+            $options['encryptedFields'] = $this->prepareEncryptedFields($encryptedFields);
+        }
+
+        if (! empty($jsonSchema)) {
+            $options['validator'] = ['$jsonSchema' => $jsonSchema];
+        }
+
+        $context->getDatabase()->createCollection($context->collectionName, $options);
     }
 
     private function encryptCorpusValue(string $fieldName, stdClass $data, ClientEncryption $clientEncryption)
@@ -1464,6 +1480,19 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         }
 
         return $encryptedFields;
+    }
+
+    /**
+     * @todo Remove this once SERVER-66901 is implemented
+     * @see https://jira.mongodb.org/browse/PHPLIB-884
+     */
+    private function prepareEncryptedFieldsMap(stdClass $encryptedFieldsMap): stdClass
+    {
+        foreach ($encryptedFieldsMap as $namespace => $encryptedFields) {
+            $encryptedFieldsMap->{$namespace} = $this->prepareEncryptedFields($encryptedFields);
+        }
+
+        return $encryptedFieldsMap;
     }
 
     private function skipIfLocalMongocryptdIsUnavailable(): void

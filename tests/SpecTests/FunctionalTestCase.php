@@ -89,7 +89,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      * @param array|object $actualDocument
      * @param string       $message
      */
-    protected static function assertDocumentsMatch($expectedDocument, $actualDocument, string $message = ''): void
+    public static function assertDocumentsMatch($expectedDocument, $actualDocument, string $message = ''): void
     {
         $constraint = new DocumentsMatchConstraint($expectedDocument, true, true);
 

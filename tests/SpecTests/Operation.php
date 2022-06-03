@@ -774,10 +774,10 @@ final class Operation
             case 'findOneAndDelete':
             case 'findOneAndReplace':
             case 'findOneAndUpdate':
-                return ResultExpectation::ASSERT_SAME_DOCUMENT;
+                return ResultExpectation::ASSERT_MATCHES_DOCUMENT;
 
             case 'find':
-                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
+                return ResultExpectation::ASSERT_DOCUMENTS_MATCH;
 
             case 'insertMany':
                 return ResultExpectation::ASSERT_INSERTMANY;

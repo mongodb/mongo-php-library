@@ -137,7 +137,7 @@ class RenameCollection implements Executable
             'to' => $this->toNamespace,
         ];
 
-        foreach (['dropTarget', 'comment'] as $option) {
+        foreach (['comment', 'dropTarget'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }

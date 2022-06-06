@@ -7,7 +7,7 @@ use MongoDB\Operation\CreateCollection;
 
 class CreateCollectionTest extends TestCase
 {
-    public function testConstructorPipelineArgumentMustBeAList(): void
+    public function testConstructorPipelineOptionMustBeAList(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "pipeline" option is not a list (unexpected index: "1")');

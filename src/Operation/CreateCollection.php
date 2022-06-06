@@ -72,11 +72,9 @@ class CreateCollection implements Executable
      *  * capped (boolean): Specify true to create a capped collection. If set,
      *    the size option must also be specified. The default is false.
      *
-     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
-     *    the operation through the database profiler, currentOp and logs. The
-     *    default is to not send a value.
+     *  * comment (mixed): BSON value to attach as a comment to this command.
      *
-     *    The comment can be any valid BSON type for server versions 4.4 and above.
+     *    This is not supported for servers versions < 4.4.
      *
      *  * changeStreamPreAndPostImages (document): Used to configure support for
      *    pre- and post-images in change streams.

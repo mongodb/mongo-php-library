@@ -11,9 +11,12 @@ source:
   ref: bypassDocumentValidation
 ---
 source:
-  file: apiargs-aggregate-option.yaml
+  file: apiargs-common-option.yaml
   ref: comment
 post: |
+  The comment can be any valid BSON type for server versions 4.4 and above.
+  Earlier server versions only support string values.
+
   .. versionadded:: 1.3
 ---
 source:

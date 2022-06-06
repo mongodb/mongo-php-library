@@ -7,19 +7,14 @@ source:
   file: apiargs-common-option.yaml
   ref: collation
 ---
-arg_name: option
-name: comment
-type: mixed
-description: |
-  Enables users to specify an arbitrary comment to help trace the operation through
-  the database profiler, currentOp and logs. The default is to not send a value.
-
+source:
+  file: apiargs-common-option.yaml
+  ref: comment
+post: |
   The comment can be any valid BSON type for server versions 4.4 and above.
-  Server versions prior to 4.4 only support string as comment,
-  and providing a non-string type will result in a server-side error.
-interface: phpmethod
-operation: ~
-optional: true
+  Earlier server versions only support string values.
+
+  .. versionadded:: 1.13
 ---
 source:
   file: apiargs-method-watch-option.yaml

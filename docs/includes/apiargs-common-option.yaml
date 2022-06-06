@@ -16,10 +16,10 @@ arg_name: option
 name: comment
 type: mixed
 description: |
-  Enables users to specify an arbitrary comment to help trace the operation through
-  the database profiler, currentOp and logs. The default is to not send a value.
-
-  The comment can be any valid BSON type for server versions 4.4 and above.
+  Enables users to specify an arbitrary comment to help trace the operation
+  through the :manual:`database profiler </reference/database-profiler>`,
+  :manual:`currentOp </reference/command/currentOp>` output, and
+  :manual:`logs </reference/log-messages>`.
 interface: phpmethod
 operation: ~
 optional: true

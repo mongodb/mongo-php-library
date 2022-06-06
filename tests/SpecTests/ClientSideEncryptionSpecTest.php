@@ -240,9 +240,9 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
         $clientEncryption = $clientEncrypted->createClientEncryption($encryptionOpts);
 
-        $commands = [];
-
         $dataKeyId = null;
+        $insertCommand = null;
+
         $keyAltName = $providerName . '_altname';
 
         (new CommandObserver())->observe(
@@ -254,18 +254,20 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
                 $dataKeyId = $clientEncryption->createDataKey($providerName, $keyData);
             },
-            function ($command) use (&$commands): void {
-                $commands[] = $command;
+            function ($command) use (&$insertCommand): void {
+                if ($command['started']->getCommandName() === 'insert') {
+                    $insertCommand = $command['started']->getCommand();
+                }
             }
         );
 
         $this->assertInstanceOf(Binary::class, $dataKeyId);
         $this->assertSame(Binary::TYPE_UUID, $dataKeyId->getType());
 
-        $this->assertCount(2, $commands);
-        $insert = $commands[1]['started'];
-        $this->assertSame('insert', $insert->getCommandName());
-        $this->assertSame(WriteConcern::MAJORITY, $insert->getCommand()->writeConcern->w);
+        $this->assertNotNull($insertCommand);
+        $this->assertObjectHasAttribute('writeConcern', $insertCommand);
+        $this->assertObjectHasAttribute('w', $insertCommand->writeConcern);
+        $this->assertSame(WriteConcern::MAJORITY, $insertCommand->writeConcern->w);
 
         $keys = $client->selectCollection('keyvault', 'datakeys')->find(['_id' => $dataKeyId]);
         $keys = iterator_to_array($keys);

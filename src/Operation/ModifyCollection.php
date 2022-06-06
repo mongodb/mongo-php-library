@@ -53,6 +53,10 @@ class ModifyCollection implements Executable
      *
      * Supported options:
      *
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    This is not supported for servers versions < 4.4.
+     *
      *  * session (MongoDB\Driver\Session): Client session.
      *
      *  * typeMap (array): Type map for BSON deserialization. This will only be
@@ -104,13 +108,24 @@ class ModifyCollection implements Executable
      */
     public function execute(Server $server)
     {
-        $cursor = $server->executeWriteCommand($this->databaseName, new Command(['collMod' => $this->collectionName] + $this->collectionOptions), $this->createOptions());
+        $cursor = $server->executeWriteCommand($this->databaseName, new Command($this->createCommand(), $this->createOptions());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
         }
 
         return current($cursor->toArray());
+    }
+
+    private function createCommand(): Command
+    {
+        $cmd = ['collMod' => $this->collectionName] + $this->collectionOptions;
+
+        if (isset($this->options['comment'])) {
+            $cmd['comment'] = $this->options['comment'];
+        }
+
+        return new Command($cmd);
     }
 
     /**

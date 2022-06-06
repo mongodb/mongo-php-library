@@ -6,13 +6,11 @@ set -o errexit  # Exit the script with error if any of the commands fail
 #   MONGODB_URI       Set the suggested connection MONGODB_URI (including credentials and topology info)
 #   API_VERSION       Optional API_VERSION environment variable for run-tests.php
 #   IS_MATRIX_TESTING Set to "true" to enable matrix testing. Defaults to empty string. If "true", DRIVER_MONGODB_VERSION and MONGODB_VERSION will also be checked.
-#   MOCK_SERVICE_ID   Set to "1" to enable service ID mocking for load balancers. Defaults to empty string.
 
 SSL=${SSL:-nossl}
 MONGODB_URI=${MONGODB_URI:-}
 API_VERSION=${API_VERSION:-}
 IS_MATRIX_TESTING=${IS_MATRIX_TESTING:-}
-MOCK_SERVICE_ID=${MOCK_SERVICE_ID:-}
 
 # For matrix testing, we have to determine the correct driver version
 if [ "${IS_MATRIX_TESTING}" = "true" ]; then
@@ -45,11 +43,6 @@ fi
 
 # Enable verbose output to see skipped and incomplete tests
 PHPUNIT_OPTS="${PHPUNIT_OPTS} -v"
-
-# For load balancer testing, we need to enable service ID mocking
-if [ "${MOCK_SERVICE_ID}" = "1" ]; then
-   PHPUNIT_OPTS="${PHPUNIT_OPTS} -d mongodb.mock_service_id=1"
-fi
 
 # Determine if MONGODB_URI already has a query string
 SUFFIX=$(echo "$MONGODB_URI" | grep -Eo "\?(.*)" | cat)

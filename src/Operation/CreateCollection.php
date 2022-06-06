@@ -30,6 +30,7 @@ use function is_bool;
 use function is_integer;
 use function is_object;
 use function is_string;
+use function sprintf;
 use function trigger_error;
 
 use const E_USER_DEPRECATED;
@@ -106,6 +107,10 @@ class CreateCollection implements Executable
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
      *
+     *  * pipeline (array): An array that consists of the aggregation pipeline
+     *    stage(s), which will be applied to the collection or view specified by
+     *    viewOn.
+     *
      *  * session (MongoDB\Driver\Session): Client session.
      *
      *  * size (integer): The maximum number of bytes for a capped collection.
@@ -124,6 +129,9 @@ class CreateCollection implements Executable
      *  * validationLevel (string): Validation level.
      *
      *  * validator (document): Validation rules or expressions.
+     *
+     *  * viewOn (string): The name of the source collection or view from which
+     *    to create the view.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
@@ -176,6 +184,10 @@ class CreateCollection implements Executable
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
+        if (isset($options['pipeline']) && ! is_array($options['pipeline'])) {
+            throw InvalidArgumentException::invalidType('"pipeline" option', $options['pipeline'], 'array');
+        }
+
         if (isset($options['session']) && ! $options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
         }
@@ -208,6 +220,10 @@ class CreateCollection implements Executable
             throw InvalidArgumentException::invalidType('"validator" option', $options['validator'], 'array or object');
         }
 
+        if (isset($options['viewOn']) && ! is_string($options['viewOn'])) {
+            throw InvalidArgumentException::invalidType('"viewOn" option', $options['viewOn'], 'string');
+        }
+
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
@@ -218,6 +234,22 @@ class CreateCollection implements Executable
 
         if (isset($options['autoIndexId'])) {
             trigger_error('The "autoIndexId" option is deprecated and will be removed in a future release', E_USER_DEPRECATED);
+        }
+
+        if (isset($options['pipeline'])) {
+            $expectedIndex = 0;
+
+            foreach ($options['pipeline'] as $i => $operation) {
+                if ($i !== $expectedIndex) {
+                    throw new InvalidArgumentException(sprintf('The "pipeline" option is not a list (unexpected index: "%s")', $i));
+                }
+
+                if (! is_array($operation) && ! is_object($operation)) {
+                    throw InvalidArgumentException::invalidType(sprintf('$options["pipeline"][%d]', $i), $operation, 'array or object');
+                }
+
+                $expectedIndex += 1;
+            }
         }
 
         $this->databaseName = (string) $databaseName;
@@ -253,7 +285,7 @@ class CreateCollection implements Executable
     {
         $cmd = ['create' => $this->collectionName];
 
-        foreach (['autoIndexId', 'capped', 'comment', 'expireAfterSeconds', 'flags', 'max', 'maxTimeMS', 'size', 'validationAction', 'validationLevel'] as $option) {
+        foreach (['autoIndexId', 'capped', 'comment', 'expireAfterSeconds', 'flags', 'max', 'maxTimeMS', 'pipeline', 'size', 'validationAction', 'validationLevel', 'viewOn'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }

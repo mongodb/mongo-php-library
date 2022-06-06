@@ -59,8 +59,6 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/entity-client-cmap-events: events are captured during an operation' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType can be set to command and cmap' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType defaults to command if unset' => 'PHPC does not implement CMAP',
-        // CreateCollection "viewOn" and "pipeline" options are not yet implemented
-        'crud/estimatedDocumentCount: estimatedDocumentCount works correctly on views' => 'Not yet implemented (PHPLIB-869)',
     ];
 
     /** @var UnifiedTestRunner */

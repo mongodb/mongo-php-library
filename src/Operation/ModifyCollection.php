@@ -108,7 +108,7 @@ class ModifyCollection implements Executable
      */
     public function execute(Server $server)
     {
-        $cursor = $server->executeWriteCommand($this->databaseName, new Command($this->createCommand()), $this->createOptions());
+        $cursor = $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);

@@ -608,7 +608,7 @@ final class Operation
                 $databaseName = $args['database'];
                 $collectionName = $args['collection'];
 
-                $test->assertContains($collectionName, $context->selectDatabase($databaseName)->listCollectionNames());
+                $test->assertContains($collectionName, $context->getInternalClient()->selectDatabase($databaseName)->listCollectionNames());
 
                 return null;
 
@@ -616,7 +616,7 @@ final class Operation
                 $databaseName = $args['database'];
                 $collectionName = $args['collection'];
 
-                $test->assertNotContains($collectionName, $context->selectDatabase($databaseName)->listCollectionNames());
+                $test->assertNotContains($collectionName, $context->getInternalClient()->selectDatabase($databaseName)->listCollectionNames());
 
                 return null;
 
@@ -679,7 +679,7 @@ final class Operation
             function (IndexInfo $indexInfo) {
                 return $indexInfo->getName();
             },
-            iterator_to_array($context->selectCollection($databaseName, $collectionName)->listIndexes())
+            iterator_to_array($context->getInternalClient()->selectCollection($databaseName, $collectionName)->listIndexes())
         );
     }
 
@@ -774,10 +774,10 @@ final class Operation
             case 'findOneAndDelete':
             case 'findOneAndReplace':
             case 'findOneAndUpdate':
-                return ResultExpectation::ASSERT_SAME_DOCUMENT;
+                return ResultExpectation::ASSERT_MATCHES_DOCUMENT;
 
             case 'find':
-                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
+                return ResultExpectation::ASSERT_DOCUMENTS_MATCH;
 
             case 'insertMany':
                 return ResultExpectation::ASSERT_INSERTMANY;

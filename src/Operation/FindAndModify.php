@@ -74,13 +74,9 @@ class FindAndModify implements Executable, Explainable
      *
      *  * collation (document): Collation specification.
      *
-     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
-     *    the operation through the database profiler, currentOp and logs. The
-     *    default is to not send a value.
+     *  * comment (mixed): BSON value to attach as a comment to this command.
      *
-     *    The comment can be any valid BSON type for server versions 4.4 and above.
-     *    Server versions prior to 4.4 do not support comment for findAndModify command,
-     *    and providing one will result in a server-side error.
+     *    This is not supported for servers versions < 4.4.
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.

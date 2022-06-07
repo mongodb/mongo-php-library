@@ -86,15 +86,9 @@ class Aggregate implements Executable, Explainable
      *
      *  * collation (document): Collation specification.
      *
-     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
-     *    the operation through the database profiler, currentOp and logs. The
-     *    default is to not send a value.
+     *  * comment (mixed): BSON value to attach as a comment to this command.
      *
-     *    The comment can be any valid BSON type for server versions 4.4 and above.
-     *    Server versions between 3.6 and 4.2 only support string as comment,
-     *    and providing a non-string type will result in a server-side error.
-     *    Older server versions do not support comment for aggregate command at all,
-     *    and providing one will result in a server-side error.
+     *    Only string values are supported for server versions < 4.4.
      *
      *  * explain (boolean): Specifies whether or not to return the information
      *    on the processing of the pipeline.

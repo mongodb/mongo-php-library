@@ -2,19 +2,14 @@ source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: bypassDocumentValidation
 ---
-arg_name: option
-name: comment
-type: mixed
-description: |
-  Enables users to specify an arbitrary comment to help trace the operation through
-  the database profiler, currentOp and logs. The default is to not send a value.
+source:
+  file: apiargs-common-option.yaml
+  ref: comment
+post: |
+  This is not supported for server versions prior to 4.4 and will result in an
+  exception at execution time if used.
 
-  The comment can be any valid BSON type for server versions 4.4 and above.
-  Server versions prior to 4.4 do not support comment for insert command,
-  and providing one will result in a server-side error.
-interface: phpmethod
-operation: ~
-optional: true
+  .. versionadded:: 1.13
 ---
 source:
   file: apiargs-common-option.yaml

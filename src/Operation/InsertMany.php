@@ -60,13 +60,10 @@ class InsertMany implements Executable
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.
      *
-     *  * comment (mixed): Enables users to specify an arbitrary comment to help trace
-     *    the operation through the database profiler, currentOp and logs. The
-     *    default is to not send a value.
+     *  * comment (mixed): BSON value to attach as a comment to the command(s)
+     *    associated with this insert.
      *
-     *    The comment can be any valid BSON type for server versions 4.4 and above.
-     *    Server versions prior to 4.4 do not support comment for insert command,
-     *    and providing one will result in a server-side error.
+     *    This is not supported for servers versions < 4.4.
      *
      *  * ordered (boolean): If true, when an insert fails, return without
      *    performing the remaining writes. If false, when a write fails,

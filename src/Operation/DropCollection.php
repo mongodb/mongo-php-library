@@ -55,6 +55,10 @@ class DropCollection implements Executable
      *
      * Supported options:
      *
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    This is not supported for servers versions < 4.4.
+     *
      *  * session (MongoDB\Driver\Session): Client session.
      *
      *  * typeMap (array): Type map for BSON deserialization. This will be used
@@ -106,10 +110,8 @@ class DropCollection implements Executable
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
         }
 
-        $command = new Command(['drop' => $this->collectionName]);
-
         try {
-            $cursor = $server->executeWriteCommand($this->databaseName, $command, $this->createOptions());
+            $cursor = $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
         } catch (CommandException $e) {
             /* The server may return an error if the collection does not exist.
              * Check for an error code and return the command reply instead of
@@ -126,6 +128,22 @@ class DropCollection implements Executable
         }
 
         return current($cursor->toArray());
+    }
+
+    /**
+     * Create the drop command.
+     *
+     * @return Command
+     */
+    private function createCommand()
+    {
+        $cmd = ['drop' => $this->collectionName];
+
+        if (isset($this->options['comment'])) {
+            $cmd['comment'] = $this->options['comment'];
+        }
+
+        return new Command($cmd);
     }
 
     /**

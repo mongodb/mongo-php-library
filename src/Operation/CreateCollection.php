@@ -72,6 +72,10 @@ class CreateCollection implements Executable
      *  * capped (boolean): Specify true to create a capped collection. If set,
      *    the size option must also be specified. The default is false.
      *
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    This is not supported for servers versions < 4.4.
+     *
      *  * changeStreamPreAndPostImages (document): Used to configure support for
      *    pre- and post-images in change streams.
      *
@@ -285,7 +289,7 @@ class CreateCollection implements Executable
     {
         $cmd = ['create' => $this->collectionName];
 
-        foreach (['autoIndexId', 'capped', 'expireAfterSeconds', 'flags', 'max', 'maxTimeMS', 'pipeline', 'size', 'validationAction', 'validationLevel', 'viewOn'] as $option) {
+        foreach (['autoIndexId', 'capped', 'comment', 'expireAfterSeconds', 'flags', 'max', 'maxTimeMS', 'pipeline', 'size', 'validationAction', 'validationLevel', 'viewOn'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }

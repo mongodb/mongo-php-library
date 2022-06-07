@@ -52,6 +52,10 @@ class RenameCollection implements Executable
      *
      * Supported options:
      *
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    This is not supported for servers versions < 4.4.
+     *
      *  * session (MongoDB\Driver\Session): Client session.
      *
      *  * typeMap (array): Type map for BSON deserialization. This will be used
@@ -112,22 +116,34 @@ class RenameCollection implements Executable
             throw UnsupportedException::writeConcernNotSupportedInTransaction();
         }
 
-        $cmd = [
-            'renameCollection' => $this->fromNamespace,
-            'to' => $this->toNamespace,
-        ];
-
-        if (isset($this->options['dropTarget'])) {
-            $cmd['dropTarget'] = $this->options['dropTarget'];
-        }
-
-        $cursor = $server->executeWriteCommand('admin', new Command($cmd), $this->createOptions());
+        $cursor = $server->executeWriteCommand('admin', $this->createCommand(), $this->createOptions());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
         }
 
         return current($cursor->toArray());
+    }
+
+    /**
+     * Create the renameCollection command.
+     *
+     * @return Command
+     */
+    private function createCommand()
+    {
+        $cmd = [
+            'renameCollection' => $this->fromNamespace,
+            'to' => $this->toNamespace,
+        ];
+
+        foreach (['comment', 'dropTarget'] as $option) {
+            if (isset($this->options[$option])) {
+                $cmd[$option] = $this->options[$option];
+            }
+        }
+
+        return new Command($cmd);
     }
 
     /**

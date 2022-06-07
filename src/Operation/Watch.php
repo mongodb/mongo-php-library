@@ -111,6 +111,10 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      *
      *  * collation (document): Specifies a collation.
      *
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    Only string values are supported for server versions < 4.4.
+     *
      *  * fullDocument (string): Determines how the "fullDocument" response
      *    field will be populated for update operations.
      *
@@ -239,7 +243,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             }
         }
 
-        $this->aggregateOptions = array_intersect_key($options, ['batchSize' => 1, 'collation' => 1, 'maxAwaitTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1, 'typeMap' => 1]);
+        $this->aggregateOptions = array_intersect_key($options, ['batchSize' => 1, 'collation' => 1, 'comment' => 1, 'maxAwaitTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1, 'typeMap' => 1]);
         $this->changeStreamOptions = array_intersect_key($options, ['fullDocument' => 1, 'fullDocumentBeforeChange' => 1, 'resumeAfter' => 1, 'startAfter' => 1, 'startAtOperationTime' => 1]);
 
         // Null database name implies a cluster-wide change stream

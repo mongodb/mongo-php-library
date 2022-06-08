@@ -28,6 +28,7 @@ use function explode;
 use function filter_var;
 use function getenv;
 use function implode;
+use function in_array;
 use function is_array;
 use function is_callable;
 use function is_object;
@@ -374,6 +375,20 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         throw new UnexpectedValueException('Could not determine server storage engine');
+    }
+
+    protected function isEnterprise(): bool
+    {
+        $buildInfo = $this->getPrimaryServer()->executeCommand(
+            $this->getDatabaseName(),
+            new Command(['buildInfo' => 1])
+        )->toArray()[0];
+
+        if (isset($buildInfo->modules) && is_array($buildInfo->modules)) {
+            return in_array('enterprise', $buildInfo->modules);
+        }
+
+        throw new UnexpectedValueException('Could not determine server modules');
     }
 
     protected function isLoadBalanced()

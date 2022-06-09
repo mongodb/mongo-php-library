@@ -133,11 +133,7 @@
       "runOnRequirements": [
         {
           "minServerVersion": "3.6.0",
-          "maxServerVersion": "4.4.13",
-          "topologies": [
-            "single",
-            "replicaset"
-          ]
+          "maxServerVersion": "4.4.13"
         }
       ],
       "operations": [

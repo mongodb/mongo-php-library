@@ -27,6 +27,7 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\RuntimeException;
+use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\WithTransaction;
 use ReflectionClass;
 use ReflectionException;
@@ -121,6 +122,53 @@ function generate_index_name($document): string
     }
 
     return $name;
+}
+
+/**
+ * Return a collection's encryptedFields from the encryptedFieldsMap
+ * autoEncryption driver option (if available).
+ *
+ * @internal
+ * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#drop-collection-helper
+ * @see Collection::drop
+ * @see Database::createCollection
+ * @see Database::dropCollection
+ * @return array|object|null
+ */
+function get_encrypted_fields_from_driver(string $databaseName, string $collectionName, Manager $manager)
+{
+    $encryptedFieldsMap = (array) $manager->getEncryptedFieldsMap();
+
+    return $encryptedFieldsMap[$databaseName . '.' . $collectionName] ?? null;
+}
+
+/**
+ * Return a collection's encryptedFields option from the server (if any).
+ *
+ * @internal
+ * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#drop-collection-helper
+ * @see Collection::drop
+ * @see Database::dropCollection
+ * @return array|object|null
+ */
+function get_encrypted_fields_from_server(string $databaseName, string $collectionName, Manager $manager, Server $server)
+{
+    // No-op if the encryptedFieldsMap autoEncryption driver option was omitted
+    if ($manager->getEncryptedFieldsMap() === null) {
+        return null;
+    }
+
+    $collectionInfoIterator = (new ListCollections($databaseName, ['filter' => ['name' => $collectionName]]))->execute($server);
+
+    foreach ($collectionInfoIterator as $collectionInfo) {
+        /* Note: ListCollections applies a typeMap that converts BSON documents
+         * to PHP arrays. This should not be problematic as encryptedFields here
+         * is only used by drop helpers to obtain names of supporting encryption
+         * collections. */
+        return $collectionInfo['options']['encryptedFields'] ?? null;
+    }
+
+    return null;
 }
 
 /**

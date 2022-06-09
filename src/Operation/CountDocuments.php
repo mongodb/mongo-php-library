@@ -65,6 +65,10 @@ class CountDocuments implements Executable
      *
      *  * collation (document): Collation specification.
      *
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    Only string values are supported for server versions < 4.4.
+     *
      *  * hint (string|document): The index to use. Specify either the index
      *    name as a string or the index key pattern as a document. If specified,
      *    then the query system will only consider plans using the hinted index.
@@ -107,7 +111,7 @@ class CountDocuments implements Executable
         $this->collectionName = (string) $collectionName;
         $this->filter = $filter;
 
-        $this->aggregateOptions = array_intersect_key($options, ['collation' => 1, 'hint' => 1, 'maxTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1]);
+        $this->aggregateOptions = array_intersect_key($options, ['collation' => 1, 'comment' => 1, 'hint' => 1, 'maxTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1]);
         $this->countOptions = array_intersect_key($options, ['limit' => 1, 'skip' => 1]);
 
         $this->aggregate = $this->createAggregate();

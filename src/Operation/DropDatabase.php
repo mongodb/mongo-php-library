@@ -48,6 +48,10 @@ class DropDatabase implements Executable
      *
      * Supported options:
      *
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    This is not supported for servers versions < 4.4.
+     *
      *  * session (MongoDB\Driver\Session): Client session.
      *
      *  * typeMap (array): Type map for BSON deserialization. This will be used
@@ -91,14 +95,29 @@ class DropDatabase implements Executable
      */
     public function execute(Server $server)
     {
-        $command = new Command(['dropDatabase' => 1]);
-        $cursor = $server->executeWriteCommand($this->databaseName, $command, $this->createOptions());
+        $cursor = $server->executeWriteCommand($this->databaseName, $this->createCommand(), $this->createOptions());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
         }
 
         return current($cursor->toArray());
+    }
+
+    /**
+     * Create the dropDatabase command.
+     *
+     * @return Command
+     */
+    private function createCommand()
+    {
+        $cmd = ['dropDatabase' => 1];
+
+        if (isset($this->options['comment'])) {
+            $cmd['comment'] = $this->options['comment'];
+        }
+
+        return new Command($cmd);
     }
 
     /**

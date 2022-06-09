@@ -63,6 +63,10 @@ class CreateIndexes implements Executable
      *
      * Supported options:
      *
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    This is not supported for servers versions < 4.4.
+     *
      *  * commitQuorum (integer|string): Specifies how many data-bearing members
      *    of a replica set, including the primary, must complete the index
      *    builds successfully before the primary marks the indexes as ready.
@@ -195,8 +199,10 @@ class CreateIndexes implements Executable
             $cmd['commitQuorum'] = $this->options['commitQuorum'];
         }
 
-        if (isset($this->options['maxTimeMS'])) {
-            $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
+        foreach (['comment', 'maxTimeMS'] as $option) {
+            if (isset($this->options[$option])) {
+                $cmd[$option] = $this->options[$option];
+            }
         }
 
         $server->executeWriteCommand($this->databaseName, new Command($cmd), $this->createOptions());

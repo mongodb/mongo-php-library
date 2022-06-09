@@ -74,15 +74,12 @@ source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: collation
 ---
-arg_name: option
-name: comment
-type: string
-description: |
-  A comment to attach to the query to help interpret and trace query
-  :dbcommand:`profile` data.
-interface: phpmethod
-operation: ~
-optional: true
+source:
+  file: apiargs-common-option.yaml
+  ref: comment
+post: |
+  The comment can be any valid BSON type for server versions 4.4 and above.
+  Earlier server versions only support string values.
 ---
 arg_name: option
 name: cursorType

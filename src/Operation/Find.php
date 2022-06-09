@@ -78,8 +78,9 @@ class Find implements Executable, Explainable
      *
      *  * collation (document): Collation specification.
      *
-     *  * comment (string): Attaches a comment to the query. If "$comment" also
-     *    exists in the modifiers document, this option will take precedence.
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    Only string values are supported for server versions < 4.4.
      *
      *  * cursorType (enum): Indicates the type of cursor to use. Must be either
      *    NON_TAILABLE, TAILABLE, or TAILABLE_AWAIT. The default is
@@ -179,10 +180,6 @@ class Find implements Executable, Explainable
 
         if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
             throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
-        }
-
-        if (isset($options['comment']) && ! is_string($options['comment'])) {
-            throw InvalidArgumentException::invalidType('"comment" option', $options['comment'], 'comment');
         }
 
         if (isset($options['cursorType'])) {

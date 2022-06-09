@@ -52,6 +52,10 @@ class ListDatabases implements Executable
      *
      *    For servers < 4.0.5, this option is ignored.
      *
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    This is not supported for servers versions < 4.4.
+     *
      *  * filter (document): Query by which to filter databases.
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
@@ -102,19 +106,7 @@ class ListDatabases implements Executable
      */
     public function execute(Server $server)
     {
-        $cmd = ['listDatabases' => 1];
-
-        if (! empty($this->options['filter'])) {
-            $cmd['filter'] = (object) $this->options['filter'];
-        }
-
-        foreach (['authorizedDatabases', 'maxTimeMS', 'nameOnly'] as $option) {
-            if (isset($this->options[$option])) {
-                $cmd[$option] = $this->options[$option];
-            }
-        }
-
-        $cursor = $server->executeReadCommand('admin', new Command($cmd), $this->createOptions());
+        $cursor = $server->executeReadCommand('admin', $this->createCommand(), $this->createOptions());
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
         $result = current($cursor->toArray());
 
@@ -123,6 +115,28 @@ class ListDatabases implements Executable
         }
 
         return $result['databases'];
+    }
+
+    /**
+     * Create the listDatabases command.
+     *
+     * @return Command
+     */
+    private function createCommand()
+    {
+        $cmd = ['listDatabases' => 1];
+
+        if (! empty($this->options['filter'])) {
+            $cmd['filter'] = (object) $this->options['filter'];
+        }
+
+        foreach (['authorizedDatabases', 'comment', 'maxTimeMS', 'nameOnly'] as $option) {
+            if (isset($this->options[$option])) {
+                $cmd[$option] = $this->options[$option];
+            }
+        }
+
+        return new Command($cmd);
     }
 
     /**

@@ -64,6 +64,10 @@ class Distinct implements Executable, Explainable
      *
      *  * collation (document): Collation specification.
      *
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    This is not supported for servers versions < 4.4.
+     *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
      *    run.
      *
@@ -187,8 +191,10 @@ class Distinct implements Executable, Explainable
             $cmd['collation'] = (object) $this->options['collation'];
         }
 
-        if (isset($this->options['maxTimeMS'])) {
-            $cmd['maxTimeMS'] = $this->options['maxTimeMS'];
+        foreach (['comment', 'maxTimeMS'] as $option) {
+            if (isset($this->options[$option])) {
+                $cmd[$option] = $this->options[$option];
+            }
         }
 
         return $cmd;

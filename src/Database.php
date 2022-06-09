@@ -33,6 +33,7 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\CreateCollection;
+use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropDatabase;
@@ -275,9 +276,30 @@ class Database
             $options['writeConcern'] = $this->writeConcern;
         }
 
+        $encryptedFields = $options['encryptedFields']
+            ?? get_encrypted_fields_from_driver($this->databaseName, $collectionName, $this->manager)
+            ?? null;
+
+        if ($encryptedFields !== null) {
+            // encryptedFields is passed to the create command
+            $options['encryptedFields'] = $encryptedFields;
+
+            $encryptedFields = (array) $encryptedFields;
+            $enxcolOptions = ['clusteredIndex' => ['key' => ['_id' => 1], 'unique' => true]];
+            (new CreateCollection($this->databaseName, $encryptedFields['escCollection'] ?? 'enxcol_.' . $collectionName . '.esc', $enxcolOptions))->execute($server);
+            (new CreateCollection($this->databaseName, $encryptedFields['eccCollection'] ?? 'enxcol_.' . $collectionName . '.ecc', $enxcolOptions))->execute($server);
+            (new CreateCollection($this->databaseName, $encryptedFields['ecocCollection'] ?? 'enxcol_.' . $collectionName . '.ecoc', $enxcolOptions))->execute($server);
+        }
+
         $operation = new CreateCollection($this->databaseName, $collectionName, $options);
 
-        return $operation->execute($server);
+        $result = $operation->execute($server);
+
+        if ($encryptedFields !== null) {
+            (new CreateIndexes($this->databaseName, $collectionName, [['key' => ['__safeContent__' => 1]]]))->execute($server);
+        }
+
+        return $result;
     }
 
     /**
@@ -328,6 +350,21 @@ class Database
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
+        }
+
+        $encryptedFields = $options['encryptedFields']
+            ?? get_encrypted_fields_from_driver($this->databaseName, $collectionName, $this->manager)
+            ?? get_encrypted_fields_from_server($this->databaseName, $collectionName, $this->manager, $server)
+            ?? null;
+
+        if ($encryptedFields !== null) {
+            // encryptedFields is not passed to the drop command
+            unset($options['encryptedFields']);
+
+            $encryptedFields = (array) $encryptedFields;
+            (new DropCollection($this->databaseName, $encryptedFields['escCollection'] ?? 'enxcol_.' . $collectionName . '.esc'))->execute($server);
+            (new DropCollection($this->databaseName, $encryptedFields['eccCollection'] ?? 'enxcol_.' . $collectionName . '.ecc'))->execute($server);
+            (new DropCollection($this->databaseName, $encryptedFields['ecocCollection'] ?? 'enxcol_.' . $collectionName . '.ecoc'))->execute($server);
         }
 
         $operation = new DropCollection($this->databaseName, $collectionName, $options);

@@ -54,6 +54,10 @@ class ListCollections implements Executable
      *
      *    For servers < 4.0, this option is ignored.
      *
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    This is not supported for servers versions < 4.4.
+     *
      *  * filter (document): Query by which to filter collections.
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to
@@ -105,22 +109,32 @@ class ListCollections implements Executable
      */
     public function execute(Server $server)
     {
+        $cursor = $server->executeReadCommand($this->databaseName, $this->createCommand(), $this->createOptions());
+        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
+
+        return new CachingIterator($cursor);
+    }
+
+    /**
+     * Create the listCollections command.
+     *
+     * @return Command
+     */
+    private function createCommand()
+    {
         $cmd = ['listCollections' => 1];
 
         if (! empty($this->options['filter'])) {
             $cmd['filter'] = (object) $this->options['filter'];
         }
 
-        foreach (['authorizedCollections', 'maxTimeMS', 'nameOnly'] as $option) {
+        foreach (['authorizedCollections', 'comment', 'maxTimeMS', 'nameOnly'] as $option) {
             if (isset($this->options[$option])) {
                 $cmd[$option] = $this->options[$option];
             }
         }
 
-        $cursor = $server->executeReadCommand($this->databaseName, new Command($cmd), $this->createOptions());
-        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
-
-        return new CachingIterator($cursor);
+        return new Command($cmd);
     }
 
     /**

@@ -59,6 +59,10 @@ class InsertOne implements Executable
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.
      *
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    This is not supported for servers versions < 4.4.
+     *
      *  * session (MongoDB\Driver\Session): Client session.
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
@@ -135,8 +139,10 @@ class InsertOne implements Executable
     {
         $options = [];
 
-        if (isset($this->options['bypassDocumentValidation'])) {
-            $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
+        foreach (['bypassDocumentValidation', 'comment'] as $option) {
+            if (isset($this->options[$option])) {
+                $options[$option] = $this->options[$option];
+            }
         }
 
         return $options;

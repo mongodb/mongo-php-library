@@ -60,6 +60,11 @@ class InsertMany implements Executable
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.
      *
+     *  * comment (mixed): BSON value to attach as a comment to the command(s)
+     *    associated with this insert.
+     *
+     *    This is not supported for servers versions < 4.4.
+     *
      *  * ordered (boolean): If true, when an insert fails, return without
      *    performing the remaining writes. If false, when a write fails,
      *    continue with the remaining writes, if any. The default is true.
@@ -164,8 +169,10 @@ class InsertMany implements Executable
     {
         $options = ['ordered' => $this->options['ordered']];
 
-        if (isset($this->options['bypassDocumentValidation'])) {
-            $options['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
+        foreach (['bypassDocumentValidation', 'comment'] as $option) {
+            if (isset($this->options[$option])) {
+                $options[$option] = $this->options[$option];
+            }
         }
 
         return $options;

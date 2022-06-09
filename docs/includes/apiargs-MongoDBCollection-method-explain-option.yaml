@@ -1,4 +1,15 @@
 source:
+  file: apiargs-common-option.yaml
+  ref: comment
+post: |
+  Defaults to the ``comment`` of the explained operation (if any).
+
+  This is not supported for server versions prior to 4.4 and will result in an
+  exception at execution time if used.
+
+  .. versionadded:: 1.13
+---
+source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: readPreference
 ---

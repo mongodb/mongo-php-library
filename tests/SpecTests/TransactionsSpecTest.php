@@ -178,7 +178,7 @@ class TransactionsSpecTest extends FunctionalTestCase
         }
 
         if (isset($test->expectations)) {
-            $commandExpectations = CommandExpectations::fromTransactions($test->expectations);
+            $commandExpectations = CommandExpectations::fromTransactions($context->getClient(), $test->expectations);
             $commandExpectations->startMonitoring();
         }
 

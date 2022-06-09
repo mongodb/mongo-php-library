@@ -1,5 +1,14 @@
 source:
   file: apiargs-common-option.yaml
+  ref: comment
+post: |
+  This is not supported for server versions prior to 4.4 and will result in an
+  exception at execution time if used.
+
+  .. versionadded:: 1.13
+---
+source:
+  file: apiargs-common-option.yaml
   ref: maxTimeMS
 ---
 source:

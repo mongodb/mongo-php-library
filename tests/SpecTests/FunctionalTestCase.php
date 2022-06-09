@@ -89,7 +89,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      * @param array|object $actualDocument
      * @param string       $message
      */
-    protected static function assertDocumentsMatch($expectedDocument, $actualDocument, string $message = ''): void
+    public static function assertDocumentsMatch($expectedDocument, $actualDocument, string $message = ''): void
     {
         $constraint = new DocumentsMatchConstraint($expectedDocument, true, true);
 
@@ -197,7 +197,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     /**
      * Drop the test and outcome collections by dropping them.
      */
-    protected function dropTestAndOutcomeCollections(): void
+    protected function dropTestAndOutcomeCollections(array $testCollectionDropOptions = []): void
     {
         $context = $this->getContext();
 
@@ -213,7 +213,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
         $collection = null;
         if ($context->collectionName !== null) {
             $collection = $context->getCollection($context->defaultWriteOptions);
-            $collection->drop();
+            $collection->drop($testCollectionDropOptions);
         }
 
         if ($context->outcomeCollectionName !== null) {

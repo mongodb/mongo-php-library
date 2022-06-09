@@ -13,6 +13,18 @@ operation: ~
 optional: true
 ---
 arg_name: option
+name: comment
+type: mixed
+description: |
+  Enables users to specify an arbitrary comment to help trace the operation
+  through the :manual:`database profiler </reference/database-profiler>`,
+  :manual:`currentOp </reference/command/currentOp>` output, and
+  :manual:`logs </reference/log-messages>`.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: hint
 type: string|array|object
 description: |

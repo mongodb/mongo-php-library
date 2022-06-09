@@ -49,6 +49,10 @@ class ListDatabaseNames implements Executable
      *
      *    For servers < 4.0.5, this option is ignored.
      *
+     *  * comment (mixed): BSON value to attach as a comment to this command.
+     *
+     *    This is not supported for servers versions < 4.4.
+     *
      *  * filter (document): Query by which to filter databases.
      *
      *  * maxTimeMS (integer): The maximum amount of time to allow the query to

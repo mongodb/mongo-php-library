@@ -67,6 +67,33 @@ pre: |
   Specifies the :manual:`collation
   </reference/bson-type-comparison-order/#collation>` for the collection.
 ---
+source:
+  file: apiargs-common-option.yaml
+  ref: comment
+post: |
+  This is not supported for server versions prior to 4.4 and will result in an
+  exception at execution time if used.
+
+  .. versionadded:: 1.13
+---
+arg_name: option
+name: encryptedFields
+type: document
+description: |
+  A document describing encrypted fields for queryable encryption. If omitted,
+  the ``encryptedFieldsMap`` option within the ``autoEncryption`` driver option
+  will be consulted. See the
+  `Client Side Encryption specification <https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst>`_
+  for more information.
+
+  This option is available in MongoDB 6.0+ and will result in an exception at
+  execution time if specified for an older server version.
+
+  .. versionadded:: 1.13
+interface: phpmethod
+operation: ~
+optional: true
+---
 arg_name: option
 name: expireAfterSeconds
 type: integer
@@ -144,6 +171,20 @@ optional: true
 source:
   file: apiargs-common-option.yaml
   ref: maxTimeMS
+---
+arg_name: option
+name: pipeline
+type: array
+description: |
+  An array that consists of the aggregation pipeline stage(s), which will be
+  applied to the collection or view specified by ``viewOn``. See the
+  :manual:`create </reference/command/create>` command documentation for more
+  information.
+  
+  .. versionadded:: 1.13
+interface: phpmethod
+operation: ~
+optional: true
 ---
 source:
   file: apiargs-common-option.yaml
@@ -291,6 +332,23 @@ description: |
         - Apply validation rules to inserts and to updates on existing *valid*
           documents. Do not apply rules to updates on existing *invalid*
           documents.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
+name: viewOn
+type: string
+description: |
+  The name of the source collection or view from which to create the view.
+
+  .. note::
+
+     The name is not the full namespace of the collection or view (i.e. it does
+     not include the database name). Views must be created in the same databases
+     as the source collection or view.
+     
+     .. versionadded:: 1.13
 interface: phpmethod
 operation: ~
 optional: true

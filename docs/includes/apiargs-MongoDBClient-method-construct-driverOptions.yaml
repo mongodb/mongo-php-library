@@ -8,6 +8,7 @@ description: |
   For the ``keyVaultClient`` option, you may pass a :phpclass:`MongoDB\\Client`
   instance, which will be unwrapped to provide a :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>`
   to the extension.
+
   .. versionadded:: 1.6
 interface: phpmethod
 operation: ~

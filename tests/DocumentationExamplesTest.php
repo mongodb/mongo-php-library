@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests;
 
+use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Collection;
@@ -11,7 +12,9 @@ use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\Exception;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Tests\SpecTests\ClientSideEncryptionSpecTest;
 
+use function base64_decode;
 use function in_array;
 use function microtime;
 use function ob_end_clean;
@@ -1846,6 +1849,111 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         // End Transactions withTxn API Example 1
         // phpcs:enable
+    }
+
+    /**
+     * Queryable encryption examples (not parsed for server manual includes).
+     *
+     * @see https://jira.mongodb.org/browse/PHPLIB-863
+     * @see ClientSideEncryptionSpecTest::testExplicitEncryption
+     */
+    public function testQueryableEncryption(): void
+    {
+        if ($this->isStandalone() || ($this->isShardedCluster() && ! $this->isShardedClusterUsingReplicasets())) {
+            $this->markTestSkipped('Queryable encryption requires replica sets');
+        }
+
+        if (version_compare($this->getServerVersion(), '6.0.0', '<')) {
+            $this->markTestSkipped('Queryable encryption requires MongoDB 6.0 or later');
+        }
+
+        if (! $this->isEnterprise()) {
+            $this->markTestSkipped('Automatic encryption requires MongoDB Enterprise');
+        }
+
+        // Fetch names for the database and collection under test
+        $collectionName = $this->getCollectionName();
+        $databaseName = $this->getDatabaseName();
+        $namespace = $this->getNamespace();
+
+        /* Create a client without auto encryption. Drop existing data in both
+         * the keyvault and database under test. The latter is necessary since
+         * setUp() only drops the collection under test, which will leave behind
+         * internal collections for queryable encryption. */
+        $client = static::createTestClient();
+        $client->selectDatabase('keyvault')->drop(['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]);
+        $client->selectDatabase($databaseName)->drop(['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]);
+
+        /* Although ClientEncryption can be constructed directly, the library
+         * provides a helper to do so. With this method, the keyVaultClient will
+         * default to the same client. */
+        $clientEncryption = $client->createClientEncryption([
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(ClientSideEncryptionSpecTest::LOCAL_MASTERKEY), 0)]],
+        ]);
+
+        // Create two data keys, one for each encrypted field
+        $dataKeyId1 = $clientEncryption->createDataKey('local');
+        $dataKeyId2 = $clientEncryption->createDataKey('local');
+
+        $autoEncryptionOpts = [
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(ClientSideEncryptionSpecTest::LOCAL_MASTERKEY), 0)]],
+            'encryptedFieldsMap' => [
+                $namespace => [
+                    'fields' => [
+                        [
+                            'path' => 'encryptedIndexed',
+                            'bsonType' => 'string',
+                            'keyId' => $dataKeyId1,
+                            'queries' => ['queryType' => 'equality'],
+                        ],
+                        [
+                            'path' => 'encryptedUnindexed',
+                            'bsonType' => 'string',
+                            'keyId' => $dataKeyId2,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $encryptedClient = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
+
+        /* Create the collection under test. The createCollection() helper will
+         * reference the client's encryptedFieldsMap and create additional,
+         * internal collections automatically. */
+        $encryptedClient->selectDatabase($databaseName)->createCollection($collectionName);
+        $encryptedCollection = $encryptedClient->selectCollection($databaseName, $collectionName);
+
+        /* Using a client with auto encryption, insert a document with encrypted
+         * fields and assert that those fields are automatically decrypted when
+         * querying. */
+        $indexedValue = 'indexedValue';
+        $unindexedValue = 'unindexedValue';
+
+        $encryptedCollection->insertOne([
+            '_id' => 1,
+            'encryptedIndexed' => $indexedValue,
+            'encryptedUnindexed' => $unindexedValue,
+        ]);
+
+        $result = $encryptedCollection->findOne(['encryptedIndexed' => $indexedValue]);
+
+        $this->assertSame(1, $result['_id']);
+        $this->assertSame($indexedValue, $result['encryptedIndexed']);
+        $this->assertSame($unindexedValue, $result['encryptedUnindexed']);
+
+        /* Using a client without auto encryption, query for the same
+         * document and assert that encrypted data is returned. */
+        $unencryptedClient = static::createTestClient();
+        $unencryptedCollection = $unencryptedClient->selectCollection($databaseName, $collectionName);
+
+        $result = $unencryptedCollection->findOne(['_id' => 1]);
+
+        $this->assertSame(1, $result['_id']);
+        $this->assertInstanceOf(Binary::class, $result['encryptedIndexed']);
+        $this->assertInstanceOf(Binary::class, $result['encryptedUnindexed']);
     }
 
     /**

@@ -2,6 +2,13 @@ source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: collation
 ---
+source:
+  file: apiargs-common-option.yaml
+  ref: comment
+post: |
+  The comment can be any valid BSON type for server versions 4.4 and above.
+  Earlier server versions only support string values.
+---
 arg_name: option
 name: hint
 type: string|array|object

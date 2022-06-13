@@ -873,7 +873,35 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
 
-        $clientEncrypted->selectCollection('db', 'coll')->insertOne(['encrypted' => 'test']);
+        $clientEncrypted->selectCollection('db', 'coll')->insertOne(['unencrypted' => 'test']);
+
+        $clientMongocryptd = static::createTestClient('mongodb://localhost:27021');
+
+        $this->expectException(ConnectionTimeoutException::class);
+        $clientMongocryptd->selectDatabase('db')->command(['ping' => 1]);
+    }
+
+    /**
+     * Prose test 8: Bypass spawning mongocryptd (via bypassQueryAnalysis)
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#via-bypassqueryanalysis
+     */
+    public function testBypassSpawningMongocryptdViaBypassQueryAnalysis(): void
+    {
+        $autoEncryptionOpts = [
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => [
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+            ],
+            'bypassQueryAnalysis' => true,
+            'extraOptions' => [
+                'mongocryptdSpawnArgs' => ['--pidfilepath=bypass-spawning-mongocryptd.pid', '--port=27021'],
+            ],
+        ];
+
+        $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
+
+        $clientEncrypted->selectCollection('db', 'coll')->insertOne(['unencrypted' => 'test']);
 
         $clientMongocryptd = static::createTestClient('mongodb://localhost:27021');
 

@@ -67,6 +67,10 @@ case "$TESTS" in
       php vendor/bin/simple-phpunit --configuration phpunit.evergreen.xml --testsuite "Atlas Data Lake Test Suite" $PHPUNIT_OPTS
       ;;
 
+   csfle)
+      php vendor/bin/simple-phpunit --configuration phpunit.evergreen.xml --group csfle $PHPUNIT_OPTS
+      ;;
+
    versioned-api)
       php vendor/bin/simple-phpunit --configuration phpunit.evergreen.xml --group versioned-api $PHPUNIT_OPTS
       ;;

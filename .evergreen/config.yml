@@ -246,6 +246,7 @@ functions:
           export KMS_ENDPOINT_REQUIRE_CLIENT_CERT="${client_side_encryption_kms_endpoint_require_client_cert}"
           export KMS_TLS_CA_FILE="${client_side_encryption_kms_tls_ca_file}"
           export KMS_TLS_CERTIFICATE_KEY_FILE="${client_side_encryption_kms_tls_certificate_key_file}"
+          export CRYPT_SHARED_LIB_PATH="${client_side_encryption_crypt_shared_lib_path}"
           export PATH="${PHP_PATH}/bin:$PATH"
           API_VERSION=${API_VERSION} PHP_VERSION=${PHP_VERSION} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
@@ -377,6 +378,18 @@ functions:
           - key: client_side_encryption_kmip_endpoint
             value: localhost:5698
 
+  "fetch crypt_shared":
+    - command: shell.exec
+      params:
+        script: |
+          # TODO: Specify same version provisioned by download-mongodb.sh (see: DRIVERS-2355)
+          python3 ${DRIVERS_TOOLS}/.evergreen/mongodl.py --component crypt_shared --version latest --only "**/mongo_crypt_v1.so" --out ${DRIVERS_TOOLS}/.evergreen/csfle --strip-path-components 1
+    - command: expansions.update
+      params:
+        updates:
+          - key: client_side_encryption_crypt_shared_lib_path
+            value: ${DRIVERS_TOOLS}/.evergreen/csfle/mongo_crypt_v1.so
+
 pre:
   - func: "fetch source"
   - func: "prepare resources"
@@ -507,6 +520,18 @@ tasks:
             MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
             SSL: "yes"
         # Note: "stop load balancer" will be called from "post"
+
+    - name: "test-crypt_shared"
+      commands:
+        - func: "bootstrap mongo-orchestration"
+          vars:
+            TOPOLOGY: "replica_set"
+        - func: "start kms servers"
+        - func: "fetch crypt_shared"
+        - func: "run tests"
+          vars:
+            TESTS: "csfle"
+
 # }}}
 
 
@@ -766,3 +791,10 @@ buildvariants:
   display_name: "Load balanced - ${mongodb-versions}"
   tasks:
     - name: "test-loadBalanced"
+
+# CSFLE crypt_shared is available from MongoDB 6.0+
+- matrix_name: "test-csfle-crypt_shared"
+  matrix_spec: { "os": "debian11", "mongodb-versions": "6.0", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  display_name: "CSFLE crypt_shared - ${mongodb-versions}"
+  tasks:
+    - name: "test-crypt_shared"

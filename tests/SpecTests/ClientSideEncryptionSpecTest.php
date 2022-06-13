@@ -31,6 +31,7 @@ use function getenv;
 use function glob;
 use function in_array;
 use function is_executable;
+use function is_readable;
 use function iterator_to_array;
 use function json_decode;
 use function sprintf;
@@ -46,6 +47,7 @@ use const PATH_SEPARATOR;
  * Client-side encryption spec tests.
  *
  * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption
+ * @group csfle
  */
 class ClientSideEncryptionSpecTest extends FunctionalTestCase
 {
@@ -65,7 +67,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         parent::setUp();
 
         $this->skipIfClientSideEncryptionIsNotSupported();
-        $this->skipIfLocalMongocryptdIsUnavailable();
+
+        if (! static::isCryptSharedLibAvailable() && ! static::isMongocryptdAvailable()) {
+            $this->markTestSkipped('Neither crypt_shared nor mongocryptd are available');
+        }
     }
 
     /**
@@ -77,6 +82,15 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     public static function assertCommandMatches(stdClass $expected, stdClass $actual): void
     {
         static::assertDocumentsMatch($expected, $actual);
+    }
+
+    public static function createTestClient(?string $uri = null, array $options = [], array $driverOptions = []): Client
+    {
+        if (isset($driverOptions['autoEncryption']) && getenv('CRYPT_SHARED_LIB_PATH')) {
+            $driverOptions['autoEncryption']['extraOptions']['cryptSharedLibPath'] = getenv('CRYPT_SHARED_LIB_PATH');
+        }
+
+        return parent::createTestClient($uri, $options, $driverOptions);
     }
 
     /**
@@ -825,6 +839,14 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testBypassSpawningMongocryptdViaBypassSpawn(): void
     {
+        /* If crypt_shared is available it will likely already have been loaded
+         * by a previous test so there is no way to prevent it from being used.
+         * Since CSFLE prefers crypt_shared to mongocryptd there is reason to
+         * run any of the "bypass spawning" tests (see also: MONGOCRYPT-421). */
+        if (static::isCryptSharedLibAvailable()) {
+            $this->markTestSkipped('Bypass spawning of mongocryptd cannot be tested when crypt_shared is available');
+        }
+
         $autoEncryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
@@ -840,6 +862,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             ],
         ];
 
+        // Disable adding cryptSharedLibPath, as it may interfere with this test
         $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
 
         try {
@@ -860,6 +883,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testBypassSpawningMongocryptdViaBypassAutoEncryption(): void
     {
+        if (static::isCryptSharedLibAvailable()) {
+            $this->markTestSkipped('Bypass spawning of mongocryptd cannot be tested when crypt_shared is available');
+        }
+
         $autoEncryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
@@ -871,6 +898,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             ],
         ];
 
+        // Disable adding cryptSharedLibPath, as it may interfere with this test
         $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
 
         $clientEncrypted->selectCollection('db', 'coll')->insertOne(['unencrypted' => 'test']);
@@ -888,6 +916,10 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testBypassSpawningMongocryptdViaBypassQueryAnalysis(): void
     {
+        if (static::isCryptSharedLibAvailable()) {
+            $this->markTestSkipped('Bypass spawning of mongocryptd cannot be tested when crypt_shared is available');
+        }
+
         $autoEncryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
@@ -899,6 +931,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             ],
         ];
 
+        // Disable adding cryptSharedLibPath, as it may interfere with this test
         $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
 
         $clientEncrypted->selectCollection('db', 'coll')->insertOne(['unencrypted' => 'test']);
@@ -1525,16 +1558,27 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         return $encryptedFieldsMap;
     }
 
-    private function skipIfLocalMongocryptdIsUnavailable(): void
+    private static function isCryptSharedLibAvailable(): bool
+    {
+        $cryptSharedLibPath = getenv('CRYPT_SHARED_LIB_PATH');
+
+        if ($cryptSharedLibPath === false) {
+            return false;
+        }
+
+        return is_readable($cryptSharedLibPath);
+    }
+
+    private static function isMongocryptdAvailable(): bool
     {
         $paths = explode(PATH_SEPARATOR, getenv("PATH"));
 
         foreach ($paths as $path) {
             if (is_executable($path . DIRECTORY_SEPARATOR . 'mongocryptd')) {
-                return;
+                return true;
             }
         }
 
-        $this->markTestSkipped('Mongocryptd is not available on the localhost');
+        return false;
     }
 }

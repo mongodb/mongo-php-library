@@ -248,7 +248,7 @@ functions:
           export KMS_TLS_CERTIFICATE_KEY_FILE="${client_side_encryption_kms_tls_certificate_key_file}"
           export CRYPT_SHARED_LIB_PATH="${client_side_encryption_crypt_shared_lib_path}"
           export PATH="${PHP_PATH}/bin:$PATH"
-          API_VERSION=${API_VERSION} PHP_VERSION=${PHP_VERSION} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+          API_VERSION=${API_VERSION} PHP_VERSION=${PHP_VERSION} TESTS=${TESTS} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "run atlas data lake test":
      - command: shell.exec

@@ -124,7 +124,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         // TODO: Remove this once SERVER-66901 is implemented (see: PHPLIB-884)
         if (isset($test->clientOptions->autoEncryptOpts->encryptedFieldsMap)) {
-            $test->clientOptions->autoEncryptOpts->encryptedFieldsMap = $this->prepareEncryptedFieldsMap($test->clientOptions->autoEncryptOpts->encryptedFieldsMap);
+            $test->clientOptions->autoEncryptOpts->encryptedFieldsMap = $test->clientOptions->autoEncryptOpts->encryptedFieldsMap;
         }
 
         try {
@@ -1233,7 +1233,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         }
 
         // Test setup
-        $encryptedFields = $this->prepareEncryptedFields($this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/etc/data/encryptedFields.json')));
+        $encryptedFields = $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/etc/data/encryptedFields.json'));
         $key1Document = $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/etc/data/keys/key1-document.json'));
         $key1Id = $key1Document->_id;
 
@@ -1407,7 +1407,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $options = $context->defaultWriteOptions;
 
         if (! empty($encryptedFields)) {
-            $options['encryptedFields'] = $this->prepareEncryptedFields($encryptedFields);
+            $options['encryptedFields'] = $encryptedFields;
         }
 
         if (! empty($jsonSchema)) {
@@ -1528,34 +1528,6 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $returnData->value = $this->encryptCorpusValue($fieldName, $data, $clientEncryption);
 
         return $data->allowed ? $returnData : $data;
-    }
-
-    /**
-     * @todo Remove this once SERVER-66901 is implemented
-     * @see https://jira.mongodb.org/browse/PHPLIB-884
-     */
-    private function prepareEncryptedFields(stdClass $encryptedFields): stdClass
-    {
-        foreach ($encryptedFields->fields as $field) {
-            if (isset($field->queries->contention)) {
-                $field->queries->contention = $this->createInt64($field->queries->contention);
-            }
-        }
-
-        return $encryptedFields;
-    }
-
-    /**
-     * @todo Remove this once SERVER-66901 is implemented
-     * @see https://jira.mongodb.org/browse/PHPLIB-884
-     */
-    private function prepareEncryptedFieldsMap(stdClass $encryptedFieldsMap): stdClass
-    {
-        foreach ($encryptedFieldsMap as $namespace => $encryptedFields) {
-            $encryptedFieldsMap->{$namespace} = $this->prepareEncryptedFields($encryptedFields);
-        }
-
-        return $encryptedFieldsMap;
     }
 
     private static function isCryptSharedLibAvailable(): bool

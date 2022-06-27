@@ -10,10 +10,15 @@ use MongoDB\Collection;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\AuthenticationException;
 use MongoDB\Driver\Exception\BulkWriteException;
+use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\ConnectionException;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Driver\Exception\EncryptionException;
 use MongoDB\Driver\Exception\RuntimeException;
+use MongoDB\Driver\Monitoring\CommandFailedEvent;
+use MongoDB\Driver\Monitoring\CommandStartedEvent;
+use MongoDB\Driver\Monitoring\CommandSubscriber;
+use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Tests\CommandObserver;
 use PHPUnit\Framework\Assert;
@@ -37,6 +42,7 @@ use function json_decode;
 use function sprintf;
 use function str_repeat;
 use function strlen;
+use function substr;
 use function unserialize;
 use function version_compare;
 
@@ -1389,6 +1395,155 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 ]);
 
                 $test->assertSame($value, $clientEncryption->decrypt($payload));
+            },
+        ];
+    }
+
+    /**
+     * Prose test 14: Decryption Events
+     *
+     * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#decryption-events
+     * @dataProvider provideDecryptionEventsTests
+     */
+    public function testDecryptionEvents(Closure $test): void
+    {
+        // Test setup
+        $setupClient = static::createTestClient();
+        $setupClient->selectCollection('db', 'decryption_events')->drop();
+
+        // Ensure that the key vault is dropped with a majority write concern
+        self::insertKeyVaultData($setupClient, []);
+
+        $clientEncryption = new ClientEncryption([
+            'keyVaultClient' => $setupClient->getManager(),
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)]],
+        ]);
+
+        $keyId = $clientEncryption->createDataKey('local');
+
+        $cipherText = $clientEncryption->encrypt('hello', [
+            'keyId' => $keyId,
+            'algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC,
+        ]);
+
+        // Flip the last byte in the encrypted string
+        $malformedCipherText = new Binary(substr($cipherText->getData(), 0, -1) . ~$cipherText->getData()[-1], Binary::TYPE_ENCRYPTED);
+
+        $autoEncryptionOpts = [
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)]],
+        ];
+
+        $encryptedClient = static::createTestClient(null, ['retryReads' => false], ['autoEncryption' => $autoEncryptionOpts]);
+
+        $subscriber = new class implements CommandSubscriber {
+            public $lastAggregateReply;
+            public $lastAggregateError;
+
+            public function commandStarted(CommandStartedEvent $event): void
+            {
+            }
+
+            public function commandSucceeded(CommandSucceededEvent $event): void
+            {
+                if ($event->getCommandName() === 'aggregate') {
+                    $this->lastAggregateReply = $event->getReply();
+                }
+            }
+
+            public function commandFailed(CommandFailedEvent $event): void
+            {
+                if ($event->getCommandName() === 'aggregate') {
+                    $this->lastAggregateError = $event->getError();
+                }
+            }
+        };
+
+        $encryptedClient->getManager()->addSubscriber($subscriber);
+
+        $test($this, $setupClient, $clientEncryption, $encryptedClient, $subscriber, $cipherText, $malformedCipherText);
+
+        $encryptedClient->getManager()->removeSubscriber($subscriber);
+    }
+
+    public static function provideDecryptionEventsTests()
+    {
+        // See: https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#case-1-command-error
+        yield 'Case 1: Command Error' => [
+            static function (self $test, Client $setupClient, ClientEncryption $clientEncryption, Client $encryptedClient, CommandSubscriber $subscriber, Binary $cipherText, Binary $malformedCipherText): void {
+                $setupClient->selectDatabase('admin')->command([
+                    'configureFailPoint' => 'failCommand',
+                    'mode' => ['times' => 1],
+                    'data' => [
+                        'errorCode' => 123,
+                        'failCommands' => ['aggregate'],
+                    ],
+                ]);
+
+                try {
+                    $encryptedClient->selectCollection('db', 'decryption_events')->aggregate([]);
+                    $test->fail('Expected exception to be thrown');
+                } catch (CommandException $e) {
+                    $test->assertSame(123, $e->getCode());
+                }
+
+                $test->assertNotNull($subscriber->lastAggregateError);
+            },
+        ];
+
+        // See: https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#case-2-network-error
+        yield 'Case 2: Network Error' => [
+            static function (self $test, Client $setupClient, ClientEncryption $clientEncryption, Client $encryptedClient, CommandSubscriber $subscriber, Binary $cipherText, Binary $malformedCipherText): void {
+                $setupClient->selectDatabase('admin')->command([
+                    'configureFailPoint' => 'failCommand',
+                    'mode' => ['times' => 1],
+                    'data' => [
+                        'closeConnection' => true,
+                        'failCommands' => ['aggregate'],
+                    ],
+                ]);
+
+                try {
+                    $encryptedClient->selectCollection('db', 'decryption_events')->aggregate([]);
+                    $test->fail('Expected exception to be thrown');
+                } catch (ConnectionTimeoutException $e) {
+                    $test->addToAssertionCount(1);
+                }
+
+                $test->assertNotNull($subscriber->lastAggregateError);
+            },
+        ];
+
+        // See: https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#case-3-decrypt-error
+        yield 'Case 3: Decrypt Error' => [
+            static function (self $test, Client $setupClient, ClientEncryption $clientEncryption, Client $encryptedClient, CommandSubscriber $subscriber, Binary $cipherText, Binary $malformedCipherText): void {
+                $collection = $encryptedClient->selectCollection('db', 'decryption_events');
+
+                $collection->insertOne(['encrypted' => $malformedCipherText]);
+
+                try {
+                    $collection->aggregate([]);
+                    $test->fail('Expected exception to be thrown');
+                } catch (EncryptionException $e) {
+                    $test->assertStringContainsString('HMAC validation failure', $e->getMessage());
+                }
+
+                $test->assertNotNull($subscriber->lastAggregateReply);
+                $test->assertEquals($malformedCipherText, $subscriber->lastAggregateReply->cursor->firstBatch[0]->encrypted ?? null);
+            },
+        ];
+
+        // See: https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#case-4-decrypt-success
+        yield 'Case 4: Decrypt Success' => [
+            static function (self $test, Client $setupClient, ClientEncryption $clientEncryption, Client $encryptedClient, CommandSubscriber $subscriber, Binary $cipherText, Binary $malformedCipherText): void {
+                $collection = $encryptedClient->selectCollection('db', 'decryption_events');
+
+                $collection->insertOne(['encrypted' => $cipherText]);
+                $collection->aggregate([]);
+
+                $test->assertNotNull($subscriber->lastAggregateReply);
+                $test->assertEquals($cipherText, $subscriber->lastAggregateReply->cursor->firstBatch[0]->encrypted ?? null);
             },
         ];
     }

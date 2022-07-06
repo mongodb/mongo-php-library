@@ -51,6 +51,10 @@ source:
 ---
 source:
   file: apiargs-method-watch-option.yaml
+  ref: showExpandedEvents
+---
+source:
+  file: apiargs-method-watch-option.yaml
   ref: startAfter
 post: |
   .. versionadded: 1.5

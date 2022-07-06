@@ -97,6 +97,30 @@ operation: ~
 optional: true
 ---
 arg_name: option
+name: showExpandedEvents
+type: bool
+description: |
+  Enables the server to send the 'expanded' list of change stream events.
+  The list of additional events included with this flag set are
+  - createIndexes
+  - dropIndexes
+  - modify
+  - create
+  - shardCollection
+  - reshardCollection
+  - refineCollectionShardKey
+
+  This flag is available in server versions greater than 6.0.0. `reshardCollection` and
+  `refineCollectionShardKey` events are not available until server version 6.1.0.
+
+  .. note::
+
+     This is an option of the ``$changeStream`` pipeline stage.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: startAfter
 type: array|object
 description: |

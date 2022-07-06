@@ -38,6 +38,7 @@ use function array_key_exists;
 use function array_unshift;
 use function count;
 use function is_array;
+use function is_bool;
 use function is_object;
 use function is_string;
 use function MongoDB\Driver\Monitoring\addSubscriber;

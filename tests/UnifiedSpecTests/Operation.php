@@ -491,7 +491,11 @@ final class Operation
                 assertArrayHasKey('to', $args);
                 assertIsString($args['to']);
 
-                return $collection->rename($args['to']);
+                return $collection->rename(
+                    $args['to'],
+                    null, /* $toDatabaseName */
+                    array_diff_key($args, ['to' => 1])
+                );
 
             default:
                 Assert::fail('Unsupported collection operation: ' . $this->name);

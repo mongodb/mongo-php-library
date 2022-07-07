@@ -38,6 +38,7 @@ use function array_key_exists;
 use function array_unshift;
 use function count;
 use function is_array;
+use function is_bool;
 use function is_object;
 use function is_string;
 use function MongoDB\Driver\Monitoring\addSubscriber;
@@ -161,6 +162,11 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      *
      *  * session (MongoDB\Driver\Session): Client session.
      *
+     *  * showExpandedEvents (boolean): Enables the server to send the expanded
+     *    list of change stream events.
+     *
+     *    This option is not supported for server versions < 6.0.
+     *
      *  * startAfter (document): Specifies the logical starting point for the
      *    new change stream. Unlike "resumeAfter", this option can be used with
      *    a resume token from an "invalidate" event.
@@ -229,6 +235,10 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             throw InvalidArgumentException::invalidType('"startAtOperationTime" option', $options['startAtOperationTime'], TimestampInterface::class);
         }
 
+        if (isset($options['showExpandedEvents']) && ! is_bool($options['showExpandedEvents'])) {
+            throw InvalidArgumentException::invalidType('"showExpandedEvents" option', $options['showExpandedEvents'], 'bool');
+        }
+
         /* In the absence of an explicit session, create one to ensure that the
          * initial aggregation and any resume attempts can use the same session
          * ("implicit from the user's perspective" per PHPLIB-342). Since this
@@ -244,7 +254,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         }
 
         $this->aggregateOptions = array_intersect_key($options, ['batchSize' => 1, 'collation' => 1, 'comment' => 1, 'maxAwaitTimeMS' => 1, 'readConcern' => 1, 'readPreference' => 1, 'session' => 1, 'typeMap' => 1]);
-        $this->changeStreamOptions = array_intersect_key($options, ['fullDocument' => 1, 'fullDocumentBeforeChange' => 1, 'resumeAfter' => 1, 'startAfter' => 1, 'startAtOperationTime' => 1]);
+        $this->changeStreamOptions = array_intersect_key($options, ['fullDocument' => 1, 'fullDocumentBeforeChange' => 1, 'resumeAfter' => 1, 'showExpandedEvents' => 1, 'startAfter' => 1, 'startAtOperationTime' => 1]);
 
         // Null database name implies a cluster-wide change stream
         if ($databaseName === null) {

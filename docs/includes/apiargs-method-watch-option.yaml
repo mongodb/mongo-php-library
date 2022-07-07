@@ -97,6 +97,31 @@ operation: ~
 optional: true
 ---
 arg_name: option
+name: showExpandedEvents
+type: boolean
+description: |
+  If true, instructs the server to include additional DDL events in the change
+  stream. The additional events that may be included are:
+
+  - ``createIndexes``
+  - ``dropIndexes``
+  - ``modify``
+  - ``create``
+  - ``shardCollection``
+  - ``reshardCollection`` (server 6.1+)
+  - ``refineCollectionShardKey`` (server 6.1+)
+
+  This is not supported for server versions prior to 6.0 and will result in an
+  exception at execution time if used.
+
+  .. note::
+
+     This is an option of the ``$changeStream`` pipeline stage.
+interface: phpmethod
+operation: ~
+optional: true
+---
+arg_name: option
 name: startAfter
 type: array|object
 description: |

@@ -1726,8 +1726,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Versioned API is not supported');
         }
 
-        if (version_compare($this->getServerVersion(), '5.9', '>=')) {
-            $this->markTestIncomplete('SERVER-63850 added count command to API version 1 in MongoDB 6.0.0-rc0 (see: PHPLIB-810)');
+        if (version_compare($this->getServerVersion(), '5.0.9', '>=')) {
+            $this->markTestSkipped('The count command was added to API version 1 (SERVER-63850)');
         }
 
         $uriString = static::getUri(true);

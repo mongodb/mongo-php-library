@@ -493,7 +493,7 @@ final class Operation
 
                 return $collection->rename(
                     $args['to'],
-                    null,
+                    null, /* $toDatabaseName */
                     array_diff_key($args, ['to' => 1])
                 );
 

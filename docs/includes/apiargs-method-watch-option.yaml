@@ -98,20 +98,21 @@ optional: true
 ---
 arg_name: option
 name: showExpandedEvents
-type: bool
+type: boolean
 description: |
-  Enables the server to send the 'expanded' list of change stream events.
-  The list of additional events included with this flag set are
-  - createIndexes
-  - dropIndexes
-  - modify
-  - create
-  - shardCollection
-  - reshardCollection
-  - refineCollectionShardKey
+  If true, instructs the server to include additional DDL events in the change
+  stream. The additional events that may be included are:
 
-  This flag is available in server versions greater than 6.0.0. `reshardCollection` and
-  `refineCollectionShardKey` events are not available until server version 6.1.0.
+  - ``createIndexes``
+  - ``dropIndexes``
+  - ``modify``
+  - ``create``
+  - ``shardCollection``
+  - ``reshardCollection`` (server 6.1+)
+  - ``refineCollectionShardKey`` (server 6.1+)
+
+  This is not supported for server versions prior to 6.0 and will result in an
+  exception at execution time if used.
 
   .. note::
 

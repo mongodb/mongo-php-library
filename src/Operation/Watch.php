@@ -162,12 +162,10 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      *
      *  * session (MongoDB\Driver\Session): Client session.
      *
-     *  * showExpandedEvents (boolean): Enables the server to send the 'expanded'
+     *  * showExpandedEvents (boolean): Enables the server to send the expanded
      *    list of change stream events.
      *
-     *    This flag is available in server versions greater than 6.0.0.
-     *    `reshardCollection` and `refineCollectionShardKey` events are not
-     *    available until server version 6.1.0.
+     *    This option is not supported for server versions < 6.0.
      *
      *  * startAfter (document): Specifies the logical starting point for the
      *    new change stream. Unlike "resumeAfter", this option can be used with

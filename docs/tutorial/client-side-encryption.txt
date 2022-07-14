@@ -21,8 +21,8 @@ Automatic Encryption and Decryption
 
    Auto encryption is an enterprise only feature.
 
-The following example uses a local key, however using AWS Key Management Service
-is also an option. The data in the ``encryptedField`` field is automatically
+The following example uses a local key; however, other key providers such as AWS
+are also an option. The data in the ``encryptedField`` field is automatically
 encrypted on insertion and decrypted when querying on the client side.
 
 .. code-block:: php
@@ -31,6 +31,7 @@ encrypted on insertion and decrypted when querying on the client side.
 
    use MongoDB\BSON\Binary;
    use MongoDB\Client;
+   use MongoDB\Driver\ClientEncryption;
 
    $localKey = new Binary('<binary key data (96 bytes)>', Binary::TYPE_GENERIC);
 
@@ -41,7 +42,7 @@ encrypted on insertion and decrypted when querying on the client side.
        ],
    ];
 
-   $client = new Client('mongodb://127.0.0.1');
+   $client = new Client();
    $clientEncryption = $client->createClientEncryption($encryptionOpts);
 
    $database = $client->selectDatabase('test');
@@ -134,7 +135,7 @@ encryption using the newly created key.
        ],
    ];
 
-   $encryptedClient = new Client('mongodb://127.0.0.1', [], ['autoEncryption' => $autoEncryptionOpts]);
+   $encryptedClient = new Client(null, [], ['autoEncryption' => $autoEncryptionOpts]);
 
    $collection = $encryptedClient->selectCollection('test', 'coll');
    $collection->drop(); // clear old data
@@ -239,3 +240,92 @@ The software then encrypts data by referencing the key by its alternative name.
 
    $document = $collection->findOne();
    var_dump($clientEncryption->decrypt($document->encryptedField));
+
+
+Automatic Queryable Encryption
+------------------------------
+
+.. note::
+
+   Automatic queryable encryption is an enterprise only feature and requires
+   MongoDB 6.0+.
+
+The following example uses a local key; however, other key providers such as AWS
+are also an option. The data in the ``encryptedIndexed`` and
+``encryptedUnindexed`` fields will be automatically encrypted on insertion and
+decrypted when querying on the client side. Additionally, it is possible to
+query on the ``encryptedIndexed`` field.
+
+.. code-block:: php
+
+   <?php
+
+   use MongoDB\BSON\Binary;
+   use MongoDB\Client;
+
+   $localKey = new Binary('<binary key data (96 bytes)>', Binary::TYPE_GENERIC);
+
+   $encryptionOpts = [
+       'keyVaultNamespace' => 'encryption.__keyVault',
+       'kmsProviders' => ['local' => ['key' => $localKey]],
+   ];
+
+   $client = new Client();
+   $clientEncryption = $client->createClientEncryption($encryptionOpts);
+
+   // Create two data keys, one for each encrypted field
+   $dataKeyId1 = $clientEncryption->createDataKey('local');
+   $dataKeyId2 = $clientEncryption->createDataKey('local');
+
+   $autoEncryptionOpts = [
+       'keyVaultNamespace' => 'encryption.__keyVault',
+       'kmsProviders' => ['local' => ['key' => $localKey]],
+       'encryptedFieldsMap' => [
+           'test.coll' => [
+               'fields' => [
+                   [
+                       'path' => 'encryptedIndexed',
+                       'bsonType' => 'string',
+                       'keyId' => $dataKeyId1,
+                       'queries' => ['queryType' => 'equality'],
+                   ],
+                   [
+                       'path' => 'encryptedUnindexed',
+                       'bsonType' => 'string',
+                       'keyId' => $dataKeyId2,
+                   ],
+               ],
+           ],
+       ],
+   ];
+
+   $encryptedClient = new Client(null, [], ['autoEncryption' => $autoEncryptionOpts]);
+
+   /* Drop and create the collection under test. The createCollection() helper
+    * will reference the client's encryptedFieldsMap and create additional,
+    * internal collections automatically. */
+   $encryptedClient->selectDatabase('test')->dropCollection('coll');
+   $encryptedClient->selectDatabase('test')->createCollection('coll');
+   $encryptedCollection = $encryptedClient->selectCollection('test', 'coll');
+
+   /* Using a client with auto encryption, insert a document with encrypted
+    * fields and assert that those fields are automatically decrypted when
+    * querying. The encryptedIndexed and encryptedUnindexed fields should both
+    * be strings. */
+   $indexedValue = 'indexedValue';
+   $unindexedValue = 'unindexedValue';
+
+   $encryptedCollection->insertOne([
+       '_id' => 1,
+       'encryptedIndexed' => $indexedValue,
+       'encryptedUnindexed' => $unindexedValue,
+   ]);
+
+   var_dump($encryptedCollection->findOne(['encryptedIndexed' => $indexedValue]));
+
+   /* Using a client without auto encryption, query for the same document and
+    * assert that encrypted data is returned. The encryptedIndexed and
+    * encryptedUnindexed fields should both be Binary objects. */
+   $unencryptedCollection = $client->selectCollection('test', 'coll');
+
+   var_dump($unencryptedCollection->findOne(['_id' => 1]));

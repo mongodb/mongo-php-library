@@ -1284,6 +1284,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $insertPayload = $clientEncryption->encrypt($value, [
                     'keyId' => $key1Id,
                     'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
+                    'contentionFactor' => 0,
                 ]);
 
                 $collection = $encryptedClient->selectCollection('db', 'explicit_encryption');
@@ -1293,6 +1294,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                     'keyId' => $key1Id,
                     'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
                     'queryType' => ClientEncryption::QUERY_TYPE_EQUALITY,
+                    'contentionFactor' => 0,
                 ]);
 
                 $results = $collection->find(['encryptedIndexed' => $findPayload])->toArray();
@@ -1323,6 +1325,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                     'keyId' => $key1Id,
                     'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
                     'queryType' => ClientEncryption::QUERY_TYPE_EQUALITY,
+                    'contentionFactor' => 0,
                 ]);
 
                 $results = $collection->find(['encryptedIndexed' => $findPayload])->toArray();
@@ -1378,6 +1381,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $payload = $clientEncryption->encrypt($value, [
                     'keyId' => $key1Id,
                     'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
+                    'contentionFactor' => 0,
                 ]);
 
                 $test->assertSame($value, $clientEncryption->decrypt($payload));

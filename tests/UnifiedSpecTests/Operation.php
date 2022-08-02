@@ -85,10 +85,10 @@ final class Operation
     private $entityMap;
 
     /** @var ExpectedError */
-    private $expectedError;
+    private $expectError;
 
     /** @var ExpectedResult */
-    private $expectedResult;
+    private $expectResult;
 
     /** @var bool */
     private $ignoreResultAndError;

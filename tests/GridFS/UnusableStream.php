@@ -12,6 +12,8 @@ use const STREAM_IS_URL;
 
 final class UnusableStream
 {
+    public $context;
+
     public static function register($protocol = 'unusable'): void
     {
         if (in_array($protocol, stream_get_wrappers())) {

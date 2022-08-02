@@ -19,6 +19,7 @@ namespace MongoDB\Model;
 
 use MongoDB\BSON\Serializable;
 use MongoDB\Exception\InvalidArgumentException;
+use ReturnTypeWillChange;
 
 use function is_array;
 use function is_float;
@@ -91,6 +92,7 @@ class IndexInput implements Serializable
      * @see https://php.net/mongodb-bson-serializable.bsonserialize
      * @return array
      */
+    #[ReturnTypeWillChange]
     public function bsonSerialize()
     {
         return $this->index;

@@ -271,12 +271,12 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
     }
 
     /** @internal */
-    final public function commandFailed(CommandFailedEvent $event)
+    final public function commandFailed(CommandFailedEvent $event): void
     {
     }
 
     /** @internal */
-    final public function commandStarted(CommandStartedEvent $event)
+    final public function commandStarted(CommandStartedEvent $event): void
     {
         if ($event->getCommandName() !== 'aggregate') {
             return;
@@ -287,7 +287,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
     }
 
     /** @internal */
-    final public function commandSucceeded(CommandSucceededEvent $event)
+    final public function commandSucceeded(CommandSucceededEvent $event): void
     {
         if ($event->getCommandName() !== 'aggregate') {
             return;

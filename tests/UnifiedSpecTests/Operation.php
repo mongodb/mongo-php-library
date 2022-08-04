@@ -2,8 +2,10 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
+use DateTime;
 use Error;
 use MongoDB\BSON\Javascript;
+use MongoDB\BSON\Timestamp;
 use MongoDB\ChangeStream;
 use MongoDB\Client;
 use MongoDB\Collection;
@@ -61,6 +63,8 @@ use function property_exists;
 use function rewind;
 use function stream_get_contents;
 use function strtolower;
+use function time;
+use function usleep;
 
 final class Operation
 {
@@ -254,9 +258,12 @@ final class Operation
                 assertArrayHasKey('pipeline', $args);
                 assertIsArray($args['pipeline']);
 
+                $this->sleepUntilNextSecond();
+
                 return $client->watch(
                     $args['pipeline'],
-                    array_diff_key($args, ['pipeline' => 1])
+                    array_diff_key($args, ['pipeline' => 1]) +
+                        ['startAtOperationTime' => new Timestamp(0, time())]
                 );
 
             case 'listDatabaseNames':
@@ -303,9 +310,12 @@ final class Operation
                 assertArrayHasKey('pipeline', $args);
                 assertIsArray($args['pipeline']);
 
+                $this->sleepUntilNextSecond();
+
                 return $collection->watch(
                     $args['pipeline'],
-                    array_diff_key($args, ['pipeline' => 1])
+                    array_diff_key($args, ['pipeline' => 1]) +
+                        ['startAtOperationTime' => new Timestamp(0, time())]
                 );
 
             case 'createFindCursor':
@@ -569,9 +579,12 @@ final class Operation
                 assertArrayHasKey('pipeline', $args);
                 assertIsArray($args['pipeline']);
 
+                $this->sleepUntilNextSecond();
+
                 return $database->watch(
                     $args['pipeline'],
-                    array_diff_key($args, ['pipeline' => 1])
+                    array_diff_key($args, ['pipeline' => 1]) +
+                        ['startAtOperationTime' => new Timestamp(0, time())]
                 );
 
             case 'createCollection':
@@ -945,5 +958,17 @@ final class Operation
         $args['source'] = $stream;
 
         return $args;
+    }
+
+    /**
+     * This method waits out the required number of microseconds to have the
+     * time tick over to the next second. This is used for watch operations
+     * to ensure we're sending the correct startAtOperationTime to skip prior
+     * commands.
+     */
+    private function sleepUntilNextSecond(): void
+    {
+        $microsecondsElapsed = (int) (new DateTime())->format('u');
+        usleep(1000000 - $microsecondsElapsed);
     }
 }

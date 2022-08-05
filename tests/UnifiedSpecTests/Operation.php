@@ -85,10 +85,10 @@ final class Operation
     private $entityMap;
 
     /** @var ExpectedError */
-    private $expectedError;
+    private $expectError;
 
     /** @var ExpectedResult */
-    private $expectedResult;
+    private $expectResult;
 
     /** @var bool */
     private $ignoreResultAndError;
@@ -295,7 +295,12 @@ final class Operation
                 assertIsArray($args['requests']);
 
                 return $collection->bulkWrite(
-                    array_map('self::prepareBulkWriteRequest', $args['requests']),
+                    array_map(
+                        static function ($request) {
+                            return self::prepareBulkWriteRequest($request);
+                        },
+                        $args['requests']
+                    ),
                     array_diff_key($args, ['requests' => 1])
                 );
 

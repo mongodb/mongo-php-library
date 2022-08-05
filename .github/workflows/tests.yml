@@ -5,10 +5,12 @@ on:
     branches:
       - "v*.*"
       - "master"
+      - "feature/*"
   push:
     branches:
       - "v*.*"
       - "master"
+      - "feature/*"
 
 jobs:
   phpunit:
@@ -24,6 +26,7 @@ jobs:
           - "7.4"
           - "8.0"
           - "8.1"
+          - "8.2"
         mongodb-version:
           - "4.4"
         driver-version:

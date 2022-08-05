@@ -163,7 +163,7 @@ class IsBsonTypeTest extends TestCase
 // phpcs:disable Squiz.Classes.ClassFileName.NoMatch
 class SerializableArray implements Serializable
 {
-    public function bsonSerialize()
+    public function bsonSerialize(): array
     {
         return ['foo'];
     }
@@ -171,7 +171,7 @@ class SerializableArray implements Serializable
 
 class SerializableObject implements Serializable
 {
-    public function bsonSerialize()
+    public function bsonSerialize(): array
     {
         return ['x' => 1];
     }

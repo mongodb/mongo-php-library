@@ -59,6 +59,11 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/entity-client-cmap-events: events are captured during an operation' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType can be set to command and cmap' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType defaults to command if unset' => 'PHPC does not implement CMAP',
+        // CSOT is not yet implemented
+        'valid-pass/collectionData-createOptions: collection is created with the correct options' => 'CSOT is not yet implemented (PHPC-1760)',
+        'valid-pass/createEntities-operation: createEntities operation' => 'CSOT is not yet implemented (PHPC-1760)',
+        'valid-pass/entity-cursor-iterateOnce: iterateOnce' => 'CSOT is not yet implemented (PHPC-1760)',
+        'valid-pass/matches-lte-operator: special lte matching operator' => 'CSOT is not yet implemented (PHPC-1760)',
     ];
 
     /** @var UnifiedTestRunner */
@@ -93,6 +98,19 @@ class UnifiedSpecTest extends FunctionalTestCase
     public function provideChangeStreamsTests()
     {
         return $this->provideTests(__DIR__ . '/change-streams/*.json');
+    }
+
+    /**
+     * @dataProvider provideClientSideEncryptionTests
+     */
+    public function testClientSideEncryption(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideClientSideEncryptionTests()
+    {
+        return $this->provideTests(__DIR__ . '/client-side-encryption/*.json');
     }
 
     /**

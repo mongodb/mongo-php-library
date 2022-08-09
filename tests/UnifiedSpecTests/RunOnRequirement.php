@@ -49,6 +49,9 @@ class RunOnRequirement
     /** @var string */
     private $serverless;
 
+    /** @var bool */
+    private $csfle;
+
     /** @var array */
     private static $supportedTopologies = [
         self::TOPOLOGY_SINGLE,
@@ -67,7 +70,7 @@ class RunOnRequirement
 
     public function __construct(stdClass $o)
     {
-        Util::assertHasOnlyKeys($o, ['minServerVersion', 'maxServerVersion', 'topologies', 'serverParameters', 'auth', 'serverless']);
+        Util::assertHasOnlyKeys($o, ['minServerVersion', 'maxServerVersion', 'topologies', 'serverParameters', 'auth', 'serverless', 'csfle']);
 
         if (isset($o->minServerVersion)) {
             assertIsString($o->minServerVersion);
@@ -103,9 +106,14 @@ class RunOnRequirement
             assertContains($o->serverless, self::$supportedServerless);
             $this->serverless = $o->serverless;
         }
+
+        if (isset($o->csfle)) {
+            assertIsBool($o->csfle);
+            $this->csfle = $o->csfle;
+        }
     }
 
-    public function isSatisfied(string $serverVersion, string $topology, stdClass $serverParameters, bool $isAuthenticated, bool $isServerless): bool
+    public function isSatisfied(string $serverVersion, string $topology, stdClass $serverParameters, bool $isAuthenticated, bool $isServerless, bool $isClientSideEncryptionSupported): bool
     {
         if (isset($this->minServerVersion) && version_compare($serverVersion, $this->minServerVersion, '<')) {
             return false;
@@ -138,6 +146,10 @@ class RunOnRequirement
             if ($isServerless && $this->serverless === self::SERVERLESS_FORBID) {
                 return false;
             }
+        }
+
+        if (isset($this->csfle) && $isClientSideEncryptionSupported !== $this->csfle) {
+            return false;
         }
 
         return true;

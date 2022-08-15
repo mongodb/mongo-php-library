@@ -4,15 +4,19 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 
 use LogicException;
 use MongoDB\Client;
+use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\ServerApi;
 use MongoDB\Model\BSONArray;
 use MongoDB\Tests\FunctionalTestCase;
+use MongoDB\Tests\SpecTests\ClientSideEncryptionSpecTest;
+use PHPUnit\Framework\Assert;
 use stdClass;
 
 use function array_key_exists;
 use function array_map;
 use function current;
 use function explode;
+use function getenv;
 use function key;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertCount;
@@ -24,6 +28,7 @@ use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
 use function PHPUnit\Framework\assertNotSame;
 use function PHPUnit\Framework\assertSame;
+use function sprintf;
 
 /**
  * Execution context for spec tests.
@@ -106,6 +111,10 @@ final class Context
             switch ($type) {
                 case 'client':
                     $this->createClient($id, $def);
+                    break;
+
+                case 'clientEncryption':
+                    $this->createClientEncryption($id, $def);
                     break;
 
                 case 'database':
@@ -316,6 +325,68 @@ final class Context
         $this->entityMap->set($id, FunctionalTestCase::createTestClient($uri, $uriOptions, $driverOptions));
     }
 
+    private function createClientEncryption(string $id, stdClass $o): void
+    {
+        Util::assertHasOnlyKeys($o, [
+            'id',
+            'clientEncryptionOpts',
+        ]);
+
+        $clientEncryptionOpts = [];
+
+        if (isset($o->clientEncryptionOpts)) {
+            assertIsObject($o->clientEncryptionOpts);
+            $clientEncryptionOpts = (array) $o->clientEncryptionOpts;
+        }
+
+        if (isset($clientEncryptionOpts['keyVaultClient'])) {
+            assertIsString($clientEncryptionOpts['keyVaultClient']);
+            $clientEncryptionOpts['keyVaultClient'] = $this->entityMap->getClient($clientEncryptionOpts['keyVaultClient'])->getManager();
+        }
+
+        if (isset($clientEncryptionOpts['kmsProviders'])) {
+            assertIsObject($clientEncryptionOpts['kmsProviders']);
+
+            if (isset($clientEncryptionOpts['kmsProviders']->aws->accessKeyId->{'$$placeholder'})) {
+                $clientEncryptionOpts['kmsProviders']->aws->accessKeyId = static::getEnv('AWS_ACCESS_KEY_ID');
+            }
+
+            if (isset($clientEncryptionOpts['kmsProviders']->aws->secretAccessKey->{'$$placeholder'})) {
+                $clientEncryptionOpts['kmsProviders']->aws->secretAccessKey = static::getEnv('AWS_SECRET_ACCESS_KEY');
+            }
+
+            if (isset($clientEncryptionOpts['kmsProviders']->azure->clientId->{'$$placeholder'})) {
+                $clientEncryptionOpts['kmsProviders']->azure->clientId = static::getEnv('AZURE_CLIENT_ID');
+            }
+
+            if (isset($clientEncryptionOpts['kmsProviders']->azure->clientSecret->{'$$placeholder'})) {
+                $clientEncryptionOpts['kmsProviders']->azure->clientSecret = static::getEnv('AZURE_CLIENT_SECRET');
+            }
+
+            if (isset($clientEncryptionOpts['kmsProviders']->azure->tenantId->{'$$placeholder'})) {
+                $clientEncryptionOpts['kmsProviders']->azure->tenantId = static::getEnv('AZURE_TENANT_ID');
+            }
+
+            if (isset($clientEncryptionOpts['kmsProviders']->gcp->email->{'$$placeholder'})) {
+                $clientEncryptionOpts['kmsProviders']->gcp->email = static::getEnv('GCP_EMAIL');
+            }
+
+            if (isset($clientEncryptionOpts['kmsProviders']->gcp->privateKey->{'$$placeholder'})) {
+                $clientEncryptionOpts['kmsProviders']->gcp->privateKey = static::getEnv('GCP_PRIVATE_KEY');
+            }
+
+            if (isset($clientEncryptionOpts['kmsProviders']->kmip->endpoint->{'$$placeholder'})) {
+                $clientEncryptionOpts['kmsProviders']->kmip->endpoint = static::getEnv('KMIP_ENDPOINT');
+            }
+
+            if (isset($clientEncryptionOpts['kmsProviders']->local->key->{'$$placeholder'})) {
+                $clientEncryptionOpts['kmsProviders']->local->key = ClientSideEncryptionSpecTest::LOCAL_MASTERKEY;
+            }
+        }
+
+        $this->entityMap->set($id, new ClientEncryption($clientEncryptionOpts));
+    }
+
     private function createEntityCollector(string $clientId, stdClass $o): void
     {
         Util::assertHasOnlyKeys($o, ['id', 'events']);
@@ -409,6 +480,17 @@ final class Context
         }
 
         $this->entityMap->set($id, $database->selectGridFSBucket($options), $databaseId);
+    }
+
+    private static function getEnv(string $name): string
+    {
+        $value = getenv($name);
+
+        if ($value === false) {
+            Assert::markTestSkipped(sprintf('Environment variable "%s" is not defined', $name));
+        }
+
+        return $value;
     }
 
     private static function prepareCollectionOrDatabaseOptions(array $options): array

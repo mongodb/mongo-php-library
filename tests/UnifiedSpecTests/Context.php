@@ -388,6 +388,13 @@ final class Context
             }
         }
 
+        if (isset($clientEncryptionOpts['kmsProviders']->kmip->endpoint)) {
+            $clientEncryptionOpts['tlsOptions']['kmip'] = [
+                'tlsCAFile' => static::getEnv('KMS_TLS_CA_FILE'),
+                'tlsCertificateKeyFile' => static::getEnv('KMS_TLS_CERTIFICATE_KEY_FILE'),
+            ];
+        }
+
         $this->entityMap->set($id, new ClientEncryption($clientEncryptionOpts), $clientId);
     }
 

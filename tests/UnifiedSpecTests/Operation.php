@@ -327,7 +327,7 @@ final class Operation
                 // CSFLE spec tests nest options under an "opts" key (see: DRIVERS-2414)
                 $options = array_key_exists('opts', $args) ? (array) $args['opts'] : [];
 
-                return $clientEncryption->rewrapManyDataKey($args['filter'], $options);
+                return static::prepareRewrapManyDataKeyResult($clientEncryption->rewrapManyDataKey($args['filter'], $options));
 
             default:
                 Assert::fail('Unsupported clientEncryption operation: ' . $this->name);
@@ -990,6 +990,31 @@ final class Operation
             default:
                 Assert::fail('Unsupported bulk write request: ' . $type);
         }
+    }
+
+    /**
+     * ClientEncryption::rewrapManyDataKey() returns its result as a raw BSON
+     * document and does not utilize WriteResult because getServer() cannot be
+     * implemented. To satisfy result expectations, unset bulkWriteResult if it
+     * is null and rename its fields (per the CRUD spec) otherwise. */
+    private static function prepareRewrapManyDataKeyResult(stdClass $result): object
+    {
+        if ($result->bulkWriteResult === null) {
+            unset($result->bulkWriteResult);
+
+            return $result;
+        }
+
+        $result->bulkWriteResult = [
+            'insertedCount' => $result->bulkWriteResult->nInserted,
+            'matchedCount' => $result->bulkWriteResult->nMatched,
+            'modifiedCount' => $result->bulkWriteResult->nModified,
+            'deletedCount' => $result->bulkWriteResult->nRemoved,
+            'upsertedCount' => $result->bulkWriteResult->nUpserted,
+            'upsertedIds' => $result->bulkWriteResult->upserted ?? new stdClass(),
+        ];
+
+        return $result;
     }
 
     private static function prepareUploadArguments(array $args): array

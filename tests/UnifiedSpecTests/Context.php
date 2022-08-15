@@ -333,6 +333,7 @@ final class Context
         ]);
 
         $clientEncryptionOpts = [];
+        $clientId = null;
 
         if (isset($o->clientEncryptionOpts)) {
             assertIsObject($o->clientEncryptionOpts);
@@ -341,7 +342,10 @@ final class Context
 
         if (isset($clientEncryptionOpts['keyVaultClient'])) {
             assertIsString($clientEncryptionOpts['keyVaultClient']);
-            $clientEncryptionOpts['keyVaultClient'] = $this->entityMap->getClient($clientEncryptionOpts['keyVaultClient'])->getManager();
+            /* Record the keyVaultClient's ID, which we'll later use to track
+             * the parent client in the entity map. */
+            $clientId = $clientEncryptionOpts['keyVaultClient'];
+            $clientEncryptionOpts['keyVaultClient'] = $this->entityMap->getClient($clientId)->getManager();
         }
 
         if (isset($clientEncryptionOpts['kmsProviders'])) {
@@ -384,7 +388,7 @@ final class Context
             }
         }
 
-        $this->entityMap->set($id, new ClientEncryption($clientEncryptionOpts));
+        $this->entityMap->set($id, new ClientEncryption($clientEncryptionOpts), $clientId);
     }
 
     private function createEntityCollector(string $clientId, stdClass $o): void

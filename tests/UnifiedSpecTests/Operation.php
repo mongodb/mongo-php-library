@@ -8,6 +8,7 @@ use MongoDB\ChangeStream;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
+use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
@@ -186,6 +187,9 @@ final class Operation
             case Client::class:
                 $result = $this->executeForClient($object);
                 break;
+            case ClientEncryption::class:
+                $result = $this->executeForClientEncryption($object);
+                break;
             case Database::class:
                 $result = $this->executeForDatabase($object);
                 break;
@@ -272,6 +276,61 @@ final class Operation
 
             default:
                 Assert::fail('Unsupported client operation: ' . $this->name);
+        }
+    }
+
+    private function executeForClientEncryption(ClientEncryption $clientEncryption)
+    {
+        $args = $this->prepareArguments();
+        Util::assertArgumentsBySchema(ClientEncryption::class, $this->name, $args);
+
+        switch ($this->name) {
+            case 'addKeyAltName':
+                assertArrayHasKey('id', $args);
+                assertArrayHasKey('keyAltName', $args);
+
+                return $clientEncryption->addKeyAltName($args['id'], $args['keyAltName']);
+
+            case 'createDataKey':
+                assertArrayHasKey('kmsProvider', $args);
+                // CSFLE spec tests nest options under an "opts" key (see: DRIVERS-2414)
+                $options = array_key_exists('opts', $args) ? (array) $args['opts'] : [];
+
+                return $clientEncryption->createDataKey($args['kmsProvider'], $options);
+
+            case 'deleteKey':
+                assertArrayHasKey('id', $args);
+
+                return $clientEncryption->deleteKey($args['id']);
+
+            case 'getKey':
+                assertArrayHasKey('id', $args);
+
+                return $clientEncryption->getKey($args['id']);
+
+            case 'getKeyByAltName':
+                assertArrayHasKey('keyAltName', $args);
+
+                return $clientEncryption->getKeyByAltName($args['keyAltName']);
+
+            case 'getKeys':
+                return iterator_to_array($clientEncryption->getKeys());
+
+            case 'removeKeyAltName':
+                assertArrayHasKey('id', $args);
+                assertArrayHasKey('keyAltName', $args);
+
+                return $clientEncryption->removeKeyAltName($args['id'], $args['keyAltName']);
+
+            case 'rewrapManyDataKey':
+                assertArrayHasKey('filter', $args);
+                // CSFLE spec tests nest options under an "opts" key (see: DRIVERS-2414)
+                $options = array_key_exists('opts', $args) ? (array) $args['opts'] : [];
+
+                return $clientEncryption->rewrapManyDataKey($args['filter'], $options);
+
+            default:
+                Assert::fail('Unsupported clientEncryption operation: ' . $this->name);
         }
     }
 

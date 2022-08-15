@@ -6,6 +6,7 @@ use MongoDB\ChangeStream;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
+use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -58,6 +59,16 @@ final class Util
             'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS', 'showExpandedEvents'],
             'listDatabaseNames' => ['authorizedDatabases', 'filter', 'maxTimeMS', 'session'],
             'listDatabases' => ['authorizedDatabases', 'filter', 'maxTimeMS', 'session'],
+        ],
+        ClientEncryption::class => [
+            'addKeyAltName' => ['id', 'keyAltName'],
+            'createDataKey' => ['kmsProvider', 'opts'],
+            'deleteKey' => ['id'],
+            'getKey' => ['id'],
+            'getKeyByAltName' => ['keyAltName'],
+            'getKeys' => [],
+            'removeKeyAltName' => ['id', 'keyAltName'],
+            'rewrapManyDataKey' => ['filter', 'opts'],
         ],
         Database::class => [
             'aggregate' => ['pipeline', 'session', 'useCursor', 'allowDiskUse', 'batchSize', 'bypassDocumentValidation', 'collation', 'comment', 'explain', 'hint', 'let', 'maxAwaitTimeMS', 'maxTimeMS'],

@@ -15,6 +15,7 @@ use MongoDB\Driver\Exception\ConnectionException;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Driver\Exception\EncryptionException;
 use MongoDB\Driver\Exception\RuntimeException;
+use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
@@ -1399,6 +1400,93 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 ]);
 
                 $test->assertSame($value, $clientEncryption->decrypt($payload));
+            },
+        ];
+    }
+
+    /**
+     * Prose test 13: Unique Index on keyAltNames
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#unique-index-on-keyaltnames
+     * @dataProvider provideUniqueIndexOnKeyAltNamesTests
+     */
+    public function testUniqueIndexOnKeyAltNames(Closure $test): void
+    {
+        // Test setup
+        $client = static::createTestClient();
+
+        // Ensure that the key vault is dropped with a majority write concern
+        self::insertKeyVaultData($client, []);
+
+        $client->selectCollection('keyvault', 'datakeys')->createIndex(
+            ['keyAltNames' => 1],
+            [
+                'unique' => true,
+                'partialFilterExpression' => ['keyAltNames' => ['$exists' => true]],
+                'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+            ],
+        );
+
+        $clientEncryption = new ClientEncryption([
+            'keyVaultClient' => $client->getManager(),
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)]],
+        ]);
+
+        $clientEncryption->createDataKey('local', ['keyAltNames' => ['def']]);
+
+        $test($this, $client, $clientEncryption);
+    }
+
+    public static function provideUniqueIndexOnKeyAltNamesTests()
+    {
+        // See: https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-1-createdatakey
+        yield 'Case 1: createDataKey()' => [
+            static function (self $test, Client $client, ClientEncryption $clientEncryption): void {
+                $clientEncryption->createDataKey('local', ['keyAltNames' => ['abc']]);
+
+                try {
+                    $clientEncryption->createDataKey('local', ['keyAltNames' => ['abc']]);
+                    $test->fail('Expected exception to be thrown');
+                } catch (ServerException $e) {
+                    $test->assertSame(11000 /* DuplicateKey */, $e->getCode());
+                }
+
+                try {
+                    $clientEncryption->createDataKey('local', ['keyAltNames' => ['def']]);
+                    $test->fail('Expected exception to be thrown');
+                } catch (ServerException $e) {
+                    $test->assertSame(11000 /* DuplicateKey */, $e->getCode());
+                }
+            },
+        ];
+
+        // See: https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-2-addkeyaltname
+        yield 'Case 2: addKeyAltName()' => [
+            static function (self $test, Client $client, ClientEncryption $clientEncryption): void {
+                $keyId = $clientEncryption->createDataKey('local');
+
+                $keyBeforeUpdate = $clientEncryption->addKeyAltName($keyId, 'abc');
+                $test->assertObjectNotHasAttribute('keyAltNames', $keyBeforeUpdate);
+
+                $keyBeforeUpdate = $clientEncryption->addKeyAltName($keyId, 'abc');
+                $test->assertObjectHasAttribute('keyAltNames', $keyBeforeUpdate);
+                $test->assertIsArray($keyBeforeUpdate->keyAltNames);
+                $test->assertContains('abc', $keyBeforeUpdate->keyAltNames);
+
+                try {
+                    $clientEncryption->addKeyAltName($keyId, 'def');
+                    $test->fail('Expected exception to be thrown');
+                } catch (ServerException $e) {
+                    $test->assertSame(11000 /* DuplicateKey */, $e->getCode());
+                }
+
+                $originalKeyId = $clientEncryption->getKeyByAltName('def')->_id;
+
+                $originalKeyBeforeUpdate = $clientEncryption->addKeyAltName($originalKeyId, 'def');
+                $test->assertObjectHasAttribute('keyAltNames', $originalKeyBeforeUpdate);
+                $test->assertIsArray($originalKeyBeforeUpdate->keyAltNames);
+                $test->assertContains('def', $originalKeyBeforeUpdate->keyAltNames);
             },
         ];
     }

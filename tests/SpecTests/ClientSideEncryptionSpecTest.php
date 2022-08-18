@@ -1640,6 +1640,84 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         ];
     }
 
+    /**
+     * Prose test 16: RewrapManyDataKey
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#rewrap
+     * @dataProvider provideRewrapManyDataKeySrcAndDstProviders
+     */
+    public function testRewrapManyDataKey(string $srcProvider, string $dstProvider): void
+    {
+        $providerMasterKeys = [
+            'aws' => ['region' => 'us-east-1', 'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0'],
+            'azure' => ['keyVaultEndpoint' => 'key-vault-csfle.vault.azure.net', 'keyName' => 'key-name-csfle'],
+            'gcp' => ['projectId' => 'devprod-drivers', 'location' => 'global', 'keyRing' => 'key-ring-csfle', 'keyName' => 'key-name-csfle'],
+            'kmip' => [],
+        ];
+
+        // Test setup
+        $client = static::createTestClient();
+
+        // Ensure that the key vault is dropped with a majority write concern
+        self::insertKeyVaultData($client, []);
+
+        $clientEncryptionOpts = [
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => [
+                'aws' => Context::getAWSCredentials(),
+                'azure' => Context::getAzureCredentials(),
+                'gcp' => Context::getGCPCredentials(),
+                'kmip' => ['endpoint' => Context::getKmipEndpoint()],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+            ],
+            'tlsOptions' => [
+                'kmip' => Context::getKmsTlsOptions(),
+            ],
+        ];
+
+        $clientEncryption1 = $client->createClientEncryption($clientEncryptionOpts);
+
+        $createDataKeyOpts = [];
+
+        if (isset($providerMasterKeys[$srcProvider])) {
+            $createDataKeyOpts['masterKey'] = $providerMasterKeys[$srcProvider];
+        }
+
+        $keyId = $clientEncryption1->createDataKey($srcProvider, $createDataKeyOpts);
+
+        $ciphertext = $clientEncryption1->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+
+        $clientEncryption2 = $client->createClientEncryption($clientEncryptionOpts);
+
+        $rewrapManyDataKeyOpts = ['provider' => $dstProvider];
+
+        if (isset($providerMasterKeys[$dstProvider])) {
+            $rewrapManyDataKeyOpts['masterKey'] = $providerMasterKeys[$dstProvider];
+        }
+
+        $result = $clientEncryption2->rewrapManyDataKey([], $rewrapManyDataKeyOpts);
+
+        $this->assertObjectHasAttribute('bulkWriteResult', $result);
+        $this->assertIsObject($result->bulkWriteResult);
+        // libmongoc uses different field names for its BulkWriteResult
+        $this->assertObjectHasAttribute('nModified', $result->bulkWriteResult);
+        $this->assertSame(1, $result->bulkWriteResult->nModified);
+
+        $this->assertSame('test', $clientEncryption1->decrypt($ciphertext));
+        $this->assertSame('test', $clientEncryption2->decrypt($ciphertext));
+    }
+
+    public static function provideRewrapManyDataKeySrcAndDstProviders()
+    {
+        $providers = ['aws', 'azure', 'gcp', 'kmip', 'local'];
+
+        foreach ($providers as $srcProvider) {
+            foreach ($providers as $dstProvider) {
+                yield [$srcProvider, $dstProvider];
+            }
+        }
+    }
+
     private function createInt64(string $value): Int64
     {
         $array = sprintf('a:1:{s:7:"integer";s:%d:"%s";}', strlen($value), $value);

@@ -26,7 +26,7 @@ class RetryableReadsSpecTest extends FunctionalTestCase
     ];
 
     /** @var array */
-    private static $incompleteTests = ['mapReduce: MapReduce succeeds with retry on' => 'PHPLIB-715'];
+    private static $incompleteTests = [];
 
     /**
      * Assert that the expected and actual command documents match.

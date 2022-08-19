@@ -37,6 +37,8 @@ use function get_class;
 use function get_debug_type;
 use function in_array;
 use function is_array;
+use function is_float;
+use function is_int;
 use function is_object;
 use function is_scalar;
 use function method_exists;
@@ -58,9 +60,6 @@ class DocumentsMatchConstraint extends Constraint
 
     /** @var boolean */
     private $ignoreExtraKeysInEmbedded = false;
-
-    /** @var array */
-    private $placeholders = [];
 
     /**
      * TODO: This is not currently used, but was preserved from the design of
@@ -88,14 +87,12 @@ class DocumentsMatchConstraint extends Constraint
      * @param array|object $value
      * @param boolean      $ignoreExtraKeysInRoot     If true, ignore extra keys within the root document
      * @param boolean      $ignoreExtraKeysInEmbedded If true, ignore extra keys within embedded documents
-     * @param array        $placeholders              Placeholders for any value
      */
-    public function __construct($value, bool $ignoreExtraKeysInRoot = false, bool $ignoreExtraKeysInEmbedded = false, array $placeholders = [])
+    public function __construct($value, bool $ignoreExtraKeysInRoot = false, bool $ignoreExtraKeysInEmbedded = false)
     {
         $this->value = $this->prepareBSON($value, true, $this->sortKeys);
         $this->ignoreExtraKeysInRoot = $ignoreExtraKeysInRoot;
         $this->ignoreExtraKeysInEmbedded = $ignoreExtraKeysInEmbedded;
-        $this->placeholders = $placeholders;
         $this->comparatorFactory = Factory::getInstance();
     }
 
@@ -303,10 +300,6 @@ class DocumentsMatchConstraint extends Constraint
                 throw new RuntimeException(sprintf('$actual is missing key: "%s"', $keyPrefix . $key));
             }
 
-            if (in_array($expectedValue, $this->placeholders, true)) {
-                continue;
-            }
-
             $actualValue = $actual[$key];
 
             if ($expectedValue instanceof BSONDocument && isset($expectedValue['$$type'])) {
@@ -322,26 +315,13 @@ class DocumentsMatchConstraint extends Constraint
                 continue;
             }
 
-            if (is_scalar($expectedValue) && is_scalar($actualValue)) {
-                if ($expectedValue !== $actualValue) {
-                    throw new ComparisonFailure(
-                        $expectedValue,
-                        $actualValue,
-                        '',
-                        '',
-                        false,
-                        sprintf('Field path "%s": %s', $keyPrefix . $key, 'Failed asserting that two values are equal.')
-                    );
-                }
-
-                continue;
-            }
-
             $expectedType = get_debug_type($expectedValue);
             $actualType = get_debug_type($actualValue);
 
-            // Workaround for ObjectComparator printing the whole actual object
-            if ($expectedType !== $actualType) {
+            /* Early check to work around ObjectComparator printing the entire value
+             * for a failed type comparison. Avoid doing this if either value is
+             * numeric to allow for flexible numeric comparisons (e.g. 1 == 1.0). */
+            if ($expectedType !== $actualType && ! (self::isNumeric($expectedValue) || self::isNumeric($actualValue))) {
                 throw new ComparisonFailure(
                     $expectedValue,
                     $actualValue,
@@ -419,6 +399,11 @@ class DocumentsMatchConstraint extends Constraint
     private function doToString()
     {
         return 'matches ' . $this->exporter()->export($this->value);
+    }
+
+    private static function isNumeric($value): bool
+    {
+        return is_int($value) || is_float($value) || $value instanceof Int64;
     }
 
     /**

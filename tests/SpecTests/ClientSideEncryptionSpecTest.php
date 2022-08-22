@@ -1424,7 +1424,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 'unique' => true,
                 'partialFilterExpression' => ['keyAltNames' => ['$exists' => true]],
                 'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
-            ],
+            ]
         );
 
         $clientEncryption = new ClientEncryption([

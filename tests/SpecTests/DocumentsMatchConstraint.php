@@ -35,12 +35,10 @@ use Symfony\Bridge\PhpUnit\ConstraintTrait;
 use function array_values;
 use function get_class;
 use function get_debug_type;
-use function in_array;
 use function is_array;
 use function is_float;
 use function is_int;
 use function is_object;
-use function is_scalar;
 use function method_exists;
 use function sprintf;
 

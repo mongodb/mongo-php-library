@@ -248,6 +248,11 @@ class UnifiedSpecTest extends FunctionalTestCase
         try {
             self::$runner->run($test);
         } catch (Exception $e) {
+            // Respect skipped tests (e.g. evaluated runOnRequirements)
+            if ($e instanceof SkippedTest) {
+                throw $e;
+            }
+
             /* As is done in PHPUnit\Framework\TestCase::runBare(), exceptions
              * other than a select few will indicate a test failure. We cannot
              * call TestCase::hasFailed() because runBare() has yet to catch the
@@ -256,7 +261,7 @@ class UnifiedSpecTest extends FunctionalTestCase
              * IncompleteTest is intentionally omitted as it is thrown for an
              * incompatible schema. This differs from PHPUnit's internal logic.
              */
-            $failed = ! ($e instanceof SkippedTest || $e instanceof Warning);
+            $failed = ! ($e instanceof Warning);
         }
 
         // phpcs:enable

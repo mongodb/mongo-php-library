@@ -59,6 +59,11 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/entity-client-cmap-events: events are captured during an operation' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType can be set to command and cmap' => 'PHPC does not implement CMAP',
         'valid-pass/expectedEventsForClient-eventType: eventType defaults to command if unset' => 'PHPC does not implement CMAP',
+        // CSOT is not yet implemented
+        'valid-pass/collectionData-createOptions: collection is created with the correct options' => 'CSOT is not yet implemented (PHPC-1760)',
+        'valid-pass/createEntities-operation: createEntities operation' => 'CSOT is not yet implemented (PHPC-1760)',
+        'valid-pass/entity-cursor-iterateOnce: iterateOnce' => 'CSOT is not yet implemented (PHPC-1760)',
+        'valid-pass/matches-lte-operator: special lte matching operator' => 'CSOT is not yet implemented (PHPC-1760)',
     ];
 
     /** @var UnifiedTestRunner */
@@ -93,6 +98,19 @@ class UnifiedSpecTest extends FunctionalTestCase
     public function provideChangeStreamsTests()
     {
         return $this->provideTests(__DIR__ . '/change-streams/*.json');
+    }
+
+    /**
+     * @dataProvider provideClientSideEncryptionTests
+     */
+    public function testClientSideEncryption(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideClientSideEncryptionTests()
+    {
+        return $this->provideTests(__DIR__ . '/client-side-encryption/*.json');
     }
 
     /**
@@ -230,6 +248,11 @@ class UnifiedSpecTest extends FunctionalTestCase
         try {
             self::$runner->run($test);
         } catch (Exception $e) {
+            // Respect skipped tests (e.g. evaluated runOnRequirements)
+            if ($e instanceof SkippedTest) {
+                throw $e;
+            }
+
             /* As is done in PHPUnit\Framework\TestCase::runBare(), exceptions
              * other than a select few will indicate a test failure. We cannot
              * call TestCase::hasFailed() because runBare() has yet to catch the
@@ -238,7 +261,7 @@ class UnifiedSpecTest extends FunctionalTestCase
              * IncompleteTest is intentionally omitted as it is thrown for an
              * incompatible schema. This differs from PHPUnit's internal logic.
              */
-            $failed = ! ($e instanceof SkippedTest || $e instanceof Warning);
+            $failed = ! ($e instanceof Warning);
         }
 
         // phpcs:enable

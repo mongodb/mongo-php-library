@@ -25,6 +25,8 @@ use function gc_collect_cycles;
 use function getenv;
 use function implode;
 use function in_array;
+use function is_executable;
+use function is_readable;
 use function is_string;
 use function parse_url;
 use function PHPUnit\Framework\assertContainsOnly;
@@ -43,7 +45,9 @@ use function strpos;
 use function substr_replace;
 use function version_compare;
 
+use const DIRECTORY_SEPARATOR;
 use const FILTER_VALIDATE_BOOLEAN;
+use const PATH_SEPARATOR;
 use const PHP_URL_HOST;
 
 /**
@@ -60,7 +64,7 @@ final class UnifiedTestRunner
 
     public const MIN_SCHEMA_VERSION = '1.0';
 
-    public const MAX_SCHEMA_VERSION = '1.7';
+    public const MAX_SCHEMA_VERSION = '1.8';
 
     /** @var MongoDB\Client */
     private $internalClient;
@@ -247,6 +251,7 @@ final class UnifiedTestRunner
                 $this->getServerParameters(),
                 $this->isAuthenticated(),
                 $this->isServerless(),
+                $this->isClientSideEncryptionSupported(),
             ];
         }
 
@@ -347,6 +352,48 @@ final class UnifiedTestRunner
         }
 
         throw new UnexpectedValueException('Could not determine authentication status');
+    }
+
+    /**
+     * Return whether client-side encryption is supported.
+     */
+    private function isClientSideEncryptionSupported(): bool
+    {
+        /* CSFLE technically requires FCV 4.2+ but this is sufficient since we
+         * do not test on mixed-version clusters. */
+        if (version_compare($this->getServerVersion(), '4.2', '<')) {
+            return false;
+        }
+
+        if (FunctionalTestCase::getModuleInfo('libmongocrypt') === 'disabled') {
+            return false;
+        }
+
+        return static::isCryptSharedLibAvailable() || static::isMongocryptdAvailable();
+    }
+
+    private static function isCryptSharedLibAvailable(): bool
+    {
+        $cryptSharedLibPath = getenv('CRYPT_SHARED_LIB_PATH');
+
+        if ($cryptSharedLibPath === false) {
+            return false;
+        }
+
+        return is_readable($cryptSharedLibPath);
+    }
+
+    private static function isMongocryptdAvailable(): bool
+    {
+        $paths = explode(PATH_SEPARATOR, getenv("PATH"));
+
+        foreach ($paths as $path) {
+            if (is_executable($path . DIRECTORY_SEPARATOR . 'mongocryptd')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -7,6 +7,7 @@ use MongoDB\ChangeStream;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
+use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Session;
 use MongoDB\GridFS\Bucket;
@@ -182,6 +183,7 @@ class EntityMap implements ArrayAccess
         if (self::$isSupportedType === null) {
             self::$isSupportedType = logicalOr(
                 isInstanceOf(Client::class),
+                isInstanceOf(ClientEncryption::class),
                 isInstanceOf(Database::class),
                 isInstanceOf(Collection::class),
                 isInstanceOf(Session::class),

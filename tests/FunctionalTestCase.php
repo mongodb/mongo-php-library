@@ -284,6 +284,21 @@ abstract class FunctionalTestCase extends TestCase
         $this->configuredFailPoints[] = [$command->configureFailPoint, $failPointServer];
     }
 
+    public static function getModuleInfo(string $row): ?string
+    {
+        ob_start();
+        phpinfo(INFO_MODULES);
+        $info = ob_get_clean();
+
+        $pattern = sprintf('/^%s([\w ]+)$/m', preg_quote($row . ' => '));
+
+        if (preg_match($pattern, $info, $matches) !== 1) {
+            return null;
+        }
+
+        return $matches[1];
+    }
+
     /**
      * Creates the test collection with the specified options.
      *
@@ -512,7 +527,7 @@ abstract class FunctionalTestCase extends TestCase
             $this->markTestSkipped('Client Side Encryption only supported on FCV 4.2 or higher');
         }
 
-        if ($this->getModuleInfo('libmongocrypt') === 'disabled') {
+        if (static::getModuleInfo('libmongocrypt') === 'disabled') {
             $this->markTestSkipped('Client Side Encryption is not enabled in the MongoDB extension');
         }
     }
@@ -596,21 +611,6 @@ abstract class FunctionalTestCase extends TestCase
             $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
             $operation->execute($server);
         }
-    }
-
-    private function getModuleInfo(string $row): ?string
-    {
-        ob_start();
-        phpinfo(INFO_MODULES);
-        $info = ob_get_clean();
-
-        $pattern = sprintf('/^%s([\w ]+)$/m', preg_quote($row . ' => '));
-
-        if (preg_match($pattern, $info, $matches) !== 1) {
-            return null;
-        }
-
-        return $matches[1];
     }
 
     /**

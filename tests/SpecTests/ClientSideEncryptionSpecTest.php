@@ -15,6 +15,7 @@ use MongoDB\Driver\Exception\ConnectionException;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
 use MongoDB\Driver\Exception\EncryptionException;
 use MongoDB\Driver\Exception\RuntimeException;
+use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
@@ -1404,6 +1405,93 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
+     * Prose test 13: Unique Index on keyAltNames
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#unique-index-on-keyaltnames
+     * @dataProvider provideUniqueIndexOnKeyAltNamesTests
+     */
+    public function testUniqueIndexOnKeyAltNames(Closure $test): void
+    {
+        // Test setup
+        $client = static::createTestClient();
+
+        // Ensure that the key vault is dropped with a majority write concern
+        self::insertKeyVaultData($client, []);
+
+        $client->selectCollection('keyvault', 'datakeys')->createIndex(
+            ['keyAltNames' => 1],
+            [
+                'unique' => true,
+                'partialFilterExpression' => ['keyAltNames' => ['$exists' => true]],
+                'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+            ]
+        );
+
+        $clientEncryption = new ClientEncryption([
+            'keyVaultClient' => $client->getManager(),
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)]],
+        ]);
+
+        $clientEncryption->createDataKey('local', ['keyAltNames' => ['def']]);
+
+        $test($this, $client, $clientEncryption);
+    }
+
+    public static function provideUniqueIndexOnKeyAltNamesTests()
+    {
+        // See: https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-1-createdatakey
+        yield 'Case 1: createDataKey()' => [
+            static function (self $test, Client $client, ClientEncryption $clientEncryption): void {
+                $clientEncryption->createDataKey('local', ['keyAltNames' => ['abc']]);
+
+                try {
+                    $clientEncryption->createDataKey('local', ['keyAltNames' => ['abc']]);
+                    $test->fail('Expected exception to be thrown');
+                } catch (ServerException $e) {
+                    $test->assertSame(11000 /* DuplicateKey */, $e->getCode());
+                }
+
+                try {
+                    $clientEncryption->createDataKey('local', ['keyAltNames' => ['def']]);
+                    $test->fail('Expected exception to be thrown');
+                } catch (ServerException $e) {
+                    $test->assertSame(11000 /* DuplicateKey */, $e->getCode());
+                }
+            },
+        ];
+
+        // See: https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#case-2-addkeyaltname
+        yield 'Case 2: addKeyAltName()' => [
+            static function (self $test, Client $client, ClientEncryption $clientEncryption): void {
+                $keyId = $clientEncryption->createDataKey('local');
+
+                $keyBeforeUpdate = $clientEncryption->addKeyAltName($keyId, 'abc');
+                $test->assertObjectNotHasAttribute('keyAltNames', $keyBeforeUpdate);
+
+                $keyBeforeUpdate = $clientEncryption->addKeyAltName($keyId, 'abc');
+                $test->assertObjectHasAttribute('keyAltNames', $keyBeforeUpdate);
+                $test->assertIsArray($keyBeforeUpdate->keyAltNames);
+                $test->assertContains('abc', $keyBeforeUpdate->keyAltNames);
+
+                try {
+                    $clientEncryption->addKeyAltName($keyId, 'def');
+                    $test->fail('Expected exception to be thrown');
+                } catch (ServerException $e) {
+                    $test->assertSame(11000 /* DuplicateKey */, $e->getCode());
+                }
+
+                $originalKeyId = $clientEncryption->getKeyByAltName('def')->_id;
+
+                $originalKeyBeforeUpdate = $clientEncryption->addKeyAltName($originalKeyId, 'def');
+                $test->assertObjectHasAttribute('keyAltNames', $originalKeyBeforeUpdate);
+                $test->assertIsArray($originalKeyBeforeUpdate->keyAltNames);
+                $test->assertContains('def', $originalKeyBeforeUpdate->keyAltNames);
+            },
+        ];
+    }
+
+    /**
      * Prose test 14: Decryption Events
      *
      * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#decryption-events
@@ -1550,6 +1638,84 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $test->assertEquals($cipherText, $subscriber->lastAggregateReply->cursor->firstBatch[0]->encrypted ?? null);
             },
         ];
+    }
+
+    /**
+     * Prose test 16: RewrapManyDataKey
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#rewrap
+     * @dataProvider provideRewrapManyDataKeySrcAndDstProviders
+     */
+    public function testRewrapManyDataKey(string $srcProvider, string $dstProvider): void
+    {
+        $providerMasterKeys = [
+            'aws' => ['region' => 'us-east-1', 'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0'],
+            'azure' => ['keyVaultEndpoint' => 'key-vault-csfle.vault.azure.net', 'keyName' => 'key-name-csfle'],
+            'gcp' => ['projectId' => 'devprod-drivers', 'location' => 'global', 'keyRing' => 'key-ring-csfle', 'keyName' => 'key-name-csfle'],
+            'kmip' => [],
+        ];
+
+        // Test setup
+        $client = static::createTestClient();
+
+        // Ensure that the key vault is dropped with a majority write concern
+        self::insertKeyVaultData($client, []);
+
+        $clientEncryptionOpts = [
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => [
+                'aws' => Context::getAWSCredentials(),
+                'azure' => Context::getAzureCredentials(),
+                'gcp' => Context::getGCPCredentials(),
+                'kmip' => ['endpoint' => Context::getKmipEndpoint()],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+            ],
+            'tlsOptions' => [
+                'kmip' => Context::getKmsTlsOptions(),
+            ],
+        ];
+
+        $clientEncryption1 = $client->createClientEncryption($clientEncryptionOpts);
+
+        $createDataKeyOpts = [];
+
+        if (isset($providerMasterKeys[$srcProvider])) {
+            $createDataKeyOpts['masterKey'] = $providerMasterKeys[$srcProvider];
+        }
+
+        $keyId = $clientEncryption1->createDataKey($srcProvider, $createDataKeyOpts);
+
+        $ciphertext = $clientEncryption1->encrypt('test', ['algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC, 'keyId' => $keyId]);
+
+        $clientEncryption2 = $client->createClientEncryption($clientEncryptionOpts);
+
+        $rewrapManyDataKeyOpts = ['provider' => $dstProvider];
+
+        if (isset($providerMasterKeys[$dstProvider])) {
+            $rewrapManyDataKeyOpts['masterKey'] = $providerMasterKeys[$dstProvider];
+        }
+
+        $result = $clientEncryption2->rewrapManyDataKey([], $rewrapManyDataKeyOpts);
+
+        $this->assertObjectHasAttribute('bulkWriteResult', $result);
+        $this->assertIsObject($result->bulkWriteResult);
+        // libmongoc uses different field names for its BulkWriteResult
+        $this->assertObjectHasAttribute('nModified', $result->bulkWriteResult);
+        $this->assertSame(1, $result->bulkWriteResult->nModified);
+
+        $this->assertSame('test', $clientEncryption1->decrypt($ciphertext));
+        $this->assertSame('test', $clientEncryption2->decrypt($ciphertext));
+    }
+
+    public static function provideRewrapManyDataKeySrcAndDstProviders()
+    {
+        $providers = ['aws', 'azure', 'gcp', 'kmip', 'local'];
+
+        foreach ($providers as $srcProvider) {
+            foreach ($providers as $dstProvider) {
+                yield [$srcProvider, $dstProvider];
+            }
+        }
     }
 
     private function createInt64(string $value): Int64

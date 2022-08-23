@@ -23,6 +23,14 @@ class MatchesTest extends FunctionalTestCase
         $this->assertResult(true, $c, ['y' => ['b' => 2, 'a' => 1], 'x' => 1], 'Root and embedded key order is not significant');
     }
 
+    public function testFlexibleNumericComparison(): void
+    {
+        $c = new Matches(['x' => 1, 'y' => 1.0]);
+        $this->assertResult(true, $c, ['x' => 1.0, 'y' => 1.0], 'Float instead of expected int matches');
+        $this->assertResult(true, $c, ['x' => 1, 'y' => 1], 'Int instead of expected float matches');
+        $this->assertResult(false, $c, ['x' => 'foo', 'y' => 1.0], 'Different type does not match');
+    }
+
     public function testDoNotAllowExtraRootKeys(): void
     {
         $c = new Matches(['x' => 1], null, false);

@@ -43,6 +43,14 @@ class DocumentsMatchConstraintTest extends TestCase
         $this->assertResult(false, $c, [1, ['a' => 1, 'b' => 2]], 'Extra keys in embedded are not permitted');
     }
 
+    public function testFlexibleNumericComparison(): void
+    {
+        $c = new DocumentsMatchConstraint(['x' => 1, 'y' => 1.0]);
+        $this->assertResult(true, $c, ['x' => 1.0, 'y' => 1.0], 'Float instead of expected int matches');
+        $this->assertResult(true, $c, ['x' => 1, 'y' => 1], 'Int instead of expected float matches');
+        $this->assertResult(false, $c, ['x' => 'foo', 'y' => 1.0], 'Different type does not match');
+    }
+
     public function testIgnoreExtraKeysInEmbedded(): void
     {
         $c = new DocumentsMatchConstraint(['x' => 1, 'y' => ['a' => 1, 'b' => 2]], false, true);
@@ -62,15 +70,6 @@ class DocumentsMatchConstraintTest extends TestCase
         $this->assertResult(false, $c, [1, ['a' => 1], 3], 'Extra keys in root are not permitted');
         $this->assertResult(true, $c, [1, ['a' => 1, 'b' => 2]], 'Extra keys in embedded are permitted');
         $this->assertResult(false, $c, [1, ['a' => 2]], 'Keys must have the correct value');
-    }
-
-    public function testPlaceholders(): void
-    {
-        $c = new DocumentsMatchConstraint(['x' => '42', 'y' => 42, 'z' => ['a' => 24]], false, false, [24, 42]);
-
-        $this->assertResult(true, $c, ['x' => '42', 'y' => 'foo', 'z' => ['a' => 1]], 'Placeholders accept any value');
-        $this->assertResult(false, $c, ['x' => 42, 'y' => 'foo', 'z' => ['a' => 1]], 'Placeholder type must match');
-        $this->assertResult(true, $c, ['x' => '42', 'y' => 42, 'z' => ['a' => 24]], 'Exact match');
     }
 
     /**
@@ -146,13 +145,13 @@ class DocumentsMatchConstraintTest extends TestCase
                 ['foo' => ['foo' => 'bar', 'bar' => 'baz']],
             ],
             'Scalar value not equal' => [
-                'Field path "foo": Failed asserting that two values are equal.',
+                'Field path "foo": Failed asserting that two strings are equal.',
                 new DocumentsMatchConstraint(['foo' => 'bar']),
                 ['foo' => 'baz'],
             ],
             'Scalar type mismatch' => [
-                'Field path "foo": Failed asserting that two values are equal.',
-                new DocumentsMatchConstraint(['foo' => 42]),
+                'Field path "foo": \'42\' is not instance of expected type "bool".',
+                new DocumentsMatchConstraint(['foo' => true]),
                 ['foo' => '42'],
             ],
             'Type mismatch' => [

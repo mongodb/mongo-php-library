@@ -12,6 +12,7 @@ use MongoDB\Driver\Exception\Exception;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\GridFS\Bucket;
+use MongoDB\MapReduceResult;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
@@ -206,6 +207,10 @@ final class Operation
              * is not used (e.g. Command Monitoring spec). */
             if ($result instanceof Cursor) {
                 $result = $result->toArray();
+            } elseif ($result instanceof MapReduceResult) {
+                /* For mapReduce operations, we ignore the mapReduce metadata
+                 * and only return the result iterator for evaluation. */
+                $result = iterator_to_array($result->getIterator());
             }
         } catch (Exception $e) {
             $exception = $e;
@@ -789,7 +794,7 @@ final class Operation
                 return ResultExpectation::ASSERT_SAME_DOCUMENTS;
 
             case 'mapReduce':
-                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
+                return ResultExpectation::ASSERT_DOCUMENTS_MATCH;
 
             case 'replaceOne':
             case 'updateMany':

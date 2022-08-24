@@ -105,8 +105,6 @@
     <!-- **************************************************************************** -->
     <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint">
         <properties>
-            <!-- Requires PHP 7.4 -->
-            <property name="enableObjectTypeHint" value="false" />
             <!-- Requires PHP 8.0 -->
             <property name="enableMixedTypeHint" value="false" />
             <!-- Requires PHP 8.0 -->

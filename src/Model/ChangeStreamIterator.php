@@ -76,7 +76,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      * @param array|object|null $initialResumeToken
      * @param object|null       $postBatchResumeToken
      */
-    public function __construct(Cursor $cursor, int $firstBatchSize, $initialResumeToken, $postBatchResumeToken)
+    public function __construct(Cursor $cursor, int $firstBatchSize, $initialResumeToken, ?object $postBatchResumeToken)
     {
         if (! is_integer($firstBatchSize)) {
             throw InvalidArgumentException::invalidType('$firstBatchSize', $firstBatchSize, 'integer');

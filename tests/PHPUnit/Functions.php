@@ -1255,7 +1255,7 @@ if (! function_exists('PHPUnit\Framework\assertObjectHasAttribute')) {
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    function assertObjectHasAttribute(string $attributeName, $object, string $message = ''): void
+    function assertObjectHasAttribute(string $attributeName, object $object, string $message = ''): void
     {
         Assert::assertObjectHasAttribute(...func_get_args());
     }
@@ -1273,7 +1273,7 @@ if (! function_exists('PHPUnit\Framework\assertObjectNotHasAttribute')) {
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    function assertObjectNotHasAttribute(string $attributeName, $object, string $message = ''): void
+    function assertObjectNotHasAttribute(string $attributeName, object $object, string $message = ''): void
     {
         Assert::assertObjectNotHasAttribute(...func_get_args());
     }

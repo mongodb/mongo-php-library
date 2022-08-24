@@ -110,7 +110,7 @@ class ListIndexes implements Executable
      * @see https://php.net/manual/en/mongodb-driver-server.executecommand.php
      * @return array
      */
-    private function createOptions()
+    private function createOptions(): array
     {
         $options = [];
 
@@ -129,7 +129,7 @@ class ListIndexes implements Executable
      * @return IndexInfoIteratorIterator
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    private function executeCommand(Server $server)
+    private function executeCommand(Server $server): IndexInfoIteratorIterator
     {
         $cmd = ['listIndexes' => $this->collectionName];
 

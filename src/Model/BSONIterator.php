@@ -133,12 +133,12 @@ class BSONIterator implements Iterator
      * @return boolean
      */
     #[ReturnTypeWillChange]
-    public function valid()
+    public function valid(): bool
     {
         return $this->current !== null;
     }
 
-    private function advance()
+    private function advance(): void
     {
         if ($this->position === $this->bufferLength) {
             return;

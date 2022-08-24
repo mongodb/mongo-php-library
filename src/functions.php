@@ -474,7 +474,7 @@ function create_field_path_type_map(array $typeMap, string $fieldPath): array
  * @throws RuntimeException for driver errors while committing the transaction
  * @throws Exception for any other errors, including those thrown in the callback
  */
-function with_transaction(Session $session, callable $callback, array $transactionOptions = [])
+function with_transaction(Session $session, callable $callback, array $transactionOptions = []): void
 {
     $operation = new WithTransaction($callback, $transactionOptions);
     $operation->execute($session);

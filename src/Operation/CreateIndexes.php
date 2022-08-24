@@ -160,7 +160,7 @@ class CreateIndexes implements Executable
      * @see https://php.net/manual/en/mongodb-driver-server.executewritecommand.php
      * @return array
      */
-    private function createOptions()
+    private function createOptions(): array
     {
         $options = [];
 
@@ -182,7 +182,7 @@ class CreateIndexes implements Executable
      * @param Server $server
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    private function executeCommand(Server $server)
+    private function executeCommand(Server $server): void
     {
         $cmd = [
             'createIndexes' => $this->collectionName,

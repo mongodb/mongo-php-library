@@ -217,7 +217,7 @@ class Delete implements Executable, Explainable
      *
      * @return array
      */
-    private function createDeleteOptions()
+    private function createDeleteOptions(): array
     {
         $deleteOptions = ['limit' => $this->limit];
 
@@ -238,7 +238,7 @@ class Delete implements Executable, Explainable
      * @see https://php.net/manual/en/mongodb-driver-server.executebulkwrite.php
      * @return array
      */
-    private function createExecuteOptions()
+    private function createExecuteOptions(): array
     {
         $options = [];
 

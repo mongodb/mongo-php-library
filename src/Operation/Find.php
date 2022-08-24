@@ -382,7 +382,7 @@ class Find implements Executable, Explainable
      * @see https://php.net/manual/en/mongodb-driver-server.executequery.php
      * @return array
      */
-    private function createExecuteOptions()
+    private function createExecuteOptions(): array
     {
         $options = [];
 
@@ -405,7 +405,7 @@ class Find implements Executable, Explainable
      *
      * @return array
      */
-    private function createQueryOptions()
+    private function createQueryOptions(): array
     {
         $options = [];
 

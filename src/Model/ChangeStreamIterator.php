@@ -273,7 +273,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      *
      * @return boolean
      */
-    private function isAtEndOfBatch()
+    private function isAtEndOfBatch(): bool
     {
         return $this->batchPosition + 1 >= $this->batchSize;
     }
@@ -284,7 +284,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#updating-the-cached-resume-token
      * @param boolean $incrementBatchPosition
      */
-    private function onIteration(bool $incrementBatchPosition)
+    private function onIteration(bool $incrementBatchPosition): void
     {
         $this->isValid = parent::valid();
 

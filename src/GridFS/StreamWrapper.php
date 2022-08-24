@@ -256,7 +256,7 @@ class StreamWrapper
      *
      * @return array
      */
-    private function getStatTemplate()
+    private function getStatTemplate(): array
     {
         return [
             // phpcs:disable Squiz.Arrays.ArrayDeclaration.IndexNoNewline
@@ -283,7 +283,7 @@ class StreamWrapper
      * @see StreamWrapper::stream_open()
      * @param string $path
      */
-    private function initProtocol(string $path)
+    private function initProtocol(string $path): void
     {
         $parts = explode('://', $path, 2);
         $this->protocol = $parts[0] ?: 'gridfs';
@@ -295,7 +295,7 @@ class StreamWrapper
      * @see StreamWrapper::stream_open()
      * @return boolean
      */
-    private function initReadableStream()
+    private function initReadableStream(): bool
     {
         $context = stream_context_get_options($this->context);
 
@@ -313,7 +313,7 @@ class StreamWrapper
      * @see StreamWrapper::stream_open()
      * @return boolean
      */
-    private function initWritableStream()
+    private function initWritableStream(): bool
     {
         $context = stream_context_get_options($this->context);
 

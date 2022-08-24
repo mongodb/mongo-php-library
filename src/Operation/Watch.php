@@ -339,7 +339,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      *
      * @return Aggregate
      */
-    private function createAggregate()
+    private function createAggregate(): Aggregate
     {
         $pipeline = $this->pipeline;
         array_unshift($pipeline, ['$changeStream' => (object) $this->changeStreamOptions]);
@@ -353,7 +353,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      * @param Server $server
      * @return ChangeStreamIterator
      */
-    private function createChangeStreamIterator(Server $server)
+    private function createChangeStreamIterator(Server $server): ChangeStreamIterator
     {
         return new ChangeStreamIterator(
             $this->executeAggregate($server),
@@ -372,7 +372,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      * @param Server $server
      * @return Cursor
      */
-    private function executeAggregate(Server $server)
+    private function executeAggregate(Server $server): Cursor
     {
         addSubscriber($this);
 
@@ -415,7 +415,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      * @return ChangeStreamIterator
      * @throws InvalidArgumentException
      */
-    private function resume($resumeToken = null, bool $hasAdvanced = false)
+    private function resume($resumeToken = null, bool $hasAdvanced = false): ChangeStreamIterator
     {
         if (isset($resumeToken) && ! is_array($resumeToken) && ! is_object($resumeToken)) {
             throw InvalidArgumentException::invalidType('$resumeToken', $resumeToken, 'array or object');
@@ -456,7 +456,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      * @param Server $server
      * @return boolean
      */
-    private function shouldCaptureOperationTime(Server $server)
+    private function shouldCaptureOperationTime(Server $server): bool
     {
         if ($this->hasResumed) {
             return false;

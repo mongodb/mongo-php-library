@@ -155,7 +155,7 @@ class CachingIterator implements Countable, Iterator
     /**
      * Ensures that the inner iterator is fully consumed and cached.
      */
-    private function exhaustIterator()
+    private function exhaustIterator(): void
     {
         while (! $this->iteratorExhausted) {
             $this->next();
@@ -165,7 +165,7 @@ class CachingIterator implements Countable, Iterator
     /**
      * Stores the current item in the cache.
      */
-    private function storeCurrentItem()
+    private function storeCurrentItem(): void
     {
         if (! $this->iterator->valid()) {
             return;

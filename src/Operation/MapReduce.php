@@ -312,7 +312,7 @@ class MapReduce implements Executable
      * @param string|array|object $out
      * @return void
      */
-    private function checkOutDeprecations($out)
+    private function checkOutDeprecations($out): void
     {
         if (is_string($out)) {
             return;
@@ -334,7 +334,7 @@ class MapReduce implements Executable
      *
      * @return Command
      */
-    private function createCommand()
+    private function createCommand(): Command
     {
         $cmd = [
             'mapReduce' => $this->collectionName,
@@ -366,7 +366,7 @@ class MapReduce implements Executable
      * @return callable
      * @throws UnexpectedValueException if the command response was malformed
      */
-    private function createGetIteratorCallable(stdClass $result, Server $server)
+    private function createGetIteratorCallable(stdClass $result, Server $server): callable
     {
         // Inline results can be wrapped with an ArrayIterator
         if (isset($result->results) && is_array($result->results)) {
@@ -400,7 +400,7 @@ class MapReduce implements Executable
      * @param boolean $hasOutputCollection
      * @return array
      */
-    private function createOptions(bool $hasOutputCollection)
+    private function createOptions(bool $hasOutputCollection): array
     {
         $options = [];
 

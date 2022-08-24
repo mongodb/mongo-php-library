@@ -133,8 +133,6 @@
 
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
         <properties>
-            <!-- Requires PHP 7.2 -->
-            <property name="enableObjectTypeHint" value="false" />
             <!-- Requires PHP 8.0 -->
             <property name="enableStaticTypeHint" value="false" />
             <!-- Requires PHP 8.0 -->

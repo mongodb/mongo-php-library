@@ -146,10 +146,7 @@ class CountDocuments implements Executable
         return (integer) $result->n;
     }
 
-    /**
-     * @return Aggregate
-     */
-    private function createAggregate()
+    private function createAggregate(): Aggregate
     {
         $pipeline = [
             ['$match' => (object) $this->filter],

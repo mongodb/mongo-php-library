@@ -134,7 +134,7 @@ class ModifyCollection implements Executable
      * @see https://php.net/manual/en/mongodb-driver-server.executewritecommand.php
      * @return array
      */
-    private function createOptions()
+    private function createOptions(): array
     {
         $options = [];
 

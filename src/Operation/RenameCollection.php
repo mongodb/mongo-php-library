@@ -130,7 +130,7 @@ class RenameCollection implements Executable
      *
      * @return Command
      */
-    private function createCommand()
+    private function createCommand(): Command
     {
         $cmd = [
             'renameCollection' => $this->fromNamespace,
@@ -152,7 +152,7 @@ class RenameCollection implements Executable
      * @see https://php.net/manual/en/mongodb-driver-server.executewritecommand.php
      * @return array
      */
-    private function createOptions()
+    private function createOptions(): array
     {
         $options = [];
 

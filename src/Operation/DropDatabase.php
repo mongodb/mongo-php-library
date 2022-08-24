@@ -109,7 +109,7 @@ class DropDatabase implements Executable
      *
      * @return Command
      */
-    private function createCommand()
+    private function createCommand(): Command
     {
         $cmd = ['dropDatabase' => 1];
 
@@ -126,7 +126,7 @@ class DropDatabase implements Executable
      * @see https://php.net/manual/en/mongodb-driver-server.executewritecommand.php
      * @return array
      */
-    private function createOptions()
+    private function createOptions(): array
     {
         $options = [];
 

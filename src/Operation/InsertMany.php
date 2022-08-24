@@ -165,7 +165,7 @@ class InsertMany implements Executable
      * @see https://php.net/manual/en/mongodb-driver-bulkwrite.construct.php
      * @return array
      */
-    private function createBulkWriteOptions()
+    private function createBulkWriteOptions(): array
     {
         $options = ['ordered' => $this->options['ordered']];
 
@@ -184,7 +184,7 @@ class InsertMany implements Executable
      * @see https://php.net/manual/en/mongodb-driver-server.executebulkwrite.php
      * @return array
      */
-    private function createExecuteOptions()
+    private function createExecuteOptions(): array
     {
         $options = [];
 

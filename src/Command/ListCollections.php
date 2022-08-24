@@ -120,7 +120,7 @@ class ListCollections implements Executable
      *
      * @return Command
      */
-    private function createCommand()
+    private function createCommand(): Command
     {
         $cmd = ['listCollections' => 1];
 
@@ -146,7 +146,7 @@ class ListCollections implements Executable
      * @see https://php.net/manual/en/mongodb-driver-server.executecommand.php
      * @return array
      */
-    private function createOptions()
+    private function createOptions(): array
     {
         $options = [];
 

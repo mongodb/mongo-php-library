@@ -320,7 +320,7 @@ class Aggregate implements Executable, Explainable
      *
      * @return array
      */
-    private function createCommandDocument()
+    private function createCommandDocument(): array
     {
         $cmd = [
             'aggregate' => $this->collectionName ?? 1,

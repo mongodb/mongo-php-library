@@ -292,7 +292,7 @@ class CollectionWrapper
     /**
      * Create an index on the chunks collection if it does not already exist.
      */
-    private function ensureChunksIndex()
+    private function ensureChunksIndex(): void
     {
         $expectedIndex = ['files_id' => 1, 'n' => 1];
 
@@ -308,7 +308,7 @@ class CollectionWrapper
     /**
      * Create an index on the files collection if it does not already exist.
      */
-    private function ensureFilesIndex()
+    private function ensureFilesIndex(): void
     {
         $expectedIndex = ['filename' => 1, 'uploadDate' => 1];
 
@@ -327,7 +327,7 @@ class CollectionWrapper
      * This method is called once before the first write operation on a GridFS
      * bucket. Indexes are only be created if the files collection is empty.
      */
-    private function ensureIndexes()
+    private function ensureIndexes(): void
     {
         if ($this->checkedIndexes) {
             return;
@@ -378,7 +378,7 @@ class CollectionWrapper
      *
      * @return boolean
      */
-    private function isFilesCollectionEmpty()
+    private function isFilesCollectionEmpty(): bool
     {
         return null === $this->filesCollection->findOne([], [
             'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),

@@ -183,7 +183,7 @@ class Count implements Executable, Explainable
      *
      * @return array
      */
-    private function createCommandDocument()
+    private function createCommandDocument(): array
     {
         $cmd = ['count' => $this->collectionName];
 
@@ -214,7 +214,7 @@ class Count implements Executable, Explainable
      * @see https://php.net/manual/en/mongodb-driver-server.executereadcommand.php
      * @return array
      */
-    private function createOptions()
+    private function createOptions(): array
     {
         $options = [];
 

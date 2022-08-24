@@ -285,7 +285,7 @@ class CreateCollection implements Executable
      *
      * @return Command
      */
-    private function createCommand()
+    private function createCommand(): Command
     {
         $cmd = ['create' => $this->collectionName];
 
@@ -310,7 +310,7 @@ class CreateCollection implements Executable
      * @see https://php.net/manual/en/mongodb-driver-server.executewritecommand.php
      * @return array
      */
-    private function createOptions()
+    private function createOptions(): array
     {
         $options = [];
 

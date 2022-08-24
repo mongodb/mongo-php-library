@@ -251,7 +251,7 @@ class WritableStream
         return $bytesRead;
     }
 
-    private function abort()
+    private function abort(): void
     {
         try {
             $this->collectionWrapper->deleteChunksByFilesId($this->file['_id']);
@@ -285,7 +285,7 @@ class WritableStream
         return $this->file['_id'];
     }
 
-    private function insertChunkFromBuffer()
+    private function insertChunkFromBuffer(): void
     {
         if (strlen($this->buffer) == 0) {
             return;

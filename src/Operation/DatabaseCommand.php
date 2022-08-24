@@ -112,7 +112,7 @@ class DatabaseCommand implements Executable
      * @see https://php.net/manual/en/mongodb-driver-server.executecommand.php
      * @return array
      */
-    private function createOptions()
+    private function createOptions(): array
     {
         $options = [];
 

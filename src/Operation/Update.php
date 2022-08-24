@@ -243,7 +243,7 @@ class Update implements Executable, Explainable
      * @see https://php.net/manual/en/mongodb-driver-bulkwrite.construct.php
      * @return array
      */
-    private function createBulkWriteOptions()
+    private function createBulkWriteOptions(): array
     {
         $options = [];
 
@@ -266,7 +266,7 @@ class Update implements Executable, Explainable
      * @see https://php.net/manual/en/mongodb-driver-server.executebulkwrite.php
      * @return array
      */
-    private function createExecuteOptions()
+    private function createExecuteOptions(): array
     {
         $options = [];
 
@@ -289,7 +289,7 @@ class Update implements Executable, Explainable
      *
      * @return array
      */
-    private function createUpdateOptions()
+    private function createUpdateOptions(): array
     {
         $updateOptions = [
             'multi' => $this->options['multi'],

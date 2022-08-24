@@ -131,7 +131,7 @@ class Explain implements Executable
      * @param Server $server
      * @return Command
      */
-    private function createCommand(Server $server)
+    private function createCommand(Server $server): Command
     {
         $cmd = ['explain' => $this->explainable->getCommandDocument($server)];
 
@@ -150,7 +150,7 @@ class Explain implements Executable
      * @see https://php.net/manual/en/mongodb-driver-server.executecommand.php
      * @return array
      */
-    private function createOptions()
+    private function createOptions(): array
     {
         $options = [];
 

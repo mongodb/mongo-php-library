@@ -643,7 +643,7 @@ class Bucket
      * @param stdClass $file GridFS file document
      * @return string
      */
-    private function createPathForFile(stdClass $file)
+    private function createPathForFile(stdClass $file): string
     {
         if (! is_object($file->_id) || method_exists($file->_id, '__toString')) {
             $id = (string) $file->_id;
@@ -665,7 +665,7 @@ class Bucket
      *
      * @return string
      */
-    private function createPathForUpload()
+    private function createPathForUpload(): string
     {
         return sprintf(
             '%s://%s/%s.files',
@@ -680,7 +680,7 @@ class Bucket
      *
      * @return string
      */
-    private function getFilesNamespace()
+    private function getFilesNamespace(): string
     {
         return sprintf('%s.%s.files', $this->databaseName, $this->bucketName);
     }
@@ -695,7 +695,7 @@ class Bucket
      * @return stdClass
      * @throws InvalidArgumentException
      */
-    private function getRawFileDocumentForStream($stream)
+    private function getRawFileDocumentForStream($stream): stdClass
     {
         if (! is_resource($stream) || get_resource_type($stream) != "stream") {
             throw InvalidArgumentException::invalidType('$stream', $stream, 'resource');
@@ -732,7 +732,7 @@ class Bucket
     /**
      * Registers the GridFS stream wrapper if it is not already registered.
      */
-    private function registerStreamWrapper()
+    private function registerStreamWrapper(): void
     {
         if (in_array(self::$streamWrapperProtocol, stream_get_wrappers())) {
             return;

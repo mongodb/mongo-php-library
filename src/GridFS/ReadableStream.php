@@ -261,7 +261,7 @@ class ReadableStream
      * @return boolean Whether there was a current chunk to read
      * @throws CorruptFileException if an expected chunk could not be read successfully
      */
-    private function initBufferFromCurrentChunk()
+    private function initBufferFromCurrentChunk(): bool
     {
         if ($this->chunkOffset === 0 && $this->numChunks === 0) {
             return false;
@@ -298,7 +298,7 @@ class ReadableStream
      * @return boolean Whether there was a next chunk to read
      * @throws CorruptFileException if an expected chunk could not be read successfully
      */
-    private function initBufferFromNextChunk()
+    private function initBufferFromNextChunk(): bool
     {
         if ($this->chunkOffset === $this->numChunks - 1) {
             return false;
@@ -314,7 +314,7 @@ class ReadableStream
     /**
      * Initializes the chunk iterator starting from the current offset.
      */
-    private function initChunksIterator()
+    private function initChunksIterator(): void
     {
         $this->chunksIterator = $this->collectionWrapper->findChunksByFileId($this->file->_id, $this->chunkOffset);
         $this->chunksIterator->rewind();

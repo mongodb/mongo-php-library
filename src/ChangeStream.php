@@ -18,14 +18,18 @@
 namespace MongoDB;
 
 use Iterator;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\CursorId;
 use MongoDB\Driver\Exception\ConnectionException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
+use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Exception\ResumeTokenException;
+use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Model\ChangeStreamIterator;
 use ReturnTypeWillChange;
 
+use function assert;
 use function call_user_func;
 use function in_array;
 
@@ -71,7 +75,7 @@ class ChangeStream implements Iterator
     /** @var int */
     private static $wireVersionForResumableChangeStreamError = 9;
 
-    /** @var callable */
+    /** @var callable|null */
     private $resumeCallable;
 
     /** @var ChangeStreamIterator */
@@ -112,7 +116,10 @@ class ChangeStream implements Iterator
      */
     public function getCursorId()
     {
-        return $this->iterator->getInnerIterator()->getId();
+        $cursor = $this->iterator->getInnerIterator();
+        assert($cursor instanceof Cursor);
+
+        return $cursor->getId();
     }
 
     /**
@@ -250,7 +257,15 @@ class ChangeStream implements Iterator
      */
     private function resume(): void
     {
+        if (! $this->resumeCallable) {
+            throw new BadMethodCallException('Cannot resume a closed change stream.');
+        }
+
         $this->iterator = call_user_func($this->resumeCallable, $this->getResumeToken(), $this->hasAdvanced);
+        if (! $this->iterator instanceof ChangeStreamIterator) {
+            throw new UnexpectedValueException('Expected change stream iterator from callable');
+        }
+
         $this->iterator->rewind();
 
         $this->onIteration($this->hasAdvanced);

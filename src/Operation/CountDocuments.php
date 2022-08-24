@@ -17,6 +17,7 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
@@ -24,6 +25,7 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 
 use function array_intersect_key;
+use function assert;
 use function count;
 use function current;
 use function is_array;
@@ -129,6 +131,8 @@ class CountDocuments implements Executable
     public function execute(Server $server)
     {
         $cursor = $this->aggregate->execute($server);
+        assert($cursor instanceof Cursor);
+
         $allResults = $cursor->toArray();
 
         /* If there are no documents to count, the aggregation pipeline has no items to group, and
@@ -138,7 +142,7 @@ class CountDocuments implements Executable
         }
 
         $result = current($allResults);
-        if (! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {
+        if (! is_object($result) || ! isset($result->n) || ! (is_integer($result->n) || is_float($result->n))) {
             throw new UnexpectedValueException('count command did not return a numeric "n" value');
         }
 

@@ -47,7 +47,7 @@ class BulkWriteResult
      * This method should only be called if the write was acknowledged.
      *
      * @see BulkWriteResult::isAcknowledged()
-     * @return integer
+     * @return integer|null
      * @throws BadMethodCallException is the write result is unacknowledged
      */
     public function getDeletedCount()
@@ -65,7 +65,7 @@ class BulkWriteResult
      * This method should only be called if the write was acknowledged.
      *
      * @see BulkWriteResult::isAcknowledged()
-     * @return integer
+     * @return integer|null
      * @throws BadMethodCallException is the write result is unacknowledged
      */
     public function getInsertedCount()
@@ -99,7 +99,7 @@ class BulkWriteResult
      * This method should only be called if the write was acknowledged.
      *
      * @see BulkWriteResult::isAcknowledged()
-     * @return integer
+     * @return integer|null
      * @throws BadMethodCallException is the write result is unacknowledged
      */
     public function getMatchedCount()
@@ -138,7 +138,7 @@ class BulkWriteResult
      * This method should only be called if the write was acknowledged.
      *
      * @see BulkWriteResult::isAcknowledged()
-     * @return integer
+     * @return integer|null
      * @throws BadMethodCallException is the write result is unacknowledged
      */
     public function getUpsertedCount()

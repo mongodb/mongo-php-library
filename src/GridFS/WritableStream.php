@@ -17,6 +17,7 @@
 
 namespace MongoDB\GridFS;
 
+use HashContext;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
@@ -65,7 +66,7 @@ class WritableStream
     /** @var array */
     private $file;
 
-    /** @var resource */
+    /** @var HashContext|null */
     private $hashCtx;
 
     /** @var boolean */
@@ -262,7 +263,7 @@ class WritableStream
         $this->file['length'] = $this->length;
         $this->file['uploadDate'] = new UTCDateTime();
 
-        if (! $this->disableMD5) {
+        if (! $this->disableMD5 && $this->hashCtx) {
             $this->file['md5'] = hash_final($this->hashCtx);
         }
 
@@ -292,7 +293,7 @@ class WritableStream
             'data' => new Binary($data, Binary::TYPE_GENERIC),
         ];
 
-        if (! $this->disableMD5) {
+        if (! $this->disableMD5 && $this->hashCtx) {
             hash_update($this->hashCtx, $data);
         }
 

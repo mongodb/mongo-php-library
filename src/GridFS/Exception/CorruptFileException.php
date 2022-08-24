@@ -24,6 +24,14 @@ use function sprintf;
 class CorruptFileException extends RuntimeException
 {
     /**
+     * Thrown when a chunk doesn't contain valid data.
+     */
+    public static function invalidChunkData(int $chunkIndex): self
+    {
+        return new static(sprintf('Invalid data found for index "%d"', $chunkIndex));
+    }
+
+    /**
      * Thrown when a chunk is not found for an expected index.
      *
      * @param integer $expectedIndex Expected index number

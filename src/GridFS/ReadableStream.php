@@ -17,13 +17,16 @@
 
 namespace MongoDB\GridFS;
 
-use MongoDB\Driver\CursorInterface;
+use MongoDB\BSON\Binary;
+use MongoDB\Driver\Cursor;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Exception\CorruptFileException;
 
+use function assert;
 use function ceil;
 use function floor;
 use function is_integer;
+use function is_object;
 use function property_exists;
 use function sprintf;
 use function strlen;
@@ -48,13 +51,13 @@ class ReadableStream
     /** @var integer */
     private $chunkOffset = 0;
 
-    /** @var CursorInterface|null */
+    /** @var Cursor|null */
     private $chunksIterator;
 
     /** @var CollectionWrapper */
     private $collectionWrapper;
 
-    /** @var float|integer */
+    /** @var integer */
     private $expectedLastChunkSize = 0;
 
     /** @var object */
@@ -164,6 +167,8 @@ class ReadableStream
             return '';
         }
 
+        assert($this->buffer !== null);
+
         $data = '';
 
         while (strlen($data) < $length) {
@@ -250,14 +255,23 @@ class ReadableStream
             return false;
         }
 
+        if ($this->chunksIterator === null) {
+            return false;
+        }
+
         if (! $this->chunksIterator->valid()) {
             throw CorruptFileException::missingChunk($this->chunkOffset);
         }
 
         $currentChunk = $this->chunksIterator->current();
+        assert(is_object($currentChunk));
 
         if ($currentChunk->n !== $this->chunkOffset) {
             throw CorruptFileException::unexpectedIndex($currentChunk->n, $this->chunkOffset);
+        }
+
+        if (! $currentChunk->data instanceof Binary) {
+            throw CorruptFileException::invalidChunkData($this->chunkOffset);
         }
 
         $this->buffer = $currentChunk->data->getData();
@@ -284,6 +298,10 @@ class ReadableStream
     private function initBufferFromNextChunk(): bool
     {
         if ($this->chunkOffset === $this->numChunks - 1) {
+            return false;
+        }
+
+        if ($this->chunksIterator === null) {
             return false;
         }
 

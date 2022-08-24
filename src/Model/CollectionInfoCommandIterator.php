@@ -37,10 +37,7 @@ class CollectionInfoCommandIterator extends IteratorIterator implements Collecti
     /** @var string|null */
     private $databaseName;
 
-    /**
-     * @param string|null $databaseName
-     */
-    public function __construct(Traversable $iterator, $databaseName = null)
+    public function __construct(Traversable $iterator, ?string $databaseName = null)
     {
         parent::__construct($iterator);
 

@@ -137,7 +137,7 @@ class Bucket
      * @param array   $options      Bucket options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct(Manager $manager, $databaseName, array $options = [])
+    public function __construct(Manager $manager, string $databaseName, array $options = [])
     {
         $options += [
             'bucketName' => self::$defaultBucketName,
@@ -282,7 +282,7 @@ class Bucket
      * @throws StreamException if the file could not be uploaded
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function downloadToStreamByName($filename, $destination, array $options = [])
+    public function downloadToStreamByName(string $filename, $destination, array $options = [])
     {
         if (! is_resource($destination) || get_resource_type($destination) != "stream") {
             throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
@@ -517,7 +517,7 @@ class Bucket
      * @throws FileNotFoundException if no file could be selected
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function openDownloadStreamByName($filename, array $options = [])
+    public function openDownloadStreamByName(string $filename, array $options = [])
     {
         $options += ['revision' => -1];
 
@@ -550,7 +550,7 @@ class Bucket
      * @param array  $options  Upload options
      * @return resource
      */
-    public function openUploadStream($filename, array $options = [])
+    public function openUploadStream(string $filename, array $options = [])
     {
         $options += ['chunkSizeBytes' => $this->chunkSizeBytes];
 
@@ -574,7 +574,7 @@ class Bucket
      * @throws FileNotFoundException if no file could be selected
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function rename($id, $newFilename)
+    public function rename($id, string $newFilename)
     {
         $updateResult = $this->collectionWrapper->updateFilenameForId($id, $newFilename);
 
@@ -620,7 +620,7 @@ class Bucket
      * @throws StreamException if the file could not be uploaded
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function uploadFromStream($filename, $source, array $options = [])
+    public function uploadFromStream(string $filename, $source, array $options = [])
     {
         if (! is_resource($source) || get_resource_type($source) != "stream") {
             throw InvalidArgumentException::invalidType('$source', $source, 'resource');

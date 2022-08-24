@@ -125,7 +125,7 @@ class WithTransaction
      * @param int $startTime The time the transaction was started
      * @return bool
      */
-    private function isTransactionTimeLimitExceeded($startTime)
+    private function isTransactionTimeLimitExceeded(int $startTime)
     {
         return time() - $startTime >= 120;
     }

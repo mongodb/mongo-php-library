@@ -77,7 +77,7 @@ class StreamWrapper
      *
      * @param string $protocol Protocol to use for stream_wrapper_register()
      */
-    public static function register($protocol = 'gridfs')
+    public static function register(string $protocol = 'gridfs')
     {
         if (in_array($protocol, stream_get_wrappers())) {
             stream_wrapper_unregister($protocol);
@@ -119,13 +119,13 @@ class StreamWrapper
      * Opens the stream.
      *
      * @see https://php.net/manual/en/streamwrapper.stream-open.php
-     * @param string  $path       Path to the file resource
-     * @param string  $mode       Mode used to open the file (only "r" and "w" are supported)
-     * @param integer $options    Additional flags set by the streams API
-     * @param string  $openedPath Not used
+     * @param string      $path       Path to the file resource
+     * @param string      $mode       Mode used to open the file (only "r" and "w" are supported)
+     * @param integer     $options    Additional flags set by the streams API
+     * @param string|null $openedPath Not used
      * @return boolean
      */
-    public function stream_open($path, $mode, $options, &$openedPath)
+    public function stream_open(string $path, string $mode, int $options, ?string &$openedPath)
     {
         $this->initProtocol($path);
         $this->mode = $mode;
@@ -151,7 +151,7 @@ class StreamWrapper
      * @param integer $length Number of bytes to read
      * @return string
      */
-    public function stream_read($length)
+    public function stream_read(int $length)
     {
         if (! $this->stream instanceof ReadableStream) {
             return '';
@@ -168,7 +168,7 @@ class StreamWrapper
      * @param integer $whence One of SEEK_SET, SEEK_CUR, or SEEK_END
      * @return boolean True if the position was updated and false otherwise
      */
-    public function stream_seek($offset, $whence = SEEK_SET)
+    public function stream_seek(int $offset, int $whence = SEEK_SET)
     {
         $size = $this->stream->getSize();
 
@@ -242,7 +242,7 @@ class StreamWrapper
      * @param string $data Data to write
      * @return integer The number of bytes written
      */
-    public function stream_write($data)
+    public function stream_write(string $data)
     {
         if (! $this->stream instanceof WritableStream) {
             return 0;
@@ -283,7 +283,7 @@ class StreamWrapper
      * @see StreamWrapper::stream_open()
      * @param string $path
      */
-    private function initProtocol($path)
+    private function initProtocol(string $path)
     {
         $parts = explode('://', $path, 2);
         $this->protocol = $parts[0] ?: 'gridfs';

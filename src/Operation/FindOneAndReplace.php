@@ -100,7 +100,7 @@ class FindOneAndReplace implements Executable, Explainable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($databaseName, $collectionName, $filter, $replacement, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, $filter, $replacement, array $options = [])
     {
         if (! is_array($filter) && ! is_object($filter)) {
             throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');

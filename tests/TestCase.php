@@ -134,6 +134,11 @@ abstract class TestCase extends BaseTestCase
         return $this->wrapValuesForDataProvider($this->getInvalidDocumentValues());
     }
 
+    public function provideInvalidIntegerValues()
+    {
+        return $this->wrapValuesForDataProvider($this->getInvalidIntegerValues());
+    }
+
     protected function assertDeprecated(callable $execution): void
     {
         $errors = [];

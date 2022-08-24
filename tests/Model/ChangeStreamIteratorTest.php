@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MongoDB\Tests\Model;
 
 use MongoDB\Collection;
@@ -11,6 +13,7 @@ use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\FunctionalTestCase;
+use TypeError;
 
 use function array_merge;
 use function sprintf;
@@ -38,13 +41,8 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
      */
     public function testFirstBatchArgumentTypeCheck($firstBatchSize): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         new ChangeStreamIterator($this->collection->find(), $firstBatchSize, null, null);
-    }
-
-    public function provideInvalidIntegerValues()
-    {
-        return $this->wrapValuesForDataProvider($this->getInvalidIntegerValues());
     }
 
     public function testInitialResumeToken(): void
@@ -73,7 +71,7 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
      */
     public function testPostBatchResumeTokenArgumentTypeCheck($postBatchResumeToken): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(TypeError::class);
         new ChangeStreamIterator($this->collection->find(), 0, null, $postBatchResumeToken);
     }
 

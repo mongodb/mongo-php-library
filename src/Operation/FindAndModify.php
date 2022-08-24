@@ -129,7 +129,7 @@ class FindAndModify implements Executable, Explainable
      * @param array  $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($databaseName, $collectionName, array $options)
+    public function __construct(string $databaseName, string $collectionName, array $options)
     {
         $options += ['remove' => false];
 

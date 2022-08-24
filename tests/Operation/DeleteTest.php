@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Delete;
-
-use function array_merge;
+use TypeError;
 
 class DeleteTest extends TestCase
 {
@@ -16,6 +17,15 @@ class DeleteTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         new Delete($this->getDatabaseName(), $this->getCollectionName(), $filter, 0);
+    }
+
+    /**
+     * @dataProvider provideInvalidIntegerValues
+     */
+    public function testConstructorLimitArgumentMustBeInt($limit): void
+    {
+        $this->expectException(TypeError::class);
+        new Delete($this->getDatabaseName(), $this->getCollectionName(), [], $limit);
     }
 
     /**
@@ -30,7 +40,7 @@ class DeleteTest extends TestCase
 
     public function provideInvalidLimitValues()
     {
-        return $this->wrapValuesForDataProvider(array_merge($this->getInvalidIntegerValues(), [-1, 2]));
+        return $this->wrapValuesForDataProvider([-1, 2]);
     }
 
     /**

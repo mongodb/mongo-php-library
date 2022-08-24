@@ -78,7 +78,7 @@ class Explain implements Executable
      * @param array       $options      Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($databaseName, Explainable $explainable, array $options = [])
+    public function __construct(string $databaseName, Explainable $explainable, array $options = [])
     {
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {
             throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], ReadPreference::class);

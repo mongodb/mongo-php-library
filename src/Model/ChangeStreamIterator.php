@@ -76,7 +76,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      * @param array|object|null $initialResumeToken
      * @param object|null       $postBatchResumeToken
      */
-    public function __construct(Cursor $cursor, $firstBatchSize, $initialResumeToken, $postBatchResumeToken)
+    public function __construct(Cursor $cursor, int $firstBatchSize, $initialResumeToken, $postBatchResumeToken)
     {
         if (! is_integer($firstBatchSize)) {
             throw InvalidArgumentException::invalidType('$firstBatchSize', $firstBatchSize, 'integer');
@@ -284,7 +284,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#updating-the-cached-resume-token
      * @param boolean $incrementBatchPosition
      */
-    private function onIteration($incrementBatchPosition)
+    private function onIteration(bool $incrementBatchPosition)
     {
         $this->isValid = parent::valid();
 

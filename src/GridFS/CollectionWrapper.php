@@ -64,7 +64,7 @@ class CollectionWrapper
      * @param array   $collectionOptions Collection options
      * @throws InvalidArgumentException
      */
-    public function __construct(Manager $manager, $databaseName, $bucketName, array $collectionOptions = [])
+    public function __construct(Manager $manager, string $databaseName, string $bucketName, array $collectionOptions = [])
     {
         $this->databaseName = (string) $databaseName;
         $this->bucketName = (string) $bucketName;
@@ -110,7 +110,7 @@ class CollectionWrapper
      * @param integer $fromChunk Starting chunk (inclusive)
      * @return Cursor
      */
-    public function findChunksByFileId($id, $fromChunk = 0)
+    public function findChunksByFileId($id, int $fromChunk = 0)
     {
         return $this->chunksCollection->find(
             [
@@ -142,7 +142,7 @@ class CollectionWrapper
      * @param integer $revision
      * @return stdClass|null
      */
-    public function findFileByFilenameAndRevision($filename, $revision)
+    public function findFileByFilenameAndRevision(string $filename, int $revision)
     {
         $filename = (string) $filename;
         $revision = (integer) $revision;
@@ -281,7 +281,7 @@ class CollectionWrapper
      * @param string $filename
      * @return UpdateResult
      */
-    public function updateFilenameForId($id, $filename)
+    public function updateFilenameForId($id, string $filename)
     {
         return $this->filesCollection->updateOne(
             ['_id' => $id],

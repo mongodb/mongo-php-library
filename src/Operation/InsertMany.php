@@ -79,7 +79,7 @@ class InsertMany implements Executable
      * @param array            $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($databaseName, $collectionName, array $documents, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, array $documents, array $options = [])
     {
         if (empty($documents)) {
             throw new InvalidArgumentException('$documents is empty');

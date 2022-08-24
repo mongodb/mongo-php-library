@@ -54,7 +54,7 @@ class BSONDocument extends ArrayObject implements JsonSerializable, Serializable
      * @param integer $flags
      * @param string  $iteratorClass
      */
-    public function __construct($input = [], $flags = ArrayObject::ARRAY_AS_PROPS, $iteratorClass = 'ArrayIterator')
+    public function __construct(array $input = [], int $flags = ArrayObject::ARRAY_AS_PROPS, string $iteratorClass = 'ArrayIterator')
     {
         parent::__construct($input, $flags, $iteratorClass);
     }

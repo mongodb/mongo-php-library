@@ -41,10 +41,7 @@ class IndexInfoIteratorIterator extends IteratorIterator implements IndexInfoIte
     /** @var string|null $ns */
     private $ns;
 
-    /**
-     * @param string|null $ns
-     */
-    public function __construct(Traversable $iterator, $ns = null)
+    public function __construct(Traversable $iterator, ?string $ns = null)
     {
         parent::__construct($iterator);
 

@@ -162,12 +162,9 @@
     </rule>
 
 
-    <!-- *********************************************************************************** -->
-    <!-- Require native type hints for all parameters, properties, and return types in tests -->
-    <!-- *********************************************************************************** -->
-    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint">
-        <exclude-pattern>src</exclude-pattern>
-    </rule>
+    <!-- *********************************************************** -->
+    <!-- Require native type hints for all code without a BC promise -->
+    <!-- *********************************************************** -->
     <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint">
         <exclude-pattern>src</exclude-pattern>
     </rule>

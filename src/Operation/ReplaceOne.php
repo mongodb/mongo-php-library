@@ -80,7 +80,7 @@ class ReplaceOne implements Executable
      * @param array        $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($databaseName, $collectionName, $filter, $replacement, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, $filter, $replacement, array $options = [])
     {
         if (! is_array($replacement) && ! is_object($replacement)) {
             throw InvalidArgumentException::invalidType('$replacement', $replacement, 'array or object');

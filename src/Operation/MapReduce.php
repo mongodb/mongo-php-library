@@ -158,7 +158,7 @@ class MapReduce implements Executable
      * @param array               $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
-    public function __construct($databaseName, $collectionName, JavascriptInterface $map, JavascriptInterface $reduce, $out, array $options = [])
+    public function __construct(string $databaseName, string $collectionName, JavascriptInterface $map, JavascriptInterface $reduce, $out, array $options = [])
     {
         if (! is_string($out) && ! is_array($out) && ! is_object($out)) {
             throw InvalidArgumentException::invalidType('$out', $out, 'string or array or object');
@@ -400,7 +400,7 @@ class MapReduce implements Executable
      * @param boolean $hasOutputCollection
      * @return array
      */
-    private function createOptions($hasOutputCollection)
+    private function createOptions(bool $hasOutputCollection)
     {
         $options = [];
 

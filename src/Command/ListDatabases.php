@@ -99,7 +99,6 @@ class ListDatabases implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @param Server $server
      * @return array An array of database info structures
      * @throws UnexpectedValueException if the command response was malformed
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -119,8 +118,6 @@ class ListDatabases implements Executable
 
     /**
      * Create the listDatabases command.
-     *
-     * @return Command
      */
     private function createCommand(): Command
     {

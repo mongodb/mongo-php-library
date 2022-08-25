@@ -196,7 +196,6 @@ class ReadableStream
     /**
      * Seeks the chunk and buffer offsets for the next read operation.
      *
-     * @param integer $offset
      * @throws InvalidArgumentException if $offset is out of range
      */
     public function seek(int $offset)

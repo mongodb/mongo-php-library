@@ -42,7 +42,6 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
      *
      * Note: this will seek to the beginning of the stream before reading.
      *
-     * @param string   $expectedContents
      * @param resource $stream
      */
     protected function assertStreamContents(string $expectedContents, $stream): void
@@ -55,7 +54,6 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     /**
      * Creates an in-memory stream with the given data.
      *
-     * @param string $data
      * @return resource
      */
     protected function createStream(string $data = '')

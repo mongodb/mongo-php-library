@@ -131,7 +131,6 @@ class CollectionInfo implements ArrayAccess
      * Return the collection type.
      *
      * @see https://mongodb.com/docs/manual/reference/command/listCollections/#output
-     * @return string
      */
     public function getType(): string
     {

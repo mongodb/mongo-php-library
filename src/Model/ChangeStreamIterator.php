@@ -71,10 +71,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * @internal
-     * @param Cursor            $cursor
-     * @param integer           $firstBatchSize
      * @param array|object|null $initialResumeToken
-     * @param object|null       $postBatchResumeToken
      */
     public function __construct(Cursor $cursor, int $firstBatchSize, $initialResumeToken, ?object $postBatchResumeToken)
     {
@@ -270,8 +267,6 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * Return whether the iterator is positioned at the end of the batch.
-     *
-     * @return boolean
      */
     private function isAtEndOfBatch(): bool
     {
@@ -282,7 +277,6 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      * Perform housekeeping after an iteration event.
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#updating-the-cached-resume-token
-     * @param boolean $incrementBatchPosition
      */
     private function onIteration(bool $incrementBatchPosition): void
     {

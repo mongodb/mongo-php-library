@@ -35,8 +35,7 @@ class InsertOneResult
     private $isAcknowledged;
 
     /**
-     * @param WriteResult $writeResult
-     * @param mixed       $insertedId
+     * @param mixed $insertedId
      */
     public function __construct(WriteResult $writeResult, $insertedId)
     {

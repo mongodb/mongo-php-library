@@ -257,8 +257,7 @@ class Database
      * Create a new collection explicitly.
      *
      * @see CreateCollection::__construct() for supported options
-     * @param string $collectionName
-     * @param array  $options
+     * @param array $options
      * @return array|object Command result document
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors

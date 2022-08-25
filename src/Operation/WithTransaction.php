@@ -123,7 +123,6 @@ class WithTransaction
      * Returns whether the time limit for retrying transactions in the convenient transaction API has passed
      *
      * @param int $startTime The time the transaction was started
-     * @return bool
      */
     private function isTransactionTimeLimitExceeded(int $startTime): bool
     {

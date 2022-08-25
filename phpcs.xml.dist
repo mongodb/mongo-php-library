@@ -112,7 +112,6 @@
         </properties>
 
         <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification" />
-        <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.UselessAnnotation" />
     </rule>
 
     <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
@@ -126,7 +125,6 @@
         </properties>
 
         <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingTraversableTypeHintSpecification" />
-        <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.UselessAnnotation" />
     </rule>
 
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
@@ -140,7 +138,6 @@
         </properties>
 
         <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification" />
-        <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.UselessAnnotation" />
     </rule>
 
 

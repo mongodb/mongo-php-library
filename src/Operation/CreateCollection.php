@@ -265,7 +265,6 @@ class CreateCollection implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @param Server $server
      * @return array|object Command result document
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
@@ -282,8 +281,6 @@ class CreateCollection implements Executable
 
     /**
      * Create the create command.
-     *
-     * @return Command
      */
     private function createCommand(): Command
     {

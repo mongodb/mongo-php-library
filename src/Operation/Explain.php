@@ -105,7 +105,6 @@ class Explain implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @param Server $server
      * @return array|object
      * @throws UnsupportedException if the server does not support explaining the operation
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -127,9 +126,6 @@ class Explain implements Executable
 
     /**
      * Create the explain command.
-     *
-     * @param Server $server
-     * @return Command
      */
     private function createCommand(Server $server): Command
     {

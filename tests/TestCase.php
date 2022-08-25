@@ -35,8 +35,6 @@ abstract class TestCase extends BaseTestCase
 {
     /**
      * Return the connection URI.
-     *
-     * @return string
      */
     public static function getUri(): string
     {
@@ -158,8 +156,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return the test collection name.
-     *
-     * @return string
      */
     protected function getCollectionName(): string
     {
@@ -170,8 +166,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return the test database name.
-     *
-     * @return string
      */
     protected function getDatabaseName(): string
     {
@@ -180,8 +174,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid array values.
-     *
-     * @param boolean $includeNull
      *
      * @return array
      */
@@ -193,8 +185,6 @@ abstract class TestCase extends BaseTestCase
     /**
      * Return a list of invalid boolean values.
      *
-     * @param boolean $includeNull
-     *
      * @return array
      */
     protected function getInvalidBooleanValues(bool $includeNull = false): array
@@ -204,8 +194,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid document values.
-     *
-     * @param boolean $includeNull
      *
      * @return array
      */
@@ -217,8 +205,6 @@ abstract class TestCase extends BaseTestCase
     /**
      * Return a list of invalid integer values.
      *
-     * @param boolean $includeNull
-     *
      * @return array
      */
     protected function getInvalidIntegerValues(bool $includeNull = false): array
@@ -228,8 +214,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid ReadPreference values.
-     *
-     * @param boolean $includeNull
      *
      * @return array
      */
@@ -241,8 +225,6 @@ abstract class TestCase extends BaseTestCase
     /**
      * Return a list of invalid ReadPreference values.
      *
-     * @param boolean $includeNull
-     *
      * @return array
      */
     protected function getInvalidReadPreferenceValues(bool $includeNull = false): array
@@ -252,8 +234,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid Session values.
-     *
-     * @param boolean $includeNull
      *
      * @return array
      */
@@ -265,8 +245,6 @@ abstract class TestCase extends BaseTestCase
     /**
      * Return a list of invalid string values.
      *
-     * @param boolean $includeNull
-     *
      * @return array
      */
     protected function getInvalidStringValues(bool $includeNull = false): array
@@ -277,8 +255,6 @@ abstract class TestCase extends BaseTestCase
     /**
      * Return a list of invalid WriteConcern values.
      *
-     * @param boolean $includeNull
-     *
      * @return array
      */
     protected function getInvalidWriteConcernValues(bool $includeNull = false): array
@@ -288,8 +264,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return the test namespace.
-     *
-     * @return string
      */
     protected function getNamespace(): string
     {

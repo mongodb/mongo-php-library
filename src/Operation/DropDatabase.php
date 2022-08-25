@@ -89,7 +89,6 @@ class DropDatabase implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @param Server $server
      * @return array|object Command result document
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
@@ -106,8 +105,6 @@ class DropDatabase implements Executable
 
     /**
      * Create the dropDatabase command.
-     *
-     * @return Command
      */
     private function createCommand(): Command
     {

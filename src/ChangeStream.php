@@ -90,8 +90,6 @@ class ChangeStream implements Iterator
 
     /**
      * @internal
-     * @param ChangeStreamIterator $iterator
-     * @param callable             $resumeCallable
      */
     public function __construct(ChangeStreamIterator $iterator, callable $resumeCallable)
     {
@@ -194,8 +192,6 @@ class ChangeStream implements Iterator
      * Determines if an exception is a resumable error.
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#resumable-error
-     * @param RuntimeException $exception
-     * @return boolean
      */
     private function isResumableError(RuntimeException $exception): bool
     {
@@ -251,8 +247,6 @@ class ChangeStream implements Iterator
 
     /**
      * Recreates the ChangeStreamIterator after a resumable server error.
-     *
-     * @return void
      */
     private function resume(): void
     {
@@ -265,7 +259,6 @@ class ChangeStream implements Iterator
     /**
      * Either resumes after a resumable error or re-throws the exception.
      *
-     * @param RuntimeException $exception
      * @throws RuntimeException
      */
     private function resumeOrThrow(RuntimeException $exception): void

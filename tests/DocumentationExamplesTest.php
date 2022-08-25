@@ -1958,8 +1958,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     /**
      * Return the test collection name.
-     *
-     * @return string
      */
     protected function getCollectionName(): string
     {

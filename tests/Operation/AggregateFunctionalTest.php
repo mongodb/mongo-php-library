@@ -340,8 +340,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
     /**
      * Create data fixtures.
      *
-     * @param integer $n
-     * @param array   $executeBulkWriteOptions
+     * @param array $executeBulkWriteOptions
      */
     private function createFixtures(int $n, array $executeBulkWriteOptions = []): void
     {

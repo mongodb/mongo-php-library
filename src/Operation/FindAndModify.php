@@ -218,7 +218,6 @@ class FindAndModify implements Executable, Explainable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @param Server $server
      * @return array|object|null
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if hint or write concern is used and unsupported
@@ -261,7 +260,6 @@ class FindAndModify implements Executable, Explainable
      * Returns the command document for this operation.
      *
      * @see Explainable::getCommandDocument()
-     * @param Server $server
      * @return array
      */
     public function getCommandDocument(Server $server)

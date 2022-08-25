@@ -92,7 +92,6 @@ class DatabaseCommand implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @param Server $server
      * @return Cursor
      */
     public function execute(Server $server)

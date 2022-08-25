@@ -107,9 +107,6 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
 
     /**
      * Assert that the collections contain equivalent documents.
-     *
-     * @param Collection $expectedCollection
-     * @param Collection $actualCollection
      */
     private function assertEquivalentCollections(Collection $expectedCollection, Collection $actualCollection): void
     {
@@ -152,8 +149,6 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     /**
      * Checks that the server version is within the allowed bounds (if any).
      *
-     * @param string|null $minServerVersion
-     * @param string|null $maxServerVersion
      * @throws PHPUnit_Framework_SkippedTestError
      */
     private function checkServerVersion(?string $minServerVersion, ?string $maxServerVersion): void
@@ -260,10 +255,9 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     /**
      * Executes an "outcome" block.
      *
-     * @param array            $operation
-     * @param array            $outcome
-     * @param mixed            $result
-     * @param RuntimeException $exception
+     * @param array $operation
+     * @param array $outcome
+     * @param mixed $result
      * @return mixed
      * @throws LogicException if the operation is unsupported
      */
@@ -300,8 +294,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
      *
      * If no result can be extracted, null will be returned.
      *
-     * @param array            $operation
-     * @param RuntimeException $exception
+     * @param array $operation
      * @return mixed
      */
     private function extractResultFromException(array $operation, array $outcome, RuntimeException $exception)

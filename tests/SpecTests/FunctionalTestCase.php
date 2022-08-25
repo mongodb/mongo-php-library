@@ -87,7 +87,6 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      *
      * @param array|object $expectedDocument
      * @param array|object $actualDocument
-     * @param string       $message
      */
     public static function assertDocumentsMatch($expectedDocument, $actualDocument, string $message = ''): void
     {
@@ -100,7 +99,6 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      * Assert data within the outcome collection.
      *
      * @param array $expectedDocuments
-     * @param int   $resultExpectation
      */
     protected function assertOutcomeCollectionData(array $expectedDocuments, int $resultExpectation = ResultExpectation::ASSERT_SAME_DOCUMENT): void
     {
@@ -161,7 +159,6 @@ class FunctionalTestCase extends BaseFunctionalTestCase
      * This decodes the file through the driver's extended JSON parser to ensure
      * proper handling of special types.
      *
-     * @param string $json
      * @return array|object
      */
     protected function decodeJson(string $json)
@@ -172,7 +169,6 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     /**
      * Return the test context.
      *
-     * @return Context
      * @throws LogicException if the context has not been set
      */
     protected function getContext(): Context
@@ -186,8 +182,6 @@ class FunctionalTestCase extends BaseFunctionalTestCase
 
     /**
      * Set the test context.
-     *
-     * @param Context $context
      */
     protected function setContext(Context $context): void
     {
@@ -229,8 +223,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     /**
      * Insert data fixtures into the test collection.
      *
-     * @param array       $documents
-     * @param string|null $collectionName
+     * @param array $documents
      */
     protected function insertDataFixtures(array $documents, ?string $collectionName = null): void
     {
@@ -257,7 +250,6 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     /**
      * Return the corresponding topology constants for the current topology.
      *
-     * @return string
      * @throws UnexpectedValueException if topology is neither single nor RS nor sharded
      */
     private function getTopology(): string
@@ -301,10 +293,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     /**
      * Checks if server version and topology requirements are satifised.
      *
-     * @param string|null $minServerVersion
-     * @param string|null $maxServerVersion
-     * @param array|null  $topologies
-     * @return boolean
+     * @param array|null $topologies
      */
     private function isServerRequirementSatisifed(?string $minServerVersion, ?string $maxServerVersion, ?array $topologies = null, ?string $serverlessMode = null): bool
     {

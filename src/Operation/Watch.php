@@ -317,7 +317,6 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @param Server $server
      * @return ChangeStream
      * @throws UnsupportedException if collation or read concern is used and unsupported
      * @throws RuntimeException for other driver errors (e.g. connection errors)
@@ -336,8 +335,6 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      * Create the aggregate command for a change stream.
      *
      * This method is also used to recreate the aggregate command when resuming.
-     *
-     * @return Aggregate
      */
     private function createAggregate(): Aggregate
     {
@@ -349,9 +346,6 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
 
     /**
      * Create a ChangeStreamIterator by executing the aggregate command.
-     *
-     * @param Server $server
-     * @return ChangeStreamIterator
      */
     private function createChangeStreamIterator(Server $server): ChangeStreamIterator
     {
@@ -368,9 +362,6 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      *
      * The command will be executed using APM so that we can capture data from
      * its response (e.g. firstBatch size, postBatchResumeToken).
-     *
-     * @param Server $server
-     * @return Cursor
      */
     private function executeAggregate(Server $server): Cursor
     {
@@ -411,8 +402,6 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#resume-process
      * @param array|object|null $resumeToken
-     * @param bool              $hasAdvanced
-     * @return ChangeStreamIterator
      * @throws InvalidArgumentException
      */
     private function resume($resumeToken = null, bool $hasAdvanced = false): ChangeStreamIterator
@@ -453,8 +442,6 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      * Determine whether to capture operation time from an aggregate response.
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#startatoperationtime
-     * @param Server $server
-     * @return boolean
      */
     private function shouldCaptureOperationTime(Server $server): bool
     {

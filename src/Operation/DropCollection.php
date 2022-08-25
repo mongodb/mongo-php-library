@@ -98,7 +98,6 @@ class DropCollection implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @param Server $server
      * @return array|object Command result document
      * @throws UnsupportedException if write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -132,8 +131,6 @@ class DropCollection implements Executable
 
     /**
      * Create the drop command.
-     *
-     * @return Command
      */
     private function createCommand(): Command
     {

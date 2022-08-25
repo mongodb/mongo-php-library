@@ -74,7 +74,6 @@ class ListCollections implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @param Server $server
      * @return CollectionInfoIterator
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

@@ -641,7 +641,6 @@ class Bucket
      * Creates a path for an existing GridFS file.
      *
      * @param stdClass $file GridFS file document
-     * @return string
      */
     private function createPathForFile(stdClass $file): string
     {
@@ -662,8 +661,6 @@ class Bucket
 
     /**
      * Creates a path for a new GridFS file, which does not yet have an ID.
-     *
-     * @return string
      */
     private function createPathForUpload(): string
     {
@@ -677,8 +674,6 @@ class Bucket
 
     /**
      * Returns the names of the files collection.
-     *
-     * @return string
      */
     private function getFilesNamespace(): string
     {
@@ -692,7 +687,6 @@ class Bucket
      * respect the Bucket's type map.
      *
      * @param resource $stream GridFS stream
-     * @return stdClass
      * @throws InvalidArgumentException
      */
     private function getRawFileDocumentForStream($stream): stdClass

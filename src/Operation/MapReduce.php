@@ -263,7 +263,6 @@ class MapReduce implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @param Server $server
      * @return MapReduceResult
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if read concern or write concern is used and unsupported
@@ -310,7 +309,6 @@ class MapReduce implements Executable
 
     /**
      * @param string|array|object $out
-     * @return void
      */
     private function checkOutDeprecations($out): void
     {
@@ -331,8 +329,6 @@ class MapReduce implements Executable
 
     /**
      * Create the mapReduce command.
-     *
-     * @return Command
      */
     private function createCommand(): Command
     {
@@ -361,9 +357,6 @@ class MapReduce implements Executable
     /**
      * Creates a callable for MapReduceResult::getIterator().
      *
-     * @param stdClass $result
-     * @param Server   $server
-     * @return callable
      * @throws UnexpectedValueException if the command response was malformed
      */
     private function createGetIteratorCallable(stdClass $result, Server $server): callable
@@ -397,7 +390,6 @@ class MapReduce implements Executable
      *
      * @see https://php.net/manual/en/mongodb-driver-server.executereadcommand.php
      * @see https://php.net/manual/en/mongodb-driver-server.executereadwritecommand.php
-     * @param boolean $hasOutputCollection
      * @return array
      */
     private function createOptions(bool $hasOutputCollection): array

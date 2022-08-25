@@ -92,7 +92,6 @@ class ListIndexes implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @param Server $server
      * @return IndexInfoIterator
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
@@ -125,8 +124,6 @@ class ListIndexes implements Executable
      * Returns information for all indexes for this collection using the
      * listIndexes command.
      *
-     * @param Server $server
-     * @return IndexInfoIteratorIterator
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     private function executeCommand(Server $server): IndexInfoIteratorIterator

@@ -103,7 +103,6 @@ class ListCollections implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @param Server $server
      * @return CachingIterator
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
@@ -117,8 +116,6 @@ class ListCollections implements Executable
 
     /**
      * Create the listCollections command.
-     *
-     * @return Command
      */
     private function createCommand(): Command
     {

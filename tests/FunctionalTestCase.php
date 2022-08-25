@@ -615,8 +615,6 @@ abstract class FunctionalTestCase extends TestCase
 
     /**
      * Checks if the failCommand command is supported on this server version
-     *
-     * @return bool
      */
     private function isFailCommandSupported(): bool
     {
@@ -627,8 +625,6 @@ abstract class FunctionalTestCase extends TestCase
 
     /**
      * Checks if the failCommand command is enabled by checking the enableTestCommands parameter
-     *
-     * @return bool
      */
     private function isFailCommandEnabled(): bool
     {

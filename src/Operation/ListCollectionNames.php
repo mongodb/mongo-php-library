@@ -70,7 +70,6 @@ class ListCollectionNames implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @param Server $server
      * @return Iterator
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

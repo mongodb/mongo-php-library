@@ -35,8 +35,7 @@ class InsertManyResult
     private $isAcknowledged;
 
     /**
-     * @param WriteResult $writeResult
-     * @param mixed[]     $insertedIds
+     * @param mixed[] $insertedIds
      */
     public function __construct(WriteResult $writeResult, array $insertedIds)
     {

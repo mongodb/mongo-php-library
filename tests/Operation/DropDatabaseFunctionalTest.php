@@ -78,9 +78,6 @@ class DropDatabaseFunctionalTest extends FunctionalTestCase
 
     /**
      * Asserts that a database with the given name does not exist on the server.
-     *
-     * @param Server $server
-     * @param string $databaseName
      */
     private function assertDatabaseDoesNotExist(Server $server, string $databaseName): void
     {

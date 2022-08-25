@@ -130,7 +130,6 @@ class BSONIterator implements Iterator
 
     /**
      * @see https://php.net/iterator.valid
-     * @return boolean
      */
     #[ReturnTypeWillChange]
     public function valid(): bool

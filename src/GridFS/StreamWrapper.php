@@ -281,7 +281,6 @@ class StreamWrapper
      * Initialize the protocol from the given path.
      *
      * @see StreamWrapper::stream_open()
-     * @param string $path
      */
     private function initProtocol(string $path): void
     {
@@ -293,7 +292,6 @@ class StreamWrapper
      * Initialize the internal stream for reading.
      *
      * @see StreamWrapper::stream_open()
-     * @return boolean
      */
     private function initReadableStream(): bool
     {
@@ -311,7 +309,6 @@ class StreamWrapper
      * Initialize the internal stream for writing.
      *
      * @see StreamWrapper::stream_open()
-     * @return boolean
      */
     private function initWritableStream(): bool
     {

@@ -138,8 +138,6 @@ class CollectionWrapper
      *
      * @see Bucket::downloadToStreamByName()
      * @see Bucket::openDownloadStreamByName()
-     * @param string  $filename
-     * @param integer $revision
      * @return stdClass|null
      */
     public function findFileByFilenameAndRevision(string $filename, int $revision)
@@ -277,8 +275,7 @@ class CollectionWrapper
     /**
      * Updates the filename field in the file document for a given ID.
      *
-     * @param mixed  $id
-     * @param string $filename
+     * @param mixed $id
      * @return UpdateResult
      */
     public function updateFilenameForId($id, string $filename)
@@ -375,8 +372,6 @@ class CollectionWrapper
 
     /**
      * Returns whether the files collection is empty.
-     *
-     * @return boolean
      */
     private function isFilesCollectionEmpty(): bool
     {

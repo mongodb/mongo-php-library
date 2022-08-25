@@ -1,5 +1,8 @@
 <?php
 
+/* Enable strict types to disable type coercion for arguments. Without this, the
+ * non-int test values 3.14 and true would be silently coerced to integers,
+ * which is not what we're expecting to test here. */
 declare(strict_types=1);
 
 namespace MongoDB\Tests\Operation;

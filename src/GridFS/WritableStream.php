@@ -146,7 +146,7 @@ class WritableStream
         $this->file = [
             '_id' => $options['_id'],
             'chunkSize' => $this->chunkSize,
-            'filename' => (string) $filename,
+            'filename' => $filename,
         ] + array_intersect_key($options, ['aliases' => 1, 'contentType' => 1, 'metadata' => 1]);
     }
 

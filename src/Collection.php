@@ -128,11 +128,11 @@ class Collection
      */
     public function __construct(Manager $manager, string $databaseName, string $collectionName, array $options = [])
     {
-        if (strlen((string) $databaseName) < 1) {
+        if (strlen($databaseName) < 1) {
             throw new InvalidArgumentException('$databaseName is invalid: ' . $databaseName);
         }
 
-        if (strlen((string) $collectionName) < 1) {
+        if (strlen($collectionName) < 1) {
             throw new InvalidArgumentException('$collectionName is invalid: ' . $collectionName);
         }
 
@@ -153,8 +153,8 @@ class Collection
         }
 
         $this->manager = $manager;
-        $this->databaseName = (string) $databaseName;
-        $this->collectionName = (string) $collectionName;
+        $this->databaseName = $databaseName;
+        $this->collectionName = $collectionName;
         $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();
         $this->readPreference = $options['readPreference'] ?? $this->manager->getReadPreference();
         $this->typeMap = $options['typeMap'] ?? self::$defaultTypeMap;

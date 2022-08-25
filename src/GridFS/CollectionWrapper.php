@@ -66,8 +66,8 @@ class CollectionWrapper
      */
     public function __construct(Manager $manager, string $databaseName, string $bucketName, array $collectionOptions = [])
     {
-        $this->databaseName = (string) $databaseName;
-        $this->bucketName = (string) $bucketName;
+        $this->databaseName = $databaseName;
+        $this->bucketName = $bucketName;
 
         $this->filesCollection = new Collection($manager, $databaseName, sprintf('%s.files', $bucketName), $collectionOptions);
         $this->chunksCollection = new Collection($manager, $databaseName, sprintf('%s.chunks', $bucketName), $collectionOptions);
@@ -142,8 +142,8 @@ class CollectionWrapper
      */
     public function findFileByFilenameAndRevision(string $filename, int $revision)
     {
-        $filename = (string) $filename;
-        $revision = (integer) $revision;
+        $filename = $filename;
+        $revision = $revision;
 
         if ($revision < 0) {
             $skip = abs($revision) - 1;
@@ -282,7 +282,7 @@ class CollectionWrapper
     {
         return $this->filesCollection->updateOne(
             ['_id' => $id],
-            ['$set' => ['filename' => (string) $filename]]
+            ['$set' => ['filename' => $filename]]
         );
     }
 

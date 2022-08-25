@@ -66,7 +66,7 @@ class ListCollections implements Executable
      */
     public function __construct(string $databaseName, array $options = [])
     {
-        $this->databaseName = (string) $databaseName;
+        $this->databaseName = $databaseName;
         $this->listCollections = new ListCollectionsCommand($databaseName, ['nameOnly' => false] + $options);
     }
 

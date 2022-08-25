@@ -92,8 +92,8 @@ class ModifyCollection implements Executable
             unset($options['writeConcern']);
         }
 
-        $this->databaseName = (string) $databaseName;
-        $this->collectionName = (string) $collectionName;
+        $this->databaseName = $databaseName;
+        $this->collectionName = $collectionName;
         $this->collectionOptions = $collectionOptions;
         $this->options = $options;
     }

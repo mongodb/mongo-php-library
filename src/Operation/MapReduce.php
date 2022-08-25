@@ -251,8 +251,8 @@ class MapReduce implements Executable
 
         $this->checkOutDeprecations($out);
 
-        $this->databaseName = (string) $databaseName;
-        $this->collectionName = (string) $collectionName;
+        $this->databaseName = $databaseName;
+        $this->collectionName = $collectionName;
         $this->map = $map;
         $this->reduce = $reduce;
         $this->out = $out;

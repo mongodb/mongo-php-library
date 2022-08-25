@@ -89,8 +89,8 @@ class ReadableStream
         }
 
         $this->file = $file;
-        $this->chunkSize = (integer) $file->chunkSize;
-        $this->length = (integer) $file->length;
+        $this->chunkSize = $file->chunkSize;
+        $this->length = $file->length;
 
         $this->collectionWrapper = $collectionWrapper;
 

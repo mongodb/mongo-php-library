@@ -79,8 +79,8 @@ class EstimatedDocumentCount implements Executable, Explainable
      */
     public function __construct(string $databaseName, string $collectionName, array $options = [])
     {
-        $this->databaseName = (string) $databaseName;
-        $this->collectionName = (string) $collectionName;
+        $this->databaseName = $databaseName;
+        $this->collectionName = $collectionName;
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');

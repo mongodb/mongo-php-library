@@ -178,7 +178,7 @@ class Bucket
         }
 
         $this->manager = $manager;
-        $this->databaseName = (string) $databaseName;
+        $this->databaseName = $databaseName;
         $this->bucketName = $options['bucketName'];
         $this->chunkSizeBytes = $options['chunkSizeBytes'];
         $this->disableMD5 = $options['disableMD5'];

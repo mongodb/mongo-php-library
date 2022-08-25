@@ -246,8 +246,8 @@ class Aggregate implements Executable, Explainable
             unset($options['batchSize']);
         }
 
-        $this->databaseName = (string) $databaseName;
-        $this->collectionName = isset($collectionName) ? (string) $collectionName : null;
+        $this->databaseName = $databaseName;
+        $this->collectionName = $collectionName ?? null;
         $this->pipeline = $pipeline;
         $this->options = $options;
     }

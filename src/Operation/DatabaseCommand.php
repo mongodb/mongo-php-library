@@ -83,7 +83,7 @@ class DatabaseCommand implements Executable
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
-        $this->databaseName = (string) $databaseName;
+        $this->databaseName = $databaseName;
         $this->command = $command instanceof Command ? $command : new Command($command);
         $this->options = $options;
     }

@@ -297,8 +297,8 @@ class BulkWrite implements Executable
             unset($options['writeConcern']);
         }
 
-        $this->databaseName = (string) $databaseName;
-        $this->collectionName = (string) $collectionName;
+        $this->databaseName = $databaseName;
+        $this->collectionName = $collectionName;
         $this->operations = $operations;
         $this->options = $options;
     }

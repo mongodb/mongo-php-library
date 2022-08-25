@@ -81,7 +81,7 @@ class DropDatabase implements Executable
             unset($options['writeConcern']);
         }
 
-        $this->databaseName = (string) $databaseName;
+        $this->databaseName = $databaseName;
         $this->options = $options;
     }
 

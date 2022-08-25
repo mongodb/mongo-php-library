@@ -120,9 +120,9 @@ class Distinct implements Executable, Explainable
             unset($options['readConcern']);
         }
 
-        $this->databaseName = (string) $databaseName;
-        $this->collectionName = (string) $collectionName;
-        $this->fieldName = (string) $fieldName;
+        $this->databaseName = $databaseName;
+        $this->collectionName = $collectionName;
+        $this->fieldName = $fieldName;
         $this->filter = $filter;
         $this->options = $options;
     }

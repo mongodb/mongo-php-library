@@ -32,7 +32,6 @@ use MongoDB\GridFS\Exception\StreamException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Find;
-use stdClass;
 
 use function array_intersect_key;
 use function fopen;
@@ -640,9 +639,9 @@ class Bucket
     /**
      * Creates a path for an existing GridFS file.
      *
-     * @param stdClass $file GridFS file document
+     * @param object $file GridFS file document
      */
-    private function createPathForFile(stdClass $file): string
+    private function createPathForFile(object $file): string
     {
         if (! is_object($file->_id) || method_exists($file->_id, '__toString')) {
             $id = (string) $file->_id;
@@ -689,7 +688,7 @@ class Bucket
      * @param resource $stream GridFS stream
      * @throws InvalidArgumentException
      */
-    private function getRawFileDocumentForStream($stream): stdClass
+    private function getRawFileDocumentForStream($stream): object
     {
         if (! is_resource($stream) || get_resource_type($stream) != "stream") {
             throw InvalidArgumentException::invalidType('$stream', $stream, 'resource');
@@ -707,10 +706,10 @@ class Bucket
     /**
      * Opens a readable stream for the GridFS file.
      *
-     * @param stdClass $file GridFS file document
+     * @param object $file GridFS file document
      * @return resource
      */
-    private function openDownloadStreamByFile(stdClass $file)
+    private function openDownloadStreamByFile(object $file)
     {
         $path = $this->createPathForFile($file);
         $context = stream_context_create([

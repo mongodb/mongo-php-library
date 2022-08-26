@@ -22,7 +22,6 @@ use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Exception\InvalidArgumentException;
-use stdClass;
 
 use function array_intersect_key;
 use function hash_final;
@@ -185,7 +184,7 @@ class WritableStream
     /**
      * Return the stream's file document.
      */
-    public function getFile(): stdClass
+    public function getFile(): object
     {
         return (object) $this->file;
     }

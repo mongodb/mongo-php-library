@@ -20,7 +20,6 @@ namespace MongoDB\GridFS;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Exception\CorruptFileException;
-use stdClass;
 
 use function ceil;
 use function floor;
@@ -58,7 +57,7 @@ class ReadableStream
     /** @var float|integer */
     private $expectedLastChunkSize = 0;
 
-    /** @var stdClass */
+    /** @var object */
     private $file;
 
     /** @var integer */
@@ -71,10 +70,10 @@ class ReadableStream
      * Constructs a readable GridFS stream.
      *
      * @param CollectionWrapper $collectionWrapper GridFS collection wrapper
-     * @param stdClass          $file              GridFS file document
+     * @param object            $file              GridFS file document
      * @throws CorruptFileException
      */
-    public function __construct(CollectionWrapper $collectionWrapper, stdClass $file)
+    public function __construct(CollectionWrapper $collectionWrapper, object $file)
     {
         if (! isset($file->chunkSize) || ! is_integer($file->chunkSize) || $file->chunkSize < 1) {
             throw new CorruptFileException('file.chunkSize is not an integer >= 1');
@@ -120,7 +119,7 @@ class ReadableStream
         // Nothing to do
     }
 
-    public function getFile(): stdClass
+    public function getFile(): object
     {
         return $this->file;
     }

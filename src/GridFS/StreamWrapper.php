@@ -18,7 +18,6 @@
 namespace MongoDB\GridFS;
 
 use MongoDB\BSON\UTCDateTime;
-use stdClass;
 
 use function explode;
 use function in_array;
@@ -65,7 +64,7 @@ class StreamWrapper
     /**
      * Return the stream's file document.
      */
-    public function getFile(): stdClass
+    public function getFile(): object
     {
         return $this->stream->getFile();
     }

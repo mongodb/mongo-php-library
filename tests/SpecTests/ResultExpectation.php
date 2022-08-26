@@ -45,9 +45,6 @@ final class ResultExpectation
     /** @var callable */
     private $assertionCallable;
 
-    /**
-     * @param mixed $expectedValue
-     */
     private function __construct(int $assertionType, $expectedValue)
     {
         switch ($assertionType) {

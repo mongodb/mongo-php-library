@@ -198,9 +198,6 @@ class CommandExpectations implements CommandSubscriber
 
     /**
      * Assert that the command expectations match the monitored events.
-     *
-     * @param FunctionalTestCase $test    Test instance
-     * @param Context            $context Execution context
      */
     public function assert(FunctionalTestCase $test, Context $context): void
     {

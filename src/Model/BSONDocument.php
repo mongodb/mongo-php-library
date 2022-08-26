@@ -50,7 +50,6 @@ class BSONDocument extends ArrayObject implements JsonSerializable, Serializable
      * by default.
      *
      * @see https://php.net/arrayobject.construct
-     * @param array $input
      */
     public function __construct(array $input = [], int $flags = ArrayObject::ARRAY_AS_PROPS, string $iteratorClass = 'ArrayIterator')
     {
@@ -62,7 +61,6 @@ class BSONDocument extends ArrayObject implements JsonSerializable, Serializable
      *
      * @see https://php.net/oop5.magic#object.set-state
      * @see https://php.net/var-export
-     * @param array $properties
      * @return self
      */
     public static function __set_state(array $properties)

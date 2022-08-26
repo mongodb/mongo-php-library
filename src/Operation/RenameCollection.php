@@ -147,7 +147,6 @@ class RenameCollection implements Executable
      * Create options for executing the command.
      *
      * @see https://php.net/manual/en/mongodb-driver-server.executewritecommand.php
-     * @return array
      */
     private function createOptions(): array
     {

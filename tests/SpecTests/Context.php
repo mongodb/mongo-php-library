@@ -317,8 +317,6 @@ final class Context
      * Prepare options readConcern, readPreference, and writeConcern options by
      * creating value objects.
      *
-     * @param array $options
-     * @return array
      * @throws LogicException if any option keys are unsupported
      */
     public function prepareOptions(array $options): array

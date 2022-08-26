@@ -830,8 +830,6 @@ CMD;
 
     /**
      * Return a list of invalid stream values.
-     *
-     * @return array
      */
     private function getInvalidStreamValues(): array
     {

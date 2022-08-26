@@ -162,7 +162,6 @@ class InsertMany implements Executable
      * Create options for constructing the bulk write.
      *
      * @see https://php.net/manual/en/mongodb-driver-bulkwrite.construct.php
-     * @return array
      */
     private function createBulkWriteOptions(): array
     {
@@ -181,7 +180,6 @@ class InsertMany implements Executable
      * Create options for executing the bulk write.
      *
      * @see https://php.net/manual/en/mongodb-driver-server.executebulkwrite.php
-     * @return array
      */
     private function createExecuteOptions(): array
     {

@@ -72,7 +72,6 @@ class ListDatabaseNames implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return Iterator
      * @throws UnexpectedValueException if the command response was malformed
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

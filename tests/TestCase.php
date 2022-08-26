@@ -174,8 +174,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid array values.
-     *
-     * @return array
      */
     protected function getInvalidArrayValues(bool $includeNull = false): array
     {
@@ -184,8 +182,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid boolean values.
-     *
-     * @return array
      */
     protected function getInvalidBooleanValues(bool $includeNull = false): array
     {
@@ -194,8 +190,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid document values.
-     *
-     * @return array
      */
     protected function getInvalidDocumentValues(bool $includeNull = false): array
     {
@@ -204,8 +198,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid integer values.
-     *
-     * @return array
      */
     protected function getInvalidIntegerValues(bool $includeNull = false): array
     {
@@ -214,8 +206,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid ReadPreference values.
-     *
-     * @return array
      */
     protected function getInvalidReadConcernValues(bool $includeNull = false): array
     {
@@ -224,8 +214,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid ReadPreference values.
-     *
-     * @return array
      */
     protected function getInvalidReadPreferenceValues(bool $includeNull = false): array
     {
@@ -234,8 +222,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid Session values.
-     *
-     * @return array
      */
     protected function getInvalidSessionValues(bool $includeNull = false): array
     {
@@ -244,8 +230,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid string values.
-     *
-     * @return array
      */
     protected function getInvalidStringValues(bool $includeNull = false): array
     {
@@ -254,8 +238,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid WriteConcern values.
-     *
-     * @return array
      */
     protected function getInvalidWriteConcernValues(bool $includeNull = false): array
     {
@@ -274,7 +256,6 @@ abstract class TestCase extends BaseTestCase
      * Wrap a list of values for use as a single-argument data provider.
      *
      * @param array $values List of values
-     * @return array
      */
     protected function wrapValuesForDataProvider(array $values): array
     {

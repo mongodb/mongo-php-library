@@ -97,8 +97,6 @@ class FunctionalTestCase extends BaseFunctionalTestCase
 
     /**
      * Assert data within the outcome collection.
-     *
-     * @param array $expectedDocuments
      */
     protected function assertOutcomeCollectionData(array $expectedDocuments, int $resultExpectation = ResultExpectation::ASSERT_SAME_DOCUMENT): void
     {
@@ -131,7 +129,6 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     /**
      * Checks server version and topology requirements.
      *
-     * @param array $runOn
      * @throws SkippedTest if the server requirements are not met
      */
     protected function checkServerRequirements(array $runOn): void
@@ -222,8 +219,6 @@ class FunctionalTestCase extends BaseFunctionalTestCase
 
     /**
      * Insert data fixtures into the test collection.
-     *
-     * @param array $documents
      */
     protected function insertDataFixtures(array $documents, ?string $collectionName = null): void
     {
@@ -292,8 +287,6 @@ class FunctionalTestCase extends BaseFunctionalTestCase
 
     /**
      * Checks if server version and topology requirements are satifised.
-     *
-     * @param array|null $topologies
      */
     private function isServerRequirementSatisifed(?string $minServerVersion, ?string $maxServerVersion, ?array $topologies = null, ?string $serverlessMode = null): bool
     {

@@ -37,9 +37,6 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
     /** @var array */
     private $databases;
 
-    /**
-     * @param array $databases
-     */
     public function __construct(array $databases)
     {
         $this->databases = $databases;

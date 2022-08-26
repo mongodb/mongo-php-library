@@ -167,7 +167,6 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     /**
      * Executes an "operation" block.
      *
-     * @param array $operation
      * @return mixed
      * @throws LogicException if the operation is unsupported
      */
@@ -255,8 +254,6 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     /**
      * Executes an "outcome" block.
      *
-     * @param array $operation
-     * @param array $outcome
      * @param mixed $result
      * @return mixed
      * @throws LogicException if the operation is unsupported
@@ -294,7 +291,6 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
      *
      * If no result can be extracted, null will be returned.
      *
-     * @param array $operation
      * @return mixed
      */
     private function extractResultFromException(array $operation, array $outcome, RuntimeException $exception)
@@ -325,7 +321,6 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     /**
      * Executes the "result" section of an "outcome" block.
      *
-     * @param array $operation
      * @param mixed $expectedResult
      * @param mixed $actualResult
      * @throws LogicException if the operation is unsupported
@@ -491,9 +486,6 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
 
     /**
      * Initializes data in the test collections.
-     *
-     * @param array $initialData
-     * @param array $expectedData
      */
     private function initializeData(array $initialData, ?array $expectedData = null): void
     {
@@ -508,9 +500,6 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
 
     /**
      * Prepares a request element for a bulkWrite operation.
-     *
-     * @param array $request
-     * @return array
      */
     private function prepareBulkWriteRequest(array $request): array
     {
@@ -553,9 +542,6 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
 
     /**
      * Prepares arguments for findOneAndReplace and findOneAndUpdate operations.
-     *
-     * @param array $arguments
-     * @return array
      */
     private function prepareFindAndModifyArguments(array $arguments): array
     {

@@ -257,7 +257,6 @@ class Database
      * Create a new collection explicitly.
      *
      * @see CreateCollection::__construct() for supported options
-     * @param array $options
      * @return array|object Command result document
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -452,7 +451,6 @@ class Database
      * Returns information for all collections in this database.
      *
      * @see ListCollections::__construct() for supported options
-     * @param array $options
      * @return CollectionInfoIterator
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -497,10 +495,10 @@ class Database
      * Rename a collection within this database.
      *
      * @see RenameCollection::__construct() for supported options
-     * @param string  $fromCollectionName Collection name
-     * @param string  $toCollectionName   New name of the collection
-     * @param ?string $toDatabaseName     New database name of the collection. Defaults to the original database.
-     * @param array   $options            Additional options
+     * @param string      $fromCollectionName Collection name
+     * @param string      $toCollectionName   New name of the collection
+     * @param string|null $toDatabaseName     New database name of the collection. Defaults to the original database.
+     * @param array       $options            Additional options
      * @return array|object Command result document
      * @throws UnsupportedException if options are unsupported on the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors

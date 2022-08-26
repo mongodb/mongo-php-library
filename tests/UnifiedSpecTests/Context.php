@@ -91,8 +91,6 @@ final class Context
 
     /**
      * Create entities for "createEntities".
-     *
-     * @param array $createEntities
      */
     public function createEntities(array $entities): void
     {

@@ -390,7 +390,6 @@ class MapReduce implements Executable
      *
      * @see https://php.net/manual/en/mongodb-driver-server.executereadcommand.php
      * @see https://php.net/manual/en/mongodb-driver-server.executereadwritecommand.php
-     * @return array
      */
     private function createOptions(bool $hasOutputCollection): array
     {

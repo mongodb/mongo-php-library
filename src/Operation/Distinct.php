@@ -171,8 +171,6 @@ class Distinct implements Executable, Explainable
 
     /**
      * Create the distinct command document.
-     *
-     * @return array
      */
     private function createCommandDocument(): array
     {
@@ -202,7 +200,6 @@ class Distinct implements Executable, Explainable
      * Create options for executing the command.
      *
      * @see https://php.net/manual/en/mongodb-driver-server.executereadcommand.php
-     * @return array
      */
     private function createOptions(): array
     {

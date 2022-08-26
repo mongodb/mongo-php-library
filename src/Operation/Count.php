@@ -178,8 +178,6 @@ class Count implements Executable, Explainable
 
     /**
      * Create the count command document.
-     *
-     * @return array
      */
     private function createCommandDocument(): array
     {
@@ -210,7 +208,6 @@ class Count implements Executable, Explainable
      * Create options for executing the command.
      *
      * @see https://php.net/manual/en/mongodb-driver-server.executereadcommand.php
-     * @return array
      */
     private function createOptions(): array
     {

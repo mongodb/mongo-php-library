@@ -247,7 +247,7 @@ class Aggregate implements Executable, Explainable
         }
 
         $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName ?? null;
+        $this->collectionName = $collectionName;
         $this->pipeline = $pipeline;
         $this->options = $options;
     }
@@ -315,8 +315,6 @@ class Aggregate implements Executable, Explainable
 
     /**
      * Create the aggregate command document.
-     *
-     * @return array
      */
     private function createCommandDocument(): array
     {

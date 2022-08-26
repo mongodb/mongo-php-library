@@ -51,7 +51,6 @@ class BSONArray extends ArrayObject implements JsonSerializable, Serializable, U
      *
      * @see https://php.net/oop5.magic#object.set-state
      * @see https://php.net/var-export
-     * @param array $properties
      * @return self
      */
     public static function __set_state(array $properties)

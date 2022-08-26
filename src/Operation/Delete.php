@@ -212,8 +212,6 @@ class Delete implements Executable, Explainable
      *
      * Note that these options are different from the bulk write options, which
      * are created in createExecuteOptions().
-     *
-     * @return array
      */
     private function createDeleteOptions(): array
     {
@@ -234,7 +232,6 @@ class Delete implements Executable, Explainable
      * Create options for executing the bulk write.
      *
      * @see https://php.net/manual/en/mongodb-driver-server.executebulkwrite.php
-     * @return array
      */
     private function createExecuteOptions(): array
     {

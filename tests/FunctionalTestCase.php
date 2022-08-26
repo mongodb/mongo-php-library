@@ -305,8 +305,6 @@ abstract class FunctionalTestCase extends TestCase
      * If the "writeConcern" option is not specified but is supported by the
      * server, a majority write concern will be used. This is helpful for tests
      * using transactions or secondary reads.
-     *
-     * @param array $options
      */
     protected function createCollection(array $options = []): void
     {
@@ -322,8 +320,6 @@ abstract class FunctionalTestCase extends TestCase
      * If the "writeConcern" option is not specified but is supported by the
      * server, a majority write concern will be used. This is helpful for tests
      * using transactions or secondary reads.
-     *
-     * @param array $options
      */
     protected function dropCollection(array $options = []): void
     {

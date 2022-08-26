@@ -407,7 +407,6 @@ function recursive_copy($element)
  * @internal
  * @param array  $typeMap   The existing typeMap
  * @param string $fieldPath The field path to apply the root type to
- * @return array
  */
 function create_field_path_type_map(array $typeMap, string $fieldPath): array
 {
@@ -473,7 +472,6 @@ function with_transaction(Session $session, callable $callback, array $transacti
  * Returns the session option if it is set and valid.
  *
  * @internal
- * @param array $options
  */
 function extract_session_from_options(array $options): ?Session
 {
@@ -488,7 +486,6 @@ function extract_session_from_options(array $options): ?Session
  * Returns the readPreference option if it is set and valid.
  *
  * @internal
- * @param array $options
  */
 function extract_read_preference_from_options(array $options): ?ReadPreference
 {

@@ -246,8 +246,6 @@ class FindFunctionalTest extends FunctionalTestCase
 
     /**
      * Create data fixtures.
-     *
-     * @param array $executeBulkWriteOptions
      */
     private function createFixtures(int $n, array $executeBulkWriteOptions = []): void
     {

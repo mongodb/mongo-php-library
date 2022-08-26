@@ -246,8 +246,6 @@ class StreamWrapper
 
     /**
      * Returns a stat template with default values.
-     *
-     * @return array
      */
     private function getStatTemplate(): array
     {

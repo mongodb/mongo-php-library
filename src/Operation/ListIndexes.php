@@ -107,7 +107,6 @@ class ListIndexes implements Executable
      * the command be executed on the primary.
      *
      * @see https://php.net/manual/en/mongodb-driver-server.executecommand.php
-     * @return array
      */
     private function createOptions(): array
     {

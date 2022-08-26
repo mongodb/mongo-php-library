@@ -938,7 +938,6 @@ class Collection
      * Returns information for all indexes for the collection.
      *
      * @see ListIndexes::__construct() for supported options
-     * @param array $options
      * @return IndexInfoIterator
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -1007,9 +1006,9 @@ class Collection
      * Renames the collection.
      *
      * @see RenameCollection::__construct() for supported options
-     * @param string  $toCollectionName New name of the collection
-     * @param ?string $toDatabaseName   New database name of the collection. Defaults to the original database.
-     * @param array   $options          Additional options
+     * @param string      $toCollectionName New name of the collection
+     * @param string|null $toDatabaseName   New database name of the collection. Defaults to the original database.
+     * @param array       $options          Additional options
      * @return array|object Command result document
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors

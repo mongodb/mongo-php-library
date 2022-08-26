@@ -109,7 +109,6 @@ class DatabaseCommand implements Executable
      * Create options for executing the command.
      *
      * @see https://php.net/manual/en/mongodb-driver-server.executecommand.php
-     * @return array
      */
     private function createOptions(): array
     {

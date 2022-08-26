@@ -263,7 +263,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         }
 
         $this->manager = $manager;
-        $this->databaseName = (string) $databaseName;
+        $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;
         $this->pipeline = $pipeline;
 

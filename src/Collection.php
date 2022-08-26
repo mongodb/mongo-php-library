@@ -446,7 +446,7 @@ class Collection
      * @param string       $fieldName Field for which to return distinct values
      * @param array|object $filter    Query by which to filter documents
      * @param array        $options   Command options
-     * @return mixed[]
+     * @return array
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors

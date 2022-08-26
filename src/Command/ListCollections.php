@@ -103,10 +103,9 @@ class ListCollections implements Executable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return CachingIterator
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function execute(Server $server)
+    public function execute(Server $server): CachingIterator
     {
         $cursor = $server->executeReadCommand($this->databaseName, $this->createCommand(), $this->createOptions());
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);

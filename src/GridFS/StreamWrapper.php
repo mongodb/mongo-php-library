@@ -64,10 +64,8 @@ class StreamWrapper
 
     /**
      * Return the stream's file document.
-     *
-     * @return stdClass
      */
-    public function getFile()
+    public function getFile(): stdClass
     {
         return $this->stream->getFile();
     }
@@ -77,7 +75,7 @@ class StreamWrapper
      *
      * @param string $protocol Protocol to use for stream_wrapper_register()
      */
-    public static function register(string $protocol = 'gridfs')
+    public static function register(string $protocol = 'gridfs'): void
     {
         if (in_array($protocol, stream_get_wrappers())) {
             stream_wrapper_unregister($protocol);
@@ -91,7 +89,7 @@ class StreamWrapper
      *
      * @see https://php.net/manual/en/streamwrapper.stream-close.php
      */
-    public function stream_close()
+    public function stream_close(): void
     {
         if (! $this->stream) {
             return;
@@ -104,9 +102,8 @@ class StreamWrapper
      * Returns whether the file pointer is at the end of the stream.
      *
      * @see https://php.net/manual/en/streamwrapper.stream-eof.php
-     * @return boolean
      */
-    public function stream_eof()
+    public function stream_eof(): bool
     {
         if (! $this->stream instanceof ReadableStream) {
             return false;
@@ -123,9 +120,8 @@ class StreamWrapper
      * @param string      $mode       Mode used to open the file (only "r" and "w" are supported)
      * @param integer     $options    Additional flags set by the streams API
      * @param string|null $openedPath Not used
-     * @return boolean
      */
-    public function stream_open(string $path, string $mode, int $options, ?string &$openedPath)
+    public function stream_open(string $path, string $mode, int $options, ?string &$openedPath): bool
     {
         $this->initProtocol($path);
         $this->mode = $mode;
@@ -149,9 +145,8 @@ class StreamWrapper
      *
      * @see https://php.net/manual/en/streamwrapper.stream-read.php
      * @param integer $length Number of bytes to read
-     * @return string
      */
-    public function stream_read(int $length)
+    public function stream_read(int $length): string
     {
         if (! $this->stream instanceof ReadableStream) {
             return '';
@@ -168,7 +163,7 @@ class StreamWrapper
      * @param integer $whence One of SEEK_SET, SEEK_CUR, or SEEK_END
      * @return boolean True if the position was updated and false otherwise
      */
-    public function stream_seek(int $offset, int $whence = SEEK_SET)
+    public function stream_seek(int $offset, int $whence = SEEK_SET): bool
     {
         $size = $this->stream->getSize();
 
@@ -198,9 +193,8 @@ class StreamWrapper
      * Return information about the stream.
      *
      * @see https://php.net/manual/en/streamwrapper.stream-stat.php
-     * @return array
      */
-    public function stream_stat()
+    public function stream_stat(): array
     {
         $stat = $this->getStatTemplate();
 
@@ -230,7 +224,7 @@ class StreamWrapper
      * @see https://php.net/manual/en/streamwrapper.stream-tell.php
      * @return integer The current position of the stream
      */
-    public function stream_tell()
+    public function stream_tell(): int
     {
         return $this->stream->tell();
     }
@@ -242,7 +236,7 @@ class StreamWrapper
      * @param string $data Data to write
      * @return integer The number of bytes written
      */
-    public function stream_write(string $data)
+    public function stream_write(string $data): int
     {
         if (! $this->stream instanceof WritableStream) {
             return 0;

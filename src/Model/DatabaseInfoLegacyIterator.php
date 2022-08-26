@@ -17,8 +17,6 @@
 
 namespace MongoDB\Model;
 
-use ReturnTypeWillChange;
-
 use function current;
 use function key;
 use function next;
@@ -52,9 +50,8 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
      *
      * @see DatabaseInfoIterator::current()
      * @see https://php.net/iterator.current
-     * @return DatabaseInfo
      */
-    public function current()
+    public function current(): DatabaseInfo
     {
         return new DatabaseInfo(current($this->databases));
     }
@@ -63,10 +60,8 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
      * Return the key of the current element.
      *
      * @see https://php.net/iterator.key
-     * @return integer
      */
-    #[ReturnTypeWillChange]
-    public function key()
+    public function key(): int
     {
         return key($this->databases);
     }
@@ -75,10 +70,8 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
      * Move forward to next element.
      *
      * @see https://php.net/iterator.next
-     * @return void
      */
-    #[ReturnTypeWillChange]
-    public function next()
+    public function next(): void
     {
         next($this->databases);
     }
@@ -87,10 +80,8 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
      * Rewind the Iterator to the first element.
      *
      * @see https://php.net/iterator.rewind
-     * @return void
      */
-    #[ReturnTypeWillChange]
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->databases);
     }
@@ -99,10 +90,8 @@ class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
      * Checks if current position is valid.
      *
      * @see https://php.net/iterator.valid
-     * @return boolean
      */
-    #[ReturnTypeWillChange]
-    public function valid()
+    public function valid(): bool
     {
         return key($this->databases) !== null;
     }

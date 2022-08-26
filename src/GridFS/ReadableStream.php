@@ -106,7 +106,7 @@ class ReadableStream
      * @see https://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
      * @return array
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return [
             'bucketName' => $this->collectionWrapper->getBucketName(),
@@ -115,37 +115,25 @@ class ReadableStream
         ];
     }
 
-    public function close()
+    public function close(): void
     {
         // Nothing to do
     }
 
-    /**
-     * Return the stream's file document.
-     *
-     * @return stdClass
-     */
-    public function getFile()
+    public function getFile(): stdClass
     {
         return $this->file;
     }
 
-    /**
-     * Return the stream's size in bytes.
-     *
-     * @return integer
-     */
-    public function getSize()
+    public function getSize(): int
     {
         return $this->length;
     }
 
     /**
      * Return whether the current read position is at the end of the stream.
-     *
-     * @return boolean
      */
-    public function isEOF()
+    public function isEOF(): bool
     {
         if ($this->chunkOffset === $this->numChunks - 1) {
             return $this->bufferOffset >= $this->expectedLastChunkSize;
@@ -161,10 +149,9 @@ class ReadableStream
      * if data is not available to be read.
      *
      * @param integer $length Number of bytes to read
-     * @return string
      * @throws InvalidArgumentException if $length is negative
      */
-    public function readBytes(int $length)
+    public function readBytes(int $length): string
     {
         if ($length < 0) {
             throw new InvalidArgumentException(sprintf('$length must be >= 0; given: %d', $length));
@@ -198,7 +185,7 @@ class ReadableStream
      *
      * @throws InvalidArgumentException if $offset is out of range
      */
-    public function seek(int $offset)
+    public function seek(int $offset): void
     {
         if ($offset < 0 || $offset > $this->file->length) {
             throw new InvalidArgumentException(sprintf('$offset must be >= 0 and <= %d; given: %d', $this->file->length, $offset));
@@ -246,10 +233,8 @@ class ReadableStream
      * Return the current position of the stream.
      *
      * This is the offset within the stream where the next byte would be read.
-     *
-     * @return integer
      */
-    public function tell()
+    public function tell(): int
     {
         return ($this->chunkOffset * $this->chunkSize) + $this->bufferOffset;
     }

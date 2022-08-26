@@ -154,9 +154,8 @@ class WritableStream
      * Return internal properties for debugging purposes.
      *
      * @see https://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
-     * @return array
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return [
             'bucketName' => $this->collectionWrapper->getBucketName(),
@@ -168,7 +167,7 @@ class WritableStream
     /**
      * Closes an active stream and flushes all buffered data to GridFS.
      */
-    public function close()
+    public function close(): void
     {
         if ($this->isClosed) {
             // TODO: Should this be an error condition? e.g. BadMethodCallException
@@ -185,10 +184,8 @@ class WritableStream
 
     /**
      * Return the stream's file document.
-     *
-     * @return stdClass
      */
-    public function getFile()
+    public function getFile(): stdClass
     {
         return (object) $this->file;
     }
@@ -197,10 +194,8 @@ class WritableStream
      * Return the stream's size in bytes.
      *
      * Note: this value will increase as more data is written to the stream.
-     *
-     * @return integer
      */
-    public function getSize()
+    public function getSize(): int
     {
         return $this->length + strlen($this->buffer);
     }
@@ -213,9 +208,8 @@ class WritableStream
      * always the end of the stream.
      *
      * @see WritableStream::getSize()
-     * @return integer
      */
-    public function tell()
+    public function tell(): int
     {
         return $this->getSize();
     }
@@ -227,13 +221,12 @@ class WritableStream
      * which point a chunk document will be inserted and the buffer reset.
      *
      * @param string $data Binary data to write
-     * @return integer
      */
-    public function writeBytes(string $data)
+    public function writeBytes(string $data): int
     {
         if ($this->isClosed) {
             // TODO: Should this be an error condition? e.g. BadMethodCallException
-            return;
+            return 0;
         }
 
         $bytesRead = 0;

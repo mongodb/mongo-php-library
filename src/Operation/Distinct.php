@@ -131,7 +131,7 @@ class Distinct implements Executable, Explainable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return mixed[]
+     * @return array
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

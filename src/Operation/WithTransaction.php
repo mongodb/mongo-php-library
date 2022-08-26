@@ -52,11 +52,10 @@ class WithTransaction
      * @see Client::startSession
      *
      * @param Session $session A session object as retrieved by Client::startSession
-     * @return void
      * @throws RuntimeException for driver errors while committing the transaction
      * @throws Exception for any other errors, including those thrown in the callback
      */
-    public function execute(Session $session)
+    public function execute(Session $session): void
     {
         $startTime = time();
 

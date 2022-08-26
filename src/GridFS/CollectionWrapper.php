@@ -25,7 +25,6 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\UpdateResult;
 use MultipleIterator;
-use stdClass;
 
 use function abs;
 use function count;
@@ -78,7 +77,7 @@ class CollectionWrapper
      *
      * @param mixed $id
      */
-    public function deleteChunksByFilesId($id)
+    public function deleteChunksByFilesId($id): void
     {
         $this->chunksCollection->deleteMany(['files_id' => $id]);
     }
@@ -88,7 +87,7 @@ class CollectionWrapper
      *
      * @param mixed $id
      */
-    public function deleteFileAndChunksById($id)
+    public function deleteFileAndChunksById($id): void
     {
         $this->filesCollection->deleteOne(['_id' => $id]);
         $this->chunksCollection->deleteMany(['files_id' => $id]);
@@ -97,7 +96,7 @@ class CollectionWrapper
     /**
      * Drops the GridFS files and chunks collections.
      */
-    public function dropCollections()
+    public function dropCollections(): void
     {
         $this->filesCollection->drop(['typeMap' => []]);
         $this->chunksCollection->drop(['typeMap' => []]);
@@ -108,9 +107,8 @@ class CollectionWrapper
      *
      * @param mixed   $id        File ID
      * @param integer $fromChunk Starting chunk (inclusive)
-     * @return Cursor
      */
-    public function findChunksByFileId($id, int $fromChunk = 0)
+    public function findChunksByFileId($id, int $fromChunk = 0): Cursor
     {
         return $this->chunksCollection->find(
             [
@@ -138,9 +136,8 @@ class CollectionWrapper
      *
      * @see Bucket::downloadToStreamByName()
      * @see Bucket::openDownloadStreamByName()
-     * @return stdClass|null
      */
-    public function findFileByFilenameAndRevision(string $filename, int $revision)
+    public function findFileByFilenameAndRevision(string $filename, int $revision): ?object
     {
         $filename = $filename;
         $revision = $revision;
@@ -167,9 +164,8 @@ class CollectionWrapper
      * Finds a GridFS file document for a given ID.
      *
      * @param mixed $id
-     * @return stdClass|null
      */
-    public function findFileById($id)
+    public function findFileById($id): ?object
     {
         return $this->filesCollection->findOne(
             ['_id' => $id],
@@ -202,42 +198,22 @@ class CollectionWrapper
         return $this->filesCollection->findOne($filter, $options);
     }
 
-    /**
-     * Return the bucket name.
-     *
-     * @return string
-     */
-    public function getBucketName()
+    public function getBucketName(): string
     {
         return $this->bucketName;
     }
 
-    /**
-     * Return the chunks collection.
-     *
-     * @return Collection
-     */
-    public function getChunksCollection()
+    public function getChunksCollection(): Collection
     {
         return $this->chunksCollection;
     }
 
-    /**
-     * Return the database name.
-     *
-     * @return string
-     */
-    public function getDatabaseName()
+    public function getDatabaseName(): string
     {
         return $this->databaseName;
     }
 
-    /**
-     * Return the files collection.
-     *
-     * @return Collection
-     */
-    public function getFilesCollection()
+    public function getFilesCollection(): Collection
     {
         return $this->filesCollection;
     }
@@ -247,7 +223,7 @@ class CollectionWrapper
      *
      * @param array|object $chunk Chunk document
      */
-    public function insertChunk($chunk)
+    public function insertChunk($chunk): void
     {
         if (! $this->checkedIndexes) {
             $this->ensureIndexes();
@@ -263,7 +239,7 @@ class CollectionWrapper
      *
      * @param array|object $file File document
      */
-    public function insertFile($file)
+    public function insertFile($file): void
     {
         if (! $this->checkedIndexes) {
             $this->ensureIndexes();
@@ -276,9 +252,8 @@ class CollectionWrapper
      * Updates the filename field in the file document for a given ID.
      *
      * @param mixed $id
-     * @return UpdateResult
      */
-    public function updateFilenameForId($id, string $filename)
+    public function updateFilenameForId($id, string $filename): UpdateResult
     {
         return $this->filesCollection->updateOne(
             ['_id' => $id],

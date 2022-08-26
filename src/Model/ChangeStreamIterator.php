@@ -177,10 +177,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * @see https://php.net/iteratoriterator.rewind
-     * @return void
      */
-    #[ReturnTypeWillChange]
-    public function next()
+    public function next(): void
     {
         /* Determine if advancing the iterator will execute a getMore command
          * (i.e. we are already positioned at the end of the current batch). If
@@ -205,10 +203,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * @see https://php.net/iteratoriterator.rewind
-     * @return void
      */
-    #[ReturnTypeWillChange]
-    public function rewind()
+    public function rewind(): void
     {
         if ($this->isRewindNop) {
             return;
@@ -220,10 +216,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * @see https://php.net/iteratoriterator.valid
-     * @return boolean
      */
-    #[ReturnTypeWillChange]
-    public function valid()
+    public function valid(): bool
     {
         return $this->isValid;
     }

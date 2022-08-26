@@ -28,15 +28,12 @@ class BulkWriteResult
     /** @var WriteResult */
     private $writeResult;
 
-    /** @var mixed[] */
+    /** @var array */
     private $insertedIds;
 
     /** @var boolean */
     private $isAcknowledged;
 
-    /**
-     * @param mixed[] $insertedIds
-     */
     public function __construct(WriteResult $writeResult, array $insertedIds)
     {
         $this->writeResult = $writeResult;
@@ -89,7 +86,7 @@ class BulkWriteResult
      * field value. Any driver-generated ID will be a MongoDB\BSON\ObjectId
      * instance.
      *
-     * @return mixed[]
+     * @return array
      */
     public function getInsertedIds()
     {
@@ -164,7 +161,7 @@ class BulkWriteResult
      * This method should only be called if the write was acknowledged.
      *
      * @see BulkWriteResult::isAcknowledged()
-     * @return mixed[]
+     * @return array
      * @throws BadMethodCallException is the write result is unacknowledged
      */
     public function getUpsertedIds()

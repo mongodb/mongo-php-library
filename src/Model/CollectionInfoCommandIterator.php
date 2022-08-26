@@ -18,7 +18,6 @@
 namespace MongoDB\Model;
 
 use IteratorIterator;
-use ReturnTypeWillChange;
 use Traversable;
 
 /**
@@ -49,10 +48,8 @@ class CollectionInfoCommandIterator extends IteratorIterator implements Collecti
      *
      * @see CollectionInfoIterator::current()
      * @see https://php.net/iterator.current
-     * @return CollectionInfo
      */
-    #[ReturnTypeWillChange]
-    public function current()
+    public function current(): CollectionInfo
     {
         $info = parent::current();
 

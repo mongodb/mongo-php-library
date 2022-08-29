@@ -64,8 +64,6 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/createEntities-operation: createEntities operation' => 'CSOT is not yet implemented (PHPC-1760)',
         'valid-pass/entity-cursor-iterateOnce: iterateOnce' => 'CSOT is not yet implemented (PHPC-1760)',
         'valid-pass/matches-lte-operator: special lte matching operator' => 'CSOT is not yet implemented (PHPC-1760)',
-        // Fails on sharded clusters
-        'change-streams/change-streams-showExpandedEvents: when showExpandedEvents is true, createIndex events are reported' => 'Fails on sharded clusters (PHPLIB-912)',
     ];
 
     /** @var UnifiedTestRunner */

@@ -290,7 +290,7 @@ abstract class FunctionalTestCase extends TestCase
         phpinfo(INFO_MODULES);
         $info = ob_get_clean();
 
-        $pattern = sprintf('/^%s([\w ]+)$/m', preg_quote($row . ' => '));
+        $pattern = sprintf('/^%s(.*)$/m', preg_quote($row . ' => '));
 
         if (preg_match($pattern, $info, $matches) !== 1) {
             return null;

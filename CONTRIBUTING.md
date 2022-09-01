@@ -31,25 +31,79 @@ $ vendor/bin/simple-phpunit
 ```
 
 The `phpunit.xml.dist` file is used as the default configuration file for the
-test suite. In addition to various PHPUnit options, it defines required
-`MONGODB_URI` and `MONGODB_DATABASE` environment variables. You may customize
+test suite. In addition to various PHPUnit options, it defines environment
+variables such as `MONGODB_URI` and `MONGODB_DATABASE`. You may customize
 this configuration by creating your own `phpunit.xml` file based on the
 `phpunit.xml.dist` file we provide. To run the tests in serverless mode, set the
 `MONGODB_IS_SERVERLESS` environment variable to `on`.
 
 To run tests against a cluster that requires authentication, either include the
-credentials in the connection string given in the `MONGODB_URI` environment
-variable, or set the `MONGODB_USERNAME` and `MONGODB_PASSWORD` environment
-variables accordingly. Note that values defined through the environment override
-credentials present in the URI.
+credentials in the connection string (i.e. `MONGODB_URI`) or set the
+`MONGODB_USERNAME` and `MONGODB_PASSWORD` environment variables accordingly.
+Note that `MONGODB_USERNAME` and `MONGODB_PASSWORD` will override any
+credentials present in the connection string.
 
 By default, the `simple-phpunit` binary chooses the correct PHPUnit version for
-the PHP version you are running. To run tests against a specific PHPUnit version,
-use the `SYMFONY_PHPUNIT_VERSION` environment variable:
+the PHP version you are running. To run tests against a specific PHPUnit
+version, use the `SYMFONY_PHPUNIT_VERSION` environment variable:
 
 ```
 $ SYMFONY_PHPUNIT_VERSION=7.5 vendor/bin/simple-phpunit
 ```
+
+### Environment Variables
+
+The test suite references the following environment variables:
+
+ * `MONGODB_DATABASE`: Default database to use in tests. Defaults to
+   `phplib_test`.
+ * `MONGODB_PASSWORD`: If specified, this value will be appended as the
+   `password` URI option for clients constructed by the test suite, which will
+   override any credentials in the connection string itself.
+ * `MONGODB_URI`: Connection string. Defaults to `mongodb://127.0.0.1/`, which
+   assumes a MongoDB server is listening on localhost port 27017.
+ * `MONGODB_USERNAME`: If specified, this value will be appended as the
+   `username` URI option for clients constructed by the test suite, which will
+   override any credentials in the connection string itself.
+
+The following environment variable is used for [stable API testing](https://github.com/mongodb/specifications/blob/master/source/versioned-api/tests/README.rst):
+
+ * `API_VERSION`: If defined, this value will be used to construct a
+   [`MongoDB\Driver\ServerApi`](https://www.php.net/manual/en/mongodb-driver-serverapi.construct.php),
+   which will then be specified as the `serverApi` driver option for clients
+   created by the test suite.
+
+The following environment variable is used for [serverless testing](https://github.com/mongodb/specifications/blob/master/source/serverless-testing/README.rst):
+
+ * `MONGODB_IS_SERVERLESS`: Specify a true boolean string
+   (see: [`FILTER_VALIDATE_BOOLEAN`](https://www.php.net/manual/en/filter.filters.validate.php))
+   if `MONGODB_URI` points to a serverless instance. Defaults to false.
+
+The following environment variables are used for [load balancer testing](https://github.com/mongodb/specifications/blob/master/source/load-balancers/tests/README.rst):
+
+ * `MONGODB_SINGLE_MONGOS_LB_URI`: Connection string to a load balancer backed
+   by a single mongos host.
+ * `MONGODB_MULTI_MONGOS_LB_URI`: Connection string to a load balancer backed by
+   multiple mongos hosts.
+
+The following environment variables are used for [CSFLE testing](https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst):
+
+ * `AWS_ACCESS_KEY_ID`
+ * `AWS_SECRET_ACCESS_KEY`
+ * `AZURE_TENANT_ID`
+ * `AZURE_CLIENT_ID`
+ * `AZURE_CLIENT_SECRET`
+ * `CRYPT_SHARED_LIB_PATH`: If defined, this value will be used to set the
+   `cryptSharedLibPath` autoEncryption driver option for clients created by the
+   test suite.
+ * `GCP_EMAIL`
+ * `GCP_PRIVATE_KEY`
+ * `KMIP_ENDPOINT`
+ * `KMS_ENDPOINT_EXPIRED`
+ * `KMS_ENDPOINT_WRONG_HOST`
+ * `KMS_ENDPOINT_REQUIRE_CLIENT_CERT`
+ * `KMS_TLS_CA_FILE`
+ * `KMS_TLS_CERTIFICATE_KEY_FILE`
 
 ## Checking coding standards
 
@@ -243,4 +297,3 @@ projects:
 
 These tasks can be initiated prior to tagging a new release to ensure that the
 updated content becomes accessible soon after the release is published.
-

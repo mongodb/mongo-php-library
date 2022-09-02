@@ -786,8 +786,7 @@ buildvariants:
 
 # Load balancer is available from MongoDB 5.0+
 - matrix_name: "test-loadBalanced"
-  # TODO: Add MongoDB 6.0 and use Debian 11 once BUILD-15237 is resolved
-  matrix_spec: { "os": "debian92", "mongodb-versions": ["5.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  matrix_spec: { "os": "debian11", "mongodb-versions": ["5.0", "6.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   display_name: "Load balanced - ${mongodb-versions}"
   tasks:
     - name: "test-loadBalanced"

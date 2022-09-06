@@ -12,9 +12,14 @@ arg_name: option
 name: batchSize
 type: integer
 description: |
-  Specifies the initial batch size for the cursor. A batchSize of ``0`` means an
-  empty first batch and is useful for quickly returning a cursor or failure
-  message without doing significant server-side work.
+  Specifies the batch size for the cursor, which will apply to both the initial
+  ``aggregate`` command and any subsequent ``getMore`` commands. This determines
+  the maximum number of documents to return in each response from the server.
+
+  A batchSize of ``0`` is special in that and will only apply to the initial
+  ``aggregate`` command; subsequent ``getMore`` commands will use the server's
+  default batch size. This may be useful for quickly returning a cursor or
+  failure from ``aggregate`` without doing significant server-side work.
 interface: phpmethod
 operation: ~
 optional: true

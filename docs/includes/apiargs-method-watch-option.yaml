@@ -17,9 +17,9 @@ description: |
   operations.
 
   By default, change streams only return the delta of fields (via an
-  "udateDescription" field) for update operations and "fullDocument" is omitted.
-  Insert and replace operations always include the "fullDocument" field. Delete
-  operations omit the field as the document no longer exists.
+  "updateDescription" field) for update operations and "fullDocument" is
+  omitted. Insert and replace operations always include the "fullDocument"
+  field. Delete operations omit the field as the document no longer exists.
 
   Specify "updateLookup" to return the current majority-committed version of the
   updated document.

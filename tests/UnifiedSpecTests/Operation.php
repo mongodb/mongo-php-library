@@ -507,16 +507,12 @@ final class Operation
                 );
 
             case 'insertMany':
-                // Merge nested and top-level options (see: SPEC-1158)
-                $options = isset($args['options']) ? (array) $args['options'] : [];
-                $options += array_diff_key($args, ['documents' => 1]);
-
                 assertArrayHasKey('documents', $args);
                 assertIsArray($args['documents']);
 
                 return $collection->insertMany(
                     $args['documents'],
-                    $options
+                    array_diff_key($args, ['documents' => 1])
                 );
 
             case 'insertOne':

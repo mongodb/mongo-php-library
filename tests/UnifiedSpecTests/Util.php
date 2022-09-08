@@ -104,7 +104,7 @@ final class Util
             'findOneAndUpdate' => ['let', 'returnDocument', 'filter', 'update', 'session', 'upsert', 'projection', 'remove', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'maxTimeMS', 'sort', 'comment'],
             'updateMany' => ['let', 'filter', 'update', 'session', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'comment'],
             'updateOne' => ['let', 'filter', 'update', 'session', 'upsert', 'arrayFilters', 'bypassDocumentValidation', 'collation', 'hint', 'comment'],
-            'insertMany' => ['options', 'documents', 'session', 'ordered', 'bypassDocumentValidation', 'comment'],
+            'insertMany' => ['documents', 'session', 'ordered', 'bypassDocumentValidation', 'comment'],
             'insertOne' => ['document', 'session', 'bypassDocumentValidation', 'comment'],
             'listIndexes' => ['session', 'maxTimeMS', 'comment'],
             'mapReduce' => ['map', 'reduce', 'out', 'session', 'bypassDocumentValidation', 'collation', 'finalize', 'jsMode', 'limit', 'maxTimeMS', 'query', 'scope', 'sort', 'verbose', 'comment'],

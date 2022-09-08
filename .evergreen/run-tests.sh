@@ -4,7 +4,7 @@ set -o errexit  # Exit the script with error if any of the commands fail
 # Supported environment variables
 API_VERSION=${API_VERSION:-} # Optional API_VERSION environment variable
 CRYPT_SHARED_LIB_PATH="${CRYPT_SHARED_LIB_PATH:-}" # Optional path to crypt_shared library
-DRIVER_MONGODB_VERSION={$DRIVER_MONGODB_VERSION:-} # Required if IS_MATRIX_TESTING is "true"
+DRIVER_MONGODB_VERSION=${DRIVER_MONGODB_VERSION:-} # Required if IS_MATRIX_TESTING is "true"
 IS_MATRIX_TESTING=${IS_MATRIX_TESTING:-} # Specify "true" to enable matrix testing. Defaults to empty string. If "true", DRIVER_MONGODB_VERSION and MONGODB_VERSION will also be checked.
 MONGODB_URI=${MONGODB_URI:-} # Connection string (including credentials and topology info)
 MONGODB_VERSION=${MONGODB_VERSION:-} # Required if IS_MATRIX_TESTING is "true"

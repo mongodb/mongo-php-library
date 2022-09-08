@@ -176,7 +176,7 @@ functions:
         script: |
           ${PREPARE_SHELL}
           MONGODB_VERSION=${VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} LOAD_BALANCER=${LOAD_BALANCER} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
-    # run-orchestration generates expansion file with the MONGODB_URI for the cluster
+    # run-orchestration generates expansion file with MONGODB_URI and CRYPT_SHARED_LIB_PATH
     - command: expansions.update
       params:
         file: mo-expansion.yml
@@ -246,9 +246,16 @@ functions:
           export KMS_ENDPOINT_REQUIRE_CLIENT_CERT="${client_side_encryption_kms_endpoint_require_client_cert}"
           export KMS_TLS_CA_FILE="${client_side_encryption_kms_tls_ca_file}"
           export KMS_TLS_CERTIFICATE_KEY_FILE="${client_side_encryption_kms_tls_certificate_key_file}"
-          export CRYPT_SHARED_LIB_PATH="${client_side_encryption_crypt_shared_lib_path}"
           export PATH="${PHP_PATH}/bin:$PATH"
-          API_VERSION=${API_VERSION} PHP_VERSION=${PHP_VERSION} TESTS=${TESTS} AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+
+          API_VERSION=${API_VERSION} \
+          CRYPT_SHARED_LIB_PATH=${CRYPT_SHARED_LIB_PATH} \
+          MONGODB_URI="${MONGODB_URI}" \
+          PHP_VERSION=${PHP_VERSION} \
+          SKIP_CRYPT_SHARED=${SKIP_CRYPT_SHARED} \
+          SSL=${SSL} \
+          TESTS=${TESTS} \
+          sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "run atlas data lake test":
      - command: shell.exec
@@ -258,7 +265,10 @@ functions:
          script: |
            ${PREPARE_SHELL}
            export PATH="${PHP_PATH}/bin:$PATH"
-           PHP_VERSION=${PHP_VERSION} TESTS="atlas-data-lake" AUTH=${AUTH} SSL=${SSL} MONGODB_URI="${MONGODB_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+
+           MONGODB_URI="mongodb://mhuser:pencil@127.0.0.1:27017" \
+           TESTS="atlas-data-lake" \
+           sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "run serverless tests":
     - command: shell.exec
@@ -271,7 +281,12 @@ functions:
           export MONGODB_USERNAME=${SERVERLESS_ATLAS_USER}
           export MONGODB_PASSWORD=${SERVERLESS_ATLAS_PASSWORD}
           export PATH="${PHP_PATH}/bin:$PATH"
-          PHP_VERSION=${PHP_VERSION} TESTS="serverless" MONGODB_URI="${SERVERLESS_URI}" sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+
+          CRYPT_SHARED_LIB_PATH=${CRYPT_SHARED_LIB_PATH} \
+          MONGODB_URI="${SERVERLESS_URI}" \
+          SKIP_CRYPT_SHARED=${SKIP_CRYPT_SHARED} \
+          TESTS="serverless" \
+          sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
   "cleanup":
     - command: shell.exec
@@ -377,18 +392,6 @@ functions:
             value: 127.0.0.1:8102
           - key: client_side_encryption_kmip_endpoint
             value: localhost:5698
-
-  "fetch crypt_shared":
-    - command: shell.exec
-      params:
-        script: |
-          # TODO: Specify same version provisioned by download-mongodb.sh (see: DRIVERS-2355)
-          python3 ${DRIVERS_TOOLS}/.evergreen/mongodl.py --component crypt_shared --version latest --only "**/mongo_crypt_v1.so" --out ${DRIVERS_TOOLS}/.evergreen/csfle --strip-path-components 1
-    - command: expansions.update
-      params:
-        updates:
-          - key: client_side_encryption_crypt_shared_lib_path
-            value: ${DRIVERS_TOOLS}/.evergreen/csfle/mongo_crypt_v1.so
 
 pre:
   - func: "fetch source"
@@ -521,15 +524,15 @@ tasks:
             SSL: "yes"
         # Note: "stop load balancer" will be called from "post"
 
-    - name: "test-crypt_shared"
+    - name: "test-skip_crypt_shared"
       commands:
         - func: "bootstrap mongo-orchestration"
           vars:
             TOPOLOGY: "replica_set"
         - func: "start kms servers"
-        - func: "fetch crypt_shared"
         - func: "run tests"
           vars:
+            SKIP_CRYPT_SHARED: "yes"
             TESTS: "csfle"
 
 # }}}
@@ -792,9 +795,9 @@ buildvariants:
   tasks:
     - name: "test-loadBalanced"
 
-# CSFLE crypt_shared is available from MongoDB 6.0+
-- matrix_name: "test-csfle-crypt_shared"
+# CSFLE crypt_shared is available from MongoDB 6.0+, so explicitly test without it to allow use of mongocryptd
+- matrix_name: "test-csfle-skip_crypt_shared"
   matrix_spec: { "os": "debian11", "mongodb-versions": "6.0", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
-  display_name: "CSFLE crypt_shared - ${mongodb-versions}"
+  display_name: "CSFLE skip_crypt_shared - ${mongodb-versions}"
   tasks:
-    - name: "test-crypt_shared"
+    - name: "test-skip_crypt_shared"

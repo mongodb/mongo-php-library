@@ -257,7 +257,7 @@ https://mongodb.com/docs/php-library/current/
 
 This library may be installed or upgraded with:
 
-    composer require mongodb/mongodb^X.Y.Z
+    composer require mongodb/mongodb:X.Y.Z
 
 Installation instructions for the `mongodb` extension may be found in the [PHP.net documentation](https://php.net/manual/en/mongodb.installation.php).
 ```

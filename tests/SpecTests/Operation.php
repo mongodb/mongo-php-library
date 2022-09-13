@@ -100,8 +100,6 @@ final class Operation
     /**
      * This method is exclusively used to prepare nested operations for the
      * withTransaction session operation
-     *
-     * @return Operation
      */
     private static function fromConvenientTransactions(stdClass $operation): Operation
     {
@@ -189,9 +187,7 @@ final class Operation
     /**
      * Execute the operation and assert its outcome.
      *
-     * @param FunctionalTestCase $test             Test instance
-     * @param Context            $context          Execution context
-     * @param bool               $bubbleExceptions If true, any exception that was caught is rethrown
+     * @param bool $bubbleExceptions If true, any exception that was caught is rethrown
      */
     public function assert(FunctionalTestCase $test, Context $context, bool $bubbleExceptions = false): void
     {
@@ -237,7 +233,6 @@ final class Operation
     /**
      * Executes the operation with a given context.
      *
-     * @param Context $context Execution context
      * @return mixed
      * @throws LogicException if the operation is unsupported
      */
@@ -291,8 +286,6 @@ final class Operation
     /**
      * Executes the client operation and return its result.
      *
-     * @param Client  $client
-     * @param Context $context Execution context
      * @return mixed
      * @throws LogicException if the collection operation is unsupported
      */
@@ -322,8 +315,6 @@ final class Operation
     /**
      * Executes the collection operation and return its result.
      *
-     * @param Collection $collection
-     * @param Context    $context    Execution context
      * @return mixed
      * @throws LogicException if the collection operation is unsupported
      */
@@ -464,8 +455,6 @@ final class Operation
     /**
      * Executes the database operation and return its result.
      *
-     * @param Database $database
-     * @param Context  $context  Execution context
      * @return mixed
      * @throws LogicException if the database operation is unsupported
      */
@@ -519,8 +508,6 @@ final class Operation
     /**
      * Executes the GridFS bucket operation and return its result.
      *
-     * @param Bucket  $bucket
-     * @param Context $context Execution context
      * @return mixed
      * @throws LogicException if the database operation is unsupported
      */
@@ -562,9 +549,6 @@ final class Operation
     /**
      * Executes the session operation and return its result.
      *
-     * @param Session            $session
-     * @param FunctionalTestCase $test
-     * @param Context            $context Execution context
      * @return mixed
      * @throws LogicException if the session operation is unsupported
      */
@@ -672,12 +656,6 @@ final class Operation
         }
     }
 
-    /**
-     * @param string $databaseName
-     * @param string $collectionName
-     *
-     * @return array
-     */
     private function getIndexNames(Context $context, string $databaseName, string $collectionName): array
     {
         return array_map(
@@ -838,8 +816,6 @@ final class Operation
     /**
      * Prepares a request element for a bulkWrite operation.
      *
-     * @param stdClass $request
-     * @return array
      * @throws LogicException if the bulk write request is unsupported
      */
     private function prepareBulkWriteRequest(stdClass $request): array

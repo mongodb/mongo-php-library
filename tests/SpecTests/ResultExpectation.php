@@ -45,10 +45,6 @@ final class ResultExpectation
     /** @var callable */
     private $assertionCallable;
 
-    /**
-     * @param integer $assertionType
-     * @param mixed   $expectedValue
-     */
     private function __construct(int $assertionType, $expectedValue)
     {
         switch ($assertionType) {
@@ -352,7 +348,6 @@ final class ResultExpectation
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/transactions/tests/README.rst#test-format
      * @param mixed $result
-     * @return boolean
      */
     private static function isErrorResult($result): bool
     {

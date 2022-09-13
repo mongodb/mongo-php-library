@@ -15,6 +15,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\MapReduceResult;
 use MongoDB\Operation\Count;
 use MongoDB\Tests\CommandObserver;
+use TypeError;
 
 use function array_filter;
 use function call_user_func;
@@ -32,9 +33,9 @@ class CollectionFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideInvalidDatabaseAndCollectionNames
      */
-    public function testConstructorDatabaseNameArgument($databaseName): void
+    public function testConstructorDatabaseNameArgument($databaseName, string $expectedExceptionClass): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($expectedExceptionClass);
         // TODO: Move to unit test once ManagerInterface can be mocked (PHPC-378)
         new Collection($this->manager, $databaseName, $this->getCollectionName());
     }
@@ -42,9 +43,9 @@ class CollectionFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideInvalidDatabaseAndCollectionNames
      */
-    public function testConstructorCollectionNameArgument($collectionName): void
+    public function testConstructorCollectionNameArgument($collectionName, string $expectedExceptionClass): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($expectedExceptionClass);
         // TODO: Move to unit test once ManagerInterface can be mocked (PHPC-378)
         new Collection($this->manager, $this->getDatabaseName(), $collectionName);
     }
@@ -52,8 +53,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
     public function provideInvalidDatabaseAndCollectionNames()
     {
         return [
-            [null],
-            [''],
+            [null, TypeError::class],
+            ['', InvalidArgumentException::class],
         ];
     }
 
@@ -805,9 +806,6 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
     /**
      * Create data fixtures.
-     *
-     * @param integer $n
-     * @param array   $executeBulkWriteOptions
      */
     private function createFixtures(int $n, array $executeBulkWriteOptions = []): void
     {

@@ -28,16 +28,12 @@ class InsertManyResult
     /** @var WriteResult */
     private $writeResult;
 
-    /** @var mixed[] */
+    /** @var array */
     private $insertedIds;
 
     /** @var boolean */
     private $isAcknowledged;
 
-    /**
-     * @param WriteResult $writeResult
-     * @param mixed[]     $insertedIds
-     */
     public function __construct(WriteResult $writeResult, array $insertedIds)
     {
         $this->writeResult = $writeResult;
@@ -72,7 +68,7 @@ class InsertManyResult
      * field value. Any driver-generated ID will be a MongoDB\BSON\ObjectId
      * instance.
      *
-     * @return mixed[]
+     * @return array
      */
     public function getInsertedIds()
     {

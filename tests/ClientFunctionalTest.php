@@ -91,9 +91,6 @@ class ClientFunctionalTest extends FunctionalTestCase
      * argument as its first and only parameter. If a DatabaseInfo matching
      * the given name is found, it will be passed to the callback, which may
      * perform additional assertions.
-     *
-     * @param string   $databaseName
-     * @param callable $callback
      */
     private function assertDatabaseExists(string $databaseName, ?callable $callback = null): void
     {

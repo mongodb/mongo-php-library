@@ -163,8 +163,7 @@ final class EventCollector implements CommandSubscriber
         return sprintf('%s:%d', $server->getHost(), $server->getPort());
     }
 
-    /** @param object $event */
-    private static function getEventName($event): string
+    private static function getEventName(object $event): string
     {
         static $eventNamesByClass = null;
 

@@ -1249,13 +1249,11 @@ if (! function_exists('PHPUnit\Framework\assertObjectHasAttribute')) {
      *
      * @see Assert::assertObjectHasAttribute
      *
-     * @param object $object
-     *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    function assertObjectHasAttribute(string $attributeName, $object, string $message = ''): void
+    function assertObjectHasAttribute(string $attributeName, object $object, string $message = ''): void
     {
         Assert::assertObjectHasAttribute(...func_get_args());
     }
@@ -1267,13 +1265,11 @@ if (! function_exists('PHPUnit\Framework\assertObjectNotHasAttribute')) {
      *
      * @see Assert::assertObjectNotHasAttribute
      *
-     * @param object $object
-     *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    function assertObjectNotHasAttribute(string $attributeName, $object, string $message = ''): void
+    function assertObjectNotHasAttribute(string $attributeName, object $object, string $message = ''): void
     {
         Assert::assertObjectNotHasAttribute(...func_get_args());
     }
@@ -1952,9 +1948,6 @@ if (! function_exists('PHPUnit\Framework\assertStringStartsNotWith')) {
      *
      * @see Assert::assertStringStartsNotWith
      *
-     * @param string $prefix
-     * @param string $string
-     *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException
      */
@@ -2221,9 +2214,6 @@ if (! function_exists('PHPUnit\Framework\assertJsonStringNotEqualsJsonString')) 
      * Asserts that two given JSON encoded objects or arrays are not equal.
      *
      * @see Assert::assertJsonStringNotEqualsJsonString
-     *
-     * @param string $expectedJson
-     * @param string $actualJson
      *
      * @throws ExpectationFailedException
      * @throws InvalidArgumentException

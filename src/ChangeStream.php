@@ -90,8 +90,6 @@ class ChangeStream implements Iterator
 
     /**
      * @internal
-     * @param ChangeStreamIterator $iterator
-     * @param callable             $resumeCallable
      */
     public function __construct(ChangeStreamIterator $iterator, callable $resumeCallable)
     {
@@ -194,10 +192,8 @@ class ChangeStream implements Iterator
      * Determines if an exception is a resumable error.
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#resumable-error
-     * @param RuntimeException $exception
-     * @return boolean
      */
-    private function isResumableError(RuntimeException $exception)
+    private function isResumableError(RuntimeException $exception): bool
     {
         if ($exception instanceof ConnectionException) {
             return true;
@@ -224,7 +220,7 @@ class ChangeStream implements Iterator
      * @param boolean $incrementKey Increment $key if there is a current result
      * @throws ResumeTokenException
      */
-    private function onIteration($incrementKey)
+    private function onIteration(bool $incrementKey): void
     {
         /* If the cursorId is 0, the server has invalidated the cursor and we
          * will never perform another getMore nor need to resume since any
@@ -251,10 +247,8 @@ class ChangeStream implements Iterator
 
     /**
      * Recreates the ChangeStreamIterator after a resumable server error.
-     *
-     * @return void
      */
-    private function resume()
+    private function resume(): void
     {
         $this->iterator = call_user_func($this->resumeCallable, $this->getResumeToken(), $this->hasAdvanced);
         $this->iterator->rewind();
@@ -265,10 +259,9 @@ class ChangeStream implements Iterator
     /**
      * Either resumes after a resumable error or re-throws the exception.
      *
-     * @param RuntimeException $exception
      * @throws RuntimeException
      */
-    private function resumeOrThrow(RuntimeException $exception)
+    private function resumeOrThrow(RuntimeException $exception): void
     {
         if ($this->isResumableError($exception)) {
             $this->resume();

@@ -35,8 +35,6 @@ abstract class TestCase extends BaseTestCase
 {
     /**
      * Return the connection URI.
-     *
-     * @return string
      */
     public static function getUri(): string
     {
@@ -134,6 +132,11 @@ abstract class TestCase extends BaseTestCase
         return $this->wrapValuesForDataProvider($this->getInvalidDocumentValues());
     }
 
+    public function provideInvalidIntegerValues()
+    {
+        return $this->wrapValuesForDataProvider($this->getInvalidIntegerValues());
+    }
+
     protected function assertDeprecated(callable $execution): void
     {
         $errors = [];
@@ -153,8 +156,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return the test collection name.
-     *
-     * @return string
      */
     protected function getCollectionName(): string
     {
@@ -165,8 +166,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return the test database name.
-     *
-     * @return string
      */
     protected function getDatabaseName(): string
     {
@@ -175,10 +174,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid array values.
-     *
-     * @param boolean $includeNull
-     *
-     * @return array
      */
     protected function getInvalidArrayValues(bool $includeNull = false): array
     {
@@ -187,10 +182,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid boolean values.
-     *
-     * @param boolean $includeNull
-     *
-     * @return array
      */
     protected function getInvalidBooleanValues(bool $includeNull = false): array
     {
@@ -199,10 +190,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid document values.
-     *
-     * @param boolean $includeNull
-     *
-     * @return array
      */
     protected function getInvalidDocumentValues(bool $includeNull = false): array
     {
@@ -211,10 +198,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid integer values.
-     *
-     * @param boolean $includeNull
-     *
-     * @return array
      */
     protected function getInvalidIntegerValues(bool $includeNull = false): array
     {
@@ -223,10 +206,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid ReadPreference values.
-     *
-     * @param boolean $includeNull
-     *
-     * @return array
      */
     protected function getInvalidReadConcernValues(bool $includeNull = false): array
     {
@@ -235,10 +214,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid ReadPreference values.
-     *
-     * @param boolean $includeNull
-     *
-     * @return array
      */
     protected function getInvalidReadPreferenceValues(bool $includeNull = false): array
     {
@@ -247,10 +222,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid Session values.
-     *
-     * @param boolean $includeNull
-     *
-     * @return array
      */
     protected function getInvalidSessionValues(bool $includeNull = false): array
     {
@@ -259,10 +230,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid string values.
-     *
-     * @param boolean $includeNull
-     *
-     * @return array
      */
     protected function getInvalidStringValues(bool $includeNull = false): array
     {
@@ -271,10 +238,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return a list of invalid WriteConcern values.
-     *
-     * @param boolean $includeNull
-     *
-     * @return array
      */
     protected function getInvalidWriteConcernValues(bool $includeNull = false): array
     {
@@ -283,8 +246,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Return the test namespace.
-     *
-     * @return string
      */
     protected function getNamespace(): string
     {
@@ -295,7 +256,6 @@ abstract class TestCase extends BaseTestCase
      * Wrap a list of values for use as a single-argument data provider.
      *
      * @param array $values List of values
-     * @return array
      */
     protected function wrapValuesForDataProvider(array $values): array
     {

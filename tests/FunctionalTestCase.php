@@ -305,8 +305,6 @@ abstract class FunctionalTestCase extends TestCase
      * If the "writeConcern" option is not specified but is supported by the
      * server, a majority write concern will be used. This is helpful for tests
      * using transactions or secondary reads.
-     *
-     * @param array $options
      */
     protected function createCollection(array $options = []): void
     {
@@ -322,8 +320,6 @@ abstract class FunctionalTestCase extends TestCase
      * If the "writeConcern" option is not specified but is supported by the
      * server, a majority write concern will be used. This is helpful for tests
      * using transactions or secondary reads.
-     *
-     * @param array $options
      */
     protected function dropCollection(array $options = []): void
     {
@@ -615,8 +611,6 @@ abstract class FunctionalTestCase extends TestCase
 
     /**
      * Checks if the failCommand command is supported on this server version
-     *
-     * @return bool
      */
     private function isFailCommandSupported(): bool
     {
@@ -627,8 +621,6 @@ abstract class FunctionalTestCase extends TestCase
 
     /**
      * Checks if the failCommand command is enabled by checking the enableTestCommands parameter
-     *
-     * @return bool
      */
     private function isFailCommandEnabled(): bool
     {

@@ -11,6 +11,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CreateIndexes;
+use TypeError;
 
 use function array_key_exists;
 use function current;
@@ -23,9 +24,9 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     /**
      * @dataProvider provideInvalidDatabaseNames
      */
-    public function testConstructorDatabaseNameArgument($databaseName): void
+    public function testConstructorDatabaseNameArgument($databaseName, string $expectedExceptionClass): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException($expectedExceptionClass);
         // TODO: Move to unit test once ManagerInterface can be mocked (PHPC-378)
         new Database($this->manager, $databaseName);
     }
@@ -33,8 +34,8 @@ class DatabaseFunctionalTest extends FunctionalTestCase
     public function provideInvalidDatabaseNames()
     {
         return [
-            [null],
-            [''],
+            [null, TypeError::class],
+            ['', InvalidArgumentException::class],
         ];
     }
 

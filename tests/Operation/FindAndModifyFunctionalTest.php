@@ -199,8 +199,6 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
 
     /**
      * Create data fixtures.
-     *
-     * @param integer $n
      */
     private function createFixtures(int $n): void
     {

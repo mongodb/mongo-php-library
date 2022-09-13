@@ -267,8 +267,6 @@ class UpdateFunctionalTest extends FunctionalTestCase
 
     /**
      * Create data fixtures.
-     *
-     * @param integer $n
      */
     private function createFixtures(int $n): void
     {

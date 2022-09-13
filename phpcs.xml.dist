@@ -105,8 +105,6 @@
     <!-- **************************************************************************** -->
     <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint">
         <properties>
-            <!-- Requires PHP 7.4 -->
-            <property name="enableObjectTypeHint" value="false" />
             <!-- Requires PHP 8.0 -->
             <property name="enableMixedTypeHint" value="false" />
             <!-- Requires PHP 8.0 -->
@@ -114,7 +112,6 @@
         </properties>
 
         <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification" />
-        <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.UselessAnnotation" />
     </rule>
 
     <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
@@ -128,13 +125,10 @@
         </properties>
 
         <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingTraversableTypeHintSpecification" />
-        <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.UselessAnnotation" />
     </rule>
 
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
         <properties>
-            <!-- Requires PHP 7.2 -->
-            <property name="enableObjectTypeHint" value="false" />
             <!-- Requires PHP 8.0 -->
             <property name="enableStaticTypeHint" value="false" />
             <!-- Requires PHP 8.0 -->
@@ -144,7 +138,6 @@
         </properties>
 
         <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification" />
-        <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.UselessAnnotation" />
     </rule>
 
 
@@ -162,12 +155,9 @@
     </rule>
 
 
-    <!-- *********************************************************************************** -->
-    <!-- Require native type hints for all parameters, properties, and return types in tests -->
-    <!-- *********************************************************************************** -->
-    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint">
-        <exclude-pattern>src</exclude-pattern>
-    </rule>
+    <!-- *********************************************************** -->
+    <!-- Require native type hints for all code without a BC promise -->
+    <!-- *********************************************************** -->
     <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint">
         <exclude-pattern>src</exclude-pattern>
     </rule>

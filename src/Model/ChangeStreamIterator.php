@@ -71,12 +71,9 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * @internal
-     * @param Cursor            $cursor
-     * @param integer           $firstBatchSize
      * @param array|object|null $initialResumeToken
-     * @param object|null       $postBatchResumeToken
      */
-    public function __construct(Cursor $cursor, $firstBatchSize, $initialResumeToken, $postBatchResumeToken)
+    public function __construct(Cursor $cursor, int $firstBatchSize, $initialResumeToken, ?object $postBatchResumeToken)
     {
         if (! is_integer($firstBatchSize)) {
             throw InvalidArgumentException::invalidType('$firstBatchSize', $firstBatchSize, 'integer');
@@ -180,10 +177,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * @see https://php.net/iteratoriterator.rewind
-     * @return void
      */
-    #[ReturnTypeWillChange]
-    public function next()
+    public function next(): void
     {
         /* Determine if advancing the iterator will execute a getMore command
          * (i.e. we are already positioned at the end of the current batch). If
@@ -208,10 +203,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * @see https://php.net/iteratoriterator.rewind
-     * @return void
      */
-    #[ReturnTypeWillChange]
-    public function rewind()
+    public function rewind(): void
     {
         if ($this->isRewindNop) {
             return;
@@ -223,10 +216,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * @see https://php.net/iteratoriterator.valid
-     * @return boolean
      */
-    #[ReturnTypeWillChange]
-    public function valid()
+    public function valid(): bool
     {
         return $this->isValid;
     }
@@ -270,10 +261,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * Return whether the iterator is positioned at the end of the batch.
-     *
-     * @return boolean
      */
-    private function isAtEndOfBatch()
+    private function isAtEndOfBatch(): bool
     {
         return $this->batchPosition + 1 >= $this->batchSize;
     }
@@ -282,9 +271,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      * Perform housekeeping after an iteration event.
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/change-streams/change-streams.rst#updating-the-cached-resume-token
-     * @param boolean $incrementBatchPosition
      */
-    private function onIteration($incrementBatchPosition)
+    private function onIteration(bool $incrementBatchPosition): void
     {
         $this->isValid = parent::valid();
 

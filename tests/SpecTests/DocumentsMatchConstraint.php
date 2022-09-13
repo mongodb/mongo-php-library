@@ -132,8 +132,7 @@ class DocumentsMatchConstraint extends Constraint
     }
 
     /**
-     * @param string $expectedType
-     * @param mixed  $actualValue
+     * @param mixed $actualValue
      */
     private function assertBSONType(string $expectedType, $actualValue): void
     {
@@ -275,10 +274,6 @@ class DocumentsMatchConstraint extends Constraint
     /**
      * Compares two documents recursively.
      *
-     * @param ArrayObject $expected
-     * @param ArrayObject $actual
-     * @param boolean     $ignoreExtraKeys
-     * @param string      $keyPrefix
      * @throws RuntimeException if the documents do not match
      */
     private function assertEquals(ArrayObject $expected, ArrayObject $actual, bool $ignoreExtraKeys, string $keyPrefix = ''): void
@@ -412,8 +407,7 @@ class DocumentsMatchConstraint extends Constraint
      * value within the array or document will then be prepared recursively.
      *
      * @param array|object $bson
-     * @param boolean      $isRoot   If true, ensure an array value is converted to a document
-     * @param boolean      $sortKeys
+     * @param boolean      $isRoot If true, ensure an array value is converted to a document
      * @return BSONDocument|BSONArray
      * @throws InvalidArgumentException if $bson is not an array or object
      */

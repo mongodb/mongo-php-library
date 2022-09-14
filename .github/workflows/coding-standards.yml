@@ -5,10 +5,12 @@ on:
     branches:
       - "v*.*"
       - "master"
+      - "feature/*"
   push:
     branches:
       - "v*.*"
       - "master"
+      - "feature/*"
 
 jobs:
   phpcs:

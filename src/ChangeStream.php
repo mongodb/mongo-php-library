@@ -18,7 +18,6 @@
 namespace MongoDB;
 
 use Iterator;
-use MongoDB\Driver\Cursor;
 use MongoDB\Driver\CursorId;
 use MongoDB\Driver\Exception\ConnectionException;
 use MongoDB\Driver\Exception\RuntimeException;
@@ -29,7 +28,6 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Model\ChangeStreamIterator;
 use ReturnTypeWillChange;
 
-use function assert;
 use function call_user_func;
 use function in_array;
 
@@ -116,10 +114,7 @@ class ChangeStream implements Iterator
      */
     public function getCursorId()
     {
-        $cursor = $this->iterator->getInnerIterator();
-        assert($cursor instanceof Cursor);
-
-        return $cursor->getId();
+        return $this->iterator->getInnerIterator()->getId();
     }
 
     /**

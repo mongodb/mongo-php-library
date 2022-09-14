@@ -30,6 +30,7 @@ use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Exception\UnexpectedValueException;
 use ReturnTypeWillChange;
 
+use function assert;
 use function count;
 use function is_array;
 use function is_object;
@@ -44,7 +45,6 @@ use function MongoDB\Driver\Monitoring\removeSubscriber;
  * rewind() do not execute getMore commands.
  *
  * @internal
- * @method Cursor getInnerIterator()
  */
 class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 {
@@ -133,6 +133,14 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     public function current()
     {
         return $this->isValid ? parent::current() : null;
+    }
+
+    final public function getInnerIterator(): Cursor
+    {
+        $cursor = parent::getInnerIterator();
+        assert($cursor instanceof Cursor);
+
+        return $cursor;
     }
 
     /**

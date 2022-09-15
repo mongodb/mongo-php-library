@@ -135,6 +135,12 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
         return $this->isValid ? parent::current() : null;
     }
 
+    /**
+     * Necessary to let psalm know that we're always expecting a cursor as inner
+     * iterator. This could be side-stepped due to the class not being final,
+     * but it's very much an invalid use-case. This method can be dropped in 2.0
+     * once the class is final.
+     */
     final public function getInnerIterator(): Cursor
     {
         $cursor = parent::getInnerIterator();

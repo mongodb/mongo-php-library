@@ -645,11 +645,10 @@ class Bucket
      */
     private function createPathForFile(object $file): string
     {
-        if (! is_object($file->_id) || method_exists($file->_id, '__toString')) {
-            /** @psalm-suppress PossiblyInvalidCast */
-            $id = (string) $file->_id;
-        } else {
+        if (is_array($file->_id) || (is_object($file->_id) && ! method_exists($file->_id, '__toString'))) {
             $id = toJSON(fromPHP(['_id' => $file->_id]));
+        } else {
+            $id = (string) $file->_id;
         }
 
         return sprintf(

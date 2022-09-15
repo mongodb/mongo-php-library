@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.x-dev@5108834088c1d8cae3698df6ef6bf15fe6e76c53">
-  <file src="src/ChangeStream.php">
-    <MixedAssignment occurrences="1">
-      <code>$this-&gt;iterator</code>
-    </MixedAssignment>
-  </file>
   <file src="src/Client.php">
     <MixedArgument occurrences="1">
       <code>$driverOptions['driver'] ?? []</code>
@@ -747,14 +742,8 @@
     <DocblockTypeContradiction occurrences="1">
       <code>isset($resumeToken) &amp;&amp; ! is_array($resumeToken) &amp;&amp; ! is_object($resumeToken)</code>
     </DocblockTypeContradiction>
-    <MissingClosureParamType occurrences="2">
-      <code>$hasAdvanced</code>
-      <code>$resumeToken</code>
-    </MissingClosureParamType>
-    <MixedArgument occurrences="3">
-      <code>$hasAdvanced</code>
+    <MixedArgument occurrences="1">
       <code>$reply-&gt;cursor-&gt;firstBatch</code>
-      <code>$resumeToken</code>
     </MixedArgument>
     <MixedAssignment occurrences="1">
       <code>$this-&gt;postBatchResumeToken</code>

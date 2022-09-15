@@ -326,7 +326,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
     {
         return new ChangeStream(
             $this->createChangeStreamIterator($server),
-            function ($resumeToken, $hasAdvanced) {
+            function ($resumeToken, $hasAdvanced): ChangeStreamIterator {
                 return $this->resume($resumeToken, $hasAdvanced);
             }
         );

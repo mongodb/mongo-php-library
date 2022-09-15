@@ -24,7 +24,6 @@ use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Exception\ResumeTokenException;
-use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Model\ChangeStreamIterator;
 use ReturnTypeWillChange;
 
@@ -33,6 +32,8 @@ use function in_array;
 
 /**
  * Iterator for a change stream.
+ *
+ * @psalm-type ResumeCallable = callable(array|object|null, bool): ChangeStreamIterator
  *
  * @api
  * @see \MongoDB\Collection::watch()
@@ -73,7 +74,7 @@ class ChangeStream implements Iterator
     /** @var int */
     private static $wireVersionForResumableChangeStreamError = 9;
 
-    /** @var callable|null */
+    /** @var ResumeCallable|null */
     private $resumeCallable;
 
     /** @var ChangeStreamIterator */
@@ -92,6 +93,8 @@ class ChangeStream implements Iterator
 
     /**
      * @internal
+     *
+     * @param ResumeCallable $resumeCallable
      */
     public function __construct(ChangeStreamIterator $iterator, callable $resumeCallable)
     {
@@ -257,9 +260,6 @@ class ChangeStream implements Iterator
         }
 
         $this->iterator = call_user_func($this->resumeCallable, $this->getResumeToken(), $this->hasAdvanced);
-        if (! $this->iterator instanceof ChangeStreamIterator) {
-            throw new UnexpectedValueException('Expected change stream iterator from callable');
-        }
 
         $this->iterator->rewind();
 

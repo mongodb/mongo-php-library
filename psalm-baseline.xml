@@ -589,7 +589,7 @@
       <code>isInTransaction</code>
     </MixedMethodCall>
     <MixedReturnStatement occurrences="1">
-      <code>is_object($result) ? $result-&gt;value ?? null : null</code>
+      <code>is_object($result) ? ($result-&gt;value ?? null) : null</code>
     </MixedReturnStatement>
   </file>
   <file src="src/Operation/FindOneAndDelete.php">

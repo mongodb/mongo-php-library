@@ -253,7 +253,7 @@ class FindAndModify implements Executable, Explainable
 
         $result = current($cursor->toArray());
 
-        return is_object($result) ? $result->value ?? null : null;
+        return is_object($result) ? ($result->value ?? null) : null;
     }
 
     /**

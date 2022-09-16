@@ -1,6 +1,6 @@
-=============
-Upgrade Guide
-=============
+===========================
+Legacy Driver Upgrade Guide
+===========================
 
 .. default-domain:: mongodb
 

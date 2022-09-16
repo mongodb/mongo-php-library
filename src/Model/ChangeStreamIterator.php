@@ -30,9 +30,9 @@ use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Exception\UnexpectedValueException;
 use ReturnTypeWillChange;
 
+use function assert;
 use function count;
 use function is_array;
-use function is_integer;
 use function is_object;
 use function MongoDB\Driver\Monitoring\addSubscriber;
 use function MongoDB\Driver\Monitoring\removeSubscriber;
@@ -75,16 +75,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      */
     public function __construct(Cursor $cursor, int $firstBatchSize, $initialResumeToken, ?object $postBatchResumeToken)
     {
-        if (! is_integer($firstBatchSize)) {
-            throw InvalidArgumentException::invalidType('$firstBatchSize', $firstBatchSize, 'integer');
-        }
-
         if (isset($initialResumeToken) && ! is_array($initialResumeToken) && ! is_object($initialResumeToken)) {
             throw InvalidArgumentException::invalidType('$initialResumeToken', $initialResumeToken, 'array or object');
-        }
-
-        if (isset($postBatchResumeToken) && ! is_object($postBatchResumeToken)) {
-            throw InvalidArgumentException::invalidType('$postBatchResumeToken', $postBatchResumeToken, 'object');
         }
 
         parent::__construct($cursor);
@@ -109,7 +101,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
         }
 
         $this->batchPosition = 0;
-        $this->batchSize = null;
+        $this->batchSize = 0;
         $this->postBatchResumeToken = null;
     }
 
@@ -141,6 +133,20 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     public function current()
     {
         return $this->isValid ? parent::current() : null;
+    }
+
+    /**
+     * Necessary to let psalm know that we're always expecting a cursor as inner
+     * iterator. This could be side-stepped due to the class not being final,
+     * but it's very much an invalid use-case. This method can be dropped in 2.0
+     * once the class is final.
+     */
+    final public function getInnerIterator(): Cursor
+    {
+        $cursor = parent::getInnerIterator();
+        assert($cursor instanceof Cursor);
+
+        return $cursor;
     }
 
     /**

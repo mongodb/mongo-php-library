@@ -1,4 +1,4 @@
-name: "Coding Standards"
+name: "Static Analysis"
 
 on:
   pull_request:
@@ -13,8 +13,8 @@ on:
       - "feature/*"
 
 jobs:
-  phpcs:
-    name: "phpcs"
+  psalm:
+    name: "Psalm"
     runs-on: "ubuntu-20.04"
 
     strategy:
@@ -64,6 +64,5 @@ jobs:
       - name: "Install dependencies with Composer"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
-      # The -q option is required until phpcs v4 is released
-      - name: "Run PHP_CodeSniffer"
-        run: "vendor/bin/phpcs -q --no-colors --report=checkstyle | cs2pr"
+      - name: "Run Psalm"
+        run: "vendor/bin/psalm --show-info=false --stats --output-format=github --threads=$(nproc)"

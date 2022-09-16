@@ -34,6 +34,7 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Find;
 
 use function array_intersect_key;
+use function assert;
 use function fopen;
 use function get_resource_type;
 use function in_array;
@@ -412,6 +413,7 @@ class Bucket
          */
         $typeMap = ['root' => 'stdClass'] + $this->typeMap;
         $file = apply_type_map_to_document($file, $typeMap);
+        assert(is_object($file));
 
         if (! isset($file->_id) && ! property_exists($file, '_id')) {
             throw new CorruptFileException('file._id does not exist');
@@ -643,10 +645,10 @@ class Bucket
      */
     private function createPathForFile(object $file): string
     {
-        if (! is_object($file->_id) || method_exists($file->_id, '__toString')) {
-            $id = (string) $file->_id;
-        } else {
+        if (is_array($file->_id) || (is_object($file->_id) && ! method_exists($file->_id, '__toString'))) {
             $id = toJSON(fromPHP(['_id' => $file->_id]));
+        } else {
+            $id = (string) $file->_id;
         }
 
         return sprintf(

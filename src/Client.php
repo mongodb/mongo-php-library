@@ -117,7 +117,7 @@ class Client
         $driverOptions['driver'] = $this->mergeDriverInfo($driverOptions['driver'] ?? []);
 
         $this->uri = $uri;
-        $this->typeMap = $driverOptions['typeMap'] ?? null;
+        $this->typeMap = $driverOptions['typeMap'];
 
         unset($driverOptions['typeMap']);
 

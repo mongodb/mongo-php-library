@@ -27,8 +27,10 @@ use MongoDB\UpdateResult;
 use MultipleIterator;
 
 use function abs;
+use function assert;
 use function count;
 use function is_numeric;
+use function is_object;
 use function sprintf;
 
 /**
@@ -150,7 +152,7 @@ class CollectionWrapper
             $sortOrder = 1;
         }
 
-        return $this->filesCollection->findOne(
+        $file = $this->filesCollection->findOne(
             ['filename' => $filename],
             [
                 'skip' => $skip,
@@ -158,6 +160,9 @@ class CollectionWrapper
                 'typeMap' => ['root' => 'stdClass'],
             ]
         );
+        assert(is_object($file) || $file === null);
+
+        return $file;
     }
 
     /**
@@ -167,10 +172,13 @@ class CollectionWrapper
      */
     public function findFileById($id): ?object
     {
-        return $this->filesCollection->findOne(
+        $file = $this->filesCollection->findOne(
             ['_id' => $id],
             ['typeMap' => ['root' => 'stdClass']]
         );
+        assert(is_object($file) || $file === null);
+
+        return $file;
     }
 
     /**

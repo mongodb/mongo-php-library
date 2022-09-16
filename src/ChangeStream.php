@@ -22,6 +22,7 @@ use MongoDB\Driver\CursorId;
 use MongoDB\Driver\Exception\ConnectionException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
+use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Model\ChangeStreamIterator;
 use ReturnTypeWillChange;
@@ -31,6 +32,8 @@ use function in_array;
 
 /**
  * Iterator for a change stream.
+ *
+ * @psalm-type ResumeCallable = callable(array|object|null, bool): ChangeStreamIterator
  *
  * @api
  * @see \MongoDB\Collection::watch()
@@ -71,7 +74,7 @@ class ChangeStream implements Iterator
     /** @var int */
     private static $wireVersionForResumableChangeStreamError = 9;
 
-    /** @var callable */
+    /** @var ResumeCallable|null */
     private $resumeCallable;
 
     /** @var ChangeStreamIterator */
@@ -90,6 +93,8 @@ class ChangeStream implements Iterator
 
     /**
      * @internal
+     *
+     * @param ResumeCallable $resumeCallable
      */
     public function __construct(ChangeStreamIterator $iterator, callable $resumeCallable)
     {
@@ -250,7 +255,12 @@ class ChangeStream implements Iterator
      */
     private function resume(): void
     {
+        if (! $this->resumeCallable) {
+            throw new BadMethodCallException('Cannot resume a closed change stream.');
+        }
+
         $this->iterator = call_user_func($this->resumeCallable, $this->getResumeToken(), $this->hasAdvanced);
+
         $this->iterator->rewind();
 
         $this->onIteration($this->hasAdvanced);

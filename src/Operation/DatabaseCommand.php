@@ -38,7 +38,7 @@ class DatabaseCommand implements Executable
     /** @var string */
     private $databaseName;
 
-    /** @var array|Command|object */
+    /** @var Command */
     private $command;
 
     /** @var array */

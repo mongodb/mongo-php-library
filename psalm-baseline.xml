@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.x-dev@5108834088c1d8cae3698df6ef6bf15fe6e76c53">
+  <file src="src/Client.php">
+    <MixedArgument occurrences="1">
+      <code>$driverOptions['driver'] ?? []</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$mergedDriver['platform']</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Collection.php">
+    <MixedArgument occurrences="3">
+      <code>$encryptedFields['eccCollection'] ?? 'enxcol_.' . $this-&gt;collectionName . '.ecc'</code>
+      <code>$encryptedFields['ecocCollection'] ?? 'enxcol_.' . $this-&gt;collectionName . '.ecoc'</code>
+      <code>$encryptedFields['escCollection'] ?? 'enxcol_.' . $this-&gt;collectionName . '.esc'</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$encryptedFields</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Command/ListCollections.php">
+    <MixedAssignment occurrences="2">
+      <code>$cmd[$option]</code>
+      <code>$options['session']</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Command/ListDatabases.php">
+    <MixedAssignment occurrences="2">
+      <code>$cmd[$option]</code>
+      <code>$options['session']</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Database.php">
+    <MixedArgument occurrences="6">
+      <code>$encryptedFields['eccCollection'] ?? 'enxcol_.' . $collectionName . '.ecc'</code>
+      <code>$encryptedFields['eccCollection'] ?? 'enxcol_.' . $collectionName . '.ecc'</code>
+      <code>$encryptedFields['ecocCollection'] ?? 'enxcol_.' . $collectionName . '.ecoc'</code>
+      <code>$encryptedFields['ecocCollection'] ?? 'enxcol_.' . $collectionName . '.ecoc'</code>
+      <code>$encryptedFields['escCollection'] ?? 'enxcol_.' . $collectionName . '.esc'</code>
+      <code>$encryptedFields['escCollection'] ?? 'enxcol_.' . $collectionName . '.esc'</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="3">
+      <code>$encryptedFields</code>
+      <code>$encryptedFields</code>
+      <code>$options['encryptedFields']</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Exception/BadMethodCallException.php">
+    <UnsafeInstantiation occurrences="2">
+      <code>new static(sprintf('%s is immutable', $class))</code>
+      <code>new static(sprintf('%s should not be called for an unacknowledged write result', $method))</code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/Exception/InvalidArgumentException.php">
+    <UnsafeInstantiation occurrences="1">
+      <code>new static(sprintf('Expected %s to have type "%s" but found "%s"', $name, $expectedType, get_debug_type($value)))</code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/Exception/ResumeTokenException.php">
+    <UnsafeInstantiation occurrences="2">
+      <code>new static('Resume token not found in change document')</code>
+      <code>new static(sprintf('Expected resume token to have type "array or object" but found "%s"', get_debug_type($value)))</code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/Exception/UnsupportedException.php">
+    <UnsafeInstantiation occurrences="10">
+      <code>new static('Array filters are not supported by the server executing this operation')</code>
+      <code>new static('Collations are not supported by the server executing this operation')</code>
+      <code>new static('Explain is not supported by the server executing this operation')</code>
+      <code>new static('Hint is not supported by the server executing this operation')</code>
+      <code>new static('Read concern is not supported by the server executing this command')</code>
+      <code>new static('The "allowDiskUse" option is not supported by the server executing this operation')</code>
+      <code>new static('The "commitQuorum" option is not supported by the server executing this operation')</code>
+      <code>new static('The "readConcern" option cannot be specified within a transaction. Instead, specify it when starting the transaction.')</code>
+      <code>new static('The "writeConcern" option cannot be specified within a transaction. Instead, specify it when starting the transaction.')</code>
+      <code>new static('Write concern is not supported by the server executing this command')</code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/GridFS/Bucket.php">
+    <DocblockTypeContradiction occurrences="4">
+      <code>! is_resource($destination)</code>
+      <code>! is_resource($destination)</code>
+      <code>! is_resource($source)</code>
+      <code>! is_resource($stream)</code>
+    </DocblockTypeContradiction>
+    <MissingReturnType occurrences="5">
+      <code>delete</code>
+      <code>downloadToStream</code>
+      <code>downloadToStreamByName</code>
+      <code>drop</code>
+      <code>rename</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="3">
+      <code>$id</code>
+      <code>$options['revision']</code>
+      <code>$options['revision']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$id</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/GridFS/Exception/CorruptFileException.php">
+    <UnsafeInstantiation occurrences="4">
+      <code>new static(sprintf('Chunk not found for index "%d"', $expectedIndex))</code>
+      <code>new static(sprintf('Expected chunk to have index "%d" but found "%d"', $expectedIndex, $index))</code>
+      <code>new static(sprintf('Expected chunk to have size "%d" but found "%d"', $expectedSize, $size))</code>
+      <code>new static(sprintf('Invalid data found for index "%d"', $chunkIndex))</code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/GridFS/Exception/FileNotFoundException.php">
+    <MixedArgument occurrences="1">
+      <code>$json</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$json</code>
+    </MixedAssignment>
+    <UnsafeInstantiation occurrences="2">
+      <code>new static(sprintf('File "%s" not found in "%s"', $json, $namespace))</code>
+      <code>new static(sprintf('File with name "%s" and revision "%d" not found in "%s"', $filename, $revision, $namespace))</code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/GridFS/Exception/StreamException.php">
+    <MixedArgument occurrences="1">
+      <code>$idString</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$idString</code>
+    </MixedAssignment>
+    <UnsafeInstantiation occurrences="3">
+      <code>new static(sprintf('Downloading file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $filename))</code>
+      <code>new static(sprintf('Downloading file from "%s" to "%s" failed. GridFS identifier: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $idString))</code>
+      <code>new static(sprintf('Uploading file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationUri, $filename))</code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/GridFS/ReadableStream.php">
+    <MixedArgument occurrences="2">
+      <code>$currentChunk-&gt;n</code>
+      <code>$this-&gt;file-&gt;length</code>
+    </MixedArgument>
+  </file>
+  <file src="src/GridFS/StreamWrapper.php">
+    <MixedArgument occurrences="5">
+      <code>$context[$this-&gt;protocol]['collectionWrapper']</code>
+      <code>$context[$this-&gt;protocol]['collectionWrapper']</code>
+      <code>$context[$this-&gt;protocol]['file']</code>
+      <code>$context[$this-&gt;protocol]['filename']</code>
+      <code>$context[$this-&gt;protocol]['options']</code>
+    </MixedArgument>
+    <MixedArrayAccess occurrences="5">
+      <code>$context[$this-&gt;protocol]['collectionWrapper']</code>
+      <code>$context[$this-&gt;protocol]['collectionWrapper']</code>
+      <code>$context[$this-&gt;protocol]['file']</code>
+      <code>$context[$this-&gt;protocol]['filename']</code>
+      <code>$context[$this-&gt;protocol]['options']</code>
+    </MixedArrayAccess>
+    <UnusedFunctionCall occurrences="1">
+      <code>stream_wrapper_unregister</code>
+    </UnusedFunctionCall>
+  </file>
+  <file src="src/GridFS/WritableStream.php">
+    <UnusedFunctionCall occurrences="1">
+      <code>hash_update</code>
+    </UnusedFunctionCall>
+  </file>
+  <file src="src/MapReduceResult.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>Traversable</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>call_user_func($this-&gt;getIterator)</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/Model/BSONArray.php">
+    <MixedArrayOffset occurrences="1">
+      <code>$this[$key]</code>
+    </MixedArrayOffset>
+    <MixedAssignment occurrences="3">
+      <code>$key</code>
+      <code>$this[$key]</code>
+      <code>$value</code>
+    </MixedAssignment>
+    <UnsafeInstantiation occurrences="1">
+      <code>new static()</code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/Model/BSONDocument.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$iteratorClass</code>
+    </ArgumentTypeCoercion>
+    <MixedArrayOffset occurrences="1">
+      <code>$this[$key]</code>
+    </MixedArrayOffset>
+    <MixedAssignment occurrences="3">
+      <code>$key</code>
+      <code>$this[$key]</code>
+      <code>$value</code>
+    </MixedAssignment>
+    <UnsafeInstantiation occurrences="1">
+      <code>new static()</code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/Model/BSONIterator.php">
+    <MixedArgument occurrences="3">
+      <code>$documentLength</code>
+      <code>$documentLength</code>
+      <code>$this-&gt;options['typeMap']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$this-&gt;position</code>
+    </MixedAssignment>
+    <MixedOperand occurrences="1">
+      <code>$documentLength</code>
+    </MixedOperand>
+  </file>
+  <file src="src/Model/CachingIterator.php">
+    <MixedArrayAccess occurrences="2">
+      <code>$currentItem[self::FIELD_KEY]</code>
+      <code>$currentItem[self::FIELD_VALUE]</code>
+    </MixedArrayAccess>
+    <MixedAssignment occurrences="2">
+      <code>$currentItem</code>
+      <code>$currentItem</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Model/ChangeStreamIterator.php">
+    <DocblockTypeContradiction occurrences="2">
+      <code>! is_array($document) &amp;&amp; ! is_object($document)</code>
+      <code>isset($initialResumeToken) &amp;&amp; ! is_array($initialResumeToken) &amp;&amp; ! is_object($initialResumeToken)</code>
+    </DocblockTypeContradiction>
+    <MixedArgument occurrences="2">
+      <code>$reply-&gt;cursor-&gt;nextBatch</code>
+      <code>$this-&gt;current()</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$this-&gt;postBatchResumeToken</code>
+    </MixedAssignment>
+    <MixedPropertyFetch occurrences="2">
+      <code>$reply-&gt;cursor-&gt;nextBatch</code>
+      <code>$reply-&gt;cursor-&gt;postBatchResumeToken</code>
+    </MixedPropertyFetch>
+    <UnusedFunctionCall occurrences="2">
+      <code>addSubscriber</code>
+      <code>removeSubscriber</code>
+    </UnusedFunctionCall>
+  </file>
+  <file src="src/Model/CollectionInfo.php">
+    <MixedArgument occurrences="1">
+      <code>$key</code>
+    </MixedArgument>
+    <MixedArrayOffset occurrences="1">
+      <code>$this-&gt;info[$key]</code>
+    </MixedArrayOffset>
+  </file>
+  <file src="src/Model/CollectionInfoCommandIterator.php">
+    <MixedArgument occurrences="1">
+      <code>$info</code>
+    </MixedArgument>
+    <MixedArrayAssignment occurrences="1">
+      <code>$info['idIndex']['ns']</code>
+    </MixedArrayAssignment>
+    <MixedAssignment occurrences="1">
+      <code>$info</code>
+    </MixedAssignment>
+    <MixedOperand occurrences="1">
+      <code>$info['name']</code>
+    </MixedOperand>
+  </file>
+  <file src="src/Model/DatabaseInfo.php">
+    <MixedArgument occurrences="1">
+      <code>$key</code>
+    </MixedArgument>
+    <MixedArrayOffset occurrences="1">
+      <code>$this-&gt;info[$key]</code>
+    </MixedArrayOffset>
+  </file>
+  <file src="src/Model/DatabaseInfoLegacyIterator.php">
+    <MixedArgument occurrences="1">
+      <code>current($this-&gt;databases)</code>
+    </MixedArgument>
+    <MixedReturnTypeCoercion occurrences="2">
+      <code>int</code>
+      <code>key($this-&gt;databases)</code>
+    </MixedReturnTypeCoercion>
+  </file>
+  <file src="src/Model/IndexInfo.php">
+    <MixedArgument occurrences="1">
+      <code>$key</code>
+    </MixedArgument>
+    <MixedArrayOffset occurrences="1">
+      <code>$this-&gt;info[$key]</code>
+    </MixedArrayOffset>
+  </file>
+  <file src="src/Model/IndexInfoIteratorIterator.php">
+    <MixedArgument occurrences="2">
+      <code>$info</code>
+      <code>$info</code>
+    </MixedArgument>
+    <MixedArrayAssignment occurrences="1">
+      <code>$info['ns']</code>
+    </MixedArrayAssignment>
+    <MixedAssignment occurrences="1">
+      <code>$info</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Model/IndexInput.php">
+    <MixedArgument occurrences="1">
+      <code>$fieldName</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$fieldName</code>
+    </MixedAssignment>
+    <MixedReturnStatement occurrences="1">
+      <code>$this-&gt;index['name']</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/Operation/Aggregate.php">
+    <MixedArgument occurrences="2">
+      <code>$this-&gt;options['typeMap']</code>
+      <code>$this-&gt;options['typeMap']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="5">
+      <code>$cmdOptions['maxAwaitTimeMS']</code>
+      <code>$cmd[$option]</code>
+      <code>$cmd['hint']</code>
+      <code>$options[$option]</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="3">
+      <code>isDefault</code>
+      <code>isDefault</code>
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Operation/BulkWrite.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>is_array($operation)</code>
+    </DocblockTypeContradiction>
+    <MixedArgument occurrences="11">
+      <code>$args</code>
+      <code>$args</code>
+      <code>$args</code>
+      <code>$args[0]</code>
+      <code>$args[0]</code>
+      <code>$args[0]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[2]</code>
+    </MixedArgument>
+    <MixedArrayAccess occurrences="24">
+      <code>$args[0]</code>
+      <code>$args[0]</code>
+      <code>$args[0]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[2]</code>
+      <code>$args[2]</code>
+      <code>$args[2]</code>
+      <code>$args[2]</code>
+      <code>$args[2]</code>
+      <code>$args[2]</code>
+      <code>$args[2]</code>
+      <code>$args[2]['upsert']</code>
+      <code>$args[2]['upsert']</code>
+      <code>$args[2]['upsert']</code>
+      <code>$args[2]['upsert']</code>
+    </MixedArrayAccess>
+    <MixedArrayAssignment occurrences="11">
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[2]</code>
+      <code>$args[2]</code>
+      <code>$args[2]</code>
+      <code>$args[2]</code>
+      <code>$args[2]</code>
+      <code>$args[2]</code>
+      <code>$operations[$i][$type][1]</code>
+      <code>$operations[$i][$type][2]</code>
+      <code>$operations[$i][$type][2]</code>
+    </MixedArrayAssignment>
+    <MixedAssignment occurrences="11">
+      <code>$args</code>
+      <code>$args</code>
+      <code>$args[2]</code>
+      <code>$args[2]</code>
+      <code>$insertedIds[$i]</code>
+      <code>$operations[$i][$type][1]</code>
+      <code>$operations[$i][$type][2]</code>
+      <code>$operations[$i][$type][2]</code>
+      <code>$options[$option]</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="2">
+      <code>isDefault</code>
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+    <MixedOperand occurrences="2">
+      <code>$args[2]</code>
+      <code>$args[2]</code>
+    </MixedOperand>
+  </file>
+  <file src="src/Operation/Count.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
+    </DocblockTypeContradiction>
+    <MixedAssignment occurrences="5">
+      <code>$cmd[$option]</code>
+      <code>$cmd['hint']</code>
+      <code>$options['readConcern']</code>
+      <code>$options['readPreference']</code>
+      <code>$options['session']</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="1">
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Operation/CountDocuments.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
+    </DocblockTypeContradiction>
+  </file>
+  <file src="src/Operation/CreateCollection.php">
+    <MixedArgument occurrences="3">
+      <code>$i</code>
+      <code>$i</code>
+      <code>$this-&gt;options['typeMap']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="3">
+      <code>$cmd[$option]</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Operation/CreateIndexes.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>is_array($index)</code>
+    </DocblockTypeContradiction>
+    <MixedAssignment occurrences="4">
+      <code>$cmd[$option]</code>
+      <code>$cmd['commitQuorum']</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="1">
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Operation/DatabaseCommand.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_array($command) &amp;&amp; ! is_object($command)</code>
+    </DocblockTypeContradiction>
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;options['typeMap']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="2">
+      <code>$options['readPreference']</code>
+      <code>$options['session']</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Operation/Delete.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
+    </DocblockTypeContradiction>
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;options['writeConcern']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="5">
+      <code>$cmd['writeConcern']</code>
+      <code>$deleteOptions['hint']</code>
+      <code>$options['comment']</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="1">
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Operation/Distinct.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
+    </DocblockTypeContradiction>
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;options['typeMap']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="4">
+      <code>$cmd[$option]</code>
+      <code>$options['readConcern']</code>
+      <code>$options['readPreference']</code>
+      <code>$options['session']</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="1">
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Operation/DropCollection.php">
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;options['typeMap']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="3">
+      <code>$cmd['comment']</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="1">
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Operation/DropDatabase.php">
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;options['typeMap']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="3">
+      <code>$cmd['comment']</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Operation/DropIndexes.php">
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;options['typeMap']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="3">
+      <code>$cmd[$option]</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="1">
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Operation/Explain.php">
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;options['typeMap']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="3">
+      <code>$cmd[$option]</code>
+      <code>$options['readPreference']</code>
+      <code>$options['session']</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Operation/Find.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
+    </DocblockTypeContradiction>
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;options['typeMap']</code>
+    </MixedArgument>
+    <MixedArrayAccess occurrences="1">
+      <code>$options['modifiers'][$modifier[1]]</code>
+    </MixedArrayAccess>
+    <MixedAssignment occurrences="4">
+      <code>$options[$modifier[0]]</code>
+      <code>$options[$option]</code>
+      <code>$options['readPreference']</code>
+      <code>$options['session']</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="1">
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Operation/FindAndModify.php">
+    <MixedArgument occurrences="2">
+      <code>$this-&gt;options['typeMap']</code>
+      <code>$this-&gt;options['writeConcern']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="6">
+      <code>$cmd[$option]</code>
+      <code>$cmd['new']</code>
+      <code>$cmd['update']</code>
+      <code>$cmd['upsert']</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="1">
+      <code>array|object|null</code>
+    </MixedInferredReturnType>
+    <MixedMethodCall occurrences="2">
+      <code>isDefault</code>
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+    <MixedReturnStatement occurrences="1">
+      <code>is_object($result) ? ($result-&gt;value ?? null) : null</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/Operation/FindOneAndDelete.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
+    </DocblockTypeContradiction>
+  </file>
+  <file src="src/Operation/FindOneAndReplace.php">
+    <DocblockTypeContradiction occurrences="2">
+      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
+      <code>! is_array($replacement) &amp;&amp; ! is_object($replacement)</code>
+    </DocblockTypeContradiction>
+    <MixedOperand occurrences="1">
+      <code>$options['returnDocument']</code>
+    </MixedOperand>
+  </file>
+  <file src="src/Operation/FindOneAndUpdate.php">
+    <DocblockTypeContradiction occurrences="2">
+      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
+      <code>! is_array($update) &amp;&amp; ! is_object($update)</code>
+    </DocblockTypeContradiction>
+    <MixedOperand occurrences="1">
+      <code>$options['returnDocument']</code>
+    </MixedOperand>
+  </file>
+  <file src="src/Operation/InsertMany.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_array($document) &amp;&amp; ! is_object($document)</code>
+    </DocblockTypeContradiction>
+    <MixedAssignment occurrences="4">
+      <code>$insertedIds[$i]</code>
+      <code>$options[$option]</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="2">
+      <code>isDefault</code>
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Operation/InsertOne.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_array($document) &amp;&amp; ! is_object($document)</code>
+    </DocblockTypeContradiction>
+    <MixedAssignment occurrences="4">
+      <code>$insertedId</code>
+      <code>$options[$option]</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="2">
+      <code>isDefault</code>
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Operation/ListCollectionNames.php">
+    <MissingClosureReturnType occurrences="1">
+      <code>function (array $collectionInfo) {</code>
+    </MissingClosureReturnType>
+  </file>
+  <file src="src/Operation/ListIndexes.php">
+    <MixedAssignment occurrences="2">
+      <code>$cmd[$option]</code>
+      <code>$options['session']</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Operation/MapReduce.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_string($out) &amp;&amp; ! is_array($out) &amp;&amp; ! is_object($out)</code>
+    </DocblockTypeContradiction>
+    <MixedArgument occurrences="3">
+      <code>$result-&gt;result-&gt;collection</code>
+      <code>$result-&gt;result-&gt;db</code>
+      <code>$this-&gt;options['typeMap']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="5">
+      <code>$cmd[$option]</code>
+      <code>$options['readConcern']</code>
+      <code>$options['readPreference']</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="4">
+      <code>getScope</code>
+      <code>isDefault</code>
+      <code>isDefault</code>
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Operation/ModifyCollection.php">
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;options['typeMap']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="3">
+      <code>$cmd['comment']</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Operation/RenameCollection.php">
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;options['typeMap']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="3">
+      <code>$cmd[$option]</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="1">
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Operation/ReplaceOne.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_array($replacement) &amp;&amp; ! is_object($replacement)</code>
+    </DocblockTypeContradiction>
+  </file>
+  <file src="src/Operation/Update.php">
+    <DocblockTypeContradiction occurrences="2">
+      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
+      <code>! is_array($update) &amp;&amp; ! is_object($update)</code>
+    </DocblockTypeContradiction>
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;options['writeConcern']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="6">
+      <code>$cmd['bypassDocumentValidation']</code>
+      <code>$cmd['writeConcern']</code>
+      <code>$options[$option]</code>
+      <code>$options['session']</code>
+      <code>$options['writeConcern']</code>
+      <code>$updateOptions[$option]</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="2">
+      <code>isDefault</code>
+      <code>isInTransaction</code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Operation/UpdateMany.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_array($update) &amp;&amp; ! is_object($update)</code>
+    </DocblockTypeContradiction>
+  </file>
+  <file src="src/Operation/UpdateOne.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_array($update) &amp;&amp; ! is_object($update)</code>
+    </DocblockTypeContradiction>
+  </file>
+  <file src="src/Operation/Watch.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>isset($resumeToken) &amp;&amp; ! is_array($resumeToken) &amp;&amp; ! is_object($resumeToken)</code>
+    </DocblockTypeContradiction>
+    <MixedArgument occurrences="1">
+      <code>$reply-&gt;cursor-&gt;firstBatch</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$this-&gt;postBatchResumeToken</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="1">
+      <code>array|object|null</code>
+    </MixedInferredReturnType>
+    <MixedPropertyFetch occurrences="2">
+      <code>$reply-&gt;cursor-&gt;firstBatch</code>
+      <code>$reply-&gt;cursor-&gt;postBatchResumeToken</code>
+    </MixedPropertyFetch>
+    <MixedReturnStatement occurrences="2">
+      <code>$this-&gt;changeStreamOptions['resumeAfter']</code>
+      <code>$this-&gt;changeStreamOptions['startAfter']</code>
+    </MixedReturnStatement>
+    <PropertyNotSetInConstructor occurrences="2">
+      <code>$firstBatchSize</code>
+      <code>$operationTime</code>
+    </PropertyNotSetInConstructor>
+    <RedundantConditionGivenDocblockType occurrences="2">
+      <code>$resumeToken === null &amp;&amp; $this-&gt;operationTime !== null</code>
+      <code>$this-&gt;operationTime !== null</code>
+    </RedundantConditionGivenDocblockType>
+    <UnusedFunctionCall occurrences="2">
+      <code>addSubscriber</code>
+      <code>removeSubscriber</code>
+    </UnusedFunctionCall>
+  </file>
+  <file src="src/UpdateResult.php">
+    <MixedAssignment occurrences="1">
+      <code>$id</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/functions.php">
+    <DocblockTypeContradiction occurrences="4">
+      <code>! is_array($document) &amp;&amp; ! is_object($document)</code>
+      <code>is_array($document)</code>
+      <code>is_array($document)</code>
+      <code>is_array($out)</code>
+    </DocblockTypeContradiction>
+    <MixedArgument occurrences="1">
+      <code>$wireVersionForWriteStageOnSecondary</code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion occurrences="1">
+      <code>$manager-&gt;getServers()</code>
+    </MixedArgumentTypeCoercion>
+    <MixedArrayAccess occurrences="1">
+      <code>$collectionInfo['options']['encryptedFields']</code>
+    </MixedArrayAccess>
+    <MixedArrayAssignment occurrences="2">
+      <code>$typeMap['fieldPaths'][$fieldPath]</code>
+      <code>$typeMap['fieldPaths'][substr($fieldPath, 0, -2)]</code>
+    </MixedArrayAssignment>
+    <MixedAssignment occurrences="7">
+      <code>$element[$key]</code>
+      <code>$lastOp</code>
+      <code>$type</code>
+      <code>$type</code>
+      <code>$typeMap['fieldPaths'][$fieldPath . '.' . $existingFieldPath]</code>
+      <code>$typeMap['fieldPaths'][$fieldPath]</code>
+      <code>$value</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="3">
+      <code>array|object</code>
+      <code>array|object|null</code>
+      <code>array|object|null</code>
+    </MixedInferredReturnType>
+    <MixedOperand occurrences="1">
+      <code>$type</code>
+    </MixedOperand>
+    <MixedReturnStatement occurrences="3">
+      <code>$collectionInfo['options']['encryptedFields'] ?? null</code>
+      <code>$encryptedFieldsMap[$databaseName . '.' . $collectionName] ?? null</code>
+      <code>toPHP(fromPHP($document), $typeMap)</code>
+    </MixedReturnStatement>
+  </file>
+</files>

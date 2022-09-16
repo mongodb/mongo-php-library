@@ -32,6 +32,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\MapReduceResult;
 use stdClass;
 
+use function assert;
 use function current;
 use function is_array;
 use function is_bool;
@@ -301,6 +302,7 @@ class MapReduce implements Executable
         }
 
         $result = current($cursor->toArray());
+        assert($result instanceof stdClass);
 
         $getIterator = $this->createGetIteratorCallable($result, $server);
 

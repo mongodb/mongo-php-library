@@ -32,6 +32,7 @@ use MongoDB\Operation\WithTransaction;
 use ReflectionClass;
 use ReflectionException;
 
+use function assert;
 use function end;
 use function get_object_vars;
 use function in_array;
@@ -231,7 +232,7 @@ function is_pipeline($pipeline): bool
         reset($stage);
         $key = key($stage);
 
-        if (! isset($key[0]) || $key[0] !== '$') {
+        if (! is_string($key) || substr($key, 0, 1) !== '$') {
             return false;
         }
     }
@@ -505,8 +506,9 @@ function extract_read_preference_from_options(array $options): ?ReadPreference
 function select_server(Manager $manager, array $options): Server
 {
     $session = extract_session_from_options($options);
-    if ($session instanceof Session && $session->getServer() !== null) {
-        return $session->getServer();
+    $server = $session instanceof Session ? $session->getServer() : null;
+    if ($server !== null) {
+        return $server;
     }
 
     $readPreference = extract_read_preference_from_options($options);
@@ -560,6 +562,8 @@ function select_server_for_aggregate_write_stage(Manager $manager, array &$optio
     if ($serverSelectionError !== null) {
         throw $serverSelectionError;
     }
+
+    assert($server instanceof Server);
 
     return $server;
 }

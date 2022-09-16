@@ -19,9 +19,11 @@ namespace MongoDB\GridFS;
 
 use MongoDB\BSON\UTCDateTime;
 
+use function assert;
 use function explode;
 use function in_array;
 use function is_integer;
+use function is_resource;
 use function stream_context_get_options;
 use function stream_get_wrappers;
 use function stream_wrapper_register;
@@ -66,6 +68,8 @@ class StreamWrapper
      */
     public function getFile(): object
     {
+        assert($this->stream !== null);
+
         return $this->stream->getFile();
     }
 
@@ -164,6 +168,8 @@ class StreamWrapper
      */
     public function stream_seek(int $offset, int $whence = SEEK_SET): bool
     {
+        assert($this->stream !== null);
+
         $size = $this->stream->getSize();
 
         if ($whence === SEEK_CUR) {
@@ -195,6 +201,8 @@ class StreamWrapper
      */
     public function stream_stat(): array
     {
+        assert($this->stream !== null);
+
         $stat = $this->getStatTemplate();
 
         $stat[2] = $stat['mode'] = $this->stream instanceof ReadableStream
@@ -225,6 +233,8 @@ class StreamWrapper
      */
     public function stream_tell(): int
     {
+        assert($this->stream !== null);
+
         return $this->stream->tell();
     }
 
@@ -286,8 +296,10 @@ class StreamWrapper
      */
     private function initReadableStream(): bool
     {
+        assert(is_resource($this->context));
         $context = stream_context_get_options($this->context);
 
+        assert($this->protocol !== null);
         $this->stream = new ReadableStream(
             $context[$this->protocol]['collectionWrapper'],
             $context[$this->protocol]['file']
@@ -303,8 +315,10 @@ class StreamWrapper
      */
     private function initWritableStream(): bool
     {
+        assert(is_resource($this->context));
         $context = stream_context_get_options($this->context);
 
+        assert($this->protocol !== null);
         $this->stream = new WritableStream(
             $context[$this->protocol]['collectionWrapper'],
             $context[$this->protocol]['filename'],

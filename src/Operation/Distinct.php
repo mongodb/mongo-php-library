@@ -151,7 +151,7 @@ class Distinct implements Executable, Explainable
 
         $result = current($cursor->toArray());
 
-        if (! isset($result->values) || ! is_array($result->values)) {
+        if (! is_object($result) || ! isset($result->values) || ! is_array($result->values)) {
             throw new UnexpectedValueException('distinct command did not return a "values" array');
         }
 

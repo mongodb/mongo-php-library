@@ -16,6 +16,7 @@ use function glob;
  * Unified test format spec tests.
  *
  * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst
+ * @group serverless
  */
 class UnifiedSpecTest extends FunctionalTestCase
 {
@@ -141,7 +142,6 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     /**
      * @dataProvider provideCrudTests
-     * @group serverless
      */
     public function testCrud(UnifiedTestCase $test): void
     {
@@ -194,7 +194,6 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     /**
      * @dataProvider provideTransactionsTests
-     * @group serverless
      */
     public function testTransactions(UnifiedTestCase $test): void
     {
@@ -209,7 +208,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideVersionedApiTests
      * @group versioned-api
-     * @group serverless
      */
     public function testVersionedApi(UnifiedTestCase $test): void
     {

@@ -269,7 +269,7 @@ final class UnifiedTestRunner
 
         // @todo Add server parameter requirements?
         Assert::markTestSkipped(sprintf(
-            'Server (version=%s, toplogy=%s, auth=%s) does not meet test requirements',
+            'Server (version=%s, topology=%s, auth=%s) does not meet test requirements',
             $cachedIsSatisfiedArgs[0],
             $cachedIsSatisfiedArgs[1],
             $cachedIsSatisfiedArgs[3] ? 'yes' : 'no'
@@ -318,7 +318,7 @@ final class UnifiedTestRunner
                 return RunOnRequirement::TOPOLOGY_LOAD_BALANCED;
 
             default:
-                throw new UnexpectedValueException('Toplogy is neither single nor RS nor sharded');
+                throw new UnexpectedValueException('Topology is neither single nor RS nor sharded');
         }
     }
 

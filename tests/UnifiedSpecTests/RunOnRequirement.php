@@ -113,7 +113,7 @@ class RunOnRequirement
         }
     }
 
-    public function isSatisfied(string $serverVersion, string $topology, stdClass $serverParameters, bool $isAuthenticated, bool $isServerless, bool $isClientSideEncryptionSupported): bool
+    public function isSatisfied(string $serverVersion, string $topology, ServerParameterHelper $serverParameters, bool $isAuthenticated, bool $isServerless, bool $isClientSideEncryptionSupported): bool
     {
         if (isset($this->minServerVersion) && version_compare($serverVersion, $this->minServerVersion, '<')) {
             return false;
@@ -128,9 +128,11 @@ class RunOnRequirement
         }
 
         if (isset($this->serverParameters)) {
-            $constraint = new Matches($this->serverParameters, null, true, false);
-            if (! $constraint->evaluate($serverParameters, '', true)) {
-                return false;
+            foreach ($this->serverParameters as $parameter => $expectedValue) {
+                $constraint = new Matches($expectedValue, null, true, false);
+                if (! $constraint->evaluate($serverParameters->$parameter, '', true)) {
+                    return false;
+                }
             }
         }
 

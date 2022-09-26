@@ -10,6 +10,7 @@
     <arg value="nps"/>
 
     <file>src</file>
+    <file>examples</file>
     <file>tests</file>
 
     <!-- ****************************************** -->

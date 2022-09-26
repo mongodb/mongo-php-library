@@ -84,6 +84,9 @@ final class UnifiedTestRunner
     /** @var FailPointObserver */
     private $failPointObserver;
 
+    /** @var ServerParameterHelper */
+    private $serverParameterHelper;
+
     public function __construct(string $internalClientUri)
     {
         $this->internalClient = FunctionalTestCase::createTestClient($internalClientUri);
@@ -95,6 +98,8 @@ final class UnifiedTestRunner
         if ($this->isServerless() || strpos($internalClientUri, self::ATLAS_TLD) !== false) {
             $this->allowKillAllSessions = false;
         }
+
+        $this->serverParameterHelper = new ServerParameterHelper($this->internalClient);
     }
 
     public function run(UnifiedTestCase $test): void
@@ -248,7 +253,7 @@ final class UnifiedTestRunner
             $cachedIsSatisfiedArgs = [
                 $this->getServerVersion(),
                 $this->getTopology(),
-                $this->getServerParameters(),
+                $this->serverParameterHelper,
                 $this->isAuthenticated(),
                 $this->isServerless(),
                 $this->isClientSideEncryptionSupported(),
@@ -264,7 +269,7 @@ final class UnifiedTestRunner
 
         // @todo Add server parameter requirements?
         Assert::markTestSkipped(sprintf(
-            'Server (version=%s, toplogy=%s, auth=%s) does not meet test requirements',
+            'Server (version=%s, topology=%s, auth=%s) does not meet test requirements',
             $cachedIsSatisfiedArgs[0],
             $cachedIsSatisfiedArgs[1],
             $cachedIsSatisfiedArgs[3] ? 'yes' : 'no'
@@ -276,24 +281,6 @@ final class UnifiedTestRunner
         $manager = $this->internalClient->getManager();
 
         return $manager->selectServer(new ReadPreference(ReadPreference::PRIMARY));
-    }
-
-    private function getServerParameters(): stdClass
-    {
-        $database = $this->internalClient->selectDatabase('admin');
-        $cursor = $database->command(
-            ['getParameter' => '*'],
-            [
-                'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
-                'typeMap' => [
-                    'root' => 'object',
-                    'document' => 'object',
-                    'array' => 'array',
-                ],
-            ]
-        );
-
-        return $cursor->toArray()[0];
     }
 
     private function getServerVersion(): string
@@ -331,7 +318,7 @@ final class UnifiedTestRunner
                 return RunOnRequirement::TOPOLOGY_LOAD_BALANCED;
 
             default:
-                throw new UnexpectedValueException('Toplogy is neither single nor RS nor sharded');
+                throw new UnexpectedValueException('Topology is neither single nor RS nor sharded');
         }
     }
 

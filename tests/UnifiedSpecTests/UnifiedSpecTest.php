@@ -16,6 +16,7 @@ use function glob;
  * Unified test format spec tests.
  *
  * @see https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst
+ * @group serverless
  */
 class UnifiedSpecTest extends FunctionalTestCase
 {
@@ -33,9 +34,9 @@ class UnifiedSpecTest extends FunctionalTestCase
         'load-balancers/cursors are correctly pinned to connections for load-balanced clusters: listIndexes pins the cursor to a connection' => 'PHPC does not implement CMAP',
         'load-balancers/cursors are correctly pinned to connections for load-balanced clusters: change streams pin to a connection' => 'PHPC does not implement CMAP',
         'load-balancers/monitoring events include correct fields: poolClearedEvent events include serviceId' => 'PHPC does not implement CMAP',
-        'load-balancers/load-balancers/state change errors are correctly handled: only connections for a specific serviceId are closed when pools are cleared' => 'PHPC does not implement CMAP',
         'load-balancers/state change errors are correctly handled: only connections for a specific serviceId are closed when pools are cleared' => 'PHPC does not implement CMAP',
         'load-balancers/state change errors are correctly handled: errors during the initial connection hello are ignored' => 'PHPC does not implement CMAP',
+        'load-balancers/state change errors are correctly handled: errors during authentication are processed' => 'PHPC does not implement CMAP',
         'load-balancers/state change errors are correctly handled: stale errors are ignored' => 'PHPC does not implement CMAP',
         'load-balancers/transactions are correctly pinned to connections for load-balanced clusters: all operations go to the same mongos' => 'PHPC does not implement CMAP',
         'load-balancers/transactions are correctly pinned to connections for load-balanced clusters: transaction can be committed multiple times' => 'PHPC does not implement CMAP',
@@ -141,7 +142,6 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     /**
      * @dataProvider provideCrudTests
-     * @group serverless
      */
     public function testCrud(UnifiedTestCase $test): void
     {
@@ -194,7 +194,6 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     /**
      * @dataProvider provideTransactionsTests
-     * @group serverless
      */
     public function testTransactions(UnifiedTestCase $test): void
     {
@@ -209,7 +208,6 @@ class UnifiedSpecTest extends FunctionalTestCase
     /**
      * @dataProvider provideVersionedApiTests
      * @group versioned-api
-     * @group serverless
      */
     public function testVersionedApi(UnifiedTestCase $test): void
     {

@@ -49,12 +49,27 @@ initialized on demand, when the first operation is executed.
 Examples
 --------
 
+.. start-connecting-include
+
+Connecting to a Standalone server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you do not specify a ``$uri`` value, the driver connects to a standalone
+:program:`mongod` on ``127.0.0.1`` via port ``27017``. To connect to a different
+server, pass the corresponding connection string as the first parameter when
+creating the :phpclass:`Client <MongoDB\\Client>` instance:
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client('mongodb://mongodb-deployment:27017');
+
 Connecting to a Replica Set
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you do not specify a ``$uri`` value, the driver connects to a standalone
-:program:`mongod` on ``127.0.0.1`` via port ``27017``. The following example
-demonstrates how to connect to a replica set with a custom read preference:
+The following example demonstrates how to connect to a replica set with a custom
+read preference:
 
 .. code-block:: php
 
@@ -105,6 +120,8 @@ The driver supports additional :php:`SSL options
 which may be specified in the constructor's ``$driverOptions`` parameter. Those
 options are covered in the :php:`MongoDB\\Driver\\Manager::__construct()
 <mongodb-driver-manager.construct>` documentation.
+
+.. end-connecting-include
 
 Specifying a Custom Type Map
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~

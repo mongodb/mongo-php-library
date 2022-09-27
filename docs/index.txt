@@ -27,6 +27,8 @@ following pages should help you get started:
 
 - :doc:`/tutorial/install-php-library`
 
+- :doc:`/tutorial/connecting`
+
 - :doc:`/tutorial/crud`
 
 - :doc:`/tutorial/commands`

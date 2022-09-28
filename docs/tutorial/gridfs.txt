@@ -28,14 +28,14 @@ method.
 
 The bucket can be constructed with various options:
 
- - ``bucketName`` determines the prefix for the bucket's metadata and chunk
-   collections. The default value is ``"fs"``.
- - ``chunkSizeBytes`` determines the size of each chunk. GridFS divides the
-   file into chunks of this length, except for the last, which is only as large
-   as needed. The default size is ``261120`` (i.e. 255 KiB).
- - ``readConcern``, ``readPreference`` and ``writeConcern`` options can be used
-   to specify defaults for read and write operations, much like the
-   :phpclass:`MongoDB\\GridFS\\Collection` options.
+- ``bucketName`` determines the prefix for the bucket's metadata and chunk
+  collections. The default value is ``"fs"``.
+- ``chunkSizeBytes`` determines the size of each chunk. GridFS divides the file
+  into chunks of this length, except for the last, which is only as large as
+  needed. The default size is ``261120`` (i.e. 255 KiB).
+- ``readConcern``, ``readPreference`` and ``writeConcern`` options can be used
+  to specify defaults for read and write operations, much like the
+  :phpclass:`MongoDB\\GridFS\\Collection` options.
 
 Uploading Files with Writable Streams
 -------------------------------------

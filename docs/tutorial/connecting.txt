@@ -1,0 +1,25 @@
+=====================
+Connecting to MongoDB
+=====================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 2
+   :class: singlecol
+
+Creating a Client instance
+--------------------------------------------------------
+
+.. include:: /reference/method/MongoDBClient__construct.txt
+   :start-after: start-connecting-include
+   :end-before: end-connecting-include
+
+Specifying connection options
+-----------------------------
+
+Connection options can be passed via the ``$uri`` parameter, or through the
+``$options`` and ``$driverOptions`` parameters. The available options are
+documented in the :phpmethod:`MongoDB\\Client::__construct()` reference.

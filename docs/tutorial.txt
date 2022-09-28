@@ -5,6 +5,7 @@ Tutorials
 
 .. toctree::
 
+   /tutorial/connecting
    /tutorial/crud
    /tutorial/collation
    /tutorial/commands

@@ -6,7 +6,6 @@ namespace MongoDB\Examples;
 use MongoDB\Client;
 
 use function assert;
-use function dirname;
 use function fprintf;
 use function getenv;
 use function is_object;
@@ -17,7 +16,7 @@ use function time;
 
 use const STDERR;
 
-require dirname(__FILE__) . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 function toJSON(object $document): string
 {

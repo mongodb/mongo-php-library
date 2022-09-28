@@ -10,7 +10,6 @@ use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 
 use function assert;
-use function dirname;
 use function fprintf;
 use function get_class;
 use function getenv;
@@ -21,7 +20,7 @@ use function printf;
 
 use const STDERR;
 
-require dirname(__FILE__) . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 function toJSON(object $document): string
 {

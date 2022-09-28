@@ -8,12 +8,11 @@ use MongoDB\BSON\Unserializable;
 use MongoDB\Client;
 use UnexpectedValueException;
 
-use function dirname;
 use function getenv;
 use function is_array;
 use function var_dump;
 
-require dirname(__FILE__) . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 class TypemapEntry implements Unserializable
 {

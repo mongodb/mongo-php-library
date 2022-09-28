@@ -10,11 +10,10 @@ use MongoDB\Model\BSONArray;
 use UnexpectedValueException;
 
 use function array_search;
-use function dirname;
 use function getenv;
 use function var_dump;
 
-require dirname(__FILE__) . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 class PersistableEntry implements Persistable
 {

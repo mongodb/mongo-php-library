@@ -7,7 +7,6 @@ use MongoDB\Client;
 use MongoDB\Driver\Session;
 
 use function assert;
-use function dirname;
 use function getenv;
 use function is_object;
 use function MongoDB\BSON\fromPHP;
@@ -15,7 +14,7 @@ use function MongoDB\BSON\toRelaxedExtendedJSON;
 use function MongoDB\with_transaction;
 use function printf;
 
-require dirname(__FILE__) . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 function toJSON(object $document): string
 {

@@ -51,7 +51,7 @@ $pipeline = [
     ],
 ];
 
-$cursor = $collection->aggregate($pipeline, ['batchSize' => 2]);
+$cursor = $collection->aggregate($pipeline);
 
 foreach ($cursor as $document) {
     assert(is_object($document));

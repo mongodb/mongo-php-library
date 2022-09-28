@@ -71,7 +71,7 @@ $collection->bulkWrite(
     ]
 );
 
-$cursor = $collection->find([], ['batchSize' => 2]);
+$cursor = $collection->find([]);
 
 foreach ($cursor as $document) {
     assert(is_object($document));

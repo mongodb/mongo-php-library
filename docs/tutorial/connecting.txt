@@ -10,7 +10,7 @@ Connecting to MongoDB
    :depth: 2
    :class: singlecol
 
-Creating a :phpclass:`Client <MongoDB\\Client>` instance
+Creating a Client instance
 --------------------------------------------------------
 
 .. include:: /reference/method/MongoDBClient__construct.txt

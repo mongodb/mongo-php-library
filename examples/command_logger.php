@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace MongoDB\Examples;
 
-require '../vendor/autoload.php';
-
 use MongoDB\Client;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
@@ -12,6 +10,7 @@ use MongoDB\Driver\Monitoring\CommandSubscriber;
 use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 
 use function assert;
+use function dirname;
 use function fprintf;
 use function get_class;
 use function getenv;
@@ -21,6 +20,8 @@ use function MongoDB\BSON\toRelaxedExtendedJSON;
 use function printf;
 
 use const STDERR;
+
+require dirname(__FILE__) . '/../vendor/autoload.php';
 
 function toJSON(object $document): string
 {

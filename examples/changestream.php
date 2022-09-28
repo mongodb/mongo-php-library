@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace MongoDB\Examples;
 
-require '../vendor/autoload.php';
-
 use MongoDB\Client;
 
 use function assert;
+use function dirname;
 use function fprintf;
 use function getenv;
 use function is_object;
@@ -17,6 +16,8 @@ use function printf;
 use function time;
 
 use const STDERR;
+
+require dirname(__FILE__) . '/../vendor/autoload.php';
 
 function toJSON(object $document): string
 {

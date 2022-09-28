@@ -28,7 +28,6 @@ function toJSON(object $document): string
     return toRelaxedExtendedJSON(fromPHP($document));
 }
 
-// phpcs:disable Squiz.Classes.ClassFileName.NoMatch
 class CommandLogger implements CommandSubscriber
 {
     public function commandStarted(CommandStartedEvent $event): void

@@ -23,6 +23,7 @@ function toJSON(object $document): string
     return toRelaxedExtendedJSON(fromPHP($document));
 }
 
+// Change streams require a replica set or sharded cluster
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 
 $collection = $client->test->coll;

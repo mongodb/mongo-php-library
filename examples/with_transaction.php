@@ -21,6 +21,7 @@ function toJSON(object $document): string
     return toRelaxedExtendedJSON(fromPHP($document));
 }
 
+// Transactions require a replica set (MongoDB >= 4.0) or sharded cluster (MongoDB >= 4.2)
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 
 $collection = $client->test->coll;

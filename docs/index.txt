@@ -37,6 +37,8 @@ following pages should help you get started:
 
 - :doc:`/reference/bson`
 
+Code examples can be found in the ``examples`` directory in the source code.
+
 If you have previously worked with the legacy ``mongo`` extension, it will be
 helpful to review the :doc:`/upgrade` for a summary of API changes between the
 old driver and this library.

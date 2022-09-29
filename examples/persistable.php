@@ -9,7 +9,6 @@ use MongoDB\Client;
 use MongoDB\Model\BSONArray;
 use UnexpectedValueException;
 
-use function array_search;
 use function getenv;
 use function var_dump;
 
@@ -21,10 +20,10 @@ class PersistableEntry implements Persistable
     private $id;
 
     /** @var string */
-    private $name;
+    public $name;
 
     /** @var array<PersistableEmail> */
-    private $emails = [];
+    public $emails = [];
 
     public function __construct(string $name)
     {
@@ -35,36 +34,6 @@ class PersistableEntry implements Persistable
     public function getId(): ObjectId
     {
         return $this->id;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    public function getEmails(): array
-    {
-        return $this->emails;
-    }
-
-    public function addEmail(PersistableEmail $email): void
-    {
-        $this->emails[] = $email;
-    }
-
-    public function deleteEmail(PersistableEmail $email): void
-    {
-        $index = array_search($email, $this->emails, true);
-        if ($index === false) {
-            return;
-        }
-
-        unset($this->emails[$index]);
     }
 
     public function bsonSerialize(): object
@@ -97,25 +66,15 @@ class PersistableEntry implements Persistable
 class PersistableEmail implements Persistable
 {
     /** @var string */
-    private $type;
+    public $type;
 
     /** @var string */
-    private $address;
+    public $address;
 
     public function __construct(string $type, string $address)
     {
         $this->type = $type;
         $this->address = $address;
-    }
-
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    public function getAddress(): string
-    {
-        return $this->address;
     }
 
     public function bsonSerialize(): object
@@ -134,8 +93,8 @@ class PersistableEmail implements Persistable
 }
 
 $entry = new PersistableEntry('alcaeus');
-$entry->addEmail(new PersistableEmail('work', 'alcaeus@example.com'));
-$entry->addEmail(new PersistableEmail('private', 'secret@example.com'));
+$entry->emails[] = new PersistableEmail('work', 'alcaeus@example.com');
+$entry->emails[] = new PersistableEmail('private', 'secret@example.com');
 
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 

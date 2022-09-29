@@ -14,7 +14,7 @@ use function var_dump;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-class TypemapEntry implements Unserializable
+class TypeMapEntry implements Unserializable
 {
     /** @var ObjectId */
     private $id;
@@ -22,7 +22,7 @@ class TypemapEntry implements Unserializable
     /** @var string */
     private $name;
 
-    /** @var array<TypemapEmail> */
+    /** @var array<TypeMapEmail> */
     private $emails;
 
     private function __construct()
@@ -62,7 +62,7 @@ class TypemapEntry implements Unserializable
     }
 }
 
-class TypemapEmail implements Unserializable
+class TypeMapEmail implements Unserializable
 {
     /** @var string */
     private $type;
@@ -107,10 +107,10 @@ $document = [
 $collection->insertOne($document);
 
 $typeMap = [
-    'root' => TypemapEntry::class, // Root object will be an Entry instance
+    'root' => TypeMapEntry::class, // Root object will be an Entry instance
     'fieldPaths' => [
         'emails' => 'array', // Emails field is used as PHP array
-        'emails.$' => TypemapEmail::class, // Each element in the emails array will be an Email instance
+        'emails.$' => TypeMapEmail::class, // Each element in the emails array will be an Email instance
     ],
 ];
 

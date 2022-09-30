@@ -76,3 +76,60 @@ In addition to the aforementioned constants, these properties can also be
 inferred from :php:`phpinfo() <phpinfo>`. If your system has multiple PHP
 runtimes installed, double-check that you are examining the ``phpinfo()`` output
 for the correct environment.
+
+Server Selection Failures
+-------------------------
+
+The follow are all examples of
+:doc:`Server Selection </tutorial/server-selection>` failures:
+
+.. code-block:: none
+
+   No suitable servers found (`serverSelectionTryOnce` set):
+     [connection refused calling hello on 'a.example.com:27017']
+     [connection refused calling hello on 'b.example.com:27017']
+
+   No suitable servers found: `serverSelectionTimeoutMS` expired:
+     [socket timeout calling hello on 'example.com:27017']
+
+   No suitable servers found: `serverSelectionTimeoutMS` expired:
+     [connection timeout calling hello on 'a.example.com:27017']
+     [connection timeout calling hello on 'b.example.com:27017']
+     [TLS handshake failed: -9806 calling hello on 'c.example.com:27017']
+
+   No suitable servers found: `serverselectiontimeoutms` timed out:
+    [TLS handshake failed: certificate verify failed (64): IP address mismatch calling hello on 'a.example.com:27017']
+    [TLS handshake failed: certificate verify failed (64): IP address mismatch calling hello on 'b.example.com:27017']
+
+These errors typically manifest as a
+:php:`MongoDB\\Driver\\Exception\\ConnectionTimeoutException <mongodb-driver-exception-connectiontimeoutexception>`
+exception from the driver. The actual exception messages originate from
+libmongoc, which is the underlying library used by the PHP driver. Since these
+messages can take many forms, it's helpful to break down the structure of the
+message so you can better diagnose errors in your application.
+
+Messages will typically start with "No suitable servers found". The next part of
+the message indicates *how* server selection failed. By default, the PHP driver
+avoids a server selection loop and instead makes a single attempt (according to
+the ``serverSelectionTryOnce`` connection string option). If the driver is
+configured to utilize a loop, a message like "serverSelectionTimeoutMS expired"
+will tell us that we exhausted its time limit.
+
+The last component of the message tells us *why* server selection failed, and
+includes one or more errors directly from the topology scanner, which is the
+service responsible for connecting to and monitoring each host. Any host that
+last experienced an error during monitoring will be included in this list. These
+messages typically originate from low-level socket or TLS functions.
+
+The following is not meant to be exhaustive, but will hopefully point you in the
+right direction for analyzing the contributing factor(s) for a server selection
+failure:
+
+- "connection refused" likely indicates that the remote host is not listening on
+  the expected port.
+- "connection timeout" could indicate a routing or firewall issue, or perhaps
+  a timeout due to latency.
+- "socket timeout" suggests that a connection *was* established at some point
+  but was dropped or otherwise timeout out due to latency.
+- "TLS handshake failed" suggests something related to TLS or OCSP verification
+  and is sometimes indicative of misconfigured TLS certificates.

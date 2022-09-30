@@ -50,23 +50,14 @@ your ``php.ini`` file:
 
    extension=php_mongodb.dll
 
-Windows binaries are available for various combinations of PHP version,
-thread-safety, and architecture. Failure to select the correct binary will
-result in an error attempting to load the extension DLL at runtime. Additional
-considerations for Windows are discussed in the
+Additional considerations for Windows are discussed in the
 :php:`Windows installation documentation <manual/en/mongodb.installation.windows.php>`.
-
-.. note::
-
-   If your system has multiple versions of PHP installed, each version will have
-   its own ``pecl`` command and ``php.ini`` file. Additionally, PHP may also use
-   separate ``php.ini`` files for its web and CLI environments. If the extension
-   has been installed but is not available at runtime, double-check that you
-   have used the correct ``pecl`` command (or binary in the case of Windows) and
-   have modified the appropriate ``php.ini`` file(s).
 
 Installing the Library
 ----------------------
+
+Using Composer
+~~~~~~~~~~~~~~
 
 The preferred method of installing the |php-library| is with
 `Composer <https://getcomposer.org/>`_ by running the following command from
@@ -75,13 +66,6 @@ your project root:
 .. code-block:: sh
 
    composer require mongodb/mongodb
-
-While not recommended, you may also manually install the library using a source
-archive attached to the
-`GitHub releases <https://github.com/mongodb/mongo-php-library/releases>`_.
-
-Configure Autoloading
-~~~~~~~~~~~~~~~~~~~~~
 
 Once you have installed the library, ensure that your application includes
 Composer's autoloader as in the following example:
@@ -96,11 +80,20 @@ Refer to Composer's `autoloading documentation
 <https://getcomposer.org/doc/01-basic-usage.md#autoloading>`_ for more
 information about setting up autoloading.
 
-If you installed the library manually from a source archive, you will need to
-manually configure autoloading:
+Manual Installation Without Composer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Map the top-level ``MongoDB\`` namespace to the ``src/`` directory
-   using your preferred autoloader implementation.
+While not recommended, you may also manually install the library using a source
+archive attached to the
+`GitHub releases <https://github.com/mongodb/mongo-php-library/releases>`_. When
+installing the library without Composer, you must ensure that all library
+classes *and* functions are loaded for your application:
 
-#. Manually require the ``src/functions.php`` file. This is necessary because
-   PHP does not support autoloading for functions.
+#. If you are using a `PSR-4 <https://www.php-fig.org/psr/psr-4/>`_ autoloader,
+   map the top-level ``MongoDB\`` namespace to the ``src/`` directory. If you
+   are not using an autoloader, manually require _all_ class files found
+   recursively within the ``src/`` directory.
+
+#. Regardless of whether you are using an autoloader, manually require the
+   ``src/functions.php`` file. This is necessary because PHP does not support
+   autoloading for functions.

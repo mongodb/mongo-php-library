@@ -1,0 +1,192 @@
+===============================
+Server Selection and Monitoring
+===============================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 2
+   :class: singlecol
+
+Server Selection and Monitoring
+-------------------------------
+
+Before any operation can be executed, the |php-library| must first select a
+server from the topology (e.g. replica set, sharded cluster). Selecting a server
+requires an accurate view of the topology, so the driver (i.e. ``mongodb``
+extension) regularly monitors the servers to which it is connected.
+
+In most other drivers, server discovery and monitoring is handled by a
+background thread; however, the PHP driver is single-threaded and must therefore
+perform monitoring *between* operations initiated by the application.
+
+Consider the following example application:
+
+.. code-block:: php
+
+   <?php
+
+   /**
+    * When constructing a Client, the library creates a MongoDB\Driver\Manager
+    * object from the driver. In turn, the driver will either create a libmongoc
+    * client object (and persist it according to the constructor parameters) or
+    * re-use a previously persisted client.
+    *
+    * Assuming a new libmongoc client was created, the host name(s) in the
+    * connection string must be resolved via DNS. Likewise, if the connection
+    * string includes a mongodb+srv scheme, SRV/TXT records must be resolved.
+    * Following DNS resolution, the driver should then have a list of one or
+    * more hosts to which it can connect. This is referred to as the seed list.
+    *
+    * If a previously persisted client was re-used, no DNS resolution is needed
+    * and there will likely already be connections and topology state associated
+    * with the client.
+    *
+    * Drivers perform no further IO when constructing a client, so control is
+    * returned the the PHP script.
+    */
+   $client = new MongoDB\Client('mongodb://a.example.com:27017/?replicaSet=rs0');
+
+   /**
+    * The library creates a MongoDB\Database object from the Client. This does
+    * not entail any IO, as the Database and Collection objects only associate
+    * a database or namespace with a Client object, respectively.
+    */
+   $database = $client->test;
+
+   /**
+    * The library creates an internal object for this operation and must select
+    * a server to use for executing that operation.
+    *
+    * If this is the first operation on the underlying libmongoc client, it must
+    * first discover the topology. It does so by establishing connections to any
+    * host(s) in the seed list (this may entail TLS and OCSP verification) and
+    * issuing "hello" commands.
+    *
+    * In the case of a replica set, connecting to a single host in the seed list
+    * should allow the driver to discover all other members in the replica set.
+    * In the case of a sharded cluster, the driver will start with an initial
+    * seed list of mongos hosts and, if SRV polling is utilized, may discover
+    * additional mongos hosts over time.
+    *
+    * If the topology was already initialized (i.e. this is not the first
+    * operation on the client), the driver may still need to perform monitoring
+    * (i.e. "hello" commands) and refresh its view of the topology. This process
+    * may entail adding or removing hosts from the topology.
+    *
+    * Once the topology has been discovered and any necessary monitoring has
+    * been performed, the driver may select a server according to the rules
+    * outlined in the server selection specification (e.g. applying a read
+    * preference, filtering hosts by latency).
+    */
+   $database->command(['ping' => 1]);
+
+Although the application consists of only a few lines of PHP, there is actually
+quite a lot going on behind the scenes! Interested readers can find this process
+discussed in greater detail in the following documents:
+
+- `Single-threaded Mode <http://mongoc.org/libmongoc/current/connection-pooling.html#single-mode>`_ in the libmongoc documentation
+- `Server Discovery and Monitoring <https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst>`_ specification
+- `Server Selection <https://github.com/mongodb/specifications/blob/master/source/server-selection/server-selection.rst>`_ specification
+
+Connection String Options
+-------------------------
+
+There are several connection string options relevant to server selection and
+monitoring.
+
+connectTimeoutMS
+~~~~~~~~~~~~~~~~
+
+``connectTimeoutMS`` specifies the limit for both establishing a connection to
+a server *and* the socket timeout for server monitoring (``hello`` commands).
+This defaults to 10 seconds for single-threaded drivers such as PHP.
+
+When a server times out during monitoring, it will not be re-checked until at
+least five seconds
+(`cooldownMS <https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-monitoring.rst#cooldownms>`_)
+have elapsed. This timeout is intended to avoid having single-threaded drivers
+block for ``connectTimeoutMS`` on *each* subsequent scan after an error.
+
+Applications can consider setting this option to slightly more than the greatest
+latency among servers in the cluster. For example, if the greatest ``ping`` time
+between the PHP application server and a database server is 200ms, it may be
+reasonable to specify a timeout of one second. This would allow ample time for
+establishing a connection and monitoring an accessible server, while also
+significantly reducing the time to detect an inaccessible server.
+
+heartbeatFrequencyMS
+~~~~~~~~~~~~~~~~~~~~
+
+``heartbeatFrequencyMS`` determines how often monitoring should occur. This
+defaults to 60 seconds for single-threaded drivers and can be set as low as
+500ms.
+
+serverSelectionTimeoutMS
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+``serverSelectionTimeoutMS`` determines the maximum amount of time to spend in
+the server selection loop. This defaults to 30 seconds, but applications will
+typically fail sooner if ``serverSelectionTryOnce`` is ``true`` and a smaller
+``connectTimeoutMS`` value is in effect.
+
+The original default was established at a time when replica set elections took
+much longer to complete. Applications can consider setting this option to
+slightly more than the expected completion time for an election. For example,
+:manual:`Replica Set Elections </core/replica-set-elections/>` states that
+elections will not typically exceed 12 seconds, so a 15-second timeout may be
+reasonable. Applications connecting to a sharded cluster may consider a smaller
+value still, since ``mongos`` insulates the driver from elections.
+
+That said, ``serverSelectionTimeoutMS`` should generally not be set to a value
+smaller than ``connectTimeoutMS``.
+
+serverSelectionTryOnce
+~~~~~~~~~~~~~~~~~~~~~~
+
+``serverSelectionTryOnce`` determines whether the driver should give up after
+the first failed server selection attempt or continue waiting until
+``serverSelectionTimeoutMS`` is reached. PHP defaults to ``true``, which allows
+the driver to "fail fast" when a server cannot be selected (e.g. no primary
+during a failover).
+
+The default behavior is generally desirable for a high-traffic web applications,
+as it means the worker process will not be blocked in a server selection loop
+and can instead return an error response and immediately go on to serve another
+request. Additionally, other driver features such as retryable reads and writes
+can still enable applications to avoid transient errors such as a failover.
+
+That said, applications that prioritize resiliency over response time (and
+worker pool utilization) may want to specify ``false`` for
+``serverSelectionTryOnce``.
+
+socketCheckIntervalMS
+~~~~~~~~~~~~~~~~~~~~~
+
+``socketCheckIntervalMS`` determines how often a socket should be checked (using
+a ``ping`` command) if it has not been used recently. This defaults to 5 seconds
+and is intentionally lower than ``heartbeatFrequencyMS`` to better allow
+single-threaded drivers to recover dropped connections.
+
+socketTimeoutMS
+~~~~~~~~~~~~~~~
+
+``socketTimeoutMS`` determines the maximum amount of time to spend reading or
+writing to a socket. Since server monitoring uses ``connectTimeoutMS`` for its
+socket timeouts, ``socketTimeoutMS`` only applies to operations executed by the
+application.
+
+``socketTimeoutMS`` defaults to 5 minutes; however, it's likely that a PHP web
+request would be terminated sooner due to
+`max_execution_time <https://www.php.net/manual/en/info.configuration.php#ini.max-execution-time>`_,
+which defaults to 30 seconds for web SAPIs. In a CLI environment, where
+``max_execution_time`` is unlimited by default, it is more likely that
+``socketTimeoutMS`` could be reached.
+
+.. note::
+
+   ``socketTimeoutMS`` is not directly related to server selection and
+   monitoring; however, it is frequently associated with the other options and
+   therefore bears mentioning.

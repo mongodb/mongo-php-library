@@ -3,8 +3,17 @@ arg_name: option
 name: batchSize
 type: integer
 description: |
-  Specifies the maximum number of change events to return in each batch of the
-  response from the MongoDB cluster.
+  Specifies the batch size for the cursor, which will apply to both the initial
+  ``aggregate`` command and any subsequent ``getMore`` commands. This determines
+  the maximum number of change events to return in each response from the
+  server.
+
+  .. note::
+
+     Irrespective of the ``batchSize`` option, the initial ``aggregate`` command
+     response for a change stream generally does not include any documents
+     unless another option is used to configure its starting point (e.g.
+     ``startAfter``).
 interface: phpmethod
 operation: ~
 optional: true

@@ -6,6 +6,7 @@ Tutorials
 .. toctree::
 
    /tutorial/connecting
+   /tutorial/server-selection
    /tutorial/crud
    /tutorial/collation
    /tutorial/commands

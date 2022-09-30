@@ -1,0 +1,135 @@
+==========================
+Frequently Asked Questions
+==========================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 2
+   :class: singlecol
+
+Common Extension Installation Errors
+------------------------------------
+
+PHP Headers Not Found
+~~~~~~~~~~~~~~~~~~~~~
+
+For example:
+
+.. code-block:: none
+
+   /private/tmp/pear/install/mongodb/php_phongo.c:24:10: fatal error: 'php.h' file not found
+
+   #include <php.h>
+            ^~~~~~~
+
+This error indicates that PHP's build system cannot find the necessary headers.
+All PHP extensions require headers in order to compile. Additionally, those
+headers must correspond to the PHP runtime for which the extension will be used.
+Generally, the ``phpize`` command (invoked by ``pecl``) will ensure that the
+extension builds with the correct headers.
+
+Note that the mere presence of a PHP runtime does not mean that headers are
+available. On various Linux distributions, headers are often published under a
+separate ``php-dev`` or ``php-devel`` package. On macOS, the default PHP runtime
+does not include headers and users typically need to install PHP (and headers)
+via `Homebrew <https://brew.sh/>`_ in order to build an extension.
+
+Multiple PHP Runtimes Installed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If your system has multiple versions of PHP installed, each version will have
+its own ``pecl`` and ``phpize`` commands. Additionally, each PHP runtime may
+have separate ``php.ini`` files for each SAPI (e.g. FPM, CLI). If the extension
+has been installed but is not available at runtime, double-check that you have
+used the correct ``pecl`` command and have modified the appropriate ``php.ini``
+file(s).
+
+If there is any doubt about the ``php.ini`` file being used by a PHP runtime,
+you should examine the output of :php:`phpinfo() <phpinfo>` for that particular
+SAPI. Additionally, :php:`php_ini_loaded_file() <php_ini_loaded_file>` and
+:php:`php_ini_scanned_files() <php_ini_scanned_files>` may be used to determine
+exactly which INI files have been loaded by PHP.
+
+Loading an Incompatible DLL on Windows
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+PECL builds Windows binaries for various combinations of PHP version,
+thread-safety (TS or NTS), and architecture (x86 or x64). Failure to select the
+correct binary will result in an error when attempting to load the extension DLL
+at runtime:
+
+.. code-block:: none
+
+   PHP Warning:  PHP Startup: Unable to load dynamic library 'mongodb'
+
+Ensure that you have downloaded a DLL that corresponds to the following PHP
+runtime properties:
+
+- PHP version (``PHP_VERSION``)
+- Thread-safety (``PHP_ZTS``)
+- Architecture (``PHP_INT_SIZE``)
+
+In addition to the aforementioned constants, these properties can also be
+inferred from :php:`phpinfo() <phpinfo>`. If your system has multiple PHP
+runtimes installed, double-check that you are examining the ``phpinfo()`` output
+for the correct environment.
+
+Server Selection Failures
+-------------------------
+
+The follow are all examples of
+:doc:`Server Selection </tutorial/server-selection>` failures:
+
+.. code-block:: none
+
+   No suitable servers found (`serverSelectionTryOnce` set):
+     [connection refused calling hello on 'a.example.com:27017']
+     [connection refused calling hello on 'b.example.com:27017']
+
+   No suitable servers found: `serverSelectionTimeoutMS` expired:
+     [socket timeout calling hello on 'example.com:27017']
+
+   No suitable servers found: `serverSelectionTimeoutMS` expired:
+     [connection timeout calling hello on 'a.example.com:27017']
+     [connection timeout calling hello on 'b.example.com:27017']
+     [TLS handshake failed: -9806 calling hello on 'c.example.com:27017']
+
+   No suitable servers found: `serverselectiontimeoutms` timed out:
+    [TLS handshake failed: certificate verify failed (64): IP address mismatch calling hello on 'a.example.com:27017']
+    [TLS handshake failed: certificate verify failed (64): IP address mismatch calling hello on 'b.example.com:27017']
+
+These errors typically manifest as a
+:php:`MongoDB\\Driver\\Exception\\ConnectionTimeoutException <mongodb-driver-exception-connectiontimeoutexception>`
+exception from the driver. The actual exception messages originate from
+libmongoc, which is the underlying library used by the PHP driver. Since these
+messages can take many forms, it's helpful to break down the structure of the
+message so you can better diagnose errors in your application.
+
+Messages will typically start with "No suitable servers found". The next part of
+the message indicates *how* server selection failed. By default, the PHP driver
+avoids a server selection loop and instead makes a single attempt (according to
+the ``serverSelectionTryOnce`` connection string option). If the driver is
+configured to utilize a loop, a message like "serverSelectionTimeoutMS expired"
+will tell us that we exhausted its time limit.
+
+The last component of the message tells us *why* server selection failed, and
+includes one or more errors directly from the topology scanner, which is the
+service responsible for connecting to and monitoring each host. Any host that
+last experienced an error during monitoring will be included in this list. These
+messages typically originate from low-level socket or TLS functions.
+
+The following is not meant to be exhaustive, but will hopefully point you in the
+right direction for analyzing the contributing factor(s) for a server selection
+failure:
+
+- "connection refused" likely indicates that the remote host is not listening on
+  the expected port.
+- "connection timeout" could indicate a routing or firewall issue, or perhaps
+  a timeout due to latency.
+- "socket timeout" suggests that a connection *was* established at some point
+  but was dropped or otherwise timeout out due to latency.
+- "TLS handshake failed" suggests something related to TLS or OCSP verification
+  and is sometimes indicative of misconfigured TLS certificates.

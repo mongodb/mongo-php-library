@@ -19,7 +19,7 @@ Definition
 
    .. code-block:: php
 
-      function __construct($uri = 'mongodb://127.0.0.1/', array $uriOptions = [], array $driverOptions = [])
+      function __construct(?string $uri = null, array $uriOptions = [], array $driverOptions = [])
 
    This constructor has the following parameters:
 

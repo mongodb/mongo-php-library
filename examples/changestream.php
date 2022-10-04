@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace MongoDB\Examples;
 
-require '../vendor/autoload.php';
-
 use MongoDB\Client;
 
 use function assert;
@@ -18,11 +16,14 @@ use function time;
 
 use const STDERR;
 
+require __DIR__ . '/../vendor/autoload.php';
+
 function toJSON(object $document): string
 {
     return toRelaxedExtendedJSON(fromPHP($document));
 }
 
+// Change streams require a replica set or sharded cluster
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 
 $collection = $client->test->coll;

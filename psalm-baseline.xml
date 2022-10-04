@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.x-dev@5108834088c1d8cae3698df6ef6bf15fe6e76c53">
+  <file src="examples/typemap.php">
+    <PropertyNotSetInConstructor occurrences="5">
+      <code>$address</code>
+      <code>$emails</code>
+      <code>$id</code>
+      <code>$name</code>
+      <code>$type</code>
+    </PropertyNotSetInConstructor>
+  </file>
   <file src="src/Client.php">
     <MixedArgument occurrences="1">
       <code>$driverOptions['driver'] ?? []</code>

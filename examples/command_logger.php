@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace MongoDB\Examples;
 
-require '../vendor/autoload.php';
-
 use MongoDB\Client;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
@@ -22,12 +20,13 @@ use function printf;
 
 use const STDERR;
 
+require __DIR__ . '/../vendor/autoload.php';
+
 function toJSON(object $document): string
 {
     return toRelaxedExtendedJSON(fromPHP($document));
 }
 
-// phpcs:disable Squiz.Classes.ClassFileName.NoMatch
 class CommandLogger implements CommandSubscriber
 {
     public function commandStarted(CommandStartedEvent $event): void

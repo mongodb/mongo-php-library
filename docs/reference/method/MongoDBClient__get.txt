@@ -21,7 +21,7 @@ Definition
 
    .. code-block:: php
 
-      function __get($databaseName): MongoDB\Database
+      function __get(string $databaseName): MongoDB\Database
 
    This method has the following parameters:
 

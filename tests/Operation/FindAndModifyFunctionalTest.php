@@ -100,7 +100,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         }
 
         $this->expectException(CommandException::class);
-        $this->expectExceptionCode(100);
+        $this->expectExceptionCode(100 /* UnsatisfiableWriteConcern */);
         $this->expectExceptionMessageMatches('/Write Concern error:/');
 
         $operation = new FindAndModify(

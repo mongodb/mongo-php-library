@@ -567,6 +567,7 @@ tasks:
       tags: ["serverless"]
       commands:
         - func: "create serverless instance"
+        - func: "start kms servers"
         - func: "run serverless tests"
 
     - name: "test-loadBalanced"

@@ -55,6 +55,7 @@ use const PATH_SEPARATOR;
  *
  * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption
  * @group csfle
+ * @group serverless
  */
 class ClientSideEncryptionSpecTest extends FunctionalTestCase
 {

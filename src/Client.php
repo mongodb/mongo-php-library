@@ -44,6 +44,8 @@ use function is_string;
 
 class Client
 {
+    public const DEFAULT_URI = 'mongodb://127.0.0.1/';
+
     /** @var array */
     private static $defaultTypeMap = [
         'array' => BSONArray::class,
@@ -91,14 +93,14 @@ class Client
      * @see https://mongodb.com/docs/manual/reference/connection-string/
      * @see https://php.net/manual/en/mongodb-driver-manager.construct.php
      * @see https://php.net/manual/en/mongodb.persistence.php#mongodb.persistence.typemaps
-     * @param string $uri           MongoDB connection string
-     * @param array  $uriOptions    Additional connection string options
-     * @param array  $driverOptions Driver-specific options
+     * @param string|null $uri           MongoDB connection string. If none is provided, this defaults to self::DEFAULT_URI.
+     * @param array       $uriOptions    Additional connection string options
+     * @param array       $driverOptions Driver-specific options
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverInvalidArgumentException for parameter/option parsing errors in the driver
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
-    public function __construct(string $uri = 'mongodb://127.0.0.1/', array $uriOptions = [], array $driverOptions = [])
+    public function __construct(?string $uri = null, array $uriOptions = [], array $driverOptions = [])
     {
         $driverOptions += ['typeMap' => self::$defaultTypeMap];
 
@@ -116,7 +118,7 @@ class Client
 
         $driverOptions['driver'] = $this->mergeDriverInfo($driverOptions['driver'] ?? []);
 
-        $this->uri = $uri;
+        $this->uri = $uri ?? self::DEFAULT_URI;
         $this->typeMap = $driverOptions['typeMap'];
 
         unset($driverOptions['typeMap']);

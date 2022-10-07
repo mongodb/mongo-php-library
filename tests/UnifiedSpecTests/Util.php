@@ -77,7 +77,7 @@ final class Util
             'dropCollection' => ['collection', 'session'],
             'listCollectionNames' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
             'listCollections' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
-            'modifyCollection' => ['collection', 'changeStreamPreAndPostImages'],
+            'modifyCollection' => ['collection', 'changeStreamPreAndPostImages', 'index', 'validator'],
             // Note: commandName is not used by PHP
             'runCommand' => ['command', 'session', 'commandName'],
         ],
@@ -86,7 +86,7 @@ final class Util
             'bulkWrite' => ['let', 'requests', 'session', 'ordered', 'bypassDocumentValidation', 'comment'],
             'createChangeStream' => ['pipeline', 'session', 'fullDocument', 'fullDocumentBeforeChange', 'resumeAfter', 'startAfter', 'startAtOperationTime', 'batchSize', 'collation', 'maxAwaitTimeMS', 'comment', 'showExpandedEvents'],
             'createFindCursor' => ['filter', 'session', 'allowDiskUse', 'allowPartialResults', 'batchSize', 'collation', 'comment', 'cursorType', 'hint', 'limit', 'max', 'maxAwaitTimeMS', 'maxScan', 'maxTimeMS', 'min', 'modifiers', 'noCursorTimeout', 'oplogReplay', 'projection', 'returnKey', 'showRecordId', 'skip', 'snapshot', 'sort'],
-            'createIndex' => ['keys', 'commitQuorum', 'maxTimeMS', 'name', 'session', 'comment'],
+            'createIndex' => ['keys', 'comment', 'commitQuorum', 'maxTimeMS', 'name', 'session', 'unique'],
             'dropIndex' => ['name', 'session', 'maxTimeMS', 'comment'],
             'count' => ['filter', 'session', 'collation', 'hint', 'limit', 'maxTimeMS', 'skip', 'comment'],
             'countDocuments' => ['filter', 'session', 'limit', 'skip', 'collation', 'hint', 'maxTimeMS', 'comment'],

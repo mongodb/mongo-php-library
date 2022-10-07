@@ -19,7 +19,7 @@ Definition
 
    .. code-block:: php
 
-      function selectCollection($databaseName, $collectionName, array $options = []): MongoDB\Collection
+      function selectCollection(string $databaseName, string $collectionName, array $options = []): MongoDB\Collection
 
    This method has the following parameters:
 

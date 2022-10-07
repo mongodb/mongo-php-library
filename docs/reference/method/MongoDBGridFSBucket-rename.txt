@@ -19,7 +19,7 @@ Definition
 
    .. code-block:: php
 
-      function rename($id, $newFilename): void
+      function rename($id, string $newFilename): void
 
    This method has the following parameters:
 

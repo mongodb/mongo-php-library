@@ -20,7 +20,7 @@ Definition
 
    .. code-block:: php
 
-      function downloadToStreamByName($filename, $destination, array $options = []): void
+      function downloadToStreamByName(string $filename, $destination, array $options = []): void
 
    This method has the following parameters:
 

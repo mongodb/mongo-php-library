@@ -19,7 +19,7 @@ Definition
 
    .. code-block:: php
 
-      function selectDatabase($databaseName, array $options = []): MongoDB\Database
+      function selectDatabase(string $databaseName, array $options = []): MongoDB\Database
 
    This method has the following parameters:
 

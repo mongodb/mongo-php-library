@@ -1,6 +1,6 @@
-=============
-Upgrade Guide
-=============
+===========================
+Legacy Driver Upgrade Guide
+===========================
 
 .. default-domain:: mongodb
 
@@ -281,7 +281,7 @@ inadvertent and potentially dangerous :manual:`full-document replacements
 Group Command Helper
 ~~~~~~~~~~~~~~~~~~~~
 
-:phpclass:`MongoDB\\Collection` does have a helper method for the
+:phpclass:`MongoDB\\Collection` does not have a helper method for the
 :manual:`group </reference/command/group>` command. The following example
 demonstrates how to execute a group command using the
 :phpmethod:`MongoDB\\Database::command()` method:

@@ -19,7 +19,7 @@ Definition
 
    .. code-block:: php
 
-      function dropDatabase($databaseName, array $options []): array|object
+      function dropDatabase(string $databaseName, array $options = []): array|object
 
    This method has the following parameters:
 

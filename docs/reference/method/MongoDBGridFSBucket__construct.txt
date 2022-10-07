@@ -19,7 +19,7 @@ Definition
 
    .. code-block:: php
 
-      function __construct(MongoDB\Driver\Manager $manager, $databaseName, array $options = [])
+      function __construct(MongoDB\Driver\Manager $manager, string $databaseName, array $options = [])
 
    This constructor has the following parameters:
 

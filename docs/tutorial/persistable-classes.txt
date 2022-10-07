@@ -116,3 +116,39 @@ The same document in the MongoDB shell might display as:
 
    :php:`MongoDB\\BSON\\Persistable <mongodb-bson-persistable>` may only be used
    for root and embedded BSON documents. It may not be used for BSON arrays.
+.. _php-type-map:
+
+Type Maps
+---------
+
+Most methods that read data from MongoDB support a ``typeMap`` option, which
+allows control over how BSON is converted to PHP. Additionally,
+the :phpclass:`MongoDB\\Client`, :phpclass:`MongoDB\\Database`, and
+:phpclass:`MongoDB\\Collection` classes accept a ``typeMap`` option, which can
+be used to specify a default type map to apply to any supporting methods and
+selected classes (e.g. :phpmethod:`MongoDB\\Client::selectDatabase()`).
+
+The :phpclass:`MongoDB\\Client`, :phpclass:`MongoDB\\Database`, and
+:phpclass:`MongoDB\\Collection` classes use the following type map by
+default:
+
+.. code-block:: php
+
+   [
+       'array' => 'MongoDB\Model\BSONArray',
+       'document' => 'MongoDB\Model\BSONDocument',
+       'root' => 'MongoDB\Model\BSONDocument',
+   ]
+
+The type map above will convert BSON documents and arrays to
+:phpclass:`MongoDB\\Model\\BSONDocument` and
+:phpclass:`MongoDB\\Model\\BSONArray` objects, respectively. The ``root`` and
+``document`` keys are used to distinguish the top-level BSON document from
+embedded documents, respectively.
+
+A type map may specify any class that implements
+:php:`MongoDB\\BSON\\Unserializable <mongodb-bson-unserializable>` as well as
+``"array"``, ``"stdClass``", and ``"object"`` (``"stdClass``" and ``"object"``
+are aliases of one another).
+
+.. seealso:: :php:`Deserialization from BSON <manual/en/mongodb.persistence.deserialization.php>` in the PHP manual

@@ -67,6 +67,7 @@ final class IsBsonType extends Constraint
         'decimal',
         'minKey',
         'maxKey',
+        'number',
     ];
 
     /** @var string */
@@ -166,6 +167,9 @@ final class IsBsonType extends Constraint
 
             case 'maxKey':
                 return $other instanceof MaxKeyInterface;
+
+            case 'number':
+                return is_int($other) || (PHP_INT_SIZE == 4 && $other instanceof Int64) || is_float($other) || $other instanceof Decimal128Interface;
 
             default:
                 // This should already have been caught in the constructor

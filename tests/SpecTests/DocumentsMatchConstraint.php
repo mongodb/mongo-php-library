@@ -246,11 +246,10 @@ class DocumentsMatchConstraint extends Constraint
                 return;
 
             case 'long':
-                if (PHP_INT_SIZE == 4) {
-                    (new IsInstanceOf(Int64::class))->evaluate($actualValue);
-                } else {
-                    (new IsType('int'))->evaluate($actualValue);
-                }
+                LogicalOr::fromConstraints(
+                    new IsType('int'),
+                    new IsInstanceOf(Int64::class)
+                )->evaluate($actualValue);
 
                 return;
 

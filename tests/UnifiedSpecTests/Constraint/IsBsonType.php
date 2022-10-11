@@ -38,8 +38,6 @@ use function is_string;
 use function range;
 use function sprintf;
 
-use const PHP_INT_SIZE;
-
 final class IsBsonType extends Constraint
 {
     use ConstraintTrait;
@@ -153,11 +151,7 @@ final class IsBsonType extends Constraint
                 return $other instanceof TimestampInterface;
 
             case 'long':
-                if (PHP_INT_SIZE == 4) {
-                    return $other instanceof Int64;
-                }
-
-                return is_int($other);
+                return is_int($other) || $other instanceof Int64;
 
             case 'decimal':
                 return $other instanceof Decimal128Interface;
@@ -169,7 +163,7 @@ final class IsBsonType extends Constraint
                 return $other instanceof MaxKeyInterface;
 
             case 'number':
-                return is_int($other) || (PHP_INT_SIZE == 4 && $other instanceof Int64) || is_float($other) || $other instanceof Decimal128Interface;
+                return is_int($other) || $other instanceof Int64 || is_float($other) || $other instanceof Decimal128Interface;
 
             default:
                 // This should already have been caught in the constructor

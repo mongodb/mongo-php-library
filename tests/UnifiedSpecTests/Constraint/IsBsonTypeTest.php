@@ -41,6 +41,7 @@ class IsBsonTypeTest extends TestCase
         $undefined = toPHP(fromJSON('{ "x": {"$undefined": true} }'))->x;
         $symbol = toPHP(fromJSON('{ "x": {"$symbol": "test"} }'))->x;
         $dbPointer = toPHP(fromJSON('{ "x": {"$dbPointer": {"$ref": "db.coll", "$id" : { "$oid" : "5a2e78accd485d55b405ac12" }  }} }'))->x;
+        $int64 = unserialize('C:18:"MongoDB\BSON\Int64":28:{a:1:{s:7:"integer";s:1:"1";}}');
         $long = PHP_INT_SIZE == 4 ? unserialize('C:18:"MongoDB\BSON\Int64":38:{a:1:{s:7:"integer";s:10:"4294967296";}}') : 4294967296;
 
         return [
@@ -65,13 +66,15 @@ class IsBsonTypeTest extends TestCase
             'javascriptWithScope' => ['javascriptWithScope', new Javascript('foo = 1;', ['x' => 1])],
             'int' => ['int', 1],
             'timestamp' => ['timestamp', new Timestamp(0, 0)],
-            'long' => ['long', $long],
+            'long(int64)' => ['long', $int64],
+            'long(long)' => ['long', $long],
             'decimal' => ['decimal', new Decimal128('18446744073709551616')],
             'minKey' => ['minKey', new MinKey()],
             'maxKey' => ['maxKey', new MaxKey()],
             'number(double)' => ['number', 1.4],
             'number(decimal)' => ['number', new Decimal128('18446744073709551616')],
             'number(int)' => ['number', 1],
+            'number(int64)' => ['number', $int64],
             'number(long)' => ['number', $long],
         ];
     }

@@ -84,9 +84,11 @@ class DocumentsMatchConstraintTest extends TestCase
 
     public function provideBSONTypes()
     {
-        $undefined = toPHP(fromJSON('{ "undefined": {"$undefined": true} }'));
-        $symbol = toPHP(fromJSON('{ "symbol": {"$symbol": "test"} }'));
-        $dbPointer = toPHP(fromJSON('{ "dbPointer": {"$dbPointer": {"$ref": "phongo.test", "$id" : { "$oid" : "5a2e78accd485d55b405ac12" }  }} }'));
+        $undefined = toPHP(fromJSON('{ "x": {"$undefined": true} }'))->x;
+        $symbol = toPHP(fromJSON('{ "x": {"$symbol": "test"} }'))->x;
+        $dbPointer = toPHP(fromJSON('{ "x": {"$dbPointer": {"$ref": "db.coll", "$id" : { "$oid" : "5a2e78accd485d55b405ac12" }  }} }'))->x;
+        $int64 = unserialize('C:18:"MongoDB\BSON\Int64":28:{a:1:{s:7:"integer";s:1:"1";}}');
+        $long = PHP_INT_SIZE == 4 ? unserialize('C:18:"MongoDB\BSON\Int64":38:{a:1:{s:7:"integer";s:10:"4294967296";}}') : 4294967296;
 
         return [
             'double' => ['double', 1.4],
@@ -94,22 +96,44 @@ class DocumentsMatchConstraintTest extends TestCase
             'object' => ['object', new BSONDocument()],
             'array' => ['array', ['foo']],
             'binData' => ['binData', new Binary('', 0)],
-            'undefined' => ['undefined', $undefined->undefined],
+            'undefined' => ['undefined', $undefined],
             'objectId' => ['objectId', new ObjectId()],
-            'boolean' => ['boolean', true],
+            'bool' => ['bool', true],
             'date' => ['date', new UTCDateTime()],
             'null' => ['null', null],
             'regex' => ['regex', new Regex('.*')],
-            'dbPointer' => ['dbPointer', $dbPointer->dbPointer],
+            'dbPointer' => ['dbPointer', $dbPointer],
             'javascript' => ['javascript', new Javascript('foo = 1;')],
-            'symbol' => ['symbol', $symbol->symbol],
+            'symbol' => ['symbol', $symbol],
             'int' => ['int', 1],
             'timestamp' => ['timestamp', new Timestamp(0, 0)],
-            'long' => ['long', PHP_INT_SIZE == 4 ? unserialize('C:18:"MongoDB\BSON\Int64":38:{a:1:{s:7:"integer";s:10:"4294967296";}}') : 4294967296],
+            'long(int64)' => ['long', $int64],
+            'long(long)' => ['long', $long],
             'decimal' => ['decimal', new Decimal128('18446744073709551616')],
             'minKey' => ['minKey', new MinKey()],
             'maxKey' => ['maxKey', new MaxKey()],
+            'number(double)' => ['number', 1.4],
+            'number(decimal)' => ['number', new Decimal128('18446744073709551616')],
+            'number(int)' => ['number', 1],
+            'number(int64)' => ['number', $int64],
+            'number(long)' => ['number', $long],
         ];
+    }
+
+    public function testBSONTypeAssertionsWithMultipleTypes(): void
+    {
+        $c1 = new DocumentsMatchConstraint(['x' => ['$$type' => ['double', 'int']]]);
+
+        $this->assertResult(true, $c1, ['x' => 1], 'int is double or int');
+        $this->assertResult(true, $c1, ['x' => 1.4], 'double is double or int');
+        $this->assertResult(false, $c1, ['x' => 'foo'], 'string is not double or int');
+
+        $c2 = new DocumentsMatchConstraint(['x' => ['$$type' => ['number', 'string']]]);
+
+        $this->assertResult(true, $c2, ['x' => 1], 'int is number or string');
+        $this->assertResult(true, $c2, ['x' => 1.4], 'double is number or string');
+        $this->assertResult(true, $c2, ['x' => 'foo'], 'string is number or string');
+        $this->assertResult(false, $c2, ['x' => true], 'bool is not number or string');
     }
 
     /**

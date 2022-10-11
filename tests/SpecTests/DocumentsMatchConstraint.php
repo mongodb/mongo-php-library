@@ -4,6 +4,7 @@ namespace MongoDB\Tests\SpecTests;
 
 use ArrayObject;
 use InvalidArgumentException;
+use LogicException;
 use MongoDB\BSON\BinaryInterface;
 use MongoDB\BSON\DBPointer;
 use MongoDB\BSON\Decimal128;
@@ -243,6 +244,19 @@ class DocumentsMatchConstraint extends Constraint
                 (new IsInstanceOf(MaxKey::class))->evaluate($actualValue);
 
                 return;
+
+            case 'number':
+                LogicalOr::fromConstraints(
+                    new IsType('int'),
+                    new IsInstanceOf(Int64::class),
+                    new IsType('float'),
+                    new IsInstanceOf(Decimal128::class)
+                )->evaluate($actualValue);
+
+                return;
+
+            default:
+                throw new LogicException('Unsupported type: ' . $expectedType);
         }
     }
 

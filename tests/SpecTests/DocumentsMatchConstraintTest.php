@@ -112,6 +112,11 @@ class DocumentsMatchConstraintTest extends TestCase
             'decimal' => ['decimal', new Decimal128('18446744073709551616')],
             'minKey' => ['minKey', new MinKey()],
             'maxKey' => ['maxKey', new MaxKey()],
+            'number(double)' => ['number', 1.4],
+            'number(decimal)' => ['number', new Decimal128('18446744073709551616')],
+            'number(int)' => ['number', 1],
+            'number(int64)' => ['number', $int64],
+            'number(long)' => ['number', $long],
         ];
     }
 

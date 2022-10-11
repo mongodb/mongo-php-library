@@ -14,8 +14,8 @@ Overview
 --------
 
 MongoDB stores data records as BSON documents. BSON is a binary representation
-of :term:`JSON` documents, though it contains more data types than JSON. For the
-BSON spec, see `bsonspec.org <https://bsonspec.org/>`_.
+of JSON documents, though it contains more data types than JSON. For the BSON
+spec, see `bsonspec.org <https://bsonspec.org/>`_.
 
 By default, the |php-library| returns BSON documents as
 :phpclass:`MongoDB\\Model\\BSONDocument` objects and BSON arrays as
@@ -106,7 +106,7 @@ of the PHP class in a special property within the BSON document.
    When deserializing a PHP variable from BSON, the encoded class name of a
    :php:`Persistable <mongodb-bson-persistable>` object will override any class
    specified in the type map, but it will not override ``"array"`` and
-   ``"stdClass"`` or ``"object"``. This is discussed in the 
+   ``"stdClass"`` or ``"object"``. This is discussed in the
    :php:`persistence specification <mongodb.persistence>` but it bears
    repeating.
 
@@ -121,7 +121,7 @@ Consider the following class definition:
        private $id;
        private $name;
        private $createdAt;
-       
+
        public function __construct($name)
        {
            $this->id = new MongoDB\BSON\ObjectId;

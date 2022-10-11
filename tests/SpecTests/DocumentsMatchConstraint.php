@@ -23,7 +23,6 @@ use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\Constraint\IsInstanceOf;
 use PHPUnit\Framework\Constraint\IsNull;
 use PHPUnit\Framework\Constraint\IsType;
-use PHPUnit\Framework\Constraint\LogicalAnd;
 use PHPUnit\Framework\Constraint\LogicalNot;
 use PHPUnit\Framework\Constraint\LogicalOr;
 use RuntimeException;
@@ -39,7 +38,6 @@ use function is_array;
 use function is_float;
 use function is_int;
 use function is_object;
-use function method_exists;
 use function sprintf;
 
 use const PHP_INT_SIZE;
@@ -148,40 +146,18 @@ class DocumentsMatchConstraint extends Constraint
                 return;
 
             case 'object':
-                $constraints = [
+                LogicalOr::fromConstraints(
                     new IsType('object'),
-                    new LogicalNot(new IsInstanceOf(BSONArray::class)),
-                ];
-
-                // LogicalAnd::fromConstraints was introduced in PHPUnit 6.5.0.
-                // This check can be removed when the PHPUnit dependency is bumped to that version
-                if (method_exists(LogicalAnd::class, 'fromConstraints')) {
-                    $constraint = LogicalAnd::fromConstraints(...$constraints);
-                } else {
-                    $constraint = new LogicalAnd();
-                    $constraint->setConstraints($constraints);
-                }
-
-                $constraint->evaluate($actualValue);
+                    new LogicalNot(new IsInstanceOf(BSONArray::class))
+                )->evaluate($actualValue);
 
                 return;
 
             case 'array':
-                $constraints = [
+                LogicalOr::fromConstraints(
                     new IsType('array'),
-                    new IsInstanceOf(BSONArray::class),
-                ];
-
-                // LogicalOr::fromConstraints was introduced in PHPUnit 6.5.0.
-                // This check can be removed when the PHPUnit dependency is bumped to that version
-                if (method_exists(LogicalOr::class, 'fromConstraints')) {
-                    $constraint = LogicalOr::fromConstraints(...$constraints);
-                } else {
-                    $constraint = new LogicalOr();
-                    $constraint->setConstraints($constraints);
-                }
-
-                $constraint->evaluate($actualValue);
+                    new IsInstanceOf(BSONArray::class)
+                )->evaluate($actualValue);
 
                 return;
 

@@ -98,7 +98,7 @@ class DocumentsMatchConstraintTest extends TestCase
             'binData' => ['binData', new Binary('', 0)],
             'undefined' => ['undefined', $undefined],
             'objectId' => ['objectId', new ObjectId()],
-            'boolean' => ['boolean', true],
+            'bool' => ['bool', true],
             'date' => ['date', new UTCDateTime()],
             'null' => ['null', null],
             'regex' => ['regex', new Regex('.*')],
@@ -118,6 +118,22 @@ class DocumentsMatchConstraintTest extends TestCase
             'number(int64)' => ['number', $int64],
             'number(long)' => ['number', $long],
         ];
+    }
+
+    public function testBSONTypeAssertionsWithMultipleTypes(): void
+    {
+        $c1 = new DocumentsMatchConstraint(['x' => ['$$type' => ['double', 'int']]]);
+
+        $this->assertResult(true, $c1, ['x' => 1], 'int is double or int');
+        $this->assertResult(true, $c1, ['x' => 1.4], 'double is double or int');
+        $this->assertResult(false, $c1, ['x' => 'foo'], 'string is not double or int');
+
+        $c2 = new DocumentsMatchConstraint(['x' => ['$$type' => ['number', 'string']]]);
+
+        $this->assertResult(true, $c2, ['x' => 1], 'int is number or string');
+        $this->assertResult(true, $c2, ['x' => 1.4], 'double is number or string');
+        $this->assertResult(true, $c2, ['x' => 'foo'], 'string is number or string');
+        $this->assertResult(false, $c2, ['x' => true], 'bool is not number or string');
     }
 
     /**

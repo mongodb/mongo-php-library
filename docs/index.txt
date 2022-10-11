@@ -35,7 +35,7 @@ following pages should help you get started:
 
 - :doc:`/tutorial/gridfs`
 
-- :doc:`/tutorial/persistable-classes`
+- :doc:`/tutorial/modeling-bson-data`
 
 - :doc:`/reference/bson`
 

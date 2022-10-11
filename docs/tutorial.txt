@@ -17,5 +17,5 @@ Tutorials
    /tutorial/indexes
    /tutorial/tailable-cursor
    /tutorial/example-data
-   /tutorial/persistable-classes
+   /tutorial/modeling-bson-data
    /tutorial/stable-api

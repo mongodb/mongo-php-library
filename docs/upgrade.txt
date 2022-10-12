@@ -23,8 +23,11 @@ implements the ``mongo`` extension API using this library and the new driver.
 While this adapter library is not officially supported by MongoDB, it does bear
 mentioning.
 
-BSON Type Classes
------------------
+BSON
+----
+
+Type Classes
+~~~~~~~~~~~~
 
 When upgrading from the legacy driver, type classes such as MongoId must be
 replaced with classes in the
@@ -102,6 +105,70 @@ the new driver.
    document with a particular structure and not a proper BSON type. The new
    driver also does not provide any helpers for working with DBRef objects,
    since their use is not encouraged.
+
+Emulating the Legacy Driver
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The legacy ``mongo`` extension returned both BSON documents and arrays as PHP
+arrays. While PHP arrays are convenient to work with, this behavior was
+problematic:
+
+- Different BSON types could deserialize to the same PHP value (e.g.
+  ``{"0": "foo"}`` and ``["foo"]``), which made it impossible to infer the
+  original BSON type.
+
+- Numerically-indexed PHP arrays would be serialized as BSON documents if there
+  was a gap in their key sequence. Such gaps were easily caused by unsetting a
+  key to remove an element and forgetting to numerically reindex the array.
+
+The |php-library|'s :phpclass:`BSONDocument <MongoDB\\Model\\BSONDocument>` and
+:phpclass:`BSONArray <MongoDB\\Model\\BSONArray>` classes address these concerns
+by preserving the BSON type information during serialization and
+deserialization; however, some users may still prefer the legacy behavior. If
+desired, you can use the ``typeMap`` option to have the library return
+everything as a PHP array:
+
+.. code-block:: php
+
+   <?php
+
+   $client = new MongoDB\Client(
+       'mongodb://127.0.0.1/',
+       [],
+       [
+           'typeMap' => [
+               'array' => 'array',
+               'document' => 'array',
+               'root' => 'array',
+           ],
+       ]
+   );
+
+   $document = $client->test->zips->findOne(['_id' => '94301']);
+
+   var_dump($document);
+
+The above example would output something similar to:
+
+.. code-block:: php
+
+   array(5) {
+     ["_id"]=>
+     string(5) "94301"
+     ["city"]=>
+     string(9) "PALO ALTO"
+     ["loc"]=>
+     array(2) {
+       [0]=>
+       float(-122.149685)
+       [1]=>
+       float(37.444324)
+     }
+     ["pop"]=>
+     int(15965)
+     ["state"]=>
+     string(2) "CA"
+   }
 
 Collection API
 --------------

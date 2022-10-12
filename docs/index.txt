@@ -35,6 +35,8 @@ following pages should help you get started:
 
 - :doc:`/tutorial/gridfs`
 
+- :doc:`/tutorial/modeling-bson-data`
+
 - :doc:`/reference/bson`
 
 Code examples can be found in the ``examples`` directory in the source code.

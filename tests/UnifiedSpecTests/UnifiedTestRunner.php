@@ -64,7 +64,9 @@ final class UnifiedTestRunner
 
     public const MIN_SCHEMA_VERSION = '1.0';
 
-    public const MAX_SCHEMA_VERSION = '1.8';
+    /* Note: This is necessary to support expectedError.errorResponse from 1.12;
+     * however, syntax from 1.9, 1.10, and 1.11 has not been implemented. */
+    public const MAX_SCHEMA_VERSION = '1.12';
 
     /** @var MongoDB\Client */
     private $internalClient;

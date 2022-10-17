@@ -65,6 +65,11 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/createEntities-operation: createEntities operation' => 'CSOT is not yet implemented (PHPC-1760)',
         'valid-pass/entity-cursor-iterateOnce: iterateOnce' => 'CSOT is not yet implemented (PHPC-1760)',
         'valid-pass/matches-lte-operator: special lte matching operator' => 'CSOT is not yet implemented (PHPC-1760)',
+        // BulkWriteException cannot access server response
+        'crud/bulkWrite-errorResponse: bulkWrite operations support errorResponse assertions' => 'BulkWriteException cannot access server response',
+        'crud/deleteOne-errorResponse: delete operations support errorResponse assertions' => 'BulkWriteException cannot access server response',
+        'crud/insertOne-errorResponse: insert operations support errorResponse assertions' => 'BulkWriteException cannot access server response',
+        'crud/updateOne-errorResponse: update operations support errorResponse assertions' => 'BulkWriteException cannot access server response',
     ];
 
     /** @var UnifiedTestRunner */

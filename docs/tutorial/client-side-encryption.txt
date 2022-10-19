@@ -196,20 +196,20 @@ Referencing Encryption Keys by an Alternative Name
 
 While it is possible to create an encryption key every time data is encrypted,
 this is not the recommended approach. Instead, you should create your encryption
-keys depending on your use-case, e.g. by creating a user-specific encryption
+keys depending on your use case, e.g. by creating a user-specific encryption
 key. To reference keys in your software, you can use the keyAltName attribute
 specified when creating the key. The following example creates an encryption key
 with an alternative name, which could be done when deploying the application.
 The software then encrypts data by referencing the key by its alternative name.
 
-Creating the encryption key
+Creating the Encryption Key
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To create the encryption key, create a client instance with encryption options
 and create a new data key. You can pass multiple alternate names for this key
 and later reference the key by these alternate names instead of the key ID.
 Creating a new data encryption key would typically be done on initial deployment,
-but depending on your use-case you may want to use more than one encryption key.
+but depending on your use case you may want to use more than one encryption key.
 
 .. code-block:: php
 
@@ -231,10 +231,10 @@ but depending on your use-case you may want to use more than one encryption key.
    $client = new Client();
    $clientEncryption = $client->createClientEncryption($clientEncryptionOpts);
 
-   // Create an encryption key with an alternate name.
+   // Create an encryption key with an alternate name
    $keyId = $clientEncryption->createDataKey('local', ['keyAltNames' => ['altname']]);
 
-Using an encryption key by alternate name
+Using an Encryption Key by Alternate Name
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To use an alternate name when referencing an encryption key, use the

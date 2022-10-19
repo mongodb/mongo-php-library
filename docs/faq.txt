@@ -80,7 +80,7 @@ for the correct environment.
 Server Selection Failures
 -------------------------
 
-The follow are all examples of
+The following are all examples of
 :doc:`Server Selection </tutorial/server-selection>` failures:
 
 .. code-block:: none

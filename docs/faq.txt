@@ -133,3 +133,23 @@ failure:
   but was dropped or otherwise timeout out due to latency.
 - "TLS handshake failed" suggests something related to TLS or OCSP verification
   and is sometimes indicative of misconfigured TLS certificates.
+
+In the case of a connection failure, you can use the connection tool to try and
+receive more information. This tool attempts to connect to each host in a
+connection string using socket functions to see if it is able to establish a
+connection, send, and receive data. The tool takes the connection string to a
+MongoDB deployment as its only argument. Assuming you've installed the library
+through composer, you would call the script from the vendor directory:
+
+.. code-block:: none
+
+   php vendor/mongodb/mongodb/tools/connect.php mysql://127.0.0.1:27017
+
+In case the server does not accept connections, the output will look like this:
+
+.. code-block:: none
+
+   Looking up MongoDB at mongodb://127.0.0.1:27017
+   Found 1 host(s) in the URI. Will attempt to connect to each.
+
+   Could not connect to 127.0.0.1:27017: Connection refused

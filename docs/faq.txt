@@ -53,6 +53,20 @@ SAPI. Additionally, :php:`php_ini_loaded_file() <php_ini_loaded_file>` and
 :php:`php_ini_scanned_files() <php_ini_scanned_files>` may be used to determine
 exactly which INI files have been loaded by PHP.
 
+To debug issues with the extension not being loaded, you can use the
+``detect-extension`` script provided in the tools directory. You can run this
+script from the CLI or include it in a script accessible via your web server.
+The tool will point out potential issues and installation instructions for your
+system. Assuming you've installed the library through composer, you can call the
+script from the vendor directory:
+
+.. code-block:: none
+
+   php vendor/mongodb/mongodb/tools/detect-extension.php
+
+If you want to check configuration for a web server SAPI, include the file in
+a script accessible from the web server and open it in your browser.
+
 Loading an Incompatible DLL on Windows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

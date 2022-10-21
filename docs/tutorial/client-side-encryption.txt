@@ -92,7 +92,7 @@ side.
    $database->dropCollection('coll'); // remove old data
 
    // This uses the key ID from the first example. The key ID could be read from
-   // configuration.
+   // a configuration file.
    $keyId = readDataKey();
 
    $database->createCollection('coll', [
@@ -147,7 +147,7 @@ encrypted fields.
    $client = new Client();
 
    // This uses the key ID from the first example. The key ID could be read from
-   // configuration.
+   // a configuration file.
    $keyId = readDataKey();
 
    $autoEncryptionOpts = [
@@ -210,7 +210,7 @@ encrypts and decrypts values in the document.
    $clientEncryption = $client->createClientEncryption($clientEncryptionOpts);
 
    // This uses the key ID from the first example. The key ID could be read from
-   // configuration.
+   // a configuration file.
    $keyId = readDataKey();
 
    $collection = $client->selectCollection('test', 'coll');

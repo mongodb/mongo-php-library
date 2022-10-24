@@ -35,10 +35,6 @@ $extensionDir = ini_get('extension_dir');
 
 $version = phpversion($extension);
 
-if (PHP_SAPI !== 'cli') {
-    echo '<pre>';
-}
-
 if ($version !== false) {
     printf("Extension \"%s\" is loaded. Version: %s\n", $extension, $version);
     exit;

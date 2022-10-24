@@ -65,7 +65,12 @@ script from the vendor directory:
    php vendor/mongodb/mongodb/tools/detect-extension.php
 
 If you want to check configuration for a web server SAPI, include the file in
-a script accessible from the web server and open it in your browser.
+a script accessible from the web server and open it in your browser. Remember to
+wrap the script in ``<pre>`` tags to properly format its output:
+
+.. code-block:: php
+
+   <pre><?php require(...); ?></pre>
 
 Loading an Incompatible DLL on Windows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

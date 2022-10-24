@@ -57,7 +57,7 @@ To debug issues with the extension not being loaded, you can use the
 ``detect-extension`` script provided in the tools directory. You can run this
 script from the CLI or include it in a script accessible via your web server.
 The tool will point out potential issues and installation instructions for your
-system. Assuming you've installed the library through composer, you can call the
+system. Assuming you've installed the library through Composer, you can call the
 script from the vendor directory:
 
 .. code-block:: none
@@ -148,16 +148,16 @@ failure:
 - "TLS handshake failed" suggests something related to TLS or OCSP verification
   and is sometimes indicative of misconfigured TLS certificates.
 
-In the case of a connection failure, you can use the connection tool to try and
+In the case of a connection failure, you can use the ``connect`` tool to try and
 receive more information. This tool attempts to connect to each host in a
 connection string using socket functions to see if it is able to establish a
 connection, send, and receive data. The tool takes the connection string to a
 MongoDB deployment as its only argument. Assuming you've installed the library
-through composer, you would call the script from the vendor directory:
+through Composer, you would call the script from the vendor directory:
 
 .. code-block:: none
 
-   php vendor/mongodb/mongodb/tools/connect.php mysql://127.0.0.1:27017
+   php vendor/mongodb/mongodb/tools/connect.php mongodb://127.0.0.1:27017
 
 In case the server does not accept connections, the output will look like this:
 
@@ -167,3 +167,8 @@ In case the server does not accept connections, the output will look like this:
    Found 1 host(s) in the URI. Will attempt to connect to each.
 
    Could not connect to 127.0.0.1:27017: Connection refused
+
+.. note::
+
+   The tool only supports the ``mongodb://`` URI schema. Using the
+   ``mongodb+srv`` scheme is not supported.

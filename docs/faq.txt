@@ -53,6 +53,25 @@ SAPI. Additionally, :php:`php_ini_loaded_file() <php_ini_loaded_file>` and
 :php:`php_ini_scanned_files() <php_ini_scanned_files>` may be used to determine
 exactly which INI files have been loaded by PHP.
 
+To debug issues with the extension not being loaded, you can use the
+``detect-extension`` script provided in the tools directory. You can run this
+script from the CLI or include it in a script accessible via your web server.
+The tool will point out potential issues and installation instructions for your
+system. Assuming you've installed the library through Composer, you can call the
+script from the vendor directory:
+
+.. code-block:: none
+
+   php vendor/mongodb/mongodb/tools/detect-extension.php
+
+If you want to check configuration for a web server SAPI, include the file in
+a script accessible from the web server and open it in your browser. Remember to
+wrap the script in ``<pre>`` tags to properly format its output:
+
+.. code-block:: php
+
+   <pre><?php require(...); ?></pre>
+
 Loading an Incompatible DLL on Windows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -80,7 +99,7 @@ for the correct environment.
 Server Selection Failures
 -------------------------
 
-The follow are all examples of
+The following are all examples of
 :doc:`Server Selection </tutorial/server-selection>` failures:
 
 .. code-block:: none
@@ -133,3 +152,28 @@ failure:
   but was dropped or otherwise timeout out due to latency.
 - "TLS handshake failed" suggests something related to TLS or OCSP verification
   and is sometimes indicative of misconfigured TLS certificates.
+
+In the case of a connection failure, you can use the ``connect`` tool to try and
+receive more information. This tool attempts to connect to each host in a
+connection string using socket functions to see if it is able to establish a
+connection, send, and receive data. The tool takes the connection string to a
+MongoDB deployment as its only argument. Assuming you've installed the library
+through Composer, you would call the script from the vendor directory:
+
+.. code-block:: none
+
+   php vendor/mongodb/mongodb/tools/connect.php mongodb://127.0.0.1:27017
+
+In case the server does not accept connections, the output will look like this:
+
+.. code-block:: none
+
+   Looking up MongoDB at mongodb://127.0.0.1:27017
+   Found 1 host(s) in the URI. Will attempt to connect to each.
+
+   Could not connect to 127.0.0.1:27017: Connection refused
+
+.. note::
+
+   The tool only supports the ``mongodb://`` URI schema. Using the
+   ``mongodb+srv`` scheme is not supported.

@@ -12,6 +12,7 @@
     <file>src</file>
     <file>examples</file>
     <file>tests</file>
+    <file>tools</file>
 
     <!-- ****************************************** -->
     <!-- Import rules from doctrine/coding-standard -->

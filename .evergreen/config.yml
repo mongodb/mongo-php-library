@@ -835,7 +835,7 @@ buildvariants:
   display_name: "Atlas Data Lake"
   run_on: debian11
   expansions:
-    VARIANT: debian11
+     VARIANT: debian11 # Referenced by ADL build script for downloading MQLRun
   tasks:
     - name: "test-atlas-data-lake"
 

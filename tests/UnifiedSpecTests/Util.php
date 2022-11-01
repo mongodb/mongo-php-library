@@ -20,6 +20,7 @@ use function array_fill_keys;
 use function array_key_exists;
 use function array_keys;
 use function implode;
+use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertContains;
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertIsArray;
@@ -141,6 +142,8 @@ final class Util
 
     public static function assertArgumentsBySchema(string $executingObjectName, string $operation, array $args): void
     {
+        assertArrayHasKey($executingObjectName, self::$args);
+        assertArrayHasKey($operation, self::$args[$executingObjectName]);
         self::assertHasOnlyKeys($args, self::$args[$executingObjectName][$operation]);
     }
 

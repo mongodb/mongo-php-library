@@ -607,6 +607,10 @@ axes:
   - id: php-versions
     display_name: PHP Version
     values:
+      - id: "8.2"
+        display_name: "PHP 8.2"
+        variables:
+          PHP_VERSION: "8.2"
       - id: "8.1"
         display_name: "PHP 8.1"
         variables:

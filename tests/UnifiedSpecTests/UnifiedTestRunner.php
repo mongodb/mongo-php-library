@@ -125,7 +125,7 @@ final class UnifiedTestRunner
              * succeeding or failing. Since the callable itself might throw, we
              * need to ensure doTearDown() will still be called. */
             try {
-                if (isset($this->entityMapObserver)) {
+                if (isset($this->entityMapObserver, $this->entityMap)) {
                     call_user_func($this->entityMapObserver, $this->entityMap);
                 }
             } finally {

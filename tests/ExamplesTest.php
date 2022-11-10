@@ -16,16 +16,16 @@ final class ExamplesTest extends FunctionalTestCase
 
     public function dataExamples(): Generator
     {
+        $expectedOutput = <<<'OUTPUT'
+{ "_id" : null, "totalCount" : 100, "evenCount" : %d, "oddCount" : %d, "maxValue" : %d, "minValue" : %d }
+OUTPUT;
+
         yield 'aggregate' => [
             'file' => __DIR__ . '/../examples/aggregate.php',
-            'expectedOutput' => <<<'OUTPUT'
-{ "_id" : null, "totalCount" : 100, "evenCount" : %d, "oddCount" : %d, "maxValue" : %d, "minValue" : %d }
-OUTPUT
+            'expectedOutput' => $expectedOutput,
         ];
 
-        yield 'bulk' => [
-            'file' => __DIR__ . '/../examples/bulk.php',
-            'expectedOutput' => <<<'OUTPUT'
+        $expectedOutput = <<<'OUTPUT'
 { "_id" : { "$oid" : "%s" }, "x" : 0 }
 { "_id" : { "$oid" : "%s" }, "y" : 1 }
 { "_id" : { "$oid" : "%s" }, "x" : 2, "y" : 2 }
@@ -34,12 +34,14 @@ OUTPUT
 { "_id" : { "$oid" : "%s" }, "x" : 6, "updateMany" : true }
 { "_id" : { "$oid" : "%s" }, "x" : 7, "updateMany" : true }
 { "_id" : { "$oid" : "%s" }, "x" : 10 }
-OUTPUT
+OUTPUT;
+
+        yield 'bulk' => [
+            'file' => __DIR__ . '/../examples/bulk.php',
+            'expectedOutput' => $expectedOutput,
         ];
 
-        yield 'command_logger' => [
-            'file' => __DIR__ . '/../examples/command_logger.php',
-            'expectedOutput' => <<<'OUTPUT'
+        $expectedOutput = <<<'OUTPUT'
 drop command started
 command: { "drop" : "coll", "$db" : "test", "lsid" : { %s }%S }
 
@@ -76,73 +78,79 @@ getMore command succeeded
 reply: { "cursor" : { "nextBatch" : [ { "_id" : { "$oid" : "%s" }, "x" : 3, "y" : 1 } ], "id" : 0, "ns" : "test.coll" }, %s }
 
 { "_id" : { "$oid" : "%s" }, "x" : 3, "y" : 1 }
-OUTPUT
+OUTPUT;
+
+        yield 'command_logger' => [
+            'file' => __DIR__ . '/../examples/command_logger.php',
+            'expectedOutput' => $expectedOutput,
         ];
+
+        $expectedOutput = <<<'OUTPUT'
+object(MongoDB\Examples\PersistableEntry)#%d (%d) {
+  ["id":"MongoDB\Examples\PersistableEntry":private]=>
+  object(MongoDB\BSON\ObjectId)#%d (%d) {
+    ["oid"]=>
+    string(24) "%s"
+  }
+  ["name"]=>
+  string(7) "alcaeus"
+  ["emails"]=>
+  array(2) {
+    [0]=>
+    object(MongoDB\Examples\PersistableEmail)#%d (%d) {
+      ["type"]=>
+      string(4) "work"
+      ["address"]=>
+      string(19) "alcaeus@example.com"
+    }
+    [1]=>
+    object(MongoDB\Examples\PersistableEmail)#%d (%d) {
+      ["type"]=>
+      string(7) "private"
+      ["address"]=>
+      string(18) "secret@example.com"
+    }
+  }
+}
+OUTPUT;
 
         yield 'persistable' => [
             'file' => __DIR__ . '/../examples/persistable.php',
-            'expectedOutput' => <<<'OUTPUT'
-%s/examples/persistable.php:%d:
-class MongoDB\Examples\PersistableEntry#%d (%d) {
-  private $id =>
-  class MongoDB\BSON\ObjectId#%d (%d) {
-    public $oid =>
+            'expectedOutput' => $expectedOutput,
+        ];
+
+        $expectedOutput = <<<'OUTPUT'
+object(MongoDB\Examples\TypeMapEntry)#%d (%d) {
+  ["id":"MongoDB\Examples\TypeMapEntry":private]=>
+  object(MongoDB\BSON\ObjectId)#%d (%d) {
+    ["oid"]=>
     string(24) "%s"
   }
-  public $name =>
+  ["name":"MongoDB\Examples\TypeMapEntry":private]=>
   string(7) "alcaeus"
-  public $emails =>
+  ["emails":"MongoDB\Examples\TypeMapEntry":private]=>
   array(2) {
-    [0] =>
-    class MongoDB\Examples\PersistableEmail#%d (%d) {
-      public $type =>
+    [0]=>
+    object(MongoDB\Examples\TypeMapEmail)#%d (%d) {
+      ["type":"MongoDB\Examples\TypeMapEmail":private]=>
       string(4) "work"
-      public $address =>
+      ["address":"MongoDB\Examples\TypeMapEmail":private]=>
       string(19) "alcaeus@example.com"
     }
-    [1] =>
-    class MongoDB\Examples\PersistableEmail#%d (%d) {
-      public $type =>
+    [1]=>
+    object(MongoDB\Examples\TypeMapEmail)#%d (%d) {
+      ["type":"MongoDB\Examples\TypeMapEmail":private]=>
       string(7) "private"
-      public $address =>
+      ["address":"MongoDB\Examples\TypeMapEmail":private]=>
       string(18) "secret@example.com"
     }
   }
 }
-OUTPUT
-        ];
+OUTPUT;
 
         yield 'typemap' => [
             'file' => __DIR__ . '/../examples/typemap.php',
-            'expectedOutput' => <<<'OUTPUT'
-%s/examples/typemap.php:%d:
-class MongoDB\Examples\TypeMapEntry#%d (%d) {
-  private $id =>
-  class MongoDB\BSON\ObjectId#%d (%d) {
-    public $oid =>
-    string(24) "%s"
-  }
-  private $name =>
-  string(7) "alcaeus"
-  private $emails =>
-  array(2) {
-    [0] =>
-    class MongoDB\Examples\TypeMapEmail#%d (%d) {
-      private $type =>
-      string(4) "work"
-      private $address =>
-      string(19) "alcaeus@example.com"
-    }
-    [1] =>
-    class MongoDB\Examples\TypeMapEmail#%d (%d) {
-      private $type =>
-      string(7) "private"
-      private $address =>
-      string(18) "secret@example.com"
-    }
-  }
-}
-OUTPUT
+            'expectedOutput' => $expectedOutput,
         ];
     }
 
@@ -151,16 +159,16 @@ OUTPUT
         $this->skipIfChangeStreamIsNotSupported();
 
         $expectedOutput = <<<'OUTPUT'
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }, "wallTime" : { "$date" : "%s" }, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 0 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }, "wallTime" : { "$date" : "%s" }, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 1 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }, "wallTime" : { "$date" : "%s" }, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 2 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }, "wallTime" : { "$date" : "%s" }, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 3 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }, "wallTime" : { "$date" : "%s" }, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 4 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }, "wallTime" : { "$date" : "%s" }, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 5 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }, "wallTime" : { "$date" : "%s" }, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 6 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }, "wallTime" : { "$date" : "%s" }, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 7 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }, "wallTime" : { "$date" : "%s" }, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 8 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }, "wallTime" : { "$date" : "%s" }, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 9 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
+{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 0 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
+{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 1 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
+{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 2 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
+{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 3 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
+{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 4 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
+{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 5 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
+{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 6 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
+{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 7 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
+{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 8 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
+{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 9 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
 Aborting after 3 seconds...
 OUTPUT;
 

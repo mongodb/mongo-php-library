@@ -26,14 +26,14 @@ OUTPUT;
         ];
 
         $expectedOutput = <<<'OUTPUT'
-{ "_id" : { "$oid" : "%s" }, "x" : 0 }
-{ "_id" : { "$oid" : "%s" }, "y" : 1 }
-{ "_id" : { "$oid" : "%s" }, "x" : 2, "y" : 2 }
-{ "_id" : { "$oid" : "%s" }, "x" : 3 }
-{ "_id" : { "$oid" : "%s" }, "x" : 5 }
-{ "_id" : { "$oid" : "%s" }, "x" : 6, "updateMany" : true }
-{ "_id" : { "$oid" : "%s" }, "x" : 7, "updateMany" : true }
-{ "_id" : { "$oid" : "%s" }, "x" : 10 }
+%s
+%s
+%s
+%s
+%s
+%s
+%s
+%s
 OUTPUT;
 
         yield 'bulk' => [
@@ -43,41 +43,41 @@ OUTPUT;
 
         $expectedOutput = <<<'OUTPUT'
 drop command started
-command: { "drop" : "coll", "$db" : "test", "lsid" : { %s }%S }
+command: %s
 
 drop command failed
-reply: { "ok" : 0.0, "errmsg" : "ns not found", "code" : 26, "codeName" : "NamespaceNotFound"%S }
+reply: %s
 exception: MongoDB\Driver\Exception\ServerException
 exception.code: 26
 exception.message: ns not found
 
 insert command started
-command: { "insert" : "coll", "ordered" : true, "$db" : "test", "lsid" : { %s }%S, "documents" : [ { "x" : 1, "_id" : { "$oid" : "%s" } }, { "x" : 2, "_id" : { "$oid" : "%s" } }, { "x" : 3, "_id" : { "$oid" : "%s" } } ] }
+command: %s
 
 insert command succeeded
-reply: { "n" : 3, %s }
+reply: %s
 
 update command started
-command: { "update" : "coll", "ordered" : true, "$db" : "test", "lsid" : { %s }%S, "updates" : [ { "q" : { "x" : { "$gt" : 1 } }, "u" : { "$set" : { "y" : 1 } }, "upsert" : false, "multi" : true } ] }
+command: %s
 
 update command succeeded
-reply: { "n" : 2, %s }
+reply: %s
 
 find command started
-command: { "find" : "coll", "filter" : {  }, "batchSize" : 2, "$db" : "test", "lsid" : { %s }%S }
+command: %s
 
 find command succeeded
-reply: { "cursor" : { "firstBatch" : [ { "_id" : { "$oid" : "%s" }, "x" : 1 }, { "_id" : { "$oid" : "%s" }, "x" : 2, "y" : 1 } ], "id" : %d, "ns" : "test.coll" }, %s }
+reply: %s
 
-{ "_id" : { "$oid" : "%s" }, "x" : 1 }
-{ "_id" : { "$oid" : "%s" }, "x" : 2, "y" : 1 }
+%s
+%s
 getMore command started
-command: { "getMore" : %d, "collection" : "coll", "batchSize" : 2, "$db" : "test", "lsid" : { %s }%S }
+command: %s
 
 getMore command succeeded
-reply: { "cursor" : { "nextBatch" : [ { "_id" : { "$oid" : "%s" }, "x" : 3, "y" : 1 } ], "id" : 0, "ns" : "test.coll" }, %s }
+reply: %s
 
-{ "_id" : { "$oid" : "%s" }, "x" : 3, "y" : 1 }
+%s
 OUTPUT;
 
         yield 'command_logger' => [
@@ -159,16 +159,16 @@ OUTPUT;
         $this->skipIfChangeStreamIsNotSupported();
 
         $expectedOutput = <<<'OUTPUT'
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 0 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 1 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 2 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 3 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 4 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 5 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 6 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 7 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 8 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
-{ "_id" : { "_data" : "%s" }, "operationType" : "insert", "clusterTime" : { "$timestamp" : { "t" : %d, "i" : %d } }%S, "fullDocument" : { "_id" : { "$oid" : "%s" }, "x" : 9 }, "ns" : { "db" : "test", "coll" : "coll" }, "documentKey" : { "_id" : { "$oid" : "%s" } } }
+%s
+%s
+%s
+%s
+%s
+%s
+%s
+%s
+%s
+%s
 Aborting after 3 seconds...
 OUTPUT;
 
@@ -188,9 +188,9 @@ OUTPUT;
         $this->skipIfTransactionsAreNotSupported();
 
         $expectedOutput = <<<'OUTPUT'
-{ "_id" : { "$oid" : "%s" }, "x" : 1 }
-{ "_id" : { "$oid" : "%s" }, "x" : 2, "y" : 1 }
-{ "_id" : { "$oid" : "%s" }, "x" : 3, "y" : 1 }
+%s
+%s
+%s
 OUTPUT;
 
         $this->testExample(__DIR__ . '/../examples/with_transaction.php', $expectedOutput);

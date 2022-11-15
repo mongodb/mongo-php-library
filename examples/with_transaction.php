@@ -27,6 +27,9 @@ $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 $collection = $client->test->coll;
 $collection->drop();
 
+// Create collection outside of transaction; this is required when using MongoDB < 4.4
+$client->test->createCollection('coll');
+
 $insertData = function (Session $session) use ($collection): void {
     $collection->insertMany(
         [

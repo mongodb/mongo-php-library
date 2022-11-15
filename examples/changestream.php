@@ -26,6 +26,9 @@ $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 $collection = $client->test->coll;
 $collection->drop();
 
+// Create collection before starting change stream; this is required on MongoDB 3.6
+$client->test->createCollection('coll');
+
 $changeStream = $collection->watch();
 
 $documents = [];

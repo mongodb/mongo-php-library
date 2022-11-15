@@ -45,11 +45,7 @@ OUTPUT;
 drop command started
 command: %s
 
-drop command failed
-reply: %s
-exception: MongoDB\Driver\Exception\ServerException
-exception.code: 26
-exception.message: ns not found
+drop command %a
 
 insert command started
 command: %s

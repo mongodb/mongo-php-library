@@ -58,7 +58,7 @@ $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 
 $client->getManager()->addSubscriber(new CommandLogger());
 
-$collection = $client->test->coll;
+$collection = $client->test->commandlogger;
 $collection->drop();
 
 $collection->insertMany([

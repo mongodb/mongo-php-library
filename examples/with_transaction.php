@@ -24,11 +24,11 @@ function toJSON(object $document): string
 // Transactions require a replica set (MongoDB >= 4.0) or sharded cluster (MongoDB >= 4.2)
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 
-$collection = $client->test->coll;
+$collection = $client->test->transaction;
 $collection->drop();
 
 // Create collection outside of transaction; this is required when using MongoDB < 4.4
-$client->test->createCollection('coll');
+$client->test->createCollection('transaction');
 
 $insertData = function (Session $session) use ($collection): void {
     $collection->insertMany(

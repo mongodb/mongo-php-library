@@ -98,7 +98,7 @@ $entry->emails[] = new PersistableEmail('private', 'secret@example.com');
 
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 
-$collection = $client->test->coll;
+$collection = $client->test->persistable;
 $collection->drop();
 
 $collection->insertOne($entry);

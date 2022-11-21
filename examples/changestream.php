@@ -23,11 +23,11 @@ function toJSON(object $document): string
 // Change streams require a replica set or sharded cluster
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 
-$collection = $client->test->coll;
+$collection = $client->test->changestream;
 $collection->drop();
 
 // Create collection before starting change stream; this is required on MongoDB 3.6
-$client->test->createCollection('coll');
+$client->test->createCollection('changestream');
 
 $changeStream = $collection->watch();
 

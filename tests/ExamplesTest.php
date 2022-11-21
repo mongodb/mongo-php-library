@@ -11,6 +11,10 @@ final class ExamplesTest extends FunctionalTestCase
     {
         parent::setUp();
 
+        if ($this->isShardedCluster()) {
+            $this->markTestSkipped('Examples are not tested on sharded clusters.');
+        }
+
         self::createTestClient()->dropDatabase('test');
     }
 

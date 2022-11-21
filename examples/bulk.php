@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace MongoDB\Examples;
 
 use MongoDB\Client;
+use MongoDB\Driver\WriteConcern;
 
 use function assert;
 use function getenv;
@@ -30,7 +31,7 @@ for ($i = 0; $i < 10; $i++) {
     $documents[] = ['x' => $i];
 }
 
-$collection->insertMany($documents);
+$collection->insertMany($documents, ['writeConcern' => new WriteConcern('majority')]);
 
 $collection->bulkWrite(
     [

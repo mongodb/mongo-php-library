@@ -397,7 +397,10 @@
       <code>$args[1]</code>
       <code>$args[2]</code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="19">
+    <MixedArrayAccess occurrences="25">
+      <code>$args[0]</code>
+      <code>$args[0]</code>
+      <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
@@ -407,6 +410,9 @@
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
@@ -431,7 +437,8 @@
       <code>$operations[$i][$type][2]</code>
       <code>$operations[$i][$type][2]</code>
     </MixedArrayAssignment>
-    <MixedAssignment occurrences="10">
+    <MixedAssignment occurrences="11">
+      <code>$args</code>
       <code>$args</code>
       <code>$args[2]</code>
       <code>$args[2]</code>

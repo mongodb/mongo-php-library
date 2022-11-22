@@ -27,7 +27,6 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
 use function array_key_exists;
-use function assert;
 use function count;
 use function current;
 use function is_array;
@@ -325,8 +324,6 @@ class BulkWrite implements Executable
         foreach ($this->operations as $i => $operation) {
             $type = key($operation);
             $args = current($operation);
-
-            assert(is_array($args));
 
             switch ($type) {
                 case self::DELETE_MANY:

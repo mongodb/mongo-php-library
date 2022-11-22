@@ -156,3 +156,60 @@ The same document in the MongoDB shell might display as:
    :php:`MongoDB\\BSON\\Persistable <mongodb-bson-persistable>` may only be used
    for root and embedded BSON documents. It may not be used for BSON arrays.
 .. _php-type-map:
+
+Working with Enums
+------------------
+
+:php:`Backed enums <enumerations.backed>` can be used with BSON and will
+serialize as their case value (i.e. integer or string).
+:php:`Pure enums <enumerations.basics>`, which have no backed cases, cannot be
+directly serialized. This is similar to how enums are handled by
+:php:`json_encode() <json-encode>`.
+
+Round-tripping a backed enum through BSON requires special handling. In the
+following example, the `bsonUnserialize()` method in the class containing the
+enum is responsible for converting the value back to an enum case:
+
+.. code-block:: php
+
+   <?php
+
+   enum Role: int
+   {
+       case USER = 1;
+       case ADMIN = 2;
+   }
+
+   class User implements MongoDB\BSON\Persistable
+   {
+       public function __construct(
+           private string $username,
+           private Role $role,
+           private MongoDB\BSON\ObjectId $_id = new MongoDB\BSON\ObjectId(),
+       ) {}
+
+       public function bsonSerialize(): array
+       {
+           return [
+               '_id' => $this->_id,
+               'username' => $this->username,
+               'role' => $this->role,
+           ];
+       }
+
+       public function bsonUnserialize(array $data): void
+       {
+           $this->_id = $data['_id'];
+           $this->username = $data['username'];
+           $this->role = Role::from($data['role']);
+       }
+   }
+
+Enums are prohibited from implementing
+:php:`MongoDB\\BSON\\Unserializable <mongodb-bson-unserializable>` and
+:php:`MongoDB\\BSON\\Persistable <mongodb-bson-persistable>`, since enum cases
+have no state and cannot be instantiated like ordinary objects. Pure and backed
+enums can, however, implement
+:php:`MongoDB\\BSON\\Serializable <mongodb-bson-serializable>`, which can be
+used to overcome the default behavior whereby backed enums are serialized as
+their case value and pure enums cannot be serialized.

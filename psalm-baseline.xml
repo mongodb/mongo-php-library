@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.x-dev@5108834088c1d8cae3698df6ef6bf15fe6e76c53">
+<files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
+  <file src="examples/aggregate.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="examples/bulk.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="examples/changestream.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="examples/command_logger.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
+    </MixedReturnStatement>
+  </file>
   <file src="examples/typemap.php">
     <PropertyNotSetInConstructor occurrences="5">
       <code>$address</code>
@@ -8,6 +40,14 @@
       <code>$name</code>
       <code>$type</code>
     </PropertyNotSetInConstructor>
+  </file>
+  <file src="examples/with_transaction.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
+    </MixedReturnStatement>
   </file>
   <file src="src/Client.php">
     <MixedArgument occurrences="1">
@@ -357,7 +397,8 @@
       <code>$args[1]</code>
       <code>$args[2]</code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="24">
+    <MixedArrayAccess occurrences="25">
+      <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>

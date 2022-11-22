@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace MongoDB\Examples;
 
 use MongoDB\Client;
+use MongoDB\Driver\WriteConcern;
 
 use function assert;
 use function getenv;
@@ -21,7 +22,7 @@ function toJSON(object $document): string
 
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 
-$collection = $client->test->coll;
+$collection = $client->test->bulk;
 $collection->drop();
 
 $documents = [];
@@ -30,7 +31,7 @@ for ($i = 0; $i < 10; $i++) {
     $documents[] = ['x' => $i];
 }
 
-$collection->insertMany($documents);
+$collection->insertMany($documents, ['writeConcern' => new WriteConcern('majority')]);
 
 $collection->bulkWrite(
     [

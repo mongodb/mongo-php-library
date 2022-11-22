@@ -93,7 +93,7 @@ class TypeMapEmail implements Unserializable
 
 $client = new Client(getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/');
 
-$collection = $client->test->coll;
+$collection = $client->test->typemap;
 $collection->drop();
 
 $document = [

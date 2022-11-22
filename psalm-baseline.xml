@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
+  <file src="examples/aggregate.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="examples/bulk.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="examples/changestream.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="examples/command_logger.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
+    </MixedReturnStatement>
+  </file>
   <file src="examples/typemap.php">
     <PropertyNotSetInConstructor occurrences="5">
       <code>$address</code>
@@ -8,6 +40,14 @@
       <code>$name</code>
       <code>$type</code>
     </PropertyNotSetInConstructor>
+  </file>
+  <file src="examples/with_transaction.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
+    </MixedReturnStatement>
   </file>
   <file src="src/Client.php">
     <MixedArgument occurrences="1">
@@ -99,10 +139,14 @@
       <code>drop</code>
       <code>rename</code>
     </MissingReturnType>
-    <MixedArgument occurrences="2">
+    <MixedArgument occurrences="3">
+      <code>$id</code>
       <code>$options['revision']</code>
       <code>$options['revision']</code>
     </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$id</code>
+    </MixedAssignment>
   </file>
   <file src="src/GridFS/Exception/CorruptFileException.php">
     <UnsafeInstantiation occurrences="4">
@@ -113,12 +157,24 @@
     </UnsafeInstantiation>
   </file>
   <file src="src/GridFS/Exception/FileNotFoundException.php">
+    <MixedArgument occurrences="1">
+      <code>$json</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$json</code>
+    </MixedAssignment>
     <UnsafeInstantiation occurrences="2">
       <code>new static(sprintf('File "%s" not found in "%s"', $json, $namespace))</code>
       <code>new static(sprintf('File with name "%s" and revision "%d" not found in "%s"', $filename, $revision, $namespace))</code>
     </UnsafeInstantiation>
   </file>
   <file src="src/GridFS/Exception/StreamException.php">
+    <MixedArgument occurrences="1">
+      <code>$idString</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$idString</code>
+    </MixedAssignment>
     <UnsafeInstantiation occurrences="3">
       <code>new static(sprintf('Downloading file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $filename))</code>
       <code>new static(sprintf('Downloading file from "%s" to "%s" failed. GridFS identifier: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $idString))</code>
@@ -343,8 +399,6 @@
     </MixedArgument>
     <MixedArrayAccess occurrences="19">
       <code>$args[0]</code>
-      <code>$args[0]</code>
-      <code>$args[0]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
@@ -353,9 +407,6 @@
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
-      <code>$args[1]</code>
-      <code>$args[1]</code>
-      <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
@@ -381,7 +432,6 @@
       <code>$operations[$i][$type][2]</code>
     </MixedArrayAssignment>
     <MixedAssignment occurrences="10">
-      <code>$args</code>
       <code>$args</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
@@ -799,16 +849,18 @@
       <code>$typeMap['fieldPaths'][$fieldPath]</code>
       <code>$value</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="2">
+    <MixedInferredReturnType occurrences="3">
+      <code>array|object</code>
       <code>array|object|null</code>
       <code>array|object|null</code>
     </MixedInferredReturnType>
     <MixedOperand occurrences="1">
       <code>$type</code>
     </MixedOperand>
-    <MixedReturnStatement occurrences="2">
+    <MixedReturnStatement occurrences="3">
       <code>$collectionInfo['options']['encryptedFields'] ?? null</code>
       <code>$encryptedFieldsMap[$databaseName . '.' . $collectionName] ?? null</code>
+      <code>toPHP(fromPHP($document), $typeMap)</code>
     </MixedReturnStatement>
   </file>
 </files>

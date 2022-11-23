@@ -680,9 +680,9 @@ axes:
     display_name: MongoDB Version
     values:
       - id: "latest-stable"
-        display_name: "MongoDB 5.0"
+        display_name: "MongoDB 6.0"
         variables:
-          VERSION: "5.0"
+          VERSION: "6.0"
       - id: "oldest-supported"
         display_name: "MongoDB 3.6"
         variables:

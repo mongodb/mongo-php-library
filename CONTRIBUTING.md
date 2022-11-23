@@ -203,7 +203,7 @@ $ git commit -m "Master is now 1.10-dev" composer.json
 
 ## Releasing
 
-The follow steps outline the release process for both new minor versions (e.g.
+The following steps outline the release process for both new minor versions (e.g.
 releasing the `master` branch as X.Y.0) and patch versions (e.g. releasing the
 `vX.Y` branch as X.Y.Z).
 

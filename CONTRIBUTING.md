@@ -203,8 +203,18 @@ $ git commit -m "Master is now 1.10-dev" composer.json
 
 ## Releasing
 
-The follow steps outline the release process for a maintenance branch (e.g.
-releasing the `vX.Y` branch as X.Y.Z).
+The following steps outline the release process for both new minor versions (e.g.
+releasing the `master` branch as X.Y.0) and patch versions (e.g. releasing the
+`vX.Y` branch as X.Y.Z).
+
+The command examples below assume that the canonical "mongodb" repository has
+the remote name "mongodb". You may need to adjust these commands if you've given
+the remote another name (e.g. "upstream"). The "origin" remote name was not used
+as it likely refers to your personal fork.
+
+It helps to keep your own fork in sync with the "mongodb" repository (i.e. any
+branches and tags on the main repository should also exist in your fork). This
+is left as an exercise to the reader.
 
 ### Ensure PHP version compatibility
 
@@ -234,50 +244,118 @@ changes in this maintenance branch. This is important because we will later
 merge the ensuing release commits up to master with `--strategy=ours`, which
 will ignore changes from the merged commits.
 
-### Tag release
+### Update composer.json and CI matrices
 
-The maintenance branch's HEAD will be the target for our release tag:
+This is especially important before releasing a new minor version.
+
+Ensure that the extension requirement and branch alias in `composer.json` are
+correct for the library version being released. For example, the 1.15.0 release
+of the library should depend on version `^1.15.0` of the extension and master
+branch alias should be `1.15.x-dev`.
+
+If this is the first release of a minor version for the library, it is likely
+following an extension release. In that case, the `driver-versions` matrix in
+the Evergreen configuration should be updated:
+
+```diff
+ - id: "oldest-supported"
+-  display_name: "PHPC 1.15-dev"
++  display_name: "PHPC 1.15.0"
+   variables:
+-    EXTENSION_BRANCH: "master"
++    EXTENSION_VERSION: "1.15.0"
+ - id: "latest-stable"
+-  display_name: "PHPC 1.15-dev"
++  display_name: "PHPC 1.15.x"
+   variables:
+-    EXTENSION_BRANCH: "master"
++    EXTENSION_VERSION: "stable"
+ - id: "latest-dev"
+-  display_name: "PHPC 1.15-dev"
++  display_name: "PHPC 1.16-dev"
+   variables:
+     EXTENSION_BRANCH: "master"
+```
+
+Commit and push any changes:
+
+```
+$ git commit -m "Update composer.json and CI matrices for X.Y.Z" composer.json .evergreen/config.yml
+$ git push mongodb
+```
+
+### Tag the release
+
+Create a tag for the release and push:
 
 ```
 $ git tag -a -m "Release X.Y.Z" X.Y.Z
+$ git push mongodb --tags
 ```
 
-### Push tags
+### Branch management
+
+#### After releasing a new minor version
+
+After a new minor version is released (i.e. `master` was tagged), a maintenance
+branch should be created for future patch releases:
 
 ```
-$ git push --tags
+$ git checkout -b vX.Y
+$ git push mongodb vX.Y
 ```
 
-### Merge the maintenance branch up to master
+Update the master branch alias in `composer.json`:
+
+```diff
+ "extra": {
+   "branch-alias": {
+-    "dev-master": "1.15.x-dev"
++    "dev-master": "1.16.x-dev"
+   }
+ },
+```
+
+Commit and push this change:
+
+```
+$ git commit -m "Master is now X.Y-dev" composer.json
+$ git push mongodb
+```
+
+#### After releasing a patch version
+
+If this was a patch release, the maintenance branch must be merged up to master:
 
 ```
 $ git checkout master
+$ git pull mongodb master
 $ git merge vX.Y --strategy=ours
-$ git push
+$ git push mongodb
 ```
 
 The `--strategy=ours` option ensures that all changes from the merged commits
-will be ignored.
+will be ignored. This is OK because we previously ensured that the `master`
+branch was up-to-date with all code changes in this maintenance branch before
+tagging.
 
 ### Publish release notes
 
 The following template should be used for creating GitHub release notes via
 [this form](https://github.com/mongodb/mongo-php-library/releases/new).
 
-```
+```markdown
 The PHP team is happy to announce that version X.Y.Z of the MongoDB PHP library is now available.
 
 **Release Highlights**
 
 <one or more paragraphs describing important changes in this release>
 
-A complete list of resolved issues in this release may be found at:
-$JIRA_URL
+A complete list of resolved issues in this release may be found in [JIRA]($JIRA_URL).
 
 **Documentation**
 
-Documentation for this library may be found at:
-https://mongodb.com/docs/php-library/current/
+Documentation for this library may be found in the [PHP Library Manual](https://mongodb.com/docs/php-library/current/).
 
 **Installation**
 
@@ -295,7 +373,7 @@ release. You may obtain the list from
 If commits from community contributors were included in this release, append the
 following section:
 
-```
+```markdown
 **Thanks**
 
 Thanks for our community contributors for this release:

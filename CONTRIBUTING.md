@@ -284,17 +284,12 @@ $ git commit -m "Update composer.json and CI matrices for X.Y.Z" composer.json .
 $ git push mongodb
 ```
 
-### Tag release
+### Tag the release
 
-The maintenance branch's HEAD will be the target for our release tag:
+Create a tag for the release and push:
 
 ```
 $ git tag -a -m "Release X.Y.Z" X.Y.Z
-```
-
-### Push tags
-
-```
 $ git push mongodb --tags
 ```
 

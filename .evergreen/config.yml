@@ -680,9 +680,9 @@ axes:
     display_name: MongoDB Version
     values:
       - id: "latest-stable"
-        display_name: "MongoDB 5.0"
+        display_name: "MongoDB 6.0"
         variables:
-          VERSION: "5.0"
+          VERSION: "6.0"
       - id: "oldest-supported"
         display_name: "MongoDB 3.6"
         variables:
@@ -691,22 +691,16 @@ axes:
   - id: driver-versions
     display_name: Driver Version
     values:
-      # TODO: Update to "1.15.0" once PHPC 1.15.0 is released
       - id: "oldest-supported"
-        # display_name: "1.15.0"
-        display_name: "PHPC 1.15-dev (master)"
+        display_name: "PHPC 1.15.0"
         variables:
-          # EXTENSION_VERSION: "1.15.0"
-          EXTENSION_BRANCH: "master"
-      # TODO: Update to "1.15.x"/"stable" once PHPC 1.15.0 is released
+          EXTENSION_VERSION: "1.15.0"
       - id: "latest-stable"
-        # display_name: "1.15.x"
-        display_name: "PHPC 1.15-dev (master)"
+        display_name: "PHPC (1.15.x)"
         variables:
-          # EXTENSION_VERSION: "stable"
-          EXTENSION_BRANCH: "master"
+          EXTENSION_VERSION: "stable"
       - id: "latest-dev"
-        display_name: "PHPC 1.15-dev (master)"
+        display_name: "PHPC (1.16-dev)"
         variables:
           EXTENSION_BRANCH: "master"
 

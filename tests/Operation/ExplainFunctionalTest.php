@@ -365,7 +365,8 @@ class ExplainFunctionalTest extends FunctionalTestCase
 
         $this->createFixtures(3);
 
-        $pipeline = [['$group' => ['_id' => null]]];
+        // Use a $sort stage to ensure the aggregate does not get optimised to a query
+        $pipeline = [['$group' => ['_id' => null]], ['$sort' => ['_id' => 1]]];
         $operation = new Aggregate($this->getDatabaseName(), $this->getCollectionName(), $pipeline);
 
         $explainOperation = new Explain($this->getDatabaseName(), $operation, ['verbosity' => Explain::VERBOSITY_QUERY, 'typeMap' => ['root' => 'array', 'document' => 'array']]);

@@ -598,6 +598,18 @@ tasks:
             SKIP_CRYPT_SHARED: "yes"
             TESTS: "csfle"
 
+    - name: "test-without_aws_credentials"
+      commands:
+        - func: "bootstrap mongo-orchestration"
+          vars:
+            TOPOLOGY: "replica_set"
+        - func: "start kms servers"
+        - func: "run tests"
+          vars:
+            client_side_encryption_aws_access_key_id: ""
+            client_side_encryption_aws_secret_access_key: ""
+            TESTS: "csfle"
+
 # }}}
 
 
@@ -863,3 +875,10 @@ buildvariants:
   display_name: "CSFLE skip_crypt_shared - ${mongodb-versions}"
   tasks:
     - name: "test-skip_crypt_shared"
+
+# Run CSFLE tests without AWS credentials (for "On-demand AWS Credentials" prose test)
+- matrix_name: "test-csfle-without_aws_credentials"
+  matrix_spec: { "os": "debian11", "mongodb-versions": "6.0", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  display_name: "CSFLE without_aws_credentials - ${mongodb-versions}"
+  tasks:
+    - name: "test-without_aws_credentials"

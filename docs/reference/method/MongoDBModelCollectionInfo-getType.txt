@@ -42,6 +42,8 @@ Examples
 
 The output would then resemble:
 
+.. code-block:: none
+
    collection
 
 See Also

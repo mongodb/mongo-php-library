@@ -46,6 +46,8 @@ Examples
 
 The output would then resemble:
 
+.. code-block:: none
+
    array(1) {
      ["readOnly"]=>
      bool(true)

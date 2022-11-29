@@ -51,6 +51,8 @@ Examples
 
 The output would then resemble:
 
+.. code-block:: none
+
    array(4) {
      ["v"]=>
      int(2)

@@ -127,6 +127,7 @@ The following example drops a single index by its name, ``state_1``:
 The operation's output would resemble:
 
 .. code-block:: none
+
    object(MongoDB\Model\BSONDocument)#11 (1) {
      ["storage":"ArrayObject":private]=>
      array(2) {

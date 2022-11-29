@@ -73,7 +73,9 @@ The following example finds and deletes the document with ``restaurant_id`` of
 
    var_dump($deletedRestaurant);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#17 (1) {
      ["storage":"ArrayObject":private]=>

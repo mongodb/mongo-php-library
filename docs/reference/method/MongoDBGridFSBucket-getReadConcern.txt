@@ -42,7 +42,9 @@ Example
 
    var_dump($bucket->getReadConcern());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Driver\ReadConcern)#3 (1) {
      ["level"]=>

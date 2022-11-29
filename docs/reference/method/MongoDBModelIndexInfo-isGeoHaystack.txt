@@ -46,7 +46,9 @@ Examples
        }
    }
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    pos_geoHaystack_x_1 has bucketSize: 5
 

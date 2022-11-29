@@ -67,7 +67,9 @@ The following example updates all of the documents with the ``borough`` of
    printf("Matched %d document(s)\n", $updateResult->getMatchedCount());
    printf("Modified %d document(s)\n", $updateResult->getModifiedCount());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    Matched 5656 document(s)
    Modified 5656 document(s)

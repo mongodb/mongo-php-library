@@ -40,7 +40,7 @@ Examples
 
    echo $info->getType();
 
-The output would then resemble::
+The output would then resemble:
 
    collection
 

@@ -45,7 +45,9 @@ This example reports the count statistics for a map-reduce operation.
 
    var_dump($result->getCounts());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    array(4) {
      ["input"]=>

@@ -61,7 +61,7 @@ database to ``places``:
 
    var_dump($result);
 
-The output would then resemble::
+The output would then resemble:
 
    object(MongoDB\Model\BSONDocument)#9 (1) {
      ["storage":"ArrayObject":private]=>

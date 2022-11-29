@@ -79,7 +79,9 @@ in the ``test`` database:
 
    var_dump($insertManyResult->getInsertedIds());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    Inserted 2 document(s)
    array(2) {

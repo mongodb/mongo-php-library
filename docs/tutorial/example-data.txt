@@ -32,7 +32,9 @@ example imports the `zips.json` file into a `test.zips` collection:
    $result = $manager->executeBulkWrite('test.zips', $bulk);
    printf("Inserted %d documents\n", $result->getInsertedCount());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    Inserted 29353 documents
 

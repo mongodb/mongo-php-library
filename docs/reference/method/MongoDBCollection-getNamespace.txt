@@ -41,7 +41,9 @@ database.
 
    echo $collection->getNamespace();
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    test.zips
 

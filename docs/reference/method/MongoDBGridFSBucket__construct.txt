@@ -53,7 +53,9 @@ Examples
 
    var_dump($bucket);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\GridFS\Bucket)#3053 (2) {
      ["bucketName"]=>

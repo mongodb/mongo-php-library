@@ -143,8 +143,10 @@ description: |
   collection.
 
   The ``indexOptionDefaults`` option accepts a ``storageEngine`` document,
-  which should take the following form::
+  which should take the following form:
 
+  .. code-block:: none
+  
      { <storage-engine-name>: <options> }
 
   Storage engine configurations specified when creating indexes are validated
@@ -212,8 +214,10 @@ description: |
 
   Allows users to specify configuration to the storage engine on a
   per-collection basis when creating a collection. The value of the
-  ``storageEngine`` option should take the following form::
+  ``storageEngine`` option should take the following form:
 
+  .. code-block:: none
+  
      { <storage-engine-name>: <options> }
 
   Storage engine configurations specified when creating collections are

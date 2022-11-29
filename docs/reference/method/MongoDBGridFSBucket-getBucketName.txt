@@ -37,6 +37,8 @@ Examples
 
    var_dump($bucket->getBucketName());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    string(2) "fs"

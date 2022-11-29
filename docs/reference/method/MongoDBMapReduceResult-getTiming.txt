@@ -51,7 +51,9 @@ for a map-reduce operation.
 
    var_dump($result->getTiming());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    array(5) {
      ["mapTime"]=>

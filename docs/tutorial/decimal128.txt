@@ -48,7 +48,9 @@ field of a collection named ``inventory``:
 
    var_dump($item);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#9 (1) {
      ["storage":"ArrayObject":private]=>
@@ -86,7 +88,9 @@ The following example adds two ``Decimal128`` values and creates a new
 
    var_dump($sum);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\BSON\Decimal128)#4 (1) {
      ["dec"]=>
@@ -111,7 +115,9 @@ obtain the expected result:
 
    var_dump($sum);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\BSON\Decimal128)#4 (1) {
      ["dec"]=>

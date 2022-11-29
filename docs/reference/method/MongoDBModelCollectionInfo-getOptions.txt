@@ -46,7 +46,9 @@ Examples
 
    var_dump($info->getOptions());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    array(2) {
      ["capped"]=>

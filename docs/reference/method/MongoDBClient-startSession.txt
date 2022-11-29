@@ -53,7 +53,9 @@ The following example starts a new session:
 
    var_dump($session);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Driver\Session)#2043 (4) {
      ["logicalSessionId"]=>

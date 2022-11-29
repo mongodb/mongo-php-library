@@ -84,7 +84,9 @@ This example explains a count command.
 
    var_dump($result);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#29 (1) {
      ["storage":"ArrayObject":private]=>

@@ -43,7 +43,9 @@ Example
 
    var_dump($bucket->getReadPreference());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Driver\ReadPreference)#3 (1) {
      ["mode"]=>

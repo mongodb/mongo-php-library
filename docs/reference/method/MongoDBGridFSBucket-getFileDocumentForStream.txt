@@ -54,7 +54,9 @@ Examples
 
    fclose($stream);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#4956 (1) {
      ["storage":"ArrayObject":private]=>

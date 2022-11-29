@@ -58,7 +58,9 @@ The following example drops the ``test`` database:
 
    var_dump($result);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#8 (1) {
      ["storage":"ArrayObject":private]=>

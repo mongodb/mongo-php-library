@@ -39,6 +39,8 @@ The following example prints the name of a database object:
 
    echo $db->getDatabaseName();
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    test

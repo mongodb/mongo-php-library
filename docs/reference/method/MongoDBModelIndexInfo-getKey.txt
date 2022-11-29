@@ -41,7 +41,9 @@ Examples
 
    var_dump($info->getKey());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    array(1) {
      ["x"]=>

@@ -71,7 +71,9 @@ The following operation inserts a document into the ``users`` collection in the
 
    var_dump($insertOneResult->getInsertedId());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    Inserted 1 document(s)
    object(MongoDB\BSON\ObjectId)#11 (1) {

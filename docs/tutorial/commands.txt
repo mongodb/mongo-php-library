@@ -52,7 +52,9 @@ in the ``restos`` collection in the ``test`` database:
 
    var_dump($results);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#27 (1) {
      ["storage":"ArrayObject":private]=>
@@ -240,7 +242,9 @@ custom read preference:
 
    var_dump($cursor->toArray()[0]);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#8 (1) {
      ["storage":"ArrayObject":private]=>
@@ -273,7 +277,9 @@ document, or access the first result in the array, as in the following:
 
    var_dump($cursor->toArray()[0]);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#2 (1) {
      ["storage":"ArrayObject":private]=>
@@ -307,7 +313,9 @@ iterating through the cursor returned by the ``listCollections`` command using a
    }
 
 The output would then be a list of the values for the ``name`` key, for
-instance::
+instance:
+
+.. code-block:: none
 
    persons
    posts

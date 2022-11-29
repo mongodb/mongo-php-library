@@ -37,7 +37,9 @@ Examples
 
    var_dump($bucket->getDatabaseName());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    string(4) "test"
 

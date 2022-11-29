@@ -46,7 +46,9 @@ This example reports the execution time for a map-reduce operation.
 
    var_dump($result->getExecutionTimeMS());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    int(244)
 

@@ -55,7 +55,9 @@ Examples
 
    fclose($stream);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\BSON\ObjectId)#3005 (1) {
      ["oid"]=>

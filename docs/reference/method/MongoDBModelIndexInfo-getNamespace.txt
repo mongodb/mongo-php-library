@@ -40,7 +40,9 @@ Examples
 
    echo $info->getNamespace();
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    foo.bar
 

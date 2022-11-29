@@ -115,7 +115,9 @@ The following operation replaces the document with ``restaurant_id`` of
 
    var_dump($replacedRestaurant);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#18 (1) {
      ["storage":"ArrayObject":private]=>

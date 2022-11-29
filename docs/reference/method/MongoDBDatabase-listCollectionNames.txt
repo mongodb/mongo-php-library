@@ -52,7 +52,9 @@ The following example lists all of the collections in the ``test`` database:
        var_dump($collectionName);
    }
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    string(11) "restaurants"
    string(5) "users"
@@ -77,7 +79,9 @@ in the ``test`` database:
        var_dump($collectionName);
    }
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    string(11) "restaurants"
    string(6) "restos"

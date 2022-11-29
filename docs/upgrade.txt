@@ -263,7 +263,7 @@ equivalent method(s) in the new driver.
 
    * - ``MongoCollection::group()``
      - Not implemented. Use :phpmethod:`MongoDB\\Database::command()`. See
-       `Group Command Helper`_ for an example.
+       :ref:`Group Command Helper` for an example.
 
    * - ``MongoCollection::insert()``
      - :phpmethod:`MongoDB\\Collection::insertOne()`

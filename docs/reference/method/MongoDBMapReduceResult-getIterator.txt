@@ -15,7 +15,7 @@ Definition
 
 .. phpmethod:: MongoDB\\MapReduceResult::getIterator()
 
-   Returns a php:`Traversable <traversable>`, which may be used to iterate
+   Returns a :php:`Traversable <traversable>`, which may be used to iterate
    through the results of the map-reduce operation.
 
    .. code-block:: php

@@ -1643,6 +1643,48 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
+     * Prose test 15: On-demand AWS Credentials
+     *
+     * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#on-demand-aws-credentials
+     * @testWith [true]
+     *           [false]
+     */
+    public function testOnDemandAwsCredentials(bool $shouldSucceed): void
+    {
+        $hasCredentials = (getenv('AWS_ACCESS_KEY_ID') && getenv('AWS_SECRET_ACCESS_KEY'));
+
+        if ($hasCredentials !== $shouldSucceed) {
+            Assert::markTestSkipped(sprintf('AWS credentials %s available', $hasCredentials ? 'are' : 'are not'));
+        }
+
+        $keyVaultClient = static::createTestClient();
+
+        $clientEncryption = new ClientEncryption([
+            'keyVaultClient' => $keyVaultClient->getManager(),
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => ['aws' => (object) []],
+        ]);
+
+        $dataKeyOpts = [
+            'masterKey' => [
+                'region' => 'us-east-1',
+                'key' => 'arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0',
+            ],
+        ];
+
+        if (! $shouldSucceed) {
+            $this->expectException(AuthenticationException::class);
+        }
+
+        $dataKeyId = $clientEncryption->createDataKey('aws', $dataKeyOpts);
+
+        if ($shouldSucceed) {
+            $this->assertInstanceOf(Binary::class, $dataKeyId);
+            $this->assertSame(Binary::TYPE_UUID, $dataKeyId->getType());
+        }
+    }
+
+    /**
      * Prose test 16: RewrapManyDataKey
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#rewrap

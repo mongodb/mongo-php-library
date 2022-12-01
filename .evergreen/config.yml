@@ -524,6 +524,16 @@ tasks:
         - func: "start kms servers"
         - func: "run tests"
 
+    - name: "test-replica_set-auth"
+      tags: ["replicaset"]
+      commands:
+        - func: "bootstrap mongo-orchestration"
+          vars:
+            TOPOLOGY: "replica_set"
+            AUTH: "auth"
+        - func: "start kms servers"
+        - func: "run tests"
+
     - name: "test-sharded_cluster"
       tags: ["sharded_cluster"]
       commands:
@@ -829,6 +839,7 @@ buildvariants:
   tasks:
     - name: "test-standalone"
     - name: "test-replica_set"
+    - name: "test-replica_set-auth"
     - name: "test-sharded_cluster"
 
 # Test oldest-supported PHP, MongoDB, and driver versions with lowest dependencies on Debian

@@ -539,7 +539,7 @@ updates to perform. The :phpmethod:`MongoDB\\Collection::updateMany()` reference
 describes each parameter in detail.
 
 The following example inserts three documents into an empty ``users`` collection
-in the ``test`` database and then uses the :query:`$set` operator to update the
+in the ``test`` database and then uses the :update:`$set` operator to update the
 documents matching the filter criteria to include the ``country`` field with
 value ``"us"``:
 

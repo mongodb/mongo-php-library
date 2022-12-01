@@ -13,7 +13,7 @@ MongoDB\\Collection::createIndexes()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::createIndexes($indexes)
+.. phpmethod:: MongoDB\\Collection::createIndexes()
 
    Create one or more indexes for the collection.
 

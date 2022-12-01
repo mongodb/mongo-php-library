@@ -196,7 +196,7 @@ A collection called ``names`` contains the following documents:
    { "_id" : 4, "first_name" : "Jürgen" }
 
 The following :phpmethod:`findOneAndUpdate()
-<MongoDB\\Collection::findOneAndUpdate>` operation on the collection does not
+<MongoDB\\Collection::findOneAndUpdate()>` operation on the collection does not
 specify a collation.
 
 .. code-block:: php
@@ -214,7 +214,7 @@ Because ``Gunter`` is lexically first in the collection, the above operation
 returns no results and updates no documents.
 
 Consider the same :phpmethod:`findOneAndUpdate()
-<MongoDB\\Collection::findOneAndUpdate>` operation but with a collation
+<MongoDB\\Collection::findOneAndUpdate()>` operation but with a collation
 specified, which uses the locale ``de@collation=phonebook``.
 
 .. note::
@@ -349,7 +349,7 @@ Aggregation
 ~~~~~~~~~~~
 
 To use collation with an :phpmethod:`aggregate()
-<MongoDB\\Collection::aggregate>` operation, specify a collation in the
+<MongoDB\\Collection::aggregate()>` operation, specify a collation in the
 aggregation options.
 
 The following aggregation example uses a collection called ``names`` and groups

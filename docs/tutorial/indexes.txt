@@ -31,7 +31,7 @@ Create indexes with the :phpmethod:`MongoDB\\Collection::createIndex()` or
 reference for more details about each method.
 
 The following example creates an ascending index on the ``state`` field using
-the :phpmethod:`createIndex() <MongoDB\\Collection::createIndex>` method:
+the :phpmethod:`createIndex() <MongoDB\\Collection::createIndex()>` method:
 
 .. code-block:: php
 

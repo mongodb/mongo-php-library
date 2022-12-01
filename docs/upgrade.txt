@@ -263,7 +263,7 @@ equivalent method(s) in the new driver.
 
    * - ``MongoCollection::group()``
      - Not implemented. Use :phpmethod:`MongoDB\\Database::command()`. See
-       :ref:`Group Command Helper` for an example.
+       :ref:`Group Command Helper <group-command-helper>` for an example.
 
    * - ``MongoCollection::insert()``
      - :phpmethod:`MongoDB\\Collection::insertOne()`
@@ -332,8 +332,8 @@ MongoCollection::save() Removed
 
 ``MongoCollection::save()``, which was syntactic sugar for an insert or upsert
 operation, has been removed in favor of explicitly using
-:phpmethod:`MongoDB\\Collection::insertOne` or
-:phpmethod:`MongoDB\\Collection::replaceOne` (with the ``upsert`` option).
+:phpmethod:`MongoDB\\Collection::insertOne()` or
+:phpmethod:`MongoDB\\Collection::replaceOne()` (with the ``upsert`` option).
 
 While the ``save`` method does have its uses for interactive environments, such
 as the ``mongo`` shell, it was intentionally excluded from the
@@ -344,6 +344,8 @@ handle the returned :phpclass:`MongoDB\\InsertOneResult` or
 :phpclass:`MongoDB\\UpdateResult`, respectively. This also helps avoid
 inadvertent and potentially dangerous :manual:`full-document replacements
 </tutorial/modify-documents>`.
+
+.. _group-command-helper:
 
 Group Command Helper
 ~~~~~~~~~~~~~~~~~~~~

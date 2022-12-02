@@ -714,15 +714,19 @@ axes:
     display_name: Driver Version
     values:
       - id: "oldest-supported"
-        display_name: "PHPC 1.15.0"
+        display_name: "PHPC 1.16-dev"
         variables:
-          EXTENSION_VERSION: "1.15.0"
+          # TODO: Replace once 1.16.0 is released
+          # EXTENSION_VERSION: "1.16.0"
+          EXTENSION_BRANCH: "master"
       - id: "latest-stable"
-        display_name: "PHPC (1.15.x)"
+        display_name: "PHPC 1.16-dev"
         variables:
-          EXTENSION_VERSION: "stable"
+          # TODO: Replace once 1.16.0 is released
+          # EXTENSION_VERSION: "1.16.0"
+          EXTENSION_BRANCH: "master"
       - id: "latest-dev"
-        display_name: "PHPC (1.16-dev)"
+        display_name: "PHPC 1.16-dev"
         variables:
           EXTENSION_BRANCH: "master"
 

@@ -185,6 +185,32 @@ class UnifiedSpecTest extends FunctionalTestCase
     }
 
     /**
+     * @dataProvider provideRetryableReadsTests
+     */
+    public function testRetryableReads(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideRetryableReadsTests()
+    {
+        return $this->provideTests(__DIR__ . '/retryable-reads/*.json');
+    }
+
+    /**
+     * @dataProvider provideRetryableWritesTests
+     */
+    public function testRetryableWrites(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideRetryableWritesTests()
+    {
+        return $this->provideTests(__DIR__ . '/retryable-writes/*.json');
+    }
+
+    /**
      * @dataProvider provideSessionsTests
      */
     public function testSessions(UnifiedTestCase $test): void

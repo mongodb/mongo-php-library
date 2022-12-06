@@ -7,6 +7,7 @@ use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\ExecutionTimeoutException;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Exception\ServerException;
+use MongoDB\Driver\Exception\WriteException;
 use MongoDB\Tests\UnifiedSpecTests\Constraint\Matches;
 use PHPUnit\Framework\Assert;
 use stdClass;
@@ -15,6 +16,7 @@ use Throwable;
 use function get_class;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertContainsOnly;
+use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\assertIsArray;
@@ -30,6 +32,8 @@ use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertStringContainsStringIgnoringCase;
 use function PHPUnit\Framework\assertThat;
 use function PHPUnit\Framework\assertTrue;
+use function PHPUnit\Framework\isInstanceOf;
+use function PHPUnit\Framework\logicalOr;
 use function property_exists;
 use function sprintf;
 
@@ -166,8 +170,15 @@ final class ExpectedError
         }
 
         if (isset($this->matchesResultDocument)) {
-            assertInstanceOf(CommandException::class, $e);
-            assertThat($e->getResultDocument(), $this->matchesResultDocument, 'CommandException result document matches');
+            assertThat($e, logicalOr(isInstanceOf(CommandException::class), isInstanceOf(WriteException::class)));
+
+            if ($e instanceof CommandException) {
+                assertThat($e->getResultDocument(), $this->matchesResultDocument, 'CommandException result document matches');
+            } elseif ($e instanceof WriteException) {
+                $writeErrors = $e->getWriteResult()->getErrorReplies();
+                assertCount(1, $writeErrors);
+                assertThat($writeErrors[0], $this->matchesResultDocument, 'WriteException result document matches');
+            }
         }
 
         if (! empty($this->excludedLabels) || ! empty($this->includedLabels)) {

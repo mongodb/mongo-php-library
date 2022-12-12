@@ -15,6 +15,7 @@ use function array_diff_key;
 use function array_keys;
 use function getenv;
 use function implode;
+use function sprintf;
 
 /**
  * Execution context for spec tests.
@@ -227,59 +228,39 @@ final class Context
 
     public static function getAWSCredentials(): array
     {
-        if (! getenv('AWS_ACCESS_KEY_ID') || ! getenv('AWS_SECRET_ACCESS_KEY')) {
-            Assert::markTestSkipped('Please configure AWS credentials to use AWS KMS provider.');
-        }
-
         return [
-            'accessKeyId' => getenv('AWS_ACCESS_KEY_ID'),
-            'secretAccessKey' => getenv('AWS_SECRET_ACCESS_KEY'),
+            'accessKeyId' => static::getEnv('AWS_ACCESS_KEY_ID'),
+            'secretAccessKey' => static::getEnv('AWS_SECRET_ACCESS_KEY'),
         ];
     }
 
     public static function getAzureCredentials(): array
     {
-        if (! getenv('AZURE_TENANT_ID') || ! getenv('AZURE_CLIENT_ID') || ! getenv('AZURE_CLIENT_SECRET')) {
-            Assert::markTestSkipped('Please configure Azure credentials to use Azure KMS provider.');
-        }
-
         return [
-            'tenantId' => getenv('AZURE_TENANT_ID'),
-            'clientId' => getenv('AZURE_CLIENT_ID'),
-            'clientSecret' => getenv('AZURE_CLIENT_SECRET'),
+            'tenantId' => static::getEnv('AZURE_TENANT_ID'),
+            'clientId' => static::getEnv('AZURE_CLIENT_ID'),
+            'clientSecret' => static::getEnv('AZURE_CLIENT_SECRET'),
         ];
     }
 
     public static function getKmipEndpoint(): string
     {
-        if (! getenv('KMIP_ENDPOINT')) {
-            Assert::markTestSkipped('Please configure KMIP endpoint to use KMIP KMS provider.');
-        }
-
-        return getenv('KMIP_ENDPOINT');
+        return static::getEnv('KMIP_ENDPOINT');
     }
 
     public static function getKmsTlsOptions(): array
     {
-        if (! getenv('KMS_TLS_CA_FILE') || ! getenv('KMS_TLS_CERTIFICATE_KEY_FILE')) {
-            Assert::markTestSkipped('Please configure KMS TLS options.');
-        }
-
         return [
-            'tlsCAFile' => getenv('KMS_TLS_CA_FILE'),
-            'tlsCertificateKeyFile' => getenv('KMS_TLS_CERTIFICATE_KEY_FILE'),
+            'tlsCAFile' => static::getEnv('KMS_TLS_CA_FILE'),
+            'tlsCertificateKeyFile' => static::getEnv('KMS_TLS_CERTIFICATE_KEY_FILE'),
         ];
     }
 
     public static function getGCPCredentials(): array
     {
-        if (! getenv('GCP_EMAIL') || ! getenv('GCP_PRIVATE_KEY')) {
-            Assert::markTestSkipped('Please configure GCP credentials to use GCP KMS provider.');
-        }
-
         return [
-            'email' => getenv('GCP_EMAIL'),
-            'privateKey' => getenv('GCP_PRIVATE_KEY'),
+            'email' => static::getEnv('GCP_EMAIL'),
+            'privateKey' => static::getEnv('GCP_PRIVATE_KEY'),
         ];
     }
 
@@ -451,6 +432,17 @@ final class Context
         $driverOptions += ['disableClientPersistence' => true];
 
         return FunctionalTestCase::createTestClient($uri, $options, $driverOptions);
+    }
+
+    private static function getEnv(string $name): string
+    {
+        $value = getenv($name);
+
+        if ($value === false) {
+            Assert::markTestSkipped(sprintf('Environment variable "%s" is not defined', $name));
+        }
+
+        return $value;
     }
 
     private function prepareGridFSBucketOptions(array $options, $bucketPrefix)

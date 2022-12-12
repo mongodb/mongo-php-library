@@ -63,8 +63,6 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
     /** @var array */
     private static $incompleteTests = [
-        'awsTemporary: Insert a document with auto encryption using the AWS provider with temporary credentials' => 'Not yet implemented (PHPC-1751)',
-        'awsTemporary: Insert with invalid temporary credentials' => 'Not yet implemented (PHPC-1751)',
         'azureKMS: Insert a document with auto encryption using Azure KMS provider' => 'RHEL platform is missing Azure root certificate (PHPLIB-619)',
         'explain: Explain a find with deterministic encryption' => 'crypt_shared does not add apiVersion field to explain commands (PHPLIB-947, SERVER-69564)',
         'timeoutMS: timeoutMS applied to listCollections to get collection schema' => 'Not yet implemented (PHPC-1760)',

@@ -15,6 +15,7 @@ use function array_diff_key;
 use function array_keys;
 use function getenv;
 use function implode;
+use function PHPUnit\Framework\assertLessThanOrEqual;
 use function sprintf;
 
 /**
@@ -87,8 +88,24 @@ final class Context
             $autoEncryptionOptions = (array) $clientOptions['autoEncryptOpts'] + ['keyVaultNamespace' => 'keyvault.datakeys'];
             unset($clientOptions['autoEncryptOpts']);
 
+            // Ensure test doesn't specify conflicting options for AWS
+            $countAws = (isset($autoEncryptionOptions['kmsProviders']->aws) ? 1 : 0);
+            $countAws += (isset($autoEncryptionOptions['kmsProviders']->awsTemporary) ? 1 : 0);
+            $countAws += (isset($autoEncryptionOptions['kmsProviders']->awsTemporaryNoSessionToken) ? 1 : 0);
+            assertLessThanOrEqual(1, $countAws, 'aws, awsTemporary, and awsTemporaryNoSessionToken are mutually exclusive');
+
             if (isset($autoEncryptionOptions['kmsProviders']->aws)) {
                 $autoEncryptionOptions['kmsProviders']->aws = self::getAWSCredentials();
+            }
+
+            if (isset($autoEncryptionOptions['kmsProviders']->awsTemporary)) {
+                unset($autoEncryptionOptions['kmsProviders']->awsTemporary);
+                $autoEncryptionOptions['kmsProviders']->aws = self::getAWSTempCredentials(true);
+            }
+
+            if (isset($autoEncryptionOptions['kmsProviders']->awsTemporaryNoSessionToken)) {
+                unset($autoEncryptionOptions['kmsProviders']->awsTemporaryNoSessionToken);
+                $autoEncryptionOptions['kmsProviders']->aws = self::getAWSTempCredentials(false);
             }
 
             if (isset($autoEncryptionOptions['kmsProviders']->azure)) {
@@ -232,6 +249,20 @@ final class Context
             'accessKeyId' => static::getEnv('AWS_ACCESS_KEY_ID'),
             'secretAccessKey' => static::getEnv('AWS_SECRET_ACCESS_KEY'),
         ];
+    }
+
+    public static function getAWSTempCredentials(bool $withSessionToken): array
+    {
+        $awsTempCredentials = [
+            'accessKeyId' => static::getEnv('AWS_TEMP_ACCESS_KEY_ID'),
+            'secretAccessKey' => static::getEnv('AWS_TEMP_SECRET_ACCESS_KEY'),
+        ];
+
+        if ($withSessionToken) {
+            $awsTempCredentials['sessionToken'] = static::getEnv('AWS_TEMP_SESSION_TOKEN');
+        }
+
+        return $awsTempCredentials;
     }
 
     public static function getAzureCredentials(): array

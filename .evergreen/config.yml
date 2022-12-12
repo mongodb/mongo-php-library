@@ -284,6 +284,9 @@ functions:
           ${PREPARE_SHELL}
           export AWS_ACCESS_KEY_ID="${client_side_encryption_aws_access_key_id}"
           export AWS_SECRET_ACCESS_KEY="${client_side_encryption_aws_secret_access_key}"
+          export AWS_TEMP_ACCESS_KEY_ID="${client_side_encryption_aws_temp_access_key_id}"
+          export AWS_TEMP_SECRET_ACCESS_KEY="${client_side_encryption_aws_temp_secret_access_key_key}"
+          export AWS_TEMP_SESSION_TOKEN="${client_side_encryption_aws_temp_session_token}"
           export AZURE_TENANT_ID="${client_side_encryption_azure_tenant_id}"
           export AZURE_CLIENT_ID="${client_side_encryption_azure_client_id}"
           export AZURE_CLIENT_SECRET="${client_side_encryption_azure_client_secret}"
@@ -328,6 +331,9 @@ functions:
           ${PREPARE_SHELL}
           export AWS_ACCESS_KEY_ID="${client_side_encryption_aws_access_key_id}"
           export AWS_SECRET_ACCESS_KEY="${client_side_encryption_aws_secret_access_key}"
+          export AWS_TEMP_ACCESS_KEY_ID="${client_side_encryption_aws_temp_access_key_id}"
+          export AWS_TEMP_SECRET_ACCESS_KEY="${client_side_encryption_aws_temp_secret_access_key_key}"
+          export AWS_TEMP_SESSION_TOKEN="${client_side_encryption_aws_temp_session_token}"
           export AZURE_TENANT_ID="${client_side_encryption_azure_tenant_id}"
           export AZURE_CLIENT_ID="${client_side_encryption_azure_client_id}"
           export AZURE_CLIENT_SECRET="${client_side_encryption_azure_client_secret}"
@@ -455,6 +461,36 @@ functions:
           - key: client_side_encryption_kmip_endpoint
             value: localhost:5698
 
+  "set aws temp creds":
+    - command: shell.exec
+      params:
+        shell: bash
+        script: |-
+          set -o errexit
+
+          export AWS_ACCESS_KEY_ID="${client_side_encryption_aws_access_key_id}"
+          export AWS_SECRET_ACCESS_KEY="${client_side_encryption_aws_secret_access_key}"
+          export AWS_DEFAULT_REGION="us-east-1"
+
+          pushd ${DRIVERS_TOOLS}/.evergreen/csfle
+          . ./activate_venv.sh
+          . ./set-temp-creds.sh
+          popd
+
+          if [ -z "$CSFLE_AWS_TEMP_ACCESS_KEY_ID" ]; then
+            echo "Failed to set AWS temporary credentials!"
+            exit 1
+          fi
+
+          cat <<EOT > aws-expansion.yml
+          client_side_encryption_aws_temp_access_key_id: "$CSFLE_AWS_TEMP_ACCESS_KEY_ID"
+          client_side_encryption_aws_temp_secret_access_key_key: "$CSFLE_AWS_TEMP_SECRET_ACCESS_KEY"
+          client_side_encryption_aws_temp_session_token: "$CSFLE_AWS_TEMP_SESSION_TOKEN"
+          EOT
+    - command: expansions.update
+      params:
+        file: aws-expansion.yml
+
 pre:
   - func: "fetch source"
   - func: "prepare resources"
@@ -513,6 +549,7 @@ tasks:
           vars:
             TOPOLOGY: "server"
         - func: "start kms servers"
+        - func: "set aws temp creds"
         - func: "run tests"
 
     - name: "test-replica_set"
@@ -522,6 +559,7 @@ tasks:
           vars:
             TOPOLOGY: "replica_set"
         - func: "start kms servers"
+        - func: "set aws temp creds"
         - func: "run tests"
 
     - name: "test-sharded_cluster"
@@ -531,6 +569,7 @@ tasks:
           vars:
             TOPOLOGY: "sharded_cluster"
         - func: "start kms servers"
+        - func: "set aws temp creds"
         - func: "run tests"
 
     - name: "test-atlas-data-lake"
@@ -547,6 +586,7 @@ tasks:
             AUTH: "auth"
             REQUIRE_API_VERSION: "yes"
         - func: "start kms servers"
+        - func: "set aws temp creds"
         - func: "run tests"
           vars:
             API_VERSION: "1"
@@ -559,6 +599,7 @@ tasks:
             TOPOLOGY: "server"
             ORCHESTRATION_FILE: "versioned-api-testing.json"
         - func: "start kms servers"
+        - func: "set aws temp creds"
         - func: "run tests"
           vars:
             TESTS: "versioned-api"
@@ -568,6 +609,7 @@ tasks:
       commands:
         - func: "create serverless instance"
         - func: "start kms servers"
+        - func: "set aws temp creds"
         - func: "run serverless tests"
 
     - name: "test-loadBalanced"
@@ -580,6 +622,7 @@ tasks:
             SSL: "yes"
         - func: "start load balancer"
         - func: "start kms servers"
+        - func: "set aws temp creds"
         - func: "run tests"
           vars:
             # Note: loadBalanced=true should already be appended to SINGLE_MONGOS_LB_URI

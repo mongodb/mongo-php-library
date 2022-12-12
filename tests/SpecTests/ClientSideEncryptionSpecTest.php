@@ -1646,6 +1646,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      * Prose test 15: On-demand AWS Credentials
      *
      * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#on-demand-aws-credentials
+     * @group csfle-without-aws-creds
      * @testWith [true]
      *           [false]
      */

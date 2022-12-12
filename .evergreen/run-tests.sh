@@ -76,6 +76,10 @@ case "$TESTS" in
       php vendor/bin/simple-phpunit $PHPUNIT_OPTS --group csfle
       ;;
 
+   csfle-without-aws-creds)
+      php vendor/bin/simple-phpunit $PHPUNIT_OPTS --group csfle-without-aws-creds
+      ;;
+
    versioned-api)
       php vendor/bin/simple-phpunit $PHPUNIT_OPTS --group versioned-api
       ;;

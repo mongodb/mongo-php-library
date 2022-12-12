@@ -131,11 +131,6 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $databaseName = $databaseName ?? $this->getDatabaseName();
         $collectionName = $collectionName ?? $this->getCollectionName();
 
-        // TODO: Remove this once SERVER-66901 is implemented (see: PHPLIB-884)
-        if (isset($test->clientOptions->autoEncryptOpts->encryptedFieldsMap)) {
-            $test->clientOptions->autoEncryptOpts->encryptedFieldsMap = $test->clientOptions->autoEncryptOpts->encryptedFieldsMap;
-        }
-
         try {
             $context = Context::fromClientSideEncryption($test, $databaseName, $collectionName);
         } catch (SkippedTestError $e) {

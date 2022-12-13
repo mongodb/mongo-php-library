@@ -15,6 +15,10 @@ final class ExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Examples are not tested on sharded clusters.');
         }
 
+        if ($this->isApiVersionRequired()) {
+            $this->markTestSkipped('Examples are not tested with when the server requires specifying an API version.');
+        }
+
         self::createTestClient()->dropDatabase('test');
     }
 

@@ -50,18 +50,18 @@ Explainable Commands
 
 Explainable commands include, but are not limited to:
 
-- `MongoDB\\Operation\\Aggregate`
-- `MongoDB\\Operation\\Count`
-- `MongoDB\\Operation\\DeleteMany`
-- `MongoDB\\Operation\\DeleteOne`
-- `MongoDB\\Operation\\Distinct`
-- `MongoDB\\Operation\\Find`
-- `MongoDB\\Operation\\FindOne`
-- `MongoDB\\Operation\\FindOneAndDelete`
-- `MongoDB\\Operation\\FindOneAndReplace`
-- `MongoDB\\Operation\\FindOneAndUpdate`
-- `MongoDB\\Operation\\UpdateMany`
-- `MongoDB\\Operation\\UpdateOne`
+- ``MongoDB\Operation\Aggregate``
+- ``MongoDB\Operation\Count``
+- ``MongoDB\Operation\DeleteMany``
+- ``MongoDB\Operation\DeleteOne``
+- ``MongoDB\Operation\Distinct``
+- ``MongoDB\Operation\Find``
+- ``MongoDB\Operation\FindOne``
+- ``MongoDB\Operation\FindOneAndDelete``
+- ``MongoDB\Operation\FindOneAndReplace``
+- ``MongoDB\Operation\FindOneAndUpdate``
+- ``MongoDB\Operation\UpdateMany``
+- ``MongoDB\Operation\UpdateOne``
 
 Examples
 --------

@@ -91,7 +91,7 @@ The following environment variables are used for [CSFLE testing](https://github.
  * `AWS_ACCESS_KEY_ID`
  * `AWS_SECRET_ACCESS_KEY`
  * `AWS_TEMP_ACCESS_KEY_ID`
- * 'AWS_TEMP_SECRET_ACCESS_KEY'
+ * `AWS_TEMP_SECRET_ACCESS_KEY`
  * `AWS_TEMP_SESSION_TOKEN`
  * `AZURE_TENANT_ID`
  * `AZURE_CLIENT_ID`

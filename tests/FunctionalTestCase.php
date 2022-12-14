@@ -388,6 +388,26 @@ abstract class FunctionalTestCase extends TestCase
         throw new UnexpectedValueException('Could not determine server storage engine');
     }
 
+    /**
+     * Returns whether clients must specify an API version by checking the
+     * requireApiVersion server parameter.
+     */
+    protected function isApiVersionRequired(): bool
+    {
+        try {
+            $cursor = $this->manager->executeCommand(
+                'admin',
+                new Command(['getParameter' => 1, 'requireApiVersion' => 1])
+            );
+
+            $document = current($cursor->toArray());
+        } catch (CommandException $e) {
+            return false;
+        }
+
+        return isset($document->requireApiVersion) && $document->requireApiVersion === true;
+    }
+
     protected function isEnterprise(): bool
     {
         $buildInfo = $this->getPrimaryServer()->executeCommand(

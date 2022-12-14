@@ -152,7 +152,9 @@ back to ``LocalDateTime``.
     var_dump($document->date->toDateTime());
     ?>
 
-Which outputs::
+Which outputs:
+
+.. code-block:: none
 
     object(stdClass)#1 (1) {
       ["date"]=>

@@ -60,7 +60,9 @@ Examples
 
    var_dump($id);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\BSON\ObjectId)#3009 (1) {
      ["oid"]=>

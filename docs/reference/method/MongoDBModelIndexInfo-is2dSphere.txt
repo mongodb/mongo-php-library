@@ -46,7 +46,9 @@ Examples
        }
    }
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    pos_2dsphere has 2dsphereIndexVersion: 3
 

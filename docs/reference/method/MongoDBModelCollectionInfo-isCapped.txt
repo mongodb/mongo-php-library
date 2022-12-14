@@ -50,7 +50,9 @@ Examples
 
    var_dump($info->isCapped());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    bool(true)
 

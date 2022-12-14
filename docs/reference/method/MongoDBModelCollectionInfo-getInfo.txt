@@ -44,7 +44,9 @@ Examples
 
    var_dump($info->getInfo());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    array(1) {
      ["readOnly"]=>

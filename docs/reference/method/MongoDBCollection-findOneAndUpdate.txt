@@ -74,7 +74,9 @@ setting its building number to ``"761"``:
 
    var_dump($updatedRestaurant);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#20 (1) {
      ["storage":"ArrayObject":private]=>

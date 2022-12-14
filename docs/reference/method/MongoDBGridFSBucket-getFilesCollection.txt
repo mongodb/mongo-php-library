@@ -41,7 +41,9 @@ Examples
 
    var_dump($filesCollection->getCollectionName());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    string(8) "fs.files"
 

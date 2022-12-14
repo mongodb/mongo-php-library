@@ -68,7 +68,9 @@ that have ``"ny"`` as the value for the ``state`` field:
 
    printf("Deleted %d document(s)\n", $deleteResult->getDeletedCount());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    Deleted 2 document(s)
 

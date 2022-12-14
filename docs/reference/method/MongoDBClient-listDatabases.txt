@@ -58,7 +58,9 @@ The following example lists all databases on the server:
        var_dump($databaseInfo);
    }
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\DatabaseInfo)#4 (3) {
      ["name"]=>

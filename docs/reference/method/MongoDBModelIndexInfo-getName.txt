@@ -42,7 +42,9 @@ Examples
 
    echo $info->getName();
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    x_1
 

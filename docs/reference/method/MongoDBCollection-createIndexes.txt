@@ -13,7 +13,7 @@ MongoDB\\Collection::createIndexes()
 Definition
 ----------
 
-.. phpmethod:: MongoDB\\Collection::createIndexes($indexes)
+.. phpmethod:: MongoDB\\Collection::createIndexes()
 
    Create one or more indexes for the collection.
 
@@ -53,7 +53,9 @@ fields that correspond to index options accepted by :phpmethod:`createIndex()
 
 For example, the following ``$indexes`` parameter creates two indexes. The first
 is an ascending unique index on the ``username`` field and the second is a
-2dsphere index on the ``loc`` field with a custom name::
+2dsphere index on the ``loc`` field with a custom name:
+
+.. code-block:: none
 
    [
        [ 'key' => [ 'username' => 1 ], 'unique' => true ],
@@ -81,7 +83,9 @@ custom name.
 
    var_dump($indexNames);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    array(2) {
      [0]=>

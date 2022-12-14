@@ -60,7 +60,9 @@ The following drops all indexes from the ``restaurants`` collection in the
 
    var_dump($result);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#9 (1) {
      ["storage":"ArrayObject":private]=>

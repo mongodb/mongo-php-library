@@ -23,7 +23,7 @@ Definition
    select a collection from the library's :phpclass:`MongoDB\\Client` or
    :phpclass:`MongoDB\\Database` classes. A collection may also be cloned from
    an existing :phpclass:`MongoDB\\Collection` object via the
-   :phpmethod:`withOptions() <MongoDB\\Collection::withOptions>` method.
+   :phpmethod:`withOptions() <MongoDB\\Collection::withOptions()>` method.
 
    :phpclass:`MongoDB\\Collection` supports the :php:`readConcern
    <mongodb-driver-readconcern>`, :php:`readPreference
@@ -41,17 +41,16 @@ Definition
 Type Map Limitations
 --------------------
 
-   The :manual:`aggregate </reference/command/aggregate>` (when not using a
-   cursor), :manual:`distinct </reference/command/distinct>`, and
-   :manual:`findAndModify </reference/command/findAndModify>` helpers do not
-   support a ``typeMap`` option due to a driver limitation. The
-   :phpmethod:`aggregate() <MongoDB\\Collection::aggregate>`,
-   :phpmethod:`distinct() <MongoDB\\Collection::distinct>`,
-   :phpmethod:`findOneAndReplace() <MongoDB\\Collection::findOneAndReplace>`,
-   :phpmethod:`findOneAndUpdate() <MongoDB\\Collection::findOneAndUpdate>`, and
-   :phpmethod:`findOneAndDelete() <MongoDB\\Collection::findOneAndDelete>`
-   methods return BSON documents as `stdClass` objects and BSON arrays as
-   arrays.
+The :manual:`aggregate </reference/command/aggregate>` (when not using a
+cursor), :manual:`distinct </reference/command/distinct>`, and
+:manual:`findAndModify </reference/command/findAndModify>` helpers do not
+support a ``typeMap`` option due to a driver limitation. The
+:phpmethod:`aggregate() <MongoDB\\Collection::aggregate()>`,
+:phpmethod:`distinct() <MongoDB\\Collection::distinct()>`,
+:phpmethod:`findOneAndReplace() <MongoDB\\Collection::findOneAndReplace()>`,
+:phpmethod:`findOneAndUpdate() <MongoDB\\Collection::findOneAndUpdate()>`, and
+:phpmethod:`findOneAndDelete() <MongoDB\\Collection::findOneAndDelete()>`
+methods return BSON documents as ``stdClass`` objects and BSON arrays as arrays.
 
 Methods
 -------

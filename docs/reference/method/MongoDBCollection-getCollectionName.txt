@@ -40,7 +40,9 @@ The following returns the collection name for the ``zips`` collection in the
 
    echo $collection->getCollectionName();
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    zips
 

@@ -31,7 +31,7 @@ Create indexes with the :phpmethod:`MongoDB\\Collection::createIndex()` or
 reference for more details about each method.
 
 The following example creates an ascending index on the ``state`` field using
-the :phpmethod:`createIndex() <MongoDB\\Collection::createIndex>` method:
+the :phpmethod:`createIndex() <MongoDB\\Collection::createIndex()>` method:
 
 .. code-block:: php
 
@@ -45,7 +45,9 @@ the :phpmethod:`createIndex() <MongoDB\\Collection::createIndex>` method:
 
 When you create an index, the method returns its name, which is automatically
 generated from its specification. The above example would output something
-similar to::
+similar to:
+
+.. code-block:: none
 
    string(7) "state_1"
 
@@ -71,7 +73,9 @@ The following example lists all indexes in the ``zips`` collection in the
        var_dump($indexInfo);
    }
 
-The output would resemble::
+The output would resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\IndexInfo)#10 (4) {
      ["v"]=>
@@ -120,7 +124,9 @@ The following example drops a single index by its name, ``state_1``:
 
    var_dump($result);
 
-The operation's output would resemble::
+The operation's output would resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#11 (1) {
      ["storage":"ArrayObject":private]=>

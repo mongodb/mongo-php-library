@@ -41,7 +41,9 @@ Example
 
    var_dump($database->getReadConcern());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Driver\ReadConcern)#5 (1) {
      ["level"]=>

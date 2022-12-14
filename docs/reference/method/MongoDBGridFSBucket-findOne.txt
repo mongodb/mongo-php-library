@@ -78,7 +78,9 @@ Examples
 
    var_dump($fileDocument);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#3004 (1) {
      ["storage":"ArrayObject":private]=>

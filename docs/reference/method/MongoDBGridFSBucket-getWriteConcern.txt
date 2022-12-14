@@ -43,7 +43,9 @@ Example
 
    var_dump($bucket->getWriteConcern());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Driver\WriteConcern)#3 (2) {
      ["w"]=>

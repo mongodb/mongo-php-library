@@ -50,6 +50,8 @@ Examples
 
    var_dump(stream_get_contents($bucket->openDownloadStreamByName('b')));
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    string(6) "foobar"

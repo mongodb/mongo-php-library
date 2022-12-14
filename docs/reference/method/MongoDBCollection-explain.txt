@@ -50,18 +50,18 @@ Explainable Commands
 
 Explainable commands include, but are not limited to:
 
-   - :phpclass:`MongoDB\\Operation\\Aggregate`
-   - :phpclass:`MongoDB\\Operation\\Count`
-   - :phpclass:`MongoDB\\Operation\\DeleteMany`
-   - :phpclass:`MongoDB\\Operation\\DeleteOne`
-   - :phpclass:`MongoDB\\Operation\\Distinct`
-   - :phpclass:`MongoDB\\Operation\\Find`
-   - :phpclass:`MongoDB\\Operation\\FindOne`
-   - :phpclass:`MongoDB\\Operation\\FindOneAndDelete`
-   - :phpclass:`MongoDB\\Operation\\FindOneAndReplace`
-   - :phpclass:`MongoDB\\Operation\\FindOneAndUpdate`
-   - :phpclass:`MongoDB\\Operation\\UpdateMany`
-   - :phpclass:`MongoDB\\Operation\\UpdateOne`
+- ``MongoDB\Operation\Aggregate``
+- ``MongoDB\Operation\Count``
+- ``MongoDB\Operation\DeleteMany``
+- ``MongoDB\Operation\DeleteOne``
+- ``MongoDB\Operation\Distinct``
+- ``MongoDB\Operation\Find``
+- ``MongoDB\Operation\FindOne``
+- ``MongoDB\Operation\FindOneAndDelete``
+- ``MongoDB\Operation\FindOneAndReplace``
+- ``MongoDB\Operation\FindOneAndUpdate``
+- ``MongoDB\Operation\UpdateMany``
+- ``MongoDB\Operation\UpdateOne``
 
 Examples
 --------
@@ -84,7 +84,9 @@ This example explains a count command.
 
    var_dump($result);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#29 (1) {
      ["storage":"ArrayObject":private]=>

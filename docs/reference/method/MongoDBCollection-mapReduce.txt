@@ -92,7 +92,9 @@ each state.
       var_dump($pop);
    };
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(stdClass)#2293 (2) {
       ["_id"]=>

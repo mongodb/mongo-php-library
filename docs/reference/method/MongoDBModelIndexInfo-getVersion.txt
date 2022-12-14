@@ -39,7 +39,9 @@ Examples
 
    var_dump($info->getVersion());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    int(1)
 

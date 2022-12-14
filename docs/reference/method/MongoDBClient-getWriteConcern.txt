@@ -42,7 +42,9 @@ Example
 
    var_dump($client->getWriteConcern());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Driver\WriteConcern)#4 (1) {
      ["j"]=>

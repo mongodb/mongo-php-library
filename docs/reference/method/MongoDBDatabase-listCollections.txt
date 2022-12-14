@@ -51,7 +51,9 @@ The following example lists all of the collections in the ``test`` database:
        var_dump($collectionInfo);
    }
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\CollectionInfo)#3 (2) {
      ["name"]=>
@@ -94,7 +96,9 @@ in the ``test`` database:
        var_dump($collectionInfo);
    }
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\CollectionInfo)#3 (2) {
      ["name"]=>

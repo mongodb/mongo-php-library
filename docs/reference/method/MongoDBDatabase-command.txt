@@ -57,7 +57,9 @@ result document:
 
    var_dump($c->toArray()[0]);
 
-The output would resemble::
+The output would resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#11 (1) {
      ["storage":"ArrayObject":private]=>
@@ -81,7 +83,9 @@ multiple result documents:
 
    var_dump($c->toArray());
 
-The output would resemble::
+The output would resemble:
+
+.. code-block:: none
 
    array(3) {
      [0]=>

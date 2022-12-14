@@ -39,6 +39,8 @@ Examples
 
    var_dump($bucket->getChunkSizeBytes());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    int(261120)

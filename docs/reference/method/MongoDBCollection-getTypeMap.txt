@@ -45,7 +45,9 @@ Example
 
    var_dump($collection->getTypeMap());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    array(3) {
      ["root"]=>

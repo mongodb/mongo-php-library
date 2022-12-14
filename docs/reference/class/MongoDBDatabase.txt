@@ -22,7 +22,7 @@ Definition
    :php:`MongoDB\\Driver\\Manager <class.mongodb-driver-manager>` class or
    select a database from the library's :phpclass:`MongoDB\\Client` class. A
    database may also be cloned from an existing :phpclass:`MongoDB\\Database`
-   object via the :phpmethod:`withOptions() <MongoDB\\Database::withOptions>`
+   object via the :phpmethod:`withOptions() <MongoDB\\Database::withOptions()>`
    method.
 
    :phpclass:`MongoDB\\Database` supports the :php:`readConcern

@@ -59,7 +59,9 @@ The following example lists all databases on the server:
        var_dump($databaseName);
    }
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    string(5) "local"
    string(4) "test"

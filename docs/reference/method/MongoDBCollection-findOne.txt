@@ -98,7 +98,9 @@ returned.
 
    var_dump($restaurant);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#10 (1) {
      ["storage":"ArrayObject":private]=>

@@ -40,7 +40,9 @@ The following returns the database name for the ``zips`` collection in the
 
    echo $collection->getDatabaseName();
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    test
 

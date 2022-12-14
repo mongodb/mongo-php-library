@@ -61,7 +61,9 @@ The following example inserts a document while specifying the value for the
 
    var_dump($insertOneResult->getInsertedId());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    Inserted 1 document(s)
    int(1)
@@ -113,7 +115,9 @@ The following example searches for the document with ``_id`` of ``"94301"``:
 
    var_dump($document);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#13 (1) {
      ["storage":"ArrayObject":private]=>
@@ -175,7 +179,9 @@ specified city and state values:
        echo $document['_id'], "\n";
    }
 
-The output would resemble::
+The output would resemble:
+
+.. code-block:: none
 
    07302
    07304
@@ -231,7 +237,9 @@ returned. It also limits the results to 5 documents.
       var_dump($restaurant);
    };
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Model\BSONDocument)#10 (1) {
      ["storage":"ArrayObject":private]=>
@@ -325,7 +333,9 @@ five most populous zip codes in the United States:
        printf("%s: %s, %s\n", $document['_id'], $document['city'], $document['state']);
    }
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    60623: CHICAGO, IL
    11226: BROOKLYN, NY
@@ -358,7 +368,9 @@ name starts with "garden" and the state is Texas:
       printf("%s: %s, %s\n", $document['_id'], $document['city'], $document['state']);
    }
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    78266: GARDEN RIDGE, TX
    79739: GARDEN CITY, TX
@@ -422,7 +434,9 @@ with them:
        printf("%s has %d zip codes\n", $state['_id'], $state['count']);
    }
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    TX has 1671 zip codes
    NY has 1595 zip codes
@@ -472,7 +486,9 @@ is ``"ny"`` to include a ``country`` field set to ``"us"``:
 
 Since the update operation uses the
 :phpmethod:`MongoDB\\Collection::updateOne()` method, which updates the first
-document to match the filter criteria, the results would then resemble::
+document to match the filter criteria, the results would then resemble:
+
+.. code-block:: none
 
    Matched 1 document(s)
    Modified 1 document(s)
@@ -498,7 +514,9 @@ value, as in this example:
    printf("Modified %d document(s)\n", $updateResult->getModifiedCount());
 
 The number of matched documents and the number of *modified* documents would
-therefore not be equal, and the output from the operation would resemble::
+therefore not be equal, and the output from the operation would resemble:
+
+.. code-block:: none
 
    Matched 1 document(s)
    Modified 0 document(s)
@@ -521,7 +539,7 @@ updates to perform. The :phpmethod:`MongoDB\\Collection::updateMany()` reference
 describes each parameter in detail.
 
 The following example inserts three documents into an empty ``users`` collection
-in the ``test`` database and then uses the :query:`$set` operator to update the
+in the ``test`` database and then uses the :update:`$set` operator to update the
 documents matching the filter criteria to include the ``country`` field with
 value ``"us"``:
 
@@ -547,7 +565,9 @@ If an update operation results in no change to a document, such as setting the
 value of the field to its current value, the number of modified documents can be
 less than the number of *matched* documents. Since the update document with
 ``name`` of ``"Bob"`` results in no changes to the document, the output of the
-operation therefore resembles::
+operation therefore resembles:
+
+.. code-block:: none
 
    Matched 3 document(s)
    Modified 2 document(s)
@@ -573,7 +593,7 @@ replacement document that will replace the original document in MongoDB. The
 :phpmethod:`MongoDB\\Collection::replaceOne()` reference describes each
 parameter in detail.
 
-.. important:: 
+.. important::
 
    Replacement operations replace all of the fields in a document except the
    ``_id`` value. To avoid accidentally overwriting or deleting desired fields,
@@ -600,12 +620,14 @@ the ``test`` database, and then replaces that document with a new one:
    printf("Matched %d document(s)\n", $updateResult->getMatchedCount());
    printf("Modified %d document(s)\n", $updateResult->getModifiedCount());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    Matched 1 document(s)
    Modified 1 document(s)
 
-.. seealso:: 
+.. seealso::
 
    - :phpmethod:`MongoDB\\Collection::replaceOne()`
    - :phpmethod:`MongoDB\\Collection::findOneAndReplace()`
@@ -649,7 +671,9 @@ the ``upsert`` option set to ``true`` and an empty ``users`` collection in the
 
    var_dump($upsertedDocument);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    Matched 0 document(s)
    Modified 0 document(s)
@@ -705,7 +729,9 @@ value is ``"ny"``:
 
    printf("Deleted %d document(s)\n", $deleteResult->getDeletedCount());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    Deleted 1 document(s)
 
@@ -739,7 +765,9 @@ value is ``"ny"``:
 
    printf("Deleted %d document(s)\n", $deleteResult->getDeletedCount());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    Deleted 2 document(s)
 

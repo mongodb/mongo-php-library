@@ -49,7 +49,9 @@ Examples
 
    var_dump($info->getIdIndex());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    array(4) {
      ["v"]=>

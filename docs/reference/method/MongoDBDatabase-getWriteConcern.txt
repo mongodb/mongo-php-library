@@ -42,7 +42,9 @@ Example
 
    var_dump($database->getWriteConcern());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Driver\WriteConcern)#5 (2) {
      ["w"]=>

@@ -25,7 +25,7 @@ Definition
    You can construct a GridFS bucket using the driver's
    :php:`Manager <class.mongodb-driver-manager>` class, or select a bucket from
    the library's :phpclass:`MongoDB\\Database` class via the
-   :phpmethod:`selectGridFSBucket() <MongoDB\\Database::selectGridFSBucket>`
+   :phpmethod:`selectGridFSBucket() <MongoDB\\Database::selectGridFSBucket()>`
    method.
 
 Methods

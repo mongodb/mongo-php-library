@@ -35,7 +35,7 @@ Behavior
 
 The selected collection inherits options such as read preference and type
 mapping from the :phpclass:`Database <MongoDB\\Database>` object. If you wish to
-override any options, use the :phpmethod:`MongoDB\\Database::selectCollection`
+override any options, use the :phpmethod:`MongoDB\\Database::selectCollection()`
 method.
 
 .. note::
@@ -43,7 +43,7 @@ method.
    To select collections whose names contain special characters, such as
    ``.``, use complex syntax, as in ``$database->{'that.database'}``.
 
-   Alternatively, :phpmethod:`MongoDB\\Database::selectCollection` supports
+   Alternatively, :phpmethod:`MongoDB\\Database::selectCollection()` supports
    selecting collections whose names contain special characters.
 
 Examples

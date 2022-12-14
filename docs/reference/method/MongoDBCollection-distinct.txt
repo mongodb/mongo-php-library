@@ -66,7 +66,9 @@ in the ``restaurants`` collection in the ``test`` database.
 
    var_dump($distinct);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    array(6) {
      [0]=>
@@ -100,7 +102,9 @@ the ``borough`` is ``Queens``:
 
    var_dump($distinct);
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    array(75) {
      [0]=>

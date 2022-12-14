@@ -15,7 +15,7 @@ Definition
 
 .. phpmethod:: MongoDB\\MapReduceResult::getIterator()
 
-   Returns a php:`Traversable <traversable>`, which may be used to iterate
+   Returns a :php:`Traversable <traversable>`, which may be used to iterate
    through the results of the map-reduce operation.
 
    .. code-block:: php
@@ -49,7 +49,9 @@ This example iterates through the results of a map-reduce operation.
       var_dump($population);
    };
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(stdClass)#2293 (2) {
       ["_id"]=>

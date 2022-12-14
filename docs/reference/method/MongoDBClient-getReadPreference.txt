@@ -42,7 +42,9 @@ Example
 
    var_dump($client->getReadPreference());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Driver\ReadPreference)#5 (1) {
      ["mode"]=>

@@ -167,7 +167,7 @@ directly serialized. This is similar to how enums are handled by
 :php:`json_encode() <json-encode>`.
 
 Round-tripping a backed enum through BSON requires special handling. In the
-following example, the `bsonUnserialize()` method in the class containing the
+following example, the ``bsonUnserialize()`` method in the class containing the
 enum is responsible for converting the value back to an enum case:
 
 .. code-block:: php

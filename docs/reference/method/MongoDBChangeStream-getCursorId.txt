@@ -43,7 +43,9 @@ This example reports the cursor ID for a change stream.
 
    var_dump($changeStream->getCursorId());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    object(MongoDB\Driver\CursorId)#5 (1) {
      ["id"]=>

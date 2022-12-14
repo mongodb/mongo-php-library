@@ -39,6 +39,8 @@ Examples
 
    var_dump((string) $bucket->getChunksCollection());
 
-The output would then resemble::
+The output would then resemble:
+
+.. code-block:: none
 
    string(14) "test.fs.chunks"

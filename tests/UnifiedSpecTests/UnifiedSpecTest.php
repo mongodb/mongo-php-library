@@ -103,6 +103,7 @@ class UnifiedSpecTest extends FunctionalTestCase
 
     /**
      * @dataProvider provideClientSideEncryptionTests
+     * @group csfle
      */
     public function testClientSideEncryption(UnifiedTestCase $test): void
     {

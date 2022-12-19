@@ -75,8 +75,8 @@ wrap the script in ``<pre>`` tags to properly format its output:
 Loading an Incompatible DLL on Windows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-PECL builds Windows binaries for various combinations of PHP version,
-thread-safety (TS or NTS), and architecture (x86 or x64). Failure to select the
+Windows binaries are available for various combinations of PHP version,
+thread safety (TS or NTS), and architecture (x86 or x64). Failure to select the
 correct binary will result in an error when attempting to load the extension DLL
 at runtime:
 
@@ -88,13 +88,16 @@ Ensure that you have downloaded a DLL that corresponds to the following PHP
 runtime properties:
 
 - PHP version (``PHP_VERSION``)
-- Thread-safety (``PHP_ZTS``)
+- Thread safety (``PHP_ZTS``)
 - Architecture (``PHP_INT_SIZE``)
 
 In addition to the aforementioned constants, these properties can also be
 inferred from :php:`phpinfo() <phpinfo>`. If your system has multiple PHP
 runtimes installed, double-check that you are examining the ``phpinfo()`` output
 for the correct environment.
+
+The aforementioned ``detect-extension`` script can also be used to determine the
+appropriate DLL for your PHP environment.
 
 Server Selection Failures
 -------------------------

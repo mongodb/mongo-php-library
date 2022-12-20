@@ -253,11 +253,6 @@ functions:
             -name 'mongo_crypt_v1.dll' -o \
             -name 'mongo_crypt_v1.dylib')"
 
-          # If we're on Windows, convert the "cygdrive" path to Windows-style paths.
-          if [ "Windows_NT" = "$OS" ]; then
-              CRYPT_SHARED_LIB_PATH=$(cygpath -m $CRYPT_SHARED_LIB_PATH)
-          fi
-
           echo "CRYPT_SHARED_LIB_PATH: $CRYPT_SHARED_LIB_PATH" >> crypt-expansion.yml
 
     # Load the expansion file to make an evergreen variable with the current unique version

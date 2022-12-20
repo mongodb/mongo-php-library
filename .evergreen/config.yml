@@ -214,7 +214,7 @@ functions:
         file: src/serverless-expansion.yml
     - command: shell.exec
       params:
-        shell: "bash"
+        shell: bash
         script: |
           ${PREPARE_SHELL}
 
@@ -432,6 +432,7 @@ functions:
     - command: shell.exec
       # Init venv without background:true to install dependencies
       params:
+        shell: bash
         script: |-
           set -o errexit
           cd ${DRIVERS_TOOLS}/.evergreen/csfle
@@ -439,6 +440,7 @@ functions:
     - command: shell.exec
       params:
         background: true
+        shell: bash
         # Use different ports for KMS HTTP servers to avoid conflicts with load balancers
         script: |-
           set -o errexit

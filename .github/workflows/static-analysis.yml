@@ -54,15 +54,10 @@ jobs:
       - name: "Show driver information"
         run: "php --ri mongodb"
 
-      - name: "Cache dependencies installed with Composer"
-        uses: "actions/cache@v2"
-        with:
-          path: "~/.composer/cache"
-          key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
-
       - name: "Install dependencies with Composer"
-        run: "composer install --no-interaction --no-progress --no-suggest"
+        uses: "ramsey/composer-install@2.2.0"
+        with:
+          composer-options: "--no-suggest"
 
       - name: "Run Psalm"
         run: "vendor/bin/psalm --show-info=false --stats --output-format=github --threads=$(nproc)"

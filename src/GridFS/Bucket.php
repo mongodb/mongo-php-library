@@ -494,7 +494,7 @@ class Bucket
     }
 
     /**
-     * Opens a readable stream stream to read a GridFS file, which is selected
+     * Opens a readable stream to read a GridFS file, which is selected
      * by name and revision.
      *
      * Supported options:

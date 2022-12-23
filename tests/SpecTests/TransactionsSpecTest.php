@@ -235,7 +235,7 @@ class TransactionsSpecTest extends FunctionalTestCase
             $this->markTestSkipped('Pinning tests require mongos');
         }
 
-        $client = self::createTestClient($this->getUri(true));
+        $client = self::createTestClient(static::getUri(true));
 
         $session = $client->startSession();
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
@@ -275,7 +275,7 @@ class TransactionsSpecTest extends FunctionalTestCase
             $this->markTestSkipped('Pinning tests require mongos');
         }
 
-        $client = self::createTestClient($this->getUri(true));
+        $client = self::createTestClient(static::getUri(true));
 
         $session = $client->startSession();
         $collection = $client->selectCollection($this->getDatabaseName(), $this->getCollectionName());

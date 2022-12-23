@@ -1,7 +1,6 @@
-.PHONY: composer test
-
 COMPOSER_ARGS=update --no-interaction --prefer-source
 
+.PHONY: composer
 composer:
 	@command -v composer >/dev/null 2>&1; \
 	if test $$? -eq 0; then \
@@ -13,5 +12,6 @@ composer:
 		false; \
 	fi
 
+.PHONY: test
 test: composer
 	vendor/bin/phpunit

@@ -543,14 +543,12 @@ final class UnifiedTestRunner
             $context->setUrisForUseMultipleMongoses($singleMongosUri, $multiMongosUri);
         }
 
-        /* TODO: Enable this logic once PHPLIB-794 is implemented. For now, load
-         * balancer tests will continue to use MONGODB_URI. */
-        if (false && $this->getPrimaryServer()->getType() === Server::TYPE_LOAD_BALANCER && ! $this->isServerless()) {
+        if ($this->getPrimaryServer()->getType() === Server::TYPE_LOAD_BALANCER && ! $this->isServerless()) {
             $singleMongosUri = getenv('MONGODB_SINGLE_MONGOS_LB_URI');
             $multiMongosUri = getenv('MONGODB_MULTI_MONGOS_LB_URI');
 
-            assertNotFalse($singleMongosUri);
-            assertNotFalse($multiMongosUri);
+            assertNotEmpty($singleMongosUri);
+            assertNotEmpty($multiMongosUri);
 
             $context->setUrisForUseMultipleMongoses($singleMongosUri, $multiMongosUri);
         }

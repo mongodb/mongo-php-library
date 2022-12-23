@@ -297,6 +297,8 @@ functions:
           export KMS_TLS_CA_FILE="${client_side_encryption_kms_tls_ca_file}"
           export KMS_TLS_CERTIFICATE_KEY_FILE="${client_side_encryption_kms_tls_certificate_key_file}"
           export PATH="${PHP_PATH}/bin:$PATH"
+          export MONGODB_SINGLE_MONGOS_LB_URI="${SINGLE_MONGOS_LB_URI}"
+          export MONGODB_MULTI_MONGOS_LB_URI="${MULTI_MONGOS_LB_URI}"
 
           API_VERSION=${API_VERSION} \
           CRYPT_SHARED_LIB_PATH=${CRYPT_SHARED_LIB_PATH} \

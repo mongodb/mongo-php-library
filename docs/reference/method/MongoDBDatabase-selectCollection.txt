@@ -71,7 +71,7 @@ database with a custom read preference:
    $users = $db->selectCollection(
        'users',
        [
-           'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_SECONDARY),
+           'readPreference' => new MongoDB\Driver\ReadPreference('primaryPreferred'),
        ]
    );
 

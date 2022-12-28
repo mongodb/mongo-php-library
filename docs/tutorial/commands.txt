@@ -236,7 +236,7 @@ custom read preference:
            'roles' => ['readWrite'],
        ],
        [
-           'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::RP_PRIMARY),
+           'readPreference' => new MongoDB\Driver\ReadPreference('primaryPreferred'),
        ]
    );
 

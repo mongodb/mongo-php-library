@@ -15,7 +15,9 @@ Definition
 
 .. phpmethod:: MongoDB\\Database::command()
 
-   Execute a :manual:`command </reference/command>` on the database.
+   Execute a :manual:`command </reference/command>` on the database. This is
+   generally used to execute commands that do not have a corresponding helper
+   method within the library.
 
    .. code-block:: php
 
@@ -43,9 +45,10 @@ Errors/Exceptions
 Example
 -------
 
-The following example executes a :manual:`ping
-</reference/command/ping>` command, which returns a cursor with a single
-result document:
+Most database commands return a single result document, which can be obtained by
+converting the returned cursor to an array and accessing its first element. The
+following example executes a :manual:`ping </reference/command/ping>` command
+and prints its result document:
 
 .. code-block:: php
 
@@ -55,7 +58,7 @@ result document:
 
    $cursor = $database->command(['ping' => 1]);
 
-   var_dump($c->toArray()[0]);
+   var_dump($cursor->toArray()[0]);
 
 The output would resemble:
 
@@ -69,9 +72,11 @@ The output would resemble:
      }
    }
 
-The following example executes a :manual:`listCollections
-</reference/command/listCollections>` command, which returns a cursor with
-multiple result documents:
+Some database commands return a cursor with multiple results. The following
+example executes :manual:`listCollections </reference/command/listCollections>`,
+which returns a cursor containing a result document for each collection in the
+``test`` database. Note that this example is illustrative; applications would
+generally use :phpmethod:`MongoDB\\Database::listCollections()` in practice.
 
 .. code-block:: php
 
@@ -81,7 +86,7 @@ multiple result documents:
 
    $cursor = $database->command(['listCollections' => 1]);
 
-   var_dump($c->toArray());
+   var_dump($cursor->toArray());
 
 The output would resemble:
 

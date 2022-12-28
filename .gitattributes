@@ -1,0 +1,13 @@
+.* export-ignore
+*.md export-ignore
+tests export-ignore
+docs export-ignore
+examples export-ignore
+mongo-orchestration export-ignore
+tools export-ignore
+Makefile export-ignore
+phpcs.xml.dist export-ignore
+phpunit.evergreen.xml export-ignore
+phpunit.xml.dist export-ignore
+psalm.xml.dist export-ignore
+psalm-baseline.xml export-ignore

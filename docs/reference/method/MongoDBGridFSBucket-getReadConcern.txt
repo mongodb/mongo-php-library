@@ -37,7 +37,7 @@ Example
 
    $database = (new MongoDB\Client)->selectDatabase('test');
    $bucket = $database->selectGridFSBucket([
-      'readConcern' => new MongoDB\Driver\ReadConcern(MongoDB\Driver\ReadConcern::MAJORITY),
+      'readConcern' => new MongoDB\Driver\ReadConcern('majority'),
    ]);
 
    var_dump($bucket->getReadConcern());

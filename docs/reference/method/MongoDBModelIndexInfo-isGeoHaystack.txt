@@ -17,12 +17,16 @@ Definition
 
 .. phpmethod:: MongoDB\\Model\\IndexInfo::isGeoHaystack()
 
-   Return whether the index is a :manual:`geoHaystack
-   </core/geohaystack>` index.
+   Return whether the index is a :manual:`geoHaystack </core/geohaystack>`
+   index.
 
    .. code-block:: php
 
       function isGeoHaystack(): boolean
+
+   .. note::
+
+      MongoDB 5.0 and later no longer supports geoHaystack indexes.
 
 Return Values
 -------------

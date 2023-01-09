@@ -36,7 +36,7 @@ Example
    <?php
 
    $collection = (new MongoDB\Client)->selectCollection('test', 'users', [
-      'readConcern' => new MongoDB\Driver\ReadConcern(MongoDB\Driver\ReadConcern::MAJORITY),
+      'readConcern' => new MongoDB\Driver\ReadConcern('majority'),
    ]);
 
    var_dump($collection->getReadConcern());

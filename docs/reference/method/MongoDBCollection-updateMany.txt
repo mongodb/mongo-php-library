@@ -61,7 +61,7 @@ The following example updates all of the documents with the ``borough`` of
 
    $updateResult = $collection->updateMany(
        [ 'borough' => 'Queens' ],
-       [ '$set' => [ 'active' => 'True' ]]
+       [ '$set' => [ 'active' => true ]]
    );
 
    printf("Matched %d document(s)\n", $updateResult->getMatchedCount());

@@ -20,7 +20,6 @@ use MongoDB\Operation\ListCollections;
 use stdClass;
 use UnexpectedValueException;
 
-use function array_merge;
 use function call_user_func;
 use function count;
 use function current;
@@ -90,63 +89,16 @@ abstract class FunctionalTestCase extends TestCase
 
     public static function getUri($allowMultipleMongoses = false): string
     {
-        $uri = parent::getUri();
-
+        /* If multiple mongoses are allowed, the multi-mongos load balanced URI
+         * can be used if available; otherwise, fall back MONGODB_URI. */
         if ($allowMultipleMongoses) {
-            return $uri;
+            return getenv('MONGODB_MULTI_MONGOS_LB_URI') ?: parent::getUri();
         }
 
-        $urlParts = parse_url($uri);
-        if ($urlParts === false) {
-            return $uri;
-        }
-
-        // Only modify URIs using the mongodb scheme
-        if ($urlParts['scheme'] !== 'mongodb') {
-            return $uri;
-        }
-
-        $hosts = explode(',', $urlParts['host']);
-        $numHosts = count($hosts);
-        if ($numHosts === 1) {
-            return $uri;
-        }
-
-        $manager = static::createTestManager($uri);
-        if ($manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY))->getType() !== Server::TYPE_MONGOS) {
-            return $uri;
-        }
-
-        // Re-append port to last host
-        if (isset($urlParts['port'])) {
-            $hosts[$numHosts - 1] .= ':' . $urlParts['port'];
-        }
-
-        $parts = ['mongodb://'];
-
-        if (isset($urlParts['user'], $urlParts['pass'])) {
-            $parts += [
-                $urlParts['user'],
-                ':',
-                $urlParts['pass'],
-                '@',
-            ];
-        }
-
-        $parts[] = $hosts[0];
-
-        if (isset($urlParts['path'])) {
-            $parts[] = $urlParts['path'];
-        }
-
-        if (isset($urlParts['query'])) {
-            $parts = array_merge($parts, [
-                '?',
-                $urlParts['query'],
-            ]);
-        }
-
-        return implode('', $parts);
+        /* If multiple mongoses are prohibited, the single-mongos load balanced
+         * URI can be used if available; otherwise, we need to conditionally
+         * process MONGODB_URI. */
+        return getenv('MONGODB_SINGLE_MONGOS_LB_URI') ?: static::getUriWithoutMultipleMongoses();
     }
 
     protected function assertCollectionCount($namespace, $count): void
@@ -627,6 +579,70 @@ abstract class FunctionalTestCase extends TestCase
             $operation = new DatabaseCommand('admin', ['configureFailPoint' => $failPoint, 'mode' => 'off']);
             $operation->execute($server);
         }
+    }
+
+    private static function getUriWithoutMultipleMongoses(): string
+    {
+        /* Cache the result. We can safely assume the topology type will remain
+         * constant for the duration of the test suite. */
+        static $uri;
+
+        if (isset($uri)) {
+            return $uri;
+        }
+
+        $uri = parent::getUri();
+        $parsed = parse_url($uri);
+
+        if (! isset($parsed['scheme'], $parsed['host'])) {
+            throw new UnexpectedValueException('Failed to parse scheme and host components from URI: ' . $uri);
+        }
+
+        // Only modify URIs using the mongodb scheme
+        if ($parsed['scheme'] !== 'mongodb') {
+            return $uri;
+        }
+
+        $hosts = explode(',', $parsed['host']);
+        $numHosts = count($hosts);
+
+        if ($numHosts === 1) {
+            return $uri;
+        }
+
+        $manager = static::createTestManager($uri);
+        if ($manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY))->getType() !== Server::TYPE_MONGOS) {
+            return $uri;
+        }
+
+        // Re-append port to last host
+        if (isset($parsed['port'])) {
+            $hosts[$numHosts - 1] .= ':' . $parsed['port'];
+        }
+
+        $parts = ['mongodb://'];
+
+        if (isset($parsed['user'], $parsed['pass'])) {
+            $parts[] = $parsed['user'] . ':' . $parsed['pass'] . '@';
+        }
+
+        $parts[] = $hosts[0];
+
+        if (isset($parsed['path'])) {
+            $parts[] = $parsed['path'];
+        } elseif (isset($parsed['query'])) {
+            /* URIs containing connection options but no auth database component
+             * still require a slash before the question mark */
+            $parts[] = '/';
+        }
+
+        if (isset($parsed['query'])) {
+            $parts[] = '?' . $parsed['query'];
+        }
+
+        $uri = implode('', $parts);
+
+        return $uri;
     }
 
     /**

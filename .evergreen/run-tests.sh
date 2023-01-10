@@ -7,6 +7,8 @@ CRYPT_SHARED_LIB_PATH="${CRYPT_SHARED_LIB_PATH:-}" # Optional path to crypt_shar
 DRIVER_MONGODB_VERSION=${DRIVER_MONGODB_VERSION:-} # Required if IS_MATRIX_TESTING is "true"
 IS_MATRIX_TESTING=${IS_MATRIX_TESTING:-} # Specify "true" to enable matrix testing. Defaults to empty string. If "true", DRIVER_MONGODB_VERSION and MONGODB_VERSION will also be checked.
 MONGODB_URI=${MONGODB_URI:-} # Connection string (including credentials and topology info)
+MONGODB_SINGLE_MONGOS_LB_URI=${MONGODB_SINGLE_MONGOS_LB_URI:-} # Single-mongos LB connection string
+MONGODB_MULTI_MONGOS_LB_URI=${MONGODB_MULTI_MONGOS_LB_URI:-} # Multi-mongos LB connection string
 MONGODB_VERSION=${MONGODB_VERSION:-} # Required if IS_MATRIX_TESTING is "true"
 SKIP_CRYPT_SHARED="${SKIP_CRYPT_SHARED:-no}" # Specify "yes" to ignore CRYPT_SHARED_LIB_PATH. Defaults to "no"
 SSL=${SSL:-no} # Specify "yes" to enable SSL. Defaults to "no"
@@ -44,14 +46,25 @@ fi
 # Enable verbose output to see skipped and incomplete tests
 PHPUNIT_OPTS="${PHPUNIT_OPTS} -v --configuration phpunit.evergreen.xml"
 
-# Determine if MONGODB_URI already has a query string
-SUFFIX=$(echo "$MONGODB_URI" | grep -Eo "\?(.*)" | cat)
-
 if [ "$SSL" = "yes" ]; then
+   SSL_OPTS="ssl=true&sslallowinvalidcertificates=true"
+
+   # Determine if MONGODB_URI already has a query string
+   SUFFIX=$(echo "$MONGODB_URI" | grep -Eo "\?(.*)" | cat)
+
    if [ -z "$SUFFIX" ]; then
-      MONGODB_URI="${MONGODB_URI}/?ssl=true&sslallowinvalidcertificates=true"
+      MONGODB_URI="${MONGODB_URI}/?${SSL_OPTS}"
    else
-      MONGODB_URI="${MONGODB_URI}&ssl=true&sslallowinvalidcertificates=true"
+      MONGODB_URI="${MONGODB_URI}&${SSL_OPTS}"
+   fi
+
+   # Assume LB URIs already have a query string (e.g. "?loadBalanced=true")
+   if [ -n "${MONGODB_SINGLE_MONGOS_LB_URI}" ]; then
+      MONGODB_SINGLE_MONGOS_LB_URI="${MONGODB_SINGLE_MONGOS_LB_URI}&${SSL_OPTS}"
+   fi
+
+   if [ -n "${MONGODB_MULTI_MONGOS_LB_URI}" ]; then
+      MONGODB_MULTI_MONGOS_LB_URI="${MONGODB_MULTI_MONGOS_LB_URI}&${SSL_OPTS}"
    fi
 fi
 
@@ -65,6 +78,8 @@ export SYMFONY_DEPRECATIONS_HELPER=999999
 export API_VERSION="${API_VERSION}"
 export CRYPT_SHARED_LIB_PATH="${CRYPT_SHARED_LIB_PATH}"
 export MONGODB_URI="${MONGODB_URI}"
+export MONGODB_SINGLE_MONGOS_LB_URI="${MONGODB_SINGLE_MONGOS_LB_URI}"
+export MONGODB_MULTI_MONGOS_LB_URI="${MONGODB_MULTI_MONGOS_LB_URI}"
 
 # Run the tests, and store the results in a junit result file
 case "$TESTS" in

@@ -48,7 +48,7 @@ class BulkWriteResult
      *
      * @see BulkWriteResult::isAcknowledged()
      * @return integer|null
-     * @throws BadMethodCallException is the write result is unacknowledged
+     * @throws BadMethodCallException if the write result is unacknowledged
      */
     public function getDeletedCount()
     {
@@ -66,7 +66,7 @@ class BulkWriteResult
      *
      * @see BulkWriteResult::isAcknowledged()
      * @return integer|null
-     * @throws BadMethodCallException is the write result is unacknowledged
+     * @throws BadMethodCallException if the write result is unacknowledged
      */
     public function getInsertedCount()
     {
@@ -100,7 +100,7 @@ class BulkWriteResult
      *
      * @see BulkWriteResult::isAcknowledged()
      * @return integer|null
-     * @throws BadMethodCallException is the write result is unacknowledged
+     * @throws BadMethodCallException if the write result is unacknowledged
      */
     public function getMatchedCount()
     {
@@ -121,7 +121,7 @@ class BulkWriteResult
      *
      * @see BulkWriteResult::isAcknowledged()
      * @return integer|null
-     * @throws BadMethodCallException is the write result is unacknowledged
+     * @throws BadMethodCallException if the write result is unacknowledged
      */
     public function getModifiedCount()
     {
@@ -139,7 +139,7 @@ class BulkWriteResult
      *
      * @see BulkWriteResult::isAcknowledged()
      * @return integer|null
-     * @throws BadMethodCallException is the write result is unacknowledged
+     * @throws BadMethodCallException if the write result is unacknowledged
      */
     public function getUpsertedCount()
     {
@@ -162,7 +162,7 @@ class BulkWriteResult
      *
      * @see BulkWriteResult::isAcknowledged()
      * @return array
-     * @throws BadMethodCallException is the write result is unacknowledged
+     * @throws BadMethodCallException if the write result is unacknowledged
      */
     public function getUpsertedIds()
     {

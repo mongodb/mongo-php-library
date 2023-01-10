@@ -26,8 +26,6 @@ Consider the following example application:
 
 .. code-block:: php
 
-   <?php
-
    /**
     * When constructing a Client, the library creates a MongoDB\Driver\Manager
     * object from the driver. In turn, the driver will either create a libmongoc

@@ -34,8 +34,6 @@ Example
 
 .. code-block:: php
 
-   <?php
-
    $database = (new MongoDB\Client)->selectDatabase('test', [
        'readPreference' => new MongoDB\Driver\ReadPreference('primaryPreferred'),
    ]);

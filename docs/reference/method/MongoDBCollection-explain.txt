@@ -70,8 +70,6 @@ This example explains a count command.
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->restaurants;
 
    $count = new MongoDB\Operation\Count(

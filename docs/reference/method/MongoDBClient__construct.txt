@@ -61,8 +61,6 @@ creating the :phpclass:`Client <MongoDB\\Client>` instance:
 
 .. code-block:: php
 
-   <?php
-
    $client = new MongoDB\Client('mongodb://mongodb-deployment:27017');
 
 Connecting to a Replica Set
@@ -72,8 +70,6 @@ The following example demonstrates how to connect to a replica set with a custom
 read preference:
 
 .. code-block:: php
-
-   <?php
 
    $client = new MongoDB\Client(
        'mongodb://rs1.example.com,rs2.example.com/?replicaSet=myReplicaSet',
@@ -91,8 +87,6 @@ SSL and authentication, as is used for `MongoDB Atlas
 
 .. code-block:: php
 
-   <?php
-
    $client = new MongoDB\Client(
        'mongodb://myUsername:myPassword@rs1.example.com,rs2.example.com/?ssl=true&replicaSet=myReplicaSet&authSource=admin'
    );
@@ -101,8 +95,6 @@ Alternatively, the authentication credentials and URI parameters may be
 specified in the constructor's ``$uriOptions`` parameter:
 
 .. code-block:: php
-
-   <?php
 
    $client = new MongoDB\Client(
        'mongodb://rs1.example.com,rs2.example.com/'
@@ -133,8 +125,6 @@ example demonstrates how to have the library unserialize everything as a PHP
 array, as was done in the legacy ``mongo`` extension.
 
 .. code-block:: php
-
-   <?php
 
    $client = new MongoDB\Client(
        null,

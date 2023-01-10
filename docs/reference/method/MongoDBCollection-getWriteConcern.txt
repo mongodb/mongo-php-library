@@ -34,8 +34,6 @@ Example
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->selectCollection('test', 'users', [
       'writeConcern' => new MongoDB\Driver\WriteConcern(1, 0, true),
    ]);

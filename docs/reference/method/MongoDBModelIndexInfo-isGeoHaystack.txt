@@ -38,8 +38,6 @@ Examples
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->selectCollection('test', 'places');
 
    $collection->createIndex(['pos' => 'geoHaystack', 'x' => 1], ['bucketSize' => 5]);

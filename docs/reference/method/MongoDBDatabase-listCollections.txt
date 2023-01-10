@@ -43,8 +43,6 @@ The following example lists all of the collections in the ``test`` database:
 
 .. code-block:: php
 
-   <?php
-
    $database = (new MongoDB\Client)->test;
 
    foreach ($database->listCollections() as $collectionInfo) {
@@ -81,8 +79,6 @@ The following example lists all collections whose name starts with ``"rest"``
 in the ``test`` database:
 
 .. code-block:: php
-
-   <?php
 
    $database = (new MongoDB\Client)->test;
 

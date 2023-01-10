@@ -60,8 +60,6 @@ running command operations.
 
 .. code-block:: php
 
-   <?php
-
    $database = (new MongoDB\Client)->admin;
 
    $cursor = $database->aggregate(

@@ -86,8 +86,6 @@ creation command specifies another collation.
 
 .. code-block:: php
 
-   <?php
-
    $database = (new MongoDB\Client)->test;
 
    $database->createCollection('contacts', [
@@ -106,8 +104,6 @@ collation with ``locale`` set to ``en_US``.
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->address_book;
 
    $collection->createIndex(
@@ -123,8 +119,6 @@ following query uses the above index:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->address_book;
 
    $cursor = $collection->find(
@@ -139,8 +133,6 @@ collation, and the second uses a collation with a different ``strength`` value
 than the collation on the index.
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->address_book;
 
@@ -171,8 +163,6 @@ results. The following query and sort operation uses a German collation with the
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->contacts;
 
    $cursor = $collection->find(
@@ -201,8 +191,6 @@ specify a collation.
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->names;
 
    $document = $collection->findOneAndUpdate(
@@ -225,8 +213,6 @@ specified, which uses the locale ``de@collation=phonebook``.
    the same characters without umlauts.
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->names;
 
@@ -264,8 +250,6 @@ numeric value greater than 100 and deletes it.
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->numbers;
 
    $document = $collection->findOneAndDelete(
@@ -290,8 +274,6 @@ first document it finds in which the lexical value of ``a`` is greater than
 ``"100"``.
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->numbers;
 
@@ -328,8 +310,6 @@ uses a case-insensitive query filter to delete all records in which the
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->recipes;
 
    $collection->deleteMany(
@@ -357,8 +337,6 @@ the ``first_name`` field together, counts the total number of results in each
 group, and sorts the results by German phonebook order.
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->names;
 

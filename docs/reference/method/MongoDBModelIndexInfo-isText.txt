@@ -33,8 +33,6 @@ Examples
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->selectCollection('test', 'restaurants');
 
    $collection->createIndex(['name' => 'text']);

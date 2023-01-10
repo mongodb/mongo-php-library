@@ -57,8 +57,6 @@ The following operation inserts a document into the ``users`` collection in the
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->users;
 
    $insertOneResult = $collection->insertOne([

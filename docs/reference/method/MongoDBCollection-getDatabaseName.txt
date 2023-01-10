@@ -34,8 +34,6 @@ The following returns the database name for the ``zips`` collection in the
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->zips;
 
    echo $collection->getDatabaseName();

@@ -130,8 +130,6 @@ everything as a PHP array:
 
 .. code-block:: php
 
-   <?php
-
    $client = new MongoDB\Client(
        'mongodb://127.0.0.1/',
        [],
@@ -356,8 +354,6 @@ demonstrates how to execute a group command using the
 :phpmethod:`MongoDB\\Database::command()` method:
 
 .. code-block:: php
-
-   <?php
 
    $database = (new MongoDB\Client)->selectDatabase('db_name');
    $cursor = $database->command([

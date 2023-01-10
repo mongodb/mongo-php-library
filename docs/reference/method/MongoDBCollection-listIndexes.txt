@@ -49,8 +49,6 @@ collection in the ``test`` database:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->restaurants;
 
    foreach ($collection->listIndexes() as $index) {

@@ -34,8 +34,6 @@ field of a collection named ``inventory``:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->inventory;
 
    $collection->insertOne([
@@ -80,8 +78,6 @@ The following example adds two ``Decimal128`` values and creates a new
 
 .. code-block:: php
 
-   <?php
-
    $lhs = new MongoDB\BSON\Decimal128('1.234');
    $rhs = new MongoDB\BSON\Decimal128('5.678');
    $sum = new MongoDB\BSON\Decimal128(bcadd($lhs, $rhs));
@@ -106,8 +102,6 @@ In the following example, we use a scale of three for :php:`bcadd() <bcadd>` to
 obtain the expected result:
 
 .. code-block:: php
-
-   <?php
 
    $lhs = new MongoDB\BSON\Decimal128('1.234');
    $rhs = new MongoDB\BSON\Decimal128('5.678');

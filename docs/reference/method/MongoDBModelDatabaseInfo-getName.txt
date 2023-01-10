@@ -31,8 +31,6 @@ Examples
 
 .. code-block:: php
 
-   <?php
-
    $info = new DatabaseInfo(['name' => 'foo']);
 
    echo $info->getName();

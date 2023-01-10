@@ -34,8 +34,6 @@ Example
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->selectCollection('test', 'users', [
        'readPreference' => new MongoDB\Driver\ReadPreference('primaryPreferred'),
    ]);

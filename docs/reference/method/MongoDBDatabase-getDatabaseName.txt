@@ -33,8 +33,6 @@ The following example prints the name of a database object:
 
 .. code-block:: php
 
-   <?php
-
    $db = (new MongoDB\Client)->test;
 
    echo $db->getDatabaseName();

@@ -31,8 +31,6 @@ Examples
 
 .. code-block:: php
 
-   <?php
-
    $info = new DatabaseInfo(['empty' => true]);
 
    var_dump($info->isEmpty());

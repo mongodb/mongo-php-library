@@ -53,8 +53,6 @@ database to ``places``:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->restaurants;
 
    $result = $collection->rename('places');

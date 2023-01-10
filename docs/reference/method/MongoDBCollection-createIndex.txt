@@ -58,8 +58,6 @@ the ``test`` database.
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->selectCollection('test', 'restaurants');
 
    $indexName = $collection->createIndex(['borough' => 1, 'cuisine' => 1]);
@@ -81,8 +79,6 @@ database. The partial index indexes only documents where the ``borough`` field
 exists.
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->selectCollection('test', 'restaurants');
 

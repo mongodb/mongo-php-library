@@ -33,8 +33,6 @@ Example
 
 .. code-block:: php
 
-   <?php
-
    $client = new MongoDB\Client('mongodb://127.0.0.1/', [], [
        'typeMap' => [
            'root' => 'array',

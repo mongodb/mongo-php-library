@@ -52,8 +52,6 @@ The following drops all indexes from the ``restaurants`` collection in the
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->restaurants;
 
    $result = $collection->dropIndexes();

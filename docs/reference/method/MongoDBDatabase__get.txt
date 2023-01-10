@@ -54,8 +54,6 @@ collections from the ``test`` database:
 
 .. code-block:: php
 
-   <?php
-
    $db = (new MongoDB\Client)->test;
 
    $users = $db->users;

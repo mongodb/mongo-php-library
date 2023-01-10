@@ -34,8 +34,6 @@ Examples
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->selectCollection('test', 'places');
 
    $collection->createIndex(['pos' => '2dsphere']);

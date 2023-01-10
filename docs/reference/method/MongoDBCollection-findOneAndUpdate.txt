@@ -59,8 +59,6 @@ setting its building number to ``"761"``:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->restaurants;
 
    $updatedRestaurant = $collection->findOneAndUpdate(

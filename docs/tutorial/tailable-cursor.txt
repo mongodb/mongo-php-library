@@ -56,8 +56,6 @@ results:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->restaurants;
 
    $cursor = $collection->find([], ['limit' => 5]);
@@ -78,8 +76,6 @@ With the inner workings of ``foreach`` under our belt, we can now translate the
 preceding example to use the Iterator methods directly:
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->restaurants;
 
@@ -113,8 +109,6 @@ to insert a new document into that collection each second.
 
 .. code-block:: php
 
-   <?php
-
    $database = (new MongoDB\Client)->test;
 
    $database->createCollection('capped', [
@@ -136,8 +130,6 @@ by using ``foreach`` to illustrate its shortcomings:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->capped;
 
    $cursor = $collection->find([], [
@@ -156,8 +148,6 @@ cursor. This is a ripe use case for directly controlling the iteration process
 using the :php:`Iterator <iterator>` interface.
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->capped;
 

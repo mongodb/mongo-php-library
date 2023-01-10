@@ -97,8 +97,6 @@ The following operation replaces the document with ``restaurant_id`` of
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->teset->restaurants;
 
    $replacedRestaurant = $collection->findOneAndReplace(

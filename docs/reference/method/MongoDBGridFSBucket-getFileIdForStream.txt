@@ -43,8 +43,6 @@ Examples
 
 .. code-block:: php
 
-   <?php
-
    $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
 
    $stream = $bucket->openUploadStream('filename');

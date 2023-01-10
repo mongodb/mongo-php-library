@@ -35,8 +35,6 @@ and prints its result document:
 
 .. code-block:: php
 
-   <?php
-
    $database = (new MongoDB\Client)->test;
 
    $cursor = $database->command(['ping' => 1]);
@@ -66,8 +64,6 @@ Note that this example is illustrative; applications would generally use
 :phpmethod:`MongoDB\\Database::listCollections()` in practice.
 
 .. code-block:: php
-
-   <?php
 
    $database = (new MongoDB\Client)->test;
 
@@ -114,8 +110,6 @@ as the Client's default read preference. It then specifies a ``primary`` read
 preference when executing the ``createUser`` command on the ``test`` database:
 
 .. code-block:: php
-
-   <?php
 
    $client = new MongoDB\Client(
       'mongodb+srv://cluster0.example.com',

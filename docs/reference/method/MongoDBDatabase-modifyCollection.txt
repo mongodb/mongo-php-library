@@ -52,8 +52,6 @@ The following example changes the expiration time of a TTL collection in the
 
 .. code-block:: php
 
-   <?php
-
    $db = (new MongoDB\Client)->test;
 
    $result = $db->modifyCollection('users', [

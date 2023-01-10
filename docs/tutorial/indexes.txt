@@ -35,8 +35,6 @@ the :phpmethod:`createIndex() <MongoDB\\Collection::createIndex()>` method:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->zips;
 
    $result = $collection->createIndex(['state' => 1]);
@@ -64,8 +62,6 @@ The following example lists all indexes in the ``zips`` collection in the
 ``test`` database:
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->zips;
 
@@ -115,8 +111,6 @@ each method.
 The following example drops a single index by its name, ``state_1``:
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->zips;
 

@@ -52,8 +52,6 @@ and prints its result document:
 
 .. code-block:: php
 
-   <?php
-
    $database = (new MongoDB\Client)->test;
 
    $cursor = $database->command(['ping' => 1]);
@@ -79,8 +77,6 @@ which returns a cursor containing a result document for each collection in the
 generally use :phpmethod:`MongoDB\\Database::listCollections()` in practice.
 
 .. code-block:: php
-
-   <?php
 
    $database = (new MongoDB\Client)->test;
 

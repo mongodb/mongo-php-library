@@ -66,8 +66,6 @@ database with document validation criteria:
 
 .. code-block:: php
 
-   <?php
-
    $db = (new MongoDB\Client)->test;
 
    $result = $db->createCollection('users', [

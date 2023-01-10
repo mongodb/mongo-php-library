@@ -38,8 +38,6 @@ This example reports the index of events while iterating a change stream.
 
 .. code-block:: php
 
-   <?php
-
    $uri = 'mongodb://rs1.example.com,rs2.example.com/?replicaSet=myReplicaSet';
 
    $collection = (new MongoDB\Client($uri))->test->inventory;

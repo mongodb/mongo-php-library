@@ -58,8 +58,6 @@ in the ``restaurants`` collection in the ``test`` database.
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->restaurants;
 
    $distinct = $collection->distinct('borough');
@@ -93,8 +91,6 @@ in the ``restaurants`` collection in the ``test`` database for documents where
 the ``borough`` is ``Queens``:
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->restaurants;
 

@@ -58,8 +58,6 @@ in the ``test`` database:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->users;
 
    $insertManyResult = $collection->insertMany([

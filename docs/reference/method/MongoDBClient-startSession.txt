@@ -45,8 +45,6 @@ The following example starts a new session:
 
 .. code-block:: php
 
-   <?php
-
    $client = new MongoDB\Client;
 
    $session = $client->startSession();

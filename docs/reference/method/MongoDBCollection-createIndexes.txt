@@ -72,8 +72,6 @@ custom name.
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->selectCollection('test', 'restaurants');
 
    $indexNames = $collection->createIndexes([

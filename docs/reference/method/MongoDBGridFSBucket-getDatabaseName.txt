@@ -31,8 +31,6 @@ Examples
 
 .. code-block:: php
 
-   <?php
-
    $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
 
    var_dump($bucket->getDatabaseName());

@@ -50,8 +50,6 @@ The following example lists all databases on the server:
 
 .. code-block:: php
 
-   <?php
-
    $client = new MongoDB\Client;
 
    foreach ($client->listDatabases() as $databaseInfo) {

@@ -22,8 +22,6 @@ introduced in future versions of the server.
 
 .. code-block:: php
 
-   <?php
-
    use MongoDB\Client;
    use MongoDB\Driver\ServerApi;
 
@@ -50,8 +48,6 @@ stable API, specify the ``strict`` option when creating the
 
 .. code-block:: php
 
-   <?php
-
    use MongoDB\Client;
    use MongoDB\Driver\ServerApi;
 
@@ -69,8 +65,6 @@ or behaviors that have been deprecated in the API version. This can be used in
 testing to ensure a smooth transition to a future API version.
 
 .. code-block:: php
-
-   <?php
 
    use MongoDB\Client;
    use MongoDB\Driver\ServerApi;

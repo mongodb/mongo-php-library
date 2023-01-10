@@ -59,8 +59,6 @@ has ``"ny"`` as the value for the ``state`` field:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->users;
    $collection->drop();
 

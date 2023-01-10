@@ -56,8 +56,6 @@ The following example finds and deletes the document with ``restaurant_id`` of
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->restaurants;
 
    $deletedRestaurant = $collection->findOneAndDelete(

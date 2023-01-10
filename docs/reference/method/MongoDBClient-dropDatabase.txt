@@ -50,8 +50,6 @@ The following example drops the ``test`` database:
 
 .. code-block:: php
 
-   <?php
-
    $client = new MongoDB\Client;
 
    $result = $client->dropDatabase('test');

@@ -51,8 +51,6 @@ The following example inserts a document while specifying the value for the
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->users;
 
    $insertOneResult = $collection->insertOne(['_id' => 1, 'name' => 'Alice']);
@@ -106,8 +104,6 @@ query.
 The following example searches for the document with ``_id`` of ``"94301"``:
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->zips;
 
@@ -169,8 +165,6 @@ specified city and state values:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->zips;
 
    $cursor = $collection->find(['city' => 'JERSEY CITY', 'state' => 'NJ']);
@@ -213,8 +207,6 @@ fields and uses a :manual:`projection
 returned. It also limits the results to 5 documents.
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->restaurants;
 
@@ -317,8 +309,6 @@ five most populous zip codes in the United States:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->zips;
 
    $cursor = $collection->find(
@@ -354,8 +344,6 @@ The following example lists documents in the ``zips`` collection where the city
 name starts with "garden" and the state is Texas:
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->zips;
 
@@ -394,8 +382,6 @@ following example finds restaurants whose name starts with "(Library)":
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->restaurants;
 
    $cursor = $collection->find([
@@ -419,8 +405,6 @@ The following example lists the 5 US states with the most zip codes associated
 with them:
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->zips;
 
@@ -469,8 +453,6 @@ is ``"ny"`` to include a ``country`` field set to ``"us"``:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->users;
    $collection->drop();
 
@@ -498,8 +480,6 @@ update, as is the case where the update sets a field's value to its existing
 value, as in this example:
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->users;
    $collection->drop();
@@ -544,8 +524,6 @@ documents matching the filter criteria to include the ``country`` field with
 value ``"us"``:
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->users;
    $collection->drop();
@@ -606,8 +584,6 @@ the ``test`` database, and then replaces that document with a new one:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->users;
    $collection->drop();
 
@@ -649,8 +625,6 @@ the ``upsert`` option set to ``true`` and an empty ``users`` collection in the
 ``test`` database, therefore inserting the document into the database:
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->users;
    $collection->drop();
@@ -718,8 +692,6 @@ value is ``"ny"``:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->users;
    $collection->drop();
 
@@ -753,8 +725,6 @@ The following operation deletes all of the documents where the ``state`` field's
 value is ``"ny"``:
 
 .. code-block:: php
-
-   <?php
 
    $collection = (new MongoDB\Client)->test->users;
    $collection->drop();

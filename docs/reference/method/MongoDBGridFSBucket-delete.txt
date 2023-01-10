@@ -42,8 +42,6 @@ Examples
 
 .. code-block:: php
 
-   <?php
-
    $bucket = (new MongoDB\Client)->test->selectGridFSBucket();
 
    $stream = fopen('php://temp', 'w+b');

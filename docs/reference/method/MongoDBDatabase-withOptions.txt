@@ -47,8 +47,6 @@ preference:
 
 .. code-block:: php
 
-   <?php
-
    $db = (new MongoDB\Client)->test;
 
    $newDb = $db->withOptions([

@@ -73,8 +73,6 @@ Composer's autoloader as in the following example:
 
 .. code-block:: php
 
-   <?php
-
    require_once __DIR__ . '/vendor/autoload.php';
 
 Refer to Composer's `autoloading documentation

@@ -53,8 +53,6 @@ The following example selects the ``test`` database:
 
 .. code-block:: php
 
-   <?php
-
    $client = new MongoDB\Client;
 
    $db = $client->selectDatabase('test');
@@ -63,8 +61,6 @@ The following examples selects the ``test`` database with a custom read
 preference:
 
 .. code-block:: php
-
-   <?php
 
    $client = new MongoDB\Client;
 

@@ -53,8 +53,6 @@ This example reports events while iterating a change stream.
 
 .. code-block:: php
 
-   <?php
-
    $uri = 'mongodb://rs1.example.com,rs2.example.com/?replicaSet=myReplicaSet';
 
    $database = (new MongoDB\Client($uri))->test;

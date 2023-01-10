@@ -34,8 +34,6 @@ Example
 
 .. code-block:: php
 
-   <?php
-
    $database = (new MongoDB\Client)->selectDatabase('test');
    $bucket = $database->selectGridFSBucket([
       'writeConcern' => new MongoDB\Driver\WriteConcern(1, 0, true),

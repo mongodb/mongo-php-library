@@ -14,8 +14,6 @@ example imports the ``zips.json`` file into a ``test.zips`` collection:
 
 .. code-block:: php
 
-   <?php
-
    $filename = 'https://media.mongodb.org/zips.json';
    $lines = file($filename, FILE_IGNORE_NEW_LINES);
 

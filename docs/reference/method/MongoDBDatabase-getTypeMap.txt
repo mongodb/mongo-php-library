@@ -33,8 +33,6 @@ Example
 
 .. code-block:: php
 
-   <?php
-
    $database = (new MongoDB\Client)->selectDatabase('test', [
        'typeMap' => [
            'root' => 'array',

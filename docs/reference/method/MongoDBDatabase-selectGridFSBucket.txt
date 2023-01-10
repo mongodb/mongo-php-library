@@ -54,8 +54,6 @@ database:
 
 .. code-block:: php
 
-   <?php
-
    $db = (new MongoDB\Client)->test;
 
    $bucket = $db->selectGridFSBucket();
@@ -64,8 +62,6 @@ The following example selects the custom ``images.files`` bucket in the ``test``
 database with a custom read preference:
 
 .. code-block:: php
-
-   <?php
 
    $db = (new MongoDB\Client)->test;
 

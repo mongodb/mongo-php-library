@@ -47,8 +47,6 @@ preference:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->selectCollection('test', 'restaurants');
 
    $newCollection = $sourceCollection->withOptions([

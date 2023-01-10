@@ -33,8 +33,6 @@ Example
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->selectCollection('test', 'users', [
        'typeMap' => [
            'root' => 'array',

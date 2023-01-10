@@ -32,8 +32,6 @@ Examples
 
 .. code-block:: php
 
-   <?php
-
    $info = new CollectionInfo(['name' => 'foo']);
 
    echo $info->getName();

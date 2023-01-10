@@ -54,8 +54,6 @@ The following example selects the ``test`` and ``another-app`` databases:
 
 .. code-block:: php
 
-   <?php
-
    $client = new MongoDB\Client;
 
    $test = $client->test;

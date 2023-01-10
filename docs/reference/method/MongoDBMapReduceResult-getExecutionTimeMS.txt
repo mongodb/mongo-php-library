@@ -34,8 +34,6 @@ This example reports the execution time for a map-reduce operation.
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->zips;
 
    $map = new MongoDB\BSON\Javascript('function() { emit(this.state, this.pop); }');

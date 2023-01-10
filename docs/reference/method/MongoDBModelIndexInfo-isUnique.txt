@@ -33,8 +33,6 @@ Examples
 
 .. code-block:: php
 
-   <?php
-
    $info = new IndexInfo([
        'unique' => true,
    ]);

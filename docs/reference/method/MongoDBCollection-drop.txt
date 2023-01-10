@@ -51,8 +51,6 @@ database:
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->restaurants;
 
    $result = $collection->drop();

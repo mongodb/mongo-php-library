@@ -33,8 +33,6 @@ more than one encryption key or create them dynamically.
 
 .. code-block:: php
 
-   <?php
-
    use MongoDB\BSON\Binary;
    use MongoDB\Client;
    use MongoDB\Driver\ClientEncryption;
@@ -71,8 +69,6 @@ automatically encrypted on insertion and decrypted when reading on the client
 side.
 
 .. code-block:: php
-
-   <?php
 
    use MongoDB\BSON\Binary;
    use MongoDB\Client;
@@ -136,8 +132,6 @@ encrypted fields.
 
 .. code-block:: php
 
-   <?php
-
    use MongoDB\BSON\Binary;
    use MongoDB\Client;
    use MongoDB\Driver\ClientEncryption;
@@ -191,8 +185,6 @@ encrypts and decrypts values in the document.
 
 .. code-block:: php
 
-   <?php
-
    use MongoDB\BSON\Binary;
    use MongoDB\Client;
    use MongoDB\Driver\ClientEncryption;
@@ -244,8 +236,6 @@ To use an alternate name when referencing an encryption key, use the
 
 .. code-block:: php
 
-   <?php
-
    use MongoDB\BSON\Binary;
    use MongoDB\Client;
    use MongoDB\Driver\ClientEncryption;
@@ -294,8 +284,6 @@ decrypted when querying on the client side. Additionally, it is possible to
 query on the ``encryptedIndexed`` field.
 
 .. code-block:: php
-
-   <?php
 
    use MongoDB\BSON\Binary;
    use MongoDB\Client;

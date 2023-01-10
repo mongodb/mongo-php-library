@@ -35,8 +35,6 @@ database.
 
 .. code-block:: php
 
-   <?php
-
    $collection = (new MongoDB\Client)->test->zips;
 
    echo $collection->getNamespace();

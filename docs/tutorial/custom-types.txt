@@ -14,7 +14,7 @@ The driver serializes PHP variables, including objects, into BSON when it
 communicates to the server, and deserializes BSON back into PHP variables when
 it receives data from the server.
 
-It is possible to influence the behaviour by implementing the
+It is possible to influence the behavior by implementing the
 :php:`MongoDB\\BSON\\Persistable <class.mongodb-bson-persistable>` interface.
 If a class implements this interface, then upon serialization the
 :php:`bsonSerialize <mongodb-bson-serializable.bsonserialize>` method is

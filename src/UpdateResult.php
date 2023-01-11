@@ -44,7 +44,7 @@ class UpdateResult
      *
      * @see UpdateResult::isAcknowledged()
      * @return integer|null
-     * @throws BadMethodCallException is the write result is unacknowledged
+     * @throws BadMethodCallException if the write result is unacknowledged
      */
     public function getMatchedCount()
     {
@@ -65,7 +65,7 @@ class UpdateResult
      *
      * @see UpdateResult::isAcknowledged()
      * @return integer|null
-     * @throws BadMethodCallException is the write result is unacknowledged
+     * @throws BadMethodCallException if the write result is unacknowledged
      */
     public function getModifiedCount()
     {
@@ -83,7 +83,7 @@ class UpdateResult
      *
      * @see UpdateResult::isAcknowledged()
      * @return integer|null
-     * @throws BadMethodCallException is the write result is unacknowledged
+     * @throws BadMethodCallException if the write result is unacknowledged
      */
     public function getUpsertedCount()
     {
@@ -107,7 +107,7 @@ class UpdateResult
      *
      * @see UpdateResult::isAcknowledged()
      * @return mixed|null
-     * @throws BadMethodCallException is the write result is unacknowledged
+     * @throws BadMethodCallException if the write result is unacknowledged
      */
     public function getUpsertedId()
     {

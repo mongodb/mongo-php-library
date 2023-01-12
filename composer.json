@@ -13,7 +13,7 @@
         "ext-hash": "*",
         "ext-json": "*",
         "ext-mongodb": "^1.16.0",
-        "jean85/pretty-package-versions": "^1.2 || ^2.0.1",
+        "jean85/pretty-package-versions": "^2.0.1",
         "symfony/polyfill-php80": "^1.19"
     },
     "require-dev": {

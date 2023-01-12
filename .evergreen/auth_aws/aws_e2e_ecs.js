@@ -21,7 +21,7 @@ load("lib/aws_e2e_lib.js");
        config['iam_auth_ecs_subnet_a'] + ' --subnets ' +
        config['iam_auth_ecs_subnet_b'] + ' --security_group ' +
        config['iam_auth_ecs_security_group'] +
-       ` --files ${mongo_binaries}/mongod:/root/mongod ${mongo_binaries}/mongo:/root/mongo ` +
+       ` --files ${mongo_binaries}/mongod:/root/mongod ${mongo_binaries}/mongo/sh:/root/mongo/sh ` +
        " lib/ecs_hosted_test.js:/root/ecs_hosted_test.js " +
        `${project_dir}:/root` +
        " --script lib/ecs_hosted_test.sh";

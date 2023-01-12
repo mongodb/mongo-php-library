@@ -9,7 +9,7 @@ env
 
 mkdir -p /data/db || true
 
-/root/mongo  --verbose --nodb ecs_hosted_test.js
+/root/mongosh  --verbose --nodb ecs_hosted_test.js
 
 RET_CODE=$?
 echo RETURN CODE: $RET_CODE

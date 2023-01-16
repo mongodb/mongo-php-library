@@ -2,11 +2,17 @@
 
 namespace MongoDB\Tests\SpecTests;
 
+use MongoDB\Driver\Exception\BulkWriteException;
+use MongoDB\Driver\Monitoring\CommandFailedEvent;
+use MongoDB\Driver\Monitoring\CommandStartedEvent;
+use MongoDB\Driver\Monitoring\CommandSubscriber;
+use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use stdClass;
 
 use function basename;
 use function file_get_contents;
 use function glob;
+use function version_compare;
 
 /**
  * Retryable writes spec tests.
@@ -16,6 +22,9 @@ use function glob;
  */
 class RetryableWritesSpecTest extends FunctionalTestCase
 {
+    public const NOT_PRIMARY = 10107;
+    public const SHUTDOWN_IN_PROGRESS = 91;
+
     /**
      * Execute an individual test case from the specification.
      *
@@ -70,5 +79,87 @@ class RetryableWritesSpecTest extends FunctionalTestCase
         }
 
         return $testArgs;
+    }
+
+    /**
+     * Prose test 1: when encountering a NoWritesPerformed error after an error with a RetryableWriteError label
+     */
+    public function testNoWritesPerformedErrorReturnsOriginalError(): void
+    {
+        if (! $this->isReplicaSet()) {
+            $this->markTestSkipped('Test only applies to replica sets');
+        }
+
+        if (version_compare($this->getServerVersion(), '4.4.0', '<')) {
+            $this->markTestSkipped('NoWritesPerformed error label is only supported on MongoDB 4.4+');
+        }
+
+        $client = self::createTestClient(null, ['retryWrites' => true]);
+
+        // Step 2: Configure a fail point with error code 91
+        $this->configureFailPoint([
+            'configureFailPoint' => 'failCommand',
+            'mode' => ['times' => 1],
+            'data' => [
+                'writeConcernError' => [
+                    'code' => self::SHUTDOWN_IN_PROGRESS,
+                    'errorLabels' => ['RetryableWriteError'],
+                ],
+                'failCommands' => ['insert'],
+            ],
+        ]);
+
+        $subscriber = new class ($this) implements CommandSubscriber {
+            private $testCase;
+
+            public function __construct(FunctionalTestCase $testCase)
+            {
+                $this->testCase = $testCase;
+            }
+
+            public function commandStarted(CommandStartedEvent $event): void
+            {
+            }
+
+            public function commandSucceeded(CommandSucceededEvent $event): void
+            {
+                if ($event->getCommandName() === 'insert') {
+                    // Step 3: Configure a fail point with code 10107
+                    $this->testCase->configureFailPoint([
+                        'configureFailPoint' => 'failCommand',
+                        'mode' => ['times' => 1],
+                        'data' => [
+                            'errorCode' => RetryableWritesSpecTest::NOT_PRIMARY,
+                            'errorLabels' => ['RetryableWriteError', 'NoWritesPerformed'],
+                            'failCommands' => ['insert'],
+                        ],
+                    ]);
+                }
+            }
+
+            public function commandFailed(CommandFailedEvent $event): void
+            {
+            }
+        };
+
+        $client->getManager()->addSubscriber($subscriber);
+
+        // Step 4: Run insertOne
+        try {
+            $client->selectCollection('db', 'retryable_writes')->insertOne(['write' => 1]);
+        } catch (BulkWriteException $e) {
+            $writeConcernError = $e->getWriteResult()->getWriteConcernError();
+            $this->assertNotNull($writeConcernError);
+
+            // Assert that the write concern error is from the first failpoint
+            $this->assertSame(self::SHUTDOWN_IN_PROGRESS, $writeConcernError->getCode());
+        }
+
+        // Step 5: Disable the fail point
+        $client->getManager()->removeSubscriber($subscriber);
+        $this->configureFailPoint([
+            'configureFailPoint' => 'failCommand',
+            'mode' => 'off',
+        ]);
     }
 }

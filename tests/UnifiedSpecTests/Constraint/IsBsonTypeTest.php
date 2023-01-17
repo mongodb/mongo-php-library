@@ -50,7 +50,7 @@ class IsBsonTypeTest extends TestCase
             // Note: additional tests in testTypeObject
             'object(stdClass)' => ['object', new stdClass()],
             'object(BSONDocument)' => ['object', new BSONDocument()],
-            // Note: additional tests tests in testTypeArray
+            // Note: additional tests in testTypeArray
             'array(indexed array)' => ['array', ['foo']],
             'array(BSONArray)' => ['array', new BSONArray()],
             'binData' => ['binData', new Binary('', 0)],

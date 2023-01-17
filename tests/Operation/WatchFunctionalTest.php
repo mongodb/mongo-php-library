@@ -673,9 +673,9 @@ class WatchFunctionalTest extends FunctionalTestCase
         /* The spec requests that we assert that the cursor returned from the
          * aggregate command is not closed on the driver side. We will verify
          * this by checking that the cursor ID is non-zero and that libmongoc
-         * reports the cursor as alive. While the cursor ID is easily accessed
-         * through ChangeStream, we'll need to use reflection to access the
-         * internal Cursor and call isDead(). */
+         * reports the cursor as alive. While the cursor ID is accessed through
+         * ChangeStream, we'll need to use reflection to access the internal
+         * Cursor and call isDead(). */
         $this->assertNotEquals('0', (string) $changeStream->getCursorId());
 
         $rc = new ReflectionClass(ChangeStream::class);

@@ -56,6 +56,8 @@ returned. It also limits the results to 5 documents.
 
 .. code-block:: php
 
+   <?php
+
    $collection = (new MongoDB\Client)->test->restaurants;
 
    $cursor = $collection->find(

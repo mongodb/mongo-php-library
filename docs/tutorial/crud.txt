@@ -380,6 +380,8 @@ An equivalent filter could be constructed using the :query:`$regex` operator:
 
 .. code-block:: php
 
+   <?php
+
    [
        'city' => ['$regex' => '^garden', '$options' => 'i'],
        'state' => 'TX',

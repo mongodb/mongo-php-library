@@ -59,6 +59,8 @@ The following example updates one document with the ``restaurant_id`` of
 
 .. code-block:: php
 
+   <?php
+
    $collection = (new MongoDB\Client)->test->restaurants;
 
    $updateResult = $collection->updateOne(

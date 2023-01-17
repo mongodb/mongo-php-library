@@ -70,8 +70,6 @@ wrap the script in ``<pre>`` tags to properly format its output:
 
 .. code-block:: php
 
-   <?php
-
    <pre><?php require(...); ?></pre>
 
 Loading an Incompatible DLL on Windows

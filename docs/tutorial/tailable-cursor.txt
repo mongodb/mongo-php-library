@@ -98,10 +98,10 @@ preceding example to use the Iterator methods directly:
    Calling ``$cursor->next()`` after the ``while`` loop naturally ends would
    throw an exception, since all results on the cursor have been exhausted.
 
-The purpose of this example is simply to demonstrate the functional equivalence
-between ``foreach`` and manual iteration with PHP's :php:`Iterator <iterator>`
-API. For normal cursors, there is little reason to manually iterate results
-instead of a concise ``foreach`` loop.
+The purpose of this example is to demonstrate the functional equivalencebetween
+``foreach`` and manual iteration with PHP's :php:`Iterator <iterator>`API.
+For normal cursors, there is little reason to manually iterate results instead
+of a concise ``foreach`` loop.
 
 Iterating a Tailable Cursor
 ---------------------------

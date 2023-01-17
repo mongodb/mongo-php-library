@@ -224,7 +224,7 @@ class ReadableStream
         }
 
         /* If we are seeking to a subsequent chunk, we do not need to
-         * reinitalize the chunk iterator. Instead, we can simply move forward
+         * reinitalize the chunk iterator. Instead, we can move forward
          * to $this->chunkOffset.
          */
         $numChunks = $this->chunkOffset - $lastChunkOffset;

@@ -62,6 +62,8 @@ special BSON type, the query criteria for selecting a restaurant must use the
 
 .. code-block:: php
 
+   <?php
+
    $database = (new MongoDB\Client)->test;
 
    $zip = $database->zips->findOne(['_id' => '10036']);
@@ -79,6 +81,8 @@ The following example finds a restaurant based on the ``cuisine`` and
 returned.
 
 .. code-block:: php
+
+   <?php
 
    $collection = (new MongoDB\Client)->test->restaurants;
 

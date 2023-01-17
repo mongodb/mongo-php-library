@@ -57,6 +57,8 @@ The following example updates all of the documents with the ``borough`` of
 
 .. code-block:: php
 
+   <?php
+
    $collection = (new MongoDB\Client)->test->restaurants;
 
    $updateResult = $collection->updateMany(

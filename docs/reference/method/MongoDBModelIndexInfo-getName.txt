@@ -17,8 +17,7 @@ Definition
 
    Return the index name. This correlates with the return value of
    :phpmethod:`MongoDB\\Collection::createIndex()`. An index name may be derived
-   from the ``$key`` parameter or or explicitly specified via the ``name``
-   option.
+   from the ``$key`` parameter or explicitly specified via the ``name`` option.
 
    .. code-block:: php
 

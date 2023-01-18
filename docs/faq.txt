@@ -152,7 +152,7 @@ failure:
 - "connection timeout" could indicate a routing or firewall issue, or perhaps
   a timeout due to latency.
 - "socket timeout" suggests that a connection *was* established at some point
-  but was dropped or otherwise timeout out due to latency.
+  but was dropped or otherwise timed out due to latency.
 - "TLS handshake failed" suggests something related to TLS or OCSP verification
   and is sometimes indicative of misconfigured TLS certificates.
 

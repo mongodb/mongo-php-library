@@ -118,8 +118,8 @@ problematic:
   original BSON type.
 
 - Numerically-indexed PHP arrays would be serialized as BSON documents if there
-  was a gap in their key sequence. Such gaps were easily caused by unsetting a
-  key to remove an element and forgetting to numerically reindex the array.
+  was a gap in their key sequence. Such gaps were caused by unsetting a key to
+  remove an element and forgetting to numerically reindex the array.
 
 The |php-library|'s :phpclass:`BSONDocument <MongoDB\\Model\\BSONDocument>` and
 :phpclass:`BSONArray <MongoDB\\Model\\BSONArray>` classes address these concerns

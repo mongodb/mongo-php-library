@@ -18,6 +18,7 @@
 namespace MongoDB;
 
 use Iterator;
+use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
@@ -44,7 +45,10 @@ use MongoDB\Operation\RenameCollection;
 use MongoDB\Operation\Watch;
 use Traversable;
 
+use function array_key_exists;
 use function is_array;
+use function is_object;
+use function property_exists;
 use function strlen;
 
 class Database
@@ -298,6 +302,60 @@ class Database
         }
 
         return $result;
+    }
+
+    /**
+     * Create a new encrypted collection.
+     *
+     * This function will automatically create data keys for any encrypted
+     * fields where the "keyId" option is null. This function will return a copy
+     * of the modified "encryptedFields" option in addition to the result from
+     * createCollection().
+     *
+     * This function requires that the "encryptedFields" option be specified.
+     *
+     * If any error is encountered while creating data keys or invoking
+     * createCollection(), a CreateEncryptedCollectionException will be thrown.
+     * The original exception and modified "encryptedFields" option can be
+     * accessed via getPrevious() and getEncryptedFields(), respectively.
+     *
+     * @see CreateCollection::__construct() for supported options
+     * @return array A tuple consisting of the createCollection() result and modified "encryptedFields" option
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws CreateEncryptedCollectionException for errors generating data keys or invoking createCollection
+     */
+    public function createEncryptedCollection(string $collectionName, ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, array $options = []): array
+    {
+        if (! isset($options['encryptedFields']) || ! is_array($options['encryptedFields']) && ! is_object($options['encryptedFields'])) {
+            throw InvalidArgumentException::invalidType('"encryptedFields" option', $options['encryptedFields'] ?? null, 'array or object');
+        }
+
+        $encryptedFields = (array) recursive_copy($options['encryptedFields']);
+
+        $createDataKeyArgs = [
+            $kmsProvider,
+            isset($masterKey) ? ['masterKey' => $masterKey] : [],
+        ];
+
+        try {
+            if (isset($encryptedFields['fields']) && is_array($encryptedFields['fields'])) {
+                foreach ($encryptedFields['fields'] as &$field) {
+                    if (is_array($field) && array_key_exists('keyId', $field) && $field['keyId'] === null) {
+                        $field['keyId'] = $clientEncryption->createDataKey(...$createDataKeyArgs);
+                    } elseif (is_object($field) && property_exists($field, 'keyId') && $field->keyId === null) {
+                        $field->keyId = $clientEncryption->createDataKey(...$createDataKeyArgs);
+                    }
+                }
+
+                $options['encryptedFields'] = $encryptedFields;
+            }
+
+            $result = $this->createCollection($collectionName, $options);
+
+            return [$result, $encryptedFields];
+        } catch (Exception $e) {
+            throw new CreateEncryptedCollectionException($e, $encryptedFields);
+        }
     }
 
     /**

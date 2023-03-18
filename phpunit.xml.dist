@@ -11,7 +11,9 @@
 >
 
     <php>
+        <ini name="assert.exception" value="1"/>
         <ini name="error_reporting" value="-1"/>
+        <ini name="zend.assertions" value="1"/>
         <env name="MONGODB_URI" value="mongodb://127.0.0.1:27017/?serverSelectionTimeoutMS=100"/>
         <env name="MONGODB_DATABASE" value="phplib_test"/>
     </php>

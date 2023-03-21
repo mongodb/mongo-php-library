@@ -165,8 +165,14 @@ repository:
  * Clone the
    [mongodb/docs-php-library](https://github.com/mongodb/docs-php-library) tools
    repository.
- * Install [giza](https://pypi.python.org/pypi/giza/), as noted in the tools
-   README.
+ * Create and activate Python 2.7 virtual environment if necessary.
+
+   ```
+   $ virtualenv -p python2.7 venv
+   $ source venv/bin/activate
+   ```
+ * Install [giza](https://pypi.python.org/pypi/giza/) according to the instructions
+   in the [mongodb/docs-tools](https://github.com/mongodb/docs-tools) README.
  * Sync your working copy of the documentation to the `source/` directory with
    `rsync -a --delete /path/to/mongo-php-library/docs/ source/`.
  * Build the documentation with `giza make publish`. You can suppress

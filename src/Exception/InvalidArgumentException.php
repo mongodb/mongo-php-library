@@ -34,7 +34,7 @@ class InvalidArgumentException extends DriverInvalidArgumentException implements
      *
      * @param string          $name         Name of the argument or option
      * @param mixed           $value        Actual value (used to derive the type)
-     * @param string|string[] $expectedType Expected type as a string or an array containing one or more strings
+     * @param string|list<string> $expectedType Expected type as a string or an array containing one or more strings
      * @return self
      */
     public static function invalidType(string $name, $value, $expectedType)
@@ -46,6 +46,7 @@ class InvalidArgumentException extends DriverInvalidArgumentException implements
         return new static(sprintf('Expected %s to have type "%s" but found "%s"', $name, $expectedType, get_debug_type($value)));
     }
 
+    /** @param list<string> $types */
     private static function expectedTypesToString(array $types): string
     {
         assert(count($types) > 0);

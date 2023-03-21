@@ -324,7 +324,7 @@ class Database
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws CreateEncryptedCollectionException for errors generating data keys or invoking createCollection
      */
-    public function createEncryptedCollection(string $collectionName, ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, array $options = []): array
+    public function createEncryptedCollection(string $collectionName, ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, array $options): array
     {
         if (! isset($options['encryptedFields']) || ! is_array($options['encryptedFields']) && ! is_object($options['encryptedFields'])) {
             throw InvalidArgumentException::invalidType('"encryptedFields" option', $options['encryptedFields'] ?? null, 'array or object');

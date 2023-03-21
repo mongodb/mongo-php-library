@@ -21,14 +21,11 @@ Definition
 
    .. code-block:: php
 
-      function createEncryptedCollection(string $collectionName, ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, array $options = []): array
+      function createEncryptedCollection(string $collectionName, ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, array $options): array
 
-   This method wraps :phpmethod:`MongoDB\\Database::createCollection()` with
-   additional functionality. Unlike ``createCollection()`, this method requires
-   that the ``encryptedFields`` option be specified.
-
-   This function will automatically create data keys for any encrypted fields
-   where the ``keyId`` option is ``null``. Data keys will be created using
+   This method wraps :phpmethod:`MongoDB\\Database::createCollection()` and will 
+   automatically create data keys for any encrypted fields where the ``keyId``
+   option is ``null``. Data keys will be created using
    :php:`MongoDB\\Driver\\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`
    and the provided ``$kmsProvider`` and ``$masterKey`` parameters.
 
@@ -40,13 +37,9 @@ Definition
 
    .. include:: /includes/apiargs/MongoDBDatabase-method-createEncryptedCollection-param.rst
 
-   The ``$options`` parameter supports the following options:
-
-   .. include:: /includes/apiargs/MongoDBDatabase-method-createEncryptedCollection-option.rst
-
-   Note that not all options are available on all versions of MongoDB. Refer to
-   the :manual:`create </reference/command/create>` command reference in the
-   MongoDB manual for compatibility considerations.
+   The ``$options`` parameter supports the same options as
+   :phpmethod:`MongoDB\\Database::createCollection()`. The ``encryptedFields``
+   option is required.
 
 Return Values
 -------------
@@ -58,11 +51,10 @@ A tuple consisting of the result from
 Errors/Exceptions
 -----------------
 
-:phpclass:`MongoDB\\Driver\\Exception\\CreateEncryptedCollectionException` if
-any error is encountered while creating data keys or invoking
-``createCollection()``. The original exception and modified ``encryptedFields``
-option can be accessed via ``getPrevious()`` and ``getEncryptedFields()``,
-respectively.
+:phpclass:`MongoDB\\Exception\\CreateEncryptedCollectionException` if any error
+is encountered while creating data keys or invoking ``createCollection()``. The
+original exception and modified ``encryptedFields`` option can be accessed via
+the ``getPrevious()`` and ``getEncryptedFields()`` methods, respectively.
 
 .. include:: /includes/extracts/error-invalidargumentexception.rst
 
@@ -104,12 +96,10 @@ an encrypted string field.
    );
 
 If the encrypted collection was successfully created, ``$result`` will contain
-the return value from :phpmethod:`MongoDB\\Database::createCollection()` (i.e.
-:manual:`create </reference/command/create>` command response) and
-``$encryptedFields['fields'][0]['keyId']`` will contain the return value from
-:php:`MongoDB\\Driver\\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`
-(i.e. a :php:`MongoDB\\BSON\\Binary <class.mongodb-bson-binary>` with subtype 4,
-UUID).
+the return value from :phpmethod:`MongoDB\\Database::createCollection()` and
+``$encryptedFields['fields'][0]['keyId']`` will contain a
+:php:`MongoDB\\BSON\\Binary <class.mongodb-bson-binary>` object with subtype 4
+(i.e. UUID).
 
 See Also
 --------

@@ -32,8 +32,8 @@ class InvalidArgumentException extends DriverInvalidArgumentException implements
     /**
      * Thrown when an argument or option has an invalid type.
      *
-     * @param string          $name         Name of the argument or option
-     * @param mixed           $value        Actual value (used to derive the type)
+     * @param string              $name         Name of the argument or option
+     * @param mixed               $value        Actual value (used to derive the type)
      * @param string|list<string> $expectedType Expected type as a string or an array containing one or more strings
      * @return self
      */

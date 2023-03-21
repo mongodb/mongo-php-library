@@ -21,7 +21,7 @@ Definition
 
    .. code-block:: php
 
-      function explain(MongoDB\\Operation\\Explainable $explainable, array $options = []): array|object
+      function explain(MongoDB\Operation\Explainable $explainable, array $options = []): array|object
 
    This method has the following parameters:
 

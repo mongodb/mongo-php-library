@@ -1,0 +1,93 @@
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: autoIndexId
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: capped
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: changeStreamPreAndPostImages
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: clusteredIndex
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: collation
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: comment
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: encryptedFields
+optional: false
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: expireAfterSeconds
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: flags
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: indexOptionDefaults
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: max
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: maxTimeMS
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: pipeline
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: session
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: size
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: storageEngine
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: timeseries
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: typeMap
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: validator
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: validationAction
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: validationLevel
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: viewOn
+---
+source:
+  file: apiargs-MongoDBDatabase-method-createCollection-option.yaml
+  ref: writeConcern
+...

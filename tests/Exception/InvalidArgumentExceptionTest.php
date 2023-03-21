@@ -2,10 +2,9 @@
 
 namespace MongoDB\Tests\Exception;
 
+use AssertionError;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Tests\TestCase;
-
-use AssertionError;
 
 class InvalidArgumentExceptionTest extends TestCase
 {

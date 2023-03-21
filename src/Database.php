@@ -305,29 +305,28 @@ class Database
     }
 
     /**
-     * Create a new encrypted collection.
+     * Create a new encrypted collection explicitly.
      *
      * This function will automatically create data keys for any encrypted
      * fields where the "keyId" option is null. This function will return a copy
      * of the modified "encryptedFields" option in addition to the result from
-     * createCollection().
-     *
-     * This function requires that the "encryptedFields" option be specified.
+     * createCollection(). The "encryptedFields" option is required.
      *
      * If any error is encountered while creating data keys or invoking
      * createCollection(), a CreateEncryptedCollectionException will be thrown.
      * The original exception and modified "encryptedFields" option can be
-     * accessed via getPrevious() and getEncryptedFields(), respectively.
+     * accessed via the getPrevious() and getEncryptedFields() methods,
+     * respectively.
      *
      * @see CreateCollection::__construct() for supported options
      * @return array A tuple consisting of the createCollection() result and modified "encryptedFields" option
      * @throws InvalidArgumentException for parameter/option parsing errors
-     * @throws CreateEncryptedCollectionException for errors generating data keys or invoking createCollection
+     * @throws CreateEncryptedCollectionException for any errors creating data keys or invoking createCollection()
      */
     public function createEncryptedCollection(string $collectionName, ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, array $options): array
     {
         if (! isset($options['encryptedFields']) || ! is_array($options['encryptedFields']) && ! is_object($options['encryptedFields'])) {
-            throw InvalidArgumentException::invalidType('"encryptedFields" option', $options['encryptedFields'] ?? null, 'array or object');
+            throw InvalidArgumentException::invalidType('"encryptedFields" option', $options['encryptedFields'] ?? null, ['array', 'object']);
         }
 
         $encryptedFields = (array) recursive_copy($options['encryptedFields']);

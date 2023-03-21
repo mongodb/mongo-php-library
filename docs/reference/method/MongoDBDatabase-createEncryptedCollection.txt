@@ -21,7 +21,7 @@ Definition
 
    .. code-block:: php
 
-      function createEncryptedCollection(string $collectionName, ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, array $options): array
+      function createEncryptedCollection(string $collectionName, MongoDB\Driver\ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, array $options): array
 
    This method wraps :phpmethod:`MongoDB\\Database::createCollection()` and will 
    automatically create data keys for any encrypted fields where the ``keyId``

@@ -30,7 +30,7 @@ name: $masterKey
 type: array|null
 description: |
   KMS-specific key options that will be used to encrypt new data keys. This
-  corresponds to the ``$masterKey`` parameter for
+  corresponds to the ``masterKey`` option for
   :php:`MongoDB\\Driver\\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`.
 
   If ``$kmsProvider`` is "local", this should be ``null``.

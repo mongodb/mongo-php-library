@@ -37,9 +37,9 @@ MongoDB\\Exception\\CreateEncryptedCollectionException
 
    Thrown by :phpmethod:`MongoDB\\Database::createEncryptedCollection()` if any
    error is encountered while creating data keys or invoking
-   ``createCollection()``. The original exception and modified
-   ``encryptedFields`` option can be accessed via ``getPrevious()`` and
-   ``getEncryptedFields()``, respectively.
+   :phpmethod:`createCollection() <MongoDB\\Database::createCollection()>`. The
+   original exception and modified ``encryptedFields`` option can be accessed
+   via the ``getPrevious()`` and ``getEncryptedFields()`` methods, respectively.
 
    This class extends the library's :phpclass:`RuntimeException
    <MongoDB\\Exception\\RuntimeException>` class.

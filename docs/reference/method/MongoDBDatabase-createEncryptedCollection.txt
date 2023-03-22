@@ -101,6 +101,29 @@ the return value from :phpmethod:`MongoDB\\Database::createCollection()` and
 :php:`MongoDB\\BSON\\Binary <class.mongodb-bson-binary>` object with subtype 4
 (i.e. UUID).
 
+The modified ``encryptedFields`` option can then be used to construct a new
+:phpclass:`MongoDB\\Client` with auto encryption enabled.
+
+.. code-block:: php
+
+   <?php
+
+   $encryptedClient = new MongoDB\Client(
+       null, // Connection string
+       [], // Additional connection string options
+       [
+           'autoEncryption' => [
+               'keyVaultNamespace' => 'keyvault.datakeys',
+               'kmsProviders' => [
+                   'local' => ['key' => new MongoDB\BSON\Binary(base64_decode(LOCAL_MASTERKEY), 0)],
+                ],
+                'encryptedFieldsMap' => [
+                    'test.users' => $encryptedFields,
+                ],
+           ],
+       ]
+   );
+
 See Also
 --------
 

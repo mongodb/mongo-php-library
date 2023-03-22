@@ -6,6 +6,7 @@ use MongoDB\BSON\Binary;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\CommandException;
+use MongoDB\Exception\CreateEncryptedCollectionException;
 use MongoDB\Exception\InvalidArgumentException;
 
 use function base64_decode;
@@ -121,17 +122,23 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
      */
     public function testCase3_InvalidKeyId(string $kmsProvider, ?array $masterKey): void
     {
-        $this->expectException(CommandException::class);
-        $this->expectExceptionCode(self::SERVER_ERROR_TYPEMISMATCH);
-        $this->expectExceptionMessage('keyId');
+        try {
+            $this->database->createEncryptedCollection(
+                $this->getCollectionName(),
+                $this->clientEncryption,
+                $kmsProvider,
+                $masterKey,
+                ['encryptedFields' => ['fields' => [['path' => 'ssn', 'bsonType' => 'string', 'keyId' => false]]]]
+            );
+            $this->fail('CreateEncryptedCollectionException was not thrown');
+        } catch (CreateEncryptedCollectionException $e) {
+            $this->assertFalse($e->getEncryptedFields()['fields'][0]['keyId'], 'Invalid keyId should not be modified');
 
-        $this->database->createEncryptedCollection(
-            $this->getCollectionName(),
-            $this->clientEncryption,
-            $kmsProvider,
-            $masterKey,
-            ['encryptedFields' => ['fields' => [['path' => 'ssn', 'bsonType' => 'string', 'keyId' => false]]]]
-        );
+            $previous = $e->getPrevious();
+            $this->assertInstanceOf(CommandException::class, $previous);
+            $this->assertSame(self::SERVER_ERROR_TYPEMISMATCH, $previous->getCode());
+            $this->assertStringContainsString('keyId', $previous->getMessage());
+        }
     }
 
     /**

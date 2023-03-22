@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\SpecTests\ClientSideEncryption;
 
+use Generator;
 use MongoDB\BSON\Binary;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\BulkWriteException;
@@ -86,7 +87,7 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
         $this->database->selectCollection($this->getCollectionName())->insertOne(['ssn' => '123-45-6789']);
     }
 
-    public static function provideKmsProviderAndMasterKey(): iterable
+    public static function provideKmsProviderAndMasterKey(): Generator
     {
         yield [
             'aws',

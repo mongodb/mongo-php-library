@@ -175,6 +175,7 @@
         <exclude-pattern>/src/GridFS/StreamWrapper</exclude-pattern>
         <exclude-pattern>/tests/DocumentationExamplesTest.php</exclude-pattern>
         <exclude-pattern>/tests/GridFS/UnusableStream.php</exclude-pattern>
+        <exclude-pattern>/tests/SpecTests/ClientSideEncryption/Prose*</exclude-pattern>
     </rule>
     <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
         <exclude-pattern>/examples</exclude-pattern>
@@ -182,5 +183,8 @@
     </rule>
     <rule ref="Squiz.Classes.ClassFileName.NoMatch">
         <exclude-pattern>/examples</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
+        <exclude-pattern>/tests/SpecTests/ClientSideEncryption/Prose*</exclude-pattern>
     </rule>
 </ruleset>

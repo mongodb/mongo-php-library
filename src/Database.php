@@ -18,6 +18,7 @@
 namespace MongoDB;
 
 use Iterator;
+use MongoDB\BSON\Binary;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
@@ -331,6 +332,7 @@ class Database
             throw InvalidArgumentException::invalidType('"encryptedFields" option', $options['encryptedFields'] ?? null, ['array', 'object']);
         }
 
+        /** @var array{fields: list<array{keyId: ?Binary}|object{keyId: ?Binary}>} */
         $encryptedFields = (array) recursive_copy($options['encryptedFields']);
 
         $createDataKeyArgs = [
@@ -339,6 +341,7 @@ class Database
         ];
 
         try {
+            /** @psalm-suppress RedundantConditionGivenDocblockType */
             if (isset($encryptedFields['fields']) && is_array($encryptedFields['fields'])) {
                 foreach ($encryptedFields['fields'] as &$field) {
                     if (is_array($field) && array_key_exists('keyId', $field) && $field['keyId'] === null) {

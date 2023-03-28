@@ -47,12 +47,6 @@ class EstimatedDocumentCount implements Executable, Explainable
     /** @var array */
     private $options;
 
-    /** @var int */
-    private static $errorCodeCollectionNotFound = 26;
-
-    /** @var int */
-    private static $wireVersionForCollStats = 12;
-
     /**
      * Constructs a command to get the estimated number of documents in a
      * collection.

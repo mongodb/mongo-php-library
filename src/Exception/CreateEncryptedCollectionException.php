@@ -28,7 +28,8 @@ use function sprintf;
  */
 final class CreateEncryptedCollectionException extends RuntimeException
 {
-    private array $encryptedFields;
+    /** @var array */
+    private $encryptedFields;
 
     public function __construct(Throwable $previous, array $encryptedFields)
     {

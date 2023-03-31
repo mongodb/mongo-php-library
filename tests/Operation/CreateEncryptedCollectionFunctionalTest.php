@@ -35,6 +35,10 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Neither crypt_shared nor mongocryptd are available');
         }
 
+        if ($this->isStandalone() || ($this->isShardedCluster() && ! $this->isShardedClusterUsingReplicasets())) {
+            $this->markTestSkipped('Queryable Encryption requires replica sets');
+        }
+
         if (version_compare($this->getServerVersion(), '6.0.0', '<')) {
             $this->markTestSkipped('Queryable Encryption requires MongoDB 6.0 or later');
         }

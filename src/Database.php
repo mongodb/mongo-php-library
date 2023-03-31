@@ -303,13 +303,13 @@ class Database
      * where "keyId" is null. A copy of the modified "encryptedFields" option
      * will be returned in addition to the result from creating the collection.
      *
-     * If any error is encountered while creating data keys or creating the
-     * collection, a CreateEncryptedCollectionException will be thrown. The
-     * original exception and modified "encryptedFields" option can be accessed
-     * via the getPrevious() and getEncryptedFields() methods, respectively.
+     * If any error is encountered creating data keys or the collection, a
+     * CreateEncryptedCollectionException will be thrown. The original exception
+     * and modified "encryptedFields" option can be accessed via the
+     * getPrevious() and getEncryptedFields() methods, respectively.
      *
      * @see CreateCollection::__construct() for supported options
-     * @return array A tuple consisting of the result from creating the collection and the modified "encryptedFields" option
+     * @return array A tuple containing the command result document from creating the collection and the modified "encryptedFields" option
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws CreateEncryptedCollectionException for any errors creating data keys or creating the collection
      */

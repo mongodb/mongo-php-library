@@ -100,24 +100,6 @@ class CreateEncryptedCollection implements Executable
     }
 
     /**
-     * @see Executable::execute()
-     * @return array|object Command result document from creating the encrypted collection
-     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
-     */
-    public function execute(Server $server)
-    {
-        foreach ($this->createMetadataCollections as $createMetadataCollection) {
-            $createMetadataCollection->execute($server);
-        }
-
-        $result = $this->createCollection->execute($server);
-
-        $this->createSafeContentIndex->execute($server);
-
-        return $result;
-    }
-
-    /**
      * Create data keys for any encrypted fields where "keyId" is null.
      *
      * This method should be called before execute(), as it may modify the
@@ -163,5 +145,23 @@ class CreateEncryptedCollection implements Executable
 
         $this->options['encryptedFields'] = $encryptedFields;
         $this->createCollection = new CreateCollection($this->databaseName, $this->collectionName, $this->options);
+    }
+
+    /**
+     * @see Executable::execute()
+     * @return array|object Command result document from creating the encrypted collection
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function execute(Server $server)
+    {
+        foreach ($this->createMetadataCollections as $createMetadataCollection) {
+            $createMetadataCollection->execute($server);
+        }
+
+        $result = $this->createCollection->execute($server);
+
+        $this->createSafeContentIndex->execute($server);
+
+        return $result;
     }
 }

@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\Exception;
 
 use Exception;
+use MongoDB\Exception\CreateEncryptedCollectionException;
 use MongoDB\Tests\TestCase;
 
 class CreateEncryptedCollectionExceptionTest extends TestCase
@@ -11,7 +12,7 @@ class CreateEncryptedCollectionExceptionTest extends TestCase
     {
         $encryptedFields = ['fields' => []];
 
-        $e = new CreateEncryptedCollection(new Exception(), $encryptedFields);
+        $e = new CreateEncryptedCollectionException(new Exception(), $encryptedFields);
         $this->assertSame($encryptedFields, $e->getEncryptedFields());
     }
 
@@ -19,7 +20,7 @@ class CreateEncryptedCollectionExceptionTest extends TestCase
     {
         $previous = new Exception();
 
-        $e = new CreateEncryptedCollection($previous, ['fields' => []]);
+        $e = new CreateEncryptedCollectionException($previous, ['fields' => []]);
         $this->assertSame($previous, $e->getPrevious());
     }
 }

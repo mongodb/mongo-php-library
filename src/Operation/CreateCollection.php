@@ -87,7 +87,8 @@ class CreateCollection implements Executable
      *
      *  * collation (document): Collation specification.
      *
-     *  * encryptedFields (document): CSFLE specification.
+     *  * encryptedFields (document): Configuration for encrypted fields.
+     *    See: https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/
      *
      *  * expireAfterSeconds: The TTL for documents in time series collections.
      *

@@ -115,6 +115,30 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame(['fields' => ['not-an-array-or-object']], $encryptedFields);
     }
 
+    public function testCreateDataKeysDoesNotModifyEncryptedFieldsObjectOption(): void
+    {
+        $originalField = (object) ['path' => 'ssn', 'bsonType' => 'string', 'keyId' => null];
+        $originalEncryptedFields = (object) ['fields' => [$originalField]];
+
+        $operation = new CreateEncryptedCollection(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            ['encryptedFields' => $originalEncryptedFields]
+        );
+
+        $operation->createDataKeys(
+            $this->clientEncryption,
+            'local',
+            null,
+            $modifiedEncryptedFields
+        );
+
+        $this->assertSame($originalField, $originalEncryptedFields->fields[0]);
+        $this->assertNull($originalField->keyId);
+
+        $this->assertInstanceOf(Binary::class, $modifiedEncryptedFields['fields'][0]['keyId'] ?? null);
+    }
+
     public static function createTestClient(?string $uri = null, array $options = [], array $driverOptions = []): Client
     {
         if (isset($driverOptions['autoEncryption']) && getenv('CRYPT_SHARED_LIB_PATH')) {

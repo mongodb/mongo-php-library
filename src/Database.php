@@ -37,6 +37,7 @@ use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropDatabase;
+use MongoDB\Operation\DropEncryptedCollection;
 use MongoDB\Operation\ListCollectionNames;
 use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\ModifyCollection;
@@ -350,22 +351,14 @@ class Database
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        $encryptedFields = $options['encryptedFields']
-            ?? get_encrypted_fields_from_driver($this->databaseName, $collectionName, $this->manager)
-            ?? get_encrypted_fields_from_server($this->databaseName, $collectionName, $this->manager, $server)
-            ?? null;
-
-        if ($encryptedFields !== null) {
-            // encryptedFields is not passed to the drop command
-            unset($options['encryptedFields']);
-
-            $encryptedFields = (array) $encryptedFields;
-            (new DropCollection($this->databaseName, $encryptedFields['escCollection'] ?? 'enxcol_.' . $collectionName . '.esc'))->execute($server);
-            (new DropCollection($this->databaseName, $encryptedFields['eccCollection'] ?? 'enxcol_.' . $collectionName . '.ecc'))->execute($server);
-            (new DropCollection($this->databaseName, $encryptedFields['ecocCollection'] ?? 'enxcol_.' . $collectionName . '.ecoc'))->execute($server);
+        if (! isset($options['encryptedFields'])) {
+            $options['encryptedFields'] = get_encrypted_fields_from_driver($this->databaseName, $collectionName, $this->manager)
+                ?? get_encrypted_fields_from_server($this->databaseName, $collectionName, $this->manager, $server);
         }
 
-        $operation = new DropCollection($this->databaseName, $collectionName, $options);
+        $operation = isset($options['encryptedFields'])
+            ? new DropEncryptedCollection($this->databaseName, $collectionName, $options)
+            : new DropCollection($this->databaseName, $collectionName, $options);
 
         return $operation->execute($server);
     }

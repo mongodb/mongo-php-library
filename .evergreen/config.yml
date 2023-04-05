@@ -175,7 +175,7 @@ functions:
       params:
         script: |
           ${PREPARE_SHELL}
-          MONGODB_VERSION=${VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} LOAD_BALANCER=${LOAD_BALANCER} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
+          MONGODB_VERSION=${MONGODB_VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} LOAD_BALANCER=${LOAD_BALANCER} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
     # run-orchestration generates expansion file with MONGODB_URI and CRYPT_SHARED_LIB_PATH
     - command: expansions.update
       params:
@@ -708,35 +708,35 @@ axes:
       - id: "latest"
         display_name: "MongoDB latest"
         variables:
-           VERSION: "latest"
+           MONGODB_VERSION: "latest"
       - id: "rapid"
         display_name: "MongoDB rapid"
         variables:
-           VERSION: "rapid"
+           MONGODB_VERSION: "rapid"
       - id: "6.0"
         display_name: "MongoDB 6.0"
         variables:
-           VERSION: "6.0"
+           MONGODB_VERSION: "6.0"
       - id: "5.0"
         display_name: "MongoDB 5.0"
         variables:
-           VERSION: "5.0"
+           MONGODB_VERSION: "5.0"
       - id: "4.4"
         display_name: "MongoDB 4.4"
         variables:
-           VERSION: "4.4"
+           MONGODB_VERSION: "4.4"
       - id: "4.2"
         display_name: "MongoDB 4.2"
         variables:
-           VERSION: "4.2"
+           MONGODB_VERSION: "4.2"
       - id: "4.0"
         display_name: "MongoDB 4.0"
         variables:
-           VERSION: "4.0"
+           MONGODB_VERSION: "4.0"
       - id: "3.6"
         display_name: "MongoDB 3.6"
         variables:
-           VERSION: "3.6"
+           MONGODB_VERSION: "3.6"
 
   - id: mongodb-edge-versions
     display_name: MongoDB Version
@@ -744,11 +744,11 @@ axes:
       - id: "latest-stable"
         display_name: "MongoDB 6.0"
         variables:
-          VERSION: "6.0"
+          MONGODB_VERSION: "6.0"
       - id: "oldest-supported"
         display_name: "MongoDB 3.6"
         variables:
-          VERSION: "3.6"
+          MONGODB_VERSION: "3.6"
 
   - id: driver-versions
     display_name: Driver Version

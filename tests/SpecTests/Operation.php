@@ -723,7 +723,7 @@ final class Operation
                     return ResultExpectation::ASSERT_NOTHING;
                 }
 
-                return ResultExpectation::ASSERT_SAME_DOCUMENTS;
+                return ResultExpectation::ASSERT_DOCUMENTS_MATCH;
 
             case 'bulkWrite':
                 return ResultExpectation::ASSERT_BULKWRITE;

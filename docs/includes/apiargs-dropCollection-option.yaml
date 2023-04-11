@@ -6,9 +6,15 @@ description: |
   the ``encryptedFieldsMap`` option within the ``autoEncryption`` driver option
   will be consulted. If ``encryptedFieldsMap`` was defined but does not specify
   this collection, the library will make a final attempt to consult the
-  server-side value for ``encryptedFields``. See the
-  `Client Side Encryption specification <https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst>`_
-  for more information.
+  server-side value for ``encryptedFields``. See
+  `Field Encryption and Queryability <https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/>`_
+  in the MongoDB manual for more information.
+
+  .. note::
+
+     This option is not passed to the :manual:`drop </reference/command/drop>`
+     command. The library uses it to determine related metadata collections that
+     should be dropped in addition to an encrypted collection.
 
   .. note::
 

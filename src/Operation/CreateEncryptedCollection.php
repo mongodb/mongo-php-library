@@ -17,9 +17,8 @@
 
 namespace MongoDB\Operation;
 
-// phpcs:disable SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use MongoDB\BSON\Binary;
-// phpcs:enable
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
@@ -78,7 +77,7 @@ class CreateEncryptedCollection implements Executable
         }
 
         if (! is_array($options['encryptedFields']) && ! is_object($options['encryptedFields'])) {
-            throw InvalidArgumentException::invalidType('"encryptedFields" option', $options['encryptedFields'], 'array or object');
+            throw InvalidArgumentException::invalidType('"encryptedFields" option', $options['encryptedFields'], ['array', 'object']);
         }
 
         $this->createCollection = new CreateCollection($databaseName, $collectionName, $options);

@@ -925,16 +925,22 @@ buildvariants:
   tasks:
     - name: "test-loadBalanced"
 
-# CSFLE crypt_shared is available from MongoDB 6.0+, so explicitly test without it to allow use of mongocryptd
 - matrix_name: "test-csfle-skip_crypt_shared"
-  matrix_spec: { "os": "debian11", "mongodb-versions": "6.0", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  matrix_spec: { "os": "debian11", "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   display_name: "CSFLE skip_crypt_shared - ${mongodb-versions}"
+  exclude_spec:
+    # CSFLE crypt_shared is available from MongoDB 6.0+
+    - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4", "5.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   tasks:
     - name: "test-skip_crypt_shared"
 
 # Run CSFLE tests without AWS credentials (for "On-demand AWS Credentials" prose test)
 - matrix_name: "test-csfle-without_aws_creds"
-  matrix_spec: { "os": "debian11", "mongodb-versions": "6.0", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  matrix_spec: { "os": ["debian92", "debian11"], "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   display_name: "CSFLE without_aws_creds - ${mongodb-versions}"
+  exclude_spec:
+    # CSFLE is available from MongoDB 4.2+ and Debian 9.2 only supports up to MongoDB 5.0
+    - { "os": "debian92", "mongodb-versions": ["3.6", "4.0", "6.0", "rapid", "latest"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4", "5.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   tasks:
     - name: "test-without_aws_creds"

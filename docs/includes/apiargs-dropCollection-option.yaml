@@ -9,6 +9,14 @@ description: |
   server-side value for ``encryptedFields``. See the
   `Client Side Encryption specification <https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst>`_
   for more information.
+
+  .. note::
+
+     Queryable Encryption is in public preview and available for evaluation
+     purposes. It is not yet recommended for production deployments as breaking
+     changes may be introduced. See the
+     `Queryable Encryption Preview <https://www.mongodb.com/blog/post/mongodb-releases-queryable-encryption-preview/>`_
+     blog post for more information.
 interface: phpmethod
 operation: ~
 optional: true

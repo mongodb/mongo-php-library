@@ -6,11 +6,15 @@ on:
       - "v*.*"
       - "master"
       - "feature/*"
+    paths:
+      - "docs/**"
   push:
     branches:
       - "v*.*"
       - "master"
       - "feature/*"
+    paths:
+      - "docs/**"
 
 jobs:
   giza:

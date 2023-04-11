@@ -6,11 +6,15 @@ on:
       - "v*.*"
       - "master"
       - "feature/*"
+    paths-ignore:
+      - "docs/**"
   push:
     branches:
       - "v*.*"
       - "master"
       - "feature/*"
+    paths-ignore:
+      - "docs/**"
 
 jobs:
   phpunit:

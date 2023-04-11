@@ -175,7 +175,7 @@ functions:
       params:
         script: |
           ${PREPARE_SHELL}
-          MONGODB_VERSION=${VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} LOAD_BALANCER=${LOAD_BALANCER} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
+          MONGODB_VERSION=${MONGODB_VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} LOAD_BALANCER=${LOAD_BALANCER} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
     # run-orchestration generates expansion file with MONGODB_URI and CRYPT_SHARED_LIB_PATH
     - command: expansions.update
       params:
@@ -708,31 +708,35 @@ axes:
       - id: "latest"
         display_name: "MongoDB latest"
         variables:
-           VERSION: "latest"
+           MONGODB_VERSION: "latest"
+      - id: "rapid"
+        display_name: "MongoDB rapid"
+        variables:
+           MONGODB_VERSION: "rapid"
       - id: "6.0"
         display_name: "MongoDB 6.0"
         variables:
-           VERSION: "6.0"
+           MONGODB_VERSION: "6.0"
       - id: "5.0"
         display_name: "MongoDB 5.0"
         variables:
-           VERSION: "5.0"
+           MONGODB_VERSION: "5.0"
       - id: "4.4"
         display_name: "MongoDB 4.4"
         variables:
-           VERSION: "4.4"
+           MONGODB_VERSION: "4.4"
       - id: "4.2"
         display_name: "MongoDB 4.2"
         variables:
-           VERSION: "4.2"
+           MONGODB_VERSION: "4.2"
       - id: "4.0"
         display_name: "MongoDB 4.0"
         variables:
-           VERSION: "4.0"
+           MONGODB_VERSION: "4.0"
       - id: "3.6"
         display_name: "MongoDB 3.6"
         variables:
-           VERSION: "3.6"
+           MONGODB_VERSION: "3.6"
 
   - id: mongodb-edge-versions
     display_name: MongoDB Version
@@ -740,11 +744,11 @@ axes:
       - id: "latest-stable"
         display_name: "MongoDB 6.0"
         variables:
-          VERSION: "6.0"
+          MONGODB_VERSION: "6.0"
       - id: "oldest-supported"
         display_name: "MongoDB 3.6"
         variables:
-          VERSION: "3.6"
+          MONGODB_VERSION: "3.6"
 
   - id: driver-versions
     display_name: Driver Version
@@ -872,7 +876,7 @@ buildvariants:
   display_name: "${os}, ${mongodb-versions}, ${php-edge-versions}, ${driver-versions}"
   exclude_spec:
     # Debian 9.2 only supports up to MongoDB 5.0
-    - { "os": "debian92", "mongodb-versions": ["6.0", "latest"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    - { "os": "debian92", "mongodb-versions": ["6.0", "rapid", "latest"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
     - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4", "5.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   tasks:
     - name: "test-standalone"
@@ -897,10 +901,12 @@ buildvariants:
   tasks:
     - name: "test-atlas-data-lake"
 
-# Stable API is available from MongoDB 5.0+
 - matrix_name: "test-requireApiVersion"
-  matrix_spec: { "os": "debian11", "mongodb-versions": ["5.0", "6.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  matrix_spec: { "os": "debian11", "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   display_name: "Versioned API - ${mongodb-versions}"
+  exclude_spec:
+    # Stable API is available from MongoDB 5.0+
+    - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   tasks:
     - .versioned-api
 
@@ -910,23 +916,31 @@ buildvariants:
   tasks:
     - .serverless
 
-# Load balancer is available from MongoDB 5.0+
 - matrix_name: "test-loadBalanced"
-  matrix_spec: { "os": "debian11", "mongodb-versions": ["5.0", "6.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  matrix_spec: { "os": "debian11", "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   display_name: "Load balanced - ${mongodb-versions}"
+  exclude_spec:
+    # Load balancer is available from MongoDB 5.0+
+    - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   tasks:
     - name: "test-loadBalanced"
 
-# CSFLE crypt_shared is available from MongoDB 6.0+, so explicitly test without it to allow use of mongocryptd
 - matrix_name: "test-csfle-skip_crypt_shared"
-  matrix_spec: { "os": "debian11", "mongodb-versions": "6.0", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  matrix_spec: { "os": "debian11", "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   display_name: "CSFLE skip_crypt_shared - ${mongodb-versions}"
+  exclude_spec:
+    # CSFLE crypt_shared is available from MongoDB 6.0+
+    - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4", "5.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   tasks:
     - name: "test-skip_crypt_shared"
 
 # Run CSFLE tests without AWS credentials (for "On-demand AWS Credentials" prose test)
 - matrix_name: "test-csfle-without_aws_creds"
-  matrix_spec: { "os": "debian11", "mongodb-versions": "6.0", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  matrix_spec: { "os": ["debian92", "debian11"], "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   display_name: "CSFLE without_aws_creds - ${mongodb-versions}"
+  exclude_spec:
+    # CSFLE is available from MongoDB 4.2+ and Debian 9.2 only supports up to MongoDB 5.0
+    - { "os": "debian92", "mongodb-versions": ["3.6", "4.0", "6.0", "rapid", "latest"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4", "5.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   tasks:
     - name: "test-without_aws_creds"

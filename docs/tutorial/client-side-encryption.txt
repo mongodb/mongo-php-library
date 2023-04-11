@@ -285,7 +285,11 @@ Automatic Queryable Encryption
 .. note::
 
    Automatic queryable encryption is an enterprise only feature and requires
-   MongoDB 6.0+.
+   MongoDB 6.0+. Queryable Encryption is in public preview and available for
+   evaluation purposes. It is not yet recommended for production deployments as
+   breaking changes may be introduced. See the
+   `Queryable Encryption Preview <https://www.mongodb.com/blog/post/mongodb-releases-queryable-encryption-preview/>`_
+   blog post for more information.
 
 The following example uses a local key; however, other key providers such as AWS
 are also an option. The data in the ``encryptedIndexed`` and

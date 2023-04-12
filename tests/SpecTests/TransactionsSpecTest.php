@@ -124,9 +124,7 @@ class TransactionsSpecTest extends FunctionalTestCase
         return $this->provideTests('transactions');
     }
 
-    /**
-     * @dataProvider provideTransactionsConvenientApiTests
-     */
+    /** @dataProvider provideTransactionsConvenientApiTests */
     public function testTransactionsConvenientApi(stdClass $test, ?array $runOn, array $data, ?string $databaseName = null, ?string $collectionName = null): void
     {
         $this->runTransactionTest($test, $runOn, $data, $databaseName, $collectionName);

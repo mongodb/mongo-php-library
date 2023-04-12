@@ -38,9 +38,7 @@ class DatabaseInfo implements ArrayAccess
     /** @var array */
     private $info;
 
-    /**
-     * @param array $info Database info
-     */
+    /** @param array $info Database info */
     public function __construct(array $info)
     {
         $this->info = $info;

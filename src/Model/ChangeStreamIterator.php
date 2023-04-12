@@ -181,9 +181,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
         return $this->isValid ? parent::key() : null;
     }
 
-    /**
-     * @see https://php.net/iteratoriterator.rewind
-     */
+    /** @see https://php.net/iteratoriterator.rewind */
     public function next(): void
     {
         /* Determine if advancing the iterator will execute a getMore command
@@ -199,6 +197,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
         try {
             parent::next();
+
             $this->onIteration(! $getMore);
         } finally {
             if ($getMore) {
@@ -207,9 +206,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
         }
     }
 
-    /**
-     * @see https://php.net/iteratoriterator.rewind
-     */
+    /** @see https://php.net/iteratoriterator.rewind */
     public function rewind(): void
     {
         if ($this->isRewindNop) {
@@ -217,12 +214,11 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
         }
 
         parent::rewind();
+
         $this->onIteration(false);
     }
 
-    /**
-     * @see https://php.net/iteratoriterator.valid
-     */
+    /** @see https://php.net/iteratoriterator.valid */
     public function valid(): bool
     {
         return $this->isValid;

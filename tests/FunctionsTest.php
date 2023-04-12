@@ -20,9 +20,7 @@ use function MongoDB\is_write_concern_acknowledged;
  */
 class FunctionsTest extends TestCase
 {
-    /**
-     * @dataProvider provideDocumentAndTypeMap
-     */
+    /** @dataProvider provideDocumentAndTypeMap */
     public function testApplyTypeMapToDocument($document, array $typeMap, $expectedDocument): void
     {
         $this->assertEquals($expectedDocument, apply_type_map_to_document($document, $typeMap));
@@ -92,9 +90,7 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideIndexSpecificationDocumentsAndGeneratedNames
-     */
+    /** @dataProvider provideIndexSpecificationDocumentsAndGeneratedNames */
     public function testGenerateIndexName($document, $expectedName): void
     {
         $this->assertSame($expectedName, generate_index_name($document));
@@ -111,18 +107,14 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testGenerateIndexNameArgumentTypeCheck($document): void
     {
         $this->expectException(InvalidArgumentException::class);
         generate_index_name($document);
     }
 
-    /**
-     * @dataProvider provideIsFirstKeyOperatorDocuments
-     */
+    /** @dataProvider provideIsFirstKeyOperatorDocuments */
     public function testIsFirstKeyOperator($document, $isFirstKeyOperator): void
     {
         $this->assertSame($isFirstKeyOperator, is_first_key_operator($document));
@@ -140,18 +132,14 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testIsFirstKeyOperatorArgumentTypeCheck($document): void
     {
         $this->expectException(InvalidArgumentException::class);
         is_first_key_operator($document);
     }
 
-    /**
-     * @dataProvider provideMapReduceOutValues
-     */
+    /** @dataProvider provideMapReduceOutValues */
     public function testIsMapReduceOutputInline($out, $isInline): void
     {
         $this->assertSame($isInline, is_mapreduce_output_inline($out));
@@ -167,9 +155,7 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideTypeMapValues
-     */
+    /** @dataProvider provideTypeMapValues */
     public function testCreateFieldPathTypeMap(array $expected, array $typeMap, $fieldPath = 'field'): void
     {
         $this->assertEquals($expected, create_field_path_type_map($typeMap, $fieldPath));
@@ -229,9 +215,7 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providePipelines
-     */
+    /** @dataProvider providePipelines */
     public function testIsPipeline($expected, $pipeline): void
     {
         $this->assertSame($expected, is_pipeline($pipeline));
@@ -258,9 +242,7 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideWriteConcerns
-     */
+    /** @dataProvider provideWriteConcerns */
     public function testIsWriteConcernAcknowledged($expected, WriteConcern $writeConcern): void
     {
         $this->assertSame($expected, is_write_concern_acknowledged($writeConcern));

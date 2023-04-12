@@ -41,9 +41,7 @@ class DropCollectionFunctionalTest extends FunctionalTestCase
         $this->assertCollectionDoesNotExist($this->getCollectionName());
     }
 
-    /**
-     * @depends testDropExistingCollection
-     */
+    /** @depends testDropExistingCollection */
     public function testDropNonexistentCollection(): void
     {
         $this->assertCollectionDoesNotExist($this->getCollectionName());

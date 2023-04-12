@@ -14,21 +14,13 @@
     <file>tests</file>
     <file>tools</file>
 
+    <!-- Target minimum supported PHP version -->
+    <config name="php_version" value="70200"/>
+
     <!-- ****************************************** -->
     <!-- Import rules from doctrine/coding-standard -->
     <!-- ****************************************** -->
     <rule ref="Doctrine">
-        <!-- ********************************************** -->
-        <!-- Exclude sniffs that require newer PHP versions -->
-        <!-- ********************************************** -->
-
-        <!-- Requires PHP 7.4 -->
-        <exclude name="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator" />
-
-        <!-- Requires PHP 8.0 -->
-        <exclude name="SlevomatCodingStandard.Classes.ModernClassNameReference.ClassNameReferencedViaFunctionCall" />
-
-
         <!-- *********************************** -->
         <!-- Exclude sniffs that cause BC breaks -->
         <!-- *********************************** -->

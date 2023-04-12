@@ -7,18 +7,14 @@ use MongoDB\Operation\CountDocuments;
 
 class CountDocumentsTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
         new CountDocuments($this->getDatabaseName(), $this->getCollectionName(), $filter);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

@@ -1690,9 +1690,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $salesCollection->drop();
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
+    /** @doesNotPerformAssertions */
     public function testVersionedApi(): void
     {
         $uriString = static::getUri(true);
@@ -1784,9 +1782,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // phpcs:enable
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
+    /** @doesNotPerformAssertions */
     public function testWithTransactionExample(): void
     {
         $this->skipIfTransactionsAreNotSupported();
@@ -2003,9 +1999,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         } while (microtime(true) < $retryUntil);
     }
 
-    /**
-     * @see https://jira.mongodb.org/browse/SERVER-39704
-     */
+    /** @see https://jira.mongodb.org/browse/SERVER-39704 */
     private function preventStaleDbVersionError(string $databaseName, string $collectionName): void
     {
         $collection = new Collection($this->manager, $databaseName, $collectionName);

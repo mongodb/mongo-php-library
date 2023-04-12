@@ -26,9 +26,7 @@ use function version_compare;
 
 class ExplainFunctionalTest extends FunctionalTestCase
 {
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testCount($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $this->createFixtures(3);
@@ -41,9 +39,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testDelete($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $this->createFixtures(3);
@@ -58,9 +54,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testDeleteMany($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $this->createFixtures(3);
@@ -75,9 +69,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testDeleteOne($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $this->createFixtures(3);
@@ -92,9 +84,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testDistinct($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $operation = new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'x', []);
@@ -105,9 +95,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testFindAndModify($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $operation = new FindAndModify($this->getDatabaseName(), $this->getCollectionName(), ['remove' => true]);
@@ -118,9 +106,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testFind($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $this->createFixtures(3);
@@ -196,9 +182,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testFindOne($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $this->createFixtures(1);
@@ -211,9 +195,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testFindOneAndDelete($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $operation = new FindOneAndDelete($this->getDatabaseName(), $this->getCollectionName(), []);
@@ -224,9 +206,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testFindOneAndReplace($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $operation = new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1.1], ['x' => 5]);
@@ -237,9 +217,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testFindOneAndUpdate($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $operation = new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], ['$rename' => ['x' => 'y']]);
@@ -250,9 +228,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testUpdate($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $this->createFixtures(3);
@@ -321,9 +297,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testUpdateMany($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $this->createFixtures(3);
@@ -339,9 +313,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected);
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testUpdateOne($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         $this->createFixtures(3);
@@ -375,9 +347,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $this->assertExplainResult($result, false, false, true);
     }
 
-    /**
-     * @dataProvider provideVerbosityInformation
-     */
+    /** @dataProvider provideVerbosityInformation */
     public function testAggregateOptimizedToQuery($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
         if (version_compare($this->getServerVersion(), '4.2.0', '<')) {

@@ -39,9 +39,7 @@ class CollectionInfo implements ArrayAccess
     /** @var array */
     private $info;
 
-    /**
-     * @param array $info Collection info
-     */
+    /** @param array $info Collection info */
     public function __construct(array $info)
     {
         $this->info = $info;

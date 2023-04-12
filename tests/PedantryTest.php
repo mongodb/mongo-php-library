@@ -24,9 +24,7 @@ use const DIRECTORY_SEPARATOR;
  */
 class PedantryTest extends TestCase
 {
-    /**
-     * @dataProvider provideProjectClassNames
-     */
+    /** @dataProvider provideProjectClassNames */
     public function testMethodsAreOrderedAlphabeticallyByVisibility($className): void
     {
         $class = new ReflectionClass($className);

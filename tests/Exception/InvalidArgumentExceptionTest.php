@@ -8,9 +8,7 @@ use MongoDB\Tests\TestCase;
 
 class InvalidArgumentExceptionTest extends TestCase
 {
-    /**
-     * @dataProvider provideExpectedTypes
-     */
+    /** @dataProvider provideExpectedTypes */
     public function testExpectedTypeFormatting($expectedType, $typeString): void
     {
         $e = InvalidArgumentException::invalidType('$arg', null, $expectedType);

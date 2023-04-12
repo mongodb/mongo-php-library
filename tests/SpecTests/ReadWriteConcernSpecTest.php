@@ -9,9 +9,7 @@ use function dirname;
 use function file_get_contents;
 use function glob;
 
-/**
- * @see https://github.com/mongodb/specifications/tree/master/source/read-write-concern
- */
+/** @see https://github.com/mongodb/specifications/tree/master/source/read-write-concern */
 class ReadWriteConcernSpecTest extends FunctionalTestCase
 {
     /** @var array */

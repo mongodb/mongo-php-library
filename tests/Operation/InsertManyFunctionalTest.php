@@ -125,9 +125,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
         return $result;
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesInsertedCount(InsertManyResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -135,9 +133,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
         $result->getInsertedCount();
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesInsertedId(InsertManyResult $result): void
     {
         $this->assertInstanceOf(ObjectId::class, $result->getInsertedIds()[0]);

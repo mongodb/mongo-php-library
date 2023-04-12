@@ -43,9 +43,7 @@ class DropDatabaseFunctionalTest extends FunctionalTestCase
         $this->assertDatabaseDoesNotExist($server, $this->getDatabaseName());
     }
 
-    /**
-     * @depends testDropExistingDatabase
-     */
+    /** @depends testDropExistingDatabase */
     public function testDropNonexistentDatabase(): void
     {
         $server = $this->getPrimaryServer();

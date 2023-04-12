@@ -128,9 +128,7 @@ class BSONIterator implements Iterator
         $this->advance();
     }
 
-    /**
-     * @see https://php.net/iterator.valid
-     */
+    /** @see https://php.net/iterator.valid */
     #[ReturnTypeWillChange]
     public function valid(): bool
     {

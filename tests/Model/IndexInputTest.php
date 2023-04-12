@@ -22,9 +22,7 @@ class IndexInputTest extends TestCase
         new IndexInput(['key' => 'foo']);
     }
 
-    /**
-     * @dataProvider provideInvalidFieldOrderValues
-     */
+    /** @dataProvider provideInvalidFieldOrderValues */
     public function testConstructorShouldRequireKeyFieldOrderToBeNumericOrString($order): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -42,9 +40,7 @@ class IndexInputTest extends TestCase
         new IndexInput(['key' => ['x' => 1], 'name' => 1]);
     }
 
-    /**
-     * @dataProvider provideExpectedNameAndKey
-     */
+    /** @dataProvider provideExpectedNameAndKey */
     public function testNameGeneration($expectedName, array $key): void
     {
         $this->assertSame($expectedName, (string) new IndexInput(['key' => $key]));

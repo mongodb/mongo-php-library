@@ -80,25 +80,19 @@ final class EventCollector implements CommandSubscriber
         $this->eventList = $eventList;
     }
 
-    /**
-     * @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php
-     */
+    /** @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php */
     public function commandFailed(CommandFailedEvent $event): void
     {
         $this->handleCommandMonitoringEvent($event);
     }
 
-    /**
-     * @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandstarted.php
-     */
+    /** @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandstarted.php */
     public function commandStarted(CommandStartedEvent $event): void
     {
         $this->handleCommandMonitoringEvent($event);
     }
 
-    /**
-     * @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandsucceeded.php
-     */
+    /** @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandsucceeded.php */
     public function commandSucceeded(CommandSucceededEvent $event): void
     {
         $this->handleCommandMonitoringEvent($event);

@@ -118,9 +118,7 @@ final class ErrorExpectation
         return $o;
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
+    /** @throws InvalidArgumentException */
     public static function fromTransactions(stdClass $operation)
     {
         return self::fromGenericOperation($operation);
@@ -210,9 +208,7 @@ final class ErrorExpectation
         $test->assertSame($this->codeName, $result->codeName);
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
+    /** @throws InvalidArgumentException */
     private static function fromGenericOperation(stdClass $operation)
     {
         $o = new self();

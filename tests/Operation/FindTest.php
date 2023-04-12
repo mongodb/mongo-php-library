@@ -7,18 +7,14 @@ use MongoDB\Operation\Find;
 
 class FindTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Find($this->getDatabaseName(), $this->getCollectionName(), $filter);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -147,9 +143,7 @@ class FindTest extends TestCase
         return [123, 3.14, true];
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorCursorTypeOptions
-     */
+    /** @dataProvider provideInvalidConstructorCursorTypeOptions */
     public function testConstructorCursorTypeOption($cursorType): void
     {
         $this->expectException(InvalidArgumentException::class);

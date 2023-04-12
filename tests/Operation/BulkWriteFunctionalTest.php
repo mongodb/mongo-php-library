@@ -163,9 +163,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         return $result;
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesDeletedCount(BulkWriteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -173,9 +171,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $result->getDeletedCount();
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesInsertCount(BulkWriteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -183,9 +179,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $result->getInsertedCount();
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesMatchedCount(BulkWriteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -193,9 +187,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $result->getMatchedCount();
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesModifiedCount(BulkWriteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -203,9 +195,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $result->getModifiedCount();
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesUpsertedCount(BulkWriteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -213,9 +203,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $result->getUpsertedCount();
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesUpsertedIds(BulkWriteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);

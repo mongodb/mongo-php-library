@@ -7,9 +7,7 @@ use MongoDB\Operation\Update;
 
 class UpdateTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -17,9 +15,7 @@ class UpdateTest extends TestCase
         new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, ['$set' => ['x' => 1]]);
     }
 
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorUpdateArgumentTypeCheck($update): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -27,9 +23,7 @@ class UpdateTest extends TestCase
         new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

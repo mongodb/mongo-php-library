@@ -666,9 +666,7 @@ final class Operation
         );
     }
 
-    /**
-     * @throws LogicException if the operation object is unsupported
-     */
+    /** @throws LogicException if the operation object is unsupported */
     private function getResultAssertionType()
     {
         switch ($this->object) {
@@ -694,9 +692,7 @@ final class Operation
         }
     }
 
-    /**
-     * @throws LogicException if the collection operation is unsupported
-     */
+    /** @throws LogicException if the collection operation is unsupported */
     private function getResultAssertionTypeForClient()
     {
         switch ($this->name) {
@@ -714,9 +710,7 @@ final class Operation
         }
     }
 
-    /**
-     * @throws LogicException if the collection operation is unsupported
-     */
+    /** @throws LogicException if the collection operation is unsupported */
     private function getResultAssertionTypeForCollection()
     {
         switch ($this->name) {
@@ -787,9 +781,7 @@ final class Operation
         }
     }
 
-    /**
-     * @throws LogicException if the database operation is unsupported
-     */
+    /** @throws LogicException if the database operation is unsupported */
     private function getResultAssertionTypeForDatabase()
     {
         switch ($this->name) {

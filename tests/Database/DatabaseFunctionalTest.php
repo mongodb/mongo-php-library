@@ -21,9 +21,7 @@ use function current;
  */
 class DatabaseFunctionalTest extends FunctionalTestCase
 {
-    /**
-     * @dataProvider provideInvalidDatabaseNames
-     */
+    /** @dataProvider provideInvalidDatabaseNames */
     public function testConstructorDatabaseNameArgument($databaseName, string $expectedExceptionClass): void
     {
         $this->expectException($expectedExceptionClass);
@@ -39,9 +37,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -138,9 +134,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, (int) $commandResult['ok']);
     }
 
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testCommandCommandArgumentTypeCheck($command): void
     {
         $this->expectException(InvalidArgumentException::class);

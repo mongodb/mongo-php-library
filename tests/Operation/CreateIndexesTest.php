@@ -15,9 +15,7 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [1 => ['key' => ['x' => 1]]]);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -54,9 +52,7 @@ class CreateIndexesTest extends TestCase
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), []);
     }
 
-    /**
-     * @dataProvider provideInvalidIndexSpecificationTypes
-     */
+    /** @dataProvider provideInvalidIndexSpecificationTypes */
     public function testConstructorRequiresIndexSpecificationsToBeAnArray($index): void
     {
         $this->expectException(InvalidArgumentException::class);

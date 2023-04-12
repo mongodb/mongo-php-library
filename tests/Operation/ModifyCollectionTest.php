@@ -14,9 +14,7 @@ class ModifyCollectionTest extends TestCase
         new ModifyCollection($this->getDatabaseName(), $this->getCollectionName(), []);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

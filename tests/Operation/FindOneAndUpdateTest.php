@@ -7,18 +7,14 @@ use MongoDB\Operation\FindOneAndUpdate;
 
 class FindOneAndUpdateTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), $filter, []);
     }
 
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorUpdateArgumentTypeCheck($update): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -32,9 +28,7 @@ class FindOneAndUpdateTest extends TestCase
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], []);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -56,9 +50,7 @@ class FindOneAndUpdateTest extends TestCase
         return $options;
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorReturnDocumentOptions
-     */
+    /** @dataProvider provideInvalidConstructorReturnDocumentOptions */
     public function testConstructorReturnDocumentOption($returnDocument): void
     {
         $this->expectException(InvalidArgumentException::class);

@@ -7,18 +7,14 @@ use MongoDB\Operation\DatabaseCommand;
 
 class DatabaseCommandTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorCommandArgumentTypeCheck($command): void
     {
         $this->expectException(InvalidArgumentException::class);
         new DatabaseCommand($this->getDatabaseName(), $command);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

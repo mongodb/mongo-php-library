@@ -23,9 +23,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
     }
 
-    /**
-     * @dataProvider provideDocumentWithExistingId
-     */
+    /** @dataProvider provideDocumentWithExistingId */
     public function testInsertOneWithExistingId($document): void
     {
         $operation = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
@@ -140,9 +138,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
         return $result;
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesInsertedCount(InsertOneResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -150,9 +146,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
         $result->getInsertedCount();
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesInsertedId(InsertOneResult $result): void
     {
         $this->assertInstanceOf(ObjectId::class, $result->getInsertedId());

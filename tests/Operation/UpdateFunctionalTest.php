@@ -225,9 +225,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         return $result;
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesMatchedCount(UpdateResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -235,9 +233,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         $result->getMatchedCount();
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesModifiedCount(UpdateResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -245,9 +241,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         $result->getModifiedCount();
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesUpsertedCount(UpdateResult $result): void
     {
         $this->expectException(BadMethodCallException::class);
@@ -255,9 +249,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
         $result->getUpsertedCount();
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesUpsertedId(UpdateResult $result): void
     {
         $this->expectException(BadMethodCallException::class);

@@ -170,9 +170,7 @@ class MatchesTest extends FunctionalTestCase
         $this->assertResult(false, $c, ['x' => 1], 'session LSID does not match (embedded)');
     }
 
-    /**
-     * @dataProvider errorMessageProvider
-     */
+    /** @dataProvider errorMessageProvider */
     public function testErrorMessages($expectedMessageRegex, Matches $constraint, $actualValue): void
     {
         try {
@@ -255,9 +253,7 @@ class MatchesTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider operatorErrorMessageProvider
-     */
+    /** @dataProvider operatorErrorMessageProvider */
     public function testOperatorSyntaxValidation($expectedMessage, Matches $constraint): void
     {
         $this->expectException(ExpectationFailedException::class);

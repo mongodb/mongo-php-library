@@ -62,25 +62,19 @@ class CallbackIterator implements Iterator
         return $this->iterator->key();
     }
 
-    /**
-     * @see https://php.net/iterator.next
-     */
+    /** @see https://php.net/iterator.next */
     public function next(): void
     {
         $this->iterator->next();
     }
 
-    /**
-     * @see https://php.net/iterator.rewind
-     */
+    /** @see https://php.net/iterator.rewind */
     public function rewind(): void
     {
         $this->iterator->rewind();
     }
 
-    /**
-     * @see https://php.net/iterator.valid
-     */
+    /** @see https://php.net/iterator.valid */
     public function valid(): bool
     {
         return $this->iterator->valid();

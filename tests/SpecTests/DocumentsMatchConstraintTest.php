@@ -72,9 +72,7 @@ class DocumentsMatchConstraintTest extends TestCase
         $this->assertResult(false, $c, [1, ['a' => 2]], 'Keys must have the correct value');
     }
 
-    /**
-     * @dataProvider provideBSONTypes
-     */
+    /** @dataProvider provideBSONTypes */
     public function testBSONTypeAssertions($type, $value): void
     {
         $constraint = new DocumentsMatchConstraint(['x' => ['$$type' => $type]]);
@@ -136,9 +134,7 @@ class DocumentsMatchConstraintTest extends TestCase
         $this->assertResult(false, $c2, ['x' => true], 'bool is not number or string');
     }
 
-    /**
-     * @dataProvider errorMessageProvider
-     */
+    /** @dataProvider errorMessageProvider */
     public function testErrorMessages($expectedMessagePart, DocumentsMatchConstraint $constraint, $actualValue): void
     {
         try {

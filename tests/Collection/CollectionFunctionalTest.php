@@ -30,9 +30,7 @@ use function version_compare;
  */
 class CollectionFunctionalTest extends FunctionalTestCase
 {
-    /**
-     * @dataProvider provideInvalidDatabaseAndCollectionNames
-     */
+    /** @dataProvider provideInvalidDatabaseAndCollectionNames */
     public function testConstructorDatabaseNameArgument($databaseName, string $expectedExceptionClass): void
     {
         $this->expectException($expectedExceptionClass);
@@ -40,9 +38,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         new Collection($this->manager, $databaseName, $this->getCollectionName());
     }
 
-    /**
-     * @dataProvider provideInvalidDatabaseAndCollectionNames
-     */
+    /** @dataProvider provideInvalidDatabaseAndCollectionNames */
     public function testConstructorCollectionNameArgument($collectionName, string $expectedExceptionClass): void
     {
         $this->expectException($expectedExceptionClass);
@@ -58,9 +54,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -172,9 +166,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @dataProvider provideTypeMapOptionsAndExpectedDocuments
-     */
+    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
     public function testDistinctWithTypeMap(array $typeMap, array $expectedDocuments): void
     {
         $bulkWrite = new BulkWrite(['ordered' => true]);
@@ -264,9 +256,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertCollectionDoesNotExist($this->getCollectionName());
     }
 
-    /**
-     * @todo Move this to a unit test once Manager can be mocked
-     */
+    /** @todo Move this to a unit test once Manager can be mocked */
     public function testDropIndexShouldNotAllowWildcardCharacter(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -732,9 +722,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @dataProvider collectionMethodClosures
-     */
+    /** @dataProvider collectionMethodClosures */
     public function testMethodDoesNotInheritReadWriteConcernInTranasaction(Closure $method): void
     {
         $this->skipIfTransactionsAreNotSupported();
@@ -760,9 +748,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @dataProvider collectionWriteMethodClosures
-     */
+    /** @dataProvider collectionWriteMethodClosures */
     public function testMethodInTransactionWithWriteConcernOption($method): void
     {
         $this->skipIfTransactionsAreNotSupported();
@@ -782,9 +768,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         }
     }
 
-    /**
-     * @dataProvider collectionReadMethodClosures
-     */
+    /** @dataProvider collectionReadMethodClosures */
     public function testMethodInTransactionWithReadConcernOption($method): void
     {
         $this->skipIfTransactionsAreNotSupported();

@@ -117,9 +117,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
         return $result;
     }
 
-    /**
-     * @depends testUnacknowledgedWriteConcern
-     */
+    /** @depends testUnacknowledgedWriteConcern */
     public function testUnacknowledgedWriteConcernAccessesDeletedCount(DeleteResult $result): void
     {
         $this->expectException(BadMethodCallException::class);

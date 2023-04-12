@@ -102,9 +102,7 @@ class FindFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @dataProvider provideTypeMapOptionsAndExpectedDocuments
-     */
+    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
     public function testTypeMapOption(array $typeMap, array $expectedDocuments): void
     {
         $this->createFixtures(3);

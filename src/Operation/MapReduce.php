@@ -309,9 +309,7 @@ class MapReduce implements Executable
         return new MapReduceResult($getIterator, $result);
     }
 
-    /**
-     * @param string|array|object $out
-     */
+    /** @param string|array|object $out */
     private function checkOutDeprecations($out): void
     {
         if (is_string($out)) {

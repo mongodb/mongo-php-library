@@ -7,9 +7,7 @@ use MongoDB\Operation\FindOne;
 
 class FindOneFunctionalTest extends FunctionalTestCase
 {
-    /**
-     * @dataProvider provideTypeMapOptionsAndExpectedDocument
-     */
+    /** @dataProvider provideTypeMapOptionsAndExpectedDocument */
     public function testTypeMapOption(array $typeMap, $expectedDocument): void
     {
         $this->createFixtures(1);

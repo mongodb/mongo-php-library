@@ -13,27 +13,21 @@ use TypeError;
 
 class DeleteTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Delete($this->getDatabaseName(), $this->getCollectionName(), $filter, 0);
     }
 
-    /**
-     * @dataProvider provideInvalidIntegerValues
-     */
+    /** @dataProvider provideInvalidIntegerValues */
     public function testConstructorLimitArgumentMustBeInt($limit): void
     {
         $this->expectException(TypeError::class);
         new Delete($this->getDatabaseName(), $this->getCollectionName(), [], $limit);
     }
 
-    /**
-     * @dataProvider provideInvalidLimitValues
-     */
+    /** @dataProvider provideInvalidLimitValues */
     public function testConstructorLimitArgumentMustBeOneOrZero($limit): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -46,9 +40,7 @@ class DeleteTest extends TestCase
         return $this->wrapValuesForDataProvider([-1, 2]);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

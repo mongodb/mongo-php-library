@@ -112,9 +112,7 @@ class ChangeStream implements Iterator
         return $this->iterator->current();
     }
 
-    /**
-     * @return CursorId
-     */
+    /** @return CursorId */
     public function getCursorId()
     {
         return $this->iterator->getInnerIterator()->getId();

@@ -1008,9 +1008,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertMatchesDocument($expectedResult, $changeStream->current());
     }
 
-    /**
-     * @dataProvider provideTypeMapOptionsAndExpectedChangeDocument
-     */
+    /** @dataProvider provideTypeMapOptionsAndExpectedChangeDocument */
     public function testTypeMapOption(array $typeMap, $expectedChangeDocument): void
     {
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], ['typeMap' => $typeMap] + $this->defaultOptions);

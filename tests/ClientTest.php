@@ -22,9 +22,7 @@ class ClientTest extends TestCase
         $this->assertEquals('mongodb://127.0.0.1/', (string) $client);
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
+    /** @doesNotPerformAssertions */
     public function testConstructorAutoEncryptionOpts(): void
     {
         $autoEncryptionOpts = [
@@ -36,9 +34,7 @@ class ClientTest extends TestCase
         new Client(static::getUri(), [], ['autoEncryption' => $autoEncryptionOpts]);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorDriverOptions
-     */
+    /** @dataProvider provideInvalidConstructorDriverOptions */
     public function testConstructorDriverOptionTypeChecks(array $driverOptions, string $exception = InvalidArgumentException::class): void
     {
         $this->expectException($exception);

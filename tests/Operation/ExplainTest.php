@@ -8,9 +8,7 @@ use MongoDB\Operation\Explainable;
 
 class ExplainTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $explainable = $this->getMockBuilder(Explainable::class)->getMock();

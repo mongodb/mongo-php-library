@@ -23,9 +23,7 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
         $this->collectionWrapper = new CollectionWrapper($this->manager, $this->getDatabaseName(), 'fs');
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
+    /** @doesNotPerformAssertions */
     public function testValidConstructorOptions(): void
     {
         new WritableStream($this->collectionWrapper, 'filename', [
@@ -35,9 +33,7 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
         ]);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -86,9 +82,7 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
         $this->assertSame(1536, $stream->getSize());
     }
 
-    /**
-     * @dataProvider provideInputDataAndExpectedMD5
-     */
+    /** @dataProvider provideInputDataAndExpectedMD5 */
     public function testWriteBytesCalculatesMD5($input, $expectedMD5): void
     {
         $stream = new WritableStream($this->collectionWrapper, 'filename');

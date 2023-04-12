@@ -10,9 +10,7 @@ use Throwable;
 use function call_user_func;
 use function time;
 
-/**
- * @internal
- */
+/** @internal */
 class WithTransaction
 {
     /** @var callable */

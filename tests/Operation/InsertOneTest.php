@@ -7,18 +7,14 @@ use MongoDB\Operation\InsertOne;
 
 class InsertOneTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorDocumentArgumentTypeCheck($document): void
     {
         $this->expectException(InvalidArgumentException::class);
         new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

@@ -13,9 +13,7 @@ class DropIndexesTest extends TestCase
         new DropIndexes($this->getDatabaseName(), $this->getCollectionName(), '');
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

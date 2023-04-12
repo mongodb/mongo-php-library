@@ -15,9 +15,7 @@ use function version_compare;
 
 class FindAndModifyFunctionalTest extends FunctionalTestCase
 {
-    /**
-     * @see https://jira.mongodb.org/browse/PHPLIB-344
-     */
+    /** @see https://jira.mongodb.org/browse/PHPLIB-344 */
     public function testManagerReadConcernIsOmitted(): void
     {
         $manager = static::createTestManager(null, ['readConcernLevel' => 'majority']);
@@ -167,9 +165,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @dataProvider provideTypeMapOptionsAndExpectedDocument
-     */
+    /** @dataProvider provideTypeMapOptionsAndExpectedDocument */
     public function testTypeMapOption(?array $typeMap, $expectedDocument): void
     {
         $this->createFixtures(1);

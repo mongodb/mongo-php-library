@@ -21,9 +21,7 @@ class InsertManyTest extends TestCase
         new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [1 => ['x' => 1]]);
     }
 
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorDocumentsArgumentElementTypeChecks($document): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -31,9 +29,7 @@ class InsertManyTest extends TestCase
         new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [$document]);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

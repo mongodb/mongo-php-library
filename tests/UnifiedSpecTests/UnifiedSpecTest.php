@@ -88,9 +88,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         }
     }
 
-    /**
-     * @dataProvider provideChangeStreamsTests
-     */
+    /** @dataProvider provideChangeStreamsTests */
     public function testChangeStreams(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -115,9 +113,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/client-side-encryption/*.json');
     }
 
-    /**
-     * @dataProvider provideCollectionManagementTests
-     */
+    /** @dataProvider provideCollectionManagementTests */
     public function testCollectionManagement(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -128,9 +124,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/collection-management/*.json');
     }
 
-    /**
-     * @dataProvider provideCommandMonitoringTests
-     */
+    /** @dataProvider provideCommandMonitoringTests */
     public function testCommandMonitoring(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -141,9 +135,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/command-monitoring/*.json');
     }
 
-    /**
-     * @dataProvider provideCrudTests
-     */
+    /** @dataProvider provideCrudTests */
     public function testCrud(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -154,9 +146,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/crud/*.json');
     }
 
-    /**
-     * @dataProvider provideGridFSTests
-     */
+    /** @dataProvider provideGridFSTests */
     public function testGridFS(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -167,9 +157,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/gridfs/*.json');
     }
 
-    /**
-     * @dataProvider provideLoadBalancers
-     */
+    /** @dataProvider provideLoadBalancers */
     public function testLoadBalancers(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -180,9 +168,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/load-balancers/*.json');
     }
 
-    /**
-     * @dataProvider provideSessionsTests
-     */
+    /** @dataProvider provideSessionsTests */
     public function testSessions(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -193,9 +179,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/sessions/*.json');
     }
 
-    /**
-     * @dataProvider provideTransactionsTests
-     */
+    /** @dataProvider provideTransactionsTests */
     public function testTransactions(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -220,9 +204,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/versioned-api/*.json');
     }
 
-    /**
-     * @dataProvider providePassingTests
-     */
+    /** @dataProvider providePassingTests */
     public function testPassingTests(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
@@ -233,9 +215,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         yield from $this->provideTests(__DIR__ . '/valid-pass/*.json');
     }
 
-    /**
-     * @dataProvider provideFailingTests
-     */
+    /** @dataProvider provideFailingTests */
     public function testFailingTests(UnifiedTestCase $test): void
     {
         // Cannot use expectException(), as it ignores PHPUnit Exceptions

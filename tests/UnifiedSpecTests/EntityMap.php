@@ -57,9 +57,7 @@ class EntityMap implements ArrayAccess
         }
     }
 
-    /**
-     * @see https://php.net/arrayaccess.offsetexists
-     */
+    /** @see https://php.net/arrayaccess.offsetexists */
     public function offsetExists($id): bool
     {
         assertIsString($id);
@@ -80,17 +78,13 @@ class EntityMap implements ArrayAccess
         return $this->map[$id]->value;
     }
 
-    /**
-     * @see https://php.net/arrayaccess.offsetset
-     */
+    /** @see https://php.net/arrayaccess.offsetset */
     public function offsetSet($id, $value): void
     {
         Assert::fail('Entities can only be set via set()');
     }
 
-    /**
-     * @see https://php.net/arrayaccess.offsetunset
-     */
+    /** @see https://php.net/arrayaccess.offsetunset */
     public function offsetUnset($id): void
     {
         Assert::fail('Entities cannot be removed from the map');

@@ -52,9 +52,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
         $this->expectedCollection->drop();
     }
 
-    /**
-     * @dataProvider provideSpecificationTests
-     */
+    /** @dataProvider provideSpecificationTests */
     public function testSpecification(array $initialData, array $test, $minServerVersion, $maxServerVersion, $serverless): void
     {
         if (isset($minServerVersion) || isset($maxServerVersion)) {

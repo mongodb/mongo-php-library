@@ -8,18 +8,14 @@ use MongoDB\Operation\UpdateMany;
 
 class UpdateManyTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
         new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), $filter, ['$set' => ['x' => 1]]);
     }
 
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorUpdateArgumentTypeCheck($update): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -35,9 +31,7 @@ class UpdateManyTest extends TestCase
         new UpdateMany($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update);
     }
 
-    /**
-     * @dataProvider provideReplacementDocuments
-     */
+    /** @dataProvider provideReplacementDocuments */
     public function testConstructorUpdateArgumentRequiresOperators($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);

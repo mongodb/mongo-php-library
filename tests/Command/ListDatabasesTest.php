@@ -8,9 +8,7 @@ use MongoDB\Tests\TestCase;
 
 class ListDatabasesTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);

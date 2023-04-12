@@ -220,9 +220,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         );
     }
 
-    /**
-     * @dataProvider provideTypeMapOptionsAndExpectedDocuments
-     */
+    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
     public function testTypeMapOptionWithInlineResults(?array $typeMap, array $expectedDocuments): void
     {
         $this->createFixtures(3);
@@ -267,9 +265,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideTypeMapOptionsAndExpectedDocuments
-     */
+    /** @dataProvider provideTypeMapOptionsAndExpectedDocuments */
     public function testTypeMapOptionWithOutputCollection(?array $typeMap, array $expectedDocuments): void
     {
         $this->createFixtures(3);

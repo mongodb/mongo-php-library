@@ -17,9 +17,7 @@ use UnexpectedValueException;
 use function current;
 use function sprintf;
 
-/**
- * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests
- */
+/** @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests */
 class PrimaryStepDownSpecTest extends FunctionalTestCase
 {
     public const INTERRUPTED_AT_SHUTDOWN = 11600;
@@ -42,9 +40,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         $this->collection = $this->client->selectCollection($this->getDatabaseName(), $this->getCollectionName());
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#not-primary-keep-connection-pool
-     */
+    /** @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#not-primary-keep-connection-pool */
     public function testNotPrimaryKeepsConnectionPool(): void
     {
         $runOn = [(object) ['minServerVersion' => '4.1.11', 'topology' => [self::TOPOLOGY_REPLICASET]]];
@@ -78,9 +74,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         $this->assertSame($totalConnectionsCreated, $this->getTotalConnectionsCreated());
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#not-primary-reset-connection-pool
-     */
+    /** @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#not-primary-reset-connection-pool */
     public function testNotPrimaryResetConnectionPool(): void
     {
         $runOn = [(object) ['minServerVersion' => '4.0.0', 'maxServerVersion' => '4.0.999', 'topology' => [self::TOPOLOGY_REPLICASET]]];
@@ -117,9 +111,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         $this->assertSame(1, $result->getInsertedCount());
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#shutdown-in-progress-reset-connection-pool
-     */
+    /** @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#shutdown-in-progress-reset-connection-pool */
     public function testShutdownResetConnectionPool(): void
     {
         $runOn = [(object) ['minServerVersion' => '4.0.0']];
@@ -156,9 +148,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         $this->assertSame(1, $result->getInsertedCount());
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#interrupted-at-shutdown-reset-connection-pool
-     */
+    /** @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#interrupted-at-shutdown-reset-connection-pool */
     public function testInterruptedAtShutdownResetConnectionPool(): void
     {
         $runOn = [(object) ['minServerVersion' => '4.0.0']];
@@ -195,9 +185,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         $this->assertSame(1, $result->getInsertedCount());
     }
 
-    /**
-     * @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#getmore-iteration
-     */
+    /** @see https://github.com/mongodb/specifications/tree/master/source/connections-survive-step-down/tests#getmore-iteration */
     public function testGetMoreIteration(): void
     {
         $this->markTestSkipped('Test causes subsequent failures in other tests (see PHPLIB-471)');

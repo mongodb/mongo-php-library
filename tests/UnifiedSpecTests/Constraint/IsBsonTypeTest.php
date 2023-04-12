@@ -28,9 +28,7 @@ use const PHP_INT_SIZE;
 
 class IsBsonTypeTest extends TestCase
 {
-    /**
-     * @dataProvider provideTypes
-     */
+    /** @dataProvider provideTypes */
     public function testConstraint($type, $value): void
     {
         $this->assertResult(true, new IsBsonType($type), $value, $this->dataName() . ' is ' . $type);
@@ -79,9 +77,7 @@ class IsBsonTypeTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideTypes
-     */
+    /** @dataProvider provideTypes */
     public function testAny($type, $value): void
     {
         $this->assertResult(true, IsBsonType::any(), $value, $this->dataName() . ' is a BSON type');

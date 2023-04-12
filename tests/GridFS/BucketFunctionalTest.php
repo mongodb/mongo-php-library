@@ -44,9 +44,7 @@ use const PHP_VERSION_ID;
  */
 class BucketFunctionalTest extends FunctionalTestCase
 {
-    /**
-     * @doesNotPerformAssertions
-     */
+    /** @doesNotPerformAssertions */
     public function testValidConstructorOptions(): void
     {
         new Bucket($this->manager, $this->getDatabaseName(), [
@@ -58,9 +56,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         ]);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -109,9 +105,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         new Bucket($this->manager, $this->getDatabaseName(), ['chunkSizeBytes' => 0]);
     }
 
-    /**
-     * @dataProvider provideInputDataAndExpectedChunks
-     */
+    /** @dataProvider provideInputDataAndExpectedChunks */
     public function testDelete($input, $expectedChunks): void
     {
         $id = $this->bucket->uploadFromStream('filename', $this->createStream($input));
@@ -147,9 +141,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->bucket->delete('nonexistent-id');
     }
 
-    /**
-     * @dataProvider provideInputDataAndExpectedChunks
-     */
+    /** @dataProvider provideInputDataAndExpectedChunks */
     public function testDeleteStillRemovesChunksIfFileDoesNotExist($input, $expectedChunks): void
     {
         $id = $this->bucket->uploadFromStream('filename', $this->createStream($input));
@@ -207,9 +199,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         stream_get_contents($this->bucket->openDownloadStream($id));
     }
 
-    /**
-     * @dataProvider provideInputDataAndExpectedChunks
-     */
+    /** @dataProvider provideInputDataAndExpectedChunks */
     public function testDownloadToStream($input): void
     {
         $id = $this->bucket->uploadFromStream('filename', $this->createStream($input));
@@ -219,9 +209,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertStreamContents($input, $destination);
     }
 
-    /**
-     * @dataProvider provideInvalidStreamValues
-     */
+    /** @dataProvider provideInvalidStreamValues */
     public function testDownloadToStreamShouldRequireDestinationStream($destination): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -274,18 +262,14 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertStreamContents('baz', $destination);
     }
 
-    /**
-     * @dataProvider provideInvalidStreamValues
-     */
+    /** @dataProvider provideInvalidStreamValues */
     public function testDownloadToStreamByNameShouldRequireDestinationStream($destination): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->bucket->downloadToStreamByName('filename', $destination);
     }
 
-    /**
-     * @dataProvider provideNonexistentFilenameAndRevision
-     */
+    /** @dataProvider provideNonexistentFilenameAndRevision */
     public function testDownloadToStreamByNameShouldRequireFilenameAndRevisionToExist($filename, $revision): void
     {
         $this->bucket->uploadFromStream('filename', $this->createStream('foo'));
@@ -452,9 +436,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertSameDocument($metadata, $fileDocument->metadata);
     }
 
-    /**
-     * @dataProvider provideInvalidGridFSStreamValues
-     */
+    /** @dataProvider provideInvalidGridFSStreamValues */
     public function testGetFileDocumentForStreamShouldRequireGridFSStreamResource($stream): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -491,9 +473,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertEquals(1, $this->bucket->getFileIdForStream($stream));
     }
 
-    /**
-     * @dataProvider provideInvalidGridFSStreamValues
-     */
+    /** @dataProvider provideInvalidGridFSStreamValues */
     public function testGetFileIdForStreamShouldRequireGridFSStreamResource($stream): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -508,9 +488,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertEquals('fs.files', $filesCollection->getCollectionName());
     }
 
-    /**
-     * @dataProvider provideInputDataAndExpectedChunks
-     */
+    /** @dataProvider provideInputDataAndExpectedChunks */
     public function testOpenDownloadStream($input): void
     {
         $id = $this->bucket->uploadFromStream('filename', $this->createStream($input));
@@ -518,9 +496,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertStreamContents($input, $this->bucket->openDownloadStream($id));
     }
 
-    /**
-     * @dataProvider provideInputDataAndExpectedChunks
-     */
+    /** @dataProvider provideInputDataAndExpectedChunks */
     public function testOpenDownloadStreamAndMultipleReadOperations($input): void
     {
         $id = $this->bucket->uploadFromStream('filename', $this->createStream($input));
@@ -566,9 +542,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertStreamContents('baz', $this->bucket->openDownloadStreamByName('filename', ['revision' => 2]));
     }
 
-    /**
-     * @dataProvider provideNonexistentFilenameAndRevision
-     */
+    /** @dataProvider provideNonexistentFilenameAndRevision */
     public function testOpenDownloadStreamByNameShouldRequireFilenameAndRevisionToExist($filename, $revision): void
     {
         $this->bucket->uploadFromStream('filename', $this->createStream('foo'));
@@ -588,9 +562,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertStreamContents('foobar', $this->bucket->openDownloadStreamByName('filename'));
     }
 
-    /**
-     * @dataProvider provideInputDataAndExpectedChunks
-     */
+    /** @dataProvider provideInputDataAndExpectedChunks */
     public function testOpenUploadStreamAndMultipleWriteOperations($input): void
     {
         $stream = $this->bucket->openUploadStream('filename');
@@ -661,9 +633,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertSameDocument(['foo' => 'bar'], $fileDocument['metadata']);
     }
 
-    /**
-     * @dataProvider provideInvalidStreamValues
-     */
+    /** @dataProvider provideInvalidStreamValues */
     public function testUploadFromStreamShouldRequireSourceStream($source): void
     {
         $this->expectException(InvalidArgumentException::class);

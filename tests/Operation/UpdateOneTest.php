@@ -8,18 +8,14 @@ use MongoDB\Operation\UpdateOne;
 
 class UpdateOneTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
         new UpdateOne($this->getDatabaseName(), $this->getCollectionName(), $filter, ['$set' => ['x' => 1]]);
     }
 
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testConstructorUpdateArgumentTypeCheck($update): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -35,9 +31,7 @@ class UpdateOneTest extends TestCase
         new UpdateOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update);
     }
 
-    /**
-     * @dataProvider provideReplacementDocuments
-     */
+    /** @dataProvider provideReplacementDocuments */
     public function testConstructorUpdateArgumentRequiresOperators($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);

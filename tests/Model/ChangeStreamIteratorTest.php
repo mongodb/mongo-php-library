@@ -39,9 +39,7 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
     }
 
-    /**
-     * @dataProvider provideInvalidIntegerValues
-     */
+    /** @dataProvider provideInvalidIntegerValues */
     public function testFirstBatchArgumentTypeCheck($firstBatchSize): void
     {
         $this->expectException(TypeError::class);
@@ -60,18 +58,14 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
         $this->assertSameDocument((object) ['resumeToken' => 2], $iterator->getResumeToken());
     }
 
-    /**
-     * @dataProvider provideInvalidDocumentValues
-     */
+    /** @dataProvider provideInvalidDocumentValues */
     public function testInitialResumeTokenArgumentTypeCheck($initialResumeToken): void
     {
         $this->expectException(InvalidArgumentException::class);
         new ChangeStreamIterator($this->collection->find(), 0, $initialResumeToken, null);
     }
 
-    /**
-     * @dataProvider provideInvalidObjectValues
-     */
+    /** @dataProvider provideInvalidObjectValues */
     public function testPostBatchResumeTokenArgumentTypeCheck($postBatchResumeToken): void
     {
         $this->expectException(TypeError::class);

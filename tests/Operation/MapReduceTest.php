@@ -10,9 +10,7 @@ use stdClass;
 
 class MapReduceTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidOutValues
-     */
+    /** @dataProvider provideInvalidOutValues */
     public function testConstructorOutArgumentTypeCheck($out): void
     {
         $map = new Javascript('function() { emit(this.x, this.y); }');
@@ -27,9 +25,7 @@ class MapReduceTest extends TestCase
         return $this->wrapValuesForDataProvider([123, 3.14, true]);
     }
 
-    /**
-     * @dataProvider provideInvalidConstructorOptions
-     */
+    /** @dataProvider provideInvalidConstructorOptions */
     public function testConstructorOptionTypeChecks(array $options): void
     {
         $map = new Javascript('function() { emit(this.x, this.y); }');

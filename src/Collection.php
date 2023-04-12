@@ -40,6 +40,7 @@ use MongoDB\Operation\DeleteMany;
 use MongoDB\Operation\DeleteOne;
 use MongoDB\Operation\Distinct;
 use MongoDB\Operation\DropCollection;
+use MongoDB\Operation\DropEncryptedCollection;
 use MongoDB\Operation\DropIndexes;
 use MongoDB\Operation\EstimatedDocumentCount;
 use MongoDB\Operation\Explain;
@@ -495,22 +496,14 @@ class Collection
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        $encryptedFields = $options['encryptedFields']
-            ?? get_encrypted_fields_from_driver($this->databaseName, $this->collectionName, $this->manager)
-            ?? get_encrypted_fields_from_server($this->databaseName, $this->collectionName, $this->manager, $server)
-            ?? null;
-
-        if ($encryptedFields !== null) {
-            // encryptedFields is not passed to the drop command
-            unset($options['encryptedFields']);
-
-            $encryptedFields = (array) $encryptedFields;
-            (new DropCollection($this->databaseName, $encryptedFields['escCollection'] ?? 'enxcol_.' . $this->collectionName . '.esc'))->execute($server);
-            (new DropCollection($this->databaseName, $encryptedFields['eccCollection'] ?? 'enxcol_.' . $this->collectionName . '.ecc'))->execute($server);
-            (new DropCollection($this->databaseName, $encryptedFields['ecocCollection'] ?? 'enxcol_.' . $this->collectionName . '.ecoc'))->execute($server);
+        if (! isset($options['encryptedFields'])) {
+            $options['encryptedFields'] = get_encrypted_fields_from_driver($this->databaseName, $this->collectionName, $this->manager)
+                ?? get_encrypted_fields_from_server($this->databaseName, $this->collectionName, $this->manager, $server);
         }
 
-        $operation = new DropCollection($this->databaseName, $this->collectionName, $options);
+        $operation = isset($options['encryptedFields'])
+            ? new DropEncryptedCollection($this->databaseName, $this->collectionName, $options)
+            : new DropCollection($this->databaseName, $this->collectionName, $options);
 
         return $operation->execute($server);
     }

@@ -14,27 +14,13 @@
     <file>tests</file>
     <file>tools</file>
 
+    <!-- Target minimum supported PHP version -->
+    <config name="php_version" value="70200"/>
+
     <!-- ****************************************** -->
     <!-- Import rules from doctrine/coding-standard -->
     <!-- ****************************************** -->
     <rule ref="Doctrine">
-        <!-- ********************************************** -->
-        <!-- Exclude sniffs that require newer PHP versions -->
-        <!-- ********************************************** -->
-
-        <!-- Requires PHP 7.3 -->
-        <exclude name="SlevomatCodingStandard.Functions.RequireTrailingCommaInCall.MissingTrailingComma" />
-
-        <!-- Requires PHP 7.4 -->
-        <exclude name="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator" />
-
-        <!-- Requires PHP 8.0 -->
-        <exclude name="SlevomatCodingStandard.Classes.ModernClassNameReference.ClassNameReferencedViaFunctionCall" />
-        <exclude name="SlevomatCodingStandard.Classes.RequireConstructorPropertyPromotion.RequiredConstructorPropertyPromotion" />
-        <exclude name="SlevomatCodingStandard.Exceptions.RequireNonCapturingCatch.NonCapturingCatchRequired" />
-        <exclude name="SlevomatCodingStandard.TypeHints.UnionTypeHintFormat.DisallowedShortNullable" />
-
-
         <!-- *********************************** -->
         <!-- Exclude sniffs that cause BC breaks -->
         <!-- *********************************** -->

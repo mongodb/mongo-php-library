@@ -491,6 +491,12 @@
       <code>$options['writeConcern']</code>
     </MixedAssignment>
   </file>
+  <file src="src/Operation/CreateEncryptedCollection.php">
+    <DocblockTypeContradiction occurrences="2">
+      <code>! is_array($encryptedFields['fields'])</code>
+      <code>! is_array($field) &amp;&amp; ! is_object($field)</code>
+    </DocblockTypeContradiction>
+  </file>
   <file src="src/Operation/CreateIndexes.php">
     <DocblockTypeContradiction occurrences="1">
       <code>is_array($index)</code>

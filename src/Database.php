@@ -18,12 +18,14 @@
 namespace MongoDB;
 
 use Iterator;
+use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
+use MongoDB\Exception\CreateEncryptedCollectionException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
@@ -33,7 +35,7 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\CreateCollection;
-use MongoDB\Operation\CreateIndexes;
+use MongoDB\Operation\CreateEncryptedCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropDatabase;
@@ -43,6 +45,7 @@ use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\ModifyCollection;
 use MongoDB\Operation\RenameCollection;
 use MongoDB\Operation\Watch;
+use Throwable;
 use Traversable;
 
 use function is_array;
@@ -257,7 +260,13 @@ class Database
     /**
      * Create a new collection explicitly.
      *
+     * If the "encryptedFields" option is specified, this method additionally
+     * creates related metadata collections and an index on the encrypted
+     * collection.
+     *
      * @see CreateCollection::__construct() for supported options
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#create-collection-helper
+     * @see https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/manage-collections/
      * @return array|object Command result document
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -269,36 +278,63 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
+        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
+            $options['writeConcern'] = $this->writeConcern;
+        }
+
+        if (! isset($options['encryptedFields'])) {
+            $options['encryptedFields'] = get_encrypted_fields_from_driver($this->databaseName, $collectionName, $this->manager);
+        }
+
+        $operation = isset($options['encryptedFields'])
+            ? new CreateEncryptedCollection($this->databaseName, $collectionName, $options)
+            : new CreateCollection($this->databaseName, $collectionName, $options);
+
         $server = select_server($this->manager, $options);
+
+        return $operation->execute($server);
+    }
+
+    /**
+     * Create a new encrypted collection explicitly.
+     *
+     * The "encryptedFields" option is required.
+     *
+     * This method will automatically create data keys for any encrypted fields
+     * where "keyId" is null. A copy of the modified "encryptedFields" option
+     * will be returned in addition to the result from creating the collection.
+     *
+     * If any error is encountered creating data keys or the collection, a
+     * CreateEncryptedCollectionException will be thrown. The original exception
+     * and modified "encryptedFields" option can be accessed via the
+     * getPrevious() and getEncryptedFields() methods, respectively.
+     *
+     * @see CreateCollection::__construct() for supported options
+     * @return array A tuple containing the command result document from creating the collection and the modified "encryptedFields" option
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws CreateEncryptedCollectionException for any errors creating data keys or creating the collection
+     */
+    public function createEncryptedCollection(string $collectionName, ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, array $options): array
+    {
+        if (! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        $encryptedFields = $options['encryptedFields']
-            ?? get_encrypted_fields_from_driver($this->databaseName, $collectionName, $this->manager)
-            ?? null;
+        $operation = new CreateEncryptedCollection($this->databaseName, $collectionName, $options);
+        $server = select_server($this->manager, $options);
 
-        if ($encryptedFields !== null) {
-            // encryptedFields is passed to the create command
-            $options['encryptedFields'] = $encryptedFields;
+        try {
+            $operation->createDataKeys($clientEncryption, $kmsProvider, $masterKey, $encryptedFields);
+            $result = $operation->execute($server);
 
-            $encryptedFields = (array) $encryptedFields;
-            $enxcolOptions = ['clusteredIndex' => ['key' => ['_id' => 1], 'unique' => true]];
-            (new CreateCollection($this->databaseName, $encryptedFields['escCollection'] ?? 'enxcol_.' . $collectionName . '.esc', $enxcolOptions))->execute($server);
-            (new CreateCollection($this->databaseName, $encryptedFields['eccCollection'] ?? 'enxcol_.' . $collectionName . '.ecc', $enxcolOptions))->execute($server);
-            (new CreateCollection($this->databaseName, $encryptedFields['ecocCollection'] ?? 'enxcol_.' . $collectionName . '.ecoc', $enxcolOptions))->execute($server);
+            return [$result, $encryptedFields];
+        } catch (Throwable $e) {
+            throw new CreateEncryptedCollectionException($e, $encryptedFields ?? []);
         }
-
-        $operation = new CreateCollection($this->databaseName, $collectionName, $options);
-
-        $result = $operation->execute($server);
-
-        if ($encryptedFields !== null) {
-            (new CreateIndexes($this->databaseName, $collectionName, [['key' => ['__safeContent__' => 1]]]))->execute($server);
-        }
-
-        return $result;
     }
 
     /**

@@ -1,0 +1,47 @@
+source:
+  file: apiargs-common-param.yaml
+  ref: $collectionName
+replacement:
+  subject: "encrypted collection"
+  action: " to create"
+---
+arg_name: param
+name: $clientEncryption
+type: :php:`MongoDB\\Driver\\ClientEncryption <mongodb-driver-clientencryption>`
+description: |
+  The ClientEncryption object used to create data keys.
+interface: phpmethod
+operation: ~
+optional: false
+---
+arg_name: param
+name: $kmsProvider
+type: string
+description: |
+  KMS provider (e.g. "local", "aws") that will be used to encrypt new data keys.
+  This corresponds to the ``$kmsProvider`` parameter for
+  :php:`MongoDB\\Driver\\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`.
+interface: phpmethod
+operation: ~
+optional: false
+---
+arg_name: param
+name: $masterKey
+type: array|null
+description: |
+  KMS-specific key options that will be used to encrypt new data keys. This
+  corresponds to the ``masterKey`` option for
+  :php:`MongoDB\\Driver\\ClientEncryption::createDataKey() <mongodb-driver-clientencryption.createdatakey>`.
+
+  If ``$kmsProvider`` is "local", this should be ``null``.
+interface: phpmethod
+operation: ~
+optional: false
+---
+source:
+  file: apiargs-common-param.yaml
+  ref: $options
+optional: false
+post: |
+  The ``encryptedFields`` option is required.
+...

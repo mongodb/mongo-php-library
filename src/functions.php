@@ -129,10 +129,10 @@ function generate_index_name($document): string
  * autoEncryption driver option (if available).
  *
  * @internal
- * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#drop-collection-helper
- * @see Collection::drop
- * @see Database::createCollection
- * @see Database::dropCollection
+ * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#collection-encryptedfields-lookup-getencryptedfields
+ * @see Collection::drop()
+ * @see Database::createCollection()
+ * @see Database::dropCollection()
  * @return array|object|null
  */
 function get_encrypted_fields_from_driver(string $databaseName, string $collectionName, Manager $manager)
@@ -146,9 +146,9 @@ function get_encrypted_fields_from_driver(string $databaseName, string $collecti
  * Return a collection's encryptedFields option from the server (if any).
  *
  * @internal
- * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#drop-collection-helper
- * @see Collection::drop
- * @see Database::dropCollection
+ * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#collection-encryptedfields-lookup-getencryptedfields
+ * @see Collection::drop()
+ * @see Database::dropCollection()
  * @return array|object|null
  */
 function get_encrypted_fields_from_server(string $databaseName, string $collectionName, Manager $manager, Server $server)
@@ -454,8 +454,8 @@ function create_field_path_type_map(array $typeMap, string $fieldPath): array
  * from the initial call have elapsed. After that, no retries will happen and
  * the helper will throw the last exception received from the driver.
  *
- * @see Client::startSession
- * @see Session::startTransaction for supported transaction options
+ * @see Client::startSession()
+ * @see Session::startTransaction() for supported transaction options
  *
  * @param Session  $session            A session object as retrieved by Client::startSession
  * @param callable $callback           A callback that will be invoked within the transaction

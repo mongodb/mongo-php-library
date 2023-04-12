@@ -30,6 +30,21 @@ MongoDB\\Exception\\BadMethodCallException
 
 ----
 
+MongoDB\\Exception\\CreateEncryptedCollectionException
+------------------------------------------------------
+
+.. phpclass:: MongoDB\\Exception\\CreateEncryptedCollectionException
+
+   Thrown by :phpmethod:`MongoDB\\Database::createEncryptedCollection()` if any
+   error is encountered while creating data keys or creating the collection. The
+   original exception and modified ``encryptedFields`` option can be accessed
+   via the ``getPrevious()`` and ``getEncryptedFields()`` methods, respectively.
+
+   This class extends the library's :phpclass:`RuntimeException
+   <MongoDB\\Exception\\RuntimeException>` class.
+
+----
+
 MongoDB\\Exception\\InvalidArgumentException
 --------------------------------------------
 

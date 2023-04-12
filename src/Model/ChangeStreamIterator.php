@@ -199,6 +199,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
         try {
             parent::next();
+
             $this->onIteration(! $getMore);
         } finally {
             if ($getMore) {
@@ -217,6 +218,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
         }
 
         parent::rewind();
+
         $this->onIteration(false);
     }
 

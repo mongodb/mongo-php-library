@@ -85,6 +85,7 @@ class BSONArray extends ArrayObject implements JsonSerializable, Serializable, U
     #[ReturnTypeWillChange]
     public function bsonUnserialize(array $data)
     {
+        /** @psalm-suppress DirectConstructorCall */
         self::__construct($data);
     }
 

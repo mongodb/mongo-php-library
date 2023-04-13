@@ -230,7 +230,7 @@ class Aggregate implements Executable, Explainable
             unset($options['writeConcern']);
         }
 
-        $this->isExplain = ! empty($options['explain']);
+        $this->isExplain = $options['explain'] ?? false;
         $this->isWrite = is_last_pipeline_operator_write($pipeline) && ! $this->isExplain;
 
         // Explain does not use a cursor

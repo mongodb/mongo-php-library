@@ -20,7 +20,7 @@
         "squizlabs/php_codesniffer": "^3.7",
         "doctrine/coding-standard": "^11.1",
         "symfony/phpunit-bridge": "^5.2",
-        "vimeo/psalm": "^4.28"
+        "vimeo/psalm": "^5"
     },
     "autoload": {
         "psr-4": { "MongoDB\\": "src/" },

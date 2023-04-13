@@ -74,9 +74,7 @@ class IndexInput implements Serializable
         $this->index = $index;
     }
 
-    /**
-     * Return the index name.
-     */
+    /** Return the index name. */
     public function __toString(): string
     {
         return $this->index['name'];

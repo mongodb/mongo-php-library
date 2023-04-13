@@ -3,7 +3,11 @@
 namespace MongoDB\Tests\Collection;
 
 use Closure;
+use Generator;
+use MongoDB\BSON\Document;
 use MongoDB\BSON\Javascript;
+use MongoDB\Codec\Codec;
+use MongoDB\Codec\LazyBSONDocumentCodec;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
@@ -13,13 +17,16 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\MapReduceResult;
+use MongoDB\Model\LazyBSONDocument;
 use MongoDB\Operation\Count;
 use MongoDB\Tests\CommandObserver;
 use TypeError;
 
 use function array_filter;
+use function array_map;
 use function call_user_func;
 use function is_scalar;
+use function iterator_to_array;
 use function json_encode;
 use function strchr;
 use function usort;
@@ -274,19 +281,44 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertArrayHasKey('queryPlanner', $result);
     }
 
-    public function testFindOne(): void
+    /** @dataProvider withCodecOptions */
+    public function testFind(Closure $expected, ?Codec $codec, string $assertion): void
+    {
+        $this->createFixtures(3);
+
+        $filter = ['_id' => ['$gt' => 1]];
+        $options = [
+            'codec' => $codec,
+            'sort' => ['x' => -1],
+        ];
+
+        $expectedObject = [['_id' => 3, 'x' => 33], ['_id' => 2, 'x' => 22]];
+
+        $method = $assertion == 'equals' ? 'assertEquals' : 'assertSameDocuments';
+
+        $this->$method(
+            array_map($expected, $expectedObject),
+            iterator_to_array($this->collection->find($filter, $options))
+        );
+    }
+
+    /** @dataProvider withCodecOptions */
+    public function testFindOne(Closure $expected, ?Codec $codec, string $assertion): void
     {
         $this->createFixtures(5);
 
         $filter = ['_id' => ['$lt' => 5]];
         $options = [
+            'codec' => $codec,
             'skip' => 1,
             'sort' => ['x' => -1],
         ];
 
-        $expected = ['_id' => 3, 'x' => 33];
+        $expectedObject = ['_id' => 3, 'x' => 33];
 
-        $this->assertSameDocument($expected, $this->collection->findOne($filter, $options));
+        $method = $assertion == 'equals' ? 'assertEquals' : 'assertSameDocument';
+
+        $this->$method($expected($expectedObject), $this->collection->findOne($filter, $options));
     }
 
     public function testFindWithinTransaction(): void
@@ -805,5 +837,24 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite, $executeBulkWriteOptions);
 
         $this->assertEquals($n, $result->getInsertedCount());
+    }
+
+    public static function withCodecOptions(): Generator
+    {
+        yield 'No codec' => [
+            'expected' => function ($expected) {
+                return $expected;
+            },
+            'codec' => null,
+            'assertion' => 'document',
+        ];
+
+        yield 'LazyBSONDocumentCodec' => [
+            'expected' => function ($expected) {
+                return new LazyBSONDocument(Document::fromPHP($expected));
+            },
+            'codec' => new LazyBSONDocumentCodec(),
+            'assertion' => 'equals',
+        ];
     }
 }

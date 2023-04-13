@@ -17,7 +17,9 @@
 
 namespace MongoDB;
 
+use Iterator;
 use MongoDB\BSON\JavascriptInterface;
+use MongoDB\Codec\Codec;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
@@ -29,6 +31,7 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
+use MongoDB\Model\CallbackIterator;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Model\IndexInfoIterator;
 use MongoDB\Operation\Aggregate;
@@ -63,6 +66,7 @@ use Traversable;
 
 use function array_diff_key;
 use function array_intersect_key;
+use function array_map;
 use function current;
 use function is_array;
 use function strlen;
@@ -76,8 +80,14 @@ class Collection
         'root' => BSONDocument::class,
     ];
 
+    /** @var array */
+    private static $codecTypeMap = ['root' => 'bson'];
+
     /** @var integer */
     private static $wireVersionForReadConcernWithWriteStage = 8;
+
+    /** @var Codec|null */
+    private $codec;
 
     /** @var string */
     private $collectionName;
@@ -107,6 +117,8 @@ class Collection
      * CRUD (i.e. create, read, update, and delete) and index management.
      *
      * Supported options:
+     *  * codec (MongoDB\Codec\Codec): A codec to decode raw BSON data to PHP
+     *    objects and back to BSON
      *
      *  * readConcern (MongoDB\Driver\ReadConcern): The default read concern to
      *    use for collection operations. Defaults to the Manager's read concern.
@@ -137,6 +149,10 @@ class Collection
             throw new InvalidArgumentException('$collectionName is invalid: ' . $collectionName);
         }
 
+        if (isset($options['codec']) && ! $options['codec'] instanceof Codec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], Codec::class);
+        }
+
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
             throw InvalidArgumentException::invalidType('"readConcern" option', $options['readConcern'], ReadConcern::class);
         }
@@ -156,6 +172,7 @@ class Collection
         $this->manager = $manager;
         $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;
+        $this->codec = $options['codec'] ?? null;
         $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();
         $this->readPreference = $options['readPreference'] ?? $this->manager->getReadPreference();
         $this->typeMap = $options['typeMap'] ?? self::$defaultTypeMap;
@@ -171,6 +188,7 @@ class Collection
     public function __debugInfo()
     {
         return [
+            'codec' => $this->codec,
             'collectionName' => $this->collectionName,
             'databaseName' => $this->databaseName,
             'manager' => $this->manager,
@@ -234,9 +252,7 @@ class Collection
             $options['readConcern'] = $this->readConcern;
         }
 
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
+        $options = $this->handleCodecAndTypeMapOptions($options);
 
         if ($hasWriteStage && ! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -244,7 +260,10 @@ class Collection
 
         $operation = new Aggregate($this->databaseName, $this->collectionName, $pipeline, $options);
 
-        return $operation->execute($server);
+        return $this->decodeIterator(
+            $operation->execute($server),
+            $options['codec'] ?? null
+        );
     }
 
     /**
@@ -633,7 +652,7 @@ class Collection
      * @see https://mongodb.com/docs/manual/crud/#read-operations
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
-     * @return Cursor
+     * @return Cursor|Iterator
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -650,13 +669,14 @@ class Collection
             $options['readConcern'] = $this->readConcern;
         }
 
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
+        $options = $this->handleCodecAndTypeMapOptions($options);
 
         $operation = new Find($this->databaseName, $this->collectionName, $filter, $options);
 
-        return $operation->execute($server);
+        return $this->decodeIterator(
+            $operation->execute($server),
+            $options['codec'] ?? null
+        );
     }
 
     /**
@@ -683,13 +703,14 @@ class Collection
             $options['readConcern'] = $this->readConcern;
         }
 
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
+        $options = $this->handleCodecAndTypeMapOptions($options);
 
         $operation = new FindOne($this->databaseName, $this->collectionName, $filter, $options);
 
-        return $operation->execute($server);
+        return $this->decodeResult(
+            $operation->execute($server),
+            $options['codec'] ?? null
+        );
     }
 
     /**
@@ -715,13 +736,14 @@ class Collection
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
+        $options = $this->handleCodecAndTypeMapOptions($options);
 
         $operation = new FindOneAndDelete($this->databaseName, $this->collectionName, $filter, $options);
 
-        return $operation->execute($server);
+        return $this->decodeResult(
+            $operation->execute($server),
+            $options['codec'] ?? null
+        );
     }
 
     /**
@@ -752,13 +774,20 @@ class Collection
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
+        $options = $this->handleCodecAndTypeMapOptions($options);
 
-        $operation = new FindOneAndReplace($this->databaseName, $this->collectionName, $filter, $replacement, $options);
+        $operation = new FindOneAndReplace(
+            $this->databaseName,
+            $this->collectionName,
+            $filter,
+            $this->encodeObject($replacement, $options['codec'] ?? null),
+            $options
+        );
 
-        return $operation->execute($server);
+        return $this->decodeResult(
+            $operation->execute($server),
+            $options['codec'] ?? null
+        );
     }
 
     /**
@@ -789,13 +818,14 @@ class Collection
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
+        $options = $this->handleCodecAndTypeMapOptions($options);
 
         $operation = new FindOneAndUpdate($this->databaseName, $this->collectionName, $filter, $update, $options);
 
-        return $operation->execute($server);
+        return $this->decodeResult(
+            $operation->execute($server),
+            $options['codec'] ?? null
+        );
     }
 
     /**
@@ -898,7 +928,14 @@ class Collection
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation = new InsertMany($this->databaseName, $this->collectionName, $documents, $options);
+        $options = $this->handleCodecAndTypeMapOptions($options);
+
+        $operation = new InsertMany(
+            $this->databaseName,
+            $this->collectionName,
+            $this->encodeObjectList($documents, $options['codec'] ?? null),
+            $options
+        );
         $server = select_server($this->manager, $options);
 
         return $operation->execute($server);
@@ -921,7 +958,14 @@ class Collection
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation = new InsertOne($this->databaseName, $this->collectionName, $document, $options);
+        $options = $this->handleCodecAndTypeMapOptions($options);
+
+        $operation = new InsertOne(
+            $this->databaseName,
+            $this->collectionName,
+            $this->encodeObject($document, $options['codec'] ?? null),
+            $options
+        );
         $server = select_server($this->manager, $options);
 
         return $operation->execute($server);
@@ -1047,7 +1091,15 @@ class Collection
             $options['writeConcern'] = $this->writeConcern;
         }
 
-        $operation = new ReplaceOne($this->databaseName, $this->collectionName, $filter, $replacement, $options);
+        $options = $this->handleCodecAndTypeMapOptions($options);
+
+        $operation = new ReplaceOne(
+            $this->databaseName,
+            $this->collectionName,
+            $filter,
+            $this->encodeObject($replacement, $options['codec'] ?? null),
+            $options
+        );
         $server = select_server($this->manager, $options);
 
         return $operation->execute($server);
@@ -1151,6 +1203,7 @@ class Collection
     public function withOptions(array $options = [])
     {
         $options += [
+            'codec' => $this->codec,
             'readConcern' => $this->readConcern,
             'readPreference' => $this->readPreference,
             'typeMap' => $this->typeMap,
@@ -1158,5 +1211,97 @@ class Collection
         ];
 
         return new Collection($this->manager, $this->databaseName, $this->collectionName, $options);
+    }
+
+    private function decodeIterator(Iterator $cursor, ?Codec $codec): Iterator
+    {
+        if (! $codec) {
+            return $cursor;
+        }
+
+        return new CallbackIterator(
+            $cursor,
+            /**
+             * @param array|object|null $value
+             * @return array|object|null
+             */
+            function ($value) use ($codec) {
+                return $this->decodeResult($value, $codec);
+            }
+        );
+    }
+
+    /**
+     * @param mixed $result
+     * @return mixed
+     */
+    private function decodeResult($result, ?Codec $codec)
+    {
+        return $codec && $codec->canDecode($result) ? $codec->decode($result) : $result;
+    }
+
+    /**
+     * @param mixed $object
+     * @return mixed
+     */
+    private function encodeObject($object, ?Codec $codec)
+    {
+        return $codec && $codec->canEncode($object) ? $codec->encode($object) : $object;
+    }
+
+    private function encodeObjectList(array $objects, ?Codec $codec): array
+    {
+        if (! $codec) {
+            return $objects;
+        }
+
+        return array_map(
+            /**
+             * @param mixed $object
+             * @return mixed
+             */
+            function ($object) use ($codec) {
+                return $this->encodeObject($object, $codec);
+            },
+            $objects
+        );
+    }
+
+    /**
+     * @param array $options
+     * @return array{codec: ?Codec, typeMap: array, ...}
+     */
+    private function handleCodecAndTypeMapOptions(array $options): array
+    {
+        // Check types for codec and typeMap options
+        if (isset($options['codec']) && ! $options['codec'] instanceof Codec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], Codec::class);
+        }
+
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        }
+
+        if (! isset($options['codec'])) {
+            // If only a typeMap option is provided, it must override any collection-level codec
+            if (isset($options['typeMap'])) {
+                return $options;
+            }
+
+            // In other cases, use the collection-level codec (potentially empty)
+            $options['codec'] = $this->codec;
+        }
+
+        // Force a codec type map if a codec is provided
+        if ($options['codec'] instanceof Codec) {
+            $options['typeMap'] = self::$codecTypeMap;
+        }
+
+        // Revert to the default type map if it wasn't provided
+        if (! isset($options['typeMap'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        return $options;
     }
 }

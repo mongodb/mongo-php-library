@@ -1,10 +1,12 @@
 {
   "runOn": [
     {
+      "maxServerVersion": "6.2.99",
       "minServerVersion": "6.0.0",
       "topology": [
         "replicaset",
-        "sharded"
+        "sharded",
+        "load-balanced"
       ]
     }
   ],
@@ -93,9 +95,9 @@
           },
           "encryptedFieldsMap": {
             "default.default": {
-              "escCollection": "esc",
-              "eccCollection": "ecc",
-              "ecocCollection": "ecoc",
+              "escCollection": "enxcol_.default.esc",
+              "eccCollection": "enxcol_.default.ecc",
+              "ecocCollection": "enxcol_.default.ecoc",
               "fields": []
             }
           }

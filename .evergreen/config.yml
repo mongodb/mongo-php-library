@@ -624,22 +624,16 @@ axes:
   - id: driver-versions
     display_name: Driver Version
     values:
-      # TODO: Update to "1.14.0" once PHPC 1.14.0 is released
       - id: "oldest-supported"
-        # display_name: "1.14.0"
-        display_name: "PHPC 1.14-dev (master)"
+        display_name: "PHPC 1.14.0"
         variables:
-          # EXTENSION_VERSION: "1.14.0"
-          EXTENSION_BRANCH: "master"
-      # TODO: Update to "1.14.x"/"stable" once PHPC 1.14.0 is released
+          EXTENSION_VERSION: "1.14.0"
       - id: "latest-stable"
-        # display_name: "1.14.x"
-        display_name: "PHPC 1.14-dev (master)"
+        display_name: "PHPC (stable)"
         variables:
-          # EXTENSION_VERSION: "stable"
-          EXTENSION_BRANCH: "master"
+          EXTENSION_VERSION: "stable"
       - id: "latest-dev"
-        display_name: "PHPC 1.14-dev (master)"
+        display_name: "PHPC (master)"
         variables:
           EXTENSION_BRANCH: "master"
 

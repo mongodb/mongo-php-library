@@ -35,8 +35,8 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
             $this->markTestSkipped('Automatic data encryption key tests require replica sets');
         }
 
-        if (version_compare($this->getServerVersion(), '6.0.0', '<')) {
-            $this->markTestSkipped('Automatic data encryption key tests require MongoDB 6.0 or later');
+        if (version_compare($this->getServerVersion(), '7.0.0', '<')) {
+            $this->markTestSkipped('Automatic data encryption key tests require MongoDB 7.0 or later');
         }
 
         $client = static::createTestClient();

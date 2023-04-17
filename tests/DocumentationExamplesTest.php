@@ -1859,8 +1859,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Queryable encryption requires replica sets');
         }
 
-        if (version_compare($this->getServerVersion(), '6.0.0', '<')) {
-            $this->markTestSkipped('Queryable encryption requires MongoDB 6.0 or later');
+        if (version_compare($this->getServerVersion(), '7.0.0', '<')) {
+            $this->markTestSkipped('Explicit encryption tests require MongoDB 7.0 or later');
         }
 
         if (! $this->isEnterprise()) {

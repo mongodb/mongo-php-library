@@ -1241,6 +1241,11 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             $this->markTestSkipped('Explicit encryption tests require MongoDB 6.0 or later');
         }
 
+        // Note: this version requirement is consistent with QEv1 spec tests
+        if (version_compare($this->getServerVersion(), '6.2.99', '>')) {
+            $this->markTestSkipped('MongoDB 7.0 and later requires Queryable Encryption v2 protocol');
+        }
+
         // Test setup
         $encryptedFields = $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/etc/data/encryptedFields.json'));
         $key1Document = $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/etc/data/keys/key1-document.json'));

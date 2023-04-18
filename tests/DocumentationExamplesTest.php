@@ -1867,6 +1867,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Queryable encryption requires MongoDB 6.0 or later');
         }
 
+        // Note: this version requirement is consistent with QEv1 spec tests
+        if (version_compare($this->getServerVersion(), '6.2.99', '>')) {
+            $this->markTestSkipped('MongoDB 7.0 and later requires Queryable Encryption v2 protocol');
+        }
+
         if (! $this->isEnterprise()) {
             $this->markTestSkipped('Automatic encryption requires MongoDB Enterprise');
         }

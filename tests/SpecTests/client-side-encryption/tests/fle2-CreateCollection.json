@@ -1,6 +1,7 @@
 {
   "runOn": [
     {
+      "maxServerVersion": "6.2.99",
       "minServerVersion": "6.0.0",
       "topology": [
         "replicaset",
@@ -21,9 +22,9 @@
           },
           "encryptedFieldsMap": {
             "default.encryptedCollection": {
-              "escCollection": "encryptedCollection.esc",
-              "eccCollection": "encryptedCollection.ecc",
-              "ecocCollection": "encryptedCollection.ecoc",
+              "escCollection": "enxcol_.encryptedCollection.esc",
+              "eccCollection": "enxcol_.encryptedCollection.ecc",
+              "ecocCollection": "enxcol_.encryptedCollection.ecoc",
               "fields": [
                 {
                   "path": "firstName",
@@ -60,7 +61,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.esc"
+            "collection": "enxcol_.encryptedCollection.esc"
           }
         },
         {
@@ -68,7 +69,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecc"
+            "collection": "enxcol_.encryptedCollection.ecc"
           }
         },
         {
@@ -76,7 +77,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecoc"
+            "collection": "enxcol_.encryptedCollection.ecoc"
           }
         },
         {
@@ -101,7 +102,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.esc"
+              "drop": "enxcol_.encryptedCollection.esc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -110,7 +111,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecc"
+              "drop": "enxcol_.encryptedCollection.ecc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -119,7 +120,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecoc"
+              "drop": "enxcol_.encryptedCollection.ecoc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -137,7 +138,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.esc",
+              "create": "enxcol_.encryptedCollection.esc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -152,7 +153,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.ecc",
+              "create": "enxcol_.encryptedCollection.ecc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -167,7 +168,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.ecoc",
+              "create": "enxcol_.encryptedCollection.ecoc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -184,9 +185,9 @@
             "command": {
               "create": "encryptedCollection",
               "encryptedFields": {
-                "escCollection": "encryptedCollection.esc",
-                "eccCollection": "encryptedCollection.ecc",
-                "ecocCollection": "encryptedCollection.ecoc",
+                "escCollection": "enxcol_.encryptedCollection.esc",
+                "eccCollection": "enxcol_.encryptedCollection.ecc",
+                "ecocCollection": "enxcol_.encryptedCollection.ecoc",
                 "fields": [
                   {
                     "path": "firstName",
@@ -745,9 +746,9 @@
           },
           "encryptedFieldsMap": {
             "default.encryptedCollection": {
-              "escCollection": "encryptedCollection.esc",
-              "eccCollection": "encryptedCollection.ecc",
-              "ecocCollection": "encryptedCollection.ecoc",
+              "escCollection": "enxcol_.encryptedCollection.esc",
+              "eccCollection": "enxcol_.encryptedCollection.ecc",
+              "ecocCollection": "enxcol_.encryptedCollection.ecoc",
               "fields": [
                 {
                   "path": "firstName",
@@ -762,9 +763,9 @@
               ]
             },
             "default.encryptedCollection.esc": {
-              "escCollection": "encryptedCollection",
-              "eccCollection": "encryptedCollection.ecc",
-              "ecocCollection": "encryptedCollection.ecoc",
+              "escCollection": "enxcol_.encryptedCollection.esc",
+              "eccCollection": "enxcol_.encryptedCollection.ecc",
+              "ecocCollection": "enxcol_.encryptedCollection.ecoc",
               "fields": [
                 {
                   "path": "firstName",
@@ -801,7 +802,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.esc"
+            "collection": "enxcol_.encryptedCollection.esc"
           }
         },
         {
@@ -809,7 +810,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecc"
+            "collection": "enxcol_.encryptedCollection.ecc"
           }
         },
         {
@@ -817,7 +818,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecoc"
+            "collection": "enxcol_.encryptedCollection.ecoc"
           }
         },
         {
@@ -842,7 +843,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.esc"
+              "drop": "enxcol_.encryptedCollection.esc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -851,7 +852,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecc"
+              "drop": "enxcol_.encryptedCollection.ecc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -860,7 +861,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecoc"
+              "drop": "enxcol_.encryptedCollection.ecoc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -878,7 +879,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.esc",
+              "create": "enxcol_.encryptedCollection.esc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -893,7 +894,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.ecc",
+              "create": "enxcol_.encryptedCollection.ecc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -908,7 +909,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.ecoc",
+              "create": "enxcol_.encryptedCollection.ecoc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -925,9 +926,9 @@
             "command": {
               "create": "encryptedCollection",
               "encryptedFields": {
-                "escCollection": "encryptedCollection.esc",
-                "eccCollection": "encryptedCollection.ecc",
-                "ecocCollection": "encryptedCollection.ecoc",
+                "escCollection": "enxcol_.encryptedCollection.esc",
+                "eccCollection": "enxcol_.encryptedCollection.ecc",
+                "ecocCollection": "enxcol_.encryptedCollection.ecoc",
                 "fields": [
                   {
                     "path": "firstName",
@@ -974,9 +975,9 @@
           },
           "encryptedFieldsMap": {
             "default.encryptedCollection": {
-              "escCollection": "encryptedCollection.esc",
-              "eccCollection": "encryptedCollection.ecc",
-              "ecocCollection": "encryptedCollection.ecoc",
+              "escCollection": "enxcol_.encryptedCollection.esc",
+              "eccCollection": "enxcol_.encryptedCollection.ecc",
+              "ecocCollection": "enxcol_.encryptedCollection.ecoc",
               "fields": [
                 {
                   "path": "firstName",
@@ -1059,9 +1060,9 @@
           },
           "encryptedFieldsMap": {
             "default.encryptedCollection": {
-              "escCollection": "encryptedCollection.esc",
-              "eccCollection": "encryptedCollection.ecc",
-              "ecocCollection": "encryptedCollection.ecoc",
+              "escCollection": "enxcol_.encryptedCollection.esc",
+              "eccCollection": "enxcol_.encryptedCollection.ecc",
+              "ecocCollection": "enxcol_.encryptedCollection.ecoc",
               "fields": [
                 {
                   "path": "firstName",
@@ -1098,7 +1099,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.esc"
+            "collection": "enxcol_.encryptedCollection.esc"
           }
         },
         {
@@ -1106,7 +1107,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecc"
+            "collection": "enxcol_.encryptedCollection.ecc"
           }
         },
         {
@@ -1114,7 +1115,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecoc"
+            "collection": "enxcol_.encryptedCollection.ecoc"
           }
         },
         {
@@ -1139,7 +1140,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.esc"
+              "drop": "enxcol_.encryptedCollection.esc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1148,7 +1149,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecc"
+              "drop": "enxcol_.encryptedCollection.ecc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1157,7 +1158,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecoc"
+              "drop": "enxcol_.encryptedCollection.ecoc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1175,7 +1176,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.esc",
+              "create": "enxcol_.encryptedCollection.esc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -1190,7 +1191,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.ecc",
+              "create": "enxcol_.encryptedCollection.ecc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -1205,7 +1206,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.ecoc",
+              "create": "enxcol_.encryptedCollection.ecoc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -1222,9 +1223,9 @@
             "command": {
               "create": "encryptedCollection",
               "encryptedFields": {
-                "escCollection": "encryptedCollection.esc",
-                "eccCollection": "encryptedCollection.ecc",
-                "ecocCollection": "encryptedCollection.ecoc",
+                "escCollection": "enxcol_.encryptedCollection.esc",
+                "eccCollection": "enxcol_.encryptedCollection.ecc",
+                "ecocCollection": "enxcol_.encryptedCollection.ecoc",
                 "fields": [
                   {
                     "path": "firstName",
@@ -1278,9 +1279,9 @@
           "arguments": {
             "collection": "encryptedCollection",
             "encryptedFields": {
-              "escCollection": "encryptedCollection.esc",
-              "eccCollection": "encryptedCollection.ecc",
-              "ecocCollection": "encryptedCollection.ecoc",
+              "escCollection": "enxcol_.encryptedCollection.esc",
+              "eccCollection": "enxcol_.encryptedCollection.ecc",
+              "ecocCollection": "enxcol_.encryptedCollection.ecoc",
               "fields": [
                 {
                   "path": "firstName",
@@ -1302,9 +1303,9 @@
           "arguments": {
             "collection": "encryptedCollection",
             "encryptedFields": {
-              "escCollection": "encryptedCollection.esc",
-              "eccCollection": "encryptedCollection.ecc",
-              "ecocCollection": "encryptedCollection.ecoc",
+              "escCollection": "enxcol_.encryptedCollection.esc",
+              "eccCollection": "enxcol_.encryptedCollection.ecc",
+              "ecocCollection": "enxcol_.encryptedCollection.ecoc",
               "fields": [
                 {
                   "path": "firstName",
@@ -1325,7 +1326,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.esc"
+            "collection": "enxcol_.encryptedCollection.esc"
           }
         },
         {
@@ -1333,7 +1334,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecc"
+            "collection": "enxcol_.encryptedCollection.ecc"
           }
         },
         {
@@ -1341,7 +1342,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecoc"
+            "collection": "enxcol_.encryptedCollection.ecoc"
           }
         },
         {
@@ -1366,7 +1367,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.esc"
+              "drop": "enxcol_.encryptedCollection.esc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1375,7 +1376,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecc"
+              "drop": "enxcol_.encryptedCollection.ecc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1384,7 +1385,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecoc"
+              "drop": "enxcol_.encryptedCollection.ecoc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1402,7 +1403,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.esc",
+              "create": "enxcol_.encryptedCollection.esc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -1417,7 +1418,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.ecc",
+              "create": "enxcol_.encryptedCollection.ecc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -1432,7 +1433,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.ecoc",
+              "create": "enxcol_.encryptedCollection.ecoc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -1449,9 +1450,9 @@
             "command": {
               "create": "encryptedCollection",
               "encryptedFields": {
-                "escCollection": "encryptedCollection.esc",
-                "eccCollection": "encryptedCollection.ecc",
-                "ecocCollection": "encryptedCollection.ecoc",
+                "escCollection": "enxcol_.encryptedCollection.esc",
+                "eccCollection": "enxcol_.encryptedCollection.ecc",
+                "ecocCollection": "enxcol_.encryptedCollection.ecoc",
                 "fields": [
                   {
                     "path": "firstName",
@@ -1510,9 +1511,9 @@
           },
           "encryptedFieldsMap": {
             "default.encryptedCollection": {
-              "escCollection": "encryptedCollection.esc",
-              "eccCollection": "encryptedCollection.ecc",
-              "ecocCollection": "encryptedCollection.ecoc",
+              "escCollection": "enxcol_.encryptedCollection.esc",
+              "eccCollection": "enxcol_.encryptedCollection.ecc",
+              "ecocCollection": "enxcol_.encryptedCollection.ecoc",
               "fields": [
                 {
                   "path": "firstName",
@@ -1542,7 +1543,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.esc"
+              "drop": "enxcol_.encryptedCollection.esc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1551,7 +1552,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecc"
+              "drop": "enxcol_.encryptedCollection.ecc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1560,7 +1561,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecoc"
+              "drop": "enxcol_.encryptedCollection.ecoc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1594,9 +1595,9 @@
           "arguments": {
             "collection": "encryptedCollection",
             "encryptedFields": {
-              "escCollection": "encryptedCollection.esc",
-              "eccCollection": "encryptedCollection.ecc",
-              "ecocCollection": "encryptedCollection.ecoc",
+              "escCollection": "enxcol_.encryptedCollection.esc",
+              "eccCollection": "enxcol_.encryptedCollection.ecc",
+              "ecocCollection": "enxcol_.encryptedCollection.ecoc",
               "fields": [
                 {
                   "path": "firstName",
@@ -1618,9 +1619,9 @@
           "arguments": {
             "collection": "encryptedCollection",
             "encryptedFields": {
-              "escCollection": "encryptedCollection.esc",
-              "eccCollection": "encryptedCollection.ecc",
-              "ecocCollection": "encryptedCollection.ecoc",
+              "escCollection": "enxcol_.encryptedCollection.esc",
+              "eccCollection": "enxcol_.encryptedCollection.ecc",
+              "ecocCollection": "enxcol_.encryptedCollection.ecoc",
               "fields": [
                 {
                   "path": "firstName",
@@ -1641,7 +1642,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.esc"
+            "collection": "enxcol_.encryptedCollection.esc"
           }
         },
         {
@@ -1649,7 +1650,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecc"
+            "collection": "enxcol_.encryptedCollection.ecc"
           }
         },
         {
@@ -1657,7 +1658,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecoc"
+            "collection": "enxcol_.encryptedCollection.ecoc"
           }
         },
         {
@@ -1683,9 +1684,9 @@
           "arguments": {
             "collection": "encryptedCollection",
             "encryptedFields": {
-              "escCollection": "encryptedCollection.esc",
-              "eccCollection": "encryptedCollection.ecc",
-              "ecocCollection": "encryptedCollection.ecoc",
+              "escCollection": "enxcol_.encryptedCollection.esc",
+              "eccCollection": "enxcol_.encryptedCollection.ecc",
+              "ecocCollection": "enxcol_.encryptedCollection.ecoc",
               "fields": [
                 {
                   "path": "firstName",
@@ -1706,7 +1707,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.esc"
+            "collection": "enxcol_.encryptedCollection.esc"
           }
         },
         {
@@ -1714,7 +1715,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecc"
+            "collection": "enxcol_.encryptedCollection.ecc"
           }
         },
         {
@@ -1722,7 +1723,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecoc"
+            "collection": "enxcol_.encryptedCollection.ecoc"
           }
         },
         {
@@ -1738,7 +1739,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.esc"
+              "drop": "enxcol_.encryptedCollection.esc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1747,7 +1748,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecc"
+              "drop": "enxcol_.encryptedCollection.ecc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1756,7 +1757,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecoc"
+              "drop": "enxcol_.encryptedCollection.ecoc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1774,7 +1775,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.esc",
+              "create": "enxcol_.encryptedCollection.esc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -1789,7 +1790,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.ecc",
+              "create": "enxcol_.encryptedCollection.ecc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -1804,7 +1805,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.ecoc",
+              "create": "enxcol_.encryptedCollection.ecoc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -1821,9 +1822,9 @@
             "command": {
               "create": "encryptedCollection",
               "encryptedFields": {
-                "escCollection": "encryptedCollection.esc",
-                "eccCollection": "encryptedCollection.ecc",
-                "ecocCollection": "encryptedCollection.ecoc",
+                "escCollection": "enxcol_.encryptedCollection.esc",
+                "eccCollection": "enxcol_.encryptedCollection.ecc",
+                "ecocCollection": "enxcol_.encryptedCollection.ecoc",
                 "fields": [
                   {
                     "path": "firstName",
@@ -1874,7 +1875,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.esc"
+              "drop": "enxcol_.encryptedCollection.esc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1883,7 +1884,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecc"
+              "drop": "enxcol_.encryptedCollection.ecc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1892,7 +1893,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecoc"
+              "drop": "enxcol_.encryptedCollection.ecoc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -1926,9 +1927,9 @@
           "arguments": {
             "collection": "encryptedCollection",
             "encryptedFields": {
-              "escCollection": "encryptedCollection.esc",
-              "eccCollection": "encryptedCollection.ecc",
-              "ecocCollection": "encryptedCollection.ecoc",
+              "escCollection": "enxcol_.encryptedCollection.esc",
+              "eccCollection": "enxcol_.encryptedCollection.ecc",
+              "ecocCollection": "enxcol_.encryptedCollection.ecoc",
               "fields": [
                 {
                   "path": "firstName",
@@ -1950,9 +1951,9 @@
           "arguments": {
             "collection": "encryptedCollection",
             "encryptedFields": {
-              "escCollection": "encryptedCollection.esc",
-              "eccCollection": "encryptedCollection.ecc",
-              "ecocCollection": "encryptedCollection.ecoc",
+              "escCollection": "enxcol_.encryptedCollection.esc",
+              "eccCollection": "enxcol_.encryptedCollection.ecc",
+              "ecocCollection": "enxcol_.encryptedCollection.ecoc",
               "fields": [
                 {
                   "path": "firstName",
@@ -1973,7 +1974,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.esc"
+            "collection": "enxcol_.encryptedCollection.esc"
           }
         },
         {
@@ -1981,7 +1982,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecc"
+            "collection": "enxcol_.encryptedCollection.ecc"
           }
         },
         {
@@ -1989,7 +1990,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecoc"
+            "collection": "enxcol_.encryptedCollection.ecoc"
           }
         },
         {
@@ -2021,7 +2022,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.esc"
+            "collection": "enxcol_.encryptedCollection.esc"
           }
         },
         {
@@ -2029,7 +2030,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecc"
+            "collection": "enxcol_.encryptedCollection.ecc"
           }
         },
         {
@@ -2037,7 +2038,7 @@
           "object": "testRunner",
           "arguments": {
             "database": "default",
-            "collection": "encryptedCollection.ecoc"
+            "collection": "enxcol_.encryptedCollection.ecoc"
           }
         },
         {
@@ -2053,7 +2054,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.esc"
+              "drop": "enxcol_.encryptedCollection.esc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -2062,7 +2063,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecc"
+              "drop": "enxcol_.encryptedCollection.ecc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -2071,7 +2072,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecoc"
+              "drop": "enxcol_.encryptedCollection.ecoc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -2089,7 +2090,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.esc",
+              "create": "enxcol_.encryptedCollection.esc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -2104,7 +2105,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.ecc",
+              "create": "enxcol_.encryptedCollection.ecc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -2119,7 +2120,7 @@
         {
           "command_started_event": {
             "command": {
-              "create": "encryptedCollection.ecoc",
+              "create": "enxcol_.encryptedCollection.ecoc",
               "clusteredIndex": {
                 "key": {
                   "_id": 1
@@ -2136,9 +2137,9 @@
             "command": {
               "create": "encryptedCollection",
               "encryptedFields": {
-                "escCollection": "encryptedCollection.esc",
-                "eccCollection": "encryptedCollection.ecc",
-                "ecocCollection": "encryptedCollection.ecoc",
+                "escCollection": "enxcol_.encryptedCollection.esc",
+                "eccCollection": "enxcol_.encryptedCollection.ecc",
+                "ecocCollection": "enxcol_.encryptedCollection.ecoc",
                 "fields": [
                   {
                     "path": "firstName",
@@ -2201,7 +2202,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.esc"
+              "drop": "enxcol_.encryptedCollection.esc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -2210,7 +2211,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecc"
+              "drop": "enxcol_.encryptedCollection.ecc"
             },
             "command_name": "drop",
             "database_name": "default"
@@ -2219,7 +2220,7 @@
         {
           "command_started_event": {
             "command": {
-              "drop": "encryptedCollection.ecoc"
+              "drop": "enxcol_.encryptedCollection.ecoc"
             },
             "command_name": "drop",
             "database_name": "default"

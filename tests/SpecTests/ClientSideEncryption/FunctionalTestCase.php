@@ -69,7 +69,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         $collection->insertMany($keyVaultData);
     }
 
-    private function createInt64(string $value): Int64
+    protected static function createInt64(string $value): Int64
     {
         $array = sprintf('a:1:{s:7:"integer";s:%d:"%s";}', strlen($value), $value);
         $int64 = sprintf('C:%d:"%s":%d:{%s}', strlen(Int64::class), Int64::class, strlen($array), $array);

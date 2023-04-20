@@ -168,6 +168,17 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/load-balancers/*.json');
     }
 
+    /** @dataProvider provideRetryableWritesTests */
+    public function testRetryableWrites(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideRetryableWritesTests()
+    {
+        return $this->provideTests(__DIR__ . '/retryable-writes/*.json');
+    }
+
     /** @dataProvider provideSessionsTests */
     public function testSessions(UnifiedTestCase $test): void
     {

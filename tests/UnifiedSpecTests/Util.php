@@ -80,7 +80,7 @@ final class Util
             'listCollections' => ['authorizedCollections', 'filter', 'maxTimeMS', 'session'],
             'modifyCollection' => ['collection', 'changeStreamPreAndPostImages', 'index', 'validator'],
             // Note: commandName is not used by PHP
-            'runCommand' => ['command', 'session', 'commandName'],
+            'runCommand' => ['command', 'commandName', 'readPreference', 'session'],
         ],
         Collection::class => [
             'aggregate' => ['pipeline', 'session', 'useCursor', 'allowDiskUse', 'batchSize', 'bypassDocumentValidation', 'collation', 'comment', 'explain', 'hint', 'let', 'maxAwaitTimeMS', 'maxTimeMS'],

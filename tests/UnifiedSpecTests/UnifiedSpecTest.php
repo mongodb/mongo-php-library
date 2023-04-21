@@ -168,6 +168,17 @@ class UnifiedSpecTest extends FunctionalTestCase
         return $this->provideTests(__DIR__ . '/load-balancers/*.json');
     }
 
+    /** @dataProvider provideRunCommandTests */
+    public function testRunCommand(UnifiedTestCase $test): void
+    {
+        self::$runner->run($test);
+    }
+
+    public function provideRunCommandTests()
+    {
+        return $this->provideTests(__DIR__ . '/run-command/*.json');
+    }
+
     /** @dataProvider provideSessionsTests */
     public function testSessions(UnifiedTestCase $test): void
     {

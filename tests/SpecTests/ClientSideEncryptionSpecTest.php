@@ -1060,10 +1060,11 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $clientEncrypted->selectCollection('db', 'coll')->insertOne(['unencrypted' => 'test']);
 
-        $clientMongocryptd = static::createTestClient('mongodb://localhost:27021');
+        $clientMongocryptd = static::createTestClient('mongodb://localhost:27021/?serverSelectionTimeoutMS=1000');
 
         $this->expectException(ConnectionTimeoutException::class);
-        $clientMongocryptd->selectDatabase('db')->command(['ping' => 1]);
+        $this->expectExceptionMessage('No suitable servers found');
+        $clientMongocryptd->getManager()->selectServer();
     }
 
     /**
@@ -1137,10 +1138,11 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $clientEncrypted->selectCollection('db', 'coll')->insertOne(['unencrypted' => 'test']);
 
-        $clientMongocryptd = static::createTestClient('mongodb://localhost:27021');
+        $clientMongocryptd = static::createTestClient('mongodb://localhost:27021/?serverSelectionTimeoutMS=1000');
 
         $this->expectException(ConnectionTimeoutException::class);
-        $clientMongocryptd->selectDatabase('db')->command(['ping' => 1]);
+        $this->expectExceptionMessage('No suitable servers found');
+        $clientMongocryptd->getManager()->selectServer();
     }
 
     /**
@@ -1170,10 +1172,11 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $clientEncrypted->selectCollection('db', 'coll')->insertOne(['unencrypted' => 'test']);
 
-        $clientMongocryptd = static::createTestClient('mongodb://localhost:27021');
+        $clientMongocryptd = static::createTestClient('mongodb://localhost:27021/?serverSelectionTimeoutMS=1000');
 
         $this->expectException(ConnectionTimeoutException::class);
-        $clientMongocryptd->selectDatabase('db')->command(['ping' => 1]);
+        $this->expectExceptionMessage('No suitable servers found');
+        $clientMongocryptd->getManager()->selectServer();
     }
 
     /**

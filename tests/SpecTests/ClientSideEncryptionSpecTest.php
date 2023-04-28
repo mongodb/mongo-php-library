@@ -4,6 +4,7 @@ namespace MongoDB\Tests\SpecTests;
 
 use Closure;
 use MongoDB\BSON\Binary;
+use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
 use MongoDB\Client;
 use MongoDB\Collection;
@@ -116,36 +117,6 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         'fle2v2-Range-DecimalPrecision-InsertFind: FLE2 Range DecimalPrecision. Insert and Find.' => 'Bundled libmongocrypt does not support Decimal128 (PHPC-2207)',
         'fle2v2-Range-DecimalPrecision-Update: FLE2 Range DecimalPrecision. Update.' => 'Bundled libmongocrypt does not support Decimal128 (PHPC-2207)',
         'fle2v2-Range-Decimal-Update: FLE2 Range Decimal. Update.' => 'Bundled libmongocrypt does not support Decimal128 (PHPC-2207)',
-        'fle2v2-Range-Long-Aggregate: FLE2 Range Long. Aggregate.' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Find with $gt' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Find with $gte' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Find with $gt with no results' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Find with $lt' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Find with $lte' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Find with $lt below min' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Find with $gt above max' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Find with $gt and $lt' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Find with equality' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Find with full range' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Find with $in' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Insert out of range' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Insert min and max' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Aggregate with $gte' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Aggregate with $gt with no results' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Aggregate with $lt' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Aggregate with $lte' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Aggregate with $lt below min' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Aggregate with $gt above max' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Aggregate with $gt and $lt' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Aggregate with equality' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Aggregate with full range' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Aggregate with $in' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Wrong type: Insert Double' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Correctness: Wrong type: Find Double' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Delete: FLE2 Range Long. Delete.' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-FindOneAndUpdate: FLE2 Range Long. FindOneAndUpdate.' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-InsertFind: FLE2 Range Long. Insert and Find.' => 'PHP encodes integers as 32-bit if range allows',
-        'fle2v2-Range-Long-Update: FLE2 Range Long. Update.' => 'PHP encodes integers as 32-bit if range allows',
         'timeoutMS: timeoutMS applied to listCollections to get collection schema' => 'Not yet implemented (PHPC-1760)',
         'timeoutMS: remaining timeoutMS applied to find to get keyvault data' => 'Not yet implemented (PHPC-1760)',
     ];
@@ -261,8 +232,21 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         foreach (glob(__DIR__ . '/client-side-encryption/tests/*.json') as $filename) {
             $group = basename($filename, '.json');
 
+            /* Some tests need to differentiate int32 and int64 BSON types.
+             * Decode certain field paths as BSON to preserve type information
+             * that would otherwise be lost by round-tripping through PHP. */
+            $typeMap = [
+                'fieldPaths' => [
+                    'encrypted_fields.fields' => 'bson',
+                    'tests.$.operations.$.arguments.document' => 'bson',
+                    'tests.$.operations.$.arguments.pipeline.$' => 'bson',
+                    'tests.$.operations.$.arguments.filter' => 'bson',
+                    'tests.$.operations.$.arguments.update' => 'bson',
+                ],
+            ];
+
             try {
-                $json = $this->decodeJson(file_get_contents($filename));
+                $json = Document::fromJSON(file_get_contents($filename))->toPHP($typeMap);
             } catch (Throwable $e) {
                 $testArgs[$group] = [
                     (object) ['skipReason' => sprintf('Exception loading file "%s": %s', $filename, $e->getMessage())],

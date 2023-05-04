@@ -713,6 +713,10 @@ axes:
         display_name: "MongoDB rapid"
         variables:
            MONGODB_VERSION: "rapid"
+      - id: "7.0"
+        display_name: "MongoDB 7.0"
+        variables:
+           MONGODB_VERSION: "7.0"
       - id: "6.0"
         display_name: "MongoDB 6.0"
         variables:
@@ -876,7 +880,7 @@ buildvariants:
   display_name: "${os}, ${mongodb-versions}, ${php-edge-versions}, ${driver-versions}"
   exclude_spec:
     # Debian 9.2 only supports up to MongoDB 5.0
-    - { "os": "debian92", "mongodb-versions": ["6.0", "rapid", "latest"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    - { "os": "debian92", "mongodb-versions": ["6.0", "7.0", "rapid", "latest"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
     - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4", "5.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   tasks:
     - name: "test-standalone"

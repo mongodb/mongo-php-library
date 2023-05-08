@@ -2,15 +2,20 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\Document;
 use MongoDB\BSON\ObjectId;
+use MongoDB\BSON\PackedArray;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Model\BSONArray;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Update;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\UpdateResult;
+use stdClass;
 
 use function version_compare;
 
@@ -24,6 +29,97 @@ class UpdateFunctionalTest extends FunctionalTestCase
         parent::setUp();
 
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+    }
+
+    /** @dataProvider provideFilterDocuments */
+    public function testFilterDocuments($filter, stdClass $expectedFilter): void
+    {
+        (new CommandObserver())->observe(
+            function () use ($filter): void {
+                $operation = new Update(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    $filter,
+                    ['$set' => ['x' => 1]],
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use ($expectedFilter): void {
+                $this->assertEquals($expectedFilter, $event['started']->getCommand()->updates[0]->q ?? null);
+            }
+        );
+    }
+
+    public function provideFilterDocuments(): array
+    {
+        $expected = (object) ['x' => 1];
+
+        return [
+            'array' => [['x' => 1], $expected],
+            'object' => [(object) ['x' => 1], $expected],
+            'Serializable' => [new BSONDocument(['x' => 1]), $expected],
+            'Document' => [Document::fromPHP(['x' => 1]), $expected],
+        ];
+    }
+
+    /**
+     * @dataProvider provideReplacementDocuments
+     * @dataProvider provideUpdateDocuments
+     * @dataProvider provideUpdatePipelines
+     */
+    public function testUpdateDocuments($update, $expectedUpdate): void
+    {
+        (new CommandObserver())->observe(
+            function () use ($update): void {
+                $operation = new Update(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    ['x' => 1],
+                    $update
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use ($expectedUpdate): void {
+                $this->assertEquals($expectedUpdate, $event['started']->getCommand()->updates[0]->u ?? null);
+            }
+        );
+    }
+
+    public function provideReplacementDocuments(): array
+    {
+        $expected = (object) ['x' => 1];
+
+        return [
+            'replacement:array' => [['x' => 1], $expected],
+            'replacement:object' => [(object) ['x' => 1], $expected],
+            'replacement:Serializable' => [new BSONDocument(['x' => 1]), $expected],
+            'replacement:Document' => [Document::fromPHP(['x' => 1]), $expected],
+        ];
+    }
+
+    public function provideUpdateDocuments(): array
+    {
+        $expected = (object) ['$set' => (object) ['x' => 1]];
+
+        return [
+            'update:array' => [['$set' => ['x' => 1]], $expected],
+            'update:object' => [(object) ['$set' => ['x' => 1]], $expected],
+            'update:Serializable' => [new BSONDocument(['$set' => ['x' => 1]]), $expected],
+            'update:Document' => [Document::fromPHP(['$set' => ['x' => 1]]), $expected],
+        ];
+    }
+
+    public function provideUpdatePipelines(): array
+    {
+        $expected = [(object) ['$set' => (object) ['x' => 1]]];
+
+        return [
+            'pipeline:array' => [[['$set' => ['x' => 1]]], $expected],
+            'pipeline:Serializable' => [new BSONArray([['$set' => ['x' => 1]]]), $expected],
+            'pipeline:PackedArray' => [PackedArray::fromPHP([['$set' => ['x' => 1]]]), $expected],
+        ];
     }
 
     public function testSessionOption(): void

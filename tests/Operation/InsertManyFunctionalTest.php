@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\Document;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Collection;
 use MongoDB\Driver\WriteConcern;
@@ -23,32 +24,94 @@ class InsertManyFunctionalTest extends FunctionalTestCase
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
     }
 
+    public function testDocumentEncoding(): void
+    {
+        $documents = [
+            ['_id' => 1],
+            (object) ['_id' => 2],
+            new BSONDocument(['_id' => 3]),
+            Document::fromPHP(['_id' => 4]),
+            ['x' => 1],
+            (object) ['x' => 2],
+            new BSONDocument(['x' => 3]),
+            Document::fromPHP(['x' => 4]),
+        ];
+
+        $expectedDocuments = [
+            (object) ['_id' => 1],
+            (object) ['_id' => 2],
+            (object) ['_id' => 3],
+            (object) ['_id' => 4],
+            // Note: _id placeholders must be replaced with generated ObjectIds
+            (object) ['_id' => null, 'x' => 1],
+            (object) ['_id' => null, 'x' => 2],
+            (object) ['_id' => null, 'x' => 3],
+            (object) ['_id' => null, 'x' => 4],
+        ];
+
+        (new CommandObserver())->observe(
+            function () use ($documents, $expectedDocuments): void {
+                $operation = new InsertMany(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    $documents
+                );
+
+                $result = $operation->execute($this->getPrimaryServer());
+                $insertedIds = $result->getInsertedIds();
+
+                foreach ($expectedDocuments as $i => $expectedDocument) {
+                    // Replace _id placeholder if necessary
+                    if ($expectedDocument->_id === null) {
+                        $expectedDocument->_id = $insertedIds[$i];
+                    }
+                }
+            },
+            function (array $event) use ($expectedDocuments): void {
+                $this->assertEquals($expectedDocuments, $event['started']->getCommand()->documents ?? null);
+            }
+        );
+    }
+
     public function testInsertMany(): void
     {
         $documents = [
-            ['_id' => 'foo', 'x' => 11],
-            ['x' => 22],
-            (object) ['_id' => 'bar', 'x' => 33],
-            new BSONDocument(['_id' => 'baz', 'x' => 44]),
+            ['_id' => 1],
+            (object) ['_id' => 2],
+            new BSONDocument(['_id' => 3]),
+            Document::fromPHP(['_id' => 4]),
+            ['x' => 1],
+            (object) ['x' => 2],
+            new BSONDocument(['x' => 3]),
+            Document::fromPHP(['x' => 4]),
         ];
 
         $operation = new InsertMany($this->getDatabaseName(), $this->getCollectionName(), $documents);
         $result = $operation->execute($this->getPrimaryServer());
 
         $this->assertInstanceOf(InsertManyResult::class, $result);
-        $this->assertSame(4, $result->getInsertedCount());
+        $this->assertSame(8, $result->getInsertedCount());
 
         $insertedIds = $result->getInsertedIds();
-        $this->assertSame('foo', $insertedIds[0]);
-        $this->assertInstanceOf(ObjectId::class, $insertedIds[1]);
-        $this->assertSame('bar', $insertedIds[2]);
-        $this->assertSame('baz', $insertedIds[3]);
+        $this->assertSame(1, $insertedIds[0]);
+        $this->assertSame(2, $insertedIds[1]);
+        $this->assertSame(3, $insertedIds[2]);
+        $this->assertSame(4, $insertedIds[3]);
+        $this->assertInstanceOf(ObjectId::class, $insertedIds[4]);
+        $this->assertInstanceOf(ObjectId::class, $insertedIds[5]);
+        $this->assertInstanceOf(ObjectId::class, $insertedIds[6]);
+        $this->assertInstanceOf(ObjectId::class, $insertedIds[7]);
 
         $expected = [
-            ['_id' => 'foo', 'x' => 11],
-            ['_id' => $insertedIds[1], 'x' => 22],
-            ['_id' => 'bar', 'x' => 33],
-            ['_id' => 'baz', 'x' => 44],
+            ['_id' => 1],
+            ['_id' => 2],
+            ['_id' => 3],
+            ['_id' => 4],
+            ['_id' => $insertedIds[4], 'x' => 1],
+            ['_id' => $insertedIds[5], 'x' => 2],
+            ['_id' => $insertedIds[6], 'x' => 3],
+            ['_id' => $insertedIds[7], 'x' => 4],
+
         ];
 
         $this->assertSameDocuments($expected, $this->collection->find());

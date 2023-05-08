@@ -2,11 +2,46 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\Document;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\CountDocuments;
 use MongoDB\Operation\InsertMany;
+use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 class CountDocumentsFunctionalTest extends FunctionalTestCase
 {
+    /** @dataProvider provideFilterDocuments */
+    public function testFilterDocuments($filter, stdClass $expectedMatchStage): void
+    {
+        (new CommandObserver())->observe(
+            function () use ($filter): void {
+                $operation = new CountDocuments(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    $filter,
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use ($expectedMatchStage): void {
+                $this->assertEquals($expectedMatchStage, $event['started']->getCommand()->pipeline[0]->{'$match'} ?? null);
+            }
+        );
+    }
+
+    public function provideFilterDocuments(): array
+    {
+        $expectedQuery = (object) ['x' => 1];
+
+        return [
+            'array' => [['x' => 1], $expectedQuery],
+            'object' => [(object) ['x' => 1], $expectedQuery],
+            'Serializable' => [new BSONDocument(['x' => 1]), $expectedQuery],
+            'Document' => [Document::fromPHP(['x' => 1]), $expectedQuery],
+        ];
+    }
+
     public function testEmptyCollection(): void
     {
         $operation = new CountDocuments($this->getDatabaseName(), $this->getCollectionName(), []);

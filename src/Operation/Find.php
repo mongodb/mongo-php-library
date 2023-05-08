@@ -32,6 +32,7 @@ use function is_bool;
 use function is_integer;
 use function is_object;
 use function is_string;
+use function MongoDB\document_to_array;
 use function trigger_error;
 
 use const E_USER_DEPRECATED;
@@ -427,7 +428,7 @@ class Find implements Executable, Explainable
             }
         }
 
-        $modifiers = empty($this->options['modifiers']) ? [] : (array) $this->options['modifiers'];
+        $modifiers = empty($this->options['modifiers']) ? [] : document_to_array($this->options['modifiers']);
 
         if (! empty($modifiers)) {
             $options['modifiers'] = $modifiers;

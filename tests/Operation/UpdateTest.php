@@ -2,7 +2,11 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\Document;
+use MongoDB\BSON\PackedArray;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Model\BSONArray;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Update;
 
 class UpdateTest extends TestCase
@@ -63,5 +67,26 @@ class UpdateTest extends TestCase
         }
 
         return $options;
+    }
+
+    /** @dataProvider provideInvalidUpdateValues */
+    public function testConstructorMultiOptionRequiresOperators($update): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('"multi" option cannot be true if $update is a replacement document');
+        new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update, ['multi' => true]);
+    }
+
+    public function provideInvalidUpdateValues(): array
+    {
+        return [
+            'replacement:array' => [['x' => 1]],
+            'replacement:object' => [(object) ['x' => 1]],
+            'replacement:Serializable' => [new BSONDocument(['x' => 1])],
+            'replacement:Document' => [Document::fromPHP(['x' => 1])],
+            'empty_pipeline:array' => [[]],
+            'empty_pipeline:Serializable' => [new BSONArray([])],
+            'empty_pipeline:PackedArray' => [PackedArray::fromPHP([])],
+        ];
     }
 }

@@ -2,9 +2,12 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\Document;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Distinct;
 use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 use function is_scalar;
 use function json_encode;
@@ -12,6 +15,38 @@ use function usort;
 
 class DistinctFunctionalTest extends FunctionalTestCase
 {
+    /** @dataProvider provideFilterDocuments */
+    public function testFilterDocuments($filter, stdClass $expectedQuery): void
+    {
+        (new CommandObserver())->observe(
+            function () use ($filter): void {
+                $operation = new Distinct(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    'x',
+                    $filter,
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use ($expectedQuery): void {
+                $this->assertEquals($expectedQuery, $event['started']->getCommand()->query ?? null);
+            }
+        );
+    }
+
+    public function provideFilterDocuments(): array
+    {
+        $expectedQuery = (object) ['x' => 1];
+
+        return [
+            'array' => [['x' => 1], $expectedQuery],
+            'object' => [(object) ['x' => 1], $expectedQuery],
+            'Serializable' => [new BSONDocument(['x' => 1]), $expectedQuery],
+            'Document' => [Document::fromPHP(['x' => 1]), $expectedQuery],
+        ];
+    }
+
     public function testDefaultReadConcernIsOmitted(): void
     {
         (new CommandObserver())->observe(

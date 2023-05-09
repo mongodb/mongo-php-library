@@ -1063,7 +1063,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $clientMongocryptd = static::createTestClient('mongodb://localhost:27021/?serverSelectionTimeoutMS=1000');
 
         $this->expectException(ConnectionTimeoutException::class);
-        $this->expectExceptionMessage('No suitable servers found');
+        $this->expectExceptionMessageMatches('#(No suitable servers found)|(No servers yet eligible for rescan)#');
         $clientMongocryptd->getManager()->selectServer();
     }
 
@@ -1141,7 +1141,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $clientMongocryptd = static::createTestClient('mongodb://localhost:27021/?serverSelectionTimeoutMS=1000');
 
         $this->expectException(ConnectionTimeoutException::class);
-        $this->expectExceptionMessage('No suitable servers found');
+        $this->expectExceptionMessageMatches('#(No suitable servers found)|(No servers yet eligible for rescan)#');
         $clientMongocryptd->getManager()->selectServer();
     }
 
@@ -1175,7 +1175,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $clientMongocryptd = static::createTestClient('mongodb://localhost:27021/?serverSelectionTimeoutMS=1000');
 
         $this->expectException(ConnectionTimeoutException::class);
-        $this->expectExceptionMessage('No suitable servers found');
+        $this->expectExceptionMessageMatches('#(No suitable servers found)|(No servers yet eligible for rescan)#');
         $clientMongocryptd->getManager()->selectServer();
     }
 

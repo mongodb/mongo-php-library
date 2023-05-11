@@ -683,10 +683,16 @@ final class Operation
                 assertArrayHasKey('command', $args);
                 assertInstanceOf(stdClass::class, $args['command']);
 
-                return $database->command(
-                    $args['command'],
-                    array_diff_key($args, ['command' => 1])
-                )->toArray()[0];
+                // Note: commandName is not used by PHP
+                $options = array_diff_key($args, ['command' => 1, 'commandName' => 1]);
+
+                /* runCommand spec tests may execute commands that return a
+                 * cursor (e.g. aggregate). PHPC creates a cursor automatically
+                 * so cannot return the original command result. Existing spec
+                 * tests do not evaluate the result, so we can return null here.
+                 * If that changes down the line, we can use command monitoring
+                 * to capture and return the command result. */
+                return $database->command($args['command'], $options)->toArray()[0] ?? null;
 
             default:
                 Assert::fail('Unsupported database operation: ' . $this->name);

@@ -178,13 +178,13 @@ class UnifiedSpecTest extends FunctionalTestCase
     {
         return $this->provideTests(__DIR__ . '/retryable-writes/*.json');
     }
-  
+
     /** @dataProvider provideRunCommandTests */
     public function testRunCommand(UnifiedTestCase $test): void
     {
         self::$runner->run($test);
     }
-  
+
     public function provideRunCommandTests()
     {
         return $this->provideTests(__DIR__ . '/run-command/*.json');

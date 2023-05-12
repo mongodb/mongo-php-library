@@ -1030,6 +1030,44 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     }
 
     /**
+     * Prose test 8: Bypass Spawning mongocryptd (via loading shared library)
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/#via-loading-shared-library
+     */
+    public function testBypassSpawningMongocryptdViaLoadingSharedLibrary(): void
+    {
+        if (! static::isCryptSharedLibAvailable()) {
+            $this->markTestSkipped('Bypass spawning of mongocryptd cannot be tested when crypt_shared is not available');
+        }
+
+        $autoEncryptionOpts = [
+            'keyVaultNamespace' => 'keyvault.datakeys',
+            'kmsProviders' => [
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+            ],
+            'schemaMap' => [
+                'db.coll' => $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/external/external-schema.json')),
+            ],
+            'extraOptions' => [
+                'mongocryptdBypassSpawn' => true,
+                'mongocryptdURI' => 'mongodb://localhost:27021/?serverSelectionTimeoutMS=1000',
+                'mongocryptdSpawnArgs' => ['--pidfilepath=bypass-spawning-mongocryptd.pid', '--port=27021'],
+                'cryptSharedLibRequired' => true,
+            ],
+        ];
+
+        $clientEncrypted = static::createTestClient(null, [], ['autoEncryption' => $autoEncryptionOpts]);
+
+        $clientEncrypted->selectCollection('db', 'coll')->insertOne(['unencrypted' => 'test']);
+
+        $clientMongocryptd = static::createTestClient('mongodb://localhost:27021/?serverSelectionTimeoutMS=1000');
+
+        $this->expectException(ConnectionTimeoutException::class);
+        $this->expectExceptionMessageMatches('#(No suitable servers found)|(No servers yet eligible for rescan)#');
+        $clientMongocryptd->getManager()->selectServer();
+    }
+
+    /**
      * Prose test 8: Bypass Spawning mongocryptd (via mongocryptdBypassSpawn)
      *
      * @see https://github.com/mongodb/specifications/tree/master/source/client-side-encryption/tests#via-mongocryptdbypassspawn
@@ -1054,7 +1092,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             ],
             'extraOptions' => [
                 'mongocryptdBypassSpawn' => true,
-                'mongocryptdURI' => 'mongodb://localhost:27021/db?serverSelectionTimeoutMS=1000',
+                'mongocryptdURI' => 'mongodb://localhost:27021/?serverSelectionTimeoutMS=1000',
                 'mongocryptdSpawnArgs' => ['--pidfilepath=bypass-spawning-mongocryptd.pid', '--port=27021'],
             ],
         ];
@@ -1100,10 +1138,11 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $clientEncrypted->selectCollection('db', 'coll')->insertOne(['unencrypted' => 'test']);
 
-        $clientMongocryptd = static::createTestClient('mongodb://localhost:27021');
+        $clientMongocryptd = static::createTestClient('mongodb://localhost:27021/?serverSelectionTimeoutMS=1000');
 
         $this->expectException(ConnectionTimeoutException::class);
-        $clientMongocryptd->selectDatabase('db')->command(['ping' => 1]);
+        $this->expectExceptionMessageMatches('#(No suitable servers found)|(No servers yet eligible for rescan)#');
+        $clientMongocryptd->getManager()->selectServer();
     }
 
     /**
@@ -1133,10 +1172,11 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $clientEncrypted->selectCollection('db', 'coll')->insertOne(['unencrypted' => 'test']);
 
-        $clientMongocryptd = static::createTestClient('mongodb://localhost:27021');
+        $clientMongocryptd = static::createTestClient('mongodb://localhost:27021/?serverSelectionTimeoutMS=1000');
 
         $this->expectException(ConnectionTimeoutException::class);
-        $clientMongocryptd->selectDatabase('db')->command(['ping' => 1]);
+        $this->expectExceptionMessageMatches('#(No suitable servers found)|(No servers yet eligible for rescan)#');
+        $clientMongocryptd->getManager()->selectServer();
     }
 
     /**

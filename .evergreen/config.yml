@@ -694,9 +694,9 @@ axes:
     display_name: PHP Version
     values:
       - id: "latest-stable"
-        display_name: "PHP 8.1"
+        display_name: "PHP 8.2"
         variables:
-          PHP_VERSION: "8.1"
+          PHP_VERSION: "8.2"
       - id: "oldest-supported"
         display_name: "PHP 7.2"
         variables:
@@ -868,7 +868,7 @@ buildvariants:
   display_name: "${os}, ${mongodb-edge-versions}, ${php-versions}, ${driver-versions}"
   exclude_spec:
     # Exclude "latest-stable" PHP version for Debian 11 (see: test-mongodb-versions matrix)
-    - { "os": "debian11", "mongodb-edge-versions": "latest-stable", "php-versions": "8.1", "driver-versions": "latest-stable" }
+    - { "os": "debian11", "mongodb-edge-versions": "latest-stable", "php-versions": "8.2", "driver-versions": "latest-stable" }
   tasks:
     - name: "test-standalone"
     - name: "test-replica_set"

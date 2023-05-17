@@ -31,12 +31,10 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
 
     public function tearDown(): void
     {
-        if ($this->hasFailed()) {
-            return;
+        if (! $this->hasFailed()) {
+            $operation = new DropCollection($this->getDatabaseName(), $this->toCollectionName);
+            $operation->execute($this->getPrimaryServer());
         }
-
-        $operation = new DropCollection($this->getDatabaseName(), $this->toCollectionName);
-        $operation->execute($this->getPrimaryServer());
 
         parent::tearDown();
     }

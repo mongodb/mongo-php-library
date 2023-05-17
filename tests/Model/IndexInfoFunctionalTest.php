@@ -20,11 +20,9 @@ class IndexInfoFunctionalTest extends FunctionalTestCase
 
     public function tearDown(): void
     {
-        if ($this->hasFailed()) {
-            return;
+        if (! $this->hasFailed()) {
+            $this->collection->drop();
         }
-
-        $this->collection->drop();
 
         parent::tearDown();
     }

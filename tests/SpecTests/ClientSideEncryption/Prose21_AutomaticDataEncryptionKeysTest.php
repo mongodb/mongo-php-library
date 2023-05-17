@@ -30,6 +30,8 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
     {
         parent::setUp();
 
+        $this->skipIfClientSideEncryptionIsNotSupported();
+
         if ($this->isStandalone() || ($this->isShardedCluster() && ! $this->isShardedClusterUsingReplicasets())) {
             $this->markTestSkipped('Automatic data encryption key tests require replica sets');
         }

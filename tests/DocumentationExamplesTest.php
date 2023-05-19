@@ -40,11 +40,9 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function tearDown(): void
     {
-        if ($this->hasFailed()) {
-            return;
+        if (! $this->hasFailed()) {
+            $this->dropCollection();
         }
-
-        $this->dropCollection();
 
         parent::tearDown();
     }

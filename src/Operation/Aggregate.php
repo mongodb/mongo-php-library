@@ -130,10 +130,10 @@ class Aggregate implements Executable, Explainable
      * Note: Collection-agnostic commands (e.g. $currentOp) may be executed by
      * specifying null for the collection name.
      *
-     * @param string      $databaseName   Database name
-     * @param string|null $collectionName Collection name
-     * @param array       $pipeline       List of pipeline operations
-     * @param array       $options        Command options
+     * @param string                                                                                                                                                                                                                                                                                                                                                   $databaseName   Database name
+     * @param string|null                                                                                                                                                                                                                                                                                                                                              $collectionName Collection name
+     * @param array                                                                                                                                                                                                                                                                                                                                                    $pipeline       List of pipeline operations
+     * @param array{ allowDiskUse?: bool, batchSize?: int, bypassDocumentValidation?: bool, collation?: array|object, comment?: mixed, explain?: bool, hint?: array|object|string, let?: array|object, maxTimeMS?: int, readConcern?: ReadConcern, readPreference?: ReadPreference, session?: Session, typeMap?: array, useCursor?: bool, writeConcern?: WriteConcern} $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct(string $databaseName, ?string $collectionName, array $pipeline, array $options = [])

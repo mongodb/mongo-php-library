@@ -24,6 +24,7 @@ use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\CreateEncryptedCollectionException;
 use MongoDB\Exception\InvalidArgumentException;
@@ -239,8 +240,8 @@ class Database
      * Execute a command on this database.
      *
      * @see DatabaseCommand::__construct() for supported options
-     * @param array|object $command Command document
-     * @param array        $options Options for command execution
+     * @param array|object                                                               $command Command document
+     * @param array{readPreference?: ReadPreference, session?: Session, typeMap?: array} $options Options for command execution
      * @return Cursor
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -558,8 +559,8 @@ class Database
      * Select a collection within this database.
      *
      * @see Collection::__construct() for supported options
-     * @param string $collectionName Name of the collection to select
-     * @param array  $options        Collection constructor options
+     * @param string                                                                                                          $collectionName Name of the collection to select
+     * @param array{readConcern?: ReadConcern, readPreference?: ReadPreference, typeMap?: array, writeConcern?: WriteConcern} $options        Collection constructor options
      * @return Collection
      * @throws InvalidArgumentException for parameter/option parsing errors
      */

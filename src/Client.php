@@ -196,8 +196,8 @@ class Client
      * Drop a database.
      *
      * @see DropDatabase::__construct() for supported options
-     * @param string $databaseName Database name
-     * @param array  $options      Additional options
+     * @param string                                              $databaseName Database name
+     * @param array{session?: Session, typeMap?: array, writeConcern?: WriteConcern} $options      Additional options
      * @return array|object Command result document
      * @throws UnsupportedException if options are unsupported on the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors
@@ -276,6 +276,7 @@ class Client
      * List database names.
      *
      * @see ListDatabaseNames::__construct() for supported options
+     * @param array{authorizedDatabases?: bool, comment?: mixed, filter?: array|object, maxTimeMS?: int, session?: Session} $options Command options
      * @throws UnexpectedValueException if the command response was malformed
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

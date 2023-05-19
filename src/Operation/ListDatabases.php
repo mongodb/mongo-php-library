@@ -58,7 +58,7 @@ class ListDatabases implements Executable
      *
      *  * session (MongoDB\Driver\Session): Client session.
      *
-     * @param array $options Command options
+     * @param array{authorizedDatabases?: bool, comment?: mixed, filter?: array|object, maxTimeMS?: int} $options Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct(array $options = [])

@@ -64,8 +64,8 @@ class BSONIterator implements Iterator
      *
      * @internal
      * @see https://php.net/manual/en/function.mongodb.bson-tophp.php
-     * @param string $data    Concatenated, valid, BSON-encoded documents
-     * @param array  $options Iterator options
+     * @param string                 $data    Concatenated, valid, BSON-encoded documents
+     * @param array{typeMap?: array} $options Iterator options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct(string $data, array $options = [])

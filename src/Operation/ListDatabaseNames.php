@@ -22,6 +22,7 @@ use Iterator;
 use MongoDB\Command\ListDatabases as ListDatabasesCommand;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 
@@ -60,7 +61,7 @@ class ListDatabaseNames implements Executable
      *
      *  * session (MongoDB\Driver\Session): Client session.
      *
-     * @param array $options Command options
+     * @param array{authorizedDatabases?: bool, comment?: mixed, filter?: array|object, maxTimeMS?: int, session?: Session} $options Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct(array $options = [])

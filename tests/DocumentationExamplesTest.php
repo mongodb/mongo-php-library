@@ -32,24 +32,9 @@ use function version_compare;
  */
 class DocumentationExamplesTest extends FunctionalTestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->dropCollection();
-    }
-
-    public function tearDown(): void
-    {
-        if (! $this->hasFailed()) {
-            $this->dropCollection();
-        }
-
-        parent::tearDown();
-    }
-
     public function testExample_1_2(): void
     {
+        $this->dropCollection(null, 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 1
@@ -74,6 +59,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_3(): void
     {
+        $this->dropCollection(null, 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 3
@@ -109,6 +95,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_6_13(): void
     {
+        $this->dropCollection(null, 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 6
@@ -213,6 +200,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_14_19(): void
     {
+        $this->dropCollection(null, 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 14
@@ -294,6 +282,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_20_28(): void
     {
+        $this->dropCollection(null, 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 20
@@ -401,6 +390,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_29_37(): void
     {
+        $this->dropCollection(null, 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 29
@@ -500,6 +490,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_38_41(): void
     {
+        $this->dropCollection(null, 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 38
@@ -537,6 +528,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_42_50(): void
     {
+        $this->dropCollection(null, 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 42
@@ -742,6 +734,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_51_54(): void
     {
+        $this->dropCollection(null, 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 51
@@ -883,6 +876,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_55_58(): void
     {
+        $this->dropCollection(null, 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 55
@@ -960,8 +954,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Test does not apply on sharded clusters: need more than a single getMore call on the change stream.');
         }
 
+        $this->dropCollection(null, 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
-        $db->dropCollection('inventory');
         $db->createCollection('inventory');
 
         // Start Changestream Example 1
@@ -1060,6 +1054,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testAggregation_example_1(): void
     {
+        $this->dropCollection(null, 'sales');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Aggregation Example 1
@@ -1074,6 +1069,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testAggregation_example_2(): void
     {
+        $this->dropCollection(null, 'sales');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Aggregation Example 2
@@ -1102,6 +1098,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testAggregation_example_3(): void
     {
+        $this->dropCollection(null, 'sales');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Aggregation Example 3
@@ -1140,6 +1137,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testAggregation_example_4(): void
     {
+        $this->dropCollection(null, 'air_airlines');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
@@ -1192,8 +1190,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testRunCommand_example_2(): void
     {
+        $this->dropCollection(null, 'restaurants');
         $db = new Database($this->manager, $this->getDatabaseName());
-        $db->dropCollection('restaurants');
         $db->createCollection('restaurants');
 
         // Start runCommand Example 2
@@ -1206,6 +1204,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testIndex_example_1(): void
     {
+        $this->dropCollection(null, 'records');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Index Example 1
@@ -1217,6 +1216,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testIndex_example_2(): void
     {
+        $this->dropCollection(null, 'restaurants');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Index Example 2
@@ -1235,6 +1235,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
     // Start Transactions Intro Example 1
     private function updateEmployeeInfo1(\MongoDB\Client $client, \MongoDB\Driver\Session $session): void
     {
+        $this->dropCollection('hr', 'employees');
+        $this->dropCollection('reporting', 'events');
         $session->startTransaction([
             'readConcern' => new \MongoDB\Driver\ReadConcern('snapshot'),
             'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY),
@@ -1292,8 +1294,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $client = static::createTestClient();
 
         /* The WC is required: https://mongodb.com/docs/manual/core/transactions/#transactions-and-locks */
-        $client->hr->dropCollection('employees', ['writeConcern' => new WriteConcern('majority')]);
-        $client->reporting->dropCollection('events', ['writeConcern' => new WriteConcern('majority')]);
+        $this->dropCollection('hr', 'employees');
+        $this->dropCollection('reporting', 'events');
 
         /* Collections need to be created before a transaction starts */
         $client->hr->createCollection('employees', ['writeConcern' => new WriteConcern('majority')]);
@@ -1472,12 +1474,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $client = static::createTestClient();
 
         /* The WC is required: https://mongodb.com/docs/manual/core/transactions/#transactions-and-locks */
-        $client->hr->dropCollection('employees', ['writeConcern' => new WriteConcern('majority')]);
-        $client->reporting->dropCollection('events', ['writeConcern' => new WriteConcern('majority')]);
+        $this->dropCollection('hr', 'employees');
+        $this->dropCollection('reporting', 'events');
 
         /* Collections need to be created before a transaction starts */
-        $client->hr->createCollection('employees', ['writeConcern' => new WriteConcern('majority')]);
-        $client->reporting->createCollection('events', ['writeConcern' => new WriteConcern('majority')]);
+        $this->createCollection('hr', 'employees');
+        $this->createCollection('reporting', 'events');
 
         ob_start();
         try {
@@ -1494,13 +1496,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertNotNull('This test intentionally performs no assertions');
 
         // Prep
+        $this->dropCollection('test', 'items');
         $client = static::createTestClient();
         $items = $client->selectDatabase(
             'test',
             ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]
         )->items;
-
-        $items->drop();
         $items->insertOne(
             ['sku' => '111', 'name' => 'Peanuts', 'start' => new UTCDateTime()]
         );
@@ -1586,17 +1587,19 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Snapshot read concern is only supported with replicasets');
         }
 
+        $this->dropCollection('pets', 'cats');
+        $this->dropCollection('pets', 'dogs');
+        $this->dropCollection('retail', 'sales');
+
         $client = static::createTestClient();
 
         $catsCollection = $client->selectCollection('pets', 'cats');
-        $catsCollection->drop();
         $catsCollection->insertMany([
             ['name' => 'Whiskers', 'color' => 'white', 'adoptable' => true],
             ['name' => 'Garfield', 'color' => 'orange', 'adoptable' => false],
         ]);
 
         $dogsCollection = $client->selectCollection('pets', 'dogs');
-        $dogsCollection->drop();
         $dogsCollection->insertMany([
             ['name' => 'Toto', 'color' => 'black',  'adoptable' => true],
             ['name' => 'Milo', 'color' => 'black', 'adoptable' => false],
@@ -1646,7 +1649,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $dogsCollection->drop();
 
         $salesCollection = $client->selectCollection('retail', 'sales');
-        $salesCollection->drop();
         $salesCollection->insertMany([
             ['shoeType' => 'boot', 'price' => 30, 'saleDate' => new UTCDateTime()],
         ]);
@@ -1727,13 +1729,13 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('The count command was added to API version 1 (SERVER-63850)');
         }
 
+        $this->dropCollection(null, 'sales');
         $uriString = static::getUri(true);
 
         // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
         $serverApi = new \MongoDB\Driver\ServerApi('1', true);
         $client = new \MongoDB\Client($uriString, [], ['serverApi' => $serverApi]);
         $db = $client->selectDatabase($this->getDatabaseName());
-        $db->dropCollection('sales');
 
         // Start Versioned API Example 5
         $strtoutc = function (string $datetime) {
@@ -1787,6 +1789,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->skipIfTransactionsAreNotSupported();
 
         $uriString = static::getUri(true);
+        $this->dropCollection('mydb1', 'foo');
+        $this->dropCollection('mydb2', 'bar');
 
         // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
         // Start Transactions withTxn API Example 1
@@ -1865,6 +1869,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
         if (! $this->isEnterprise()) {
             $this->markTestSkipped('Automatic encryption requires MongoDB Enterprise');
         }
+
+        $this->dropCollection();
 
         // Fetch names for the database and collection under test
         $collectionName = $this->getCollectionName();
@@ -1951,14 +1957,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertInstanceOf(Binary::class, $result['encryptedUnindexed']);
     }
 
-    /**
-     * Return the test collection name.
-     */
-    protected function getCollectionName(): string
-    {
-        return 'inventory';
-    }
-
     private function assertCursorCount($count, Cursor $cursor): void
     {
         $this->assertCount($count, $cursor->toArray());
@@ -1966,7 +1964,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     private function assertInventoryCount($count): void
     {
-        $this->assertCollectionCount($this->getDatabaseName() . '.' . $this->getCollectionName(), $count);
+        $this->assertCollectionCount($this->getDatabaseName() . '.inventory', $count);
     }
 
     private function waitForSnapshot(string $databaseName, string $collectionName): void

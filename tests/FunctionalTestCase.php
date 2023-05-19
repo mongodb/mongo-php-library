@@ -16,6 +16,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
+use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListCollections;
 use stdClass;
 use UnexpectedValueException;
@@ -54,6 +55,9 @@ abstract class FunctionalTestCase extends TestCase
     /** @var array */
     private $configuredFailPoints = [];
 
+    /** @var array{string, array{string, true}} */
+    private $collectionsToCleanup = [];
+
     public function setUp(): void
     {
         parent::setUp();
@@ -64,6 +68,10 @@ abstract class FunctionalTestCase extends TestCase
 
     public function tearDown(): void
     {
+        if (! $this->hasFailed()) {
+            $this->cleanupCollections();
+        }
+
         $this->disableFailPoints();
 
         parent::tearDown();
@@ -252,33 +260,65 @@ abstract class FunctionalTestCase extends TestCase
     }
 
     /**
-     * Creates the test collection with the specified options.
+     * Creates the test collection with the specified options  and ensures it is dropped again during tearDown().
      *
      * If the "writeConcern" option is not specified but is supported by the
      * server, a majority write concern will be used. This is helpful for tests
      * using transactions or secondary reads.
      */
-    protected function createCollection(array $options = []): void
+    protected function createCollection(?string $databaseName = null, ?string $collectionName = null, array $options = []): void
     {
         $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
 
-        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
+        if (null === $databaseName) {
+            $databaseName = $this->getDatabaseName();
+        }
+
+        if (null === $collectionName) {
+            $collectionName = $this->getCollectionName();
+        }
+
+        $operation = new CreateCollection($databaseName, $collectionName, $options);
         $operation->execute($this->getPrimaryServer());
+        $this->collectionsToCleanup[$databaseName][$collectionName] = true;
     }
 
     /**
-     * Drops the test collection with the specified options.
-     *
-     * If the "writeConcern" option is not specified but is supported by the
-     * server, a majority write concern will be used. This is helpful for tests
-     * using transactions or secondary reads.
+     * Drops the test collection and ensures it is dropped again during tearDown().
      */
-    protected function dropCollection(array $options = []): void
+    protected function dropCollection(?string $databaseName = null, ?string $collectionName = null): void
     {
-        $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+        $options = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
 
-        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
+        if (null === $databaseName) {
+            $databaseName = $this->getDatabaseName();
+        }
+
+        if (null === $collectionName) {
+            $collectionName = $this->getCollectionName();
+        }
+
+        $operation = new DropCollection($databaseName, $collectionName, $options);
         $operation->execute($this->getPrimaryServer());
+        $this->collectionsToCleanup[$databaseName][$collectionName] = true;
+    }
+
+    protected function cleanupCollections(): void
+    {
+        foreach ($this->collectionsToCleanup as $databaseName => $collectionNames) {
+            // The default database is never dropped.
+            if ($databaseName === $this->getDatabaseName()) {
+                foreach ($collectionNames as $collectionName => $unused) {
+                    $this->dropCollection($databaseName, $collectionName);
+                }
+            } else {
+                $options = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+                $operation = new DropDatabase($databaseName, $options);
+                $operation->execute($this->getPrimaryServer());
+            }
+        }
+
+        $this->collectionsToCleanup = [];
     }
 
     protected function getFeatureCompatibilityVersion(?ReadPreference $readPreference = null)

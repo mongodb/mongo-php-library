@@ -21,13 +21,4 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
 
         $this->dropCollection();
     }
-
-    public function tearDown(): void
-    {
-        if (! $this->hasFailed()) {
-            $this->dropCollection();
-        }
-
-        parent::tearDown();
-    }
 }

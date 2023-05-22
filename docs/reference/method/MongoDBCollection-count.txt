@@ -21,7 +21,7 @@ Definition
 
    .. code-block:: php
 
-      function count($filter = [], array $options = []): integer
+      function count(array|object $filter = [], array $options = []): integer
 
    This method has the following parameters:
 

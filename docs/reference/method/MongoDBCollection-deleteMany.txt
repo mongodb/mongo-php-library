@@ -19,7 +19,7 @@ Definition
 
    .. code-block:: php
 
-      function deleteMany($filter, array $options = []): MongoDB\DeleteResult
+      function deleteMany(array|object $filter, array $options = []): MongoDB\DeleteResult
 
    This method has the following parameters:
 

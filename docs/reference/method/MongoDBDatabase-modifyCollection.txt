@@ -22,7 +22,7 @@ Definition
 
    .. code-block:: php
 
-      function modifyCollection($collectionName, array $collectionOptions, array $options = []): array|object
+      function modifyCollection(string $collectionName, array $collectionOptions, array $options = []): array|object
 
    This method has the following parameters:
 

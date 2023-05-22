@@ -21,7 +21,7 @@ Definition
 
    .. code-block:: php
 
-      function deleteOne($filter, array $options = []): MongoDB\DeleteResult
+      function deleteOne(array|object $filter, array $options = []): MongoDB\DeleteResult
 
    This method has the following parameters:
 

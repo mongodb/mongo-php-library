@@ -19,7 +19,7 @@ Definition
 
    .. code-block:: php
 
-      function dropCollection($collectionName, array $options = []): array|object
+      function dropCollection(string $collectionName, array $options = []): array|object
 
    This method has the following parameters:
 

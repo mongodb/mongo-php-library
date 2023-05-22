@@ -306,15 +306,8 @@ abstract class FunctionalTestCase extends TestCase
     protected function cleanupCollections(): void
     {
         foreach ($this->collectionsToCleanup as $databaseName => $collectionNames) {
-            // The default database is never dropped.
-            if ($databaseName === $this->getDatabaseName()) {
-                foreach ($collectionNames as $collectionName => $unused) {
-                    $this->dropCollection($databaseName, $collectionName);
-                }
-            } else {
-                $options = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
-                $operation = new DropDatabase($databaseName, $options);
-                $operation->execute($this->getPrimaryServer());
+            foreach ($collectionNames as $collectionName => $unused) {
+                $this->dropCollection($databaseName, $collectionName);
             }
         }
 

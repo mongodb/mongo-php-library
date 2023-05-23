@@ -196,7 +196,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      * @param Manager     $manager        Manager instance from the driver
      * @param string|null $databaseName   Database name
      * @param string|null $collectionName Collection name
-     * @param array       $pipeline       List of pipeline operations
+     * @param array       $pipeline       Aggregation pipeline
      * @param array       $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */

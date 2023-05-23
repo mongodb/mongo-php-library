@@ -24,15 +24,13 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 
-use function array_is_list;
-use function assert;
 use function current;
 use function is_array;
 use function is_bool;
 use function is_integer;
 use function is_object;
 use function is_string;
-use function sprintf;
+use function MongoDB\is_pipeline;
 use function trigger_error;
 
 use const E_USER_DEPRECATED;
@@ -242,18 +240,8 @@ class CreateCollection implements Executable
             trigger_error('The "autoIndexId" option is deprecated and will be removed in a future release', E_USER_DEPRECATED);
         }
 
-        if (isset($options['pipeline'])) {
-            $pipeline = $options['pipeline'];
-            assert(is_array($pipeline));
-            if (! array_is_list($pipeline)) {
-                throw new InvalidArgumentException('The "pipeline" option is not a list');
-            }
-
-            foreach ($options['pipeline'] as $i => $operation) {
-                if (! is_array($operation) && ! is_object($operation)) {
-                    throw InvalidArgumentException::invalidType(sprintf('$options["pipeline"][%d]', $i), $operation, 'array or object');
-                }
-            }
+        if (isset($options['pipeline']) && ! is_pipeline($options['pipeline'], true /* allowEmpty */)) {
+            throw new InvalidArgumentException('"pipeline" option is not a valid aggregation pipeline');
         }
 
         $this->databaseName = $databaseName;

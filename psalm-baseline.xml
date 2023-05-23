@@ -418,7 +418,7 @@
   </file>
   <file src="src/Operation/CreateCollection.php">
     <MixedArgument occurrences="2">
-      <code>$i</code>
+      <code>$options['pipeline']</code>
       <code>$this-&gt;options['typeMap']</code>
     </MixedArgument>
     <MixedAssignment occurrences="4">

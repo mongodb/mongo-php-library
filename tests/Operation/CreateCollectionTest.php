@@ -10,7 +10,7 @@ class CreateCollectionTest extends TestCase
     public function testConstructorPipelineOptionMustBeAList(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The "pipeline" option is not a list');
+        $this->expectExceptionMessage('"pipeline" option is not a valid aggregation pipeline');
         new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['pipeline' => [1 => ['$match' => ['x' => 1]]]]);
     }
 

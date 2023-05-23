@@ -16,7 +16,6 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\DropCollection;
-use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListCollections;
 use stdClass;
 use UnexpectedValueException;
@@ -260,11 +259,12 @@ abstract class FunctionalTestCase extends TestCase
     }
 
     /**
-     * Creates the test collection with the specified options  and ensures it is dropped again during tearDown().
+     * Creates the test collection with the specified options and ensures it is
+     * dropped again during tearDown().
      *
-     * If the "writeConcern" option is not specified but is supported by the
-     * server, a majority write concern will be used. This is helpful for tests
-     * using transactions or secondary reads.
+     * A majority write concern is applied by default to ensure that the
+     * transaction can acquire the required locks.
+     * See: https://www.mongodb.com/docs/manual/core/transactions/#transactions-and-operations
      */
     protected function createCollection(?string $databaseName = null, ?string $collectionName = null, array $options = []): void
     {
@@ -285,6 +285,10 @@ abstract class FunctionalTestCase extends TestCase
 
     /**
      * Drops the test collection and ensures it is dropped again during tearDown().
+     *
+     * A majority write concern is applied by default to ensure that the
+     * transaction can acquire the required locks.
+     * See: https://www.mongodb.com/docs/manual/core/transactions/#transactions-and-operations
      */
     protected function dropCollection(?string $databaseName = null, ?string $collectionName = null): void
     {
@@ -303,7 +307,7 @@ abstract class FunctionalTestCase extends TestCase
         $this->collectionsToCleanup[$databaseName][$collectionName] = true;
     }
 
-    protected function cleanupCollections(): void
+    private function cleanupCollections(): void
     {
         foreach ($this->collectionsToCleanup as $databaseName => $collectionNames) {
             foreach ($collectionNames as $collectionName => $unused) {

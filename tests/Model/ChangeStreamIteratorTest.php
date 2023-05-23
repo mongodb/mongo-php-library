@@ -11,8 +11,6 @@ use MongoDB\Collection;
 use MongoDB\Driver\Exception\LogicException;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\ChangeStreamIterator;
-use MongoDB\Operation\CreateCollection;
-use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\FunctionalTestCase;
@@ -30,11 +28,8 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
-
-        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['capped' => true, 'size' => 8192]);
-        $operation->execute($this->getPrimaryServer());
+        $this->dropCollection();
+        $this->createCollection(null, null, ['capped' => true, 'size' => 8192]);
 
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
     }

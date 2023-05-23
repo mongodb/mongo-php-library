@@ -1235,8 +1235,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
     // Start Transactions Intro Example 1
     private function updateEmployeeInfo1(\MongoDB\Client $client, \MongoDB\Driver\Session $session): void
     {
-        $this->dropCollection('hr', 'employees');
-        $this->dropCollection('reporting', 'events');
         $session->startTransaction([
             'readConcern' => new \MongoDB\Driver\ReadConcern('snapshot'),
             'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY),
@@ -1293,13 +1291,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $client = static::createTestClient();
 
-        /* The WC is required: https://mongodb.com/docs/manual/core/transactions/#transactions-and-locks */
         $this->dropCollection('hr', 'employees');
         $this->dropCollection('reporting', 'events');
 
         /* Collections need to be created before a transaction starts */
-        $client->hr->createCollection('employees', ['writeConcern' => new WriteConcern('majority')]);
-        $client->reporting->createCollection('events', ['writeConcern' => new WriteConcern('majority')]);
+        $this->createCollection('hr', 'employees');
+        $this->createCollection('reporting', 'events');
 
         $session = $client->startSession();
 
@@ -1473,7 +1470,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $client = static::createTestClient();
 
-        /* The WC is required: https://mongodb.com/docs/manual/core/transactions/#transactions-and-locks */
         $this->dropCollection('hr', 'employees');
         $this->dropCollection('reporting', 'events');
 

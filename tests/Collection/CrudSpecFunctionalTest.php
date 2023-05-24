@@ -48,8 +48,8 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     {
         parent::setUp();
 
+        $this->dropCollection(null, $this->getCollectionName() . '.expected');
         $this->expectedCollection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName() . '.expected');
-        $this->expectedCollection->drop();
     }
 
     /** @dataProvider provideSpecificationTests */

@@ -1854,19 +1854,18 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Automatic encryption requires MongoDB Enterprise');
         }
 
-        // Ensure the collection is dropped by tearDown()
-        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
-
         // Fetch names for the database and collection under test
         $collectionName = $this->getCollectionName();
         $databaseName = $this->getDatabaseName();
         $namespace = $this->getNamespace();
 
-        /* Create a client without auto encryption. Drop existing data in both the keyvault and database under test.
-         * The latter is necessary to clean up any internal collections for queryable encryption. */
+        /* Create a client without auto encryption. Drop existing data in both the
+         * keyvault and the collection under test, the "encryptedFields" option
+         * is necessary to clean up any internal collections for queryable
+         * encryption, assuming they use their default names */
         $client = static::createTestClient();
-        $client->selectDatabase('keyvault')->drop(['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]);
-        $client->selectDatabase($databaseName)->drop(['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]);
+        $this->dropCollection('keyvault', 'datakeys');
+        $this->dropCollection($databaseName, $collectionName, ['encryptedFields' => []]);
 
         /* Although ClientEncryption can be constructed directly, the library
          * provides a helper to do so. With this method, the keyVaultClient will

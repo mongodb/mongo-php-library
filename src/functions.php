@@ -234,8 +234,13 @@ function is_first_key_operator($document): bool
 /**
  * Returns whether an update specification is a valid aggregation pipeline.
  *
+ * Note: this method may propagate an InvalidArgumentException from
+ * document_or_array() if a Serializable object within the pipeline array
+ * returns a non-array, non-object value from its bsonSerialize() method.
+ *
  * @internal
- * @param mixed $pipeline
+ * @param array|object $pipeline
+ * @throws InvalidArgumentException
  */
 function is_pipeline($pipeline): bool
 {

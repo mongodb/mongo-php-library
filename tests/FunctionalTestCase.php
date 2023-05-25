@@ -5,6 +5,7 @@ namespace MongoDB\Tests;
 use InvalidArgumentException;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Client;
+use MongoDB\Collection;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Manager;
@@ -15,7 +16,6 @@ use MongoDB\Driver\ServerApi;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
-use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\ListCollections;
 use stdClass;
 use UnexpectedValueException;
@@ -54,7 +54,7 @@ abstract class FunctionalTestCase extends TestCase
     /** @var array */
     private $configuredFailPoints = [];
 
-    /** @var array{string, array{string, true}} */
+    /** @var Collection[] */
     private $collectionsToCleanup = [];
 
     public function setUp(): void
@@ -260,18 +260,21 @@ abstract class FunctionalTestCase extends TestCase
 
     /**
      * Creates the test collection with the specified options and ensures it is
-     * dropped again during tearDown().
+     * dropped again during tearDown(). If the collection already exists, it
+     * is dropped and recreated.
      *
      * A majority write concern is applied by default to ensure that the
      * transaction can acquire the required locks.
      * See: https://www.mongodb.com/docs/manual/core/transactions/#transactions-and-operations
      */
-    protected function createCollection(string $databaseName, string $collectionName, array $options = []): void
+    protected function createCollection(string $databaseName, string $collectionName, array $options = []): Collection
     {
-        $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+        $collection = $this->dropCollection($databaseName, $collectionName, $options);
+
         $operation = new CreateCollection($databaseName, $collectionName, $options);
         $operation->execute($this->getPrimaryServer());
-        $this->collectionsToCleanup[$databaseName][$collectionName] = true;
+
+        return $collection;
     }
 
     /**
@@ -281,20 +284,20 @@ abstract class FunctionalTestCase extends TestCase
      * transaction can acquire the required locks.
      * See: https://www.mongodb.com/docs/manual/core/transactions/#transactions-and-operations
      */
-    protected function dropCollection(string $databaseName, string $collectionName): void
+    protected function dropCollection(string $databaseName, string $collectionName, array $options = []): Collection
     {
-        $options = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
-        $operation = new DropCollection($databaseName, $collectionName, $options);
-        $operation->execute($this->getPrimaryServer());
-        $this->collectionsToCleanup[$databaseName][$collectionName] = true;
+        $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+        $collection = new Collection($this->manager, $databaseName, $collectionName, $options);
+        $this->collectionsToCleanup[] = $collection;
+        $collection->drop();
+
+        return $collection;
     }
 
     private function cleanupCollections(): void
     {
-        foreach ($this->collectionsToCleanup as $databaseName => $collectionNames) {
-            foreach ($collectionNames as $collectionName => $unused) {
-                $this->dropCollection($databaseName, $collectionName);
-            }
+        foreach ($this->collectionsToCleanup as $collection) {
+            $collection->drop();
         }
 
         $this->collectionsToCleanup = [];

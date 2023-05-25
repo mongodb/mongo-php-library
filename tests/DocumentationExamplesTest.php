@@ -954,9 +954,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Test does not apply on sharded clusters: need more than a single getMore call on the change stream.');
         }
 
-        $this->dropCollection($this->getDatabaseName(), 'inventory');
+        $this->createCollection($this->getDatabaseName(), 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
-        $db->createCollection('inventory');
 
         // Start Changestream Example 1
         $changeStream = $db->inventory->watch();
@@ -1190,9 +1189,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testRunCommand_example_2(): void
     {
-        $this->dropCollection($this->getDatabaseName(), 'restaurants');
+        $this->createCollection($this->getDatabaseName(), 'restaurants');
         $db = new Database($this->manager, $this->getDatabaseName());
-        $db->createCollection('restaurants');
 
         // Start runCommand Example 2
         $cursor = $db->command(['collStats' => 'restaurants']);
@@ -1290,9 +1288,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertNotNull('This test intentionally performs no assertions');
 
         $client = static::createTestClient();
-
-        $this->dropCollection('hr', 'employees');
-        $this->dropCollection('reporting', 'events');
 
         /* Collections need to be created before a transaction starts */
         $this->createCollection('hr', 'employees');
@@ -1470,9 +1465,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $client = static::createTestClient();
 
-        $this->dropCollection('hr', 'employees');
-        $this->dropCollection('reporting', 'events');
-
         /* Collections need to be created before a transaction starts */
         $this->createCollection('hr', 'employees');
         $this->createCollection('reporting', 'events');
@@ -1492,12 +1484,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertNotNull('This test intentionally performs no assertions');
 
         // Prep
-        $this->dropCollection('test', 'items');
         $client = static::createTestClient();
-        $items = $client->selectDatabase(
-            'test',
-            ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]
-        )->items;
+        $items = $this->createCollection('test', 'items');
         $items->insertOne(
             ['sku' => '111', 'name' => 'Peanuts', 'start' => new UTCDateTime()]
         );
@@ -1866,6 +1854,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Automatic encryption requires MongoDB Enterprise');
         }
 
+        // Ensure the collection is dropped by tearDown()
         $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
 
         // Fetch names for the database and collection under test
@@ -1873,10 +1862,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $databaseName = $this->getDatabaseName();
         $namespace = $this->getNamespace();
 
-        /* Create a client without auto encryption. Drop existing data in both
-         * the keyvault and database under test. The latter is necessary since
-         * setUp() only drops the collection under test, which will leave behind
-         * internal collections for queryable encryption. */
+        /* Create a client without auto encryption. Drop existing data in both the keyvault and database under test.
+         * The latter is necessary to clean up any internal collections for queryable encryption. */
         $client = static::createTestClient();
         $client->selectDatabase('keyvault')->drop(['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]);
         $client->selectDatabase($databaseName)->drop(['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]);

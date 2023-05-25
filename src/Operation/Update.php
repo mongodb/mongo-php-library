@@ -228,10 +228,6 @@ class Update implements Executable, Explainable
             $cmd['bypassDocumentValidation'] = $this->options['bypassDocumentValidation'];
         }
 
-        if (isset($this->options['writeConcern'])) {
-            $cmd['writeConcern'] = $this->options['writeConcern'];
-        }
-
         return $cmd;
     }
 

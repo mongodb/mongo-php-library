@@ -166,7 +166,14 @@ class Distinct implements Executable, Explainable
      */
     public function getCommandDocument(Server $server)
     {
-        return $this->createCommandDocument();
+        $cmd = $this->createCommandDocument();
+
+        // Read concern can change the query plan
+        if (isset($this->options['readConcern'])) {
+            $cmd['readConcern'] = $this->options['readConcern'];
+        }
+
+        return $cmd;
     }
 
     /**

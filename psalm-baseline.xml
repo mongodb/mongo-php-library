@@ -286,10 +286,11 @@
       <code>$this-&gt;options['typeMap']</code>
       <code>$this-&gt;options['typeMap']</code>
     </MixedArgument>
-    <MixedAssignment occurrences="5">
+    <MixedAssignment occurrences="6">
       <code>$cmdOptions['maxAwaitTimeMS']</code>
       <code>$cmd[$option]</code>
       <code>$cmd['hint']</code>
+      <code>$cmd['readConcern']</code>
       <code>$options[$option]</code>
       <code>$options['writeConcern']</code>
     </MixedAssignment>
@@ -383,9 +384,10 @@
     <DocblockTypeContradiction occurrences="1">
       <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
     </DocblockTypeContradiction>
-    <MixedAssignment occurrences="5">
+    <MixedAssignment occurrences="6">
       <code>$cmd[$option]</code>
       <code>$cmd['hint']</code>
+      <code>$cmd['readConcern']</code>
       <code>$options['readConcern']</code>
       <code>$options['readPreference']</code>
       <code>$options['session']</code>
@@ -468,8 +470,9 @@
     <MixedArgument occurrences="1">
       <code>$this-&gt;options['typeMap']</code>
     </MixedArgument>
-    <MixedAssignment occurrences="4">
+    <MixedAssignment occurrences="5">
       <code>$cmd[$option]</code>
+      <code>$cmd['readConcern']</code>
       <code>$options['readConcern']</code>
       <code>$options['readPreference']</code>
       <code>$options['session']</code>
@@ -534,7 +537,8 @@
     <MixedArrayAccess occurrences="1">
       <code>$options['modifiers'][$modifier[1]]</code>
     </MixedArrayAccess>
-    <MixedAssignment occurrences="4">
+    <MixedAssignment occurrences="5">
+      <code>$cmd['readConcern']</code>
       <code>$options[$modifier[0]]</code>
       <code>$options[$option]</code>
       <code>$options['readPreference']</code>

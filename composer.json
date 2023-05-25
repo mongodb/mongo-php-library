@@ -14,7 +14,8 @@
         "ext-json": "*",
         "ext-mongodb": "^1.16.0",
         "jean85/pretty-package-versions": "^2.0.1",
-        "symfony/polyfill-php80": "^1.19"
+        "symfony/polyfill-php73": "^1.27",
+        "symfony/polyfill-php80": "^1.27"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.7",

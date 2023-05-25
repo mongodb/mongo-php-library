@@ -34,6 +34,7 @@ use MongoDB\Operation\WithTransaction;
 use ReflectionClass;
 use ReflectionException;
 
+use function array_key_first;
 use function assert;
 use function end;
 use function get_object_vars;
@@ -207,22 +208,26 @@ function get_encrypted_fields_from_server(string $databaseName, string $collecti
 /**
  * Return whether the first key in the document starts with a "$" character.
  *
- * This is used for differentiating update and replacement documents. Since true
- * and false return values may be expected in different contexts, this function
- * intentionally throws if $document has an unexpected type.
+ * This is used for validating aggregation pipeline stages and differentiating
+ * update and replacement documents. Since true and false return values may be
+ * expected in different contexts, this function intentionally throws if
+ * $document has an unexpected type instead of returning false.
  *
  * @internal
- * @param array|object $document Update or replacement document
+ * @param array|object $document
  * @throws InvalidArgumentException if $document is not an array or object
  */
 function is_first_key_operator($document): bool
 {
     $document = document_to_array($document);
 
-    reset($document);
-    $firstKey = (string) key($document);
+    $firstKey = array_key_first($document);
 
-    return isset($firstKey[0]) && $firstKey[0] === '$';
+    if (! is_string($firstKey)) {
+        return false;
+    }
+
+    return '$' === $firstKey[0] ?? null;
 }
 
 /**
@@ -266,11 +271,8 @@ function is_pipeline($pipeline): bool
         }
 
         $expectedKey++;
-        $stage = document_to_array($stage);
-        reset($stage);
-        $key = key($stage);
 
-        if (! is_string($key) || substr($key, 0, 1) !== '$') {
+        if (! is_first_key_operator($stage)) {
             return false;
         }
     }

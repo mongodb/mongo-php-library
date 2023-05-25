@@ -121,9 +121,7 @@ function document_to_array($document): array
             'document' => 'bson',
             'root' => 'array',
         ]);
-    }
-
-    if ($document instanceof Serializable) {
+    } elseif ($document instanceof Serializable) {
         $document = $document->bsonSerialize();
     }
 
@@ -244,9 +242,7 @@ function is_pipeline($pipeline): bool
             'document' => 'bson',
             'root' => 'array',
         ]);
-    }
-
-    if ($pipeline instanceof Serializable) {
+    } elseif ($pipeline instanceof Serializable) {
         $pipeline = $pipeline->bsonSerialize();
     }
 

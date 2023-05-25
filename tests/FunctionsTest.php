@@ -155,6 +155,10 @@ class FunctionsTest extends TestCase
     {
         $this->assertFalse(is_first_key_operator($cast(['y' => 1])));
         $this->assertTrue(is_first_key_operator($cast(['$set' => ['y' => 1]])));
+
+        // Empty and packed arrays are unlikely arguments, but still valid
+        $this->assertFalse(is_first_key_operator($cast([])));
+        $this->assertFalse(is_first_key_operator($cast(['foo'])));
     }
 
     /** @dataProvider provideInvalidDocumentValues */

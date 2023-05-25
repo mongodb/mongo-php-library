@@ -101,11 +101,9 @@ function apply_type_map_to_document($document, array $typeMap)
  * This is used to facilitate unified access to document fields. It also handles
  * Document, PackedArray, and Serializable objects.
  *
- * PackedArray is intentionally allowed because this function is not used for
- * type checking. Prohibiting PackedArray would only require callers to check
- * for a PackedArray in order to avoid an exception. Furthermore, this function
- * does not distinguish between Serializable::bsonSerialize() return values that
- * might encode as a BSON document or array.
+ * This function is not used for type checking. Therefore, it does not reject
+ * PackedArray objects or Serializable::bsonSerialize() return values that would
+ * encode as BSON arrays.
  *
  * @internal
  * @param array|object $document
@@ -127,6 +125,9 @@ function document_to_array($document): array
     }
 
     if (is_object($document)) {
+        /* Note: this omits all uninitialized properties, whereas BSON encoding
+         * includes untyped, uninitialized properties. This is acceptable given
+         * document_to_array()'s use cases. */
         $document = get_object_vars($document);
     }
 

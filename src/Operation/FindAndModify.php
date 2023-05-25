@@ -293,9 +293,9 @@ class FindAndModify implements Executable, Explainable
         }
 
         if (isset($this->options['update'])) {
-            $cmd['update'] = is_pipeline($this->options['update'])
-                ? $this->options['update']
-                : (object) $this->options['update'];
+            /** @var array|object */
+            $update = $this->options['update'];
+            $cmd['update'] = is_pipeline($update) ? $update : (object) $update;
         }
 
         foreach (['arrayFilters', 'bypassDocumentValidation', 'comment', 'hint', 'maxTimeMS'] as $option) {

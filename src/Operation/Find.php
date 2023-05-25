@@ -428,10 +428,10 @@ class Find implements Executable, Explainable
             }
         }
 
-        $modifiers = empty($this->options['modifiers']) ? [] : document_to_array($this->options['modifiers']);
-
-        if (! empty($modifiers)) {
-            $options['modifiers'] = $modifiers;
+        if (! empty($this->options['modifiers'])) {
+            /** @var array|object */
+            $modifiers = $this->options['modifiers'];
+            $options['modifiers'] = is_object($modifiers) ? document_to_array($modifiers) : $modifiers;
         }
 
         return $options;

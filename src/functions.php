@@ -228,7 +228,7 @@ function is_first_key_operator($document): bool
         return false;
     }
 
-    return '$' === $firstKey[0] ?? null;
+    return '$' === ($firstKey[0] ?? null);
 }
 
 /**

@@ -17,6 +17,7 @@ use MongoDB\Tests\CommandObserver;
 use MongoDB\UpdateResult;
 use stdClass;
 
+use function is_array;
 use function version_compare;
 
 class UpdateFunctionalTest extends FunctionalTestCase
@@ -70,6 +71,10 @@ class UpdateFunctionalTest extends FunctionalTestCase
      */
     public function testUpdateDocuments($update, $expectedUpdate): void
     {
+        if (is_array($expectedUpdate) && version_compare($this->getServerVersion(), '4.2.0', '<')) {
+            $this->markTestSkipped('Pipeline-style updates are not supported');
+        }
+
         (new CommandObserver())->observe(
             function () use ($update): void {
                 $operation = new Update(

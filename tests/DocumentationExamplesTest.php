@@ -34,7 +34,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 {
     public function testExample_1_2(): void
     {
-        $this->dropCollection(null, 'inventory');
+        $this->dropCollection($this->getDatabaseName(), 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 1
@@ -59,7 +59,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_3(): void
     {
-        $this->dropCollection(null, 'inventory');
+        $this->dropCollection($this->getDatabaseName(), 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 3
@@ -95,7 +95,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_6_13(): void
     {
-        $this->dropCollection(null, 'inventory');
+        $this->dropCollection($this->getDatabaseName(), 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 6
@@ -200,7 +200,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_14_19(): void
     {
-        $this->dropCollection(null, 'inventory');
+        $this->dropCollection($this->getDatabaseName(), 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 14
@@ -282,7 +282,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_20_28(): void
     {
-        $this->dropCollection(null, 'inventory');
+        $this->dropCollection($this->getDatabaseName(), 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 20
@@ -390,7 +390,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_29_37(): void
     {
-        $this->dropCollection(null, 'inventory');
+        $this->dropCollection($this->getDatabaseName(), 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 29
@@ -490,7 +490,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_38_41(): void
     {
-        $this->dropCollection(null, 'inventory');
+        $this->dropCollection($this->getDatabaseName(), 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 38
@@ -528,7 +528,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_42_50(): void
     {
-        $this->dropCollection(null, 'inventory');
+        $this->dropCollection($this->getDatabaseName(), 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 42
@@ -734,7 +734,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_51_54(): void
     {
-        $this->dropCollection(null, 'inventory');
+        $this->dropCollection($this->getDatabaseName(), 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 51
@@ -876,7 +876,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testExample_55_58(): void
     {
-        $this->dropCollection(null, 'inventory');
+        $this->dropCollection($this->getDatabaseName(), 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Example 55
@@ -954,7 +954,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Test does not apply on sharded clusters: need more than a single getMore call on the change stream.');
         }
 
-        $this->dropCollection(null, 'inventory');
+        $this->dropCollection($this->getDatabaseName(), 'inventory');
         $db = new Database($this->manager, $this->getDatabaseName());
         $db->createCollection('inventory');
 
@@ -1054,7 +1054,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testAggregation_example_1(): void
     {
-        $this->dropCollection(null, 'sales');
+        $this->dropCollection($this->getDatabaseName(), 'sales');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Aggregation Example 1
@@ -1069,7 +1069,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testAggregation_example_2(): void
     {
-        $this->dropCollection(null, 'sales');
+        $this->dropCollection($this->getDatabaseName(), 'sales');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Aggregation Example 2
@@ -1098,7 +1098,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testAggregation_example_3(): void
     {
-        $this->dropCollection(null, 'sales');
+        $this->dropCollection($this->getDatabaseName(), 'sales');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Aggregation Example 3
@@ -1137,7 +1137,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testAggregation_example_4(): void
     {
-        $this->dropCollection(null, 'air_airlines');
+        $this->dropCollection($this->getDatabaseName(), 'air_airlines');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // phpcs:disable Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps
@@ -1190,7 +1190,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testRunCommand_example_2(): void
     {
-        $this->dropCollection(null, 'restaurants');
+        $this->dropCollection($this->getDatabaseName(), 'restaurants');
         $db = new Database($this->manager, $this->getDatabaseName());
         $db->createCollection('restaurants');
 
@@ -1204,7 +1204,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testIndex_example_1(): void
     {
-        $this->dropCollection(null, 'records');
+        $this->dropCollection($this->getDatabaseName(), 'records');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Index Example 1
@@ -1216,7 +1216,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testIndex_example_2(): void
     {
-        $this->dropCollection(null, 'restaurants');
+        $this->dropCollection($this->getDatabaseName(), 'restaurants');
         $db = new Database($this->manager, $this->getDatabaseName());
 
         // Start Index Example 2
@@ -1725,7 +1725,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('The count command was added to API version 1 (SERVER-63850)');
         }
 
-        $this->dropCollection(null, 'sales');
+        $this->dropCollection($this->getDatabaseName(), 'sales');
         $uriString = static::getUri(true);
 
         // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
@@ -1866,7 +1866,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Automatic encryption requires MongoDB Enterprise');
         }
 
-        $this->dropCollection();
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
 
         // Fetch names for the database and collection under test
         $collectionName = $this->getCollectionName();

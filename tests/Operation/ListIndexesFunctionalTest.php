@@ -12,7 +12,7 @@ class ListIndexesFunctionalTest extends FunctionalTestCase
 {
     public function testListIndexesForNewlyCreatedCollection(): void
     {
-        $this->dropCollection();
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1]);
         $writeResult = $insertOne->execute($this->getPrimaryServer());
@@ -34,7 +34,7 @@ class ListIndexesFunctionalTest extends FunctionalTestCase
 
     public function testListIndexesForNonexistentCollection(): void
     {
-        $this->dropCollection();
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $operation = new ListIndexes($this->getDatabaseName(), $this->getCollectionName());
         $indexes = $operation->execute($this->getPrimaryServer());

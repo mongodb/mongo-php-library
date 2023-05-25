@@ -28,8 +28,8 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->dropCollection();
-        $this->createCollection(null, null, ['capped' => true, 'size' => 8192]);
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
+        $this->createCollection($this->getDatabaseName(), $this->getCollectionName(), ['capped' => true, 'size' => 8192]);
 
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
     }

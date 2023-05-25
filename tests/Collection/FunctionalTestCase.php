@@ -19,6 +19,6 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
 
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
 
-        $this->dropCollection();
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
     }
 }

@@ -266,18 +266,9 @@ abstract class FunctionalTestCase extends TestCase
      * transaction can acquire the required locks.
      * See: https://www.mongodb.com/docs/manual/core/transactions/#transactions-and-operations
      */
-    protected function createCollection(?string $databaseName = null, ?string $collectionName = null, array $options = []): void
+    protected function createCollection(string $databaseName, string $collectionName, array $options = []): void
     {
         $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
-
-        if (null === $databaseName) {
-            $databaseName = $this->getDatabaseName();
-        }
-
-        if (null === $collectionName) {
-            $collectionName = $this->getCollectionName();
-        }
-
         $operation = new CreateCollection($databaseName, $collectionName, $options);
         $operation->execute($this->getPrimaryServer());
         $this->collectionsToCleanup[$databaseName][$collectionName] = true;
@@ -290,18 +281,9 @@ abstract class FunctionalTestCase extends TestCase
      * transaction can acquire the required locks.
      * See: https://www.mongodb.com/docs/manual/core/transactions/#transactions-and-operations
      */
-    protected function dropCollection(?string $databaseName = null, ?string $collectionName = null): void
+    protected function dropCollection(string $databaseName, string $collectionName): void
     {
         $options = ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
-
-        if (null === $databaseName) {
-            $databaseName = $this->getDatabaseName();
-        }
-
-        if (null === $collectionName) {
-            $collectionName = $this->getCollectionName();
-        }
-
         $operation = new DropCollection($databaseName, $collectionName, $options);
         $operation->execute($this->getPrimaryServer());
         $this->collectionsToCleanup[$databaseName][$collectionName] = true;

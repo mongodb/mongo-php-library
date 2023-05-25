@@ -15,7 +15,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     {
         parent::setUp();
 
-        $this->dropCollection();
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
     }
 
     protected function createDefaultReadConcern()

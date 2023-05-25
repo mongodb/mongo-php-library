@@ -36,7 +36,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
                 $operation = new InsertOne(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    $document,
+                    $document
                 );
 
                 $result = $operation->execute($this->getPrimaryServer());

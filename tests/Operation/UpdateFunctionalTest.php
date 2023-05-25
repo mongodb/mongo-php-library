@@ -40,7 +40,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     $filter,
-                    ['$set' => ['x' => 1]],
+                    ['$set' => ['x' => 1]]
                 );
 
                 $operation->execute($this->getPrimaryServer());

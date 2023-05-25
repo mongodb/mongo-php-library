@@ -27,7 +27,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $operation = new FindAndModify(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    ['query' => $query, 'remove' => true],
+                    ['query' => $query, 'remove' => true]
                 );
 
                 $operation->execute($this->getPrimaryServer());

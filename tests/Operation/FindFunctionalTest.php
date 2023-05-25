@@ -24,7 +24,7 @@ class FindFunctionalTest extends FunctionalTestCase
                 $operation = new Find(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    $filter,
+                    $filter
                 );
 
                 $operation->execute($this->getPrimaryServer());

@@ -20,7 +20,7 @@ class CountFunctionalTest extends FunctionalTestCase
                 $operation = new Count(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    $filter,
+                    $filter
                 );
 
                 $operation->execute($this->getPrimaryServer());

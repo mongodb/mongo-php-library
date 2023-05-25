@@ -24,7 +24,7 @@ class DistinctFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     'x',
-                    $filter,
+                    $filter
                 );
 
                 $operation->execute($this->getPrimaryServer());

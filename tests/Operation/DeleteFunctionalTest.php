@@ -37,7 +37,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     $filter,
-                    1,
+                    1
                 );
 
                 $operation->execute($this->getPrimaryServer());

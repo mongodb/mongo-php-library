@@ -10,7 +10,7 @@ use MongoDB\Model\BSONArray;
 use UnexpectedValueException;
 
 use function getenv;
-use function var_dump;
+use function print_r;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -106,4 +106,4 @@ $collection->insertOne($entry);
 $foundEntry = $collection->findOne([]);
 
 /** @psalm-suppress ForbiddenCode */
-var_dump($foundEntry);
+print_r($foundEntry);

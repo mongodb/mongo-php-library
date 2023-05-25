@@ -10,7 +10,7 @@ use UnexpectedValueException;
 
 use function getenv;
 use function is_array;
-use function var_dump;
+use function print_r;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -117,4 +117,4 @@ $typeMap = [
 $entry = $collection->findOne([], ['typeMap' => $typeMap]);
 
 /** @psalm-suppress ForbiddenCode */
-var_dump($entry);
+print_r($entry);

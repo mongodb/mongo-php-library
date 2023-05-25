@@ -90,32 +90,31 @@ OUTPUT;
         ];
 
         $expectedOutput = <<<'OUTPUT'
-object(MongoDB\Examples\PersistableEntry)#%d (%d) {
-  ["id":"MongoDB\Examples\PersistableEntry":private]=>
-  object(MongoDB\BSON\ObjectId)#%d (%d) {
-    ["oid"]=>
-    string(24) "%s"
-  }
-  ["name"]=>
-  string(7) "alcaeus"
-  ["emails"]=>
-  array(2) {
-    [0]=>
-    object(MongoDB\Examples\PersistableEmail)#%d (%d) {
-      ["type"]=>
-      string(4) "work"
-      ["address"]=>
-      string(19) "alcaeus@example.com"
-    }
-    [1]=>
-    object(MongoDB\Examples\PersistableEmail)#%d (%d) {
-      ["type"]=>
-      string(7) "private"
-      ["address"]=>
-      string(18) "secret@example.com"
-    }
-  }
-}
+MongoDB\Examples\PersistableEntry Object
+(
+    [id:MongoDB\Examples\PersistableEntry:private] => MongoDB\BSON\ObjectId Object
+        (
+            [oid] => %s
+        )
+
+    [name] => alcaeus
+    [emails] => Array
+        (
+            [0] => MongoDB\Examples\PersistableEmail Object
+                (
+                    [type] => work
+                    [address] => alcaeus@example.com
+                )
+
+            [1] => MongoDB\Examples\PersistableEmail Object
+                (
+                    [type] => private
+                    [address] => secret@example.com
+                )
+
+        )
+
+)
 OUTPUT;
 
         yield 'persistable' => [
@@ -124,32 +123,31 @@ OUTPUT;
         ];
 
         $expectedOutput = <<<'OUTPUT'
-object(MongoDB\Examples\TypeMapEntry)#%d (%d) {
-  ["id":"MongoDB\Examples\TypeMapEntry":private]=>
-  object(MongoDB\BSON\ObjectId)#%d (%d) {
-    ["oid"]=>
-    string(24) "%s"
-  }
-  ["name":"MongoDB\Examples\TypeMapEntry":private]=>
-  string(7) "alcaeus"
-  ["emails":"MongoDB\Examples\TypeMapEntry":private]=>
-  array(2) {
-    [0]=>
-    object(MongoDB\Examples\TypeMapEmail)#%d (%d) {
-      ["type":"MongoDB\Examples\TypeMapEmail":private]=>
-      string(4) "work"
-      ["address":"MongoDB\Examples\TypeMapEmail":private]=>
-      string(19) "alcaeus@example.com"
-    }
-    [1]=>
-    object(MongoDB\Examples\TypeMapEmail)#%d (%d) {
-      ["type":"MongoDB\Examples\TypeMapEmail":private]=>
-      string(7) "private"
-      ["address":"MongoDB\Examples\TypeMapEmail":private]=>
-      string(18) "secret@example.com"
-    }
-  }
-}
+MongoDB\Examples\TypeMapEntry Object
+(
+    [id:MongoDB\Examples\TypeMapEntry:private] => MongoDB\BSON\ObjectId Object
+        (
+            [oid] => %s
+        )
+
+    [name:MongoDB\Examples\TypeMapEntry:private] => alcaeus
+    [emails:MongoDB\Examples\TypeMapEntry:private] => Array
+        (
+            [0] => MongoDB\Examples\TypeMapEmail Object
+                (
+                    [type:MongoDB\Examples\TypeMapEmail:private] => work
+                    [address:MongoDB\Examples\TypeMapEmail:private] => alcaeus@example.com
+                )
+
+            [1] => MongoDB\Examples\TypeMapEmail Object
+                (
+                    [type:MongoDB\Examples\TypeMapEmail:private] => private
+                    [address:MongoDB\Examples\TypeMapEmail:private] => secret@example.com
+                )
+
+        )
+
+)
 OUTPUT;
 
         yield 'typemap' => [

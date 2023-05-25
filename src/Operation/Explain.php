@@ -159,13 +159,4 @@ class Explain implements Executable
 
         return $options;
     }
-
-    private function isFindAndModify(Explainable $explainable): bool
-    {
-        if ($explainable instanceof FindAndModify || $explainable instanceof FindOneAndDelete || $explainable instanceof FindOneAndReplace || $explainable instanceof FindOneAndUpdate) {
-            return true;
-        }
-
-        return false;
-    }
 }

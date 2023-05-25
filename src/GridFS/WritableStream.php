@@ -255,8 +255,7 @@ class WritableStream
         $this->isClosed = true;
     }
 
-    /** @return mixed */
-    private function fileCollectionInsert()
+    private function fileCollectionInsert(): void
     {
         $this->file['length'] = $this->length;
         $this->file['uploadDate'] = new UTCDateTime();
@@ -272,8 +271,6 @@ class WritableStream
 
             throw $e;
         }
-
-        return $this->file['_id'];
     }
 
     private function insertChunkFromBuffer(): void

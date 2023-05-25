@@ -92,9 +92,6 @@ class Bucket
     /** @var string */
     private $bucketName;
 
-    /** @var boolean */
-    private $disableMD5;
-
     /** @var integer */
     private $chunkSizeBytes;
 
@@ -181,7 +178,6 @@ class Bucket
         $this->databaseName = $databaseName;
         $this->bucketName = $options['bucketName'];
         $this->chunkSizeBytes = $options['chunkSizeBytes'];
-        $this->disableMD5 = $options['disableMD5'];
         $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();
         $this->readPreference = $options['readPreference'] ?? $this->manager->getReadPreference();
         $this->typeMap = $options['typeMap'] ?? self::$defaultTypeMap;

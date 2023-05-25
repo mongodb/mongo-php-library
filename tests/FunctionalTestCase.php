@@ -269,12 +269,13 @@ abstract class FunctionalTestCase extends TestCase
      */
     protected function createCollection(string $databaseName, string $collectionName, array $options = []): Collection
     {
-        $collection = $this->dropCollection($databaseName, $collectionName, $options);
-
         if (isset($options['encryptedFields'])) {
             throw new InvalidArgumentException('The "encryptedFields" option is not supported by createCollection(). Time to refactor!');
         }
 
+        $collection = $this->dropCollection($databaseName, $collectionName, $options);
+
+        $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
         $operation = new CreateCollection($databaseName, $collectionName, $options);
         $operation->execute($this->getPrimaryServer());
 
@@ -290,11 +291,11 @@ abstract class FunctionalTestCase extends TestCase
      */
     protected function dropCollection(string $databaseName, string $collectionName, array $options = []): Collection
     {
-        $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
         $collection = new Collection($this->manager, $databaseName, $collectionName, $options);
-        $collection->drop();
-
         $this->collectionsToCleanup[] = [$collection, $options];
+
+        $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+        $collection->drop($options);
 
         return $collection;
     }
@@ -302,6 +303,7 @@ abstract class FunctionalTestCase extends TestCase
     private function cleanupCollections(): void
     {
         foreach ($this->collectionsToCleanup as [$collection, $options]) {
+            $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
             $collection->drop($options);
         }
 

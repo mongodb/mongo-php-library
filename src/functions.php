@@ -115,7 +115,8 @@ function document_to_array($document): array
         /* Nested documents and arrays are intentionally left as BSON. We avoid
          * iterator_to_array() since Document and PackedArray iteration returns
          * all values as MongoDB\BSON\Value instances. */
-        /** @var array */
+
+        /** @psalm-var array */
         return $document->toPHP([
             'array' => 'bson',
             'document' => 'bson',
@@ -249,7 +250,7 @@ function is_pipeline($pipeline): bool
         /* Nested documents and arrays are intentionally left as BSON. We avoid
          * iterator_to_array() since Document iteration returns all values as
          * MongoDB\BSON\Value instances. */
-        /** @var array */
+        /** @psalm-var array */
         $pipeline = $pipeline->toPHP([
             'array' => 'bson',
             'document' => 'bson',

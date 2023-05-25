@@ -293,7 +293,7 @@ class FindAndModify implements Executable, Explainable
         }
 
         if (isset($this->options['update'])) {
-            /** @var array|object */
+            /** @psalm-var array|object */
             $update = $this->options['update'];
             $cmd['update'] = is_pipeline($update) ? $update : (object) $update;
         }

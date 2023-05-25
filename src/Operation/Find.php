@@ -429,7 +429,7 @@ class Find implements Executable, Explainable
         }
 
         if (! empty($this->options['modifiers'])) {
-            /** @var array|object */
+            /** @psalm-var array|object */
             $modifiers = $this->options['modifiers'];
             $options['modifiers'] = is_object($modifiers) ? document_to_array($modifiers) : $modifiers;
         }

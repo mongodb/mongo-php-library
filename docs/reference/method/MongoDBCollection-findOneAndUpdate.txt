@@ -19,7 +19,7 @@ Definition
 
    .. code-block:: php
 
-      function findOneAndUpdate($filter, $update, array $options = []): object|null
+      function findOneAndUpdate(array|object $filter, array|object $update, array $options = []): object|null
 
    This method has the following parameters:
 

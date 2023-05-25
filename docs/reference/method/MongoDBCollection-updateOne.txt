@@ -21,7 +21,7 @@ Definition
 
    .. code-block:: php
 
-      function updateOne($filter, $update, array $options = []): MongoDB\UpdateResult
+      function updateOne(array|object $filter, array|object $update, array $options = []): MongoDB\UpdateResult
 
    This method has the following parameters:
 

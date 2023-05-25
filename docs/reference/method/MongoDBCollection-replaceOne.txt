@@ -21,7 +21,7 @@ Definition
 
    .. code-block:: php
 
-      function replaceOne($filter, $replacement, array $options = []): MongoDB\UpdateResult
+      function replaceOne(array|object $filter, array|object $replacement, array $options = []): MongoDB\UpdateResult
 
    This method has the following parameters:
 

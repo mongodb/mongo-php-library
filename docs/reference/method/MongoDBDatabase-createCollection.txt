@@ -19,7 +19,7 @@ Definition
 
    .. code-block:: php
 
-      function createCollection($collectionName, array $options = []): array|object
+      function createCollection(string $collectionName, array $options = []): array|object
 
    MongoDB creates collections implicitly when you first reference the
    collection in a command, such as when inserting a document into a new

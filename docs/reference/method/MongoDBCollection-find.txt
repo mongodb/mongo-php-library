@@ -19,7 +19,7 @@ Definition
 
    .. code-block:: php
 
-      function find($filter = [], array $options = []): MongoDB\Driver\Cursor
+      function find(array|object $filter = [], array $options = []): MongoDB\Driver\Cursor
 
    This method has the following parameters:
 

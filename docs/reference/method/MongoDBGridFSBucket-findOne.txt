@@ -20,7 +20,7 @@ Definition
 
    .. code-block:: php
 
-      function findOne($filter = [], array $options = []): array|object|null
+      function findOne(array|object $filter = [], array $options = []): array|object|null
 
    This method has the following parameters:
 

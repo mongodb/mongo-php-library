@@ -24,7 +24,7 @@ Definition
 
    .. code-block:: php
 
-      function mapReduce($map, $reduce, $out, array $options = []): MongoDB\MapReduceResult
+      function mapReduce(MongoDB\BSON\JavascriptInterface $map, MongoDB\BSON\JavascriptInterface $reduce, string|array|object $out, array $options = []): MongoDB\MapReduceResult
 
    This method has the following parameters:
 

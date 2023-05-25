@@ -21,7 +21,7 @@ Definition
 
    .. code-block:: php
 
-      function command($command, array $options = []): MongoDB\Driver\Cursor
+      function command(array|object $command, array $options = []): MongoDB\Driver\Cursor
 
    This method has the following parameters:
 

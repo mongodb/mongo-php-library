@@ -19,7 +19,7 @@ Definition
 
    .. code-block:: php
 
-      function createIndex($key, array $options = []): string
+      function createIndex(array|object $key, array $options = []): string
 
    This method has the following parameters:
 

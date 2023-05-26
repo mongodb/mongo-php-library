@@ -47,9 +47,6 @@ class StreamWrapper
     public $context;
 
     /** @var string|null */
-    private $mode;
-
-    /** @var string|null */
     private $protocol;
 
     /** @var ReadableStream|WritableStream|null */
@@ -127,7 +124,6 @@ class StreamWrapper
     public function stream_open(string $path, string $mode, int $options, ?string &$openedPath): bool
     {
         $this->initProtocol($path);
-        $this->mode = $mode;
 
         if ($mode === 'r') {
             return $this->initReadableStream();

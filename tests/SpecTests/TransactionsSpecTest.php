@@ -320,7 +320,7 @@ class TransactionsSpecTest extends FunctionalTestCase
         }
 
         $manager = static::createTestManager();
-        $primary = $manager->selectServer(new ReadPreference('primary'));
+        $primary = $manager->selectServer(new ReadPreference(ReadPreference::PRIMARY));
 
         $servers = $primary->getType() === Server::TYPE_MONGOS
             ? $manager->getServers()

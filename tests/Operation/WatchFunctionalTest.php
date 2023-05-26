@@ -1322,7 +1322,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Test does not apply to sharded clusters');
         }
 
-        $readPreference = new ReadPreference('secondary');
+        $readPreference = new ReadPreference(ReadPreference::SECONDARY);
         $options = ['readPreference' => $readPreference] + $this->defaultOptions;
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
 

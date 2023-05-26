@@ -328,7 +328,7 @@ abstract class FunctionalTestCase extends TestCase
         $cursor = $this->manager->executeCommand(
             $this->getDatabaseName(),
             new Command(['serverStatus' => 1]),
-            $readPreference ?: new ReadPreference('primary')
+            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY)
         );
 
         $result = current($cursor->toArray());

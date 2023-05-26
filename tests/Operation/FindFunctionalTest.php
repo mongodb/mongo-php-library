@@ -288,7 +288,7 @@ class FindFunctionalTest extends FunctionalTestCase
 
             $filter = ['_id' => ['$lt' => 3]];
             $options = [
-                'readPreference' => new ReadPreference('primary'),
+                'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
                 'session' => $session,
             ];
 

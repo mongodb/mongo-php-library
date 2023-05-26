@@ -116,5 +116,4 @@ $typeMap = [
 
 $entry = $collection->findOne([], ['typeMap' => $typeMap]);
 
-/** @psalm-suppress ForbiddenCode */
 print_r($entry);

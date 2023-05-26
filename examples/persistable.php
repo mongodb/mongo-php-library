@@ -105,5 +105,4 @@ $collection->insertOne($entry);
 
 $foundEntry = $collection->findOne([]);
 
-/** @psalm-suppress ForbiddenCode */
 print_r($foundEntry);

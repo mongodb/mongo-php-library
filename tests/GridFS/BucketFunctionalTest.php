@@ -51,7 +51,7 @@ class BucketFunctionalTest extends FunctionalTestCase
             'bucketName' => 'test',
             'chunkSizeBytes' => 8192,
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
-            'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
+            'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY, 1000),
         ]);
     }

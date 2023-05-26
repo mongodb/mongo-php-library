@@ -209,7 +209,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         }
 
         $options += [
-            'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
+            'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
         ];
 
         if (array_key_exists('fullDocument', $options) && ! is_string($options['fullDocument'])) {

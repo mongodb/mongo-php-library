@@ -1425,7 +1425,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
     {
         $session->startTransaction([
             'readConcern' => new \MongoDB\Driver\ReadConcern("snapshot"),
-            'readPrefernece' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_PRIMARY),
+            'readPrefernece' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::PRIMARY),
             'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY),
         ]);
 
@@ -1510,7 +1510,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
              * mode, so using $manager->selectServer does not work here. To work
              * around this, we run a query on a secondary and rely on an
              * exception to let us know that no secondary is available. */
-            $items->countDocuments([], ['readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY)]);
+            $items->countDocuments([], ['readPreference' => new ReadPreference(ReadPreference::SECONDARY)]);
         } catch (Exception $e) {
             $this->markTestSkipped('Secondary is not available');
         }
@@ -1556,7 +1556,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $items = $client->selectDatabase(
             'test',
             [
-                'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_SECONDARY),
+                'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::SECONDARY),
                 'readConcern' => new \MongoDB\Driver\ReadConcern(\MongoDB\Driver\ReadConcern::MAJORITY),
                 'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
             ]
@@ -1837,7 +1837,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $transactionOptions = [
             'readConcern' => new \MongoDB\Driver\ReadConcern(\MongoDB\Driver\ReadConcern::LOCAL),
             'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
-            'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_PRIMARY),
+            'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::PRIMARY),
         ];
 
         \MongoDB\with_transaction($session, $callback, $transactionOptions);

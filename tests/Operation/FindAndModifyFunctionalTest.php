@@ -115,7 +115,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
     public function testManagerReadConcernIsOmitted(): void
     {
         $manager = static::createTestManager(null, ['readConcernLevel' => 'majority']);
-        $server = $manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = $manager->selectServer(new ReadPreference(ReadPreference::PRIMARY));
 
         (new CommandObserver())->observe(
             function () use ($server): void {

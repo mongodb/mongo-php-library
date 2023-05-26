@@ -3,9 +3,11 @@
 namespace MongoDB\Tests\Operation;
 
 use InvalidArgumentException;
+use MongoDB\BSON\Document;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\ListIndexes;
@@ -78,15 +80,16 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
         });
     }
 
-    public function testCreateIndexes(): void
+    /** @dataProvider provideKeyCasts */
+    public function testCreateIndexes(callable $cast): void
     {
         $expectedNames = ['x_1', 'y_-1_z_1', 'g_2dsphere_z_1', 'my_ttl'];
 
         $indexes = [
-            ['key' => ['x' => 1], 'sparse' => true, 'unique' => true],
-            ['key' => ['y' => -1, 'z' => 1]],
-            ['key' => ['g' => '2dsphere', 'z' => 1]],
-            ['key' => ['t' => 1], 'expireAfterSeconds' => 0, 'name' => 'my_ttl'],
+            ['key' => $cast(['x' => 1]), 'sparse' => true, 'unique' => true],
+            ['key' => $cast(['y' => -1, 'z' => 1])],
+            ['key' => $cast(['g' => '2dsphere', 'z' => 1])],
+            ['key' => $cast(['t' => 1]), 'expireAfterSeconds' => 0, 'name' => 'my_ttl'],
         ];
 
         $operation = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), $indexes);
@@ -117,6 +120,20 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
             $this->assertFalse($info->isUnique());
             $this->assertTrue($info->isTtl());
         });
+    }
+
+    public function provideKeyCasts(): array
+    {
+        // phpcs:disable SlevomatCodingStandard.ControlStructures.JumpStatementsSpacing
+        // phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration
+        // phpcs:disable Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore
+        return [
+            'array' => [function ($key) { return $key; }],
+            'object' => [function ($key) { return (object) $key; }],
+            'Serializable' => [function ($key) { return new BSONDocument($key); }],
+            'Document' => [function ($key) { return Document::fromPHP($key); }],
+        ];
+        // phpcs:enable
     }
 
     public function testCreateConflictingIndexesWithCommand(): void

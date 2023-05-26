@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\Document;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Collection;
 use MongoDB\Driver\WriteConcern;
@@ -10,6 +11,7 @@ use MongoDB\InsertOneResult;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 class InsertOneFunctionalTest extends FunctionalTestCase
 {
@@ -23,36 +25,76 @@ class InsertOneFunctionalTest extends FunctionalTestCase
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
     }
 
-    /** @dataProvider provideDocumentWithExistingId */
-    public function testInsertOneWithExistingId($document): void
+    /**
+     * @dataProvider provideDocumentsWithIds
+     * @dataProvider provideDocumentsWithoutIds
+     */
+    public function testDocumentEncoding($document, stdClass $expectedDocument): void
+    {
+        (new CommandObserver())->observe(
+            function () use ($document, $expectedDocument): void {
+                $operation = new InsertOne(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    $document
+                );
+
+                $result = $operation->execute($this->getPrimaryServer());
+
+                // Replace _id placeholder if necessary
+                if ($expectedDocument->_id === null) {
+                    $expectedDocument->_id = $result->getInsertedId();
+                }
+            },
+            function (array $event) use ($expectedDocument): void {
+                $this->assertEquals($expectedDocument, $event['started']->getCommand()->documents[0] ?? null);
+            }
+        );
+    }
+
+    public function provideDocumentsWithIds(): array
+    {
+        $expectedDocument = (object) ['_id' => 1];
+
+        return [
+            'with_id:array' => [['_id' => 1], $expectedDocument],
+            'with_id:object' => [(object) ['_id' => 1], $expectedDocument],
+            'with_id:Serializable' => [new BSONDocument(['_id' => 1]), $expectedDocument],
+            'with_id:Document' => [Document::fromPHP(['_id' => 1]), $expectedDocument],
+        ];
+    }
+
+    public function provideDocumentsWithoutIds(): array
+    {
+        /* Note: _id placeholders must be replaced with generated ObjectIds. We
+         * also clone the value for each data set since tests will may modify
+         * the object. */
+        $expectedDocument = (object) ['_id' => null, 'x' => 1];
+
+        return [
+            'without_id:array' => [['x' => 1], clone $expectedDocument],
+            'without_id:object' => [(object) ['x' => 1], clone $expectedDocument],
+            'without_id:Serializable' => [new BSONDocument(['x' => 1]), clone $expectedDocument],
+            'without_id:Document' => [Document::fromPHP(['x' => 1]), clone $expectedDocument],
+        ];
+    }
+
+    /** @dataProvider provideDocumentsWithIds */
+    public function testInsertOneWithExistingId($document, stdClass $expectedDocument): void
     {
         $operation = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
         $result = $operation->execute($this->getPrimaryServer());
 
         $this->assertInstanceOf(InsertOneResult::class, $result);
         $this->assertSame(1, $result->getInsertedCount());
-        $this->assertSame('foo', $result->getInsertedId());
+        $this->assertSame($expectedDocument->_id, $result->getInsertedId());
 
-        $expected = [
-            ['_id' => 'foo', 'x' => 11],
-        ];
-
-        $this->assertSameDocuments($expected, $this->collection->find());
+        $this->assertSameDocuments([$expectedDocument], $this->collection->find());
     }
 
-    public function provideDocumentWithExistingId()
+    /** @dataProvider provideDocumentsWithoutIds */
+    public function testInsertOneWithGeneratedId($document, stdClass $expectedDocument): void
     {
-        return [
-            [['_id' => 'foo', 'x' => 11]],
-            [(object) ['_id' => 'foo', 'x' => 11]],
-            [new BSONDocument(['_id' => 'foo', 'x' => 11])],
-        ];
-    }
-
-    public function testInsertOneWithGeneratedId(): void
-    {
-        $document = ['x' => 11];
-
         $operation = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document);
         $result = $operation->execute($this->getPrimaryServer());
 
@@ -60,11 +102,10 @@ class InsertOneFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $result->getInsertedCount());
         $this->assertInstanceOf(ObjectId::class, $result->getInsertedId());
 
-        $expected = [
-            ['_id' => $result->getInsertedId(), 'x' => 11],
-        ];
+        // Replace _id placeholder
+        $expectedDocument->_id = $result->getInsertedId();
 
-        $this->assertSameDocuments($expected, $this->collection->find());
+        $this->assertSameDocuments([$expectedDocument], $this->collection->find());
     }
 
     public function testSessionOption(): void

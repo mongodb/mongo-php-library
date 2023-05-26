@@ -2,7 +2,11 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\Document;
+use MongoDB\BSON\PackedArray;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Model\BSONArray;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\FindOneAndUpdate;
 
 class FindOneAndUpdateTest extends TestCase
@@ -21,11 +25,25 @@ class FindOneAndUpdateTest extends TestCase
         new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], $update);
     }
 
-    public function testConstructorUpdateArgumentRequiresOperatorsOrPipeline(): void
+    /** @dataProvider provideInvalidUpdateValues */
+    public function testConstructorUpdateArgumentRequiresOperatorsOrPipeline($update): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected an update document with operator as first key or a pipeline');
-        new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], []);
+        new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), [], $update);
+    }
+
+    public function provideInvalidUpdateValues(): array
+    {
+        return [
+            'replacement:array' => [['x' => 1]],
+            'replacement:object' => [(object) ['x' => 1]],
+            'replacement:Serializable' => [new BSONDocument(['x' => 1])],
+            'replacement:Document' => [Document::fromPHP(['x' => 1])],
+            'empty_pipeline:array' => [[]],
+            'empty_pipeline:Serializable' => [new BSONArray([])],
+            'empty_pipeline:PackedArray' => [PackedArray::fromPHP([])],
+        ];
     }
 
     /** @dataProvider provideInvalidConstructorOptions */

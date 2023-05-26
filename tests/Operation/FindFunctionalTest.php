@@ -2,17 +2,83 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\Document;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 use function microtime;
 
 class FindFunctionalTest extends FunctionalTestCase
 {
+    /** @dataProvider provideFilterDocuments */
+    public function testFilterDocuments($filter, stdClass $expectedQuery): void
+    {
+        (new CommandObserver())->observe(
+            function () use ($filter): void {
+                $operation = new Find(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    $filter
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use ($expectedQuery): void {
+                $this->assertEquals($expectedQuery, $event['started']->getCommand()->filter ?? null);
+            }
+        );
+    }
+
+    public function provideFilterDocuments(): array
+    {
+        $expectedQuery = (object) ['x' => 1];
+
+        return [
+            'array' => [['x' => 1], $expectedQuery],
+            'object' => [(object) ['x' => 1], $expectedQuery],
+            'Serializable' => [new BSONDocument(['x' => 1]), $expectedQuery],
+            'Document' => [Document::fromPHP(['x' => 1]), $expectedQuery],
+        ];
+    }
+
+    /** @dataProvider provideModifierDocuments */
+    public function testModifierDocuments($modifiers, stdClass $expectedSort): void
+    {
+        (new CommandObserver())->observe(
+            function () use ($modifiers): void {
+                $operation = new Find(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [],
+                    ['modifiers' => $modifiers]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use ($expectedSort): void {
+                $this->assertEquals($expectedSort, $event['started']->getCommand()->sort ?? null);
+            }
+        );
+    }
+
+    public function provideModifierDocuments(): array
+    {
+        $expectedSort = (object) ['x' => 1];
+
+        return [
+            'array' => [['$orderby' => ['x' => 1]], $expectedSort],
+            'object' => [(object) ['$orderby' => ['x' => 1]], $expectedSort],
+            'Serializable' => [new BSONDocument(['$orderby' => ['x' => 1]]), $expectedSort],
+            'Document' => [Document::fromPHP(['$orderby' => ['x' => 1]]), $expectedSort],
+        ];
+    }
+
     public function testDefaultReadConcernIsOmitted(): void
     {
         (new CommandObserver())->observe(

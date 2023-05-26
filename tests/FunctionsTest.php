@@ -2,6 +2,8 @@
 
 namespace MongoDB\Tests;
 
+use MongoDB\BSON\Document;
+use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
@@ -9,8 +11,10 @@ use MongoDB\Model\BSONDocument;
 
 use function MongoDB\apply_type_map_to_document;
 use function MongoDB\create_field_path_type_map;
+use function MongoDB\document_to_array;
 use function MongoDB\generate_index_name;
 use function MongoDB\is_first_key_operator;
+use function MongoDB\is_last_pipeline_operator_write;
 use function MongoDB\is_mapreduce_output_inline;
 use function MongoDB\is_pipeline;
 use function MongoDB\is_write_concern_acknowledged;
@@ -90,21 +94,53 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /** @dataProvider provideIndexSpecificationDocumentsAndGeneratedNames */
-    public function testGenerateIndexName($document, $expectedName): void
+    /** @dataProvider provideDocumentsAndExpectedArrays */
+    public function testDocumentToArray($document, array $expectedArray): void
     {
-        $this->assertSame($expectedName, generate_index_name($document));
+        $this->assertSame($expectedArray, document_to_array($document));
     }
 
-    public function provideIndexSpecificationDocumentsAndGeneratedNames()
+    public function provideDocumentsAndExpectedArrays(): array
     {
         return [
-            [ ['x' => 1], 'x_1' ],
-            [ ['x' => -1, 'y' => 1], 'x_-1_y_1' ],
-            [ ['x' => '2dsphere', 'y' => 1 ], 'x_2dsphere_y_1' ],
-            [ (object) ['x' => 1], 'x_1' ],
-            [ new BSONDocument(['x' => 1]), 'x_1' ],
+            'array' => [['x' => 1], ['x' => 1]],
+            'object' => [(object) ['x' => 1], ['x' => 1]],
+            'Serializable' => [new BSONDocument(['x' => 1]), ['x' => 1]],
+            'Document' => [Document::fromPHP(['x' => 1]), ['x' => 1]],
+            // PackedArray and array-returning Serializable are both allowed
+            'PackedArray' => [PackedArray::fromPHP(['foo']), [0 => 'foo']],
+            'Serializable:array' => [new BSONArray(['foo']), [0 => 'foo']],
         ];
+    }
+
+    /** @dataProvider provideInvalidDocumentValues */
+    public function testDocumentToArrayArgumentTypeCheck($document): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected $document to have type "array or object"');
+        document_to_array($document);
+    }
+
+    /** @dataProvider provideDocumentCasts */
+    public function testGenerateIndexName($cast): void
+    {
+        $this->assertSame('x_1', generate_index_name($cast(['x' => 1])));
+        $this->assertSame('x_-1_y_1', generate_index_name($cast(['x' => -1, 'y' => 1])));
+        $this->assertSame('x_2dsphere_y_1', generate_index_name($cast(['x' => '2dsphere', 'y' => 1])));
+    }
+
+    public function provideDocumentCasts(): array
+    {
+        // phpcs:disable SlevomatCodingStandard.ControlStructures.JumpStatementsSpacing
+        // phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration
+        // phpcs:disable Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore
+        return [
+            'array' => [function ($value) { return $value; }],
+            'object' => [function ($value) { return (object) $value; }],
+            'Serializable' => [function ($value) { return new BSONDocument($value); }],
+            'Document' => [function ($value) { return Document::fromPHP($value); }],
+        ];
+        // phpcs:enable
     }
 
     /** @dataProvider provideInvalidDocumentValues */
@@ -114,22 +150,15 @@ class FunctionsTest extends TestCase
         generate_index_name($document);
     }
 
-    /** @dataProvider provideIsFirstKeyOperatorDocuments */
-    public function testIsFirstKeyOperator($document, $isFirstKeyOperator): void
+    /** @dataProvider provideDocumentCasts */
+    public function testIsFirstKeyOperator(callable $cast): void
     {
-        $this->assertSame($isFirstKeyOperator, is_first_key_operator($document));
-    }
+        $this->assertFalse(is_first_key_operator($cast(['y' => 1])));
+        $this->assertTrue(is_first_key_operator($cast(['$set' => ['y' => 1]])));
 
-    public function provideIsFirstKeyOperatorDocuments()
-    {
-        return [
-            [ ['y' => 1], false ],
-            [ (object) ['y' => 1], false ],
-            [ new BSONDocument(['y' => 1]), false ],
-            [ ['$set' => ['y' => 1]], true ],
-            [ (object) ['$set' => ['y' => 1]], true ],
-            [ new BSONDocument(['$set' => ['y' => 1]]), true ],
-        ];
+        // Empty and packed arrays are unlikely arguments, but still valid
+        $this->assertFalse(is_first_key_operator($cast([])));
+        $this->assertFalse(is_first_key_operator($cast(['foo'])));
     }
 
     /** @dataProvider provideInvalidDocumentValues */
@@ -139,20 +168,18 @@ class FunctionsTest extends TestCase
         is_first_key_operator($document);
     }
 
-    /** @dataProvider provideMapReduceOutValues */
-    public function testIsMapReduceOutputInline($out, $isInline): void
+    /** @dataProvider provideDocumentCasts */
+    public function testIsMapReduceOutputInlineWithDocumentValues(callable $cast): void
     {
-        $this->assertSame($isInline, is_mapreduce_output_inline($out));
+        $this->assertTrue(is_mapreduce_output_inline($cast(['inline' => 1])));
+        // Note: only the key is significant
+        $this->assertTrue(is_mapreduce_output_inline($cast(['inline' => 0])));
+        $this->assertFalse(is_mapreduce_output_inline($cast(['replace' => 'collectionName'])));
     }
 
-    public function provideMapReduceOutValues()
+    public function testIsMapReduceOutputInlineWithStringValue(): void
     {
-        return [
-            [ 'collectionName', false ],
-            [ ['inline' => 1], true ],
-            [ ['inline' => 0], true ], // only the key is significant
-            [ ['replace' => 'collectionName'], false ],
-        ];
+        $this->assertFalse(is_mapreduce_output_inline('collectionName'));
     }
 
     /** @dataProvider provideTypeMapValues */
@@ -215,30 +242,80 @@ class FunctionsTest extends TestCase
         ];
     }
 
+    /** @dataProvider provideDocumentCasts */
+    public function testIsLastPipelineOperatorWrite(callable $cast): void
+    {
+        $match = ['$match' => ['x' => 1]];
+        $merge = ['$merge' => ['into' => 'coll']];
+        $out = ['$out' => ['db' => 'db', 'coll' => 'coll']];
+
+        $this->assertTrue(is_last_pipeline_operator_write([$cast($merge)]));
+        $this->assertTrue(is_last_pipeline_operator_write([$cast($out)]));
+        $this->assertTrue(is_last_pipeline_operator_write([$cast($match), $cast($merge)]));
+        $this->assertTrue(is_last_pipeline_operator_write([$cast($match), $cast($out)]));
+        $this->assertFalse(is_last_pipeline_operator_write([$cast($match)]));
+        $this->assertFalse(is_last_pipeline_operator_write([$cast($merge), $cast($match)]));
+        $this->assertFalse(is_last_pipeline_operator_write([$cast($out), $cast($match)]));
+    }
+
     /** @dataProvider providePipelines */
     public function testIsPipeline($expected, $pipeline): void
     {
         $this->assertSame($expected, is_pipeline($pipeline));
     }
 
-    public function providePipelines()
+    public function providePipelines(): array
     {
+        $valid = [
+            ['$match' => ['foo' => 'bar']],
+            (object) ['$group' => ['_id' => 1]],
+            new BSONDocument(['$skip' => 1]),
+            Document::fromPHP(['$limit' => 1]),
+        ];
+
+        $invalidIndex = [1 => ['$group' => ['_id' => 1]]];
+
+        $invalidStageKey = [['group' => ['_id' => 1]]];
+
+        $dbrefInNumericField = ['0' => ['$ref' => 'foo', '$id' => 'bar']];
+
         return [
-            'Not an array' => [false, (object) []],
-            'Empty array' => [false, []],
-            'Non-sequential indexes in array' => [false, [1 => ['$group' => []]]],
-            'Update document instead of pipeline' => [false, ['$set' => ['foo' => 'bar']]],
-            'Invalid pipeline stage' => [false, [['group' => []]]],
-            'Update with DbRef' => [false, ['x' => ['$ref' => 'foo', '$id' => 'bar']]],
-            'Valid pipeline' => [
-                true,
-                [
-                    ['$match' => ['foo' => 'bar']],
-                    ['$group' => ['_id' => 1]],
-                ],
-            ],
-            'False positive with DbRef in numeric field' => [true, ['0' => ['$ref' => 'foo', '$id' => 'bar']]],
-            'DbRef in numeric field as object' => [false, (object) ['0' => ['$ref' => 'foo', '$id' => 'bar']]],
+            // Valid pipeline in various forms
+            'valid: array' => [true, $valid],
+            'valid: Serializable' => [true, new BSONArray($valid)],
+            'valid: PackedArray' => [true, PackedArray::fromPHP($valid)],
+            // Invalid type for an otherwise valid pipeline
+            'invalid type: stdClass' => [false, (object) $valid],
+            'invalid type: Serializable' => [false, new BSONDocument($valid)],
+            'invalid type: Document' => [false, Document::fromPHP($valid)],
+            // Invalid index in pipeline array
+            'invalid index: array' => [false, $invalidIndex],
+            // Note: PackedArray::fromPHP() requires a list array
+            // Note: BSONArray::bsonSerialize() re-indexes the array
+            'invalid index: array' => [true, new BSONArray($invalidIndex)],
+            // Invalid stage key in pipeline element
+            'invalid stage key: array' => [false, $invalidStageKey],
+            'invalid stage key: Serializable' => [false, new BSONArray($invalidStageKey)],
+            'invalid stage key: PackedArray' => [false, PackedArray::fromPHP($invalidStageKey)],
+            // Invalid pipeline element type
+            'invalid pipeline element type: array' => [false, [[[]]]],
+            'invalid pipeline element type: Serializable' => [false, new BSONArray([new BSONArray([])])],
+            'invalid pipeline element type: PackedArray' => [false, PackedArray::fromPHP([[]])],
+            // Empty array has no pipeline stages
+            'invalid empty: array' => [false, []],
+            'invalid empty: Serializable' => [false, new BSONArray([])],
+            'invalid empty: PackedArray' => [false, PackedArray::fromPHP([])],
+            // False positive: DBRef in numeric field
+            'false positive DBRef: array' => [true, $dbrefInNumericField],
+            'false positive DBRef: Serializable' => [true, new BSONArray($dbrefInNumericField)],
+            'false positive DBRef: PackedArray' => [true, PackedArray::fromPHP($dbrefInNumericField)],
+            // Invalid document containing DBRef in numeric field
+            'invalid DBRef: stdClass' => [false, (object) $dbrefInNumericField],
+            'invalid DBRef: Serializable' => [false, new BSONDocument($dbrefInNumericField)],
+            'invalid DBRef: Document' => [false, Document::fromPHP($dbrefInNumericField)],
+            // Additional invalid cases
+            'Update document' => [false, ['$set' => ['foo' => 'bar']]],
+            'Replacement document with DBRef' => [false, ['x' => ['$ref' => 'foo', '$id' => 'bar']]],
         ];
     }
 

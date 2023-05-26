@@ -18,6 +18,8 @@
 namespace MongoDB;
 
 use Exception;
+use MongoDB\BSON\Document;
+use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
@@ -32,10 +34,10 @@ use MongoDB\Operation\WithTransaction;
 use ReflectionClass;
 use ReflectionException;
 
+use function array_key_first;
 use function assert;
 use function end;
 use function get_object_vars;
-use function in_array;
 use function is_array;
 use function is_object;
 use function is_string;
@@ -94,26 +96,61 @@ function apply_type_map_to_document($document, array $typeMap)
 }
 
 /**
- * Generate an index name from a key specification.
+ * Converts a document parameter to an array.
+ *
+ * This is used to facilitate unified access to document fields. It also handles
+ * Document, PackedArray, and Serializable objects.
+ *
+ * This function is not used for type checking. Therefore, it does not reject
+ * PackedArray objects or Serializable::bsonSerialize() return values that would
+ * encode as BSON arrays.
  *
  * @internal
- * @param array|object $document Document containing fields mapped to values,
- *                               which denote order or an index type
- * @throws InvalidArgumentException
+ * @param array|object $document
+ * @throws InvalidArgumentException if $document is not an array or object
  */
-function generate_index_name($document): string
+function document_to_array($document): array
 {
-    if ($document instanceof Serializable) {
+    if ($document instanceof Document || $document instanceof PackedArray) {
+        /* Nested documents and arrays are intentionally left as BSON. We avoid
+         * iterator_to_array() since Document and PackedArray iteration returns
+         * all values as MongoDB\BSON\Value instances. */
+
+        /** @psalm-var array */
+        return $document->toPHP([
+            'array' => 'bson',
+            'document' => 'bson',
+            'root' => 'array',
+        ]);
+    } elseif ($document instanceof Serializable) {
         $document = $document->bsonSerialize();
     }
 
     if (is_object($document)) {
+        /* Note: this omits all uninitialized properties, whereas BSON encoding
+         * includes untyped, uninitialized properties. This is acceptable given
+         * document_to_array()'s use cases. */
         $document = get_object_vars($document);
     }
 
     if (! is_array($document)) {
         throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
     }
+
+    return $document;
+}
+
+/**
+ * Generate an index name from a key specification.
+ *
+ * @internal
+ * @param array|object $document Document containing fields mapped to values,
+ *                               which denote order or an index type
+ * @throws InvalidArgumentException if $document is not an array or object
+ */
+function generate_index_name($document): string
+{
+    $document = document_to_array($document);
 
     $name = '';
 
@@ -174,40 +211,55 @@ function get_encrypted_fields_from_server(string $databaseName, string $collecti
 /**
  * Return whether the first key in the document starts with a "$" character.
  *
- * This is used for differentiating update and replacement documents.
+ * This is used for validating aggregation pipeline stages and differentiating
+ * update and replacement documents. Since true and false return values may be
+ * expected in different contexts, this function intentionally throws if
+ * $document has an unexpected type instead of returning false.
  *
  * @internal
- * @param array|object $document Update or replacement document
- * @throws InvalidArgumentException
+ * @param array|object $document
+ * @throws InvalidArgumentException if $document is not an array or object
  */
 function is_first_key_operator($document): bool
 {
-    if ($document instanceof Serializable) {
-        $document = $document->bsonSerialize();
+    $document = document_to_array($document);
+
+    $firstKey = array_key_first($document);
+
+    if (! is_string($firstKey)) {
+        return false;
     }
 
-    if (is_object($document)) {
-        $document = get_object_vars($document);
-    }
-
-    if (! is_array($document)) {
-        throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
-    }
-
-    reset($document);
-    $firstKey = (string) key($document);
-
-    return isset($firstKey[0]) && $firstKey[0] === '$';
+    return '$' === ($firstKey[0] ?? null);
 }
 
 /**
  * Returns whether an update specification is a valid aggregation pipeline.
  *
+ * Note: this method may propagate an InvalidArgumentException from
+ * document_or_array() if a Serializable object within the pipeline array
+ * returns a non-array, non-object value from its bsonSerialize() method.
+ *
  * @internal
- * @param mixed $pipeline
+ * @param array|object $pipeline
+ * @throws InvalidArgumentException
  */
 function is_pipeline($pipeline): bool
 {
+    if ($pipeline instanceof PackedArray) {
+        /* Nested documents and arrays are intentionally left as BSON. We avoid
+         * iterator_to_array() since Document iteration returns all values as
+         * MongoDB\BSON\Value instances. */
+        /** @psalm-var array */
+        $pipeline = $pipeline->toPHP([
+            'array' => 'bson',
+            'document' => 'bson',
+            'root' => 'array',
+        ]);
+    } elseif ($pipeline instanceof Serializable) {
+        $pipeline = $pipeline->bsonSerialize();
+    }
+
     if (! is_array($pipeline)) {
         return false;
     }
@@ -228,11 +280,8 @@ function is_pipeline($pipeline): bool
         }
 
         $expectedKey++;
-        $stage = (array) $stage;
-        reset($stage);
-        $key = key($stage);
 
-        if (! is_string($key) || substr($key, 0, 1) !== '$') {
+        if (! is_first_key_operator($stage)) {
             return false;
         }
     }
@@ -272,9 +321,15 @@ function is_last_pipeline_operator_write(array $pipeline): bool
         return false;
     }
 
-    $lastOp = (array) $lastOp;
+    if (! is_array($lastOp) && ! is_object($lastOp)) {
+        return false;
+    }
 
-    return in_array(key($lastOp), ['$out', '$merge'], true);
+    $lastOp = document_to_array($lastOp);
+
+    reset($lastOp);
+
+    return key($lastOp) === '$merge' || key($lastOp) === '$out';
 }
 
 /**
@@ -285,7 +340,6 @@ function is_last_pipeline_operator_write(array $pipeline): bool
  * @internal
  * @see https://mongodb.com/docs/manual/reference/command/mapReduce/#output-inline
  * @param string|array|object $out Output specification
- * @throws InvalidArgumentException
  */
 function is_mapreduce_output_inline($out): bool
 {
@@ -293,17 +347,7 @@ function is_mapreduce_output_inline($out): bool
         return false;
     }
 
-    if ($out instanceof Serializable) {
-        $out = $out->bsonSerialize();
-    }
-
-    if (is_object($out)) {
-        $out = get_object_vars($out);
-    }
-
-    if (! is_array($out)) {
-        throw InvalidArgumentException::invalidType('$out', $out, 'array or object');
-    }
+    $out = document_to_array($out);
 
     reset($out);
 

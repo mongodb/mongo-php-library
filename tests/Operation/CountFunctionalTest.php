@@ -2,13 +2,47 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\Document;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 class CountFunctionalTest extends FunctionalTestCase
 {
+    /** @dataProvider provideFilterDocuments */
+    public function testFilterDocuments($filter, stdClass $expectedQuery): void
+    {
+        (new CommandObserver())->observe(
+            function () use ($filter): void {
+                $operation = new Count(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    $filter
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use ($expectedQuery): void {
+                $this->assertEquals($expectedQuery, $event['started']->getCommand()->query ?? null);
+            }
+        );
+    }
+
+    public function provideFilterDocuments(): array
+    {
+        $expectedQuery = (object) ['x' => 1];
+
+        return [
+            'array' => [['x' => 1], $expectedQuery],
+            'object' => [(object) ['x' => 1], $expectedQuery],
+            'Serializable' => [new BSONDocument(['x' => 1]), $expectedQuery],
+            'Document' => [Document::fromPHP(['x' => 1]), $expectedQuery],
+        ];
+    }
+
     public function testDefaultReadConcernIsOmitted(): void
     {
         (new CommandObserver())->observe(

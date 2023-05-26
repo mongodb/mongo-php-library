@@ -193,6 +193,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidDocumentValues(bool $includeNull = false): array
     {
+        // Note: PackedArray is intentionally omitted here (see: PHPLIB-1137)
         return array_merge([123, 3.14, 'foo', true], $includeNull ? [null] : []);
     }
 

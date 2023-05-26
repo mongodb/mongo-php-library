@@ -1,37 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
-  <file src="examples/aggregate.php">
-    <MixedInferredReturnType occurrences="1">
-      <code>string</code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="1">
-      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
-    </MixedReturnStatement>
-  </file>
-  <file src="examples/bulk.php">
-    <MixedInferredReturnType occurrences="1">
-      <code>string</code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="1">
-      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
-    </MixedReturnStatement>
-  </file>
-  <file src="examples/changestream.php">
-    <MixedInferredReturnType occurrences="1">
-      <code>string</code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="1">
-      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
-    </MixedReturnStatement>
-  </file>
-  <file src="examples/command_logger.php">
-    <MixedInferredReturnType occurrences="1">
-      <code>string</code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="1">
-      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
-    </MixedReturnStatement>
-  </file>
   <file src="examples/typemap.php">
     <PropertyNotSetInConstructor occurrences="5">
       <code>$address</code>
@@ -41,30 +9,12 @@
       <code>$type</code>
     </PropertyNotSetInConstructor>
   </file>
-  <file src="examples/with_transaction.php">
-    <MixedInferredReturnType occurrences="1">
-      <code>string</code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="1">
-      <code>toRelaxedExtendedJSON(fromPHP($document))</code>
-    </MixedReturnStatement>
-  </file>
   <file src="src/Client.php">
     <MixedArgument occurrences="1">
       <code>$driverOptions['driver'] ?? []</code>
     </MixedArgument>
     <MixedAssignment occurrences="1">
       <code>$mergedDriver['platform']</code>
-    </MixedAssignment>
-  </file>
-  <file src="src/Collection.php">
-    <MixedArgument occurrences="3">
-      <code>$encryptedFields['eccCollection'] ?? 'enxcol_.' . $this-&gt;collectionName . '.ecc'</code>
-      <code>$encryptedFields['ecocCollection'] ?? 'enxcol_.' . $this-&gt;collectionName . '.ecoc'</code>
-      <code>$encryptedFields['escCollection'] ?? 'enxcol_.' . $this-&gt;collectionName . '.esc'</code>
-    </MixedArgument>
-    <MixedAssignment occurrences="1">
-      <code>$encryptedFields</code>
     </MixedAssignment>
   </file>
   <file src="src/Command/ListCollections.php">
@@ -77,21 +27,6 @@
     <MixedAssignment occurrences="2">
       <code>$cmd[$option]</code>
       <code>$options['session']</code>
-    </MixedAssignment>
-  </file>
-  <file src="src/Database.php">
-    <MixedArgument occurrences="6">
-      <code>$encryptedFields['eccCollection'] ?? 'enxcol_.' . $collectionName . '.ecc'</code>
-      <code>$encryptedFields['eccCollection'] ?? 'enxcol_.' . $collectionName . '.ecc'</code>
-      <code>$encryptedFields['ecocCollection'] ?? 'enxcol_.' . $collectionName . '.ecoc'</code>
-      <code>$encryptedFields['ecocCollection'] ?? 'enxcol_.' . $collectionName . '.ecoc'</code>
-      <code>$encryptedFields['escCollection'] ?? 'enxcol_.' . $collectionName . '.esc'</code>
-      <code>$encryptedFields['escCollection'] ?? 'enxcol_.' . $collectionName . '.esc'</code>
-    </MixedArgument>
-    <MixedAssignment occurrences="3">
-      <code>$encryptedFields</code>
-      <code>$encryptedFields</code>
-      <code>$options['encryptedFields']</code>
     </MixedAssignment>
   </file>
   <file src="src/Exception/BadMethodCallException.php">
@@ -139,14 +74,10 @@
       <code>drop</code>
       <code>rename</code>
     </MissingReturnType>
-    <MixedArgument occurrences="3">
-      <code>$id</code>
+    <MixedArgument occurrences="2">
       <code>$options['revision']</code>
       <code>$options['revision']</code>
     </MixedArgument>
-    <MixedAssignment occurrences="1">
-      <code>$id</code>
-    </MixedAssignment>
   </file>
   <file src="src/GridFS/Exception/CorruptFileException.php">
     <UnsafeInstantiation occurrences="4">
@@ -157,24 +88,12 @@
     </UnsafeInstantiation>
   </file>
   <file src="src/GridFS/Exception/FileNotFoundException.php">
-    <MixedArgument occurrences="1">
-      <code>$json</code>
-    </MixedArgument>
-    <MixedAssignment occurrences="1">
-      <code>$json</code>
-    </MixedAssignment>
     <UnsafeInstantiation occurrences="2">
       <code>new static(sprintf('File "%s" not found in "%s"', $json, $namespace))</code>
       <code>new static(sprintf('File with name "%s" and revision "%d" not found in "%s"', $filename, $revision, $namespace))</code>
     </UnsafeInstantiation>
   </file>
   <file src="src/GridFS/Exception/StreamException.php">
-    <MixedArgument occurrences="1">
-      <code>$idString</code>
-    </MixedArgument>
-    <MixedAssignment occurrences="1">
-      <code>$idString</code>
-    </MixedAssignment>
     <UnsafeInstantiation occurrences="3">
       <code>new static(sprintf('Downloading file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $filename))</code>
       <code>new static(sprintf('Downloading file from "%s" to "%s" failed. GridFS identifier: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $idString))</code>
@@ -384,13 +303,14 @@
     <DocblockTypeContradiction occurrences="1">
       <code>is_array($operation)</code>
     </DocblockTypeContradiction>
-    <MixedArgument occurrences="11">
+    <MixedArgument occurrences="12">
       <code>$args</code>
       <code>$args</code>
       <code>$args</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
+      <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
@@ -629,10 +549,9 @@
       <code>$this-&gt;options['typeMap']</code>
       <code>$this-&gt;options['writeConcern']</code>
     </MixedArgument>
-    <MixedAssignment occurrences="6">
+    <MixedAssignment occurrences="5">
       <code>$cmd[$option]</code>
       <code>$cmd['new']</code>
-      <code>$cmd['update']</code>
       <code>$cmd['upsert']</code>
       <code>$options['session']</code>
       <code>$options['writeConcern']</code>
@@ -834,11 +753,9 @@
     </MixedAssignment>
   </file>
   <file src="src/functions.php">
-    <DocblockTypeContradiction occurrences="4">
+    <DocblockTypeContradiction occurrences="2">
       <code>! is_array($document) &amp;&amp; ! is_object($document)</code>
       <code>is_array($document)</code>
-      <code>is_array($document)</code>
-      <code>is_array($out)</code>
     </DocblockTypeContradiction>
     <MixedArgument occurrences="1">
       <code>$wireVersionForWriteStageOnSecondary</code>
@@ -853,9 +770,8 @@
       <code>$typeMap['fieldPaths'][$fieldPath]</code>
       <code>$typeMap['fieldPaths'][substr($fieldPath, 0, -2)]</code>
     </MixedArrayAssignment>
-    <MixedAssignment occurrences="7">
+    <MixedAssignment occurrences="6">
       <code>$element[$key]</code>
-      <code>$lastOp</code>
       <code>$type</code>
       <code>$type</code>
       <code>$typeMap['fieldPaths'][$fieldPath . '.' . $existingFieldPath]</code>

@@ -2,14 +2,17 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\Document;
 use MongoDB\Collection;
 use MongoDB\DeleteResult;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Delete;
 use MongoDB\Tests\CommandObserver;
+use stdClass;
 
 use function version_compare;
 
@@ -23,6 +26,38 @@ class DeleteFunctionalTest extends FunctionalTestCase
         parent::setUp();
 
         $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
+    }
+
+    /** @dataProvider provideFilterDocuments */
+    public function testFilterDocuments($filter, stdClass $expectedQuery): void
+    {
+        (new CommandObserver())->observe(
+            function () use ($filter): void {
+                $operation = new Delete(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    $filter,
+                    1
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use ($expectedQuery): void {
+                $this->assertEquals($expectedQuery, $event['started']->getCommand()->deletes[0]->q ?? null);
+            }
+        );
+    }
+
+    public function provideFilterDocuments(): array
+    {
+        $expectedQuery = (object) ['x' => 1];
+
+        return [
+            'array' => [['x' => 1], $expectedQuery],
+            'object' => [(object) ['x' => 1], $expectedQuery],
+            'Serializable' => [new BSONDocument(['x' => 1]), $expectedQuery],
+            'Document' => [Document::fromPHP(['x' => 1]), $expectedQuery],
+        ];
     }
 
     public function testDeleteOne(): void

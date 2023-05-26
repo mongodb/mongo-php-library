@@ -52,7 +52,7 @@ preference:
    $db = (new MongoDB\Client)->test;
 
    $newDb = $db->withOptions([
-       'readPreference' => new MongoDB\Driver\ReadPreference('primaryPreferred'),
+       'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::PRIMARY_PREFERRED),
    ]);
 
 See Also

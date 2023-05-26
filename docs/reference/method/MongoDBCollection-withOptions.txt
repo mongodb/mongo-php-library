@@ -52,7 +52,7 @@ preference:
    $collection = (new MongoDB\Client)->selectCollection('test', 'restaurants');
 
    $newCollection = $sourceCollection->withOptions([
-       'readPreference' => new MongoDB\Driver\ReadPreference('primaryPreferred'),
+       'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::PRIMARY_PREFERRED),
    ]);
 
 See Also

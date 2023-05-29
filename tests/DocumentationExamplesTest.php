@@ -19,6 +19,7 @@ use function in_array;
 use function microtime;
 use function ob_end_clean;
 use function ob_start;
+use function usleep;
 use function var_dump;
 use function version_compare;
 
@@ -1973,27 +1974,21 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $collection = new Collection($this->manager, $databaseName, $collectionName);
         $session = $this->manager->startSession(['snapshot' => true]);
 
-        /* Retry until a snapshot query succeeds or ten seconds elapse,
-         * whichwever comes first.
-         *
-         * TODO: use hrtime() once the library requires PHP 7.3+ */
+        // Retry until a snapshot query succeeds or ten seconds elapse.
         $retryUntil = microtime(true) + 10;
 
         do {
             try {
-                $collection->aggregate(
-                    [['$match' => ['_id' => ['$exists' => true]]]],
-                    ['session' => $session]
-                );
-
-                break;
-            } catch (CommandException $e) {
-                if ($e->getCode() === 246 /* SnapshotUnavailable */) {
-                    continue;
+                if ($collection->findOne([], ['session' => $session]) !== null) {
+                    break;
                 }
-
-                throw $e;
+            } catch (CommandException $e) {
+                if ($e->getCode() !== 246 /* SnapshotUnavailable */) {
+                    throw $e;
+                }
             }
+
+            usleep(1000);
         } while (microtime(true) < $retryUntil);
     }
 

@@ -80,7 +80,7 @@ class ClientTest extends TestCase
     {
         $uriOptions = [
             'readConcernLevel' => ReadConcern::LOCAL,
-            'readPreference' => ReadPreference::SECONDARY_PREFERRED,
+            'readPreference' => 'secondaryPreferred',
             'w' => WriteConcern::MAJORITY,
         ];
 
@@ -94,7 +94,8 @@ class ClientTest extends TestCase
 
         $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertEquals(new ReadPreference(ReadPreference::SECONDARY_PREFERRED), $debug['readPreference']);
+        $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
+        $this->assertSame(ReadPreference::SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
@@ -116,7 +117,8 @@ class ClientTest extends TestCase
 
         $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertEquals(new ReadPreference(ReadPreference::SECONDARY_PREFERRED), $debug['readPreference']);
+        $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
+        $this->assertSame(ReadPreference::SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
@@ -154,7 +156,8 @@ class ClientTest extends TestCase
 
         $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertEquals(new ReadPreference(ReadPreference::SECONDARY_PREFERRED), $debug['readPreference']);
+        $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
+        $this->assertSame(ReadPreference::SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
@@ -176,7 +179,8 @@ class ClientTest extends TestCase
 
         $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
-        $this->assertEquals(new ReadPreference(ReadPreference::SECONDARY_PREFERRED), $debug['readPreference']);
+        $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
+        $this->assertSame(ReadPreference::SECONDARY_PREFERRED, $debug['readPreference']->getMode());
         $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);

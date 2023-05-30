@@ -62,6 +62,7 @@ class TransactionsSpecTest extends FunctionalTestCase
      *
      * Note: this method may modify the $expected object.
      *
+     * @see https://github.com/mongodb/specifications/blob/master/source/transactions/tests/README.rst#command-started-events
      * @param stdClass $expected Expected command document
      * @param stdClass $actual   Actual command document
      */
@@ -100,12 +101,7 @@ class TransactionsSpecTest extends FunctionalTestCase
          * preferable to skipping the txnNumber assertion. */
         //unset($expected['txnNumber']);
 
-        foreach ($expected as $key => $value) {
-            if ($value === null) {
-                static::assertObjectNotHasAttribute($key, $actual);
-                unset($expected->{$key});
-            }
-        }
+        static::assertCommandOmittedFields($expected, $actual);
 
         static::assertDocumentsMatch($expected, $actual);
     }

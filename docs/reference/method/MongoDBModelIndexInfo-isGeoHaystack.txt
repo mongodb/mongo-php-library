@@ -4,6 +4,9 @@ MongoDB\\Model\\IndexInfo::isGeoHaystack()
 
 .. versionadded:: 1.4
 
+.. deprecated:: 1.16
+   MongoDB 5.0 and later no longer supports geoHaystack indexes.
+
 .. default-domain:: mongodb
 
 .. contents:: On this page
@@ -23,10 +26,6 @@ Definition
    .. code-block:: php
 
       function isGeoHaystack(): boolean
-
-   .. note::
-
-      MongoDB 5.0 and later no longer supports geoHaystack indexes.
 
 Return Values
 -------------

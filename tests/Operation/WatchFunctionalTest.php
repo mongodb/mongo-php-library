@@ -1107,8 +1107,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         try {
             $changeStream->next();
             $this->fail('Exception for missing resume token was not thrown');
-        } catch (ResumeTokenException $e) {
-        } catch (ServerException $e) {
+        } catch (ResumeTokenException | ServerException $e) {
         }
 
         $this->assertFalse($changeStream->valid());

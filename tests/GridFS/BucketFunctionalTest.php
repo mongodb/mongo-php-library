@@ -549,7 +549,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->bucket->uploadFromStream('filename', $this->createStream('bar'));
 
         $this->expectException(FileNotFoundException::class);
-        $this->bucket->openDownloadStream($filename, ['revision' => $revision]);
+        $this->bucket->openDownloadStream($filename);
     }
 
     public function testOpenUploadStream(): void

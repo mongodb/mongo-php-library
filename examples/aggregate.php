@@ -11,7 +11,7 @@ use function is_object;
 use function MongoDB\BSON\fromPHP;
 use function MongoDB\BSON\toRelaxedExtendedJSON;
 use function printf;
-use function rand;
+use function random_int;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -28,7 +28,7 @@ $collection->drop();
 $documents = [];
 
 for ($i = 0; $i < 100; $i++) {
-    $documents[] = ['randomValue' => rand(0, 1000)];
+    $documents[] = ['randomValue' => random_int(0, 1000)];
 }
 
 $collection->insertMany($documents);

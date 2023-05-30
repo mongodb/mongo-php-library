@@ -20,7 +20,7 @@ final class UnusableStream
             stream_wrapper_unregister($protocol);
         }
 
-        stream_wrapper_register($protocol, static::class, STREAM_IS_URL);
+        stream_wrapper_register($protocol, self::class, STREAM_IS_URL);
     }
 
     public function stream_close(): void

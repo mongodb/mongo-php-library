@@ -17,7 +17,6 @@
 
 namespace MongoDB\Operation;
 
-// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
 use MongoDB\BSON\Binary;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;

@@ -20,6 +20,7 @@ use MongoDB\Operation\ListCollections;
 use stdClass;
 use UnexpectedValueException;
 
+use function array_intersect_key;
 use function call_user_func;
 use function count;
 use function current;
@@ -266,14 +267,19 @@ abstract class FunctionalTestCase extends TestCase
      * A majority write concern is applied by default to ensure that the
      * transaction can acquire the required locks.
      * See: https://www.mongodb.com/docs/manual/core/transactions/#transactions-and-operations
+     *
+     * @param array $options CreateCollection options
      */
     protected function createCollection(string $databaseName, string $collectionName, array $options = []): Collection
     {
+        // @see https://jira.mongodb.org/browse/PHPLIB-1145
         if (isset($options['encryptedFields'])) {
             throw new InvalidArgumentException('The "encryptedFields" option is not supported by createCollection(). Time to refactor!');
         }
 
-        $collection = $this->dropCollection($databaseName, $collectionName, $options);
+        // Pass only relevant options to drop the collection in case it already exists
+        $dropOptions = array_intersect_key($options, ['writeConcern' => 1, 'encryptedFields' => 1]);
+        $collection = $this->dropCollection($databaseName, $collectionName, $dropOptions);
 
         $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
         $operation = new CreateCollection($databaseName, $collectionName, $options);
@@ -288,10 +294,12 @@ abstract class FunctionalTestCase extends TestCase
      * A majority write concern is applied by default to ensure that the
      * transaction can acquire the required locks.
      * See: https://www.mongodb.com/docs/manual/core/transactions/#transactions-and-operations
+     *
+     * @param array $options Collection::dropCollection() options
      */
     protected function dropCollection(string $databaseName, string $collectionName, array $options = []): Collection
     {
-        $collection = new Collection($this->manager, $databaseName, $collectionName, $options);
+        $collection = new Collection($this->manager, $databaseName, $collectionName);
         $this->collectionsToCleanup[] = [$collection, $options];
 
         $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];

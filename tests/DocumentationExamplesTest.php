@@ -11,7 +11,6 @@ use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\Exception;
 use MongoDB\Driver\ReadPreference;
-use MongoDB\Driver\WriteConcern;
 use MongoDB\Tests\SpecTests\ClientSideEncryptionSpecTest;
 
 use function base64_decode;
@@ -1571,19 +1570,13 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Snapshot read concern is only supported with replicasets');
         }
 
-        $this->dropCollection('pets', 'cats');
-        $this->dropCollection('pets', 'dogs');
-        $this->dropCollection('retail', 'sales');
-
-        $client = static::createTestClient();
-
-        $catsCollection = $client->selectCollection('pets', 'cats');
+        $catsCollection = $this->dropCollection('pets', 'cats');
         $catsCollection->insertMany([
             ['name' => 'Whiskers', 'color' => 'white', 'adoptable' => true],
             ['name' => 'Garfield', 'color' => 'orange', 'adoptable' => false],
         ]);
 
-        $dogsCollection = $client->selectCollection('pets', 'dogs');
+        $dogsCollection = $this->dropCollection('pets', 'dogs');
         $dogsCollection->insertMany([
             ['name' => 'Toto', 'color' => 'black',  'adoptable' => true],
             ['name' => 'Milo', 'color' => 'black', 'adoptable' => false],
@@ -1597,6 +1590,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->waitForSnapshot('pets', 'cats');
             $this->waitForSnapshot('pets', 'dogs');
         }
+
+        $client = static::createTestClient();
 
         ob_start();
 
@@ -1629,10 +1624,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $this->assertSame(3, $adoptablePetsCount);
 
-        $catsCollection->drop();
-        $dogsCollection->drop();
-
-        $salesCollection = $client->selectCollection('retail', 'sales');
+        $salesCollection = $this->dropCollection('retail', 'sales');
         $salesCollection->insertMany([
             ['shoeType' => 'boot', 'price' => 30, 'saleDate' => new UTCDateTime()],
         ]);
@@ -1671,8 +1663,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // End Snapshot Query Example 2
 
         $this->assertSame(1, $totalDailySales);
-
-        $salesCollection->drop();
     }
 
     /** @doesNotPerformAssertions */

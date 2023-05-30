@@ -578,7 +578,7 @@ function select_server_for_aggregate_write_stage(Manager $manager, array &$optio
 
     /* If there is either no read preference or a primary read preference, there
      * is no special server selection logic to apply. */
-    if ($readPreference === null || $readPreference->getMode() === ReadPreference::PRIMARY) {
+    if ($readPreference === null || $readPreference->getModeString() === ReadPreference::PRIMARY) {
         return select_server($manager, $options);
     }
 

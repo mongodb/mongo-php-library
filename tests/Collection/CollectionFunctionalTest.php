@@ -386,7 +386,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
-        $this->assertSame(ReadPreference::SECONDARY_PREFERRED, $debug['readPreference']->getMode());
+        $this->assertSame(ReadPreference::SECONDARY_PREFERRED, $debug['readPreference']->getModeString());
         $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);
@@ -408,7 +408,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->assertInstanceOf(ReadConcern::class, $debug['readConcern']);
         $this->assertSame(ReadConcern::LOCAL, $debug['readConcern']->getLevel());
         $this->assertInstanceOf(ReadPreference::class, $debug['readPreference']);
-        $this->assertSame(ReadPreference::SECONDARY_PREFERRED, $debug['readPreference']->getMode());
+        $this->assertSame(ReadPreference::SECONDARY_PREFERRED, $debug['readPreference']->getModeString());
         $this->assertIsArray($debug['typeMap']);
         $this->assertSame(['root' => 'array'], $debug['typeMap']);
         $this->assertInstanceOf(WriteConcern::class, $debug['writeConcern']);

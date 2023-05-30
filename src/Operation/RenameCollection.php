@@ -32,7 +32,6 @@ use function is_bool;
 /**
  * Operation for the renameCollection command.
  *
- * @api
  * @see \MongoDB\Collection::rename()
  * @see \MongoDB\Database::renameCollection()
  * @see https://mongodb.com/docs/manual/reference/command/renameCollection/

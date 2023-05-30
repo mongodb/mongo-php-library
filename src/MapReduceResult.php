@@ -31,7 +31,6 @@ use function call_user_func;
  * output method (e.g. inline, collection) via the IteratorAggregate interface.
  * It also provides access to command statistics.
  *
- * @api
  * @see \MongoDB\Collection::mapReduce()
  * @see https://mongodb.com/docs/manual/reference/command/mapReduce/
  */

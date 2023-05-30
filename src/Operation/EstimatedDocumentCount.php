@@ -32,7 +32,6 @@ use function is_integer;
 /**
  * Operation for obtaining an estimated count of documents in a collection
  *
- * @api
  * @see \MongoDB\Collection::estimatedDocumentCount()
  * @see https://mongodb.com/docs/manual/reference/command/count/
  */

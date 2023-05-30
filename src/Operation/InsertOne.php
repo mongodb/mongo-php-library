@@ -33,7 +33,6 @@ use function is_object;
 /**
  * Operation for inserting a single document with the insert command.
  *
- * @api
  * @see \MongoDB\Collection::insertOne()
  * @see https://mongodb.com/docs/manual/reference/command/insert/
  */

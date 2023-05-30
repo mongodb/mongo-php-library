@@ -37,7 +37,6 @@ use function is_string;
 /**
  * Operation for the count command.
  *
- * @api
  * @see \MongoDB\Collection::count()
  * @see https://mongodb.com/docs/manual/reference/command/count/
  */

@@ -34,7 +34,6 @@ use function array_search;
  * For information on keys and index options, see the referenced
  * db.collection.createIndex() documentation.
  *
- * @api
  * @see \MongoDB\Collection::listIndexes()
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst
  * @see https://mongodb.com/docs/manual/reference/method/db.collection.createIndex/

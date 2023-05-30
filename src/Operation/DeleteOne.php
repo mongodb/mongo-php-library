@@ -26,7 +26,6 @@ use MongoDB\Exception\UnsupportedException;
 /**
  * Operation for deleting a single document with the delete command.
  *
- * @api
  * @see \MongoDB\Collection::deleteOne()
  * @see https://mongodb.com/docs/manual/reference/command/delete/
  */

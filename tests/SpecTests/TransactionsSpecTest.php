@@ -6,7 +6,6 @@ use MongoDB\BSON\Int64;
 use MongoDB\BSON\Timestamp;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\ServerException;
-use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use stdClass;
 
@@ -320,7 +319,7 @@ class TransactionsSpecTest extends FunctionalTestCase
         }
 
         $manager = static::createTestManager();
-        $primary = $manager->selectServer(new ReadPreference(ReadPreference::PRIMARY));
+        $primary = $manager->selectServer();
 
         $servers = $primary->getType() === Server::TYPE_MONGOS
             ? $manager->getServers()

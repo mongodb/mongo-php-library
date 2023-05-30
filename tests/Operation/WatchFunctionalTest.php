@@ -165,7 +165,7 @@ class WatchFunctionalTest extends FunctionalTestCase
          * a socket timeout that is less than the change stream's maxAwaitTimeMS
          * option. */
         $manager = static::createTestManager(null, ['socketTimeoutMS' => 50]);
-        $primaryServer = $manager->selectServer(new ReadPreference(ReadPreference::PRIMARY));
+        $primaryServer = $manager->selectServer();
 
         $operation = new Watch($manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($primaryServer);

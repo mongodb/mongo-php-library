@@ -305,7 +305,7 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function getPrimaryServer()
     {
-        return $this->manager->selectServer(new ReadPreference(ReadPreference::PRIMARY));
+        return $this->manager->selectServer();
     }
 
     protected function getServerVersion(?ReadPreference $readPreference = null)
@@ -611,7 +611,7 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         $manager = static::createTestManager($uri);
-        if ($manager->selectServer(new ReadPreference(ReadPreference::PRIMARY))->getType() !== Server::TYPE_MONGOS) {
+        if ($manager->selectServer()->getType() !== Server::TYPE_MONGOS) {
             return $uri;
         }
 

@@ -151,6 +151,17 @@ possible it can be added to the baseline using `set-baseline`:
 $ vendor/bin/psalm --set-baseline=psalm-baseline.xml
 ```
 
+## Automatic code refactoring
+
+The library uses [rector](https://getrector.com/) to refactor the code for new features.
+To run automatic refactoring, use the `rector` command:
+
+```
+$ vendor/bin/rector
+```
+
+New rules can be added to the `rector.php` configuration file.
+
 ## Documentation
 
 Documentation for the library lives in the `docs/` directory and is built with

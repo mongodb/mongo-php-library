@@ -81,13 +81,12 @@ class CreateEncryptedCollection implements Executable
 
         $this->createCollection = new CreateCollection($databaseName, $collectionName, $options);
 
-        /** @psalm-var array{eccCollection?: ?string, ecocCollection?: ?string, escCollection?: ?string} */
+        /** @psalm-var array{ecocCollection?: ?string, escCollection?: ?string} */
         $encryptedFields = (array) $options['encryptedFields'];
         $enxcolOptions = ['clusteredIndex' => ['key' => ['_id' => 1], 'unique' => true]];
 
         $this->createMetadataCollections = [
             new CreateCollection($databaseName, $encryptedFields['escCollection'] ?? 'enxcol_.' . $collectionName . '.esc', $enxcolOptions),
-            new CreateCollection($databaseName, $encryptedFields['eccCollection'] ?? 'enxcol_.' . $collectionName . '.ecc', $enxcolOptions),
             new CreateCollection($databaseName, $encryptedFields['ecocCollection'] ?? 'enxcol_.' . $collectionName . '.ecoc', $enxcolOptions),
         ];
 

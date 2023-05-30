@@ -71,12 +71,11 @@ class DropEncryptedCollection implements Executable
             throw InvalidArgumentException::invalidType('"encryptedFields" option', $options['encryptedFields'], ['array', 'object']);
         }
 
-        /** @psalm-var array{eccCollection?: ?string, ecocCollection?: ?string, escCollection?: ?string} */
+        /** @psalm-var array{ecocCollection?: ?string, escCollection?: ?string} */
         $encryptedFields = (array) $options['encryptedFields'];
 
         $this->dropMetadataCollections = [
             new DropCollection($databaseName, $encryptedFields['escCollection'] ?? 'enxcol_.' . $collectionName . '.esc'),
-            new DropCollection($databaseName, $encryptedFields['eccCollection'] ?? 'enxcol_.' . $collectionName . '.ecc'),
             new DropCollection($databaseName, $encryptedFields['ecocCollection'] ?? 'enxcol_.' . $collectionName . '.ecoc'),
         ];
 

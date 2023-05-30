@@ -22,10 +22,12 @@ use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 
 use function array_key_exists;
 use function is_array;
 use function is_object;
+use function MongoDB\server_supports_feature;
 
 /**
  * Create an encrypted collection.
@@ -44,6 +46,9 @@ use function is_object;
  */
 class CreateEncryptedCollection implements Executable
 {
+    /** @var integer */
+    private static $wireVersionForQueryableEncryptionV2 = 21;
+
     /** @var CreateCollection */
     private $createCollection;
 
@@ -149,9 +154,14 @@ class CreateEncryptedCollection implements Executable
      * @see Executable::execute()
      * @return array|object Command result document from creating the encrypted collection
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     * @throws UnsupportedException if the server does not support Queryable Encryption
      */
     public function execute(Server $server)
     {
+        if (! server_supports_feature($server, self::$wireVersionForQueryableEncryptionV2)) {
+            throw new UnsupportedException('Driver support of Queryable Encryption is incompatible with server. Upgrade server to use Queryable Encryption.');
+        }
+
         foreach ($this->createMetadataCollections as $createMetadataCollection) {
             $createMetadataCollection->execute($server);
         }

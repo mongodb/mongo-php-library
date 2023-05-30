@@ -313,6 +313,7 @@ class Database
      * @return array A tuple containing the command result document from creating the collection and the modified "encryptedFields" option
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws CreateEncryptedCollectionException for any errors creating data keys or creating the collection
+     * @throws UnsupportedException if Queryable Encryption is not supported by the selected server
      */
     public function createEncryptedCollection(string $collectionName, ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, array $options): array
     {

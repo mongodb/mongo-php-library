@@ -22,10 +22,12 @@ use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedException;
 
 use function array_key_exists;
 use function is_array;
 use function is_object;
+use function MongoDB\server_supports_feature;
 
 /**
  * Create an encrypted collection.
@@ -44,6 +46,9 @@ use function is_object;
  */
 class CreateEncryptedCollection implements Executable
 {
+    /** @var integer */
+    private static $wireVersionForQueryableEncryptionV2 = 21;
+
     /** @var CreateCollection */
     private $createCollection;
 
@@ -81,13 +86,12 @@ class CreateEncryptedCollection implements Executable
 
         $this->createCollection = new CreateCollection($databaseName, $collectionName, $options);
 
-        /** @psalm-var array{eccCollection?: ?string, ecocCollection?: ?string, escCollection?: ?string} */
+        /** @psalm-var array{ecocCollection?: ?string, escCollection?: ?string} */
         $encryptedFields = (array) $options['encryptedFields'];
         $enxcolOptions = ['clusteredIndex' => ['key' => ['_id' => 1], 'unique' => true]];
 
         $this->createMetadataCollections = [
             new CreateCollection($databaseName, $encryptedFields['escCollection'] ?? 'enxcol_.' . $collectionName . '.esc', $enxcolOptions),
-            new CreateCollection($databaseName, $encryptedFields['eccCollection'] ?? 'enxcol_.' . $collectionName . '.ecc', $enxcolOptions),
             new CreateCollection($databaseName, $encryptedFields['ecocCollection'] ?? 'enxcol_.' . $collectionName . '.ecoc', $enxcolOptions),
         ];
 
@@ -150,9 +154,14 @@ class CreateEncryptedCollection implements Executable
      * @see Executable::execute()
      * @return array|object Command result document from creating the encrypted collection
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     * @throws UnsupportedException if the server does not support Queryable Encryption
      */
     public function execute(Server $server)
     {
+        if (! server_supports_feature($server, self::$wireVersionForQueryableEncryptionV2)) {
+            throw new UnsupportedException('Driver support of Queryable Encryption is incompatible with server. Upgrade server to use Queryable Encryption.');
+        }
+
         foreach ($this->createMetadataCollections as $createMetadataCollection) {
             $createMetadataCollection->execute($server);
         }

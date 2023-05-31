@@ -16,6 +16,7 @@ use function in_array;
 use function json_encode;
 use function MongoDB\BSON\fromJSON;
 use function MongoDB\BSON\toPHP;
+use function property_exists;
 use function sprintf;
 use function version_compare;
 
@@ -93,6 +94,28 @@ class FunctionalTestCase extends BaseFunctionalTestCase
         $constraint = new DocumentsMatchConstraint($expectedDocument, true, true);
 
         static::assertThat($actualDocument, $constraint, $message);
+    }
+
+    /**
+     * Assert omitted fields in command documents.
+     *
+     * Note: this method may modify the $expected object.
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/transactions/tests/README.rst#null-values
+     */
+    protected static function assertCommandOmittedFields(stdClass $expected, stdClass $actual): void
+    {
+        foreach ($expected as $key => $value) {
+            if ($value === null) {
+                static::assertObjectNotHasAttribute($key, $actual);
+                unset($expected->{$key});
+                continue;
+            }
+
+            if ($value instanceof stdClass && property_exists($actual, $key) && $actual->{$key} instanceof stdClass) {
+                static::assertCommandOmittedFields($value, $actual->{$key});
+            }
+        }
     }
 
     /**

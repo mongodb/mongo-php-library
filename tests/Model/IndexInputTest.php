@@ -2,8 +2,10 @@
 
 namespace MongoDB\Tests\Model;
 
+use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Model\IndexInput;
 use MongoDB\Tests\TestCase;
 use stdClass;
@@ -40,16 +42,22 @@ class IndexInputTest extends TestCase
         new IndexInput(['key' => ['x' => 1], 'name' => 1]);
     }
 
-    /** @dataProvider provideExpectedNameAndKey */
-    public function testNameGeneration($expectedName, array $key): void
+    /**
+     * @dataProvider provideExpectedNameAndKey
+     * @param array|object $key
+     */
+    public function testNameGeneration($expectedName, $key): void
     {
         $this->assertSame($expectedName, (string) new IndexInput(['key' => $key]));
     }
 
-    public function provideExpectedNameAndKey()
+    public function provideExpectedNameAndKey(): array
     {
         return [
             ['x_1', ['x' => 1]],
+            ['x_1', (object) ['x' => 1]],
+            ['x_1', new BSONDocument(['x' => 1])],
+            ['x_1', Document::fromPHP(['x' => 1])],
             ['x_1_y_-1', ['x' => 1, 'y' => -1]],
             ['loc_2dsphere', ['loc' => '2dsphere']],
             ['loc_2dsphere_x_1', ['loc' => '2dsphere', 'x' => 1]],

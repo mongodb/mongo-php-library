@@ -368,6 +368,7 @@ class Matches extends Constraint
         return 'matches ' . $this->exporter()->export($this->value);
     }
 
+    /** @psalm-return never-return */
     private static function failAt(string $message, string $keyPath): void
     {
         $prefix = empty($keyPath) ? '' : sprintf('Field path "%s": ', $keyPath);

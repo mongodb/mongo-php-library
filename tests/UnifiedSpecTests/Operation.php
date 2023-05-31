@@ -172,7 +172,6 @@ final class Operation
 
     private function execute()
     {
-        $result = null;
         $this->context->setActiveClient(null);
 
         if ($this->isTestRunnerOperation) {

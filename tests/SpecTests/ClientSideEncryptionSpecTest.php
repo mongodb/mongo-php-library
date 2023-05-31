@@ -1891,7 +1891,6 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
     private function encryptCorpusValue(string $fieldName, stdClass $data, ClientEncryption $clientEncryption)
     {
-        $encrypted = null;
         $encryptionOptions = [
             'algorithm' => $data->algo === 'rand' ? ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_RANDOM : ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC,
         ];

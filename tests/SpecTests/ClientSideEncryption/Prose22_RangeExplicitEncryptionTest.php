@@ -109,10 +109,11 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
     public function tearDown(): void
     {
+        /* Since encryptedClient is created with disableClientPersistence=true,
+         * free any objects that may hold a reference to its mongoc_client_t */
         $this->collection = null;
         $this->clientEncryption = null;
         $this->encryptedClient = null;
-        $this->key1Id = null;
     }
 
     /** @see https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#test-setup-rangeopts */

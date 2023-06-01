@@ -274,9 +274,13 @@
     <MixedArgument occurrences="1">
       <code>$fieldName</code>
     </MixedArgument>
-    <MixedAssignment occurrences="1">
+    <MixedAssignment occurrences="2">
       <code>$fieldName</code>
+      <code>$type</code>
     </MixedAssignment>
+    <MixedOperand occurrences="1">
+      <code>$type</code>
+    </MixedOperand>
     <MixedReturnStatement occurrences="1">
       <code>$this-&gt;index['name']</code>
     </MixedReturnStatement>
@@ -774,9 +778,8 @@
       <code>$typeMap['fieldPaths'][$fieldPath]</code>
       <code>$typeMap['fieldPaths'][substr($fieldPath, 0, -2)]</code>
     </MixedArrayAssignment>
-    <MixedAssignment occurrences="6">
+    <MixedAssignment occurrences="5">
       <code>$element[$key]</code>
-      <code>$type</code>
       <code>$type</code>
       <code>$typeMap['fieldPaths'][$fieldPath . '.' . $existingFieldPath]</code>
       <code>$typeMap['fieldPaths'][$fieldPath]</code>

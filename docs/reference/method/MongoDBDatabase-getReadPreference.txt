@@ -37,7 +37,7 @@ Example
    <?php
 
    $database = (new MongoDB\Client)->selectDatabase('test', [
-       'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::PRIMARY_PREFERRED),
+       'readPreference' => new MongoDB\Driver\ReadPreference('primaryPreferred'),
    ]);
 
    var_dump($database->getReadPreference());

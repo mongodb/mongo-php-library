@@ -71,7 +71,7 @@ database with a custom read preference:
 
    $imagesBucket = $db->selectGridFSBucket([
        'bucketName' => 'images',
-       'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::PRIMARY_PREFERRED),
+       'readPreference' => new MongoDB\Driver\ReadPreference('primaryPreferred'),
    ]);
 
 See Also

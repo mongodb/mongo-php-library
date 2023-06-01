@@ -131,7 +131,7 @@ preference when executing the ``createUser`` command on the ``test`` database:
            'roles' => ['readWrite'],
        ],
        [
-           'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::PRIMARY),
+           'readPreference' => new MongoDB\Driver\ReadPreference('primary'),
        ]
    );
 

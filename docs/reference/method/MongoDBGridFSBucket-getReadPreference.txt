@@ -38,7 +38,7 @@ Example
 
    $database = (new MongoDB\Client)->selectDatabase('test');
    $bucket = $database->selectGridFSBucket([
-      'readPreference' => new MongoDB\Driver\ReadPreference(MongoDB\Driver\ReadPreference::PRIMARY_PREFERRED),
+      'readPreference' => new MongoDB\Driver\ReadPreference('primaryPreferred'),
    ]);
 
    var_dump($bucket->getReadPreference());

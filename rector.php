@@ -2,6 +2,9 @@
 
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassLike\RemoveAnnotationRector;
+use Rector\Php56\Rector\FunctionLike\AddDefaultValueForUndefinedVariableRector;
+use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
+use Rector\Set\ValueObject\LevelSetList;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
@@ -11,13 +14,20 @@ return static function (RectorConfig $rectorConfig): void {
         __DIR__ . '/tools',
     ]);
 
-    /**
-     * All classes are public API by default, unless marked with @internal.
-     */
-    $rectorConfig->ruleWithConfiguration(RemoveAnnotationRector::class, ['api']);
+    // Modernize code
+    $rectorConfig->sets([LevelSetList::UP_TO_PHP_72]);
 
-    // define sets of rules
-    //    $rectorConfig->sets([
-    //        LevelSetList::UP_TO_PHP_72
-    //    ]);
+    $rectorConfig->skip([
+        // Falsely detect unassigned variables in code paths stopped by PHPUnit\Framework\Assert::markTestSkipped()
+        AddDefaultValueForUndefinedVariableRector::class => [
+            __DIR__ . '/tests/',
+        ],
+        // @see https://github.com/phpstan/phpstan-src/pull/2429
+        RemoveExtraParametersRector::class => [
+            __DIR__ . '/src/Operation/',
+        ],
+    ]);
+
+    // All classes are public API by default, unless marked with @internal.
+    $rectorConfig->ruleWithConfiguration(RemoveAnnotationRector::class, ['api']);
 };

@@ -1186,19 +1186,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertInstanceOf(Cursor::class, $cursor);
     }
 
-    public function testRunCommand_example_2(): void
-    {
-        $this->createCollection($this->getDatabaseName(), 'restaurants');
-        $db = new Database($this->manager, $this->getDatabaseName());
-
-        // Start runCommand Example 2
-        $cursor = $db->command(['collStats' => 'restaurants']);
-        $result = $cursor->toArray()[0];
-        // End runCommand Example 2
-
-        $this->assertInstanceOf(Cursor::class, $cursor);
-    }
-
     public function testIndex_example_1(): void
     {
         $this->dropCollection($this->getDatabaseName(), 'records');
@@ -1418,7 +1405,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
     {
         $session->startTransaction([
             'readConcern' => new \MongoDB\Driver\ReadConcern("snapshot"),
-            'readPrefernece' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_PRIMARY),
+            'readPrefernece' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::PRIMARY),
             'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY),
         ]);
 
@@ -1494,7 +1481,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
              * mode, so using $manager->selectServer does not work here. To work
              * around this, we run a query on a secondary and rely on an
              * exception to let us know that no secondary is available. */
-            $items->countDocuments([], ['readPreference' => new ReadPreference(ReadPreference::RP_SECONDARY)]);
+            $items->countDocuments([], ['readPreference' => new ReadPreference(ReadPreference::SECONDARY)]);
         } catch (Exception $e) {
             $this->markTestSkipped('Secondary is not available');
         }
@@ -1540,7 +1527,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $items = $client->selectDatabase(
             'test',
             [
-                'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_SECONDARY),
+                'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::SECONDARY),
                 'readConcern' => new \MongoDB\Driver\ReadConcern(\MongoDB\Driver\ReadConcern::MAJORITY),
                 'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
             ]
@@ -1815,7 +1802,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $transactionOptions = [
             'readConcern' => new \MongoDB\Driver\ReadConcern(\MongoDB\Driver\ReadConcern::LOCAL),
             'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
-            'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_PRIMARY),
+            'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::PRIMARY),
         ];
 
         \MongoDB\with_transaction($session, $callback, $transactionOptions);

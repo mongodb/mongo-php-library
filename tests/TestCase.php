@@ -210,7 +210,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidReadConcernValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', true, [], new stdClass(), new ReadPreference(ReadPreference::RP_PRIMARY), new WriteConcern(1)], $includeNull ? [null] : []);
+        return array_merge([123, 3.14, 'foo', true, [], new stdClass(), new ReadPreference(ReadPreference::PRIMARY), new WriteConcern(1)], $includeNull ? [null] : []);
     }
 
     /**
@@ -226,7 +226,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidSessionValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', true, [], new stdClass(), new ReadConcern(), new ReadPreference(ReadPreference::RP_PRIMARY), new WriteConcern(1)], $includeNull ? [null] : []);
+        return array_merge([123, 3.14, 'foo', true, [], new stdClass(), new ReadConcern(), new ReadPreference(ReadPreference::PRIMARY), new WriteConcern(1)], $includeNull ? [null] : []);
     }
 
     /**
@@ -242,7 +242,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidWriteConcernValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', true, [], new stdClass(), new ReadConcern(), new ReadPreference(ReadPreference::RP_PRIMARY)], $includeNull ? [null] : []);
+        return array_merge([123, 3.14, 'foo', true, [], new stdClass(), new ReadConcern(), new ReadPreference(ReadPreference::PRIMARY)], $includeNull ? [null] : []);
     }
 
     /**

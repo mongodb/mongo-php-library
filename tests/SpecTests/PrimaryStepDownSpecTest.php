@@ -208,7 +208,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         $totalConnectionsCreated = $this->getTotalConnectionsCreated();
 
         // Send a {replSetStepDown: 5, force: true} command to the current primary and verify that the command succeeded
-        $primary = $this->client->getManager()->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $primary = $this->client->getManager()->selectServer();
 
         $success = false;
         $attempts = 0;
@@ -267,12 +267,12 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
 
     private function getTotalConnectionsCreated(?Server $server = null)
     {
-        $server = $server ?: $this->client->getManager()->selectServer(new ReadPreference('primary'));
+        $server = $server ?: $this->client->getManager()->selectServer();
 
         $cursor = $server->executeCommand(
             $this->getDatabaseName(),
             new Command(['serverStatus' => 1]),
-            new ReadPreference(ReadPreference::RP_PRIMARY)
+            new ReadPreference(ReadPreference::PRIMARY)
         );
 
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
@@ -292,7 +292,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
 
             return;
         } catch (DriverException $e) {
-            $this->client->getManager()->selectServer(new ReadPreference('primary'));
+            $this->client->getManager()->selectServer();
 
             return;
         }

@@ -4,7 +4,6 @@ namespace MongoDB\Tests\UnifiedSpecTests;
 
 use MongoDB\Collection;
 use MongoDB\Driver\Exception\ServerException;
-use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Model\BSONArray;
 use MongoDB\Operation\DatabaseCommand;
@@ -279,7 +278,7 @@ final class UnifiedTestRunner
     {
         $manager = $this->internalClient->getManager();
 
-        return $manager->selectServer(new ReadPreference(ReadPreference::PRIMARY));
+        return $manager->selectServer();
     }
 
     private function getServerVersion(): string
@@ -438,7 +437,7 @@ final class UnifiedTestRunner
         }
 
         $manager = $this->internalClient->getManager();
-        $primary = $manager->selectServer(new ReadPreference(ReadPreference::PRIMARY));
+        $primary = $manager->selectServer();
         $servers = $primary->getType() === Server::TYPE_MONGOS ? $manager->getServers() : [$primary];
 
         foreach ($servers as $server) {

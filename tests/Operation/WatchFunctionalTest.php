@@ -165,7 +165,7 @@ class WatchFunctionalTest extends FunctionalTestCase
          * a socket timeout that is less than the change stream's maxAwaitTimeMS
          * option. */
         $manager = static::createTestManager(null, ['socketTimeoutMS' => 50]);
-        $primaryServer = $manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $primaryServer = $manager->selectServer();
 
         $operation = new Watch($manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($primaryServer);
@@ -1321,7 +1321,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Test does not apply to sharded clusters');
         }
 
-        $readPreference = new ReadPreference('secondary');
+        $readPreference = new ReadPreference(ReadPreference::SECONDARY);
         $options = ['readPreference' => $readPreference] + $this->defaultOptions;
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
 

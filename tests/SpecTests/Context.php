@@ -163,7 +163,7 @@ final class Context
 
         $o->outcomeReadOptions = [
             'readConcern' => new ReadConcern('local'),
-            'readPreference' => new ReadPreference('primary'),
+            'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
         ];
 
         $o->client = self::createTestClient(null, $clientOptions);
@@ -224,7 +224,7 @@ final class Context
 
         $o->outcomeReadOptions = [
             'readConcern' => new ReadConcern('local'),
-            'readPreference' => new ReadPreference('primary'),
+            'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
         ];
 
         $clientOptions = isset($test->clientOptions) ? (array) $test->clientOptions : [];

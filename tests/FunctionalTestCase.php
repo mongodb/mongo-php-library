@@ -290,7 +290,7 @@ abstract class FunctionalTestCase extends TestCase
         $cursor = $this->manager->executeCommand(
             'admin',
             new Command(['getParameter' => 1, 'featureCompatibilityVersion' => 1]),
-            $readPreference ?: new ReadPreference(ReadPreference::RP_PRIMARY)
+            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY)
         );
 
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
@@ -305,7 +305,7 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function getPrimaryServer()
     {
-        return $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        return $this->manager->selectServer();
     }
 
     protected function getServerVersion(?ReadPreference $readPreference = null)
@@ -313,7 +313,7 @@ abstract class FunctionalTestCase extends TestCase
         $buildInfo = $this->manager->executeCommand(
             $this->getDatabaseName(),
             new Command(['buildInfo' => 1]),
-            $readPreference ?: new ReadPreference(ReadPreference::RP_PRIMARY)
+            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY)
         )->toArray()[0];
 
         if (isset($buildInfo->version) && is_string($buildInfo->version)) {
@@ -328,7 +328,7 @@ abstract class FunctionalTestCase extends TestCase
         $cursor = $this->manager->executeCommand(
             $this->getDatabaseName(),
             new Command(['serverStatus' => 1]),
-            $readPreference ?: new ReadPreference('primary')
+            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY)
         );
 
         $result = current($cursor->toArray());
@@ -611,7 +611,7 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         $manager = static::createTestManager($uri);
-        if ($manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY))->getType() !== Server::TYPE_MONGOS) {
+        if ($manager->selectServer()->getType() !== Server::TYPE_MONGOS) {
             return $uri;
         }
 

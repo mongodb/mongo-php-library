@@ -272,7 +272,7 @@ abstract class FunctionalTestCase extends TestCase
      */
     protected function createCollection(string $databaseName, string $collectionName, array $options = []): Collection
     {
-        // @see https://jira.mongodb.org/browse/PHPLIB-1145
+        // See: https://jira.mongodb.org/browse/PHPLIB-1145
         if (isset($options['encryptedFields'])) {
             throw new InvalidArgumentException('The "encryptedFields" option is not supported by createCollection(). Time to refactor!');
         }

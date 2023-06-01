@@ -33,11 +33,10 @@ use function in_array;
 /**
  * Iterator for a change stream.
  *
- * @psalm-type ResumeCallable = callable(array|object|null, bool): ChangeStreamIterator
- *
- * @api
  * @see \MongoDB\Collection::watch()
  * @see https://mongodb.com/docs/manual/reference/method/db.watch/#mongodb-method-db.watch
+ *
+ * @psalm-type ResumeCallable = callable(array|object|null, bool): ChangeStreamIterator
  */
 class ChangeStream implements Iterator
 {

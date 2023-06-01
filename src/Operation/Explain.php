@@ -33,7 +33,6 @@ use function MongoDB\server_supports_feature;
 /**
  * Operation for the explain command.
  *
- * @api
  * @see \MongoDB\Collection::explain()
  * @see https://mongodb.com/docs/manual/reference/command/explain/
  */

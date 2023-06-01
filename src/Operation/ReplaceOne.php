@@ -31,7 +31,6 @@ use function MongoDB\is_pipeline;
 /**
  * Operation for replacing a single document with the update command.
  *
- * @api
  * @see \MongoDB\Collection::replaceOne()
  * @see https://mongodb.com/docs/manual/reference/command/update/
  */

@@ -48,7 +48,6 @@ use const E_USER_DEPRECATED;
 /**
  * Operation for the mapReduce command.
  *
- * @api
  * @see \MongoDB\Collection::mapReduce()
  * @see https://mongodb.com/docs/manual/reference/command/mapReduce/
  */

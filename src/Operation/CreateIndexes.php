@@ -36,7 +36,6 @@ use function sprintf;
 /**
  * Operation for the createIndexes command.
  *
- * @api
  * @see \MongoDB\Collection::createIndex()
  * @see \MongoDB\Collection::createIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/createIndexes/

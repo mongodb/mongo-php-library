@@ -25,7 +25,7 @@ use function is_float;
 use function is_int;
 use function is_object;
 use function is_string;
-use function MongoDB\generate_index_name;
+use function MongoDB\document_to_array;
 use function sprintf;
 
 /**
@@ -64,7 +64,7 @@ class IndexInput implements Serializable
         }
 
         if (! isset($index['name'])) {
-            $index['name'] = generate_index_name($index['key']);
+            $index['name'] = $this->generateIndexName($index['key']);
         }
 
         if (! is_string($index['name'])) {
@@ -91,5 +91,25 @@ class IndexInput implements Serializable
     public function bsonSerialize(): array
     {
         return $this->index;
+    }
+
+    /**
+     * Generate an index name from a key specification.
+     *
+     * @param array|object $document Document containing fields mapped to values,
+     *                               which denote order or an index type
+     * @throws InvalidArgumentException if $document is not an array or object
+     */
+    private function generateIndexName($document): string
+    {
+        $document = document_to_array($document);
+
+        $name = '';
+
+        foreach ($document as $field => $type) {
+            $name .= ($name !== '' ? '_' : '') . $field . '_' . $type;
+        }
+
+        return $name;
     }
 }

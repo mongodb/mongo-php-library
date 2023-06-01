@@ -141,27 +141,6 @@ function document_to_array($document): array
 }
 
 /**
- * Generate an index name from a key specification.
- *
- * @internal
- * @param array|object $document Document containing fields mapped to values,
- *                               which denote order or an index type
- * @throws InvalidArgumentException if $document is not an array or object
- */
-function generate_index_name($document): string
-{
-    $document = document_to_array($document);
-
-    $name = '';
-
-    foreach ($document as $field => $type) {
-        $name .= ($name != '' ? '_' : '') . $field . '_' . $type;
-    }
-
-    return $name;
-}
-
-/**
  * Return a collection's encryptedFields from the encryptedFieldsMap
  * autoEncryption driver option (if available).
  *

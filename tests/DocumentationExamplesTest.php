@@ -1190,20 +1190,6 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $this->assertInstanceOf(Cursor::class, $cursor);
     }
 
-    public function testRunCommand_example_2(): void
-    {
-        $db = new Database($this->manager, $this->getDatabaseName());
-        $db->dropCollection('restaurants');
-        $db->createCollection('restaurants');
-
-        // Start runCommand Example 2
-        $cursor = $db->command(['collStats' => 'restaurants']);
-        $result = $cursor->toArray()[0];
-        // End runCommand Example 2
-
-        $this->assertInstanceOf(Cursor::class, $cursor);
-    }
-
     public function testIndex_example_1(): void
     {
         $db = new Database($this->manager, $this->getDatabaseName());

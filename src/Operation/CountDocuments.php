@@ -36,7 +36,6 @@ use function is_object;
 /**
  * Operation for obtaining an exact count of documents in a collection
  *
- * @api
  * @see \MongoDB\Collection::countDocuments()
  * @see https://github.com/mongodb/specifications/blob/master/source/crud/crud.rst#countdocuments
  */

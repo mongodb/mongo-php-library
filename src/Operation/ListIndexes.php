@@ -33,7 +33,6 @@ use function is_integer;
 /**
  * Operation for the listIndexes command.
  *
- * @api
  * @see \MongoDB\Collection::listIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/listIndexes/
  */

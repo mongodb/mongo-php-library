@@ -31,7 +31,6 @@ use function MongoDB\is_first_key_operator;
 /**
  * Operation for replacing a document with the findAndModify command.
  *
- * @api
  * @see \MongoDB\Collection::findOneAndReplace()
  * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
  */

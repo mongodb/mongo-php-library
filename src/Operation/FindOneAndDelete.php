@@ -28,7 +28,6 @@ use function is_object;
 /**
  * Operation for deleting a document with the findAndModify command.
  *
- * @api
  * @see \MongoDB\Collection::findOneAndDelete()
  * @see https://mongodb.com/docs/manual/reference/command/findAndModify/
  */

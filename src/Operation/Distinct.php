@@ -36,7 +36,6 @@ use function MongoDB\create_field_path_type_map;
 /**
  * Operation for the distinct command.
  *
- * @api
  * @see \MongoDB\Collection::distinct()
  * @see https://mongodb.com/docs/manual/reference/command/distinct/
  */

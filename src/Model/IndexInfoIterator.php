@@ -25,7 +25,6 @@ use ReturnTypeWillChange;
  *
  * This iterator is used for enumerating indexes in a collection.
  *
- * @api
  * @see \MongoDB\Collection::listIndexes()
  */
 interface IndexInfoIterator extends Iterator

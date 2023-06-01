@@ -40,7 +40,6 @@ use const E_USER_DEPRECATED;
 /**
  * Operation for the find command.
  *
- * @api
  * @see \MongoDB\Collection::find()
  * @see https://mongodb.com/docs/manual/tutorial/query-documents/
  * @see https://mongodb.com/docs/manual/reference/operator/query-modifier/

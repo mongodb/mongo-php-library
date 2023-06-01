@@ -32,7 +32,6 @@ use function is_array;
 /**
  * Operation for the drop command.
  *
- * @api
  * @see \MongoDB\Collection::drop()
  * @see \MongoDB\Database::dropCollection()
  * @see https://mongodb.com/docs/manual/reference/command/drop/

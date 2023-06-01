@@ -27,7 +27,6 @@ use MongoDB\Model\CollectionInfoIterator;
 /**
  * Operation for the listCollections command.
  *
- * @api
  * @see \MongoDB\Database::listCollections()
  * @see https://mongodb.com/docs/manual/reference/command/listCollections/
  */

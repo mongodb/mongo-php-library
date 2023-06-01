@@ -59,8 +59,6 @@ use function urlencode;
 /**
  * Bucket provides a public API for interacting with the GridFS files and chunks
  * collections.
- *
- * @api
  */
 class Bucket
 {

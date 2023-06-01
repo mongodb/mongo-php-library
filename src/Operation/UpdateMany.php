@@ -31,7 +31,6 @@ use function MongoDB\is_pipeline;
 /**
  * Operation for updating multiple documents with the update command.
  *
- * @api
  * @see \MongoDB\Collection::updateMany()
  * @see https://mongodb.com/docs/manual/reference/command/update/
  */

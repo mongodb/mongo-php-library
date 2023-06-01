@@ -210,7 +210,7 @@ class FunctionsTest extends TestCase
             'Array field path converted to array' => [
                 [
                     'root' => 'object',
-                    'array' => 'MongoDB\Model\BSONArray',
+                    'array' => BSONArray::class,
                     'fieldPaths' => [
                         'field' => 'array',
                         'field.$' => 'object',
@@ -219,7 +219,7 @@ class FunctionsTest extends TestCase
                 ],
                 [
                     'root' => 'object',
-                    'array' => 'MongoDB\Model\BSONArray',
+                    'array' => BSONArray::class,
                     'fieldPaths' => ['nested' => 'array'],
                 ],
                 'field.$',
@@ -227,14 +227,14 @@ class FunctionsTest extends TestCase
             'Array field path without root key' => [
                 [
                     'root' => 'object',
-                    'array' => 'MongoDB\Model\BSONArray',
+                    'array' => BSONArray::class,
                     'fieldPaths' => [
                         'field' => 'array',
                         'field.$.nested' => 'array',
                     ],
                 ],
                 [
-                    'array' => 'MongoDB\Model\BSONArray',
+                    'array' => BSONArray::class,
                     'fieldPaths' => ['nested' => 'array'],
                 ],
                 'field.$',

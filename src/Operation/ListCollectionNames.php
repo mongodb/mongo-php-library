@@ -27,7 +27,6 @@ use MongoDB\Model\CallbackIterator;
 /**
  * Operation for the listCollectionNames helper.
  *
- * @api
  * @see \MongoDB\Database::listCollectionNames()
  * @see https://mongodb.com/docs/manual/reference/command/listCollections/
  */

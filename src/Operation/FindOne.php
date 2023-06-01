@@ -27,7 +27,6 @@ use function current;
 /**
  * Operation for finding a single document with the find command.
  *
- * @api
  * @see \MongoDB\Collection::findOne()
  * @see https://mongodb.com/docs/manual/tutorial/query-documents/
  * @see https://mongodb.com/docs/manual/reference/operator/query-modifier/

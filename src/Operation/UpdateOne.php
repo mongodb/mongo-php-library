@@ -31,7 +31,6 @@ use function MongoDB\is_pipeline;
 /**
  * Operation for updating a single document with the update command.
  *
- * @api
  * @see \MongoDB\Collection::updateOne()
  * @see https://mongodb.com/docs/manual/reference/command/update/
  */

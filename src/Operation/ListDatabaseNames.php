@@ -30,7 +30,6 @@ use function array_column;
 /**
  * Operation for the ListDatabases command, returning only database names.
  *
- * @api
  * @see \MongoDB\Client::listDatabaseNames()
  * @see https://mongodb.com/docs/manual/reference/command/listDatabases/#mongodb-dbcommand-dbcmd.listDatabases
  */

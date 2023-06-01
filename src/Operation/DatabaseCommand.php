@@ -30,7 +30,6 @@ use function is_object;
 /**
  * Operation for executing a database command.
  *
- * @api
  * @see \MongoDB\Database::command()
  */
 class DatabaseCommand implements Executable

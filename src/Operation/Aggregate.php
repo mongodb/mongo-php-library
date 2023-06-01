@@ -44,7 +44,6 @@ use function sprintf;
 /**
  * Operation for the aggregate command.
  *
- * @api
  * @see \MongoDB\Collection::aggregate()
  * @see https://mongodb.com/docs/manual/reference/command/aggregate/
  */

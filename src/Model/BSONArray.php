@@ -31,8 +31,6 @@ use function MongoDB\recursive_copy;
  *
  * The internal data will be filtered through array_values() during BSON
  * serialization to ensure that it becomes a BSON array.
- *
- * @api
  */
 class BSONArray extends ArrayObject implements JsonSerializable, Serializable, Unserializable
 {

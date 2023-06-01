@@ -23,6 +23,9 @@ use ReturnTypeWillChange;
 
 use function array_key_exists;
 use function array_search;
+use function trigger_error;
+
+use const E_USER_DEPRECATED;
 
 /**
  * Index information model class.

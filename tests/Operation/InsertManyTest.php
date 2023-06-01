@@ -17,7 +17,7 @@ class InsertManyTest extends TestCase
     public function testConstructorDocumentsMustBeAList(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$documents is not a list (unexpected index: "1")');
+        $this->expectExceptionMessage('$documents is not a list');
         new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [1 => ['x' => 1]]);
     }
 

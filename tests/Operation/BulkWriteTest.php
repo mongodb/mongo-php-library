@@ -17,7 +17,7 @@ class BulkWriteTest extends TestCase
     public function testOperationsMustBeAList(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$operations is not a list (unexpected index: "1")');
+        $this->expectExceptionMessage('$operations is not a list');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             1 => [BulkWrite::INSERT_ONE => [['x' => 1]]],
         ]);

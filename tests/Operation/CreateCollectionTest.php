@@ -10,7 +10,7 @@ class CreateCollectionTest extends TestCase
     public function testConstructorPipelineOptionMustBeAList(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The "pipeline" option is not a list (unexpected index: "1")');
+        $this->expectExceptionMessage('The "pipeline" option is not a list');
         new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), ['pipeline' => [1 => ['$match' => ['x' => 1]]]]);
     }
 

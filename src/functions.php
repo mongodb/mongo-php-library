@@ -34,6 +34,7 @@ use MongoDB\Operation\WithTransaction;
 use ReflectionClass;
 use ReflectionException;
 
+use function array_is_list;
 use function array_key_first;
 use function assert;
 use function end;
@@ -260,18 +261,14 @@ function is_pipeline($pipeline, bool $allowEmpty = false): bool
         return $allowEmpty;
     }
 
-    $expectedKey = 0;
+    if (! array_is_list($pipeline)) {
+        return false;
+    }
 
-    foreach ($pipeline as $key => $stage) {
+    foreach ($pipeline as $stage) {
         if (! is_array($stage) && ! is_object($stage)) {
             return false;
         }
-
-        if ($expectedKey !== $key) {
-            return false;
-        }
-
-        $expectedKey++;
 
         if (! is_first_key_operator($stage)) {
             return false;

@@ -23,7 +23,7 @@ class WatchTest extends FunctionalTestCase
     public function testConstructorPipelineArgumentMustBeAList(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$pipeline is not a list (unexpected index: "foo")');
+        $this->expectExceptionMessage('$pipeline is not a list');
 
         /* Note: Watch uses array_unshift() to prepend the $changeStream stage
          * to the pipeline. Since array_unshift() reindexes numeric keys, we'll

@@ -114,7 +114,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->skipIfTransactionsAreNotSupported();
 
         // Collection must be created before the transaction starts
-        $this->createCollection();
+        $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $session = $this->manager->startSession();
         $session->startTransaction();
@@ -294,7 +294,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
         $this->skipIfTransactionsAreNotSupported();
 
         // Collection must be created before the transaction starts
-        $this->createCollection();
+        $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $session = $this->manager->startSession();
         $session->startTransaction();
@@ -727,7 +727,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         $this->skipIfTransactionsAreNotSupported();
 
-        $this->createCollection();
+        $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $session = $this->manager->startSession();
         $session->startTransaction();
@@ -753,7 +753,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         $this->skipIfTransactionsAreNotSupported();
 
-        $this->createCollection();
+        $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $session = $this->manager->startSession();
         $session->startTransaction();
@@ -773,7 +773,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         $this->skipIfTransactionsAreNotSupported();
 
-        $this->createCollection();
+        $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $session = $this->manager->startSession();
         $session->startTransaction();

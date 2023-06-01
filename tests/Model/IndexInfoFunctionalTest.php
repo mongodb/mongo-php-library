@@ -14,17 +14,7 @@ class IndexInfoFunctionalTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->collection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName());
-        $this->collection->drop();
-    }
-
-    public function tearDown(): void
-    {
-        if (! $this->hasFailed()) {
-            $this->collection->drop();
-        }
-
-        parent::tearDown();
+        $this->collection = $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
     }
 
     public function testIs2dSphere(): void

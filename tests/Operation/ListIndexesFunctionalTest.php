@@ -4,7 +4,6 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Model\IndexInfo;
 use MongoDB\Model\IndexInfoIterator;
-use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListIndexes;
 use MongoDB\Tests\CommandObserver;
@@ -13,8 +12,7 @@ class ListIndexesFunctionalTest extends FunctionalTestCase
 {
     public function testListIndexesForNewlyCreatedCollection(): void
     {
-        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $insertOne = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1]);
         $writeResult = $insertOne->execute($this->getPrimaryServer());
@@ -36,8 +34,7 @@ class ListIndexesFunctionalTest extends FunctionalTestCase
 
     public function testListIndexesForNonexistentCollection(): void
     {
-        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName());
-        $operation->execute($this->getPrimaryServer());
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $operation = new ListIndexes($this->getDatabaseName(), $this->getCollectionName());
         $indexes = $operation->execute($this->getPrimaryServer());

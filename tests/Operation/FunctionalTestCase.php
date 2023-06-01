@@ -15,16 +15,7 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
     {
         parent::setUp();
 
-        $this->dropCollection();
-    }
-
-    public function tearDown(): void
-    {
-        if (! $this->hasFailed()) {
-            $this->dropCollection();
-        }
-
-        parent::tearDown();
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
     }
 
     protected function createDefaultReadConcern()

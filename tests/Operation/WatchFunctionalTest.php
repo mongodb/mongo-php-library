@@ -52,7 +52,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         parent::setUp();
 
         $this->skipIfChangeStreamIsNotSupported();
-        $this->createCollection();
+        $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
     }
 
     /**
@@ -1189,7 +1189,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertIsCallable($rp->getValue($changeStream));
 
         // Invalidate the cursor to verify that resumeCallable is unset when the cursor is exhausted.
-        $this->dropCollection();
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $this->advanceCursorUntilValid($changeStream);
 

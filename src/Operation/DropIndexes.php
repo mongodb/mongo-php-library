@@ -32,7 +32,6 @@ use function is_integer;
 /**
  * Operation for the dropIndexes command.
  *
- * @api
  * @see \MongoDB\Collection::dropIndexes()
  * @see https://mongodb.com/docs/manual/reference/command/dropIndexes/
  */

@@ -30,7 +30,6 @@ use function is_array;
 /**
  * Operation for the collMod command.
  *
- * @api
  * @see \MongoDB\Database::modifyCollection()
  * @see https://mongodb.com/docs/manual/reference/command/collMod/
  */

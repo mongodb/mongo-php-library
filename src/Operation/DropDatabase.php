@@ -30,7 +30,6 @@ use function is_array;
 /**
  * Operation for the dropDatabase command.
  *
- * @api
  * @see \MongoDB\Client::dropDatabase()
  * @see \MongoDB\Database::drop()
  * @see https://mongodb.com/docs/manual/reference/command/dropDatabase/

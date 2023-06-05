@@ -5,7 +5,6 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\Count;
-use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\Delete;
 use MongoDB\Operation\DeleteMany;
 use MongoDB\Operation\DeleteOne;
@@ -137,8 +136,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
             'size' => 1048576,
         ];
 
-        $operation = new CreateCollection($databaseName, $cappedCollectionName, $cappedCollectionOptions);
-        $operation->execute($this->getPrimaryServer());
+        $this->createCollection($databaseName, $cappedCollectionName, $cappedCollectionOptions);
 
         $this->createFixtures(2);
 

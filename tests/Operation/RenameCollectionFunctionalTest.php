@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\Exception\CommandException;
-use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\FindOne;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\RenameCollection;
@@ -25,18 +24,8 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
         parent::setUp();
 
         $this->toCollectionName = $this->getCollectionName() . '.renamed';
-        $operation = new DropCollection($this->getDatabaseName(), $this->toCollectionName);
-        $operation->execute($this->getPrimaryServer());
-    }
-
-    public function tearDown(): void
-    {
-        if (! $this->hasFailed()) {
-            $operation = new DropCollection($this->getDatabaseName(), $this->toCollectionName);
-            $operation->execute($this->getPrimaryServer());
-        }
-
-        parent::tearDown();
+        $this->dropCollection($this->getDatabaseName(), $this->toCollectionName);
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
     }
 
     public function testDefaultWriteConcernIsOmitted(): void

@@ -18,7 +18,7 @@ class ModifyCollectionFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Sharded clusters may report result inconsistently');
         }
 
-        $this->createCollection();
+        $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $indexes = [['key' => ['lastAccess' => 1], 'expireAfterSeconds' => 3]];
         $createIndexes = new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), $indexes);

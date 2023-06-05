@@ -30,8 +30,6 @@ use function MongoDB\recursive_copy;
  *
  * The internal data will be cast to an object during BSON serialization to
  * ensure that it becomes a BSON document.
- *
- * @api
  */
 class BSONDocument extends ArrayObject implements JsonSerializable, Serializable, Unserializable
 {

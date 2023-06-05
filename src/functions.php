@@ -141,27 +141,6 @@ function document_to_array($document): array
 }
 
 /**
- * Generate an index name from a key specification.
- *
- * @internal
- * @param array|object $document Document containing fields mapped to values,
- *                               which denote order or an index type
- * @throws InvalidArgumentException if $document is not an array or object
- */
-function generate_index_name($document): string
-{
-    $document = document_to_array($document);
-
-    $name = '';
-
-    foreach ($document as $field => $type) {
-        $name .= ($name != '' ? '_' : '') . $field . '_' . $type;
-    }
-
-    return $name;
-}
-
-/**
  * Return a collection's encryptedFields from the encryptedFieldsMap
  * autoEncryption driver option (if available).
  *
@@ -558,7 +537,7 @@ function select_server(Manager $manager, array $options): Server
     $readPreference = extract_read_preference_from_options($options);
     if (! $readPreference instanceof ReadPreference) {
         // TODO: PHPLIB-476: Read transaction read preference once PHPC-1439 is implemented
-        $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $readPreference = new ReadPreference(ReadPreference::PRIMARY);
     }
 
     return $manager->selectServer($readPreference);
@@ -578,7 +557,7 @@ function select_server_for_aggregate_write_stage(Manager $manager, array &$optio
 
     /* If there is either no read preference or a primary read preference, there
      * is no special server selection logic to apply. */
-    if ($readPreference === null || $readPreference->getMode() === ReadPreference::RP_PRIMARY) {
+    if ($readPreference === null || $readPreference->getModeString() === ReadPreference::PRIMARY) {
         return select_server($manager, $options);
     }
 
@@ -594,7 +573,7 @@ function select_server_for_aggregate_write_stage(Manager $manager, array &$optio
      * preference and repeat server selection if it previously failed or
      * selected a secondary. */
     if (! all_servers_support_write_stage_on_secondary($manager->getServers())) {
-        $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
+        $options['readPreference'] = new ReadPreference(ReadPreference::PRIMARY);
 
         if ($server === null || $server->isSecondary()) {
             return select_server($manager, $options);

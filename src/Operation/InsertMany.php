@@ -34,7 +34,6 @@ use function sprintf;
 /**
  * Operation for inserting multiple documents with the insert command.
  *
- * @api
  * @see \MongoDB\Collection::insertMany()
  * @see https://mongodb.com/docs/manual/reference/command/insert/
  */

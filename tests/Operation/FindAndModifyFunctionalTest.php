@@ -6,7 +6,6 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Exception\CommandException;
-use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\BSONArray;
@@ -115,7 +114,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
     public function testManagerReadConcernIsOmitted(): void
     {
         $manager = static::createTestManager(null, ['readConcernLevel' => 'majority']);
-        $server = $manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        $server = $manager->selectServer();
 
         (new CommandObserver())->observe(
             function () use ($server): void {

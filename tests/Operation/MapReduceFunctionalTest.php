@@ -5,7 +5,6 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\BSON\Javascript;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\MapReduceResult;
-use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\Find;
 use MongoDB\Operation\MapReduce;
 use MongoDB\Tests\CommandObserver;
@@ -26,7 +25,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
     public function testDefaultReadConcernIsOmitted(): void
     {
         // Collection must exist for mapReduce command
-        $this->createCollection();
+        $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
 
         (new CommandObserver())->observe(
             function (): void {
@@ -50,7 +49,8 @@ class MapReduceFunctionalTest extends FunctionalTestCase
     public function testDefaultWriteConcernIsOmitted(): void
     {
         // Collection must exist for mapReduce command
-        $this->createCollection();
+        $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName() . '.output');
 
         (new CommandObserver())->observe(
             function (): void {
@@ -69,9 +69,6 @@ class MapReduceFunctionalTest extends FunctionalTestCase
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
             }
         );
-
-        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName() . '.output');
-        $operation->execute($this->getPrimaryServer());
     }
 
     public function testFinalize(): void
@@ -273,6 +270,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $map = new Javascript('function() { emit(this.x, this.y); }');
         $reduce = new Javascript('function(key, values) { return Array.sum(values); }');
         $out = $this->getCollectionName() . '.output';
+        $this->dropCollection($this->getDatabaseName(), $out);
 
         $operation = new MapReduce($this->getDatabaseName(), $this->getCollectionName(), $map, $reduce, $out, ['typeMap' => $typeMap]);
         $results = iterator_to_array($operation->execute($this->getPrimaryServer()));
@@ -283,9 +281,6 @@ class MapReduceFunctionalTest extends FunctionalTestCase
         $cursor = $operation->execute($this->getPrimaryServer());
 
         $this->assertEquals($this->sortResults($expectedDocuments), $this->sortResults(iterator_to_array($cursor)));
-
-        $operation = new DropCollection($this->getDatabaseName(), $out);
-        $operation->execute($this->getPrimaryServer());
     }
 
     /**
@@ -293,6 +288,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
      */
     private function createFixtures(int $n): void
     {
+        $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
         $bulkWrite = new BulkWrite(['ordered' => true]);
 
         for ($i = 1; $i <= $n; $i++) {

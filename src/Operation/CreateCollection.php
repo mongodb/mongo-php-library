@@ -38,7 +38,6 @@ use const E_USER_DEPRECATED;
 /**
  * Operation for the create command.
  *
- * @api
  * @see \MongoDB\Database::createCollection()
  * @see https://mongodb.com/docs/manual/reference/command/create/
  */

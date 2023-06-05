@@ -13,6 +13,7 @@
     <file>examples</file>
     <file>tests</file>
     <file>tools</file>
+    <file>rector.php</file>
 
     <!-- Target minimum supported PHP version -->
     <config name="php_version" value="70200"/>

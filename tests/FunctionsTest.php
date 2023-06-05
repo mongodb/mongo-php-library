@@ -12,7 +12,6 @@ use MongoDB\Model\BSONDocument;
 use function MongoDB\apply_type_map_to_document;
 use function MongoDB\create_field_path_type_map;
 use function MongoDB\document_to_array;
-use function MongoDB\generate_index_name;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_last_pipeline_operator_write;
 use function MongoDB\is_mapreduce_output_inline;
@@ -121,14 +120,6 @@ class FunctionsTest extends TestCase
         document_to_array($document);
     }
 
-    /** @dataProvider provideDocumentCasts */
-    public function testGenerateIndexName($cast): void
-    {
-        $this->assertSame('x_1', generate_index_name($cast(['x' => 1])));
-        $this->assertSame('x_-1_y_1', generate_index_name($cast(['x' => -1, 'y' => 1])));
-        $this->assertSame('x_2dsphere_y_1', generate_index_name($cast(['x' => '2dsphere', 'y' => 1])));
-    }
-
     public function provideDocumentCasts(): array
     {
         // phpcs:disable SlevomatCodingStandard.ControlStructures.JumpStatementsSpacing
@@ -141,13 +132,6 @@ class FunctionsTest extends TestCase
             'Document' => [function ($value) { return Document::fromPHP($value); }],
         ];
         // phpcs:enable
-    }
-
-    /** @dataProvider provideInvalidDocumentValues */
-    public function testGenerateIndexNameArgumentTypeCheck($document): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        generate_index_name($document);
     }
 
     /** @dataProvider provideDocumentCasts */
@@ -210,7 +194,7 @@ class FunctionsTest extends TestCase
             'Array field path converted to array' => [
                 [
                     'root' => 'object',
-                    'array' => 'MongoDB\Model\BSONArray',
+                    'array' => BSONArray::class,
                     'fieldPaths' => [
                         'field' => 'array',
                         'field.$' => 'object',
@@ -219,7 +203,7 @@ class FunctionsTest extends TestCase
                 ],
                 [
                     'root' => 'object',
-                    'array' => 'MongoDB\Model\BSONArray',
+                    'array' => BSONArray::class,
                     'fieldPaths' => ['nested' => 'array'],
                 ],
                 'field.$',
@@ -227,14 +211,14 @@ class FunctionsTest extends TestCase
             'Array field path without root key' => [
                 [
                     'root' => 'object',
-                    'array' => 'MongoDB\Model\BSONArray',
+                    'array' => BSONArray::class,
                     'fieldPaths' => [
                         'field' => 'array',
                         'field.$.nested' => 'array',
                     ],
                 ],
                 [
-                    'array' => 'MongoDB\Model\BSONArray',
+                    'array' => BSONArray::class,
                     'fieldPaths' => ['nested' => 'array'],
                 ],
                 'field.$',

@@ -6,7 +6,6 @@ use MongoDB\BSON\Document;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Model\BSONDocument;
-use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
@@ -227,8 +226,7 @@ class FindFunctionalTest extends FunctionalTestCase
             'size' => 1048576,
         ];
 
-        $operation = new CreateCollection($databaseName, $cappedCollectionName, $cappedCollectionOptions);
-        $operation->execute($this->getPrimaryServer());
+        $this->createCollection($databaseName, $cappedCollectionName, $cappedCollectionOptions);
 
         // Insert documents into the capped collection.
         $bulkWrite = new BulkWrite(['ordered' => true]);
@@ -278,7 +276,7 @@ class FindFunctionalTest extends FunctionalTestCase
         $this->skipIfTransactionsAreNotSupported();
 
         // Collection must be created before the transaction starts
-        $this->createCollection();
+        $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $session = $this->manager->startSession();
         $session->startTransaction();
@@ -288,7 +286,7 @@ class FindFunctionalTest extends FunctionalTestCase
 
             $filter = ['_id' => ['$lt' => 3]];
             $options = [
-                'readPreference' => new ReadPreference('primary'),
+                'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
                 'session' => $session,
             ];
 

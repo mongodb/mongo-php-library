@@ -968,7 +968,7 @@ class Collection
 
         // Check if the out option is inline because we will want to coerce a primary read preference if not
         if ($hasOutputCollection) {
-            $options['readPreference'] = new ReadPreference(ReadPreference::RP_PRIMARY);
+            $options['readPreference'] = new ReadPreference(ReadPreference::PRIMARY);
         }
 
         $server = select_server($this->manager, $options);

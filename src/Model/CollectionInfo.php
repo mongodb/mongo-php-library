@@ -30,7 +30,6 @@ use function array_key_exists;
  * command or, for legacy servers, queries on the "system.namespaces"
  * collection. It provides methods to access options for the collection.
  *
- * @api
  * @see \MongoDB\Database::listCollections()
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst
  */

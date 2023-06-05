@@ -53,7 +53,6 @@ use function MongoDB\server_supports_feature;
  * Note: the implementation of CommandSubscriber is an internal implementation
  * detail and should not be considered part of the public API.
  *
- * @api
  * @see \MongoDB\Collection::watch()
  * @see https://mongodb.com/docs/manual/changeStreams/
  */
@@ -209,7 +208,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         }
 
         $options += [
-            'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
+            'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
         ];
 
         if (array_key_exists('fullDocument', $options) && ! is_string($options['fullDocument'])) {

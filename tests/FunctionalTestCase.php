@@ -5,6 +5,7 @@ namespace MongoDB\Tests;
 use InvalidArgumentException;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Client;
+use MongoDB\Collection;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Manager;
@@ -15,11 +16,11 @@ use MongoDB\Driver\ServerApi;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
-use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\ListCollections;
 use stdClass;
 use UnexpectedValueException;
 
+use function array_intersect_key;
 use function call_user_func;
 use function count;
 use function current;
@@ -54,6 +55,9 @@ abstract class FunctionalTestCase extends TestCase
     /** @var array */
     private $configuredFailPoints = [];
 
+    /** @var array{int,{Collection,array}} */
+    private $collectionsToCleanup = [];
+
     public function setUp(): void
     {
         parent::setUp();
@@ -64,6 +68,10 @@ abstract class FunctionalTestCase extends TestCase
 
     public function tearDown(): void
     {
+        if (! $this->hasFailed()) {
+            $this->cleanupCollections();
+        }
+
         $this->disableFailPoints();
 
         parent::tearDown();
@@ -252,33 +260,62 @@ abstract class FunctionalTestCase extends TestCase
     }
 
     /**
-     * Creates the test collection with the specified options.
+     * Creates the test collection with the specified options and ensures it is
+     * dropped again during tearDown(). If the collection already exists, it
+     * is dropped and recreated.
      *
-     * If the "writeConcern" option is not specified but is supported by the
-     * server, a majority write concern will be used. This is helpful for tests
-     * using transactions or secondary reads.
+     * A majority write concern is applied by default to ensure that the
+     * transaction can acquire the required locks.
+     * See: https://www.mongodb.com/docs/manual/core/transactions/#transactions-and-operations
+     *
+     * @param array $options CreateCollection options
      */
-    protected function createCollection(array $options = []): void
+    protected function createCollection(string $databaseName, string $collectionName, array $options = []): Collection
     {
-        $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+        // See: https://jira.mongodb.org/browse/PHPLIB-1145
+        if (isset($options['encryptedFields'])) {
+            throw new InvalidArgumentException('The "encryptedFields" option is not supported by createCollection(). Time to refactor!');
+        }
 
-        $operation = new CreateCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
+        // Pass only relevant options to drop the collection in case it already exists
+        $dropOptions = array_intersect_key($options, ['writeConcern' => 1, 'encryptedFields' => 1]);
+        $collection = $this->dropCollection($databaseName, $collectionName, $dropOptions);
+
+        $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+        $operation = new CreateCollection($databaseName, $collectionName, $options);
         $operation->execute($this->getPrimaryServer());
+
+        return $collection;
     }
 
     /**
-     * Drops the test collection with the specified options.
+     * Drops the test collection and ensures it is dropped again during tearDown().
      *
-     * If the "writeConcern" option is not specified but is supported by the
-     * server, a majority write concern will be used. This is helpful for tests
-     * using transactions or secondary reads.
+     * A majority write concern is applied by default to ensure that the
+     * transaction can acquire the required locks.
+     * See: https://www.mongodb.com/docs/manual/core/transactions/#transactions-and-operations
+     *
+     * @param array $options Collection::dropCollection() options
      */
-    protected function dropCollection(array $options = []): void
+    protected function dropCollection(string $databaseName, string $collectionName, array $options = []): Collection
     {
-        $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+        $collection = new Collection($this->manager, $databaseName, $collectionName);
+        $this->collectionsToCleanup[] = [$collection, $options];
 
-        $operation = new DropCollection($this->getDatabaseName(), $this->getCollectionName(), $options);
-        $operation->execute($this->getPrimaryServer());
+        $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+        $collection->drop($options);
+
+        return $collection;
+    }
+
+    private function cleanupCollections(): void
+    {
+        foreach ($this->collectionsToCleanup as [$collection, $options]) {
+            $options += ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)];
+            $collection->drop($options);
+        }
+
+        $this->collectionsToCleanup = [];
     }
 
     protected function getFeatureCompatibilityVersion(?ReadPreference $readPreference = null)
@@ -290,7 +327,7 @@ abstract class FunctionalTestCase extends TestCase
         $cursor = $this->manager->executeCommand(
             'admin',
             new Command(['getParameter' => 1, 'featureCompatibilityVersion' => 1]),
-            $readPreference ?: new ReadPreference(ReadPreference::RP_PRIMARY)
+            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY)
         );
 
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
@@ -305,7 +342,7 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function getPrimaryServer()
     {
-        return $this->manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY));
+        return $this->manager->selectServer();
     }
 
     protected function getServerVersion(?ReadPreference $readPreference = null)
@@ -313,7 +350,7 @@ abstract class FunctionalTestCase extends TestCase
         $buildInfo = $this->manager->executeCommand(
             $this->getDatabaseName(),
             new Command(['buildInfo' => 1]),
-            $readPreference ?: new ReadPreference(ReadPreference::RP_PRIMARY)
+            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY)
         )->toArray()[0];
 
         if (isset($buildInfo->version) && is_string($buildInfo->version)) {
@@ -328,7 +365,7 @@ abstract class FunctionalTestCase extends TestCase
         $cursor = $this->manager->executeCommand(
             $this->getDatabaseName(),
             new Command(['serverStatus' => 1]),
-            $readPreference ?: new ReadPreference('primary')
+            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY)
         );
 
         $result = current($cursor->toArray());
@@ -611,7 +648,7 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         $manager = static::createTestManager($uri);
-        if ($manager->selectServer(new ReadPreference(ReadPreference::RP_PRIMARY))->getType() !== Server::TYPE_MONGOS) {
+        if ($manager->selectServer()->getType() !== Server::TYPE_MONGOS) {
             return $uri;
         }
 

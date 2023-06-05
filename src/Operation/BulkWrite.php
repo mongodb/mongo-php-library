@@ -40,7 +40,6 @@ use function sprintf;
 /**
  * Operation for executing multiple write operations.
  *
- * @api
  * @see \MongoDB\Collection::bulkWrite()
  */
 class BulkWrite implements Executable

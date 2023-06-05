@@ -51,7 +51,7 @@ class BucketFunctionalTest extends FunctionalTestCase
             'bucketName' => 'test',
             'chunkSizeBytes' => 8192,
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
-            'readPreference' => new ReadPreference(ReadPreference::RP_PRIMARY),
+            'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY, 1000),
         ]);
     }
@@ -549,7 +549,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->bucket->uploadFromStream('filename', $this->createStream('bar'));
 
         $this->expectException(FileNotFoundException::class);
-        $this->bucket->openDownloadStream($filename, ['revision' => $revision]);
+        $this->bucket->openDownloadStreamByName($filename, ['revision' => $revision]);
     }
 
     public function testOpenUploadStream(): void

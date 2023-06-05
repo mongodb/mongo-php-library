@@ -305,7 +305,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
         $this->skipIfTransactionsAreNotSupported();
 
         // Collection must be created before the transaction starts
-        $this->createCollection();
+        $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
 
         $session = $this->manager->startSession();
         $session->startTransaction();
@@ -315,7 +315,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
             $pipeline = [['$match' => ['_id' => ['$lt' => 3]]]];
             $options = [
-                'readPreference' => new ReadPreference('primary'),
+                'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
                 'session' => $session,
             ];
 

@@ -29,7 +29,6 @@ use function array_key_exists;
  * This class models the database information returned by the listDatabases
  * command. It provides methods to access common database properties.
  *
- * @api
  * @see \MongoDB\Client::listDatabases()
  * @see https://mongodb.com/docs/manual/reference/command/listDatabases/
  */

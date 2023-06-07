@@ -67,7 +67,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
     public function provideDocumentsWithoutIds(): array
     {
         /* Note: _id placeholders must be replaced with generated ObjectIds. We
-         * also clone the value for each data set since tests will may modify
+         * also clone the value for each data set since tests may need to modify
          * the object. */
         $expectedDocument = (object) ['_id' => null, 'x' => 1];
 

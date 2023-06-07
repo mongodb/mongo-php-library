@@ -2,16 +2,21 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\Document;
 use MongoDB\BSON\ObjectId;
+use MongoDB\BSON\PackedArray;
 use MongoDB\BulkWriteResult;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\BadMethodCallException;
+use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\BulkWrite;
 use MongoDB\Tests\CommandObserver;
+use stdClass;
 
+use function is_array;
 use function version_compare;
 
 class BulkWriteFunctionalTest extends FunctionalTestCase
@@ -57,6 +62,60 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
+    /**
+     * @dataProvider provideDocumentsWithIds
+     * @dataProvider provideDocumentsWithoutIds
+     */
+    public function testInsertDocumentEncoding($document, stdClass $expectedDocument): void
+    {
+        (new CommandObserver())->observe(
+            function () use ($document, $expectedDocument): void {
+                $operation = new BulkWrite(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [['insertOne' => [$document]]]
+                );
+
+                $result = $operation->execute($this->getPrimaryServer());
+
+                // Replace _id placeholder if necessary
+                if ($expectedDocument->_id === null) {
+                    $expectedDocument->_id = $result->getInsertedIds()[0];
+                }
+            },
+            function (array $event) use ($expectedDocument): void {
+                $this->assertEquals($expectedDocument, $event['started']->getCommand()->documents[0] ?? null);
+            }
+        );
+    }
+
+    public function provideDocumentsWithIds(): array
+    {
+        $expectedDocument = (object) ['_id' => 1];
+
+        return [
+            'with_id:array' => [['_id' => 1], $expectedDocument],
+            'with_id:object' => [(object) ['_id' => 1], $expectedDocument],
+            'with_id:Serializable' => [new BSONDocument(['_id' => 1]), $expectedDocument],
+            'with_id:Document' => [Document::fromPHP(['_id' => 1]), $expectedDocument],
+        ];
+    }
+
+    public function provideDocumentsWithoutIds(): array
+    {
+        /* Note: _id placeholders must be replaced with generated ObjectIds. We
+         * also clone the value for each data set since tests may need to modify
+         * the object. */
+        $expectedDocument = (object) ['_id' => null, 'x' => 1];
+
+        return [
+            'without_id:array' => [['x' => 1], clone $expectedDocument],
+            'without_id:object' => [(object) ['x' => 1], clone $expectedDocument],
+            'without_id:Serializable' => [new BSONDocument(['x' => 1]), clone $expectedDocument],
+            'without_id:Document' => [Document::fromPHP(['x' => 1]), clone $expectedDocument],
+        ];
+    }
+
     public function testUpdates(): void
     {
         $this->createFixtures(4);
@@ -93,6 +152,127 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $this->assertSameDocuments($expected, $this->collection->find());
     }
 
+    /** @dataProvider provideFilterDocuments */
+    public function testUpdateFilterDocuments($filter, stdClass $expectedFilter): void
+    {
+        (new CommandObserver())->observe(
+            function () use ($filter): void {
+                $operation = new BulkWrite(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [
+                        ['replaceOne' => [$filter, ['x' => 1]]],
+                        ['updateOne' => [$filter, ['$set' => ['x' => 1]]]],
+                        ['updateMany' => [$filter, ['$set' => ['x' => 1]]]],
+                    ]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use ($expectedFilter): void {
+                $this->assertEquals($expectedFilter, $event['started']->getCommand()->updates[0]->q ?? null);
+                $this->assertEquals($expectedFilter, $event['started']->getCommand()->updates[1]->q ?? null);
+                $this->assertEquals($expectedFilter, $event['started']->getCommand()->updates[2]->q ?? null);
+            }
+        );
+    }
+
+    public function provideFilterDocuments(): array
+    {
+        $expectedQuery = (object) ['x' => 1];
+
+        return [
+            'array' => [['x' => 1], $expectedQuery],
+            'object' => [(object) ['x' => 1], $expectedQuery],
+            'Serializable' => [new BSONDocument(['x' => 1]), $expectedQuery],
+            'Document' => [Document::fromPHP(['x' => 1]), $expectedQuery],
+        ];
+    }
+
+    /** @dataProvider provideReplacementDocuments */
+    public function testReplacementDocuments($replacement, stdClass $expectedReplacement): void
+    {
+        (new CommandObserver())->observe(
+            function () use ($replacement): void {
+                $operation = new BulkWrite(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [['replaceOne' => [['x' => 1], $replacement]]]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use ($expectedReplacement): void {
+                $this->assertEquals($expectedReplacement, $event['started']->getCommand()->updates[0]->u ?? null);
+            }
+        );
+    }
+
+    public function provideReplacementDocuments(): array
+    {
+        $expected = (object) ['x' => 1];
+
+        return [
+            'replacement:array' => [['x' => 1], $expected],
+            'replacement:object' => [(object) ['x' => 1], $expected],
+            'replacement:Serializable' => [new BSONDocument(['x' => 1]), $expected],
+            'replacement:Document' => [Document::fromPHP(['x' => 1]), $expected],
+        ];
+    }
+
+    /**
+     * @dataProvider provideUpdateDocuments
+     * @dataProvider provideUpdatePipelines
+     */
+    public function testUpdateDocuments($update, $expectedUpdate): void
+    {
+        if (is_array($expectedUpdate) && version_compare($this->getServerVersion(), '4.2.0', '<')) {
+            $this->markTestSkipped('Pipeline-style updates are not supported');
+        }
+
+        (new CommandObserver())->observe(
+            function () use ($update): void {
+                $operation = new BulkWrite(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [
+                        ['updateOne' => [['x' => 1], $update]],
+                        ['updateMany' => [['x' => 1], $update]],
+                    ]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use ($expectedUpdate): void {
+                $this->assertEquals($expectedUpdate, $event['started']->getCommand()->updates[0]->u ?? null);
+                $this->assertEquals($expectedUpdate, $event['started']->getCommand()->updates[1]->u ?? null);
+            }
+        );
+    }
+
+    public function provideUpdateDocuments(): array
+    {
+        $expected = (object) ['$set' => (object) ['x' => 1]];
+
+        return [
+            'update:array' => [['$set' => ['x' => 1]], $expected],
+            'update:object' => [(object) ['$set' => ['x' => 1]], $expected],
+            'update:Serializable' => [new BSONDocument(['$set' => ['x' => 1]]), $expected],
+            'update:Document' => [Document::fromPHP(['$set' => ['x' => 1]]), $expected],
+        ];
+    }
+
+    public function provideUpdatePipelines(): array
+    {
+        $expected = [(object) ['$set' => (object) ['x' => 1]]];
+
+        return [
+            'pipeline:array' => [[['$set' => ['x' => 1]]], $expected],
+            'pipeline:Serializable' => [new BSONArray([['$set' => ['x' => 1]]]), $expected],
+            'pipeline:PackedArray' => [PackedArray::fromPHP([['$set' => ['x' => 1]]]), $expected],
+        ];
+    }
+
     public function testDeletes(): void
     {
         $this->createFixtures(4);
@@ -113,6 +293,29 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
+    }
+
+    /** @dataProvider provideFilterDocuments */
+    public function testDeleteFilterDocuments($filter, stdClass $expectedQuery): void
+    {
+        (new CommandObserver())->observe(
+            function () use ($filter): void {
+                $operation = new BulkWrite(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    [
+                        ['deleteOne' => [$filter]],
+                        ['deleteMany' => [$filter]],
+                    ]
+                );
+
+                $operation->execute($this->getPrimaryServer());
+            },
+            function (array $event) use ($expectedQuery): void {
+                $this->assertEquals($expectedQuery, $event['started']->getCommand()->deletes[0]->q ?? null);
+                $this->assertEquals($expectedQuery, $event['started']->getCommand()->deletes[1]->q ?? null);
+            }
+        );
     }
 
     public function testMixedOrderedOperations(): void

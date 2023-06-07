@@ -18,6 +18,14 @@
     <!-- Target minimum supported PHP version -->
     <config name="php_version" value="70200"/>
 
+    <!-- Allows line length to be 120 characters max -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="120"/>
+        </properties>
+    </rule>
+
     <!-- ****************************************** -->
     <!-- Import rules from doctrine/coding-standard -->
     <!-- ****************************************** -->

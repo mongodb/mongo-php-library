@@ -3,12 +3,10 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\BSON\Document;
-use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\UnsupportedException;
-use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\FindAndModify;
 use MongoDB\Tests\CommandObserver;
@@ -73,41 +71,6 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $this->assertEquals($expectedUpdate, $event['started']->getCommand()->update ?? null);
             }
         );
-    }
-
-    public function provideReplacementDocuments(): array
-    {
-        $expected = (object) ['x' => 1];
-
-        return [
-            'replacement:array' => [['x' => 1], $expected],
-            'replacement:object' => [(object) ['x' => 1], $expected],
-            'replacement:Serializable' => [new BSONDocument(['x' => 1]), $expected],
-            'replacement:Document' => [Document::fromPHP(['x' => 1]), $expected],
-        ];
-    }
-
-    public function provideUpdateDocuments(): array
-    {
-        $expected = (object) ['$set' => (object) ['x' => 1]];
-
-        return [
-            'update:array' => [['$set' => ['x' => 1]], $expected],
-            'update:object' => [(object) ['$set' => ['x' => 1]], $expected],
-            'update:Serializable' => [new BSONDocument(['$set' => ['x' => 1]]), $expected],
-            'update:Document' => [Document::fromPHP(['$set' => ['x' => 1]]), $expected],
-        ];
-    }
-
-    public function provideUpdatePipelines(): array
-    {
-        $expected = [(object) ['$set' => (object) ['x' => 1]]];
-
-        return [
-            'pipeline:array' => [[['$set' => ['x' => 1]]], $expected],
-            'pipeline:Serializable' => [new BSONArray([['$set' => ['x' => 1]]]), $expected],
-            'pipeline:PackedArray' => [PackedArray::fromPHP([['$set' => ['x' => 1]]]), $expected],
-        ];
     }
 
     /** @see https://jira.mongodb.org/browse/PHPLIB-344 */

@@ -36,8 +36,9 @@
     </UnsafeInstantiation>
   </file>
   <file src="src/Exception/InvalidArgumentException.php">
-    <UnsafeInstantiation occurrences="1">
+    <UnsafeInstantiation occurrences="2">
       <code>new static(sprintf('Expected %s to have type "%s" but found "%s"', $name, $expectedType, get_debug_type($value)))</code>
+      <code>new static('Expected update operator(s) or non-empty pipeline for ' . $name)</code>
     </UnsafeInstantiation>
   </file>
   <file src="src/Exception/ResumeTokenException.php">
@@ -308,13 +309,14 @@
     <DocblockTypeContradiction occurrences="1">
       <code>is_array($operation)</code>
     </DocblockTypeContradiction>
-    <MixedArgument occurrences="12">
+    <MixedArgument occurrences="13">
       <code>$args</code>
       <code>$args</code>
       <code>$args</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
+      <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
@@ -322,11 +324,14 @@
       <code>$args[1]</code>
       <code>$args[2]</code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="25">
+    <MixedArrayAccess occurrences="28">
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
@@ -349,7 +354,8 @@
       <code>$args[2]['upsert']</code>
       <code>$args[2]['upsert']</code>
     </MixedArrayAccess>
-    <MixedArrayAssignment occurrences="11">
+    <MixedArrayAssignment occurrences="12">
+      <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[2]</code>

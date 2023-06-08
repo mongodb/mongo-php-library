@@ -17,10 +17,12 @@
 
 namespace MongoDB;
 
+use Countable;
 use Iterator;
 use MongoDB\BSON\JavascriptInterface;
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\CursorInterface;
+use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
@@ -38,12 +40,14 @@ use MongoDB\Operation\BulkWrite;
 use MongoDB\Operation\Count;
 use MongoDB\Operation\CountDocuments;
 use MongoDB\Operation\CreateIndexes;
+use MongoDB\Operation\CreateSearchIndexes;
 use MongoDB\Operation\DeleteMany;
 use MongoDB\Operation\DeleteOne;
 use MongoDB\Operation\Distinct;
 use MongoDB\Operation\DropCollection;
 use MongoDB\Operation\DropEncryptedCollection;
 use MongoDB\Operation\DropIndexes;
+use MongoDB\Operation\DropSearchIndex;
 use MongoDB\Operation\EstimatedDocumentCount;
 use MongoDB\Operation\Explain;
 use MongoDB\Operation\Explainable;
@@ -55,11 +59,13 @@ use MongoDB\Operation\FindOneAndUpdate;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\ListIndexes;
+use MongoDB\Operation\ListSearchIndexes;
 use MongoDB\Operation\MapReduce;
 use MongoDB\Operation\RenameCollection;
 use MongoDB\Operation\ReplaceOne;
 use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
+use MongoDB\Operation\UpdateSearchIndex;
 use MongoDB\Operation\Watch;
 
 use function array_diff_key;
@@ -361,6 +367,64 @@ class Collection
     }
 
     /**
+     * Create an Atlas Search index for the collection.
+     * Only available when used against a 7.0+ Atlas cluster.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/command/createSearchIndexes/
+     * @see https://mongodb.com/docs/manual/reference/method/db.collection.createSearchIndex/
+     * @param array|object                          $definition Atlas Search index mapping definition
+     * @param array{name?: string, comment?: mixed} $options    Command options
+     * @return string The name of the created search index
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function createSearchIndex($definition, array $options = []): string
+    {
+        $index = ['definition' => $definition];
+        if (isset($options['name'])) {
+            $index['name'] = $options['name'];
+            unset($options['name']);
+        }
+
+        $names = $this->createSearchIndexes([$index], $options);
+
+        return current($names);
+    }
+
+    /**
+     * Create one or more Atlas Search indexes for the collection.
+     * Only available when used against a 7.0+ Atlas cluster.
+     *
+     * Each element in the $indexes array must have "definition" document and they may have a "name" string.
+     * The name can be omitted for a single index, in which case a name will be the default.
+     * For example:
+     *
+     *     $indexes = [
+     *         // Create a search index with the default name, on
+     *         ['definition' => ['mappings' => ['dynamic' => false, 'fields' => ['title' => ['type' => 'string']]]]],
+     *         // Create a named search index on all fields
+     *         ['name' => 'search_all', 'definition' => ['mappings' => ['dynamic' => true]]],
+     *     ];
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/command/createSearchIndexes/
+     * @see https://mongodb.com/docs/manual/reference/method/db.collection.createSearchIndex/
+     * @param list<array{name?: string, definition: array|object}> $indexes List of search index specifications
+     * @param array{comment?: string}                              $options Command options
+     * @return string[] The names of the created search indexes
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function createSearchIndexes(array $indexes, array $options = []): array
+    {
+        $operation = new CreateSearchIndexes($this->databaseName, $this->collectionName, $indexes, $options);
+        $server = select_server($this->manager, $options);
+
+        return $operation->execute($server);
+    }
+
+    /**
      * Deletes all documents matching the filter.
      *
      * @see DeleteMany::__construct() for supported options
@@ -499,6 +563,31 @@ class Collection
         $operation = new DropIndexes($this->databaseName, $this->collectionName, '*', $options);
 
         return $operation->execute(select_server($this->manager, $options));
+    }
+
+    /**
+     * Drop a single Atlas Search index in the collection.
+     * Only available when used against a 7.0+ Atlas cluster.
+     *
+     * @param string                 $name    Search index name
+     * @param array{comment?: mixed} $options Additional options
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function dropSearchIndex(string $name, array $options = []): void
+    {
+        $operation = new DropSearchIndex($this->databaseName, $this->collectionName, $name);
+        $server = select_server($this->manager, $options);
+
+        try {
+            $operation->execute($server);
+        } catch (CommandException $e) {
+            // Suppress namespace not found errors for idempotency
+            if ($e->getCode() !== 26) {
+                throw $e;
+            }
+        }
     }
 
     /**
@@ -813,6 +902,24 @@ class Collection
     }
 
     /**
+     * Returns information for all Atlas Search indexes for the collection.
+     * Only available when used against a 7.0+ Atlas cluster.
+     *
+     * @param array{name?: string} $options Command options
+     * @return Countable&Iterator<array{id: string, name: string, status: string, queryable: bool, latestDefinition: array}>
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     * @see ListSearchIndexes::__construct() for supported options
+     */
+    public function listSearchIndexes(array $options = []): Iterator
+    {
+        $operation = new ListSearchIndexes($this->databaseName, $this->collectionName, $options);
+        $server = select_server($this->manager, $options);
+
+        return $operation->execute($server);
+    }
+
+    /**
      * Executes a map-reduce aggregation on the collection.
      *
      * @see MapReduce::__construct() for supported options
@@ -944,6 +1051,25 @@ class Collection
         $operation = new UpdateOne($this->databaseName, $this->collectionName, $filter, $update, $options);
 
         return $operation->execute(select_server($this->manager, $options));
+    }
+
+    /**
+     * Update a single Atlas Search index in the collection.
+     * Only available when used against a 7.0+ Atlas cluster.
+     *
+     * @param string                 $name       Search index name
+     * @param array|object           $definition Atlas Search index definition
+     * @param array{comment?: mixed} $options    Command options
+     * @throws UnsupportedException if options are not supported by the selected server
+     * @throws InvalidArgumentException for parameter parsing errors
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function updateSearchIndex(string $name, $definition, array $options = []): void
+    {
+        $operation = new UpdateSearchIndex($this->databaseName, $this->collectionName, $name, $definition, $options);
+        $server = select_server($this->manager, $options);
+
+        $operation->execute($server);
     }
 
     /**

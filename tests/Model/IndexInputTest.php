@@ -15,12 +15,14 @@ class IndexInputTest extends TestCase
     public function testConstructorShouldRequireKey(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Required "key" document is missing from index specification');
         new IndexInput([]);
     }
 
     public function testConstructorShouldRequireKeyToBeArrayOrObject(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected "key" option to have type "document"');
         new IndexInput(['key' => 'foo']);
     }
 
@@ -28,6 +30,7 @@ class IndexInputTest extends TestCase
     public function testConstructorShouldRequireKeyFieldOrderToBeNumericOrString($order): void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected order value for "x" field within "key" option to have type "numeric or string"');
         new IndexInput(['key' => ['x' => $order]]);
     }
 
@@ -39,6 +42,7 @@ class IndexInputTest extends TestCase
     public function testConstructorShouldRequireNameToBeString(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected "name" option to have type "string"');
         new IndexInput(['key' => ['x' => 1], 'name' => 1]);
     }
 
@@ -67,7 +71,7 @@ class IndexInputTest extends TestCase
 
     public function testBsonSerialization(): void
     {
-        $expected = [
+        $expected = (object) [
             'key' => ['x' => 1],
             'unique' => true,
             'name' => 'x_1',
@@ -79,6 +83,6 @@ class IndexInputTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Serializable::class, $indexInput);
-        $this->assertSame($expected, $indexInput->bsonSerialize());
+        $this->assertEquals($expected, $indexInput->bsonSerialize());
     }
 }

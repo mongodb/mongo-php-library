@@ -106,11 +106,6 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    public function provideInvalidDocumentValues()
-    {
-        return $this->wrapValuesForDataProvider($this->getInvalidDocumentValues());
-    }
-
     public function testDeleteOneFilterArgumentMissing(): void
     {
         $this->expectException(InvalidArgumentException::class);

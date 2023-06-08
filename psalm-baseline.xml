@@ -28,6 +28,11 @@
       <code>($value is NativeType ? BSONType : $value)</code>
     </MixedInferredReturnType>
   </file>
+  <file src="src/Collection.php">
+    <MixedArgumentTypeCoercion>
+      <code>$options</code>
+    </MixedArgumentTypeCoercion>
+  </file>
   <file src="src/Command/ListCollections.php">
     <MixedAssignment>
       <code>$cmd[$option]</code>
@@ -317,6 +322,14 @@
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
+  <file src="src/Operation/CreateSearchIndexes.php">
+    <MixedArgumentTypeCoercion>
+      <code>(array) $index</code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment>
+      <code>$cmd[$option]</code>
+    </MixedAssignment>
+  </file>
   <file src="src/Operation/DatabaseCommand.php">
     <MixedArgument>
       <code><![CDATA[$this->options['typeMap']]]></code>
@@ -396,6 +409,11 @@
     <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
+  </file>
+  <file src="src/Operation/DropSearchIndex.php">
+    <MixedAssignment>
+      <code>$cmd[$option]</code>
+    </MixedAssignment>
   </file>
   <file src="src/Operation/Explain.php">
     <MixedArgument>
@@ -575,6 +593,11 @@
     <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
+  </file>
+  <file src="src/Operation/UpdateSearchIndex.php">
+    <MixedAssignment>
+      <code>$cmd[$option]</code>
+    </MixedAssignment>
   </file>
   <file src="src/Operation/Watch.php">
     <MixedArgument>

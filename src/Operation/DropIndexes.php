@@ -72,8 +72,6 @@ class DropIndexes implements Executable
      */
     public function __construct(string $databaseName, string $collectionName, string $indexName, array $options = [])
     {
-        $indexName = $indexName;
-
         if ($indexName === '') {
             throw new InvalidArgumentException('$indexName cannot be empty');
         }

@@ -2,7 +2,11 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\BSON\Document;
+use MongoDB\BSON\PackedArray;
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Model\BSONArray;
+use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\BulkWrite;
 
 class BulkWriteTest extends TestCase
@@ -164,13 +168,31 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    public function testReplaceOneReplacementArgumentRequiresNoOperators(): void
+    /** @dataProvider provideInvalidReplacementValues */
+    public function testReplaceOneReplacementArgumentRequiresNoOperators($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('First key in $operations[0]["replaceOne"][1] is an update operator');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            [BulkWrite::REPLACE_ONE => [['_id' => 1], ['$inc' => ['x' => 1]]]],
+            [BulkWrite::REPLACE_ONE => [['x' => 1], $replacement]],
         ]);
+    }
+
+    public function provideInvalidReplacementValues(): array
+    {
+        return [
+            'update:array' => [['$set' => ['x' => 1]]],
+            'update:object' => [(object) ['$set' => ['x' => 1]]],
+            'update:Serializable' => [new BSONDocument(['$set' => ['x' => 1]])],
+            'update:Document' => [Document::fromPHP(['$set' => ['x' => 1]])],
+            // TODO: Enable the following tests when implementing PHPLIB-1129
+            //'pipeline:array' => [[['$set' => ['x' => 1]]]],
+            //'pipeline:Serializable' => [new BSONArray([['$set' => ['x' => 1]]])],
+            //'pipeline:PackedArray' => [PackedArray::fromPHP([['$set' => ['x' => 1]]])],
+            //'empty_pipeline:array' => [[]],
+            //'empty_pipeline:Serializable' => [new BSONArray([])],
+            //'empty_pipeline:PackedArray' => [PackedArray::fromPHP([])],
+        ];
     }
 
     /** @dataProvider provideInvalidDocumentValues */
@@ -236,13 +258,27 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    public function testUpdateManyUpdateArgumentRequiresOperatorsOrPipeline(): void
+    /** @dataProvider provideInvalidUpdateValues */
+    public function testUpdateManyUpdateArgumentRequiresOperatorsOrPipeline($update): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('First key in $operations[0]["updateMany"][1] is neither an update operator nor a pipeline');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            [BulkWrite::UPDATE_MANY => [['_id' => ['$gt' => 1]], ['x' => 1]]],
+            [BulkWrite::UPDATE_MANY => [['x' => 1], $update]],
         ]);
+    }
+
+    public function provideInvalidUpdateValues(): array
+    {
+        return [
+            'replacement:array' => [['x' => 1]],
+            'replacement:object' => [(object) ['x' => 1]],
+            'replacement:Serializable' => [new BSONDocument(['x' => 1])],
+            'replacement:Document' => [Document::fromPHP(['x' => 1])],
+            'empty_pipeline:array' => [[]],
+            'empty_pipeline:Serializable' => [new BSONArray([])],
+            'empty_pipeline:PackedArray' => [PackedArray::fromPHP([])],
+        ];
     }
 
     /** @dataProvider provideInvalidArrayValues */
@@ -313,12 +349,13 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    public function testUpdateOneUpdateArgumentRequiresOperatorsOrPipeline(): void
+    /** @dataProvider provideInvalidUpdateValues */
+    public function testUpdateOneUpdateArgumentRequiresOperatorsOrPipeline($update): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('First key in $operations[0]["updateOne"][1] is neither an update operator nor a pipeline');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            [BulkWrite::UPDATE_ONE => [['_id' => 1], ['x' => 1]]],
+            [BulkWrite::UPDATE_ONE => [['x' => 1], $update]],
         ]);
     }
 

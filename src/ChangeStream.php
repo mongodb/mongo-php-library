@@ -42,15 +42,11 @@ class ChangeStream implements Iterator
 {
     /**
      * @deprecated 1.4
-     * @todo Remove this in 2.0 (see: PHPLIB-360)
+     * @todo make this constant private in 2.0 (see: PHPLIB-360)
      */
     public const CURSOR_NOT_FOUND = 43;
 
-    /** @var int */
-    private static $cursorNotFound = 43;
-
-    /** @var int[] */
-    private static $resumableErrorCodes = [
+    private const RESUMABLE_ERROR_CODES = [
         6, // HostUnreachable
         7, // HostNotFound
         89, // NetworkTimeout
@@ -70,8 +66,7 @@ class ChangeStream implements Iterator
         133, // FailedToSatisfyReadPreference
     ];
 
-    /** @var int */
-    private static $wireVersionForResumableChangeStreamError = 9;
+    private const WIRE_VERSION_FOR_RESUMABLE_CHANGE_STREAM_ERROR = 9;
 
     /** @var ResumeCallable|null */
     private $resumeCallable;
@@ -205,15 +200,15 @@ class ChangeStream implements Iterator
             return false;
         }
 
-        if ($exception->getCode() === self::$cursorNotFound) {
+        if ($exception->getCode() === self::CURSOR_NOT_FOUND) {
             return true;
         }
 
-        if (server_supports_feature($this->iterator->getServer(), self::$wireVersionForResumableChangeStreamError)) {
+        if (server_supports_feature($this->iterator->getServer(), self::WIRE_VERSION_FOR_RESUMABLE_CHANGE_STREAM_ERROR)) {
             return $exception->hasErrorLabel('ResumableChangeStreamError');
         }
 
-        return in_array($exception->getCode(), self::$resumableErrorCodes);
+        return in_array($exception->getCode(), self::RESUMABLE_ERROR_CODES);
     }
 
     /**

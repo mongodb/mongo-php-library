@@ -46,8 +46,7 @@ use function MongoDB\server_supports_feature;
  */
 class Update implements Executable, Explainable
 {
-    /** @var integer */
-    private static $wireVersionForHint = 8;
+    private const WIRE_VERSION_FOR_HINT = 8;
 
     /** @var string */
     private $databaseName;
@@ -196,7 +195,7 @@ class Update implements Executable, Explainable
          * unacknowledged write concern on an unsupported server. */
         if (
             isset($this->options['writeConcern']) && ! is_write_concern_acknowledged($this->options['writeConcern']) &&
-            isset($this->options['hint']) && ! server_supports_feature($server, self::$wireVersionForHint)
+            isset($this->options['hint']) && ! server_supports_feature($server, self::WIRE_VERSION_FOR_HINT)
         ) {
             throw UnsupportedException::hintNotSupported();
         }

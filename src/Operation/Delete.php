@@ -43,7 +43,7 @@ use function MongoDB\server_supports_feature;
  */
 class Delete implements Executable, Explainable
 {
-    private const WIRE_VERSION_FOR_HINT = 5;
+    private const WIRE_VERSION_FOR_HINT = 9;
 
     /** @var string */
     private $databaseName;

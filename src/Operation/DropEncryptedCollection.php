@@ -23,6 +23,7 @@ use MongoDB\Exception\InvalidArgumentException;
 
 use function is_array;
 use function is_object;
+use function MongoDB\document_to_array;
 
 /**
  * Drop an encrypted collection.
@@ -72,7 +73,7 @@ class DropEncryptedCollection implements Executable
         }
 
         /** @psalm-var array{ecocCollection?: ?string, escCollection?: ?string} */
-        $encryptedFields = (array) $options['encryptedFields'];
+        $encryptedFields = document_to_array($options['encryptedFields']);
 
         $this->dropMetadataCollections = [
             new DropCollection($databaseName, $encryptedFields['escCollection'] ?? 'enxcol_.' . $collectionName . '.esc'),

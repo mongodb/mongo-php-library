@@ -52,6 +52,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
      * @dataProvider provideReplacementDocuments
      * @dataProvider provideUpdateDocuments
      * @dataProvider provideUpdatePipelines
+     * @dataProvider provideReplacementDocumentLikePipeline
      */
     public function testUpdateDocuments($update, $expectedUpdate): void
     {
@@ -74,6 +75,18 @@ class UpdateFunctionalTest extends FunctionalTestCase
                 $this->assertEquals($expectedUpdate, $event['started']->getCommand()->updates[0]->u ?? null);
             }
         );
+    }
+
+    public function provideReplacementDocumentLikePipeline(): array
+    {
+        /* libmongoc encodes this replacement document as a BSON array because
+         * it resembles an update pipeline (see: CDRIVER-4658). */
+        return [
+            'replacement_like_pipeline' => [
+                (object) ['0' => ['$set' => ['x' => 1]]],
+                [(object) ['$set' => (object) ['x' => 1]]],
+            ],
+        ];
     }
 
     public function testSessionOption(): void

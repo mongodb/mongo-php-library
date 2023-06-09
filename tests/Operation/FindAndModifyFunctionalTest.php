@@ -51,6 +51,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
      * @dataProvider provideReplacementDocuments
      * @dataProvider provideUpdateDocuments
      * @dataProvider provideUpdatePipelines
+     * @dataProvider provideReplacementDocumentLikePipeline
      */
     public function testUpdateDocuments($update, $expectedUpdate): void
     {
@@ -71,6 +72,19 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $this->assertEquals($expectedUpdate, $event['started']->getCommand()->update ?? null);
             }
         );
+    }
+
+    public function provideReplacementDocumentLikePipeline(): array
+    {
+        /* Note: this expected value differs from UpdateFunctionalTest because
+         * FindAndModify is not affected by libmongoc's pipeline detection for
+         * update commands (see: CDRIVER-4658). */
+        return [
+            'replacement_like_pipeline' => [
+                (object) ['0' => ['$set' => ['x' => 1]]],
+                (object) ['0' => (object) ['$set' => (object) ['x' => 1]]],
+            ],
+        ];
     }
 
     /** @see https://jira.mongodb.org/browse/PHPLIB-344 */

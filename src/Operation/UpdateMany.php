@@ -89,7 +89,7 @@ class UpdateMany implements Executable, Explainable
         }
 
         if (! is_first_key_operator($update) && ! is_pipeline($update)) {
-            throw new InvalidArgumentException('Expected an update document with operator as first key or a pipeline');
+            throw new InvalidArgumentException('Expected update operator(s) or non-empty pipeline for $update');
         }
 
         $this->update = new Update(

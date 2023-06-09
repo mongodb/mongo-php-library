@@ -34,18 +34,6 @@ class FindFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideFilterDocuments(): array
-    {
-        $expectedQuery = (object) ['x' => 1];
-
-        return [
-            'array' => [['x' => 1], $expectedQuery],
-            'object' => [(object) ['x' => 1], $expectedQuery],
-            'Serializable' => [new BSONDocument(['x' => 1]), $expectedQuery],
-            'Document' => [Document::fromPHP(['x' => 1]), $expectedQuery],
-        ];
-    }
-
     /** @dataProvider provideModifierDocuments */
     public function testModifierDocuments($modifiers, stdClass $expectedSort): void
     {

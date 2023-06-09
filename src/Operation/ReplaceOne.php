@@ -85,12 +85,17 @@ class ReplaceOne implements Executable
             throw InvalidArgumentException::invalidType('$replacement', $replacement, 'array or object');
         }
 
-        if (is_first_key_operator($replacement)) {
-            throw new InvalidArgumentException('First key in $replacement argument is an update operator');
+        // Treat empty arrays as replacement documents for BC
+        if ($replacement === []) {
+            $replacement = (object) $replacement;
         }
 
-        if (is_pipeline($replacement)) {
-            throw new InvalidArgumentException('$replacement argument is a pipeline');
+        if (is_first_key_operator($replacement)) {
+            throw new InvalidArgumentException('First key in $replacement is an update operator');
+        }
+
+        if (is_pipeline($replacement, true /* allowEmpty */)) {
+            throw new InvalidArgumentException('$replacement is an update pipeline');
         }
 
         $this->update = new Update(

@@ -2,14 +2,12 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\BSON\Document;
 use MongoDB\Collection;
 use MongoDB\DeleteResult;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Exception\UnsupportedException;
-use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Delete;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
@@ -46,18 +44,6 @@ class DeleteFunctionalTest extends FunctionalTestCase
                 $this->assertEquals($expectedQuery, $event['started']->getCommand()->deletes[0]->q ?? null);
             }
         );
-    }
-
-    public function provideFilterDocuments(): array
-    {
-        $expectedQuery = (object) ['x' => 1];
-
-        return [
-            'array' => [['x' => 1], $expectedQuery],
-            'object' => [(object) ['x' => 1], $expectedQuery],
-            'Serializable' => [new BSONDocument(['x' => 1]), $expectedQuery],
-            'Document' => [Document::fromPHP(['x' => 1]), $expectedQuery],
-        ];
     }
 
     public function testDeleteOne(): void

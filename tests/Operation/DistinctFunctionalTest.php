@@ -2,9 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\BSON\Document;
 use MongoDB\Driver\BulkWrite;
-use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Distinct;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
@@ -33,18 +31,6 @@ class DistinctFunctionalTest extends FunctionalTestCase
                 $this->assertEquals($expectedQuery, $event['started']->getCommand()->query ?? null);
             }
         );
-    }
-
-    public function provideFilterDocuments(): array
-    {
-        $expectedQuery = (object) ['x' => 1];
-
-        return [
-            'array' => [['x' => 1], $expectedQuery],
-            'object' => [(object) ['x' => 1], $expectedQuery],
-            'Serializable' => [new BSONDocument(['x' => 1]), $expectedQuery],
-            'Document' => [Document::fromPHP(['x' => 1]), $expectedQuery],
-        ];
     }
 
     public function testDefaultReadConcernIsOmitted(): void

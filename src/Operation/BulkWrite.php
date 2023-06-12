@@ -191,8 +191,17 @@ class BulkWrite implements Executable
                         throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
                     }
 
+                    // Treat empty arrays as replacement documents for BC
+                    if ($args[1] === []) {
+                        $args[1] = (object) $args[1];
+                    }
+
                     if (is_first_key_operator($args[1])) {
                         throw new InvalidArgumentException(sprintf('First key in $operations[%d]["%s"][1] is an update operator', $i, $type));
+                    }
+
+                    if (is_pipeline($args[1], true /* allowEmpty */)) {
+                        throw new InvalidArgumentException(sprintf('$operations[%d]["%s"][1] is an update pipeline', $i, $type));
                     }
 
                     if (! isset($args[2])) {
@@ -229,7 +238,7 @@ class BulkWrite implements Executable
                     }
 
                     if (! is_first_key_operator($args[1]) && ! is_pipeline($args[1])) {
-                        throw new InvalidArgumentException(sprintf('First key in $operations[%d]["%s"][1] is neither an update operator nor a pipeline', $i, $type));
+                        throw new InvalidArgumentException(sprintf('Expected update operator(s) or non-empty pipeline for $operations[%d]["%s"][1]', $i, $type));
                     }
 
                     if (! isset($args[2])) {

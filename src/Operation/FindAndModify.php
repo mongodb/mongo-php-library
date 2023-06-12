@@ -293,6 +293,14 @@ class FindAndModify implements Executable, Explainable
         if (isset($this->options['update'])) {
             /** @psalm-var array|object */
             $update = $this->options['update'];
+            /* A non-empty pipeline will encode as a BSON array, so leave it
+             * as-is. Cast anything else to an object since a BSON document is
+             * likely expected. This includes empty arrays, which historically
+             * can be used to represent empty replacement documents.
+             *
+             * This also allows an empty pipeline expressed as a PackedArray or
+             * Serializable to still encode as a BSON array, since the object
+             * cast will have no effect. */
             $cmd['update'] = is_pipeline($update) ? $update : (object) $update;
         }
 

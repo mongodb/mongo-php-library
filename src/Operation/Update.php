@@ -147,7 +147,7 @@ class Update implements Executable, Explainable
         }
 
         if ($options['multi'] && ! is_first_key_operator($update) && ! is_pipeline($update)) {
-            throw new InvalidArgumentException('"multi" option cannot be true if $update is a replacement document');
+            throw new InvalidArgumentException('"multi" option cannot be true unless $update has update operator(s) or non-empty pipeline');
         }
 
         if (isset($options['session']) && ! $options['session'] instanceof Session) {

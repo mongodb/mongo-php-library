@@ -113,7 +113,7 @@ class Explain implements Executable
             throw UnsupportedException::explainNotSupported();
         }
 
-        $cursor = $server->executeCommand($this->databaseName, $this->createCommand($server), $this->createOptions());
+        $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $this->createOptions());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
@@ -125,9 +125,9 @@ class Explain implements Executable
     /**
      * Create the explain command.
      */
-    private function createCommand(Server $server): Command
+    private function createCommand(): Command
     {
-        $cmd = ['explain' => $this->explainable->getCommandDocument($server)];
+        $cmd = ['explain' => $this->explainable->getCommandDocument()];
 
         foreach (['comment', 'verbosity'] as $option) {
             if (isset($this->options[$option])) {

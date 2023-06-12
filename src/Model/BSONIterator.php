@@ -34,8 +34,7 @@ use function unpack;
  */
 class BSONIterator implements Iterator
 {
-    /** @var integer */
-    private static $bsonSize = 4;
+    private const BSON_SIZE = 4;
 
     /** @var string */
     private $buffer;
@@ -141,11 +140,11 @@ class BSONIterator implements Iterator
             return;
         }
 
-        if ($this->bufferLength - $this->position < self::$bsonSize) {
-            throw new UnexpectedValueException(sprintf('Expected at least %d bytes; %d remaining', self::$bsonSize, $this->bufferLength - $this->position));
+        if ($this->bufferLength - $this->position < self::BSON_SIZE) {
+            throw new UnexpectedValueException(sprintf('Expected at least %d bytes; %d remaining', self::BSON_SIZE, $this->bufferLength - $this->position));
         }
 
-        [, $documentLength] = unpack('V', substr($this->buffer, $this->position, self::$bsonSize));
+        [, $documentLength] = unpack('V', substr($this->buffer, $this->position, self::BSON_SIZE));
 
         if ($this->bufferLength - $this->position < $documentLength) {
             throw new UnexpectedValueException(sprintf('Expected %d bytes; %d remaining', $documentLength, $this->bufferLength - $this->position));

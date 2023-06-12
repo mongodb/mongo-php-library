@@ -46,15 +46,13 @@ class Client
 {
     public const DEFAULT_URI = 'mongodb://127.0.0.1/';
 
-    /** @var array */
-    private static $defaultTypeMap = [
+    private const DEFAULT_TYPE_MAP = [
         'array' => BSONArray::class,
         'document' => BSONDocument::class,
         'root' => BSONDocument::class,
     ];
 
-    /** @var string */
-    private static $handshakeSeparator = ' / ';
+    private const HANDSHAKE_SEPARATOR = '/';
 
     /** @var string|null */
     private static $version;
@@ -102,7 +100,7 @@ class Client
      */
     public function __construct(?string $uri = null, array $uriOptions = [], array $driverOptions = [])
     {
-        $driverOptions += ['typeMap' => self::$defaultTypeMap];
+        $driverOptions += ['typeMap' => self::DEFAULT_TYPE_MAP];
 
         if (! is_array($driverOptions['typeMap'])) {
             throw InvalidArgumentException::invalidType('"typeMap" driver option', $driverOptions['typeMap'], 'array');
@@ -405,7 +403,7 @@ class Client
                 throw InvalidArgumentException::invalidType('"name" handshake option', $driver['name'], 'string');
             }
 
-            $mergedDriver['name'] .= self::$handshakeSeparator . $driver['name'];
+            $mergedDriver['name'] .= self::HANDSHAKE_SEPARATOR . $driver['name'];
         }
 
         if (isset($driver['version'])) {
@@ -413,7 +411,7 @@ class Client
                 throw InvalidArgumentException::invalidType('"version" handshake option', $driver['version'], 'string');
             }
 
-            $mergedDriver['version'] .= self::$handshakeSeparator . $driver['version'];
+            $mergedDriver['version'] .= self::HANDSHAKE_SEPARATOR . $driver['version'];
         }
 
         if (isset($driver['platform'])) {

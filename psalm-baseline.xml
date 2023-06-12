@@ -9,6 +9,11 @@
       <code>$type</code>
     </PropertyNotSetInConstructor>
   </file>
+  <file src="src/ChangeStream.php">
+    <DeprecatedConstant occurrences="1">
+      <code>self::CURSOR_NOT_FOUND</code>
+    </DeprecatedConstant>
+  </file>
   <file src="src/Client.php">
     <MixedArgument occurrences="1">
       <code>$driverOptions['driver'] ?? []</code>

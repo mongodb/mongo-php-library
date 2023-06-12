@@ -49,11 +49,9 @@ use function MongoDB\server_supports_feature;
  */
 class FindAndModify implements Executable, Explainable
 {
-    /** @var integer */
-    private static $wireVersionForHint = 9;
+    private const WIRE_VERSION_FOR_HINT = 9;
 
-    /** @var integer */
-    private static $wireVersionForUnsupportedOptionServerSideError = 8;
+    private const WIRE_VERSION_FOR_UNSUPPORTED_OPTION_SERVER_SIDE_ERROR = 8;
 
     /** @var string */
     private $databaseName;
@@ -227,7 +225,7 @@ class FindAndModify implements Executable, Explainable
     {
         /* Server versions >= 4.2.0 raise errors for unsupported update options.
          * For previous versions, the CRUD spec requires a client-side error. */
-        if (isset($this->options['hint']) && ! server_supports_feature($server, self::$wireVersionForUnsupportedOptionServerSideError)) {
+        if (isset($this->options['hint']) && ! server_supports_feature($server, self::WIRE_VERSION_FOR_UNSUPPORTED_OPTION_SERVER_SIDE_ERROR)) {
             throw UnsupportedException::hintNotSupported();
         }
 
@@ -235,7 +233,7 @@ class FindAndModify implements Executable, Explainable
          * unacknowledged write concern on an unsupported server. */
         if (
             isset($this->options['writeConcern']) && ! is_write_concern_acknowledged($this->options['writeConcern']) &&
-            isset($this->options['hint']) && ! server_supports_feature($server, self::$wireVersionForHint)
+            isset($this->options['hint']) && ! server_supports_feature($server, self::WIRE_VERSION_FOR_HINT)
         ) {
             throw UnsupportedException::hintNotSupported();
         }

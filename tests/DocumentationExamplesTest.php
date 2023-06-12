@@ -1799,13 +1799,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         // Step 3: Use with_transaction to start a transaction, execute the callback, and commit (or abort on error).
 
-        $transactionOptions = [
-            'readConcern' => new \MongoDB\Driver\ReadConcern(\MongoDB\Driver\ReadConcern::LOCAL),
-            'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
-            'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::PRIMARY),
-        ];
-
-        \MongoDB\with_transaction($session, $callback, $transactionOptions);
+        \MongoDB\with_transaction($session, $callback);
 
         // End Transactions withTxn API Example 1
         // phpcs:enable

@@ -228,10 +228,12 @@ class Aggregate implements Executable, Explainable
             unset($options['batchSize']);
         }
 
-        /* Ignore batchSize for writes, since no documents are returned and a
-         * batchSize of zero could prevent the pipeline from executing. */
         if ($this->isWrite) {
+            /* Ignore batchSize for writes, since no documents are returned and
+             * a batchSize of zero could prevent the pipeline from executing. */
             unset($options['batchSize']);
+        } else {
+            unset($options['writeConcern']);
         }
 
         $this->databaseName = $databaseName;
@@ -365,14 +367,10 @@ class Aggregate implements Executable, Explainable
     {
         $options = [];
 
-        foreach (['readConcern', 'readPreference', 'session'] as $option) {
+        foreach (['readConcern', 'readPreference', 'session', 'writeConcern'] as $option) {
             if (isset($this->options[$option])) {
                 $options[$option] = $this->options[$option];
             }
-        }
-
-        if ($this->isWrite && isset($this->options['writeConcern'])) {
-            $options['writeConcern'] = $this->options['writeConcern'];
         }
 
         if (! $this->isWrite) {

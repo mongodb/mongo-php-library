@@ -219,7 +219,7 @@ class Update implements Executable, Explainable
      * @see Explainable::getCommandDocument()
      * @return array
      */
-    public function getCommandDocument(Server $server)
+    public function getCommandDocument()
     {
         $cmd = ['update' => $this->collectionName, 'updates' => [['q' => $this->filter, 'u' => $this->update] + $this->createUpdateOptions()]];
 

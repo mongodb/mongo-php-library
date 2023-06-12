@@ -306,7 +306,7 @@ class Aggregate implements Executable, Explainable
      * @see Explainable::getCommandDocument()
      * @return array
      */
-    public function getCommandDocument(Server $server)
+    public function getCommandDocument()
     {
         $cmd = $this->createCommandDocument();
 

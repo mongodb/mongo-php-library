@@ -41,10 +41,8 @@ use function get_object_vars;
 use function is_array;
 use function is_object;
 use function is_string;
-use function key;
 use function MongoDB\BSON\fromPHP;
 use function MongoDB\BSON\toPHP;
-use function reset;
 use function substr;
 
 /**
@@ -319,11 +317,9 @@ function is_last_pipeline_operator_write(array $pipeline): bool
         return false;
     }
 
-    $lastOp = document_to_array($lastOp);
+    $key = array_key_first(document_to_array($lastOp));
 
-    reset($lastOp);
-
-    return key($lastOp) === '$merge' || key($lastOp) === '$out';
+    return $key === '$merge' || $key === '$out';
 }
 
 /**
@@ -341,11 +337,7 @@ function is_mapreduce_output_inline($out): bool
         return false;
     }
 
-    $out = document_to_array($out);
-
-    reset($out);
-
-    return key($out) === 'inline';
+    return array_key_first(document_to_array($out)) === 'inline';
 }
 
 /**

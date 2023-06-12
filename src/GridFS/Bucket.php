@@ -62,21 +62,17 @@ use function urlencode;
  */
 class Bucket
 {
-    /** @var string */
-    private static $defaultBucketName = 'fs';
+    private const DEFAULT_BUCKET_NAME = 'fs';
 
-    /** @var integer */
-    private static $defaultChunkSizeBytes = 261120;
+    private const DEFAULT_CHUNK_SIZE_BYTES = 261120;
 
-    /** @var array */
-    private static $defaultTypeMap = [
+    private const DEFAULT_TYPE_MAP = [
         'array' => BSONArray::class,
         'document' => BSONDocument::class,
         'root' => BSONDocument::class,
     ];
 
-    /** @var string */
-    private static $streamWrapperProtocol = 'gridfs';
+    private const STREAM_WRAPPER_PROTOCOL = 'gridfs';
 
     /** @var CollectionWrapper */
     private $collectionWrapper;
@@ -138,8 +134,8 @@ class Bucket
     public function __construct(Manager $manager, string $databaseName, array $options = [])
     {
         $options += [
-            'bucketName' => self::$defaultBucketName,
-            'chunkSizeBytes' => self::$defaultChunkSizeBytes,
+            'bucketName' => self::DEFAULT_BUCKET_NAME,
+            'chunkSizeBytes' => self::DEFAULT_CHUNK_SIZE_BYTES,
             'disableMD5' => false,
         ];
 
@@ -182,7 +178,7 @@ class Bucket
         $this->disableMD5 = $options['disableMD5'];
         $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();
         $this->readPreference = $options['readPreference'] ?? $this->manager->getReadPreference();
-        $this->typeMap = $options['typeMap'] ?? self::$defaultTypeMap;
+        $this->typeMap = $options['typeMap'] ?? self::DEFAULT_TYPE_MAP;
         $this->writeConcern = $options['writeConcern'] ?? $this->manager->getWriteConcern();
 
         $collectionOptions = array_intersect_key($options, ['readConcern' => 1, 'readPreference' => 1, 'typeMap' => 1, 'writeConcern' => 1]);
@@ -555,7 +551,7 @@ class Bucket
 
         $path = $this->createPathForUpload();
         $context = stream_context_create([
-            self::$streamWrapperProtocol => [
+            self::STREAM_WRAPPER_PROTOCOL => [
                 'collectionWrapper' => $this->collectionWrapper,
                 'filename' => $filename,
                 'options' => $options,
@@ -651,7 +647,7 @@ class Bucket
 
         return sprintf(
             '%s://%s/%s.files/%s',
-            self::$streamWrapperProtocol,
+            self::STREAM_WRAPPER_PROTOCOL,
             urlencode($this->databaseName),
             urlencode($this->bucketName),
             urlencode($id)
@@ -665,7 +661,7 @@ class Bucket
     {
         return sprintf(
             '%s://%s/%s.files',
-            self::$streamWrapperProtocol,
+            self::STREAM_WRAPPER_PROTOCOL,
             urlencode($this->databaseName),
             urlencode($this->bucketName)
         );
@@ -713,7 +709,7 @@ class Bucket
     {
         $path = $this->createPathForFile($file);
         $context = stream_context_create([
-            self::$streamWrapperProtocol => [
+            self::STREAM_WRAPPER_PROTOCOL => [
                 'collectionWrapper' => $this->collectionWrapper,
                 'file' => $file,
             ],
@@ -727,10 +723,10 @@ class Bucket
      */
     private function registerStreamWrapper(): void
     {
-        if (in_array(self::$streamWrapperProtocol, stream_get_wrappers())) {
+        if (in_array(self::STREAM_WRAPPER_PROTOCOL, stream_get_wrappers())) {
             return;
         }
 
-        StreamWrapper::register(self::$streamWrapperProtocol);
+        StreamWrapper::register(self::STREAM_WRAPPER_PROTOCOL);
     }
 }

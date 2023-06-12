@@ -49,8 +49,7 @@ use function MongoDB\server_supports_feature;
  */
 class CreateEncryptedCollection implements Executable
 {
-    /** @var integer */
-    private static $wireVersionForQueryableEncryptionV2 = 21;
+    private const WIRE_VERSION_FOR_QUERYABLE_ENCRYPTION_V2 = 21;
 
     /** @var CreateCollection */
     private $createCollection;
@@ -177,7 +176,7 @@ class CreateEncryptedCollection implements Executable
      */
     public function execute(Server $server)
     {
-        if (! server_supports_feature($server, self::$wireVersionForQueryableEncryptionV2)) {
+        if (! server_supports_feature($server, self::WIRE_VERSION_FOR_QUERYABLE_ENCRYPTION_V2)) {
             throw new UnsupportedException('Driver support of Queryable Encryption is incompatible with server. Upgrade server to use Queryable Encryption.');
         }
 

@@ -38,11 +38,8 @@ use function is_integer;
  */
 class ListIndexes implements Executable
 {
-    /** @var integer */
-    private static $errorCodeDatabaseNotFound = 60;
-
-    /** @var integer */
-    private static $errorCodeNamespaceNotFound = 26;
+    private const ERROR_CODE_DATABASE_NOT_FOUND = 60;
+    private const ERROR_CODE_NAMESPACE_NOT_FOUND = 26;
 
     /** @var string */
     private $databaseName;
@@ -141,7 +138,7 @@ class ListIndexes implements Executable
              * Check for possible error codes (see: SERVER-20463) and return an
              * empty iterator instead of throwing.
              */
-            if ($e->getCode() === self::$errorCodeNamespaceNotFound || $e->getCode() === self::$errorCodeDatabaseNotFound) {
+            if ($e->getCode() === self::ERROR_CODE_NAMESPACE_NOT_FOUND || $e->getCode() === self::ERROR_CODE_DATABASE_NOT_FOUND) {
                 return new IndexInfoIteratorIterator(new EmptyIterator());
             }
 

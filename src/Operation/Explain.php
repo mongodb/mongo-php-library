@@ -42,8 +42,7 @@ class Explain implements Executable
     public const VERBOSITY_EXEC_STATS = 'executionStats';
     public const VERBOSITY_QUERY = 'queryPlanner';
 
-    /** @var integer */
-    private static $wireVersionForAggregate = 7;
+    private const WIRE_VERSION_FOR_AGGREGATE = 7;
 
     /** @var string */
     private $databaseName;
@@ -110,11 +109,11 @@ class Explain implements Executable
      */
     public function execute(Server $server)
     {
-        if ($this->explainable instanceof Aggregate && ! server_supports_feature($server, self::$wireVersionForAggregate)) {
+        if ($this->explainable instanceof Aggregate && ! server_supports_feature($server, self::WIRE_VERSION_FOR_AGGREGATE)) {
             throw UnsupportedException::explainNotSupported();
         }
 
-        $cursor = $server->executeCommand($this->databaseName, $this->createCommand($server), $this->createOptions());
+        $cursor = $server->executeCommand($this->databaseName, $this->createCommand(), $this->createOptions());
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);
@@ -126,9 +125,9 @@ class Explain implements Executable
     /**
      * Create the explain command.
      */
-    private function createCommand(Server $server): Command
+    private function createCommand(): Command
     {
-        $cmd = ['explain' => $this->explainable->getCommandDocument($server)];
+        $cmd = ['explain' => $this->explainable->getCommandDocument()];
 
         foreach (['comment', 'verbosity'] as $option) {
             if (isset($this->options[$option])) {

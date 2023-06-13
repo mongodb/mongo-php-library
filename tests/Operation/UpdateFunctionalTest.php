@@ -2,16 +2,12 @@
 
 namespace MongoDB\Tests\Operation;
 
-use MongoDB\BSON\Document;
 use MongoDB\BSON\ObjectId;
-use MongoDB\BSON\PackedArray;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Exception\UnsupportedException;
-use MongoDB\Model\BSONArray;
-use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Update;
 use MongoDB\Tests\CommandObserver;
 use MongoDB\UpdateResult;
@@ -52,22 +48,11 @@ class UpdateFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideFilterDocuments(): array
-    {
-        $expected = (object) ['x' => 1];
-
-        return [
-            'array' => [['x' => 1], $expected],
-            'object' => [(object) ['x' => 1], $expected],
-            'Serializable' => [new BSONDocument(['x' => 1]), $expected],
-            'Document' => [Document::fromPHP(['x' => 1]), $expected],
-        ];
-    }
-
     /**
      * @dataProvider provideReplacementDocuments
      * @dataProvider provideUpdateDocuments
      * @dataProvider provideUpdatePipelines
+     * @dataProvider provideReplacementDocumentLikePipeline
      */
     public function testUpdateDocuments($update, $expectedUpdate): void
     {
@@ -92,38 +77,15 @@ class UpdateFunctionalTest extends FunctionalTestCase
         );
     }
 
-    public function provideReplacementDocuments(): array
+    public function provideReplacementDocumentLikePipeline(): array
     {
-        $expected = (object) ['x' => 1];
-
+        /* Note: libmongoc encodes this replacement document as a BSON array
+         * because it resembles an update pipeline (see: CDRIVER-4658). */
         return [
-            'replacement:array' => [['x' => 1], $expected],
-            'replacement:object' => [(object) ['x' => 1], $expected],
-            'replacement:Serializable' => [new BSONDocument(['x' => 1]), $expected],
-            'replacement:Document' => [Document::fromPHP(['x' => 1]), $expected],
-        ];
-    }
-
-    public function provideUpdateDocuments(): array
-    {
-        $expected = (object) ['$set' => (object) ['x' => 1]];
-
-        return [
-            'update:array' => [['$set' => ['x' => 1]], $expected],
-            'update:object' => [(object) ['$set' => ['x' => 1]], $expected],
-            'update:Serializable' => [new BSONDocument(['$set' => ['x' => 1]]), $expected],
-            'update:Document' => [Document::fromPHP(['$set' => ['x' => 1]]), $expected],
-        ];
-    }
-
-    public function provideUpdatePipelines(): array
-    {
-        $expected = [(object) ['$set' => (object) ['x' => 1]]];
-
-        return [
-            'pipeline:array' => [[['$set' => ['x' => 1]]], $expected],
-            'pipeline:Serializable' => [new BSONArray([['$set' => ['x' => 1]]]), $expected],
-            'pipeline:PackedArray' => [PackedArray::fromPHP([['$set' => ['x' => 1]]]), $expected],
+            'replacement_like_pipeline' => [
+                (object) ['0' => ['$set' => ['x' => 1]]],
+                [(object) ['$set' => (object) ['x' => 1]]],
+            ],
         ];
     }
 

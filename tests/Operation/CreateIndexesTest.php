@@ -14,7 +14,7 @@ class CreateIndexesTest extends TestCase
     public function testConstructorIndexesArgumentMustBeAList(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$indexes is not a list (unexpected index: "1")');
+        $this->expectExceptionMessage('$indexes is not a list');
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [1 => ['key' => ['x' => 1]]]);
     }
 

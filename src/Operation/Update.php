@@ -46,8 +46,7 @@ use function MongoDB\server_supports_feature;
  */
 class Update implements Executable, Explainable
 {
-    /** @var integer */
-    private static $wireVersionForHint = 8;
+    private const WIRE_VERSION_FOR_HINT = 8;
 
     /** @var string */
     private $databaseName;
@@ -148,7 +147,7 @@ class Update implements Executable, Explainable
         }
 
         if ($options['multi'] && ! is_first_key_operator($update) && ! is_pipeline($update)) {
-            throw new InvalidArgumentException('"multi" option cannot be true if $update is a replacement document');
+            throw new InvalidArgumentException('"multi" option cannot be true unless $update has update operator(s) or non-empty pipeline');
         }
 
         if (isset($options['session']) && ! $options['session'] instanceof Session) {
@@ -196,7 +195,7 @@ class Update implements Executable, Explainable
          * unacknowledged write concern on an unsupported server. */
         if (
             isset($this->options['writeConcern']) && ! is_write_concern_acknowledged($this->options['writeConcern']) &&
-            isset($this->options['hint']) && ! server_supports_feature($server, self::$wireVersionForHint)
+            isset($this->options['hint']) && ! server_supports_feature($server, self::WIRE_VERSION_FOR_HINT)
         ) {
             throw UnsupportedException::hintNotSupported();
         }
@@ -220,7 +219,7 @@ class Update implements Executable, Explainable
      * @see Explainable::getCommandDocument()
      * @return array
      */
-    public function getCommandDocument(Server $server)
+    public function getCommandDocument()
     {
         $cmd = ['update' => $this->collectionName, 'updates' => [['q' => $this->filter, 'u' => $this->update] + $this->createUpdateOptions()]];
 

@@ -17,7 +17,7 @@ class BulkWriteTest extends TestCase
     public function testOperationsMustBeAList(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$operations is not a list (unexpected index: "1")');
+        $this->expectExceptionMessage('$operations is not a list');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             1 => [BulkWrite::INSERT_ONE => [['x' => 1]]],
         ]);
@@ -145,6 +145,17 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
+    /**
+     * @dataProvider provideReplacementDocuments
+     * @doesNotPerformAssertions
+     */
+    public function testReplaceOneReplacementArgument($replacement): void
+    {
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::REPLACE_ONE => [['x' => 1], $replacement]],
+        ]);
+    }
+
     public function testReplaceOneReplacementArgumentMissing(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -164,12 +175,26 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    public function testReplaceOneReplacementArgumentRequiresNoOperators(): void
+    /** @dataProvider provideUpdateDocuments */
+    public function testReplaceOneReplacementArgumentProhibitsUpdateDocument($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('First key in $operations[0]["replaceOne"][1] is an update operator');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            [BulkWrite::REPLACE_ONE => [['_id' => 1], ['$inc' => ['x' => 1]]]],
+            [BulkWrite::REPLACE_ONE => [['x' => 1], $replacement]],
+        ]);
+    }
+
+    /**
+     * @dataProvider provideUpdatePipelines
+     * @dataProvider provideEmptyUpdatePipelinesExcludingArray
+     */
+    public function testReplaceOneReplacementArgumentProhibitsUpdatePipeline($replacement): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$operations[0]["replaceOne"][1] is an update pipeline');
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::REPLACE_ONE => [['x' => 1], $replacement]],
         ]);
     }
 
@@ -217,6 +242,18 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
+    /**
+     * @dataProvider provideUpdateDocuments
+     * @dataProvider provideUpdatePipelines
+     * @doesNotPerformAssertions
+     */
+    public function testUpdateManyUpdateArgument($update): void
+    {
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_MANY => [['x' => 1], $update]],
+        ]);
+    }
+
     public function testUpdateManyUpdateArgumentMissing(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -236,12 +273,16 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    public function testUpdateManyUpdateArgumentRequiresOperatorsOrPipeline(): void
+    /**
+     * @dataProvider provideReplacementDocuments
+     * @dataProvider provideEmptyUpdatePipelines
+     */
+    public function testUpdateManyUpdateArgumentProhibitsReplacementDocumentOrEmptyPipeline($update): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('First key in $operations[0]["updateMany"][1] is neither an update operator nor a pipeline');
+        $this->expectExceptionMessage('Expected update operator(s) or non-empty pipeline for $operations[0]["updateMany"][1]');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            [BulkWrite::UPDATE_MANY => [['_id' => ['$gt' => 1]], ['x' => 1]]],
+            [BulkWrite::UPDATE_MANY => [['x' => 1], $update]],
         ]);
     }
 
@@ -272,6 +313,18 @@ class BulkWriteTest extends TestCase
         $this->expectExceptionMessageMatches('/Expected \$operations\[0\]\["updateMany"\]\[2\]\["upsert"\] to have type "boolean" but found "[\w ]+"/');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::UPDATE_MANY => [['x' => 1], ['$set' => ['x' => 1]], ['upsert' => $upsert]]],
+        ]);
+    }
+
+    /**
+     * @dataProvider provideUpdateDocuments
+     * @dataProvider provideUpdatePipelines
+     * @doesNotPerformAssertions
+     */
+    public function testUpdateOneUpdateArgument($update): void
+    {
+        new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
+            [BulkWrite::UPDATE_ONE => [['x' => 1], $update]],
         ]);
     }
 
@@ -313,12 +366,16 @@ class BulkWriteTest extends TestCase
         ]);
     }
 
-    public function testUpdateOneUpdateArgumentRequiresOperatorsOrPipeline(): void
+    /**
+     * @dataProvider provideReplacementDocuments
+     * @dataProvider provideEmptyUpdatePipelines
+     */
+    public function testUpdateOneUpdateArgumentProhibitsReplacementDocumentOrEmptyPipeline($update): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('First key in $operations[0]["updateOne"][1] is neither an update operator nor a pipeline');
+        $this->expectExceptionMessage('Expected update operator(s) or non-empty pipeline for $operations[0]["updateOne"][1]');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
-            [BulkWrite::UPDATE_ONE => [['_id' => 1], ['x' => 1]]],
+            [BulkWrite::UPDATE_ONE => [['x' => 1], $update]],
         ]);
     }
 

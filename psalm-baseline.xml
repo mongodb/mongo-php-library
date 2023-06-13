@@ -9,6 +9,11 @@
       <code>$type</code>
     </PropertyNotSetInConstructor>
   </file>
+  <file src="src/ChangeStream.php">
+    <DeprecatedConstant occurrences="1">
+      <code>self::CURSOR_NOT_FOUND</code>
+    </DeprecatedConstant>
+  </file>
   <file src="src/Client.php">
     <MixedArgument occurrences="1">
       <code>$driverOptions['driver'] ?? []</code>
@@ -36,8 +41,9 @@
     </UnsafeInstantiation>
   </file>
   <file src="src/Exception/InvalidArgumentException.php">
-    <UnsafeInstantiation occurrences="1">
+    <UnsafeInstantiation occurrences="2">
       <code>new static(sprintf('Expected %s to have type "%s" but found "%s"', $name, $expectedType, get_debug_type($value)))</code>
+      <code>new static('Expected update operator(s) or non-empty pipeline for ' . $name)</code>
     </UnsafeInstantiation>
   </file>
   <file src="src/Exception/ResumeTokenException.php">
@@ -308,13 +314,14 @@
     <DocblockTypeContradiction occurrences="1">
       <code>is_array($operation)</code>
     </DocblockTypeContradiction>
-    <MixedArgument occurrences="12">
+    <MixedArgument occurrences="13">
       <code>$args</code>
       <code>$args</code>
       <code>$args</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
+      <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
@@ -322,11 +329,14 @@
       <code>$args[1]</code>
       <code>$args[2]</code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="25">
+    <MixedArrayAccess occurrences="28">
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
@@ -349,7 +359,8 @@
       <code>$args[2]['upsert']</code>
       <code>$args[2]['upsert']</code>
     </MixedArrayAccess>
-    <MixedArrayAssignment occurrences="11">
+    <MixedArrayAssignment occurrences="12">
+      <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[2]</code>
@@ -406,13 +417,13 @@
     </DocblockTypeContradiction>
   </file>
   <file src="src/Operation/CreateCollection.php">
-    <MixedArgument occurrences="3">
-      <code>$i</code>
+    <MixedArgument occurrences="2">
       <code>$i</code>
       <code>$this-&gt;options['typeMap']</code>
     </MixedArgument>
-    <MixedAssignment occurrences="3">
+    <MixedAssignment occurrences="4">
       <code>$cmd[$option]</code>
+      <code>$i</code>
       <code>$options['session']</code>
       <code>$options['writeConcern']</code>
     </MixedAssignment>
@@ -422,6 +433,9 @@
       <code>! is_array($encryptedFields['fields'])</code>
       <code>! is_array($field) &amp;&amp; ! is_object($field)</code>
     </DocblockTypeContradiction>
+    <MixedArgument occurrences="1">
+      <code>$this-&gt;options['encryptedFields']</code>
+    </MixedArgument>
   </file>
   <file src="src/Operation/CreateIndexes.php">
     <DocblockTypeContradiction occurrences="1">

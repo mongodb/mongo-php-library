@@ -91,8 +91,8 @@ class DeleteOne implements Executable, Explainable
      * @see Explainable::getCommandDocument()
      * @return array
      */
-    public function getCommandDocument(Server $server)
+    public function getCommandDocument()
     {
-        return $this->delete->getCommandDocument($server);
+        return $this->delete->getCommandDocument();
     }
 }

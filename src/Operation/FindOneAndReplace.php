@@ -27,6 +27,7 @@ use function is_array;
 use function is_integer;
 use function is_object;
 use function MongoDB\is_first_key_operator;
+use function MongoDB\is_pipeline;
 
 /**
  * Operation for replacing a document with the findAndModify command.
@@ -109,8 +110,17 @@ class FindOneAndReplace implements Executable, Explainable
             throw InvalidArgumentException::invalidType('$replacement', $replacement, 'array or object');
         }
 
+        // Treat empty arrays as replacement documents for BC
+        if ($replacement === []) {
+            $replacement = (object) $replacement;
+        }
+
         if (is_first_key_operator($replacement)) {
-            throw new InvalidArgumentException('First key in $replacement argument is an update operator');
+            throw new InvalidArgumentException('First key in $replacement is an update operator');
+        }
+
+        if (is_pipeline($replacement, true /* allowEmpty */)) {
+            throw new InvalidArgumentException('$replacement is an update pipeline');
         }
 
         if (isset($options['projection']) && ! is_array($options['projection']) && ! is_object($options['projection'])) {
@@ -165,8 +175,8 @@ class FindOneAndReplace implements Executable, Explainable
      * @see Explainable::getCommandDocument()
      * @return array
      */
-    public function getCommandDocument(Server $server)
+    public function getCommandDocument()
     {
-        return $this->findAndModify->getCommandDocument($server);
+        return $this->findAndModify->getCommandDocument();
     }
 }

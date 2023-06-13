@@ -34,6 +34,7 @@ use MongoDB\Operation\WithTransaction;
 use ReflectionClass;
 use ReflectionException;
 
+use function array_is_list;
 use function array_key_first;
 use function assert;
 use function end;
@@ -41,10 +42,8 @@ use function get_object_vars;
 use function is_array;
 use function is_object;
 use function is_string;
-use function key;
 use function MongoDB\BSON\fromPHP;
 use function MongoDB\BSON\toPHP;
-use function reset;
 use function substr;
 
 /**
@@ -213,7 +212,22 @@ function is_first_key_operator($document): bool
 }
 
 /**
- * Returns whether an update specification is a valid aggregation pipeline.
+ * Returns whether the argument is a valid aggregation or update pipeline.
+ *
+ * This is primarily used for validating arguments for update and replace
+ * operations, but can also be used for validating an aggregation pipeline.
+ *
+ * The $allowEmpty parameter can be used to control whether an empty array
+ * should be considered a valid pipeline. Empty arrays are generally valid for
+ * an aggregation pipeline, but the things are more complicated for update
+ * pipelines.
+ *
+ * Update operations must prohibit empty pipelines, since libmongoc may encode
+ * an empty pipeline array as an empty replacement document when writing an
+ * update command (arrays and documents have the same bson_t representation).
+ * For consistency, findOneAndUpdate should also prohibit empty pipelines.
+ * Replace operations (e.g. replaceOne, findOneAndReplace) should reject empty
+ * and non-empty pipelines alike, since neither is a replacement document.
  *
  * Note: this method may propagate an InvalidArgumentException from
  * document_or_array() if a Serializable object within the pipeline array
@@ -223,11 +237,11 @@ function is_first_key_operator($document): bool
  * @param array|object $pipeline
  * @throws InvalidArgumentException
  */
-function is_pipeline($pipeline): bool
+function is_pipeline($pipeline, bool $allowEmpty = false): bool
 {
     if ($pipeline instanceof PackedArray) {
         /* Nested documents and arrays are intentionally left as BSON. We avoid
-         * iterator_to_array() since Document iteration returns all values as
+         * iterator_to_array() since PackedArray iteration returns all values as
          * MongoDB\BSON\Value instances. */
         /** @psalm-var array */
         $pipeline = $pipeline->toPHP([
@@ -244,21 +258,17 @@ function is_pipeline($pipeline): bool
     }
 
     if ($pipeline === []) {
+        return $allowEmpty;
+    }
+
+    if (! array_is_list($pipeline)) {
         return false;
     }
 
-    $expectedKey = 0;
-
-    foreach ($pipeline as $key => $stage) {
+    foreach ($pipeline as $stage) {
         if (! is_array($stage) && ! is_object($stage)) {
             return false;
         }
-
-        if ($expectedKey !== $key) {
-            return false;
-        }
-
-        $expectedKey++;
 
         if (! is_first_key_operator($stage)) {
             return false;
@@ -304,11 +314,9 @@ function is_last_pipeline_operator_write(array $pipeline): bool
         return false;
     }
 
-    $lastOp = document_to_array($lastOp);
+    $key = array_key_first(document_to_array($lastOp));
 
-    reset($lastOp);
-
-    return key($lastOp) === '$merge' || key($lastOp) === '$out';
+    return $key === '$merge' || $key === '$out';
 }
 
 /**
@@ -326,11 +334,7 @@ function is_mapreduce_output_inline($out): bool
         return false;
     }
 
-    $out = document_to_array($out);
-
-    reset($out);
-
-    return key($out) === 'inline';
+    return array_key_first(document_to_array($out)) === 'inline';
 }
 
 /**

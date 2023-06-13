@@ -18,6 +18,8 @@
 namespace MongoDB\Operation;
 
 use MongoDB\BSON\Binary;
+use MongoDB\BSON\PackedArray;
+use MongoDB\BSON\Serializable;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
@@ -27,6 +29,7 @@ use MongoDB\Exception\UnsupportedException;
 use function array_key_exists;
 use function is_array;
 use function is_object;
+use function MongoDB\document_to_array;
 use function MongoDB\server_supports_feature;
 
 /**
@@ -46,8 +49,7 @@ use function MongoDB\server_supports_feature;
  */
 class CreateEncryptedCollection implements Executable
 {
-    /** @var integer */
-    private static $wireVersionForQueryableEncryptionV2 = 21;
+    private const WIRE_VERSION_FOR_QUERYABLE_ENCRYPTION_V2 = 21;
 
     /** @var CreateCollection */
     private $createCollection;
@@ -87,7 +89,7 @@ class CreateEncryptedCollection implements Executable
         $this->createCollection = new CreateCollection($databaseName, $collectionName, $options);
 
         /** @psalm-var array{ecocCollection?: ?string, escCollection?: ?string} */
-        $encryptedFields = (array) $options['encryptedFields'];
+        $encryptedFields = document_to_array($options['encryptedFields']);
         $enxcolOptions = ['clusteredIndex' => ['key' => ['_id' => 1], 'unique' => true]];
 
         $this->createMetadataCollections = [
@@ -118,12 +120,28 @@ class CreateEncryptedCollection implements Executable
      */
     public function createDataKeys(ClientEncryption $clientEncryption, string $kmsProvider, ?array $masterKey, ?array &$encryptedFields = null): void
     {
-        /** @psalm-var array{fields: list<array{keyId: ?Binary}|object{keyId: ?Binary}>} */
-        $encryptedFields = (array) $this->options['encryptedFields'];
+        /** @psalm-var array{fields: list<array{keyId: ?Binary}|object{keyId: ?Binary}>|Serializable|PackedArray} */
+        $encryptedFields = document_to_array($this->options['encryptedFields']);
 
-        /* NOP if there are no fields to examine. If the type is invalid, defer
-         * to the server to raise an error in execute(). */
-        if (! isset($encryptedFields['fields']) || ! is_array($encryptedFields['fields'])) {
+        // NOP if there are no fields to examine
+        if (! isset($encryptedFields['fields'])) {
+            return;
+        }
+
+        // Allow PackedArray or Serializable object for the fields array
+        if ($encryptedFields['fields'] instanceof PackedArray) {
+            /** @psalm-var array */
+            $encryptedFields['fields'] = $encryptedFields['fields']->toPHP([
+                'array' => 'array',
+                'document' => 'object',
+                'root' => 'array',
+            ]);
+        } elseif ($encryptedFields['fields'] instanceof Serializable) {
+            $encryptedFields['fields'] = $encryptedFields['fields']->bsonSerialize();
+        }
+
+        // Skip invalid types and defer to the server to raise an error
+        if (! is_array($encryptedFields['fields'])) {
             return;
         }
 
@@ -138,7 +156,7 @@ class CreateEncryptedCollection implements Executable
                 continue;
             }
 
-            $field = (array) $field;
+            $field = document_to_array($field);
 
             if (array_key_exists('keyId', $field) && $field['keyId'] === null) {
                 $field['keyId'] = $clientEncryption->createDataKey(...$createDataKeyArgs);
@@ -158,7 +176,7 @@ class CreateEncryptedCollection implements Executable
      */
     public function execute(Server $server)
     {
-        if (! server_supports_feature($server, self::$wireVersionForQueryableEncryptionV2)) {
+        if (! server_supports_feature($server, self::WIRE_VERSION_FOR_QUERYABLE_ENCRYPTION_V2)) {
             throw new UnsupportedException('Driver support of Queryable Encryption is incompatible with server. Upgrade server to use Queryable Encryption.');
         }
 

@@ -26,6 +26,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\IndexInput;
 
+use function array_is_list;
 use function array_map;
 use function is_array;
 use function is_integer;
@@ -42,8 +43,7 @@ use function sprintf;
  */
 class CreateIndexes implements Executable
 {
-    /** @var integer */
-    private static $wireVersionForCommitQuorum = 9;
+    private const WIRE_VERSION_FOR_COMMIT_QUORUM = 9;
 
     /** @var string */
     private $databaseName;
@@ -89,20 +89,16 @@ class CreateIndexes implements Executable
             throw new InvalidArgumentException('$indexes is empty');
         }
 
-        $expectedIndex = 0;
+        if (! array_is_list($indexes)) {
+            throw new InvalidArgumentException('$indexes is not a list');
+        }
 
         foreach ($indexes as $i => $index) {
-            if ($i !== $expectedIndex) {
-                throw new InvalidArgumentException(sprintf('$indexes is not a list (unexpected index: "%s")', $i));
-            }
-
             if (! is_array($index)) {
                 throw InvalidArgumentException::invalidType(sprintf('$index[%d]', $i), $index, 'array');
             }
 
             $this->indexes[] = new IndexInput($index);
-
-            $expectedIndex += 1;
         }
 
         if (isset($options['commitQuorum']) && ! is_string($options['commitQuorum']) && ! is_integer($options['commitQuorum'])) {
@@ -188,7 +184,7 @@ class CreateIndexes implements Executable
         if (isset($this->options['commitQuorum'])) {
             /* Drivers MUST manually raise an error if this option is specified
              * when creating an index on a pre 4.4 server. */
-            if (! server_supports_feature($server, self::$wireVersionForCommitQuorum)) {
+            if (! server_supports_feature($server, self::WIRE_VERSION_FOR_COMMIT_QUORUM)) {
                 throw UnsupportedException::commitQuorumNotSupported();
             }
 

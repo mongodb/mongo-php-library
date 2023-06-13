@@ -43,8 +43,7 @@ use function MongoDB\server_supports_feature;
  */
 class Delete implements Executable, Explainable
 {
-    /** @var integer */
-    private static $wireVersionForHint = 9;
+    private const WIRE_VERSION_FOR_HINT = 9;
 
     /** @var string */
     private $databaseName;
@@ -152,7 +151,7 @@ class Delete implements Executable, Explainable
          * unacknowledged write concern on an unsupported server. */
         if (
             isset($this->options['writeConcern']) && ! is_write_concern_acknowledged($this->options['writeConcern']) &&
-            isset($this->options['hint']) && ! server_supports_feature($server, self::$wireVersionForHint)
+            isset($this->options['hint']) && ! server_supports_feature($server, self::WIRE_VERSION_FOR_HINT)
         ) {
             throw UnsupportedException::hintNotSupported();
         }
@@ -176,7 +175,7 @@ class Delete implements Executable, Explainable
      * @see Explainable::getCommandDocument()
      * @return array
      */
-    public function getCommandDocument(Server $server)
+    public function getCommandDocument()
     {
         return ['delete' => $this->collectionName, 'deletes' => [['q' => $this->filter] + $this->createDeleteOptions()]];
     }

@@ -67,8 +67,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
     public const FULL_DOCUMENT_BEFORE_CHANGE_WHEN_AVAILABLE = 'whenAvailable';
     public const FULL_DOCUMENT_BEFORE_CHANGE_REQUIRED = 'required';
 
-    /** @var integer */
-    private static $wireVersionForStartAtOperationTime = 7;
+    private const WIRE_VERSION_FOR_START_AT_OPERATION_TIME = 7;
 
     /** @var Aggregate */
     private $aggregate;
@@ -468,7 +467,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             return false;
         }
 
-        if (! server_supports_feature($server, self::$wireVersionForStartAtOperationTime)) {
+        if (! server_supports_feature($server, self::WIRE_VERSION_FOR_START_AT_OPERATION_TIME)) {
             return false;
         }
 

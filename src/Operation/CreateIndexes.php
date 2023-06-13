@@ -26,6 +26,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\IndexInput;
 
+use function array_is_list;
 use function array_map;
 use function is_array;
 use function is_integer;
@@ -88,20 +89,16 @@ class CreateIndexes implements Executable
             throw new InvalidArgumentException('$indexes is empty');
         }
 
-        $expectedIndex = 0;
+        if (! array_is_list($indexes)) {
+            throw new InvalidArgumentException('$indexes is not a list');
+        }
 
         foreach ($indexes as $i => $index) {
-            if ($i !== $expectedIndex) {
-                throw new InvalidArgumentException(sprintf('$indexes is not a list (unexpected index: "%s")', $i));
-            }
-
             if (! is_array($index)) {
                 throw InvalidArgumentException::invalidType(sprintf('$index[%d]', $i), $index, 'array');
             }
 
             $this->indexes[] = new IndexInput($index);
-
-            $expectedIndex += 1;
         }
 
         if (isset($options['commitQuorum']) && ! is_string($options['commitQuorum']) && ! is_integer($options['commitQuorum'])) {

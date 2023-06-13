@@ -31,6 +31,7 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use stdClass;
 
+use function array_is_list;
 use function current;
 use function is_array;
 use function is_bool;
@@ -137,18 +138,14 @@ class Aggregate implements Executable, Explainable
      */
     public function __construct(string $databaseName, ?string $collectionName, array $pipeline, array $options = [])
     {
-        $expectedIndex = 0;
+        if (! array_is_list($pipeline)) {
+            throw new InvalidArgumentException('$pipeline is not a list');
+        }
 
         foreach ($pipeline as $i => $operation) {
-            if ($i !== $expectedIndex) {
-                throw new InvalidArgumentException(sprintf('$pipeline is not a list (unexpected index: "%s")', $i));
-            }
-
             if (! is_array($operation) && ! is_object($operation)) {
                 throw InvalidArgumentException::invalidType(sprintf('$pipeline[%d]', $i), $operation, 'array or object');
             }
-
-            $expectedIndex += 1;
         }
 
         $options += ['useCursor' => true];

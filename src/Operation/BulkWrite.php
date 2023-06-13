@@ -26,6 +26,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
+use function array_is_list;
 use function array_key_exists;
 use function count;
 use function current;
@@ -132,13 +133,11 @@ class BulkWrite implements Executable
             throw new InvalidArgumentException('$operations is empty');
         }
 
-        $expectedIndex = 0;
+        if (! array_is_list($operations)) {
+            throw new InvalidArgumentException('$operations is not a list');
+        }
 
         foreach ($operations as $i => $operation) {
-            if ($i !== $expectedIndex) {
-                throw new InvalidArgumentException(sprintf('$operations is not a list (unexpected index: "%s")', $i));
-            }
-
             if (! is_array($operation)) {
                 throw InvalidArgumentException::invalidType(sprintf('$operations[%d]', $i), $operation, 'array');
             }
@@ -271,8 +270,6 @@ class BulkWrite implements Executable
                 default:
                     throw new InvalidArgumentException(sprintf('Unknown operation type "%s" in $operations[%d]', $type, $i));
             }
-
-            $expectedIndex += 1;
         }
 
         $options += ['ordered' => true];

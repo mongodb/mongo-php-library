@@ -24,6 +24,8 @@ use MongoDB\Driver\Session;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 
+use function array_is_list;
+use function assert;
 use function current;
 use function is_array;
 use function is_bool;
@@ -241,18 +243,16 @@ class CreateCollection implements Executable
         }
 
         if (isset($options['pipeline'])) {
-            $expectedIndex = 0;
+            $pipeline = $options['pipeline'];
+            assert(is_array($pipeline));
+            if (! array_is_list($pipeline)) {
+                throw new InvalidArgumentException('The "pipeline" option is not a list');
+            }
 
             foreach ($options['pipeline'] as $i => $operation) {
-                if ($i !== $expectedIndex) {
-                    throw new InvalidArgumentException(sprintf('The "pipeline" option is not a list (unexpected index: "%s")', $i));
-                }
-
                 if (! is_array($operation) && ! is_object($operation)) {
                     throw InvalidArgumentException::invalidType(sprintf('$options["pipeline"][%d]', $i), $operation, 'array or object');
                 }
-
-                $expectedIndex += 1;
             }
         }
 

@@ -10,7 +10,7 @@ class AggregateTest extends TestCase
     public function testConstructorPipelineArgumentMustBeAList(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$pipeline is not a list (unexpected index: "1")');
+        $this->expectExceptionMessage('$pipeline is not a list');
         new Aggregate($this->getDatabaseName(), $this->getCollectionName(), [1 => ['$match' => ['x' => 1]]]);
     }
 

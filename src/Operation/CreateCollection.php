@@ -25,6 +25,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 
 use function array_is_list;
+use function assert;
 use function current;
 use function is_array;
 use function is_bool;
@@ -242,7 +243,9 @@ class CreateCollection implements Executable
         }
 
         if (isset($options['pipeline'])) {
-            if (! array_is_list($options['pipeline'])) {
+            $pipeline = $options['pipeline'];
+            assert(is_array($pipeline));
+            if (! array_is_list($pipeline)) {
                 throw new InvalidArgumentException('The "pipeline" option is not a list');
             }
 

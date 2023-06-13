@@ -417,13 +417,13 @@
     </DocblockTypeContradiction>
   </file>
   <file src="src/Operation/CreateCollection.php">
-    <MixedArgument occurrences="3">
-      <code>$i</code>
+    <MixedArgument occurrences="2">
       <code>$i</code>
       <code>$this-&gt;options['typeMap']</code>
     </MixedArgument>
-    <MixedAssignment occurrences="3">
+    <MixedAssignment occurrences="4">
       <code>$cmd[$option]</code>
+      <code>$i</code>
       <code>$options['session']</code>
       <code>$options['writeConcern']</code>
     </MixedAssignment>

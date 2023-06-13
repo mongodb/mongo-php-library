@@ -22,7 +22,9 @@ class IndexInfoTest extends TestCase
         $this->assertSame('x_1', $info->getName());
         $this->assertSame('foo.bar', $info->getNamespace());
         $this->assertFalse($info->is2dSphere());
-        $this->assertFalse($info->isGeoHaystack());
+        $this->assertDeprecated(function () use ($info): void {
+            $this->assertFalse($info->isGeoHaystack());
+        });
         $this->assertFalse($info->isSparse());
         $this->assertFalse($info->isText());
         $this->assertFalse($info->isTtl());
@@ -44,7 +46,9 @@ class IndexInfoTest extends TestCase
         $this->assertSame('y_sparse', $info->getName());
         $this->assertSame('foo.bar', $info->getNamespace());
         $this->assertFalse($info->is2dSphere());
-        $this->assertFalse($info->isGeoHaystack());
+        $this->assertDeprecated(function () use ($info): void {
+            $this->assertFalse($info->isGeoHaystack());
+        });
         $this->assertTrue($info->isSparse());
         $this->assertFalse($info->isText());
         $this->assertFalse($info->isTtl());
@@ -66,7 +70,9 @@ class IndexInfoTest extends TestCase
         $this->assertSame('z_unique', $info->getName());
         $this->assertSame('foo.bar', $info->getNamespace());
         $this->assertFalse($info->is2dSphere());
-        $this->assertFalse($info->isGeoHaystack());
+        $this->assertDeprecated(function () use ($info): void {
+            $this->assertFalse($info->isGeoHaystack());
+        });
         $this->assertFalse($info->isSparse());
         $this->assertFalse($info->isText());
         $this->assertFalse($info->isTtl());
@@ -88,7 +94,9 @@ class IndexInfoTest extends TestCase
         $this->assertSame('z_unique', $info->getName());
         $this->assertSame('foo.bar', $info->getNamespace());
         $this->assertFalse($info->is2dSphere());
-        $this->assertFalse($info->isGeoHaystack());
+        $this->assertDeprecated(function () use ($info): void {
+            $this->assertFalse($info->isGeoHaystack());
+        });
         $this->assertFalse($info->isSparse());
         $this->assertFalse($info->isText());
         $this->assertTrue($info->isTtl());
@@ -166,7 +174,9 @@ class IndexInfoTest extends TestCase
         $this->assertSame('pos_2dsphere', $info->getName());
         $this->assertSame('foo.bar', $info->getNamespace());
         $this->assertTrue($info->is2dSphere());
-        $this->assertFalse($info->isGeoHaystack());
+        $this->assertDeprecated(function () use ($info): void {
+            $this->assertFalse($info->isGeoHaystack());
+        });
         $this->assertFalse($info->isSparse());
         $this->assertFalse($info->isText());
         $this->assertFalse($info->isTtl());
@@ -187,7 +197,9 @@ class IndexInfoTest extends TestCase
         $this->assertSame('pos2_geoHaystack_x_1', $info->getName());
         $this->assertSame('foo.bar', $info->getNamespace());
         $this->assertFalse($info->is2dSphere());
-        $this->assertTrue($info->isGeoHaystack());
+        $this->assertDeprecated(function () use ($info): void {
+            $this->assertTrue($info->isGeoHaystack());
+        });
         $this->assertFalse($info->isSparse());
         $this->assertFalse($info->isText());
         $this->assertFalse($info->isTtl());
@@ -208,7 +220,9 @@ class IndexInfoTest extends TestCase
         $this->assertSame('title_text_description_text', $info->getName());
         $this->assertSame('foo.bar', $info->getNamespace());
         $this->assertFalse($info->is2dSphere());
-        $this->assertFalse($info->isGeoHaystack());
+        $this->assertDeprecated(function () use ($info): void {
+            $this->assertFalse($info->isGeoHaystack());
+        });
         $this->assertFalse($info->isSparse());
         $this->assertTrue($info->isText());
         $this->assertFalse($info->isTtl());

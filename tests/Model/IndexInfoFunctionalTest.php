@@ -50,7 +50,9 @@ class IndexInfoFunctionalTest extends FunctionalTestCase
         $index = $result->current();
 
         $this->assertEquals($indexName, $index->getName());
-        $this->assertTrue($index->isGeoHaystack());
+        $this->assertDeprecated(function () use ($index): void {
+            $this->assertTrue($index->isGeoHaystack());
+        });
         $this->assertEquals(5, $index['bucketSize']);
     }
 

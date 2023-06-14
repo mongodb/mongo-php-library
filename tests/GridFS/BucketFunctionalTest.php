@@ -674,7 +674,20 @@ class BucketFunctionalTest extends FunctionalTestCase
     {
         $options = ['disableMD5' => true];
         $id = $this->bucket->uploadFromStream('filename', $this->createStream('data'), $options);
-        $this->assertCollectionCount($this->filesCollection, 1);
+
+        $fileDocument = $this->filesCollection->findOne(
+            ['_id' => $id]
+        );
+
+        $this->assertArrayNotHasKey('md5', $fileDocument);
+    }
+
+    public function testDisableMD5OptionInConstructor(): void
+    {
+        $options = ['disableMD5' => true];
+
+        $this->bucket = new Bucket($this->manager, $this->getDatabaseName(), $options);
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream('data'));
 
         $fileDocument = $this->filesCollection->findOne(
             ['_id' => $id]

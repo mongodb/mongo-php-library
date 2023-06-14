@@ -65,4 +65,30 @@ class DeleteTest extends TestCase
 
         return $options;
     }
+
+    public function testExplainableCommandDocument(): void
+    {
+        $options = [
+            'collation' => ['locale' => 'fr'],
+            'hint' => '_id_',
+            // Ignored options
+            'let' => ['a' => 1],
+            'ordered' => true,
+            'comment' => 'explain me',
+        ];
+        $operation = new Delete($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], 0, $options);
+
+        $expected = [
+            'delete' => $this->getCollectionName(),
+            'deletes' => [
+                [
+                    'q' => ['x' => 1],
+                    'limit' => 0,
+                    'collation' => (object) ['locale' => 'fr'],
+                    'hint' => '_id_',
+                ],
+            ],
+        ];
+        $this->assertEquals($expected, $operation->getCommandDocument());
+    }
 }

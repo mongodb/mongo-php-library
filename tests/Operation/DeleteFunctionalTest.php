@@ -12,8 +12,6 @@ use MongoDB\Operation\Delete;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
 
-use function version_compare;
-
 class DeleteFunctionalTest extends FunctionalTestCase
 {
     /** @var Collection */
@@ -87,9 +85,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
 
     public function testHintOptionAndUnacknowledgedWriteConcernUnsupportedClientSideError(): void
     {
-        if (version_compare($this->getServerVersion(), '4.4.0', '>=')) {
-            $this->markTestSkipped('hint is supported');
-        }
+        $this->skipIfServerVersion('>=', '4.4.0', 'hint is supported');
 
         $operation = new Delete(
             $this->getDatabaseName(),

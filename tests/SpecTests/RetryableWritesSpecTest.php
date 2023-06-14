@@ -12,7 +12,6 @@ use stdClass;
 use function basename;
 use function file_get_contents;
 use function glob;
-use function version_compare;
 
 /**
  * Retryable writes spec tests.
@@ -90,9 +89,7 @@ class RetryableWritesSpecTest extends FunctionalTestCase
             $this->markTestSkipped('Test only applies to replica sets');
         }
 
-        if (version_compare($this->getServerVersion(), '4.4.0', '<')) {
-            $this->markTestSkipped('NoWritesPerformed error label is only supported on MongoDB 4.4+');
-        }
+        $this->skipIfServerVersion('<', '4.4.0', 'NoWritesPerformed error label is only supported on MongoDB 4.4+');
 
         $client = self::createTestClient(null, ['retryWrites' => true]);
 

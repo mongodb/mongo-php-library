@@ -16,7 +16,6 @@ use MongoDB\Tests\CommandObserver;
 use function call_user_func;
 use function is_callable;
 use function sprintf;
-use function version_compare;
 
 class CreateIndexesFunctionalTest extends FunctionalTestCase
 {
@@ -189,9 +188,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
 
     public function testCommitQuorumOption(): void
     {
-        if (version_compare($this->getServerVersion(), '4.3.4', '<')) {
-            $this->markTestSkipped('commitQuorum is not supported');
-        }
+        $this->skipIfServerVersion('<', '4.3.4', 'commitQuorum is not supported');
 
         if ($this->getPrimaryServer()->getType() !== Server::TYPE_RS_PRIMARY) {
             $this->markTestSkipped('commitQuorum is only supported on replica sets');
@@ -216,9 +213,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
 
     public function testCommitQuorumUnsupported(): void
     {
-        if (version_compare($this->getServerVersion(), '4.3.4', '>=')) {
-            $this->markTestSkipped('commitQuorum is supported');
-        }
+        $this->skipIfServerVersion('>=', '4.3.4', 'commitQuorum is supported');
 
         $operation = new CreateIndexes(
             $this->getDatabaseName(),

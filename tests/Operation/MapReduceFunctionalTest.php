@@ -107,9 +107,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
 
     public function testResultIncludesTimingWithVerboseOption(): void
     {
-        if (version_compare($this->getServerVersion(), '4.3.0', '>=')) {
-            $this->markTestSkipped('mapReduce statistics are no longer exposed');
-        }
+        $this->skipIfServerVersion('>=', '4.3.0', 'mapReduce statistics are no longer exposed');
 
         $this->createFixtures(3);
 
@@ -128,9 +126,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
 
     public function testResultDoesNotIncludeTimingWithoutVerboseOption(): void
     {
-        if (version_compare($this->getServerVersion(), '4.3.0', '>=')) {
-            $this->markTestSkipped('mapReduce statistics are no longer exposed');
-        }
+        $this->skipIfServerVersion('>=', '4.3.0', 'mapReduce statistics are no longer exposed');
 
         $this->createFixtures(3);
 

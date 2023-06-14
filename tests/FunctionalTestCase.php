@@ -484,6 +484,13 @@ abstract class FunctionalTestCase extends TestCase
         return preg_match('@^.*/.*:\d+@', $document['host']);
     }
 
+    protected function skipIfServerVersion(string $operator, string $version, ?string $message = null): void
+    {
+        if (version_compare($this->getServerVersion(), $version, $operator)) {
+            $this->markTestSkipped($message ?? sprintf('Server version is %s %s', $operator, $version));
+        }
+    }
+
     protected function skipIfChangeStreamIsNotSupported(): void
     {
         switch ($this->getPrimaryServer()->getType()) {

@@ -46,7 +46,6 @@ use function str_repeat;
 use function strlen;
 use function substr;
 use function unserialize;
-use function version_compare;
 
 use const DIRECTORY_SEPARATOR;
 use const PATH_SEPARATOR;
@@ -1339,9 +1338,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             $this->markTestSkipped('Explicit encryption tests require replica sets');
         }
 
-        if (version_compare($this->getServerVersion(), '7.0.0', '<')) {
-            $this->markTestSkipped('Explicit encryption tests require MongoDB 7.0 or later');
-        }
+        $this->skipIfServerVersion('<', '7.0.0', 'Explicit encryption tests require MongoDB 7.0 or later');
 
         // Test setup
         $encryptedFields = $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/etc/data/encryptedFields.json'));

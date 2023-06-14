@@ -17,7 +17,6 @@ use function base64_decode;
 use function file_get_contents;
 use function get_debug_type;
 use function is_int;
-use function version_compare;
 
 /**
  * Prose test 22: Range Explicit Encryption
@@ -41,9 +40,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
             $this->markTestSkipped('Range explicit encryption tests require replica sets');
         }
 
-        if (version_compare($this->getServerVersion(), '7.0.0', '<')) {
-            $this->markTestSkipped('Range explicit encryption tests require MongoDB 7.0 or later');
-        }
+        $this->skipIfServerVersion('<', '7.0.0', 'Range explicit encryption tests require MongoDB 7.0 or later');
 
         $client = static::createTestClient();
 

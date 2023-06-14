@@ -12,8 +12,6 @@ use MongoDB\Operation\FindAndModify;
 use MongoDB\Tests\CommandObserver;
 use stdClass;
 
-use function version_compare;
-
 class FindAndModifyFunctionalTest extends FunctionalTestCase
 {
     /** @dataProvider provideQueryDocuments */
@@ -129,9 +127,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
 
     public function testHintOptionUnsupportedClientSideError(): void
     {
-        if (version_compare($this->getServerVersion(), '4.2.0', '>=')) {
-            $this->markTestSkipped('server reports error for unsupported findAndModify options');
-        }
+        $this->skipIfServerVersion('>=', '4.2.0', 'server reports error for unsupported findAndModify options');
 
         $operation = new FindAndModify(
             $this->getDatabaseName(),
@@ -147,9 +143,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
 
     public function testHintOptionAndUnacknowledgedWriteConcernUnsupportedClientSideError(): void
     {
-        if (version_compare($this->getServerVersion(), '4.4.0', '>=')) {
-            $this->markTestSkipped('hint is supported');
-        }
+        $this->skipIfServerVersion('>=', '4.4.0', 'hint is supported');
 
         $operation = new FindAndModify(
             $this->getDatabaseName(),

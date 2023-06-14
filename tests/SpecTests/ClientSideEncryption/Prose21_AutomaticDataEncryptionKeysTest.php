@@ -11,7 +11,6 @@ use MongoDB\Exception\CreateEncryptedCollectionException;
 use MongoDB\Exception\InvalidArgumentException;
 
 use function base64_decode;
-use function version_compare;
 
 /**
  * Prose test 21: Automatic Data Encryption Keys
@@ -35,9 +34,7 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
             $this->markTestSkipped('Automatic data encryption key tests require replica sets');
         }
 
-        if (version_compare($this->getServerVersion(), '7.0.0', '<')) {
-            $this->markTestSkipped('Automatic data encryption key tests require MongoDB 7.0 or later');
-        }
+        $this->skipIfServerVersion('<', '7.0.0', 'Automatic data encryption key tests require MongoDB 7.0 or later');
 
         $client = static::createTestClient();
         $this->database = $client->selectDatabase($this->getDatabaseName());

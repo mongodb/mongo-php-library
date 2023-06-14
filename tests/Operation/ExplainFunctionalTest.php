@@ -21,8 +21,6 @@ use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
 use MongoDB\Tests\CommandObserver;
 
-use function version_compare;
-
 class ExplainFunctionalTest extends FunctionalTestCase
 {
     /** @dataProvider provideVerbosityInformation */
@@ -329,9 +327,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
 
     public function testAggregate(): void
     {
-        if (version_compare($this->getServerVersion(), '4.0.0', '<')) {
-            $this->markTestSkipped('Explaining aggregate command requires server version >= 4.0');
-        }
+        $this->skipIfServerVersion('<', '4.0.0', 'Explaining aggregate command requires server version >= 4.0');
 
         $this->createFixtures(3);
 
@@ -348,9 +344,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
     /** @dataProvider provideVerbosityInformation */
     public function testAggregateOptimizedToQuery($verbosity, $executionStatsExpected, $allPlansExecutionExpected): void
     {
-        if (version_compare($this->getServerVersion(), '4.2.0', '<')) {
-            $this->markTestSkipped('MongoDB < 4.2 does not optimize simple aggregation pipelines');
-        }
+        $this->skipIfServerVersion('<', '4.2.0', 'MongoDB < 4.2 does not optimize simple aggregation pipelines');
 
         $this->createFixtures(3);
 

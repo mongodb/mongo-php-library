@@ -13,7 +13,6 @@ use MongoDB\InsertOneResult;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\UpdateResult;
 use MultipleIterator;
-use PHPUnit_Framework_SkippedTestError;
 
 use function array_diff_key;
 use function array_key_exists;
@@ -25,7 +24,6 @@ use function MongoDB\is_last_pipeline_operator_write;
 use function sprintf;
 use function str_replace;
 use function strtolower;
-use function version_compare;
 
 /**
  * CRUD spec functional tests.
@@ -54,8 +52,12 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     /** @dataProvider provideSpecificationTests */
     public function testSpecification(array $initialData, array $test, $minServerVersion, $maxServerVersion, $serverless): void
     {
-        if (isset($minServerVersion) || isset($maxServerVersion)) {
-            $this->checkServerVersion($minServerVersion, $maxServerVersion);
+        if (isset($minServerVersion)) {
+            $this->skipIfServerVersion('<', $minServerVersion);
+        }
+
+        if (isset($maxServerVersion)) {
+            $this->skipIfServerVersion('>=', $maxServerVersion);
         }
 
         $this->checkServerlessRequirement($serverless);
@@ -140,24 +142,6 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
 
             default:
                 $this->fail(sprintf('Unknown serverless requirement "%s".', $serverless));
-        }
-    }
-
-    /**
-     * Checks that the server version is within the allowed bounds (if any).
-     *
-     * @throws PHPUnit_Framework_SkippedTestError
-     */
-    private function checkServerVersion(?string $minServerVersion, ?string $maxServerVersion): void
-    {
-        $serverVersion = $this->getServerVersion();
-
-        if (isset($minServerVersion) && version_compare($serverVersion, $minServerVersion, '<')) {
-            $this->markTestSkipped(sprintf('Server version "%s" < minServerVersion "%s"', $serverVersion, $minServerVersion));
-        }
-
-        if (isset($maxServerVersion) && version_compare($serverVersion, $maxServerVersion, '>=')) {
-            $this->markTestSkipped(sprintf('Server version "%s" >= maxServerVersion "%s"', $serverVersion, $maxServerVersion));
         }
     }
 

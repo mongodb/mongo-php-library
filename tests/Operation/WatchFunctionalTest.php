@@ -29,7 +29,6 @@ use function bin2hex;
 use function microtime;
 use function MongoDB\server_supports_feature;
 use function sprintf;
-use function version_compare;
 
 /**
  * @group matrix-testing-exclude-server-4.2-driver-4.0-topology-sharded_cluster
@@ -61,9 +60,7 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testGetResumeToken(): void
     {
-        if ($this->isPostBatchResumeTokenSupported()) {
-            $this->markTestSkipped('postBatchResumeToken is supported');
-        }
+        $this->skipIfServerVersion('>=', '4.0.7', 'postBatchResumeToken is supported');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
@@ -108,9 +105,7 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testGetResumeTokenWithPostBatchResumeToken(): void
     {
-        if (! $this->isPostBatchResumeTokenSupported()) {
-            $this->markTestSkipped('postBatchResumeToken is not supported');
-        }
+        $this->skipIfServerVersion('<', '4.0.7', 'postBatchResumeToken is not supported');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
 
@@ -206,9 +201,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testResumeBeforeReceivingAnyResultsIncludesPostBatchResumeToken(): void
     {
-        if (! $this->isPostBatchResumeTokenSupported()) {
-            $this->markTestSkipped('postBatchResumeToken is not supported');
-        }
+        $this->skipIfServerVersion('<', '4.0.7', 'postBatchResumeToken is not supported');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
 
@@ -282,9 +275,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('startAtOperationTime is not supported');
         }
 
-        if ($this->isPostBatchResumeTokenSupported()) {
-            $this->markTestSkipped('postBatchResumeToken takes precedence over startAtOperationTime');
-        }
+        $this->skipIfServerVersion('>=', '4.0.7', 'postBatchResumeToken takes precedence over startAtOperationTime');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
 
@@ -699,9 +690,7 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testResumeTokenNotFoundClientSideError(): void
     {
-        if (version_compare($this->getServerVersion(), '4.1.8', '>=')) {
-            $this->markTestSkipped('Server rejects change streams that modify resume token (SERVER-37786)');
-        }
+        $this->skipIfServerVersion('>=', '4.1.8', 'Server rejects change streams that modify resume token (SERVER-37786)');
 
         $pipeline =  [['$project' => ['_id' => 0]]];
 
@@ -727,9 +716,7 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testResumeTokenNotFoundServerSideError(): void
     {
-        if (version_compare($this->getServerVersion(), '4.1.8', '<')) {
-            $this->markTestSkipped('Server does not reject change streams that modify resume token');
-        }
+        $this->skipIfServerVersion('<', '4.1.8', 'Server does not reject change streams that modify resume token');
 
         $pipeline =  [['$project' => ['_id' => 0]]];
 
@@ -750,9 +737,7 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testResumeTokenInvalidTypeClientSideError(): void
     {
-        if (version_compare($this->getServerVersion(), '4.1.8', '>=')) {
-            $this->markTestSkipped('Server rejects change streams that modify resume token (SERVER-37786)');
-        }
+        $this->skipIfServerVersion('>=', '4.1.8', 'Server rejects change streams that modify resume token (SERVER-37786)');
 
         $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
 
@@ -778,9 +763,7 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testResumeTokenInvalidTypeServerSideError(): void
     {
-        if (version_compare($this->getServerVersion(), '4.1.8', '<')) {
-            $this->markTestSkipped('Server does not reject change streams that modify resume token');
-        }
+        $this->skipIfServerVersion('<', '4.1.8', 'Server does not reject change streams that modify resume token');
 
         $pipeline =  [['$project' => ['_id' => ['$literal' => 'foo']]]];
 
@@ -964,9 +947,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testStartAfterOption(): void
     {
-        if (version_compare($this->getServerVersion(), '4.1.1', '<')) {
-            $this->markTestSkipped('startAfter is not supported');
-        }
+        $this->skipIfServerVersion('<', '4.1.1', 'startAfter is not supported');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
@@ -1175,8 +1156,8 @@ class WatchFunctionalTest extends FunctionalTestCase
 
     public function testSessionFreed(): void
     {
-        if ($this->isShardedCluster() && version_compare($this->getServerVersion(), '5.1.0', '>=')) {
-            $this->markTestSkipped('mongos still reports non-zero cursor ID for invalidated change stream (SERVER-60764)');
+        if ($this->isShardedCluster()) {
+            $this->skipIfServerVersion('>=', '5.1.0', 'mongos still reports non-zero cursor ID for invalidated change stream (SERVER-60764)');
         }
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
@@ -1283,9 +1264,7 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testErrorDuringAggregateCommandDoesNotCauseResume(): void
     {
-        if (version_compare($this->getServerVersion(), '4.0.0', '<')) {
-            $this->markTestSkipped('failCommand is not supported');
-        }
+        $this->skipIfServerVersion('<', '4.0.0', 'failCommand is not supported');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
 
@@ -1362,9 +1341,7 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testGetResumeTokenReturnsOriginalResumeTokenOnEmptyBatch(): void
     {
-        if ($this->isPostBatchResumeTokenSupported()) {
-            $this->markTestSkipped('postBatchResumeToken is supported');
-        }
+        $this->skipIfServerVersion('>=', '4.0.7', 'postBatchResumeToken is supported');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
@@ -1398,10 +1375,7 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testResumeTokenBehaviour(): void
     {
-        if (version_compare($this->getServerVersion(), '4.1.1', '<')) {
-            $this->markTestSkipped('Testing resumeAfter and startAfter can only be tested on servers >= 4.1.1');
-        }
-
+        $this->skipIfServerVersion('<', '4.1.1', 'Testing resumeAfter and startAfter can only be tested on servers >= 4.1.1');
         $this->skipIfIsShardedCluster('Resume token behaviour can\'t be reliably tested on sharded clusters.');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
@@ -1457,9 +1431,7 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testResumingChangeStreamWithoutPreviousResultsIncludesStartAfterOption(): void
     {
-        if (version_compare($this->getServerVersion(), '4.1.1', '<')) {
-            $this->markTestSkipped('Testing resumeAfter and startAfter can only be tested on servers >= 4.1.1');
-        }
+        $this->skipIfServerVersion('<', '4.1.1', 'Testing resumeAfter and startAfter can only be tested on servers >= 4.1.1');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
@@ -1504,9 +1476,7 @@ class WatchFunctionalTest extends FunctionalTestCase
      */
     public function testResumingChangeStreamWithPreviousResultsIncludesResumeAfterOption(): void
     {
-        if (version_compare($this->getServerVersion(), '4.1.1', '<')) {
-            $this->markTestSkipped('Testing resumeAfter and startAfter can only be tested on servers >= 4.1.1');
-        }
+        $this->skipIfServerVersion('<', '4.1.1', 'Testing resumeAfter and startAfter can only be tested on servers >= 4.1.1');
 
         $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
         $changeStream = $operation->execute($this->getPrimaryServer());
@@ -1594,11 +1564,6 @@ class WatchFunctionalTest extends FunctionalTestCase
         );
         $writeResult = $insertOne->execute($this->getPrimaryServer());
         $this->assertEquals(1, $writeResult->getInsertedCount());
-    }
-
-    private function isPostBatchResumeTokenSupported()
-    {
-        return version_compare($this->getServerVersion(), '4.0.7', '>=');
     }
 
     private function isStartAtOperationTimeSupported()

@@ -198,6 +198,7 @@ class Bucket
         return [
             'bucketName' => $this->bucketName,
             'databaseName' => $this->databaseName,
+            'disableMD5' => $this->disableMD5,
             'manager' => $this->manager,
             'chunkSizeBytes' => $this->chunkSizeBytes,
             'readConcern' => $this->readConcern,
@@ -547,7 +548,10 @@ class Bucket
      */
     public function openUploadStream(string $filename, array $options = [])
     {
-        $options += ['chunkSizeBytes' => $this->chunkSizeBytes];
+        $options += [
+            'chunkSizeBytes' => $this->chunkSizeBytes,
+            'disableMD5' => $this->disableMD5,
+        ];
 
         $path = $this->createPathForUpload();
         $context = stream_context_create([

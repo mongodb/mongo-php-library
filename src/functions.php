@@ -300,7 +300,7 @@ function is_in_transaction(array $options): bool
  * executed against a primary server.
  *
  * @internal
- * @param array $pipeline List of pipeline operations
+ * @param array $pipeline Aggregation pipeline
  */
 function is_last_pipeline_operator_write(array $pipeline): bool
 {

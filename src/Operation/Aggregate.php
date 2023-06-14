@@ -31,7 +31,6 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use stdClass;
 
-use function array_is_list;
 use function current;
 use function is_array;
 use function is_bool;
@@ -40,7 +39,7 @@ use function is_object;
 use function is_string;
 use function MongoDB\create_field_path_type_map;
 use function MongoDB\is_last_pipeline_operator_write;
-use function sprintf;
+use function MongoDB\is_pipeline;
 
 /**
  * Operation for the aggregate command.
@@ -132,20 +131,14 @@ class Aggregate implements Executable, Explainable
      *
      * @param string      $databaseName   Database name
      * @param string|null $collectionName Collection name
-     * @param array       $pipeline       List of pipeline operations
+     * @param array       $pipeline       Aggregation pipeline
      * @param array       $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct(string $databaseName, ?string $collectionName, array $pipeline, array $options = [])
     {
-        if (! array_is_list($pipeline)) {
-            throw new InvalidArgumentException('$pipeline is not a list');
-        }
-
-        foreach ($pipeline as $i => $operation) {
-            if (! is_array($operation) && ! is_object($operation)) {
-                throw InvalidArgumentException::invalidType(sprintf('$pipeline[%d]', $i), $operation, 'array or object');
-            }
+        if (! is_pipeline($pipeline, true /* allowEmpty */)) {
+            throw new InvalidArgumentException('$pipeline is not a valid aggregation pipeline');
         }
 
         $options += ['useCursor' => true];

@@ -187,7 +187,7 @@ class Database
      * and $listLocalSessions. Requires MongoDB >= 3.6
      *
      * @see Aggregate::__construct() for supported options
-     * @param array $pipeline List of pipeline operations
+     * @param array $pipeline Aggregation pipeline
      * @param array $options  Command options
      * @return Traversable
      * @throws UnexpectedValueException if the command response was malformed
@@ -598,7 +598,7 @@ class Database
      * Create a change stream for watching changes to the database.
      *
      * @see Watch::__construct() for supported options
-     * @param array $pipeline List of pipeline operations
+     * @param array $pipeline Aggregation pipeline
      * @param array $options  Command options
      * @return ChangeStream
      * @throws InvalidArgumentException for parameter/option parsing errors

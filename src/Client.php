@@ -352,7 +352,7 @@ class Client
      * Create a change stream for watching changes to the cluster.
      *
      * @see Watch::__construct() for supported options
-     * @param array $pipeline List of pipeline operations
+     * @param array $pipeline Aggregation pipeline
      * @param array $options  Command options
      * @return ChangeStream
      * @throws InvalidArgumentException for parameter/option parsing errors

@@ -199,7 +199,7 @@ class Collection
      * "result" array from the command response document.
      *
      * @see Aggregate::__construct() for supported options
-     * @param array $pipeline List of pipeline operations
+     * @param array $pipeline Aggregation pipeline
      * @param array $options  Command options
      * @return Traversable
      * @throws UnexpectedValueException if the command response was malformed
@@ -1105,7 +1105,7 @@ class Collection
      * Create a change stream for watching changes to the collection.
      *
      * @see Watch::__construct() for supported options
-     * @param array $pipeline List of pipeline operations
+     * @param array $pipeline Aggregation pipeline
      * @param array $options  Command options
      * @return ChangeStream
      * @throws InvalidArgumentException for parameter/option parsing errors

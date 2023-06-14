@@ -243,9 +243,9 @@ class FunctionsTest extends TestCase
     }
 
     /** @dataProvider providePipelines */
-    public function testIsPipeline($expected, $pipeline): void
+    public function testIsPipeline($expected, $pipeline, $allowEmpty = false): void
     {
-        $this->assertSame($expected, is_pipeline($pipeline));
+        $this->assertSame($expected, is_pipeline($pipeline, $allowEmpty));
     }
 
     public function providePipelines(): array
@@ -286,6 +286,9 @@ class FunctionsTest extends TestCase
             'invalid pipeline element type: Serializable' => [false, new BSONArray([new BSONArray([])])],
             'invalid pipeline element type: PackedArray' => [false, PackedArray::fromPHP([[]])],
             // Empty array has no pipeline stages
+            'valid empty: array' => [true, [], true],
+            'valid empty: Serializable' => [true, new BSONArray([]), true],
+            'valid empty: PackedArray' => [true, PackedArray::fromPHP([]), true],
             'invalid empty: array' => [false, []],
             'invalid empty: Serializable' => [false, new BSONArray([])],
             'invalid empty: PackedArray' => [false, PackedArray::fromPHP([])],

@@ -336,7 +336,7 @@ operation, has been removed in favor of explicitly using
 :phpmethod:`MongoDB\\Collection::replaceOne()` (with the ``upsert`` option).
 
 While the ``save`` method does have its uses for interactive environments, such
-as the ``mongo`` shell, it was intentionally excluded from the
+as the MongoDB shell, it was intentionally excluded from the
 `CRUD specification <https://github.com/mongodb/specifications/blob/master/source/crud/crud.rst>`_
 for language drivers. Generally, application code should know if the document
 has an identifier and be able to explicitly insert or replace the document and

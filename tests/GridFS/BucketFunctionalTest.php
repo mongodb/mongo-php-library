@@ -53,6 +53,7 @@ class BucketFunctionalTest extends FunctionalTestCase
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY, 1000),
+            'disableMD5' => true,
         ]);
     }
 
@@ -667,6 +668,19 @@ class BucketFunctionalTest extends FunctionalTestCase
         ];
 
         $this->assertSameDocument($expected, $fileDocument);
+    }
+
+    public function testDisableMD5(): void
+    {
+        $options = ['disableMD5' => true];
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream('data'), $options);
+        $this->assertCollectionCount($this->filesCollection, 1);
+
+        $fileDocument = $this->filesCollection->findOne(
+            ['_id' => $id]
+        );
+
+        $this->assertArrayNotHasKey('md5', $fileDocument);
     }
 
     public function testUploadingFirstFileCreatesIndexes(): void

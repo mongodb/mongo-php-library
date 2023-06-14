@@ -33,8 +33,8 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         $this->bucket = new Bucket($this->manager, $this->getDatabaseName());
         $this->bucket->drop();
 
-        $this->chunksCollection = new Collection($this->manager, $this->getDatabaseName(), 'fs.chunks');
-        $this->filesCollection = new Collection($this->manager, $this->getDatabaseName(), 'fs.files');
+        $this->chunksCollection = $this->createCollection($this->getDatabaseName(), 'fs.chunks');
+        $this->filesCollection = $this->createCollection($this->getDatabaseName(), 'fs.files');
     }
 
     /**

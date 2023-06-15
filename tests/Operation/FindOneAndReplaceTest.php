@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\FindOneAndReplace;
 
@@ -81,5 +82,40 @@ class FindOneAndReplaceTest extends TestCase
     public function provideInvalidConstructorReturnDocumentOptions()
     {
         return $this->wrapValuesForDataProvider([-1, 0, 3]);
+    }
+
+    public function testExplainableCommandDocument(): void
+    {
+        $options = [
+            'bypassDocumentValidation' => true,
+            'collation' => ['locale' => 'fr'],
+            'comment' => 'explain me',
+            'fields' => ['_id' => 0],
+            'hint' => '_id_',
+            'maxTimeMS' => 100,
+            'projection' => ['_id' => 0],
+            'returnDocument' => FindOneAndReplace::RETURN_DOCUMENT_AFTER,
+            'sort' => ['x' => 1],
+            'typeMap' => ['root' => 'array'],
+            'let' => ['a' => 3],
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+        ];
+        $operation = new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), ['y' => 2], ['y' => 3], $options);
+
+        $expected = [
+            'findAndModify' => $this->getCollectionName(),
+            'new' => true,
+            'collation' => (object) ['locale' => 'fr'],
+            'fields' => (object) ['_id' => 0],
+            'let' => (object) ['a' => 3],
+            'query' => (object) ['y' => 2],
+            'sort' => (object) ['x' => 1],
+            'update' => (object) ['y' => 3],
+            'bypassDocumentValidation' => true,
+            'comment' => 'explain me',
+            'hint' => '_id_',
+            'maxTimeMS' => 100,
+        ];
+        $this->assertEquals($expected, $operation->getCommandDocument());
     }
 }

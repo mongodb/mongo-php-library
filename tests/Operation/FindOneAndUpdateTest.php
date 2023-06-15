@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\FindOneAndUpdate;
 
@@ -64,5 +65,43 @@ class FindOneAndUpdateTest extends TestCase
     public function provideInvalidConstructorReturnDocumentOptions()
     {
         return $this->wrapValuesForDataProvider([-1, 0, 3]);
+    }
+
+    public function testExplainableCommandDocument(): void
+    {
+        $options = [
+            'arrayFilters' => [['x' => 1]],
+            'bypassDocumentValidation' => true,
+            'collation' => ['locale' => 'fr'],
+            'comment' => 'explain me',
+            'hint' => '_id_',
+            'maxTimeMS' => 100,
+            'projection' => ['_id' => 0],
+            'returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER,
+            'sort' => ['x' => 1],
+            'typeMap' => ['root' => 'array'],
+            'upsert' => true,
+            'let' => ['a' => 3],
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+        ];
+        $operation = new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), ['y' => 2], ['$set' => ['x' => 2]], $options);
+
+        $expected = [
+            'findAndModify' => $this->getCollectionName(),
+            'new' => true,
+            'upsert' => true,
+            'collation' => (object) ['locale' => 'fr'],
+            'fields' => (object) ['_id' => 0],
+            'let' => (object) ['a' => 3],
+            'query' => (object) ['y' => 2],
+            'sort' => (object) ['x' => 1],
+            'update' => (object) ['$set' => ['x' => 2]],
+            'arrayFilters' =>  [['x' => 1]],
+            'bypassDocumentValidation' => true,
+            'comment' => 'explain me',
+            'hint' => '_id_',
+            'maxTimeMS' => 100,
+        ];
+        $this->assertEquals($expected, $operation->getCommandDocument());
     }
 }

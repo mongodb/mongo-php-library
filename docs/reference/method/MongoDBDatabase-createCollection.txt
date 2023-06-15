@@ -26,7 +26,7 @@ Definition
    collection. You may also explicitly create a collection with specific options
    using the :phpmethod:`MongoDB\\Database::createCollection()` method, or using
    :manual:`db.createCollection() </reference/method/db.createCollection>` in
-   the :program:`mongo` shell.
+   the MongoDB shell.
 
    Explicitly creating collections enables you to create
    :manual:`capped collections </core/capped-collections>`, specify

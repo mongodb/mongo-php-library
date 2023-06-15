@@ -15,14 +15,6 @@ description: |
      This option is not passed to the :manual:`drop </reference/command/drop>`
      command. The library uses it to determine related metadata collections that
      should be dropped in addition to an encrypted collection.
-
-  .. note::
-
-     Queryable Encryption is in public preview and available for evaluation
-     purposes. It is not yet recommended for production deployments as breaking
-     changes may be introduced. See the
-     `Queryable Encryption Preview <https://www.mongodb.com/blog/post/mongodb-releases-queryable-encryption-preview/>`_
-     blog post for more information.
 interface: phpmethod
 operation: ~
 optional: true

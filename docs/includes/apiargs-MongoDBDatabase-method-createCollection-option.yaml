@@ -86,16 +86,8 @@ description: |
   `Field Encryption and Queryability <https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/>`_
   in the MongoDB manual for more information.
 
-  This option is available in MongoDB 6.0+ and will result in an exception at
+  This option is available in MongoDB 7.0+ and will result in an exception at
   execution time if specified for an older server version.
-
-  .. note::
-
-     Queryable Encryption is in public preview and available for evaluation
-     purposes. It is not yet recommended for production deployments as breaking
-     changes may be introduced. See the
-     `Queryable Encryption Preview <https://www.mongodb.com/blog/post/mongodb-releases-queryable-encryption-preview/>`_
-     blog post for more information.
 
   .. versionadded:: 1.13
 interface: phpmethod

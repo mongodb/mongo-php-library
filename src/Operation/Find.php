@@ -330,27 +330,17 @@ class Find implements Executable, Explainable
      */
     public function getCommandDocument()
     {
-        $cmd = $this->createCommandDocument();
-
-        // Read concern can change the query plan
-        if (isset($this->options['readConcern'])) {
-            $cmd['readConcern'] = $this->options['readConcern'];
-        }
-
-        return $cmd;
-    }
-
-    /**
-     * Construct a command document for Find
-     */
-    private function createCommandDocument(): array
-    {
         $cmd = ['find' => $this->collectionName, 'filter' => (object) $this->filter];
 
         $options = $this->createQueryOptions();
 
         if (empty($options)) {
             return $cmd;
+        }
+
+        // Read concern can change the query plan
+        if (isset($this->options['readConcern'])) {
+            $cmd['readConcern'] = $this->options['readConcern'];
         }
 
         // maxAwaitTimeMS is a Query level option so should not be considered here

@@ -76,12 +76,13 @@ class FindOneAndUpdateTest extends TestCase
             'comment' => 'explain me',
             'hint' => '_id_',
             'maxTimeMS' => 100,
-            'projection' => ['_id' => 0],
-            'returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER,
             'sort' => ['x' => 1],
-            'typeMap' => ['root' => 'array'],
             'upsert' => true,
             'let' => ['a' => 3],
+            // Intentionally omitted options
+            'projection' => ['_id' => 0],
+            'returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER,
+            'typeMap' => ['root' => 'array'],
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];
         $operation = new FindOneAndUpdate($this->getDatabaseName(), $this->getCollectionName(), ['y' => 2], ['$set' => ['x' => 2]], $options);

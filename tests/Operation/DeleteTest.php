@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Delete;
 use TypeError;
@@ -71,10 +72,10 @@ class DeleteTest extends TestCase
         $options = [
             'collation' => ['locale' => 'fr'],
             'hint' => '_id_',
-            // Ignored options
             'let' => ['a' => 1],
-            'ordered' => true,
             'comment' => 'explain me',
+            // Intentionally omitted options
+            'writeConcern' => new WriteConcern(0),
         ];
         $operation = new Delete($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], 0, $options);
 
@@ -88,6 +89,8 @@ class DeleteTest extends TestCase
                     'hint' => '_id_',
                 ],
             ],
+            'comment' => 'explain me',
+            'let' => (object) ['a' => 1],
         ];
         $this->assertEquals($expected, $operation->getCommandDocument());
     }

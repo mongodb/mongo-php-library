@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Distinct;
 
@@ -60,9 +61,10 @@ class DistinctTest extends TestCase
             'collation' => ['locale' => 'fr'],
             'maxTimeMS' => 100,
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
+            'comment' => 'explain me',
+            // Intentionally omitted options
             'readPreference' => new ReadPreference(ReadPreference::SECONDARY_PREFERRED),
             'typeMap' => ['root' => 'array'],
-            'comment' => 'explain me',
         ];
         $operation = new Distinct($this->getDatabaseName(), $this->getCollectionName(), 'f', ['x' => 1], $options);
 

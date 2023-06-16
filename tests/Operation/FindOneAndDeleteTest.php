@@ -40,9 +40,10 @@ class FindOneAndDeleteTest extends TestCase
             'comment' => 'explain me',
             'hint' => '_id_',
             'maxTimeMS' => 100,
-            'projection' => ['_id' => 0],
             'sort' => ['x' => 1],
             'let' => ['a' => 3],
+            // Intentionally omitted options
+            'projection' => ['_id' => 0],
             'typeMap' => ['root' => 'array'],
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];

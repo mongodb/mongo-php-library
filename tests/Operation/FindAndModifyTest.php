@@ -97,13 +97,14 @@ class FindAndModifyTest extends TestCase
             'maxTimeMS' => 100,
             'new' => true,
             'query' => ['y' => 2],
-            'remove' => false,
             'sort' => ['x' => 1],
-            'typeMap' => ['root' => 'array'],
             'update' => ['$set' => ['x' => 2]],
             'upsert' => true,
             'let' => ['a' => 3],
-            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+            // Intentionally omitted options
+            'remove' => false, // When "update" is set
+            'typeMap' => ['root' => 'array'],
+            'writeConcern' => new WriteConcern(0),
         ];
         $operation = new FindAndModify($this->getDatabaseName(), $this->getCollectionName(), $options);
 

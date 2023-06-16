@@ -94,10 +94,11 @@ class FindOneAndReplaceTest extends TestCase
             'hint' => '_id_',
             'maxTimeMS' => 100,
             'projection' => ['_id' => 0],
-            'returnDocument' => FindOneAndReplace::RETURN_DOCUMENT_AFTER,
             'sort' => ['x' => 1],
-            'typeMap' => ['root' => 'array'],
             'let' => ['a' => 3],
+            // Intentionally omitted options
+            'returnDocument' => FindOneAndReplace::RETURN_DOCUMENT_AFTER,
+            'typeMap' => ['root' => 'array'],
             'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
         ];
         $operation = new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), ['y' => 2], ['y' => 3], $options);

@@ -338,11 +338,6 @@ class Find implements Executable, Explainable
             return $cmd;
         }
 
-        // Read concern can change the query plan
-        if (isset($this->options['readConcern'])) {
-            $cmd['readConcern'] = $this->options['readConcern'];
-        }
-
         // maxAwaitTimeMS is a Query level option so should not be considered here
         unset($options['maxAwaitTimeMS']);
 

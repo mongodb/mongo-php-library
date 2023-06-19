@@ -300,9 +300,6 @@ class Aggregate implements Executable, Explainable
     {
         $cmd = $this->createCommandDocument();
 
-        // The 'explain' option is incompatible with the explain command
-        unset($cmd['explain']);
-
         // Read concern can change the query plan
         if (isset($this->options['readConcern'])) {
             $cmd['readConcern'] = $this->options['readConcern'];

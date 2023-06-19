@@ -122,7 +122,7 @@ class AggregateTest extends TestCase
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'useCursor' => true,
             // Intentionally omitted options
-            'explain' => true,
+            // The "explain" option is illegal
             'readPreference' => new ReadPreference(ReadPreference::SECONDARY_PREFERRED),
             'typeMap' => ['root' => 'array', 'document' => 'array'],
             'writeConcern' => new WriteConcern(0),
@@ -140,6 +140,7 @@ class AggregateTest extends TestCase
             'maxTimeMS' => 100,
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
             'let' => (object) ['a' => 1],
+            'cursor' => ['batchSize' => 100],
         ];
         $this->assertEquals($expected, $operation->getCommandDocument());
     }

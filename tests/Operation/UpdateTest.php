@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Operation;
 
+use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Update;
 
@@ -74,5 +75,38 @@ class UpdateTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('"multi" option cannot be true unless $update has update operator(s) or non-empty pipeline');
         new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $update, ['multi' => true]);
+    }
+
+    public function testExplainableCommandDocument(): void
+    {
+        $options = [
+            'arrayFilters' => [['x' => 1]],
+            'bypassDocumentValidation' => true,
+            'collation' => ['locale' => 'fr'],
+            'comment' => 'explain me',
+            'hint' => '_id_',
+            'multi' => true,
+            'upsert' => true,
+            'let' => ['a' => 3],
+            'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
+        ];
+        $operation = new Update($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['$set' => ['x' => 2]], $options);
+
+        $expected = [
+            'update' => $this->getCollectionName(),
+            'bypassDocumentValidation' => true,
+            'updates' => [
+                [
+                    'q' => ['x' => 1],
+                    'u' => ['$set' => ['x' => 2]],
+                    'multi' => true,
+                    'upsert' => true,
+                    'arrayFilters' => [['x' => 1]],
+                    'hint' => '_id_',
+                    'collation' => (object) ['locale' => 'fr'],
+                ],
+            ],
+        ];
+        $this->assertEquals($expected, $operation->getCommandDocument());
     }
 }

@@ -471,7 +471,7 @@
       <code>$this-&gt;options['writeConcern']</code>
     </MixedArgument>
     <MixedAssignment occurrences="5">
-      <code>$cmd['writeConcern']</code>
+      <code>$cmd['comment']</code>
       <code>$deleteOptions['hint']</code>
       <code>$options['comment']</code>
       <code>$options['session']</code>

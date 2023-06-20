@@ -43,9 +43,7 @@ use function iterator_to_array;
 use function json_decode;
 use function sprintf;
 use function str_repeat;
-use function strlen;
 use function substr;
-use function unserialize;
 
 use const DIRECTORY_SEPARATOR;
 use const PATH_SEPARATOR;
@@ -1862,14 +1860,6 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         }
     }
 
-    private function createInt64(string $value): Int64
-    {
-        $array = sprintf('a:1:{s:7:"integer";s:%d:"%s";}', strlen($value), $value);
-        $int64 = sprintf('C:%d:"%s":%d:{%s}', strlen(Int64::class), Int64::class, strlen($array), $array);
-
-        return unserialize($int64);
-    }
-
     private function createTestCollection(?stdClass $encryptedFields = null, ?stdClass $jsonSchema = null): void
     {
         $context = $this->getContext();
@@ -1936,7 +1926,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 /* Note: workaround issue where mongocryptd refuses to encrypt
                  * 32-bit integers if schemaMap defines a "long" BSON type. */
                 $value = $data->type === 'long' && ! $data->value instanceof Int64
-                    ? $this->createInt64($data->value)
+                    ? new Int64($data->value)
                     : $data->value;
 
                 $encrypted = $clientEncryption->encrypt($value, $encryptionOptions);
@@ -1987,7 +1977,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             /* Note: workaround issue where mongocryptd refuses to encrypt
              * 32-bit integers if schemaMap defines a "long" BSON type. */
             if ($data->type === 'long' && ! $data->value instanceof Int64) {
-                $data->value = $this->createInt64($data->value);
+                $data->value = new Int64($data->value);
             }
 
             return $data;

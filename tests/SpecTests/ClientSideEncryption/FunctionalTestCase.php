@@ -2,7 +2,6 @@
 
 namespace MongoDB\Tests\SpecTests\ClientSideEncryption;
 
-use MongoDB\BSON\Int64;
 use MongoDB\Client;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Tests\SpecTests\FunctionalTestCase as BaseFunctionalTestCase;
@@ -14,8 +13,6 @@ use function getenv;
 use function is_executable;
 use function is_readable;
 use function sprintf;
-use function strlen;
-use function unserialize;
 
 use const DIRECTORY_SEPARATOR;
 use const PATH_SEPARATOR;
@@ -67,14 +64,6 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         }
 
         $collection->insertMany($keyVaultData);
-    }
-
-    protected static function createInt64(string $value): Int64
-    {
-        $array = sprintf('a:1:{s:7:"integer";s:%d:"%s";}', strlen($value), $value);
-        $int64 = sprintf('C:%d:"%s":%d:{%s}', strlen(Int64::class), Int64::class, strlen($array), $array);
-
-        return unserialize($int64);
     }
 
     private function createTestCollection(?stdClass $encryptedFields = null, ?stdClass $jsonSchema = null): void

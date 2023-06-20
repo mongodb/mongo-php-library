@@ -4,6 +4,7 @@ namespace MongoDB\Tests\SpecTests;
 
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
+use MongoDB\BSON\Int64;
 use MongoDB\BSON\Javascript;
 use MongoDB\BSON\MaxKey;
 use MongoDB\BSON\MinKey;
@@ -18,7 +19,6 @@ use PHPUnit\Framework\ExpectationFailedException;
 
 use function MongoDB\BSON\fromJSON;
 use function MongoDB\BSON\toPHP;
-use function unserialize;
 
 use const PHP_INT_SIZE;
 
@@ -85,8 +85,8 @@ class DocumentsMatchConstraintTest extends TestCase
         $undefined = toPHP(fromJSON('{ "x": {"$undefined": true} }'))->x;
         $symbol = toPHP(fromJSON('{ "x": {"$symbol": "test"} }'))->x;
         $dbPointer = toPHP(fromJSON('{ "x": {"$dbPointer": {"$ref": "db.coll", "$id" : { "$oid" : "5a2e78accd485d55b405ac12" }  }} }'))->x;
-        $int64 = unserialize('C:18:"MongoDB\BSON\Int64":28:{a:1:{s:7:"integer";s:1:"1";}}');
-        $long = PHP_INT_SIZE == 4 ? unserialize('C:18:"MongoDB\BSON\Int64":38:{a:1:{s:7:"integer";s:10:"4294967296";}}') : 4294967296;
+        $int64 = new Int64(1);
+        $long = PHP_INT_SIZE == 4 ? new Int64('4294967296') : 4294967296;
 
         return [
             'double' => ['double', 1.4],

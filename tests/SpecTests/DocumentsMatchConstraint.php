@@ -30,8 +30,6 @@ use function PHPUnit\Framework\logicalAnd;
 use function PHPUnit\Framework\logicalOr;
 use function sprintf;
 
-use const PHP_INT_SIZE;
-
 /**
  * Constraint that checks if one document matches another.
  *
@@ -307,12 +305,6 @@ class DocumentsMatchConstraint extends Constraint
             if ($value instanceof BSONDocument || $value instanceof stdClass || is_array($value)) {
                 $bson[$key] = $this->prepareBSON($value, false, $sortKeys);
                 continue;
-            }
-
-            /* Convert Int64 objects to integers on 64-bit platforms for
-             * compatibility reasons. */
-            if ($value instanceof Int64 && PHP_INT_SIZE != 4) {
-                $bson[$key] = (int) ((string) $value);
             }
         }
 

@@ -12,13 +12,7 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\CreateEncryptedCollection;
 
 use function base64_decode;
-use function explode;
 use function getenv;
-use function is_executable;
-use function is_readable;
-
-use const DIRECTORY_SEPARATOR;
-use const PATH_SEPARATOR;
 
 class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
 {
@@ -216,29 +210,5 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         }
 
         return parent::createTestClient($uri, $options, $driverOptions);
-    }
-
-    private static function isCryptSharedLibAvailable(): bool
-    {
-        $cryptSharedLibPath = getenv('CRYPT_SHARED_LIB_PATH');
-
-        if ($cryptSharedLibPath === false) {
-            return false;
-        }
-
-        return is_readable($cryptSharedLibPath);
-    }
-
-    private static function isMongocryptdAvailable(): bool
-    {
-        $paths = explode(PATH_SEPARATOR, getenv("PATH"));
-
-        foreach ($paths as $path) {
-            if (is_executable($path . DIRECTORY_SEPARATOR . 'mongocryptd')) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

@@ -30,7 +30,9 @@ use function getenv;
 use function implode;
 use function is_array;
 use function is_callable;
+use function is_executable;
 use function is_object;
+use function is_readable;
 use function is_string;
 use function key;
 use function ob_get_clean;
@@ -43,8 +45,10 @@ use function preg_replace;
 use function sprintf;
 use function version_compare;
 
+use const DIRECTORY_SEPARATOR;
 use const FILTER_VALIDATE_BOOLEAN;
 use const INFO_MODULES;
+use const PATH_SEPARATOR;
 
 abstract class FunctionalTestCase extends TestCase
 {
@@ -561,6 +565,40 @@ abstract class FunctionalTestCase extends TestCase
         if ($this->getServerStorageEngine() !== 'wiredTiger') {
             $this->markTestSkipped('Transactions require WiredTiger storage engine');
         }
+    }
+
+    /**
+     * The Automatic Encryption Shared Library is installed with MongoDB Enterprise or Atlas (version 6.0 and later).
+     *
+     * @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/shared-library/
+     */
+    protected static function isCryptSharedLibAvailable(): bool
+    {
+        $cryptSharedLibPath = getenv('CRYPT_SHARED_LIB_PATH');
+
+        if ($cryptSharedLibPath === false) {
+            return false;
+        }
+
+        return is_readable($cryptSharedLibPath);
+    }
+
+    /**
+     * mongocryptd is installed with MongoDB Enterprise Server (version 4.2 and later).
+     *
+     * @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/mongocryptd/
+     */
+    protected static function isMongocryptdAvailable(): bool
+    {
+        $paths = explode(PATH_SEPARATOR, getenv("PATH"));
+
+        foreach ($paths as $path) {
+            if (is_executable($path . DIRECTORY_SEPARATOR . 'mongocryptd')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static function appendAuthenticationOptions(array $options): array

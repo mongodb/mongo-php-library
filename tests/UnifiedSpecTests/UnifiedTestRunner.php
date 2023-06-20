@@ -24,8 +24,6 @@ use function gc_collect_cycles;
 use function getenv;
 use function implode;
 use function in_array;
-use function is_executable;
-use function is_readable;
 use function is_string;
 use function parse_url;
 use function PHPUnit\Framework\assertContainsOnly;
@@ -42,9 +40,7 @@ use function strpos;
 use function substr_replace;
 use function version_compare;
 
-use const DIRECTORY_SEPARATOR;
 use const FILTER_VALIDATE_BOOLEAN;
-use const PATH_SEPARATOR;
 
 /**
  * Unified test runner.
@@ -355,30 +351,6 @@ final class UnifiedTestRunner
         }
 
         return static::isCryptSharedLibAvailable() || static::isMongocryptdAvailable();
-    }
-
-    private static function isCryptSharedLibAvailable(): bool
-    {
-        $cryptSharedLibPath = getenv('CRYPT_SHARED_LIB_PATH');
-
-        if ($cryptSharedLibPath === false) {
-            return false;
-        }
-
-        return is_readable($cryptSharedLibPath);
-    }
-
-    private static function isMongocryptdAvailable(): bool
-    {
-        $paths = explode(PATH_SEPARATOR, getenv("PATH"));
-
-        foreach ($paths as $path) {
-            if (is_executable($path . DIRECTORY_SEPARATOR . 'mongocryptd')) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

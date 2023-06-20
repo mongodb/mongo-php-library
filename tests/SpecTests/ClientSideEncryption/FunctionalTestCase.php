@@ -8,14 +8,8 @@ use MongoDB\Tests\SpecTests\FunctionalTestCase as BaseFunctionalTestCase;
 use PHPUnit\Framework\Assert;
 use stdClass;
 
-use function explode;
 use function getenv;
-use function is_executable;
-use function is_readable;
 use function sprintf;
-
-use const DIRECTORY_SEPARATOR;
-use const PATH_SEPARATOR;
 
 /**
  * Base class for client-side encryption prose tests.
@@ -91,29 +85,5 @@ abstract class FunctionalTestCase extends BaseFunctionalTestCase
         }
 
         return $value;
-    }
-
-    private static function isCryptSharedLibAvailable(): bool
-    {
-        $cryptSharedLibPath = getenv('CRYPT_SHARED_LIB_PATH');
-
-        if ($cryptSharedLibPath === false) {
-            return false;
-        }
-
-        return is_readable($cryptSharedLibPath);
-    }
-
-    private static function isMongocryptdAvailable(): bool
-    {
-        $paths = explode(PATH_SEPARATOR, getenv("PATH"));
-
-        foreach ($paths as $path) {
-            if (is_executable($path . DIRECTORY_SEPARATOR . 'mongocryptd')) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

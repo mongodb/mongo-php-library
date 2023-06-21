@@ -567,11 +567,7 @@ abstract class FunctionalTestCase extends TestCase
         }
     }
 
-    /**
-     * The Automatic Encryption Shared Library is installed with MongoDB Enterprise or Atlas (version 6.0 and later).
-     *
-     * @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/shared-library/
-     */
+    /** @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/shared-library/ */
     protected static function isCryptSharedLibAvailable(): bool
     {
         $cryptSharedLibPath = getenv('CRYPT_SHARED_LIB_PATH');
@@ -583,11 +579,7 @@ abstract class FunctionalTestCase extends TestCase
         return is_readable($cryptSharedLibPath);
     }
 
-    /**
-     * mongocryptd is installed with MongoDB Enterprise Server (version 4.2 and later).
-     *
-     * @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/mongocryptd/
-     */
+    /** @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/mongocryptd/ */
     protected static function isMongocryptdAvailable(): bool
     {
         $paths = explode(PATH_SEPARATOR, getenv("PATH"));

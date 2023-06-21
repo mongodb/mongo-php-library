@@ -20,7 +20,6 @@ use function ob_end_clean;
 use function ob_start;
 use function usleep;
 use function var_dump;
-use function version_compare;
 
 /**
  * Documentation examples to be parsed for inclusion in the MongoDB manual.
@@ -1549,9 +1548,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testSnapshotQueries(): void
     {
-        if (version_compare($this->getServerVersion(), '5.0.0', '<')) {
-            $this->markTestSkipped('Snapshot queries outside of transactions are not supported');
-        }
+        $this->skipIfServerVersion('<', '5.0.0', 'Snapshot queries outside of transactions are not supported');
 
         if (! ($this->isReplicaSet() || $this->isShardedClusterUsingReplicasets())) {
             $this->markTestSkipped('Snapshot read concern is only supported with replicasets');
@@ -1682,13 +1679,8 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
     public function testVersionedApiMigration(): void
     {
-        if (version_compare($this->getServerVersion(), '5.0.0', '<')) {
-            $this->markTestSkipped('Versioned API is not supported');
-        }
-
-        if (version_compare($this->getServerVersion(), '5.0.9', '>=')) {
-            $this->markTestSkipped('The count command was added to API version 1 (SERVER-63850)');
-        }
+        $this->skipIfServerVersion('<', '5.0.0', 'Versioned API is not supported');
+        $this->skipIfServerVersion('>=', '5.0.9', 'The count command was added to API version 1 (SERVER-63850)');
 
         $this->dropCollection($this->getDatabaseName(), 'sales');
         $uriString = static::getUri(true);
@@ -1817,9 +1809,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $this->markTestSkipped('Queryable encryption requires replica sets');
         }
 
-        if (version_compare($this->getServerVersion(), '7.0.0', '<')) {
-            $this->markTestSkipped('Explicit encryption tests require MongoDB 7.0 or later');
-        }
+        $this->skipIfServerVersion('<', '7.0.0', 'Explicit encryption tests require MongoDB 7.0 or later');
 
         if (! $this->isEnterprise()) {
             $this->markTestSkipped('Automatic encryption requires MongoDB Enterprise');

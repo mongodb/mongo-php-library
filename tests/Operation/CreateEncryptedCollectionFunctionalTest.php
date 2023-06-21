@@ -16,7 +16,6 @@ use function explode;
 use function getenv;
 use function is_executable;
 use function is_readable;
-use function version_compare;
 
 use const DIRECTORY_SEPARATOR;
 use const PATH_SEPARATOR;
@@ -42,9 +41,7 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Queryable Encryption requires replica sets');
         }
 
-        if (version_compare($this->getServerVersion(), '6.0.0', '<')) {
-            $this->markTestSkipped('Queryable Encryption requires MongoDB 6.0 or later');
-        }
+        $this->skipIfServerVersion('<', '6.0.0', 'Queryable Encryption requires MongoDB 6.0 or later');
 
         $client = static::createTestClient();
 

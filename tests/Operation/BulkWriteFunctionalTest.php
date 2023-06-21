@@ -15,7 +15,6 @@ use MongoDB\Tests\CommandObserver;
 use stdClass;
 
 use function is_array;
-use function version_compare;
 
 class BulkWriteFunctionalTest extends FunctionalTestCase
 {
@@ -200,8 +199,8 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
      */
     public function testUpdateDocuments($update, $expectedUpdate): void
     {
-        if (is_array($expectedUpdate) && version_compare($this->getServerVersion(), '4.2.0', '<')) {
-            $this->markTestSkipped('Pipeline-style updates are not supported');
+        if (is_array($expectedUpdate)) {
+            $this->skipIfServerVersion('<', '4.2.0', 'Pipeline-style updates are not supported');
         }
 
         (new CommandObserver())->observe(
@@ -425,9 +424,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
 
     public function testBulkWriteWithPipelineUpdates(): void
     {
-        if (version_compare($this->getServerVersion(), '4.2.0', '<')) {
-            $this->markTestSkipped('Pipeline-style updates are not supported');
-        }
+        $this->skipIfServerVersion('<', '4.2.0', 'Pipeline-style updates are not supported');
 
         $this->createFixtures(4);
 

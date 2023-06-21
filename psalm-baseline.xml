@@ -41,9 +41,8 @@
     </UnsafeInstantiation>
   </file>
   <file src="src/Exception/InvalidArgumentException.php">
-    <UnsafeInstantiation occurrences="2">
+    <UnsafeInstantiation occurrences="1">
       <code>new static(sprintf('Expected %s to have type "%s" but found "%s"', $name, $expectedType, get_debug_type($value)))</code>
-      <code>new static('Expected update operator(s) or non-empty pipeline for ' . $name)</code>
     </UnsafeInstantiation>
   </file>
   <file src="src/Exception/ResumeTokenException.php">
@@ -421,18 +420,13 @@
       <code>$options['pipeline']</code>
       <code>$this-&gt;options['typeMap']</code>
     </MixedArgument>
-    <MixedAssignment occurrences="4">
+    <MixedAssignment occurrences="3">
       <code>$cmd[$option]</code>
-      <code>$i</code>
       <code>$options['session']</code>
       <code>$options['writeConcern']</code>
     </MixedAssignment>
   </file>
   <file src="src/Operation/CreateEncryptedCollection.php">
-    <DocblockTypeContradiction occurrences="2">
-      <code>! is_array($encryptedFields['fields'])</code>
-      <code>! is_array($field) &amp;&amp; ! is_object($field)</code>
-    </DocblockTypeContradiction>
     <MixedArgument occurrences="1">
       <code>$this-&gt;options['encryptedFields']</code>
     </MixedArgument>
@@ -555,8 +549,7 @@
     <MixedArrayAccess occurrences="1">
       <code>$options['modifiers'][$modifier[1]]</code>
     </MixedArrayAccess>
-    <MixedAssignment occurrences="5">
-      <code>$cmd['readConcern']</code>
+    <MixedAssignment occurrences="4">
       <code>$options[$modifier[0]]</code>
       <code>$options[$option]</code>
       <code>$options['readPreference']</code>
@@ -712,9 +705,8 @@
     <MixedArgument occurrences="1">
       <code>$this-&gt;options['writeConcern']</code>
     </MixedArgument>
-    <MixedAssignment occurrences="6">
+    <MixedAssignment occurrences="5">
       <code>$cmd['bypassDocumentValidation']</code>
-      <code>$cmd['writeConcern']</code>
       <code>$options[$option]</code>
       <code>$options['session']</code>
       <code>$options['writeConcern']</code>
@@ -799,18 +791,13 @@
       <code>$typeMap['fieldPaths'][$fieldPath]</code>
       <code>$value</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="3">
-      <code>array|object</code>
+    <MixedInferredReturnType occurrences="2">
       <code>array|object|null</code>
       <code>array|object|null</code>
     </MixedInferredReturnType>
-    <MixedOperand occurrences="1">
-      <code>$type</code>
-    </MixedOperand>
-    <MixedReturnStatement occurrences="3">
+    <MixedReturnStatement occurrences="2">
       <code>$collectionInfo['options']['encryptedFields'] ?? null</code>
       <code>$encryptedFieldsMap[$databaseName . '.' . $collectionName] ?? null</code>
-      <code>toPHP(fromPHP($document), $typeMap)</code>
     </MixedReturnStatement>
   </file>
 </files>

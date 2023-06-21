@@ -7,6 +7,7 @@ use MongoDB\BSON\Javascript;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -21,7 +22,7 @@ use function array_filter;
 use function call_user_func;
 use function is_scalar;
 use function json_encode;
-use function strchr;
+use function str_contains;
 use function usort;
 use function version_compare;
 
@@ -447,16 +448,28 @@ class CollectionFunctionalTest extends FunctionalTestCase
     public function collectionMethodClosures()
     {
         return [
-            [
+            'read-only aggregate' => [
                 function ($collection, $session, $options = []): void {
                     $collection->aggregate(
                         [['$match' => ['_id' => ['$lt' => 3]]]],
                         ['session' => $session] + $options
                     );
+                }, 'r',
+            ],
+
+            'read-write aggregate' => [
+                function ($collection, $session, $options = []): void {
+                    $collection->aggregate(
+                        [
+                            ['$match' => ['_id' => ['$lt' => 3]]],
+                            ['$merge' => $collection . '_out'],
+                        ],
+                        ['session' => $session] + $options
+                    );
                 }, 'rw',
             ],
 
-            [
+            'bulkWrite insertOne' => [
                 function ($collection, $session, $options = []): void {
                     $collection->bulkWrite(
                         [['insertOne' => [['test' => 'foo']]]],
@@ -466,7 +479,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             ],
 
             /* Disabled, as count command can't be used in transactions
-            [
+            'count' => [
                 function($collection, $session, $options = []) {
                     $collection->count(
                         [],
@@ -476,7 +489,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             ],
             */
 
-            [
+            'countDocuments' => [
                 function ($collection, $session, $options = []): void {
                     $collection->countDocuments(
                         [],
@@ -486,7 +499,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             ],
 
             /* Disabled, as it's illegal to use createIndex command in transactions
-            [
+            'createIndex' => [
                 function($collection, $session, $options = []) {
                     $collection->createIndex(
                         ['test' => 1],
@@ -496,7 +509,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             ],
             */
 
-            [
+            'deleteMany' => [
                 function ($collection, $session, $options = []): void {
                     $collection->deleteMany(
                         ['test' => 'foo'],
@@ -505,7 +518,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 }, 'w',
             ],
 
-            [
+            'deleteOne' => [
                 function ($collection, $session, $options = []): void {
                     $collection->deleteOne(
                         ['test' => 'foo'],
@@ -514,7 +527,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 }, 'w',
             ],
 
-            [
+            'distinct' => [
                 function ($collection, $session, $options = []): void {
                     $collection->distinct(
                         '_id',
@@ -525,7 +538,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             ],
 
             /* Disabled, as it's illegal to use drop command in transactions
-            [
+            'drop' => [
                 function($collection, $session, $options = []) {
                     $collection->drop(
                         ['session' => $session] + $options
@@ -535,7 +548,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             */
 
             /* Disabled, as it's illegal to use dropIndexes command in transactions
-            [
+            'dropIndex' => [
                 function($collection, $session, $options = []) {
                     $collection->dropIndex(
                         '_id_1',
@@ -545,7 +558,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             ], */
 
             /* Disabled, as it's illegal to use dropIndexes command in transactions
-            [
+            'dropIndexes' => [
                 function($collection, $session, $options = []) {
                     $collection->dropIndexes(
                         ['session' => $session] + $options
@@ -555,7 +568,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             */
 
             /* Disabled, as count command can't be used in transactions
-            [
+            'estimatedDocumentCount' => [
                 function($collection, $session, $options = []) {
                     $collection->estimatedDocumentCount(
                         ['session' => $session] + $options
@@ -564,7 +577,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             ],
             */
 
-            [
+            'find' => [
                 function ($collection, $session, $options = []): void {
                     $collection->find(
                         ['test' => 'foo'],
@@ -573,7 +586,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 }, 'r',
             ],
 
-            [
+            'findOne' => [
                 function ($collection, $session, $options = []): void {
                     $collection->findOne(
                         ['test' => 'foo'],
@@ -582,7 +595,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 }, 'r',
             ],
 
-            [
+            'findOneAndDelete' => [
                 function ($collection, $session, $options = []): void {
                     $collection->findOneAndDelete(
                         ['test' => 'foo'],
@@ -591,7 +604,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 }, 'w',
             ],
 
-            [
+            'findOneAndReplace' => [
                 function ($collection, $session, $options = []): void {
                     $collection->findOneAndReplace(
                         ['test' => 'foo'],
@@ -601,7 +614,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 }, 'w',
             ],
 
-            [
+            'findOneAndUpdate' => [
                 function ($collection, $session, $options = []): void {
                     $collection->findOneAndUpdate(
                         ['test' => 'foo'],
@@ -611,7 +624,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 }, 'w',
             ],
 
-            [
+            'insertMany' => [
                 function ($collection, $session, $options = []): void {
                     $collection->insertMany(
                         [
@@ -623,7 +636,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 }, 'w',
             ],
 
-            [
+            'insertOne' => [
                 function ($collection, $session, $options = []): void {
                     $collection->insertOne(
                         ['test' => 'foo'],
@@ -633,7 +646,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             ],
 
             /* Disabled, as it's illegal to use listIndexes command in transactions
-            [
+            'listIndexes' => [
                 function($collection, $session, $options = []) {
                     $collection->listIndexes(
                         ['session' => $session] + $options
@@ -643,7 +656,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             */
 
             /* Disabled, as it's illegal to use mapReduce command in transactions
-            [
+            'mapReduce' => [
                 function($collection, $session, $options = []) {
                     $collection->mapReduce(
                         new \MongoDB\BSON\Javascript('function() { emit(this.state, this.pop); }'),
@@ -655,7 +668,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             ],
             */
 
-            [
+            'replaceOne' => [
                 function ($collection, $session, $options = []): void {
                     $collection->replaceOne(
                         ['test' => 'foo'],
@@ -665,7 +678,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 }, 'w',
             ],
 
-            [
+            'updateMany' => [
                 function ($collection, $session, $options = []): void {
                     $collection->updateMany(
                         ['test' => 'foo'],
@@ -675,7 +688,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 }, 'w',
             ],
 
-            [
+            'updateOne' => [
                 function ($collection, $session, $options = []): void {
                     $collection->updateOne(
                         ['test' => 'foo'],
@@ -686,7 +699,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             ],
 
             /* Disabled, as it's illegal to use change streams in transactions
-            [
+            'watch' => [
                 function($collection, $session, $options = []) {
                     $collection->watch(
                         [],
@@ -698,32 +711,28 @@ class CollectionFunctionalTest extends FunctionalTestCase
         ];
     }
 
-    public function collectionReadMethodClosures()
+    public function collectionReadMethodClosures(): array
     {
         return array_filter(
             $this->collectionMethodClosures(),
             function ($rw) {
-                if (strchr($rw[1], 'r') !== false) {
-                    return true;
-                }
+                return str_contains($rw[1], 'r');
             }
         );
     }
 
-    public function collectionWriteMethodClosures()
+    public function collectionWriteMethodClosures(): array
     {
         return array_filter(
             $this->collectionMethodClosures(),
             function ($rw) {
-                if (strchr($rw[1], 'w') !== false) {
-                    return true;
-                }
+                return str_contains($rw[1], 'w');
             }
         );
     }
 
     /** @dataProvider collectionMethodClosures */
-    public function testMethodDoesNotInheritReadWriteConcernInTranasaction(Closure $method): void
+    public function testMethodDoesNotInheritReadWriteConcernInTransaction(Closure $method): void
     {
         $this->skipIfTransactionsAreNotSupported();
 
@@ -739,7 +748,16 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
         (new CommandObserver())->observe(
             function () use ($method, $collection, $session): void {
-                call_user_func($method, $collection, $session);
+                try {
+                    call_user_func($method, $collection, $session);
+                } catch (CommandException $exception) {
+                    // Write aggregates are not supported in transactions
+                    if ($exception->getResultDocument()->codeName === 'OperationNotSupportedInTransaction') {
+                        $this->markTestSkipped('OperationNotSupportedInTransaction: ' . $exception->getMessage());
+                    }
+
+                    throw $exception;
+                }
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());

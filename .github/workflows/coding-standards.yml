@@ -19,12 +19,12 @@ on:
 jobs:
   phpcs:
     name: "phpcs"
-    runs-on: "ubuntu-20.04"
+    runs-on: "ubuntu-22.04"
 
     strategy:
       matrix:
         php-version:
-          - "7.4"
+          - "8.2"
         driver-version:
           - "mongodb/mongo-php-driver@master"
 

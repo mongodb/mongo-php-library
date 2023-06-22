@@ -3,6 +3,7 @@
 namespace MongoDB\Tests;
 
 use InvalidArgumentException;
+use MongoDB\BSON\PackedArray;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -139,6 +140,11 @@ abstract class TestCase extends BaseTestCase
         return $this->wrapValuesForDataProvider($this->getInvalidIntegerValues());
     }
 
+    public function provideInvalidUpdateValues()
+    {
+        return $this->wrapValuesForDataProvider($this->getInvalidUpdateValues());
+    }
+
     protected function assertDeprecated(callable $execution): void
     {
         $errors = [];
@@ -214,8 +220,7 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidDocumentValues(bool $includeNull = false): array
     {
-        // Note: PackedArray is intentionally omitted here (see: PHPLIB-1137)
-        return array_merge([123, 3.14, 'foo', true], $includeNull ? [null] : []);
+        return array_merge([123, 3.14, 'foo', true, PackedArray::fromPHP([])], $includeNull ? [null] : []);
     }
 
     /**
@@ -301,6 +306,11 @@ abstract class TestCase extends BaseTestCase
     protected function getInvalidStringValues(bool $includeNull = false): array
     {
         return array_merge([123, 3.14, true, [], new stdClass()], $includeNull ? [null] : []);
+    }
+
+    protected function getInvalidUpdateValues(): array
+    {
+        return [123, 3.14, 'foo', true];
     }
 
     /**

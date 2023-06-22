@@ -29,7 +29,7 @@ class FindAndModifyTest extends TestCase
             'session' => $this->getInvalidSessionValues(),
             'sort' => $this->getInvalidDocumentValues(),
             'typeMap' => $this->getInvalidArrayValues(),
-            'update' => $this->getInvalidDocumentValues(),
+            'update' => $this->getInvalidUpdateValues(),
             'upsert' => $this->getInvalidBooleanValues(),
             'writeConcern' => $this->getInvalidWriteConcernValues(),
         ]);

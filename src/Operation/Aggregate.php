@@ -38,6 +38,7 @@ use function is_integer;
 use function is_object;
 use function is_string;
 use function MongoDB\create_field_path_type_map;
+use function MongoDB\is_document;
 use function MongoDB\is_last_pipeline_operator_write;
 use function MongoDB\is_pipeline;
 
@@ -155,8 +156,8 @@ class Aggregate implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
-        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
-            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
+        if (isset($options['collation']) && ! is_document($options['collation'])) {
+            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'document');
         }
 
         if (isset($options['explain']) && ! is_bool($options['explain'])) {
@@ -167,8 +168,8 @@ class Aggregate implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"hint" option', $options['hint'], 'string or array or object');
         }
 
-        if (isset($options['let']) && ! is_array($options['let']) && ! is_object($options['let'])) {
-            throw InvalidArgumentException::invalidType('"let" option', $options['let'], ['array', 'object']);
+        if (isset($options['let']) && ! is_document($options['let'])) {
+            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'document');
         }
 
         if (isset($options['maxAwaitTimeMS']) && ! is_integer($options['maxAwaitTimeMS'])) {

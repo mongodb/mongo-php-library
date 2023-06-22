@@ -46,7 +46,7 @@ class FindOneAndReplaceTest extends TestCase
     public function testConstructorReplacementArgumentProhibitsUpdatePipeline($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$replacement is an update pipeline');
+        $this->expectExceptionMessageMatches('#(\$replacement is an update pipeline)|(Expected \$replacement to have type "document")#');
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 

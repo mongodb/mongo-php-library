@@ -50,6 +50,7 @@ class WatchTest extends FunctionalTestCase
             'readPreference' => $this->getInvalidReadPreferenceValues(true),
             'resumeAfter' => $this->getInvalidDocumentValues(),
             'session' => $this->getInvalidSessionValues(),
+            'startAfter' => $this->getInvalidDocumentValues(),
             'startAtOperationTime' => $this->getInvalidTimestampValues(),
             'typeMap' => $this->getInvalidArrayValues(),
         ]);

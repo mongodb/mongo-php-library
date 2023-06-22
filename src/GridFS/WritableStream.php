@@ -28,11 +28,10 @@ use function array_intersect_key;
 use function hash_final;
 use function hash_init;
 use function hash_update;
-use function is_array;
 use function is_bool;
 use function is_integer;
-use function is_object;
 use function is_string;
+use function MongoDB\is_document;
 use function MongoDB\is_string_array;
 use function sprintf;
 use function strlen;
@@ -130,8 +129,8 @@ class WritableStream
             throw InvalidArgumentException::invalidType('"contentType" option', $options['contentType'], 'string');
         }
 
-        if (isset($options['metadata']) && ! is_array($options['metadata']) && ! is_object($options['metadata'])) {
-            throw InvalidArgumentException::invalidType('"metadata" option', $options['metadata'], 'array or object');
+        if (isset($options['metadata']) && ! is_document($options['metadata'])) {
+            throw InvalidArgumentException::invalidType('"metadata" option', $options['metadata'], 'document');
         }
 
         $this->chunkSize = $options['chunkSizeBytes'];

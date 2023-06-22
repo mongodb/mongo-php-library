@@ -87,8 +87,8 @@ function all_servers_support_write_stage_on_secondary(array $servers): bool
  */
 function apply_type_map_to_document($document, array $typeMap)
 {
-    if (! is_array($document) && ! is_object($document)) {
-        throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
+    if (! is_document($document)) {
+        throw InvalidArgumentException::invalidType('$document', $document, 'document');
     }
 
     return toPHP(fromPHP($document), $typeMap);
@@ -133,7 +133,7 @@ function document_to_array($document): array
     }
 
     if (! is_array($document)) {
-        throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
+        throw InvalidArgumentException::invalidType('$document', $document, 'document');
     }
 
     return $document;
@@ -187,6 +187,19 @@ function get_encrypted_fields_from_server(string $databaseName, string $collecti
 }
 
 /**
+ * Returns whether a given value is a valid document.
+ *
+ * This method returns true for any array or object, but specifically excludes
+ * BSON PackedArray instances
+ *
+ * @param mixed $document
+ */
+function is_document($document): bool
+{
+    return is_array($document) || (is_object($document) && ! $document instanceof PackedArray);
+}
+
+/**
  * Return whether the first key in the document starts with a "$" character.
  *
  * This is used for validating aggregation pipeline stages and differentiating
@@ -200,6 +213,10 @@ function get_encrypted_fields_from_server(string $databaseName, string $collecti
  */
 function is_first_key_operator($document): bool
 {
+    if ($document instanceof PackedArray) {
+        return false;
+    }
+
     $document = document_to_array($document);
 
     $firstKey = array_key_first($document);
@@ -266,7 +283,7 @@ function is_pipeline($pipeline, bool $allowEmpty = false): bool
     }
 
     foreach ($pipeline as $stage) {
-        if (! is_array($stage) && ! is_object($stage)) {
+        if (! is_document($stage)) {
             return false;
         }
 

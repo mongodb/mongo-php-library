@@ -34,6 +34,7 @@ use function is_integer;
 use function is_object;
 use function is_string;
 use function MongoDB\create_field_path_type_map;
+use function MongoDB\is_document;
 use function MongoDB\is_pipeline;
 use function MongoDB\is_write_concern_acknowledged;
 use function MongoDB\server_supports_feature;
@@ -139,12 +140,12 @@ class FindAndModify implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
-        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
-            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
+        if (isset($options['collation']) && ! is_document($options['collation'])) {
+            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'document');
         }
 
-        if (isset($options['fields']) && ! is_array($options['fields']) && ! is_object($options['fields'])) {
-            throw InvalidArgumentException::invalidType('"fields" option', $options['fields'], 'array or object');
+        if (isset($options['fields']) && ! is_document($options['fields'])) {
+            throw InvalidArgumentException::invalidType('"fields" option', $options['fields'], 'document');
         }
 
         if (isset($options['hint']) && ! is_string($options['hint']) && ! is_array($options['hint']) && ! is_object($options['hint'])) {
@@ -159,8 +160,8 @@ class FindAndModify implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"new" option', $options['new'], 'boolean');
         }
 
-        if (isset($options['query']) && ! is_array($options['query']) && ! is_object($options['query'])) {
-            throw InvalidArgumentException::invalidType('"query" option', $options['query'], 'array or object');
+        if (isset($options['query']) && ! is_document($options['query'])) {
+            throw InvalidArgumentException::invalidType('"query" option', $options['query'], 'document');
         }
 
         if (! is_bool($options['remove'])) {
@@ -171,8 +172,8 @@ class FindAndModify implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
         }
 
-        if (isset($options['sort']) && ! is_array($options['sort']) && ! is_object($options['sort'])) {
-            throw InvalidArgumentException::invalidType('"sort" option', $options['sort'], 'array or object');
+        if (isset($options['sort']) && ! is_document($options['sort'])) {
+            throw InvalidArgumentException::invalidType('"sort" option', $options['sort'], 'document');
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
@@ -191,8 +192,8 @@ class FindAndModify implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"upsert" option', $options['upsert'], 'boolean');
         }
 
-        if (isset($options['let']) && ! is_array($options['let']) && ! is_object($options['let'])) {
-            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'array or object');
+        if (isset($options['let']) && ! is_document($options['let'])) {
+            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'document');
         }
 
         if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {

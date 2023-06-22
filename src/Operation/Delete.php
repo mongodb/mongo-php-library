@@ -29,6 +29,7 @@ use MongoDB\Exception\UnsupportedException;
 use function is_array;
 use function is_object;
 use function is_string;
+use function MongoDB\is_document;
 use function MongoDB\is_write_concern_acknowledged;
 use function MongoDB\server_supports_feature;
 
@@ -98,16 +99,16 @@ class Delete implements Executable, Explainable
      */
     public function __construct(string $databaseName, string $collectionName, $filter, int $limit, array $options = [])
     {
-        if (! is_array($filter) && ! is_object($filter)) {
-            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
+        if (! is_document($filter)) {
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'document');
         }
 
         if ($limit !== 0 && $limit !== 1) {
             throw new InvalidArgumentException('$limit must be 0 or 1');
         }
 
-        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
-            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
+        if (isset($options['collation']) && ! is_document($options['collation'])) {
+            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'document');
         }
 
         if (isset($options['hint']) && ! is_string($options['hint']) && ! is_array($options['hint']) && ! is_object($options['hint'])) {
@@ -122,8 +123,8 @@ class Delete implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
 
-        if (isset($options['let']) && ! is_array($options['let']) && ! is_object($options['let'])) {
-            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'array or object');
+        if (isset($options['let']) && ! is_document($options['let'])) {
+            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'document');
         }
 
         if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {

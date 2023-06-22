@@ -27,9 +27,8 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\InsertManyResult;
 
 use function array_is_list;
-use function is_array;
 use function is_bool;
-use function is_object;
+use function MongoDB\is_document;
 use function sprintf;
 
 /**
@@ -90,8 +89,8 @@ class InsertMany implements Executable
         }
 
         foreach ($documents as $i => $document) {
-            if (! is_array($document) && ! is_object($document)) {
-                throw InvalidArgumentException::invalidType(sprintf('$documents[%d]', $i), $document, 'array or object');
+            if (! is_document($document)) {
+                throw InvalidArgumentException::invalidType(sprintf('$documents[%d]', $i), $document, 'document');
             }
         }
 

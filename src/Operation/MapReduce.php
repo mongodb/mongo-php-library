@@ -41,6 +41,7 @@ use function is_object;
 use function is_string;
 use function MongoDB\create_field_path_type_map;
 use function MongoDB\document_to_array;
+use function MongoDB\is_document;
 use function MongoDB\is_mapreduce_output_inline;
 use function trigger_error;
 
@@ -169,8 +170,8 @@ class MapReduce implements Executable
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
-        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
-            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
+        if (isset($options['collation']) && ! is_document($options['collation'])) {
+            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'document');
         }
 
         if (isset($options['finalize']) && ! $options['finalize'] instanceof JavascriptInterface) {
@@ -189,8 +190,8 @@ class MapReduce implements Executable
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
-        if (isset($options['query']) && ! is_array($options['query']) && ! is_object($options['query'])) {
-            throw InvalidArgumentException::invalidType('"query" option', $options['query'], 'array or object');
+        if (isset($options['query']) && ! is_document($options['query'])) {
+            throw InvalidArgumentException::invalidType('"query" option', $options['query'], 'document');
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
@@ -201,16 +202,16 @@ class MapReduce implements Executable
             throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], ReadPreference::class);
         }
 
-        if (isset($options['scope']) && ! is_array($options['scope']) && ! is_object($options['scope'])) {
-            throw InvalidArgumentException::invalidType('"scope" option', $options['scope'], 'array or object');
+        if (isset($options['scope']) && ! is_document($options['scope'])) {
+            throw InvalidArgumentException::invalidType('"scope" option', $options['scope'], 'document');
         }
 
         if (isset($options['session']) && ! $options['session'] instanceof Session) {
             throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
         }
 
-        if (isset($options['sort']) && ! is_array($options['sort']) && ! is_object($options['sort'])) {
-            throw InvalidArgumentException::invalidType('"sort" option', $options['sort'], 'array or object');
+        if (isset($options['sort']) && ! is_document($options['sort'])) {
+            throw InvalidArgumentException::invalidType('"sort" option', $options['sort'], 'document');
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {

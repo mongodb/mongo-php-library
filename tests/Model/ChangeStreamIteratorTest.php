@@ -16,7 +16,6 @@ use MongoDB\Tests\CommandObserver;
 use MongoDB\Tests\FunctionalTestCase;
 use TypeError;
 
-use function array_merge;
 use function sprintf;
 
 class ChangeStreamIteratorTest extends FunctionalTestCase
@@ -67,7 +66,7 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
 
     public function provideInvalidObjectValues()
     {
-        return $this->wrapValuesForDataProvider(array_merge($this->getInvalidDocumentValues(), [[]]));
+        return $this->wrapValuesForDataProvider([123, 3.14, 'foo', true, []]);
     }
 
     public function testPostBatchResumeTokenIsReturnedForLastElementInFirstBatch(): void

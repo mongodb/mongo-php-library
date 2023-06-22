@@ -16,17 +16,14 @@ on:
     paths-ignore:
       - "docs/**"
 
+env:
+  PHP_VERSION: "8.2"
+  DRIVER_VERSION: "stable"
+
 jobs:
   phpcs:
     name: "phpcs"
     runs-on: "ubuntu-22.04"
-
-    strategy:
-      matrix:
-        php-version:
-          - "8.2"
-        driver-version:
-          - "stable"
 
     steps:
       - name: "Checkout"
@@ -36,8 +33,8 @@ jobs:
         id: extcache
         uses: shivammathur/cache-extensions@v1
         with:
-          php-version: ${{ matrix.php-version }}
-          extensions: "mongodb-${{ matrix.driver-version }}"
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: "mongodb-${{ env.DRIVER_VERSION }}"
           key: "extcache-v1"
 
       - name: Cache extensions
@@ -51,8 +48,8 @@ jobs:
         uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
-          extensions: "mongodb-${{ matrix.driver-version }}"
-          php-version: "${{ matrix.php-version }}"
+          extensions: "mongodb-${{ env.DRIVER_VERSION }}"
+          php-version: "${{ env.PHP_VERSION }}"
           tools: "cs2pr"
 
       - name: "Show driver information"

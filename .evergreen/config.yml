@@ -760,15 +760,13 @@ axes:
       - id: "oldest-supported"
         display_name: "PHPC 1.16.0"
         variables:
-          EXTENSION_BRANCH: "master"
-#          EXTENSION_VERSION: "1.16.0"
+          EXTENSION_VERSION: "1.16.0"
       - id: "latest-stable"
         display_name: "PHPC (1.16.x)"
         variables:
-          EXTENSION_BRANCH: "master"
-#          EXTENSION_VERSION: "stable"
+          EXTENSION_VERSION: "stable"
       - id: "latest-dev"
-        display_name: "PHPC (1.16-dev)"
+        display_name: "PHPC (1.17-dev)"
         variables:
           EXTENSION_BRANCH: "master"
 

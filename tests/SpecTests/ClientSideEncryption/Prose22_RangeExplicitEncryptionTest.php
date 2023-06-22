@@ -8,6 +8,7 @@ use Iterator;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
+use MongoDB\BSON\Int64;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\EncryptionException;
@@ -168,8 +169,8 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
         yield 'Long' => [
             'Long',
             [
-                'min' => self::createInt64('0'),
-                'max' => self::createInt64('200'),
+                'min' => new Int64(0),
+                'max' => new Int64(200),
                 'sparsity' => 1,
             ],
         ];
@@ -467,7 +468,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 
             case 'Long':
                 return function (int $value) {
-                    return self::createInt64((string) $value);
+                    return new Int64($value);
                 };
 
             default:

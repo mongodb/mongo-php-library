@@ -40,8 +40,6 @@ use function sprintf;
 use function strpos;
 use function strrchr;
 
-use const PHP_INT_SIZE;
-
 /**
  * Constraint that checks if one value matches another.
  *
@@ -424,17 +422,6 @@ class Matches extends Constraint
         if (! is_array($bson) && ! is_object($bson)) {
             return $bson;
         }
-
-        /* Convert Int64 objects to integers on 64-bit platforms for
-         * compatibility reasons. */
-        if ($bson instanceof Int64 && PHP_INT_SIZE != 4) {
-            return (int) ((string) $bson);
-        }
-
-        /* TODO: Convert Int64 objects to integers on 32-bit platforms if they
-         * can be expressed as such. This is necessary to handle flexible
-         * numeric comparisons if the server returns 32-bit value as a 64-bit
-         * integer (e.g. cursor ID). */
 
         // Serializable can produce an array or object, so recurse on its output
         if ($bson instanceof Serializable) {

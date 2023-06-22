@@ -23,20 +23,10 @@ class InsertOneTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['bypassDocumentValidation' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = ['writeConcern' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
+            'session' => $this->getInvalidSessionValues(),
+            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        ]);
     }
 }

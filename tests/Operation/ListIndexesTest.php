@@ -16,16 +16,9 @@ class ListIndexesTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'maxTimeMS' => $this->getInvalidIntegerValues(),
+            'session' => $this->getInvalidSessionValues(),
+        ]);
     }
 }

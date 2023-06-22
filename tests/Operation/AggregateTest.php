@@ -26,69 +26,23 @@ class AggregateTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['allowDiskUse' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['batchSize' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['bypassDocumentValidation' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['collation' => $value];
-        }
-
-        foreach ($this->getInvalidHintValues() as $value) {
-            $options[][] = ['hint' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['let' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['explain' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxAwaitTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidReadConcernValues() as $value) {
-            $options[][] = ['readConcern' => $value];
-        }
-
-        foreach ($this->getInvalidReadPreferenceValues() as $value) {
-            $options[][] = ['readPreference' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        foreach ($this->getInvalidArrayValues() as $value) {
-            $options[][] = ['typeMap' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues(true) as $value) {
-            $options[][] = ['useCursor' => $value];
-        }
-
-        foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = ['writeConcern' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'allowDiskUse' => $this->getInvalidBooleanValues(),
+            'batchSize' => $this->getInvalidIntegerValues(),
+            'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
+            'collation' => $this->getInvalidDocumentValues(),
+            'hint' => $this->getInvalidHintValues(),
+            'let' => $this->getInvalidDocumentValues(),
+            'explain' => $this->getInvalidBooleanValues(),
+            'maxAwaitTimeMS' => $this->getInvalidIntegerValues(),
+            'maxTimeMS' => $this->getInvalidIntegerValues(),
+            'readConcern' => $this->getInvalidReadConcernValues(),
+            'readPreference' => $this->getInvalidReadPreferenceValues(),
+            'session' => $this->getInvalidSessionValues(),
+            'typeMap' => $this->getInvalidArrayValues(),
+            'useCursor' => $this->getInvalidBooleanValues(true),
+            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        ]);
     }
 
     public function testConstructorBatchSizeOptionRequiresUseCursor(): void
@@ -101,11 +55,6 @@ class AggregateTest extends TestCase
             [['$match' => ['x' => 1]]],
             ['batchSize' => 100, 'useCursor' => false]
         );
-    }
-
-    private function getInvalidHintValues()
-    {
-        return [123, 3.14, true];
     }
 
     public function testExplainableCommandDocument(): void

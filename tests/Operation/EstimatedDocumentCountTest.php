@@ -16,24 +16,11 @@ class EstimatedDocumentCountTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidReadConcernValues() as $value) {
-            $options[][] = ['readConcern' => $value];
-        }
-
-        foreach ($this->getInvalidReadPreferenceValues() as $value) {
-            $options[][] = ['readPreference' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'maxTimeMS' => $this->getInvalidIntegerValues(),
+            'readConcern' => $this->getInvalidReadConcernValues(),
+            'readPreference' => $this->getInvalidReadPreferenceValues(),
+            'session' => $this->getInvalidSessionValues(),
+        ]);
     }
 }

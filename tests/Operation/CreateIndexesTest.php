@@ -27,25 +27,13 @@ class CreateIndexesTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ([3.14, true, [], new stdClass()] as $value) {
-            $options[][] = ['commitQuorum' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = ['writeConcern' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            // commitQuorum is int|string, for which no helper exists
+            'commitQuorum' => ['float' => 3.14, 'bool' => true, 'array' => [], 'object' => new stdClass()],
+            'maxTimeMS' => $this->getInvalidIntegerValues(),
+            'session' => $this->getInvalidSessionValues(),
+            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        ]);
     }
 
     public function testConstructorRequiresAtLeastOneIndex(): void

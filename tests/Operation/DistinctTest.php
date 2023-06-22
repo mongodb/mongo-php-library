@@ -25,33 +25,14 @@ class DistinctTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['collation' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidReadConcernValues() as $value) {
-            $options[][] = ['readConcern' => $value];
-        }
-
-        foreach ($this->getInvalidReadPreferenceValues() as $value) {
-            $options[][] = ['readPreference' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        foreach ($this->getInvalidArrayValues() as $value) {
-            $options[][] = ['typeMap' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'collation' => $this->getInvalidDocumentValues(),
+            'maxTimeMS' => $this->getInvalidIntegerValues(),
+            'readConcern' => $this->getInvalidReadConcernValues(),
+            'readPreference' => $this->getInvalidReadPreferenceValues(),
+            'session' => $this->getInvalidSessionValues(),
+            'typeMap' => $this->getInvalidArrayValues(),
+        ]);
     }
 
     public function testExplainableCommandDocument(): void

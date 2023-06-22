@@ -15,26 +15,13 @@ class ListCollectionsTest extends TestCase
         new ListCollections($this->getDatabaseName(), $options);
     }
 
-    public function provideInvalidConstructorOptions()
+    public function provideInvalidConstructorOptions(): void
     {
-        $options = [];
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['authorizedCollections' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['filter' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        return $options;
+        $this->createOptionDataProvider([
+            'authorizedCollections' => $this->getInvalidBooleanValues(),
+            'filter' => $this->getInvalidDocumentValues(),
+            'maxTimeMS' => $this->getInvalidIntegerValues(),
+            'session' => $this->getInvalidSessionValues(),
+        ]);
     }
 }

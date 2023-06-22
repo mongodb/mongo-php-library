@@ -17,9 +17,11 @@ use function array_map;
 use function array_merge;
 use function array_values;
 use function call_user_func;
+use function get_debug_type;
 use function getenv;
 use function hash;
 use function is_array;
+use function is_int;
 use function is_object;
 use function is_string;
 use function iterator_to_array;
@@ -154,6 +156,25 @@ abstract class TestCase extends BaseTestCase
         $this->assertCount(1, $errors);
     }
 
+    protected function createOptionDataProvider(array $options): array
+    {
+        $data = [];
+
+        // Loop through each option and get possible values
+        foreach ($options as $option => $values) {
+            // Create an option array with a named data provider for each value
+            foreach ($values as $key => $value) {
+                if (is_int($key)) {
+                    $key = get_debug_type($value);
+                }
+
+                $data[$option . '_' . $key] = [[$option => $value]];
+            }
+        }
+
+        return $data;
+    }
+
     /**
      * Return the test collection name.
      */
@@ -198,6 +219,14 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * Return a list of invalid hint values.
+     */
+    protected function getInvalidHintValues()
+    {
+        return [123, 3.14, true];
+    }
+
+    /**
      * Return a list of invalid integer values.
      */
     protected function getInvalidIntegerValues(bool $includeNull = false): array
@@ -210,7 +239,19 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidReadConcernValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', true, [], new stdClass(), new ReadPreference(ReadPreference::PRIMARY), new WriteConcern(1)], $includeNull ? [null] : []);
+        return array_merge(
+            [
+                123,
+                3.14,
+                'foo',
+                true,
+                [],
+                new stdClass(),
+                new ReadPreference(ReadPreference::PRIMARY),
+                new WriteConcern(1),
+            ],
+            $includeNull ? ['null' => null] : []
+        );
     }
 
     /**
@@ -218,7 +259,19 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidReadPreferenceValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', true, [], new stdClass(), new ReadConcern(), new WriteConcern(1)], $includeNull ? [null] : []);
+        return array_merge(
+            [
+                123,
+                3.14,
+                'foo',
+                true,
+                [],
+                new stdClass(),
+                new ReadConcern(),
+                new WriteConcern(1),
+            ],
+            $includeNull ? ['null' => null] : []
+        );
     }
 
     /**
@@ -226,7 +279,20 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidSessionValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', true, [], new stdClass(), new ReadConcern(), new ReadPreference(ReadPreference::PRIMARY), new WriteConcern(1)], $includeNull ? [null] : []);
+        return array_merge(
+            [
+                123,
+                3.14,
+                'foo',
+                true,
+                [],
+                new stdClass(),
+                new ReadConcern(),
+                new ReadPreference(ReadPreference::PRIMARY),
+                new WriteConcern(1),
+            ],
+            $includeNull ? ['null' => null] : []
+        );
     }
 
     /**
@@ -242,7 +308,19 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getInvalidWriteConcernValues(bool $includeNull = false): array
     {
-        return array_merge([123, 3.14, 'foo', true, [], new stdClass(), new ReadConcern(), new ReadPreference(ReadPreference::PRIMARY)], $includeNull ? [null] : []);
+        return array_merge(
+            [
+                123,
+                3.14,
+                'foo',
+                true,
+                [],
+                new stdClass(),
+                new ReadConcern(),
+                new ReadPreference(ReadPreference::PRIMARY),
+            ],
+            $includeNull ? ['null' => null] : []
+        );
     }
 
     /**

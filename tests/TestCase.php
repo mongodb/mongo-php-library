@@ -140,11 +140,6 @@ abstract class TestCase extends BaseTestCase
         return $this->wrapValuesForDataProvider($this->getInvalidIntegerValues());
     }
 
-    public function provideInvalidUpdateValues()
-    {
-        return $this->wrapValuesForDataProvider($this->getInvalidUpdateValues());
-    }
-
     protected function assertDeprecated(callable $execution): void
     {
         $errors = [];
@@ -305,11 +300,6 @@ abstract class TestCase extends BaseTestCase
     protected function getInvalidStringValues(bool $includeNull = false): array
     {
         return array_merge([123, 3.14, true, [], new stdClass()], $includeNull ? [null] : []);
-    }
-
-    protected function getInvalidUpdateValues(): array
-    {
-        return [123, 3.14, 'foo', true];
     }
 
     /**

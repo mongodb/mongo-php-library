@@ -531,6 +531,10 @@ abstract class FunctionalTestCase extends TestCase
         if (static::getModuleInfo('libmongocrypt') === 'disabled') {
             $this->markTestSkipped('Client Side Encryption is not enabled in the MongoDB extension');
         }
+
+        if (! static::isCryptSharedLibAvailable() && ! static::isMongocryptdAvailable()) {
+            $this->markTestSkipped('Neither crypt_shared nor mongocryptd are available');
+        }
     }
 
     protected function skipIfGeoHaystackIndexIsNotSupported(): void
@@ -568,7 +572,7 @@ abstract class FunctionalTestCase extends TestCase
     }
 
     /** @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/shared-library/ */
-    protected static function isCryptSharedLibAvailable(): bool
+    public static function isCryptSharedLibAvailable(): bool
     {
         $cryptSharedLibPath = getenv('CRYPT_SHARED_LIB_PATH');
 
@@ -580,7 +584,7 @@ abstract class FunctionalTestCase extends TestCase
     }
 
     /** @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/mongocryptd/ */
-    protected static function isMongocryptdAvailable(): bool
+    public static function isMongocryptdAvailable(): bool
     {
         $paths = explode(PATH_SEPARATOR, getenv("PATH"));
 

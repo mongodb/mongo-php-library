@@ -1810,10 +1810,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         }
 
         $this->skipIfServerVersion('<', '7.0.0', 'Explicit encryption tests require MongoDB 7.0 or later');
-
-        if (! static::isCryptSharedLibAvailable() && ! static::isMongocryptdAvailable()) {
-            $this->markTestSkipped('Neither crypt_shared nor mongocryptd are available');
-        }
+        $this->skipIfClientSideEncryptionIsNotSupported();
 
         // Fetch names for the database and collection under test
         $collectionName = $this->getCollectionName();

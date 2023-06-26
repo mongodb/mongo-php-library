@@ -337,6 +337,8 @@ final class UnifiedTestRunner
 
     /**
      * Return whether client-side encryption is supported.
+     *
+     * @see FunctionalTestCase::skipIfClientSideEncryptionIsNotSupported()
      */
     private function isClientSideEncryptionSupported(): bool
     {
@@ -350,7 +352,7 @@ final class UnifiedTestRunner
             return false;
         }
 
-        return static::isCryptSharedLibAvailable() || static::isMongocryptdAvailable();
+        return FunctionalTestCase::isCryptSharedLibAvailable() || FunctionalTestCase::isMongocryptdAvailable();
     }
 
     /**

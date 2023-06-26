@@ -117,10 +117,6 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         parent::setUp();
 
         $this->skipIfClientSideEncryptionIsNotSupported();
-
-        if (! static::isCryptSharedLibAvailable() && ! static::isMongocryptdAvailable()) {
-            $this->markTestSkipped('Neither crypt_shared nor mongocryptd are available');
-        }
     }
 
     /**

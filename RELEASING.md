@@ -1,4 +1,4 @@
-## Releasing
+# Releasing
 
 The following steps outline the release process for both new minor versions (e.g.
 releasing the `master` branch as X.Y.0) and patch versions (e.g. releasing the
@@ -13,11 +13,11 @@ It helps to keep your own fork in sync with the "mongodb" repository (i.e. any
 branches and tags on the main repository should also exist in your fork). This
 is left as an exercise to the reader.
 
-### Ensure PHP version compatibility
+## Ensure PHP version compatibility
 
 Ensure that the library test suite completes on supported versions of PHP.
 
-### Transition JIRA issues and version
+## Transition JIRA issues and version
 
 All issues associated with the release version should be in the "Closed" state
 and have a resolution of "Fixed". Issues with other resolutions (e.g.
@@ -31,7 +31,7 @@ Update the version's release date and status from the
 [Manage Versions](https://jira.mongodb.org/plugins/servlet/project-config/PHPLIB/versions)
 page.
 
-### Update version info
+## Update version info
 
 The PHP library uses [semantic versioning](https://semver.org/). Do not break
 backwards compatibility in a non-major release or your users will kill you.
@@ -41,7 +41,7 @@ changes in this maintenance branch. This is important because we will later
 merge the ensuing release commits up to master with `--strategy=ours`, which
 will ignore changes from the merged commits.
 
-### Update composer.json and CI matrices
+## Update composer.json and CI matrices
 
 This is especially important before releasing a new minor version.
 
@@ -81,7 +81,7 @@ $ git commit -m "Update composer.json and CI matrices for X.Y.Z" composer.json .
 $ git push mongodb
 ```
 
-### Tag the release
+## Tag the release
 
 Create a tag for the release and push:
 
@@ -90,9 +90,9 @@ $ git tag -a -m "Release X.Y.Z" X.Y.Z
 $ git push mongodb --tags
 ```
 
-### Branch management
+## Branch management
 
-## Creating a maintenance branch and updating master branch alias
+# Creating a maintenance branch and updating master branch alias
 
 After releasing a new major or minor version (e.g. 1.9.0), a maintenance branch
 (e.g. v1.9) should be created. Any development towards a patch release (e.g.
@@ -123,7 +123,7 @@ Commit this change:
 $ git commit -m "Master is now 1.10-dev" composer.json
 ```
 
-#### After releasing a new minor version
+### After releasing a new minor version
 
 After a new minor version is released (i.e. `master` was tagged), a maintenance
 branch should be created for future patch releases:
@@ -151,7 +151,7 @@ $ git commit -m "Master is now X.Y-dev" composer.json
 $ git push mongodb
 ```
 
-#### After releasing a patch version
+### After releasing a patch version
 
 If this was a patch release, the maintenance branch must be merged up to master:
 
@@ -168,7 +168,7 @@ branch was up-to-date with all code changes in this maintenance branch before
 tagging.
 
 
-### Publish release notes
+## Publish release notes
 
 The following template should be used for creating GitHub release notes via
 [this form](https://github.com/mongodb/mongo-php-library/releases/new).
@@ -212,7 +212,7 @@ Thanks for our community contributors for this release:
 
 Release announcements should also be posted in the [MongoDB Product & Driver Announcements: Driver Releases](https://mongodb.com/community/forums/tags/c/announcements/driver-releases/110/php) forum and shared on Twitter.
 
-### Documentation Updates for New Major and Minor Versions
+## Documentation Updates for New Major and Minor Versions
 
 New major and minor releases will also require documentation updates to other
 projects:

@@ -192,5 +192,5 @@ repository:
 
 ## Releasing
 
-The release are created by the maintainers of the library. The process is documented in
+The releases are created by the maintainers of the library. The process is documented in
 the [RELEASING.md](RELEASING.md) file.

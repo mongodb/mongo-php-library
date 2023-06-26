@@ -110,8 +110,6 @@ class CachingIterator implements Countable, Iterator
             $this->iterator->next();
 
             $this->storeCurrentItem();
-
-            $this->iteratorExhausted = ! $this->iterator->valid();
         }
 
         next($this->items);
@@ -152,6 +150,8 @@ class CachingIterator implements Countable, Iterator
     private function storeCurrentItem(): void
     {
         if (! $this->iterator->valid()) {
+            $this->iteratorExhausted = true;
+
             return;
         }
 

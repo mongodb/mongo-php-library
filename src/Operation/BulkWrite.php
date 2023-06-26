@@ -32,7 +32,6 @@ use function count;
 use function current;
 use function is_array;
 use function is_bool;
-use function is_object;
 use function key;
 use function MongoDB\is_document;
 use function MongoDB\is_first_key_operator;
@@ -233,11 +232,7 @@ class BulkWrite implements Executable
                         throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
                     }
 
-                    if (! is_array($args[1]) && ! is_object($args[1])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
-                    }
-
-                    if (! is_first_key_operator($args[1]) && ! is_pipeline($args[1])) {
+                    if ((! is_document($args[1]) || ! is_first_key_operator($args[1])) && ! is_pipeline($args[1])) {
                         throw new InvalidArgumentException(sprintf('Expected update operator(s) or non-empty pipeline for $operations[%d]["%s"][1]', $i, $type));
                     }
 

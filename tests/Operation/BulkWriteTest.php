@@ -267,7 +267,7 @@ class BulkWriteTest extends TestCase
     public function testUpdateManyUpdateArgumentTypeCheck($update): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/(non-empty pipeline for \$operations\[0\]\["updateMany"\]\[1\])|(\$operations\[0\]\["updateMany"\]\[1\] to have type "array or object" but found ".+")/');
+        $this->expectExceptionMessage('Expected update operator(s) or non-empty pipeline for $operations[0]["updateMany"][1]');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::UPDATE_MANY => [['x' => 1], $update]],
         ]);
@@ -360,7 +360,7 @@ class BulkWriteTest extends TestCase
     public function testUpdateOneUpdateArgumentTypeCheck($update): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/(non-empty pipeline for \$operations\[0\]\["updateOne"\]\[1\])|(\$operations\[0\]\["updateOne"\]\[1\] to have type "array or object" but found ".+")/');
+        $this->expectExceptionMessage('Expected update operator(s) or non-empty pipeline for $operations[0]["updateOne"][1]');
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::UPDATE_ONE => [['x' => 1], $update]],
         ]);

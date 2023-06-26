@@ -7,7 +7,6 @@ use MongoDB\BSON\Javascript;
 use MongoDB\Collection;
 use MongoDB\Database;
 use MongoDB\Driver\BulkWrite;
-use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
@@ -457,6 +456,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 }, 'r',
             ],
 
+            /* Disabled, as write aggregations are not supported in transactions
             'read-write aggregate' => [
                 function ($collection, $session, $options = []): void {
                     $collection->aggregate(
@@ -468,6 +468,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                     );
                 }, 'rw',
             ],
+            */
 
             'bulkWrite insertOne' => [
                 function ($collection, $session, $options = []): void {
@@ -748,16 +749,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
         (new CommandObserver())->observe(
             function () use ($method, $collection, $session): void {
-                try {
-                    call_user_func($method, $collection, $session);
-                } catch (CommandException $exception) {
-                    // Write aggregates are not supported in transactions
-                    if ($exception->getResultDocument()->codeName === 'OperationNotSupportedInTransaction') {
-                        $this->markTestSkipped('OperationNotSupportedInTransaction: ' . $exception->getMessage());
-                    }
-
-                    throw $exception;
-                }
+                call_user_func($method, $collection, $session);
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());

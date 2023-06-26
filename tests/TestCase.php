@@ -166,15 +166,14 @@ abstract class TestCase extends BaseTestCase
     {
         $data = [];
 
-        // Loop through each option and get possible values
         foreach ($options as $option => $values) {
-            // Create an option array with a named data provider for each value
             foreach ($values as $key => $value) {
+                $dataKey = $option . '_' . $key;
                 if (is_int($key)) {
-                    $key = get_debug_type($value);
+                    $dataKey .= '_' . get_debug_type($value);
                 }
 
-                $data[$option . '_' . $key] = [[$option => $value]];
+                $data[$dataKey] = [[$option => $value]];
             }
         }
 

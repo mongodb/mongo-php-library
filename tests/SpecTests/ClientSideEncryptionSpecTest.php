@@ -32,21 +32,15 @@ use UnexpectedValueException;
 use function base64_decode;
 use function basename;
 use function count;
-use function explode;
 use function file_get_contents;
 use function getenv;
 use function glob;
 use function in_array;
-use function is_executable;
-use function is_readable;
 use function iterator_to_array;
 use function json_decode;
 use function sprintf;
 use function str_repeat;
 use function substr;
-
-use const DIRECTORY_SEPARATOR;
-use const PATH_SEPARATOR;
 
 /**
  * Client-side encryption spec tests.
@@ -123,10 +117,6 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         parent::setUp();
 
         $this->skipIfClientSideEncryptionIsNotSupported();
-
-        if (! static::isCryptSharedLibAvailable() && ! static::isMongocryptdAvailable()) {
-            $this->markTestSkipped('Neither crypt_shared nor mongocryptd are available');
-        }
     }
 
     /**
@@ -1987,29 +1977,5 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $returnData->value = $this->encryptCorpusValue($fieldName, $data, $clientEncryption);
 
         return $data->allowed ? $returnData : $data;
-    }
-
-    private static function isCryptSharedLibAvailable(): bool
-    {
-        $cryptSharedLibPath = getenv('CRYPT_SHARED_LIB_PATH');
-
-        if ($cryptSharedLibPath === false) {
-            return false;
-        }
-
-        return is_readable($cryptSharedLibPath);
-    }
-
-    private static function isMongocryptdAvailable(): bool
-    {
-        $paths = explode(PATH_SEPARATOR, getenv("PATH"));
-
-        foreach ($paths as $path) {
-            if (is_executable($path . DIRECTORY_SEPARATOR . 'mongocryptd')) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

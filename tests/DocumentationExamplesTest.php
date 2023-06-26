@@ -1810,10 +1810,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         }
 
         $this->skipIfServerVersion('<', '7.0.0', 'Explicit encryption tests require MongoDB 7.0 or later');
-
-        if (! $this->isEnterprise()) {
-            $this->markTestSkipped('Automatic encryption requires MongoDB Enterprise');
-        }
+        $this->skipIfClientSideEncryptionIsNotSupported();
 
         // Fetch names for the database and collection under test
         $collectionName = $this->getCollectionName();

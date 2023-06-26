@@ -28,10 +28,11 @@ use function explode;
 use function filter_var;
 use function getenv;
 use function implode;
-use function in_array;
 use function is_array;
 use function is_callable;
+use function is_executable;
 use function is_object;
+use function is_readable;
 use function is_string;
 use function key;
 use function ob_get_clean;
@@ -44,8 +45,10 @@ use function preg_replace;
 use function sprintf;
 use function version_compare;
 
+use const DIRECTORY_SEPARATOR;
 use const FILTER_VALIDATE_BOOLEAN;
 use const INFO_MODULES;
+use const PATH_SEPARATOR;
 
 abstract class FunctionalTestCase extends TestCase
 {
@@ -397,20 +400,6 @@ abstract class FunctionalTestCase extends TestCase
         return isset($document->requireApiVersion) && $document->requireApiVersion === true;
     }
 
-    protected function isEnterprise(): bool
-    {
-        $buildInfo = $this->getPrimaryServer()->executeCommand(
-            $this->getDatabaseName(),
-            new Command(['buildInfo' => 1])
-        )->toArray()[0];
-
-        if (isset($buildInfo->modules) && is_array($buildInfo->modules)) {
-            return in_array('enterprise', $buildInfo->modules);
-        }
-
-        throw new UnexpectedValueException('Could not determine server modules');
-    }
-
     protected function isLoadBalanced()
     {
         return $this->getPrimaryServer()->getType() == Server::TYPE_LOAD_BALANCER;
@@ -542,6 +531,10 @@ abstract class FunctionalTestCase extends TestCase
         if (static::getModuleInfo('libmongocrypt') === 'disabled') {
             $this->markTestSkipped('Client Side Encryption is not enabled in the MongoDB extension');
         }
+
+        if (! static::isCryptSharedLibAvailable() && ! static::isMongocryptdAvailable()) {
+            $this->markTestSkipped('Neither crypt_shared nor mongocryptd are available');
+        }
     }
 
     protected function skipIfGeoHaystackIndexIsNotSupported(): void
@@ -576,6 +569,32 @@ abstract class FunctionalTestCase extends TestCase
         if ($this->getServerStorageEngine() !== 'wiredTiger') {
             $this->markTestSkipped('Transactions require WiredTiger storage engine');
         }
+    }
+
+    /** @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/shared-library/ */
+    public static function isCryptSharedLibAvailable(): bool
+    {
+        $cryptSharedLibPath = getenv('CRYPT_SHARED_LIB_PATH');
+
+        if ($cryptSharedLibPath === false) {
+            return false;
+        }
+
+        return is_readable($cryptSharedLibPath);
+    }
+
+    /** @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/mongocryptd/ */
+    public static function isMongocryptdAvailable(): bool
+    {
+        $paths = explode(PATH_SEPARATOR, getenv("PATH"));
+
+        foreach ($paths as $path) {
+            if (is_executable($path . DIRECTORY_SEPARATOR . 'mongocryptd')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static function appendAuthenticationOptions(array $options): array

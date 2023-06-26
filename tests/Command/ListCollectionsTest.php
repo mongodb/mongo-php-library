@@ -15,9 +15,9 @@ class ListCollectionsTest extends TestCase
         new ListCollections($this->getDatabaseName(), $options);
     }
 
-    public function provideInvalidConstructorOptions(): void
+    public function provideInvalidConstructorOptions(): array
     {
-        $this->createOptionDataProvider([
+        return $this->createOptionDataProvider([
             'authorizedCollections' => $this->getInvalidBooleanValues(),
             'filter' => $this->getInvalidDocumentValues(),
             'maxTimeMS' => $this->getInvalidIntegerValues(),

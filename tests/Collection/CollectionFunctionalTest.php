@@ -61,9 +61,9 @@ class CollectionFunctionalTest extends FunctionalTestCase
         new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName(), $options);
     }
 
-    public function provideInvalidConstructorOptions(): void
+    public function provideInvalidConstructorOptions(): array
     {
-        $this->createOptionDataProvider([
+        return $this->createOptionDataProvider([
             'readConcern' => $this->getInvalidReadConcernValues(),
             'readPreference' => $this->getInvalidReadPreferenceValues(),
             'typeMap' => $this->getInvalidArrayValues(),

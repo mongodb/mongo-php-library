@@ -44,6 +44,7 @@ use function is_object;
 use function is_string;
 use function MongoDB\Driver\Monitoring\addSubscriber;
 use function MongoDB\Driver\Monitoring\removeSubscriber;
+use function MongoDB\is_document;
 use function MongoDB\select_server;
 use function MongoDB\server_supports_feature;
 
@@ -222,12 +223,12 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             throw InvalidArgumentException::invalidType('"readPreference" option', $options['readPreference'], ReadPreference::class);
         }
 
-        if (isset($options['resumeAfter']) && ! is_array($options['resumeAfter']) && ! is_object($options['resumeAfter'])) {
-            throw InvalidArgumentException::invalidType('"resumeAfter" option', $options['resumeAfter'], 'array or object');
+        if (isset($options['resumeAfter']) && ! is_document($options['resumeAfter'])) {
+            throw InvalidArgumentException::expectedDocumentType('"resumeAfter" option', $options['resumeAfter']);
         }
 
-        if (isset($options['startAfter']) && ! is_array($options['startAfter']) && ! is_object($options['startAfter'])) {
-            throw InvalidArgumentException::invalidType('"startAfter" option', $options['startAfter'], 'array or object');
+        if (isset($options['startAfter']) && ! is_document($options['startAfter'])) {
+            throw InvalidArgumentException::expectedDocumentType('"startAfter" option', $options['startAfter']);
         }
 
         if (isset($options['startAtOperationTime']) && ! $options['startAtOperationTime'] instanceof TimestampInterface) {

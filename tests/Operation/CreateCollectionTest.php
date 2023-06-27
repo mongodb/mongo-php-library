@@ -23,97 +23,30 @@ class CreateCollectionTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['autoIndexId' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['capped' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['changeStreamPreAndPostImages' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['clusteredIndex' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['collation' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['encryptedFields' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['expireAfterSeconds' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['flags' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['indexOptionDefaults' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['max' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidArrayValues() as $value) {
-            $options[][] = ['pipeline' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['size' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['storageEngine' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['timeseries' => $value];
-        }
-
-        foreach ($this->getInvalidArrayValues() as $value) {
-            $options[][] = ['typeMap' => $value];
-        }
-
-        foreach ($this->getInvalidStringValues() as $value) {
-            $options[][] = ['validationAction' => $value];
-        }
-
-        foreach ($this->getInvalidStringValues() as $value) {
-            $options[][] = ['validationLevel' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['validator' => $value];
-        }
-
-        foreach ($this->getInvalidStringValues() as $value) {
-            $options[][] = ['viewOn' => $value];
-        }
-
-        foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = ['writeConcern' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'autoIndexId' => $this->getInvalidBooleanValues(),
+            'capped' => $this->getInvalidBooleanValues(),
+            'changeStreamPreAndPostImages' => $this->getInvalidDocumentValues(),
+            'clusteredIndex' => $this->getInvalidDocumentValues(),
+            'collation' => $this->getInvalidDocumentValues(),
+            'encryptedFields' => $this->getInvalidDocumentValues(),
+            'expireAfterSeconds' => $this->getInvalidIntegerValues(),
+            'flags' => $this->getInvalidIntegerValues(),
+            'indexOptionDefaults' => $this->getInvalidDocumentValues(),
+            'max' => $this->getInvalidIntegerValues(),
+            'maxTimeMS' => $this->getInvalidIntegerValues(),
+            'pipeline' => $this->getInvalidArrayValues(),
+            'session' => $this->getInvalidSessionValues(),
+            'size' => $this->getInvalidIntegerValues(),
+            'storageEngine' => $this->getInvalidDocumentValues(),
+            'timeseries' => $this->getInvalidDocumentValues(),
+            'typeMap' => $this->getInvalidArrayValues(),
+            'validationAction' => $this->getInvalidStringValues(),
+            'validationLevel' => $this->getInvalidStringValues(),
+            'validator' => $this->getInvalidDocumentValues(),
+            'viewOn' => $this->getInvalidStringValues(),
+            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        ]);
     }
 
     public function testAutoIndexIdOptionIsDeprecated(): void

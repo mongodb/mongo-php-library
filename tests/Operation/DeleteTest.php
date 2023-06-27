@@ -50,21 +50,13 @@ class DeleteTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['collation' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = ['writeConcern' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'collation' => $this->getInvalidDocumentValues(),
+            'hint' => $this->getInvalidHintValues(),
+            'let' => $this->getInvalidDocumentValues(),
+            'session' => $this->getInvalidSessionValues(),
+            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        ]);
     }
 
     public function testExplainableCommandDocument(): void

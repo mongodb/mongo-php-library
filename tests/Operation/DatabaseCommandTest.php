@@ -23,20 +23,10 @@ class DatabaseCommandTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidReadPreferenceValues() as $value) {
-            $options[][] = ['readPreference' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        foreach ($this->getInvalidArrayValues() as $value) {
-            $options[][] = ['typeMap' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'readPreference' => $this->getInvalidReadPreferenceValues(),
+            'session' => $this->getInvalidSessionValues(),
+            'typeMap' => $this->getInvalidArrayValues(),
+        ]);
     }
 }

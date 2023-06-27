@@ -22,24 +22,11 @@ class RenameCollectionTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        foreach ($this->getInvalidArrayValues() as $value) {
-            $options[][] = ['typeMap' => $value];
-        }
-
-        foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = ['writeConcern' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['dropTarget' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'dropTarget' => $this->getInvalidBooleanValues(),
+            'session' => $this->getInvalidSessionValues(),
+            'typeMap' => $this->getInvalidArrayValues(),
+            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        ]);
     }
 }

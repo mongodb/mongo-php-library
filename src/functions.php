@@ -88,7 +88,7 @@ function all_servers_support_write_stage_on_secondary(array $servers): bool
 function apply_type_map_to_document($document, array $typeMap)
 {
     if (! is_document($document)) {
-        throw InvalidArgumentException::invalidType('$document', $document, 'document');
+        throw InvalidArgumentException::expectedDocumentType('$document', $document);
     }
 
     return toPHP(fromPHP($document), $typeMap);
@@ -133,7 +133,7 @@ function document_to_array($document): array
     }
 
     if (! is_array($document)) {
-        throw InvalidArgumentException::invalidType('$document', $document, 'document');
+        throw InvalidArgumentException::expectedDocumentType('$document', $document);
     }
 
     return $document;

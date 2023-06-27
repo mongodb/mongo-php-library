@@ -74,7 +74,7 @@ class InsertOne implements Executable
     public function __construct(string $databaseName, string $collectionName, $document, array $options = [])
     {
         if (! is_document($document)) {
-            throw InvalidArgumentException::invalidType('$document', $document, 'document');
+            throw InvalidArgumentException::expectedDocumentType('$document', $document);
         }
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {

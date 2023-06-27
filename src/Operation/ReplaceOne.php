@@ -81,7 +81,7 @@ class ReplaceOne implements Executable
     public function __construct(string $databaseName, string $collectionName, $filter, $replacement, array $options = [])
     {
         if (! is_document($replacement)) {
-            throw InvalidArgumentException::invalidType('$replacement', $replacement, 'document');
+            throw InvalidArgumentException::expectedDocumentType('$replacement', $replacement);
         }
 
         // Treat empty arrays as replacement documents for BC

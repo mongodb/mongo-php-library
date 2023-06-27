@@ -79,7 +79,7 @@ class ListCollections implements Executable
         }
 
         if (isset($options['filter']) && ! is_document($options['filter'])) {
-            throw InvalidArgumentException::invalidType('"filter" option', $options['filter'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"filter" option', $options['filter']);
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {

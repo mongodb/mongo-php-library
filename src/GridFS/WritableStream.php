@@ -130,7 +130,7 @@ class WritableStream
         }
 
         if (isset($options['metadata']) && ! is_document($options['metadata'])) {
-            throw InvalidArgumentException::invalidType('"metadata" option', $options['metadata'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"metadata" option', $options['metadata']);
         }
 
         $this->chunkSize = $options['chunkSizeBytes'];

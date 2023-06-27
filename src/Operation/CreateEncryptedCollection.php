@@ -84,7 +84,7 @@ class CreateEncryptedCollection implements Executable
         }
 
         if (! is_document($options['encryptedFields'])) {
-            throw InvalidArgumentException::invalidType('"encryptedFields" option', $options['encryptedFields'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"encryptedFields" option', $options['encryptedFields']);
         }
 
         $this->createCollection = new CreateCollection($databaseName, $collectionName, $options);

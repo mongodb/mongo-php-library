@@ -89,11 +89,11 @@ class Distinct implements Executable, Explainable
     public function __construct(string $databaseName, string $collectionName, string $fieldName, $filter = [], array $options = [])
     {
         if (! is_document($filter)) {
-            throw InvalidArgumentException::invalidType('$filter', $filter, 'document');
+            throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
         if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {

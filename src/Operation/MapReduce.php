@@ -171,7 +171,7 @@ class MapReduce implements Executable
         }
 
         if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
         }
 
         if (isset($options['finalize']) && ! $options['finalize'] instanceof JavascriptInterface) {
@@ -191,7 +191,7 @@ class MapReduce implements Executable
         }
 
         if (isset($options['query']) && ! is_document($options['query'])) {
-            throw InvalidArgumentException::invalidType('"query" option', $options['query'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"query" option', $options['query']);
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
@@ -203,7 +203,7 @@ class MapReduce implements Executable
         }
 
         if (isset($options['scope']) && ! is_document($options['scope'])) {
-            throw InvalidArgumentException::invalidType('"scope" option', $options['scope'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"scope" option', $options['scope']);
         }
 
         if (isset($options['session']) && ! $options['session'] instanceof Session) {
@@ -211,7 +211,7 @@ class MapReduce implements Executable
         }
 
         if (isset($options['sort']) && ! is_document($options['sort'])) {
-            throw InvalidArgumentException::invalidType('"sort" option', $options['sort'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"sort" option', $options['sort']);
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {

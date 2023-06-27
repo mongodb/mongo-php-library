@@ -53,7 +53,7 @@ class IndexInput implements Serializable
         }
 
         if (! is_document($index['key'])) {
-            throw InvalidArgumentException::invalidType('"key" option', $index['key'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"key" option', $index['key']);
         }
 
         foreach ($index['key'] as $fieldName => $order) {

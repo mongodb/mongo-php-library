@@ -102,11 +102,11 @@ class FindOneAndReplace implements Executable, Explainable
     public function __construct(string $databaseName, string $collectionName, $filter, $replacement, array $options = [])
     {
         if (! is_document($filter)) {
-            throw InvalidArgumentException::invalidType('$filter', $filter, 'document');
+            throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
         if (! is_document($replacement)) {
-            throw InvalidArgumentException::invalidType('$replacement', $replacement, 'document');
+            throw InvalidArgumentException::expectedDocumentType('$replacement', $replacement);
         }
 
         // Treat empty arrays as replacement documents for BC
@@ -123,7 +123,7 @@ class FindOneAndReplace implements Executable, Explainable
         }
 
         if (isset($options['projection']) && ! is_document($options['projection'])) {
-            throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"projection" option', $options['projection']);
         }
 
         if (array_key_exists('returnDocument', $options) && ! is_integer($options['returnDocument'])) {

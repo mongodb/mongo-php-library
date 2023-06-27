@@ -77,7 +77,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     public function __construct(Cursor $cursor, int $firstBatchSize, $initialResumeToken, ?object $postBatchResumeToken)
     {
         if (isset($initialResumeToken) && ! is_document($initialResumeToken)) {
-            throw InvalidArgumentException::invalidType('$initialResumeToken', $initialResumeToken, 'document');
+            throw InvalidArgumentException::expectedDocumentType('$initialResumeToken', $initialResumeToken);
         }
 
         parent::__construct($cursor);
@@ -236,7 +236,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     private function extractResumeToken($document)
     {
         if (! is_document($document)) {
-            throw InvalidArgumentException::invalidType('$document', $document, 'document');
+            throw InvalidArgumentException::expectedDocumentType('$document', $document);
         }
 
         if ($document instanceof Serializable) {

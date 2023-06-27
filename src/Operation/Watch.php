@@ -224,11 +224,11 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         }
 
         if (isset($options['resumeAfter']) && ! is_document($options['resumeAfter'])) {
-            throw InvalidArgumentException::invalidType('"resumeAfter" option', $options['resumeAfter'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"resumeAfter" option', $options['resumeAfter']);
         }
 
         if (isset($options['startAfter']) && ! is_document($options['startAfter'])) {
-            throw InvalidArgumentException::invalidType('"startAfter" option', $options['startAfter'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"startAfter" option', $options['startAfter']);
         }
 
         if (isset($options['startAtOperationTime']) && ! $options['startAtOperationTime'] instanceof TimestampInterface) {

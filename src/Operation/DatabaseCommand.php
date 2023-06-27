@@ -67,7 +67,7 @@ class DatabaseCommand implements Executable
     public function __construct(string $databaseName, $command, array $options = [])
     {
         if (! is_document($command)) {
-            throw InvalidArgumentException::invalidType('$command', $command, 'document');
+            throw InvalidArgumentException::expectedDocumentType('$command', $command);
         }
 
         if (isset($options['readPreference']) && ! $options['readPreference'] instanceof ReadPreference) {

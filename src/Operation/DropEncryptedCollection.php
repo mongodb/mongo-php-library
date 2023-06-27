@@ -68,7 +68,7 @@ class DropEncryptedCollection implements Executable
         }
 
         if (! is_document($options['encryptedFields'])) {
-            throw InvalidArgumentException::invalidType('"encryptedFields" option', $options['encryptedFields'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"encryptedFields" option', $options['encryptedFields']);
         }
 
         /** @psalm-var array{ecocCollection?: ?string, escCollection?: ?string} */

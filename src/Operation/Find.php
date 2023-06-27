@@ -164,7 +164,7 @@ class Find implements Executable, Explainable
     public function __construct(string $databaseName, string $collectionName, $filter, array $options = [])
     {
         if (! is_document($filter)) {
-            throw InvalidArgumentException::invalidType('$filter', $filter, 'document');
+            throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
         if (isset($options['allowDiskUse']) && ! is_bool($options['allowDiskUse'])) {
@@ -180,7 +180,7 @@ class Find implements Executable, Explainable
         }
 
         if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
         }
 
         if (isset($options['cursorType'])) {
@@ -206,7 +206,7 @@ class Find implements Executable, Explainable
         }
 
         if (isset($options['max']) && ! is_document($options['max'])) {
-            throw InvalidArgumentException::invalidType('"max" option', $options['max'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"max" option', $options['max']);
         }
 
         if (isset($options['maxAwaitTimeMS']) && ! is_integer($options['maxAwaitTimeMS'])) {
@@ -222,11 +222,11 @@ class Find implements Executable, Explainable
         }
 
         if (isset($options['min']) && ! is_document($options['min'])) {
-            throw InvalidArgumentException::invalidType('"min" option', $options['min'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"min" option', $options['min']);
         }
 
         if (isset($options['modifiers']) && ! is_document($options['modifiers'])) {
-            throw InvalidArgumentException::invalidType('"modifiers" option', $options['modifiers'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"modifiers" option', $options['modifiers']);
         }
 
         if (isset($options['noCursorTimeout']) && ! is_bool($options['noCursorTimeout'])) {
@@ -238,7 +238,7 @@ class Find implements Executable, Explainable
         }
 
         if (isset($options['projection']) && ! is_document($options['projection'])) {
-            throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"projection" option', $options['projection']);
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
@@ -270,7 +270,7 @@ class Find implements Executable, Explainable
         }
 
         if (isset($options['sort']) && ! is_document($options['sort'])) {
-            throw InvalidArgumentException::invalidType('"sort" option', $options['sort'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"sort" option', $options['sort']);
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
@@ -278,7 +278,7 @@ class Find implements Executable, Explainable
         }
 
         if (isset($options['let']) && ! is_document($options['let'])) {
-            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"let" option', $options['let']);
         }
 
         if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {

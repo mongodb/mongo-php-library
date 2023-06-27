@@ -141,11 +141,11 @@ class FindAndModify implements Executable, Explainable
         }
 
         if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
         }
 
         if (isset($options['fields']) && ! is_document($options['fields'])) {
-            throw InvalidArgumentException::invalidType('"fields" option', $options['fields'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"fields" option', $options['fields']);
         }
 
         if (isset($options['hint']) && ! is_string($options['hint']) && ! is_array($options['hint']) && ! is_object($options['hint'])) {
@@ -161,7 +161,7 @@ class FindAndModify implements Executable, Explainable
         }
 
         if (isset($options['query']) && ! is_document($options['query'])) {
-            throw InvalidArgumentException::invalidType('"query" option', $options['query'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"query" option', $options['query']);
         }
 
         if (! is_bool($options['remove'])) {
@@ -173,7 +173,7 @@ class FindAndModify implements Executable, Explainable
         }
 
         if (isset($options['sort']) && ! is_document($options['sort'])) {
-            throw InvalidArgumentException::invalidType('"sort" option', $options['sort'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"sort" option', $options['sort']);
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
@@ -193,7 +193,7 @@ class FindAndModify implements Executable, Explainable
         }
 
         if (isset($options['let']) && ! is_document($options['let'])) {
-            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"let" option', $options['let']);
         }
 
         if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {

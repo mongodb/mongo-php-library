@@ -153,19 +153,19 @@ class CreateCollection implements Executable
         }
 
         if (isset($options['changeStreamPreAndPostImages']) && ! is_document($options['changeStreamPreAndPostImages'])) {
-            throw InvalidArgumentException::invalidType('"changeStreamPreAndPostImages" option', $options['changeStreamPreAndPostImages'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"changeStreamPreAndPostImages" option', $options['changeStreamPreAndPostImages']);
         }
 
         if (isset($options['clusteredIndex']) && ! is_document($options['clusteredIndex'])) {
-            throw InvalidArgumentException::invalidType('"clusteredIndex" option', $options['clusteredIndex'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"clusteredIndex" option', $options['clusteredIndex']);
         }
 
         if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
         }
 
         if (isset($options['encryptedFields']) && ! is_document($options['encryptedFields'])) {
-            throw InvalidArgumentException::invalidType('"encryptedFields" option', $options['encryptedFields'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"encryptedFields" option', $options['encryptedFields']);
         }
 
         if (isset($options['expireAfterSeconds']) && ! is_integer($options['expireAfterSeconds'])) {
@@ -177,7 +177,7 @@ class CreateCollection implements Executable
         }
 
         if (isset($options['indexOptionDefaults']) && ! is_document($options['indexOptionDefaults'])) {
-            throw InvalidArgumentException::invalidType('"indexOptionDefaults" option', $options['indexOptionDefaults'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"indexOptionDefaults" option', $options['indexOptionDefaults']);
         }
 
         if (isset($options['max']) && ! is_integer($options['max'])) {
@@ -201,11 +201,11 @@ class CreateCollection implements Executable
         }
 
         if (isset($options['storageEngine']) && ! is_document($options['storageEngine'])) {
-            throw InvalidArgumentException::invalidType('"storageEngine" option', $options['storageEngine'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"storageEngine" option', $options['storageEngine']);
         }
 
         if (isset($options['timeseries']) && ! is_document($options['timeseries'])) {
-            throw InvalidArgumentException::invalidType('"timeseries" option', $options['timeseries'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"timeseries" option', $options['timeseries']);
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
@@ -221,7 +221,7 @@ class CreateCollection implements Executable
         }
 
         if (isset($options['validator']) && ! is_document($options['validator'])) {
-            throw InvalidArgumentException::invalidType('"validator" option', $options['validator'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"validator" option', $options['validator']);
         }
 
         if (isset($options['viewOn']) && ! is_string($options['viewOn'])) {

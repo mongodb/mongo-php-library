@@ -115,7 +115,7 @@ class Update implements Executable, Explainable
     public function __construct(string $databaseName, string $collectionName, $filter, $update, array $options = [])
     {
         if (! is_document($filter)) {
-            throw InvalidArgumentException::invalidType('$filter', $filter, 'document');
+            throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
         if (! is_array($update) && ! is_object($update)) {
@@ -136,7 +136,7 @@ class Update implements Executable, Explainable
         }
 
         if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
         }
 
         if (isset($options['hint']) && ! is_string($options['hint']) && ! is_array($options['hint']) && ! is_object($options['hint'])) {
@@ -164,7 +164,7 @@ class Update implements Executable, Explainable
         }
 
         if (isset($options['let']) && ! is_document($options['let'])) {
-            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"let" option', $options['let']);
         }
 
         if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {

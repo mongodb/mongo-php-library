@@ -157,7 +157,7 @@ class Aggregate implements Executable, Explainable
         }
 
         if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
         }
 
         if (isset($options['explain']) && ! is_bool($options['explain'])) {
@@ -169,7 +169,7 @@ class Aggregate implements Executable, Explainable
         }
 
         if (isset($options['let']) && ! is_document($options['let'])) {
-            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"let" option', $options['let']);
         }
 
         if (isset($options['maxAwaitTimeMS']) && ! is_integer($options['maxAwaitTimeMS'])) {

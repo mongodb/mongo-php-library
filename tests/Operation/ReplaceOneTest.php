@@ -45,7 +45,7 @@ class ReplaceOneTest extends TestCase
     public function testConstructorReplacementArgumentProhibitsUpdatePipeline($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('#(\$replacement is an update pipeline)|(Expected \$replacement to have type "document")#');
+        $this->expectExceptionMessageMatches('#(\$replacement is an update pipeline)|(Expected \$replacement to have type "document" \(array or object\))#');
         new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $replacement);
     }
 }

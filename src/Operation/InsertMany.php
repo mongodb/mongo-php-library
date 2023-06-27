@@ -90,7 +90,7 @@ class InsertMany implements Executable
 
         foreach ($documents as $i => $document) {
             if (! is_document($document)) {
-                throw InvalidArgumentException::invalidType(sprintf('$documents[%d]', $i), $document, 'document');
+                throw InvalidArgumentException::expectedDocumentType(sprintf('$documents[%d]', $i), $document);
             }
         }
 

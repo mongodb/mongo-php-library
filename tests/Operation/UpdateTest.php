@@ -12,7 +12,7 @@ class UpdateTest extends TestCase
     public function testConstructorFilterArgumentTypeCheck($filter): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/Expected \$filter to have type "document" but found ".+"/');
+        $this->expectExceptionMessageMatches('/Expected \$filter to have type "document" \(array or object\) but found ".+"/');
         new Update($this->getDatabaseName(), $this->getCollectionName(), $filter, ['$set' => ['x' => 1]]);
     }
 

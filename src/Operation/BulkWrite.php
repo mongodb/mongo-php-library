@@ -154,7 +154,7 @@ class BulkWrite implements Executable
             }
 
             if (! is_document($args[0])) {
-                throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][0]', $i, $type), $args[0], 'document');
+                throw InvalidArgumentException::expectedDocumentType(sprintf('$operations[%d]["%s"][0]', $i, $type), $args[0]);
             }
 
             switch ($type) {
@@ -174,7 +174,7 @@ class BulkWrite implements Executable
                     $args[1]['limit'] = ($type === self::DELETE_ONE ? 1 : 0);
 
                     if (isset($args[1]['collation']) && ! is_document($args[1]['collation'])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]["collation"]', $i, $type), $args[1]['collation'], 'document');
+                        throw InvalidArgumentException::expectedDocumentType(sprintf('$operations[%d]["%s"][1]["collation"]', $i, $type), $args[1]['collation']);
                     }
 
                     $operations[$i][$type][1] = $args[1];
@@ -187,7 +187,7 @@ class BulkWrite implements Executable
                     }
 
                     if (! is_document($args[1])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'document');
+                        throw InvalidArgumentException::expectedDocumentType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1]);
                     }
 
                     // Treat empty arrays as replacement documents for BC
@@ -215,7 +215,7 @@ class BulkWrite implements Executable
                     $args[2] += ['upsert' => false];
 
                     if (isset($args[2]['collation']) && ! is_document($args[2]['collation'])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation'], 'document');
+                        throw InvalidArgumentException::expectedDocumentType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation']);
                     }
 
                     if (! is_bool($args[2]['upsert'])) {
@@ -252,7 +252,7 @@ class BulkWrite implements Executable
                     }
 
                     if (isset($args[2]['collation']) && ! is_document($args[2]['collation'])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation'], 'document');
+                        throw InvalidArgumentException::expectedDocumentType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation']);
                     }
 
                     if (! is_bool($args[2]['upsert'])) {
@@ -287,7 +287,7 @@ class BulkWrite implements Executable
         }
 
         if (isset($options['let']) && ! is_document($options['let'])) {
-            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"let" option', $options['let']);
         }
 
         if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {

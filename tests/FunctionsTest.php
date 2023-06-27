@@ -116,7 +116,7 @@ class FunctionsTest extends TestCase
     public function testDocumentToArrayArgumentTypeCheck($document): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected $document to have type "document"');
+        $this->expectExceptionMessage('Expected $document to have type "document" (array or object)');
         document_to_array($document);
     }
 

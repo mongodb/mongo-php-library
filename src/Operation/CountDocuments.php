@@ -97,7 +97,7 @@ class CountDocuments implements Executable
     public function __construct(string $databaseName, string $collectionName, $filter, array $options = [])
     {
         if (! is_document($filter)) {
-            throw InvalidArgumentException::invalidType('$filter', $filter, 'document');
+            throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
         if (isset($options['limit']) && ! is_integer($options['limit'])) {

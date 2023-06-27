@@ -67,7 +67,7 @@ class CreateIndexesTest extends TestCase
     public function testConstructorRequiresIndexSpecificationKeyToBeADocument($key): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected "key" option to have type "document"');
+        $this->expectExceptionMessage('Expected "key" option to have type "document" (array or object)');
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => $key]]);
     }
 

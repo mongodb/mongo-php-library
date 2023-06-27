@@ -82,11 +82,11 @@ class FindOneAndDelete implements Executable, Explainable
     public function __construct(string $databaseName, string $collectionName, $filter, array $options = [])
     {
         if (! is_document($filter)) {
-            throw InvalidArgumentException::invalidType('$filter', $filter, 'document');
+            throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
         if (isset($options['projection']) && ! is_document($options['projection'])) {
-            throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'document');
+            throw InvalidArgumentException::expectedDocumentType('"projection" option', $options['projection']);
         }
 
         if (isset($options['projection'])) {

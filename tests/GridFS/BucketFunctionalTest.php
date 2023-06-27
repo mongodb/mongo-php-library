@@ -66,37 +66,15 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidStringValues(true) as $value) {
-            $options[][] = ['bucketName' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues(true) as $value) {
-            $options[][] = ['chunkSizeBytes' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues(true) as $value) {
-            $options[][] = ['disableMD5' => $value];
-        }
-
-        foreach ($this->getInvalidReadConcernValues() as $value) {
-            $options[][] = ['readConcern' => $value];
-        }
-
-        foreach ($this->getInvalidReadPreferenceValues() as $value) {
-            $options[][] = ['readPreference' => $value];
-        }
-
-        foreach ($this->getInvalidArrayValues() as $value) {
-            $options[][] = ['typeMap' => $value];
-        }
-
-        foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = ['writeConcern' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'bucketName' => $this->getInvalidStringValues(true),
+            'chunkSizeBytes' => $this->getInvalidIntegerValues(true),
+            'disableMD5' => $this->getInvalidBooleanValues(true),
+            'readConcern' => $this->getInvalidReadConcernValues(),
+            'readPreference' => $this->getInvalidReadPreferenceValues(),
+            'typeMap' => $this->getInvalidArrayValues(),
+            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        ]);
     }
 
     public function testConstructorShouldRequireChunkSizeBytesOptionToBePositive(): void

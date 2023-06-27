@@ -33,6 +33,7 @@ use function is_integer;
 use function is_object;
 use function is_string;
 use function MongoDB\document_to_array;
+use function MongoDB\is_document;
 use function trigger_error;
 
 use const E_USER_DEPRECATED;
@@ -162,8 +163,8 @@ class Find implements Executable, Explainable
      */
     public function __construct(string $databaseName, string $collectionName, $filter, array $options = [])
     {
-        if (! is_array($filter) && ! is_object($filter)) {
-            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
+        if (! is_document($filter)) {
+            throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
         if (isset($options['allowDiskUse']) && ! is_bool($options['allowDiskUse'])) {
@@ -178,8 +179,8 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"batchSize" option', $options['batchSize'], 'integer');
         }
 
-        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
-            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
+        if (isset($options['collation']) && ! is_document($options['collation'])) {
+            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
         }
 
         if (isset($options['cursorType'])) {
@@ -204,8 +205,8 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"limit" option', $options['limit'], 'integer');
         }
 
-        if (isset($options['max']) && ! is_array($options['max']) && ! is_object($options['max'])) {
-            throw InvalidArgumentException::invalidType('"max" option', $options['max'], 'array or object');
+        if (isset($options['max']) && ! is_document($options['max'])) {
+            throw InvalidArgumentException::expectedDocumentType('"max" option', $options['max']);
         }
 
         if (isset($options['maxAwaitTimeMS']) && ! is_integer($options['maxAwaitTimeMS'])) {
@@ -220,12 +221,12 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
-        if (isset($options['min']) && ! is_array($options['min']) && ! is_object($options['min'])) {
-            throw InvalidArgumentException::invalidType('"min" option', $options['min'], 'array or object');
+        if (isset($options['min']) && ! is_document($options['min'])) {
+            throw InvalidArgumentException::expectedDocumentType('"min" option', $options['min']);
         }
 
-        if (isset($options['modifiers']) && ! is_array($options['modifiers']) && ! is_object($options['modifiers'])) {
-            throw InvalidArgumentException::invalidType('"modifiers" option', $options['modifiers'], 'array or object');
+        if (isset($options['modifiers']) && ! is_document($options['modifiers'])) {
+            throw InvalidArgumentException::expectedDocumentType('"modifiers" option', $options['modifiers']);
         }
 
         if (isset($options['noCursorTimeout']) && ! is_bool($options['noCursorTimeout'])) {
@@ -236,8 +237,8 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"oplogReplay" option', $options['oplogReplay'], 'boolean');
         }
 
-        if (isset($options['projection']) && ! is_array($options['projection']) && ! is_object($options['projection'])) {
-            throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
+        if (isset($options['projection']) && ! is_document($options['projection'])) {
+            throw InvalidArgumentException::expectedDocumentType('"projection" option', $options['projection']);
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
@@ -268,16 +269,16 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"snapshot" option', $options['snapshot'], 'boolean');
         }
 
-        if (isset($options['sort']) && ! is_array($options['sort']) && ! is_object($options['sort'])) {
-            throw InvalidArgumentException::invalidType('"sort" option', $options['sort'], 'array or object');
+        if (isset($options['sort']) && ! is_document($options['sort'])) {
+            throw InvalidArgumentException::expectedDocumentType('"sort" option', $options['sort']);
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
-        if (isset($options['let']) && ! is_array($options['let']) && ! is_object($options['let'])) {
-            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'array or object');
+        if (isset($options['let']) && ! is_document($options['let'])) {
+            throw InvalidArgumentException::expectedDocumentType('"let" option', $options['let']);
         }
 
         if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {

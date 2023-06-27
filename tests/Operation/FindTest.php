@@ -25,101 +25,31 @@ class FindTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['allowPartialResults' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['batchSize' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['collation' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['cursorType' => $value];
-        }
-
-        foreach ($this->getInvalidHintValues() as $value) {
-            $options[][] = ['hint' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['limit' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['max' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxAwaitTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxScan' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['min' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['modifiers' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['oplogReplay' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['projection' => $value];
-        }
-
-        foreach ($this->getInvalidReadConcernValues() as $value) {
-            $options[][] = ['readConcern' => $value];
-        }
-
-        foreach ($this->getInvalidReadPreferenceValues() as $value) {
-            $options[][] = ['readPreference' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['returnKey' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['showRecordId' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['skip' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['snapshot' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['sort' => $value];
-        }
-
-        foreach ($this->getInvalidArrayValues() as $value) {
-            $options[][] = ['typeMap' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'allowPartialResults' => $this->getInvalidBooleanValues(),
+            'batchSize' => $this->getInvalidIntegerValues(),
+            'collation' => $this->getInvalidDocumentValues(),
+            'cursorType' => $this->getInvalidIntegerValues(),
+            'hint' => $this->getInvalidHintValues(),
+            'limit' => $this->getInvalidIntegerValues(),
+            'max' => $this->getInvalidDocumentValues(),
+            'maxAwaitTimeMS' => $this->getInvalidIntegerValues(),
+            'maxScan' => $this->getInvalidIntegerValues(),
+            'maxTimeMS' => $this->getInvalidIntegerValues(),
+            'min' => $this->getInvalidDocumentValues(),
+            'modifiers' => $this->getInvalidDocumentValues(),
+            'oplogReplay' => $this->getInvalidBooleanValues(),
+            'projection' => $this->getInvalidDocumentValues(),
+            'readConcern' => $this->getInvalidReadConcernValues(),
+            'readPreference' => $this->getInvalidReadPreferenceValues(),
+            'returnKey' => $this->getInvalidBooleanValues(),
+            'session' => $this->getInvalidSessionValues(),
+            'showRecordId' => $this->getInvalidBooleanValues(),
+            'skip' => $this->getInvalidIntegerValues(),
+            'snapshot' => $this->getInvalidBooleanValues(),
+            'sort' => $this->getInvalidDocumentValues(),
+            'typeMap' => $this->getInvalidArrayValues(),
+        ]);
     }
 
     public function testSnapshotOptionIsDeprecated(): void
@@ -138,11 +68,6 @@ class FindTest extends TestCase
         $this->assertDeprecated(function (): void {
             new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['maxScan' => 1]);
         });
-    }
-
-    private function getInvalidHintValues()
-    {
-        return [123, 3.14, true];
     }
 
     /** @dataProvider provideInvalidConstructorCursorTypeOptions */

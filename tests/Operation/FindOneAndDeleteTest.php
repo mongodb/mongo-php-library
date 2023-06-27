@@ -24,13 +24,9 @@ class FindOneAndDeleteTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['projection' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'projection' => $this->getInvalidDocumentValues(),
+        ]);
     }
 
     public function testExplainableCommandDocument(): void

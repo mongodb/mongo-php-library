@@ -42,21 +42,11 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidIntegerValues(true) as $value) {
-            $options[][] = ['chunkSizeBytes' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues(true) as $value) {
-            $options[][] = ['disableMD5' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['metadata' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'chunkSizeBytes' => $this->getInvalidIntegerValues(true),
+            'disableMD5' => $this->getInvalidBooleanValues(true),
+            'metadata' => $this->getInvalidDocumentValues(),
+        ]);
     }
 
     public function testConstructorShouldRequireChunkSizeBytesOptionToBePositive(): void

@@ -26,9 +26,8 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\InsertOneResult;
 
-use function is_array;
 use function is_bool;
-use function is_object;
+use function MongoDB\is_document;
 
 /**
  * Operation for inserting a single document with the insert command.
@@ -74,8 +73,8 @@ class InsertOne implements Executable
      */
     public function __construct(string $databaseName, string $collectionName, $document, array $options = [])
     {
-        if (! is_array($document) && ! is_object($document)) {
-            throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
+        if (! is_document($document)) {
+            throw InvalidArgumentException::expectedDocumentType('$document', $document);
         }
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {

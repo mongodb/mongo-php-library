@@ -46,7 +46,7 @@ class FindOneAndReplaceTest extends TestCase
     public function testConstructorReplacementArgumentProhibitsUpdatePipeline($replacement): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$replacement is an update pipeline');
+        $this->expectExceptionMessageMatches('#(\$replacement is an update pipeline)|(Expected \$replacement to have type "document" \(array or object\))#');
         new FindOneAndReplace($this->getDatabaseName(), $this->getCollectionName(), [], $replacement);
     }
 
@@ -59,17 +59,10 @@ class FindOneAndReplaceTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['projection' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues(true) as $value) {
-            $options[][] = ['returnDocument' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'projection' => $this->getInvalidDocumentValues(),
+            'returnDocument' => $this->getInvalidIntegerValues(true),
+        ]);
     }
 
     /** @dataProvider provideInvalidConstructorReturnDocumentOptions */

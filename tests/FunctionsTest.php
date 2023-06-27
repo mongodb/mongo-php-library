@@ -112,12 +112,18 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    /** @dataProvider provideInvalidDocumentValuesForChecks */
     public function testDocumentToArrayArgumentTypeCheck($document): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected $document to have type "array or object"');
+        $this->expectExceptionMessage('Expected $document to have type "document" (array or object)');
         document_to_array($document);
+    }
+
+    public function provideInvalidDocumentValuesForChecks(): array
+    {
+        // PackedArray is intentionally left out, as document_to_array is used to convert aggregation pipelines
+        return $this->wrapValuesForDataProvider([123, 3.14, 'foo', true]);
     }
 
     public function provideDocumentCasts(): array
@@ -145,7 +151,7 @@ class FunctionsTest extends TestCase
         $this->assertFalse(is_first_key_operator($cast(['foo'])));
     }
 
-    /** @dataProvider provideInvalidDocumentValues */
+    /** @dataProvider provideInvalidDocumentValuesForChecks */
     public function testIsFirstKeyOperatorArgumentTypeCheck($document): void
     {
         $this->expectException(InvalidArgumentException::class);

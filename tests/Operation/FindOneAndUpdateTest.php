@@ -42,17 +42,10 @@ class FindOneAndUpdateTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['projection' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues(true) as $value) {
-            $options[][] = ['returnDocument' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'projection' => $this->getInvalidDocumentValues(),
+            'returnDocument' => $this->getInvalidIntegerValues(),
+        ]);
     }
 
     /** @dataProvider provideInvalidConstructorReturnDocumentOptions */

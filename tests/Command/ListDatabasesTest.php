@@ -17,28 +17,12 @@ class ListDatabasesTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['authorizedDatabases' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['filter' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['nameOnly' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'authorizedDatabases' => $this->getInvalidBooleanValues(),
+            'filter' => $this->getInvalidDocumentValues(),
+            'maxTimeMS' => $this->getInvalidIntegerValues(),
+            'nameOnly' => $this->getInvalidBooleanValues(),
+            'session' => $this->getInvalidSessionValues(),
+        ]);
     }
 }

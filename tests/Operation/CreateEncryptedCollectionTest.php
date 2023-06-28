@@ -6,8 +6,6 @@ use Generator;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\CreateEncryptedCollection;
 
-use function get_debug_type;
-
 class CreateEncryptedCollectionTest extends TestCase
 {
     /** @dataProvider provideInvalidConstructorOptions */
@@ -23,10 +21,8 @@ class CreateEncryptedCollectionTest extends TestCase
             [],
         ];
 
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            yield 'encryptedFields type: ' . get_debug_type($value) => [
-                ['encryptedFields' => $value],
-            ];
-        }
+        yield from $this->createOptionDataProvider([
+            'encryptedFields' => $this->getInvalidDocumentValues(),
+        ]);
     }
 }

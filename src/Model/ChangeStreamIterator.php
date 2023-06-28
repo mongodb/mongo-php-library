@@ -36,6 +36,7 @@ use function is_array;
 use function is_object;
 use function MongoDB\Driver\Monitoring\addSubscriber;
 use function MongoDB\Driver\Monitoring\removeSubscriber;
+use function MongoDB\is_document;
 
 /**
  * ChangeStreamIterator wraps a change stream's tailable cursor.
@@ -75,8 +76,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      */
     public function __construct(Cursor $cursor, int $firstBatchSize, $initialResumeToken, ?object $postBatchResumeToken)
     {
-        if (isset($initialResumeToken) && ! is_array($initialResumeToken) && ! is_object($initialResumeToken)) {
-            throw InvalidArgumentException::invalidType('$initialResumeToken', $initialResumeToken, 'array or object');
+        if (isset($initialResumeToken) && ! is_document($initialResumeToken)) {
+            throw InvalidArgumentException::expectedDocumentType('$initialResumeToken', $initialResumeToken);
         }
 
         parent::__construct($cursor);
@@ -234,8 +235,8 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      */
     private function extractResumeToken($document)
     {
-        if (! is_array($document) && ! is_object($document)) {
-            throw InvalidArgumentException::invalidType('$document', $document, 'array or object');
+        if (! is_document($document)) {
+            throw InvalidArgumentException::expectedDocumentType('$document', $document);
         }
 
         if ($document instanceof Serializable) {

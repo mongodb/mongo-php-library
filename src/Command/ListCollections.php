@@ -25,10 +25,9 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Operation\Executable;
 
-use function is_array;
 use function is_bool;
 use function is_integer;
-use function is_object;
+use function MongoDB\is_document;
 
 /**
  * Wrapper for the listCollections command.
@@ -79,8 +78,8 @@ class ListCollections implements Executable
             throw InvalidArgumentException::invalidType('"authorizedCollections" option', $options['authorizedCollections'], 'boolean');
         }
 
-        if (isset($options['filter']) && ! is_array($options['filter']) && ! is_object($options['filter'])) {
-            throw InvalidArgumentException::invalidType('"filter" option', $options['filter'], 'array or object');
+        if (isset($options['filter']) && ! is_document($options['filter'])) {
+            throw InvalidArgumentException::expectedDocumentType('"filter" option', $options['filter']);
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {

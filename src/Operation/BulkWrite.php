@@ -32,8 +32,8 @@ use function count;
 use function current;
 use function is_array;
 use function is_bool;
-use function is_object;
 use function key;
+use function MongoDB\is_document;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_pipeline;
 use function sprintf;
@@ -153,8 +153,8 @@ class BulkWrite implements Executable
                 throw new InvalidArgumentException(sprintf('Missing first argument for $operations[%d]["%s"]', $i, $type));
             }
 
-            if (! is_array($args[0]) && ! is_object($args[0])) {
-                throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][0]', $i, $type), $args[0], 'array or object');
+            if (! is_document($args[0])) {
+                throw InvalidArgumentException::expectedDocumentType(sprintf('$operations[%d]["%s"][0]', $i, $type), $args[0]);
             }
 
             switch ($type) {
@@ -173,8 +173,8 @@ class BulkWrite implements Executable
 
                     $args[1]['limit'] = ($type === self::DELETE_ONE ? 1 : 0);
 
-                    if (isset($args[1]['collation']) && ! is_array($args[1]['collation']) && ! is_object($args[1]['collation'])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]["collation"]', $i, $type), $args[1]['collation'], 'array or object');
+                    if (isset($args[1]['collation']) && ! is_document($args[1]['collation'])) {
+                        throw InvalidArgumentException::expectedDocumentType(sprintf('$operations[%d]["%s"][1]["collation"]', $i, $type), $args[1]['collation']);
                     }
 
                     $operations[$i][$type][1] = $args[1];
@@ -186,8 +186,8 @@ class BulkWrite implements Executable
                         throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
                     }
 
-                    if (! is_array($args[1]) && ! is_object($args[1])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
+                    if (! is_document($args[1])) {
+                        throw InvalidArgumentException::expectedDocumentType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1]);
                     }
 
                     // Treat empty arrays as replacement documents for BC
@@ -214,8 +214,8 @@ class BulkWrite implements Executable
                     $args[2]['multi'] = false;
                     $args[2] += ['upsert' => false];
 
-                    if (isset($args[2]['collation']) && ! is_array($args[2]['collation']) && ! is_object($args[2]['collation'])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation'], 'array or object');
+                    if (isset($args[2]['collation']) && ! is_document($args[2]['collation'])) {
+                        throw InvalidArgumentException::expectedDocumentType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation']);
                     }
 
                     if (! is_bool($args[2]['upsert'])) {
@@ -232,11 +232,7 @@ class BulkWrite implements Executable
                         throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
                     }
 
-                    if (! is_array($args[1]) && ! is_object($args[1])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][1]', $i, $type), $args[1], 'array or object');
-                    }
-
-                    if (! is_first_key_operator($args[1]) && ! is_pipeline($args[1])) {
+                    if ((! is_document($args[1]) || ! is_first_key_operator($args[1])) && ! is_pipeline($args[1])) {
                         throw new InvalidArgumentException(sprintf('Expected update operator(s) or non-empty pipeline for $operations[%d]["%s"][1]', $i, $type));
                     }
 
@@ -255,8 +251,8 @@ class BulkWrite implements Executable
                         throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["arrayFilters"]', $i, $type), $args[2]['arrayFilters'], 'array');
                     }
 
-                    if (isset($args[2]['collation']) && ! is_array($args[2]['collation']) && ! is_object($args[2]['collation'])) {
-                        throw InvalidArgumentException::invalidType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation'], 'array or object');
+                    if (isset($args[2]['collation']) && ! is_document($args[2]['collation'])) {
+                        throw InvalidArgumentException::expectedDocumentType(sprintf('$operations[%d]["%s"][2]["collation"]', $i, $type), $args[2]['collation']);
                     }
 
                     if (! is_bool($args[2]['upsert'])) {
@@ -290,8 +286,8 @@ class BulkWrite implements Executable
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
 
-        if (isset($options['let']) && ! is_array($options['let']) && ! is_object($options['let'])) {
-            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'array or object');
+        if (isset($options['let']) && ! is_document($options['let'])) {
+            throw InvalidArgumentException::expectedDocumentType('"let" option', $options['let']);
         }
 
         if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {

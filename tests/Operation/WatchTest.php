@@ -40,53 +40,20 @@ class WatchTest extends FunctionalTestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['batchSize' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['collation' => $value];
-        }
-
-        foreach ($this->getInvalidStringValues(true) as $value) {
-            $options[][] = ['fullDocument' => $value];
-        }
-
-        foreach ($this->getInvalidStringValues() as $value) {
-            $options[][] = ['fullDocumentBeforeChange' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxAwaitTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidReadConcernValues() as $value) {
-            $options[][] = ['readConcern' => $value];
-        }
-
-        foreach ($this->getInvalidReadPreferenceValues(true) as $value) {
-            $options[][] = ['readPreference' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['resumeAfter' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        foreach ($this->getInvalidTimestampValues() as $value) {
-            $options[][] = ['startAtOperationTime' => $value];
-        }
-
-        foreach ($this->getInvalidArrayValues() as $value) {
-            $options[][] = ['typeMap' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'batchSize' => $this->getInvalidIntegerValues(),
+            'collation' => $this->getInvalidDocumentValues(),
+            'fullDocument' => $this->getInvalidStringValues(true),
+            'fullDocumentBeforeChange' => $this->getInvalidStringValues(),
+            'maxAwaitTimeMS' => $this->getInvalidIntegerValues(),
+            'readConcern' => $this->getInvalidReadConcernValues(),
+            'readPreference' => $this->getInvalidReadPreferenceValues(true),
+            'resumeAfter' => $this->getInvalidDocumentValues(),
+            'session' => $this->getInvalidSessionValues(),
+            'startAfter' => $this->getInvalidDocumentValues(),
+            'startAtOperationTime' => $this->getInvalidTimestampValues(),
+            'typeMap' => $this->getInvalidArrayValues(),
+        ]);
     }
 
     private function getInvalidTimestampValues()

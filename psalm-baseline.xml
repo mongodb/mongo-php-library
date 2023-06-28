@@ -196,10 +196,6 @@
     </MixedAssignment>
   </file>
   <file src="src/Model/ChangeStreamIterator.php">
-    <DocblockTypeContradiction occurrences="2">
-      <code>! is_array($document) &amp;&amp; ! is_object($document)</code>
-      <code>isset($initialResumeToken) &amp;&amp; ! is_array($initialResumeToken) &amp;&amp; ! is_object($initialResumeToken)</code>
-    </DocblockTypeContradiction>
     <MixedArgument occurrences="2">
       <code>$reply-&gt;cursor-&gt;nextBatch</code>
       <code>$this-&gt;current()</code>
@@ -276,8 +272,9 @@
     </MixedAssignment>
   </file>
   <file src="src/Model/IndexInput.php">
-    <MixedArgument occurrences="1">
+    <MixedArgument occurrences="2">
       <code>$fieldName</code>
+      <code>$index['key']</code>
     </MixedArgument>
     <MixedAssignment occurrences="2">
       <code>$fieldName</code>
@@ -328,11 +325,13 @@
       <code>$args[1]</code>
       <code>$args[2]</code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="28">
+    <MixedArrayAccess occurrences="30">
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
+      <code>$args[0]</code>
+      <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
@@ -395,9 +394,6 @@
     </MixedOperand>
   </file>
   <file src="src/Operation/Count.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
-    </DocblockTypeContradiction>
     <MixedAssignment occurrences="6">
       <code>$cmd[$option]</code>
       <code>$cmd['hint']</code>
@@ -409,11 +405,6 @@
     <MixedMethodCall occurrences="1">
       <code>isInTransaction</code>
     </MixedMethodCall>
-  </file>
-  <file src="src/Operation/CountDocuments.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
-    </DocblockTypeContradiction>
   </file>
   <file src="src/Operation/CreateCollection.php">
     <MixedArgument occurrences="2">
@@ -427,7 +418,8 @@
     </MixedAssignment>
   </file>
   <file src="src/Operation/CreateEncryptedCollection.php">
-    <MixedArgument occurrences="1">
+    <MixedArgument occurrences="2">
+      <code>$options['encryptedFields']</code>
       <code>$this-&gt;options['encryptedFields']</code>
     </MixedArgument>
   </file>
@@ -446,9 +438,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/DatabaseCommand.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($command) &amp;&amp; ! is_object($command)</code>
-    </DocblockTypeContradiction>
     <MixedArgument occurrences="1">
       <code>$this-&gt;options['typeMap']</code>
     </MixedArgument>
@@ -458,9 +447,6 @@
     </MixedAssignment>
   </file>
   <file src="src/Operation/Delete.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
-    </DocblockTypeContradiction>
     <MixedArgument occurrences="1">
       <code>$this-&gt;options['writeConcern']</code>
     </MixedArgument>
@@ -476,9 +462,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/Distinct.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
-    </DocblockTypeContradiction>
     <MixedArgument occurrences="1">
       <code>$this-&gt;options['typeMap']</code>
     </MixedArgument>
@@ -516,6 +499,11 @@
       <code>$options['writeConcern']</code>
     </MixedAssignment>
   </file>
+  <file src="src/Operation/DropEncryptedCollection.php">
+    <MixedArgument occurrences="1">
+      <code>$options['encryptedFields']</code>
+    </MixedArgument>
+  </file>
   <file src="src/Operation/DropIndexes.php">
     <MixedArgument occurrences="1">
       <code>$this-&gt;options['typeMap']</code>
@@ -540,9 +528,6 @@
     </MixedAssignment>
   </file>
   <file src="src/Operation/Find.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
-    </DocblockTypeContradiction>
     <MixedArgument occurrences="1">
       <code>$this-&gt;options['typeMap']</code>
     </MixedArgument>
@@ -583,32 +568,30 @@
     </MixedReturnStatement>
   </file>
   <file src="src/Operation/FindOneAndDelete.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
-    </DocblockTypeContradiction>
+    <MixedAssignment occurrences="1">
+      <code>$options['fields']</code>
+    </MixedAssignment>
   </file>
   <file src="src/Operation/FindOneAndReplace.php">
-    <DocblockTypeContradiction occurrences="2">
-      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
-      <code>! is_array($replacement) &amp;&amp; ! is_object($replacement)</code>
-    </DocblockTypeContradiction>
+    <MixedAssignment occurrences="1">
+      <code>$options['fields']</code>
+    </MixedAssignment>
     <MixedOperand occurrences="1">
       <code>$options['returnDocument']</code>
     </MixedOperand>
   </file>
   <file src="src/Operation/FindOneAndUpdate.php">
-    <DocblockTypeContradiction occurrences="2">
-      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
+    <DocblockTypeContradiction occurrences="1">
       <code>! is_array($update) &amp;&amp; ! is_object($update)</code>
     </DocblockTypeContradiction>
+    <MixedAssignment occurrences="1">
+      <code>$options['fields']</code>
+    </MixedAssignment>
     <MixedOperand occurrences="1">
       <code>$options['returnDocument']</code>
     </MixedOperand>
   </file>
   <file src="src/Operation/InsertMany.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($document) &amp;&amp; ! is_object($document)</code>
-    </DocblockTypeContradiction>
     <MixedAssignment occurrences="4">
       <code>$insertedIds[$i]</code>
       <code>$options[$option]</code>
@@ -621,9 +604,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/InsertOne.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($document) &amp;&amp; ! is_object($document)</code>
-    </DocblockTypeContradiction>
     <MixedAssignment occurrences="4">
       <code>$insertedId</code>
       <code>$options[$option]</code>
@@ -692,14 +672,8 @@
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
-  <file src="src/Operation/ReplaceOne.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($replacement) &amp;&amp; ! is_object($replacement)</code>
-    </DocblockTypeContradiction>
-  </file>
   <file src="src/Operation/Update.php">
-    <DocblockTypeContradiction occurrences="2">
-      <code>! is_array($filter) &amp;&amp; ! is_object($filter)</code>
+    <DocblockTypeContradiction occurrences="1">
       <code>! is_array($update) &amp;&amp; ! is_object($update)</code>
     </DocblockTypeContradiction>
     <MixedArgument occurrences="1">
@@ -767,11 +741,11 @@
     </MixedAssignment>
   </file>
   <file src="src/functions.php">
-    <DocblockTypeContradiction occurrences="2">
-      <code>! is_array($document) &amp;&amp; ! is_object($document)</code>
+    <DocblockTypeContradiction occurrences="1">
       <code>is_array($document)</code>
     </DocblockTypeContradiction>
-    <MixedArgument occurrences="1">
+    <MixedArgument occurrences="2">
+      <code>$stage</code>
       <code>$wireVersionForWriteStageOnSecondary</code>
     </MixedArgument>
     <MixedArgumentTypeCoercion occurrences="1">
@@ -784,8 +758,9 @@
       <code>$typeMap['fieldPaths'][$fieldPath]</code>
       <code>$typeMap['fieldPaths'][substr($fieldPath, 0, -2)]</code>
     </MixedArrayAssignment>
-    <MixedAssignment occurrences="5">
+    <MixedAssignment occurrences="6">
       <code>$element[$key]</code>
+      <code>$stage</code>
       <code>$type</code>
       <code>$typeMap['fieldPaths'][$fieldPath . '.' . $existingFieldPath]</code>
       <code>$typeMap['fieldPaths'][$fieldPath]</code>

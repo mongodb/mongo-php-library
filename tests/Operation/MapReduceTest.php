@@ -65,69 +65,23 @@ class MapReduceTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['bypassDocumentValidation' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['collation' => $value];
-        }
-
-        foreach ($this->getInvalidJavascriptValues() as $value) {
-            $options[][] = ['finalize' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['jsMode' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['limit' => $value];
-        }
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['query' => $value];
-        }
-
-        foreach ($this->getInvalidReadConcernValues() as $value) {
-            $options[][] = ['readConcern' => $value];
-        }
-
-        foreach ($this->getInvalidReadPreferenceValues() as $value) {
-            $options[][] = ['readPreference' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['scope' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        foreach ($this->getInvalidDocumentValues() as $value) {
-            $options[][] = ['sort' => $value];
-        }
-
-        foreach ($this->getInvalidArrayValues() as $value) {
-            $options[][] = ['typeMap' => $value];
-        }
-
-        foreach ($this->getInvalidBooleanValues() as $value) {
-            $options[][] = ['verbose' => $value];
-        }
-
-        foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = ['writeConcern' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
+            'collation' => $this->getInvalidDocumentValues(),
+            'finalize' => $this->getInvalidJavascriptValues(),
+            'jsMode' => $this->getInvalidBooleanValues(),
+            'limit' => $this->getInvalidIntegerValues(),
+            'maxTimeMS' => $this->getInvalidIntegerValues(),
+            'query' => $this->getInvalidDocumentValues(),
+            'readConcern' => $this->getInvalidReadConcernValues(),
+            'readPreference' => $this->getInvalidReadPreferenceValues(),
+            'scope' => $this->getInvalidDocumentValues(),
+            'session' => $this->getInvalidSessionValues(),
+            'sort' => $this->getInvalidDocumentValues(),
+            'typeMap' => $this->getInvalidArrayValues(),
+            'verbose' => $this->getInvalidBooleanValues(),
+            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        ]);
     }
 
     private function getInvalidJavascriptValues()

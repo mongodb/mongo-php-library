@@ -74,4 +74,14 @@ abstract class TestCase extends BaseTestCase
             'empty_pipeline:PackedArray' => [PackedArray::fromPHP([])],
         ];
     }
+
+    public function provideInvalidUpdateValues(): array
+    {
+        return $this->wrapValuesForDataProvider($this->getInvalidUpdateValues());
+    }
+
+    protected function getInvalidUpdateValues(): array
+    {
+        return [123, 3.14, 'foo', true];
+    }
 }

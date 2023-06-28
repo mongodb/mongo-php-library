@@ -22,24 +22,11 @@ class DropIndexesTest extends TestCase
 
     public function provideInvalidConstructorOptions()
     {
-        $options = [];
-
-        foreach ($this->getInvalidIntegerValues() as $value) {
-            $options[][] = ['maxTimeMS' => $value];
-        }
-
-        foreach ($this->getInvalidSessionValues() as $value) {
-            $options[][] = ['session' => $value];
-        }
-
-        foreach ($this->getInvalidArrayValues() as $value) {
-            $options[][] = ['typeMap' => $value];
-        }
-
-        foreach ($this->getInvalidWriteConcernValues() as $value) {
-            $options[][] = ['writeConcern' => $value];
-        }
-
-        return $options;
+        return $this->createOptionDataProvider([
+            'maxTimeMS' => $this->getInvalidIntegerValues(),
+            'session' => $this->getInvalidSessionValues(),
+            'typeMap' => $this->getInvalidArrayValues(),
+            'writeConcern' => $this->getInvalidWriteConcernValues(),
+        ]);
     }
 }

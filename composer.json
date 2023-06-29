@@ -6,7 +6,8 @@
     "license": "Apache-2.0",
     "authors": [
         { "name": "Andreas Braun", "email": "andreas.braun@mongodb.com" },
-        { "name": "Jeremy Mikola", "email": "jmikola@gmail.com" }
+        { "name": "Jeremy Mikola", "email": "jmikola@gmail.com" },
+        { "name": "Jérôme Tamarelle", "email": "jerome.tamarelle@mongodb.com" }
     ],
     "require": {
         "php": "^7.2 || ^8.0",
@@ -32,6 +33,20 @@
     "autoload-dev": {
         "psr-4": { "MongoDB\\Tests\\": "tests/" },
         "files": [ "tests/PHPUnit/Functions.php" ]
+    },
+    "scripts": {
+        "checks": [
+            "@check:cs",
+            "@check:psalm",
+            "@check:rector"
+        ],
+        "check:cs": "phpcs",
+        "check:psalm": "psalm",
+        "check:rector": "rector --ansi --dry-run",
+        "fix:cs": "phpcbf",
+        "fix:psalm:baseline": "psalm --set-baseline=psalm-baseline.xml",
+        "fix:rector": "rector process --ansi",
+        "test": "simple-phpunit"
     },
     "extra": {
         "branch-alias": {

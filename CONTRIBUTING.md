@@ -26,8 +26,8 @@ Composer.
 
 The test suite may be executed with:
 
-```
-$ vendor/bin/simple-phpunit
+```console
+$ composer run test
 ```
 
 The `phpunit.xml.dist` file is used as the default configuration file for the
@@ -47,7 +47,7 @@ By default, the `simple-phpunit` binary chooses the correct PHPUnit version for
 the PHP version you are running. To run tests against a specific PHPUnit
 version, use the `SYMFONY_PHPUNIT_VERSION` environment variable:
 
-```
+```console
 $ SYMFONY_PHPUNIT_VERSION=7.5 vendor/bin/simple-phpunit
 ```
 
@@ -108,38 +108,46 @@ The following environment variables are used for [CSFLE testing](https://github.
  * `KMS_TLS_CA_FILE`
  * `KMS_TLS_CERTIFICATE_KEY_FILE`
 
-## Checking coding standards
+## Code quality
+
+Before submitting a pull request, please ensure that your code adheres to the
+coding standards and passes static analysis checks.
+
+```console
+$ composer run checks
+```
+
+### Coding standards
 
 The library's code is checked using [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer),
 which is installed as a development dependency by Composer. To check the code
 for style errors, run the `phpcs` binary:
 
-
-```
+```console
 $ vendor/bin/phpcs
 ```
 
 To automatically fix all fixable errors, use the `phpcbf` binary:
 
-```
+```console
 $ vendor/bin/phpcbf
 ```
 
-## Running static analysis
+### Static analysis
 
 The library uses [psalm](https://psalm.dev) to run static analysis on the code
 and ensure an additional level of type safety. New code is expected to adhere
 to level 1, with a baseline covering existing issues. To run static analysis
 checks, run the `psalm` binary:
 
-```
+```console
 $ vendor/bin/psalm
 ```
 
 To remove fixed errors from the baseline, you can use the `update-baseline`
 command-line argument:
 
-```
+```console
 $ vendor/bin/psalm --update-baseline
 ```
 
@@ -147,16 +155,16 @@ Note that this will not add new errors to the baseline. New errors should be
 fixed instead of being added to the technical debt, but in case this isn't
 possible it can be added to the baseline using `set-baseline`:
 
-```
+```console
 $ vendor/bin/psalm --set-baseline=psalm-baseline.xml
 ```
 
-## Automatic code refactoring
+### Refactoring
 
 The library uses [rector](https://getrector.com/) to refactor the code for new features.
 To run automatic refactoring, use the `rector` command:
 
-```
+```console
 $ vendor/bin/rector
 ```
 
@@ -178,7 +186,7 @@ repository:
    repository.
  * Create and activate Python 2.7 virtual environment if necessary.
 
-   ```
+   ```console
    $ virtualenv -p python2.7 venv
    $ source venv/bin/activate
    ```

@@ -76,7 +76,7 @@ the Evergreen configuration should be updated:
 
 Commit and push any changes:
 
-```
+```console
 $ git commit -m "Update composer.json and CI matrices for X.Y.Z" composer.json .evergreen/config.yml
 $ git push mongodb
 ```
@@ -85,7 +85,7 @@ $ git push mongodb
 
 Create a tag for the release and push:
 
-```
+```console
 $ git tag -a -m "Release X.Y.Z" X.Y.Z
 $ git push mongodb --tags
 ```
@@ -119,7 +119,7 @@ The above would be changed to:
 
 Commit this change:
 
-```
+```console
 $ git commit -m "Master is now 1.10-dev" composer.json
 ```
 
@@ -128,7 +128,7 @@ $ git commit -m "Master is now 1.10-dev" composer.json
 After a new minor version is released (i.e. `master` was tagged), a maintenance
 branch should be created for future patch releases:
 
-```
+```console
 $ git checkout -b vX.Y
 $ git push mongodb vX.Y
 ```
@@ -146,7 +146,7 @@ Update the master branch alias in `composer.json`:
 
 Commit and push this change:
 
-```
+```console
 $ git commit -m "Master is now X.Y-dev" composer.json
 $ git push mongodb
 ```
@@ -155,7 +155,7 @@ $ git push mongodb
 
 If this was a patch release, the maintenance branch must be merged up to master:
 
-```
+```console
 $ git checkout master
 $ git pull mongodb master
 $ git merge vX.Y --strategy=ours

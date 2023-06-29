@@ -48,7 +48,7 @@ the PHP version you are running. To run tests against a specific PHPUnit
 version, use the `SYMFONY_PHPUNIT_VERSION` environment variable:
 
 ```console
-$ SYMFONY_PHPUNIT_VERSION=7.5 vendor/bin/simple-phpunit
+$ SYMFONY_PHPUNIT_VERSION=8.5 vendor/bin/simple-phpunit
 ```
 
 ### Environment Variables

@@ -283,7 +283,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 'aws' => Context::getAWSCredentials(),
                 'azure' => Context::getAzureCredentials(),
                 'gcp' => Context::getGCPCredentials(),
-                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
                 'kmip' => ['endpoint' => Context::getKmipEndpoint()],
             ],
             'tlsOptions' => [
@@ -421,7 +421,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $encryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
-                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
             ],
         ];
 
@@ -570,7 +570,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $autoEncryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
-                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
             ],
             'keyVaultClient' => $client,
         ];
@@ -599,7 +599,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $autoEncryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
-                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
             ],
         ];
 
@@ -648,7 +648,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 'aws' => Context::getAWSCredentials(),
                 'azure' => Context::getAzureCredentials(),
                 'gcp' => Context::getGCPCredentials(),
-                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
                 'kmip' => ['endpoint' => Context::getKmipEndpoint()],
             ],
             'tlsOptions' => [
@@ -904,7 +904,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $autoEncryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
-                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
             ],
             'schemaMap' => [
                 'db.coll' => $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/external/external-schema.json')),
@@ -946,7 +946,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $autoEncryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
-                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
             ],
             'schemaMap' => [
                 'db.coll' => $this->decodeJson(file_get_contents(__DIR__ . '/client-side-encryption/external/external-schema.json')),
@@ -986,7 +986,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $autoEncryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
-                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
             ],
             'bypassAutoEncryption' => true,
             'extraOptions' => [
@@ -1020,7 +1020,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $autoEncryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
-                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
             ],
             'bypassQueryAnalysis' => true,
             'extraOptions' => [
@@ -1350,12 +1350,12 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $clientEncryption = new ClientEncryption([
             'keyVaultClient' => $keyVaultClient->getManager(),
             'keyVaultNamespace' => 'keyvault.datakeys',
-            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)]],
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))]],
         ]);
 
         $autoEncryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
-            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)]],
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))]],
             'bypassQueryAnalysis' => true,
         ];
 
@@ -1519,7 +1519,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $clientEncryption = new ClientEncryption([
             'keyVaultClient' => $client->getManager(),
             'keyVaultNamespace' => 'keyvault.datakeys',
-            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)]],
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))]],
         ]);
 
         $clientEncryption->createDataKey('local', ['keyAltNames' => ['def']]);
@@ -1598,7 +1598,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         $clientEncryption = new ClientEncryption([
             'keyVaultClient' => $setupClient->getManager(),
             'keyVaultNamespace' => 'keyvault.datakeys',
-            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)]],
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))]],
         ]);
 
         $keyId = $clientEncryption->createDataKey('local');
@@ -1613,7 +1613,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $autoEncryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
-            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)]],
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))]],
         ];
 
         $encryptedClient = static::createTestClient(null, ['retryReads' => false], ['autoEncryption' => $autoEncryptionOpts]);
@@ -1800,7 +1800,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 'azure' => Context::getAzureCredentials(),
                 'gcp' => Context::getGCPCredentials(),
                 'kmip' => ['endpoint' => Context::getKmipEndpoint()],
-                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
             ],
             'tlsOptions' => [
                 'kmip' => Context::getKmsTlsOptions(),
@@ -1900,7 +1900,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         switch ($data->identifier) {
             case 'id':
-                $encryptionOptions['keyId'] = new Binary(base64_decode($keyId), 4);
+                $encryptionOptions['keyId'] = new Binary(base64_decode($keyId), Binary::TYPE_UUID);
                 break;
 
             case 'altname':

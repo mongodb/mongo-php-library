@@ -51,7 +51,7 @@ class IsBsonTypeTest extends TestCase
             // Note: additional tests in testTypeArray
             'array(indexed array)' => ['array', ['foo']],
             'array(BSONArray)' => ['array', new BSONArray()],
-            'binData' => ['binData', new Binary('', 0)],
+            'binData' => ['binData', new Binary('')],
             'undefined' => ['undefined', $undefined],
             'objectId' => ['objectId', new ObjectId()],
             'bool' => ['bool', true],

@@ -50,7 +50,7 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         $this->clientEncryption = $client->createClientEncryption([
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
-                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
             ],
         ]);
     }

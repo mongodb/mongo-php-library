@@ -39,7 +39,7 @@ more than one encryption key or create them dynamically.
    use MongoDB\Client;
    use MongoDB\Driver\ClientEncryption;
 
-   $localKey = new Binary('<binary key data (96 bytes)>', Binary::TYPE_GENERIC);
+   $localKey = new Binary('<binary key data (96 bytes)>');
 
    $clientEncryptionOpts = [
        'keyVaultNamespace' => 'encryption.__keyVault',
@@ -78,7 +78,7 @@ side.
    use MongoDB\Client;
    use MongoDB\Driver\ClientEncryption;
 
-   $localKey = new Binary('<binary key data (96 bytes)>', Binary::TYPE_GENERIC);
+   $localKey = new Binary('<binary key data (96 bytes)>');
    $encryptionOpts = [
        'keyVaultNamespace' => 'encryption.__keyVault',
        'kmsProviders' => [
@@ -142,7 +142,7 @@ encrypted fields.
    use MongoDB\Client;
    use MongoDB\Driver\ClientEncryption;
 
-   $localKey = new Binary('<binary key data (96 bytes)>', Binary::TYPE_GENERIC);
+   $localKey = new Binary('<binary key data (96 bytes)>');
 
    $client = new Client();
 
@@ -197,7 +197,7 @@ encrypts and decrypts values in the document.
    use MongoDB\Client;
    use MongoDB\Driver\ClientEncryption;
 
-   $localKey = new Binary('<binary key data (96 bytes)>', Binary::TYPE_GENERIC);
+   $localKey = new Binary('<binary key data (96 bytes)>');
 
    $clientEncryptionOpts = [
        'keyVaultNamespace' => 'encryption.__keyVault',
@@ -250,7 +250,7 @@ To use an alternate name when referencing an encryption key, use the
    use MongoDB\Client;
    use MongoDB\Driver\ClientEncryption;
 
-   $localKey = new Binary('<binary key data (96 bytes)>', Binary::TYPE_GENERIC);
+   $localKey = new Binary('<binary key data (96 bytes)>');
 
    $clientEncryptionOpts = [
        'keyVaultNamespace' => 'encryption.__keyVault',
@@ -300,7 +300,7 @@ query on the ``encryptedIndexed`` field.
    use MongoDB\BSON\Binary;
    use MongoDB\Client;
 
-   $localKey = new Binary('<binary key data (96 bytes)>', Binary::TYPE_GENERIC);
+   $localKey = new Binary('<binary key data (96 bytes)>');
 
    $encryptionOpts = [
        'keyVaultNamespace' => 'encryption.__keyVault',

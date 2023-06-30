@@ -1830,7 +1830,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
          * default to the same client. */
         $clientEncryption = $client->createClientEncryption([
             'keyVaultNamespace' => 'keyvault.datakeys',
-            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(ClientSideEncryptionSpecTest::LOCAL_MASTERKEY), 0)]],
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(ClientSideEncryptionSpecTest::LOCAL_MASTERKEY))]],
         ]);
 
         // Create two data keys, one for each encrypted field
@@ -1839,7 +1839,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
 
         $autoEncryptionOpts = [
             'keyVaultNamespace' => 'keyvault.datakeys',
-            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(ClientSideEncryptionSpecTest::LOCAL_MASTERKEY), 0)]],
+            'kmsProviders' => ['local' => ['key' => new Binary(base64_decode(ClientSideEncryptionSpecTest::LOCAL_MASTERKEY))]],
             'encryptedFieldsMap' => [
                 $namespace => [
                     'fields' => [

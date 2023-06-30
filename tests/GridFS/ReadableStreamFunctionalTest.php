@@ -34,13 +34,13 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
         ]);
 
         $this->chunksCollection->insertMany([
-            ['_id' => 1, 'files_id' => 'length-0-with-empty-chunk', 'n' => 0, 'data' => new Binary('', Binary::TYPE_GENERIC)],
-            ['_id' => 2, 'files_id' => 'length-2', 'n' => 0, 'data' => new Binary('ab', Binary::TYPE_GENERIC)],
-            ['_id' => 3, 'files_id' => 'length-8', 'n' => 0, 'data' => new Binary('abcd', Binary::TYPE_GENERIC)],
-            ['_id' => 4, 'files_id' => 'length-8', 'n' => 1, 'data' => new Binary('efgh', Binary::TYPE_GENERIC)],
-            ['_id' => 5, 'files_id' => 'length-10', 'n' => 0, 'data' => new Binary('abcd', Binary::TYPE_GENERIC)],
-            ['_id' => 6, 'files_id' => 'length-10', 'n' => 1, 'data' => new Binary('efgh', Binary::TYPE_GENERIC)],
-            ['_id' => 7, 'files_id' => 'length-10', 'n' => 2, 'data' => new Binary('ij', Binary::TYPE_GENERIC)],
+            ['_id' => 1, 'files_id' => 'length-0-with-empty-chunk', 'n' => 0, 'data' => new Binary('')],
+            ['_id' => 2, 'files_id' => 'length-2', 'n' => 0, 'data' => new Binary('ab')],
+            ['_id' => 3, 'files_id' => 'length-8', 'n' => 0, 'data' => new Binary('abcd')],
+            ['_id' => 4, 'files_id' => 'length-8', 'n' => 1, 'data' => new Binary('efgh')],
+            ['_id' => 5, 'files_id' => 'length-10', 'n' => 0, 'data' => new Binary('abcd')],
+            ['_id' => 6, 'files_id' => 'length-10', 'n' => 1, 'data' => new Binary('efgh')],
+            ['_id' => 7, 'files_id' => 'length-10', 'n' => 2, 'data' => new Binary('ij')],
         ]);
     }
 
@@ -161,7 +161,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
     {
         $this->chunksCollection->updateOne(
             ['files_id' => 'length-10', 'n' => 2],
-            ['$set' => ['data' => new Binary('i', Binary::TYPE_GENERIC)]]
+            ['$set' => ['data' => new Binary('i')]]
         );
 
         $fileDocument = $this->collectionWrapper->findFileById('length-10');

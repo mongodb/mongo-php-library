@@ -170,7 +170,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $this->chunksCollection->updateOne(
             ['files_id' => $id, 'n' => 0],
-            ['$set' => ['data' => new Binary('fooba', Binary::TYPE_GENERIC)]]
+            ['$set' => ['data' => new Binary('fooba')]]
         );
 
         $this->expectException(CorruptFileException::class);

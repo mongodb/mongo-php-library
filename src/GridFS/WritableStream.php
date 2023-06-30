@@ -283,7 +283,7 @@ class WritableStream
         $chunk = [
             'files_id' => $this->file['_id'],
             'n' => $this->chunkOffset,
-            'data' => new Binary($data, Binary::TYPE_GENERIC),
+            'data' => new Binary($data),
         ];
 
         if (! $this->disableMD5 && $this->hashCtx) {

@@ -93,7 +93,7 @@ class DocumentsMatchConstraintTest extends TestCase
             'string' => ['string', 'foo'],
             'object' => ['object', new BSONDocument()],
             'array' => ['array', ['foo']],
-            'binData' => ['binData', new Binary('', 0)],
+            'binData' => ['binData', new Binary('')],
             'undefined' => ['undefined', $undefined],
             'objectId' => ['objectId', new ObjectId()],
             'bool' => ['bool', true],

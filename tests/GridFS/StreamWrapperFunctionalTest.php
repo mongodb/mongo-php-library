@@ -30,9 +30,9 @@ class StreamWrapperFunctionalTest extends FunctionalTestCase
         ]);
 
         $this->chunksCollection->insertMany([
-            ['_id' => 1, 'files_id' => 'length-10', 'n' => 0, 'data' => new Binary('abcd', Binary::TYPE_GENERIC)],
-            ['_id' => 2, 'files_id' => 'length-10', 'n' => 1, 'data' => new Binary('efgh', Binary::TYPE_GENERIC)],
-            ['_id' => 3, 'files_id' => 'length-10', 'n' => 2, 'data' => new Binary('ij', Binary::TYPE_GENERIC)],
+            ['_id' => 1, 'files_id' => 'length-10', 'n' => 0, 'data' => new Binary('abcd')],
+            ['_id' => 2, 'files_id' => 'length-10', 'n' => 1, 'data' => new Binary('efgh')],
+            ['_id' => 3, 'files_id' => 'length-10', 'n' => 2, 'data' => new Binary('ij')],
         ]);
     }
 

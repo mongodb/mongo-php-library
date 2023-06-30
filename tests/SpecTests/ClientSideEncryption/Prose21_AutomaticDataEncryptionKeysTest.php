@@ -51,7 +51,7 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
             'keyVaultNamespace' => 'keyvault.datakeys',
             'kmsProviders' => [
                 'aws' => self::getAWSCredentials(),
-                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY), 0)],
+                'local' => ['key' => new Binary(base64_decode(self::LOCAL_MASTERKEY))],
             ],
         ]);
     }

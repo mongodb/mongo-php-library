@@ -16,13 +16,19 @@ final class ExamplesTest extends FunctionalTestCase
         }
 
         if ($this->isApiVersionRequired()) {
-            $this->markTestSkipped('Examples are not tested with when the server requires specifying an API version.');
+            $this->markTestSkipped('Examples are not tested when the server requires specifying an API version.');
         }
 
         self::createTestClient()->dropDatabase('test');
     }
 
-    public function dataExamples(): Generator
+    /** @dataProvider provideExamples */
+    public function testExamples(string $file, string $expectedOutput): void
+    {
+        $this->assertExampleOutput($file, $expectedOutput);
+    }
+
+    public static function provideExamples(): Generator
     {
         $expectedOutput = <<<'OUTPUT'
 { "_id" : null, "totalCount" : 100, "evenCount" : %d, "oddCount" : %d, "maxValue" : %d, "minValue" : %d }
@@ -174,15 +180,7 @@ OUTPUT;
 Aborting after 3 seconds...
 OUTPUT;
 
-        $this->testExample(__DIR__ . '/../examples/changestream.php', $expectedOutput);
-    }
-
-    /** @dataProvider dataExamples */
-    public function testExample(string $file, string $expectedOutput): void
-    {
-        require $file;
-
-        self::assertStringMatchesFormat($expectedOutput, $this->getActualOutputForAssertion());
+        $this->assertExampleOutput(__DIR__ . '/../examples/changestream.php', $expectedOutput);
     }
 
     public function testWithTransaction(): void
@@ -195,6 +193,259 @@ OUTPUT;
 %s
 OUTPUT;
 
-        $this->testExample(__DIR__ . '/../examples/with_transaction.php', $expectedOutput);
+        $this->assertExampleOutput(__DIR__ . '/../examples/with_transaction.php', $expectedOutput);
+    }
+
+    /** @dataProvider provideEncryptionExamples */
+    public function testEncryptionExamples(string $file, string $expectedOutput): void
+    {
+        $this->skipIfClientSideEncryptionIsNotSupported();
+
+        $this->assertExampleOutput($file, $expectedOutput);
+
+        // Clean up metadata and key vault collections
+        $this->dropCollection('test', 'coll', ['encryptedFields' => []]);
+        $this->dropCollection('encryption', '__keyVault');
+    }
+
+    public static function provideEncryptionExamples(): Generator
+    {
+        $expectedOutput = <<<'OUTPUT'
+MongoDB\BSON\Binary Object
+(
+    [data] => %a
+    [type] => 4
+)
+MongoDB\BSON\Binary Object
+(
+    [data] => %a
+    [type] => 6
+)
+OUTPUT;
+
+        yield 'create_data_key' => [
+            'file' => __DIR__ . '/../docs/examples/create_data_key.php',
+            'expectedOutput' => $expectedOutput,
+        ];
+
+        $expectedOutput = <<<'OUTPUT'
+MongoDB\BSON\Binary Object
+(
+    [data] => %a
+    [type] => 6
+)
+OUTPUT;
+
+        yield 'key_alt_name' => [
+            'file' => __DIR__ . '/../docs/examples/key_alt_name.php',
+            'expectedOutput' => $expectedOutput,
+        ];
+
+        $expectedOutput = <<<'OUTPUT'
+MongoDB\Model\BSONDocument Object
+(
+    [storage:ArrayObject:private] => Array
+        (
+            [_id] => 1
+            [encryptedField] => mySecret
+        )
+
+)
+MongoDB\Model\BSONDocument Object
+(
+    [storage:ArrayObject:private] => Array
+        (
+            [_id] => 1
+            [encryptedField] => MongoDB\BSON\Binary Object
+                (
+                    [data] => %a
+                    [type] => 6
+                )
+
+        )
+
+)
+OUTPUT;
+
+        yield 'csfle-automatic_encryption-local_schema' => [
+            'file' => __DIR__ . '/../docs/examples/csfle-automatic_encryption-local_schema.php',
+            'expectedOutput' => $expectedOutput,
+        ];
+
+        $expectedOutput = <<<'OUTPUT'
+MongoDB\Model\BSONDocument Object
+(
+    [storage:ArrayObject:private] => Array
+        (
+            [_id] => 1
+            [encryptedField] => mySecret
+        )
+
+)
+MongoDB\Model\BSONDocument Object
+(
+    [storage:ArrayObject:private] => Array
+        (
+            [_id] => 1
+            [encryptedField] => MongoDB\BSON\Binary Object
+                (
+                    [data] => %a
+                    [type] => 6
+                )
+
+        )
+
+)
+OUTPUT;
+
+        yield 'csfle-automatic_encryption-server_side_schema' => [
+            'file' => __DIR__ . '/../docs/examples/csfle-automatic_encryption-server_side_schema.php',
+            'expectedOutput' => $expectedOutput,
+        ];
+
+        $expectedOutput = <<<'OUTPUT'
+MongoDB\BSON\Binary Object
+(
+    [data] => %a
+    [type] => 6
+)
+mySecret
+OUTPUT;
+
+        yield 'csfle-explicit_encryption' => [
+            'file' => __DIR__ . '/../docs/examples/csfle-explicit_encryption.php',
+            'expectedOutput' => $expectedOutput,
+        ];
+
+        $expectedOutput = <<<'OUTPUT'
+mySecret
+OUTPUT;
+
+        yield 'csfle-explicit_encryption_automatic_decryption' => [
+            'file' => __DIR__ . '/../docs/examples/csfle-explicit_encryption_automatic_decryption.php',
+            'expectedOutput' => $expectedOutput,
+        ];
+    }
+
+    /** @dataProvider provideQueryableEncryptionExamples */
+    public function testQueryableEncryptionExamples(string $file, string $expectedOutput): void
+    {
+        $this->skipIfClientSideEncryptionIsNotSupported();
+
+        $this->skipIfServerVersion('<', '7.0.0', 'Queryable encryption tests require MongoDB 7.0 or later');
+
+        $this->assertExampleOutput($file, $expectedOutput);
+
+        // Clean up metadata and key vault collections
+        $this->dropCollection('test', 'coll', ['encryptedFields' => []]);
+        $this->dropCollection('encryption', '__keyVault');
+    }
+
+    public static function provideQueryableEncryptionExamples(): Generator
+    {
+        $expectedOutput = <<<'OUTPUT'
+MongoDB\Model\BSONDocument Object
+(
+    [storage:ArrayObject:private] => Array
+        (
+            [_id] => 1
+            [encryptedIndexed] => indexedValue
+            [encryptedUnindexed] => unindexedValue
+            [__safeContent__] => MongoDB\Model\BSONArray Object
+                (
+                    [storage:ArrayObject:private] => Array
+                        (
+                            [0] => MongoDB\BSON\Binary Object
+                                (
+                                    [data] => %a
+                                    [type] => 0
+                                )
+
+                        )
+
+                )
+
+        )
+
+)
+MongoDB\Model\BSONDocument Object
+(
+    [storage:ArrayObject:private] => Array
+        (
+            [_id] => 1
+            [encryptedIndexed] => MongoDB\BSON\Binary Object
+                (
+                    [data] => %a
+                    [type] => 6
+                )
+
+            [encryptedUnindexed] => MongoDB\BSON\Binary Object
+                (
+                    [data] => %a
+                    [type] => 6
+                )
+
+            [__safeContent__] => MongoDB\Model\BSONArray Object
+                (
+                    [storage:ArrayObject:private] => Array
+                        (
+                            [0] => MongoDB\BSON\Binary Object
+                                (
+                                    [data] => %a
+                                    [type] => 0
+                                )
+
+                        )
+
+                )
+
+        )
+
+)
+OUTPUT;
+
+        yield 'queryable_encryption-automatic' => [
+            'file' => __DIR__ . '/../docs/examples/queryable_encryption-automatic.php',
+            'expectedOutput' => $expectedOutput,
+        ];
+
+        $expectedOutput = <<<'OUTPUT'
+MongoDB\Model\BSONDocument Object
+(
+    [storage:ArrayObject:private] => Array
+        (
+            [_id] => 1
+            [encryptedIndexed] => indexedValue
+            [encryptedUnindexed] => unindexedValue
+            [__safeContent__] => MongoDB\Model\BSONArray Object
+                (
+                    [storage:ArrayObject:private] => Array
+                        (
+                            [0] => MongoDB\BSON\Binary Object
+                                (
+                                    [data] => %a
+                                    [type] => 0
+                                )
+
+                        )
+
+                )
+
+        )
+
+)
+OUTPUT;
+
+        yield 'queryable_encryption-explicit' => [
+            'file' => __DIR__ . '/../docs/examples/queryable_encryption-explicit.php',
+            'expectedOutput' => $expectedOutput,
+        ];
+    }
+
+    private function assertExampleOutput(string $file, string $expectedOutput): void
+    {
+        require $file;
+
+        $this->assertStringMatchesFormat($expectedOutput, $this->getActualOutputForAssertion());
     }
 }

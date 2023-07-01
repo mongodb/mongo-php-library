@@ -1,5 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
+  <file src="docs/examples/create_data_key.php">
+    <TooFewArguments occurrences="1">
+      <code>new Binary(random_bytes(96))</code>
+    </TooFewArguments>
+  </file>
+  <file src="docs/examples/csfle-automatic_encryption-local_schema.php">
+    <TooFewArguments occurrences="1">
+      <code>new Binary(random_bytes(96))</code>
+    </TooFewArguments>
+  </file>
+  <file src="docs/examples/csfle-automatic_encryption-server_side_schema.php">
+    <TooFewArguments occurrences="1">
+      <code>new Binary(random_bytes(96))</code>
+    </TooFewArguments>
+  </file>
+  <file src="docs/examples/csfle-explicit_encryption.php">
+    <MixedArgument occurrences="1">
+      <code>$document-&gt;encryptedField</code>
+    </MixedArgument>
+    <PossiblyInvalidPropertyFetch occurrences="1">
+      <code>$document-&gt;encryptedField</code>
+    </PossiblyInvalidPropertyFetch>
+    <PossiblyNullArgument occurrences="1">
+      <code>$document-&gt;encryptedField</code>
+    </PossiblyNullArgument>
+    <PossiblyNullPropertyFetch occurrences="1">
+      <code>$document-&gt;encryptedField</code>
+    </PossiblyNullPropertyFetch>
+    <TooFewArguments occurrences="1">
+      <code>new Binary(random_bytes(96))</code>
+    </TooFewArguments>
+  </file>
+  <file src="docs/examples/csfle-explicit_encryption_automatic_decryption.php">
+    <PossiblyInvalidPropertyFetch occurrences="1">
+      <code>$document-&gt;encryptedField</code>
+    </PossiblyInvalidPropertyFetch>
+    <PossiblyNullPropertyFetch occurrences="1">
+      <code>$document-&gt;encryptedField</code>
+    </PossiblyNullPropertyFetch>
+    <TooFewArguments occurrences="1">
+      <code>new Binary(random_bytes(96))</code>
+    </TooFewArguments>
+  </file>
+  <file src="docs/examples/key_alt_name.php">
+    <TooFewArguments occurrences="1">
+      <code>new Binary(random_bytes(96))</code>
+    </TooFewArguments>
+  </file>
+  <file src="docs/examples/queryable_encryption-automatic.php">
+    <TooFewArguments occurrences="1">
+      <code>new Binary(random_bytes(96))</code>
+    </TooFewArguments>
+  </file>
+  <file src="docs/examples/queryable_encryption-explicit.php">
+    <TooFewArguments occurrences="1">
+      <code>new Binary(random_bytes(96))</code>
+    </TooFewArguments>
+  </file>
   <file src="examples/typemap.php">
     <PropertyNotSetInConstructor occurrences="5">
       <code>$address</code>

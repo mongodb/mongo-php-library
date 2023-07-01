@@ -1,0 +1,265 @@
+=================
+In-Use Encryption
+=================
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 3
+   :class: singlecol
+
+
+Dependencies
+------------
+
+To get started using in-use encryption in your project, the
+`PHP driver <https://php.net/mongodb>`_ (i.e. ``mongodb`` extension) will need
+to be compiled with `libmongocrypt <https://github.com/mongodb/libmongocrypt>`_
+(enabled by default).
+
+Additionally, either `crypt_shared`_ or `mongocryptd`_ are required in order to
+use *automatic* client-side encryption. Neither is required for *explicit*
+encryption.
+
+
+crypt_shared
+~~~~~~~~~~~~
+
+The :manual:`Automatic Encryption Shared Library </core/queryable-encryption/reference/shared-library/>`
+(crypt_shared) provides the same functionality as mongocryptd_, but does not
+require you to spawn another process to perform automatic encryption.
+
+By default, the PHP driver attempts to load crypt_shared from the system path(s)
+and uses it automatically if found. To load crypt_shared from another location,
+use the ``cryptSharedLibPath`` auto encryption
+:php:`driver option <manual/en/mongodb-driver-manager.construct.php#mongodb-driver-manager.construct-driveroptions>`
+when constructing a client. If the driver cannot load crypt_shared it will
+attempt to fallback to using mongocryptd by default. The
+``cryptSharedLibRequired`` option may be used to always require crypt_shared and
+fail if it cannot be loaded.
+
+For detailed installation instructions see the MongoDB documentation for the
+:manual:`Automatic Encryption Shared Library </core/queryable-encryption/reference/shared-library/>`.
+
+
+mongocryptd
+~~~~~~~~~~~
+
+The mongocryptd binary is an alternative requirement for automatic client-side
+encryption and is included as a component in the
+:manual:`MongoDB Enterprise Server package </administration/install-enterprise/>`.
+For detailed installation instructions see the
+:manual:`MongoDB documentation on mongocryptd </core/csfle/reference/mongocryptd/>`.
+
+mongocryptd performs the following:
+
+- Parses the automatic encryption rules specified in the client configuration.
+  If the ``schemaMap`` auto encryption driver option contains invalid syntax,
+  mongocryptd returns an error.
+
+- Uses the specified automatic encryption rules to mark fields in read and write
+  operations for encryption.
+
+- Rejects read/write operations that may return unexpected or incorrect results
+  when applied to an encrypted field. For supported and unsupported operations,
+  see :manual:`Supported Operations for Automatic Encryption </core/csfle/reference/supported-operations/>`.
+
+A client configured with auto encryption will automatically spawn the
+mongocryptd process from the application's ``PATH``. Applications can control
+the spawning behavior via various auto encryption
+:php:`driver options <manual/en/mongodb-driver-manager.construct.php#mongodb-driver-manager.construct-driveroptions>`.
+
+mongocryptd is only responsible for supporting automatic client-side encryption
+and does not itself perform any encryption or decryption.
+
+
+Managing Encryption Keys
+------------------------
+
+.. seealso:: :manual:`Encryption Key Management </core/csfle/fundamentals/manage-keys/>` in the MongoDB manual
+
+Creating an Encryption Key
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+   The following examples use a local master key. While this is suitable for
+   development, a production application should use a supported cloud provider
+   (e.g. AWS KMS). The master key is used to encrypt locally stored data keys
+   and thus it is very important that you keep this key secure.
+
+To create an encryption key, create a
+:php:`MongoDB\\Driver\\ClientEncryption <class.mongodb-driver-clientencryption>`
+instance with encryption options and create a new data key. The method will
+return the key ID which can be used to reference the key later. You can also
+pass multiple alternate names for this key and reference the key by these names
+instead of the key ID. Creating a new data encryption key would typically be
+done on initial deployment, but depending on your use case you may want to use
+more than one encryption key or create them dynamically.
+
+.. literalinclude:: /examples/create_data_key.php
+   :language: php
+
+
+Referencing Encryption Keys by an Alternative Name
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+While it is possible to create an encryption key every time data is encrypted,
+this is not the recommended approach. Instead, you should create your encryption
+keys depending on your use case, e.g. by creating a user-specific encryption
+key. To reference keys in your software, you can use the ``keyAltName``
+attribute specified when creating the key. The following example creates an
+encryption key with an alternative name, which could be done when deploying the
+application. The script then encrypts data by referencing the key by its
+alternative name.
+
+To use an alternate name when referencing an encryption key, use the
+``keyAltName`` option instead of ``keyId``.
+
+.. literalinclude:: /examples/key_alt_name.php
+   :language: php
+
+
+Client-Side Field Level Encryption
+----------------------------------
+
+Introduced in MongoDB 4.2,
+:manual:`Client-Side Field Level Encryption </core/csfle/>` allows an
+application to encrypt specific data fields in addition to pre-existing MongoDB
+encryption features such as
+:manual:`Encryption at Rest </core/security-encryption-at-rest/>` and
+:manual:`TLS/SSL (Transport Encryption) </core/security-transport-encryption/>`.
+
+With field level encryption, applications can encrypt fields in documents prior
+to transmitting data over the wire to the server. Client-side field level
+encryption supports workloads where applications must guarantee that
+unauthorized parties, including server administrators, cannot read the encrypted
+data.
+
+
+Automatic Client-Side Field Level Encryption
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+   Automatic client-side field level encryption requires MongoDB 4.2+ Enterprise
+   or a MongoDB 4.2+ Atlas cluster.
+
+Automatic client-side field level encryption is enabled by creating a client and
+specifying the ``autoEncryption``
+:php:`driver option <manual/en/mongodb-driver-manager.construct.php#mongodb-driver-manager.construct-driveroptions>`.
+The following examples demonstrate how to setup automatic client-side field
+level encryption and use a
+:php:`MongoDB\\Driver\\ClientEncryption <class.mongodb-driver-clientencryption>`
+object to create a new encryption key.
+
+
+Providing Local Automatic Encryption Rules
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The following example uses the ``schemaMap`` auto encryption driver option to
+define encrypted fields using a
+:manual:`strict subset of the JSON schema syntax </core/csfle/fundamentals/create-schema/>`.
+
+Specifying a ``schemaMap`` this way provides more security than relying on JSON
+schemas obtained from the server. It protects against a malicious server
+advertising a false JSON schema, which could trick the client into sending
+unencrypted data that should be encrypted.
+
+JSON schemas specified in the ``schemaMap`` auto encryption driver option only
+apply to configuring automatic client-side field level encryption. Other
+validation rules in the JSON schema will not be enforced by the driver and will
+result in an error.
+
+.. literalinclude:: /examples/csfle-automatic_encryption-local_schema.php
+   :language: php
+
+
+Server-Side Field Level Encryption Enforcement
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The MongoDB 4.2+ server supports using schema validation to enforce encryption
+of specific fields in a collection. This schema validation will prevent an
+application from inserting unencrypted values for any fields marked with the
+:manual:`"encrypt" JSON schema keyword </core/csfle/reference/encryption-schemas/>`.
+
+The following example sets up a collection with automatic encryption using a
+``$jsonSchema`` validator and
+:manual:`Encryption Schema syntax </core/csfle/fundamentals/create-schema/>`.
+Data in the ``encryptedField`` field is automatically encrypted on insertion and
+decrypted when reading on the client side.
+
+.. literalinclude:: /examples/csfle-automatic_encryption-server_side_schema.php
+   :language: php
+
+
+Explicit Encryption
+~~~~~~~~~~~~~~~~~~~
+
+Explicit encryption is a MongoDB community feature and does not use
+crypt_shared_ or mongocryptd_. Explicit encryption is provided by the
+:php:`MongoDB\\Driver\\ClientEncryption <mongodb-driver-clientencryption>` class.
+
+.. literalinclude:: /examples/csfle-explicit_encryption.php
+   :language: php
+
+
+Explicit Encryption with Automatic Decryption
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Although automatic encryption requires MongoDB 4.2+ enterprise or a MongoDB 4.2+
+Atlas cluster, automatic *decryption* is supported for all users. To configure
+automatic decryption without automatic encryption set the
+``bypassAutoEncryption`` auto encryption
+:php:`driver option <manual/en/mongodb-driver-manager.construct.php#mongodb-driver-manager.construct-driveroptions>`
+when constructing a client.
+
+.. literalinclude:: /examples/csfle-explicit_encryption_automatic_decryption.php
+   :language: php
+
+
+Queryable Encryption
+--------------------
+
+Introduced in MongoDB 7.0,
+:manual:`Queryable Encryption </core/queryable-encryption/>` is another
+form of in-use encryption. Data is encrypted client-side. Queryable Encryption
+supports indexed encrypted fields, which are further processed server-side.
+
+
+Automatic Queryable Encryption
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+   Automatic queryable encryption requires MongoDB 7.0+ Enterprise or a MongoDB
+   7.0+ Atlas cluster.
+
+Automatic encryption in Queryable Encryption utilizes ``crypt_shared`` or
+``mongocryptd`` to automatically encrypt and decrypt data client-side. The data
+in the ``encryptedIndexed`` and ``encryptedUnindexed`` fields will be
+automatically encrypted on insertion and decrypted when querying on the client
+side. Additionally, it is possible to query on the ``encryptedIndexed`` field.
+
+.. literalinclude:: /examples/queryable_encryption-automatic.php
+   :language: php
+
+
+Explicit Queryable Encryption
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+
+   Explicit queryable encryption requires MongoDB 7.0+.
+
+Explicit encryption in Queryable Encryption is performed using the
+:php:`MongoDB\Driver\ClientEncryption::encrypt() <mongodb-driver-clientencryption.encrypt>`
+and :php:`decrypt() <mongodb-driver-clientencryption.decrypt>` methods. Although
+values must be explicitly encrypted (e.g. insertions, query criteria), automatic
+decryption for queries is possible by configuring ``encryptedFields`` on the
+collection, as demonstrated in the following example:
+
+.. literalinclude:: /examples/queryable_encryption-explicit.php
+   :language: php

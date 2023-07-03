@@ -20,6 +20,8 @@ jobs:
   giza:
     name: "Build Docs"
     runs-on: "ubuntu-20.04"
+    container:
+      image: python:2.7.18-buster
 
     steps:
       - name: "Checkout library"
@@ -35,10 +37,9 @@ jobs:
           path: docs
           fetch-depth: 2
 
-      - name: "Setup python"
-        uses: actions/setup-python@v4
-        with:
-          python-version: '2.7'
+      # python:2.7.18-buster does not include rsync
+      - name: "Install rsync"
+        run: "apt-get update && apt-get -y install rsync"
 
       # The requirements file installs urllib3 with an incompatible version; we replace it with one that works
       - name: "Install giza"

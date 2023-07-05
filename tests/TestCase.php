@@ -28,9 +28,12 @@ use function is_string;
 use function iterator_to_array;
 use function MongoDB\BSON\fromPHP;
 use function MongoDB\BSON\toJSON;
+use function preg_match;
+use function preg_replace;
 use function restore_error_handler;
 use function set_error_handler;
 use function sprintf;
+use function strtr;
 
 use const E_USER_DEPRECATED;
 
@@ -42,6 +45,44 @@ abstract class TestCase extends BaseTestCase
     public static function getUri(): string
     {
         return getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1:27017';
+    }
+
+    public static function printConfiguration(): void
+    {
+        $template = <<<'OUTPUT'
+Test configuration:
+  URI: %uri%
+  Database: %database%
+  API version: %apiVersion%
+  
+  crypt_shared: %cryptSharedAvailable% 
+  mongocryptd: %mongocryptdAvailable%
+
+OUTPUT;
+
+        // Redact credentials in the URI to be safe
+        $uri = static::getUri();
+        if (preg_match('#://.+:.+@#', $uri)) {
+            $uri = preg_replace('#(.+://).+:.+@(.+)$#', '$1<redacted>@$2', $uri);
+        }
+
+        $configuration = [
+            '%uri%' => $uri,
+            '%database%' => static::getDatabaseName(),
+            '%apiVersion%' => getenv('MONGODB_API_VERSION') ?: 'Not configured',
+            '%cryptSharedAvailable%' => FunctionalTestCase::isCryptSharedLibAvailable() ? 'Available' : 'Not available',
+            '%mongocryptdAvailable%' => FunctionalTestCase::isMongocryptdAvailable() ? 'Available' : 'Not available',
+        ];
+
+        echo strtr($template, $configuration) . "\n";
+    }
+
+    /**
+     * Return the test database name.
+     */
+    protected static function getDatabaseName(): string
+    {
+        return getenv('MONGODB_DATABASE') ?: 'phplib_test';
     }
 
     /**
@@ -183,14 +224,6 @@ abstract class TestCase extends BaseTestCase
         $class = new ReflectionClass($this);
 
         return sprintf('%s.%s', $class->getShortName(), hash('crc32b', $this->getName()));
-    }
-
-    /**
-     * Return the test database name.
-     */
-    protected function getDatabaseName(): string
-    {
-        return getenv('MONGODB_DATABASE') ?: 'phplib_test';
     }
 
     /**

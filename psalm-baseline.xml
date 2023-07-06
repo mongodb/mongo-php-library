@@ -69,7 +69,7 @@
     </MixedArrayAccess>
   </file>
   <file src="src/Model/AsListIterator.php">
-    <InvalidTemplateParam occurrences="1">
+    <InvalidTemplateParam>
       <code>AsListIterator</code>
     </InvalidTemplateParam>
   </file>
@@ -172,6 +172,66 @@
     <MixedReturnStatement>
       <code><![CDATA[$this->index['name']]]></code>
     </MixedReturnStatement>
+  </file>
+  <file src="src/Model/LazyBSONArray.php">
+    <MixedArgument>
+      <code>$offset</code>
+      <code>$offset</code>
+      <code>$offset</code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[new CallbackFilterIterator(
+                    $itemIterator,
+                    /** @param TValue $value */
+                    function ($value, int $offset) use (&$seen): bool {
+                        return ! isset($this->unset[$offset]) && ! isset($seen[$offset]);
+                    },
+                )]]></code>
+      <code><![CDATA[new CallbackIterator(
+                // Skip keys that were unset or handled in a previous iterator
+                new CallbackFilterIterator(
+                    $itemIterator,
+                    /** @param TValue $value */
+                    function ($value, int $offset) use (&$seen): bool {
+                        return ! isset($this->unset[$offset]) && ! isset($seen[$offset]);
+                    },
+                ),
+                /**
+                 * @param TValue $value
+                 * @return TValue
+                 */
+                function ($value, int $offset) use (&$seen) {
+                    // Mark key as seen, skipping any future occurrences
+                    $seen[$offset] = true;
+
+                    // Return actual value (potentially overridden by offsetSet)
+                    return $this->offsetGet($offset);
+                },
+            )]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedArrayAssignment>
+      <code>$seen[$offset]</code>
+    </MixedArrayAssignment>
+    <RedundantConditionGivenDocblockType>
+      <code>is_array($input)</code>
+    </RedundantConditionGivenDocblockType>
+    <RedundantFunctionCallGivenDocblockType>
+      <code>array_values</code>
+    </RedundantFunctionCallGivenDocblockType>
+  </file>
+  <file src="src/Model/LazyBSONDocument.php">
+    <MismatchingDocblockReturnType>
+      <code><![CDATA[Iterator<string, TValue>]]></code>
+    </MismatchingDocblockReturnType>
+    <MixedAssignment>
+      <code>$value</code>
+    </MixedAssignment>
+    <MixedInferredReturnType>
+      <code><![CDATA[Iterator<string, TValue>]]></code>
+    </MixedInferredReturnType>
+    <RedundantConditionGivenDocblockType>
+      <code>is_object($input)</code>
+    </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/Operation/Aggregate.php">
     <MixedArgument>

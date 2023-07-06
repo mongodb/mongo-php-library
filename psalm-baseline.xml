@@ -68,6 +68,11 @@
       <code><![CDATA[$context[$this->protocol]['options']]]></code>
     </MixedArrayAccess>
   </file>
+  <file src="src/Model/AsListIterator.php">
+    <InvalidTemplateParam occurrences="1">
+      <code>AsListIterator</code>
+    </InvalidTemplateParam>
+  </file>
   <file src="src/Model/BSONArray.php">
     <MixedAssignment>
       <code>$this[$key]</code>

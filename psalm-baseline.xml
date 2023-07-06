@@ -75,6 +75,16 @@
       <code>$mergedDriver['platform']</code>
     </MixedAssignment>
   </file>
+  <file src="src/Codec/DecodeIfSupported.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>($value is BSONType ? NativeType : $value)</code>
+    </MixedInferredReturnType>
+  </file>
+  <file src="src/Codec/EncodeIfSupported.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>($value is NativeType ? BSONType : $value)</code>
+    </MixedInferredReturnType>
+  </file>
   <file src="src/Command/ListCollections.php">
     <MixedAssignment occurrences="2">
       <code>$cmd[$option]</code>

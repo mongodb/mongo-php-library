@@ -27,15 +27,24 @@ use Traversable;
  * Iterator to apply a callback before returning an element
  *
  * @internal
+ *
+ * @template TKey
+ * @template TValue
+ * @template TCallbackValue
+ * @template-implements Iterator<TKey, TCallbackValue>
  */
 class CallbackIterator implements Iterator
 {
-    /** @var Closure */
+    /** @var Closure(TValue, TKey): TCallbackValue */
     private $callback;
 
-    /** @var Iterator */
+    /** @var Iterator<TKey, TValue> */
     private $iterator;
 
+    /**
+     * @param Traversable<TKey, TValue>             $traversable
+     * @param Closure(TValue, TKey): TCallbackValue $callback
+     */
     public function __construct(Traversable $traversable, Closure $callback)
     {
         $this->iterator = $traversable instanceof Iterator ? $traversable : new IteratorIterator($traversable);
@@ -44,7 +53,7 @@ class CallbackIterator implements Iterator
 
     /**
      * @see https://php.net/iterator.current
-     * @return mixed
+     * @return TCallbackValue
      */
     #[ReturnTypeWillChange]
     public function current()
@@ -54,7 +63,7 @@ class CallbackIterator implements Iterator
 
     /**
      * @see https://php.net/iterator.key
-     * @return mixed
+     * @return TKey
      */
     #[ReturnTypeWillChange]
     public function key()

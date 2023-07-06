@@ -49,7 +49,7 @@ class CallbackIterator implements Iterator
     #[ReturnTypeWillChange]
     public function current()
     {
-        return ($this->callback)($this->iterator->current());
+        return ($this->callback)($this->iterator->current(), $this->iterator->key());
     }
 
     /**

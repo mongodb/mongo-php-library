@@ -25,4 +25,16 @@ use MongoDB\BSON\Document;
  */
 interface DocumentCodec extends Codec
 {
+    /**
+     * @param mixed $value
+     * @psalm-param Document $value
+     * @psalm-return ObjectType
+     */
+    public function decode($value): object;
+
+    /**
+     * @param mixed $value
+     * @psalm-param ObjectType $value
+     */
+    public function encode($value): Document;
 }

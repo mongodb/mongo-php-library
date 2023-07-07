@@ -18,6 +18,9 @@
 namespace MongoDB\Codec;
 
 /**
+ * The Codec interface allows decoding BSON data to native PHP types and back
+ * to BSON.
+ *
  * @psalm-template BSONType
  * @psalm-template NativeType
  * @template-extends Decoder<BSONType, NativeType>

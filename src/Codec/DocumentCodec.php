@@ -20,6 +20,9 @@ namespace MongoDB\Codec;
 use MongoDB\BSON\Document;
 
 /**
+ * The DocumentCodec interface allows decoding BSON document data to native PHP
+ * objects and back to BSON documents.
+ *
  * @psalm-template ObjectType of object
  * @template-extends Codec<Document, ObjectType>
  */

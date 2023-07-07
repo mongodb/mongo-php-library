@@ -17,6 +17,8 @@
 
 namespace MongoDB\Codec;
 
+use MongoDB\Exception\InvalidArgumentException;
+
 /**
  * @internal
  * @psalm-template BSONType
@@ -25,20 +27,31 @@ namespace MongoDB\Codec;
 interface Decoder
 {
     /**
+     * Checks if the decoder supports a given value.
+     *
      * @param mixed $value
      * @psalm-assert-if-true BSONType $value
      */
     public function canDecode($value): bool;
 
     /**
+     * Decodes a given value. If the decoder does not support the value, it
+     * should throw an exception.
+     *
      * @param mixed $value
      * @psalm-param BSONType $value
      * @return mixed
      * @psalm-return NativeType
+     * @throws InvalidArgumentException if the decoder does not support the value
      */
     public function decode($value);
 
     /**
+     * Decodes a given value if supported, otherwise returns the value as-is.
+     *
+     * The DecodeIfSupported trait provides a default implementation of this
+     * method.
+     *
      * @param mixed $value
      * @psalm-param mixed $value
      * @return mixed

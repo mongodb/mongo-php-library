@@ -17,6 +17,11 @@
 
 namespace MongoDB\Codec;
 
+/**
+ * This interface is used to indicate that a class is aware of the CodecLibrary
+ * it was added to. The library will be injected when the codec is added to the
+ * library. This allows codecs to recursively encode its nested values.
+ */
 interface KnowsCodecLibrary
 {
     public function attachLibrary(CodecLibrary $library): void;

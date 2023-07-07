@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Model;
 
 use Generator;
-use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\LazyBSONArray;
@@ -112,15 +111,15 @@ class LazyBSONArrayTest extends TestCase
     /** @dataProvider provideTestArray */
     public function testGetDocument(LazyBSONArray $array): void
     {
-        $this->assertInstanceOf(Document::class, $array[1]);
-        $this->assertInstanceOf(Document::class, $array[1]);
+        $this->assertInstanceOf(LazyBSONDocument::class, $array[1]);
+        $this->assertInstanceOf(LazyBSONDocument::class, $array[1]);
     }
 
     /** @dataProvider provideTestArray */
     public function testGetArray(LazyBSONArray $array): void
     {
-        $this->assertInstanceOf(PackedArray::class, $array[2]);
-        $this->assertInstanceOf(PackedArray::class, $array[2]);
+        $this->assertInstanceOf(LazyBSONArray::class, $array[2]);
+        $this->assertInstanceOf(LazyBSONArray::class, $array[2]);
     }
 
     /** @dataProvider provideTestArray */
@@ -217,27 +216,27 @@ class LazyBSONArrayTest extends TestCase
         $items = iterator_to_array($array);
         $this->assertCount(3, $items);
         $this->assertSame('bar', $items[0]);
-        $this->assertInstanceOf(Document::class, $items[1]);
-        $this->assertInstanceOf(PackedArray::class, $items[2]);
+        $this->assertInstanceOf(LazyBSONDocument::class, $items[1]);
+        $this->assertInstanceOf(LazyBSONArray::class, $items[2]);
 
         $array[0] = 'baz';
         $items = iterator_to_array($array);
         $this->assertCount(3, $items);
         $this->assertSame('baz', $items[0]);
-        $this->assertInstanceOf(Document::class, $items[1]);
-        $this->assertInstanceOf(PackedArray::class, $items[2]);
+        $this->assertInstanceOf(LazyBSONDocument::class, $items[1]);
+        $this->assertInstanceOf(LazyBSONArray::class, $items[2]);
 
         unset($array[0]);
         unset($array[2]);
         $items = iterator_to_array($array);
         $this->assertCount(1, $items);
-        $this->assertInstanceOf(Document::class, $items[0]);
+        $this->assertInstanceOf(LazyBSONDocument::class, $items[0]);
 
         // Leave a gap to ensure we're re-indexing keys
         $array[5] = 'yay!';
         $items = iterator_to_array($array);
         $this->assertCount(2, $items);
-        $this->assertInstanceOf(Document::class, $items[0]);
+        $this->assertInstanceOf(LazyBSONDocument::class, $items[0]);
         $this->assertSame('yay!', $items[1]);
     }
 }

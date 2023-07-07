@@ -23,6 +23,8 @@ use ArrayIterator;
 use CallbackFilterIterator;
 use IteratorAggregate;
 use MongoDB\BSON\PackedArray;
+use MongoDB\Codec\CodecLibrary;
+use MongoDB\Codec\LazyBSONCodecLibrary;
 use MongoDB\Exception\InvalidArgumentException;
 use ReturnTypeWillChange;
 
@@ -68,6 +70,8 @@ class LazyBSONArray implements ArrayAccess, IteratorAggregate
 
     private bool $entirePackedArrayRead = false;
 
+    private CodecLibrary $codecLibrary;
+
     /**
      * Deep clone this lazy array.
      */
@@ -87,7 +91,7 @@ class LazyBSONArray implements ArrayAccess, IteratorAggregate
      *        When given a BSON array, this is treated as input. For lists
      *        this constructs a new BSON array using fromPHP.
      */
-    public function __construct($input = null)
+    public function __construct($input = null, ?CodecLibrary $codecLibrary = null)
     {
         if ($input === null) {
             $this->bson = PackedArray::fromPHP([]);
@@ -104,6 +108,8 @@ class LazyBSONArray implements ArrayAccess, IteratorAggregate
         } else {
             throw InvalidArgumentException::invalidType('input', $input, [PackedArray::class, 'array', 'null']);
         }
+
+        $this->codecLibrary = $codecLibrary ?? new LazyBSONCodecLibrary();
     }
 
     /** @return AsListIterator<TValue> */
@@ -256,7 +262,7 @@ class LazyBSONArray implements ArrayAccess, IteratorAggregate
         $found = false;
         if ($this->bson->has($offset)) {
             $found = true;
-            $this->read[$offset] = $this->bson->get($offset);
+            $this->read[$offset] = $this->codecLibrary->decodeIfSupported($this->bson->get($offset));
         }
 
         // Mark the offset as "existing" if it wasn't previously marked already

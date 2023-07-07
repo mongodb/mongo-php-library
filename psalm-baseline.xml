@@ -28,6 +28,16 @@
       <code>($value is NativeType ? BSONType : $value)</code>
     </MixedInferredReturnType>
   </file>
+  <file src="src/Codec/LazyBSONArrayCodec.php">
+    <MixedAssignment>
+      <code>$return[]</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Codec/LazyBSONDocumentCodec.php">
+    <MixedAssignment>
+      <code>$return[$field]</code>
+    </MixedAssignment>
+  </file>
   <file src="src/Command/ListCollections.php">
     <MixedAssignment>
       <code>$cmd[$option]</code>

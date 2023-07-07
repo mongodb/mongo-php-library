@@ -24,6 +24,8 @@ use CallbackFilterIterator;
 use Iterator;
 use IteratorAggregate;
 use MongoDB\BSON\Document;
+use MongoDB\Codec\CodecLibrary;
+use MongoDB\Codec\LazyBSONCodecLibrary;
 use MongoDB\Exception\InvalidArgumentException;
 use ReturnTypeWillChange;
 
@@ -65,6 +67,8 @@ class LazyBSONDocument implements ArrayAccess, IteratorAggregate
     /** @var array<string, true> */
     private array $unset = [];
 
+    private CodecLibrary $codecLibrary;
+
     /**
      * Deep clone this lazy document.
      */
@@ -84,7 +88,7 @@ class LazyBSONDocument implements ArrayAccess, IteratorAggregate
      *        When given a BSON document, this is treated as input. For arrays
      *        and objects this constructs a new BSON document using fromPHP.
      */
-    public function __construct($input = null)
+    public function __construct($input = null, ?CodecLibrary $codecLibrary = null)
     {
         if ($input === null) {
             $this->bson = Document::fromPHP([]);
@@ -101,6 +105,8 @@ class LazyBSONDocument implements ArrayAccess, IteratorAggregate
         } else {
             throw InvalidArgumentException::invalidType('input', $input, [Document::class, 'array', 'null']);
         }
+
+        $this->codecLibrary = $codecLibrary ?? new LazyBSONCodecLibrary();
     }
 
     /** @return TValue */
@@ -218,7 +224,7 @@ class LazyBSONDocument implements ArrayAccess, IteratorAggregate
         $found = false;
         if ($this->bson->has($key)) {
             $found = true;
-            $this->read[$key] = $this->bson->get($key);
+            $this->read[$key] = $this->codecLibrary->decodeIfSupported($this->bson->get($key));
         }
 
         // Mark the offset as "existing" if it wasn't previously marked already

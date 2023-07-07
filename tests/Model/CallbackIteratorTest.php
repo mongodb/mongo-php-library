@@ -8,6 +8,7 @@ use MongoDB\Tests\TestCase;
 
 use function array_keys;
 use function iterator_to_array;
+use function strrev;
 
 class CallbackIteratorTest extends TestCase
 {
@@ -48,5 +49,22 @@ class CallbackIteratorTest extends TestCase
         );
 
         $this->assertSame(['a' => 2, 'b' => 4, 'c' => 6], iterator_to_array($callbackIterator));
+    }
+
+    public function testWithCallable(): void
+    {
+        $original = ['foo', 'bar', 'baz'];
+
+        $callbackIterator = new CallbackIterator(
+            new ArrayIterator($original),
+            [self::class, 'reverseValue']
+        );
+
+        $this->assertSame(['oof', 'rab', 'zab'], iterator_to_array($callbackIterator));
+    }
+
+    public static function reverseValue($value, $key)
+    {
+        return strrev($value);
     }
 }

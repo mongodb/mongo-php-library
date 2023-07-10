@@ -3,68 +3,83 @@
 namespace MongoDB\Tests\Model;
 
 use ArrayIterator;
+use Generator;
+use Iterator;
+use IteratorAggregate;
 use MongoDB\Model\CallbackIterator;
 use MongoDB\Tests\TestCase;
 
-use function array_keys;
 use function iterator_to_array;
-use function strrev;
 
 class CallbackIteratorTest extends TestCase
 {
-    public function testArrayIteration(): void
+    /** @dataProvider provideTests */
+    public function testIteration($expected, $source, $callback): void
     {
-        $expectedKey = 0;
+        $callbackIterator = new CallbackIterator($source, $callback);
 
-        $original = [1, 2, 3];
+        $this->assertEquals($expected, iterator_to_array($callbackIterator));
+    }
 
-        $callbackIterator = new CallbackIterator(
-            new ArrayIterator($original),
-            function ($value, $key) use (&$expectedKey) {
-                $this->assertSame($expectedKey, $key);
-                $expectedKey++;
+    public static function provideTests(): Generator
+    {
+        $listIterator = new ArrayIterator([1, 2, 3]);
+        $hashIterator = new ArrayIterator(['a' => 1, 'b' => 2, 'c' => 3]);
+
+        $iteratorAggregate = new class ($listIterator) implements IteratorAggregate
+        {
+            private $iterator;
+
+            public function __construct(Iterator $iterator)
+            {
+                $this->iterator = $iterator;
+            }
+
+            public function getIterator(): Iterator
+            {
+                return $this->iterator;
+            }
+        };
+
+        yield 'List with closure' => [
+            'expected' => [2, 4, 6],
+            'source' => $listIterator,
+            'callback' => function ($value, $key) use ($listIterator) {
+                self::assertSame($listIterator->key(), $key);
 
                 return $value * 2;
-            }
-        );
+            },
+        ];
 
-        $this->assertSame([2, 4, 6], iterator_to_array($callbackIterator));
-    }
+        yield 'List with callable' => [
+            'expected' => [2, 4, 6],
+            'source' => $listIterator,
+            'callback' => [self::class, 'doubleValue'],
+        ];
 
-    public function testHashIteration(): void
-    {
-        $expectedKey = 0;
-
-        $original = ['a' => 1, 'b' => 2, 'c' => 3];
-        $expectedKeys = array_keys($original);
-
-        $callbackIterator = new CallbackIterator(
-            new ArrayIterator($original),
-            function ($value, $key) use (&$expectedKey, $expectedKeys) {
-                $this->assertSame($expectedKeys[$expectedKey], $key);
-                $expectedKey++;
+        yield 'Hash with closure' => [
+            'expected' => ['a' => 2, 'b' => 4, 'c' => 6],
+            'source' => $hashIterator,
+            'callback' => function ($value, $key) use ($hashIterator) {
+                self::assertSame($hashIterator->key(), $key);
 
                 return $value * 2;
-            }
-        );
+            },
+        ];
 
-        $this->assertSame(['a' => 2, 'b' => 4, 'c' => 6], iterator_to_array($callbackIterator));
+        yield 'IteratorAggregate with closure' => [
+            'expected' => [2, 4, 6],
+            'source' => $iteratorAggregate,
+            'callback' => function ($value, $key) use ($listIterator) {
+                self::assertSame($listIterator->key(), $key);
+
+                return $value * 2;
+            },
+        ];
     }
 
-    public function testWithCallable(): void
+    public static function doubleValue($value, $key)
     {
-        $original = ['foo', 'bar', 'baz'];
-
-        $callbackIterator = new CallbackIterator(
-            new ArrayIterator($original),
-            [self::class, 'reverseValue']
-        );
-
-        $this->assertSame(['oof', 'rab', 'zab'], iterator_to_array($callbackIterator));
-    }
-
-    public static function reverseValue($value, $key)
-    {
-        return strrev($value);
+        return $value * 2;
     }
 }

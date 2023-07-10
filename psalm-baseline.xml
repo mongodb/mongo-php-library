@@ -16,7 +16,8 @@
     </TooFewArguments>
   </file>
   <file src="docs/examples/csfle-explicit_encryption.php">
-    <MixedArgument occurrences="1">
+    <MixedArgument occurrences="2">
+      <code>$clientEncryption-&gt;decrypt($document-&gt;encryptedField)</code>
       <code>$document-&gt;encryptedField</code>
     </MixedArgument>
     <PossiblyInvalidPropertyFetch occurrences="1">
@@ -33,12 +34,6 @@
     </TooFewArguments>
   </file>
   <file src="docs/examples/csfle-explicit_encryption_automatic_decryption.php">
-    <PossiblyInvalidPropertyFetch occurrences="1">
-      <code>$document-&gt;encryptedField</code>
-    </PossiblyInvalidPropertyFetch>
-    <PossiblyNullPropertyFetch occurrences="1">
-      <code>$document-&gt;encryptedField</code>
-    </PossiblyNullPropertyFetch>
     <TooFewArguments occurrences="1">
       <code>new Binary(random_bytes(96))</code>
     </TooFewArguments>

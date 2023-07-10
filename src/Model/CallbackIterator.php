@@ -17,26 +17,36 @@
 
 namespace MongoDB\Model;
 
-use Closure;
 use Iterator;
 use IteratorIterator;
 use ReturnTypeWillChange;
 use Traversable;
 
+use function call_user_func;
+
 /**
  * Iterator to apply a callback before returning an element
  *
  * @internal
+ *
+ * @template TKey
+ * @template TValue
+ * @template TCallbackValue
+ * @template-implements Iterator<TKey, TCallbackValue>
  */
 class CallbackIterator implements Iterator
 {
-    /** @var Closure */
+    /** @var callable(TValue, TKey): TCallbackValue */
     private $callback;
 
-    /** @var Iterator */
+    /** @var Iterator<TKey, TValue> */
     private $iterator;
 
-    public function __construct(Traversable $traversable, Closure $callback)
+    /**
+     * @param Traversable<TKey, TValue>              $traversable
+     * @param callable(TValue, TKey): TCallbackValue $callback
+     */
+    public function __construct(Traversable $traversable, callable $callback)
     {
         $this->iterator = $traversable instanceof Iterator ? $traversable : new IteratorIterator($traversable);
         $this->callback = $callback;
@@ -44,17 +54,17 @@ class CallbackIterator implements Iterator
 
     /**
      * @see https://php.net/iterator.current
-     * @return mixed
+     * @return TCallbackValue
      */
     #[ReturnTypeWillChange]
     public function current()
     {
-        return ($this->callback)($this->iterator->current());
+        return call_user_func($this->callback, $this->iterator->current(), $this->iterator->key());
     }
 
     /**
      * @see https://php.net/iterator.key
-     * @return mixed
+     * @return TKey
      */
     #[ReturnTypeWillChange]
     public function key()

@@ -91,4 +91,4 @@ $indexedFindPayload = $clientEncryption->encrypt('indexedValue', [
 
 /* Using the client configured with encryption (but not automatic encryption),
  * find the document and observe that the fields are automatically decrypted. */
-print_r($encryptedCollection->findOne(['encryptedIndexed' => $findPayload]));
+print_r($encryptedCollection->findOne(['encryptedIndexed' => $indexedFindPayload]));

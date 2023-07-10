@@ -115,10 +115,13 @@ To reference keys in your application, you can use the ``keyAltName``
 attribute specified when creating the key. The following example creates an
 encryption key with an alternative name, which could be done when deploying the
 application. The script then encrypts data by referencing the key by its
-alternative name.
+alternative name using the ``keyAltName`` option instead of ``keyId``.
 
-To use an alternate name when referencing an encryption key, use the
-``keyAltName`` option instead of ``keyId``.
+.. note::
+
+   Prior to adding a new key alternate name, you must create a partial, unique
+   index on the ``keyAltNames`` field. Client-Side Field Level Encryption
+   depends on server-enforced uniqueness of key alternate names.
 
 .. literalinclude:: /examples/key_alt_name.php
    :language: php

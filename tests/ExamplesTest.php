@@ -201,11 +201,17 @@ OUTPUT;
     {
         $this->skipIfClientSideEncryptionIsNotSupported();
 
-        $this->assertExampleOutput($file, $expectedOutput);
-
-        // Clean up metadata and key vault collections
+        /* Ensure that the key vault, collection under test, and any metadata
+         * collections are cleaned up before and after the example is run. */
         $this->dropCollection('test', 'coll', ['encryptedFields' => []]);
         $this->dropCollection('encryption', '__keyVault');
+
+        /* Ensure the key vault has a partial, unique index for keyAltNames. The
+         * key management examples already do this, so this is mainly for the
+         * benefit of other scripts. */
+        $this->setUpKeyVaultIndex();
+
+        $this->assertExampleOutput($file, $expectedOutput);
     }
 
     public static function provideEncryptionExamples(): Generator
@@ -342,11 +348,15 @@ OUTPUT,
 
         $this->skipIfServerVersion('<', '7.0.0', 'Queryable encryption tests require MongoDB 7.0 or later');
 
-        $this->assertExampleOutput($file, $expectedOutput);
-
-        // Clean up metadata and key vault collections
+        /* Ensure that the key vault, collection under test, and any metadata
+         * collections are cleaned up before and after the example is run. */
         $this->dropCollection('test', 'coll', ['encryptedFields' => []]);
         $this->dropCollection('encryption', '__keyVault');
+
+        // Ensure the key vault has a partial, unique index for keyAltNames
+        $this->setUpKeyVaultIndex();
+
+        $this->assertExampleOutput($file, $expectedOutput);
     }
 
     public static function provideQueryableEncryptionExamples(): Generator
@@ -451,5 +461,16 @@ OUTPUT,
         require $file;
 
         $this->assertStringMatchesFormat($expectedOutput, $this->getActualOutputForAssertion());
+    }
+
+    private function setUpKeyVaultIndex(): void
+    {
+        self::createTestClient()->selectCollection('encryption', '__keyVault')->createIndex(
+            ['keyAltNames' => 1],
+            [
+                'unique' => true,
+                'partialFilterExpression' => ['keyAltNames' => ['$exists' => true]],
+            ]
+        );
     }
 }

@@ -15,6 +15,15 @@ $localKey = new Binary(random_bytes(96));
 // Create a client with no encryption options
 $client = new Client($uri);
 
+/* Prepare the database for this script. Drop the key vault collection and
+ * ensure it has a unique index for keyAltNames. This would typically be done
+ * during application deployment. */
+$client->selectCollection('encryption', '__keyVault')->drop();
+$client->selectCollection('encryption', '__keyVault')->createIndex(['keyAltNames' => 1], [
+    'unique' => true,
+    'partialFilterExpression' => ['keyAltNames' => ['$exists' => true]],
+]);
+
 // Create a ClientEncryption object to manage data encryption keys
 $clientEncryption = $client->createClientEncryption([
     'keyVaultNamespace' => 'encryption.__keyVault',
@@ -22,11 +31,6 @@ $clientEncryption = $client->createClientEncryption([
         'local' => ['key' => $localKey],
     ],
 ]);
-
-/* Create a new key vault collection for this script. The application must also
- * ensure that a unique index exists for keyAltNames. */
-$client->selectCollection('encryption', '__keyVault')->drop();
-$client->selectCollection('encryption', '__keyVault')->createIndex(['keyAltNames' => 1], ['unique' => true]);
 
 // Create a data encryption key with an alternate name
 $clientEncryption->createDataKey('local', ['keyAltNames' => ['myDataKey']]);

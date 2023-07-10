@@ -8,6 +8,10 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 $uri = getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/';
 
+/* Note: this script assumes that the test database is empty and that the key
+ * vault collection exists and has a partial, unique index on keyAltNames (as
+ * demonstrated in the encryption key management scripts). */
+
 // Generate a secure local key to use for this script
 $localKey = new Binary(random_bytes(96));
 
@@ -20,10 +24,8 @@ $clientEncryption = $client->createClientEncryption([
     'kmsProviders' => ['local' => ['key' => $localKey]],
 ]);
 
-/* Create a new key vault collection and data encryption keys for this script.
- * Alternatively, the key IDs could be read from a configuration file. */
-$client->selectCollection('encryption', '__keyVault')->drop();
-$client->selectCollection('encryption', '__keyVault')->createIndex(['keyAltNames' => 1], ['unique' => true]);
+/* Create the data encryption keys for this script. Alternatively, the key IDs
+ * could be read from a configuration file. */
 $keyId1 = $clientEncryption->createDataKey('local');
 $keyId2 = $clientEncryption->createDataKey('local');
 
@@ -53,10 +55,10 @@ $encryptedClient = new Client($uri, [], [
     ],
 ]);
 
-/* Create a new collection for this script. The drop and create helpers will
- * infer encryptedFields from the client and manage internal encryption
- * collections automatically. */
-$encryptedClient->selectDatabase('test')->dropCollection('coll');
+/* Create the data collection for this script. The create and drop helpers will
+ * infer encryptedFields from the client configuration and manage internal
+ * encryption collections automatically. Alternatively, the "encryptedFields"
+ * option can also be passed explicitly. */
 $encryptedClient->selectDatabase('test')->createCollection('coll');
 $encryptedCollection = $encryptedClient->selectCollection('test', 'coll');
 

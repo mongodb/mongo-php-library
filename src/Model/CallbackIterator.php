@@ -37,19 +37,19 @@ use function call_user_func;
 class CallbackIterator implements Iterator
 {
     /** @var callable(TValue, TKey): TCallbackValue */
-    private $callable;
+    private $callback;
 
     /** @var Iterator<TKey, TValue> */
     private $iterator;
 
     /**
      * @param Traversable<TKey, TValue>              $traversable
-     * @param callable(TValue, TKey): TCallbackValue $callable
+     * @param callable(TValue, TKey): TCallbackValue $callback
      */
-    public function __construct(Traversable $traversable, callable $callable)
+    public function __construct(Traversable $traversable, callable $callback)
     {
         $this->iterator = $traversable instanceof Iterator ? $traversable : new IteratorIterator($traversable);
-        $this->callable = $callable;
+        $this->callback = $callback;
     }
 
     /**
@@ -59,7 +59,7 @@ class CallbackIterator implements Iterator
     #[ReturnTypeWillChange]
     public function current()
     {
-        return call_user_func($this->callable, $this->iterator->current(), $this->iterator->key());
+        return call_user_func($this->callback, $this->iterator->current(), $this->iterator->key());
     }
 
     /**

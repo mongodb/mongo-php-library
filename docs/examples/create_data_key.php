@@ -11,10 +11,10 @@ $uri = getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/';
 // Generate a secure local key to use for this script
 $localKey = new Binary(random_bytes(96));
 
-/* Create a client with no encryption options. Additionally, create a
- * ClientEncryption object to manage data keys. */
+// Create a client with no encryption options
 $client = new Client($uri);
 
+// Create a ClientEncryption object to manage data encryption keys
 $clientEncryption = $client->createClientEncryption([
     'keyVaultNamespace' => 'encryption.__keyVault',
     'kmsProviders' => [
@@ -22,10 +22,13 @@ $clientEncryption = $client->createClientEncryption([
     ],
 ]);
 
-/* Drop the key vault collection and create an encryption key. This would
- * typically be done during application deployment. To store the key ID for
- * later use, you can use serialize() or var_export(). */
+/* Create a new key vault collection for this script. The application must also
+ * ensure that a unique index exists for keyAltNames. */
 $client->selectCollection('encryption', '__keyVault')->drop();
+$client->selectCollection('encryption', '__keyVault')->createIndex(['keyAltNames' => 1], ['unique' => true]);
+
+/* Create a data encryption key. To store the key ID for later use, you can use
+ * serialize(), var_export(), etc. */
 $keyId = $clientEncryption->createDataKey('local');
 
 print_r($keyId);

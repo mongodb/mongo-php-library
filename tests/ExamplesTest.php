@@ -210,7 +210,9 @@ OUTPUT;
 
     public static function provideEncryptionExamples(): Generator
     {
-        $expectedOutput = <<<'OUTPUT'
+        yield 'create_data_key' => [
+            'file' => __DIR__ . '/../docs/examples/create_data_key.php',
+            'expectedOutput' => <<<'OUTPUT'
 MongoDB\BSON\Binary Object
 (
     [data] => %a
@@ -221,109 +223,115 @@ MongoDB\BSON\Binary Object
     [data] => %a
     [type] => 6
 )
-OUTPUT;
-
-        yield 'create_data_key' => [
-            'file' => __DIR__ . '/../docs/examples/create_data_key.php',
-            'expectedOutput' => $expectedOutput,
+OUTPUT,
         ];
-
-        $expectedOutput = <<<'OUTPUT'
-MongoDB\BSON\Binary Object
-(
-    [data] => %a
-    [type] => 6
-)
-OUTPUT;
 
         yield 'key_alt_name' => [
             'file' => __DIR__ . '/../docs/examples/key_alt_name.php',
-            'expectedOutput' => $expectedOutput,
-        ];
-
-        $expectedOutput = <<<'OUTPUT'
-MongoDB\Model\BSONDocument Object
-(
-    [storage:ArrayObject:private] => Array
-        (
-            [_id] => 1
-            [encryptedField] => mySecret
-        )
-
-)
-MongoDB\Model\BSONDocument Object
-(
-    [storage:ArrayObject:private] => Array
-        (
-            [_id] => 1
-            [encryptedField] => MongoDB\BSON\Binary Object
-                (
-                    [data] => %a
-                    [type] => 6
-                )
-
-        )
-
-)
-OUTPUT;
-
-        yield 'csfle-automatic_encryption-local_schema' => [
-            'file' => __DIR__ . '/../docs/examples/csfle-automatic_encryption-local_schema.php',
-            'expectedOutput' => $expectedOutput,
-        ];
-
-        $expectedOutput = <<<'OUTPUT'
-MongoDB\Model\BSONDocument Object
-(
-    [storage:ArrayObject:private] => Array
-        (
-            [_id] => 1
-            [encryptedField] => mySecret
-        )
-
-)
-MongoDB\Model\BSONDocument Object
-(
-    [storage:ArrayObject:private] => Array
-        (
-            [_id] => 1
-            [encryptedField] => MongoDB\BSON\Binary Object
-                (
-                    [data] => %a
-                    [type] => 6
-                )
-
-        )
-
-)
-OUTPUT;
-
-        yield 'csfle-automatic_encryption-server_side_schema' => [
-            'file' => __DIR__ . '/../docs/examples/csfle-automatic_encryption-server_side_schema.php',
-            'expectedOutput' => $expectedOutput,
-        ];
-
-        $expectedOutput = <<<'OUTPUT'
+            'expectedOutput' => <<<'OUTPUT'
+Error creating key: E11000 duplicate key error %s: encryption.__keyVault%sdup key: { keyAltNames: "myDataKey" }
 MongoDB\BSON\Binary Object
 (
     [data] => %a
     [type] => 6
 )
-mySecret
-OUTPUT;
+OUTPUT,
+        ];
+
+        yield 'csfle-automatic_encryption-local_schema' => [
+            'file' => __DIR__ . '/../docs/examples/csfle-automatic_encryption-local_schema.php',
+            'expectedOutput' => <<<'OUTPUT'
+MongoDB\Model\BSONDocument Object
+(
+    [storage:ArrayObject:private] => Array
+        (
+            [_id] => 1
+            [encryptedField] => mySecret
+        )
+
+)
+MongoDB\Model\BSONDocument Object
+(
+    [storage:ArrayObject:private] => Array
+        (
+            [_id] => 1
+            [encryptedField] => MongoDB\BSON\Binary Object
+                (
+                    [data] => %a
+                    [type] => 6
+                )
+
+        )
+
+)
+Error inserting document: Document failed validation
+OUTPUT,
+        ];
+
+        yield 'csfle-automatic_encryption-server_side_schema' => [
+            'file' => __DIR__ . '/../docs/examples/csfle-automatic_encryption-server_side_schema.php',
+            'expectedOutput' => <<<'OUTPUT'
+MongoDB\Model\BSONDocument Object
+(
+    [storage:ArrayObject:private] => Array
+        (
+            [_id] => 1
+            [encryptedField] => mySecret
+        )
+
+)
+MongoDB\Model\BSONDocument Object
+(
+    [storage:ArrayObject:private] => Array
+        (
+            [_id] => 1
+            [encryptedField] => MongoDB\BSON\Binary Object
+                (
+                    [data] => %a
+                    [type] => 6
+                )
+
+        )
+
+)
+Error inserting document: Document failed validation
+OUTPUT,
+        ];
 
         yield 'csfle-explicit_encryption' => [
             'file' => __DIR__ . '/../docs/examples/csfle-explicit_encryption.php',
-            'expectedOutput' => $expectedOutput,
-        ];
+            'expectedOutput' => <<<'OUTPUT'
+MongoDB\Model\BSONDocument Object
+(
+    [storage:ArrayObject:private] => Array
+        (
+            [_id] => 1
+            [encryptedField] => MongoDB\BSON\Binary Object
+                (
+                    [data] => %a
+                    [type] => 6
+                )
 
-        $expectedOutput = <<<'OUTPUT'
-mySecret
-OUTPUT;
+        )
+
+)
+Decrypted: mySecret
+OUTPUT,
+        ];
 
         yield 'csfle-explicit_encryption_automatic_decryption' => [
             'file' => __DIR__ . '/../docs/examples/csfle-explicit_encryption_automatic_decryption.php',
-            'expectedOutput' => $expectedOutput,
+            'expectedOutput' => <<<'OUTPUT'
+MongoDB\Model\BSONDocument Object
+(
+    [storage:ArrayObject:private] => Array
+        (
+            [_id] => 1
+            [encryptedField] => mySecret
+        )
+
+)
+OUTPUT,
         ];
     }
 
@@ -343,7 +351,9 @@ OUTPUT;
 
     public static function provideQueryableEncryptionExamples(): Generator
     {
-        $expectedOutput = <<<'OUTPUT'
+        yield 'queryable_encryption-automatic' => [
+            'file' => __DIR__ . '/../docs/examples/queryable_encryption-automatic.php',
+            'expectedOutput' => <<<'OUTPUT'
 MongoDB\Model\BSONDocument Object
 (
     [storage:ArrayObject:private] => Array
@@ -402,14 +412,12 @@ MongoDB\Model\BSONDocument Object
         )
 
 )
-OUTPUT;
-
-        yield 'queryable_encryption-automatic' => [
-            'file' => __DIR__ . '/../docs/examples/queryable_encryption-automatic.php',
-            'expectedOutput' => $expectedOutput,
+OUTPUT,
         ];
 
-        $expectedOutput = <<<'OUTPUT'
+        yield 'queryable_encryption-explicit' => [
+            'file' => __DIR__ . '/../docs/examples/queryable_encryption-explicit.php',
+            'expectedOutput' => <<<'OUTPUT'
 MongoDB\Model\BSONDocument Object
 (
     [storage:ArrayObject:private] => Array
@@ -434,11 +442,7 @@ MongoDB\Model\BSONDocument Object
         )
 
 )
-OUTPUT;
-
-        yield 'queryable_encryption-explicit' => [
-            'file' => __DIR__ . '/../docs/examples/queryable_encryption-explicit.php',
-            'expectedOutput' => $expectedOutput,
+OUTPUT,
         ];
     }
 

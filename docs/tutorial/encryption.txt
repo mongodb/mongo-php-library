@@ -92,24 +92,26 @@ Creating an Encryption Key
 
 To create an encryption key, create a
 :php:`MongoDB\\Driver\\ClientEncryption <class.mongodb-driver-clientencryption>`
-instance with encryption options and create a new data key. The method will
-return the key ID which can be used to reference the key later. You can also
-pass multiple alternate names for this key and reference the key by these names
-instead of the key ID. Creating a new data encryption key would typically be
-done on initial deployment, but depending on your use case you may want to use
-more than one encryption key or create them dynamically.
+instance with encryption options and use the
+:php:`createDataKey() <manual/en/mongodb-driver-clientencryption.createdatakey.php>`
+method. The method will return the key ID which can be used to reference the key
+later. You can also pass multiple :ref:`alternate names <alt_name>` for this key
+and reference the key by these names instead of the key ID.
+
+Creating a new data encryption key would typically be done on initial
+deployment, but depending on your use case you may want to use more than one
+encryption key (e.g. user-specific encryption keys) or create them dynamically.
 
 .. literalinclude:: /examples/create_data_key.php
    :language: php
 
 
+.. _alt_name:
+
 Referencing Encryption Keys by an Alternative Name
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-While it is possible to create an encryption key every time data is encrypted,
-this is not the recommended approach. Instead, you should create your encryption
-keys depending on your use case, e.g. by creating a user-specific encryption
-key. To reference keys in your software, you can use the ``keyAltName``
+To reference keys in your application, you can use the ``keyAltName``
 attribute specified when creating the key. The following example creates an
 encryption key with an alternative name, which could be done when deploying the
 application. The script then encrypts data by referencing the key by its
@@ -156,26 +158,7 @@ level encryption and use a
 object to create a new encryption key.
 
 
-Providing Local Automatic Encryption Rules
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The following example uses the ``schemaMap`` auto encryption driver option to
-define encrypted fields using a
-:manual:`strict subset of the JSON schema syntax </core/csfle/fundamentals/create-schema/>`.
-
-Specifying a ``schemaMap`` this way provides more security than relying on JSON
-schemas obtained from the server. It protects against a malicious server
-advertising a false JSON schema, which could trick the client into sending
-unencrypted data that should be encrypted.
-
-JSON schemas specified in the ``schemaMap`` auto encryption driver option only
-apply to configuring automatic client-side field level encryption. Other
-validation rules in the JSON schema will not be enforced by the driver and will
-result in an error.
-
-.. literalinclude:: /examples/csfle-automatic_encryption-local_schema.php
-   :language: php
-
+.. _server-side:
 
 Server-Side Field Level Encryption Enforcement
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -183,7 +166,7 @@ Server-Side Field Level Encryption Enforcement
 The MongoDB 4.2+ server supports using schema validation to enforce encryption
 of specific fields in a collection. This schema validation will prevent an
 application from inserting unencrypted values for any fields marked with the
-:manual:`"encrypt" JSON schema keyword </core/csfle/reference/encryption-schemas/>`.
+:manual:`"encrypt" schema keyword </core/csfle/reference/encryption-schemas/>`.
 
 The following example sets up a collection with automatic encryption using a
 ``$jsonSchema`` validator and
@@ -192,6 +175,29 @@ Data in the ``encryptedField`` field is automatically encrypted on insertion and
 decrypted when reading on the client side.
 
 .. literalinclude:: /examples/csfle-automatic_encryption-server_side_schema.php
+   :language: php
+
+
+Providing Local Automatic Encryption Rules
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The following example uses the ``schemaMap`` auto encryption driver option to
+define encrypted fields using a
+:manual:`strict subset of the JSON schema syntax </core/csfle/fundamentals/create-schema/>`.
+
+Using ``schemaMap`` in conjunction with a :ref:`server-side schema <server-side>`
+provides more security than relying entirely on a schema obtained from the
+server. It protects against a malicious server advertising a false schema, which
+could trick the client into sending unencrypted data that should be encrypted.
+
+.. note::
+
+   Only :manual:`Encryption Schema syntax </core/csfle/reference/encryption-schemas/>`
+   can be used with the ``schemaMap`` option. Do not specify document validation
+   keywords in the automatic encryption rules. To define document validation
+   rules, configure :manual:`schema validation </core/schema-validation/>`.
+
+.. literalinclude:: /examples/csfle-automatic_encryption-local_schema.php
    :language: php
 
 
@@ -258,7 +264,7 @@ Explicit encryption in Queryable Encryption is performed using the
 :php:`MongoDB\Driver\ClientEncryption::encrypt() <mongodb-driver-clientencryption.encrypt>`
 and :php:`decrypt() <mongodb-driver-clientencryption.decrypt>` methods. Although
 values must be explicitly encrypted (e.g. insertions, query criteria), automatic
-decryption for queries is possible by configuring ``encryptedFields`` on the
+*decryption* for queries is possible by configuring ``encryptedFields`` on the
 collection, as demonstrated in the following example:
 
 .. literalinclude:: /examples/queryable_encryption-explicit.php

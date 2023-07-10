@@ -20,7 +20,7 @@ $client = new Client($uri, [], [
     ],
 ]);
 
-// Create a ClientEncryption object to manage data keys
+// Create a ClientEncryption object to manage data encryption keys
 $clientEncryption = $client->createClientEncryption([
     'keyVaultNamespace' => 'encryption.__keyVault',
     'kmsProviders' => [
@@ -28,12 +28,13 @@ $clientEncryption = $client->createClientEncryption([
     ],
 ]);
 
-/* Drop the key vault collection and create an encryption key. Alternatively,
- * this key ID could be read from a configuration file. */
+/* Create a new key vault collection and data encryption key for this script.
+ * Alternatively, this key ID could be read from a configuration file. */
 $client->selectCollection('encryption', '__keyVault')->drop();
+$client->selectCollection('encryption', '__keyVault')->createIndex(['keyAltNames' => 1], ['unique' => true]);
 $keyId = $clientEncryption->createDataKey('local');
 
-// Select and drop a collection to use for this example
+// Create a new collection for this script
 $collection = $client->selectCollection('test', 'coll');
 $collection->drop();
 
@@ -43,10 +44,10 @@ $encryptedValue = $clientEncryption->encrypt('mySecret', [
     'keyId' => $keyId,
 ]);
 
-$collection->insertOne(['encryptedField' => $encryptedValue]);
+$collection->insertOne(['_id' => 1, 'encryptedField' => $encryptedValue]);
 
-/* Query for the document. The field will still be automatically decrypted
- * because the client was configured with an autoEncryption driver option. */
+/* Using the client configured with encryption (but not automatic encryption),
+ * find the document and observe that the field is automatically decrypted. */
 $document = $collection->findOne();
 
-print_r($document->encryptedField);
+print_r($document);

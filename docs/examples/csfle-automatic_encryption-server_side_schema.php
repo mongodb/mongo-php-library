@@ -3,6 +3,7 @@
 use MongoDB\BSON\Binary;
 use MongoDB\Client;
 use MongoDB\Driver\ClientEncryption;
+use MongoDB\Driver\Exception\ServerException;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
@@ -11,10 +12,10 @@ $uri = getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/';
 // Generate a secure local key to use for this script
 $localKey = new Binary(random_bytes(96));
 
-/* Create a client with no encryption options. Additionally, create a
- * ClientEncryption object to manage data keys. */
+// Create a client with no encryption options
 $client = new Client($uri);
 
+// Create a ClientEncryption object to manage data encryption keys
 $clientEncryption = $client->createClientEncryption([
     'keyVaultNamespace' => 'encryption.__keyVault',
     'kmsProviders' => [
@@ -22,12 +23,13 @@ $clientEncryption = $client->createClientEncryption([
     ],
 ]);
 
-/* Drop the key vault collection and create an encryption key. Alternatively,
- * this key ID could be read from a configuration file. */
+/* Create a new key vault collection and data encryption key for this script.
+ * Alternatively, this key ID could be read from a configuration file. */
 $client->selectCollection('encryption', '__keyVault')->drop();
+$client->selectCollection('encryption', '__keyVault')->createIndex(['keyAltNames' => 1], ['unique' => true]);
 $keyId = $clientEncryption->createDataKey('local');
 
-// Create a client with automatic encryption enabled
+// Create another client with automatic encryption enabled
 $encryptedClient = new Client($uri, [], [
     'autoEncryption' => [
         'keyVaultNamespace' => 'encryption.__keyVault',
@@ -35,39 +37,42 @@ $encryptedClient = new Client($uri, [], [
     ],
 ]);
 
-/* Drop and create the collection. Specify a validator option when creating the
- * collection to enforce a server-side JSON schema. */
-$validator = [
-    '$jsonSchema' => [
-        'bsonType' => 'object',
-        'properties' => [
-            'encryptedField' => [
-                'encrypt' => [
-                    'keyId' => [$keyId],
-                    'bsonType' => 'string',
-                    'algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC,
-                ],
+// Define a JSON schema for the encrypted collection
+$schema = [
+    'bsonType' => 'object',
+    'properties' => [
+        'encryptedField' => [
+            'encrypt' => [
+                'keyId' => [$keyId],
+                'bsonType' => 'string',
+                'algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC,
             ],
         ],
     ],
 ];
 
+/* Create a new collection for this script. Configure a server-side schema by
+ * explicitly creating the collection with a "validator" option. */
 $encryptedClient->selectDatabase('test')->dropCollection('coll');
-$encryptedClient->selectDatabase('test')->createCollection('coll', ['validator' => $validator]);
+$encryptedClient->selectDatabase('test')->createCollection('coll', ['validator' => ['$jsonSchema' => $schema]]);
 $encryptedCollection = $encryptedClient->selectCollection('test', 'coll');
 
-/* Using the encrypted client, insert and find a document. The encrypted field
- * will be automatically encrypted and decrypted. */
-$encryptedCollection->insertOne([
-    '_id' => 1,
-    'encryptedField' => 'mySecret',
-]);
+/* Using the encrypted client, insert and find a document to demonstrate that
+ * the encrypted field is automatically encrypted and decrypted. */
+$encryptedCollection->insertOne(['_id' => 1, 'encryptedField' => 'mySecret']);
 
 print_r($encryptedCollection->findOne(['_id' => 1]));
 
 /* Using the client configured without encryption, find the same document and
- * observe that the field is not automatically decrypted. Additionally, the JSON
- * schema will prohibit inserting a document with an unencrypted field value. */
+ * observe that the field is not automatically decrypted. */
 $unencryptedCollection = $client->selectCollection('test', 'coll');
 
 print_r($unencryptedCollection->findOne(['_id' => 1]));
+
+/* Attempt to insert another document with an unencrypted field value to
+ * demonstrate that the server-side schema is enforced. */
+try {
+    $unencryptedCollection->insertOne(['_id' => 2, 'encryptedField' => 'myOtherSecret']);
+} catch (ServerException $e) {
+    printf("Error inserting document: %s\n", $e->getMessage());
+}

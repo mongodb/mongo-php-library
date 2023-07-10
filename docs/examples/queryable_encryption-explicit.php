@@ -8,26 +8,26 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 $uri = getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/';
 
-/* Create a local key for this script. In practice, this value would be read
- * from a file, constant, or environment variable. Production apps should use
- * a cloud provider instead of a local key. */
+// Generate a secure local key to use for this script
 $localKey = new Binary(random_bytes(96));
 
-/* Create a client with no encryption options. Additionally, create a
- * ClientEncryption object to manage data keys. */
+// Create a client with no encryption options
 $client = new Client($uri);
 
+// Create a ClientEncryption object to manage data encryption keys
 $clientEncryption = $client->createClientEncryption([
     'keyVaultNamespace' => 'encryption.__keyVault',
     'kmsProviders' => ['local' => ['key' => $localKey]],
 ]);
 
-// Drop the key vault collection and create two data keys (one for each encrypted field)
+/* Create a new key vault collection and data encryption keys for this script.
+ * Alternatively, the key IDs could be read from a configuration file. */
 $client->selectCollection('encryption', '__keyVault')->drop();
-$dataKeyId1 = $clientEncryption->createDataKey('local');
-$dataKeyId2 = $clientEncryption->createDataKey('local');
+$client->selectCollection('encryption', '__keyVault')->createIndex(['keyAltNames' => 1], ['unique' => true]);
+$keyId1 = $clientEncryption->createDataKey('local');
+$keyId2 = $clientEncryption->createDataKey('local');
 
-// Create a client with automatic encryption disabled
+// Create another client with automatic encryption disabled
 $encryptedClient = new Client($uri, [], [
     'autoEncryption' => [
         'keyVaultNamespace' => 'encryption.__keyVault',
@@ -36,59 +36,56 @@ $encryptedClient = new Client($uri, [], [
     ],
 ]);
 
-// Define encryptedFields for the collection
+// Define encrypted fields for the collection
 $encryptedFields = [
     'fields' => [
         [
             'path' => 'encryptedIndexed',
             'bsonType' => 'string',
-            'keyId' => $dataKeyId1,
+            'keyId' => $keyId1,
             'queries' => ['queryType' => ClientEncryption::QUERY_TYPE_EQUALITY],
         ],
         [
             'path' => 'encryptedUnindexed',
             'bsonType' => 'string',
-            'keyId' => $dataKeyId2,
+            'keyId' => $keyId2,
         ],
     ],
 ];
 
-/* Drop and create the collection. Pass encryptedFields to each method to ensure
- * that internal encryption collections are managed. */
+/* Create a new collection for this script. Pass encryptedFields to the drop and
+ * create helpers to ensure that internal encryption collections are managed. */
 $encryptedClient->selectDatabase('test')->dropCollection('coll', ['encryptedFields' => $encryptedFields]);
 $encryptedClient->selectDatabase('test')->createCollection('coll', ['encryptedFields' => $encryptedFields]);
-$collection = $encryptedClient->selectCollection('test', 'coll');
+$encryptedCollection = $encryptedClient->selectCollection('test', 'coll');
 
 // Insert a document with manually encrypted fields
-$indexedValue = 'indexedValue';
-$unindexedValue = 'unindexedValue';
-
-$insertPayloadIndexed = $clientEncryption->encrypt($indexedValue, [
+$indexedInsertPayload = $clientEncryption->encrypt('indexedValue', [
     'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
     'contentionFactor' => 1,
-    'keyId' => $dataKeyId1,
+    'keyId' => $keyId1,
 ]);
 
-$insertPayloadUnindexed = $clientEncryption->encrypt($unindexedValue, [
+$unindexedInsertPayload = $clientEncryption->encrypt('unindexedValue', [
     'algorithm' => ClientEncryption::ALGORITHM_UNINDEXED,
-    'keyId' => $dataKeyId2,
+    'keyId' => $keyId2,
 ]);
 
-$collection->insertOne([
+$encryptedCollection->insertOne([
     '_id' => 1,
-    'encryptedIndexed' => $insertPayloadIndexed,
-    'encryptedUnindexed' => $insertPayloadUnindexed,
+    'encryptedIndexed' => $indexedInsertPayload,
+    'encryptedUnindexed' => $unindexedInsertPayload,
 ]);
 
 /* Encrypt the payload for an "equality" query using the same key that was used
- * to encrypt the insert payload. */
-$findPayload = $clientEncryption->encrypt($indexedValue, [
+ * to encrypt the corresponding insert payload. */
+$indexedFindPayload = $clientEncryption->encrypt('indexedValue', [
     'algorithm' => ClientEncryption::ALGORITHM_INDEXED,
     'queryType' => ClientEncryption::QUERY_TYPE_EQUALITY,
     'contentionFactor' => 1,
-    'keyId' => $dataKeyId1,
+    'keyId' => $keyId1,
 ]);
 
-/* Find the inserted document. Fields will still be automatically decrypted
- * because the client was configured with an autoEncryption driver option. */
-print_r($collection->findOne(['encryptedIndexed' => $findPayload]));
+/* Using the client configured with encryption (but not automatic encryption),
+ * find the document and observe that the fields are automatically decrypted. */
+print_r($encryptedCollection->findOne(['encryptedIndexed' => $findPayload]));

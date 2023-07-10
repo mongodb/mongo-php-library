@@ -3,6 +3,7 @@
 use MongoDB\BSON\Binary;
 use MongoDB\Client;
 use MongoDB\Driver\ClientEncryption;
+use MongoDB\Driver\Exception\ServerException;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
@@ -11,10 +12,10 @@ $uri = getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/';
 // Generate a secure local key to use for this script
 $localKey = new Binary(random_bytes(96));
 
-/* Create a client with no encryption options. Additionally, create a
- * ClientEncryption object to manage data keys. */
+// Create a client with no encryption options
 $client = new Client($uri);
 
+// Create a ClientEncryption object to manage data encryption keys
 $clientEncryption = $client->createClientEncryption([
     'keyVaultNamespace' => 'encryption.__keyVault',
     'kmsProviders' => [
@@ -22,11 +23,21 @@ $clientEncryption = $client->createClientEncryption([
     ],
 ]);
 
-/* Drop the key vault collection and create an encryption key with an alternate
- * name. This would typically be done during application deployment. To store
- * the key ID for later use, you can use serialize() or var_export(). */
+/* Create a new key vault collection for this script. The application must also
+ * ensure that a unique index exists for keyAltNames. */
 $client->selectCollection('encryption', '__keyVault')->drop();
+$client->selectCollection('encryption', '__keyVault')->createIndex(['keyAltNames' => 1], ['unique' => true]);
+
+// Create a data encryption key with an alternate name
 $clientEncryption->createDataKey('local', ['keyAltNames' => ['myDataKey']]);
+
+/* Attempt to create a second key with the same name to demonstrate that the
+ * unique index is enforced. */
+try {
+    $clientEncryption->createDataKey('local', ['keyAltNames' => ['myDataKey']]);
+} catch (ServerException $e) {
+    printf("Error creating key: %s\n", $e->getMessage());
+}
 
 // Encrypt a value, using the "keyAltName" option instead of "keyId"
 $encryptedValue = $clientEncryption->encrypt('mySecret', [

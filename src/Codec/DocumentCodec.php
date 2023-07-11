@@ -18,6 +18,7 @@
 namespace MongoDB\Codec;
 
 use MongoDB\BSON\Document;
+use MongoDB\Exception\UnsupportedValueException;
 
 /**
  * The DocumentCodec interface allows decoding BSON document data to native PHP
@@ -32,12 +33,14 @@ interface DocumentCodec extends Codec
      * @param mixed $value
      * @psalm-param Document $value
      * @psalm-return ObjectType
+     * @throws UnsupportedValueException if the decoder does not support the value
      */
     public function decode($value): object;
 
     /**
      * @param mixed $value
      * @psalm-param ObjectType $value
+     * @throws UnsupportedValueException if the encoder does not support the value
      */
     public function encode($value): Document;
 }

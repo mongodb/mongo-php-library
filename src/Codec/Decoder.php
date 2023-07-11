@@ -17,7 +17,7 @@
 
 namespace MongoDB\Codec;
 
-use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedValueException;
 
 /**
  * @psalm-template BSONType
@@ -41,7 +41,7 @@ interface Decoder
      * @psalm-param BSONType $value
      * @return mixed
      * @psalm-return NativeType
-     * @throws InvalidArgumentException if the decoder does not support the value
+     * @throws UnsupportedValueException if the decoder does not support the value
      */
     public function decode($value);
 

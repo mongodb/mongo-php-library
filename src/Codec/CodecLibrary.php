@@ -18,10 +18,7 @@
 namespace MongoDB\Codec;
 
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Exception\UnexpectedValueException;
-
-use function get_debug_type;
-use function sprintf;
+use MongoDB\Exception\UnsupportedValueException;
 
 class CodecLibrary implements Codec
 {
@@ -129,7 +126,7 @@ class CodecLibrary implements Codec
             }
         }
 
-        throw new UnexpectedValueException(sprintf('No decoder found for value of type "%s"', get_debug_type($value)));
+        throw UnsupportedValueException::invalidDecodableValue($value);
     }
 
     /**
@@ -144,6 +141,6 @@ class CodecLibrary implements Codec
             }
         }
 
-        throw new UnexpectedValueException(sprintf('No encoder found for value of type "%s"', get_debug_type($value)));
+        throw UnsupportedValueException::invalidEncodableValue($value);
     }
 }

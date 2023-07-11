@@ -7,7 +7,7 @@ use MongoDB\Codec\CodecLibrary;
 use MongoDB\Codec\DecodeIfSupported;
 use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Codec\KnowsCodecLibrary;
-use MongoDB\Exception\UnexpectedValueException;
+use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Tests\TestCase;
 
 class CodecLibraryTest extends TestCase
@@ -36,17 +36,13 @@ class CodecLibraryTest extends TestCase
 
         $this->assertFalse($codec->canDecode(null));
 
-        $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('No decoder found for value of type "null"');
-
-        $this->assertNull($codec->decode(null));
+        $this->expectExceptionObject(UnsupportedValueException::invalidDecodableValue(null));
+        $codec->decode(null);
     }
 
     public function testDecodeUnsupportedValue(): void
     {
-        $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('No decoder found for value of type "string"');
-
+        $this->expectExceptionObject(UnsupportedValueException::invalidDecodableValue('foo'));
         $this->getCodecLibrary()->decode('foo');
     }
 
@@ -74,17 +70,13 @@ class CodecLibraryTest extends TestCase
 
         $this->assertFalse($codec->canEncode(null));
 
-        $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('No encoder found for value of type "null"');
-
+        $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue(null));
         $codec->encode(null);
     }
 
     public function testEncodeUnsupportedValue(): void
     {
-        $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('No encoder found for value of type "string"');
-
+        $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue('foo'));
         $this->getCodecLibrary()->encode('foo');
     }
 

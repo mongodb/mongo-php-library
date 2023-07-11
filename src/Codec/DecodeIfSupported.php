@@ -17,6 +17,8 @@
 
 namespace MongoDB\Codec;
 
+use MongoDB\Exception\UnsupportedValueException;
+
 /**
  * @psalm-template BSONType
  * @psalm-template NativeType
@@ -34,6 +36,7 @@ trait DecodeIfSupported
      * @psalm-param BSONType $value
      * @return mixed
      * @psalm-return NativeType
+     * @throws UnsupportedValueException if the decoder does not support the value
      */
     abstract public function decode($value);
 

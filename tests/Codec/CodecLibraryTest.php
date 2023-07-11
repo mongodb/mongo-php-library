@@ -16,18 +16,18 @@ class CodecLibraryTest extends TestCase
     {
         $codec = $this->getCodecLibrary();
 
-        $this->assertTrue($codec->canDecode('cigam'));
-        $this->assertFalse($codec->canDecode('magic'));
+        $this->assertTrue($codec->canDecode('encoded'));
+        $this->assertFalse($codec->canDecode('decoded'));
 
-        $this->assertSame('magic', $codec->decode('cigam'));
+        $this->assertSame('decoded', $codec->decode('encoded'));
     }
 
     public function testDecodeIfSupported(): void
     {
         $codec = $this->getCodecLibrary();
 
-        $this->assertSame('magic', $codec->decodeIfSupported('cigam'));
-        $this->assertSame('magic', $codec->decodeIfSupported('magic'));
+        $this->assertSame('decoded', $codec->decodeIfSupported('encoded'));
+        $this->assertSame('decoded', $codec->decodeIfSupported('decoded'));
     }
 
     public function testDecodeNull(): void
@@ -54,18 +54,18 @@ class CodecLibraryTest extends TestCase
     {
         $codec = $this->getCodecLibrary();
 
-        $this->assertTrue($codec->canEncode('magic'));
-        $this->assertFalse($codec->canEncode('cigam'));
+        $this->assertTrue($codec->canEncode('decoded'));
+        $this->assertFalse($codec->canEncode('encoded'));
 
-        $this->assertSame('cigam', $codec->encode('magic'));
+        $this->assertSame('encoded', $codec->encode('decoded'));
     }
 
     public function testEncodeIfSupported(): void
     {
         $codec = $this->getCodecLibrary();
 
-        $this->assertSame('cigam', $codec->encodeIfSupported('magic'));
-        $this->assertSame('cigam', $codec->encodeIfSupported('cigam'));
+        $this->assertSame('encoded', $codec->encodeIfSupported('decoded'));
+        $this->assertSame('encoded', $codec->encodeIfSupported('encoded'));
     }
 
     public function testEncodeNull(): void
@@ -116,22 +116,22 @@ class CodecLibraryTest extends TestCase
 
                 public function canDecode($value): bool
                 {
-                    return $value === 'cigam';
+                    return $value === 'encoded';
                 }
 
                 public function canEncode($value): bool
                 {
-                    return $value === 'magic';
+                    return $value === 'decoded';
                 }
 
                 public function decode($value)
                 {
-                    return 'magic';
+                    return 'decoded';
                 }
 
                 public function encode($value)
                 {
-                    return 'cigam';
+                    return 'encoded';
                 }
             }
         );

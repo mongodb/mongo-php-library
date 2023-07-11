@@ -8,75 +8,35 @@ for a more flexible and efficient way to handle BSON data.
 
 ## Encoders and Decoders
 
-The codec interface is comprised by two smaller interfaces: encoders and decoders. Both interfaces are marked as
-internal, as users are only expected to interact with the Codec interface. The interfaces are typed as generics through
-`@template` annotations, allowing for better type checking when they are used. Without type annotations, the interfaces
-are equivalent to the following:
+The `Codec` interface is comprised of two smaller interfaces: `Decoder` and `Encoder`. The interfaces are typed as
+generics through `@template` annotations, allowing for better type checking when they are used.
 
-```php
-namespace MongoDB\Codec;
+Each decoder and encoder may support a limited set of types or even values. Before calling `decode` or `encode`, the
+`canDecode` and `canEncode` methods can be used to determine whether a value is supported. If a value is not supported,
+the `decode` and `encode` methods will throw a `UnsupportedValueException` exception. The `decodeIfSupported` and
+`encodeIfSupported` methods are useful to encode or decode a value only if it is supported. For unsupported values, the
+original value is returned.
 
-interface Decoder
-{
-    public function canDecode(mixed $value): bool;
-
-    public function decode(mixed $value): mixed;
-
-    public function decodeIfSupported(mixed $value): mixed;
-}
-
-interface Encoder
-{
-    public function canEncode(mixed $value): bool;
-
-    public function encode(mixed $value): mixed;
-
-    public function encodeIfSupported(mixed $value): mixed;
-}
-```
-
-## Codec Interface
+## Codec Interfaces
 
 The `Codec` interface combines decoding and encoding into a single interface. This will be used for most values except
-for documents where a more specific `DocumentCodec` is provided.
+for documents where a more specific `DocumentCodec` is provided. The `DocumentCodec` interface overrides the `decode`
+and `encode` methods from the base `Codec` interface to narrow the return types. Document codecs guarantee to always
+encode to a BSON document instance and decode to a PHP object.
 
-The base interface supports encoding from a `NativeType` to a `BSONType` and back. Helper methods to determine whether a
-value is supported are provided. The `decodeIfSupported` and `encodeIfSupported` methods are useful to have a codec
-encode or decode a value only if it is supported. If it is not supported, the original value is returned.
-
-```php
-namespace MongoDB\Codec;
-
-interface Codec extends Decoder, Encoder
-{
-}
-```
-
-## Document Codec
-
-The document codec is special as it is guaranteed to always encode to a BSON document instance and decode to a PHP
-object. Document codecs will be used by `MongoDB\Collection` instances to automatically decode BSON data into PHP
-objects when reading data, and to encode PHP objects when inserting or replacing data.
-
-```php
-namespace MongoDB\Codec;
-
-use MongoDB\BSON\Document;
-
-/** 
- * @template ObjectType of object
- * @extends Codec<ObjectType, Document> 
- */
-interface DocumentCodec extends Codec
-{
-}
-```
-
-## Built-in codecs
+## Built-in Codecs
 
 By default, two codecs are provided: an `ArrayCodec` and an `ObjectCodec`. These two codecs are used to recursively
 encode and decode values in arrays and `stdClass` instances, respectively. When encoding or decoding an object,
 `ObjectCodec` only handles public properties of the object and ignores private and protected properties.
+
+## Codec Libraries
+
+The `CodecLibrary` class is able to combine several `Decoder`, `Encoder`, and `Codec` instances into a single codec.
+When decoding or encoding a value, the library will use the first instance that supports the value. This allows for
+easier composition of codecs. A `Decoder`, `Encoder`, or `Codec` implementation may choose to implement the
+`KnowsCodecLibrary` interface. In this case, when the codec is added to a library, the library is injected into the
+instance using the `attachCodecLibrary` method. This allows the codec to use the library to decode or encode values.
 
 ## Future Work
 
@@ -91,10 +51,9 @@ the various `find` and `findAndModify` operations in collections as well as the 
 collections, databases, and the client object itself.
 
 When writing data, any operation that takes an entire document will use the codec to automatically encode the document.
-This is limited to `insertOne`, `insertMany`, `replaceOne`, and `findOneAndReplace` operations in collections. `update`
-operations will not use the codec to encode documents, as they only support update operators and can't work with the
-entire document.
-
+This is limited to `insertOne`, `insertMany`, `replaceOne`, and `findOneAndReplace` operations in collections as well
+as `insertOne` and `replaceOne` operations in bulk writes. `update` operations will not use the codec to encode
+documents, as they only support update operators and can't work with the entire document.
 
 ### Codecs and type maps
 
@@ -108,5 +67,5 @@ this case, the type map is used. The precedence order is as follows:
 * collection-level `typeMap` option
 
 Codecs are not inherited from the client or the database object, as they are purely used for operations that return
-documents. However, database- or client-level aggregation commands will take an operation-level codec option to
+documents. However, database- or client-level aggregation commands will take an operation-level `codec` option to
 decode the resulting documents.

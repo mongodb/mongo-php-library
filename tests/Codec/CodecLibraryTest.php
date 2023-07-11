@@ -90,6 +90,7 @@ class CodecLibraryTest extends TestCase
 
     public function testLibraryAttachesToCodecs(): void
     {
+        // TODO PHPUnit >= 10: use createMockForIntersectionOfInterfaces instead
         $codec = $this->getTestCodec();
         $library = $this->getCodecLibrary();
 

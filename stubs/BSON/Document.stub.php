@@ -3,6 +3,8 @@
 namespace MongoDB\BSON;
 
 /**
+ * This stub file is temporary and can be removed when using Psalm 5
+ *
  * @template TValue
  * @template-implements \IteratorAggregate<string, TValue>
  */

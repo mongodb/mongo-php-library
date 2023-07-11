@@ -52,7 +52,6 @@ interface Decoder
      * method.
      *
      * @param mixed $value
-     * @psalm-param mixed $value
      * @return mixed
      * @psalm-return ($value is BSONType ? NativeType : $value)
      */

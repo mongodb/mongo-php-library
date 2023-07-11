@@ -65,7 +65,7 @@ class CodecLibrary implements Codec
         $this->decoders[] = $codec;
         $this->encoders[] = $codec;
         if ($codec instanceof KnowsCodecLibrary) {
-            $codec->attachLibrary($this);
+            $codec->attachCodecLibrary($this);
         }
 
         return $this;
@@ -76,7 +76,7 @@ class CodecLibrary implements Codec
     {
         $this->decoders[] = $decoder;
         if ($decoder instanceof KnowsCodecLibrary) {
-            $decoder->attachLibrary($this);
+            $decoder->attachCodecLibrary($this);
         }
 
         return $this;
@@ -87,7 +87,7 @@ class CodecLibrary implements Codec
     {
         $this->encoders[] = $encoder;
         if ($encoder instanceof KnowsCodecLibrary) {
-            $encoder->attachLibrary($this);
+            $encoder->attachCodecLibrary($this);
         }
 
         return $this;

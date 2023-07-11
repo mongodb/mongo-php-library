@@ -24,5 +24,5 @@ namespace MongoDB\Codec;
  */
 interface KnowsCodecLibrary
 {
-    public function attachLibrary(CodecLibrary $library): void;
+    public function attachCodecLibrary(CodecLibrary $library): void;
 }

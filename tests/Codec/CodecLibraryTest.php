@@ -145,7 +145,7 @@ class CodecLibraryTest extends TestCase
 
             public $library;
 
-            public function attachLibrary(CodecLibrary $library): void
+            public function attachCodecLibrary(CodecLibrary $library): void
             {
                 $this->library = $library;
             }

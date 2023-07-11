@@ -20,7 +20,6 @@ namespace MongoDB\Codec;
 use MongoDB\Exception\InvalidArgumentException;
 
 /**
- * @internal
  * @psalm-template BSONType
  * @psalm-template NativeType
  */

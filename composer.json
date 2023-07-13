@@ -10,7 +10,7 @@
         { "name": "Jérôme Tamarelle", "email": "jerome.tamarelle@mongodb.com" }
     ],
     "require": {
-        "php": "^7.2 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "ext-hash": "*",
         "ext-json": "*",
         "ext-mongodb": "^1.16.0",

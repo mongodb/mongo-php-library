@@ -33,7 +33,8 @@ class PedantryTest extends TestCase
         $methods = array_filter(
             $methods,
             function (ReflectionMethod $method) use ($class) {
-                return $method->getDeclaringClass() == $class;
+                return $method->getDeclaringClass() == $class // Exclude inherited methods
+                    && $method->getFileName() === $class->getFileName(); // Exclude methods inherited from traits
             }
         );
 
@@ -86,7 +87,8 @@ class PedantryTest extends TestCase
                 continue;
             }
 
-            $classNames[][] = 'MongoDB\\' . str_replace(DIRECTORY_SEPARATOR, '\\', substr($file->getRealPath(), strlen($srcDir) + 1, -4));
+            $className = 'MongoDB\\' . str_replace(DIRECTORY_SEPARATOR, '\\', substr($file->getRealPath(), strlen($srcDir) + 1, -4));
+            $classNames[$className][] = $className;
         }
 
         return $classNames;

@@ -46,14 +46,11 @@ class CreateCollection implements Executable
     public const USE_POWER_OF_2_SIZES = 1;
     public const NO_PADDING = 2;
 
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var string */
-    private $collectionName;
+    private string $collectionName;
 
-    /** @var array */
-    private $options = [];
+    private array $options = [];
 
     /**
      * Constructs a create command.

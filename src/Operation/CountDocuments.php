@@ -41,23 +41,18 @@ use function MongoDB\is_document;
  */
 class CountDocuments implements Executable
 {
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var string */
-    private $collectionName;
+    private string $collectionName;
 
     /** @var array|object */
     private $filter;
 
-    /** @var array */
-    private $aggregateOptions;
+    private array $aggregateOptions;
 
-    /** @var array */
-    private $countOptions;
+    private array $countOptions;
 
-    /** @var Aggregate */
-    private $aggregate;
+    private Aggregate $aggregate;
 
     /**
      * Constructs an aggregate command for counting documents

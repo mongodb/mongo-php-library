@@ -42,17 +42,13 @@ class CachingIterator implements Countable, Iterator
     private const FIELD_KEY = 0;
     private const FIELD_VALUE = 1;
 
-    /** @var array */
-    private $items = [];
+    private array $items = [];
 
-    /** @var Iterator */
-    private $iterator;
+    private Iterator $iterator;
 
-    /** @var boolean */
-    private $iteratorAdvanced = false;
+    private bool $iteratorAdvanced = false;
 
-    /** @var boolean */
-    private $iteratorExhausted = false;
+    private bool $iteratorExhausted = false;
 
     /**
      * Initialize the iterator and stores the first item in the cache. This

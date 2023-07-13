@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\UnifiedSpecTests;
 
+use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Driver\Exception\ServerException;
 use MongoDB\Driver\Server;
@@ -60,26 +61,20 @@ final class UnifiedTestRunner
      * however, syntax from 1.9, 1.10, and 1.11 has not been implemented. */
     public const MAX_SCHEMA_VERSION = '1.12';
 
-    /** @var MongoDB\Client */
-    private $internalClient;
+    private Client $internalClient;
 
-    /** @var string */
-    private $internalClientUri;
+    private string $internalClientUri;
 
-    /** @var bool */
-    private $allowKillAllSessions = true;
+    private bool $allowKillAllSessions = true;
 
-    /** @var EntityMap */
-    private $entityMap;
+    private ?EntityMap $entityMap = null;
 
     /** @var callable(EntityMap):void */
     private $entityMapObserver;
 
-    /** @var FailPointObserver */
-    private $failPointObserver;
+    private ?FailPointObserver $failPointObserver = null;
 
-    /** @var ServerParameterHelper */
-    private $serverParameterHelper;
+    private ServerParameterHelper $serverParameterHelper;
 
     public function __construct(string $internalClientUri)
     {
@@ -266,7 +261,7 @@ final class UnifiedTestRunner
             'Server (version=%s, topology=%s, auth=%s) does not meet test requirements',
             $cachedIsSatisfiedArgs[0],
             $cachedIsSatisfiedArgs[1],
-            $cachedIsSatisfiedArgs[3] ? 'yes' : 'no'
+            $cachedIsSatisfiedArgs[3] ? 'yes' : 'no',
         ));
     }
 

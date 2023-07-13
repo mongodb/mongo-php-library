@@ -26,7 +26,7 @@ class ListDatabaseNamesFunctionalTest extends FunctionalTestCase
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('authorizedDatabases', $event['started']->getCommand());
                 $this->assertSame(true, $event['started']->getCommand()->nameOnly);
-            }
+            },
         );
 
         foreach ($databases as $database) {
@@ -39,7 +39,7 @@ class ListDatabaseNamesFunctionalTest extends FunctionalTestCase
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new ListDatabaseNames(
-                    ['authorizedDatabases' => true]
+                    ['authorizedDatabases' => true],
                 );
 
                 $operation->execute($this->getPrimaryServer());
@@ -47,7 +47,7 @@ class ListDatabaseNamesFunctionalTest extends FunctionalTestCase
             function (array $event): void {
                 $this->assertObjectHasAttribute('authorizedDatabases', $event['started']->getCommand());
                 $this->assertSame(true, $event['started']->getCommand()->authorizedDatabases);
-            }
+            },
         );
     }
 
@@ -73,14 +73,14 @@ class ListDatabaseNamesFunctionalTest extends FunctionalTestCase
         (new CommandObserver())->observe(
             function (): void {
                 $operation = new ListDatabaseNames(
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 }

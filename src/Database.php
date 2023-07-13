@@ -61,11 +61,9 @@ class Database
 
     private const WIRE_VERSION_FOR_READ_CONCERN_WITH_WRITE_STAGE = 8;
 
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var Manager */
-    private $manager;
+    private Manager $manager;
 
     /** @var ReadConcern */
     private $readConcern;

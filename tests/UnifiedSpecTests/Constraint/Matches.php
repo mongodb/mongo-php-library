@@ -51,23 +51,18 @@ class Matches extends Constraint
 {
     use ConstraintTrait;
 
-    /** @var EntityMap */
-    private $entityMap;
+    private ?EntityMap $entityMap = null;
 
     /** @var mixed */
     private $value;
 
-    /** @var bool */
-    private $allowExtraRootKeys;
+    private bool $allowExtraRootKeys;
 
-    /** @var bool */
-    private $allowOperators;
+    private bool $allowOperators;
 
-    /** @var ComparisonFailure|null */
-    private $lastFailure;
+    private ?ComparisonFailure $lastFailure = null;
 
-    /** @var Factory */
-    private $comparatorFactory;
+    private Factory $comparatorFactory;
 
     public function __construct($value, ?EntityMap $entityMap = null, $allowExtraRootKeys = true, $allowOperators = true)
     {
@@ -102,7 +97,7 @@ class Matches extends Constraint
                 $this->exporter()->export($this->value),
                 $this->exporter()->export($other),
                 false,
-                $e->getMessage()
+                $e->getMessage(),
             );
         }
 
@@ -168,7 +163,7 @@ class Matches extends Constraint
             $this->assertMatches(
                 $expectedValue,
                 $actual[$key],
-                (empty($keyPath) ? $key : $keyPath . '.' . $key)
+                (empty($keyPath) ? $key : $keyPath . '.' . $key),
             );
         }
     }
@@ -222,7 +217,7 @@ class Matches extends Constraint
             $this->assertMatches(
                 $expectedValue,
                 $actual[$key],
-                (empty($keyPath) ? $key : $keyPath . '.' . $key)
+                (empty($keyPath) ? $key : $keyPath . '.' . $key),
             );
         }
 
@@ -260,7 +255,7 @@ class Matches extends Constraint
             assertThat(
                 $operator['$$type'],
                 logicalOr(isType('string'), logicalAnd(isInstanceOf(BSONArray::class), containsOnly('string'))),
-                '$$type requires string or string[]'
+                '$$type requires string or string[]',
             );
 
             $constraint = IsBsonType::anyOf(...(array) $operator['$$type']);
@@ -282,7 +277,7 @@ class Matches extends Constraint
             $this->assertMatches(
                 self::prepare($this->entityMap[$operator['$$matchesEntity']]),
                 $actual,
-                $keyPath
+                $keyPath,
             );
 
             return;
@@ -311,7 +306,7 @@ class Matches extends Constraint
             $this->assertMatches(
                 self::prepare($operator['$$unsetOrMatches']),
                 $actual,
-                $keyPath
+                $keyPath,
             );
 
             return;

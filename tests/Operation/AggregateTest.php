@@ -53,7 +53,7 @@ class AggregateTest extends TestCase
             $this->getDatabaseName(),
             $this->getCollectionName(),
             [['$match' => ['x' => 1]]],
-            ['batchSize' => 100, 'useCursor' => false]
+            ['batchSize' => 100, 'useCursor' => false],
         );
     }
 

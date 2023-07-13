@@ -12,8 +12,7 @@ use function glob;
 /** @see https://github.com/mongodb/specifications/tree/master/source/read-write-concern */
 class ReadWriteConcernSpecTest extends FunctionalTestCase
 {
-    /** @var array */
-    private static $incompleteTests = [];
+    private static array $incompleteTests = [];
 
     /**
      * Assert that the expected and actual command documents match.
@@ -57,8 +56,8 @@ class ReadWriteConcernSpecTest extends FunctionalTestCase
             $this->markTestSkipped($test->skipReason);
         }
 
-        $databaseName = $databaseName ?? $this->getDatabaseName();
-        $collectionName = $collectionName ?? $this->getCollectionName();
+        $databaseName ??= $this->getDatabaseName();
+        $collectionName ??= $this->getCollectionName();
 
         $context = Context::fromReadWriteConcern($test, $databaseName, $collectionName);
         $this->setContext($context);

@@ -11,6 +11,8 @@ use stdClass;
 
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
+
 class BSONArrayTest extends TestCase
 {
     public function testBsonSerializeReindexesKeys(): void
@@ -88,7 +90,7 @@ class BSONArrayTest extends TestCase
 
         $expectedJson = '["foo",[1,2,3],{"foo":1,"bar":2,"baz":3},[[[]]]]';
 
-        $this->assertSame($expectedJson, json_encode($document));
+        $this->assertSame($expectedJson, json_encode($document, JSON_THROW_ON_ERROR));
     }
 
     public function testJsonSerializeReindexesKeys(): void

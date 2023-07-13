@@ -42,8 +42,7 @@ final class IsBsonType extends Constraint
 {
     use ConstraintTrait;
 
-    /** @var array */
-    private static $types = [
+    private static array $types = [
         'double',
         'string',
         'object',
@@ -68,8 +67,7 @@ final class IsBsonType extends Constraint
         'number',
     ];
 
-    /** @var string */
-    private $type;
+    private string $type;
 
     public function __construct(string $type)
     {
@@ -91,9 +89,7 @@ final class IsBsonType extends Constraint
             return new self(...$types);
         }
 
-        return LogicalOr::fromConstraints(...array_map(function ($type) {
-            return new self($type);
-        }, $types));
+        return LogicalOr::fromConstraints(...array_map(fn ($type) => new self($type), $types));
     }
 
     private function doMatches($other): bool

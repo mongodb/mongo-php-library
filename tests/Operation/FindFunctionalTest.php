@@ -23,14 +23,14 @@ class FindFunctionalTest extends FunctionalTestCase
                 $operation = new Find(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    $filter
+                    $filter,
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event) use ($expectedQuery): void {
                 $this->assertEquals($expectedQuery, $event['started']->getCommand()->filter ?? null);
-            }
+            },
         );
     }
 
@@ -43,14 +43,14 @@ class FindFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [],
-                    ['modifiers' => $modifiers]
+                    ['modifiers' => $modifiers],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event) use ($expectedSort): void {
                 $this->assertEquals($expectedSort, $event['started']->getCommand()->sort ?? null);
-            }
+            },
         );
     }
 
@@ -74,14 +74,14 @@ class FindFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [],
-                    ['readConcern' => $this->createDefaultReadConcern()]
+                    ['readConcern' => $this->createDefaultReadConcern()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -144,14 +144,14 @@ class FindFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [],
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -211,7 +211,7 @@ class FindFunctionalTest extends FunctionalTestCase
         $cappedCollectionOptions = [
             'capped' => true,
             'max' => 100,
-            'size' => 1048576,
+            'size' => 1_048_576,
         ];
 
         $this->createCollection($databaseName, $cappedCollectionName, $cappedCollectionOptions);

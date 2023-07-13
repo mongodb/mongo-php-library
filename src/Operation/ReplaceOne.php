@@ -35,8 +35,7 @@ use function MongoDB\is_pipeline;
  */
 class ReplaceOne implements Executable
 {
-    /** @var Update */
-    private $update;
+    private Update $update;
 
     /**
      * Constructs an update command.
@@ -102,7 +101,7 @@ class ReplaceOne implements Executable
             $collectionName,
             $filter,
             $replacement,
-            ['multi' => false] + $options
+            ['multi' => false] + $options,
         );
     }
 

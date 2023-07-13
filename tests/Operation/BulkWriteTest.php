@@ -417,7 +417,7 @@ class BulkWriteTest extends TestCase
             $this->getDatabaseName(),
             $this->getCollectionName(),
             [[BulkWrite::INSERT_ONE => [['x' => 1]]]],
-            $options
+            $options,
         );
     }
 

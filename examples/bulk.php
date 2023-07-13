@@ -68,7 +68,7 @@ $collection->bulkWrite(
                 ['x' => 10], // Document
             ],
         ],
-    ]
+    ],
 );
 
 $cursor = $collection->find([]);

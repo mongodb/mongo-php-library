@@ -10,8 +10,7 @@ use MongoDB\Tests\FunctionalTestCase as BaseFunctionalTestCase;
  */
 abstract class FunctionalTestCase extends BaseFunctionalTestCase
 {
-    /** @var Collection */
-    protected $collection;
+    protected Collection $collection;
 
     public function setUp(): void
     {

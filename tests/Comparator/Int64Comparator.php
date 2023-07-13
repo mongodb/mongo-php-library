@@ -33,8 +33,8 @@ class Int64Comparator extends Comparator
             sprintf(
                 'Failed asserting that %s matches expected %s.',
                 $this->exporter->export($actual),
-                $this->exporter->export($expected)
-            )
+                $this->exporter->export($expected),
+            ),
         );
     }
 

@@ -39,11 +39,9 @@ class DocumentsMatchConstraint extends Constraint
 {
     use ConstraintTrait;
 
-    /** @var boolean */
-    private $ignoreExtraKeysInRoot = false;
+    private bool $ignoreExtraKeysInRoot = false;
 
-    /** @var boolean */
-    private $ignoreExtraKeysInEmbedded = false;
+    private bool $ignoreExtraKeysInEmbedded = false;
 
     /**
      * TODO: This is not currently used, but was preserved from the design of
@@ -51,19 +49,15 @@ class DocumentsMatchConstraint extends Constraint
      * documents as JSON strings. If the TODO item in matches() is implemented
      * to make document comparisons more efficient, we may consider supporting
      * this option.
-     *
-     * @var boolean
      */
-    private $sortKeys = false;
+    private bool $sortKeys = false;
 
     /** @var BSONArray|BSONDocument */
     private $value;
 
-    /** @var ComparisonFailure|null */
-    private $lastFailure;
+    private ?ComparisonFailure $lastFailure = null;
 
-    /** @var Factory */
-    private $comparatorFactory;
+    private Factory $comparatorFactory;
 
     /**
      * Creates a new constraint.
@@ -104,7 +98,7 @@ class DocumentsMatchConstraint extends Constraint
                 $this->exporter()->export($this->value),
                 $this->exporter()->export($other),
                 false,
-                $e->getMessage()
+                $e->getMessage(),
             );
         }
 
@@ -126,7 +120,7 @@ class DocumentsMatchConstraint extends Constraint
         assertThat(
             $expectedType,
             logicalOr(isType('string'), logicalAnd(isInstanceOf(BSONArray::class), containsOnly('string'))),
-            '$$type requires string or string[]'
+            '$$type requires string or string[]',
         );
 
         IsBsonType::anyOf(...(array) $expectedType)->evaluate($actualValue);
@@ -143,7 +137,7 @@ class DocumentsMatchConstraint extends Constraint
             throw new RuntimeException(sprintf(
                 '%s is not instance of expected class "%s"',
                 $this->exporter()->shortenedExport($actual),
-                get_class($expected)
+                get_class($expected),
             ));
         }
 
@@ -186,8 +180,8 @@ class DocumentsMatchConstraint extends Constraint
                         'Field path "%s": %s is not instance of expected type "%s".',
                         $keyPrefix . $key,
                         $this->exporter()->shortenedExport($actualValue),
-                        $expectedType
-                    )
+                        $expectedType,
+                    ),
                 );
             }
 
@@ -200,7 +194,7 @@ class DocumentsMatchConstraint extends Constraint
                     '',
                     '',
                     false,
-                    sprintf('Field path "%s": %s', $keyPrefix . $key, $failure->getMessage())
+                    sprintf('Field path "%s": %s', $keyPrefix . $key, $failure->getMessage()),
                 );
             }
         }

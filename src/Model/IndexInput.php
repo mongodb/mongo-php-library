@@ -39,8 +39,7 @@ use function sprintf;
  */
 class IndexInput implements Serializable
 {
-    /** @var array */
-    private $index;
+    private array $index;
 
     /**
      * @param array $index Index specification

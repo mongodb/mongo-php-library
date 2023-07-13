@@ -23,14 +23,14 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 $operation = new Aggregate(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    [['$match' => ['x' => 1]]]
+                    [['$match' => ['x' => 1]]],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('allowDiskUse', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -42,14 +42,14 @@ class AggregateFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['$out' => $this->getCollectionName() . '.output']],
-                    ['batchSize' => 0]
+                    ['batchSize' => 0],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertEquals(new stdClass(), $event['started']->getCommand()->cursor);
-            }
+            },
         );
 
         $outCollection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName() . '.output');
@@ -63,14 +63,14 @@ class AggregateFunctionalTest extends FunctionalTestCase
                 $operation = new Aggregate(
                     'admin',
                     null,
-                    [['$currentOp' => (object) []]]
+                    [['$currentOp' => (object) []]],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertSame(1, $event['started']->getCommand()->aggregate);
-            }
+            },
         );
     }
 
@@ -82,14 +82,14 @@ class AggregateFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['$match' => ['x' => 1]]],
-                    ['readConcern' => $this->createDefaultReadConcern()]
+                    ['readConcern' => $this->createDefaultReadConcern()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -101,14 +101,14 @@ class AggregateFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['$out' => $this->getCollectionName() . '.output']],
-                    ['writeConcern' => $this->createDefaultWriteConcern()]
+                    ['writeConcern' => $this->createDefaultWriteConcern()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
-            }
+            },
         );
 
         $outCollection = new Collection($this->manager, $this->getDatabaseName(), $this->getCollectionName() . '.output');
@@ -146,14 +146,14 @@ class AggregateFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [],
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -184,7 +184,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
          * result in different explain output (see: SERVER-24860) */
         $this->assertThat($results[0], $this->logicalOr(
             $this->arrayHasKey('stages'),
-            $this->arrayHasKey('queryPlanner')
+            $this->arrayHasKey('queryPlanner'),
         ));
     }
 
@@ -214,7 +214,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
-            }
+            },
         );
 
         $this->assertCollectionCount($this->getCollectionName() . '.output', 0);
@@ -228,7 +228,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['$match' => ['x' => 1]]],
-                    ['bypassDocumentValidation' => true]
+                    ['bypassDocumentValidation' => true],
                 );
 
                 $operation->execute($this->getPrimaryServer());
@@ -236,7 +236,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
             function (array $event): void {
                 $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
-            }
+            },
         );
     }
 
@@ -248,14 +248,14 @@ class AggregateFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['$match' => ['x' => 1]]],
-                    ['bypassDocumentValidation' => false]
+                    ['bypassDocumentValidation' => false],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
-            }
+            },
         );
     }
 

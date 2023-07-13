@@ -18,8 +18,7 @@ use function is_array;
 
 class BulkWriteFunctionalTest extends FunctionalTestCase
 {
-    /** @var Collection */
-    private $collection;
+    private Collection $collection;
 
     public function setUp(): void
     {
@@ -70,7 +69,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                 $operation = new BulkWrite(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    [['insertOne' => [$document]]]
+                    [['insertOne' => [$document]]],
                 );
 
                 $result = $operation->execute($this->getPrimaryServer());
@@ -82,7 +81,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use ($expectedDocument): void {
                 $this->assertEquals($expectedDocument, $event['started']->getCommand()->documents[0] ?? null);
-            }
+            },
         );
     }
 
@@ -161,7 +160,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                         ['replaceOne' => [$filter, ['x' => 1]]],
                         ['updateOne' => [$filter, ['$set' => ['x' => 1]]]],
                         ['updateMany' => [$filter, ['$set' => ['x' => 1]]]],
-                    ]
+                    ],
                 );
 
                 $operation->execute($this->getPrimaryServer());
@@ -170,7 +169,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                 $this->assertEquals($expectedFilter, $event['started']->getCommand()->updates[0]->q ?? null);
                 $this->assertEquals($expectedFilter, $event['started']->getCommand()->updates[1]->q ?? null);
                 $this->assertEquals($expectedFilter, $event['started']->getCommand()->updates[2]->q ?? null);
-            }
+            },
         );
     }
 
@@ -182,14 +181,14 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                 $operation = new BulkWrite(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    [['replaceOne' => [['x' => 1], $replacement]]]
+                    [['replaceOne' => [['x' => 1], $replacement]]],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event) use ($expectedReplacement): void {
                 $this->assertEquals($expectedReplacement, $event['started']->getCommand()->updates[0]->u ?? null);
-            }
+            },
         );
     }
 
@@ -211,7 +210,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                     [
                         ['updateOne' => [['x' => 1], $update]],
                         ['updateMany' => [['x' => 1], $update]],
-                    ]
+                    ],
                 );
 
                 $operation->execute($this->getPrimaryServer());
@@ -219,7 +218,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             function (array $event) use ($expectedUpdate): void {
                 $this->assertEquals($expectedUpdate, $event['started']->getCommand()->updates[0]->u ?? null);
                 $this->assertEquals($expectedUpdate, $event['started']->getCommand()->updates[1]->u ?? null);
-            }
+            },
         );
     }
 
@@ -256,7 +255,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                     [
                         ['deleteOne' => [$filter]],
                         ['deleteMany' => [$filter]],
-                    ]
+                    ],
                 );
 
                 $operation->execute($this->getPrimaryServer());
@@ -264,7 +263,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             function (array $event) use ($expectedQuery): void {
                 $this->assertEquals($expectedQuery, $event['started']->getCommand()->deletes[0]->q ?? null);
                 $this->assertEquals($expectedQuery, $event['started']->getCommand()->deletes[1]->q ?? null);
-            }
+            },
         );
     }
 
@@ -372,14 +371,14 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['insertOne' => [['_id' => 1]]]],
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -391,7 +390,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['insertOne' => [['_id' => 1]]]],
-                    ['bypassDocumentValidation' => true]
+                    ['bypassDocumentValidation' => true],
                 );
 
                 $operation->execute($this->getPrimaryServer());
@@ -399,7 +398,7 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
             function (array $event): void {
                 $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
-            }
+            },
         );
     }
 
@@ -411,14 +410,14 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['insertOne' => [['_id' => 1]]]],
-                    ['bypassDocumentValidation' => false]
+                    ['bypassDocumentValidation' => false],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
-            }
+            },
         );
     }
 

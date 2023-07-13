@@ -39,8 +39,7 @@ class MapReduceResult implements IteratorAggregate
     /** @var callable */
     private $getIterator;
 
-    /** @var integer */
-    private $executionTimeMS;
+    private int $executionTimeMS;
 
     /** @var array */
     private $counts;

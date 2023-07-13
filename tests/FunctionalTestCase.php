@@ -52,11 +52,10 @@ use const PATH_SEPARATOR;
 
 abstract class FunctionalTestCase extends TestCase
 {
-    /** @var Manager */
-    protected $manager;
+    protected Manager $manager;
 
     /** @var array */
-    private $configuredFailPoints = [];
+    private array $configuredFailPoints = [];
 
     /** @var array{int,{Collection,array}} */
     private $collectionsToCleanup = [];
@@ -85,7 +84,7 @@ abstract class FunctionalTestCase extends TestCase
         return new Client(
             $uri ?? static::getUri(),
             static::appendAuthenticationOptions($options),
-            static::appendServerApiOption($driverOptions)
+            static::appendServerApiOption($driverOptions),
         );
     }
 
@@ -94,7 +93,7 @@ abstract class FunctionalTestCase extends TestCase
         return new Manager(
             $uri ?? static::getUri(),
             static::appendAuthenticationOptions($options),
-            static::appendServerApiOption($driverOptions)
+            static::appendServerApiOption($driverOptions),
         );
     }
 
@@ -330,7 +329,7 @@ abstract class FunctionalTestCase extends TestCase
         $cursor = $this->manager->executeCommand(
             'admin',
             new Command(['getParameter' => 1, 'featureCompatibilityVersion' => 1]),
-            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY)
+            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY),
         );
 
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
@@ -353,7 +352,7 @@ abstract class FunctionalTestCase extends TestCase
         $buildInfo = $this->manager->executeCommand(
             $this->getDatabaseName(),
             new Command(['buildInfo' => 1]),
-            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY)
+            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY),
         )->toArray()[0];
 
         if (isset($buildInfo->version) && is_string($buildInfo->version)) {
@@ -368,7 +367,7 @@ abstract class FunctionalTestCase extends TestCase
         $cursor = $this->manager->executeCommand(
             $this->getDatabaseName(),
             new Command(['serverStatus' => 1]),
-            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY)
+            $readPreference ?: new ReadPreference(ReadPreference::PRIMARY),
         );
 
         $result = current($cursor->toArray());
@@ -389,7 +388,7 @@ abstract class FunctionalTestCase extends TestCase
         try {
             $cursor = $this->manager->executeCommand(
                 'admin',
-                new Command(['getParameter' => 1, 'requireApiVersion' => 1])
+                new Command(['getParameter' => 1, 'requireApiVersion' => 1]),
             );
 
             $document = current($cursor->toArray());
@@ -455,7 +454,7 @@ abstract class FunctionalTestCase extends TestCase
 
         $cursor = $this->getPrimaryServer()->executeQuery(
             'config.shards',
-            new Query([], ['limit' => 1])
+            new Query([], ['limit' => 1]),
         );
 
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
@@ -726,7 +725,7 @@ abstract class FunctionalTestCase extends TestCase
         try {
             $cursor = $this->manager->executeCommand(
                 'admin',
-                new Command(['getParameter' => 1, 'enableTestCommands' => 1])
+                new Command(['getParameter' => 1, 'enableTestCommands' => 1]),
             );
 
             $document = current($cursor->toArray());

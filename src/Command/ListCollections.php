@@ -37,11 +37,9 @@ use function MongoDB\is_document;
  */
 class ListCollections implements Executable
 {
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Constructs a listCollections command.

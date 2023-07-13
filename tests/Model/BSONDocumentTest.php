@@ -12,6 +12,8 @@ use stdClass;
 
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
+
 class BSONDocumentTest extends TestCase
 {
     public function testConstructorDefaultsToPropertyAccess(): void
@@ -96,7 +98,7 @@ class BSONDocumentTest extends TestCase
 
         $expectedJson = '{"foo":"bar","array":[1,2,3],"object":{"0":1,"1":2,"2":3},"nested":{"0":{"0":{}}}}';
 
-        $this->assertSame($expectedJson, json_encode($document));
+        $this->assertSame($expectedJson, json_encode($document, JSON_THROW_ON_ERROR));
     }
 
     public function testJsonSerializeCastsToObject(): void

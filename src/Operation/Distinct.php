@@ -42,20 +42,16 @@ use function MongoDB\is_document;
  */
 class Distinct implements Executable, Explainable
 {
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var string */
-    private $collectionName;
+    private string $collectionName;
 
-    /** @var string */
-    private $fieldName;
+    private string $fieldName;
 
     /** @var array|object */
     private $filter;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Constructs a distinct command.

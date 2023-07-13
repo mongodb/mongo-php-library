@@ -18,8 +18,7 @@ use function sprintf;
  */
 class ClientFunctionalTest extends FunctionalTestCase
 {
-    /** @var Client */
-    private $client;
+    private Client $client;
 
     public function setUp(): void
     {

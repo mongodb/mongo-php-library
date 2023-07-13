@@ -31,8 +31,7 @@ use MongoDB\Exception\UnsupportedException;
  */
 class DeleteMany implements Executable, Explainable
 {
-    /** @var Delete */
-    private $delete;
+    private Delete $delete;
 
     /**
      * Constructs a delete command.

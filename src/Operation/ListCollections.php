@@ -32,11 +32,9 @@ use MongoDB\Model\CollectionInfoIterator;
  */
 class ListCollections implements Executable
 {
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var ListCollectionsCommand */
-    private $listCollections;
+    private ListCollectionsCommand $listCollections;
 
     /**
      * Constructs a listCollections command.

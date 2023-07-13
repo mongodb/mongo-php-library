@@ -35,7 +35,7 @@ class ListCollectionNamesFunctionalTest extends FunctionalTestCase
             function (): void {
                 $operation = new ListCollectionNames(
                     $this->getDatabaseName(),
-                    ['authorizedCollections' => true]
+                    ['authorizedCollections' => true],
                 );
 
                 $operation->execute($this->getPrimaryServer());
@@ -43,7 +43,7 @@ class ListCollectionNamesFunctionalTest extends FunctionalTestCase
             function (array $event): void {
                 $this->assertObjectHasAttribute('authorizedCollections', $event['started']->getCommand());
                 $this->assertSame(true, $event['started']->getCommand()->authorizedCollections);
-            }
+            },
         );
     }
 
@@ -53,14 +53,14 @@ class ListCollectionNamesFunctionalTest extends FunctionalTestCase
             function (): void {
                 $operation = new ListCollectionNames(
                     $this->getDatabaseName(),
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 }

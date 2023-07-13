@@ -131,7 +131,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
         $cappedCollectionOptions = [
             'capped' => true,
             'max' => 100,
-            'size' => 1048576,
+            'size' => 1_048_576,
         ];
 
         $this->createCollection($databaseName, $cappedCollectionName, $cappedCollectionOptions);
@@ -150,7 +150,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
                 $this->assertObjectNotHasAttribute('maxAwaitTimeMS', $command->explain);
                 $this->assertObjectHasAttribute('tailable', $command->explain);
                 $this->assertObjectHasAttribute('awaitData', $command->explain);
-            }
+            },
         );
     }
 
@@ -162,7 +162,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
             $this->getDatabaseName(),
             $this->getCollectionName(),
             [],
-            ['modifiers' => ['$orderby' => ['_id' => 1]]]
+            ['modifiers' => ['$orderby' => ['_id' => 1]]],
         );
 
         (new CommandObserver())->observe(
@@ -174,7 +174,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
                 $command = $event['started']->getCommand();
                 $this->assertObjectHasAttribute('sort', $command->explain);
                 $this->assertObjectNotHasAttribute('modifiers', $command->explain);
-            }
+            },
         );
     }
 
@@ -251,7 +251,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
                     $this->getCollectionName(),
                     ['_id' => ['$gt' => 1]],
                     ['$inc' => ['x' => 1]],
-                    ['bypassDocumentValidation' => true]
+                    ['bypassDocumentValidation' => true],
                 );
 
                 $explainOperation = new Explain($this->getDatabaseName(), $operation);
@@ -260,10 +260,10 @@ class ExplainFunctionalTest extends FunctionalTestCase
             function (array $event): void {
                 $this->assertObjectHasAttribute(
                     'bypassDocumentValidation',
-                    $event['started']->getCommand()->explain
+                    $event['started']->getCommand()->explain,
                 );
                 $this->assertEquals(true, $event['started']->getCommand()->explain->bypassDocumentValidation);
-            }
+            },
         );
     }
 
@@ -278,7 +278,7 @@ class ExplainFunctionalTest extends FunctionalTestCase
                     $this->getCollectionName(),
                     ['_id' => ['$gt' => 1]],
                     ['$inc' => ['x' => 1]],
-                    ['bypassDocumentValidation' => false]
+                    ['bypassDocumentValidation' => false],
                 );
 
                 $explainOperation = new Explain($this->getDatabaseName(), $operation);
@@ -287,9 +287,9 @@ class ExplainFunctionalTest extends FunctionalTestCase
             function (array $event): void {
                 $this->assertObjectNotHasAttribute(
                     'bypassDocumentValidation',
-                    $event['started']->getCommand()->explain
+                    $event['started']->getCommand()->explain,
                 );
-            }
+            },
         );
     }
 

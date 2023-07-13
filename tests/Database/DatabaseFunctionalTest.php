@@ -185,7 +185,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $commandResult = $this->database->modifyCollection(
             $this->getCollectionName(),
             ['index' => ['keyPattern' => ['lastAccess' => 1], 'expireAfterSeconds' => 1000]],
-            ['typeMap' => ['root' => 'array', 'document' => 'array']]
+            ['typeMap' => ['root' => 'array', 'document' => 'array']],
         );
         $this->assertCommandSucceeded($commandResult);
 
@@ -222,7 +222,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
             $this->getCollectionName(),
             $toCollectionName,
             null,
-            ['dropTarget' => true]
+            ['dropTarget' => true],
         );
         $this->assertCommandSucceeded($commandResult);
         $this->assertCollectionDoesNotExist($this->getCollectionName());
@@ -258,7 +258,7 @@ class DatabaseFunctionalTest extends FunctionalTestCase
         $commandResult = $this->database->renameCollection(
             $this->getCollectionName(),
             $toCollectionName,
-            $toDatabaseName
+            $toDatabaseName,
         );
         $this->assertCommandSucceeded($commandResult);
         $this->assertCollectionDoesNotExist($this->getCollectionName());

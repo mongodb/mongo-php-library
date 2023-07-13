@@ -31,29 +31,21 @@ class RunOnRequirement
 
     public const VERSION_PATTERN = '/^[0-9]+(\\.[0-9]+){1,2}$/';
 
-    /** @var string */
-    private $minServerVersion;
+    private ?string $minServerVersion = null;
 
-    /** @var string */
-    private $maxServerVersion;
+    private ?string $maxServerVersion = null;
 
-    /** @var array */
-    private $topologies;
+    private ?array $topologies = null;
 
-    /** @var stdClass */
-    private $serverParameters;
+    private ?object $serverParameters = null;
 
-    /** @var bool */
-    private $auth;
+    private ?bool $auth = null;
 
-    /** @var string */
-    private $serverless;
+    private ?string $serverless = null;
 
-    /** @var bool */
-    private $csfle;
+    private ?bool $csfle = null;
 
-    /** @var array */
-    private static $supportedTopologies = [
+    private static array $supportedTopologies = [
         self::TOPOLOGY_SINGLE,
         self::TOPOLOGY_REPLICASET,
         self::TOPOLOGY_SHARDED,
@@ -61,8 +53,7 @@ class RunOnRequirement
         self::TOPOLOGY_LOAD_BALANCED,
     ];
 
-    /** @var array */
-    private static $supportedServerless = [
+    private static array $supportedServerless = [
         self::SERVERLESS_REQUIRE,
         self::SERVERLESS_FORBID,
         self::SERVERLESS_ALLOW,

@@ -17,19 +17,15 @@ use function property_exists;
 
 final class ExpectedResult
 {
-    /** @var Matches */
-    private $constraint;
+    private ?Matches $constraint = null;
 
-    /** @var EntityMap */
-    private $entityMap;
+    private EntityMap $entityMap;
 
     /**
      * ID of the entity yielding the result. This is mainly used to associate
      * entities with a root client for collation of observed events.
-     *
-     * @var ?string
      */
-    private $yieldingEntityId;
+    private ?string $yieldingEntityId = null;
 
     public function __construct(stdClass $o, EntityMap $entityMap, ?string $yieldingEntityId = null)
     {

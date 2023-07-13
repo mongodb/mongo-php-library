@@ -24,11 +24,9 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
     public const NOT_PRIMARY = 10107;
     public const SHUTDOWN_IN_PROGRESS = 91;
 
-    /** @var Client */
-    private $client;
+    private Client $client;
 
-    /** @var Collection */
-    private $collection;
+    private Collection $collection;
 
     public function setUp(): void
     {
@@ -233,7 +231,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
             },
             function ($event) use (&$events): void {
                 $events[] = $event;
-            }
+            },
         );
         $this->assertTrue($cursor->valid());
         $this->assertCount(1, $events);
@@ -272,7 +270,7 @@ class PrimaryStepDownSpecTest extends FunctionalTestCase
         $cursor = $server->executeCommand(
             $this->getDatabaseName(),
             new Command(['serverStatus' => 1]),
-            new ReadPreference(ReadPreference::PRIMARY)
+            new ReadPreference(ReadPreference::PRIMARY),
         );
 
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);

@@ -22,14 +22,14 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $operation = new FindAndModify(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    ['query' => $query, 'remove' => true]
+                    ['query' => $query, 'remove' => true],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event) use ($expectedQuery): void {
                 $this->assertEquals($expectedQuery, $event['started']->getCommand()->query ?? null);
-            }
+            },
         );
     }
 
@@ -61,14 +61,14 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                     [
                         'query' => ['x' => 1],
                         'update' => $update,
-                    ]
+                    ],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event) use ($expectedUpdate): void {
                 $this->assertEquals($expectedUpdate, $event['started']->getCommand()->update ?? null);
-            }
+            },
         );
     }
 
@@ -96,14 +96,14 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $operation = new FindAndModify(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    ['remove' => true]
+                    ['remove' => true],
                 );
 
                 $operation->execute($server);
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -114,14 +114,14 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $operation = new FindAndModify(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    ['remove' => true, 'writeConcern' => $this->createDefaultWriteConcern()]
+                    ['remove' => true, 'writeConcern' => $this->createDefaultWriteConcern()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -132,7 +132,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         $operation = new FindAndModify(
             $this->getDatabaseName(),
             $this->getCollectionName(),
-            ['remove' => true, 'hint' => '_id_']
+            ['remove' => true, 'hint' => '_id_'],
         );
 
         $this->expectException(UnsupportedException::class);
@@ -148,7 +148,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         $operation = new FindAndModify(
             $this->getDatabaseName(),
             $this->getCollectionName(),
-            ['remove' => true, 'hint' => '_id_', 'writeConcern' => new WriteConcern(0)]
+            ['remove' => true, 'hint' => '_id_', 'writeConcern' => new WriteConcern(0)],
         );
 
         $this->expectException(UnsupportedException::class);
@@ -170,7 +170,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         $operation = new FindAndModify(
             $this->getDatabaseName(),
             $this->getCollectionName(),
-            ['remove' => true, 'writeConcern' => new WriteConcern(50)]
+            ['remove' => true, 'writeConcern' => new WriteConcern(50)],
         );
 
         $operation->execute($this->getPrimaryServer());
@@ -183,14 +183,14 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $operation = new FindAndModify(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    ['remove' => true, 'session' => $this->createSession()]
+                    ['remove' => true, 'session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -201,7 +201,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $operation = new FindAndModify(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    ['remove' => true, 'bypassDocumentValidation' => true]
+                    ['remove' => true, 'bypassDocumentValidation' => true],
                 );
 
                 $operation->execute($this->getPrimaryServer());
@@ -209,7 +209,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
             function (array $event): void {
                 $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
-            }
+            },
         );
     }
 
@@ -220,14 +220,14 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 $operation = new FindAndModify(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    ['remove' => true, 'bypassDocumentValidation' => false]
+                    ['remove' => true, 'bypassDocumentValidation' => false],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -242,7 +242,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
             [
                 'remove' => true,
                 'typeMap' => $typeMap,
-            ]
+            ],
         );
         $document = $operation->execute($this->getPrimaryServer());
 

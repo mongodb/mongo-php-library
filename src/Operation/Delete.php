@@ -46,20 +46,16 @@ class Delete implements Executable, Explainable
 {
     private const WIRE_VERSION_FOR_HINT = 9;
 
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var string */
-    private $collectionName;
+    private string $collectionName;
 
     /** @var array|object */
     private $filter;
 
-    /** @var integer */
-    private $limit;
+    private int $limit;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Constructs a delete command.

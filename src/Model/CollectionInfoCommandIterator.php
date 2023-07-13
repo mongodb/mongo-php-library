@@ -33,8 +33,7 @@ use Traversable;
  */
 class CollectionInfoCommandIterator extends IteratorIterator implements CollectionInfoIterator
 {
-    /** @var string|null */
-    private $databaseName;
+    private ?string $databaseName = null;
 
     public function __construct(Traversable $iterator, ?string $databaseName = null)
     {

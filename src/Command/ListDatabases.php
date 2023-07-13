@@ -39,8 +39,7 @@ use function MongoDB\is_document;
  */
 class ListDatabases implements Executable
 {
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Constructs a listDatabases command.

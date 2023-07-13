@@ -46,8 +46,7 @@ class StreamWrapper
     /** @var resource|null Stream context (set by PHP) */
     public $context;
 
-    /** @var string|null */
-    private $protocol;
+    private ?string $protocol = null;
 
     /** @var ReadableStream|WritableStream|null */
     private $stream;
@@ -298,7 +297,7 @@ class StreamWrapper
         assert($this->protocol !== null);
         $this->stream = new ReadableStream(
             $context[$this->protocol]['collectionWrapper'],
-            $context[$this->protocol]['file']
+            $context[$this->protocol]['file'],
         );
 
         return true;
@@ -318,7 +317,7 @@ class StreamWrapper
         $this->stream = new WritableStream(
             $context[$this->protocol]['collectionWrapper'],
             $context[$this->protocol]['filename'],
-            $context[$this->protocol]['options']
+            $context[$this->protocol]['options'],
         );
 
         return true;

@@ -486,7 +486,7 @@ OUTPUT;
             [
                 'unique' => true,
                 'partialFilterExpression' => ['keyAltNames' => ['$exists' => true]],
-            ]
+            ],
         );
     }
 }

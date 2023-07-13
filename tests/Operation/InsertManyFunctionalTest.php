@@ -14,8 +14,7 @@ use MongoDB\Tests\CommandObserver;
 
 class InsertManyFunctionalTest extends FunctionalTestCase
 {
-    /** @var Collection */
-    private $collection;
+    private Collection $collection;
 
     public function setUp(): void
     {
@@ -54,7 +53,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
                 $operation = new InsertMany(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    $documents
+                    $documents,
                 );
 
                 $result = $operation->execute($this->getPrimaryServer());
@@ -69,7 +68,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use ($expectedDocuments): void {
                 $this->assertEquals($expectedDocuments, $event['started']->getCommand()->documents ?? null);
-            }
+            },
         );
     }
 
@@ -125,14 +124,14 @@ class InsertManyFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['_id' => 1], ['_id' => 2]],
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -144,7 +143,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['_id' => 1], ['_id' => 2]],
-                    ['bypassDocumentValidation' => true]
+                    ['bypassDocumentValidation' => true],
                 );
 
                 $operation->execute($this->getPrimaryServer());
@@ -152,7 +151,7 @@ class InsertManyFunctionalTest extends FunctionalTestCase
             function (array $event): void {
                 $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
-            }
+            },
         );
     }
 
@@ -164,14 +163,14 @@ class InsertManyFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['_id' => 1], ['_id' => 2]],
-                    ['bypassDocumentValidation' => false]
+                    ['bypassDocumentValidation' => false],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
-            }
+            },
         );
     }
 

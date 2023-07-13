@@ -37,8 +37,7 @@ use function array_key_exists;
  */
 class IndexInfoIteratorIterator extends IteratorIterator implements IndexInfoIterator
 {
-    /** @var string|null $ns */
-    private $ns;
+    private ?string $ns = null;
 
     public function __construct(Traversable $iterator, ?string $ns = null)
     {

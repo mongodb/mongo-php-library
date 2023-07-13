@@ -17,8 +17,7 @@ use function MongoDB\Driver\Monitoring\removeSubscriber;
  */
 class CommandObserver implements CommandSubscriber
 {
-    /** @var array */
-    private $commands = [];
+    private array $commands = [];
 
     public function observe(callable $execution, callable $commandCallback): void
     {

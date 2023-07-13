@@ -115,7 +115,7 @@ OUTPUT;
 
         $this->assertEquals(
             toJSON(fromPHP($normalizedExpectedDocument)),
-            toJSON(fromPHP($normalizedActualDocument))
+            toJSON(fromPHP($normalizedActualDocument)),
         );
     }
 
@@ -132,7 +132,7 @@ OUTPUT;
     {
         $this->assertEquals(
             toJSON(fromPHP($this->normalizeBSON($expectedDocument))),
-            toJSON(fromPHP($this->normalizeBSON($actualDocument)))
+            toJSON(fromPHP($this->normalizeBSON($actualDocument))),
         );
     }
 
@@ -146,13 +146,11 @@ OUTPUT;
             throw new InvalidArgumentException('$actualDocuments is not an array or Traversable');
         }
 
-        $normalizeRootDocuments = function ($document) {
-            return toJSON(fromPHP($this->normalizeBSON($document)));
-        };
+        $normalizeRootDocuments = fn ($document) => toJSON(fromPHP($this->normalizeBSON($document)));
 
         $this->assertEquals(
             array_map($normalizeRootDocuments, $expectedDocuments),
-            array_map($normalizeRootDocuments, $actualDocuments)
+            array_map($normalizeRootDocuments, $actualDocuments),
         );
     }
 
@@ -282,7 +280,7 @@ OUTPUT;
                 new ReadPreference(ReadPreference::PRIMARY),
                 new WriteConcern(1),
             ],
-            $includeNull ? ['null' => null] : []
+            $includeNull ? ['null' => null] : [],
         );
     }
 
@@ -302,7 +300,7 @@ OUTPUT;
                 new ReadConcern(),
                 new WriteConcern(1),
             ],
-            $includeNull ? ['null' => null] : []
+            $includeNull ? ['null' => null] : [],
         );
     }
 
@@ -323,7 +321,7 @@ OUTPUT;
                 new ReadPreference(ReadPreference::PRIMARY),
                 new WriteConcern(1),
             ],
-            $includeNull ? ['null' => null] : []
+            $includeNull ? ['null' => null] : [],
         );
     }
 
@@ -351,7 +349,7 @@ OUTPUT;
                 new ReadConcern(),
                 new ReadPreference(ReadPreference::PRIMARY),
             ],
-            $includeNull ? ['null' => null] : []
+            $includeNull ? ['null' => null] : [],
         );
     }
 
@@ -370,9 +368,7 @@ OUTPUT;
      */
     protected function wrapValuesForDataProvider(array $values): array
     {
-        return array_map(function ($value) {
-            return [$value];
-        }, $values);
+        return array_map(fn ($value) => [$value], $values);
     }
 
     /**

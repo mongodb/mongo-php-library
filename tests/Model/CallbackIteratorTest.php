@@ -28,7 +28,7 @@ class CallbackIteratorTest extends TestCase
 
         $iteratorAggregate = new class ($listIterator) implements IteratorAggregate
         {
-            private $iterator;
+            private Iterator $iterator;
 
             public function __construct(Iterator $iterator)
             {

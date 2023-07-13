@@ -50,23 +50,17 @@ use function MongoDB\is_pipeline;
  */
 class Aggregate implements Executable, Explainable
 {
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var string|null */
-    private $collectionName;
+    private ?string $collectionName = null;
 
-    /** @var array */
-    private $pipeline;
+    private array $pipeline;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
-    /** @var bool */
-    private $isExplain;
+    private bool $isExplain;
 
-    /** @var bool */
-    private $isWrite;
+    private bool $isWrite;
 
     /**
      * Constructs an aggregate command.
@@ -267,7 +261,7 @@ class Aggregate implements Executable, Explainable
 
         $command = new Command(
             $this->createCommandDocument(),
-            $this->createCommandOptions()
+            $this->createCommandOptions(),
         );
 
         $cursor = $this->executeCommand($server, $command);

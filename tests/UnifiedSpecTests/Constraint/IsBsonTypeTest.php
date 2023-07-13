@@ -40,7 +40,7 @@ class IsBsonTypeTest extends TestCase
         $symbol = toPHP(fromJSON('{ "x": {"$symbol": "test"} }'))->x;
         $dbPointer = toPHP(fromJSON('{ "x": {"$dbPointer": {"$ref": "db.coll", "$id" : { "$oid" : "5a2e78accd485d55b405ac12" }  }} }'))->x;
         $int64 = new Int64(1);
-        $long = PHP_INT_SIZE == 4 ? new Int64('4294967296') : 4294967296;
+        $long = PHP_INT_SIZE == 4 ? new Int64('4294967296') : 4_294_967_296;
 
         return [
             'double' => ['double', 1.4],

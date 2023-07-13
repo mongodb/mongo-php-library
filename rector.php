@@ -15,7 +15,7 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     // Modernize code
-    $rectorConfig->sets([LevelSetList::UP_TO_PHP_72]);
+    $rectorConfig->sets([LevelSetList::UP_TO_PHP_74]);
 
     $rectorConfig->skip([
         // Falsely detect unassigned variables in code paths stopped by PHPUnit\Framework\Assert::markTestSkipped()

@@ -39,35 +39,25 @@ use function substr;
  */
 class ReadableStream
 {
-    /** @var string|null */
-    private $buffer;
+    private ?string $buffer = null;
 
-    /** @var integer */
-    private $bufferOffset = 0;
+    private int $bufferOffset = 0;
 
-    /** @var integer */
-    private $chunkSize;
+    private int $chunkSize;
 
-    /** @var integer */
-    private $chunkOffset = 0;
+    private int $chunkOffset = 0;
 
-    /** @var Cursor|null */
-    private $chunksIterator;
+    private ?Cursor $chunksIterator = null;
 
-    /** @var CollectionWrapper */
-    private $collectionWrapper;
+    private CollectionWrapper $collectionWrapper;
 
-    /** @var integer */
-    private $expectedLastChunkSize = 0;
+    private int $expectedLastChunkSize = 0;
 
-    /** @var object */
-    private $file;
+    private object $file;
 
-    /** @var integer */
-    private $length;
+    private int $length;
 
-    /** @var integer */
-    private $numChunks = 0;
+    private int $numChunks = 0;
 
     /**
      * Constructs a readable GridFS stream.

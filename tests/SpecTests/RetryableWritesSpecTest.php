@@ -107,7 +107,7 @@ class RetryableWritesSpecTest extends FunctionalTestCase
         ]);
 
         $subscriber = new class ($this) implements CommandSubscriber {
-            private $testCase;
+            private FunctionalTestCase $testCase;
 
             public function __construct(FunctionalTestCase $testCase)
             {

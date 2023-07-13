@@ -36,23 +36,18 @@ class BSONIterator implements Iterator
 {
     private const BSON_SIZE = 4;
 
-    /** @var string */
-    private $buffer;
+    private string $buffer;
 
-    /** @var integer */
-    private $bufferLength;
+    private int $bufferLength;
 
-    /** @var mixed */
-    private $current;
+    /** @var array|object|null */
+    private $current = null;
 
-    /** @var integer */
-    private $key = 0;
+    private int $key = 0;
 
-    /** @var integer */
-    private $position = 0;
+    private int $position = 0;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Constructs a BSON Iterator.

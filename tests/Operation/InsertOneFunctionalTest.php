@@ -15,8 +15,7 @@ use stdClass;
 
 class InsertOneFunctionalTest extends FunctionalTestCase
 {
-    /** @var Collection */
-    private $collection;
+    private Collection $collection;
 
     public function setUp(): void
     {
@@ -36,7 +35,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
                 $operation = new InsertOne(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    $document
+                    $document,
                 );
 
                 $result = $operation->execute($this->getPrimaryServer());
@@ -48,7 +47,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use ($expectedDocument): void {
                 $this->assertEquals($expectedDocument, $event['started']->getCommand()->documents[0] ?? null);
-            }
+            },
         );
     }
 
@@ -116,14 +115,14 @@ class InsertOneFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     ['_id' => 1],
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -135,7 +134,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     ['_id' => 1],
-                    ['bypassDocumentValidation' => true]
+                    ['bypassDocumentValidation' => true],
                 );
 
                 $operation->execute($this->getPrimaryServer());
@@ -143,7 +142,7 @@ class InsertOneFunctionalTest extends FunctionalTestCase
             function (array $event): void {
                 $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
-            }
+            },
         );
     }
 
@@ -155,14 +154,14 @@ class InsertOneFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     ['_id' => 1],
-                    ['bypassDocumentValidation' => false]
+                    ['bypassDocumentValidation' => false],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
-            }
+            },
         );
     }
 

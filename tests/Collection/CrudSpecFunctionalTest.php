@@ -25,6 +25,8 @@ use function sprintf;
 use function str_replace;
 use function strtolower;
 
+use const JSON_THROW_ON_ERROR;
+
 /**
  * CRUD spec functional tests.
  *
@@ -39,8 +41,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
     public const SERVERLESS_FORBID = 'forbid';
     public const SERVERLESS_REQUIRE = 'require';
 
-    /** @var Collection */
-    private $expectedCollection;
+    private Collection $expectedCollection;
 
     public function setUp(): void
     {
@@ -87,7 +88,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
         $testArgs = [];
 
         foreach (glob(__DIR__ . '/spec-tests/*/*.json') as $filename) {
-            $json = json_decode(file_get_contents($filename), true);
+            $json = json_decode(file_get_contents($filename), true, 512, JSON_THROW_ON_ERROR);
 
             foreach ($json['tests'] as $test) {
                 $name = str_replace(' ', '_', $test['description']);
@@ -157,13 +158,13 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             case 'aggregate':
                 return $this->collection->aggregate(
                     $operation['arguments']['pipeline'],
-                    array_diff_key($operation['arguments'], ['pipeline' => 1])
+                    array_diff_key($operation['arguments'], ['pipeline' => 1]),
                 );
 
             case 'bulkWrite':
                 return $this->collection->bulkWrite(
                     array_map([$this, 'prepareBulkWriteRequest'], $operation['arguments']['requests']),
-                    $operation['arguments']['options'] ?? []
+                    $operation['arguments']['options'] ?? [],
                 );
 
             case 'count':
@@ -189,7 +190,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 return $this->collection->distinct(
                     $operation['arguments']['fieldName'],
                     $operation['arguments']['filter'] ?? [],
-                    array_diff_key($operation['arguments'], ['fieldName' => 1, 'filter' => 1])
+                    array_diff_key($operation['arguments'], ['fieldName' => 1, 'filter' => 1]),
                 );
 
             case 'findOneAndReplace':
@@ -218,13 +219,13 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             case 'insertMany':
                 return $this->collection->insertMany(
                     $operation['arguments']['documents'],
-                    $operation['arguments']['options'] ?? []
+                    $operation['arguments']['options'] ?? [],
                 );
 
             case 'insertOne':
                 return $this->collection->insertOne(
                     $operation['arguments']['document'],
-                    array_diff_key($operation['arguments'], ['document' => 1])
+                    array_diff_key($operation['arguments'], ['document' => 1]),
                 );
 
             default:
@@ -337,7 +338,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 if (isset($expectedResult['insertedIds'])) {
                     $this->assertSameDocument(
                         ['insertedIds' => $expectedResult['insertedIds']],
-                        ['insertedIds' => $actualResult->getInsertedIds()]
+                        ['insertedIds' => $actualResult->getInsertedIds()],
                     );
                 }
 
@@ -356,7 +357,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 if (isset($expectedResult['upsertedIds'])) {
                     $this->assertSameDocument(
                         ['upsertedIds' => $expectedResult['upsertedIds']],
-                        ['upsertedIds' => $actualResult->getUpsertedIds()]
+                        ['upsertedIds' => $actualResult->getUpsertedIds()],
                     );
                 }
 
@@ -371,7 +372,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             case 'distinct':
                 $this->assertSameDocument(
                     ['values' => $expectedResult],
-                    ['values' => $actualResult]
+                    ['values' => $actualResult],
                 );
                 break;
 
@@ -395,7 +396,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
             case 'findOneAndUpdate':
                 $this->assertSameDocument(
                     ['result' => $expectedResult],
-                    ['result' => $actualResult]
+                    ['result' => $actualResult],
                 );
                 break;
 
@@ -410,7 +411,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 if (isset($expectedResult['insertedIds'])) {
                     $this->assertSameDocument(
                         ['insertedIds' => $expectedResult['insertedIds']],
-                        ['insertedIds' => $actualResult->getInsertedIds()]
+                        ['insertedIds' => $actualResult->getInsertedIds()],
                     );
                 }
 
@@ -427,7 +428,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 if (isset($expectedResult['insertedId'])) {
                     $this->assertSameDocument(
                         ['insertedId' => $expectedResult['insertedId']],
-                        ['insertedId' => $actualResult->getInsertedId()]
+                        ['insertedId' => $actualResult->getInsertedId()],
                     );
                 }
 
@@ -454,7 +455,7 @@ class CrudSpecFunctionalTest extends FunctionalTestCase
                 if (array_key_exists('upsertedId', $expectedResult)) {
                     $this->assertSameDocument(
                         ['upsertedId' => $expectedResult['upsertedId']],
-                        ['upsertedId' => $actualResult->getUpsertedId()]
+                        ['upsertedId' => $actualResult->getUpsertedId()],
                     );
                 }
 

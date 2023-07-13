@@ -16,8 +16,8 @@ class DatabaseInfoTest extends TestCase
 
     public function testGetSizeOnDisk(): void
     {
-        $info = new DatabaseInfo(['sizeOnDisk' => 1048576]);
-        $this->assertSame(1048576, $info->getSizeOnDisk());
+        $info = new DatabaseInfo(['sizeOnDisk' => 1_048_576]);
+        $this->assertSame(1_048_576, $info->getSizeOnDisk());
     }
 
     public function testIsEmpty(): void
@@ -33,7 +33,7 @@ class DatabaseInfoTest extends TestCase
     {
         $expectedInfo = [
             'name' => 'foo',
-            'sizeOnDisk' => 1048576,
+            'sizeOnDisk' => 1_048_576,
             'empty' => false,
         ];
 
@@ -51,7 +51,7 @@ class DatabaseInfoTest extends TestCase
 
     public function testOffsetSetCannotBeCalled(): void
     {
-        $info = new DatabaseInfo(['name' => 'foo', 'sizeOnDisk' => 1048576, 'empty' => false]);
+        $info = new DatabaseInfo(['name' => 'foo', 'sizeOnDisk' => 1_048_576, 'empty' => false]);
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage(DatabaseInfo::class . ' is immutable');
         $info['empty'] = true;
@@ -59,7 +59,7 @@ class DatabaseInfoTest extends TestCase
 
     public function testOffsetUnsetCannotBeCalled(): void
     {
-        $info = new DatabaseInfo(['name' => 'foo', 'sizeOnDisk' => 1048576, 'empty' => false]);
+        $info = new DatabaseInfo(['name' => 'foo', 'sizeOnDisk' => 1_048_576, 'empty' => false]);
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage(DatabaseInfo::class . ' is immutable');
         unset($info['empty']);

@@ -37,7 +37,6 @@ use function substr;
 
 use const PHP_EOL;
 use const PHP_OS;
-use const PHP_VERSION_ID;
 
 /**
  * Functional tests for the Bucket class.
@@ -156,7 +155,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $this->chunksCollection->updateOne(
             ['files_id' => $id, 'n' => 0],
-            ['$set' => ['n' => 1]]
+            ['$set' => ['n' => 1]],
         );
 
         $this->expectException(CorruptFileException::class);
@@ -170,7 +169,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $this->chunksCollection->updateOne(
             ['files_id' => $id, 'n' => 0],
-            ['$set' => ['data' => new Binary('fooba')]]
+            ['$set' => ['data' => new Binary('fooba')]],
         );
 
         $this->expectException(CorruptFileException::class);
@@ -297,7 +296,7 @@ class BucketFunctionalTest extends FunctionalTestCase
                     '_id' => 0,
                 ],
                 'sort' => ['length' => -1],
-            ]
+            ],
         );
 
         $expected = [
@@ -333,7 +332,7 @@ class BucketFunctionalTest extends FunctionalTestCase
                     '_id' => 0,
                 ],
                 'sort' => ['length' => -1],
-            ]
+            ],
         );
 
         $this->assertInstanceOf(BSONDocument::class, $fileDocument);
@@ -566,7 +565,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $fileDocument = $this->filesCollection->findOne(
             ['_id' => $id],
-            ['projection' => ['filename' => 1, '_id' => 0]]
+            ['projection' => ['filename' => 1, '_id' => 0]],
         );
 
         $this->assertSameDocument(['filename' => 'b'], $fileDocument);
@@ -580,7 +579,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $fileDocument = $this->filesCollection->findOne(
             ['_id' => $id],
-            ['projection' => ['filename' => 1, '_id' => 0]]
+            ['projection' => ['filename' => 1, '_id' => 0]],
         );
 
         $this->assertSameDocument(['filename' => 'a'], $fileDocument);
@@ -637,7 +636,7 @@ class BucketFunctionalTest extends FunctionalTestCase
                     'md5' => 1,
                     '_id' => 0,
                 ],
-            ]
+            ],
         );
 
         $expected = [
@@ -654,7 +653,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $id = $this->bucket->uploadFromStream('filename', $this->createStream('data'), $options);
 
         $fileDocument = $this->filesCollection->findOne(
-            ['_id' => $id]
+            ['_id' => $id],
         );
 
         $this->assertArrayNotHasKey('md5', $fileDocument);
@@ -668,7 +667,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         $id = $this->bucket->uploadFromStream('filename', $this->createStream('data'));
 
         $fileDocument = $this->filesCollection->findOne(
-            ['_id' => $id]
+            ['_id' => $id],
         );
 
         $this->assertArrayNotHasKey('md5', $fileDocument);
@@ -715,10 +714,6 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     public function testUploadFromStreamFails(): void
     {
-        if (PHP_VERSION_ID < 70400) {
-            $this->markTestSkipped('Test only works on PHP 7.4 and newer');
-        }
-
         UnusableStream::register();
         $source = fopen('unusable://temp', 'w');
 
@@ -741,7 +736,7 @@ CMD;
         @exec(
             $command,
             $output,
-            $return
+            $return,
         );
 
         $this->assertSame(0, $return);

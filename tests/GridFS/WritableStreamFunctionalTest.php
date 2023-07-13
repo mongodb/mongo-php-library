@@ -13,8 +13,7 @@ use function str_repeat;
  */
 class WritableStreamFunctionalTest extends FunctionalTestCase
 {
-    /** @var CollectionWrapper */
-    private $collectionWrapper;
+    private CollectionWrapper $collectionWrapper;
 
     public function setUp(): void
     {
@@ -81,7 +80,7 @@ class WritableStreamFunctionalTest extends FunctionalTestCase
 
         $fileDocument = $this->filesCollection->findOne(
             ['_id' => $stream->getFile()->_id],
-            ['projection' => ['md5' => 1, '_id' => 0]]
+            ['projection' => ['md5' => 1, '_id' => 0]],
         );
 
         $this->assertSameDocument(['md5' => $expectedMD5], $fileDocument);

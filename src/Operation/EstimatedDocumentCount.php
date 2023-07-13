@@ -37,14 +37,11 @@ use function is_integer;
  */
 class EstimatedDocumentCount implements Executable, Explainable
 {
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var string */
-    private $collectionName;
+    private string $collectionName;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Constructs a command to get the estimated number of documents in a

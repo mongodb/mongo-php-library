@@ -37,13 +37,13 @@ $insertData = function (Session $session) use ($collection): void {
             ['x' => 2],
             ['x' => 3],
         ],
-        ['session' => $session]
+        ['session' => $session],
     );
 
     $collection->updateMany(
         ['x' => ['$gt' => 1]],
         ['$set' => ['y' => 1]],
-        ['session' => $session]
+        ['session' => $session],
     );
 };
 

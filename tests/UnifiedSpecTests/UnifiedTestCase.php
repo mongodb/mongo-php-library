@@ -25,20 +25,15 @@ use function PHPUnit\Framework\assertIsString;
  */
 final class UnifiedTestCase implements IteratorAggregate
 {
-    /** @var stdClass */
-    private $test;
+    private stdClass $test;
 
-    /** @var string */
-    private $schemaVersion;
+    private string $schemaVersion;
 
-    /** @var array|null */
-    private $runOnRequirements;
+    private ?array $runOnRequirements = null;
 
-    /** @var array|null */
-    private $createEntities;
+    private ?array $createEntities = null;
 
-    /** @var array|null */
-    private $initialData;
+    private ?array $initialData = null;
 
     private function __construct(stdClass $test, string $schemaVersion, ?array $runOnRequirements = null, ?array $createEntities = null, ?array $initialData = null)
     {

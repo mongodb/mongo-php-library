@@ -46,32 +46,23 @@ class WritableStream
 {
     private const DEFAULT_CHUNK_SIZE_BYTES = 261120;
 
-    /** @var string */
-    private $buffer = '';
+    private string $buffer = '';
 
-    /** @var integer */
-    private $chunkOffset = 0;
+    private int $chunkOffset = 0;
 
-    /** @var integer */
-    private $chunkSize;
+    private int $chunkSize;
 
-    /** @var boolean */
-    private $disableMD5;
+    private bool $disableMD5;
 
-    /** @var CollectionWrapper */
-    private $collectionWrapper;
+    private CollectionWrapper $collectionWrapper;
 
-    /** @var array */
-    private $file;
+    private array $file;
 
-    /** @var HashContext|null */
-    private $hashCtx;
+    private ?HashContext $hashCtx = null;
 
-    /** @var boolean */
-    private $isClosed = false;
+    private bool $isClosed = false;
 
-    /** @var integer */
-    private $length = 0;
+    private int $length = 0;
 
     /**
      * Constructs a writable GridFS stream.

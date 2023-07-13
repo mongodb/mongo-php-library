@@ -32,6 +32,7 @@ use function array_key_exists;
  *
  * @see \MongoDB\Database::listCollections()
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst
+ * @template-implements ArrayAccess<string, mixed>
  */
 class CollectionInfo implements ArrayAccess
 {

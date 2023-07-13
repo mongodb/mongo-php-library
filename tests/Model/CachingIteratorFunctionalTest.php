@@ -17,7 +17,7 @@ class CachingIteratorFunctionalTest extends FunctionalTestCase
         $this->assertSame(0, $iterator->count());
         $iterator->rewind();
         $this->assertFalse($iterator->valid());
-        $this->assertFalse($iterator->current());
+        $this->assertNull($iterator->current());
         $this->assertNull($iterator->key());
     }
 
@@ -43,7 +43,7 @@ class CachingIteratorFunctionalTest extends FunctionalTestCase
 
         $iterator->next();
         $this->assertFalse($iterator->valid());
-        $this->assertFalse($iterator->current());
+        $this->assertNull($iterator->current());
         $this->assertNull($iterator->key());
     }
 }

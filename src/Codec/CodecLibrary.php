@@ -20,9 +20,12 @@ namespace MongoDB\Codec;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedValueException;
 
+/** @template-implements Codec<mixed, mixed> */
 class CodecLibrary implements Codec
 {
+    /** @template-use DecodeIfSupported<mixed, mixed> */
     use DecodeIfSupported;
+    /** @template-use EncodeIfSupported<mixed, mixed> */
     use EncodeIfSupported;
 
     /** @var list<Decoder> */

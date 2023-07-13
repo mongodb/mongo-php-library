@@ -52,6 +52,7 @@ use const E_USER_DEPRECATED;
  *
  * @see \MongoDB\Collection::mapReduce()
  * @see https://mongodb.com/docs/manual/reference/command/mapReduce/
+ * @psalm-import-type MapReduceCallable from MapReduceResult
  */
 class MapReduce implements Executable
 {
@@ -353,6 +354,7 @@ class MapReduce implements Executable
     /**
      * Creates a callable for MapReduceResult::getIterator().
      *
+     * @psalm-return MapReduceCallable
      * @throws UnexpectedValueException if the command response was malformed
      */
     private function createGetIteratorCallable(stdClass $result, Server $server): callable

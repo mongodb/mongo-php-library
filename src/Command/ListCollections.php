@@ -18,6 +18,7 @@
 namespace MongoDB\Command;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
@@ -99,11 +100,13 @@ class ListCollections implements Executable
     /**
      * Execute the operation.
      *
+     * @return CachingIterator<int, array>
      * @see Executable::execute()
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server): CachingIterator
     {
+        /** @var Cursor<array> $cursor */
         $cursor = $server->executeReadCommand($this->databaseName, $this->createCommand(), $this->createOptions());
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
 

@@ -24,7 +24,7 @@
         "rector/rector": "^0.16.0",
         "squizlabs/php_codesniffer": "^3.7",
         "symfony/phpunit-bridge": "^5.2",
-        "vimeo/psalm": "^4.28"
+        "vimeo/psalm": "^5.13"
     },
     "autoload": {
         "psr-4": { "MongoDB\\": "src/" },

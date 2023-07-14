@@ -66,13 +66,6 @@
       <code>! is_resource($source)</code>
       <code>! is_resource($stream)</code>
     </DocblockTypeContradiction>
-    <MissingReturnType>
-      <code>delete</code>
-      <code>downloadToStream</code>
-      <code>downloadToStreamByName</code>
-      <code>drop</code>
-      <code>rename</code>
-    </MissingReturnType>
     <MixedArgument>
       <code><![CDATA[$options['revision']]]></code>
       <code><![CDATA[$options['revision']]]></code>

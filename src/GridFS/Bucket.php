@@ -205,6 +205,7 @@ class Bucket
      * attempt to delete orphaned chunks.
      *
      * @param mixed $id File ID
+     * @return void
      * @throws FileNotFoundException if no file could be selected
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
@@ -223,6 +224,7 @@ class Bucket
      *
      * @param mixed    $id          File ID
      * @param resource $destination Writable Stream
+     * @return void
      * @throws FileNotFoundException if no file could be selected
      * @throws InvalidArgumentException if $destination is not a stream
      * @throws StreamException if the file could not be uploaded
@@ -262,6 +264,7 @@ class Bucket
      * @param string   $filename    Filename
      * @param resource $destination Writable Stream
      * @param array    $options     Download options
+     * @return void
      * @throws FileNotFoundException if no file could be selected
      * @throws InvalidArgumentException if $destination is not a stream
      * @throws StreamException if the file could not be uploaded
@@ -283,6 +286,7 @@ class Bucket
      * Drops the files and chunks collections associated with this GridFS
      * bucket.
      *
+     * @return void
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function drop()
@@ -560,6 +564,7 @@ class Bucket
      *
      * @param mixed  $id          File ID
      * @param string $newFilename New filename
+     * @return void
      * @throws FileNotFoundException if no file could be selected
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */

@@ -3,26 +3,7 @@
   <file src="docs/examples/csfle-explicit_encryption.php">
     <MixedArgument>
       <code><![CDATA[$clientEncryption->decrypt($document->encryptedField)]]></code>
-      <code><![CDATA[$document->encryptedField]]></code>
     </MixedArgument>
-    <PossiblyInvalidPropertyFetch>
-      <code><![CDATA[$document->encryptedField]]></code>
-    </PossiblyInvalidPropertyFetch>
-    <PossiblyNullArgument>
-      <code><![CDATA[$document->encryptedField]]></code>
-    </PossiblyNullArgument>
-    <PossiblyNullPropertyFetch>
-      <code><![CDATA[$document->encryptedField]]></code>
-    </PossiblyNullPropertyFetch>
-  </file>
-  <file src="examples/typemap.php">
-    <PropertyNotSetInConstructor>
-      <code>$address</code>
-      <code>$emails</code>
-      <code>$id</code>
-      <code>$name</code>
-      <code>$type</code>
-    </PropertyNotSetInConstructor>
   </file>
   <file src="src/ChangeStream.php">
     <DeprecatedConstant>
@@ -60,12 +41,6 @@
     </MixedAssignment>
   </file>
   <file src="src/GridFS/Bucket.php">
-    <DocblockTypeContradiction>
-      <code>! is_resource($destination)</code>
-      <code>! is_resource($destination)</code>
-      <code>! is_resource($source)</code>
-      <code>! is_resource($stream)</code>
-    </DocblockTypeContradiction>
     <MixedArgument>
       <code><![CDATA[$options['revision']]]></code>
       <code><![CDATA[$options['revision']]]></code>
@@ -94,18 +69,15 @@
     </MixedArrayAccess>
   </file>
   <file src="src/Model/BSONArray.php">
-    <DirectConstructorCall>
-      <code>self::__construct($data)</code>
-    </DirectConstructorCall>
     <MixedAssignment>
       <code>$this[$key]</code>
       <code>$value</code>
     </MixedAssignment>
   </file>
   <file src="src/Model/BSONDocument.php">
-    <ArgumentTypeCoercion>
-      <code>$iteratorClass</code>
-    </ArgumentTypeCoercion>
+    <InvalidParamDefault>
+      <code><![CDATA[class-string<ArrayIterator<string,mixed>>|class-string<ArrayObject<string,mixed>>]]></code>
+    </InvalidParamDefault>
     <MixedAssignment>
       <code>$this[$key]</code>
       <code>$value</code>
@@ -212,9 +184,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/BulkWrite.php">
-    <DocblockTypeContradiction>
-      <code>is_array($operation)</code>
-    </DocblockTypeContradiction>
     <MixedArgument>
       <code>$args</code>
       <code>$args</code>
@@ -330,9 +299,6 @@
     </MixedArgument>
   </file>
   <file src="src/Operation/CreateIndexes.php">
-    <DocblockTypeContradiction>
-      <code>is_array($index)</code>
-    </DocblockTypeContradiction>
     <MixedAssignment>
       <code>$cmd[$option]</code>
       <code><![CDATA[$cmd['commitQuorum']]]></code>
@@ -484,9 +450,6 @@
     </MixedAssignment>
   </file>
   <file src="src/Operation/FindOneAndUpdate.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[! is_array($update) && ! is_object($update)]]></code>
-    </DocblockTypeContradiction>
     <MixedAssignment>
       <code><![CDATA[$options['fields']]]></code>
     </MixedAssignment>
@@ -520,9 +483,6 @@
     </MixedAssignment>
   </file>
   <file src="src/Operation/MapReduce.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[! is_string($out) && ! is_array($out) && ! is_object($out)]]></code>
-    </DocblockTypeContradiction>
     <MixedArgument>
       <code><![CDATA[$result->result->collection]]></code>
       <code><![CDATA[$result->result->db]]></code>
@@ -563,9 +523,6 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/Update.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[! is_array($update) && ! is_object($update)]]></code>
-    </DocblockTypeContradiction>
     <MixedArgument>
       <code><![CDATA[$this->options['writeConcern']]]></code>
     </MixedArgument>
@@ -580,20 +537,7 @@
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
-  <file src="src/Operation/UpdateMany.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[! is_array($update) && ! is_object($update)]]></code>
-    </DocblockTypeContradiction>
-  </file>
-  <file src="src/Operation/UpdateOne.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[! is_array($update) && ! is_object($update)]]></code>
-    </DocblockTypeContradiction>
-  </file>
   <file src="src/Operation/Watch.php">
-    <DocblockTypeContradiction>
-      <code><![CDATA[isset($resumeToken) && ! is_array($resumeToken) && ! is_object($resumeToken)]]></code>
-    </DocblockTypeContradiction>
     <MixedArgument>
       <code><![CDATA[$reply->cursor->firstBatch]]></code>
     </MixedArgument>
@@ -611,9 +555,6 @@
       <code><![CDATA[$this->changeStreamOptions['resumeAfter']]]></code>
       <code><![CDATA[$this->changeStreamOptions['startAfter']]]></code>
     </MixedReturnStatement>
-    <PropertyNotSetInConstructor>
-      <code>$firstBatchSize</code>
-    </PropertyNotSetInConstructor>
   </file>
   <file src="src/UpdateResult.php">
     <MixedAssignment>
@@ -621,9 +562,6 @@
     </MixedAssignment>
   </file>
   <file src="src/functions.php">
-    <DocblockTypeContradiction>
-      <code>is_array($document)</code>
-    </DocblockTypeContradiction>
     <MixedArgument>
       <code>$stage</code>
       <code>$wireVersionForWriteStageOnSecondary</code>

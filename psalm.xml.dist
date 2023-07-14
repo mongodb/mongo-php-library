@@ -17,9 +17,22 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+
     <stubs>
         <file name="stubs/BSON/Document.stub.php"/>
         <file name="stubs/BSON/Iterator.stub.php"/>
         <file name="stubs/BSON/PackedArray.stub.php"/>
     </stubs>
+
+    <issueHandlers>
+        <!-- Class is meant to be Unserialized by the extension only -->
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <file name="examples/typemap.php" />
+            </errorLevel>
+        </PropertyNotSetInConstructor>
+
+        <!-- This is often the result of type checks due to missing native types -->
+        <DocblockTypeContradiction errorLevel="info" />
+    </issueHandlers>
 </psalm>

@@ -79,7 +79,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
 
     private string $databaseName;
 
-    private int $firstBatchSize;
+    private int $firstBatchSize = 0;
 
     private bool $hasResumed = false;
 

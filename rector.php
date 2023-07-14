@@ -5,6 +5,7 @@ use Rector\DeadCode\Rector\ClassLike\RemoveAnnotationRector;
 use Rector\Php56\Rector\FunctionLike\AddDefaultValueForUndefinedVariableRector;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Set\ValueObject\LevelSetList;
+use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
@@ -25,6 +26,10 @@ return static function (RectorConfig $rectorConfig): void {
         // @see https://github.com/phpstan/phpstan-src/pull/2429
         RemoveExtraParametersRector::class => [
             __DIR__ . '/src/Operation/',
+        ],
+        // Assigns wrong type due to outdated PHPStan stubs
+        TypedPropertyFromAssignsRector::class => [
+            __DIR__ . '/src/Model/BSONIterator.php',
         ],
     ]);
 

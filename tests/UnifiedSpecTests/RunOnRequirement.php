@@ -10,9 +10,9 @@ use function in_array;
 use function PHPUnit\Framework\assertContains;
 use function PHPUnit\Framework\assertContainsOnly;
 use function PHPUnit\Framework\assertEmpty;
+use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\assertIsArray;
 use function PHPUnit\Framework\assertIsBool;
-use function PHPUnit\Framework\assertIsObject;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertMatchesRegularExpression;
 use function version_compare;
@@ -37,7 +37,7 @@ class RunOnRequirement
 
     private ?array $topologies = null;
 
-    private ?object $serverParameters = null;
+    private ?stdClass $serverParameters = null;
 
     private ?bool $auth = null;
 
@@ -83,7 +83,7 @@ class RunOnRequirement
         }
 
         if (isset($o->serverParameters)) {
-            assertIsObject($o->serverParameters);
+            assertInstanceOf(stdClass::class, $o->serverParameters);
             $this->serverParameters = $o->serverParameters;
         }
 

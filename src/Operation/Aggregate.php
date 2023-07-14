@@ -17,7 +17,6 @@
 
 namespace MongoDB\Operation;
 
-use ArrayIterator;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
@@ -31,13 +30,11 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use stdClass;
 
-use function current;
 use function is_array;
 use function is_bool;
 use function is_integer;
 use function is_object;
 use function is_string;
-use function MongoDB\create_field_path_type_map;
 use function MongoDB\is_document;
 use function MongoDB\is_last_pipeline_operator_write;
 use function MongoDB\is_pipeline;
@@ -112,12 +109,6 @@ class Aggregate implements Executable, Explainable
      *  * typeMap (array): Type map for BSON deserialization. This will be
      *    applied to the returned Cursor (it is not sent to the server).
      *
-     *  * useCursor (boolean): Indicates whether the command will request that
-     *    the server provide results using a cursor. The default is true.
-     *
-     *    This option allows users to turn off cursors if necessary to aid in
-     *    mongod/mongos upgrades.
-     *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern. This only
      *    applies when an $out or $merge stage is specified.
      *
@@ -135,8 +126,6 @@ class Aggregate implements Executable, Explainable
         if (! is_pipeline($pipeline, true /* allowEmpty */)) {
             throw new InvalidArgumentException('$pipeline is not a valid aggregation pipeline');
         }
-
-        $options += ['useCursor' => true];
 
         if (isset($options['allowDiskUse']) && ! is_bool($options['allowDiskUse'])) {
             throw InvalidArgumentException::invalidType('"allowDiskUse" option', $options['allowDiskUse'], 'boolean');
@@ -190,16 +179,8 @@ class Aggregate implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
-        if (! is_bool($options['useCursor'])) {
-            throw InvalidArgumentException::invalidType('"useCursor" option', $options['useCursor'], 'boolean');
-        }
-
         if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
-        }
-
-        if (isset($options['batchSize']) && ! $options['useCursor']) {
-            throw new InvalidArgumentException('"batchSize" option should not be used if "useCursor" is false');
         }
 
         if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {
@@ -216,12 +197,6 @@ class Aggregate implements Executable, Explainable
 
         $this->isExplain = ! empty($options['explain']);
         $this->isWrite = is_last_pipeline_operator_write($pipeline) && ! $this->isExplain;
-
-        // Explain does not use a cursor
-        if ($this->isExplain) {
-            $options['useCursor'] = false;
-            unset($options['batchSize']);
-        }
 
         if ($this->isWrite) {
             /* Ignore batchSize for writes, since no documents are returned and
@@ -241,7 +216,7 @@ class Aggregate implements Executable, Explainable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return ArrayIterator|Cursor
+     * @return Cursor
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if read concern or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -266,25 +241,11 @@ class Aggregate implements Executable, Explainable
 
         $cursor = $this->executeCommand($server, $command);
 
-        if ($this->options['useCursor'] || $this->isExplain) {
-            if (isset($this->options['typeMap'])) {
-                $cursor->setTypeMap($this->options['typeMap']);
-            }
-
-            return $cursor;
-        }
-
         if (isset($this->options['typeMap'])) {
-            $cursor->setTypeMap(create_field_path_type_map($this->options['typeMap'], 'result.$'));
+            $cursor->setTypeMap($this->options['typeMap']);
         }
 
-        $result = current($cursor->toArray());
-
-        if (! is_object($result) || ! isset($result->result) || ! is_array($result->result)) {
-            throw new UnexpectedValueException('aggregate command did not return a "result" array');
-        }
-
-        return new ArrayIterator($result->result);
+        return $cursor;
     }
 
     /**
@@ -331,11 +292,9 @@ class Aggregate implements Executable, Explainable
             $cmd['hint'] = is_array($this->options['hint']) ? (object) $this->options['hint'] : $this->options['hint'];
         }
 
-        if ($this->options['useCursor']) {
-            $cmd['cursor'] = isset($this->options["batchSize"])
-                ? ['batchSize' => $this->options["batchSize"]]
-                : new stdClass();
-        }
+        $cmd['cursor'] = isset($this->options['batchSize'])
+            ? ['batchSize' => $this->options['batchSize']]
+            : new stdClass();
 
         return $cmd;
     }

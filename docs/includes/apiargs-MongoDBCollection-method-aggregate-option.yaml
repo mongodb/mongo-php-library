@@ -59,22 +59,6 @@ source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: typeMap
 ---
-arg_name: option
-name: useCursor
-type: boolean
-description: |
-  Indicates whether the command will request that the server provide results
-  using a cursor. The default is ``true``.
-
-  .. note::
-
-     MongoDB 3.6+ no longer supports returning results without a cursor (excluding
-     when the explain option is used) and specifying false for this option will
-     result in a server error.
-interface: phpmethod
-operation: ~
-optional: true
----
 source:
   file: apiargs-MongoDBCollection-common-option.yaml
   ref: writeConcern

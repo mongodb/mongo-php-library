@@ -36,7 +36,6 @@ use MongoDB\Model\ChangeStreamIterator;
 use function array_intersect_key;
 use function array_key_exists;
 use function array_unshift;
-use function assert;
 use function count;
 use function is_array;
 use function is_bool;
@@ -355,10 +354,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         addSubscriber($this);
 
         try {
-            $cursor = $this->aggregate->execute($server);
-            assert($cursor instanceof Cursor);
-
-            return $cursor;
+            return $this->aggregate->execute($server);
         } finally {
             removeSubscriber($this);
         }

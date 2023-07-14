@@ -40,21 +40,8 @@ class AggregateTest extends TestCase
             'readPreference' => $this->getInvalidReadPreferenceValues(),
             'session' => $this->getInvalidSessionValues(),
             'typeMap' => $this->getInvalidArrayValues(),
-            'useCursor' => $this->getInvalidBooleanValues(true),
             'writeConcern' => $this->getInvalidWriteConcernValues(),
         ]);
-    }
-
-    public function testConstructorBatchSizeOptionRequiresUseCursor(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('"batchSize" option should not be used if "useCursor" is false');
-        new Aggregate(
-            $this->getDatabaseName(),
-            $this->getCollectionName(),
-            [['$match' => ['x' => 1]]],
-            ['batchSize' => 100, 'useCursor' => false],
-        );
     }
 
     public function testExplainableCommandDocument(): void
@@ -69,7 +56,6 @@ class AggregateTest extends TestCase
             'let' => ['a' => 1],
             'maxTimeMS' => 100,
             'readConcern' => new ReadConcern(ReadConcern::LOCAL),
-            'useCursor' => true,
             // Intentionally omitted options
             // The "explain" option is illegal
             'readPreference' => new ReadPreference(ReadPreference::SECONDARY_PREFERRED),

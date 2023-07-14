@@ -1711,7 +1711,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         try {
             $count = $db->sales->count();
         } catch (\MongoDB\Driver\Exception\CommandException $e) {
-            echo json_encode($e->getResultDocument(), \JSON_THROW_ON_ERROR);
+            echo json_encode($e->getResultDocument());
             // { "ok": 0, "errmsg": "Provided apiStrict:true, but the command count is not in API Version 1", "code": 323, "codeName": "APIStrictError" }
         }
 

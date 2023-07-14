@@ -43,7 +43,7 @@ class InsertMany implements Executable
 
     private string $collectionName;
 
-    /** @var object[]|array[] */
+    /** @var list<object>|list<array> */
     private array $documents;
 
     private array $options;

@@ -20,7 +20,6 @@ use function key;
  */
 class CommandExpectations implements CommandSubscriber
 {
-    /** @var array */
     private array $actualEvents = [];
 
     private array $expectedEvents = [];
@@ -35,7 +34,7 @@ class CommandExpectations implements CommandSubscriber
 
     private bool $ignoreKeyVaultListCollections = false;
 
-    /** @var string[] */
+    /** @var list<string> */
     private array $ignoredCommandNames = [];
 
     private Client $observedClient;

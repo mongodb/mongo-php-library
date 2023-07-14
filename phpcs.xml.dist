@@ -152,9 +152,6 @@
     <!-- *********************************************************** -->
     <!-- Require native type hints for all code without a BC promise -->
     <!-- *********************************************************** -->
-    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint">
-        <exclude-pattern>src</exclude-pattern>
-    </rule>
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint">
         <exclude-pattern>src</exclude-pattern>
     </rule>

@@ -86,17 +86,13 @@ class Bucket
 
     private int $chunkSizeBytes;
 
-    /** @var ReadConcern */
-    private $readConcern;
+    private ReadConcern $readConcern;
 
-    /** @var ReadPreference */
-    private $readPreference;
+    private ReadPreference $readPreference;
 
-    /** @var array */
-    private $typeMap;
+    private array $typeMap;
 
-    /** @var WriteConcern */
-    private $writeConcern;
+    private WriteConcern $writeConcern;
 
     /**
      * Constructs a GridFS bucket.

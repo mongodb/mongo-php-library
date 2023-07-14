@@ -41,7 +41,7 @@ class DropEncryptedCollection implements Executable
 {
     private DropCollection $dropCollection;
 
-    /** @var DropCollection[] */
+    /** @var list<DropCollection> */
     private array $dropMetadataCollections;
 
     /**

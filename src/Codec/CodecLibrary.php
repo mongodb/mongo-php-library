@@ -25,11 +25,11 @@ class CodecLibrary implements Codec
     use DecodeIfSupported;
     use EncodeIfSupported;
 
-    /** @var array<Decoder> */
-    private $decoders = [];
+    /** @var list<Decoder> */
+    private array $decoders = [];
 
-    /** @var array<Encoder> */
-    private $encoders = [];
+    /** @var list<Encoder> */
+    private array $encoders = [];
 
     /** @param Decoder|Encoder $items */
     public function __construct(...$items)

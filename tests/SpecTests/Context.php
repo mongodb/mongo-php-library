@@ -34,10 +34,8 @@ final class Context
 
     public string $databaseName;
 
-    /** @var array */
     public array $defaultWriteOptions = [];
 
-    /** @var array */
     public array $outcomeReadOptions = [];
 
     public ?string $outcomeCollectionName = null;

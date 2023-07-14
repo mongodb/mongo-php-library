@@ -72,11 +72,9 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
 
     private Aggregate $aggregate;
 
-    /** @var array */
-    private $aggregateOptions;
+    private array $aggregateOptions;
 
-    /** @var array */
-    private $changeStreamOptions;
+    private array $changeStreamOptions;
 
     private ?string $collectionName = null;
 

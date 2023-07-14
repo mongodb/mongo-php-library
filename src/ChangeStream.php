@@ -71,8 +71,7 @@ class ChangeStream implements Iterator
     /** @var ResumeCallable|null */
     private $resumeCallable;
 
-    /** @var ChangeStreamIterator */
-    private $iterator;
+    private ChangeStreamIterator $iterator;
 
     private int $key = 0;
 

@@ -35,7 +35,7 @@ class EntityMap implements ArrayAccess
      * Track lsids so they can be accessed after Session::getLogicalSessionId()
      * has been called.
      *
-     * @var stdClass[]
+     * @var list<stdClass>
      */
     private array $lsidsBySession = [];
 

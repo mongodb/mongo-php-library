@@ -13,7 +13,6 @@ use function MongoDB\Driver\Monitoring\removeSubscriber;
 
 class FailPointObserver implements CommandSubscriber
 {
-    /** @var array */
     private array $failPointsAndServers = [];
 
     /** @see https://php.net/manual/en/mongodb-driver-monitoring-commandsubscriber.commandfailed.php */

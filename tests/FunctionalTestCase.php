@@ -54,7 +54,6 @@ abstract class FunctionalTestCase extends TestCase
 {
     protected Manager $manager;
 
-    /** @var array */
     private array $configuredFailPoints = [];
 
     /** @var array{int,{Collection,array}} */

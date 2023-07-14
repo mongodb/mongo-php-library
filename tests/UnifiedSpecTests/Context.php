@@ -42,10 +42,10 @@ final class Context
 
     private EntityMap $entityMap;
 
-    /** @var EventCollector[] */
+    /** @var list<EventCollector> */
     private array $eventCollectors = [];
 
-    /** @var EventObserver[] */
+    /** @var array<string, EventObserver> */
     private array $eventObserversByClient = [];
 
     private Client $internalClient;

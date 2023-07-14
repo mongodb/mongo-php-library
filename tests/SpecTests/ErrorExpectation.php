@@ -37,10 +37,10 @@ final class ErrorExpectation
 
     private bool $isExpected = false;
 
-    /** @var string[] */
+    /** @var list<string> */
     private array $excludedLabels = [];
 
-    /** @var string[] */
+    /** @var list<string> */
     private array $includedLabels = [];
 
     private string $messageContains;

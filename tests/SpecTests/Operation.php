@@ -558,7 +558,7 @@ final class Operation
                 return $session->startTransaction($context->prepareOptions($options));
 
             case 'withTransaction':
-                /** @var self[] $callbackOperations */
+                /** @var list<self> $callbackOperations */
                 $callbackOperations = array_map(fn ($operation) => self::fromConvenientTransactions($operation), $this->arguments['callback']->operations);
 
                 $callback = function () use ($callbackOperations, $test, $context): void {

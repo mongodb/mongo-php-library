@@ -54,7 +54,7 @@ class CreateEncryptedCollection implements Executable
 
     private CreateCollection $createCollection;
 
-    /** @var CreateCollection[] */
+    /** @var list<CreateCollection> */
     private array $createMetadataCollections;
 
     private CreateIndexes $createSafeContentIndex;

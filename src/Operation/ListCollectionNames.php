@@ -75,7 +75,7 @@ class ListCollectionNames implements Executable
     {
         return new CallbackIterator(
             $this->listCollections->execute($server),
-            fn (array $collectionInfo): string => (string) $collectionInfo['name']
+            fn (array $collectionInfo): string => (string) $collectionInfo['name'],
         );
     }
 }

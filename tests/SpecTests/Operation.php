@@ -13,7 +13,6 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\GridFS\Bucket;
 use MongoDB\MapReduceResult;
-use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
 use stdClass;
@@ -648,8 +647,13 @@ final class Operation
     private function getIndexNames(Context $context, string $databaseName, string $collectionName): array
     {
         return array_map(
-            fn (IndexInfo $indexInfo) => $indexInfo->getName(),
-            iterator_to_array($context->getInternalClient()->selectCollection($databaseName, $collectionName)->listIndexes()),
+            'strval',
+            iterator_to_array(
+                $context
+                    ->getInternalClient()
+                    ->selectCollection($databaseName, $collectionName)
+                    ->listIndexes(),
+            ),
         );
     }
 

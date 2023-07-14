@@ -49,6 +49,7 @@ class CreateIndexes implements Executable
 
     private string $collectionName;
 
+    /** @var list<IndexInput> */
     private array $indexes = [];
 
     private array $options = [];
@@ -140,7 +141,7 @@ class CreateIndexes implements Executable
         $this->executeCommand($server);
 
         return array_map(
-            fn (IndexInput $index): string => (string) $index,
+            'strval',
             $this->indexes,
         );
     }

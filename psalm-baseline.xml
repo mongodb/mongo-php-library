@@ -264,7 +264,6 @@
   <file src="src/Operation/Aggregate.php">
     <MixedArgument>
       <code><![CDATA[$this->options['typeMap']]]></code>
-      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
     <MixedAssignment>
       <code><![CDATA[$cmdOptions['maxAwaitTimeMS']]]></code>

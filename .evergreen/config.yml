@@ -175,7 +175,7 @@ functions:
       params:
         script: |
           ${PREPARE_SHELL}
-          SKIP_LEGACY_SHELL=true MONGODB_VERSION=${MONGODB_VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} LOAD_BALANCER=${LOAD_BALANCER} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
+          SKIP_CRYPT_SHARED=${SKIP_CRYPT_SHARED} SKIP_LEGACY_SHELL=true MONGODB_VERSION=${MONGODB_VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} LOAD_BALANCER=${LOAD_BALANCER} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
     # run-orchestration generates expansion file with MONGODB_URI and CRYPT_SHARED_LIB_PATH
     - command: expansions.update
       params:
@@ -304,7 +304,6 @@ functions:
           MONGODB_SINGLE_MONGOS_LB_URI="${SINGLE_MONGOS_LB_URI}" \
           MONGODB_MULTI_MONGOS_LB_URI="${MULTI_MONGOS_LB_URI}" \
           PHP_VERSION=${PHP_VERSION} \
-          SKIP_CRYPT_SHARED=${SKIP_CRYPT_SHARED} \
           SSL=${SSL} \
           TESTS=${TESTS} \
           sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
@@ -352,7 +351,6 @@ functions:
 
           CRYPT_SHARED_LIB_PATH=${CRYPT_SHARED_LIB_PATH} \
           MONGODB_URI="${SERVERLESS_URI}" \
-          SKIP_CRYPT_SHARED=${SKIP_CRYPT_SHARED} \
           TESTS="serverless" \
           sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
 
@@ -632,7 +630,7 @@ tasks:
             SSL: "yes"
         # Note: "stop load balancer" will be called from "post"
 
-    - name: "test-skip_crypt_shared"
+    - name: "test-csfle-crypt_shared"
       commands:
         - func: "bootstrap mongo-orchestration"
           vars:
@@ -641,7 +639,18 @@ tasks:
         - func: "set aws temp creds"
         - func: "run tests"
           vars:
+            TESTS: "csfle"
+
+    - name: "test-csfle-mongocryptd"
+      commands:
+        - func: "bootstrap mongo-orchestration"
+          vars:
+            TOPOLOGY: "replica_set"
             SKIP_CRYPT_SHARED: "yes"
+        - func: "start kms servers"
+        - func: "set aws temp creds"
+        - func: "run tests"
+          vars:
             TESTS: "csfle"
 
     - name: "test-without_aws_creds"
@@ -788,6 +797,9 @@ axes:
       - id: rhel90
         display_name: "RHEL 9.0"
         run_on: rhel90-small
+      - id: rhel80
+        display_name: "RHEL 8.0"
+        run_on: rhel80-small
 
       # Ubuntu LTS
       - id: ubuntu2204
@@ -947,14 +959,25 @@ buildvariants:
   tasks:
     - name: "test-loadBalanced"
 
-- matrix_name: "test-csfle-skip_crypt_shared"
-  matrix_spec: { "os": "debian11", "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
-  display_name: "CSFLE skip_crypt_shared - ${mongodb-versions}"
+# CSFLE tests (crypt_shared and mongocryptd) are tested on RHEL 8 as it's the only version that supports
+# 4.2 AND 6.0 (which is required for crypt_shared), as well as a somewhat relevant PHP version.
+# Newer MongoDB version may require adding different operating systems here
+- matrix_name: "test-csfle-crypt_shared"
+  matrix_spec: { "os": "rhel80", "mongodb-versions": "*", "php-versions": "8.0", "driver-versions": "latest-stable" }
+  display_name: "CSFLE crypt_shared - ${mongodb-versions}"
   exclude_spec:
-    # CSFLE crypt_shared is available from MongoDB 6.0+
-    - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4", "5.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    # MongoDB < 4.2 does not need to be tested.
+    - { "os": "rhel80", "mongodb-versions": ["3.6", "4.0"], "php-versions": "8.0", "driver-versions": "latest-stable" }
   tasks:
-    - name: "test-skip_crypt_shared"
+    - name: "test-csfle-crypt_shared"
+- matrix_name: "test-csfle-mongocryptd"
+  matrix_spec: { "os": "rhel80", "mongodb-versions": "*", "php-versions": "8.0", "driver-versions": "latest-stable" }
+  display_name: "CSFLE mongocryptd - ${mongodb-versions}"
+  exclude_spec:
+    # MongoDB < 4.2 does not need to be tested.
+    - { "os": "rhel80", "mongodb-versions": ["3.6", "4.0"], "php-versions": "8.0", "driver-versions": "latest-stable" }
+  tasks:
+    - name: "test-csfle-mongocryptd"
 
 # Run CSFLE tests without AWS credentials (for "On-demand AWS Credentials" prose test)
 - matrix_name: "test-csfle-without_aws_creds"

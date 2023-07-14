@@ -10,7 +10,6 @@ MONGODB_URI=${MONGODB_URI:-} # Connection string (including credentials and topo
 MONGODB_SINGLE_MONGOS_LB_URI=${MONGODB_SINGLE_MONGOS_LB_URI:-} # Single-mongos LB connection string
 MONGODB_MULTI_MONGOS_LB_URI=${MONGODB_MULTI_MONGOS_LB_URI:-} # Multi-mongos LB connection string
 MONGODB_VERSION=${MONGODB_VERSION:-} # Required if IS_MATRIX_TESTING is "true"
-SKIP_CRYPT_SHARED="${SKIP_CRYPT_SHARED:-no}" # Specify "yes" to ignore CRYPT_SHARED_LIB_PATH. Defaults to "no"
 SSL=${SSL:-no} # Specify "yes" to enable SSL. Defaults to "no"
 TESTS=${TESTS:-} # Optional test group. Defaults to all tests
 

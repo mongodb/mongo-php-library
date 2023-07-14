@@ -22,7 +22,10 @@ use function sprintf;
  */
 final class ErrorExpectation
 {
-    /** @see https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err */
+    /**
+     * @see https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err
+     * @var array<string, int>
+     */
     private static array $codeNameMap = [
         'Interrupted' => 11601,
         'MaxTimeMSExpired' => 50,

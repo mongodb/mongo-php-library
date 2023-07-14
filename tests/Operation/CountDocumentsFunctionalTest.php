@@ -17,14 +17,14 @@ class CountDocumentsFunctionalTest extends FunctionalTestCase
                 $operation = new CountDocuments(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    $filter
+                    $filter,
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event) use ($expectedMatchStage): void {
                 $this->assertEquals($expectedMatchStage, $event['started']->getCommand()->pipeline[0]->{'$match'} ?? null);
-            }
+            },
         );
     }
 

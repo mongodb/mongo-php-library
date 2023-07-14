@@ -4,6 +4,7 @@ namespace MongoDB\Tests\SpecTests\ClientSideEncryption;
 
 use Generator;
 use MongoDB\BSON\Binary;
+use MongoDB\Database;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\CommandException;
@@ -23,8 +24,8 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
 {
     public const SERVER_ERROR_TYPEMISMATCH = 14;
 
-    private $clientEncryption;
-    private $database;
+    private ?ClientEncryption $clientEncryption = null;
+    private ?Database $database = null;
 
     public function setUp(): void
     {
@@ -73,7 +74,7 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
             $this->clientEncryption,
             $kmsProvider,
             $masterKey,
-            ['encryptedFields' => ['fields' => [['path' => 'ssn', 'bsonType' => 'string', 'keyId' => null]]]]
+            ['encryptedFields' => ['fields' => [['path' => 'ssn', 'bsonType' => 'string', 'keyId' => null]]]],
         );
 
         $this->assertCommandSucceeded($result);
@@ -110,7 +111,7 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
             $this->clientEncryption,
             $kmsProvider,
             $masterKey,
-            []
+            [],
         );
     }
 
@@ -126,7 +127,7 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
                 $this->clientEncryption,
                 $kmsProvider,
                 $masterKey,
-                ['encryptedFields' => ['fields' => [['path' => 'ssn', 'bsonType' => 'string', 'keyId' => false]]]]
+                ['encryptedFields' => ['fields' => [['path' => 'ssn', 'bsonType' => 'string', 'keyId' => false]]]],
             );
             $this->fail('CreateEncryptedCollectionException was not thrown');
         } catch (CreateEncryptedCollectionException $e) {
@@ -150,7 +151,7 @@ class Prose21_AutomaticDataEncryptionKeysTest extends FunctionalTestCase
             $this->clientEncryption,
             $kmsProvider,
             $masterKey,
-            ['encryptedFields' => ['fields' => [['path' => 'ssn', 'bsonType' => 'string', 'keyId' => null]]]]
+            ['encryptedFields' => ['fields' => [['path' => 'ssn', 'bsonType' => 'string', 'keyId' => null]]]],
         );
 
         $this->assertCommandSucceeded($result);

@@ -34,7 +34,7 @@ class BSONIteratorTest extends TestCase
                     [
                         ['_id' => 1, 'x' => ['foo' => 'bar']],
                         ['_id' => 3, 'x' => ['foo' => 'bar']],
-                    ]
+                    ],
                 )),
                 [
                     (object) ['_id' => 1, 'x' => (object) ['foo' => 'bar']],
@@ -48,7 +48,7 @@ class BSONIteratorTest extends TestCase
                     [
                         ['_id' => 1, 'x' => ['foo' => 'bar']],
                         ['_id' => 3, 'x' => ['foo' => 'bar']],
-                    ]
+                    ],
                 )),
                 [
                     ['_id' => 1, 'x' => ['foo' => 'bar']],
@@ -62,7 +62,7 @@ class BSONIteratorTest extends TestCase
                     [
                         ['_id' => 1, 'x' => ['foo' => 'bar']],
                         ['_id' => 3, 'x' => ['foo' => 'bar']],
-                    ]
+                    ],
                 )),
                 [
                     (object) ['_id' => 1, 'x' => ['foo' => 'bar']],
@@ -76,7 +76,7 @@ class BSONIteratorTest extends TestCase
                     [
                         ['_id' => 1, 'x' => ['foo' => 'bar']],
                         ['_id' => 3, 'x' => ['foo' => 'bar']],
-                    ]
+                    ],
                 )),
                 [
                     ['_id' => 1, 'x' => (object) ['foo' => 'bar']],

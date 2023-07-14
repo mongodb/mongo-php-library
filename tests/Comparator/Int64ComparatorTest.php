@@ -108,48 +108,48 @@ class Int64ComparatorTest extends TestCase
     public static function provideMatchingAssertions(): Generator
     {
         yield 'Expected Int64, Actual Int64' => [
-            'expected' => new Int64(8589934592),
-            'actual' => new Int64(8589934592),
+            'expected' => new Int64(8_589_934_592),
+            'actual' => new Int64(8_589_934_592),
         ];
 
         yield 'Expected Int64, Actual int' => [
-            'expected' => new Int64(8589934592),
-            'actual' => 8589934592,
+            'expected' => new Int64(8_589_934_592),
+            'actual' => 8_589_934_592,
         ];
 
         yield 'Expected Int64, Actual int string' => [
-            'expected' => new Int64(8589934592),
+            'expected' => new Int64(8_589_934_592),
             'actual' => '8589934592',
         ];
 
         yield 'Expected Int64, Actual float' => [
-            'expected' => new Int64(8589934592),
-            'actual' => 8589934592.0,
+            'expected' => new Int64(8_589_934_592),
+            'actual' => 8_589_934_592.0,
         ];
 
         yield 'Expected Int64, Actual float string' => [
-            'expected' => new Int64(8589934592),
+            'expected' => new Int64(8_589_934_592),
             'actual' => '8589934592.0',
         ];
 
         yield 'Expected int, Actual Int64' => [
-            'expected' => 8589934592,
-            'actual' => new Int64(8589934592),
+            'expected' => 8_589_934_592,
+            'actual' => new Int64(8_589_934_592),
         ];
 
         yield 'Expected int string, Actual Int64' => [
             'expected' => '8589934592',
-            'actual' => new Int64(8589934592),
+            'actual' => new Int64(8_589_934_592),
         ];
 
         yield 'Expected float, Actual Int64' => [
-            'expected' => 8589934592.0,
-            'actual' => new Int64(8589934592),
+            'expected' => 8_589_934_592.0,
+            'actual' => new Int64(8_589_934_592),
         ];
 
         yield 'Expected float string, Actual Int64' => [
             'expected' => '8589934592.0',
-            'actual' => new Int64(8589934592),
+            'actual' => new Int64(8_589_934_592),
         ];
     }
 
@@ -164,32 +164,32 @@ class Int64ComparatorTest extends TestCase
     public static function provideFailingValues(): Generator
     {
         yield 'Expected Int64, Actual Int64' => [
-            'expected' => new Int64(8589934592),
+            'expected' => new Int64(8_589_934_592),
             'actual' => new Int64(456),
         ];
 
         yield 'Expected Int64, Actual int' => [
-            'expected' => new Int64(8589934592),
+            'expected' => new Int64(8_589_934_592),
             'actual' => 456,
         ];
 
         yield 'Expected Int64, Actual int string' => [
-            'expected' => new Int64(8589934592),
+            'expected' => new Int64(8_589_934_592),
             'actual' => '456',
         ];
 
         yield 'Expected Int64, Actual float' => [
-            'expected' => new Int64(8589934592),
-            'actual' => 8589934592.1,
+            'expected' => new Int64(8_589_934_592),
+            'actual' => 8_589_934_592.1,
         ];
 
         yield 'Expected Int64, Actual float string' => [
-            'expected' => new Int64(8589934592),
+            'expected' => new Int64(8_589_934_592),
             'actual' => '8589934592.1',
         ];
 
         yield 'Expected int, Actual Int64' => [
-            'expected' => 8589934592,
+            'expected' => 8_589_934_592,
             'actual' => new Int64(456),
         ];
 
@@ -199,7 +199,7 @@ class Int64ComparatorTest extends TestCase
         ];
 
         yield 'Expected float, Actual Int64' => [
-            'expected' => 8589934592.1,
+            'expected' => 8_589_934_592.1,
             'actual' => new Int64(456),
         ];
 

@@ -33,8 +33,7 @@ use function current;
  */
 class FindOne implements Executable, Explainable
 {
-    /** @var Find */
-    private $find;
+    private Find $find;
 
     /**
      * Constructs a find command for finding a single document.
@@ -108,7 +107,7 @@ class FindOne implements Executable, Explainable
             $databaseName,
             $collectionName,
             $filter,
-            ['limit' => 1] + $options
+            ['limit' => 1] + $options,
         );
     }
 

@@ -71,19 +71,15 @@ class ChangeStream implements Iterator
     /** @var ResumeCallable|null */
     private $resumeCallable;
 
-    /** @var ChangeStreamIterator */
-    private $iterator;
+    private ChangeStreamIterator $iterator;
 
-    /** @var integer */
-    private $key = 0;
+    private int $key = 0;
 
     /**
      * Whether the change stream has advanced to its first result. This is used
      * to determine whether $key should be incremented after an iteration event.
-     *
-     * @var boolean
      */
-    private $hasAdvanced = false;
+    private bool $hasAdvanced = false;
 
     /**
      * @internal

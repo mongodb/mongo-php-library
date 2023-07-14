@@ -74,35 +74,25 @@ class Bucket
 
     private const STREAM_WRAPPER_PROTOCOL = 'gridfs';
 
-    /** @var CollectionWrapper */
-    private $collectionWrapper;
+    private CollectionWrapper $collectionWrapper;
 
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var Manager */
-    private $manager;
+    private Manager $manager;
 
-    /** @var string */
-    private $bucketName;
+    private string $bucketName;
 
-    /** @var boolean */
-    private $disableMD5;
+    private bool $disableMD5;
 
-    /** @var integer */
-    private $chunkSizeBytes;
+    private int $chunkSizeBytes;
 
-    /** @var ReadConcern */
-    private $readConcern;
+    private ReadConcern $readConcern;
 
-    /** @var ReadPreference */
-    private $readPreference;
+    private ReadPreference $readPreference;
 
-    /** @var array */
-    private $typeMap;
+    private array $typeMap;
 
-    /** @var WriteConcern */
-    private $writeConcern;
+    private WriteConcern $writeConcern;
 
     /**
      * Constructs a GridFS bucket.
@@ -654,7 +644,7 @@ class Bucket
             self::STREAM_WRAPPER_PROTOCOL,
             urlencode($this->databaseName),
             urlencode($this->bucketName),
-            urlencode($id)
+            urlencode($id),
         );
     }
 
@@ -667,7 +657,7 @@ class Bucket
             '%s://%s/%s.files',
             self::STREAM_WRAPPER_PROTOCOL,
             urlencode($this->databaseName),
-            urlencode($this->bucketName)
+            urlencode($this->bucketName),
         );
     }
 

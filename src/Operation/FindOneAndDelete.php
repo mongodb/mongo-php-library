@@ -32,8 +32,7 @@ use function MongoDB\is_document;
  */
 class FindOneAndDelete implements Executable, Explainable
 {
-    /** @var FindAndModify */
-    private $findAndModify;
+    private FindAndModify $findAndModify;
 
     /**
      * Constructs a findAndModify command for deleting a document.
@@ -98,7 +97,7 @@ class FindOneAndDelete implements Executable, Explainable
         $this->findAndModify = new FindAndModify(
             $databaseName,
             $collectionName,
-            ['query' => $filter, 'remove' => true] + $options
+            ['query' => $filter, 'remove' => true] + $options,
         );
     }
 

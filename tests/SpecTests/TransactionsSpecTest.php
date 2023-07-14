@@ -29,10 +29,8 @@ class TransactionsSpecTest extends FunctionalTestCase
     /**
      * In addition to the useMultipleMongoses tests, these should all pass
      * before the driver can be considered compatible with MongoDB 4.2.
-     *
-     * @var array
      */
-    private static $incompleteTests = [
+    private static array $incompleteTests = [
         'transactions/mongos-recovery-token: commitTransaction retry fails on new mongos' => 'isMaster failpoints cannot be disabled',
         'transactions/pin-mongos: remain pinned after non-transient error on commit' => 'Blocked on SPEC-1320',
         'transactions/pin-mongos: unpin after transient error within a transaction and commit' => 'isMaster failpoints cannot be disabled',
@@ -71,7 +69,7 @@ class TransactionsSpecTest extends FunctionalTestCase
             static::assertObjectHasAttribute('getMore', $actual);
             static::assertThat($actual->getMore, static::logicalOr(
                 static::isInstanceOf(Int64::class),
-                static::isType('integer')
+                static::isType('integer'),
             ));
             unset($expected->getMore);
         }
@@ -155,8 +153,8 @@ class TransactionsSpecTest extends FunctionalTestCase
             $this->markTestSkipped($test->skipReason);
         }
 
-        $databaseName = $databaseName ?? $this->getDatabaseName();
-        $collectionName = $collectionName ?? $this->getCollectionName();
+        $databaseName ??= $this->getDatabaseName();
+        $collectionName ??= $this->getCollectionName();
 
         $context = Context::fromTransactions($test, $databaseName, $collectionName, $useMultipleMongoses);
         $this->setContext($context);

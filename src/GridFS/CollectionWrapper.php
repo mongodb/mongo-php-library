@@ -40,20 +40,15 @@ use function sprintf;
  */
 class CollectionWrapper
 {
-    /** @var string */
-    private $bucketName;
+    private string $bucketName;
 
-    /** @var Collection */
-    private $chunksCollection;
+    private Collection $chunksCollection;
 
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var boolean */
-    private $checkedIndexes = false;
+    private bool $checkedIndexes = false;
 
-    /** @var Collection */
-    private $filesCollection;
+    private Collection $filesCollection;
 
     /**
      * Constructs a GridFS collection wrapper.
@@ -120,7 +115,7 @@ class CollectionWrapper
             [
                 'sort' => ['n' => 1],
                 'typeMap' => ['root' => 'stdClass'],
-            ]
+            ],
         );
     }
 
@@ -158,7 +153,7 @@ class CollectionWrapper
                 'skip' => $skip,
                 'sort' => ['uploadDate' => $sortOrder],
                 'typeMap' => ['root' => 'stdClass'],
-            ]
+            ],
         );
         assert(is_object($file) || $file === null);
 
@@ -174,7 +169,7 @@ class CollectionWrapper
     {
         $file = $this->filesCollection->findOne(
             ['_id' => $id],
-            ['typeMap' => ['root' => 'stdClass']]
+            ['typeMap' => ['root' => 'stdClass']],
         );
         assert(is_object($file) || $file === null);
 
@@ -265,7 +260,7 @@ class CollectionWrapper
     {
         return $this->filesCollection->updateOne(
             ['_id' => $id],
-            ['$set' => ['filename' => $filename]]
+            ['$set' => ['filename' => $filename]],
         );
     }
 

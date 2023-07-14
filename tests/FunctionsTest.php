@@ -132,10 +132,10 @@ class FunctionsTest extends TestCase
         // phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration
         // phpcs:disable Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore
         return [
-            'array' => [function ($value) { return $value; }],
-            'object' => [function ($value) { return (object) $value; }],
-            'Serializable' => [function ($value) { return new BSONDocument($value); }],
-            'Document' => [function ($value) { return Document::fromPHP($value); }],
+            'array' => [fn ($value) => $value],
+            'object' => [fn ($value) => (object) $value],
+            'Serializable' => [fn ($value) => new BSONDocument($value)],
+            'Document' => [fn ($value) => Document::fromPHP($value)],
         ];
         // phpcs:enable
     }

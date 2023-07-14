@@ -18,15 +18,14 @@ use function strpos;
  */
 class RetryableReadsSpecTest extends FunctionalTestCase
 {
-    /** @var array */
-    private static $skippedOperations = [
+    /** @var array<string, string> */
+    private static array $skippedOperations = [
         'listCollectionObjects' => 'Not implemented',
         'listDatabaseObjects' => 'Not implemented',
         'listIndexNames' => 'Not implemented',
     ];
 
-    /** @var array */
-    private static $incompleteTests = [];
+    private static array $incompleteTests = [];
 
     /**
      * Assert that the expected and actual command documents match.

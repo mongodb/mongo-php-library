@@ -18,14 +18,14 @@ class CountFunctionalTest extends FunctionalTestCase
                 $operation = new Count(
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
-                    $filter
+                    $filter,
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event) use ($expectedQuery): void {
                 $this->assertEquals($expectedQuery, $event['started']->getCommand()->query ?? null);
-            }
+            },
         );
     }
 
@@ -37,14 +37,14 @@ class CountFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [],
-                    ['readConcern' => $this->createDefaultReadConcern()]
+                    ['readConcern' => $this->createDefaultReadConcern()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -93,14 +93,14 @@ class CountFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [],
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 }

@@ -37,17 +37,13 @@ use function is_integer;
  */
 class DropIndexes implements Executable
 {
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var string */
-    private $collectionName;
+    private string $collectionName;
 
-    /** @var string */
-    private $indexName;
+    private string $indexName;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Constructs a dropIndexes command.

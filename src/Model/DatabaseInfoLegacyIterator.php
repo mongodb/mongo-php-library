@@ -34,8 +34,7 @@ use function reset;
  */
 class DatabaseInfoLegacyIterator implements DatabaseInfoIterator
 {
-    /** @var array */
-    private $databases;
+    private array $databases;
 
     public function __construct(array $databases)
     {

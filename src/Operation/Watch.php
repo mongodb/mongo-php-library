@@ -70,38 +70,27 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
 
     private const WIRE_VERSION_FOR_START_AT_OPERATION_TIME = 7;
 
-    /** @var Aggregate */
-    private $aggregate;
+    private Aggregate $aggregate;
 
-    /** @var array */
-    private $aggregateOptions;
+    private array $aggregateOptions;
 
-    /** @var array */
-    private $changeStreamOptions;
+    private array $changeStreamOptions;
 
-    /** @var string|null */
-    private $collectionName;
+    private ?string $collectionName = null;
 
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var integer */
-    private $firstBatchSize;
+    private int $firstBatchSize;
 
-    /** @var boolean */
-    private $hasResumed = false;
+    private bool $hasResumed = false;
 
-    /** @var Manager */
-    private $manager;
+    private Manager $manager;
 
-    /** @var TimestampInterface */
-    private $operationTime;
+    private ?TimestampInterface $operationTime = null;
 
-    /** @var array */
-    private $pipeline;
+    private array $pipeline;
 
-    /** @var object|null */
-    private $postBatchResumeToken;
+    private ?object $postBatchResumeToken = null;
 
     /**
      * Constructs an aggregate command for creating a change stream.
@@ -325,9 +314,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
     {
         return new ChangeStream(
             $this->createChangeStreamIterator($server),
-            function ($resumeToken, $hasAdvanced): ChangeStreamIterator {
-                return $this->resume($resumeToken, $hasAdvanced);
-            }
+            fn ($resumeToken, $hasAdvanced): ChangeStreamIterator => $this->resume($resumeToken, $hasAdvanced),
         );
     }
 
@@ -353,7 +340,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             $this->executeAggregate($server),
             $this->firstBatchSize,
             $this->getInitialResumeToken(),
-            $this->postBatchResumeToken
+            $this->postBatchResumeToken,
         );
     }
 

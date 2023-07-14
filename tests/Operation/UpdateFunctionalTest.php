@@ -17,8 +17,7 @@ use function is_array;
 
 class UpdateFunctionalTest extends FunctionalTestCase
 {
-    /** @var Collection */
-    private $collection;
+    private Collection $collection;
 
     public function setUp(): void
     {
@@ -36,14 +35,14 @@ class UpdateFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     $filter,
-                    ['$set' => ['x' => 1]]
+                    ['$set' => ['x' => 1]],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event) use ($expectedFilter): void {
                 $this->assertEquals($expectedFilter, $event['started']->getCommand()->updates[0]->q ?? null);
-            }
+            },
         );
     }
 
@@ -65,14 +64,14 @@ class UpdateFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     ['x' => 1],
-                    $update
+                    $update,
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event) use ($expectedUpdate): void {
                 $this->assertEquals($expectedUpdate, $event['started']->getCommand()->updates[0]->u ?? null);
-            }
+            },
         );
     }
 
@@ -97,14 +96,14 @@ class UpdateFunctionalTest extends FunctionalTestCase
                     $this->getCollectionName(),
                     ['_id' => 1],
                     ['$inc' => ['x' => 1]],
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -117,7 +116,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
                     $this->getCollectionName(),
                     ['_id' => 1],
                     ['$inc' => ['x' => 1]],
-                    ['bypassDocumentValidation' => true]
+                    ['bypassDocumentValidation' => true],
                 );
 
                 $operation->execute($this->getPrimaryServer());
@@ -125,7 +124,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
             function (array $event): void {
                 $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
-            }
+            },
         );
     }
 
@@ -138,14 +137,14 @@ class UpdateFunctionalTest extends FunctionalTestCase
                     $this->getCollectionName(),
                     ['_id' => 1],
                     ['$inc' => ['x' => 1]],
-                    ['bypassDocumentValidation' => false]
+                    ['bypassDocumentValidation' => false],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -158,7 +157,7 @@ class UpdateFunctionalTest extends FunctionalTestCase
             $this->getCollectionName(),
             ['_id' => 1],
             ['$inc' => ['x' => 1]],
-            ['hint' => '_id_', 'writeConcern' => new WriteConcern(0)]
+            ['hint' => '_id_', 'writeConcern' => new WriteConcern(0)],
         );
 
         $this->expectException(UnsupportedException::class);

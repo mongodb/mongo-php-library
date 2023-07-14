@@ -22,29 +22,21 @@ use function usleep;
 
 final class Loop
 {
-    /** @var boolean */
-    private static $allowIteration = true;
+    private static bool $allowIteration = true;
 
-    /** @var integer */
-    private static $sleepUsecBetweenIterations = 0;
+    private static int $sleepUsecBetweenIterations = 0;
 
-    /** @var Context */
-    private $context;
+    private Context $context;
 
-    /** @var array */
-    private $operations = [];
+    private array $operations = [];
 
-    /** @var BSONArray */
-    private $errorList;
+    private ?BSONArray $errorList = null;
 
-    /** @var BSONArray */
-    private $failureList;
+    private ?BSONArray $failureList = null;
 
-    /** @var string */
-    private $numSuccessfulOperationsEntityId;
+    private string $numSuccessfulOperationsEntityId;
 
-    /** @var string */
-    private $numIterationsEntityId;
+    private string $numIterationsEntityId;
 
     public function __construct(array $operations, Context $context, array $options = [])
     {

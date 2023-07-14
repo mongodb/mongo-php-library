@@ -55,23 +55,18 @@ use const E_USER_DEPRECATED;
  */
 class MapReduce implements Executable
 {
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var string */
-    private $collectionName;
+    private string $collectionName;
 
-    /** @var JavascriptInterface */
-    private $map;
+    private JavascriptInterface $map;
 
-    /** @var JavascriptInterface */
-    private $reduce;
+    private JavascriptInterface $reduce;
 
     /** @var array|object|string */
     private $out;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Constructs a mapReduce command.
@@ -366,9 +361,7 @@ class MapReduce implements Executable
         if (isset($result->results) && is_array($result->results)) {
             $results = $result->results;
 
-            return function () use ($results) {
-                return new ArrayIterator($results);
-            };
+            return fn () => new ArrayIterator($results);
         }
 
         if (isset($result->result) && (is_string($result->result) || is_object($result->result))) {
@@ -378,9 +371,7 @@ class MapReduce implements Executable
                 ? new Find($this->databaseName, $result->result, [], $options)
                 : new Find($result->result->db, $result->result->collection, [], $options);
 
-            return function () use ($find, $server) {
-                return $find->execute($server);
-            };
+            return fn () => $find->execute($server);
         }
 
         throw new UnexpectedValueException('mapReduce command did not return inline results or an output collection');

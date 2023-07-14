@@ -92,7 +92,7 @@ function connect(string $host, bool $ssl): void
         'admin.$cmd', /* namespace */
         0, /* numberToSkip */
         1, /* numberToReturn */
-        hex2bin('130000001069734d6173746572000100000000') /* { "isMaster": 1 } */
+        hex2bin('130000001069734d6173746572000100000000'), /* { "isMaster": 1 } */
     );
     $requestLength = 16 /* MsgHeader length */ + strlen($request);
     $header = pack('V4', $requestLength, 0 /* requestID */, 0 /* responseTo */, 2004 /* OP_QUERY */);

@@ -54,26 +54,19 @@ class Client
 
     private const HANDSHAKE_SEPARATOR = '/';
 
-    /** @var string|null */
-    private static $version;
+    private static ?string $version = null;
 
-    /** @var Manager */
-    private $manager;
+    private Manager $manager;
 
-    /** @var ReadConcern */
-    private $readConcern;
+    private ReadConcern $readConcern;
 
-    /** @var ReadPreference */
-    private $readPreference;
+    private ReadPreference $readPreference;
 
-    /** @var string */
-    private $uri;
+    private string $uri;
 
-    /** @var array */
-    private $typeMap;
+    private array $typeMap;
 
-    /** @var WriteConcern */
-    private $writeConcern;
+    private WriteConcern $writeConcern;
 
     /**
      * Constructs a new Client instance.

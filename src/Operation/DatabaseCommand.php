@@ -34,14 +34,11 @@ use function MongoDB\is_document;
  */
 class DatabaseCommand implements Executable
 {
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var Command */
-    private $command;
+    private Command $command;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Constructs a command.

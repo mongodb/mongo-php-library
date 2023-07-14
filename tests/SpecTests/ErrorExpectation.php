@@ -24,10 +24,9 @@ final class ErrorExpectation
 {
     /**
      * @see https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err
-     *
-     * @var array
+     * @var array<string, int>
      */
-    private static $codeNameMap = [
+    private static array $codeNameMap = [
         'Interrupted' => 11601,
         'MaxTimeMSExpired' => 50,
         'NoSuchTransaction' => 251,
@@ -35,23 +34,19 @@ final class ErrorExpectation
         'WriteConflict' => 112,
     ];
 
-    /** @var integer */
-    private $code;
+    private int $code;
 
-    /** @var string */
-    private $codeName;
+    private string $codeName;
 
-    /** @var boolean */
-    private $isExpected = false;
+    private bool $isExpected = false;
 
-    /** @var string[] */
-    private $excludedLabels = [];
+    /** @var list<string> */
+    private array $excludedLabels = [];
 
-    /** @var string[] */
-    private $includedLabels = [];
+    /** @var list<string> */
+    private array $includedLabels = [];
 
-    /** @var string */
-    private $messageContains;
+    private string $messageContains;
 
     private function __construct()
     {

@@ -690,14 +690,6 @@ axes:
         display_name: "PHP 7.4"
         variables:
           PHP_VERSION: "7.4"
-      - id: "7.3"
-        display_name: "PHP 7.3"
-        variables:
-          PHP_VERSION: "7.3"
-      - id: "7.2"
-        display_name: "PHP 7.2"
-        variables:
-          PHP_VERSION: "7.2"
 
   - id: php-edge-versions
     display_name: PHP Version
@@ -707,9 +699,9 @@ axes:
         variables:
           PHP_VERSION: "8.2"
       - id: "oldest-supported"
-        display_name: "PHP 7.2"
+        display_name: "PHP 7.4"
         variables:
-          PHP_VERSION: "7.2"
+          PHP_VERSION: "7.4"
 
   - id: mongodb-versions
     display_name: MongoDB Version
@@ -898,7 +890,7 @@ buildvariants:
     # Exclude "latest-stable" PHP version for Debian 11 (see: test-mongodb-versions matrix)
     - { "os": "debian11", "mongodb-edge-versions": "latest-stable", "php-versions": "8.2", "driver-versions": "latest-stable" }
     # Exclude PHP versions older than 8.1 on RHEL 9 and Ubuntu 22.04 (OpenSSL 3 is only supported on PHP 8.1+)
-    - { "os": ["rhel90", "ubuntu2204-arm64", "ubuntu2204"], "php-versions": ["7.2", "7.3", "7.4", "8.0"], "mongodb-edge-versions": "*", "driver-versions": "*" }
+    - { "os": ["rhel90", "ubuntu2204-arm64", "ubuntu2204"], "php-versions": ["7.4", "8.0"], "mongodb-edge-versions": "*", "driver-versions": "*" }
   tasks:
     - name: "test-standalone"
     - name: "test-replica_set"

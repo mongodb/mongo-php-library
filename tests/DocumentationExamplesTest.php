@@ -597,7 +597,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 44
         $cursor = $db->inventory->find(
             ['status' => 'A'],
-            ['projection' => ['item' => 1, 'status' => 1]]
+            ['projection' => ['item' => 1, 'status' => 1]],
         );
         // End Example 44
 
@@ -616,7 +616,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 45
         $cursor = $db->inventory->find(
             ['status' => 'A'],
-            ['projection' => ['item' => 1, 'status' => 1, '_id' => 0]]
+            ['projection' => ['item' => 1, 'status' => 1, '_id' => 0]],
         );
         // End Example 45
 
@@ -635,7 +635,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 46
         $cursor = $db->inventory->find(
             ['status' => 'A'],
-            ['projection' => ['status' => 0, 'instock' => 0]]
+            ['projection' => ['status' => 0, 'instock' => 0]],
         );
         // End Example 46
 
@@ -654,7 +654,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 47
         $cursor = $db->inventory->find(
             ['status' => 'A'],
-            ['projection' => ['item' => 1, 'status' => 1, 'size.uom' => 1]]
+            ['projection' => ['item' => 1, 'status' => 1, 'size.uom' => 1]],
         );
         // End Example 47
 
@@ -674,7 +674,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 48
         $cursor = $db->inventory->find(
             ['status' => 'A'],
-            ['projection' => ['size.uom' => 0]]
+            ['projection' => ['size.uom' => 0]],
         );
         // End Example 48
 
@@ -693,7 +693,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 49
         $cursor = $db->inventory->find(
             ['status' => 'A'],
-            ['projection' => ['item' => 1, 'status' => 1, 'instock.qty' => 1]]
+            ['projection' => ['item' => 1, 'status' => 1, 'instock.qty' => 1]],
         );
         // End Example 49
 
@@ -714,7 +714,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Example 50
         $cursor = $db->inventory->find(
             ['status' => 'A'],
-            ['projection' => ['item' => 1, 'status' => 1, 'instock' => ['$slice' => -1]]]
+            ['projection' => ['item' => 1, 'status' => 1, 'instock' => ['$slice' => -1]]],
         );
         // End Example 50
 
@@ -813,7 +813,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             [
                 '$set' => ['size.uom' => 'cm', 'status' => 'P'],
                 '$currentDate' => ['lastModified' => true],
-            ]
+            ],
         );
         // End Example 52
 
@@ -833,7 +833,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             [
                 '$set' => ['size.uom' => 'cm', 'status' => 'P'],
                 '$currentDate' => ['lastModified' => true],
-            ]
+            ],
         );
         // End Example 53
 
@@ -856,7 +856,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
                     ['warehouse' => 'A', 'qty' => 60],
                     ['warehouse' => 'B', 'qty' => 40],
                 ],
-            ]
+            ],
         );
         // End Example 54
 
@@ -1205,7 +1205,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // Start Index Example 2
         $indexName = $db->restaurants->createIndex(
             ['cuisine' => 1, 'name' => 1],
-            ['partialFilterExpression' => ['rating' => ['$gt' => 5]]]
+            ['partialFilterExpression' => ['rating' => ['$gt' => 5]]],
         );
         // End Index Example 2
 
@@ -1227,11 +1227,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $client->hr->employees->updateOne(
                 ['employee' => 3],
                 ['$set' => ['status' => 'Inactive']],
-                ['session' => $session]
+                ['session' => $session],
             );
             $client->reporting->events->insertOne(
                 ['employee' => 3, 'status' => ['new' => 'Inactive', 'old' => 'Active']],
-                ['session' => $session]
+                ['session' => $session],
             );
         } catch (\MongoDB\Driver\Exception\Exception $error) {
             echo "Caught exception during transaction, aborting.\n";
@@ -1412,11 +1412,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
             $client->hr->employees->updateOne(
                 ['employee' => 3],
                 ['$set' => ['status' => 'Inactive']],
-                ['session' => $session]
+                ['session' => $session],
             );
             $client->reporting->events->insertOne(
                 ['employee' => 3, 'status' => ['new' => 'Inactive', 'old' => 'Active']],
-                ['session' => $session]
+                ['session' => $session],
             );
         } catch (\MongoDB\Driver\Exception\Exception $error) {
             echo "Caught exception during transaction, aborting.\n";
@@ -1472,7 +1472,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $client = static::createTestClient();
         $items = $this->createCollection('test', 'items');
         $items->insertOne(
-            ['sku' => '111', 'name' => 'Peanuts', 'start' => new UTCDateTime()]
+            ['sku' => '111', 'name' => 'Peanuts', 'start' => new UTCDateTime()],
         );
 
         try {
@@ -1492,11 +1492,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
             [
                 'readConcern' => new \MongoDB\Driver\ReadConcern(\MongoDB\Driver\ReadConcern::MAJORITY),
                 'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
-            ]
+            ],
         )->items;
 
         $s1 = $client->startSession(
-            ['causalConsistency' => true]
+            ['causalConsistency' => true],
         );
 
         $currentDate = new \MongoDB\BSON\UTCDateTime();
@@ -1504,11 +1504,11 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $items->updateOne(
             ['sku' => '111', 'end' => ['$exists' => false]],
             ['$set' => ['end' => $currentDate]],
-            ['session' => $s1]
+            ['session' => $s1],
         );
         $items->insertOne(
             ['sku' => '111-nuts', 'name' => 'Pecans', 'start' => $currentDate],
-            ['session' => $s1]
+            ['session' => $s1],
         );
         // End Causal Consistency Example 1
         // phpcs:enable
@@ -1518,7 +1518,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         // phpcs:disable SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly
         // Start Causal Consistency Example 2
         $s2 = $client->startSession(
-            ['causalConsistency' => true]
+            ['causalConsistency' => true],
         );
         $s2->advanceClusterTime($s1->getClusterTime());
         $s2->advanceOperationTime($s1->getOperationTime());
@@ -1529,12 +1529,12 @@ class DocumentationExamplesTest extends FunctionalTestCase
                 'readPreference' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::SECONDARY),
                 'readConcern' => new \MongoDB\Driver\ReadConcern(\MongoDB\Driver\ReadConcern::MAJORITY),
                 'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
-            ]
+            ],
         )->items;
 
         $result = $items->find(
             ['end' => ['$exists' => false]],
-            ['session' => $s2]
+            ['session' => $s2],
         );
         foreach ($result as $item) {
             var_dump($item);
@@ -1590,7 +1590,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
                 ['$match' => ['adoptable' => true]],
                 ['$count' => 'adoptableCatsCount'],
             ],
-            ['session' => $session]
+            ['session' => $session],
         )->toArray()[0]->adoptableCatsCount;
 
         $adoptablePetsCount += $dogsCollection->aggregate(
@@ -1598,7 +1598,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
                 ['$match' => ['adoptable' => true]],
                 ['$count' => 'adoptableDogsCount'],
             ],
-            ['session' => $session]
+            ['session' => $session],
         )->toArray()[0]->adoptableDogsCount;
 
         var_dump($adoptablePetsCount);
@@ -1642,7 +1642,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
                 ],
                 ['$count' => 'totalDailySales'],
             ],
-            ['session' => $session]
+            ['session' => $session],
         )->toArray()[0]->totalDailySales;
         // End Snapshot Query Example 2
 
@@ -1691,9 +1691,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
         $db = $client->selectDatabase($this->getDatabaseName());
 
         // Start Versioned API Example 5
-        $strtoutc = function (string $datetime) {
-            return new \MongoDB\BSON\UTCDateTime(new \DateTime($datetime));
-        };
+        $strtoutc = fn (string $datetime) => new \MongoDB\BSON\UTCDateTime(new \DateTime($datetime));
 
         $db->sales->insertMany([
             ['_id' => 1, 'item' => 'abc', 'price' => 10, 'quantity' => 2, 'date' => $strtoutc('2021-01-01T08:00:00Z')],
@@ -1762,7 +1760,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             'foo',
             [
                 'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
-            ]
+            ],
         )->insertOne(['abc' => 0]);
 
         $client->selectCollection(
@@ -1770,7 +1768,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
             'bar',
             [
                 'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 1000),
-            ]
+            ],
         )->insertOne(['xyz' => 0]);
 
         // Step 1: Define the callback that specifies the sequence of operations to perform inside the transactions.

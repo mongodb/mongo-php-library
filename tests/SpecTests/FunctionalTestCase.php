@@ -19,6 +19,8 @@ use function MongoDB\BSON\toPHP;
 use function sprintf;
 use function version_compare;
 
+use const JSON_THROW_ON_ERROR;
+
 /**
  * Base class for spec test runners.
  *
@@ -35,8 +37,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     public const SERVERLESS_FORBID = 'forbid';
     public const SERVERLESS_REQUIRE = 'require';
 
-    /** @var Context|null */
-    private $context;
+    private ?Context $context = null;
 
     public function setUp(): void
     {
@@ -165,7 +166,7 @@ class FunctionalTestCase extends BaseFunctionalTestCase
         $serverVersion = $this->getServerVersion();
         $topology = $this->getTopology();
 
-        $this->markTestSkipped(sprintf('Server version "%s" and topology "%s" do not meet test requirements: %s', $serverVersion, $topology, json_encode($runOn)));
+        $this->markTestSkipped(sprintf('Server version "%s" and topology "%s" do not meet test requirements: %s', $serverVersion, $topology, json_encode($runOn, JSON_THROW_ON_ERROR)));
     }
 
     /**

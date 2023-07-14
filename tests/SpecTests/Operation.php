@@ -13,7 +13,6 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\GridFS\Bucket;
 use MongoDB\MapReduceResult;
-use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Operation\FindOneAndUpdate;
 use stdClass;
@@ -43,32 +42,23 @@ final class Operation
     public const OBJECT_SESSION1 = 'session1';
     public const OBJECT_TEST_RUNNER = 'testRunner';
 
-    /** @var ErrorExpectation|null */
-    public $errorExpectation;
+    public ?ErrorExpectation $errorExpectation = null;
 
-    /** @var ResultExpectation|null */
-    public $resultExpectation;
+    public ?ResultExpectation $resultExpectation = null;
 
-    /** @var array */
-    private $arguments = [];
+    private array $arguments = [];
 
-    /** @var string|null */
-    private $collectionName;
+    private ?string $collectionName = null;
 
-    /** @var array */
-    private $collectionOptions = [];
+    private array $collectionOptions = [];
 
-    /** @var string|null */
-    private $databaseName;
+    private ?string $databaseName = null;
 
-    /** @var array */
-    private $databaseOptions = [];
+    private array $databaseOptions = [];
 
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var string */
-    private $object = self::OBJECT_COLLECTION;
+    private string $object = self::OBJECT_COLLECTION;
 
     private function __construct(stdClass $operation)
     {
@@ -304,7 +294,7 @@ final class Operation
             case 'watch':
                 return $client->watch(
                     $args['pipeline'] ?? [],
-                    array_diff_key($args, ['pipeline' => 1])
+                    array_diff_key($args, ['pipeline' => 1]),
                 );
 
             default:
@@ -327,7 +317,7 @@ final class Operation
             case 'aggregate':
                 return $collection->aggregate(
                     $args['pipeline'],
-                    array_diff_key($args, ['pipeline' => 1])
+                    array_diff_key($args, ['pipeline' => 1]),
                 );
 
             case 'bulkWrite':
@@ -338,19 +328,19 @@ final class Operation
                 return $collection->bulkWrite(
                     // TODO: Check if self can be used with a private static function
                     array_map([$this, 'prepareBulkWriteRequest'], $args['requests']),
-                    $options
+                    $options,
                 );
 
             case 'createIndex':
                 return $collection->createIndex(
                     $args['keys'],
-                    array_diff_key($args, ['keys' => 1])
+                    array_diff_key($args, ['keys' => 1]),
                 );
 
             case 'dropIndex':
                 return $collection->dropIndex(
                     $args['name'],
-                    array_diff_key($args, ['name' => 1])
+                    array_diff_key($args, ['name' => 1]),
                 );
 
             case 'count':
@@ -376,7 +366,7 @@ final class Operation
                 return $collection->distinct(
                     $args['fieldName'],
                     $args['filter'] ?? [],
-                    array_diff_key($args, ['fieldName' => 1, 'filter' => 1])
+                    array_diff_key($args, ['fieldName' => 1, 'filter' => 1]),
                 );
 
             case 'drop':
@@ -421,13 +411,13 @@ final class Operation
 
                 return $collection->insertMany(
                     $args['documents'],
-                    $options
+                    $options,
                 );
 
             case 'insertOne':
                 return $collection->insertOne(
                     $args['document'],
-                    array_diff_key($args, ['document' => 1])
+                    array_diff_key($args, ['document' => 1]),
                 );
 
             case 'listIndexes':
@@ -438,13 +428,13 @@ final class Operation
                     $args['map'],
                     $args['reduce'],
                     $args['out'],
-                    array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1])
+                    array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1]),
                 );
 
             case 'watch':
                 return $collection->watch(
                     $args['pipeline'] ?? [],
-                    array_diff_key($args, ['pipeline' => 1])
+                    array_diff_key($args, ['pipeline' => 1]),
                 );
 
             default:
@@ -467,19 +457,19 @@ final class Operation
             case 'aggregate':
                 return $database->aggregate(
                     $args['pipeline'],
-                    array_diff_key($args, ['pipeline' => 1])
+                    array_diff_key($args, ['pipeline' => 1]),
                 );
 
             case 'createCollection':
                 return $database->createCollection(
                     $args['collection'],
-                    array_diff_key($args, ['collection' => 1])
+                    array_diff_key($args, ['collection' => 1]),
                 );
 
             case 'dropCollection':
                 return $database->dropCollection(
                     $args['collection'],
-                    array_diff_key($args, ['collection' => 1])
+                    array_diff_key($args, ['collection' => 1]),
                 );
 
             case 'listCollectionNames':
@@ -491,13 +481,13 @@ final class Operation
             case 'runCommand':
                 return $database->command(
                     $args['command'],
-                    array_diff_key($args, ['command' => 1])
+                    array_diff_key($args, ['command' => 1]),
                 )->toArray()[0];
 
             case 'watch':
                 return $database->watch(
                     $args['pipeline'] ?? [],
-                    array_diff_key($args, ['pipeline' => 1])
+                    array_diff_key($args, ['pipeline' => 1]),
                 );
 
             default:
@@ -567,10 +557,11 @@ final class Operation
                 return $session->startTransaction($context->prepareOptions($options));
 
             case 'withTransaction':
-                /** @var self[] $callbackOperations */
-                $callbackOperations = array_map(function ($operation) {
-                    return self::fromConvenientTransactions($operation);
-                }, $this->arguments['callback']->operations);
+                /** @var list<self> $callbackOperations */
+                $callbackOperations = array_map(
+                    fn ($operation) => self::fromConvenientTransactions($operation),
+                    $this->arguments['callback']->operations,
+                );
 
                 $callback = function () use ($callbackOperations, $test, $context): void {
                     foreach ($callbackOperations as $operation) {
@@ -659,10 +650,13 @@ final class Operation
     private function getIndexNames(Context $context, string $databaseName, string $collectionName): array
     {
         return array_map(
-            function (IndexInfo $indexInfo) {
-                return $indexInfo->getName();
-            },
-            iterator_to_array($context->getInternalClient()->selectCollection($databaseName, $collectionName)->listIndexes())
+            'strval',
+            iterator_to_array(
+                $context
+                    ->getInternalClient()
+                    ->selectCollection($databaseName, $collectionName)
+                    ->listIndexes(),
+            ),
         );
     }
 

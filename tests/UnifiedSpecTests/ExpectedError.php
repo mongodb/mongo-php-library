@@ -39,11 +39,8 @@ use function sprintf;
 
 final class ExpectedError
 {
-    /**
-     * @see https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err
-     * @var array
-     */
-    private static $codeNameMap = [
+    /** @see https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err */
+    private static array $codeNameMap = [
         'Interrupted' => 11601,
         'MaxTimeMSExpired' => 50,
         'NoSuchTransaction' => 251,
@@ -51,32 +48,23 @@ final class ExpectedError
         'WriteConflict' => 112,
     ];
 
-    /** @var bool */
-    private $isError = false;
+    private bool $isError = false;
 
-    /** @var bool|null */
-    private $isClientError;
+    private ?bool $isClientError = null;
 
-    /** @var string|null */
-    private $messageContains;
+    private ?string $messageContains = null;
 
-    /** @var int|null */
-    private $code;
+    private ?int $code = null;
 
-    /** @var string|null */
-    private $codeName;
+    private ?string $codeName = null;
 
-    /** @var Matches|null */
-    private $matchesResultDocument;
+    private ?Matches $matchesResultDocument = null;
 
-    /** @var array */
-    private $includedLabels = [];
+    private array $includedLabels = [];
 
-    /** @var array */
-    private $excludedLabels = [];
+    private array $excludedLabels = [];
 
-    /** @var ExpectedResult|null */
-    private $expectedResult;
+    private ?ExpectedResult $expectedResult = null;
 
     public function __construct(?stdClass $o, EntityMap $entityMap)
     {

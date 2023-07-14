@@ -43,8 +43,7 @@ use const E_USER_DEPRECATED;
  */
 class IndexInfo implements ArrayAccess
 {
-    /** @var array */
-    private $info;
+    private array $info;
 
     /** @param array $info Index info */
     public function __construct(array $info)

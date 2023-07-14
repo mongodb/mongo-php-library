@@ -10,14 +10,11 @@ use MongoDB\Tests\CommandObserver;
 
 class RenameCollectionFunctionalTest extends FunctionalTestCase
 {
-    /** @var integer */
-    private static $errorCodeNamespaceNotFound = 26;
+    private static int $errorCodeNamespaceNotFound = 26;
 
-    /** @var integer */
-    private static $errorCodeNamespaceExists = 48;
+    private static int $errorCodeNamespaceExists = 48;
 
-    /** @var string */
-    private $toCollectionName;
+    private string $toCollectionName;
 
     public function setUp(): void
     {
@@ -43,14 +40,14 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
                     $this->getCollectionName(),
                     $this->getDatabaseName(),
                     $this->toCollectionName,
-                    ['writeConcern' => $this->createDefaultWriteConcern()]
+                    ['writeConcern' => $this->createDefaultWriteConcern()],
                 );
 
                 $operation->execute($server);
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -66,7 +63,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
             $this->getDatabaseName(),
             $this->getCollectionName(),
             $this->getDatabaseName(),
-            $this->toCollectionName
+            $this->toCollectionName,
         );
         $commandResult = $operation->execute($server);
 
@@ -101,7 +98,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
             $this->getDatabaseName(),
             $this->getCollectionName(),
             $this->getDatabaseName(),
-            $this->toCollectionName
+            $this->toCollectionName,
         );
         $operation->execute($server);
     }
@@ -115,7 +112,7 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
             $this->getDatabaseName(),
             $this->getCollectionName(),
             $this->getDatabaseName(),
-            $this->toCollectionName
+            $this->toCollectionName,
         );
         $operation->execute($this->getPrimaryServer());
     }
@@ -135,14 +132,14 @@ class RenameCollectionFunctionalTest extends FunctionalTestCase
                     $this->getCollectionName(),
                     $this->getDatabaseName(),
                     $this->toCollectionName,
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($server);
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 }

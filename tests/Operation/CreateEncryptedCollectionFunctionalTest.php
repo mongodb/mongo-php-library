@@ -5,7 +5,7 @@ namespace MongoDB\Tests\Operation;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Document;
 use MongoDB\Client;
-use MongoDB\ClientEncryption;
+use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
@@ -18,8 +18,7 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
 {
     public const LOCAL_MASTERKEY = 'Mng0NCt4ZHVUYUJCa1kxNkVyNUR1QURhZ2h2UzR2d2RrZzh0cFBwM3R6NmdWMDFBMUN3YkQ5aXRRMkhGRGdQV09wOGVNYUMxT2k3NjZKelhaQmRCZGJkTXVyZG9uSjFk';
 
-    /** @var ClientEncryption */
-    private $clientEncryption;
+    private ClientEncryption $clientEncryption;
 
     public function setUp(): void
     {
@@ -61,14 +60,14 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         $operation = new CreateEncryptedCollection(
             $this->getDatabaseName(),
             $this->getCollectionName(),
-            ['encryptedFields' => $input]
+            ['encryptedFields' => $input],
         );
 
         $operation->createDataKeys(
             $this->clientEncryption,
             'local',
             null,
-            $encryptedFieldsOutput
+            $encryptedFieldsOutput,
         );
 
         $this->assertSame($expectedOutput, $encryptedFieldsOutput);
@@ -92,14 +91,14 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         $operation = new CreateEncryptedCollection(
             $this->getDatabaseName(),
             $this->getCollectionName(),
-            ['encryptedFields' => $input]
+            ['encryptedFields' => $input],
         );
 
         $operation->createDataKeys(
             $this->clientEncryption,
             'local',
             null,
-            $encryptedFieldsOutput
+            $encryptedFieldsOutput,
         );
 
         $this->assertSame($expectedOutput, $encryptedFieldsOutput);
@@ -123,14 +122,14 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         $operation = new CreateEncryptedCollection(
             $this->getDatabaseName(),
             $this->getCollectionName(),
-            ['encryptedFields' => $input]
+            ['encryptedFields' => $input],
         );
 
         $operation->createDataKeys(
             $this->clientEncryption,
             'local',
             null,
-            $encryptedFieldsOutput
+            $encryptedFieldsOutput,
         );
 
         $this->assertSame($expectedOutput, $encryptedFieldsOutput);
@@ -156,14 +155,14 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         $operation = new CreateEncryptedCollection(
             $this->getDatabaseName(),
             $this->getCollectionName(),
-            ['encryptedFields' => $originalEncryptedFields]
+            ['encryptedFields' => $originalEncryptedFields],
         );
 
         $operation->createDataKeys(
             $this->clientEncryption,
             'local',
             null,
-            $modifiedEncryptedFields
+            $modifiedEncryptedFields,
         );
 
         $this->assertSame($originalField, $originalEncryptedFields->fields[0]);
@@ -178,14 +177,14 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
         $operation = new CreateEncryptedCollection(
             $this->getDatabaseName(),
             $this->getCollectionName(),
-            ['encryptedFields' => $input]
+            ['encryptedFields' => $input],
         );
 
         $operation->createDataKeys(
             $this->clientEncryption,
             'local',
             null,
-            $modifiedEncryptedFields
+            $modifiedEncryptedFields,
         );
 
         $this->assertInstanceOf(Binary::class, $modifiedEncryptedFields['fields'][0]['keyId'] ?? null);

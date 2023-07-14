@@ -49,11 +49,9 @@ class Update implements Executable, Explainable
 {
     private const WIRE_VERSION_FOR_HINT = 8;
 
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var string */
-    private $collectionName;
+    private string $collectionName;
 
     /** @var array|object */
     private $filter;
@@ -61,8 +59,7 @@ class Update implements Executable, Explainable
     /** @var array|object */
     private $update;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Constructs a update command.

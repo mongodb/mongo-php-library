@@ -14,8 +14,7 @@ use stdClass;
 
 class DeleteFunctionalTest extends FunctionalTestCase
 {
-    /** @var Collection */
-    private $collection;
+    private Collection $collection;
 
     public function setUp(): void
     {
@@ -33,14 +32,14 @@ class DeleteFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     $filter,
-                    1
+                    1,
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event) use ($expectedQuery): void {
                 $this->assertEquals($expectedQuery, $event['started']->getCommand()->deletes[0]->q ?? null);
-            }
+            },
         );
     }
 
@@ -92,7 +91,7 @@ class DeleteFunctionalTest extends FunctionalTestCase
             $this->getCollectionName(),
             [],
             0,
-            ['hint' => '_id_', 'writeConcern' => new WriteConcern(0)]
+            ['hint' => '_id_', 'writeConcern' => new WriteConcern(0)],
         );
 
         $this->expectException(UnsupportedException::class);
@@ -110,14 +109,14 @@ class DeleteFunctionalTest extends FunctionalTestCase
                     $this->getCollectionName(),
                     [],
                     0,
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 

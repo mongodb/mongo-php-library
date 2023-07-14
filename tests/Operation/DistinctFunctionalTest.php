@@ -11,6 +11,8 @@ use function is_scalar;
 use function json_encode;
 use function usort;
 
+use const JSON_THROW_ON_ERROR;
+
 class DistinctFunctionalTest extends FunctionalTestCase
 {
     /** @dataProvider provideFilterDocuments */
@@ -22,14 +24,14 @@ class DistinctFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     'x',
-                    $filter
+                    $filter,
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event) use ($expectedQuery): void {
                 $this->assertEquals($expectedQuery, $event['started']->getCommand()->query ?? null);
-            }
+            },
         );
     }
 
@@ -42,14 +44,14 @@ class DistinctFunctionalTest extends FunctionalTestCase
                     $this->getCollectionName(),
                     'x',
                     [],
-                    ['readConcern' => $this->createDefaultReadConcern()]
+                    ['readConcern' => $this->createDefaultReadConcern()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -62,14 +64,14 @@ class DistinctFunctionalTest extends FunctionalTestCase
                     $this->getCollectionName(),
                     'x',
                     [],
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -103,8 +105,8 @@ class DistinctFunctionalTest extends FunctionalTestCase
                     return 1;
                 }
 
-                $a = json_encode($a);
-                $b = json_encode($b);
+                $a = json_encode($a, JSON_THROW_ON_ERROR);
+                $b = json_encode($b, JSON_THROW_ON_ERROR);
             }
 
             return $a < $b ? -1 : 1;

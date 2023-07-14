@@ -69,7 +69,7 @@ $collection->insertMany([
 
 $collection->updateMany(
     ['x' => ['$gt' => 1]],
-    ['$set' => ['y' => 1]]
+    ['$set' => ['y' => 1]],
 );
 
 $cursor = $collection->find([], ['batchSize' => 2]);

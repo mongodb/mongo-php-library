@@ -37,17 +37,14 @@ use function MongoDB\is_document;
  */
 class InsertOne implements Executable
 {
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var string */
-    private $collectionName;
+    private string $collectionName;
 
     /** @var array|object */
     private $document;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Constructs an insert command.

@@ -45,17 +45,14 @@ class CreateIndexes implements Executable
 {
     private const WIRE_VERSION_FOR_COMMIT_QUORUM = 9;
 
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var string */
-    private $collectionName;
+    private string $collectionName;
 
-    /** @var array */
-    private $indexes = [];
+    /** @var list<IndexInput> */
+    private array $indexes = [];
 
-    /** @var array */
-    private $options = [];
+    private array $options = [];
 
     /**
      * Constructs a createIndexes command.
@@ -143,9 +140,10 @@ class CreateIndexes implements Executable
 
         $this->executeCommand($server);
 
-        return array_map(function (IndexInput $index) {
-            return (string) $index;
-        }, $this->indexes);
+        return array_map(
+            'strval',
+            $this->indexes,
+        );
     }
 
     /**

@@ -34,8 +34,7 @@ use function array_key_exists;
  */
 class DatabaseInfo implements ArrayAccess
 {
-    /** @var array */
-    private $info;
+    private array $info;
 
     /** @param array $info Database info */
     public function __construct(array $info)

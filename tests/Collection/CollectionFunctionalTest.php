@@ -25,6 +25,8 @@ use function str_contains;
 use function usort;
 use function version_compare;
 
+use const JSON_THROW_ON_ERROR;
+
 /**
  * Functional tests for the Collection class.
  */
@@ -111,7 +113,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
             $cursor = $this->collection->aggregate(
                 [['$match' => ['_id' => ['$lt' => 3]]]],
-                ['session' => $session]
+                ['session' => $session],
             );
 
             $expected = [
@@ -139,7 +141,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                         'sparse' => true,
                         'unique' => true,
                         'writeConcern' => new WriteConcern(1),
-                    ]
+                    ],
                 );
             },
             function (array $event): void {
@@ -149,7 +151,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 $this->assertObjectHasAttribute('writeConcern', $command);
                 $this->assertObjectHasAttribute('sparse', $command->indexes[0]);
                 $this->assertObjectHasAttribute('unique', $command->indexes[0]);
-            }
+            },
         );
     }
 
@@ -182,8 +184,8 @@ class CollectionFunctionalTest extends FunctionalTestCase
                     return 1;
                 }
 
-                $a = json_encode($a);
-                $b = json_encode($b);
+                $a = json_encode($a, JSON_THROW_ON_ERROR);
+                $b = json_encode($b, JSON_THROW_ON_ERROR);
             }
 
             return $a < $b ? -1 : 1;
@@ -291,7 +293,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
 
             $cursor = $this->collection->find(
                 ['_id' => ['$lt' => 3]],
-                ['session' => $session]
+                ['session' => $session],
             );
 
             $expected = [
@@ -438,7 +440,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 function ($collection, $session, $options = []): void {
                     $collection->aggregate(
                         [['$match' => ['_id' => ['$lt' => 3]]]],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'r',
             ],
@@ -461,7 +463,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 function ($collection, $session, $options = []): void {
                     $collection->bulkWrite(
                         [['insertOne' => [['test' => 'foo']]]],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'w',
             ],
@@ -481,7 +483,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 function ($collection, $session, $options = []): void {
                     $collection->countDocuments(
                         [],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'r',
             ],
@@ -501,7 +503,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 function ($collection, $session, $options = []): void {
                     $collection->deleteMany(
                         ['test' => 'foo'],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'w',
             ],
@@ -510,7 +512,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 function ($collection, $session, $options = []): void {
                     $collection->deleteOne(
                         ['test' => 'foo'],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'w',
             ],
@@ -520,7 +522,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                     $collection->distinct(
                         '_id',
                         [],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'r',
             ],
@@ -569,7 +571,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 function ($collection, $session, $options = []): void {
                     $collection->find(
                         ['test' => 'foo'],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'r',
             ],
@@ -578,7 +580,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 function ($collection, $session, $options = []): void {
                     $collection->findOne(
                         ['test' => 'foo'],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'r',
             ],
@@ -587,7 +589,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 function ($collection, $session, $options = []): void {
                     $collection->findOneAndDelete(
                         ['test' => 'foo'],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'w',
             ],
@@ -597,7 +599,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                     $collection->findOneAndReplace(
                         ['test' => 'foo'],
                         [],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'w',
             ],
@@ -607,7 +609,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                     $collection->findOneAndUpdate(
                         ['test' => 'foo'],
                         ['$set' => ['updated' => 1]],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'w',
             ],
@@ -619,7 +621,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                             ['test' => 'foo'],
                             ['test' => 'bar'],
                         ],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'w',
             ],
@@ -628,7 +630,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                 function ($collection, $session, $options = []): void {
                     $collection->insertOne(
                         ['test' => 'foo'],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'w',
             ],
@@ -661,7 +663,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                     $collection->replaceOne(
                         ['test' => 'foo'],
                         [],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'w',
             ],
@@ -671,7 +673,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                     $collection->updateMany(
                         ['test' => 'foo'],
                         ['$set' => ['updated' => 1]],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'w',
             ],
@@ -681,7 +683,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
                     $collection->updateOne(
                         ['test' => 'foo'],
                         ['$set' => ['updated' => 1]],
-                        ['session' => $session] + $options
+                        ['session' => $session] + $options,
                     );
                 }, 'w',
             ],
@@ -703,9 +705,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         return array_filter(
             $this->collectionMethodClosures(),
-            function ($rw) {
-                return str_contains($rw[1], 'r');
-            }
+            fn ($rw) => str_contains($rw[1], 'r'),
         );
     }
 
@@ -713,9 +713,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         return array_filter(
             $this->collectionMethodClosures(),
-            function ($rw) {
-                return str_contains($rw[1], 'w');
-            }
+            fn ($rw) => str_contains($rw[1], 'w'),
         );
     }
 
@@ -741,7 +739,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
                 $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
-            }
+            },
         );
     }
 

@@ -17,14 +17,14 @@ class DatabaseCommandFunctionalTest extends FunctionalTestCase
             function () use ($command): void {
                 $operation = new DatabaseCommand(
                     $this->getDatabaseName(),
-                    $command
+                    $command,
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertEquals(1, $event['started']->getCommand()->ping ?? null);
-            }
+            },
         );
     }
 
@@ -49,14 +49,14 @@ class DatabaseCommandFunctionalTest extends FunctionalTestCase
                 $operation = new DatabaseCommand(
                     $this->getDatabaseName(),
                     ['ping' => 1],
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 }

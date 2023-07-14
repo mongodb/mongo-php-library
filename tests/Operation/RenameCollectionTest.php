@@ -16,7 +16,7 @@ class RenameCollectionTest extends TestCase
             $this->getCollectionName(),
             $this->getDatabaseName(),
             $this->getCollectionName() . '.renamed',
-            $options
+            $options,
         );
     }
 

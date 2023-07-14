@@ -35,7 +35,7 @@ class PedantryTest extends TestCase
             function (ReflectionMethod $method) use ($class) {
                 return $method->getDeclaringClass() == $class // Exclude inherited methods
                     && $method->getFileName() === $class->getFileName(); // Exclude methods inherited from traits
-            }
+            },
         );
 
         $getSortValue = function (ReflectionMethod $method) {
@@ -55,17 +55,11 @@ class PedantryTest extends TestCase
         $sortedMethods = $methods;
         usort(
             $sortedMethods,
-            function (ReflectionMethod $a, ReflectionMethod $b) use ($getSortValue) {
-                return strcasecmp($getSortValue($a), $getSortValue($b));
-            }
+            fn (ReflectionMethod $a, ReflectionMethod $b) => strcasecmp($getSortValue($a), $getSortValue($b)),
         );
 
-        $methods = array_map(function (ReflectionMethod $method) {
-            return $method->getName();
-        }, $methods);
-        $sortedMethods = array_map(function (ReflectionMethod $method) {
-            return $method->getName();
-        }, $sortedMethods);
+        $methods = array_map(fn (ReflectionMethod $method) => $method->getName(), $methods);
+        $sortedMethods = array_map(fn (ReflectionMethod $method) => $method->getName(), $sortedMethods);
 
         $this->assertEquals($sortedMethods, $methods);
     }

@@ -20,8 +20,7 @@ use function sprintf;
 
 class ChangeStreamIteratorTest extends FunctionalTestCase
 {
-    /** @var Collection */
-    private $collection;
+    private Collection $collection;
 
     public function setUp(): void
     {
@@ -144,7 +143,7 @@ class ChangeStreamIteratorTest extends FunctionalTestCase
             $callable,
             function (array $event) use (&$commands): void {
                 $this->fail(sprintf('"%s" command was executed', $event['started']->getCommandName()));
-            }
+            },
         );
 
         $this->assertEmpty($commands);

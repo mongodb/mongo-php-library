@@ -13,7 +13,7 @@ class CollectionInfoTest extends TestCase
         $info = new CollectionInfo([
             'name' => 'foo',
             'type' => 'view',
-            'options' => ['capped' => true, 'size' => 1048576],
+            'options' => ['capped' => true, 'size' => 1_048_576],
             'info' => ['readOnly' => true],
             'idIndex' => ['idIndex' => true], // Dummy option
         ]);
@@ -24,8 +24,8 @@ class CollectionInfoTest extends TestCase
         $this->assertSame('view', $info->getType());
         $this->assertSame('view', $info['type']);
 
-        $this->assertSame(['capped' => true, 'size' => 1048576], $info->getOptions());
-        $this->assertSame(['capped' => true, 'size' => 1048576], $info['options']);
+        $this->assertSame(['capped' => true, 'size' => 1_048_576], $info->getOptions());
+        $this->assertSame(['capped' => true, 'size' => 1_048_576], $info['options']);
 
         $this->assertSame(['readOnly' => true], $info->getInfo());
         $this->assertSame(['readOnly' => true], $info['info']);
@@ -58,22 +58,22 @@ class CollectionInfoTest extends TestCase
         $this->assertNull($info->getCappedMax());
         $this->assertNull($info->getCappedSize());
 
-        $info = new CollectionInfo(['name' => 'foo', 'options' => ['capped' => true, 'size' => 1048576]]);
+        $info = new CollectionInfo(['name' => 'foo', 'options' => ['capped' => true, 'size' => 1_048_576]]);
         $this->assertTrue($info->isCapped());
         $this->assertNull($info->getCappedMax());
-        $this->assertSame(1048576, $info->getCappedSize());
+        $this->assertSame(1_048_576, $info->getCappedSize());
 
-        $info = new CollectionInfo(['name' => 'foo', 'options' => ['capped' => true, 'size' => 1048576, 'max' => 100]]);
+        $info = new CollectionInfo(['name' => 'foo', 'options' => ['capped' => true, 'size' => 1_048_576, 'max' => 100]]);
         $this->assertTrue($info->isCapped());
         $this->assertSame(100, $info->getCappedMax());
-        $this->assertSame(1048576, $info->getCappedSize());
+        $this->assertSame(1_048_576, $info->getCappedSize());
     }
 
     public function testDebugInfo(): void
     {
         $expectedInfo = [
             'name' => 'foo',
-            'options' => ['capped' => true, 'size' => 1048576],
+            'options' => ['capped' => true, 'size' => 1_048_576],
         ];
 
         $info = new CollectionInfo($expectedInfo);
@@ -90,7 +90,7 @@ class CollectionInfoTest extends TestCase
 
     public function testOffsetSetCannotBeCalled(): void
     {
-        $info = new CollectionInfo(['name' => 'foo', 'options' => ['capped' => true, 'size' => 1048576]]);
+        $info = new CollectionInfo(['name' => 'foo', 'options' => ['capped' => true, 'size' => 1_048_576]]);
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage(CollectionInfo::class . ' is immutable');
         $info['options'] = ['capped' => false];
@@ -98,7 +98,7 @@ class CollectionInfoTest extends TestCase
 
     public function testOffsetUnsetCannotBeCalled(): void
     {
-        $info = new CollectionInfo(['name' => 'foo', 'options' => ['capped' => true, 'size' => 1048576]]);
+        $info = new CollectionInfo(['name' => 'foo', 'options' => ['capped' => true, 'size' => 1_048_576]]);
         $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage(CollectionInfo::class . ' is immutable');
         unset($info['options']);

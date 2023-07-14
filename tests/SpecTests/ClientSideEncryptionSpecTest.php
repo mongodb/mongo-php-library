@@ -42,6 +42,8 @@ use function sprintf;
 use function str_repeat;
 use function substr;
 
+use const JSON_THROW_ON_ERROR;
+
 /**
  * Client-side encryption spec tests.
  *
@@ -53,8 +55,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 {
     public const LOCAL_MASTERKEY = 'Mng0NCt4ZHVUYUJCa1kxNkVyNUR1QURhZ2h2UzR2d2RrZzh0cFBwM3R6NmdWMDFBMUN3YkQ5aXRRMkhGRGdQV09wOGVNYUMxT2k3NjZKelhaQmRCZGJkTXVyZG9uSjFk';
 
-    /** @var array */
-    private static $incompleteTests = [
+    private static array $incompleteTests = [
         'explain: Explain a find with deterministic encryption' => 'crypt_shared does not add apiVersion field to explain commands (PHPLIB-947, SERVER-69564)',
         'fle2v2-Range-Decimal-Aggregate: FLE2 Range Decimal. Aggregate.' => 'Bundled libmongocrypt does not support Decimal128 (PHPC-2207)',
         'fle2v2-Range-Decimal-Correctness: Find with $gt' => 'Bundled libmongocrypt does not support Decimal128 (PHPC-2207)',
@@ -169,8 +170,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             $this->markTestSkipped($test->skipReason);
         }
 
-        $databaseName = $databaseName ?? $this->getDatabaseName();
-        $collectionName = $collectionName ?? $this->getCollectionName();
+        $databaseName ??= $this->getDatabaseName();
+        $collectionName ??= $this->getCollectionName();
 
         try {
             $context = Context::fromClientSideEncryption($test, $databaseName, $collectionName);
@@ -330,7 +331,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 if ($command['started']->getCommandName() === 'insert') {
                     $insertCommand = $command['started']->getCommand();
                 }
-            }
+            },
         );
 
         $this->assertInstanceOf(Binary::class, $dataKeyId);
@@ -468,7 +469,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
     {
         yield 'Test 1' => [
             static function (self $test, Collection $collection): void {
-                $collection->insertOne(['_id' => 'over_2mib_under_16mib', 'unencrypted' => str_repeat('a', 2097152)]);
+                $collection->insertOne(['_id' => 'over_2mib_under_16mib', 'unencrypted' => str_repeat('a', 2_097_152)]);
                 $test->assertCollectionCount($collection->getNamespace(), 1);
             },
         ];
@@ -476,7 +477,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
         yield 'Test 2' => [
             static function (self $test, Collection $collection, array $document): void {
                 $collection->insertOne(
-                    ['_id' => 'encryption_exceeds_2mib', 'unencrypted' => str_repeat('a', 2097152 - 2000)] + $document
+                    ['_id' => 'encryption_exceeds_2mib', 'unencrypted' => str_repeat('a', 2_097_152 - 2000)] + $document,
                 );
                 $test->assertCollectionCount($collection->getNamespace(), 1);
             },
@@ -488,8 +489,8 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 (new CommandObserver())->observe(
                     function () use ($collection): void {
                         $collection->insertMany([
-                            ['_id' => 'over_2mib_1', 'unencrypted' => str_repeat('a', 2097152)],
-                            ['_id' => 'over_2mib_2', 'unencrypted' => str_repeat('a', 2097152)],
+                            ['_id' => 'over_2mib_1', 'unencrypted' => str_repeat('a', 2_097_152)],
+                            ['_id' => 'over_2mib_2', 'unencrypted' => str_repeat('a', 2_097_152)],
                         ]);
                     },
                     function ($command) use (&$commands): void {
@@ -498,7 +499,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                         }
 
                         $commands[] = $command;
-                    }
+                    },
                 );
 
                 $test->assertCount(2, $commands);
@@ -513,11 +514,11 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                         $collection->insertMany([
                             [
                                 '_id' => 'encryption_exceeds_2mib_1',
-                                'unencrypted' => str_repeat('a', 2097152 - 2000),
+                                'unencrypted' => str_repeat('a', 2_097_152 - 2000),
                             ] + $document,
                             [
                                 '_id' => 'encryption_exceeds_2mib_2',
-                                'unencrypted' => str_repeat('a', 2097152 - 2000),
+                                'unencrypted' => str_repeat('a', 2_097_152 - 2000),
                             ] + $document,
                         ]);
                     },
@@ -527,7 +528,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                         }
 
                         $commands[] = $command;
-                    }
+                    },
                 );
 
                 $test->assertCount(2, $commands);
@@ -536,7 +537,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         yield 'Test 5' => [
             static function (self $test, Collection $collection): void {
-                $collection->insertOne(['_id' => 'under_16mib', 'unencrypted' => str_repeat('a', 16777216 - 2000)]);
+                $collection->insertOne(['_id' => 'under_16mib', 'unencrypted' => str_repeat('a', 16_777_216 - 2000)]);
                 $test->assertCollectionCount($collection->getNamespace(), 1);
             },
         ];
@@ -545,7 +546,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
             static function (self $test, Collection $collection, array $document): void {
                 $test->expectException(BulkWriteException::class);
                 $test->expectExceptionMessageMatches('#object to insert too large#');
-                $collection->insertOne(['_id' => 'encryption_exceeds_16mib', 'unencrypted' => str_repeat('a', 16777216 - 2000)] + $document);
+                $collection->insertOne(['_id' => 'encryption_exceeds_16mib', 'unencrypted' => str_repeat('a', 16_777_216 - 2000)] + $document);
             },
         ];
     }
@@ -579,7 +580,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
 
         $collection = $clientEncrypted->selectCollection('db', 'coll');
 
-        $document = json_decode(file_get_contents(__DIR__ . '/client-side-encryption/limits/limits-doc.json'), true);
+        $document = json_decode(file_get_contents(__DIR__ . '/client-side-encryption/limits/limits-doc.json'), true, 512, JSON_THROW_ON_ERROR);
 
         $test($this, $collection, $document);
     }
@@ -717,7 +718,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 $this->assertEquals(
                     $clientEncryption->decrypt($expectedData->value),
                     $clientEncryption->decrypt($actualData->value),
-                    'Decrypted value for field ' . $fieldName . ' does not match.'
+                    'Decrypted value for field ' . $fieldName . ' does not match.',
                 );
             } else {
                 $this->assertEquals($corpus[$fieldName]->value, $actualData->value, 'Value for field ' . $fieldName . ' does not match original value.');
@@ -1513,7 +1514,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
                 'unique' => true,
                 'partialFilterExpression' => ['keyAltNames' => ['$exists' => true]],
                 'writeConcern' => new WriteConcern(WriteConcern::MAJORITY),
-            ]
+            ],
         );
 
         $clientEncryption = new ClientEncryption([

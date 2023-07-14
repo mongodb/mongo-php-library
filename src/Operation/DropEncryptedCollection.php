@@ -39,11 +39,10 @@ use function MongoDB\is_document;
  */
 class DropEncryptedCollection implements Executable
 {
-    /** @var DropCollection */
-    private $dropCollection;
+    private DropCollection $dropCollection;
 
-    /** @var DropCollection[] */
-    private $dropMetadataCollections;
+    /** @var list<DropCollection> */
+    private array $dropMetadataCollections;
 
     /**
      * Constructs an operation to drop an encrypted collection and its related

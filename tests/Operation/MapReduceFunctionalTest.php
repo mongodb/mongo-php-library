@@ -35,14 +35,14 @@ class MapReduceFunctionalTest extends FunctionalTestCase
                     new Javascript('function() { emit(this.x, this.y); }'),
                     new Javascript('function(key, values) { return Array.sum(values); }'),
                     ['inline' => 1],
-                    ['readConcern' => $this->createDefaultReadConcern()]
+                    ['readConcern' => $this->createDefaultReadConcern()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('readConcern', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -60,14 +60,14 @@ class MapReduceFunctionalTest extends FunctionalTestCase
                     new Javascript('function() { emit(this.x, this.y); }'),
                     new Javascript('function(key, values) { return Array.sum(values); }'),
                     $this->getCollectionName() . '.output',
-                    ['writeConcern' => $this->createDefaultWriteConcern()]
+                    ['writeConcern' => $this->createDefaultWriteConcern()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -155,14 +155,14 @@ class MapReduceFunctionalTest extends FunctionalTestCase
                     new Javascript('function() { emit(this.x, this.y); }'),
                     new Javascript('function(key, values) { return Array.sum(values); }'),
                     ['inline' => 1],
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -178,7 +178,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
                     new Javascript('function() { emit(this.x, this.y); }'),
                     new Javascript('function(key, values) { return Array.sum(values); }'),
                     ['inline' => 1],
-                    ['bypassDocumentValidation' => true]
+                    ['bypassDocumentValidation' => true],
                 );
 
                 $operation->execute($this->getPrimaryServer());
@@ -186,7 +186,7 @@ class MapReduceFunctionalTest extends FunctionalTestCase
             function (array $event): void {
                 $this->assertObjectHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
                 $this->assertEquals(true, $event['started']->getCommand()->bypassDocumentValidation);
-            }
+            },
         );
     }
 
@@ -202,14 +202,14 @@ class MapReduceFunctionalTest extends FunctionalTestCase
                     new Javascript('function() { emit(this.x, this.y); }'),
                     new Javascript('function(key, values) { return Array.sum(values); }'),
                     ['inline' => 1],
-                    ['bypassDocumentValidation' => false]
+                    ['bypassDocumentValidation' => false],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('bypassDocumentValidation', $event['started']->getCommand());
-            }
+            },
         );
     }
 

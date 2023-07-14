@@ -38,7 +38,7 @@ final class Util
     /**
      * Array to fill, which contains the schema of allowed attributes for operations.
      */
-    private static $args = [
+    private static array $args = [
         Operation::OBJECT_TEST_RUNNER => [
             'assertCollectionExists' => ['databaseName', 'collectionName'],
             'assertCollectionNotExists' => ['databaseName', 'collectionName'],

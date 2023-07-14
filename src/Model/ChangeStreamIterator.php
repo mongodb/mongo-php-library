@@ -49,26 +49,20 @@ use function MongoDB\is_document;
  */
 class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 {
-    /** @var integer */
-    private $batchPosition = 0;
+    private int $batchPosition = 0;
 
-    /** @var integer */
-    private $batchSize;
+    private int $batchSize;
 
-    /** @var boolean */
-    private $isRewindNop;
+    private bool $isRewindNop;
 
-    /** @var boolean */
-    private $isValid = false;
+    private bool $isValid = false;
 
-    /** @var object|null */
-    private $postBatchResumeToken;
+    private ?object $postBatchResumeToken = null;
 
     /** @var array|object|null */
     private $resumeToken;
 
-    /** @var Server */
-    private $server;
+    private Server $server;
 
     /**
      * @internal

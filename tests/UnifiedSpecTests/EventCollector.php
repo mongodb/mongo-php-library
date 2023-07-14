@@ -29,8 +29,7 @@ use function sprintf;
  */
 final class EventCollector implements CommandSubscriber
 {
-    /** @var array */
-    private static $supportedEvents = [
+    private static array $supportedEvents = [
         'PoolCreatedEvent' => null,
         'PoolReadyEvent' => null,
         'PoolClearedEvent' => null,
@@ -47,17 +46,13 @@ final class EventCollector implements CommandSubscriber
         'CommandFailedEvent' => CommandFailedEvent::class,
     ];
 
-    /** @var string */
-    private $clientId;
+    private string $clientId;
 
-    /** @var Context */
-    private $context;
+    private Context $context;
 
-    /** @var array */
-    private $collectEvents = [];
+    private array $collectEvents = [];
 
-    /** @var BSONArray */
-    private $eventList;
+    private BSONArray $eventList;
 
     public function __construct(BSONArray $eventList, array $collectEvents, string $clientId, Context $context)
     {

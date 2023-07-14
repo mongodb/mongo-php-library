@@ -52,23 +52,18 @@ class CreateEncryptedCollection implements Executable
 {
     private const WIRE_VERSION_FOR_QUERYABLE_ENCRYPTION_V2 = 21;
 
-    /** @var CreateCollection */
-    private $createCollection;
+    private CreateCollection $createCollection;
 
-    /** @var CreateCollection[] */
-    private $createMetadataCollections;
+    /** @var list<CreateCollection> */
+    private array $createMetadataCollections;
 
-    /** @var CreateIndexes */
-    private $createSafeContentIndex;
+    private CreateIndexes $createSafeContentIndex;
 
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var string */
-    private $collectionName;
+    private string $collectionName;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * @see CreateCollection::__construct() for supported options

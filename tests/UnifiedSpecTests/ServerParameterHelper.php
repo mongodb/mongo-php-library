@@ -10,17 +10,14 @@ use function array_key_exists;
 
 final class ServerParameterHelper
 {
-    /** @var Client */
-    private $client;
+    private Client $client;
 
     /** @var array<string|mixed> */
-    private $parameters = [];
+    private array $parameters = [];
 
-    /** @var bool */
-    private $fetchAllParametersFailed = false;
+    private bool $fetchAllParametersFailed = false;
 
-    /** @var bool */
-    private $allParametersFetched = false;
+    private bool $allParametersFetched = false;
 
     public function __construct(Client $client)
     {
@@ -66,7 +63,7 @@ final class ServerParameterHelper
                         'document' => 'array',
                         'array' => 'array',
                     ],
-                ]
+                ],
             );
 
             $this->parameters = $cursor->toArray()[0];
@@ -91,7 +88,7 @@ final class ServerParameterHelper
                     'document' => 'array',
                     'array' => 'array',
                 ],
-            ]
+            ],
         );
 
         $this->parameters[$parameter] = $cursor->toArray()[0][$parameter];

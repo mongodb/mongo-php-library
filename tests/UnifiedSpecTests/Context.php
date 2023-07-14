@@ -38,32 +38,25 @@ use function sprintf;
  */
 final class Context
 {
-    /** @var string */
-    private $activeClient;
+    private ?string $activeClient = null;
 
-    /** @var EntityMap */
-    private $entityMap;
+    private EntityMap $entityMap;
 
-    /** @var EventCollector[] */
-    private $eventCollectors = [];
+    /** @var list<EventCollector> */
+    private array $eventCollectors = [];
 
-    /** @var EventObserver[] */
-    private $eventObserversByClient = [];
+    /** @var array<string, EventObserver> */
+    private array $eventObserversByClient = [];
 
-    /** @var Client */
-    private $internalClient;
+    private Client $internalClient;
 
-    /** @var boolean */
-    private $inLoop = false;
+    private bool $inLoop = false;
 
-    /** @var string */
-    private $uri;
+    private string $uri;
 
-    /** @var string */
-    private $singleMongosUri;
+    private string $singleMongosUri;
 
-    /** @var string */
-    private $multiMongosUri;
+    private string $multiMongosUri;
 
     public function __construct(Client $internalClient, string $uri)
     {
@@ -239,10 +232,10 @@ final class Context
 
                         return [$key => $value];
                     },
-                    $tags
+                    $tags,
                 );
             },
-            (array) $readPreferenceTags
+            (array) $readPreferenceTags,
         );
     }
 
@@ -316,7 +309,7 @@ final class Context
             $driverOptions['serverApi'] = new ServerApi(
                 $serverApi->version,
                 $serverApi->strict ?? null,
-                $serverApi->deprecationErrors ?? null
+                $serverApi->deprecationErrors ?? null,
             );
         }
 

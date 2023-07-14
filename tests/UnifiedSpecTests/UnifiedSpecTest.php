@@ -20,8 +20,7 @@ use function glob;
  */
 class UnifiedSpecTest extends FunctionalTestCase
 {
-    /** @var array */
-    private static $incompleteTests = [
+    private static array $incompleteTests = [
         // Many load balancer tests use CMAP events and/or assertNumberConnectionsCheckedOut
         'load-balancers/cursors are correctly pinned to connections for load-balanced clusters: no connection is pinned if all documents are returned in the initial batch' => 'PHPC does not implement CMAP',
         'load-balancers/cursors are correctly pinned to connections for load-balanced clusters: pinned connections are returned when the cursor is drained' => 'PHPC does not implement CMAP',
@@ -67,8 +66,7 @@ class UnifiedSpecTest extends FunctionalTestCase
         'valid-pass/matches-lte-operator: special lte matching operator' => 'CSOT is not yet implemented (PHPC-1760)',
     ];
 
-    /** @var UnifiedTestRunner */
-    private static $runner;
+    private static UnifiedTestRunner $runner;
 
     public static function setUpBeforeClass(): void
     {

@@ -20,32 +20,24 @@ use function key;
  */
 class CommandExpectations implements CommandSubscriber
 {
-    /** @var array */
-    private $actualEvents = [];
+    private array $actualEvents = [];
 
-    /** @var array */
-    private $expectedEvents = [];
+    private array $expectedEvents = [];
 
-    /** @var boolean */
-    private $ignoreCommandFailed = false;
+    private bool $ignoreCommandFailed = false;
 
-    /** @var boolean */
-    private $ignoreCommandStarted = false;
+    private bool $ignoreCommandStarted = false;
 
-    /** @var boolean */
-    private $ignoreCommandSucceeded = false;
+    private bool $ignoreCommandSucceeded = false;
 
-    /** @var boolean */
-    private $ignoreExtraEvents = false;
+    private bool $ignoreExtraEvents = false;
 
-    /** @var boolean */
-    private $ignoreKeyVaultListCollections = false;
+    private bool $ignoreKeyVaultListCollections = false;
 
-    /** @var string[] */
-    private $ignoredCommandNames = [];
+    /** @var list<string> */
+    private array $ignoredCommandNames = [];
 
-    /** @var Client */
-    private $observedClient;
+    private Client $observedClient;
 
     private function __construct(Client $observedClient, array $events)
     {

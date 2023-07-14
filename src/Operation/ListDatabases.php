@@ -33,8 +33,7 @@ use MongoDB\Model\DatabaseInfoLegacyIterator;
  */
 class ListDatabases implements Executable
 {
-    /** @var ListDatabasesCommand */
-    private $listDatabases;
+    private ListDatabasesCommand $listDatabases;
 
     /**
      * Constructs a listDatabases command.

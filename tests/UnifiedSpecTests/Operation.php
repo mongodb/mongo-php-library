@@ -67,35 +67,25 @@ final class Operation
 {
     public const OBJECT_TEST_RUNNER = 'testRunner';
 
-    /** @var bool */
-    private $isTestRunnerOperation;
+    private bool $isTestRunnerOperation;
 
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var ?string */
-    private $object;
+    private ?string $object = null;
 
-    /** @var array */
-    private $arguments = [];
+    private array $arguments = [];
 
-    /** @var Context */
-    private $context;
+    private Context $context;
 
-    /** @var EntityMap */
-    private $entityMap;
+    private EntityMap $entityMap;
 
-    /** @var ExpectedError */
-    private $expectError;
+    private ExpectedError $expectError;
 
-    /** @var ExpectedResult */
-    private $expectResult;
+    private ExpectedResult $expectResult;
 
-    /** @var bool */
-    private $ignoreResultAndError;
+    private bool $ignoreResultAndError;
 
-    /** @var string */
-    private $saveResultAsEntity;
+    private ?string $saveResultAsEntity = null;
 
     public function __construct(stdClass $o, Context $context)
     {
@@ -260,7 +250,7 @@ final class Operation
 
                 return $client->watch(
                     $args['pipeline'],
-                    array_diff_key($args, ['pipeline' => 1])
+                    array_diff_key($args, ['pipeline' => 1]),
                 );
 
             case 'listDatabaseNames':
@@ -268,10 +258,8 @@ final class Operation
 
             case 'listDatabases':
                 return array_map(
-                    function (DatabaseInfo $info) {
-                        return $info->__debugInfo();
-                    },
-                    iterator_to_array($client->listDatabases($args))
+                    fn (DatabaseInfo $info) => $info->__debugInfo(),
+                    iterator_to_array($client->listDatabases($args)),
                 );
 
             default:
@@ -346,7 +334,7 @@ final class Operation
 
                 return iterator_to_array($collection->aggregate(
                     $args['pipeline'],
-                    array_diff_key($args, ['pipeline' => 1])
+                    array_diff_key($args, ['pipeline' => 1]),
                 ));
 
             case 'bulkWrite':
@@ -355,12 +343,10 @@ final class Operation
 
                 return $collection->bulkWrite(
                     array_map(
-                        static function ($request) {
-                            return self::prepareBulkWriteRequest($request);
-                        },
-                        $args['requests']
+                        static fn ($request) => self::prepareBulkWriteRequest($request),
+                        $args['requests'],
                     ),
-                    array_diff_key($args, ['requests' => 1])
+                    array_diff_key($args, ['requests' => 1]),
                 );
 
             case 'createChangeStream':
@@ -369,7 +355,7 @@ final class Operation
 
                 return $collection->watch(
                     $args['pipeline'],
-                    array_diff_key($args, ['pipeline' => 1])
+                    array_diff_key($args, ['pipeline' => 1]),
                 );
 
             case 'createFindCursor':
@@ -378,7 +364,7 @@ final class Operation
 
                 return $collection->find(
                     $args['filter'],
-                    array_diff_key($args, ['filter' => 1])
+                    array_diff_key($args, ['filter' => 1]),
                 );
 
             case 'createIndex':
@@ -387,7 +373,7 @@ final class Operation
 
                 return $collection->createIndex(
                     $args['keys'],
-                    array_diff_key($args, ['keys' => 1])
+                    array_diff_key($args, ['keys' => 1]),
                 );
 
             case 'dropIndex':
@@ -396,7 +382,7 @@ final class Operation
 
                 return $collection->dropIndex(
                     $args['name'],
-                    array_diff_key($args, ['name' => 1])
+                    array_diff_key($args, ['name' => 1]),
                 );
 
             case 'count':
@@ -437,7 +423,7 @@ final class Operation
                 return $collection->distinct(
                     $args['fieldName'],
                     $args['filter'],
-                    array_diff_key($args, ['fieldName' => 1, 'filter' => 1])
+                    array_diff_key($args, ['fieldName' => 1, 'filter' => 1]),
                 );
 
             case 'drop':
@@ -449,7 +435,7 @@ final class Operation
 
                 return iterator_to_array($collection->find(
                     $args['filter'],
-                    array_diff_key($args, ['filter' => 1])
+                    array_diff_key($args, ['filter' => 1]),
                 ));
 
             case 'findOne':
@@ -458,7 +444,7 @@ final class Operation
 
                 return $collection->findOne(
                     $args['filter'],
-                    array_diff_key($args, ['filter' => 1])
+                    array_diff_key($args, ['filter' => 1]),
                 );
 
             case 'findOneAndReplace':
@@ -512,7 +498,7 @@ final class Operation
 
                 return $collection->insertMany(
                     $args['documents'],
-                    array_diff_key($args, ['documents' => 1])
+                    array_diff_key($args, ['documents' => 1]),
                 );
 
             case 'insertOne':
@@ -521,15 +507,13 @@ final class Operation
 
                 return $collection->insertOne(
                     $args['document'],
-                    array_diff_key($args, ['document' => 1])
+                    array_diff_key($args, ['document' => 1]),
                 );
 
             case 'listIndexes':
                 return array_map(
-                    function (IndexInfo $info) {
-                        return $info->__debugInfo();
-                    },
-                    iterator_to_array($collection->listIndexes($args))
+                    fn (IndexInfo $info) => $info->__debugInfo(),
+                    iterator_to_array($collection->listIndexes($args)),
                 );
 
             case 'mapReduce':
@@ -544,7 +528,7 @@ final class Operation
                     $args['map'],
                     $args['reduce'],
                     $args['out'],
-                    array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1])
+                    array_diff_key($args, ['map' => 1, 'reduce' => 1, 'out' => 1]),
                 );
 
             case 'rename':
@@ -554,7 +538,7 @@ final class Operation
                 return $collection->rename(
                     $args['to'],
                     null, /* $toDatabaseName */
-                    array_diff_key($args, ['to' => 1])
+                    array_diff_key($args, ['to' => 1]),
                 );
 
             default:
@@ -622,7 +606,7 @@ final class Operation
 
                 return iterator_to_array($database->aggregate(
                     $args['pipeline'],
-                    array_diff_key($args, ['pipeline' => 1])
+                    array_diff_key($args, ['pipeline' => 1]),
                 ));
 
             case 'createChangeStream':
@@ -631,7 +615,7 @@ final class Operation
 
                 return $database->watch(
                     $args['pipeline'],
-                    array_diff_key($args, ['pipeline' => 1])
+                    array_diff_key($args, ['pipeline' => 1]),
                 );
 
             case 'createCollection':
@@ -640,7 +624,7 @@ final class Operation
 
                 return $database->createCollection(
                     $args['collection'],
-                    array_diff_key($args, ['collection' => 1])
+                    array_diff_key($args, ['collection' => 1]),
                 );
 
             case 'dropCollection':
@@ -649,7 +633,7 @@ final class Operation
 
                 return $database->dropCollection(
                     $args['collection'],
-                    array_diff_key($args, ['collection' => 1])
+                    array_diff_key($args, ['collection' => 1]),
                 );
 
             case 'listCollectionNames':
@@ -657,10 +641,8 @@ final class Operation
 
             case 'listCollections':
                 return array_map(
-                    function (CollectionInfo $info) {
-                        return $info->__debugInfo();
-                    },
-                    iterator_to_array($database->listCollections($args))
+                    fn (CollectionInfo $info) => $info->__debugInfo(),
+                    iterator_to_array($database->listCollections($args)),
                 );
 
             case 'modifyCollection':
@@ -757,7 +739,7 @@ final class Operation
 
                 return stream_get_contents($bucket->openDownloadStreamByName(
                     $args['filename'],
-                    array_diff_key($args, ['filename' => 1])
+                    array_diff_key($args, ['filename' => 1]),
                 ));
 
             case 'download':
@@ -778,7 +760,7 @@ final class Operation
                 return $bucket->uploadFromStream(
                     $args['filename'],
                     $args['source'],
-                    array_diff_key($args, ['filename' => 1, 'source' => 1])
+                    array_diff_key($args, ['filename' => 1, 'source' => 1]),
                 );
 
             default:
@@ -907,10 +889,8 @@ final class Operation
     private function getIndexNames(string $databaseName, string $collectionName): array
     {
         return array_map(
-            function (IndexInfo $indexInfo) {
-                return $indexInfo->getName();
-            },
-            iterator_to_array($this->context->getInternalClient()->selectCollection($databaseName, $collectionName)->listIndexes())
+            fn (IndexInfo $indexInfo) => $indexInfo->getName(),
+            iterator_to_array($this->context->getInternalClient()->selectCollection($databaseName, $collectionName)->listIndexes()),
         );
     }
 

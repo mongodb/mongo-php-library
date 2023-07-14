@@ -44,9 +44,8 @@ final class EventObserver implements CommandSubscriber
      * documents should be redacted).
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/command-monitoring/command-monitoring.rst#security
-     * @var array
      */
-    private static $sensitiveCommands = [
+    private static array $sensitiveCommands = [
         'authenticate' => 1,
         'saslStart' => 1,
         'saslContinue' => 1,
@@ -63,16 +62,14 @@ final class EventObserver implements CommandSubscriber
      * document includes a speculativeAuthenticate field.
      *
      * @see https://github.com/mongodb/specifications/blob/master/source/command-monitoring/command-monitoring.rst#security
-     * @var array
      */
-    private static $sensitiveCommandsWithSpeculativeAuthenticate = [
+    private static array $sensitiveCommandsWithSpeculativeAuthenticate = [
         'ismaster' => 1,
         'isMaster' => 1,
         'hello' => 1,
     ];
 
-    /** @var array */
-    private static $supportedEvents = [
+    private static array $supportedEvents = [
         'commandStartedEvent' => CommandStartedEvent::class,
         'commandSucceededEvent' => CommandSucceededEvent::class,
         'commandFailedEvent' => CommandFailedEvent::class,
@@ -81,10 +78,8 @@ final class EventObserver implements CommandSubscriber
     /**
      * These events are defined in the specification but unsupported by PHPLIB
      * (e.g. CMAP events).
-     *
-     * @var array
      */
-    private static $unsupportedEvents = [
+    private static array $unsupportedEvents = [
         'poolCreatedEvent' => 1,
         'poolReadyEvent' => 1,
         'poolClearedEvent' => 1,
@@ -98,28 +93,21 @@ final class EventObserver implements CommandSubscriber
         'connectionCheckedInEvent' => 1,
     ];
 
-    /** @var array */
-    private $actualEvents = [];
+    private array $actualEvents = [];
 
-    /** @var string */
-    private $clientId;
+    private string $clientId;
 
-    /** @var Context */
-    private $context;
+    private Context $context;
 
     /**
      * The configureFailPoint command (used by failPoint and targetedFailPoint
      * operations) is always ignored.
-     *
-     * @var array
      */
-    private $ignoreCommands = ['configureFailPoint' => 1];
+    private array $ignoreCommands = ['configureFailPoint' => 1];
 
-    /** @var array */
-    private $observeEvents = [];
+    private array $observeEvents = [];
 
-    /** @var bool */
-    private $observeSensitiveCommands;
+    private bool $observeSensitiveCommands;
 
     public function __construct(array $observeEvents, array $ignoreCommands, bool $observeSensitiveCommands, string $clientId, Context $context)
     {

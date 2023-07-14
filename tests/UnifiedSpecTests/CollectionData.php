@@ -20,14 +20,11 @@ use function sprintf;
 
 class CollectionData
 {
-    /** @var string */
-    private $collectionName;
+    private string $collectionName;
 
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var array */
-    private $documents;
+    private array $documents;
 
     public function __construct(stdClass $o)
     {
@@ -46,7 +43,7 @@ class CollectionData
     {
         $database = $client->selectDatabase(
             $this->databaseName,
-            ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]
+            ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)],
         );
 
         $database->dropCollection($this->collectionName);
@@ -68,7 +65,7 @@ class CollectionData
             [
                 'readConcern' => new ReadConcern(ReadConcern::LOCAL),
                 'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
-            ]
+            ],
         );
 
         $cursor = $collection->find([], ['sort' => ['_id' => 1]]);

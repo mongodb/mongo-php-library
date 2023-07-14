@@ -16,8 +16,7 @@ use function array_filter;
  */
 class ReadableStreamFunctionalTest extends FunctionalTestCase
 {
-    /** @var CollectionWrapper */
-    private $collectionWrapper;
+    private CollectionWrapper $collectionWrapper;
 
     public function setUp(): void
     {
@@ -116,9 +115,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
     {
         return array_filter(
             $this->provideFileIdAndExpectedBytes(),
-            function (array $args) {
-                return $args[1] > 0;
-            }
+            fn (array $args) => $args[1] > 0,
         );
     }
 
@@ -161,7 +158,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
     {
         $this->chunksCollection->updateOne(
             ['files_id' => 'length-10', 'n' => 2],
-            ['$set' => ['data' => new Binary('i')]]
+            ['$set' => ['data' => new Binary('i')]],
         );
 
         $fileDocument = $this->collectionWrapper->findFileById('length-10');
@@ -218,7 +215,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use (&$commands): void {
                 $commands[] = $event['started']->getCommandName();
-            }
+            },
         );
 
         $this->assertSame(['find'], $commands);
@@ -252,7 +249,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use (&$commands): void {
                 $commands[] = $event['started']->getCommandName();
-            }
+            },
         );
 
         $this->assertSame([], $commands);
@@ -284,7 +281,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use (&$commands): void {
                 $commands[] = $event['started']->getCommandName();
-            }
+            },
         );
 
         $this->assertSame([], $commands);

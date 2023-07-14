@@ -18,14 +18,14 @@ class DropDatabaseFunctionalTest extends FunctionalTestCase
             function (): void {
                 $operation = new DropDatabase(
                     $this->getDatabaseName(),
-                    ['writeConcern' => $this->createDefaultWriteConcern()]
+                    ['writeConcern' => $this->createDefaultWriteConcern()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -63,14 +63,14 @@ class DropDatabaseFunctionalTest extends FunctionalTestCase
             function (): void {
                 $operation = new DropDatabase(
                     $this->getDatabaseName(),
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 

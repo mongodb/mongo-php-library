@@ -68,8 +68,8 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
             $this->markTestSkipped($test->skipReason);
         }
 
-        $databaseName = $databaseName ?? $this->getDatabaseName();
-        $collectionName = $collectionName ?? $this->getCollectionName();
+        $databaseName ??= $this->getDatabaseName();
+        $collectionName ??= $this->getCollectionName();
 
         $context = Context::fromCrud($test, $databaseName, $collectionName);
         $this->setContext($context);
@@ -186,7 +186,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
                 $this->assertIsArray($reply->cursorsKilled);
                 $this->assertArrayHasKey(0, $reply->cursorsKilled);
                 $this->assertSame($cursorId, $reply->cursorsKilled[0]);
-            }
+            },
         );
     }
 
@@ -239,7 +239,7 @@ class AtlasDataLakeSpecTest extends FunctionalTestCase
     {
         $cursor = $this->manager->executeCommand(
             $this->getDatabaseName(),
-            new Command(['buildInfo' => 1])
+            new Command(['buildInfo' => 1]),
         );
 
         $document = current($cursor->toArray());

@@ -40,7 +40,7 @@ class CallbackIterator implements Iterator
     private $callback;
 
     /** @var Iterator<TKey, TValue> */
-    private $iterator;
+    private Iterator $iterator;
 
     /**
      * @param Traversable<TKey, TValue>              $traversable

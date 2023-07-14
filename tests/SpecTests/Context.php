@@ -26,47 +26,33 @@ use function sprintf;
  */
 final class Context
 {
-    /** @var string|null */
-    public $bucketName;
+    public ?string $bucketName = null;
 
-    /** @var Client|null */
-    private $client;
+    private ?Client $client = null;
 
-    /** @var string|null */
-    public $collectionName;
+    public ?string $collectionName = null;
 
-    /** @var string */
-    public $databaseName;
+    public string $databaseName;
 
-    /** @var array */
-    public $defaultWriteOptions = [];
+    public array $defaultWriteOptions = [];
 
-    /** @var array */
-    public $outcomeReadOptions = [];
+    public array $outcomeReadOptions = [];
 
-    /** @var string|null */
-    public $outcomeCollectionName;
+    public ?string $outcomeCollectionName = null;
 
-    /** @var Session|null */
-    public $session0;
+    public ?Session $session0 = null;
 
-    /** @var object */
-    public $session0Lsid;
+    public object $session0Lsid;
 
-    /** @var Session|null */
-    public $session1;
+    public ?Session $session1 = null;
 
-    /** @var object */
-    public $session1Lsid;
+    public object $session1Lsid;
 
-    /** @var bool */
-    public $useEncryptedClientIfConfigured = false;
+    public bool $useEncryptedClientIfConfigured = false;
 
-    /** @var Client */
-    private $internalClient;
+    private Client $internalClient;
 
-    /** @var Client|null */
-    private $encryptedClient;
+    private ?Client $encryptedClient = null;
 
     private function __construct(string $databaseName, ?string $collectionName)
     {
@@ -306,7 +292,7 @@ final class Context
             $this->databaseName,
             $this->collectionName,
             $collectionOptions,
-            $databaseOptions
+            $databaseOptions,
         );
     }
 
@@ -446,7 +432,7 @@ final class Context
     {
         return $this->getClient()->selectDatabase(
             $databaseName,
-            $this->prepareOptions($databaseOptions)
+            $this->prepareOptions($databaseOptions),
         );
     }
 

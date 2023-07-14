@@ -51,17 +51,14 @@ class Find implements Executable, Explainable
     public const TAILABLE = 2;
     public const TAILABLE_AWAIT = 3;
 
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var string */
-    private $collectionName;
+    private string $collectionName;
 
     /** @var array|object */
     private $filter;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Constructs a find command.

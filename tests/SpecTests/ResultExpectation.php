@@ -36,8 +36,7 @@ final class ResultExpectation
     public const ASSERT_CALLABLE = 11;
     public const ASSERT_DOCUMENTS_MATCH = 12;
 
-    /** @var integer */
-    private $assertionType = self::ASSERT_NOTHING;
+    private int $assertionType = self::ASSERT_NOTHING;
 
     /** @var mixed */
     private $expectedValue;
@@ -167,7 +166,7 @@ final class ResultExpectation
                  * from the BulkWriteException. */
                 $test->assertThat($actual, $test->logicalOr(
                     $test->isInstanceOf(BulkWriteResult::class),
-                    $test->isInstanceOf(WriteResult::class)
+                    $test->isInstanceOf(WriteResult::class),
                 ));
 
                 if (! $actual->isAcknowledged()) {
@@ -224,7 +223,7 @@ final class ResultExpectation
                  * from the BulkWriteException. */
                 $test->assertThat($actual, $test->logicalOr(
                     $test->isInstanceOf(InsertManyResult::class),
-                    $test->isInstanceOf(WriteResult::class)
+                    $test->isInstanceOf(WriteResult::class),
                 ));
 
                 if (isset($expected->insertedCount)) {
@@ -241,7 +240,7 @@ final class ResultExpectation
             case self::ASSERT_INSERTONE:
                 $test->assertThat($actual, $test->logicalOr(
                     $test->isInstanceOf(InsertOneResult::class),
-                    $test->isInstanceOf(WriteResult::class)
+                    $test->isInstanceOf(WriteResult::class),
                 ));
 
                 if (isset($expected->insertedCount)) {
@@ -251,7 +250,7 @@ final class ResultExpectation
                 if (property_exists($expected, 'insertedId')) {
                     $test->assertSameDocument(
                         ['insertedId' => $expected->insertedId],
-                        ['insertedId' => $actual->getInsertedId()]
+                        ['insertedId' => $actual->getInsertedId()],
                     );
                 }
 
@@ -261,7 +260,7 @@ final class ResultExpectation
                 $test->assertIsObject($expected);
                 $test->assertThat($actual, $test->logicalOr(
                     $test->isType('array'),
-                    $test->isType('object')
+                    $test->isType('object'),
                 ));
                 $test->assertMatchesDocument($expected, $actual);
                 break;
@@ -281,7 +280,7 @@ final class ResultExpectation
                 $test->assertIsObject($expected);
                 $test->assertThat($actual, $test->logicalOr(
                     $test->isType('array'),
-                    $test->isType('object')
+                    $test->isType('object'),
                 ));
                 $test->assertSameDocument($expected, $actual);
                 break;
@@ -312,7 +311,7 @@ final class ResultExpectation
                 if (property_exists($expected, 'upsertedId')) {
                     $test->assertSameDocument(
                         ['upsertedId' => $expected->upsertedId],
-                        ['upsertedId' => $actual->getUpsertedId()]
+                        ['upsertedId' => $actual->getUpsertedId()],
                     );
                 }
 

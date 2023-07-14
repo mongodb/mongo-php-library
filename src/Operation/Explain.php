@@ -44,14 +44,11 @@ class Explain implements Executable
 
     private const WIRE_VERSION_FOR_AGGREGATE = 7;
 
-    /** @var string */
-    private $databaseName;
+    private string $databaseName;
 
-    /** @var Explainable */
-    private $explainable;
+    private Explainable $explainable;
 
-    /** @var array */
-    private $options;
+    private array $options;
 
     /**
      * Constructs an explain command for explainable operations.

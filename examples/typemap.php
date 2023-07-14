@@ -16,14 +16,12 @@ require __DIR__ . '/../vendor/autoload.php';
 
 class TypeMapEntry implements Unserializable
 {
-    /** @var ObjectId */
-    private $id;
+    private ObjectId $id;
 
-    /** @var string */
-    private $name;
+    private string $name;
 
     /** @var array<TypeMapEmail> */
-    private $emails;
+    private array $emails;
 
     private function __construct()
     {
@@ -64,11 +62,9 @@ class TypeMapEntry implements Unserializable
 
 class TypeMapEmail implements Unserializable
 {
-    /** @var string */
-    private $type;
+    private string $type;
 
-    /** @var string */
-    private $address;
+    private string $address;
 
     private function __construct()
     {

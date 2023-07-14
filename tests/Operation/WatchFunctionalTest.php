@@ -40,11 +40,9 @@ class WatchFunctionalTest extends FunctionalTestCase
     public const INTERRUPTED = 11601;
     public const NOT_PRIMARY = 10107;
 
-    /** @var integer */
-    private static $wireVersionForStartAtOperationTime = 7;
+    private static int $wireVersionForStartAtOperationTime = 7;
 
-    /** @var array */
-    private $defaultOptions = ['maxAwaitTimeMS' => 500];
+    private array $defaultOptions = ['maxAwaitTimeMS' => 500];
 
     public function setUp(): void
     {
@@ -117,7 +115,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use (&$events): void {
                 $events[] = $event;
-            }
+            },
         );
 
         $this->assertCount(1, $events);
@@ -139,7 +137,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use (&$lastEvent): void {
                 $lastEvent = $event;
-            }
+            },
         );
 
         $this->assertNotNull($lastEvent);
@@ -174,7 +172,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use (&$commands): void {
                 $commands[] = $event['started']->getCommandName();
-            }
+            },
         );
 
         $expectedCommands = [
@@ -213,7 +211,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use (&$events): void {
                 $events[] = $event;
-            }
+            },
         );
 
         $this->assertCount(1, $events);
@@ -235,7 +233,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use (&$events): void {
                 $events[] = $event;
-            }
+            },
         );
 
         $this->assertCount(3, $events);
@@ -287,7 +285,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use (&$events): void {
                 $events[] = $event;
-            }
+            },
         );
 
         $this->assertCount(1, $events);
@@ -312,7 +310,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use (&$events): void {
                 $events[] = $event;
-            }
+            },
         );
 
         $this->assertCount(3, $events);
@@ -1118,7 +1116,7 @@ class WatchFunctionalTest extends FunctionalTestCase
                 if (isset($command->aggregate)) {
                     $originalSession = bin2hex((string) $command->lsid->id);
                 }
-            }
+            },
         );
 
         $changeStream->rewind();
@@ -1131,7 +1129,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             function (array $event) use (&$sessionAfterResume, &$commands): void {
                 $commands[] = $event['started']->getCommandName();
                 $sessionAfterResume[] = bin2hex((string) $event['started']->getCommand()->lsid->id);
-            }
+            },
         );
 
         $expectedCommands = [
@@ -1213,7 +1211,7 @@ class WatchFunctionalTest extends FunctionalTestCase
                 }
 
                 $aggregateCommands[] = (array) $command;
-            }
+            },
         );
 
         $this->assertCount(2, $aggregateCommands);
@@ -1224,9 +1222,9 @@ class WatchFunctionalTest extends FunctionalTestCase
                 $this->logicalOr(
                     $this->objectHasAttribute('resumeAfter'),
                     $this->objectHasAttribute('startAfter'),
-                    $this->objectHasAttribute('startAtOperationTime')
-                )
-            )
+                    $this->objectHasAttribute('startAtOperationTime'),
+                ),
+            ),
         );
 
         $this->assertThat(
@@ -1234,8 +1232,8 @@ class WatchFunctionalTest extends FunctionalTestCase
             $this->logicalOr(
                 $this->objectHasAttribute('resumeAfter'),
                 $this->objectHasAttribute('startAfter'),
-                $this->objectHasAttribute('startAtOperationTime')
-            )
+                $this->objectHasAttribute('startAtOperationTime'),
+            ),
         );
 
         $aggregateCommands = array_map(
@@ -1244,14 +1242,14 @@ class WatchFunctionalTest extends FunctionalTestCase
                 if (isset($aggregateCommand['pipeline'][0]->{'$changeStream'})) {
                     $aggregateCommand['pipeline'][0]->{'$changeStream'} = array_diff_key(
                         (array) $aggregateCommand['pipeline'][0]->{'$changeStream'},
-                        ['resumeAfter' => false, 'startAfter' => false, 'startAtOperationTime' => false]
+                        ['resumeAfter' => false, 'startAfter' => false, 'startAtOperationTime' => false],
                     );
                 }
 
                 // Remove options we don't want to compare between commands
                 return array_diff_key($aggregateCommand, ['lsid' => false, '$clusterTime' => false]);
             },
-            $aggregateCommands
+            $aggregateCommands,
         );
 
         // Ensure options in original and resuming aggregate command match
@@ -1284,7 +1282,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             },
             function (array $event) use (&$commandCount): void {
                 $commandCount++;
-            }
+            },
         );
 
         $this->assertSame(1, $commandCount);
@@ -1318,11 +1316,9 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertNotSame($previousCursorId, $changeStream->getCursorId());
 
         $getCursor = Closure::bind(
-            function () {
-                return $this->iterator->getInnerIterator();
-            },
+            fn () => $this->iterator->getInnerIterator(),
             $changeStream,
-            ChangeStream::class
+            ChangeStream::class,
         );
         $cursor = $getCursor();
         assert($cursor instanceof Cursor);
@@ -1460,7 +1456,7 @@ class WatchFunctionalTest extends FunctionalTestCase
                 }
 
                 $aggregateCommand = $event['started']->getCommand();
-            }
+            },
         );
 
         $this->assertNotNull($aggregateCommand);
@@ -1509,7 +1505,7 @@ class WatchFunctionalTest extends FunctionalTestCase
                 }
 
                 $aggregateCommand = $event['started']->getCommand();
-            }
+            },
         );
 
         $this->assertNotNull($aggregateCommand);
@@ -1525,7 +1521,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             $callable,
             function (array $event) use (&$commands): void {
                 $this->fail(sprintf('"%s" command was executed', $event['started']->getCommandName()));
-            }
+            },
         );
 
         $this->assertEmpty($commands);
@@ -1560,7 +1556,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             $this->getDatabaseName(),
             $this->getCollectionName(),
             $document,
-            ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)]
+            ['writeConcern' => new WriteConcern(WriteConcern::MAJORITY)],
         );
         $writeResult = $insertOne->execute($this->getPrimaryServer());
         $this->assertEquals(1, $writeResult->getInsertedCount());

@@ -126,7 +126,7 @@ class CodecLibraryTest extends TestCase
                 {
                     return 'encoded';
                 }
-            }
+            },
         );
     }
 

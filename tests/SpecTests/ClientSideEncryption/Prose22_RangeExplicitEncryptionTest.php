@@ -10,6 +10,8 @@ use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\UTCDateTime;
+use MongoDB\Client;
+use MongoDB\Collection;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\EncryptionException;
 use MultipleIterator;
@@ -28,9 +30,9 @@ use function is_int;
  */
 class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
 {
-    private $clientEncryption;
-    private $collection;
-    private $encryptedClient;
+    private ?ClientEncryption $clientEncryption = null;
+    private ?Collection $collection = null;
+    private ?Client $encryptedClient = null;
     private $key1Id;
 
     public function setUp(): void
@@ -446,30 +448,20 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
         switch ($type) {
             case 'DecimalNoPrecision':
             case 'DecimalPrecision':
-                return function (int $value) {
-                    return new Decimal128((string) $value);
-                };
+                return fn (int $value) => new Decimal128((string) $value);
 
             case 'DoubleNoPrecision':
             case 'DoublePrecision':
-                return function (int $value) {
-                    return (double) $value;
-                };
+                return fn (int $value) => (double) $value;
 
             case 'Date':
-                return function (int $value) {
-                    return new UTCDateTime($value);
-                };
+                return fn (int $value) => new UTCDateTime($value);
 
             case 'Int':
-                return function (int $value) {
-                    return $value;
-                };
+                return fn (int $value) => $value;
 
             case 'Long':
-                return function (int $value) {
-                    return new Int64($value);
-                };
+                return fn (int $value) => new Int64($value);
 
             default:
                 throw new LogicException('Unsupported type: ' . $type);

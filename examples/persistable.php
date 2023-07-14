@@ -16,14 +16,12 @@ require __DIR__ . '/../vendor/autoload.php';
 
 class PersistableEntry implements Persistable
 {
-    /** @var ObjectId */
-    private $id;
+    private ObjectId $id;
 
-    /** @var string */
-    public $name;
+    public string $name;
 
     /** @var array<PersistableEmail> */
-    public $emails = [];
+    public array $emails = [];
 
     public function __construct(string $name)
     {
@@ -65,11 +63,9 @@ class PersistableEntry implements Persistable
 
 class PersistableEmail implements Persistable
 {
-    /** @var string */
-    public $type;
+    public string $type;
 
-    /** @var string */
-    public $address;
+    public string $address;
 
     public function __construct(string $type, string $address)
     {

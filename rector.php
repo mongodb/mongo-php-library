@@ -4,7 +4,9 @@ use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassLike\RemoveAnnotationRector;
 use Rector\Php56\Rector\FunctionLike\AddDefaultValueForUndefinedVariableRector;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
+use Rector\Php73\Rector\FuncCall\JsonThrowOnErrorRector;
 use Rector\Set\ValueObject\LevelSetList;
+use Rector\TypeDeclaration\Rector\Property\TypedPropertyFromAssignsRector;
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([
@@ -15,7 +17,7 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     // Modernize code
-    $rectorConfig->sets([LevelSetList::UP_TO_PHP_72]);
+    $rectorConfig->sets([LevelSetList::UP_TO_PHP_74]);
 
     $rectorConfig->skip([
         // Falsely detect unassigned variables in code paths stopped by PHPUnit\Framework\Assert::markTestSkipped()
@@ -25,6 +27,14 @@ return static function (RectorConfig $rectorConfig): void {
         // @see https://github.com/phpstan/phpstan-src/pull/2429
         RemoveExtraParametersRector::class => [
             __DIR__ . '/src/Operation/',
+        ],
+        // Assigns wrong type due to outdated PHPStan stubs
+        TypedPropertyFromAssignsRector::class => [
+            __DIR__ . '/src/Model/BSONIterator.php',
+        ],
+        // Not necessary in documentation examples
+        JsonThrowOnErrorRector::class => [
+            __DIR__ . '/tests/DocumentationExamplesTest.php',
         ],
     ]);
 

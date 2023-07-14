@@ -28,7 +28,7 @@ class ModifyCollectionFunctionalTest extends FunctionalTestCase
             $this->getDatabaseName(),
             $this->getCollectionName(),
             ['index' => ['keyPattern' => ['lastAccess' => 1], 'expireAfterSeconds' => 1000]],
-            ['typeMap' => ['root' => 'array', 'document' => 'array']]
+            ['typeMap' => ['root' => 'array', 'document' => 'array']],
         );
         $result = $modifyCollection->execute($this->getPrimaryServer());
 

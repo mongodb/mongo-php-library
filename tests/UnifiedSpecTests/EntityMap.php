@@ -29,19 +29,17 @@ use function sprintf;
 
 class EntityMap implements ArrayAccess
 {
-    /** @var array */
-    private $map = [];
+    private array $map = [];
 
     /**
      * Track lsids so they can be accessed after Session::getLogicalSessionId()
      * has been called.
      *
-     * @var stdClass[]
+     * @var array<string, stdClass>
      */
-    private $lsidsBySession = [];
+    private array $lsidsBySession = [];
 
-    /** @var Constraint */
-    private static $isSupportedType;
+    private static Constraint $isSupportedType;
 
     public function __destruct()
     {
@@ -102,12 +100,10 @@ class EntityMap implements ArrayAccess
         $parent = $parentId === null ? null : $this->map[$parentId];
 
         $this->map[$id] = new class ($id, $value, $parent) {
-            /** @var string */
-            public $id;
+            public string $id;
             /** @var mixed */
             public $value;
-            /** @var self */
-            public $parent;
+            public ?self $parent;
 
             public function __construct(string $id, $value, ?self $parent = null)
             {
@@ -174,19 +170,17 @@ class EntityMap implements ArrayAccess
 
     private static function isSupportedType(): Constraint
     {
-        if (self::$isSupportedType === null) {
-            self::$isSupportedType = logicalOr(
-                isInstanceOf(Client::class),
-                isInstanceOf(ClientEncryption::class),
-                isInstanceOf(Database::class),
-                isInstanceOf(Collection::class),
-                isInstanceOf(Session::class),
-                isInstanceOf(Bucket::class),
-                isInstanceOf(ChangeStream::class),
-                isInstanceOf(Cursor::class),
-                IsBsonType::any()
-            );
-        }
+        self::$isSupportedType ??= logicalOr(
+            isInstanceOf(Client::class),
+            isInstanceOf(ClientEncryption::class),
+            isInstanceOf(Database::class),
+            isInstanceOf(Collection::class),
+            isInstanceOf(Session::class),
+            isInstanceOf(Bucket::class),
+            isInstanceOf(ChangeStream::class),
+            isInstanceOf(Cursor::class),
+            IsBsonType::any(),
+        );
 
         return self::$isSupportedType;
     }

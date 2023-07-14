@@ -127,10 +127,10 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
         // phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration
         // phpcs:disable Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore
         return [
-            'array' => [function ($key) { return $key; }],
-            'object' => [function ($key) { return (object) $key; }],
-            'Serializable' => [function ($key) { return new BSONDocument($key); }],
-            'Document' => [function ($key) { return Document::fromPHP($key); }],
+            'array' => [fn ($key) => $key],
+            'object' => [fn ($key) => (object) $key],
+            'Serializable' => [fn ($key) => new BSONDocument($key)],
+            'Document' => [fn ($key) => Document::fromPHP($key)],
         ];
         // phpcs:enable
     }
@@ -156,14 +156,14 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['key' => ['x' => 1]]],
-                    ['writeConcern' => $this->createDefaultWriteConcern()]
+                    ['writeConcern' => $this->createDefaultWriteConcern()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectNotHasAttribute('writeConcern', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -175,14 +175,14 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['key' => ['x' => 1]]],
-                    ['session' => $this->createSession()]
+                    ['session' => $this->createSession()],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('lsid', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -200,14 +200,14 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
                     $this->getDatabaseName(),
                     $this->getCollectionName(),
                     [['key' => ['x' => 1]]],
-                    ['commitQuorum' => 'majority']
+                    ['commitQuorum' => 'majority'],
                 );
 
                 $operation->execute($this->getPrimaryServer());
             },
             function (array $event): void {
                 $this->assertObjectHasAttribute('commitQuorum', $event['started']->getCommand());
-            }
+            },
         );
     }
 
@@ -219,7 +219,7 @@ class CreateIndexesFunctionalTest extends FunctionalTestCase
             $this->getDatabaseName(),
             $this->getCollectionName(),
             [['key' => ['x' => 1]]],
-            ['commitQuorum' => 'majority']
+            ['commitQuorum' => 'majority'],
         );
 
         $this->expectException(UnsupportedException::class);

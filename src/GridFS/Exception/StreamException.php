@@ -20,7 +20,7 @@ class StreamException extends RuntimeException
         $sourceMetadata = stream_get_meta_data($source);
         $destinationMetadata = stream_get_meta_data($destination);
 
-        return new static(sprintf('Downloading file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $filename));
+        return new self(sprintf('Downloading file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $filename));
     }
 
     /**
@@ -34,7 +34,7 @@ class StreamException extends RuntimeException
         $sourceMetadata = stream_get_meta_data($source);
         $destinationMetadata = stream_get_meta_data($destination);
 
-        return new static(sprintf('Downloading file from "%s" to "%s" failed. GridFS identifier: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $idString));
+        return new self(sprintf('Downloading file from "%s" to "%s" failed. GridFS identifier: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $idString));
     }
 
     /** @param resource $source */
@@ -42,6 +42,6 @@ class StreamException extends RuntimeException
     {
         $sourceMetadata = stream_get_meta_data($source);
 
-        return new static(sprintf('Uploading file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationUri, $filename));
+        return new self(sprintf('Uploading file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationUri, $filename));
     }
 }

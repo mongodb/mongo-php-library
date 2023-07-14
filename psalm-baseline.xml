@@ -59,37 +59,6 @@
       <code><![CDATA[$options['session']]]></code>
     </MixedAssignment>
   </file>
-  <file src="src/Exception/BadMethodCallException.php">
-    <UnsafeInstantiation>
-      <code><![CDATA[new static(sprintf('%s is immutable', $class))]]></code>
-      <code><![CDATA[new static(sprintf('%s should not be called for an unacknowledged write result', $method))]]></code>
-    </UnsafeInstantiation>
-  </file>
-  <file src="src/Exception/InvalidArgumentException.php">
-    <UnsafeInstantiation>
-      <code><![CDATA[new static(sprintf('Expected %s to have type "%s" but found "%s"', $name, $expectedType, get_debug_type($value)))]]></code>
-    </UnsafeInstantiation>
-  </file>
-  <file src="src/Exception/ResumeTokenException.php">
-    <UnsafeInstantiation>
-      <code><![CDATA[new static('Resume token not found in change document')]]></code>
-      <code><![CDATA[new static(sprintf('Expected resume token to have type "array or object" but found "%s"', get_debug_type($value)))]]></code>
-    </UnsafeInstantiation>
-  </file>
-  <file src="src/Exception/UnsupportedException.php">
-    <UnsafeInstantiation>
-      <code><![CDATA[new static('Array filters are not supported by the server executing this operation')]]></code>
-      <code><![CDATA[new static('Collations are not supported by the server executing this operation')]]></code>
-      <code><![CDATA[new static('Explain is not supported by the server executing this operation')]]></code>
-      <code><![CDATA[new static('Hint is not supported by the server executing this operation')]]></code>
-      <code><![CDATA[new static('Read concern is not supported by the server executing this command')]]></code>
-      <code><![CDATA[new static('The "allowDiskUse" option is not supported by the server executing this operation')]]></code>
-      <code><![CDATA[new static('The "commitQuorum" option is not supported by the server executing this operation')]]></code>
-      <code><![CDATA[new static('The "readConcern" option cannot be specified within a transaction. Instead, specify it when starting the transaction.')]]></code>
-      <code><![CDATA[new static('The "writeConcern" option cannot be specified within a transaction. Instead, specify it when starting the transaction.')]]></code>
-      <code><![CDATA[new static('Write concern is not supported by the server executing this command')]]></code>
-    </UnsafeInstantiation>
-  </file>
   <file src="src/GridFS/Bucket.php">
     <DocblockTypeContradiction>
       <code>! is_resource($destination)</code>
@@ -108,27 +77,6 @@
       <code><![CDATA[$options['revision']]]></code>
       <code><![CDATA[$options['revision']]]></code>
     </MixedArgument>
-  </file>
-  <file src="src/GridFS/Exception/CorruptFileException.php">
-    <UnsafeInstantiation>
-      <code><![CDATA[new static(sprintf('Chunk not found for index "%d"', $expectedIndex))]]></code>
-      <code><![CDATA[new static(sprintf('Expected chunk to have index "%d" but found "%d"', $expectedIndex, $index))]]></code>
-      <code><![CDATA[new static(sprintf('Expected chunk to have size "%d" but found "%d"', $expectedSize, $size))]]></code>
-      <code><![CDATA[new static(sprintf('Invalid data found for index "%d"', $chunkIndex))]]></code>
-    </UnsafeInstantiation>
-  </file>
-  <file src="src/GridFS/Exception/FileNotFoundException.php">
-    <UnsafeInstantiation>
-      <code><![CDATA[new static(sprintf('File "%s" not found in "%s"', $json, $namespace))]]></code>
-      <code><![CDATA[new static(sprintf('File with name "%s" and revision "%d" not found in "%s"', $filename, $revision, $namespace))]]></code>
-    </UnsafeInstantiation>
-  </file>
-  <file src="src/GridFS/Exception/StreamException.php">
-    <UnsafeInstantiation>
-      <code><![CDATA[new static(sprintf('Downloading file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $filename))]]></code>
-      <code><![CDATA[new static(sprintf('Downloading file from "%s" to "%s" failed. GridFS identifier: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $idString))]]></code>
-      <code><![CDATA[new static(sprintf('Uploading file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationUri, $filename))]]></code>
-    </UnsafeInstantiation>
   </file>
   <file src="src/GridFS/ReadableStream.php">
     <MixedArgument>
@@ -160,9 +108,6 @@
       <code>$this[$key]</code>
       <code>$value</code>
     </MixedAssignment>
-    <UnsafeInstantiation>
-      <code>new static()</code>
-    </UnsafeInstantiation>
   </file>
   <file src="src/Model/BSONDocument.php">
     <ArgumentTypeCoercion>
@@ -172,9 +117,6 @@
       <code>$this[$key]</code>
       <code>$value</code>
     </MixedAssignment>
-    <UnsafeInstantiation>
-      <code>new static()</code>
-    </UnsafeInstantiation>
   </file>
   <file src="src/Model/BSONIterator.php">
     <MixedArgument>

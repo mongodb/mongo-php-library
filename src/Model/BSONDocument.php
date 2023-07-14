@@ -66,7 +66,7 @@ class BSONDocument extends ArrayObject implements JsonSerializable, Serializable
      */
     public static function __set_state(array $properties)
     {
-        $document = new static();
+        $document = new self();
         $document->exchangeArray($properties);
 
         return $document;

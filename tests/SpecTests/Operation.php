@@ -558,7 +558,10 @@ final class Operation
 
             case 'withTransaction':
                 /** @var list<self> $callbackOperations */
-                $callbackOperations = array_map(fn ($operation) => self::fromConvenientTransactions($operation), $this->arguments['callback']->operations);
+                $callbackOperations = array_map(
+                    fn ($operation) => self::fromConvenientTransactions($operation),
+                    $this->arguments['callback']->operations,
+                );
 
                 $callback = function () use ($callbackOperations, $test, $context): void {
                     foreach ($callbackOperations as $operation) {

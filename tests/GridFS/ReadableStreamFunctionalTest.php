@@ -115,7 +115,7 @@ class ReadableStreamFunctionalTest extends FunctionalTestCase
     {
         return array_filter(
             $this->provideFileIdAndExpectedBytes(),
-            fn (array $args) => $args[1] > 0
+            fn (array $args) => $args[1] > 0,
         );
     }
 

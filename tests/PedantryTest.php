@@ -55,7 +55,7 @@ class PedantryTest extends TestCase
         $sortedMethods = $methods;
         usort(
             $sortedMethods,
-            fn (ReflectionMethod $a, ReflectionMethod $b) => strcasecmp($getSortValue($a), $getSortValue($b))
+            fn (ReflectionMethod $a, ReflectionMethod $b) => strcasecmp($getSortValue($a), $getSortValue($b)),
         );
 
         $methods = array_map(fn (ReflectionMethod $method) => $method->getName(), $methods);

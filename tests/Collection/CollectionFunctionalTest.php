@@ -705,7 +705,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         return array_filter(
             $this->collectionMethodClosures(),
-            fn ($rw) => str_contains($rw[1], 'r')
+            fn ($rw) => str_contains($rw[1], 'r'),
         );
     }
 
@@ -713,7 +713,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     {
         return array_filter(
             $this->collectionMethodClosures(),
-            fn ($rw) => str_contains($rw[1], 'w')
+            fn ($rw) => str_contains($rw[1], 'w'),
         );
     }
 

@@ -199,6 +199,7 @@
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[2]</code>
+      <code>$args[2]</code>
     </MixedArgument>
     <MixedArrayAccess>
       <code>$args[0]</code>
@@ -206,6 +207,8 @@
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
+      <code>$args[0]</code>
+      <code>$args[0]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
@@ -220,6 +223,9 @@
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[1]</code>
+      <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
@@ -263,6 +269,8 @@
       <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
     <MixedMethodCall>
+      <code>encodeIfSupported</code>
+      <code>encodeIfSupported</code>
       <code>isInTransaction</code>
     </MixedMethodCall>
     <MixedOperand>

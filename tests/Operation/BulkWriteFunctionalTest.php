@@ -12,6 +12,8 @@ use MongoDB\Exception\BadMethodCallException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\BulkWrite;
 use MongoDB\Tests\CommandObserver;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use MongoDB\Tests\Fixtures\Document\TestObject;
 use stdClass;
 
 use function is_array;
@@ -447,6 +449,47 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         ];
 
         $this->assertSameDocuments($expected, $this->collection->find());
+    }
+
+    public function testCodecOption(): void
+    {
+        $this->createFixtures(3);
+
+        $codec = new TestDocumentCodec();
+
+        $replaceObject = TestObject::createForFixture(3);
+        $replaceObject->x->foo = 'baz';
+
+        $operations = [
+            ['insertOne' => [TestObject::createForFixture(4)]],
+            ['replaceOne' => [['_id' => 3], $replaceObject]],
+        ];
+
+        $operation = new BulkWrite(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            $operations,
+            ['codec' => $codec],
+        );
+
+        $result = $operation->execute($this->getPrimaryServer());
+
+        $this->assertInstanceOf(BulkWriteResult::class, $result);
+        $this->assertSame(1, $result->getInsertedCount());
+        $this->assertSame(1, $result->getMatchedCount());
+        $this->assertSame(1, $result->getModifiedCount());
+
+        $replacedObject = TestObject::createForFixture(3, true);
+        $replacedObject->x->foo = 'baz';
+
+        // Only read the last two documents as the other two don't fit our codec
+        $this->assertEquals(
+            [
+                $replacedObject,
+                TestObject::createForFixture(4, true),
+            ],
+            $this->collection->find(['_id' => ['$gte' => 3]], ['codec' => $codec])->toArray(),
+        );
     }
 
     /**

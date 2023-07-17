@@ -18,6 +18,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\BulkWriteResult;
+use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
@@ -28,10 +29,12 @@ use MongoDB\Exception\UnsupportedException;
 
 use function array_is_list;
 use function array_key_exists;
+use function assert;
 use function count;
 use function current;
 use function is_array;
 use function is_bool;
+use function is_object;
 use function key;
 use function MongoDB\is_document;
 use function MongoDB\is_first_key_operator;
@@ -99,6 +102,10 @@ class BulkWrite implements Executable
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation. The default is false.
+     *
+     *  * codec (MongoDB\Codec\DocumentCodec): Codec used to decode documents
+     *    from BSON to PHP objects. This option is also used to encode PHP
+     *    objects into BSON for insertOne and replaceOne operations.
      *
      *  * comment (mixed): BSON value to attach as a comment to this command(s)
      *    associated with this bulk write.
@@ -271,6 +278,10 @@ class BulkWrite implements Executable
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
 
+        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
+        }
+
         if (! is_bool($options['ordered'])) {
             throw InvalidArgumentException::invalidType('"ordered" option', $options['ordered'], 'boolean');
         }
@@ -330,13 +341,31 @@ class BulkWrite implements Executable
                     break;
 
                 case self::INSERT_ONE:
-                    $insertedIds[$i] = $bulk->insert($args[0]);
+                    $insertedDocument = isset($this->options['codec'])
+                        ? $this->options['codec']->encodeIfSupported($args[0])
+                        : $args[0];
+                    // Psalm's assert-if-true annotation does not work with unions, so
+                    // assert the type manually instead of using is_document
+                    assert(is_array($insertedDocument) || is_object($insertedDocument));
+
+                    $insertedIds[$i] = $bulk->insert($insertedDocument);
                     break;
 
                 case self::REPLACE_ONE:
+                    $replacementDocument = isset($this->options['codec'])
+                        ? $this->options['codec']->encodeIfSupported($args[1])
+                        : $args[1];
+                    // Psalm's assert-if-true annotation does not work with unions, so
+                    // assert the type manually instead of using is_document
+                    assert(is_array($replacementDocument) || is_object($replacementDocument));
+
+                    $bulk->update($args[0], $replacementDocument, $args[2]);
+                    break;
+
                 case self::UPDATE_MANY:
                 case self::UPDATE_ONE:
                     $bulk->update($args[0], $args[1], $args[2]);
+                    break;
             }
         }
 

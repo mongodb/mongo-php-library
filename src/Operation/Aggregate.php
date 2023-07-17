@@ -55,8 +55,6 @@ class Aggregate implements Executable, Explainable
 
     private array $options;
 
-    private bool $isExplain;
-
     private bool $isWrite;
 
     /**
@@ -195,8 +193,7 @@ class Aggregate implements Executable, Explainable
             unset($options['writeConcern']);
         }
 
-        $this->isExplain = ! empty($options['explain']);
-        $this->isWrite = is_last_pipeline_operator_write($pipeline) && ! $this->isExplain;
+        $this->isWrite = is_last_pipeline_operator_write($pipeline) && ! ($options['explain'] ?? false);
 
         if ($this->isWrite) {
             /* Ignore batchSize for writes, since no documents are returned and

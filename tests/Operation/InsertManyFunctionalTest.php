@@ -11,6 +11,8 @@ use MongoDB\InsertManyResult;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertMany;
 use MongoDB\Tests\CommandObserver;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use MongoDB\Tests\Fixtures\Document\TestObject;
 
 class InsertManyFunctionalTest extends FunctionalTestCase
 {
@@ -199,5 +201,49 @@ class InsertManyFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesInsertedId(InsertManyResult $result): void
     {
         $this->assertInstanceOf(ObjectId::class, $result->getInsertedIds()[0]);
+    }
+
+    public function testInsertingWithCodec(): void
+    {
+        $documents = [
+            TestObject::createForFixture(1),
+            TestObject::createForFixture(2),
+            TestObject::createForFixture(3),
+        ];
+
+        $expectedDocuments = [
+            (object) [
+                '_id' => 1,
+                'x' => (object) ['foo' => 'bar'],
+                'encoded' => true,
+            ],
+            (object) [
+                '_id' => 2,
+                'x' => (object) ['foo' => 'bar'],
+                'encoded' => true,
+            ],
+            (object) [
+                '_id' => 3,
+                'x' => (object) ['foo' => 'bar'],
+                'encoded' => true,
+            ],
+        ];
+
+        (new CommandObserver())->observe(
+            function () use ($documents): void {
+                $operation = new InsertMany(
+                    $this->getDatabaseName(),
+                    $this->getCollectionName(),
+                    $documents,
+                    ['codec' => new TestDocumentCodec()],
+                );
+
+                $result = $operation->execute($this->getPrimaryServer());
+                $this->assertEquals([1, 2, 3], $result->getInsertedIds());
+            },
+            function (array $event) use ($expectedDocuments): void {
+                $this->assertEquals($expectedDocuments, $event['started']->getCommand()->documents ?? null);
+            },
+        );
     }
 }

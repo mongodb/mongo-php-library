@@ -475,6 +475,7 @@
       <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
     <MixedMethodCall>
+      <code>encodeIfSupported</code>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
@@ -486,6 +487,7 @@
       <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
     <MixedMethodCall>
+      <code>encodeIfSupported</code>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>

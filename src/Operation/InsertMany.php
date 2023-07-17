@@ -17,6 +17,7 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
@@ -27,7 +28,10 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\InsertManyResult;
 
 use function array_is_list;
+use function assert;
+use function is_array;
 use function is_bool;
+use function is_object;
 use function MongoDB\is_document;
 use function sprintf;
 
@@ -55,6 +59,9 @@ class InsertMany implements Executable
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.
+     *
+     *  * codec (MongoDB\Codec\DocumentCodec): Codec used to encode PHP objects
+     *    into BSON.
      *
      *  * comment (mixed): BSON value to attach as a comment to the command(s)
      *    associated with this insert.
@@ -95,6 +102,10 @@ class InsertMany implements Executable
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+        }
+
+        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
         }
 
         if (! is_bool($options['ordered'])) {
@@ -142,7 +153,14 @@ class InsertMany implements Executable
         $insertedIds = [];
 
         foreach ($this->documents as $i => $document) {
-            $insertedIds[$i] = $bulk->insert($document);
+            $insertedDocument = isset($this->options['codec'])
+                ? $this->options['codec']->encodeIfSupported($document)
+                : $document;
+            // Psalm's assert-if-true annotation does not work with unions, so
+            // assert the type manually instead of using is_document
+            assert(is_array($insertedDocument) || is_object($insertedDocument));
+
+            $insertedIds[$i] = $bulk->insert($insertedDocument);
         }
 
         $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createExecuteOptions());

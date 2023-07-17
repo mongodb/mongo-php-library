@@ -11,6 +11,8 @@ use MongoDB\InsertOneResult;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Tests\CommandObserver;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use MongoDB\Tests\Fixtures\Document\TestObject;
 use stdClass;
 
 class InsertOneFunctionalTest extends FunctionalTestCase
@@ -190,5 +192,30 @@ class InsertOneFunctionalTest extends FunctionalTestCase
     public function testUnacknowledgedWriteConcernAccessesInsertedId(InsertOneResult $result): void
     {
         $this->assertInstanceOf(ObjectId::class, $result->getInsertedId());
+    }
+
+    public function testInsertingWithCodec(): void
+    {
+        (new CommandObserver())->observe(
+            function (): void {
+                $document = TestObject::createForFixture(1);
+                $options = ['codec' => new TestDocumentCodec()];
+
+                $operation = new InsertOne($this->getDatabaseName(), $this->getCollectionName(), $document, $options);
+                $result = $operation->execute($this->getPrimaryServer());
+
+                $this->assertSame(1, $result->getInsertedId());
+            },
+            function (array $event): void {
+                $this->assertEquals(
+                    (object) [
+                        '_id' => 1,
+                        'x' => (object) ['foo' => 'bar'],
+                        'encoded' => true,
+                    ],
+                    $event['started']->getCommand()->documents[0] ?? null,
+                );
+            },
+        );
     }
 }

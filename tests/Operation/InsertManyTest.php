@@ -40,6 +40,7 @@ class InsertManyTest extends TestCase
     {
         return $this->createOptionDataProvider([
             'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
+            'codec' => $this->getInvalidDocumentCodecValues(),
             'ordered' => $this->getInvalidBooleanValues(true),
             'session' => $this->getInvalidSessionValues(),
             'writeConcern' => $this->getInvalidWriteConcernValues(),

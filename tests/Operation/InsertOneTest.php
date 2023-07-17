@@ -25,6 +25,7 @@ class InsertOneTest extends TestCase
     {
         return $this->createOptionDataProvider([
             'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
+            'codec' => $this->getInvalidDocumentCodecValues(),
             'session' => $this->getInvalidSessionValues(),
             'writeConcern' => $this->getInvalidWriteConcernValues(),
         ]);

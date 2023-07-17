@@ -159,7 +159,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
 
     public function testFindAndModifyReportedWriteConcernError(): void
     {
-        if (($this->isShardedCluster() && ! $this->isShardedClusterUsingReplicasets()) || ! $this->isReplicaSet()) {
+        if ($this->isStandalone()) {
             $this->markTestSkipped('Test only applies to replica sets');
         }
 

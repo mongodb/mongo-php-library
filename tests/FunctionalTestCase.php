@@ -9,7 +9,6 @@ use MongoDB\Collection;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Manager;
-use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\ServerApi;
@@ -444,33 +443,6 @@ abstract class FunctionalTestCase extends TestCase
         return false;
     }
 
-    protected function isShardedClusterUsingReplicasets()
-    {
-        // Assume serverless is a sharded cluster using replica sets
-        if (static::isServerless()) {
-            return true;
-        }
-
-        $cursor = $this->getPrimaryServer()->executeQuery(
-            'config.shards',
-            new Query([], ['limit' => 1]),
-        );
-
-        $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
-        $document = current($cursor->toArray());
-
-        if (! $document) {
-            return false;
-        }
-
-        /**
-         * Use regular expression to distinguish between standalone or replicaset:
-         * Without a replicaset: "host" : "localhost:4100"
-         * With a replicaset: "host" : "dec6d8a7-9bc1-4c0e-960c-615f860b956f/localhost:4400,localhost:4401"
-         */
-        return preg_match('@^.*/.*:\d+@', $document['host']);
-    }
-
     protected function skipIfServerVersion(string $operator, string $version, ?string $message = null): void
     {
         if (version_compare($this->getServerVersion(), $version, $operator)) {
@@ -480,43 +452,25 @@ abstract class FunctionalTestCase extends TestCase
 
     protected function skipIfChangeStreamIsNotSupported(): void
     {
-        switch ($this->getPrimaryServer()->getType()) {
-            case Server::TYPE_MONGOS:
-            case Server::TYPE_LOAD_BALANCER:
-                if (! $this->isShardedClusterUsingReplicasets()) {
-                    $this->markTestSkipped('$changeStream is only supported with replicasets');
-                }
-
-                break;
-
-            case Server::TYPE_RS_PRIMARY:
-                break;
-
-            default:
-                $this->markTestSkipped('$changeStream is not supported');
+        if ($this->isStandalone()) {
+            $this->markTestSkipped('$changeStream requires replica sets');
         }
     }
 
     protected function skipIfCausalConsistencyIsNotSupported(): void
     {
         switch ($this->getPrimaryServer()->getType()) {
-            case Server::TYPE_MONGOS:
-            case Server::TYPE_LOAD_BALANCER:
-                if (! $this->isShardedClusterUsingReplicasets()) {
-                    $this->markTestSkipped('Causal Consistency is only supported with replicasets');
-                }
-
+            case Server::TYPE_STANDALONE:
+                $this->markTestSkipped('Causal consistency requires replica sets');
                 break;
 
             case Server::TYPE_RS_PRIMARY:
+                // Note: mongos does not report storage engine information
                 if ($this->getServerStorageEngine() !== 'wiredTiger') {
-                    $this->markTestSkipped('Causal Consistency requires WiredTiger storage engine');
+                    $this->markTestSkipped('Causal consistency requires WiredTiger storage engine');
                 }
 
                 break;
-
-            default:
-                $this->markTestSkipped('Causal Consistency is not supported');
         }
     }
 
@@ -549,10 +503,6 @@ abstract class FunctionalTestCase extends TestCase
         }
 
         if ($this->isShardedCluster()) {
-            if (! $this->isShardedClusterUsingReplicasets()) {
-                $this->markTestSkipped('Transactions are not supported on sharded clusters without replica sets');
-            }
-
             if (version_compare($this->getFeatureCompatibilityVersion(), '4.2', '<')) {
                 $this->markTestSkipped('Transactions are only supported on FCV 4.2 or higher');
             }

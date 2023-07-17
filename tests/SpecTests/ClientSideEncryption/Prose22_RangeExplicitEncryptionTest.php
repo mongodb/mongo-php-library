@@ -39,7 +39,7 @@ class Prose22_RangeExplicitEncryptionTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        if ($this->isStandalone() || ($this->isShardedCluster() && ! $this->isShardedClusterUsingReplicasets())) {
+        if ($this->isStandalone()) {
             $this->markTestSkipped('Range explicit encryption tests require replica sets');
         }
 

@@ -30,7 +30,7 @@ class CreateEncryptedCollectionFunctionalTest extends FunctionalTestCase
             $this->markTestSkipped('Neither crypt_shared nor mongocryptd are available');
         }
 
-        if ($this->isStandalone() || ($this->isShardedCluster() && ! $this->isShardedClusterUsingReplicasets())) {
+        if ($this->isStandalone()) {
             $this->markTestSkipped('Queryable Encryption requires replica sets');
         }
 

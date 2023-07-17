@@ -442,6 +442,7 @@
       <code>array|object|null</code>
     </MixedInferredReturnType>
     <MixedMethodCall>
+      <code>decodeIfSupported</code>
       <code>isInTransaction</code>
     </MixedMethodCall>
     <MixedReturnStatement>
@@ -470,6 +471,9 @@
     <MixedAssignment>
       <code><![CDATA[$options['fields']]]></code>
     </MixedAssignment>
+    <RedundantConditionGivenDocblockType>
+      <code>is_object($replacementDocument)</code>
+    </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/Operation/FindOneAndUpdate.php">
     <MixedAssignment>

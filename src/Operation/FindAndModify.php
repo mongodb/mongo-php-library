@@ -17,6 +17,8 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\BSON\Document;
+use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
@@ -27,6 +29,7 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 
 use function array_key_exists;
+use function assert;
 use function current;
 use function is_array;
 use function is_bool;
@@ -67,6 +70,9 @@ class FindAndModify implements Executable, Explainable
      *
      *  * arrayFilters (document array): A set of filters specifying to which
      *    array elements an update should apply.
+     *
+     *  * codec (MongoDB\Codec\DocumentCodec): Codec used to decode documents
+     *    from BSON to PHP objects.
      *
      *  * collation (document): Collation specification.
      *
@@ -135,6 +141,10 @@ class FindAndModify implements Executable, Explainable
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+        }
+
+        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
         }
 
         if (isset($options['collation']) && ! is_document($options['collation'])) {
@@ -242,6 +252,17 @@ class FindAndModify implements Executable, Explainable
         }
 
         $cursor = $server->executeWriteCommand($this->databaseName, new Command($this->createCommandDocument()), $this->createOptions());
+
+        if (isset($this->options['codec'])) {
+            $cursor->setTypeMap(['root' => 'bson']);
+            $result = current($cursor->toArray());
+            assert($result instanceof Document);
+
+            $decoded = $this->options['codec']->decodeIfSupported($result->get('value') ?? null);
+            assert($decoded === null || is_object($decoded));
+
+            return $decoded;
+        }
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap(create_field_path_type_map($this->options['typeMap'], 'value'));

@@ -10,6 +10,8 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\FindAndModify;
 use MongoDB\Tests\CommandObserver;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use MongoDB\Tests\Fixtures\Document\TestObject;
 use stdClass;
 
 class FindAndModifyFunctionalTest extends FunctionalTestCase
@@ -277,6 +279,51 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
                 ['_id' => 1, 'x' => ['foo' => 'bar']],
             ],
         ];
+    }
+
+    public function testFindOneAndDeleteWithCodec(): void
+    {
+        $this->createFixtures(1);
+
+        $operation = new FindAndModify(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            ['remove' => true, 'codec' => new TestDocumentCodec()],
+        );
+
+        $result = $operation->execute($this->getPrimaryServer());
+
+        self::assertEquals(TestObject::createForFixture(1, true), $result);
+    }
+
+    public function testFindOneAndUpdateWithCodec(): void
+    {
+        $this->createFixtures(1);
+
+        $operation = new FindAndModify(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            ['update' => ['$set' => ['x.foo' => 'baz']], 'codec' => new TestDocumentCodec()],
+        );
+
+        $result = $operation->execute($this->getPrimaryServer());
+
+        self::assertEquals(TestObject::createForFixture(1, true), $result);
+    }
+
+    public function testFindOneAndReplaceWithCodec(): void
+    {
+        $this->createFixtures(1);
+
+        $operation = new FindAndModify(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            ['update' => ['_id' => 1], 'codec' => new TestDocumentCodec()],
+        );
+
+        $result = $operation->execute($this->getPrimaryServer());
+
+        self::assertEquals(TestObject::createForFixture(1, true), $result);
     }
 
     /**

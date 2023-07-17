@@ -17,13 +17,17 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
 use function array_key_exists;
+use function assert;
+use function is_array;
 use function is_integer;
+use function is_object;
 use function MongoDB\is_document;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_pipeline;
@@ -48,6 +52,9 @@ class FindOneAndReplace implements Executable, Explainable
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.
+     *
+     *  * codec (MongoDB\Codec\DocumentCodec): Codec used to decode documents
+     *    from BSON to PHP objects.
      *
      *  * collation (document): Collation specification.
      *
@@ -121,6 +128,10 @@ class FindOneAndReplace implements Executable, Explainable
             throw new InvalidArgumentException('$replacement is an update pipeline');
         }
 
+        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
+        }
+
         if (isset($options['projection']) && ! is_document($options['projection'])) {
             throw InvalidArgumentException::expectedDocumentType('"projection" option', $options['projection']);
         }
@@ -147,10 +158,17 @@ class FindOneAndReplace implements Executable, Explainable
 
         unset($options['projection'], $options['returnDocument']);
 
+        $replacementDocument = isset($options['codec'])
+            ? $options['codec']->encodeIfSupported($replacement)
+            : $replacement;
+        // Psalm's assert-if-true annotation does not work with unions, so
+        // assert the type manually instead of using is_document
+        assert(is_array($replacementDocument) || is_object($replacementDocument));
+
         $this->findAndModify = new FindAndModify(
             $databaseName,
             $collectionName,
-            ['query' => $filter, 'update' => $replacement] + $options,
+            ['query' => $filter, 'update' => $replacementDocument] + $options,
         );
     }
 

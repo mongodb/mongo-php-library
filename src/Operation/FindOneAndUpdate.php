@@ -54,6 +54,9 @@ class FindOneAndUpdate implements Executable, Explainable
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.
      *
+     *  * codec (MongoDB\Codec\DocumentCodec): Codec used to decode documents
+     *    from BSON to PHP objects.
+     *
      *  * collation (document): Collation specification.
      *
      *  * comment (mixed): BSON value to attach as a comment to this command.

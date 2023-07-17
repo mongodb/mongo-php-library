@@ -17,7 +17,6 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
@@ -25,7 +24,6 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 
 use function array_intersect_key;
-use function assert;
 use function count;
 use function current;
 use function is_float;
@@ -125,7 +123,6 @@ class CountDocuments implements Executable
     public function execute(Server $server)
     {
         $cursor = $this->aggregate->execute($server);
-        assert($cursor instanceof Cursor);
 
         $allResults = $cursor->toArray();
 

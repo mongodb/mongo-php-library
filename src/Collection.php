@@ -59,7 +59,6 @@ use MongoDB\Operation\ReplaceOne;
 use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
 use MongoDB\Operation\Watch;
-use Traversable;
 
 use function array_diff_key;
 use function array_intersect_key;
@@ -186,15 +185,10 @@ class Collection
     /**
      * Executes an aggregation framework pipeline on the collection.
      *
-     * Note: this method's return value depends on the MongoDB server version
-     * and the "useCursor" option. If "useCursor" is true, a Cursor will be
-     * returned; otherwise, an ArrayIterator is returned, which wraps the
-     * "result" array from the command response document.
-     *
      * @see Aggregate::__construct() for supported options
      * @param array $pipeline Aggregation pipeline
      * @param array $options  Command options
-     * @return Traversable
+     * @return Cursor
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors

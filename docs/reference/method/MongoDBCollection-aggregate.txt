@@ -50,13 +50,8 @@ Errors/Exceptions
 Behavior
 --------
 
-:phpmethod:`MongoDB\\Collection::aggregate()`'s return value depends on the
-MongoDB server version and whether the ``useCursor`` option is specified. If
-``useCursor`` is ``true``, a :php:`MongoDB\\Driver\\Cursor
-<class.mongodb-driver-cursor>` object is returned. If ``useCursor`` is
-``false``, an :php:`ArrayIterator <arrayiterator>` is returned that wraps the
-``result`` array from the command response document. In both cases, the return
-value will be :php:`Traversable <traversable>`.
+:phpmethod:`MongoDB\\Collection::aggregate()`'s returns a
+:php:`MongoDB\\Driver\\Cursor <class.mongodb-driver-cursor>` object.
 
 Examples
 --------

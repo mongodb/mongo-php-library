@@ -401,6 +401,7 @@
   </file>
   <file src="src/Operation/Find.php">
     <MixedArgument>
+      <code><![CDATA[$this->options['codec']]]></code>
       <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
     <MixedArrayAccess>
@@ -437,6 +438,18 @@
     <MixedReturnStatement>
       <code><![CDATA[is_object($result) ? ($result->value ?? null) : null]]></code>
       <code><![CDATA[is_object($result) ? ($result->value ?? null) : null]]></code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/Operation/FindOne.php">
+    <MixedAssignment>
+      <code>$document</code>
+    </MixedAssignment>
+    <MixedInferredReturnType>
+      <code>array|object|null</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement>
+      <code>$document === false ? null : $document</code>
+      <code>$document === false ? null : $document</code>
     </MixedReturnStatement>
   </file>
   <file src="src/Operation/FindOneAndDelete.php">

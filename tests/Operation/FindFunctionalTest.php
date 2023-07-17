@@ -9,6 +9,8 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use MongoDB\Tests\Fixtures\Document\TestObject;
 use stdClass;
 
 use function microtime;
@@ -194,6 +196,25 @@ class FindFunctionalTest extends FunctionalTestCase
                 ],
             ],
         ];
+    }
+
+    public function testCodecOption(): void
+    {
+        $this->createFixtures(3);
+
+        $codec = new TestDocumentCodec();
+
+        $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['codec' => $codec]);
+        $cursor = $operation->execute($this->getPrimaryServer());
+
+        $this->assertEquals(
+            [
+                TestObject::createForFixture(1, true),
+                TestObject::createForFixture(2, true),
+                TestObject::createForFixture(3, true),
+            ],
+            $cursor->toArray(),
+        );
     }
 
     public function testMaxAwaitTimeMS(): void

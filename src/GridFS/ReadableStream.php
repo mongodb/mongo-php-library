@@ -17,8 +17,9 @@
 
 namespace MongoDB\GridFS;
 
+use Iterator;
 use MongoDB\BSON\Binary;
-use MongoDB\Driver\Cursor;
+use MongoDB\Driver\CursorInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Exception\CorruptFileException;
 
@@ -47,7 +48,8 @@ class ReadableStream
 
     private int $chunkOffset = 0;
 
-    private ?Cursor $chunksIterator = null;
+    /** @var (CursorInterface&Iterator)|null */
+    private $chunksIterator = null;
 
     private CollectionWrapper $collectionWrapper;
 

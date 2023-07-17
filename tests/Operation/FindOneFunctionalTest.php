@@ -4,6 +4,8 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Driver\BulkWrite;
 use MongoDB\Operation\FindOne;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use MongoDB\Tests\Fixtures\Document\TestObject;
 
 class FindOneFunctionalTest extends FunctionalTestCase
 {
@@ -34,6 +36,18 @@ class FindOneFunctionalTest extends FunctionalTestCase
                 ['_id' => 1, 'x' => (object) ['foo' => 'bar']],
             ],
         ];
+    }
+
+    public function testCodecOption(): void
+    {
+        $this->createFixtures(1);
+
+        $codec = new TestDocumentCodec();
+
+        $operation = new FindOne($this->getDatabaseName(), $this->getCollectionName(), [], ['codec' => $codec]);
+        $document = $operation->execute($this->getPrimaryServer());
+
+        $this->assertEquals(TestObject::createForFixture(1, true), $document);
     }
 
     /**

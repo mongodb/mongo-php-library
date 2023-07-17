@@ -17,7 +17,9 @@
 
 namespace MongoDB\Operation;
 
-use MongoDB\Driver\Cursor;
+use Iterator;
+use MongoDB\Codec\DocumentCodec;
+use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadConcern;
@@ -26,6 +28,7 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Model\CodecCursor;
 
 use function is_array;
 use function is_bool;
@@ -73,6 +76,9 @@ class Find implements Executable, Explainable
      *    some shards are inaccessible (instead of throwing an error).
      *
      *  * batchSize (integer): The number of documents to return per batch.
+     *
+     *  * codec (MongoDB\Codec\DocumentCodec): Codec used to decode documents
+     *    from BSON to PHP objects.
      *
      *  * collation (document): Collation specification.
      *
@@ -174,6 +180,10 @@ class Find implements Executable, Explainable
 
         if (isset($options['batchSize']) && ! is_integer($options['batchSize'])) {
             throw InvalidArgumentException::invalidType('"batchSize" option', $options['batchSize'], 'integer');
+        }
+
+        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
         }
 
         if (isset($options['collation']) && ! is_document($options['collation'])) {
@@ -300,7 +310,7 @@ class Find implements Executable, Explainable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return Cursor
+     * @return CursorInterface&Iterator
      * @throws UnsupportedException if read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
@@ -312,6 +322,10 @@ class Find implements Executable, Explainable
         }
 
         $cursor = $server->executeQuery($this->databaseName . '.' . $this->collectionName, new Query($this->filter, $this->createQueryOptions()), $this->createExecuteOptions());
+
+        if (isset($this->options['codec'])) {
+            return CodecCursor::fromCursor($cursor, $this->options['codec']);
+        }
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);

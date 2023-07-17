@@ -42,6 +42,7 @@ class WatchTest extends FunctionalTestCase
     {
         return $this->createOptionDataProvider([
             'batchSize' => $this->getInvalidIntegerValues(),
+            'codec' => $this->getInvalidDocumentCodecValues(),
             'collation' => $this->getInvalidDocumentValues(),
             'fullDocument' => $this->getInvalidStringValues(true),
             'fullDocumentBeforeChange' => $this->getInvalidStringValues(),

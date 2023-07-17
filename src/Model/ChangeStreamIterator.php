@@ -19,6 +19,7 @@ namespace MongoDB\Model;
 
 use Iterator;
 use IteratorIterator;
+use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
@@ -245,9 +246,19 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
             return $this->extractResumeToken($document->bsonSerialize());
         }
 
-        $resumeToken = is_array($document)
-            ? ($document['_id'] ?? null)
-            : ($document->_id ?? null);
+        if ($document instanceof Document) {
+            $resumeToken = $document->has('_id')
+                ? $document->get('_id')
+                : null;
+
+            if ($resumeToken instanceof Document) {
+                $resumeToken = $resumeToken->toPHP();
+            }
+        } else {
+            $resumeToken = is_array($document)
+                ? ($document['_id'] ?? null)
+                : ($document->_id ?? null);
+        }
 
         if (! isset($resumeToken)) {
             $this->isValid = false;

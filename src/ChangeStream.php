@@ -18,6 +18,8 @@
 namespace MongoDB;
 
 use Iterator;
+use MongoDB\BSON\Document;
+use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\CursorId;
 use MongoDB\Driver\Exception\ConnectionException;
 use MongoDB\Driver\Exception\RuntimeException;
@@ -27,6 +29,7 @@ use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Model\ChangeStreamIterator;
 use ReturnTypeWillChange;
 
+use function assert;
 use function call_user_func;
 use function in_array;
 
@@ -82,15 +85,22 @@ class ChangeStream implements Iterator
      */
     private bool $hasAdvanced = false;
 
+    private ?DocumentCodec $codec;
+
     /**
      * @internal
      *
      * @param ResumeCallable $resumeCallable
      */
-    public function __construct(ChangeStreamIterator $iterator, callable $resumeCallable)
+    public function __construct(ChangeStreamIterator $iterator, callable $resumeCallable, ?DocumentCodec $codec = null)
     {
         $this->iterator = $iterator;
         $this->resumeCallable = $resumeCallable;
+        $this->codec = $codec;
+
+        if ($codec) {
+            $this->iterator->getInnerIterator()->setTypeMap(['root' => 'bson']);
+        }
     }
 
     /**
@@ -100,7 +110,15 @@ class ChangeStream implements Iterator
     #[ReturnTypeWillChange]
     public function current()
     {
-        return $this->iterator->current();
+        $value = $this->iterator->current();
+
+        if (! $this->codec) {
+            return $value;
+        }
+
+        assert($value === null || $value instanceof Document);
+
+        return $this->codec->decodeIfSupported($value);
     }
 
     /** @return CursorId */
@@ -251,6 +269,10 @@ class ChangeStream implements Iterator
         $this->iterator = call_user_func($this->resumeCallable, $this->getResumeToken(), $this->hasAdvanced);
 
         $this->iterator->rewind();
+
+        if ($this->codec) {
+            $this->iterator->getInnerIterator()->setTypeMap(['root' => 'bson']);
+        }
 
         $this->onIteration($this->hasAdvanced);
     }

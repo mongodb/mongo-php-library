@@ -101,6 +101,7 @@
       <code><![CDATA[$reply->cursor->nextBatch]]></code>
     </MixedArgument>
     <MixedAssignment>
+      <code>$resumeToken</code>
       <code><![CDATA[$this->postBatchResumeToken]]></code>
     </MixedAssignment>
     <MixedPropertyFetch>

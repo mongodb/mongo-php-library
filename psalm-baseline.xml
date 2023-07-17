@@ -537,6 +537,11 @@
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
+  <file src="src/Operation/ReplaceOne.php">
+    <RedundantConditionGivenDocblockType occurrences="1">
+      <code>is_object($replacementDocument)</code>
+    </RedundantConditionGivenDocblockType>
+  </file>
   <file src="src/Operation/Update.php">
     <MixedArgument>
       <code><![CDATA[$this->options['writeConcern']]]></code>

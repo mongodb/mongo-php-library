@@ -17,12 +17,16 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\UpdateResult;
 
+use function assert;
+use function is_array;
+use function is_object;
 use function MongoDB\is_document;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_pipeline;
@@ -44,6 +48,9 @@ class ReplaceOne implements Executable
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.
+     *
+     *  * codec (MongoDB\Codec\DocumentCodec): Codec used to encode PHP objects
+     *    into BSON.
      *
      *  * collation (document): Collation specification.
      *
@@ -96,11 +103,22 @@ class ReplaceOne implements Executable
             throw new InvalidArgumentException('$replacement is an update pipeline');
         }
 
+        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
+        }
+
+        $replacementDocument = isset($options['codec'])
+            ? $options['codec']->encodeIfSupported($replacement)
+            : $replacement;
+        // Psalm's assert-if-true annotation does not work with unions, so
+        // assert the type manually instead of using is_document
+        assert(is_array($replacementDocument) || is_object($replacementDocument));
+
         $this->update = new Update(
             $databaseName,
             $collectionName,
             $filter,
-            $replacement,
+            $replacementDocument,
             ['multi' => false] + $options,
         );
     }

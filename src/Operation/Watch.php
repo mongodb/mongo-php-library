@@ -17,9 +17,10 @@
 
 namespace MongoDB\Operation;
 
+use Iterator;
 use MongoDB\BSON\TimestampInterface;
 use MongoDB\ChangeStream;
-use MongoDB\Driver\Cursor;
+use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
@@ -348,8 +349,10 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      *
      * The command will be executed using APM so that we can capture data from
      * its response (e.g. firstBatch size, postBatchResumeToken).
+     *
+     * @return CursorInterface&Iterator
      */
-    private function executeAggregate(Server $server): Cursor
+    private function executeAggregate(Server $server)
     {
         addSubscriber($this);
 

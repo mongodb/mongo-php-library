@@ -170,6 +170,7 @@
   </file>
   <file src="src/Operation/Aggregate.php">
     <MixedArgument>
+      <code><![CDATA[$this->options['codec']]]></code>
       <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
     <MixedAssignment>
@@ -538,7 +539,7 @@
     </MixedMethodCall>
   </file>
   <file src="src/Operation/ReplaceOne.php">
-    <RedundantConditionGivenDocblockType occurrences="1">
+    <RedundantConditionGivenDocblockType>
       <code>is_object($replacementDocument)</code>
     </RedundantConditionGivenDocblockType>
   </file>

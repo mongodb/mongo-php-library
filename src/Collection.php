@@ -19,7 +19,6 @@ namespace MongoDB;
 
 use Iterator;
 use MongoDB\BSON\JavascriptInterface;
-use MongoDB\Driver\Cursor;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
@@ -190,7 +189,7 @@ class Collection
      * @see Aggregate::__construct() for supported options
      * @param array $pipeline Aggregation pipeline
      * @param array $options  Command options
-     * @return Cursor
+     * @return CursorInterface&Iterator
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if options are not supported by the selected server
      * @throws InvalidArgumentException for parameter/option parsing errors

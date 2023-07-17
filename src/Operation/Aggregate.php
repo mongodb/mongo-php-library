@@ -17,8 +17,11 @@
 
 namespace MongoDB\Operation;
 
+use Iterator;
+use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Cursor;
+use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -28,6 +31,7 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
+use MongoDB\Model\CodecCursor;
 use stdClass;
 
 use function is_array;
@@ -71,6 +75,9 @@ class Aggregate implements Executable, Explainable
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation. This only applies when an $out
      *    or $merge stage is specified.
+     *
+     *  * codec (MongoDB\Codec\DocumentCodec): Codec used to decode documents
+     *    from BSON to PHP objects.
      *
      *  * collation (document): Collation specification.
      *
@@ -135,6 +142,10 @@ class Aggregate implements Executable, Explainable
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+        }
+
+        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
         }
 
         if (isset($options['collation']) && ! is_document($options['collation'])) {
@@ -213,7 +224,7 @@ class Aggregate implements Executable, Explainable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return Cursor
+     * @return CursorInterface&Iterator
      * @throws UnexpectedValueException if the command response was malformed
      * @throws UnsupportedException if read concern or write concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -237,6 +248,10 @@ class Aggregate implements Executable, Explainable
         );
 
         $cursor = $this->executeCommand($server, $command);
+
+        if (isset($this->options['codec'])) {
+            return CodecCursor::fromCursor($cursor, $this->options['codec']);
+        }
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);

@@ -9,6 +9,8 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Tests\CommandObserver;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use MongoDB\Tests\Fixtures\Document\TestObject;
 use stdClass;
 
 use function current;
@@ -333,6 +335,30 @@ class AggregateFunctionalTest extends FunctionalTestCase
         } finally {
             $session->endSession();
         }
+    }
+
+    public function testCodecOption(): void
+    {
+        $this->createFixtures(3);
+
+        $codec = new TestDocumentCodec();
+
+        $operation = new Aggregate(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [['$match' => ['_id' => ['$gt' => 1]]]],
+            ['codec' => $codec],
+        );
+
+        $cursor = $operation->execute($this->getPrimaryServer());
+
+        $this->assertEquals(
+            [
+                TestObject::createForFixture(2, true),
+                TestObject::createForFixture(3, true),
+            ],
+            $cursor->toArray(),
+        );
     }
 
     /**

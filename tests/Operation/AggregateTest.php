@@ -30,6 +30,7 @@ class AggregateTest extends TestCase
             'allowDiskUse' => $this->getInvalidBooleanValues(),
             'batchSize' => $this->getInvalidIntegerValues(),
             'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
+            'codec' => $this->getInvalidDocumentCodecValues(),
             'collation' => $this->getInvalidDocumentValues(),
             'hint' => $this->getInvalidHintValues(),
             'let' => $this->getInvalidDocumentValues(),

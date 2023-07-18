@@ -53,7 +53,7 @@ while (true) {
     $changeStream->next();
 
     if (time() - $startTime > 3) {
-        printf("Aborting after 3 seconds...\n");
+        echo "Aborting after 3 seconds...\n";
         break;
     }
 }

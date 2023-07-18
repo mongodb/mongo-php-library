@@ -1,381 +1,190 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
-  <file src="docs/examples/create_data_key.php">
-    <TooFewArguments occurrences="1">
-      <code>new Binary(random_bytes(96))</code>
-    </TooFewArguments>
-  </file>
-  <file src="docs/examples/csfle-automatic_encryption-local_schema.php">
-    <TooFewArguments occurrences="1">
-      <code>new Binary(random_bytes(96))</code>
-    </TooFewArguments>
-  </file>
-  <file src="docs/examples/csfle-automatic_encryption-server_side_schema.php">
-    <TooFewArguments occurrences="1">
-      <code>new Binary(random_bytes(96))</code>
-    </TooFewArguments>
-  </file>
+<files psalm-version="5.13.1@086b94371304750d1c673315321a55d15fc59015">
   <file src="docs/examples/csfle-explicit_encryption.php">
-    <MixedArgument occurrences="2">
-      <code>$clientEncryption-&gt;decrypt($document-&gt;encryptedField)</code>
-      <code>$document-&gt;encryptedField</code>
+    <MixedArgument>
+      <code><![CDATA[$clientEncryption->decrypt($document->encryptedField)]]></code>
     </MixedArgument>
-    <PossiblyInvalidPropertyFetch occurrences="1">
-      <code>$document-&gt;encryptedField</code>
-    </PossiblyInvalidPropertyFetch>
-    <PossiblyNullArgument occurrences="1">
-      <code>$document-&gt;encryptedField</code>
-    </PossiblyNullArgument>
-    <PossiblyNullPropertyFetch occurrences="1">
-      <code>$document-&gt;encryptedField</code>
-    </PossiblyNullPropertyFetch>
-    <TooFewArguments occurrences="1">
-      <code>new Binary(random_bytes(96))</code>
-    </TooFewArguments>
-  </file>
-  <file src="docs/examples/csfle-explicit_encryption_automatic_decryption.php">
-    <TooFewArguments occurrences="1">
-      <code>new Binary(random_bytes(96))</code>
-    </TooFewArguments>
-  </file>
-  <file src="docs/examples/key_alt_name.php">
-    <TooFewArguments occurrences="1">
-      <code>new Binary(random_bytes(96))</code>
-    </TooFewArguments>
-  </file>
-  <file src="docs/examples/queryable_encryption-automatic.php">
-    <TooFewArguments occurrences="1">
-      <code>new Binary(random_bytes(96))</code>
-    </TooFewArguments>
-  </file>
-  <file src="docs/examples/queryable_encryption-explicit.php">
-    <TooFewArguments occurrences="1">
-      <code>new Binary(random_bytes(96))</code>
-    </TooFewArguments>
-  </file>
-  <file src="examples/typemap.php">
-    <PropertyNotSetInConstructor occurrences="5">
-      <code>$address</code>
-      <code>$emails</code>
-      <code>$id</code>
-      <code>$name</code>
-      <code>$type</code>
-    </PropertyNotSetInConstructor>
   </file>
   <file src="src/ChangeStream.php">
-    <DeprecatedConstant occurrences="1">
+    <DeprecatedConstant>
       <code>self::CURSOR_NOT_FOUND</code>
     </DeprecatedConstant>
   </file>
   <file src="src/Client.php">
-    <MixedArgument occurrences="1">
-      <code>$driverOptions['driver'] ?? []</code>
+    <MixedArgument>
+      <code><![CDATA[$driverOptions['driver'] ?? []]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="1">
-      <code>$mergedDriver['platform']</code>
+    <MixedAssignment>
+      <code><![CDATA[$mergedDriver['platform']]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Codec/DecodeIfSupported.php">
-    <MixedInferredReturnType occurrences="1">
+    <MixedInferredReturnType>
       <code>($value is BSONType ? NativeType : $value)</code>
     </MixedInferredReturnType>
   </file>
   <file src="src/Codec/EncodeIfSupported.php">
-    <MixedInferredReturnType occurrences="1">
+    <MixedInferredReturnType>
       <code>($value is NativeType ? BSONType : $value)</code>
     </MixedInferredReturnType>
   </file>
   <file src="src/Command/ListCollections.php">
-    <MixedAssignment occurrences="2">
+    <MixedAssignment>
       <code>$cmd[$option]</code>
-      <code>$options['session']</code>
+      <code><![CDATA[$options['session']]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Command/ListDatabases.php">
-    <MixedAssignment occurrences="2">
+    <MixedAssignment>
       <code>$cmd[$option]</code>
-      <code>$options['session']</code>
+      <code><![CDATA[$options['session']]]></code>
     </MixedAssignment>
   </file>
-  <file src="src/Exception/BadMethodCallException.php">
-    <UnsafeInstantiation occurrences="2">
-      <code>new static(sprintf('%s is immutable', $class))</code>
-      <code>new static(sprintf('%s should not be called for an unacknowledged write result', $method))</code>
-    </UnsafeInstantiation>
-  </file>
-  <file src="src/Exception/InvalidArgumentException.php">
-    <UnsafeInstantiation occurrences="1">
-      <code>new static(sprintf('Expected %s to have type "%s" but found "%s"', $name, $expectedType, get_debug_type($value)))</code>
-    </UnsafeInstantiation>
-  </file>
-  <file src="src/Exception/ResumeTokenException.php">
-    <UnsafeInstantiation occurrences="2">
-      <code>new static('Resume token not found in change document')</code>
-      <code>new static(sprintf('Expected resume token to have type "array or object" but found "%s"', get_debug_type($value)))</code>
-    </UnsafeInstantiation>
-  </file>
-  <file src="src/Exception/UnsupportedException.php">
-    <UnsafeInstantiation occurrences="10">
-      <code>new static('Array filters are not supported by the server executing this operation')</code>
-      <code>new static('Collations are not supported by the server executing this operation')</code>
-      <code>new static('Explain is not supported by the server executing this operation')</code>
-      <code>new static('Hint is not supported by the server executing this operation')</code>
-      <code>new static('Read concern is not supported by the server executing this command')</code>
-      <code>new static('The "allowDiskUse" option is not supported by the server executing this operation')</code>
-      <code>new static('The "commitQuorum" option is not supported by the server executing this operation')</code>
-      <code>new static('The "readConcern" option cannot be specified within a transaction. Instead, specify it when starting the transaction.')</code>
-      <code>new static('The "writeConcern" option cannot be specified within a transaction. Instead, specify it when starting the transaction.')</code>
-      <code>new static('Write concern is not supported by the server executing this command')</code>
-    </UnsafeInstantiation>
-  </file>
   <file src="src/GridFS/Bucket.php">
-    <DocblockTypeContradiction occurrences="4">
-      <code>! is_resource($destination)</code>
-      <code>! is_resource($destination)</code>
-      <code>! is_resource($source)</code>
-      <code>! is_resource($stream)</code>
-    </DocblockTypeContradiction>
-    <MissingReturnType occurrences="5">
-      <code>delete</code>
-      <code>downloadToStream</code>
-      <code>downloadToStreamByName</code>
-      <code>drop</code>
-      <code>rename</code>
-    </MissingReturnType>
-    <MixedArgument occurrences="2">
-      <code>$options['revision']</code>
-      <code>$options['revision']</code>
+    <MixedArgument>
+      <code><![CDATA[$options['revision']]]></code>
+      <code><![CDATA[$options['revision']]]></code>
     </MixedArgument>
   </file>
-  <file src="src/GridFS/Exception/CorruptFileException.php">
-    <UnsafeInstantiation occurrences="4">
-      <code>new static(sprintf('Chunk not found for index "%d"', $expectedIndex))</code>
-      <code>new static(sprintf('Expected chunk to have index "%d" but found "%d"', $expectedIndex, $index))</code>
-      <code>new static(sprintf('Expected chunk to have size "%d" but found "%d"', $expectedSize, $size))</code>
-      <code>new static(sprintf('Invalid data found for index "%d"', $chunkIndex))</code>
-    </UnsafeInstantiation>
-  </file>
-  <file src="src/GridFS/Exception/FileNotFoundException.php">
-    <UnsafeInstantiation occurrences="2">
-      <code>new static(sprintf('File "%s" not found in "%s"', $json, $namespace))</code>
-      <code>new static(sprintf('File with name "%s" and revision "%d" not found in "%s"', $filename, $revision, $namespace))</code>
-    </UnsafeInstantiation>
-  </file>
-  <file src="src/GridFS/Exception/StreamException.php">
-    <UnsafeInstantiation occurrences="3">
-      <code>new static(sprintf('Downloading file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $filename))</code>
-      <code>new static(sprintf('Downloading file from "%s" to "%s" failed. GridFS identifier: "%s"', $sourceMetadata['uri'], $destinationMetadata['uri'], $idString))</code>
-      <code>new static(sprintf('Uploading file from "%s" to "%s" failed. GridFS filename: "%s"', $sourceMetadata['uri'], $destinationUri, $filename))</code>
-    </UnsafeInstantiation>
-  </file>
   <file src="src/GridFS/ReadableStream.php">
-    <MixedArgument occurrences="2">
-      <code>$currentChunk-&gt;n</code>
-      <code>$this-&gt;file-&gt;length</code>
+    <MixedArgument>
+      <code><![CDATA[$currentChunk->n]]></code>
+      <code><![CDATA[$this->file->length]]></code>
     </MixedArgument>
   </file>
   <file src="src/GridFS/StreamWrapper.php">
-    <MixedArgument occurrences="5">
-      <code>$context[$this-&gt;protocol]['collectionWrapper']</code>
-      <code>$context[$this-&gt;protocol]['collectionWrapper']</code>
-      <code>$context[$this-&gt;protocol]['file']</code>
-      <code>$context[$this-&gt;protocol]['filename']</code>
-      <code>$context[$this-&gt;protocol]['options']</code>
+    <MixedArgument>
+      <code><![CDATA[$context[$this->protocol]['collectionWrapper']]]></code>
+      <code><![CDATA[$context[$this->protocol]['collectionWrapper']]]></code>
+      <code><![CDATA[$context[$this->protocol]['file']]]></code>
+      <code><![CDATA[$context[$this->protocol]['filename']]]></code>
+      <code><![CDATA[$context[$this->protocol]['options']]]></code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="5">
-      <code>$context[$this-&gt;protocol]['collectionWrapper']</code>
-      <code>$context[$this-&gt;protocol]['collectionWrapper']</code>
-      <code>$context[$this-&gt;protocol]['file']</code>
-      <code>$context[$this-&gt;protocol]['filename']</code>
-      <code>$context[$this-&gt;protocol]['options']</code>
+    <MixedArrayAccess>
+      <code><![CDATA[$context[$this->protocol]['collectionWrapper']]]></code>
+      <code><![CDATA[$context[$this->protocol]['collectionWrapper']]]></code>
+      <code><![CDATA[$context[$this->protocol]['file']]]></code>
+      <code><![CDATA[$context[$this->protocol]['filename']]]></code>
+      <code><![CDATA[$context[$this->protocol]['options']]]></code>
     </MixedArrayAccess>
-    <UnusedFunctionCall occurrences="1">
-      <code>stream_wrapper_unregister</code>
-    </UnusedFunctionCall>
-  </file>
-  <file src="src/GridFS/WritableStream.php">
-    <TooFewArguments occurrences="1">
-      <code>new Binary($data)</code>
-    </TooFewArguments>
-    <UnusedFunctionCall occurrences="1">
-      <code>hash_update</code>
-    </UnusedFunctionCall>
-  </file>
-  <file src="src/MapReduceResult.php">
-    <MixedInferredReturnType occurrences="1">
-      <code>Traversable</code>
-    </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="1">
-      <code>call_user_func($this-&gt;getIterator)</code>
-    </MixedReturnStatement>
   </file>
   <file src="src/Model/BSONArray.php">
-    <MixedArrayOffset occurrences="1">
-      <code>$this[$key]</code>
-    </MixedArrayOffset>
-    <MixedAssignment occurrences="3">
-      <code>$key</code>
+    <MixedAssignment>
       <code>$this[$key]</code>
       <code>$value</code>
     </MixedAssignment>
-    <UnsafeInstantiation occurrences="1">
-      <code>new static()</code>
-    </UnsafeInstantiation>
   </file>
   <file src="src/Model/BSONDocument.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$iteratorClass</code>
-    </ArgumentTypeCoercion>
-    <MixedArrayOffset occurrences="1">
-      <code>$this[$key]</code>
-    </MixedArrayOffset>
-    <MixedAssignment occurrences="3">
-      <code>$key</code>
+    <InvalidParamDefault>
+      <code><![CDATA[class-string<ArrayIterator<string,mixed>>|class-string<ArrayObject<string,mixed>>]]></code>
+    </InvalidParamDefault>
+    <MixedAssignment>
       <code>$this[$key]</code>
       <code>$value</code>
     </MixedAssignment>
-    <UnsafeInstantiation occurrences="1">
-      <code>new static()</code>
-    </UnsafeInstantiation>
   </file>
   <file src="src/Model/BSONIterator.php">
-    <MixedArgument occurrences="3">
+    <MixedArgument>
       <code>$documentLength</code>
       <code>$documentLength</code>
-      <code>$this-&gt;options['typeMap']</code>
+      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="1">
-      <code>$this-&gt;position</code>
+    <MixedAssignment>
+      <code><![CDATA[$this->position]]></code>
     </MixedAssignment>
-    <MixedOperand occurrences="1">
+    <MixedOperand>
       <code>$documentLength</code>
     </MixedOperand>
   </file>
-  <file src="src/Model/CachingIterator.php">
-    <MixedArrayAccess occurrences="2">
-      <code>$currentItem[self::FIELD_KEY]</code>
-      <code>$currentItem[self::FIELD_VALUE]</code>
-    </MixedArrayAccess>
-    <MixedAssignment occurrences="2">
-      <code>$currentItem</code>
-      <code>$currentItem</code>
-    </MixedAssignment>
-  </file>
   <file src="src/Model/ChangeStreamIterator.php">
-    <MixedArgument occurrences="2">
-      <code>$reply-&gt;cursor-&gt;nextBatch</code>
-      <code>$this-&gt;current()</code>
+    <MixedArgument>
+      <code><![CDATA[$reply->cursor->nextBatch]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="1">
-      <code>$this-&gt;postBatchResumeToken</code>
+    <MixedAssignment>
+      <code><![CDATA[$this->postBatchResumeToken]]></code>
     </MixedAssignment>
-    <MixedPropertyFetch occurrences="2">
-      <code>$reply-&gt;cursor-&gt;nextBatch</code>
-      <code>$reply-&gt;cursor-&gt;postBatchResumeToken</code>
+    <MixedPropertyFetch>
+      <code><![CDATA[$reply->cursor->nextBatch]]></code>
+      <code><![CDATA[$reply->cursor->postBatchResumeToken]]></code>
     </MixedPropertyFetch>
-    <UnusedFunctionCall occurrences="2">
-      <code>addSubscriber</code>
-      <code>removeSubscriber</code>
-    </UnusedFunctionCall>
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->current()]]></code>
+    </PossiblyNullArgument>
   </file>
   <file src="src/Model/CollectionInfo.php">
-    <MixedArgument occurrences="1">
+    <MixedArgument>
       <code>$key</code>
     </MixedArgument>
-    <MixedArrayOffset occurrences="1">
-      <code>$this-&gt;info[$key]</code>
+    <MixedArrayOffset>
+      <code><![CDATA[$this->info[$key]]]></code>
     </MixedArrayOffset>
   </file>
   <file src="src/Model/CollectionInfoCommandIterator.php">
-    <MixedArgument occurrences="1">
-      <code>$info</code>
-    </MixedArgument>
-    <MixedArrayAssignment occurrences="1">
-      <code>$info['idIndex']['ns']</code>
+    <MixedArrayAssignment>
+      <code><![CDATA[$info['idIndex']['ns']]]></code>
     </MixedArrayAssignment>
-    <MixedAssignment occurrences="1">
-      <code>$info</code>
-    </MixedAssignment>
-    <MixedOperand occurrences="1">
-      <code>$info['name']</code>
+    <MixedOperand>
+      <code><![CDATA[$info['name']]]></code>
     </MixedOperand>
   </file>
   <file src="src/Model/DatabaseInfo.php">
-    <MixedArgument occurrences="1">
+    <MixedArgument>
       <code>$key</code>
     </MixedArgument>
-    <MixedArrayOffset occurrences="1">
-      <code>$this-&gt;info[$key]</code>
+    <MixedArrayOffset>
+      <code><![CDATA[$this->info[$key]]]></code>
     </MixedArrayOffset>
   </file>
   <file src="src/Model/DatabaseInfoLegacyIterator.php">
-    <MixedArgument occurrences="1">
-      <code>current($this-&gt;databases)</code>
+    <MixedArgument>
+      <code><![CDATA[current($this->databases)]]></code>
     </MixedArgument>
-    <MixedReturnTypeCoercion occurrences="2">
+    <MixedReturnTypeCoercion>
       <code>int</code>
-      <code>key($this-&gt;databases)</code>
+      <code><![CDATA[key($this->databases)]]></code>
     </MixedReturnTypeCoercion>
   </file>
   <file src="src/Model/IndexInfo.php">
-    <MixedArgument occurrences="1">
+    <MixedArgument>
       <code>$key</code>
     </MixedArgument>
-    <MixedArrayOffset occurrences="1">
-      <code>$this-&gt;info[$key]</code>
+    <MixedArrayOffset>
+      <code><![CDATA[$this->info[$key]]]></code>
     </MixedArrayOffset>
   </file>
-  <file src="src/Model/IndexInfoIteratorIterator.php">
-    <MixedArgument occurrences="2">
-      <code>$info</code>
-      <code>$info</code>
-    </MixedArgument>
-    <MixedArrayAssignment occurrences="1">
-      <code>$info['ns']</code>
-    </MixedArrayAssignment>
-    <MixedAssignment occurrences="1">
-      <code>$info</code>
-    </MixedAssignment>
-  </file>
   <file src="src/Model/IndexInput.php">
-    <MixedArgument occurrences="2">
+    <MixedArgument>
       <code>$fieldName</code>
-      <code>$index['key']</code>
+      <code><![CDATA[$index['key']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="2">
+    <MixedAssignment>
       <code>$fieldName</code>
       <code>$type</code>
     </MixedAssignment>
-    <MixedOperand occurrences="1">
+    <MixedOperand>
       <code>$type</code>
     </MixedOperand>
-    <MixedReturnStatement occurrences="1">
-      <code>$this-&gt;index['name']</code>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->index['name']]]></code>
     </MixedReturnStatement>
   </file>
   <file src="src/Operation/Aggregate.php">
-    <MixedArgument occurrences="2">
-      <code>$this-&gt;options['typeMap']</code>
-      <code>$this-&gt;options['typeMap']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="5">
-      <code>$cmdOptions['maxAwaitTimeMS']</code>
+    <MixedAssignment>
+      <code><![CDATA[$cmdOptions['maxAwaitTimeMS']]]></code>
       <code>$cmd[$option]</code>
-      <code>$cmd['hint']</code>
-      <code>$cmd['readConcern']</code>
+      <code><![CDATA[$cmd['hint']]]></code>
+      <code><![CDATA[$cmd['readConcern']]]></code>
       <code>$options[$option]</code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="3">
-      <code>isDefault</code>
-      <code>isDefault</code>
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
   <file src="src/Operation/BulkWrite.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>is_array($operation)</code>
-    </DocblockTypeContradiction>
-    <MixedArgument occurrences="13">
+    <MixedArgument>
       <code>$args</code>
       <code>$args</code>
       <code>$args</code>
@@ -390,7 +199,7 @@
       <code>$args[1]</code>
       <code>$args[2]</code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="30">
+    <MixedArrayAccess>
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
@@ -417,26 +226,29 @@
       <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
-      <code>$args[2]['upsert']</code>
-      <code>$args[2]['upsert']</code>
-      <code>$args[2]['upsert']</code>
-      <code>$args[2]['upsert']</code>
+      <code><![CDATA[$args[2]['upsert']]]></code>
+      <code><![CDATA[$args[2]['upsert']]]></code>
+      <code><![CDATA[$args[2]['upsert']]]></code>
+      <code><![CDATA[$args[2]['upsert']]]></code>
     </MixedArrayAccess>
-    <MixedArrayAssignment occurrences="12">
+    <MixedArrayAssignment>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
+      <code><![CDATA[$args[1]['limit']]]></code>
       <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
+      <code><![CDATA[$args[2]['multi']]]></code>
+      <code><![CDATA[$args[2]['multi']]]></code>
       <code>$operations[$i][$type][1]</code>
       <code>$operations[$i][$type][2]</code>
       <code>$operations[$i][$type][2]</code>
     </MixedArrayAssignment>
-    <MixedAssignment occurrences="11">
+    <MixedAssignment>
       <code>$args</code>
       <code>$args</code>
       <code>$args[2]</code>
@@ -446,398 +258,341 @@
       <code>$operations[$i][$type][2]</code>
       <code>$operations[$i][$type][2]</code>
       <code>$options[$option]</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="2">
-      <code>isDefault</code>
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
-    <MixedOperand occurrences="2">
+    <MixedOperand>
       <code>$args[2]</code>
       <code>$args[2]</code>
     </MixedOperand>
   </file>
   <file src="src/Operation/Count.php">
-    <MixedAssignment occurrences="6">
+    <MixedAssignment>
       <code>$cmd[$option]</code>
-      <code>$cmd['hint']</code>
-      <code>$cmd['readConcern']</code>
-      <code>$options['readConcern']</code>
-      <code>$options['readPreference']</code>
-      <code>$options['session']</code>
+      <code><![CDATA[$cmd['hint']]]></code>
+      <code><![CDATA[$cmd['readConcern']]]></code>
+      <code><![CDATA[$options['readConcern']]]></code>
+      <code><![CDATA[$options['readPreference']]]></code>
+      <code><![CDATA[$options['session']]]></code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="1">
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
   <file src="src/Operation/CreateCollection.php">
-    <MixedArgument occurrences="2">
-      <code>$options['pipeline']</code>
-      <code>$this-&gt;options['typeMap']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="3">
+    <MixedAssignment>
       <code>$cmd[$option]</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Operation/CreateEncryptedCollection.php">
-    <MixedArgument occurrences="2">
-      <code>$options['encryptedFields']</code>
-      <code>$this-&gt;options['encryptedFields']</code>
+    <MixedArgument>
+      <code><![CDATA[$options['encryptedFields']]]></code>
+      <code><![CDATA[$this->options['encryptedFields']]]></code>
     </MixedArgument>
   </file>
   <file src="src/Operation/CreateIndexes.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>is_array($index)</code>
-    </DocblockTypeContradiction>
-    <MixedAssignment occurrences="4">
+    <MixedAssignment>
       <code>$cmd[$option]</code>
-      <code>$cmd['commitQuorum']</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+      <code><![CDATA[$cmd['commitQuorum']]]></code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="1">
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
   <file src="src/Operation/DatabaseCommand.php">
-    <MixedArgument occurrences="1">
-      <code>$this-&gt;options['typeMap']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="2">
-      <code>$options['readPreference']</code>
-      <code>$options['session']</code>
+    <MixedAssignment>
+      <code><![CDATA[$options['readPreference']]]></code>
+      <code><![CDATA[$options['session']]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Operation/Delete.php">
-    <MixedArgument occurrences="1">
-      <code>$this-&gt;options['writeConcern']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['writeConcern']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="5">
-      <code>$cmd['comment']</code>
-      <code>$deleteOptions['hint']</code>
-      <code>$options['comment']</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+    <MixedAssignment>
+      <code><![CDATA[$cmd['comment']]]></code>
+      <code><![CDATA[$deleteOptions['hint']]]></code>
+      <code><![CDATA[$options['comment']]]></code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="1">
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
   <file src="src/Operation/Distinct.php">
-    <MixedArgument occurrences="1">
-      <code>$this-&gt;options['typeMap']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="5">
+    <MixedAssignment>
       <code>$cmd[$option]</code>
-      <code>$cmd['readConcern']</code>
-      <code>$options['readConcern']</code>
-      <code>$options['readPreference']</code>
-      <code>$options['session']</code>
+      <code><![CDATA[$cmd['readConcern']]]></code>
+      <code><![CDATA[$options['readConcern']]]></code>
+      <code><![CDATA[$options['readPreference']]]></code>
+      <code><![CDATA[$options['session']]]></code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="1">
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
   <file src="src/Operation/DropCollection.php">
-    <MixedArgument occurrences="1">
-      <code>$this-&gt;options['typeMap']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="3">
-      <code>$cmd['comment']</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+    <MixedAssignment>
+      <code><![CDATA[$cmd['comment']]]></code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="1">
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
   <file src="src/Operation/DropDatabase.php">
-    <MixedArgument occurrences="1">
-      <code>$this-&gt;options['typeMap']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="3">
-      <code>$cmd['comment']</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+    <MixedAssignment>
+      <code><![CDATA[$cmd['comment']]]></code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Operation/DropEncryptedCollection.php">
-    <MixedArgument occurrences="1">
-      <code>$options['encryptedFields']</code>
+    <MixedArgument>
+      <code><![CDATA[$options['encryptedFields']]]></code>
     </MixedArgument>
   </file>
   <file src="src/Operation/DropIndexes.php">
-    <MixedArgument occurrences="1">
-      <code>$this-&gt;options['typeMap']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="3">
+    <MixedAssignment>
       <code>$cmd[$option]</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="1">
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
   <file src="src/Operation/Explain.php">
-    <MixedArgument occurrences="1">
-      <code>$this-&gt;options['typeMap']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="3">
+    <MixedAssignment>
       <code>$cmd[$option]</code>
-      <code>$options['readPreference']</code>
-      <code>$options['session']</code>
+      <code><![CDATA[$options['readPreference']]]></code>
+      <code><![CDATA[$options['session']]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Operation/Find.php">
-    <MixedArgument occurrences="1">
-      <code>$this-&gt;options['typeMap']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedArrayAccess occurrences="1">
-      <code>$options['modifiers'][$modifier[1]]</code>
+    <MixedArrayAccess>
+      <code><![CDATA[$options['modifiers'][$modifier[1]]]]></code>
     </MixedArrayAccess>
-    <MixedAssignment occurrences="4">
+    <MixedAssignment>
       <code>$options[$modifier[0]]</code>
       <code>$options[$option]</code>
-      <code>$options['readPreference']</code>
-      <code>$options['session']</code>
+      <code><![CDATA[$options['readPreference']]]></code>
+      <code><![CDATA[$options['session']]]></code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="1">
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
   <file src="src/Operation/FindAndModify.php">
-    <MixedArgument occurrences="2">
-      <code>$this-&gt;options['typeMap']</code>
-      <code>$this-&gt;options['writeConcern']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
+      <code><![CDATA[$this->options['writeConcern']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="5">
+    <MixedAssignment>
       <code>$cmd[$option]</code>
-      <code>$cmd['new']</code>
-      <code>$cmd['upsert']</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+      <code><![CDATA[$cmd['new']]]></code>
+      <code><![CDATA[$cmd['upsert']]]></code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="1">
+    <MixedInferredReturnType>
       <code>array|object|null</code>
     </MixedInferredReturnType>
-    <MixedMethodCall occurrences="2">
-      <code>isDefault</code>
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
-    <MixedReturnStatement occurrences="1">
-      <code>is_object($result) ? ($result-&gt;value ?? null) : null</code>
+    <MixedReturnStatement>
+      <code><![CDATA[is_object($result) ? ($result->value ?? null) : null]]></code>
+      <code><![CDATA[is_object($result) ? ($result->value ?? null) : null]]></code>
     </MixedReturnStatement>
   </file>
   <file src="src/Operation/FindOneAndDelete.php">
-    <MixedAssignment occurrences="1">
-      <code>$options['fields']</code>
+    <MixedAssignment>
+      <code><![CDATA[$options['fields']]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Operation/FindOneAndReplace.php">
-    <MixedAssignment occurrences="1">
-      <code>$options['fields']</code>
+    <MixedAssignment>
+      <code><![CDATA[$options['fields']]]></code>
     </MixedAssignment>
-    <MixedOperand occurrences="1">
-      <code>$options['returnDocument']</code>
-    </MixedOperand>
   </file>
   <file src="src/Operation/FindOneAndUpdate.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($update) &amp;&amp; ! is_object($update)</code>
-    </DocblockTypeContradiction>
-    <MixedAssignment occurrences="1">
-      <code>$options['fields']</code>
+    <MixedAssignment>
+      <code><![CDATA[$options['fields']]]></code>
     </MixedAssignment>
-    <MixedOperand occurrences="1">
-      <code>$options['returnDocument']</code>
-    </MixedOperand>
   </file>
   <file src="src/Operation/InsertMany.php">
-    <MixedAssignment occurrences="4">
+    <MixedAssignment>
       <code>$insertedIds[$i]</code>
       <code>$options[$option]</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="2">
-      <code>isDefault</code>
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
   <file src="src/Operation/InsertOne.php">
-    <MixedAssignment occurrences="4">
+    <MixedAssignment>
       <code>$insertedId</code>
       <code>$options[$option]</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="2">
-      <code>isDefault</code>
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
-  <file src="src/Operation/ListCollectionNames.php">
-    <MissingClosureReturnType occurrences="1">
-      <code>function (array $collectionInfo) {</code>
-    </MissingClosureReturnType>
-  </file>
   <file src="src/Operation/ListIndexes.php">
-    <MixedAssignment occurrences="2">
+    <MixedAssignment>
       <code>$cmd[$option]</code>
-      <code>$options['session']</code>
+      <code><![CDATA[$options['session']]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Operation/MapReduce.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_string($out) &amp;&amp; ! is_array($out) &amp;&amp; ! is_object($out)</code>
-    </DocblockTypeContradiction>
-    <MixedArgument occurrences="3">
-      <code>$result-&gt;result-&gt;collection</code>
-      <code>$result-&gt;result-&gt;db</code>
-      <code>$this-&gt;options['typeMap']</code>
+    <MixedArgument>
+      <code><![CDATA[$result->result->collection]]></code>
+      <code><![CDATA[$result->result->db]]></code>
+      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="5">
+    <MixedAssignment>
       <code>$cmd[$option]</code>
-      <code>$options['readConcern']</code>
-      <code>$options['readPreference']</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+      <code><![CDATA[$options['readConcern']]]></code>
+      <code><![CDATA[$options['readPreference']]]></code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="4">
-      <code>getScope</code>
-      <code>isDefault</code>
-      <code>isDefault</code>
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
   <file src="src/Operation/ModifyCollection.php">
-    <MixedArgument occurrences="1">
-      <code>$this-&gt;options['typeMap']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="3">
-      <code>$cmd['comment']</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+    <MixedAssignment>
+      <code><![CDATA[$cmd['comment']]]></code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Operation/RenameCollection.php">
-    <MixedArgument occurrences="1">
-      <code>$this-&gt;options['typeMap']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="3">
+    <MixedAssignment>
       <code>$cmd[$option]</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="1">
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
   <file src="src/Operation/Update.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($update) &amp;&amp; ! is_object($update)</code>
-    </DocblockTypeContradiction>
-    <MixedArgument occurrences="1">
-      <code>$this-&gt;options['writeConcern']</code>
+    <MixedArgument>
+      <code><![CDATA[$this->options['writeConcern']]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="5">
-      <code>$cmd['bypassDocumentValidation']</code>
+    <MixedAssignment>
+      <code><![CDATA[$cmd['bypassDocumentValidation']]]></code>
       <code>$options[$option]</code>
-      <code>$options['session']</code>
-      <code>$options['writeConcern']</code>
+      <code><![CDATA[$options['session']]]></code>
+      <code><![CDATA[$options['writeConcern']]]></code>
       <code>$updateOptions[$option]</code>
     </MixedAssignment>
-    <MixedMethodCall occurrences="2">
-      <code>isDefault</code>
+    <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
   </file>
-  <file src="src/Operation/UpdateMany.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($update) &amp;&amp; ! is_object($update)</code>
-    </DocblockTypeContradiction>
-  </file>
-  <file src="src/Operation/UpdateOne.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>! is_array($update) &amp;&amp; ! is_object($update)</code>
-    </DocblockTypeContradiction>
-  </file>
   <file src="src/Operation/Watch.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>isset($resumeToken) &amp;&amp; ! is_array($resumeToken) &amp;&amp; ! is_object($resumeToken)</code>
-    </DocblockTypeContradiction>
-    <MixedArgument occurrences="1">
-      <code>$reply-&gt;cursor-&gt;firstBatch</code>
+    <MixedArgument>
+      <code><![CDATA[$reply->cursor->firstBatch]]></code>
     </MixedArgument>
-    <MixedAssignment occurrences="1">
-      <code>$this-&gt;postBatchResumeToken</code>
+    <MixedAssignment>
+      <code><![CDATA[$this->postBatchResumeToken]]></code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="1">
+    <MixedInferredReturnType>
       <code>array|object|null</code>
     </MixedInferredReturnType>
-    <MixedPropertyFetch occurrences="2">
-      <code>$reply-&gt;cursor-&gt;firstBatch</code>
-      <code>$reply-&gt;cursor-&gt;postBatchResumeToken</code>
+    <MixedPropertyFetch>
+      <code><![CDATA[$reply->cursor->firstBatch]]></code>
+      <code><![CDATA[$reply->cursor->postBatchResumeToken]]></code>
     </MixedPropertyFetch>
-    <MixedReturnStatement occurrences="2">
-      <code>$this-&gt;changeStreamOptions['resumeAfter']</code>
-      <code>$this-&gt;changeStreamOptions['startAfter']</code>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->changeStreamOptions['resumeAfter']]]></code>
+      <code><![CDATA[$this->changeStreamOptions['startAfter']]]></code>
     </MixedReturnStatement>
-    <PropertyNotSetInConstructor occurrences="2">
-      <code>$firstBatchSize</code>
-      <code>$operationTime</code>
-    </PropertyNotSetInConstructor>
-    <RedundantConditionGivenDocblockType occurrences="2">
-      <code>$resumeToken === null &amp;&amp; $this-&gt;operationTime !== null</code>
-      <code>$this-&gt;operationTime !== null</code>
-    </RedundantConditionGivenDocblockType>
-    <UnusedFunctionCall occurrences="2">
-      <code>addSubscriber</code>
-      <code>removeSubscriber</code>
-    </UnusedFunctionCall>
   </file>
   <file src="src/UpdateResult.php">
-    <MixedAssignment occurrences="1">
+    <MixedAssignment>
       <code>$id</code>
     </MixedAssignment>
   </file>
   <file src="src/functions.php">
-    <DocblockTypeContradiction occurrences="1">
-      <code>is_array($document)</code>
-    </DocblockTypeContradiction>
-    <MixedArgument occurrences="2">
+    <MixedArgument>
       <code>$stage</code>
       <code>$wireVersionForWriteStageOnSecondary</code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="1">
-      <code>$manager-&gt;getServers()</code>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$manager->getServers()]]></code>
     </MixedArgumentTypeCoercion>
-    <MixedArrayAccess occurrences="1">
-      <code>$collectionInfo['options']['encryptedFields']</code>
+    <MixedArrayAccess>
+      <code><![CDATA[$collectionInfo['options']['encryptedFields']]]></code>
     </MixedArrayAccess>
-    <MixedArrayAssignment occurrences="2">
-      <code>$typeMap['fieldPaths'][$fieldPath]</code>
-      <code>$typeMap['fieldPaths'][substr($fieldPath, 0, -2)]</code>
+    <MixedArrayAssignment>
+      <code><![CDATA[$typeMap['fieldPaths'][$fieldPath]]]></code>
+      <code><![CDATA[$typeMap['fieldPaths'][substr($fieldPath, 0, -2)]]]></code>
     </MixedArrayAssignment>
-    <MixedAssignment occurrences="6">
+    <MixedAssignment>
       <code>$element[$key]</code>
       <code>$stage</code>
       <code>$type</code>
-      <code>$typeMap['fieldPaths'][$fieldPath . '.' . $existingFieldPath]</code>
-      <code>$typeMap['fieldPaths'][$fieldPath]</code>
+      <code><![CDATA[$typeMap['fieldPaths'][$fieldPath . '.' . $existingFieldPath]]]></code>
+      <code><![CDATA[$typeMap['fieldPaths'][$fieldPath]]]></code>
       <code>$value</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="2">
+    <MixedInferredReturnType>
       <code>array|object|null</code>
       <code>array|object|null</code>
     </MixedInferredReturnType>
-    <MixedReturnStatement occurrences="2">
-      <code>$collectionInfo['options']['encryptedFields'] ?? null</code>
-      <code>$encryptedFieldsMap[$databaseName . '.' . $collectionName] ?? null</code>
+    <MixedReturnStatement>
+      <code><![CDATA[$collectionInfo['options']['encryptedFields'] ?? null]]></code>
+      <code><![CDATA[$collectionInfo['options']['encryptedFields'] ?? null]]></code>
+      <code><![CDATA[$encryptedFieldsMap[$databaseName . '.' . $collectionName] ?? null]]></code>
+      <code><![CDATA[$encryptedFieldsMap[$databaseName . '.' . $collectionName] ?? null]]></code>
     </MixedReturnStatement>
   </file>
 </files>

@@ -33,10 +33,15 @@ use function call_user_func;
  *
  * @see \MongoDB\Collection::mapReduce()
  * @see https://mongodb.com/docs/manual/reference/command/mapReduce/
+ * @template-implements IteratorAggregate<int, array|object>
+ * @psalm-type MapReduceCallable = callable(): Traversable<int, array|object>
  */
 class MapReduceResult implements IteratorAggregate
 {
-    /** @var callable */
+    /**
+     * @var callable
+     * @psalm-var MapReduceCallable
+     */
     private $getIterator;
 
     private int $executionTimeMS;
@@ -49,6 +54,7 @@ class MapReduceResult implements IteratorAggregate
      * @internal
      * @param callable $getIterator Callback that returns a Traversable for mapReduce results
      * @param stdClass $result      Result document from the mapReduce command
+     * @psalm-param MapReduceCallable $getIterator
      */
     public function __construct(callable $getIterator, stdClass $result)
     {
@@ -82,7 +88,7 @@ class MapReduceResult implements IteratorAggregate
      * Return the mapReduce results as a Traversable.
      *
      * @see https://php.net/iteratoraggregate.getiterator
-     * @return Traversable
+     * @return Traversable<int, array|object>
      */
     #[ReturnTypeWillChange]
     public function getIterator()

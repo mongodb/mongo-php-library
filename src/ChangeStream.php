@@ -37,6 +37,7 @@ use function in_array;
  * @see https://mongodb.com/docs/manual/reference/method/db.watch/#mongodb-method-db.watch
  *
  * @psalm-type ResumeCallable = callable(array|object|null, bool): ChangeStreamIterator
+ * @template-implements Iterator<int, array|object>
  */
 class ChangeStream implements Iterator
 {
@@ -94,7 +95,7 @@ class ChangeStream implements Iterator
 
     /**
      * @see https://php.net/iterator.current
-     * @return mixed
+     * @return array|object|null
      */
     #[ReturnTypeWillChange]
     public function current()
@@ -124,7 +125,7 @@ class ChangeStream implements Iterator
 
     /**
      * @see https://php.net/iterator.key
-     * @return mixed
+     * @return int|null
      */
     #[ReturnTypeWillChange]
     public function key()

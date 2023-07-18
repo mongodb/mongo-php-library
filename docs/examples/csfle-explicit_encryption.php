@@ -41,6 +41,8 @@ $collection->insertOne(['_id' => 1, 'encryptedField' => $encryptedValue]);
 
 /* Using the client configured without encryption, find the document and observe
  * that the field is not automatically decrypted. */
+
+/** @var object{encryptedField: Binary} $document */
 $document = $collection->findOne();
 
 print_r($document);

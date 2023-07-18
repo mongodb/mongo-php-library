@@ -31,6 +31,8 @@ use function unpack;
 
 /**
  * Iterator for BSON documents.
+ *
+ * @template-implements Iterator<int, mixed>
  */
 class BSONIterator implements Iterator
 {
@@ -89,7 +91,7 @@ class BSONIterator implements Iterator
 
     /**
      * @see https://php.net/iterator.key
-     * @return mixed
+     * @return int
      */
     #[ReturnTypeWillChange]
     public function key()

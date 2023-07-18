@@ -54,7 +54,7 @@ class InvalidArgumentException extends DriverInvalidArgumentException implements
             $expectedType = self::expectedTypesToString($expectedType);
         }
 
-        return new static(sprintf('Expected %s to have type "%s" but found "%s"', $name, $expectedType, get_debug_type($value)));
+        return new self(sprintf('Expected %s to have type "%s" but found "%s"', $name, $expectedType, get_debug_type($value)));
     }
 
     /** @param list<string> $types */

@@ -40,6 +40,7 @@ use const E_USER_DEPRECATED;
  * @see \MongoDB\Collection::listIndexes()
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst
  * @see https://mongodb.com/docs/manual/reference/method/db.collection.createIndex/
+ * @template-implements ArrayAccess<string, mixed>
  */
 class IndexInfo implements ArrayAccess
 {

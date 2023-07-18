@@ -46,6 +46,8 @@ use function MongoDB\is_document;
  * rewind() do not execute getMore commands.
  *
  * @internal
+ * @template TValue of array|object
+ * @template-extends IteratorIterator<int, TValue, Cursor<TValue>>
  */
 class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 {
@@ -67,6 +69,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     /**
      * @internal
      * @param array|object|null $initialResumeToken
+     * @psalm-param Cursor<TValue> $cursor
      */
     public function __construct(Cursor $cursor, int $firstBatchSize, $initialResumeToken, ?object $postBatchResumeToken)
     {
@@ -122,12 +125,13 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * @see https://php.net/iteratoriterator.current
-     * @return mixed
+     * @return array|object|null
+     * @psalm-return TValue|null
      */
     #[ReturnTypeWillChange]
     public function current()
     {
-        return $this->isValid ? parent::current() : null;
+        return $this->valid() ? parent::current() : null;
     }
 
     /**
@@ -168,12 +172,12 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 
     /**
      * @see https://php.net/iteratoriterator.key
-     * @return mixed
+     * @return int|null
      */
     #[ReturnTypeWillChange]
     public function key()
     {
-        return $this->isValid ? parent::key() : null;
+        return $this->valid() ? parent::key() : null;
     }
 
     /** @see https://php.net/iteratoriterator.rewind */
@@ -213,7 +217,10 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
         $this->onIteration(false);
     }
 
-    /** @see https://php.net/iteratoriterator.valid */
+    /**
+     * @see https://php.net/iteratoriterator.valid
+     * @psalm-assert-if-true TValue $this->current()
+     */
     public function valid(): bool
     {
         return $this->isValid;
@@ -276,11 +283,11 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
         /* Disable rewind()'s NOP behavior once we advance to a valid position.
          * This will allow the driver to throw a LogicException if rewind() is
          * called after the cursor has advanced past its first element. */
-        if ($this->isRewindNop && $this->isValid) {
+        if ($this->isRewindNop && $this->valid()) {
             $this->isRewindNop = false;
         }
 
-        if ($incrementBatchPosition && $this->isValid) {
+        if ($incrementBatchPosition && $this->valid()) {
             $this->batchPosition++;
         }
 
@@ -292,7 +299,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
          * from the current document if possible. */
         if ($this->isAtEndOfBatch() && $this->postBatchResumeToken !== null) {
             $this->resumeToken = $this->postBatchResumeToken;
-        } elseif ($this->isValid) {
+        } elseif ($this->valid()) {
             $this->resumeToken = $this->extractResumeToken($this->current());
         }
     }

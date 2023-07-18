@@ -34,11 +34,13 @@ use function array_key_exists;
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-indexes.rst
  * @see https://mongodb.com/docs/manual/reference/command/listIndexes/
  * @see https://mongodb.com/docs/manual/reference/system-collections/
+ * @template-extends IteratorIterator<int, array, Traversable<int, array>>
  */
 class IndexInfoIteratorIterator extends IteratorIterator implements IndexInfoIterator
 {
     private ?string $ns = null;
 
+    /** @param Traversable<int, array> $iterator */
     public function __construct(Traversable $iterator, ?string $ns = null)
     {
         parent::__construct($iterator);

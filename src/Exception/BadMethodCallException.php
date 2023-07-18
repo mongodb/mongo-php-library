@@ -31,7 +31,7 @@ class BadMethodCallException extends BaseBadMethodCallException implements Excep
      */
     public static function classIsImmutable(string $class)
     {
-        return new static(sprintf('%s is immutable', $class));
+        return new self(sprintf('%s is immutable', $class));
     }
 
     /**
@@ -42,6 +42,6 @@ class BadMethodCallException extends BaseBadMethodCallException implements Excep
      */
     public static function unacknowledgedWriteResultAccess(string $method)
     {
-        return new static(sprintf('%s should not be called for an unacknowledged write result', $method));
+        return new self(sprintf('%s should not be called for an unacknowledged write result', $method));
     }
 }

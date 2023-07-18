@@ -31,14 +31,14 @@ class CommandLogger implements CommandSubscriber
         printf("%s command started\n", $event->getCommandName());
 
         printf("command: %s\n", toJson($event->getCommand()));
-        printf("\n");
+        echo "\n";
     }
 
     public function commandSucceeded(CommandSucceededEvent $event): void
     {
         printf("%s command succeeded\n", $event->getCommandName());
         printf("reply: %s\n", toJson($event->getReply()));
-        printf("\n");
+        echo "\n";
     }
 
     public function commandFailed(CommandFailedEvent $event): void
@@ -50,7 +50,7 @@ class CommandLogger implements CommandSubscriber
         printf("exception: %s\n", get_class($exception));
         printf("exception.code: %d\n", $exception->getCode());
         printf("exception.message: %s\n", $exception->getMessage());
-        printf("\n");
+        echo "\n";
     }
 }
 

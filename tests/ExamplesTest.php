@@ -361,7 +361,7 @@ OUTPUT;
         $this->skipIfServerVersion('<', '7.0.0', 'Queryable encryption tests require MongoDB 7.0 or later');
 
         if ($this->isStandalone()) {
-            $this->markTestSkipped('Encrypted collections are not supported on standalone');
+            $this->markTestSkipped('Queryable encryption requires replica sets');
         }
 
         /* Ensure that the key vault, collection under test, and any metadata

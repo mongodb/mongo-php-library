@@ -1323,7 +1323,7 @@ class ClientSideEncryptionSpecTest extends FunctionalTestCase
      */
     public function testExplicitEncryption(Closure $test): void
     {
-        if ($this->isStandalone() || ($this->isShardedCluster() && ! $this->isShardedClusterUsingReplicasets())) {
+        if ($this->isStandalone()) {
             $this->markTestSkipped('Explicit encryption tests require replica sets');
         }
 

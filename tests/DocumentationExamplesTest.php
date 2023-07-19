@@ -1550,7 +1550,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
     {
         $this->skipIfServerVersion('<', '5.0.0', 'Snapshot queries outside of transactions are not supported');
 
-        if (! ($this->isReplicaSet() || $this->isShardedClusterUsingReplicasets())) {
+        if ($this->isStandalone()) {
             $this->markTestSkipped('Snapshot read concern is only supported with replicasets');
         }
 
@@ -1803,7 +1803,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
      */
     public function testQueryableEncryption(): void
     {
-        if ($this->isStandalone() || ($this->isShardedCluster() && ! $this->isShardedClusterUsingReplicasets())) {
+        if ($this->isStandalone()) {
             $this->markTestSkipped('Queryable encryption requires replica sets');
         }
 

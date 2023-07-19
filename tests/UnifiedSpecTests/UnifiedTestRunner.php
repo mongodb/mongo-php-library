@@ -33,7 +33,6 @@ use function PHPUnit\Framework\assertIsArray;
 use function PHPUnit\Framework\assertIsString;
 use function PHPUnit\Framework\assertNotEmpty;
 use function PHPUnit\Framework\assertNotFalse;
-use function preg_match;
 use function preg_replace;
 use function sprintf;
 use function strlen;
@@ -299,9 +298,10 @@ final class UnifiedTestRunner
                 return RunOnRequirement::TOPOLOGY_REPLICASET;
 
             case Server::TYPE_MONGOS:
-                return $this->isShardedClusterUsingReplicasets()
-                    ? RunOnRequirement::TOPOLOGY_SHARDED_REPLICASET
-                    : RunOnRequirement::TOPOLOGY_SHARDED;
+                /* Since MongoDB 3.6, all sharded clusters use replica sets. The
+                 * unified test format deprecated use of "sharded-replicaset" in
+                 * tests but we should still identify as such. */
+                return RunOnRequirement::TOPOLOGY_SHARDED_REPLICASET;
 
             case Server::TYPE_LOAD_BALANCER:
                 return RunOnRequirement::TOPOLOGY_LOAD_BALANCED;
@@ -366,23 +366,6 @@ final class UnifiedTestRunner
     private function isSchemaVersionSupported(string $schemaVersion): bool
     {
         return version_compare($schemaVersion, self::MIN_SCHEMA_VERSION, '>=') && version_compare($schemaVersion, self::MAX_SCHEMA_VERSION, '<=');
-    }
-
-    private function isShardedClusterUsingReplicasets(): bool
-    {
-        $collection = $this->internalClient->selectCollection('config', 'shards');
-        $config = $collection->findOne();
-
-        if ($config === null) {
-            return false;
-        }
-
-        /**
-         * Use regular expression to distinguish between standalone or replicaset:
-         * Without a replicaset: "host" : "localhost:4100"
-         * With a replicaset: "host" : "dec6d8a7-9bc1-4c0e-960c-615f860b956f/localhost:4400,localhost:4401"
-         */
-        return preg_match('@^.*/.*:\d+@', $config['host']);
     }
 
     /**

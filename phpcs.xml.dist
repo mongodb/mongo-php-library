@@ -78,9 +78,13 @@
     </rule>
 
 
-    <!-- ***************************************************** -->
+    <!-- **************************************** -->
+    <!-- Enable rules not enforced by Doctrine CS -->
+    <!-- **************************************** -->
+
+    <!-- Require arrow functions where possible -->
+    <rule ref="SlevomatCodingStandard.Functions.RequireArrowFunction"/>
     <!-- Forbid fully qualified names even for colliding names -->
-    <!-- ***************************************************** -->
     <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly">
         <properties>
             <property name="allowFallbackGlobalConstants" value="false"/>
@@ -109,7 +113,6 @@
 
         <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification" />
     </rule>
-
     <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
         <properties>
             <!-- Requires PHP 8.0 -->
@@ -120,7 +123,6 @@
 
         <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingTraversableTypeHintSpecification" />
     </rule>
-
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
         <properties>
             <!-- Requires PHP 8.0 -->

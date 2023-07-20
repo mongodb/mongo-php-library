@@ -30,10 +30,9 @@ use MongoDB\Exception\InvalidArgumentException;
 use ReturnTypeWillChange;
 
 use function array_key_exists;
-use function assert;
+use function get_object_vars;
 use function is_array;
 use function is_object;
-use function is_string;
 use function MongoDB\recursive_copy;
 use function sprintf;
 use function trigger_error;
@@ -84,7 +83,7 @@ class LazyBSONDocument implements ArrayAccess, IteratorAggregate
     /**
      * Constructs a lazy BSON document.
      *
-     * @param Document<TValue>|array<TValue>|object|null $input An input for a lazy object.
+     * @param Document<TValue>|array<string, TValue>|object|null $input An input for a lazy object.
      *        When given a BSON document, this is treated as input. For arrays
      *        and objects this constructs a new BSON document using fromPHP.
      */
@@ -97,8 +96,11 @@ class LazyBSONDocument implements ArrayAccess, IteratorAggregate
         } elseif (is_array($input) || is_object($input)) {
             $this->bson = Document::fromPHP([]);
 
+            if (is_object($input)) {
+                $input = get_object_vars($input);
+            }
+
             foreach ($input as $key => $value) {
-                assert(is_string($key));
                 $this->set[$key] = $value;
                 $this->exists[$key] = true;
             }

@@ -63,7 +63,6 @@
         <!-- Exclude sniffs that cause a huge diff - enable separately -->
         <!-- ********************************************************* -->
         <exclude name="SlevomatCodingStandard.Commenting.DocCommentSpacing.IncorrectAnnotationsGroup" />
-        <exclude name="Squiz.Strings.DoubleQuoteUsage" />
 
 
         <!-- ********************* -->

@@ -140,7 +140,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     public function testDownloadingFileWithMissingChunk(): void
     {
-        $id = $this->bucket->uploadFromStream("filename", $this->createStream("foobar"));
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream('foobar'));
 
         $this->chunksCollection->deleteOne(['files_id' => $id, 'n' => 0]);
 
@@ -151,7 +151,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     public function testDownloadingFileWithUnexpectedChunkIndex(): void
     {
-        $id = $this->bucket->uploadFromStream("filename", $this->createStream("foobar"));
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream('foobar'));
 
         $this->chunksCollection->updateOne(
             ['files_id' => $id, 'n' => 0],
@@ -165,7 +165,7 @@ class BucketFunctionalTest extends FunctionalTestCase
 
     public function testDownloadingFileWithUnexpectedChunkSize(): void
     {
-        $id = $this->bucket->uploadFromStream("filename", $this->createStream("foobar"));
+        $id = $this->bucket->uploadFromStream('filename', $this->createStream('foobar'));
 
         $this->chunksCollection->updateOne(
             ['files_id' => $id, 'n' => 0],

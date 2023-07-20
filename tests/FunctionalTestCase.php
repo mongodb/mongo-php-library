@@ -534,7 +534,7 @@ abstract class FunctionalTestCase extends TestCase
     /** @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/mongocryptd/ */
     public static function isMongocryptdAvailable(): bool
     {
-        $paths = explode(PATH_SEPARATOR, getenv("PATH"));
+        $paths = explode(PATH_SEPARATOR, getenv('PATH'));
 
         foreach ($paths as $path) {
             if (is_executable($path . DIRECTORY_SEPARATOR . 'mongocryptd')) {

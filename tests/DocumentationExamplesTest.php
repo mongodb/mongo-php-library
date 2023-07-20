@@ -1403,7 +1403,7 @@ class DocumentationExamplesTest extends FunctionalTestCase
     private function updateEmployeeInfo3(\MongoDB\Client $client, \MongoDB\Driver\Session $session): void
     {
         $session->startTransaction([
-            'readConcern' => new \MongoDB\Driver\ReadConcern("snapshot"),
+            'readConcern' => new \MongoDB\Driver\ReadConcern('snapshot'),
             'readPrefernece' => new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::PRIMARY),
             'writeConcern' => new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY),
         ]);

@@ -32,10 +32,8 @@ class PedantryTest extends TestCase
 
         $methods = array_filter(
             $methods,
-            function (ReflectionMethod $method) use ($class) {
-                return $method->getDeclaringClass() == $class // Exclude inherited methods
-                    && $method->getFileName() === $class->getFileName(); // Exclude methods inherited from traits
-            },
+            fn (ReflectionMethod $method) => $method->getDeclaringClass() == $class // Exclude inherited methods
+                    && $method->getFileName() === $class->getFileName(), // Exclude methods inherited from traits
         );
 
         $getSortValue = function (ReflectionMethod $method) {

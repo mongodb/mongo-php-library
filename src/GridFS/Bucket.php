@@ -232,7 +232,7 @@ class Bucket
      */
     public function downloadToStream($id, $destination)
     {
-        if (! is_resource($destination) || get_resource_type($destination) != "stream") {
+        if (! is_resource($destination) || get_resource_type($destination) != 'stream') {
             throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
         }
 
@@ -272,7 +272,7 @@ class Bucket
      */
     public function downloadToStreamByName(string $filename, $destination, array $options = [])
     {
-        if (! is_resource($destination) || get_resource_type($destination) != "stream") {
+        if (! is_resource($destination) || get_resource_type($destination) != 'stream') {
             throw InvalidArgumentException::invalidType('$destination', $destination, 'resource');
         }
 
@@ -616,7 +616,7 @@ class Bucket
      */
     public function uploadFromStream(string $filename, $source, array $options = [])
     {
-        if (! is_resource($source) || get_resource_type($source) != "stream") {
+        if (! is_resource($source) || get_resource_type($source) != 'stream') {
             throw InvalidArgumentException::invalidType('$source', $source, 'resource');
         }
 
@@ -685,7 +685,7 @@ class Bucket
      */
     private function getRawFileDocumentForStream($stream): object
     {
-        if (! is_resource($stream) || get_resource_type($stream) != "stream") {
+        if (! is_resource($stream) || get_resource_type($stream) != 'stream') {
             throw InvalidArgumentException::invalidType('$stream', $stream, 'resource');
         }
 

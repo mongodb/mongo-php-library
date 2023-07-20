@@ -85,7 +85,7 @@ if ($extensionFileExists) {
 if (defined('PHP_WINDOWS_VERSION_BUILD')) {
     $zts = PHP_ZTS ? 'Thread Safe (TS)' : 'Non Thread Safe (NTS)';
     $arch = PHP_INT_SIZE === 8 ? 'x64' : 'x86';
-    $dll = sprintf("%d.%d %s %s", PHP_MAJOR_VERSION, PHP_MINOR_VERSION, $zts, $arch);
+    $dll = sprintf('%d.%d %s %s', PHP_MAJOR_VERSION, PHP_MINOR_VERSION, $zts, $arch);
 
     printf("You likely need to download a Windows DLL for: %s\n", $dll);
     printf("Windows DLLs should be available from: https://pecl.php.net/package/%s\n", $extension);

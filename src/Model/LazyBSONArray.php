@@ -51,7 +51,7 @@ use const E_USER_WARNING;
  * @template-implements ArrayAccess<int, TValue>
  * @template-implements IteratorAggregate<int, TValue>
  */
-class LazyBSONArray implements ArrayAccess, IteratorAggregate
+final class LazyBSONArray implements ArrayAccess, IteratorAggregate
 {
     /** @var PackedArray<TValue> */
     private PackedArray $bson;

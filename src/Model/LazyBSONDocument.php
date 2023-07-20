@@ -50,7 +50,7 @@ use const E_USER_WARNING;
  * @template-implements ArrayAccess<string, TValue>
  * @template-implements IteratorAggregate<string, TValue>
  */
-class LazyBSONDocument implements ArrayAccess, IteratorAggregate
+final class LazyBSONDocument implements ArrayAccess, IteratorAggregate
 {
     /** @var Document<TValue> */
     private Document $bson;

@@ -33,6 +33,7 @@ use function array_key_exists;
 use function get_object_vars;
 use function is_array;
 use function is_object;
+use function is_string;
 use function MongoDB\recursive_copy;
 use function sprintf;
 use function trigger_error;
@@ -183,7 +184,11 @@ class LazyBSONDocument implements ArrayAccess, IteratorAggregate
     /** @param mixed $offset */
     public function offsetExists($offset): bool
     {
-        return $this->__isset((string) $offset);
+        if (! is_string($offset)) {
+            return false;
+        }
+
+        return $this->__isset($offset);
     }
 
     /**
@@ -193,7 +198,13 @@ class LazyBSONDocument implements ArrayAccess, IteratorAggregate
     #[ReturnTypeWillChange]
     public function offsetGet($offset)
     {
-        return $this->__get((string) $offset);
+        if (! is_string($offset)) {
+            trigger_error(sprintf('Undefined offset: %s', (string) $offset), E_USER_WARNING);
+
+            return null;
+        }
+
+        return $this->__get($offset);
     }
 
     /**
@@ -202,13 +213,25 @@ class LazyBSONDocument implements ArrayAccess, IteratorAggregate
      */
     public function offsetSet($offset, $value): void
     {
-        $this->__set((string) $offset, $value);
+        if (! is_string($offset)) {
+            trigger_error(sprintf('Unsupported offset: %s', (string) $offset), E_USER_WARNING);
+
+            return;
+        }
+
+        $this->__set($offset, $value);
     }
 
     /** @param mixed $offset */
     public function offsetUnset($offset): void
     {
-        $this->__unset((string) $offset);
+        if (! is_string($offset)) {
+            trigger_error(sprintf('Undefined offset: %s', (string) $offset), E_USER_WARNING);
+
+            return;
+        }
+
+        $this->__unset($offset);
     }
 
     private function readFromBson(string $key): void

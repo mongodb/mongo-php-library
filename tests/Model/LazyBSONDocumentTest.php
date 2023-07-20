@@ -73,10 +73,8 @@ class LazyBSONDocumentTest extends TestCase
     }
 
     /** @dataProvider provideTestDocumentWithNativeArrays */
-    public function testConstructWithArrayUsesLiteralValues($value): void
+    public function testConstructWithArrayUsesLiteralValues($document): void
     {
-        $document = new LazyBSONDocument($value);
-
         $this->assertInstanceOf(stdClass::class, $document->document);
         $this->assertIsArray($document->hash);
         $this->assertIsArray($document->array);
@@ -143,6 +141,15 @@ class LazyBSONDocumentTest extends TestCase
         $document['bar'];
     }
 
+    public function testOffsetGetWithInvalidOffset(): void
+    {
+        $document = new LazyBSONDocument(['foo' => 'bar']);
+
+        $this->expectWarning();
+        $this->expectWarningMessage('Undefined offset: 1');
+        $document[1];
+    }
+
     /** @dataProvider provideTestDocument */
     public function testGetDocument(LazyBSONDocument $document): void
     {
@@ -171,6 +178,13 @@ class LazyBSONDocumentTest extends TestCase
         $this->assertFalse(isset($document['bar']));
     }
 
+    public function testOffsetExistsWithInvalidOffset(): void
+    {
+        $document = new LazyBSONDocument(['foo' => 'bar']);
+
+        $this->assertFalse(isset($document[1]));
+    }
+
     /** @dataProvider provideTestDocument */
     public function testPropertySet(LazyBSONDocument $document): void
     {
@@ -193,6 +207,15 @@ class LazyBSONDocumentTest extends TestCase
         $this->assertSame('bar', $document['foo']);
         $document['foo'] = 'baz';
         $this->assertSame('baz', $document['foo']);
+    }
+
+    public function testOffsetSetWithInvalidOffset(): void
+    {
+        $document = new LazyBSONDocument(['foo' => 'bar']);
+
+        $this->expectWarning();
+        $this->expectWarningMessage('Unsupported offset: 1');
+        $document[1] = 'foo';
     }
 
     /** @dataProvider provideTestDocument */
@@ -227,6 +250,15 @@ class LazyBSONDocumentTest extends TestCase
         $document['document'] = (object) ['foo' => 'baz'];
         unset($document['document']);
         $this->assertFalse(isset($document['document']));
+    }
+
+    public function testOffsetUnsetWithInvalidOffset(): void
+    {
+        $document = new LazyBSONDocument(['foo' => 'bar']);
+
+        $this->expectWarning();
+        $this->expectWarningMessage('Undefined offset: 1');
+        unset($document[1]);
     }
 
     /** @dataProvider provideTestDocument */

@@ -99,39 +99,16 @@
     </rule>
 
 
-    <!-- **************************************************************************** -->
-    <!-- Exclude BC breaking type hints for parameters, properties, and return values -->
-    <!-- **************************************************************************** -->
+    <!-- ****************************************************** -->
+    <!-- Don't require annotations to specify traversable types -->
+    <!-- ****************************************************** -->
     <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint">
-        <properties>
-            <!-- Requires PHP 8.0 -->
-            <property name="enableMixedTypeHint" value="false" />
-            <!-- Requires PHP 8.0 -->
-            <property name="enableUnionTypeHint" value="false" />
-        </properties>
-
         <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification" />
     </rule>
     <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
-        <properties>
-            <!-- Requires PHP 8.0 -->
-            <property name="enableMixedTypeHint" value="false" />
-            <!-- Requires PHP 8.0 -->
-            <property name="enableUnionTypeHint" value="false" />
-        </properties>
-
         <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingTraversableTypeHintSpecification" />
     </rule>
     <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
-        <properties>
-            <!-- Requires PHP 8.0 -->
-            <property name="enableStaticTypeHint" value="false" />
-            <!-- Requires PHP 8.0 -->
-            <property name="enableMixedTypeHint" value="false" />
-            <!-- Requires PHP 8.0 -->
-            <property name="enableUnionTypeHint" value="false" />
-        </properties>
-
         <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification" />
     </rule>
 

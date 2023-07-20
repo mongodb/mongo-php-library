@@ -81,13 +81,7 @@ class LazyBSONDocument implements ArrayAccess, IteratorAggregate
         }
     }
 
-    /**
-     * Constructs a lazy BSON document.
-     *
-     * @param Document<TValue>|array<string, TValue>|object|null $input An input for a lazy object.
-     *        When given a BSON document, this is treated as input. For arrays
-     *        and objects this constructs a new BSON document using fromPHP.
-     */
+    /** @param Document<TValue>|array<string, TValue>|object|null $input */
     public function __construct($input = null, ?CodecLibrary $codecLibrary = null)
     {
         if ($input === null) {

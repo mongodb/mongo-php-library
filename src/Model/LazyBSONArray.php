@@ -84,13 +84,7 @@ class LazyBSONArray implements ArrayAccess, IteratorAggregate
         }
     }
 
-    /**
-     * Constructs a lazy BSON array.
-     *
-     * @param PackedArray<TValue>|list<TValue>|null $input An input for a lazy array.
-     *        When given a BSON array, this is treated as input. For lists
-     *        this constructs a new BSON array using fromPHP.
-     */
+    /** @param PackedArray<TValue>|list<TValue>|null $input */
     public function __construct($input = null, ?CodecLibrary $codecLibrary = null)
     {
         if ($input === null) {

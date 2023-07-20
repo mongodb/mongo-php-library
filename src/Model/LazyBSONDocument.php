@@ -127,12 +127,7 @@ class LazyBSONDocument implements ArrayAccess, IteratorAggregate
 
     public function __isset(string $name): bool
     {
-        // If we've looked for the value, return the cached result
-        if (isset($this->exists[$name])) {
-            return $this->exists[$name];
-        }
-
-        return $this->exists[$name] = $this->bson->has($name);
+        return $this->exists[$name] ??= $this->bson->has($name);
     }
 
     /** @param TValue $value */

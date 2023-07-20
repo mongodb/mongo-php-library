@@ -159,12 +159,7 @@ class LazyBSONArray implements ArrayAccess, IteratorAggregate
 
         $offset = (int) $offset;
 
-        // If we've looked for the value, return the cached result
-        if (isset($this->exists[$offset])) {
-            return $this->exists[$offset];
-        }
-
-        return $this->exists[$offset] = $this->bson->has($offset);
+        return $this->exists[$offset] ??= $this->bson->has($offset);
     }
 
     /**

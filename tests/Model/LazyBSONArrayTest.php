@@ -239,4 +239,23 @@ class LazyBSONArrayTest extends TestCase
         $this->assertInstanceOf(LazyBSONDocument::class, $items[0]);
         $this->assertSame('yay!', $items[1]);
     }
+
+    public function testCount(): void
+    {
+        $array = new LazyBSONArray(PackedArray::fromPHP(['foo', 'bar', 'baz']));
+
+        $this->assertCount(3, $array);
+
+        // Overwrite existing item, count must not change
+        $array[0] = 'yay';
+        $this->assertCount(3, $array);
+
+        // Unset existing element, count must decrease
+        unset($array[1]);
+        $this->assertCount(2, $array);
+
+        // Append element, count must increase again
+        $array[] = 'yay';
+        $this->assertCount(3, $array);
+    }
 }

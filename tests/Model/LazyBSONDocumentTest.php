@@ -289,4 +289,23 @@ class LazyBSONDocumentTest extends TestCase
         $this->assertInstanceOf(LazyBSONDocument::class, $items['document']);
         $this->assertSame('yay!', $items['new']);
     }
+
+    public function testCount(): void
+    {
+        $document = new LazyBSONDocument(Document::fromPHP(['foo' => 'bar', 'bar' => 'baz']));
+
+        $this->assertCount(2, $document);
+
+        // Overwrite existing item, count must not change
+        $document['foo'] = 'yay';
+        $this->assertCount(2, $document);
+
+        // Unset existing element, count must decrease
+        unset($document['bar']);
+        $this->assertCount(1, $document);
+
+        // Append element, count must increase again
+        $document['baz'] = 'yay';
+        $this->assertCount(2, $document);
+    }
 }

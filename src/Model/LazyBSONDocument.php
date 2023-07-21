@@ -21,6 +21,7 @@ use AppendIterator;
 use ArrayAccess;
 use ArrayIterator;
 use CallbackFilterIterator;
+use Countable;
 use Iterator;
 use IteratorAggregate;
 use MongoDB\BSON\Document;
@@ -29,7 +30,9 @@ use MongoDB\Codec\LazyBSONCodecLibrary;
 use MongoDB\Exception\InvalidArgumentException;
 use ReturnTypeWillChange;
 
+use function array_filter;
 use function array_key_exists;
+use function count;
 use function get_object_vars;
 use function is_array;
 use function is_object;
@@ -50,7 +53,7 @@ use const E_USER_WARNING;
  * @template-implements ArrayAccess<string, TValue>
  * @template-implements IteratorAggregate<string, TValue>
  */
-final class LazyBSONDocument implements ArrayAccess, IteratorAggregate
+final class LazyBSONDocument implements ArrayAccess, Countable, IteratorAggregate
 {
     /** @var Document<TValue> */
     private Document $bson;
@@ -66,6 +69,8 @@ final class LazyBSONDocument implements ArrayAccess, IteratorAggregate
 
     /** @var array<string, true> */
     private array $unset = [];
+
+    private bool $entireDocumentRead = false;
 
     private CodecLibrary $codecLibrary;
 
@@ -138,6 +143,13 @@ final class LazyBSONDocument implements ArrayAccess, IteratorAggregate
         $this->unset[$name] = true;
         $this->exists[$name] = false;
         unset($this->set[$name]);
+    }
+
+    public function count(): int
+    {
+        $this->readEntireDocument();
+
+        return count(array_filter($this->exists));
     }
 
     /** @return Iterator<string, TValue> */
@@ -226,6 +238,23 @@ final class LazyBSONDocument implements ArrayAccess, IteratorAggregate
         }
 
         $this->__unset($offset);
+    }
+
+    private function readEntireDocument(): void
+    {
+        if ($this->entireDocumentRead) {
+            return;
+        }
+
+        foreach ($this->bson as $offset => $value) {
+            $this->read[$offset] = $value;
+
+            if (! isset($this->exists[$offset])) {
+                $this->exists[$offset] = true;
+            }
+        }
+
+        $this->entireDocumentRead = true;
     }
 
     private function readFromBson(string $key): void

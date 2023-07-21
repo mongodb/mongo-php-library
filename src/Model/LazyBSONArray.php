@@ -21,6 +21,7 @@ use AppendIterator;
 use ArrayAccess;
 use ArrayIterator;
 use CallbackFilterIterator;
+use Countable;
 use IteratorAggregate;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Codec\CodecLibrary;
@@ -28,10 +29,12 @@ use MongoDB\Codec\LazyBSONCodecLibrary;
 use MongoDB\Exception\InvalidArgumentException;
 use ReturnTypeWillChange;
 
+use function array_filter;
 use function array_key_exists;
 use function array_keys;
 use function array_map;
 use function array_values;
+use function count;
 use function is_array;
 use function is_numeric;
 use function max;
@@ -51,7 +54,7 @@ use const E_USER_WARNING;
  * @template-implements ArrayAccess<int, TValue>
  * @template-implements IteratorAggregate<int, TValue>
  */
-final class LazyBSONArray implements ArrayAccess, IteratorAggregate
+final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate
 {
     /** @var PackedArray<TValue> */
     private PackedArray $bson;
@@ -104,6 +107,13 @@ final class LazyBSONArray implements ArrayAccess, IteratorAggregate
         }
 
         $this->codecLibrary = $codecLibrary ?? new LazyBSONCodecLibrary();
+    }
+
+    public function count(): int
+    {
+        $this->readEntirePackedArray();
+
+        return count(array_filter($this->exists));
     }
 
     /** @return AsListIterator<TValue> */

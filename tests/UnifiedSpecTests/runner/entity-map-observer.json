@@ -1,0 +1,68 @@
+{
+  "description": "find",
+  "schemaVersion": "1.0",
+  "createEntities": [
+    {
+      "client": {
+        "id": "client0",
+        "useMultipleMongoses": true,
+        "observeEvents": [
+          "commandStartedEvent"
+        ]
+      }
+    },
+    {
+      "database": {
+        "id": "database0",
+        "client": "client0",
+        "databaseName": "runner-tests"
+      }
+    },
+    {
+      "collection": {
+        "id": "collection0",
+        "database": "database0",
+        "collectionName": "coll0"
+      }
+    }
+  ],
+  "initialData": [
+    {
+      "collectionName": "coll0",
+      "databaseName": "runner-tests",
+      "documents": []
+    }
+  ],
+  "tests": [
+    {
+      "description": "basic find",
+      "operations": [
+        {
+          "name": "find",
+          "arguments": {
+            "filter": {}
+          },
+          "object": "collection0",
+          "expectResult": []
+        }
+      ],
+      "expectEvents": [
+        {
+          "client": "client0",
+          "events": [
+            {
+              "commandStartedEvent": {
+                "command": {
+                  "find": "coll0",
+                  "filter": {}
+                },
+                "commandName": "find",
+                "databaseName": "runner-tests"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

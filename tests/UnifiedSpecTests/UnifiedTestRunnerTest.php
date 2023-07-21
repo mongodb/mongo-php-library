@@ -8,7 +8,7 @@ class UnifiedTestRunnerTest extends FunctionalTestCase
 {
     public function testEntityMapObserver(): void
     {
-        $test = UnifiedTestCase::fromFile(__DIR__ . '/crud/find.json');
+        $test = UnifiedTestCase::fromFile(__DIR__ . '/runner/entity-map-observer.json');
         $calls = 0;
 
         $runner = new UnifiedTestRunner(static::getUri());

@@ -11,8 +11,11 @@ use MongoDB\Tests\TestCase;
 use stdClass;
 
 use function iterator_to_array;
+use function json_encode;
 use function serialize;
 use function unserialize;
+
+use const JSON_THROW_ON_ERROR;
 
 class LazyBSONArrayTest extends TestCase
 {
@@ -272,5 +275,15 @@ class LazyBSONArrayTest extends TestCase
         $unserialized = unserialize($serialized);
 
         $this->assertEquals(['foobar', 'baz', 'yay!'], iterator_to_array($unserialized));
+    }
+
+    public function testJsonSerialize(): void
+    {
+        $array = new LazyBSONArray(PackedArray::fromPHP(['foo', 'bar', 'baz']));
+        $array[0] = 'foobar';
+        $array[3] = 'yay!';
+        unset($array[1]);
+
+        $this->assertJsonStringEqualsJsonString('["foobar","baz","yay!"]', json_encode($array, JSON_THROW_ON_ERROR));
     }
 }

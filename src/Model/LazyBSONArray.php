@@ -23,6 +23,7 @@ use ArrayIterator;
 use CallbackFilterIterator;
 use Countable;
 use IteratorAggregate;
+use JsonSerializable;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Codec\CodecLibrary;
 use MongoDB\Codec\LazyBSONCodecLibrary;
@@ -37,6 +38,7 @@ use function array_values;
 use function count;
 use function is_array;
 use function is_numeric;
+use function iterator_to_array;
 use function max;
 use function MongoDB\recursive_copy;
 use function sprintf;
@@ -54,7 +56,7 @@ use const E_USER_WARNING;
  * @template-implements ArrayAccess<int, TValue>
  * @template-implements IteratorAggregate<int, TValue>
  */
-final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate
+final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
 {
     /** @var PackedArray<TValue> */
     private PackedArray $bson;
@@ -182,6 +184,11 @@ final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate
                 },
             ),
         );
+    }
+
+    public function jsonSerialize(): array
+    {
+        return iterator_to_array($this->getIterator());
     }
 
     /** @param mixed $offset */

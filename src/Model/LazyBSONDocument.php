@@ -24,6 +24,7 @@ use CallbackFilterIterator;
 use Countable;
 use Iterator;
 use IteratorAggregate;
+use JsonSerializable;
 use MongoDB\BSON\Document;
 use MongoDB\Codec\CodecLibrary;
 use MongoDB\Codec\LazyBSONCodecLibrary;
@@ -38,6 +39,7 @@ use function get_object_vars;
 use function is_array;
 use function is_object;
 use function is_string;
+use function iterator_to_array;
 use function MongoDB\recursive_copy;
 use function sprintf;
 use function trigger_error;
@@ -54,7 +56,7 @@ use const E_USER_WARNING;
  * @template-implements ArrayAccess<string, TValue>
  * @template-implements IteratorAggregate<string, TValue>
  */
-final class LazyBSONDocument implements ArrayAccess, Countable, IteratorAggregate
+final class LazyBSONDocument implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
 {
     /** @var Document<TValue> */
     private Document $bson;
@@ -216,6 +218,11 @@ final class LazyBSONDocument implements ArrayAccess, Countable, IteratorAggregat
                 return $this->__get($key);
             },
         );
+    }
+
+    public function jsonSerialize(): array
+    {
+        return iterator_to_array($this->getIterator());
     }
 
     /** @param mixed $offset */

@@ -11,8 +11,11 @@ use MongoDB\Tests\TestCase;
 use stdClass;
 
 use function iterator_to_array;
+use function json_encode;
 use function serialize;
 use function unserialize;
+
+use const JSON_THROW_ON_ERROR;
 
 class LazyBSONDocumentTest extends TestCase
 {
@@ -322,5 +325,15 @@ class LazyBSONDocumentTest extends TestCase
         $unserialized = unserialize($serialized);
 
         $this->assertEquals(['foo' => 'foobar', 'baz' => 'yay!'], iterator_to_array($unserialized));
+    }
+
+    public function testJsonSerialize(): void
+    {
+        $document = new LazyBSONDocument(Document::fromPHP(['foo' => 'bar', 'bar' => 'baz']));
+        $document['foo'] = 'foobar';
+        $document['baz'] = 'yay!';
+        unset($document['bar']);
+
+        $this->assertJsonStringEqualsJsonString('{"foo":"foobar","baz":"yay!"}', json_encode($document, JSON_THROW_ON_ERROR));
     }
 }

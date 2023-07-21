@@ -125,6 +125,8 @@ final class UnifiedTestRunner
      *
      * This function is primarily used by the Atlas testing workload executor.
      *
+     * @see https://github.com/mongodb-labs/drivers-atlas-testing/
+     *
      * @param callable(EntityMap):void $entityMapObserver
      */
     public function setEntityMapObserver(callable $entityMapObserver): void

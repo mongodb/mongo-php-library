@@ -11,6 +11,8 @@ use MongoDB\Tests\TestCase;
 use stdClass;
 
 use function iterator_to_array;
+use function serialize;
+use function unserialize;
 
 class LazyBSONArrayTest extends TestCase
 {
@@ -257,5 +259,18 @@ class LazyBSONArrayTest extends TestCase
         // Append element, count must increase again
         $array[] = 'yay';
         $this->assertCount(3, $array);
+    }
+
+    public function testSerialization(): void
+    {
+        $array = new LazyBSONArray(PackedArray::fromPHP(['foo', 'bar', 'baz']));
+        $array[0] = 'foobar';
+        $array[3] = 'yay!';
+        unset($array[1]);
+
+        $serialized = serialize($array);
+        $unserialized = unserialize($serialized);
+
+        $this->assertEquals(['foobar', 'baz', 'yay!'], iterator_to_array($unserialized));
     }
 }

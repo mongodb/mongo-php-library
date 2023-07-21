@@ -11,6 +11,8 @@ use MongoDB\Tests\TestCase;
 use stdClass;
 
 use function iterator_to_array;
+use function serialize;
+use function unserialize;
 
 class LazyBSONDocumentTest extends TestCase
 {
@@ -307,5 +309,18 @@ class LazyBSONDocumentTest extends TestCase
         // Append element, count must increase again
         $document['baz'] = 'yay';
         $this->assertCount(2, $document);
+    }
+
+    public function testSerialization(): void
+    {
+        $document = new LazyBSONDocument(Document::fromPHP(['foo' => 'bar', 'bar' => 'baz']));
+        $document['foo'] = 'foobar';
+        $document['baz'] = 'yay!';
+        unset($document['bar']);
+
+        $serialized = serialize($document);
+        $unserialized = unserialize($serialized);
+
+        $this->assertEquals(['foo' => 'foobar', 'baz' => 'yay!'], iterator_to_array($unserialized));
     }
 }

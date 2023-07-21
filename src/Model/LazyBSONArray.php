@@ -109,6 +109,36 @@ final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate
         $this->codecLibrary = $codecLibrary ?? new LazyBSONCodecLibrary();
     }
 
+    /** @return array{bson: PackedArray<TValue>, set: array<int, TValue>, unset: array<int, true>, codecLibrary: CodecLibrary} */
+    public function __serialize(): array
+    {
+        return [
+            'bson' => $this->bson,
+            'set' => $this->set,
+            'unset' => $this->unset,
+            'codecLibrary' => $this->codecLibrary,
+        ];
+    }
+
+    /** @param array{bson: PackedArray<TValue>, set: array<int, TValue>, unset: array<int, true>, codecLibrary: CodecLibrary} $data */
+    public function __unserialize(array $data): void
+    {
+        $this->bson = $data['bson'];
+        $this->set = $data['set'];
+        $this->unset = $data['unset'];
+        $this->codecLibrary = $data['codecLibrary'];
+
+        $this->exists = array_map(
+        /** @param TValue $value */
+            fn ($value): bool => true,
+            $this->set,
+        );
+
+        foreach ($this->unset as $index => $unused) {
+            $this->exists[$index] = false;
+        }
+    }
+
     public function count(): int
     {
         $this->readEntirePackedArray();

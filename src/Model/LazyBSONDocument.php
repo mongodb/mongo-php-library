@@ -32,6 +32,7 @@ use ReturnTypeWillChange;
 
 use function array_filter;
 use function array_key_exists;
+use function array_map;
 use function count;
 use function get_object_vars;
 use function is_array;
@@ -130,12 +131,42 @@ final class LazyBSONDocument implements ArrayAccess, Countable, IteratorAggregat
         return $this->exists[$name] ??= $this->bson->has($name);
     }
 
+    /** @return array{bson: Document<TValue>, set: array<string, TValue>, unset: array<string, true>, codecLibrary: CodecLibrary} */
+    public function __serialize(): array
+    {
+        return [
+            'bson' => $this->bson,
+            'set' => $this->set,
+            'unset' => $this->unset,
+            'codecLibrary' => $this->codecLibrary,
+        ];
+    }
+
     /** @param TValue $value */
     public function __set(string $property, $value): void
     {
         $this->set[$property] = $value;
         unset($this->unset[$property]);
         $this->exists[$property] = true;
+    }
+
+    /** @param array{bson: Document<TValue>, set: array<string, TValue>, unset: array<string, true>, codecLibrary: CodecLibrary} $data */
+    public function __unserialize(array $data): void
+    {
+        $this->bson = $data['bson'];
+        $this->set = $data['set'];
+        $this->unset = $data['unset'];
+        $this->codecLibrary = $data['codecLibrary'];
+
+        $this->exists = array_map(
+        /** @param TValue $value */
+            fn ($value): bool => true,
+            $this->set,
+        );
+
+        foreach ($this->unset as $name => $unused) {
+            $this->exists[$name] = false;
+        }
     }
 
     public function __unset(string $name): void

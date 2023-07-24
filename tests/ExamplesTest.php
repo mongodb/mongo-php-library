@@ -90,9 +90,9 @@ OUTPUT;
         ];
 
         $expectedOutput = <<<'OUTPUT'
-MongoDB\Examples\PersistableEntry Object
+MongoDB\Examples\Persistable\PersistableEntry Object
 (
-    [id:MongoDB\Examples\PersistableEntry:private] => MongoDB\BSON\ObjectId Object
+    [id:MongoDB\Examples\Persistable\PersistableEntry:private] => MongoDB\BSON\ObjectId Object
         (
             [oid] => %s
         )
@@ -100,13 +100,13 @@ MongoDB\Examples\PersistableEntry Object
     [name] => alcaeus
     [emails] => Array
         (
-            [0] => MongoDB\Examples\PersistableEmail Object
+            [0] => MongoDB\Examples\Persistable\PersistableEmail Object
                 (
                     [type] => work
                     [address] => alcaeus@example.com
                 )
 
-            [1] => MongoDB\Examples\PersistableEmail Object
+            [1] => MongoDB\Examples\Persistable\PersistableEmail Object
                 (
                     [type] => private
                     [address] => secret@example.com
@@ -123,26 +123,26 @@ OUTPUT;
         ];
 
         $expectedOutput = <<<'OUTPUT'
-MongoDB\Examples\TypeMapEntry Object
+MongoDB\Examples\Typemap\TypeMapEntry Object
 (
-    [id:MongoDB\Examples\TypeMapEntry:private] => MongoDB\BSON\ObjectId Object
+    [id:MongoDB\Examples\Typemap\TypeMapEntry:private] => MongoDB\BSON\ObjectId Object
         (
             [oid] => %s
         )
 
-    [name:MongoDB\Examples\TypeMapEntry:private] => alcaeus
-    [emails:MongoDB\Examples\TypeMapEntry:private] => Array
+    [name:MongoDB\Examples\Typemap\TypeMapEntry:private] => alcaeus
+    [emails:MongoDB\Examples\Typemap\TypeMapEntry:private] => Array
         (
-            [0] => MongoDB\Examples\TypeMapEmail Object
+            [0] => MongoDB\Examples\Typemap\TypeMapEmail Object
                 (
-                    [type:MongoDB\Examples\TypeMapEmail:private] => work
-                    [address:MongoDB\Examples\TypeMapEmail:private] => alcaeus@example.com
+                    [type:MongoDB\Examples\Typemap\TypeMapEmail:private] => work
+                    [address:MongoDB\Examples\Typemap\TypeMapEmail:private] => alcaeus@example.com
                 )
 
-            [1] => MongoDB\Examples\TypeMapEmail Object
+            [1] => MongoDB\Examples\Typemap\TypeMapEmail Object
                 (
-                    [type:MongoDB\Examples\TypeMapEmail:private] => private
-                    [address:MongoDB\Examples\TypeMapEmail:private] => secret@example.com
+                    [type:MongoDB\Examples\Typemap\TypeMapEmail:private] => private
+                    [address:MongoDB\Examples\Typemap\TypeMapEmail:private] => secret@example.com
                 )
 
         )

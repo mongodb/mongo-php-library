@@ -78,9 +78,9 @@
       <code><![CDATA[$context[$this->protocol]['options']]]></code>
     </MixedArrayAccess>
   </file>
-  <file src="src/Model/AsListIterator.php">
+  <file src="src/Model/ListIterator.php">
     <InvalidTemplateParam>
-      <code>AsListIterator</code>
+      <code>ListIterator</code>
     </InvalidTemplateParam>
   </file>
   <file src="src/Model/BSONArray.php">

@@ -26,7 +26,7 @@ use Traversable;
  * @template TValue
  * @template-extends IteratorIterator<int, TValue, Traversable<mixed, TValue>>
  */
-final class AsListIterator extends IteratorIterator
+final class ListIterator extends IteratorIterator
 {
     private int $index = 0;
 

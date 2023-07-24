@@ -4,17 +4,17 @@ namespace MongoDB\Tests\Model;
 
 use ArrayIterator;
 use Generator;
-use MongoDB\Model\AsListIterator;
+use MongoDB\Model\ListIterator;
 use MongoDB\Tests\TestCase;
 
 use function iterator_to_array;
 
-class AsListIteratorTest extends TestCase
+class ListIteratorTest extends TestCase
 {
     /** @dataProvider provideTests */
     public function testIteration($source): void
     {
-        $iterator = new AsListIterator($source);
+        $iterator = new ListIterator($source);
 
         $this->assertEquals(['foo', 'bar', 'baz'], iterator_to_array($iterator));
     }

@@ -148,8 +148,8 @@ final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate, 
         return count(array_filter($this->exists));
     }
 
-    /** @return AsListIterator<TValue> */
-    public function getIterator(): AsListIterator
+    /** @return ListIterator<TValue> */
+    public function getIterator(): ListIterator
     {
         $itemIterator = new AppendIterator();
         // Iterate through all fields in the BSON array
@@ -160,8 +160,8 @@ final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate, 
         /** @var array<int, bool> $seen */
         $seen = [];
 
-        // Use AsListIterator to ensure we're indexing from 0 without gaps
-        return new AsListIterator(
+        // Use ListIterator to ensure we're indexing from 0 without gaps
+        return new ListIterator(
             new CallbackIterator(
                 // Skip keys that were unset or handled in a previous iterator
                 new CallbackFilterIterator(

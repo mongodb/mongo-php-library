@@ -81,6 +81,9 @@
       <code><![CDATA[$options['revision']]]></code>
       <code><![CDATA[$options['revision']]]></code>
     </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code>$context</code>
+    </MixedArgumentTypeCoercion>
   </file>
   <file src="src/GridFS/ReadableStream.php">
     <MixedArgument>
@@ -89,20 +92,13 @@
     </MixedArgument>
   </file>
   <file src="src/GridFS/StreamWrapper.php">
-    <MixedArgument>
-      <code><![CDATA[$context[$this->protocol]['collectionWrapper']]]></code>
-      <code><![CDATA[$context[$this->protocol]['collectionWrapper']]]></code>
-      <code><![CDATA[$context[$this->protocol]['file']]]></code>
-      <code><![CDATA[$context[$this->protocol]['filename']]]></code>
-      <code><![CDATA[$context[$this->protocol]['options']]]></code>
-    </MixedArgument>
-    <MixedArrayAccess>
-      <code><![CDATA[$context[$this->protocol]['collectionWrapper']]]></code>
-      <code><![CDATA[$context[$this->protocol]['collectionWrapper']]]></code>
-      <code><![CDATA[$context[$this->protocol]['file']]]></code>
-      <code><![CDATA[$context[$this->protocol]['filename']]]></code>
-      <code><![CDATA[$context[$this->protocol]['options']]]></code>
-    </MixedArrayAccess>
+    <InvalidArgument>
+      <code>$context</code>
+      <code>$context</code>
+    </InvalidArgument>
+    <MixedAssignment>
+      <code>$context</code>
+    </MixedAssignment>
   </file>
   <file src="src/Model/BSONArray.php">
     <MixedAssignment>

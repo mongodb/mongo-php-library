@@ -234,7 +234,7 @@ class Collection
             $options['readConcern'] = $this->readConcern;
         }
 
-        if (! array_key_exists('codec', $options)) {
+        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
             $options['codec'] = $this->codec;
         }
 
@@ -264,7 +264,7 @@ class Collection
      */
     public function bulkWrite(array $operations, array $options = [])
     {
-        if (! array_key_exists('codec', $options)) {
+        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
             $options['codec'] = $this->codec;
         }
 
@@ -648,7 +648,7 @@ class Collection
      */
     public function find($filter = [], array $options = [])
     {
-        if (! array_key_exists('codec', $options)) {
+        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
             $options['codec'] = $this->codec;
         }
 
@@ -685,7 +685,7 @@ class Collection
      */
     public function findOne($filter = [], array $options = [])
     {
-        if (! array_key_exists('codec', $options)) {
+        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
             $options['codec'] = $this->codec;
         }
 
@@ -725,7 +725,7 @@ class Collection
      */
     public function findOneAndDelete($filter, array $options = [])
     {
-        if (! array_key_exists('codec', $options)) {
+        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
             $options['codec'] = $this->codec;
         }
 
@@ -766,7 +766,7 @@ class Collection
      */
     public function findOneAndReplace($filter, $replacement, array $options = [])
     {
-        if (! array_key_exists('codec', $options)) {
+        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
             $options['codec'] = $this->codec;
         }
 
@@ -807,7 +807,7 @@ class Collection
      */
     public function findOneAndUpdate($filter, $update, array $options = [])
     {
-        if (! array_key_exists('codec', $options)) {
+        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
             $options['codec'] = $this->codec;
         }
 
@@ -922,7 +922,7 @@ class Collection
      */
     public function insertMany(array $documents, array $options = [])
     {
-        if (! array_key_exists('codec', $options)) {
+        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
             $options['codec'] = $this->codec;
         }
 
@@ -949,7 +949,7 @@ class Collection
      */
     public function insertOne($document, array $options = [])
     {
-        if (! array_key_exists('codec', $options)) {
+        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
             $options['codec'] = $this->codec;
         }
 
@@ -1079,7 +1079,7 @@ class Collection
      */
     public function replaceOne($filter, $replacement, array $options = [])
     {
-        if (! array_key_exists('codec', $options)) {
+        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
             $options['codec'] = $this->codec;
         }
 
@@ -1154,7 +1154,7 @@ class Collection
      */
     public function watch(array $pipeline = [], array $options = [])
     {
-        if (! array_key_exists('codec', $options)) {
+        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
             $options['codec'] = $this->codec;
         }
 

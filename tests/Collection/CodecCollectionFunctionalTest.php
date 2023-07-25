@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\Collection;
 
 use Generator;
+use MongoDB\BSON\Document;
 use MongoDB\BulkWriteResult;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
@@ -41,6 +42,14 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
                 self::createFixtureResult(3),
             ],
             'options' => ['codec' => null],
+        ];
+
+        yield 'BSON type map' => [
+            'expected' => [
+                Document::fromPHP(self::createFixtureResult(2)),
+                Document::fromPHP(self::createFixtureResult(3)),
+            ],
+            'options' => ['typeMap' => ['root' => 'bson']],
         ];
     }
 
@@ -81,6 +90,16 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
             ],
             'options' => ['codec' => null],
         ];
+
+        yield 'BSON type map' => [
+            'expected' => [
+                Document::fromPHP(self::createFixtureResult(1)),
+                Document::fromPHP(self::createFixtureResult(2)),
+                Document::fromPHP($replacedObject),
+                Document::fromPHP(self::createObjectFixtureResult(4, true)),
+            ],
+            'options' => ['typeMap' => ['root' => 'bson']],
+        ];
     }
 
     /** @dataProvider provideBulkWriteOptions */
@@ -108,6 +127,12 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
             $expected[3]->_id = $result->getInsertedIds()[0];
         }
 
+        if ($expected[3] instanceof Document && $expected[3]->get('_id') === null) {
+            $inserted = $expected[3]->toPHP();
+            $inserted->_id = $result->getInsertedIds()[0];
+            $expected[3] = Document::fromPHP($inserted);
+        }
+
         $this->assertEquals(
             $expected,
             $this->collection->find([], $options)->toArray(),
@@ -124,6 +149,11 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         yield 'No codec' => [
             'expected' => self::createFixtureResult(1),
             'options' => ['codec' => null],
+        ];
+
+        yield 'BSON type map' => [
+            'expected' => Document::fromPHP(self::createFixtureResult(1)),
+            'options' => ['typeMap' => ['root' => 'bson']],
         ];
     }
 
@@ -164,6 +194,11 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
             'expected' => $replacedObject,
             'options' => ['codec' => null],
         ];
+
+        yield 'BSON type map' => [
+            'expected' => Document::FromPHP($replacedObject),
+            'options' => ['typeMap' => ['root' => 'bson']],
+        ];
     }
 
     /** @dataProvider provideFindOneAndReplaceOptions */
@@ -202,6 +237,15 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
             ],
             'options' => ['codec' => null],
         ];
+
+        yield 'BSON type map' => [
+            'expected' => [
+                Document::fromPHP(self::createFixtureResult(1)),
+                Document::fromPHP(self::createFixtureResult(2)),
+                Document::fromPHP(self::createFixtureResult(3)),
+            ],
+            'options' => ['typeMap' => ['root' => 'bson']],
+        ];
     }
 
     /** @dataProvider provideFindOptions */
@@ -224,6 +268,11 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         yield 'No codec' => [
             'expected' => self::createFixtureResult(1),
             'options' => ['codec' => null],
+        ];
+
+        yield 'BSON type map' => [
+            'expected' => Document::fromPHP(self::createFixtureResult(1)),
+            'options' => ['typeMap' => ['root' => 'bson']],
         ];
     }
 
@@ -256,6 +305,15 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
             ],
             'options' => ['codec' => null],
         ];
+
+        yield 'BSON type map' => [
+            'expected' => [
+                Document::fromPHP(self::createObjectFixtureResult(1, true)),
+                Document::fromPHP(self::createObjectFixtureResult(2, true)),
+                Document::fromPHP(self::createObjectFixtureResult(3, true)),
+            ],
+            'options' => ['typeMap' => ['root' => 'bson']],
+        ];
     }
 
     /** @dataProvider provideInsertManyOptions */
@@ -270,9 +328,15 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         $result = $this->collection->insertMany($documents, $options);
         $this->assertSame(3, $result->getInsertedCount());
 
-        foreach ($expected as $index => $expectedDocument) {
+        foreach ($expected as $index => &$expectedDocument) {
             if ($expectedDocument instanceof BSONDocument && $expectedDocument->_id === null) {
                 $expectedDocument->_id = $result->getInsertedIds()[$index];
+            }
+
+            if ($expectedDocument instanceof Document && $expectedDocument->get('_id') === null) {
+                $inserted = $expectedDocument->toPHP();
+                $inserted->_id = $result->getInsertedIds()[$index];
+                $expectedDocument = Document::fromPHP($inserted);
             }
         }
 
@@ -290,6 +354,11 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
             'expected' => self::createObjectFixtureResult(1, true),
             'options' => ['codec' => null],
         ];
+
+        yield 'BSON type map' => [
+            'expected' => Document::fromPHP(self::createObjectFixtureResult(1, true)),
+            'options' => ['typeMap' => ['root' => 'bson']],
+        ];
     }
 
     /** @dataProvider provideInsertOneOptions */
@@ -300,6 +369,12 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
 
         if ($expected instanceof BSONDocument && $expected->_id === null) {
             $expected->_id = $result->getInsertedId();
+        }
+
+        if ($expected instanceof Document && $expected->get('_id') === null) {
+            $inserted = $expected->toPHP();
+            $inserted->_id = $result->getInsertedId();
+            $expected = Document::fromPHP($inserted);
         }
 
         $this->assertEquals($expected, $this->collection->findOne([], $options));
@@ -321,6 +396,11 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         yield 'No codec' => [
             'expected' => $replacedObject,
             'options' => ['codec' => null],
+        ];
+
+        yield 'BSON type map' => [
+            'expected' => Document::fromPHP($replacedObject),
+            'options' => ['typeMap' => ['root' => 'bson']],
         ];
     }
 

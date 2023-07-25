@@ -153,14 +153,15 @@ class InsertMany implements Executable
         $insertedIds = [];
 
         foreach ($this->documents as $i => $document) {
-            $insertedDocument = isset($this->options['codec'])
-                ? $this->options['codec']->encodeIfSupported($document)
-                : $document;
+            if (isset($this->options['codec'])) {
+                $document = $this->options['codec']->encodeIfSupported($document);
+            }
+
             // Psalm's assert-if-true annotation does not work with unions, so
             // assert the type manually instead of using is_document
-            assert(is_array($insertedDocument) || is_object($insertedDocument));
+            assert(is_array($document) || is_object($document));
 
-            $insertedIds[$i] = $bulk->insert($insertedDocument);
+            $insertedIds[$i] = $bulk->insert($document);
         }
 
         $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createExecuteOptions());

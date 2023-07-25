@@ -158,17 +158,18 @@ class FindOneAndReplace implements Executable, Explainable
 
         unset($options['projection'], $options['returnDocument']);
 
-        $replacementDocument = isset($options['codec'])
-            ? $options['codec']->encodeIfSupported($replacement)
-            : $replacement;
+        if (isset($options['codec'])) {
+            $replacement = $options['codec']->encodeIfSupported($replacement);
+        }
+
         // Psalm's assert-if-true annotation does not work with unions, so
         // assert the type manually instead of using is_document
-        assert(is_array($replacementDocument) || is_object($replacementDocument));
+        assert(is_array($replacement) || is_object($replacement));
 
         $this->findAndModify = new FindAndModify(
             $databaseName,
             $collectionName,
-            ['query' => $filter, 'update' => $replacementDocument] + $options,
+            ['query' => $filter, 'update' => $replacement] + $options,
         );
     }
 

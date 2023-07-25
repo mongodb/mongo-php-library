@@ -473,7 +473,7 @@
       <code><![CDATA[$options['fields']]]></code>
     </MixedAssignment>
     <RedundantConditionGivenDocblockType>
-      <code>is_object($replacementDocument)</code>
+      <code>is_object($replacement)</code>
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/Operation/FindOneAndUpdate.php">
@@ -483,6 +483,7 @@
   </file>
   <file src="src/Operation/InsertMany.php">
     <MixedAssignment>
+      <code>$document</code>
       <code>$insertedIds[$i]</code>
       <code>$options[$option]</code>
       <code><![CDATA[$options['session']]]></code>
@@ -501,9 +502,12 @@
       <code><![CDATA[$options['writeConcern']]]></code>
     </MixedAssignment>
     <MixedMethodCall>
-      <code>encodeIfSupported</code>
       <code>isInTransaction</code>
     </MixedMethodCall>
+    <RedundantConditionGivenDocblockType>
+      <code>assert(is_array($document) || is_object($document))</code>
+      <code>is_array($document)</code>
+    </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/Operation/ListIndexes.php">
     <MixedAssignment>
@@ -553,7 +557,7 @@
   </file>
   <file src="src/Operation/ReplaceOne.php">
     <RedundantConditionGivenDocblockType>
-      <code>is_object($replacementDocument)</code>
+      <code>is_object($replacement)</code>
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/Operation/Update.php">

@@ -105,6 +105,14 @@ class InsertOne implements Executable
             unset($options['writeConcern']);
         }
 
+        if (isset($options['codec'])) {
+            $document = $options['codec']->encodeIfSupported($document);
+
+            // Psalm's assert-if-true annotation does not work with unions, so
+            // assert the type manually instead of using is_document
+            assert(is_array($document) || is_object($document));
+        }
+
         $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;
         $this->document = $document;
@@ -128,14 +136,7 @@ class InsertOne implements Executable
 
         $bulk = new Bulk($this->createBulkWriteOptions());
 
-        $insertedDocument = isset($this->options['codec'])
-            ? $this->options['codec']->encodeIfSupported($this->document)
-            : $this->document;
-        // Psalm's assert-if-true annotation does not work with unions, so
-        // assert the type manually instead of using is_document
-        assert(is_array($insertedDocument) || is_object($insertedDocument));
-
-        $insertedId = $bulk->insert($insertedDocument);
+        $insertedId = $bulk->insert($this->document);
 
         $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createExecuteOptions());
 

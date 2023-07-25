@@ -75,6 +75,14 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      */
     public function __construct(CursorInterface $cursor, int $firstBatchSize, $initialResumeToken, ?object $postBatchResumeToken)
     {
+        if (! $cursor instanceof Iterator) {
+            throw InvalidArgumentException::invalidType(
+                '$cursor',
+                $cursor,
+                CursorInterface::class . '&' . Iterator::class,
+            );
+        }
+
         if (isset($initialResumeToken) && ! is_document($initialResumeToken)) {
             throw InvalidArgumentException::expectedDocumentType('$initialResumeToken', $initialResumeToken);
         }

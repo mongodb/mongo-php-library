@@ -20,6 +20,7 @@ namespace MongoDB\Codec;
 use MongoDB\BSON\Document;
 use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Model\LazyBSONDocument;
+use stdClass;
 
 /**
  * Codec for lazy decoding of BSON Document instances
@@ -80,10 +81,10 @@ final class LazyBSONDocumentCodec implements DocumentCodec, KnowsCodecLibrary
             throw UnsupportedValueException::invalidEncodableValue($value);
         }
 
-        $return = [];
+        $return = new stdClass();
         /** @var mixed $fieldValue */
         foreach ($value as $field => $fieldValue) {
-            $return[$field] = $this->getLibrary()->encodeIfSupported($fieldValue);
+            $return->{$field} = $this->getLibrary()->encodeIfSupported($fieldValue);
         }
 
         return Document::fromPHP($return);

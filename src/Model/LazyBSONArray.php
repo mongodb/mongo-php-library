@@ -200,7 +200,11 @@ final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate, 
 
         $offset = (int) $offset;
 
-        return $this->exists[$offset] ??= $this->bson->has($offset);
+        if (isset($this->exists[$offset])) {
+            return $this->exists[$offset];
+        }
+
+        return $this->exists[$offset] = $this->bson->has($offset);
     }
 
     /**

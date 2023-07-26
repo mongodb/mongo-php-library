@@ -130,7 +130,11 @@ final class LazyBSONDocument implements ArrayAccess, Countable, IteratorAggregat
 
     public function __isset(string $name): bool
     {
-        return $this->exists[$name] ??= $this->bson->has($name);
+        if (isset($this->exists[$name])) {
+            return $this->exists[$name];
+        }
+
+        return $this->exists[$name] = $this->bson->has($name);
     }
 
     /** @return array{bson: Document<TValue>, set: array<string, TValue>, unset: array<string, true>, codecLibrary: CodecLibrary} */

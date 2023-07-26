@@ -33,11 +33,6 @@
       <code>$return[]</code>
     </MixedAssignment>
   </file>
-  <file src="src/Codec/LazyBSONDocumentCodec.php">
-    <MixedAssignment>
-      <code>$return[$field]</code>
-    </MixedAssignment>
-  </file>
   <file src="src/Command/ListCollections.php">
     <MixedAssignment>
       <code>$cmd[$option]</code>
@@ -77,11 +72,6 @@
       <code><![CDATA[$context[$this->protocol]['filename']]]></code>
       <code><![CDATA[$context[$this->protocol]['options']]]></code>
     </MixedArrayAccess>
-  </file>
-  <file src="src/Model/ListIterator.php">
-    <InvalidTemplateParam>
-      <code>ListIterator</code>
-    </InvalidTemplateParam>
   </file>
   <file src="src/Model/BSONArray.php">
     <MixedAssignment>
@@ -242,6 +232,11 @@
     <RedundantConditionGivenDocblockType>
       <code>is_object($input)</code>
     </RedundantConditionGivenDocblockType>
+  </file>
+  <file src="src/Model/ListIterator.php">
+    <InvalidTemplateParam>
+      <code>ListIterator</code>
+    </InvalidTemplateParam>
   </file>
   <file src="src/Operation/Aggregate.php">
     <MixedArgument>

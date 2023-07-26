@@ -117,7 +117,7 @@ final class LazyBSONDocument implements ArrayAccess, Countable, IteratorAggregat
     /** @return TValue */
     public function __get(string $property)
     {
-        $this->readFromBson($property);
+        $this->readFromDocument($property);
 
         if (isset($this->unset[$property]) || ! $this->exists[$property]) {
             trigger_error(sprintf('Undefined property: %s', $property), E_USER_WARNING);
@@ -299,7 +299,7 @@ final class LazyBSONDocument implements ArrayAccess, Countable, IteratorAggregat
         $this->entireDocumentRead = true;
     }
 
-    private function readFromBson(string $key): void
+    private function readFromDocument(string $key): void
     {
         if (array_key_exists($key, $this->read)) {
             return;

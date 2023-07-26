@@ -221,7 +221,7 @@ final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate, 
         }
 
         $offset = (int) $offset;
-        $this->readFromBson($offset);
+        $this->readFromPackedArray($offset);
 
         if (isset($this->unset[$offset]) || ! $this->exists[$offset]) {
             trigger_error(sprintf('Undefined offset: %d', $offset), E_USER_WARNING);
@@ -292,7 +292,7 @@ final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate, 
         $this->entirePackedArrayRead = true;
     }
 
-    private function readFromBson(int $offset): void
+    private function readFromPackedArray(int $offset): void
     {
         if (array_key_exists($offset, $this->read)) {
             return;

@@ -62,11 +62,7 @@ final class ArrayCodec implements Codec, KnowsCodecLibrary
         }
 
         return array_map(
-            /**
-             * @param mixed $item
-             * @return mixed
-             */
-            fn ($item) => $this->getLibrary()->decodeIfSupported($item),
+            [$this->getLibrary(), 'decodeIfSupported'],
             $value,
         );
     }
@@ -89,11 +85,7 @@ final class ArrayCodec implements Codec, KnowsCodecLibrary
         }
 
         return array_map(
-            /**
-             * @param mixed $item
-             * @return mixed
-             */
-            fn ($item) => $this->getLibrary()->encodeIfSupported($item),
+            [$this->getLibrary(), 'encodeIfSupported'],
             $value,
         );
     }

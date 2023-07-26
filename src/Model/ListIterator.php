@@ -37,15 +37,15 @@ final class ListIterator extends IteratorIterator
 
     public function next(): void
     {
-        $this->index++;
-
         parent::next();
+
+        $this->index++;
     }
 
     public function rewind(): void
     {
-        $this->index = 0;
-
         parent::rewind();
+
+        $this->index = 0;
     }
 }

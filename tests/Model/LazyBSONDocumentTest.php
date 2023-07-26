@@ -234,7 +234,7 @@ class LazyBSONDocumentTest extends TestCase
         unset($document->foo);
         $this->assertFalse(isset($document->foo));
 
-        // Change value to ensure it is unset for good
+        // Set new value to ensure unset also clears values not read from BSON
         $document->document = (object) ['foo' => 'baz'];
         unset($document->document);
         $this->assertFalse(isset($document->document));
@@ -251,7 +251,7 @@ class LazyBSONDocumentTest extends TestCase
         unset($document['foo']);
         $this->assertFalse(isset($document['foo']));
 
-        // Change value to ensure it is unset for good
+        // Set new value to ensure unset also clears values not read from BSON
         $document['document'] = (object) ['foo' => 'baz'];
         unset($document['document']);
         $this->assertFalse(isset($document['document']));

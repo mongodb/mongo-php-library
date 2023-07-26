@@ -207,7 +207,7 @@ class LazyBSONArrayTest extends TestCase
         unset($array[0]);
         $this->assertFalse(isset($array[0]));
 
-        // Change value to ensure it is unset for good
+        // Set new value to ensure unset also clears values not read from BSON
         $array[1] = (object) ['foo' => 'baz'];
         unset($array[1]);
         $this->assertFalse(isset($array[1]));

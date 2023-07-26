@@ -117,13 +117,11 @@ class LazyBSONArrayTest extends TestCase
     public function testGetDocument(LazyBSONArray $array): void
     {
         $this->assertInstanceOf(LazyBSONDocument::class, $array[1]);
-        $this->assertInstanceOf(LazyBSONDocument::class, $array[1]);
     }
 
     /** @dataProvider provideTestArray */
     public function testGetArray(LazyBSONArray $array): void
     {
-        $this->assertInstanceOf(LazyBSONArray::class, $array[2]);
         $this->assertInstanceOf(LazyBSONArray::class, $array[2]);
     }
 

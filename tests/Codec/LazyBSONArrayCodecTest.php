@@ -37,10 +37,7 @@ class LazyBSONArrayCodecTest extends TestCase
         $array = new LazyBSONArray($this->getTestArray());
         $encoded = (new LazyBSONArrayCodec())->encode($array);
 
-        $this->assertEquals(
-            self::ARRAY,
-            $encoded->toPHP(['root' => 'array', 'array' => 'array', 'document' => 'array']),
-        );
+        $this->assertEquals(PackedArray::fromPHP(self::ARRAY), $encoded);
     }
 
     public function testEncodeWithWrongType(): void

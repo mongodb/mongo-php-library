@@ -37,10 +37,7 @@ class LazyBSONDocumentCodecTest extends TestCase
         $document = new LazyBSONDocument($this->getTestDocument());
         $encoded = (new LazyBSONDocumentCodec())->encode($document);
 
-        $this->assertEquals(
-            self::OBJECT,
-            $encoded->toPHP(['root' => 'array', 'array' => 'array', 'document' => 'array']),
-        );
+        $this->assertEquals(Document::fromPHP(self::OBJECT), $encoded);
     }
 
     public function testEncodeWithWrongType(): void

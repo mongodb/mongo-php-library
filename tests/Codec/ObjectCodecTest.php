@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Codec;
 
+use Generator;
 use MongoDB\Codec\Codec;
 use MongoDB\Codec\CodecLibrary;
 use MongoDB\Codec\DecodeIfSupported;
@@ -13,26 +14,36 @@ use stdClass;
 
 class ObjectCodecTest extends TestCase
 {
-    public function testDecodeObject(): void
+    public static function provideValues(): Generator
     {
-        $value = (object) [
-            'foo' => 'decoded',
-            'bar' => 'encoded',
+        yield 'Object' => [
+            'value' => (object) ['foo' => 'decoded', 'bar' => 'encoded'],
+            'encoded' => (object) ['foo' => 'encoded', 'bar' => 'encoded'],
+            'decoded' => (object) ['foo' => 'decoded', 'bar' => 'decoded'],
         ];
 
+        yield 'Extended stdClass' => [
+            'value' => self::getExtendedObject(),
+            'encoded' => (object) ['foo' => 'encoded', 'bar' => 'encoded'],
+            'decoded' => (object) ['foo' => 'decoded', 'bar' => 'decoded'],
+        ];
+    }
+
+    /** @dataProvider provideValues */
+    public function testDecode($value, $encoded, $decoded): void
+    {
         $this->assertEquals(
-            (object) ['foo' => 'decoded', 'bar' => 'decoded'],
+            $decoded,
             $this->getCodec()->decode($value),
         );
     }
 
-    public function testDecodeExtendedObject(): void
+    /** @dataProvider provideValues */
+    public function testEncode($value, $encoded, $decoded): void
     {
-        $value = $this->getExtendedObject();
-
         $this->assertEquals(
-            (object) ['foo' => 'decoded', 'bar' => 'decoded'],
-            $this->getCodec()->decode($value),
+            $encoded,
+            $this->getCodec()->encode($value),
         );
     }
 
@@ -40,29 +51,6 @@ class ObjectCodecTest extends TestCase
     {
         $this->expectExceptionObject(UnsupportedValueException::invalidDecodableValue('foo'));
         $this->getCodec()->decode('foo');
-    }
-
-    public function testEncodeObject(): void
-    {
-        $value = (object) [
-            'foo' => 'decoded',
-            'bar' => 'encoded',
-        ];
-
-        $this->assertEquals(
-            (object) ['foo' => 'encoded', 'bar' => 'encoded'],
-            $this->getCodec()->encode($value),
-        );
-    }
-
-    public function testEncodeExtendedObject(): void
-    {
-        $value = $this->getExtendedObject();
-
-        $this->assertEquals(
-            (object) ['foo' => 'encoded', 'bar' => 'encoded'],
-            $this->getCodec()->encode($value),
-        );
     }
 
     public function testEncodeWithWrongType(): void
@@ -111,7 +99,7 @@ class ObjectCodecTest extends TestCase
         );
     }
 
-    private function getExtendedObject(): stdClass
+    private static function getExtendedObject(): stdClass
     {
         return new class extends stdClass {
             public static $baz = 'oops';

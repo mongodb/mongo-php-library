@@ -2,6 +2,7 @@
 
 namespace MongoDB\Tests\Codec;
 
+use Generator;
 use MongoDB\Codec\ArrayCodec;
 use MongoDB\Codec\Codec;
 use MongoDB\Codec\CodecLibrary;
@@ -12,70 +13,49 @@ use MongoDB\Tests\TestCase;
 
 class ArrayCodecTest extends TestCase
 {
-    public function testDecodeList(): void
+    public static function provideValues(): Generator
     {
-        $value = [
-            'decoded',
-            'encoded',
+        yield 'List' => [
+            'value' => ['decoded', 'encoded'],
+            'encoded' => ['encoded', 'encoded'],
+            'decoded' => ['decoded', 'decoded'],
         ];
 
-        $this->assertSame(['decoded', 'decoded'], $this->getCodec()->decode($value));
+        yield 'List with gaps' => [
+            'value' => [0 => 'decoded', 2 => 'encoded'],
+            'encoded' => [0 => 'encoded', 2 => 'encoded'],
+            'decoded' => [0 => 'decoded', 2 => 'decoded'],
+        ];
+
+        yield 'Hash' => [
+            'value' => ['foo' => 'decoded', 'bar' => 'encoded'],
+            'encoded' => ['foo' => 'encoded', 'bar' => 'encoded'],
+            'decoded' => ['foo' => 'decoded', 'bar' => 'decoded'],
+        ];
     }
 
-    public function testDecodeListWithGaps(): void
+    /** @dataProvider provideValues */
+    public function testDecode($value, $encoded, $decoded): void
     {
-        $value = [
-            0 => 'decoded',
-            2 => 'encoded',
-        ];
-
-        $this->assertSame([0 => 'decoded', 2 => 'decoded'], $this->getCodec()->decode($value));
+        $this->assertSame(
+            $decoded,
+            $this->getCodec()->decode($value),
+        );
     }
 
-    public function testDecodeHash(): void
+    /** @dataProvider provideValues */
+    public function testEncode($value, $encoded, $decoded): void
     {
-        $value = [
-            'foo' => 'decoded',
-            'bar' => 'encoded',
-        ];
-
-        $this->assertSame(['foo' => 'decoded', 'bar' => 'decoded'], $this->getCodec()->decode($value));
+        $this->assertSame(
+            $encoded,
+            $this->getCodec()->encode($value),
+        );
     }
 
     public function testDecodeWithWrongType(): void
     {
         $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue('foo'));
         $this->getCodec()->encode('foo');
-    }
-
-    public function testEncode(): void
-    {
-        $value = [
-            'decoded',
-            'encoded',
-        ];
-
-        $this->assertSame(['encoded', 'encoded'], $this->getCodec()->encode($value));
-    }
-
-    public function testEncodeListWithGaps(): void
-    {
-        $value = [
-            0 => 'decoded',
-            2 => 'encoded',
-        ];
-
-        $this->assertSame([0 => 'encoded', 2 => 'encoded'], $this->getCodec()->encode($value));
-    }
-
-    public function testEncodeHash(): void
-    {
-        $value = [
-            'foo' => 'decoded',
-            'bar' => 'encoded',
-        ];
-
-        $this->assertSame(['foo' => 'encoded', 'bar' => 'encoded'], $this->getCodec()->encode($value));
     }
 
     public function testEncodeWithWrongType(): void

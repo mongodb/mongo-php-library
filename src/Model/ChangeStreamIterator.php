@@ -255,9 +255,7 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
         }
 
         if ($document instanceof Document) {
-            $resumeToken = $document->has('_id')
-                ? $document->get('_id')
-                : null;
+            $resumeToken = $document->get('_id');
 
             if ($resumeToken instanceof Document) {
                 $resumeToken = $resumeToken->toPHP();

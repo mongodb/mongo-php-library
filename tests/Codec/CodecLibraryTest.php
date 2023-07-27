@@ -4,9 +4,9 @@ namespace MongoDB\Tests\Codec;
 
 use MongoDB\Codec\Codec;
 use MongoDB\Codec\CodecLibrary;
+use MongoDB\Codec\CodecLibraryAware;
 use MongoDB\Codec\DecodeIfSupported;
 use MongoDB\Codec\EncodeIfSupported;
-use MongoDB\Codec\KnowsCodecLibrary;
 use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Tests\TestCase;
 
@@ -132,7 +132,7 @@ class CodecLibraryTest extends TestCase
 
     private function getTestCodec(): Codec
     {
-        return new class implements Codec, KnowsCodecLibrary {
+        return new class implements Codec, CodecLibraryAware {
             use DecodeIfSupported;
             use EncodeIfSupported;
 

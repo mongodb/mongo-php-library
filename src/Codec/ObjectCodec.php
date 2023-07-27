@@ -27,7 +27,7 @@ use function get_object_vars;
  *
  * @template-implements Codec<stdClass, stdClass>
  */
-final class ObjectCodec implements Codec, KnowsCodecLibrary
+final class ObjectCodec implements Codec, CodecLibraryAware
 {
     private ?CodecLibrary $library = null;
 

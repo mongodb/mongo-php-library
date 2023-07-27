@@ -27,7 +27,7 @@ use stdClass;
  *
  * @template-implements DocumentCodec<LazyBSONDocument>
  */
-final class LazyBSONDocumentCodec implements DocumentCodec, KnowsCodecLibrary
+final class LazyBSONDocumentCodec implements DocumentCodec, CodecLibraryAware
 {
     private ?CodecLibrary $library = null;
 

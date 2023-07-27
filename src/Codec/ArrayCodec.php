@@ -27,7 +27,7 @@ use function is_array;
  *
  * @template-implements Codec<array, array>
  */
-final class ArrayCodec implements Codec, KnowsCodecLibrary
+final class ArrayCodec implements Codec, CodecLibraryAware
 {
     private ?CodecLibrary $library = null;
 

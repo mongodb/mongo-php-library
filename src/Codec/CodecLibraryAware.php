@@ -22,7 +22,7 @@ namespace MongoDB\Codec;
  * it was added to. The library will be injected when the codec is added to the
  * library. This allows codecs to recursively encode its nested values.
  */
-interface KnowsCodecLibrary
+interface CodecLibraryAware
 {
     public function attachCodecLibrary(CodecLibrary $library): void;
 }

@@ -64,7 +64,7 @@ class CodecLibrary implements Codec
     {
         $this->decoders[] = $codec;
         $this->encoders[] = $codec;
-        if ($codec instanceof KnowsCodecLibrary) {
+        if ($codec instanceof CodecLibraryAware) {
             $codec->attachCodecLibrary($this);
         }
 
@@ -75,7 +75,7 @@ class CodecLibrary implements Codec
     final public function attachDecoder(Decoder $decoder): self
     {
         $this->decoders[] = $decoder;
-        if ($decoder instanceof KnowsCodecLibrary) {
+        if ($decoder instanceof CodecLibraryAware) {
             $decoder->attachCodecLibrary($this);
         }
 
@@ -86,7 +86,7 @@ class CodecLibrary implements Codec
     final public function attachEncoder(Encoder $encoder): self
     {
         $this->encoders[] = $encoder;
-        if ($encoder instanceof KnowsCodecLibrary) {
+        if ($encoder instanceof CodecLibraryAware) {
             $encoder->attachCodecLibrary($this);
         }
 

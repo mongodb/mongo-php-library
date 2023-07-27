@@ -26,7 +26,7 @@ use MongoDB\Model\LazyBSONArray;
  *
  * @template-implements Codec<PackedArray, LazyBSONArray>
  */
-final class LazyBSONArrayCodec implements Codec, KnowsCodecLibrary
+final class LazyBSONArrayCodec implements Codec, CodecLibraryAware
 {
     private ?CodecLibrary $library = null;
 

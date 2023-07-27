@@ -300,6 +300,10 @@ class Find implements Executable, Explainable
             trigger_error('The "maxScan" option is deprecated and will be removed in a future release', E_USER_DEPRECATED);
         }
 
+        if (isset($options['codec']) && isset($options['typeMap'])) {
+            throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
+        }
+
         $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;
         $this->filter = $filter;

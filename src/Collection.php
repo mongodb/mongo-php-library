@@ -234,16 +234,10 @@ class Collection
             $options['readConcern'] = $this->readConcern;
         }
 
-        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
-            $options['codec'] = $this->codec;
-        }
+        $options = $this->inheritCodecOrTypeMap($options);
 
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
-
-        if ($hasWriteStage && ! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
+        if ($hasWriteStage) {
+            $options = $this->inheritWriteOptions($options);
         }
 
         $operation = new Aggregate($this->databaseName, $this->collectionName, $pipeline, $options);
@@ -264,13 +258,9 @@ class Collection
      */
     public function bulkWrite(array $operations, array $options = [])
     {
-        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
-            $options['codec'] = $this->codec;
-        }
-
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions(
+            $this->inheritCodec($options),
+        );
 
         $operation = new BulkWrite($this->databaseName, $this->collectionName, $operations, $options);
         $server = select_server($this->manager, $options);
@@ -294,15 +284,9 @@ class Collection
      */
     public function count($filter = [], array $options = [])
     {
-        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
-            $options['readPreference'] = $this->readPreference;
-        }
+        $options = $this->inheritReadOptions($options);
 
         $server = select_server($this->manager, $options);
-
-        if (! isset($options['readConcern']) && ! is_in_transaction($options)) {
-            $options['readConcern'] = $this->readConcern;
-        }
 
         $operation = new Count($this->databaseName, $this->collectionName, $filter, $options);
 
@@ -323,15 +307,9 @@ class Collection
      */
     public function countDocuments($filter = [], array $options = [])
     {
-        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
-            $options['readPreference'] = $this->readPreference;
-        }
+        $options = $this->inheritReadOptions($options);
 
         $server = select_server($this->manager, $options);
-
-        if (! isset($options['readConcern']) && ! is_in_transaction($options)) {
-            $options['readConcern'] = $this->readConcern;
-        }
 
         $operation = new CountDocuments($this->databaseName, $this->collectionName, $filter, $options);
 
@@ -391,9 +369,7 @@ class Collection
     {
         $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions($options);
 
         $operation = new CreateIndexes($this->databaseName, $this->collectionName, $indexes, $options);
 
@@ -414,9 +390,7 @@ class Collection
      */
     public function deleteMany($filter, array $options = [])
     {
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions($options);
 
         $operation = new DeleteMany($this->databaseName, $this->collectionName, $filter, $options);
         $server = select_server($this->manager, $options);
@@ -438,9 +412,7 @@ class Collection
      */
     public function deleteOne($filter, array $options = [])
     {
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions($options);
 
         $operation = new DeleteOne($this->databaseName, $this->collectionName, $filter, $options);
         $server = select_server($this->manager, $options);
@@ -463,19 +435,11 @@ class Collection
      */
     public function distinct(string $fieldName, $filter = [], array $options = [])
     {
-        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
-            $options['readPreference'] = $this->readPreference;
-        }
-
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
+        $options = $this->inheritReadOptions(
+            $this->inheritTypeMap($options),
+        );
 
         $server = select_server($this->manager, $options);
-
-        if (! isset($options['readConcern']) && ! is_in_transaction($options)) {
-            $options['readConcern'] = $this->readConcern;
-        }
 
         $operation = new Distinct($this->databaseName, $this->collectionName, $fieldName, $filter, $options);
 
@@ -494,15 +458,11 @@ class Collection
      */
     public function drop(array $options = [])
     {
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
-
         $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions(
+            $this->inheritTypeMap($options),
+        );
 
         if (! isset($options['encryptedFields'])) {
             $options['encryptedFields'] = get_encrypted_fields_from_driver($this->databaseName, $this->collectionName, $this->manager)
@@ -535,15 +495,11 @@ class Collection
             throw new InvalidArgumentException('dropIndexes() must be used to drop multiple indexes');
         }
 
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
-
         $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions(
+            $this->inheritTypeMap($options),
+        );
 
         $operation = new DropIndexes($this->databaseName, $this->collectionName, $indexName, $options);
 
@@ -562,15 +518,11 @@ class Collection
      */
     public function dropIndexes(array $options = [])
     {
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
-
         $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions(
+            $this->inheritTypeMap($options),
+        );
 
         $operation = new DropIndexes($this->databaseName, $this->collectionName, '*', $options);
 
@@ -590,15 +542,9 @@ class Collection
      */
     public function estimatedDocumentCount(array $options = [])
     {
-        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
-            $options['readPreference'] = $this->readPreference;
-        }
+        $options = $this->inheritReadOptions($options);
 
         $server = select_server($this->manager, $options);
-
-        if (! isset($options['readConcern']) && ! is_in_transaction($options)) {
-            $options['readConcern'] = $this->readConcern;
-        }
 
         $operation = new EstimatedDocumentCount($this->databaseName, $this->collectionName, $options);
 
@@ -623,9 +569,7 @@ class Collection
             $options['readPreference'] = $this->readPreference;
         }
 
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
+        $options = $this->inheritTypeMap($options);
 
         $server = select_server($this->manager, $options);
 
@@ -648,23 +592,11 @@ class Collection
      */
     public function find($filter = [], array $options = [])
     {
-        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
-            $options['codec'] = $this->codec;
-        }
-
-        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
-            $options['readPreference'] = $this->readPreference;
-        }
+        $options = $this->inheritReadOptions(
+            $this->inheritCodecOrTypeMap($options),
+        );
 
         $server = select_server($this->manager, $options);
-
-        if (! isset($options['readConcern']) && ! is_in_transaction($options)) {
-            $options['readConcern'] = $this->readConcern;
-        }
-
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
 
         $operation = new Find($this->databaseName, $this->collectionName, $filter, $options);
 
@@ -685,23 +617,11 @@ class Collection
      */
     public function findOne($filter = [], array $options = [])
     {
-        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
-            $options['codec'] = $this->codec;
-        }
-
-        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
-            $options['readPreference'] = $this->readPreference;
-        }
+        $options = $this->inheritReadOptions(
+            $this->inheritCodecOrTypeMap($options),
+        );
 
         $server = select_server($this->manager, $options);
-
-        if (! isset($options['readConcern']) && ! is_in_transaction($options)) {
-            $options['readConcern'] = $this->readConcern;
-        }
-
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
 
         $operation = new FindOne($this->databaseName, $this->collectionName, $filter, $options);
 
@@ -725,19 +645,11 @@ class Collection
      */
     public function findOneAndDelete($filter, array $options = [])
     {
-        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
-            $options['codec'] = $this->codec;
-        }
-
         $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
-
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
+        $options = $this->inheritWriteOptions(
+            $this->inheritCodecOrTypeMap($options),
+        );
 
         $operation = new FindOneAndDelete($this->databaseName, $this->collectionName, $filter, $options);
 
@@ -766,19 +678,11 @@ class Collection
      */
     public function findOneAndReplace($filter, $replacement, array $options = [])
     {
-        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
-            $options['codec'] = $this->codec;
-        }
-
         $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
-
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
+        $options = $this->inheritWriteOptions(
+            $this->inheritCodecOrTypeMap($options),
+        );
 
         $operation = new FindOneAndReplace($this->databaseName, $this->collectionName, $filter, $replacement, $options);
 
@@ -807,19 +711,11 @@ class Collection
      */
     public function findOneAndUpdate($filter, $update, array $options = [])
     {
-        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
-            $options['codec'] = $this->codec;
-        }
-
         $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
-
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
+        $options = $this->inheritWriteOptions(
+            $this->inheritCodecOrTypeMap($options),
+        );
 
         $operation = new FindOneAndUpdate($this->databaseName, $this->collectionName, $filter, $update, $options);
 
@@ -922,13 +818,9 @@ class Collection
      */
     public function insertMany(array $documents, array $options = [])
     {
-        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
-            $options['codec'] = $this->codec;
-        }
-
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions(
+            $this->inheritCodec($options),
+        );
 
         $operation = new InsertMany($this->databaseName, $this->collectionName, $documents, $options);
         $server = select_server($this->manager, $options);
@@ -949,13 +841,9 @@ class Collection
      */
     public function insertOne($document, array $options = [])
     {
-        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
-            $options['codec'] = $this->codec;
-        }
-
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions(
+            $this->inheritCodec($options),
+        );
 
         $operation = new InsertOne($this->databaseName, $this->collectionName, $document, $options);
         $server = select_server($this->manager, $options);
@@ -1018,13 +906,9 @@ class Collection
             $options['readConcern'] = $this->readConcern;
         }
 
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
-
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions(
+            $this->inheritTypeMap($options),
+        );
 
         $operation = new MapReduce($this->databaseName, $this->collectionName, $map, $reduce, $out, $options);
 
@@ -1049,15 +933,11 @@ class Collection
             $toDatabaseName = $this->databaseName;
         }
 
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
-
         $server = select_server($this->manager, $options);
 
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions(
+            $this->inheritTypeMap($options),
+        );
 
         $operation = new RenameCollection($this->databaseName, $this->collectionName, $toDatabaseName, $toCollectionName, $options);
 
@@ -1079,13 +959,9 @@ class Collection
      */
     public function replaceOne($filter, $replacement, array $options = [])
     {
-        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
-            $options['codec'] = $this->codec;
-        }
-
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions(
+            $this->inheritCodec($options),
+        );
 
         $operation = new ReplaceOne($this->databaseName, $this->collectionName, $filter, $replacement, $options);
         $server = select_server($this->manager, $options);
@@ -1108,9 +984,7 @@ class Collection
      */
     public function updateMany($filter, $update, array $options = [])
     {
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions($options);
 
         $operation = new UpdateMany($this->databaseName, $this->collectionName, $filter, $update, $options);
         $server = select_server($this->manager, $options);
@@ -1133,9 +1007,7 @@ class Collection
      */
     public function updateOne($filter, $update, array $options = [])
     {
-        if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
-            $options['writeConcern'] = $this->writeConcern;
-        }
+        $options = $this->inheritWriteOptions($options);
 
         $operation = new UpdateOne($this->databaseName, $this->collectionName, $filter, $update, $options);
         $server = select_server($this->manager, $options);
@@ -1154,30 +1026,11 @@ class Collection
      */
     public function watch(array $pipeline = [], array $options = [])
     {
-        if (! array_key_exists('codec', $options) && ! isset($options['typeMap'])) {
-            $options['codec'] = $this->codec;
-        }
-
-        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
-            $options['readPreference'] = $this->readPreference;
-        }
+        $options = $this->inheritReadOptions(
+            $this->inheritCodecOrTypeMap($options),
+        );
 
         $server = select_server($this->manager, $options);
-
-        /* Although change streams require a newer version of the server than
-         * read concerns, perform the usual wire version check before inheriting
-         * the collection's read concern. In the event that the server is too
-         * old, this makes it more likely that users will encounter an error
-         * related to change streams being unsupported instead of an
-         * UnsupportedException regarding use of the "readConcern" option from
-         * the Aggregate operation class. */
-        if (! isset($options['readConcern']) && ! is_in_transaction($options)) {
-            $options['readConcern'] = $this->readConcern;
-        }
-
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = $this->typeMap;
-        }
 
         $operation = new Watch($this->manager, $this->databaseName, $this->collectionName, $pipeline, $options);
 
@@ -1203,5 +1056,77 @@ class Collection
         ];
 
         return new Collection($this->manager, $this->databaseName, $this->collectionName, $options);
+    }
+
+    private function inheritCodec(array $options): array
+    {
+        // If the options contain a type map, don't inherit anything
+        if (isset($options['typeMap'])) {
+            return $options;
+        }
+
+        if (! array_key_exists('codec', $options)) {
+            $options['codec'] = $this->codec;
+        }
+
+        return $options;
+    }
+
+    private function inheritCodecOrTypeMap(array $options): array
+    {
+        // If the options contain a type map, don't inherit anything
+        if (isset($options['typeMap'])) {
+            return $options;
+        }
+
+        // If this collection does not use a codec, or if a codec was explicitly
+        // defined in the options, only inherit the type map (if possible)
+        if (! $this->codec || array_key_exists('codec', $options)) {
+            return $this->inheritTypeMap($options);
+        }
+
+        // At this point, we know that we use a codec and the options array did
+        // not explicitly contain a codec, so we can inherit ours
+        $options['codec'] = $this->codec;
+
+        return $options;
+    }
+
+    private function inheritReadOptions(array $options): array
+    {
+        // ReadConcern and ReadPreference may not change within a transaction
+        if (! is_in_transaction($options)) {
+            if (! isset($options['readConcern'])) {
+                $options['readConcern'] = $this->readConcern;
+            }
+
+            if (! isset($options['readPreference'])) {
+                $options['readPreference'] = $this->readPreference;
+            }
+        }
+
+        return $options;
+    }
+
+    private function inheritTypeMap(array $options): array
+    {
+        // Only inherit the type map if no codec is used
+        if (! isset($options['typeMap']) && ! isset($options['codec'])) {
+            $options['typeMap'] = $this->typeMap;
+        }
+
+        return $options;
+    }
+
+    private function inheritWriteOptions(array $options): array
+    {
+        // WriteConcern may not change within a transaction
+        if (! is_in_transaction($options)) {
+            if (! isset($options['writeConcern'])) {
+                $options['writeConcern'] = $this->writeConcern;
+            }
+        }
+
+        return $options;
     }
 }

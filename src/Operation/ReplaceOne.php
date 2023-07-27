@@ -108,6 +108,10 @@ class ReplaceOne implements Executable
         }
 
         if (isset($options['codec'])) {
+            if (isset($options['typeMap'])) {
+                throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
+            }
+
             $replacement = $options['codec']->encodeIfSupported($replacement);
         }
 

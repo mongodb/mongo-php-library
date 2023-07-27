@@ -204,6 +204,10 @@ class Aggregate implements Executable, Explainable
             unset($options['writeConcern']);
         }
 
+        if (isset($options['codec']) && isset($options['typeMap'])) {
+            throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
+        }
+
         $this->isWrite = is_last_pipeline_operator_write($pipeline) && ! ($options['explain'] ?? false);
 
         if ($this->isWrite) {

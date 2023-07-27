@@ -215,6 +215,10 @@ class FindAndModify implements Executable, Explainable
             unset($options['writeConcern']);
         }
 
+        if (isset($options['codec']) && isset($options['typeMap'])) {
+            throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
+        }
+
         $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;
         $this->options = $options;

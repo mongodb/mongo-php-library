@@ -7,6 +7,7 @@ use MongoDB\BSON\Document;
 use MongoDB\BulkWriteResult;
 use MongoDB\Collection;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\FindOneAndReplace;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
@@ -61,6 +62,17 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         $cursor = $this->collection->aggregate([['$match' => ['_id' => ['$gt' => 1]]]], $options);
 
         $this->assertEquals($expected, $cursor->toArray());
+    }
+
+    public function testAggregateWithCodecAndTypemap(): void
+    {
+        $options = [
+            'codec' => new TestDocumentCodec(),
+            'typeMap' => ['root' => 'array', 'document' => 'array'],
+        ];
+
+        $this->expectExceptionObject(InvalidArgumentException::cannotCombineCodecAndTypeMap());
+        $this->collection->aggregate([['$match' => ['_id' => ['$gt' => 1]]]], $options);
     }
 
     public static function provideBulkWriteOptions(): Generator
@@ -167,6 +179,17 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         self::assertEquals($expected, $result);
     }
 
+    public function testFindOneAndDeleteWithCodecAndTypemap(): void
+    {
+        $options = [
+            'codec' => new TestDocumentCodec(),
+            'typeMap' => ['root' => 'array', 'document' => 'array'],
+        ];
+
+        $this->expectExceptionObject(InvalidArgumentException::cannotCombineCodecAndTypeMap());
+        $this->collection->findOneAndDelete(['_id' => 1], $options);
+    }
+
     /** @dataProvider provideFindOneAndModifyOptions */
     public function testFindOneAndUpdate($expected, $options): void
     {
@@ -175,6 +198,17 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         $result = $this->collection->findOneAndUpdate(['_id' => 1], ['$set' => ['x.foo' => 'baz']], $options);
 
         self::assertEquals($expected, $result);
+    }
+
+    public function testFindOneAndUpdateWithCodecAndTypemap(): void
+    {
+        $options = [
+            'codec' => new TestDocumentCodec(),
+            'typeMap' => ['root' => 'array', 'document' => 'array'],
+        ];
+
+        $this->expectExceptionObject(InvalidArgumentException::cannotCombineCodecAndTypeMap());
+        $this->collection->findOneAndUpdate(['_id' => 1], ['$set' => ['x.foo' => 'baz']], $options);
     }
 
     public static function provideFindOneAndReplaceOptions(): Generator
@@ -218,6 +252,17 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         self::assertEquals($expected, $result);
     }
 
+    public function testFindOneAndReplaceWithCodecAndTypemap(): void
+    {
+        $options = [
+            'codec' => new TestDocumentCodec(),
+            'typeMap' => ['root' => 'array', 'document' => 'array'],
+        ];
+
+        $this->expectExceptionObject(InvalidArgumentException::cannotCombineCodecAndTypeMap());
+        $this->collection->findOneAndReplace(['_id' => 1], ['foo' => 'bar'], $options);
+    }
+
     public static function provideFindOptions(): Generator
     {
         yield 'Default codec' => [
@@ -258,6 +303,17 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         $this->assertEquals($expected, $cursor->toArray());
     }
 
+    public function testFindWithCodecAndTypemap(): void
+    {
+        $options = [
+            'codec' => new TestDocumentCodec(),
+            'typeMap' => ['root' => 'array', 'document' => 'array'],
+        ];
+
+        $this->expectExceptionObject(InvalidArgumentException::cannotCombineCodecAndTypeMap());
+        $this->collection->find([], $options);
+    }
+
     public static function provideFindOneOptions(): Generator
     {
         yield 'Default codec' => [
@@ -284,6 +340,17 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         $document = $this->collection->findOne([], $options);
 
         $this->assertEquals($expected, $document);
+    }
+
+    public function testFindOneWithCodecAndTypemap(): void
+    {
+        $options = [
+            'codec' => new TestDocumentCodec(),
+            'typeMap' => ['root' => 'array', 'document' => 'array'],
+        ];
+
+        $this->expectExceptionObject(InvalidArgumentException::cannotCombineCodecAndTypeMap());
+        $this->collection->findOne([], $options);
     }
 
     public static function provideInsertManyOptions(): Generator
@@ -417,6 +484,17 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $result->getModifiedCount());
 
         $this->assertEquals($expected, $this->collection->findOne([], $options));
+    }
+
+    public function testReplaceOneWithCodecAndTypemap(): void
+    {
+        $options = [
+            'codec' => new TestDocumentCodec(),
+            'typeMap' => ['root' => 'array', 'document' => 'array'],
+        ];
+
+        $this->expectExceptionObject(InvalidArgumentException::cannotCombineCodecAndTypeMap());
+        $this->collection->replaceOne(['_id' => 1], ['foo' => 'bar'], $options);
     }
 
     /**

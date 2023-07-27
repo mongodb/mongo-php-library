@@ -18,7 +18,6 @@
 namespace MongoDB;
 
 use Iterator;
-use MongoDB\BSON\Document;
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\CursorId;
 use MongoDB\Driver\Exception\ConnectionException;
@@ -29,7 +28,6 @@ use MongoDB\Exception\ResumeTokenException;
 use MongoDB\Model\ChangeStreamIterator;
 use ReturnTypeWillChange;
 
-use function assert;
 use function call_user_func;
 use function in_array;
 
@@ -115,8 +113,6 @@ class ChangeStream implements Iterator
         if (! $this->codec) {
             return $value;
         }
-
-        assert($value === null || $value instanceof Document);
 
         return $this->codec->decodeIfSupported($value);
     }

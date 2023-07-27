@@ -49,7 +49,7 @@ class ReadableStream
     private int $chunkOffset = 0;
 
     /** @var (CursorInterface&Iterator)|null */
-    private $chunksIterator = null;
+    private ?Iterator $chunksIterator = null;
 
     private CollectionWrapper $collectionWrapper;
 

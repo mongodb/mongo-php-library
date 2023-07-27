@@ -263,9 +263,8 @@ class Collection
         );
 
         $operation = new BulkWrite($this->databaseName, $this->collectionName, $operations, $options);
-        $server = select_server($this->manager, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -286,11 +285,9 @@ class Collection
     {
         $options = $this->inheritReadOptions($options);
 
-        $server = select_server($this->manager, $options);
-
         $operation = new Count($this->databaseName, $this->collectionName, $filter, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -309,11 +306,9 @@ class Collection
     {
         $options = $this->inheritReadOptions($options);
 
-        $server = select_server($this->manager, $options);
-
         $operation = new CountDocuments($this->databaseName, $this->collectionName, $filter, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -367,13 +362,11 @@ class Collection
      */
     public function createIndexes(array $indexes, array $options = [])
     {
-        $server = select_server($this->manager, $options);
-
         $options = $this->inheritWriteOptions($options);
 
         $operation = new CreateIndexes($this->databaseName, $this->collectionName, $indexes, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -393,9 +386,8 @@ class Collection
         $options = $this->inheritWriteOptions($options);
 
         $operation = new DeleteMany($this->databaseName, $this->collectionName, $filter, $options);
-        $server = select_server($this->manager, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -415,9 +407,8 @@ class Collection
         $options = $this->inheritWriteOptions($options);
 
         $operation = new DeleteOne($this->databaseName, $this->collectionName, $filter, $options);
-        $server = select_server($this->manager, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -439,11 +430,9 @@ class Collection
             $this->inheritTypeMap($options),
         );
 
-        $server = select_server($this->manager, $options);
-
         $operation = new Distinct($this->databaseName, $this->collectionName, $fieldName, $filter, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -495,15 +484,13 @@ class Collection
             throw new InvalidArgumentException('dropIndexes() must be used to drop multiple indexes');
         }
 
-        $server = select_server($this->manager, $options);
-
         $options = $this->inheritWriteOptions(
             $this->inheritTypeMap($options),
         );
 
         $operation = new DropIndexes($this->databaseName, $this->collectionName, $indexName, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -518,15 +505,13 @@ class Collection
      */
     public function dropIndexes(array $options = [])
     {
-        $server = select_server($this->manager, $options);
-
         $options = $this->inheritWriteOptions(
             $this->inheritTypeMap($options),
         );
 
         $operation = new DropIndexes($this->databaseName, $this->collectionName, '*', $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -544,11 +529,9 @@ class Collection
     {
         $options = $this->inheritReadOptions($options);
 
-        $server = select_server($this->manager, $options);
-
         $operation = new EstimatedDocumentCount($this->databaseName, $this->collectionName, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -571,11 +554,9 @@ class Collection
 
         $options = $this->inheritTypeMap($options);
 
-        $server = select_server($this->manager, $options);
-
         $operation = new Explain($this->databaseName, $explainable, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -596,11 +577,9 @@ class Collection
             $this->inheritCodecOrTypeMap($options),
         );
 
-        $server = select_server($this->manager, $options);
-
         $operation = new Find($this->databaseName, $this->collectionName, $filter, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -621,11 +600,9 @@ class Collection
             $this->inheritCodecOrTypeMap($options),
         );
 
-        $server = select_server($this->manager, $options);
-
         $operation = new FindOne($this->databaseName, $this->collectionName, $filter, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -645,15 +622,13 @@ class Collection
      */
     public function findOneAndDelete($filter, array $options = [])
     {
-        $server = select_server($this->manager, $options);
-
         $options = $this->inheritWriteOptions(
             $this->inheritCodecOrTypeMap($options),
         );
 
         $operation = new FindOneAndDelete($this->databaseName, $this->collectionName, $filter, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -678,15 +653,13 @@ class Collection
      */
     public function findOneAndReplace($filter, $replacement, array $options = [])
     {
-        $server = select_server($this->manager, $options);
-
         $options = $this->inheritWriteOptions(
             $this->inheritCodecOrTypeMap($options),
         );
 
         $operation = new FindOneAndReplace($this->databaseName, $this->collectionName, $filter, $replacement, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -711,15 +684,13 @@ class Collection
      */
     public function findOneAndUpdate($filter, $update, array $options = [])
     {
-        $server = select_server($this->manager, $options);
-
         $options = $this->inheritWriteOptions(
             $this->inheritCodecOrTypeMap($options),
         );
 
         $operation = new FindOneAndUpdate($this->databaseName, $this->collectionName, $filter, $update, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -823,9 +794,8 @@ class Collection
         );
 
         $operation = new InsertMany($this->databaseName, $this->collectionName, $documents, $options);
-        $server = select_server($this->manager, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -846,9 +816,8 @@ class Collection
         );
 
         $operation = new InsertOne($this->databaseName, $this->collectionName, $document, $options);
-        $server = select_server($this->manager, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -862,9 +831,8 @@ class Collection
     public function listIndexes(array $options = [])
     {
         $operation = new ListIndexes($this->databaseName, $this->collectionName, $options);
-        $server = select_server($this->manager, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -895,8 +863,6 @@ class Collection
             $options['readPreference'] = new ReadPreference(ReadPreference::PRIMARY);
         }
 
-        $server = select_server($this->manager, $options);
-
         /* A "majority" read concern is not compatible with inline output, so
          * avoid providing the Collection's read concern if it would conflict.
          *
@@ -912,7 +878,7 @@ class Collection
 
         $operation = new MapReduce($this->databaseName, $this->collectionName, $map, $reduce, $out, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -933,15 +899,13 @@ class Collection
             $toDatabaseName = $this->databaseName;
         }
 
-        $server = select_server($this->manager, $options);
-
         $options = $this->inheritWriteOptions(
             $this->inheritTypeMap($options),
         );
 
         $operation = new RenameCollection($this->databaseName, $this->collectionName, $toDatabaseName, $toCollectionName, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -964,9 +928,8 @@ class Collection
         );
 
         $operation = new ReplaceOne($this->databaseName, $this->collectionName, $filter, $replacement, $options);
-        $server = select_server($this->manager, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -987,9 +950,8 @@ class Collection
         $options = $this->inheritWriteOptions($options);
 
         $operation = new UpdateMany($this->databaseName, $this->collectionName, $filter, $update, $options);
-        $server = select_server($this->manager, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -1010,9 +972,8 @@ class Collection
         $options = $this->inheritWriteOptions($options);
 
         $operation = new UpdateOne($this->databaseName, $this->collectionName, $filter, $update, $options);
-        $server = select_server($this->manager, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**
@@ -1030,11 +991,9 @@ class Collection
             $this->inheritCodecOrTypeMap($options),
         );
 
-        $server = select_server($this->manager, $options);
-
         $operation = new Watch($this->manager, $this->databaseName, $this->collectionName, $pipeline, $options);
 
-        return $operation->execute($server);
+        return $operation->execute(select_server($this->manager, $options));
     }
 
     /**

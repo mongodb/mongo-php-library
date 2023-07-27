@@ -113,6 +113,7 @@ class ReplaceOne implements Executable
 
         // Psalm's assert-if-true annotation does not work with unions, so
         // assert the type manually instead of using is_document
+        // See https://github.com/vimeo/psalm/issues/6831
         assert(is_array($replacement) || is_object($replacement));
 
         $this->update = new Update(

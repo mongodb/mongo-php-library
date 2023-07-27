@@ -164,6 +164,7 @@ class FindOneAndReplace implements Executable, Explainable
 
         // Psalm's assert-if-true annotation does not work with unions, so
         // assert the type manually instead of using is_document
+        // See https://github.com/vimeo/psalm/issues/6831
         assert(is_array($replacement) || is_object($replacement));
 
         $this->findAndModify = new FindAndModify(

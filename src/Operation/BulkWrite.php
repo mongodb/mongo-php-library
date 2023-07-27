@@ -346,6 +346,7 @@ class BulkWrite implements Executable
                         : $args[0];
                     // Psalm's assert-if-true annotation does not work with unions, so
                     // assert the type manually instead of using is_document
+                    // See https://github.com/vimeo/psalm/issues/6831
                     assert(is_array($insertedDocument) || is_object($insertedDocument));
 
                     $insertedIds[$i] = $bulk->insert($insertedDocument);
@@ -357,6 +358,7 @@ class BulkWrite implements Executable
                         : $args[1];
                     // Psalm's assert-if-true annotation does not work with unions, so
                     // assert the type manually instead of using is_document
+                    // See https://github.com/vimeo/psalm/issues/6831
                     assert(is_array($replacementDocument) || is_object($replacementDocument));
 
                     $bulk->update($args[0], $replacementDocument, $args[2]);

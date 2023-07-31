@@ -21,6 +21,10 @@ class LazyBSONDocumentTest extends TestCase
 {
     public static function provideTestDocument(): Generator
     {
+        // Creating a lazy BSON structure from PHP data does not convert any
+        // nested arrays or objects to their lazy BSON variants. In order to
+        // make tests reusable, we need to create the lazy BSON variants
+        // manually
         yield 'array' => [
             new LazyBSONDocument([
                 'foo' => 'bar',

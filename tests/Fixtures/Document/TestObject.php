@@ -17,6 +17,8 @@
 
 namespace MongoDB\Tests\Fixtures\Document;
 
+use MongoDB\BSON\Document;
+
 final class TestObject
 {
     public int $id;
@@ -24,6 +26,14 @@ final class TestObject
     public TestNestedObject $x;
 
     public bool $decoded = false;
+
+    public static function createDocument(int $id): Document
+    {
+        return Document::fromPHP([
+            '_id' => $id,
+            'x' => ['foo' => 'bar'],
+        ]);
+    }
 
     public static function createForFixture(int $id): self
     {

@@ -16,7 +16,7 @@ class LazyBSONCodecLibraryTest extends TestCase
     {
         $array = [
             'bar',
-            ['foo' => 'bar'],
+            (object) ['foo' => 'bar'],
             [0, 1, 2],
         ];
         $document = (object) [

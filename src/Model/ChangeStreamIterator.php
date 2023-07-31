@@ -149,11 +149,14 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      * iterator. This could be side-stepped due to the class not being final,
      * but it's very much an invalid use-case. This method can be dropped in 2.0
      * once the class is final.
+     *
+     * @return CursorInterface<int, TValue>&Iterator<int, TValue>
      */
-    final public function getInnerIterator(): CursorInterface
+    final public function getInnerIterator(): Iterator
     {
         $cursor = parent::getInnerIterator();
         assert($cursor instanceof CursorInterface);
+        assert($cursor instanceof Iterator);
 
         return $cursor;
     }

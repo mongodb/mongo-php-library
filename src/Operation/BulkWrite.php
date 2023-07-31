@@ -341,28 +341,30 @@ class BulkWrite implements Executable
                     break;
 
                 case self::INSERT_ONE:
-                    $insertedDocument = isset($this->options['codec'])
-                        ? $this->options['codec']->encodeIfSupported($args[0])
-                        : $args[0];
-                    // Psalm's assert-if-true annotation does not work with unions, so
-                    // assert the type manually instead of using is_document
-                    // See https://github.com/vimeo/psalm/issues/6831
-                    assert(is_array($insertedDocument) || is_object($insertedDocument));
+                    if (isset($this->options['codec'])) {
+                        $args[0] = $this->options['codec']->encodeIfSupported($args[0]);
 
-                    $insertedIds[$i] = $bulk->insert($insertedDocument);
+                        // Psalm's assert-if-true annotation does not work with unions, so
+                        // assert the type manually instead of using is_document
+                        // See https://github.com/vimeo/psalm/issues/6831
+                        assert(is_array($args[0]) || is_object($args[0]));
+                    }
+
+                    $insertedIds[$i] = $bulk->insert($args[0]);
                     break;
 
                 case self::REPLACE_ONE:
-                    $replacementDocument = isset($this->options['codec'])
-                        ? $this->options['codec']->encodeIfSupported($args[1])
-                        : $args[1];
-                    // Psalm's assert-if-true annotation does not work with unions, so
-                    // assert the type manually instead of using is_document
-                    // See https://github.com/vimeo/psalm/issues/6831
-                    assert(is_array($replacementDocument) || is_object($replacementDocument));
+                    if (isset($this->options['codec'])) {
+                        $args[1] = $this->options['codec']->encodeIfSupported($args[1]);
 
-                    $bulk->update($args[0], $replacementDocument, $args[2]);
-                    break;
+                        // Psalm's assert-if-true annotation does not work with unions, so
+                        // assert the type manually instead of using is_document
+                        // See https://github.com/vimeo/psalm/issues/6831
+                        assert(is_array($args[1]) || is_object($args[1]));
+                    }
+
+                    // break intentionally missing, as replace is handled
+                    // through update as well
 
                 case self::UPDATE_MANY:
                 case self::UPDATE_ONE:

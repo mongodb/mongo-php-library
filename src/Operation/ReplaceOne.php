@@ -113,12 +113,12 @@ class ReplaceOne implements Executable
             }
 
             $replacement = $options['codec']->encodeIfSupported($replacement);
-        }
 
-        // Psalm's assert-if-true annotation does not work with unions, so
-        // assert the type manually instead of using is_document
-        // See https://github.com/vimeo/psalm/issues/6831
-        assert(is_array($replacement) || is_object($replacement));
+            // Psalm's assert-if-true annotation does not work with unions, so
+            // assert the type manually instead of using is_document
+            // See https://github.com/vimeo/psalm/issues/6831
+            assert(is_array($replacement) || is_object($replacement));
+        }
 
         $this->update = new Update(
             $databaseName,

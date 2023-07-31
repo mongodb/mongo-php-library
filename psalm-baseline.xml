@@ -200,7 +200,6 @@
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[2]</code>
-      <code>$args[2]</code>
     </MixedArgument>
     <MixedArrayAccess>
       <code>$args[0]</code>
@@ -209,7 +208,6 @@
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
-      <code>$args[0]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
@@ -225,8 +223,6 @@
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
-      <code>$args[1]</code>
-      <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
@@ -240,6 +236,8 @@
       <code><![CDATA[$args[2]['upsert']]]></code>
     </MixedArrayAccess>
     <MixedArrayAssignment>
+      <code>$args[0]</code>
+      <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
@@ -259,6 +257,8 @@
     <MixedAssignment>
       <code>$args</code>
       <code>$args</code>
+      <code>$args[0]</code>
+      <code>$args[1]</code>
       <code>$args[2]</code>
       <code>$args[2]</code>
       <code>$insertedIds[$i]</code>
@@ -473,7 +473,8 @@
       <code><![CDATA[$options['fields']]]></code>
     </MixedAssignment>
     <RedundantConditionGivenDocblockType>
-      <code>is_object($replacement)</code>
+      <code>assert(is_array($replacement) || is_object($replacement))</code>
+      <code>is_array($replacement)</code>
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/Operation/FindOneAndUpdate.php">
@@ -557,7 +558,8 @@
   </file>
   <file src="src/Operation/ReplaceOne.php">
     <RedundantConditionGivenDocblockType>
-      <code>is_object($replacement)</code>
+      <code>assert(is_array($replacement) || is_object($replacement))</code>
+      <code>is_array($replacement)</code>
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/Operation/Update.php">

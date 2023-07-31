@@ -27,6 +27,10 @@ use MongoDB\Driver\Server;
 
 use function assert;
 use function iterator_to_array;
+use function sprintf;
+use function trigger_error;
+
+use const E_USER_WARNING;
 
 /**
  * @template TValue of object
@@ -104,6 +108,7 @@ class CodecCursor implements CursorInterface, Iterator
     public function setTypeMap(array $typemap): void
     {
         // Not supported
+        trigger_error(sprintf('Discarding type map for %s', __METHOD__), E_USER_WARNING);
     }
 
     /** @return array<int, TValue> */

@@ -31,10 +31,10 @@ use MongoDB\Exception\InvalidArgumentException;
 use ReturnTypeWillChange;
 
 use function array_filter;
+use function array_is_list;
 use function array_key_exists;
 use function array_keys;
 use function array_map;
-use function array_values;
 use function count;
 use function is_array;
 use function is_numeric;
@@ -97,8 +97,17 @@ final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate, 
         } elseif ($input instanceof PackedArray) {
             $this->bson = $input;
         } elseif (is_array($input)) {
+            if (! array_is_list($input)) {
+                // Check if all keys are numeric
+                foreach ($input as $key => $value) {
+                    if (! is_numeric($key)) {
+                        throw InvalidArgumentException::invalidType('input', $input, [PackedArray::class, 'array', 'null']);
+                    }
+                }
+            }
+
             $this->bson = PackedArray::fromPHP([]);
-            $this->set = array_values($input);
+            $this->set = $input;
             $this->exists = array_map(
                 /** @param TValue $value */
                 fn ($value): bool => true,

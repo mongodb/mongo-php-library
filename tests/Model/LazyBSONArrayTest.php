@@ -63,6 +63,26 @@ class LazyBSONArrayTest extends TestCase
         $this->assertIsArray($array[2]);
     }
 
+    public function testConstructAllowsGapsInList(): void
+    {
+        $array = new LazyBSONArray([
+            0 => 'foo',
+            2 => 'bar',
+        ]);
+
+        $this->assertSame('foo', $array[0]);
+        $this->assertFalse(isset($array[1]));
+        $this->assertSame('bar', $array[2]);
+
+        $this->assertSame(['foo', 'bar'], iterator_to_array($array));
+    }
+
+    public function testConstructRejectsHash(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new LazyBSONArray([0 => 'foo', 'foo' => 'bar']);
+    }
+
     public function testClone(): void
     {
         $original = new LazyBSONArray();

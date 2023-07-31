@@ -212,12 +212,15 @@
     <MixedArrayAssignment>
       <code>$seen[$offset]</code>
     </MixedArrayAssignment>
+    <MixedAssignment>
+      <code>$value</code>
+    </MixedAssignment>
     <RedundantConditionGivenDocblockType>
       <code>is_array($input)</code>
     </RedundantConditionGivenDocblockType>
-    <RedundantFunctionCallGivenDocblockType>
-      <code>array_values</code>
-    </RedundantFunctionCallGivenDocblockType>
+    <TypeDoesNotContainType>
+      <code>is_numeric($key)</code>
+    </TypeDoesNotContainType>
   </file>
   <file src="src/Model/LazyBSONDocument.php">
     <MismatchingDocblockReturnType>

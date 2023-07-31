@@ -291,6 +291,8 @@ final class LazyBSONDocument implements ArrayAccess, Countable, IteratorAggregat
         foreach ($this->bson as $offset => $value) {
             $this->read[$offset] = $value;
 
+            // The offset could've been explicitly unset before, so we need to
+            // respect pre-existing entries in the "exists" list
             if (! isset($this->exists[$offset])) {
                 $this->exists[$offset] = true;
             }
@@ -312,7 +314,8 @@ final class LazyBSONDocument implements ArrayAccess, Countable, IteratorAggregat
             $this->read[$key] = $this->codecLibrary->decodeIfSupported($this->bson->get($key));
         }
 
-        // Mark the offset as "existing" if it wasn't previously marked already
+        // The offset could've been explicitly unset before, so we need to
+        // respect pre-existing entries in the "exists" list
         if (! isset($this->exists[$key])) {
             $this->exists[$key] = $found;
         }

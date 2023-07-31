@@ -31,8 +31,8 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
     {
         yield 'Default codec' => [
             'expected' => [
-                TestObject::createForFixture(2, true),
-                TestObject::createForFixture(3, true),
+                TestObject::createDecodedForFixture(2),
+                TestObject::createDecodedForFixture(3),
             ],
             'options' => [],
         ];
@@ -77,15 +77,15 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
 
     public static function provideBulkWriteOptions(): Generator
     {
-        $replacedObject = TestObject::createForFixture(3, true);
+        $replacedObject = TestObject::createDecodedForFixture(3);
         $replacedObject->x->foo = 'baz';
 
         yield 'Default codec' => [
             'expected' => [
-                TestObject::createForFixture(1, true),
-                TestObject::createForFixture(2, true),
+                TestObject::createDecodedForFixture(1),
+                TestObject::createDecodedForFixture(2),
                 $replacedObject,
-                TestObject::createForFixture(4, true),
+                TestObject::createDecodedForFixture(4),
             ],
             'options' => [],
         ];
@@ -154,7 +154,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
     public function provideFindOneAndModifyOptions(): Generator
     {
         yield 'Default codec' => [
-            'expected' => TestObject::createForFixture(1, true),
+            'expected' => TestObject::createDecodedForFixture(1),
             'options' => [],
         ];
 
@@ -213,7 +213,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
 
     public static function provideFindOneAndReplaceOptions(): Generator
     {
-        $replacedObject = TestObject::createForFixture(1, true);
+        $replacedObject = TestObject::createDecodedForFixture(1);
         $replacedObject->x->foo = 'baz';
 
         yield 'Default codec' => [
@@ -267,9 +267,9 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
     {
         yield 'Default codec' => [
             'expected' => [
-                TestObject::createForFixture(1, true),
-                TestObject::createForFixture(2, true),
-                TestObject::createForFixture(3, true),
+                TestObject::createDecodedForFixture(1),
+                TestObject::createDecodedForFixture(2),
+                TestObject::createDecodedForFixture(3),
             ],
             'options' => [],
         ];
@@ -317,7 +317,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
     public static function provideFindOneOptions(): Generator
     {
         yield 'Default codec' => [
-            'expected' => TestObject::createForFixture(1, true),
+            'expected' => TestObject::createDecodedForFixture(1),
             'options' => [],
         ];
 
@@ -357,9 +357,9 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
     {
         yield 'Default codec' => [
             'expected' => [
-                TestObject::createForFixture(1, true),
-                TestObject::createForFixture(2, true),
-                TestObject::createForFixture(3, true),
+                TestObject::createDecodedForFixture(1),
+                TestObject::createDecodedForFixture(2),
+                TestObject::createDecodedForFixture(3),
             ],
             'options' => [],
         ];
@@ -413,7 +413,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
     public static function provideInsertOneOptions(): Generator
     {
         yield 'Default codec' => [
-            'expected' => TestObject::createForFixture(1, true),
+            'expected' => TestObject::createDecodedForFixture(1),
             'options' => [],
         ];
 
@@ -449,7 +449,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
 
     public static function provideReplaceOneOptions(): Generator
     {
-        $replacedObject = TestObject::createForFixture(1, true);
+        $replacedObject = TestObject::createDecodedForFixture(1);
         $replacedObject->x->foo = 'baz';
 
         yield 'Default codec' => [

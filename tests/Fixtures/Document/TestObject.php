@@ -23,16 +23,23 @@ final class TestObject
 
     public TestNestedObject $x;
 
-    public bool $decoded;
+    public bool $decoded = false;
 
-    public static function createForFixture(int $i, bool $decoded = false): self
+    public static function createForFixture(int $id): self
     {
         $instance = new self();
-        $instance->id = $i;
-        $instance->decoded = $decoded;
+        $instance->id = $id;
 
         $instance->x = new TestNestedObject();
         $instance->x->foo = 'bar';
+
+        return $instance;
+    }
+
+    public static function createDecodedForFixture(int $id): self
+    {
+        $instance = self::createForFixture($id);
+        $instance->decoded = true;
 
         return $instance;
     }

@@ -47,7 +47,7 @@ class FindOneFunctionalTest extends FunctionalTestCase
         $operation = new FindOne($this->getDatabaseName(), $this->getCollectionName(), [], ['codec' => $codec]);
         $document = $operation->execute($this->getPrimaryServer());
 
-        $this->assertEquals(TestObject::createForFixture(1, true), $document);
+        $this->assertEquals(TestObject::createDecodedForFixture(1), $document);
     }
 
     /**

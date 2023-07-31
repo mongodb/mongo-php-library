@@ -209,9 +209,9 @@ class FindFunctionalTest extends FunctionalTestCase
 
         $this->assertEquals(
             [
-                TestObject::createForFixture(1, true),
-                TestObject::createForFixture(2, true),
-                TestObject::createForFixture(3, true),
+                TestObject::createDecodedForFixture(1),
+                TestObject::createDecodedForFixture(2),
+                TestObject::createDecodedForFixture(3),
             ],
             $cursor->toArray(),
         );

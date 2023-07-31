@@ -293,7 +293,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
 
         $result = $operation->execute($this->getPrimaryServer());
 
-        self::assertEquals(TestObject::createForFixture(1, true), $result);
+        self::assertEquals(TestObject::createDecodedForFixture(1), $result);
     }
 
     public function testFindOneAndUpdateWithCodec(): void
@@ -308,7 +308,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
 
         $result = $operation->execute($this->getPrimaryServer());
 
-        self::assertEquals(TestObject::createForFixture(1, true), $result);
+        self::assertEquals(TestObject::createDecodedForFixture(1), $result);
     }
 
     public function testFindOneAndReplaceWithCodec(): void
@@ -323,7 +323,7 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
 
         $result = $operation->execute($this->getPrimaryServer());
 
-        self::assertEquals(TestObject::createForFixture(1, true), $result);
+        self::assertEquals(TestObject::createDecodedForFixture(1), $result);
     }
 
     /**

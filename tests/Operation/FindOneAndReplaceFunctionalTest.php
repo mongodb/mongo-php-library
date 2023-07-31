@@ -28,7 +28,7 @@ class FindOneAndReplaceFunctionalTest extends FunctionalTestCase
                 );
 
                 $this->assertEquals(
-                    TestObject::createForFixture(1, true),
+                    TestObject::createDecodedForFixture(1),
                     $operation->execute($this->getPrimaryServer()),
                 );
             },

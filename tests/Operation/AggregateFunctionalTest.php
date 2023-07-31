@@ -354,8 +354,8 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
         $this->assertEquals(
             [
-                TestObject::createForFixture(2, true),
-                TestObject::createForFixture(3, true),
+                TestObject::createDecodedForFixture(2),
+                TestObject::createDecodedForFixture(3),
             ],
             $cursor->toArray(),
         );

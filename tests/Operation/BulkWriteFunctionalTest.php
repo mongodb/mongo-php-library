@@ -479,14 +479,14 @@ class BulkWriteFunctionalTest extends FunctionalTestCase
         $this->assertSame(1, $result->getMatchedCount());
         $this->assertSame(1, $result->getModifiedCount());
 
-        $replacedObject = TestObject::createForFixture(3, true);
+        $replacedObject = TestObject::createDecodedForFixture(3);
         $replacedObject->x->foo = 'baz';
 
         // Only read the last two documents as the other two don't fit our codec
         $this->assertEquals(
             [
                 $replacedObject,
-                TestObject::createForFixture(4, true),
+                TestObject::createDecodedForFixture(4),
             ],
             $this->collection->find(['_id' => ['$gte' => 3]], ['codec' => $codec])->toArray(),
         );

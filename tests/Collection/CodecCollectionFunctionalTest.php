@@ -523,6 +523,11 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
 
     private static function createObjectFixtureResult(int $id, bool $isInserted = false): BSONDocument
     {
-        return new BSONDocument(['_id' => $isInserted ? null : $id, 'id' => $id, 'x' => new BSONDocument(['foo' => 'bar']), 'decoded' => false]);
+        return new BSONDocument([
+            '_id' => $isInserted ? null : $id,
+            'id' => $id,
+            'x' => new BSONDocument(['foo' => 'bar']),
+            'decoded' => false,
+        ]);
     }
 }

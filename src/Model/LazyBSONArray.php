@@ -39,12 +39,14 @@ use function count;
 use function is_array;
 use function is_numeric;
 use function iterator_to_array;
+use function ksort;
 use function max;
 use function MongoDB\recursive_copy;
 use function sprintf;
 use function trigger_error;
 
 use const E_USER_WARNING;
+use const SORT_NUMERIC;
 
 /**
  * Model class for a BSON array.
@@ -160,6 +162,9 @@ final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate, 
     /** @return ListIterator<TValue> */
     public function getIterator(): ListIterator
     {
+        // Sort keys to ensure they are in ascending order
+        ksort($this->set, SORT_NUMERIC);
+
         $itemIterator = new AppendIterator();
         // Iterate through all fields in the BSON array
         $itemIterator->append($this->bson->getIterator());

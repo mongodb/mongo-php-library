@@ -308,4 +308,14 @@ class LazyBSONArrayTest extends TestCase
 
         $this->assertJsonStringEqualsJsonString('["foobar","baz","yay!"]', json_encode($array, JSON_THROW_ON_ERROR));
     }
+
+    public function testIteratorToArrayWithReverseKeys(): void
+    {
+        $array = new LazyBSONArray();
+        $array[2] = 'foo';
+        $array[1] = 'bar';
+        $array[0] = 'baz';
+
+        $this->assertSame(['baz', 'bar', 'foo'], iterator_to_array($array));
+    }
 }

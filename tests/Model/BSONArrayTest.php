@@ -110,4 +110,15 @@ class BSONArrayTest extends TestCase
         $this->assertInstanceOf(BSONArray::class, $array);
         $this->assertSame($data, $array->getArrayCopy());
     }
+
+    public function testBsonSerializeWithReverseKeys(): void
+    {
+        $array = new BSONArray([]);
+        $array[2] = 'foo';
+        $array[1] = 'bar';
+        $array[0] = 'baz';
+
+        // Since BSONArray uses array_values internally, the reverse order is expected
+        $this->assertSame(['foo', 'bar', 'baz'], $array->bsonSerialize());
+    }
 }

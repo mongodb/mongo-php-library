@@ -24,9 +24,6 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\UpdateResult;
 
-use function assert;
-use function is_array;
-use function is_object;
 use function MongoDB\is_document;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_pipeline;
@@ -86,6 +83,48 @@ class ReplaceOne implements Executable
      */
     public function __construct(string $databaseName, string $collectionName, $filter, $replacement, array $options = [])
     {
+        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
+        }
+
+        if (isset($options['codec'])) {
+            if (isset($options['typeMap'])) {
+                throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
+            }
+        }
+
+        $this->update = new Update(
+            $databaseName,
+            $collectionName,
+            $filter,
+            $this->validateReplacement($replacement, $options['codec'] ?? null),
+            ['multi' => false] + $options,
+        );
+    }
+
+    /**
+     * Execute the operation.
+     *
+     * @see Executable::execute()
+     * @return UpdateResult
+     * @throws UnsupportedException if collation is used and unsupported
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function execute(Server $server)
+    {
+        return $this->update->execute($server);
+    }
+
+    /**
+     * @param array|object $replacement
+     * @return array|object
+     */
+    private function validateReplacement($replacement, ?DocumentCodec $codec)
+    {
+        if ($codec) {
+            $replacement = $codec->encode($replacement);
+        }
+
         if (! is_document($replacement)) {
             throw InvalidArgumentException::expectedDocumentType('$replacement', $replacement);
         }
@@ -103,42 +142,6 @@ class ReplaceOne implements Executable
             throw new InvalidArgumentException('$replacement is an update pipeline');
         }
 
-        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
-            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
-        }
-
-        if (isset($options['codec'])) {
-            if (isset($options['typeMap'])) {
-                throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
-            }
-
-            $replacement = $options['codec']->encodeIfSupported($replacement);
-
-            // Psalm's assert-if-true annotation does not work with unions, so
-            // assert the type manually instead of using is_document
-            // See https://github.com/vimeo/psalm/issues/6831
-            assert(is_array($replacement) || is_object($replacement));
-        }
-
-        $this->update = new Update(
-            $databaseName,
-            $collectionName,
-            $filter,
-            $replacement,
-            ['multi' => false] + $options,
-        );
-    }
-
-    /**
-     * Execute the operation.
-     *
-     * @see Executable::execute()
-     * @return UpdateResult
-     * @throws UnsupportedException if collation is used and unsupported
-     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
-     */
-    public function execute(Server $server)
-    {
-        return $this->update->execute($server);
+        return $replacement;
     }
 }

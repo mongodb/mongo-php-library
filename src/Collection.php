@@ -781,8 +781,8 @@ class Collection
      *
      * @see InsertMany::__construct() for supported options
      * @see https://mongodb.com/docs/manual/reference/command/insert/
-     * @param array[]|object[] $documents The documents to insert
-     * @param array            $options   Command options
+     * @param list<object|array> $documents The documents to insert
+     * @param array              $options   Command options
      * @return InsertManyResult
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)

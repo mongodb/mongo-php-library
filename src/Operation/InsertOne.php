@@ -27,10 +27,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\InsertOneResult;
 
-use function assert;
-use function is_array;
 use function is_bool;
-use function is_object;
 use function MongoDB\is_document;
 
 /**
@@ -77,10 +74,6 @@ class InsertOne implements Executable
      */
     public function __construct(string $databaseName, string $collectionName, $document, array $options = [])
     {
-        if (! is_document($document)) {
-            throw InvalidArgumentException::expectedDocumentType('$document', $document);
-        }
-
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
         }
@@ -105,18 +98,9 @@ class InsertOne implements Executable
             unset($options['writeConcern']);
         }
 
-        if (isset($options['codec'])) {
-            $document = $options['codec']->encodeIfSupported($document);
-
-            // Psalm's assert-if-true annotation does not work with unions, so
-            // assert the type manually instead of using is_document
-            // See https://github.com/vimeo/psalm/issues/6831
-            assert(is_array($document) || is_object($document));
-        }
-
         $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;
-        $this->document = $document;
+        $this->document = $this->validateDocument($document, $options['codec'] ?? null);
         $this->options = $options;
     }
 
@@ -180,5 +164,22 @@ class InsertOne implements Executable
         }
 
         return $options;
+    }
+
+    /**
+     * @param array|object $document
+     * @return array|object
+     */
+    private function validateDocument($document, ?DocumentCodec $codec)
+    {
+        if ($codec) {
+            $document = $codec->encode($document);
+        }
+
+        if (! is_document($document)) {
+            throw InvalidArgumentException::expectedDocumentType('$document', $document);
+        }
+
+        return $document;
     }
 }

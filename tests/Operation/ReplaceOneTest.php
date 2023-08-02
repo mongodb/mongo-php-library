@@ -3,7 +3,9 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\ReplaceOne;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 
 class ReplaceOneTest extends TestCase
 {
@@ -61,5 +63,12 @@ class ReplaceOneTest extends TestCase
         return $this->createOptionDataProvider([
             'codec' => $this->getInvalidDocumentCodecValues(),
         ]);
+    }
+
+    public function testCodecRejectsInvalidDocuments(): void
+    {
+        $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue([]));
+
+        new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['y' => 1], ['codec' => new TestDocumentCodec()]);
     }
 }

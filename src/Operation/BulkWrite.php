@@ -29,12 +29,10 @@ use MongoDB\Exception\UnsupportedException;
 
 use function array_is_list;
 use function array_key_exists;
-use function assert;
 use function count;
 use function current;
 use function is_array;
 use function is_bool;
-use function is_object;
 use function key;
 use function MongoDB\is_document;
 use function MongoDB\is_first_key_operator;
@@ -141,6 +139,139 @@ class BulkWrite implements Executable
             throw new InvalidArgumentException('$operations is not a list');
         }
 
+        $options += ['ordered' => true];
+
+        if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
+            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+        }
+
+        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
+        }
+
+        if (! is_bool($options['ordered'])) {
+            throw InvalidArgumentException::invalidType('"ordered" option', $options['ordered'], 'boolean');
+        }
+
+        if (isset($options['session']) && ! $options['session'] instanceof Session) {
+            throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
+        }
+
+        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
+            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
+        }
+
+        if (isset($options['let']) && ! is_document($options['let'])) {
+            throw InvalidArgumentException::expectedDocumentType('"let" option', $options['let']);
+        }
+
+        if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {
+            unset($options['bypassDocumentValidation']);
+        }
+
+        if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
+            unset($options['writeConcern']);
+        }
+
+        $this->databaseName = $databaseName;
+        $this->collectionName = $collectionName;
+        $this->operations = $this->validateOperations($operations, $options['codec'] ?? null);
+        $this->options = $options;
+    }
+
+    /**
+     * Execute the operation.
+     *
+     * @see Executable::execute()
+     * @return BulkWriteResult
+     * @throws UnsupportedException if write concern is used and unsupported
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function execute(Server $server)
+    {
+        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
+        if ($inTransaction && isset($this->options['writeConcern'])) {
+            throw UnsupportedException::writeConcernNotSupportedInTransaction();
+        }
+
+        $bulk = new Bulk($this->createBulkWriteOptions());
+        $insertedIds = [];
+
+        foreach ($this->operations as $i => $operation) {
+            $type = key($operation);
+            $args = current($operation);
+
+            switch ($type) {
+                case self::DELETE_MANY:
+                case self::DELETE_ONE:
+                    $bulk->delete($args[0], $args[1]);
+                    break;
+
+                case self::INSERT_ONE:
+                    $insertedIds[$i] = $bulk->insert($args[0]);
+                    break;
+
+                case self::UPDATE_MANY:
+                case self::UPDATE_ONE:
+                case self::REPLACE_ONE:
+                    $bulk->update($args[0], $args[1], $args[2]);
+                    break;
+            }
+        }
+
+        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createExecuteOptions());
+
+        return new BulkWriteResult($writeResult, $insertedIds);
+    }
+
+    /**
+     * Create options for constructing the bulk write.
+     *
+     * @see https://php.net/manual/en/mongodb-driver-bulkwrite.construct.php
+     */
+    private function createBulkWriteOptions(): array
+    {
+        $options = ['ordered' => $this->options['ordered']];
+
+        foreach (['bypassDocumentValidation', 'comment'] as $option) {
+            if (isset($this->options[$option])) {
+                $options[$option] = $this->options[$option];
+            }
+        }
+
+        if (isset($this->options['let'])) {
+            $options['let'] = (object) $this->options['let'];
+        }
+
+        return $options;
+    }
+
+    /**
+     * Create options for executing the bulk write.
+     *
+     * @see https://php.net/manual/en/mongodb-driver-server.executebulkwrite.php
+     */
+    private function createExecuteOptions(): array
+    {
+        $options = [];
+
+        if (isset($this->options['session'])) {
+            $options['session'] = $this->options['session'];
+        }
+
+        if (isset($this->options['writeConcern'])) {
+            $options['writeConcern'] = $this->options['writeConcern'];
+        }
+
+        return $options;
+    }
+
+    /**
+     * @param array[] $operations
+     * @return array[]
+     */
+    private function validateOperations(array $operations, ?DocumentCodec $codec): array
+    {
         foreach ($operations as $i => $operation) {
             if (! is_array($operation)) {
                 throw InvalidArgumentException::invalidType(sprintf('$operations[%d]', $i), $operation, 'array');
@@ -163,6 +294,10 @@ class BulkWrite implements Executable
 
             switch ($type) {
                 case self::INSERT_ONE:
+                    if ($codec) {
+                        $operations[$i][$type][0] = $codec->encode($args[0]);
+                    }
+
                     break;
 
                 case self::DELETE_MANY:
@@ -188,6 +323,10 @@ class BulkWrite implements Executable
                 case self::REPLACE_ONE:
                     if (! isset($args[1]) && ! array_key_exists(1, $args)) {
                         throw new InvalidArgumentException(sprintf('Missing second argument for $operations[%d]["%s"]', $i, $type));
+                    }
+
+                    if ($codec) {
+                        $operations[$i][$type][1] = $codec->encode($args[1]);
                     }
 
                     if (! is_document($args[1])) {
@@ -272,151 +411,6 @@ class BulkWrite implements Executable
             }
         }
 
-        $options += ['ordered' => true];
-
-        if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
-            throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
-        }
-
-        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
-            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
-        }
-
-        if (! is_bool($options['ordered'])) {
-            throw InvalidArgumentException::invalidType('"ordered" option', $options['ordered'], 'boolean');
-        }
-
-        if (isset($options['session']) && ! $options['session'] instanceof Session) {
-            throw InvalidArgumentException::invalidType('"session" option', $options['session'], Session::class);
-        }
-
-        if (isset($options['writeConcern']) && ! $options['writeConcern'] instanceof WriteConcern) {
-            throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
-        }
-
-        if (isset($options['let']) && ! is_document($options['let'])) {
-            throw InvalidArgumentException::expectedDocumentType('"let" option', $options['let']);
-        }
-
-        if (isset($options['bypassDocumentValidation']) && ! $options['bypassDocumentValidation']) {
-            unset($options['bypassDocumentValidation']);
-        }
-
-        if (isset($options['writeConcern']) && $options['writeConcern']->isDefault()) {
-            unset($options['writeConcern']);
-        }
-
-        $this->databaseName = $databaseName;
-        $this->collectionName = $collectionName;
-        $this->operations = $operations;
-        $this->options = $options;
-    }
-
-    /**
-     * Execute the operation.
-     *
-     * @see Executable::execute()
-     * @return BulkWriteResult
-     * @throws UnsupportedException if write concern is used and unsupported
-     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
-     */
-    public function execute(Server $server)
-    {
-        $inTransaction = isset($this->options['session']) && $this->options['session']->isInTransaction();
-        if ($inTransaction && isset($this->options['writeConcern'])) {
-            throw UnsupportedException::writeConcernNotSupportedInTransaction();
-        }
-
-        $bulk = new Bulk($this->createBulkWriteOptions());
-        $insertedIds = [];
-
-        foreach ($this->operations as $i => $operation) {
-            $type = key($operation);
-            $args = current($operation);
-
-            switch ($type) {
-                case self::DELETE_MANY:
-                case self::DELETE_ONE:
-                    $bulk->delete($args[0], $args[1]);
-                    break;
-
-                case self::INSERT_ONE:
-                    if (isset($this->options['codec'])) {
-                        $args[0] = $this->options['codec']->encodeIfSupported($args[0]);
-
-                        // Psalm's assert-if-true annotation does not work with unions, so
-                        // assert the type manually instead of using is_document
-                        // See https://github.com/vimeo/psalm/issues/6831
-                        assert(is_array($args[0]) || is_object($args[0]));
-                    }
-
-                    $insertedIds[$i] = $bulk->insert($args[0]);
-                    break;
-
-                case self::REPLACE_ONE:
-                    if (isset($this->options['codec'])) {
-                        $args[1] = $this->options['codec']->encodeIfSupported($args[1]);
-
-                        // Psalm's assert-if-true annotation does not work with unions, so
-                        // assert the type manually instead of using is_document
-                        // See https://github.com/vimeo/psalm/issues/6831
-                        assert(is_array($args[1]) || is_object($args[1]));
-                    }
-
-                    // break intentionally missing, as replace is handled
-                    // through update as well
-
-                case self::UPDATE_MANY:
-                case self::UPDATE_ONE:
-                    $bulk->update($args[0], $args[1], $args[2]);
-                    break;
-            }
-        }
-
-        $writeResult = $server->executeBulkWrite($this->databaseName . '.' . $this->collectionName, $bulk, $this->createExecuteOptions());
-
-        return new BulkWriteResult($writeResult, $insertedIds);
-    }
-
-    /**
-     * Create options for constructing the bulk write.
-     *
-     * @see https://php.net/manual/en/mongodb-driver-bulkwrite.construct.php
-     */
-    private function createBulkWriteOptions(): array
-    {
-        $options = ['ordered' => $this->options['ordered']];
-
-        foreach (['bypassDocumentValidation', 'comment'] as $option) {
-            if (isset($this->options[$option])) {
-                $options[$option] = $this->options[$option];
-            }
-        }
-
-        if (isset($this->options['let'])) {
-            $options['let'] = (object) $this->options['let'];
-        }
-
-        return $options;
-    }
-
-    /**
-     * Create options for executing the bulk write.
-     *
-     * @see https://php.net/manual/en/mongodb-driver-server.executebulkwrite.php
-     */
-    private function createExecuteOptions(): array
-    {
-        $options = [];
-
-        if (isset($this->options['session'])) {
-            $options['session'] = $this->options['session'];
-        }
-
-        if (isset($this->options['writeConcern'])) {
-            $options['writeConcern'] = $this->options['writeConcern'];
-        }
-
-        return $options;
+        return $operations;
     }
 }

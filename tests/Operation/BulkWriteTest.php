@@ -3,7 +3,9 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\BulkWrite;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 
 class BulkWriteTest extends TestCase
 {
@@ -61,6 +63,18 @@ class BulkWriteTest extends TestCase
         new BulkWrite($this->getDatabaseName(), $this->getCollectionName(), [
             [BulkWrite::INSERT_ONE => [$document]],
         ]);
+    }
+
+    public function testInsertOneWithCodecRejectsInvalidDocuments(): void
+    {
+        $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue([]));
+
+        new BulkWrite(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [[BulkWrite::INSERT_ONE => [['x' => 1]]]],
+            ['codec' => new TestDocumentCodec()],
+        );
     }
 
     public function testDeleteManyFilterArgumentMissing(): void
@@ -221,6 +235,18 @@ class BulkWriteTest extends TestCase
     public function provideInvalidBooleanValues()
     {
         return $this->wrapValuesForDataProvider($this->getInvalidBooleanValues());
+    }
+
+    public function testReplaceOneWithCodecRejectsInvalidDocuments(): void
+    {
+        $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue([]));
+
+        new BulkWrite(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [[BulkWrite::REPLACE_ONE => [['x' => 1], ['y' => 1]]]],
+            ['codec' => new TestDocumentCodec()],
+        );
     }
 
     public function testUpdateManyFilterArgumentMissing(): void

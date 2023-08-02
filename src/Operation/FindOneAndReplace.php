@@ -24,10 +24,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
 
 use function array_key_exists;
-use function assert;
-use function is_array;
 use function is_integer;
-use function is_object;
 use function MongoDB\is_document;
 use function MongoDB\is_first_key_operator;
 use function MongoDB\is_pipeline;
@@ -111,23 +108,6 @@ class FindOneAndReplace implements Executable, Explainable
             throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
         }
 
-        if (! is_document($replacement)) {
-            throw InvalidArgumentException::expectedDocumentType('$replacement', $replacement);
-        }
-
-        // Treat empty arrays as replacement documents for BC
-        if ($replacement === []) {
-            $replacement = (object) $replacement;
-        }
-
-        if (is_first_key_operator($replacement)) {
-            throw new InvalidArgumentException('First key in $replacement is an update operator');
-        }
-
-        if (is_pipeline($replacement, true /* allowEmpty */)) {
-            throw new InvalidArgumentException('$replacement is an update pipeline');
-        }
-
         if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
             throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
         }
@@ -158,14 +138,7 @@ class FindOneAndReplace implements Executable, Explainable
 
         unset($options['projection'], $options['returnDocument']);
 
-        if (isset($options['codec'])) {
-            $replacement = $options['codec']->encodeIfSupported($replacement);
-
-            // Psalm's assert-if-true annotation does not work with unions, so
-            // assert the type manually instead of using is_document
-            // See https://github.com/vimeo/psalm/issues/6831
-            assert(is_array($replacement) || is_object($replacement));
-        }
+        $replacement = $this->validateReplacement($replacement, $options['codec'] ?? null);
 
         $this->findAndModify = new FindAndModify(
             $databaseName,
@@ -196,5 +169,35 @@ class FindOneAndReplace implements Executable, Explainable
     public function getCommandDocument()
     {
         return $this->findAndModify->getCommandDocument();
+    }
+
+    /**
+     * @param array|object $replacement
+     * @return array|object
+     */
+    private function validateReplacement($replacement, ?DocumentCodec $codec)
+    {
+        if (isset($codec)) {
+            $replacement = $codec->encode($replacement);
+        }
+
+        if (! is_document($replacement)) {
+            throw InvalidArgumentException::expectedDocumentType('$replacement', $replacement);
+        }
+
+        // Treat empty arrays as replacement documents for BC
+        if ($replacement === []) {
+            $replacement = (object) $replacement;
+        }
+
+        if (is_first_key_operator($replacement)) {
+            throw new InvalidArgumentException('First key in $replacement is an update operator');
+        }
+
+        if (is_pipeline($replacement, true /* allowEmpty */)) {
+            throw new InvalidArgumentException('$replacement is an update pipeline');
+        }
+
+        return $replacement;
     }
 }

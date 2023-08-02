@@ -260,7 +260,7 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         ];
 
         $this->expectExceptionObject(InvalidArgumentException::cannotCombineCodecAndTypeMap());
-        $this->collection->findOneAndReplace(['_id' => 1], ['foo' => 'bar'], $options);
+        $this->collection->findOneAndReplace(['_id' => 1], TestObject::createForFixture(1), $options);
     }
 
     public static function provideFindOptions(): Generator

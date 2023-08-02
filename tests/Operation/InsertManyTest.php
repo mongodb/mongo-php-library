@@ -3,7 +3,9 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\InsertMany;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 
 class InsertManyTest extends TestCase
 {
@@ -45,5 +47,12 @@ class InsertManyTest extends TestCase
             'session' => $this->getInvalidSessionValues(),
             'writeConcern' => $this->getInvalidWriteConcernValues(),
         ]);
+    }
+
+    public function testCodecRejectsInvalidDocuments(): void
+    {
+        $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue([]));
+
+        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [[]], ['codec' => new TestDocumentCodec()]);
     }
 }

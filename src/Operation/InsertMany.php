@@ -28,10 +28,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\InsertManyResult;
 
 use function array_is_list;
-use function assert;
-use function is_array;
 use function is_bool;
-use function is_object;
 use function MongoDB\is_document;
 use function sprintf;
 
@@ -76,28 +73,14 @@ class InsertMany implements Executable
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
-     * @param string           $databaseName   Database name
-     * @param string           $collectionName Collection name
-     * @param array[]|object[] $documents      List of documents to insert
-     * @param array            $options        Command options
+     * @param string             $databaseName   Database name
+     * @param string             $collectionName Collection name
+     * @param list<object|array> $documents      List of documents to insert
+     * @param array              $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct(string $databaseName, string $collectionName, array $documents, array $options = [])
     {
-        if (empty($documents)) {
-            throw new InvalidArgumentException('$documents is empty');
-        }
-
-        if (! array_is_list($documents)) {
-            throw new InvalidArgumentException('$documents is not a list');
-        }
-
-        foreach ($documents as $i => $document) {
-            if (! is_document($document)) {
-                throw InvalidArgumentException::expectedDocumentType(sprintf('$documents[%d]', $i), $document);
-            }
-        }
-
         $options += ['ordered' => true];
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
@@ -130,7 +113,7 @@ class InsertMany implements Executable
 
         $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;
-        $this->documents = $documents;
+        $this->documents = $this->validateDocuments($documents, $options['codec'] ?? null);
         $this->options = $options;
     }
 
@@ -153,15 +136,6 @@ class InsertMany implements Executable
         $insertedIds = [];
 
         foreach ($this->documents as $i => $document) {
-            if (isset($this->options['codec'])) {
-                $document = $this->options['codec']->encodeIfSupported($document);
-
-                // Psalm's assert-if-true annotation does not work with unions, so
-                // assert the type manually instead of using is_document
-                // See https://github.com/vimeo/psalm/issues/6831
-                assert(is_array($document) || is_object($document));
-            }
-
             $insertedIds[$i] = $bulk->insert($document);
         }
 
@@ -206,5 +180,32 @@ class InsertMany implements Executable
         }
 
         return $options;
+    }
+
+    /**
+     * @param list<object|array> $documents
+     * @return list<object|array>
+     */
+    private function validateDocuments(array $documents, ?DocumentCodec $codec): array
+    {
+        if (empty($documents)) {
+            throw new InvalidArgumentException('$documents is empty');
+        }
+
+        if (! array_is_list($documents)) {
+            throw new InvalidArgumentException('$documents is not a list');
+        }
+
+        foreach ($documents as $i => $document) {
+            if ($codec) {
+                $document = $documents[$i] = $codec->encode($document);
+            }
+
+            if (! is_document($document)) {
+                throw InvalidArgumentException::expectedDocumentType(sprintf('$documents[%d]', $i), $document);
+            }
+        }
+
+        return $documents;
     }
 }

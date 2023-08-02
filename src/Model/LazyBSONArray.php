@@ -299,7 +299,7 @@ final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate, 
             $this->read[$offset] = $value;
 
             // The offset could've been explicitly unset before, so we need to
-            // respect pre-existing entries in the "exists" list
+            // respect pre-existing entries in the "exists" map
             if (! isset($this->exists[$offset])) {
                 $this->exists[$offset] = true;
             }
@@ -322,7 +322,7 @@ final class LazyBSONArray implements ArrayAccess, Countable, IteratorAggregate, 
         }
 
         // The offset could've been explicitly unset before, so we need to
-        // respect pre-existing entries in the "exists" list
+        // respect pre-existing entries in the "exists" map
         if (! isset($this->exists[$offset])) {
             $this->exists[$offset] = $found;
         }

@@ -69,10 +69,7 @@ class LazyBSONArrayTest extends TestCase
 
     public function testConstructAllowsGapsInList(): void
     {
-        $array = new LazyBSONArray([
-            0 => 'foo',
-            2 => 'bar',
-        ]);
+        $array = new LazyBSONArray([0 => 'foo', 2 => 'bar']);
 
         $this->assertSame('foo', $array[0]);
         $this->assertFalse(isset($array[1]));
@@ -127,6 +124,8 @@ class LazyBSONArrayTest extends TestCase
     public function testOffsetGetForNumericOffset(LazyBSONArray $array): void
     {
         $this->assertSame('bar', $array['0']);
+        $this->assertSame('bar', $array['0.5']);
+        $this->assertSame('bar', $array[0.5]);
     }
 
     /** @dataProvider provideTestArray */
@@ -157,9 +156,18 @@ class LazyBSONArrayTest extends TestCase
 
         // Unsupported offset
         $this->assertFalse(isset($array['foo']));
+    }
 
-        // Numeric offset
-        $this->assertTrue(isset($array['1']));
+    /** @dataProvider provideTestArray */
+    public function testOffsetExistsForNumericOffset(LazyBSONArray $array): void
+    {
+        $this->assertTrue(isset($array['0']));
+        $this->assertTrue(isset($array['0.5']));
+        $this->assertTrue(isset($array[0.5]));
+
+        $this->assertFalse(isset($array['4']));
+        $this->assertFalse(isset($array['4.5']));
+        $this->assertFalse(isset($array[4.5]));
     }
 
     /** @dataProvider provideTestArray */
@@ -179,6 +187,12 @@ class LazyBSONArrayTest extends TestCase
     {
         $array['1'] = 'baz';
         $this->assertSame('baz', $array[1]);
+
+        $array[2.1] = 'yay!';
+        $this->assertSame('yay!', $array[2]);
+
+        $array['0.5'] = 'wow';
+        $this->assertSame('wow', $array[0]);
     }
 
     /** @dataProvider provideTestArray */
@@ -217,6 +231,7 @@ class LazyBSONArrayTest extends TestCase
 
         // Expect offset 3 to be skipped, offset 5 is used as 4 is already set
         $this->assertFalse(isset($array[3]));
+        $this->assertSame('yay!', $array[4]);
         $this->assertSame('bleh', $array[5]);
     }
 
@@ -231,10 +246,27 @@ class LazyBSONArrayTest extends TestCase
         unset($array[0]);
         $this->assertFalse(isset($array[0]));
 
-        // Set new value to ensure unset also clears values not read from BSON
+        // Set new value to ensure unsetting a previously modified value does not fall back to loading values from BSON
         $array[1] = (object) ['foo' => 'baz'];
         unset($array[1]);
         $this->assertFalse(isset($array[1]));
+    }
+
+    /** @dataProvider provideTestArray */
+    public function testOffsetUnsetForNumericOffsets(LazyBSONArray $array): void
+    {
+        $this->assertTrue(isset($array[0]));
+        $this->assertTrue(isset($array[1]));
+        $this->assertTrue(isset($array[2]));
+
+        unset($array['0']);
+        $this->assertFalse(isset($array[0]));
+
+        unset($array['1.5']);
+        $this->assertFalse(isset($array[1]));
+
+        unset($array[2.5]);
+        $this->assertFalse(isset($array[2]));
     }
 
     /** @dataProvider provideTestArray */
@@ -286,27 +318,27 @@ class LazyBSONArrayTest extends TestCase
         $this->assertCount(3, $array);
     }
 
-    public function testSerialization(): void
+    /** @dataProvider provideTestArray */
+    public function testSerialization(LazyBSONArray $array): void
     {
-        $array = new LazyBSONArray(PackedArray::fromPHP(['foo', 'bar', 'baz']));
-        $array[0] = 'foobar';
+        $array[2] = [0];
         $array[3] = 'yay!';
         unset($array[1]);
 
         $serialized = serialize($array);
         $unserialized = unserialize($serialized);
 
-        $this->assertEquals(['foobar', 'baz', 'yay!'], iterator_to_array($unserialized));
+        $this->assertEquals(['bar', [0], 'yay!'], iterator_to_array($unserialized));
     }
 
-    public function testJsonSerialize(): void
+    /** @dataProvider provideTestArray */
+    public function testJsonSerialize(LazyBSONArray $array): void
     {
-        $array = new LazyBSONArray(PackedArray::fromPHP(['foo', 'bar', 'baz']));
-        $array[0] = 'foobar';
+        $array[2] = [0];
         $array[3] = 'yay!';
         unset($array[1]);
 
-        $this->assertJsonStringEqualsJsonString('["foobar","baz","yay!"]', json_encode($array, JSON_THROW_ON_ERROR));
+        $this->assertJsonStringEqualsJsonString('["bar",[0],"yay!"]', json_encode($array, JSON_THROW_ON_ERROR));
     }
 
     public function testIteratorToArrayWithReverseKeys(): void

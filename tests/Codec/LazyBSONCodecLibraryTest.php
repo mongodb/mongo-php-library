@@ -36,18 +36,18 @@ class LazyBSONCodecLibraryTest extends TestCase
         ];
 
         yield 'array' => [
-            'expected' => [PackedArray::fromPHP($array)],
-            'value' => [new LazyBSONArray($array)],
+            'expected' => [PackedArray::fromPHP($array), Document::fromPHP($document)],
+            'value' => [new LazyBSONArray($array), new LazyBSONDocument($document)],
         ];
 
         yield 'hash' => [
-            'expected' => ['foo' => PackedArray::fromPHP($array)],
-            'value' => ['foo' => new LazyBSONArray($array)],
+            'expected' => ['array' => PackedArray::fromPHP($array), 'document' => Document::fromPHP($document)],
+            'value' => ['array' => new LazyBSONArray($array), 'document' => new LazyBSONDocument($document)],
         ];
 
         yield 'object' => [
-            'expected' => (object) ['foo' => PackedArray::fromPHP($array)],
-            'value' => (object) ['foo' => new LazyBSONArray($array)],
+            'expected' => (object) ['array' => PackedArray::fromPHP($array), 'document' => Document::fromPHP($document)],
+            'value' => (object) ['array' => new LazyBSONArray($array), 'document' => new LazyBSONDocument($document)],
         ];
     }
 
@@ -64,29 +64,29 @@ class LazyBSONCodecLibraryTest extends TestCase
             'array' => [0, 1, 2],
         ]);
 
-        yield 'packedArray' => [
+        yield 'PackedArray' => [
             'expected' => new LazyBSONArray($packedArray),
             'value' => $packedArray,
         ];
 
-        yield 'document' => [
+        yield 'Document' => [
             'expected' => new LazyBSONDocument($document),
             'value' => $document,
         ];
 
         yield 'array' => [
-            'expected' => [new LazyBSONArray($packedArray)],
-            'value' => [$packedArray],
+            'expected' => [new LazyBSONArray($packedArray), new LazyBSONDocument($document)],
+            'value' => [$packedArray, $document],
         ];
 
         yield 'hash' => [
-            'expected' => ['foo' => new LazyBSONArray($packedArray)],
-            'value' => ['foo' => $packedArray],
+            'expected' => ['array' => new LazyBSONArray($packedArray), 'document' => new LazyBSONDocument($document)],
+            'value' => ['array' => $packedArray, 'document' => $document],
         ];
 
         yield 'object' => [
-            'expected' => (object) ['foo' => new LazyBSONArray($packedArray)],
-            'value' => (object) ['foo' => $packedArray],
+            'expected' => (object) ['array' => new LazyBSONArray($packedArray), 'document' => new LazyBSONDocument($document)],
+            'value' => (object) ['array' => $packedArray, 'document' => $document],
         ];
     }
 

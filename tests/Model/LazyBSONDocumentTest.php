@@ -82,7 +82,7 @@ class LazyBSONDocumentTest extends TestCase
     }
 
     /** @dataProvider provideTestDocumentWithNativeArrays */
-    public function testConstructWithArrayUsesLiteralValues($document): void
+    public function testConstructWithArrayUsesLiteralValues(LazyBSONDocument $document): void
     {
         $this->assertInstanceOf(stdClass::class, $document->document);
         $this->assertIsArray($document->hash);
@@ -238,7 +238,7 @@ class LazyBSONDocumentTest extends TestCase
         unset($document->foo);
         $this->assertFalse(isset($document->foo));
 
-        // Set new value to ensure unset also clears values not read from BSON
+        // Set new value to ensure unsetting a previously modified value does not fall back to loading values from BSON
         $document->document = (object) ['foo' => 'baz'];
         unset($document->document);
         $this->assertFalse(isset($document->document));
@@ -255,7 +255,7 @@ class LazyBSONDocumentTest extends TestCase
         unset($document['foo']);
         $this->assertFalse(isset($document['foo']));
 
-        // Set new value to ensure unset also clears values not read from BSON
+        // Set new value to ensure unsetting a previously modified value does not fall back to loading values from BSON
         $document['document'] = (object) ['foo' => 'baz'];
         unset($document['document']);
         $this->assertFalse(isset($document['document']));
@@ -318,26 +318,26 @@ class LazyBSONDocumentTest extends TestCase
         $this->assertCount(2, $document);
     }
 
-    public function testSerialization(): void
+    /** @dataProvider provideTestDocument */
+    public function testSerialization(LazyBSONDocument $document): void
     {
-        $document = new LazyBSONDocument(Document::fromPHP(['foo' => 'bar', 'bar' => 'baz']));
-        $document['foo'] = 'foobar';
-        $document['baz'] = 'yay!';
-        unset($document['bar']);
+        $document['array'] = [0];
+        $document['new'] = 'yay!';
+        unset($document['document']);
 
         $serialized = serialize($document);
         $unserialized = unserialize($serialized);
 
-        $this->assertEquals(['foo' => 'foobar', 'baz' => 'yay!'], iterator_to_array($unserialized));
+        $this->assertEquals(['foo' => 'bar', 'array' => [0], 'new' => 'yay!'], iterator_to_array($unserialized));
     }
 
-    public function testJsonSerialize(): void
+    /** @dataProvider provideTestDocument */
+    public function testJsonSerialize(LazyBSONDocument $document): void
     {
-        $document = new LazyBSONDocument(Document::fromPHP(['foo' => 'bar', 'bar' => 'baz']));
-        $document['foo'] = 'foobar';
-        $document['baz'] = 'yay!';
-        unset($document['bar']);
+        $document['array'] = [0];
+        $document['new'] = 'yay!';
+        unset($document['document']);
 
-        $this->assertJsonStringEqualsJsonString('{"foo":"foobar","baz":"yay!"}', json_encode($document, JSON_THROW_ON_ERROR));
+        $this->assertJsonStringEqualsJsonString('{"foo":"bar","array":[0],"new":"yay!"}', json_encode($document, JSON_THROW_ON_ERROR));
     }
 }

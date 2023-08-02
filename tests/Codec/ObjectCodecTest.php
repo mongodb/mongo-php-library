@@ -70,7 +70,7 @@ class ObjectCodecTest extends TestCase
     private function getCodecLibrary(): CodecLibrary
     {
         return new CodecLibrary(
-        /** @template-implements Codec<string, string> */
+            /** @template-implements Codec<string, string> */
             new class implements Codec
             {
                 use DecodeIfSupported;

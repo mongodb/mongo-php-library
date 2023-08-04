@@ -294,6 +294,8 @@ class BulkWrite implements Executable
 
             switch ($type) {
                 case self::INSERT_ONE:
+                    // $args[0] was already validated above. Since DocumentCodec::encode will always return a Document
+                    // instance, there is no need to re-validate the returned value here.
                     if ($codec) {
                         $operations[$i][$type][0] = $codec->encode($args[0]);
                     }

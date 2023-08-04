@@ -21,6 +21,7 @@
     },
     "require-dev": {
         "doctrine/coding-standard": "^11.1",
+        "phpbench/phpbench": "^1.2",
         "rector/rector": "^0.16.0",
         "squizlabs/php_codesniffer": "^3.7",
         "symfony/phpunit-bridge": "^5.2",
@@ -31,10 +32,14 @@
         "files": [ "src/functions.php" ]
     },
     "autoload-dev": {
-        "psr-4": { "MongoDB\\Tests\\": "tests/" },
+        "psr-4": {
+            "MongoDB\\Tests\\": "tests/",
+            "MongoDB\\Benchmark\\": "benchmark/"
+        },
         "files": [ "tests/PHPUnit/Functions.php" ]
     },
     "scripts": {
+        "benchmark": "phpbench run --report=aggregate",
         "checks": [
             "@check:cs",
             "@check:psalm",

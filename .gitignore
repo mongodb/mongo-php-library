@@ -15,4 +15,8 @@ phpcs.xml
 # psalm
 psalm.xml
 
+# phpbench
+.phpbench/
+phpbench.json
+
 mongocryptd.pid

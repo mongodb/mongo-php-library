@@ -1,6 +1,7 @@
 .* export-ignore
 *.md export-ignore
 tests export-ignore
+benchmark export-ignore
 docs export-ignore
 examples export-ignore
 mongo-orchestration export-ignore

@@ -262,10 +262,7 @@ class FindAndModify implements Executable, Explainable
             $result = current($cursor->toArray());
             assert($result instanceof Document);
 
-            $decoded = $this->options['codec']->decodeIfSupported($result->get('value'));
-            assert($decoded === null || is_object($decoded));
-
-            return $decoded;
+            return $this->options['codec']->decode($result->get('value'));
         }
 
         if (isset($this->options['typeMap'])) {

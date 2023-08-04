@@ -87,10 +87,8 @@ class ReplaceOne implements Executable
             throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
         }
 
-        if (isset($options['codec'])) {
-            if (isset($options['typeMap'])) {
-                throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
-            }
+        if (isset($options['codec'], $options['typeMap'])) {
+            throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
         }
 
         $this->update = new Update(

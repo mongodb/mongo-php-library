@@ -258,9 +258,8 @@ class Collection
      */
     public function bulkWrite(array $operations, array $options = [])
     {
-        $options = $this->inheritWriteOptions(
-            $this->inheritCodec($options),
-        );
+        $options = $this->inheritWriteOptions($options);
+        $options = $this->inheritCodec($options);
 
         $operation = new BulkWrite($this->databaseName, $this->collectionName, $operations, $options);
 
@@ -426,9 +425,8 @@ class Collection
      */
     public function distinct(string $fieldName, $filter = [], array $options = [])
     {
-        $options = $this->inheritReadOptions(
-            $this->inheritTypeMap($options),
-        );
+        $options = $this->inheritReadOptions($options);
+        $options = $this->inheritTypeMap($options);
 
         $operation = new Distinct($this->databaseName, $this->collectionName, $fieldName, $filter, $options);
 
@@ -449,9 +447,8 @@ class Collection
     {
         $server = select_server($this->manager, $options);
 
-        $options = $this->inheritWriteOptions(
-            $this->inheritTypeMap($options),
-        );
+        $options = $this->inheritWriteOptions($options);
+        $options = $this->inheritTypeMap($options);
 
         if (! isset($options['encryptedFields'])) {
             $options['encryptedFields'] = get_encrypted_fields_from_driver($this->databaseName, $this->collectionName, $this->manager)
@@ -484,9 +481,8 @@ class Collection
             throw new InvalidArgumentException('dropIndexes() must be used to drop multiple indexes');
         }
 
-        $options = $this->inheritWriteOptions(
-            $this->inheritTypeMap($options),
-        );
+        $options = $this->inheritWriteOptions($options);
+        $options = $this->inheritTypeMap($options);
 
         $operation = new DropIndexes($this->databaseName, $this->collectionName, $indexName, $options);
 
@@ -505,9 +501,8 @@ class Collection
      */
     public function dropIndexes(array $options = [])
     {
-        $options = $this->inheritWriteOptions(
-            $this->inheritTypeMap($options),
-        );
+        $options = $this->inheritWriteOptions($options);
+        $options = $this->inheritTypeMap($options);
 
         $operation = new DropIndexes($this->databaseName, $this->collectionName, '*', $options);
 
@@ -573,9 +568,8 @@ class Collection
      */
     public function find($filter = [], array $options = [])
     {
-        $options = $this->inheritReadOptions(
-            $this->inheritCodecOrTypeMap($options),
-        );
+        $options = $this->inheritReadOptions($options);
+        $options = $this->inheritCodecOrTypeMap($options);
 
         $operation = new Find($this->databaseName, $this->collectionName, $filter, $options);
 
@@ -596,9 +590,8 @@ class Collection
      */
     public function findOne($filter = [], array $options = [])
     {
-        $options = $this->inheritReadOptions(
-            $this->inheritCodecOrTypeMap($options),
-        );
+        $options = $this->inheritReadOptions($options);
+        $options = $this->inheritCodecOrTypeMap($options);
 
         $operation = new FindOne($this->databaseName, $this->collectionName, $filter, $options);
 
@@ -622,9 +615,8 @@ class Collection
      */
     public function findOneAndDelete($filter, array $options = [])
     {
-        $options = $this->inheritWriteOptions(
-            $this->inheritCodecOrTypeMap($options),
-        );
+        $options = $this->inheritWriteOptions($options);
+        $options = $this->inheritCodecOrTypeMap($options);
 
         $operation = new FindOneAndDelete($this->databaseName, $this->collectionName, $filter, $options);
 
@@ -653,9 +645,8 @@ class Collection
      */
     public function findOneAndReplace($filter, $replacement, array $options = [])
     {
-        $options = $this->inheritWriteOptions(
-            $this->inheritCodecOrTypeMap($options),
-        );
+        $options = $this->inheritWriteOptions($options);
+        $options = $this->inheritCodecOrTypeMap($options);
 
         $operation = new FindOneAndReplace($this->databaseName, $this->collectionName, $filter, $replacement, $options);
 
@@ -684,9 +675,8 @@ class Collection
      */
     public function findOneAndUpdate($filter, $update, array $options = [])
     {
-        $options = $this->inheritWriteOptions(
-            $this->inheritCodecOrTypeMap($options),
-        );
+        $options = $this->inheritWriteOptions($options);
+        $options = $this->inheritCodecOrTypeMap($options);
 
         $operation = new FindOneAndUpdate($this->databaseName, $this->collectionName, $filter, $update, $options);
 
@@ -789,9 +779,8 @@ class Collection
      */
     public function insertMany(array $documents, array $options = [])
     {
-        $options = $this->inheritWriteOptions(
-            $this->inheritCodec($options),
-        );
+        $options = $this->inheritWriteOptions($options);
+        $options = $this->inheritCodec($options);
 
         $operation = new InsertMany($this->databaseName, $this->collectionName, $documents, $options);
 
@@ -811,9 +800,8 @@ class Collection
      */
     public function insertOne($document, array $options = [])
     {
-        $options = $this->inheritWriteOptions(
-            $this->inheritCodec($options),
-        );
+        $options = $this->inheritWriteOptions($options);
+        $options = $this->inheritCodec($options);
 
         $operation = new InsertOne($this->databaseName, $this->collectionName, $document, $options);
 
@@ -872,9 +860,8 @@ class Collection
             $options['readConcern'] = $this->readConcern;
         }
 
-        $options = $this->inheritWriteOptions(
-            $this->inheritTypeMap($options),
-        );
+        $options = $this->inheritWriteOptions($options);
+        $options = $this->inheritTypeMap($options);
 
         $operation = new MapReduce($this->databaseName, $this->collectionName, $map, $reduce, $out, $options);
 
@@ -899,9 +886,8 @@ class Collection
             $toDatabaseName = $this->databaseName;
         }
 
-        $options = $this->inheritWriteOptions(
-            $this->inheritTypeMap($options),
-        );
+        $options = $this->inheritWriteOptions($options);
+        $options = $this->inheritTypeMap($options);
 
         $operation = new RenameCollection($this->databaseName, $this->collectionName, $toDatabaseName, $toCollectionName, $options);
 
@@ -923,9 +909,8 @@ class Collection
      */
     public function replaceOne($filter, $replacement, array $options = [])
     {
-        $options = $this->inheritWriteOptions(
-            $this->inheritCodec($options),
-        );
+        $options = $this->inheritWriteOptions($options);
+        $options = $this->inheritCodec($options);
 
         $operation = new ReplaceOne($this->databaseName, $this->collectionName, $filter, $replacement, $options);
 
@@ -987,9 +972,8 @@ class Collection
      */
     public function watch(array $pipeline = [], array $options = [])
     {
-        $options = $this->inheritReadOptions(
-            $this->inheritCodecOrTypeMap($options),
-        );
+        $options = $this->inheritReadOptions($options);
+        $options = $this->inheritCodecOrTypeMap($options);
 
         $operation = new Watch($this->manager, $this->databaseName, $this->collectionName, $pipeline, $options);
 

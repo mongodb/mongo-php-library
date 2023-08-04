@@ -53,6 +53,6 @@ class InsertManyTest extends TestCase
     {
         $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue([]));
 
-        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [[]], ['codec' => new TestDocumentCodec()]);
+        new InsertMany($this->getDatabaseName(), $this->getCollectionName(), [['x' => 1]], ['codec' => new TestDocumentCodec()]);
     }
 }

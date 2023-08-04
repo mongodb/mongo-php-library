@@ -37,6 +37,6 @@ class InsertOneTest extends TestCase
     {
         $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue([]));
 
-        new InsertOne($this->getDatabaseName(), $this->getCollectionName(), [], ['codec' => new TestDocumentCodec()]);
+        new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['codec' => new TestDocumentCodec()]);
     }
 }

@@ -213,9 +213,7 @@ class Collection
     {
         $hasWriteStage = is_last_pipeline_operator_write($pipeline);
 
-        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
-            $options['readPreference'] = $this->readPreference;
-        }
+        $options = $this->inheritReadPreference($options);
 
         $server = $hasWriteStage
             ? select_server_for_aggregate_write_stage($this->manager, $options)
@@ -223,15 +221,9 @@ class Collection
 
         /* MongoDB 4.2 and later supports a read concern when an $out stage is
          * being used, but earlier versions do not.
-         *
-         * A read concern is also not compatible with transactions.
          */
-        if (
-            ! isset($options['readConcern']) &&
-            ! is_in_transaction($options) &&
-            ( ! $hasWriteStage || server_supports_feature($server, self::WIRE_VERSION_FOR_READ_CONCERN_WITH_WRITE_STAGE))
-        ) {
-            $options['readConcern'] = $this->readConcern;
+        if (! $hasWriteStage || server_supports_feature($server, self::WIRE_VERSION_FOR_READ_CONCERN_WITH_WRITE_STAGE)) {
+            $options = $this->inheritReadConcern($options);
         }
 
         $options = $this->inheritCodecOrTypeMap($options);
@@ -543,10 +535,7 @@ class Collection
      */
     public function explain(Explainable $explainable, array $options = [])
     {
-        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
-            $options['readPreference'] = $this->readPreference;
-        }
-
+        $options = $this->inheritReadPreference($options);
         $options = $this->inheritTypeMap($options);
 
         $operation = new Explain($this->databaseName, $explainable, $options);
@@ -842,22 +831,18 @@ class Collection
     {
         $hasOutputCollection = ! is_mapreduce_output_inline($out);
 
-        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
-            $options['readPreference'] = $this->readPreference;
-        }
-
         // Check if the out option is inline because we will want to coerce a primary read preference if not
         if ($hasOutputCollection) {
             $options['readPreference'] = new ReadPreference(ReadPreference::PRIMARY);
+        } else {
+            $options = $this->inheritReadPreference($options);
         }
 
         /* A "majority" read concern is not compatible with inline output, so
          * avoid providing the Collection's read concern if it would conflict.
-         *
-         * A read concern is also not compatible with transactions.
          */
-        if (! isset($options['readConcern']) && ! ($hasOutputCollection && $this->readConcern->getLevel() === ReadConcern::MAJORITY) && ! is_in_transaction($options)) {
-            $options['readConcern'] = $this->readConcern;
+        if (! $hasOutputCollection || $this->readConcern->getLevel() !== ReadConcern::MAJORITY) {
+            $options = $this->inheritReadConcern($options);
         }
 
         $options = $this->inheritWriteOptions($options);
@@ -1035,17 +1020,28 @@ class Collection
         return $options;
     }
 
-    private function inheritReadOptions(array $options): array
+    private function inheritReadConcern(array $options): array
     {
         // ReadConcern and ReadPreference may not change within a transaction
-        if (! is_in_transaction($options)) {
-            if (! isset($options['readConcern'])) {
-                $options['readConcern'] = $this->readConcern;
-            }
+        if (! isset($options['readConcern']) && ! is_in_transaction($options)) {
+            $options['readConcern'] = $this->readConcern;
+        }
 
-            if (! isset($options['readPreference'])) {
-                $options['readPreference'] = $this->readPreference;
-            }
+        return $options;
+    }
+
+    private function inheritReadOptions(array $options): array
+    {
+        $options = $this->inheritReadConcern($options);
+
+        return $this->inheritReadPreference($options);
+    }
+
+    private function inheritReadPreference(array $options): array
+    {
+        // ReadConcern and ReadPreference may not change within a transaction
+        if (! isset($options['readPreference']) && ! is_in_transaction($options)) {
+            $options['readPreference'] = $this->readPreference;
         }
 
         return $options;

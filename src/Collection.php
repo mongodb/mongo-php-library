@@ -445,10 +445,10 @@ class Collection
      */
     public function drop(array $options = [])
     {
-        $server = select_server($this->manager, $options);
-
         $options = $this->inheritWriteOptions($options);
         $options = $this->inheritTypeMap($options);
+
+        $server = select_server($this->manager, $options);
 
         if (! isset($options['encryptedFields'])) {
             $options['encryptedFields'] = get_encrypted_fields_from_driver($this->databaseName, $this->collectionName, $this->manager)

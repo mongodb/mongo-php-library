@@ -80,21 +80,18 @@ final class DocumentBench extends BaseBench
     public function benchIteration(): void
     {
         // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedForeach
-        foreach (self::getBSONDocument() as $key => $value) {
-        }
+        foreach (self::getBSONDocument() as $key => $value);
     }
 
     public function benchIterationAsArray(): void
     {
         // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedForeach
-        foreach (self::getBSONDocument()->toPHP(['root' => 'array']) as $key => $value) {
-        }
+        foreach (self::getBSONDocument()->toPHP(['root' => 'array']) as $key => $value);
     }
 
     public function benchIterationAsObject(): void
     {
         // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedForeach
-        foreach (self::getBSONDocument()->toPHP() as $key => $value) {
-        }
+        foreach (self::getBSONDocument()->toPHP() as $key => $value);
     }
 }

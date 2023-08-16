@@ -83,21 +83,18 @@ final class PackedArrayBench extends BaseBench
     public function benchIteration(): void
     {
         // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedForeach
-        foreach (self::getBSONArray() as $key => $value) {
-        }
+        foreach (self::getBSONArray() as $key => $value);
     }
 
     public function benchIterationAfterIteratorToArray(): void
     {
         // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedForeach
-        foreach (iterator_to_array(self::getBSONArray()) as $key => $value) {
-        }
+        foreach (iterator_to_array(self::getBSONArray()) as $key => $value);
     }
 
     public function benchIterationAsArray(): void
     {
         // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedForeach
-        foreach (self::getBSONArray()->toPHP() as $key => $value) {
-        }
+        foreach (self::getBSONArray()->toPHP() as $key => $value);
     }
 }

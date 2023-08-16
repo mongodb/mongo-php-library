@@ -58,18 +58,21 @@ final class PackedArrayBench extends BaseBench
     public function benchIteration(): void
     {
         // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedForeach
+        // phpcs:ignore Generic.ControlStructures.InlineControlStructure.NotAllowed
         foreach (self::$array as $key => $value);
     }
 
     public function benchIterationAfterIteratorToArray(): void
     {
         // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedForeach
+        // phpcs:ignore Generic.ControlStructures.InlineControlStructure.NotAllowed
         foreach (iterator_to_array(self::$array) as $key => $value);
     }
 
     public function benchIterationAsArray(): void
     {
         // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedForeach
+        // phpcs:ignore Generic.ControlStructures.InlineControlStructure.NotAllowed
         foreach (self::$array->toPHP() as $key => $value);
     }
 }

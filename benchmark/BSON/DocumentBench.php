@@ -57,18 +57,21 @@ final class DocumentBench extends BaseBench
     public function benchIteration(): void
     {
         // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedForeach
+        // phpcs:ignore Generic.ControlStructures.InlineControlStructure.NotAllowed
         foreach (self::$document as $key => $value);
     }
 
     public function benchIterationAsArray(): void
     {
         // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedForeach
+        // phpcs:ignore Generic.ControlStructures.InlineControlStructure.NotAllowed
         foreach (self::$document->toPHP(['root' => 'array']) as $key => $value);
     }
 
     public function benchIterationAsObject(): void
     {
         // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedForeach
+        // phpcs:ignore Generic.ControlStructures.InlineControlStructure.NotAllowed
         foreach (self::$document->toPHP() as $key => $value);
     }
 }

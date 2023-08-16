@@ -8,6 +8,7 @@ mongo-orchestration export-ignore
 stubs export-ignore
 tools export-ignore
 Makefile export-ignore
+phpbench.json.dist export-ignore
 phpcs.xml.dist export-ignore
 phpunit.evergreen.xml export-ignore
 phpunit.xml.dist export-ignore

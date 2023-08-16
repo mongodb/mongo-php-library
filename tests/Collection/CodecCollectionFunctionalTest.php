@@ -395,6 +395,8 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         $result = $this->collection->insertMany($documents, $options);
         $this->assertSame(3, $result->getInsertedCount());
 
+        // Add missing identifiers. This is relevant for the "No codec" data set, as the encoded document will not have
+        // an "_id" field and the driver will automatically generate one.
         foreach ($expected as $index => &$expectedDocument) {
             if ($expectedDocument instanceof BSONDocument && $expectedDocument->_id === null) {
                 $expectedDocument->_id = $result->getInsertedIds()[$index];
@@ -434,6 +436,8 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         $result = $this->collection->insertOne(TestObject::createForFixture(1), $options);
         $this->assertSame(1, $result->getInsertedCount());
 
+        // Add missing identifiers. This is relevant for the "No codec" data set, as the encoded document will not have
+        // an "_id" field and the driver will automatically generate one.
         if ($expected instanceof BSONDocument && $expected->_id === null) {
             $expected->_id = $result->getInsertedId();
         }

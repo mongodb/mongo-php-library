@@ -128,6 +128,23 @@ OUTPUT;
             'expectedOutput' => $expectedOutput,
         ];
 
+        /* Note: Do not assert output beyond the initial topology events, as it
+         * may vary based on the test environment. PHPUnit's matching behavior
+         * for "%A" also seems to differ slightly from run-tests.php, otherwise
+         * we could assert the final topologyClosed event. */
+        $expectedOutput = <<<'OUTPUT'
+topologyOpening: %x was opened
+
+topologyChanged: %x changed from Unknown to %s
+
+%A
+OUTPUT;
+
+        yield 'sdam_logger' => [
+            'file' => __DIR__ . '/../examples/sdam_logger.php',
+            'expectedOutput' => $expectedOutput,
+        ];
+
         $expectedOutput = <<<'OUTPUT'
 MongoDB\Examples\TypeMapEntry Object
 (

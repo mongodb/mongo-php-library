@@ -436,8 +436,8 @@ class CodecCollectionFunctionalTest extends FunctionalTestCase
         $result = $this->collection->insertOne(TestObject::createForFixture(1), $options);
         $this->assertSame(1, $result->getInsertedCount());
 
-        // Add missing identifiers. This is relevant for the "No codec" data set, as the encoded document will not have
-        // an "_id" field and the driver will automatically generate one.
+        // Add missing identifiers. This is relevant for the "No codec" data set, as the encoded document will have an
+        // automatically generated identifier, which needs to be used in the expected document.
         if ($expected instanceof BSONDocument && $expected->_id === null) {
             $expected->_id = $result->getInsertedId();
         }

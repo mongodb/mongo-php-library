@@ -296,6 +296,20 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         self::assertEquals(TestObject::createDecodedForFixture(1), $result);
     }
 
+    public function testFindOneAndDeleteNothingWithCodec(): void
+    {
+        // When the query does not match any documents, the operation returns null
+        $operation = new FindAndModify(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            ['remove' => true, 'codec' => new TestDocumentCodec()],
+        );
+
+        $result = $operation->execute($this->getPrimaryServer());
+
+        self::assertNull($result);
+    }
+
     public function testFindOneAndUpdateWithCodec(): void
     {
         $this->createFixtures(1);
@@ -311,6 +325,20 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         self::assertEquals(TestObject::createDecodedForFixture(1), $result);
     }
 
+    public function testFindOneAndUpdateNothingWithCodec(): void
+    {
+        // When the query does not match any documents, the operation returns null
+        $operation = new FindAndModify(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            ['update' => ['$set' => ['x.foo' => 'baz']], 'codec' => new TestDocumentCodec()],
+        );
+
+        $result = $operation->execute($this->getPrimaryServer());
+
+        self::assertNull($result);
+    }
+
     public function testFindOneAndReplaceWithCodec(): void
     {
         $this->createFixtures(1);
@@ -324,6 +352,20 @@ class FindAndModifyFunctionalTest extends FunctionalTestCase
         $result = $operation->execute($this->getPrimaryServer());
 
         self::assertEquals(TestObject::createDecodedForFixture(1), $result);
+    }
+
+    public function testFindOneAndReplaceNothingWithCodec(): void
+    {
+        // When the query does not match any documents, the operation returns null
+        $operation = new FindAndModify(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            ['update' => ['_id' => 1], 'codec' => new TestDocumentCodec()],
+        );
+
+        $result = $operation->execute($this->getPrimaryServer());
+
+        self::assertNull($result);
     }
 
     /**

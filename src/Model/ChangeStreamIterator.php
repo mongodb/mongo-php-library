@@ -49,7 +49,7 @@ use function MongoDB\is_document;
  *
  * @internal
  * @template TValue of array|object
- * @template-extends IteratorIterator<int, TValue, Iterator<int, TValue>>
+ * @template-extends IteratorIterator<int, TValue, CursorInterface<int, TValue>&Iterator<int, TValue>>
  */
 class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 {

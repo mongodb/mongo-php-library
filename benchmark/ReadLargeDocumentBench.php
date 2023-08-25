@@ -3,6 +3,8 @@
 namespace MongoDB\Benchmark;
 
 use Generator;
+use MongoDB\Benchmark\Fixtures\PassThruCodec;
+use MongoDB\Benchmark\Fixtures\ToObjectCodec;
 use MongoDB\BSON\Document;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
@@ -40,7 +42,7 @@ final class ReadLargeDocumentBench extends BaseBench
     {
         yield 'Driver default typemap' => [
             'codec' => null,
-            'typeMap' => [],
+            'typeMap' => null,
             'accessor' => 'object',
         ];
 
@@ -64,6 +66,18 @@ final class ReadLargeDocumentBench extends BaseBench
             'codec' => null,
             'typeMap' => ['root' => 'bson'],
             'accessor' => 'bson',
+        ];
+
+        yield 'Codec (pass thru)' => [
+            'codec' => new PassThruCodec(),
+            'typeMap' => null,
+            'accessor' => 'bson',
+        ];
+
+        yield 'Codec (to object)' => [
+            'codec' => new ToObjectCodec(),
+            'typeMap' => null,
+            'accessor' => 'object',
         ];
     }
 

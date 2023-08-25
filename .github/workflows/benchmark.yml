@@ -1,0 +1,77 @@
+name: "Performance Benchmark"
+
+on:
+  pull_request:
+    branches:
+      - "v*.*"
+      - "master"
+      - "feature/*"
+    paths-ignore:
+      - "docs/**"
+  push:
+    branches:
+      - "v*.*"
+      - "master"
+      - "feature/*"
+    paths-ignore:
+      - "docs/**"
+
+env:
+  PHP_VERSION: "8.2"
+  DRIVER_VERSION: "stable"
+
+jobs:
+  psalm:
+    name: "phpbench"
+    runs-on: "ubuntu-22.04"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v3"
+
+      - id: setup-mongodb
+        uses: mongodb-labs/drivers-evergreen-tools@master
+        with:
+          version: "6.0"
+          topology: "server"
+          skip-legacy-shell: true
+
+      - name: Setup cache environment
+        id: extcache
+        uses: shivammathur/cache-extensions@v1
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: "mongodb-${{ ENV.DRIVER_VERSION }}"
+          key: "extcache-v1"
+
+      - name: Cache extensions
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.extcache.outputs.dir }}
+          key: ${{ steps.extcache.outputs.key }}
+          restore-keys: ${{ steps.extcache.outputs.key }}
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          extensions: "mongodb-${{ ENV.DRIVER_VERSION }}"
+          php-version: "${{ env.PHP_VERSION }}"
+
+      - name: "Show driver information"
+        run: "php --ri mongodb"
+
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@2.2.0"
+        with:
+          composer-options: "--no-suggest"
+
+      - name: "Run phpbench"
+        run: "vendor/bin/phpbench run --report=aggregate --report=bar_chart_time --output html"
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v3
+        with:
+          name: phpbench-${{ github.sha }}.html
+          path: .phpbench/html/index.html
+          retention-days: 3

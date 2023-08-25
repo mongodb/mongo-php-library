@@ -55,6 +55,15 @@ final class PackedArrayBench extends BaseBench
         self::$array->toPHP();
     }
 
+    public function benchToPHPArrayViaIteration(): void
+    {
+        $array = [];
+
+        foreach (self::$array as $key => $value) {
+            $array[$key] = $value;
+        }
+    }
+
     public function benchIteration(): void
     {
         // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedForeach

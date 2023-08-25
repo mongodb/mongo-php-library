@@ -9,8 +9,8 @@ use function getenv;
 
 abstract class BaseBench
 {
-    protected const LARGE_FILE_PATH = __DIR__ . '/data/large_doc.json';
-    protected const TWEET_FILE_PATH = __DIR__ . '/data/tweet.json';
+    protected const LARGE_FILE_PATH = __DIR__ . '/Fixtures/data/large_doc.json';
+    protected const TWEET_FILE_PATH = __DIR__ . '/Fixtures/data/tweet.json';
 
     private static ?Collection $collection;
 

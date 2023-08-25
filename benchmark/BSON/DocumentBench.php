@@ -5,6 +5,7 @@ namespace MongoDB\Benchmark\BSON;
 use MongoDB\Benchmark\BaseBench;
 use MongoDB\BSON\Document;
 use PhpBench\Attributes\BeforeMethods;
+use stdClass;
 
 use function file_get_contents;
 use function iterator_to_array;
@@ -47,6 +48,15 @@ final class DocumentBench extends BaseBench
     public function benchToPHPObject(): void
     {
         self::$document->toPHP();
+    }
+
+    public function benchToPHPObjectViaIteration(): void
+    {
+        $object = new stdClass();
+
+        foreach (self::$document as $key => $value) {
+            $object->$key = $value;
+        }
     }
 
     public function benchToPHPArray(): void

@@ -60,6 +60,7 @@ class FindOneAndReplaceTest extends TestCase
     public function provideInvalidConstructorOptions()
     {
         return $this->createOptionDataProvider([
+            'codec' => $this->getInvalidDocumentCodecValues(),
             'projection' => $this->getInvalidDocumentValues(),
             'returnDocument' => $this->getInvalidIntegerValues(true),
         ]);

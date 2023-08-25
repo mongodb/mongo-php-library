@@ -66,6 +66,7 @@ class CollectionFunctionalTest extends FunctionalTestCase
     public function provideInvalidConstructorOptions(): array
     {
         return $this->createOptionDataProvider([
+            'codec' => $this->getInvalidDocumentCodecValues(),
             'readConcern' => $this->getInvalidReadConcernValues(),
             'readPreference' => $this->getInvalidReadPreferenceValues(),
             'typeMap' => $this->getInvalidArrayValues(),

@@ -4,6 +4,7 @@ namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Operation\Watch;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use stdClass;
 
 /**
@@ -42,6 +43,7 @@ class WatchTest extends FunctionalTestCase
     {
         return $this->createOptionDataProvider([
             'batchSize' => $this->getInvalidIntegerValues(),
+            'codec' => $this->getInvalidDocumentCodecValues(),
             'collation' => $this->getInvalidDocumentValues(),
             'fullDocument' => $this->getInvalidStringValues(true),
             'fullDocumentBeforeChange' => $this->getInvalidStringValues(),
@@ -54,6 +56,14 @@ class WatchTest extends FunctionalTestCase
             'startAtOperationTime' => $this->getInvalidTimestampValues(),
             'typeMap' => $this->getInvalidArrayValues(),
         ]);
+    }
+
+    public function testConstructorRejectsCodecAndTypemap(): void
+    {
+        $this->expectExceptionObject(InvalidArgumentException::cannotCombineCodecAndTypeMap());
+
+        $options = ['codec' => new TestDocumentCodec(), 'typeMap' => ['root' => 'array']];
+        new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
     }
 
     private function getInvalidTimestampValues()

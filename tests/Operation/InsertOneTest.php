@@ -3,7 +3,9 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\InsertOne;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 
 class InsertOneTest extends TestCase
 {
@@ -25,8 +27,16 @@ class InsertOneTest extends TestCase
     {
         return $this->createOptionDataProvider([
             'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
+            'codec' => $this->getInvalidDocumentCodecValues(),
             'session' => $this->getInvalidSessionValues(),
             'writeConcern' => $this->getInvalidWriteConcernValues(),
         ]);
+    }
+
+    public function testCodecRejectsInvalidDocuments(): void
+    {
+        $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue([]));
+
+        new InsertOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['codec' => new TestDocumentCodec()]);
     }
 }

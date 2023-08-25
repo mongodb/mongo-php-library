@@ -28,6 +28,7 @@ class FindTest extends TestCase
         return $this->createOptionDataProvider([
             'allowPartialResults' => $this->getInvalidBooleanValues(),
             'batchSize' => $this->getInvalidIntegerValues(),
+            'codec' => $this->getInvalidDocumentCodecValues(),
             'collation' => $this->getInvalidDocumentValues(),
             'cursorType' => $this->getInvalidIntegerValues(),
             'hint' => $this->getInvalidHintValues(),

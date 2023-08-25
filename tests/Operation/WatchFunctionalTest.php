@@ -3,9 +3,14 @@
 namespace MongoDB\Tests\Operation;
 
 use Closure;
+use Generator;
 use Iterator;
+use MongoDB\BSON\Document;
 use MongoDB\BSON\TimestampInterface;
 use MongoDB\ChangeStream;
+use MongoDB\Codec\DecodeIfSupported;
+use MongoDB\Codec\DocumentCodec;
+use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\ConnectionTimeoutException;
@@ -15,6 +20,7 @@ use MongoDB\Driver\Monitoring\CommandSucceededEvent;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Exception\ResumeTokenException;
+use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\InsertOne;
 use MongoDB\Operation\Watch;
 use MongoDB\Tests\CommandObserver;
@@ -52,15 +58,72 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
     }
 
+    public static function provideCodecOptions(): Generator
+    {
+        yield 'No codec' => [
+            'options' => [],
+            'getIdentifier' => static fn (object $document): object => $document->_id,
+        ];
+
+        $codec = new class implements DocumentCodec {
+            use DecodeIfSupported;
+            use EncodeIfSupported;
+
+            public function canDecode($value): bool
+            {
+                return $value instanceof Document;
+            }
+
+            public function canEncode($value): bool
+            {
+                return false;
+            }
+
+            public function decode($value): stdClass
+            {
+                if (! $value instanceof Document) {
+                    throw UnsupportedValueException::invalidDecodableValue($value);
+                }
+
+                return (object) [
+                    'id' => $value->get('_id')->toPHP(),
+                    'fullDocument' => $value->get('fullDocument')->toPHP(),
+                ];
+            }
+
+            public function encode($value): Document
+            {
+                return Document::fromPHP([]);
+            }
+        };
+
+        yield 'Codec' => [
+            'options' => ['codec' => $codec],
+            'getIdentifier' => static function (object $document): object {
+                self::assertObjectHasAttribute('id', $document);
+
+                return $document->id;
+            },
+        ];
+    }
+
     /**
      * Prose test 1: "ChangeStream must continuously track the last seen
      * resumeToken"
+     *
+     * @dataProvider provideCodecOptions
      */
-    public function testGetResumeToken(): void
+    public function testGetResumeToken(array $options, Closure $getIdentifier): void
     {
         $this->skipIfServerVersion('>=', '4.0.7', 'postBatchResumeToken is supported');
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $operation = new Watch(
+            $this->manager,
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            $options + $this->defaultOptions,
+        );
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $changeStream->rewind();
@@ -71,16 +134,16 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['x' => 2]);
 
         $this->advanceCursorUntilValid($changeStream);
-        $this->assertSameDocument($changeStream->current()->_id, $changeStream->getResumeToken());
+        $this->assertSameDocument($getIdentifier($changeStream->current()), $changeStream->getResumeToken());
 
         $changeStream->next();
         $this->assertTrue($changeStream->valid());
-        $this->assertSameDocument($changeStream->current()->_id, $changeStream->getResumeToken());
+        $this->assertSameDocument($getIdentifier($changeStream->current()), $changeStream->getResumeToken());
 
         $this->insertDocument(['x' => 3]);
 
         $this->advanceCursorUntilValid($changeStream);
-        $this->assertSameDocument($changeStream->current()->_id, $changeStream->getResumeToken());
+        $this->assertSameDocument($getIdentifier($changeStream->current()), $changeStream->getResumeToken());
     }
 
     /**
@@ -100,12 +163,20 @@ class WatchFunctionalTest extends FunctionalTestCase
      *  - The batch has been iterated up to but not including the last element.
      * Expected result: getResumeToken must return the _id of the previous
      * document returned.
+     *
+     * @dataProvider provideCodecOptions
      */
-    public function testGetResumeTokenWithPostBatchResumeToken(): void
+    public function testGetResumeTokenWithPostBatchResumeToken(array $options, Closure $getIdentifier): void
     {
         $this->skipIfServerVersion('<', '4.0.7', 'postBatchResumeToken is not supported');
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $operation = new Watch(
+            $this->manager,
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            $options + $this->defaultOptions,
+        );
 
         $events = [];
 
@@ -144,7 +215,7 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertSame('getMore', $lastEvent['started']->getCommandName());
         $postBatchResumeToken = $this->getPostBatchResumeTokenFromReply($lastEvent['succeeded']->getReply());
 
-        $this->assertSameDocument($changeStream->current()->_id, $changeStream->getResumeToken());
+        $this->assertSameDocument($getIdentifier($changeStream->current()), $changeStream->getResumeToken());
 
         $changeStream->next();
         $this->assertSameDocument($postBatchResumeToken, $changeStream->getResumeToken());
@@ -423,9 +494,16 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->assertNull($changeStream->current());
     }
 
-    public function testNoChangeAfterResumeBeforeInsert(): void
+    /** @dataProvider provideCodecOptions */
+    public function testNoChangeAfterResumeBeforeInsert(array $options): void
     {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $operation = new Watch(
+            $this->manager,
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            $options + $this->defaultOptions,
+        );
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->assertNoCommandExecuted(function () use ($changeStream): void {
@@ -437,15 +515,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->advanceCursorUntilValid($changeStream);
 
-        $expectedResult = [
-            '_id' => $changeStream->current()->_id,
-            'operationType' => 'insert',
-            'fullDocument' => ['_id' => 1, 'x' => 'foo'],
-            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
-            'documentKey' => ['_id' => 1],
-        ];
-
-        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument(['_id' => 1, 'x' => 'foo'], $changeStream->current()->fullDocument);
 
         $this->forceChangeStreamResume();
 
@@ -456,15 +526,7 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->advanceCursorUntilValid($changeStream);
 
-        $expectedResult = [
-            '_id' => $changeStream->current()->_id,
-            'operationType' => 'insert',
-            'fullDocument' => ['_id' => 2, 'x' => 'bar'],
-            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
-            'documentKey' => ['_id' => 2],
-        ];
-
-        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument(['_id' => 2, 'x' => 'bar'], $changeStream->current()->fullDocument);
     }
 
     public function testResumeMultipleTimesInSuccession(): void
@@ -841,9 +903,16 @@ class WatchFunctionalTest extends FunctionalTestCase
         }
     }
 
-    public function testRewindExtractsResumeTokenAndNextResumes(): void
+    /** @dataProvider provideCodecOptions */
+    public function testRewindExtractsResumeTokenAndNextResumes(array $options, Closure $getIdentifier): void
     {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $operation = new Watch(
+            $this->manager,
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            $options + $this->defaultOptions,
+        );
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->insertDocument(['_id' => 1, 'x' => 'foo']);
@@ -859,9 +928,14 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->advanceCursorUntilValid($changeStream);
 
-        $resumeToken = $changeStream->current()->_id;
-        $options = ['resumeAfter' => $resumeToken] + $this->defaultOptions;
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
+        $resumeToken = $getIdentifier($changeStream->current());
+        $operation = new Watch(
+            $this->manager,
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            ['resumeAfter' => $resumeToken] + $options + $this->defaultOptions,
+        );
         $changeStream = $operation->execute($this->getPrimaryServer());
         $this->assertSameDocument($resumeToken, $changeStream->getResumeToken());
 
@@ -877,33 +951,26 @@ class WatchFunctionalTest extends FunctionalTestCase
         }
 
         $this->assertSame(0, $changeStream->key());
-        $expectedResult = [
-            '_id' => $changeStream->current()->_id,
-            'operationType' => 'insert',
-            'fullDocument' => ['_id' => 2, 'x' => 'bar'],
-            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
-            'documentKey' => ['_id' => 2],
-        ];
-        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument(['_id' => 2, 'x' => 'bar'], $changeStream->current()->fullDocument);
 
         $this->forceChangeStreamResume();
 
         $this->advanceCursorUntilValid($changeStream);
         $this->assertSame(1, $changeStream->key());
 
-        $expectedResult = [
-            '_id' => $changeStream->current()->_id,
-            'operationType' => 'insert',
-            'fullDocument' => ['_id' => 3, 'x' => 'baz'],
-            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
-            'documentKey' => ['_id' => 3],
-        ];
-        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument(['_id' => 3, 'x' => 'baz'], $changeStream->current()->fullDocument);
     }
 
-    public function testResumeAfterOption(): void
+    /** @dataProvider provideCodecOptions */
+    public function testResumeAfterOption(array $options, Closure $getIdentifier): void
     {
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $operation = new Watch(
+            $this->manager,
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            $options + $this->defaultOptions,
+        );
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $changeStream->rewind();
@@ -914,10 +981,15 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->advanceCursorUntilValid($changeStream);
 
-        $resumeToken = $changeStream->current()->_id;
+        $resumeToken = $getIdentifier($changeStream->current());
 
-        $options = $this->defaultOptions + ['resumeAfter' => $resumeToken];
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
+        $operation = new Watch(
+            $this->manager,
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            ['resumeAfter' => $resumeToken] + $options + $this->defaultOptions,
+        );
         $changeStream = $operation->execute($this->getPrimaryServer());
         $this->assertSameDocument($resumeToken, $changeStream->getResumeToken());
 
@@ -932,22 +1004,21 @@ class WatchFunctionalTest extends FunctionalTestCase
             $this->assertTrue($changeStream->valid());
         }
 
-        $expectedResult = [
-            '_id' => $changeStream->current()->_id,
-            'operationType' => 'insert',
-            'fullDocument' => ['_id' => 2, 'x' => 'bar'],
-            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
-            'documentKey' => ['_id' => 2],
-        ];
-
-        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument(['_id' => 2, 'x' => 'bar'], $changeStream->current()->fullDocument);
     }
 
-    public function testStartAfterOption(): void
+    /** @dataProvider provideCodecOptions */
+    public function testStartAfterOption(array $options, Closure $getIdentifier): void
     {
         $this->skipIfServerVersion('<', '4.1.1', 'startAfter is not supported');
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $operation = new Watch(
+            $this->manager,
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            $options + $this->defaultOptions,
+        );
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $changeStream->rewind();
@@ -958,10 +1029,15 @@ class WatchFunctionalTest extends FunctionalTestCase
 
         $this->advanceCursorUntilValid($changeStream);
 
-        $resumeToken = $changeStream->current()->_id;
+        $resumeToken = $getIdentifier($changeStream->current());
 
-        $options = $this->defaultOptions + ['startAfter' => $resumeToken];
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
+        $operation = new Watch(
+            $this->manager,
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            ['startAfter' => $resumeToken] + $options + $this->defaultOptions,
+        );
         $changeStream = $operation->execute($this->getPrimaryServer());
         $this->assertSameDocument($resumeToken, $changeStream->getResumeToken());
 
@@ -976,15 +1052,7 @@ class WatchFunctionalTest extends FunctionalTestCase
             $this->assertTrue($changeStream->valid());
         }
 
-        $expectedResult = [
-            '_id' => $changeStream->current()->_id,
-            'operationType' => 'insert',
-            'fullDocument' => ['_id' => 2, 'x' => 'bar'],
-            'ns' => ['db' => $this->getDatabaseName(), 'coll' => $this->getCollectionName()],
-            'documentKey' => ['_id' => 2],
-        ];
-
-        $this->assertMatchesDocument($expectedResult, $changeStream->current());
+        $this->assertMatchesDocument(['_id' => 2, 'x' => 'bar'], $changeStream->current()->fullDocument);
     }
 
     /** @dataProvider provideTypeMapOptionsAndExpectedChangeDocument */
@@ -1368,13 +1436,21 @@ class WatchFunctionalTest extends FunctionalTestCase
      *  - getResumeToken must return startAfter from the initial aggregate if the option was specified.
      *  - getResumeToken must return resumeAfter from the initial aggregate if the option was specified.
      *  - If neither the startAfter nor resumeAfter options were specified, the getResumeToken result must be empty.
+     *
+     * @dataProvider provideCodecOptions
      */
-    public function testResumeTokenBehaviour(): void
+    public function testResumeTokenBehaviour(array $options): void
     {
         $this->skipIfServerVersion('<', '4.1.1', 'Testing resumeAfter and startAfter can only be tested on servers >= 4.1.1');
         $this->skipIfIsShardedCluster('Resume token behaviour can\'t be reliably tested on sharded clusters.');
 
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $this->defaultOptions);
+        $operation = new Watch(
+            $this->manager,
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            $options + $this->defaultOptions,
+        );
 
         $lastOpTime = null;
 
@@ -1398,22 +1474,37 @@ class WatchFunctionalTest extends FunctionalTestCase
         $this->insertDocument(['x' => 2]);
 
         // Test startAfter option
-        $options = ['startAfter' => $resumeToken] + $this->defaultOptions;
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
+        $operation = new Watch(
+            $this->manager,
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            ['startAfter' => $resumeToken] + $options + $this->defaultOptions,
+        );
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->assertEquals($resumeToken, $changeStream->getResumeToken());
 
         // Test resumeAfter option
-        $options = ['resumeAfter' => $resumeToken] + $this->defaultOptions;
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
+        $operation = new Watch(
+            $this->manager,
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            ['resumeAfter' => $resumeToken] + $options + $this->defaultOptions,
+        );
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->assertEquals($resumeToken, $changeStream->getResumeToken());
 
         // Test without option
-        $options = ['startAtOperationTime' => $lastOpTime] + $this->defaultOptions;
-        $operation = new Watch($this->manager, $this->getDatabaseName(), $this->getCollectionName(), [], $options);
+        $operation = new Watch(
+            $this->manager,
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [],
+            ['startAtOperationTime' => $lastOpTime] + $options + $this->defaultOptions,
+        );
         $changeStream = $operation->execute($this->getPrimaryServer());
 
         $this->assertNull($changeStream->getResumeToken());

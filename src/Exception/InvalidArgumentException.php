@@ -29,6 +29,11 @@ use function sprintf;
 
 class InvalidArgumentException extends DriverInvalidArgumentException implements Exception
 {
+    public static function cannotCombineCodecAndTypeMap(): self
+    {
+        return new self('Cannot provide both "codec" and "typeMap" options');
+    }
+
     /**
      * Thrown when an argument or option is expected to be a document.
      *

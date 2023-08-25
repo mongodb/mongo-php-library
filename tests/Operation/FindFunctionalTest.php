@@ -9,6 +9,8 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\CreateIndexes;
 use MongoDB\Operation\Find;
 use MongoDB\Tests\CommandObserver;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use MongoDB\Tests\Fixtures\Document\TestObject;
 use stdClass;
 
 use function microtime;
@@ -196,6 +198,25 @@ class FindFunctionalTest extends FunctionalTestCase
         ];
     }
 
+    public function testCodecOption(): void
+    {
+        $this->createFixtures(3);
+
+        $codec = new TestDocumentCodec();
+
+        $operation = new Find($this->getDatabaseName(), $this->getCollectionName(), [], ['codec' => $codec]);
+        $cursor = $operation->execute($this->getPrimaryServer());
+
+        $this->assertEquals(
+            [
+                TestObject::createDecodedForFixture(1),
+                TestObject::createDecodedForFixture(2),
+                TestObject::createDecodedForFixture(3),
+            ],
+            $cursor->toArray(),
+        );
+    }
+
     public function testMaxAwaitTimeMS(): void
     {
         $maxAwaitTimeMS = 100;
@@ -302,10 +323,7 @@ class FindFunctionalTest extends FunctionalTestCase
         $bulkWrite = new BulkWrite(['ordered' => true]);
 
         for ($i = 1; $i <= $n; $i++) {
-            $bulkWrite->insert([
-                '_id' => $i,
-                'x' => (object) ['foo' => 'bar'],
-            ]);
+            $bulkWrite->insert(TestObject::createDocument($i));
         }
 
         $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite, $executeBulkWriteOptions);

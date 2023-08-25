@@ -9,6 +9,8 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Tests\CommandObserver;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
+use MongoDB\Tests\Fixtures\Document\TestObject;
 use stdClass;
 
 use function current;
@@ -335,6 +337,30 @@ class AggregateFunctionalTest extends FunctionalTestCase
         }
     }
 
+    public function testCodecOption(): void
+    {
+        $this->createFixtures(3);
+
+        $codec = new TestDocumentCodec();
+
+        $operation = new Aggregate(
+            $this->getDatabaseName(),
+            $this->getCollectionName(),
+            [['$match' => ['_id' => ['$gt' => 1]]]],
+            ['codec' => $codec],
+        );
+
+        $cursor = $operation->execute($this->getPrimaryServer());
+
+        $this->assertEquals(
+            [
+                TestObject::createDecodedForFixture(2),
+                TestObject::createDecodedForFixture(3),
+            ],
+            $cursor->toArray(),
+        );
+    }
+
     /**
      * Create data fixtures.
      */
@@ -343,10 +369,7 @@ class AggregateFunctionalTest extends FunctionalTestCase
         $bulkWrite = new BulkWrite(['ordered' => true]);
 
         for ($i = 1; $i <= $n; $i++) {
-            $bulkWrite->insert([
-                '_id' => $i,
-                'x' => (object) ['foo' => 'bar'],
-            ]);
+            $bulkWrite->insert(TestObject::createDocument($i));
         }
 
         $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulkWrite, $executeBulkWriteOptions);

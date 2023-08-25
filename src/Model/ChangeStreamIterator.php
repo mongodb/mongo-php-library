@@ -17,9 +17,11 @@
 
 namespace MongoDB\Model;
 
+use Iterator;
 use IteratorIterator;
+use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
-use MongoDB\Driver\Cursor;
+use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
 use MongoDB\Driver\Monitoring\CommandStartedEvent;
 use MongoDB\Driver\Monitoring\CommandSubscriber;
@@ -47,7 +49,7 @@ use function MongoDB\is_document;
  *
  * @internal
  * @template TValue of array|object
- * @template-extends IteratorIterator<int, TValue, Cursor<TValue>>
+ * @template-extends IteratorIterator<int, TValue, CursorInterface<int, TValue>&Iterator<int, TValue>>
  */
 class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
 {
@@ -69,10 +71,18 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     /**
      * @internal
      * @param array|object|null $initialResumeToken
-     * @psalm-param Cursor<TValue> $cursor
+     * @psalm-param CursorInterface<int, TValue>&Iterator<int, TValue> $cursor
      */
-    public function __construct(Cursor $cursor, int $firstBatchSize, $initialResumeToken, ?object $postBatchResumeToken)
+    public function __construct(CursorInterface $cursor, int $firstBatchSize, $initialResumeToken, ?object $postBatchResumeToken)
     {
+        if (! $cursor instanceof Iterator) {
+            throw InvalidArgumentException::invalidType(
+                '$cursor',
+                $cursor,
+                CursorInterface::class . '&' . Iterator::class,
+            );
+        }
+
         if (isset($initialResumeToken) && ! is_document($initialResumeToken)) {
             throw InvalidArgumentException::expectedDocumentType('$initialResumeToken', $initialResumeToken);
         }
@@ -139,11 +149,14 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
      * iterator. This could be side-stepped due to the class not being final,
      * but it's very much an invalid use-case. This method can be dropped in 2.0
      * once the class is final.
+     *
+     * @return CursorInterface<int, TValue>&Iterator<int, TValue>
      */
-    final public function getInnerIterator(): Cursor
+    final public function getInnerIterator(): Iterator
     {
         $cursor = parent::getInnerIterator();
-        assert($cursor instanceof Cursor);
+        assert($cursor instanceof CursorInterface);
+        assert($cursor instanceof Iterator);
 
         return $cursor;
     }
@@ -244,9 +257,17 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
             return $this->extractResumeToken($document->bsonSerialize());
         }
 
-        $resumeToken = is_array($document)
-            ? ($document['_id'] ?? null)
-            : ($document->_id ?? null);
+        if ($document instanceof Document) {
+            $resumeToken = $document->get('_id');
+
+            if ($resumeToken instanceof Document) {
+                $resumeToken = $resumeToken->toPHP();
+            }
+        } else {
+            $resumeToken = is_array($document)
+                ? ($document['_id'] ?? null)
+                : ($document->_id ?? null);
+        }
 
         if (! isset($resumeToken)) {
             $this->isValid = false;

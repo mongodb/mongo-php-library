@@ -20,6 +20,7 @@ class FindAndModifyTest extends TestCase
         return $this->createOptionDataProvider([
             'arrayFilters' => $this->getInvalidArrayValues(),
             'bypassDocumentValidation' => $this->getInvalidBooleanValues(),
+            'codec' => $this->getInvalidDocumentCodecValues(),
             'collation' => $this->getInvalidDocumentValues(),
             'fields' => $this->getInvalidDocumentValues(),
             'maxTimeMS' => $this->getInvalidIntegerValues(),

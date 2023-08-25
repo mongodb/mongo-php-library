@@ -18,8 +18,9 @@
 namespace MongoDB\GridFS;
 
 use ArrayIterator;
+use Iterator;
 use MongoDB\Collection;
-use MongoDB\Driver\Cursor;
+use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Exception\InvalidArgumentException;
@@ -104,8 +105,9 @@ class CollectionWrapper
      *
      * @param mixed   $id        File ID
      * @param integer $fromChunk Starting chunk (inclusive)
+     * @return CursorInterface&Iterator
      */
-    public function findChunksByFileId($id, int $fromChunk = 0): Cursor
+    public function findChunksByFileId($id, int $fromChunk = 0)
     {
         return $this->chunksCollection->find(
             [
@@ -182,7 +184,7 @@ class CollectionWrapper
      * @see Find::__construct() for supported options
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
-     * @return Cursor
+     * @return CursorInterface&Iterator
      */
     public function findFiles($filter, array $options = [])
     {

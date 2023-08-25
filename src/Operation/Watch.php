@@ -17,9 +17,11 @@
 
 namespace MongoDB\Operation;
 
+use Iterator;
 use MongoDB\BSON\TimestampInterface;
 use MongoDB\ChangeStream;
-use MongoDB\Driver\Cursor;
+use MongoDB\Codec\DocumentCodec;
+use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Monitoring\CommandFailedEvent;
@@ -91,12 +93,17 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
 
     private ?object $postBatchResumeToken = null;
 
+    private ?DocumentCodec $codec;
+
     /**
      * Constructs an aggregate command for creating a change stream.
      *
      * Supported options:
      *
      *  * batchSize (integer): The number of documents to return per batch.
+     *
+     *  * codec (MongoDB\Codec\DocumentCodec): Codec used to decode documents
+     *    from BSON to PHP objects.
      *
      *  * collation (document): Specifies a collation.
      *
@@ -199,6 +206,14 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
             'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
         ];
 
+        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
+        }
+
+        if (isset($options['codec']) && isset($options['typeMap'])) {
+            throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
+        }
+
         if (array_key_exists('fullDocument', $options) && ! is_string($options['fullDocument'])) {
             throw InvalidArgumentException::invalidType('"fullDocument" option', $options['fullDocument'], 'string');
         }
@@ -254,6 +269,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;
         $this->pipeline = $pipeline;
+        $this->codec = $options['codec'] ?? null;
 
         $this->aggregate = $this->createAggregate();
     }
@@ -314,6 +330,7 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         return new ChangeStream(
             $this->createChangeStreamIterator($server),
             fn ($resumeToken, $hasAdvanced): ChangeStreamIterator => $this->resume($resumeToken, $hasAdvanced),
+            $this->codec,
         );
     }
 
@@ -348,8 +365,10 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
      *
      * The command will be executed using APM so that we can capture data from
      * its response (e.g. firstBatch size, postBatchResumeToken).
+     *
+     * @return CursorInterface&Iterator
      */
-    private function executeAggregate(Server $server): Cursor
+    private function executeAggregate(Server $server)
     {
         addSubscriber($this);
 

@@ -17,6 +17,7 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\BulkWrite as Bulk;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
@@ -56,6 +57,9 @@ class InsertMany implements Executable
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.
      *
+     *  * codec (MongoDB\Codec\DocumentCodec): Codec used to encode PHP objects
+     *    into BSON.
+     *
      *  * comment (mixed): BSON value to attach as a comment to the command(s)
      *    associated with this insert.
      *
@@ -69,32 +73,22 @@ class InsertMany implements Executable
      *
      *  * writeConcern (MongoDB\Driver\WriteConcern): Write concern.
      *
-     * @param string           $databaseName   Database name
-     * @param string           $collectionName Collection name
-     * @param array[]|object[] $documents      List of documents to insert
-     * @param array            $options        Command options
+     * @param string             $databaseName   Database name
+     * @param string             $collectionName Collection name
+     * @param list<object|array> $documents      List of documents to insert
+     * @param array              $options        Command options
      * @throws InvalidArgumentException for parameter/option parsing errors
      */
     public function __construct(string $databaseName, string $collectionName, array $documents, array $options = [])
     {
-        if (empty($documents)) {
-            throw new InvalidArgumentException('$documents is empty');
-        }
-
-        if (! array_is_list($documents)) {
-            throw new InvalidArgumentException('$documents is not a list');
-        }
-
-        foreach ($documents as $i => $document) {
-            if (! is_document($document)) {
-                throw InvalidArgumentException::expectedDocumentType(sprintf('$documents[%d]', $i), $document);
-            }
-        }
-
         $options += ['ordered' => true];
 
         if (isset($options['bypassDocumentValidation']) && ! is_bool($options['bypassDocumentValidation'])) {
             throw InvalidArgumentException::invalidType('"bypassDocumentValidation" option', $options['bypassDocumentValidation'], 'boolean');
+        }
+
+        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
         }
 
         if (! is_bool($options['ordered'])) {
@@ -119,7 +113,7 @@ class InsertMany implements Executable
 
         $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;
-        $this->documents = $documents;
+        $this->documents = $this->validateDocuments($documents, $options['codec'] ?? null);
         $this->options = $options;
     }
 
@@ -186,5 +180,32 @@ class InsertMany implements Executable
         }
 
         return $options;
+    }
+
+    /**
+     * @param list<object|array> $documents
+     * @return list<object|array>
+     */
+    private function validateDocuments(array $documents, ?DocumentCodec $codec): array
+    {
+        if (empty($documents)) {
+            throw new InvalidArgumentException('$documents is empty');
+        }
+
+        if (! array_is_list($documents)) {
+            throw new InvalidArgumentException('$documents is not a list');
+        }
+
+        foreach ($documents as $i => $document) {
+            if ($codec) {
+                $document = $documents[$i] = $codec->encode($document);
+            }
+
+            if (! is_document($document)) {
+                throw InvalidArgumentException::expectedDocumentType(sprintf('$documents[%d]', $i), $document);
+            }
+        }
+
+        return $documents;
     }
 }

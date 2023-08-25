@@ -17,6 +17,7 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
@@ -44,6 +45,9 @@ class ReplaceOne implements Executable
      *
      *  * bypassDocumentValidation (boolean): If true, allows the write to
      *    circumvent document level validation.
+     *
+     *  * codec (MongoDB\Codec\DocumentCodec): Codec used to encode PHP objects
+     *    into BSON.
      *
      *  * collation (document): Collation specification.
      *
@@ -79,6 +83,46 @@ class ReplaceOne implements Executable
      */
     public function __construct(string $databaseName, string $collectionName, $filter, $replacement, array $options = [])
     {
+        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
+        }
+
+        if (isset($options['codec'], $options['typeMap'])) {
+            throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
+        }
+
+        $this->update = new Update(
+            $databaseName,
+            $collectionName,
+            $filter,
+            $this->validateReplacement($replacement, $options['codec'] ?? null),
+            ['multi' => false] + $options,
+        );
+    }
+
+    /**
+     * Execute the operation.
+     *
+     * @see Executable::execute()
+     * @return UpdateResult
+     * @throws UnsupportedException if collation is used and unsupported
+     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function execute(Server $server)
+    {
+        return $this->update->execute($server);
+    }
+
+    /**
+     * @param array|object $replacement
+     * @return array|object
+     */
+    private function validateReplacement($replacement, ?DocumentCodec $codec)
+    {
+        if ($codec) {
+            $replacement = $codec->encode($replacement);
+        }
+
         if (! is_document($replacement)) {
             throw InvalidArgumentException::expectedDocumentType('$replacement', $replacement);
         }
@@ -96,25 +140,6 @@ class ReplaceOne implements Executable
             throw new InvalidArgumentException('$replacement is an update pipeline');
         }
 
-        $this->update = new Update(
-            $databaseName,
-            $collectionName,
-            $filter,
-            $replacement,
-            ['multi' => false] + $options,
-        );
-    }
-
-    /**
-     * Execute the operation.
-     *
-     * @see Executable::execute()
-     * @return UpdateResult
-     * @throws UnsupportedException if collation is used and unsupported
-     * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
-     */
-    public function execute(Server $server)
-    {
-        return $this->update->execute($server);
+        return $replacement;
     }
 }

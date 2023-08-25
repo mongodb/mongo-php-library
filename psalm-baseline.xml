@@ -101,6 +101,7 @@
       <code><![CDATA[$reply->cursor->nextBatch]]></code>
     </MixedArgument>
     <MixedAssignment>
+      <code>$resumeToken</code>
       <code><![CDATA[$this->postBatchResumeToken]]></code>
     </MixedAssignment>
     <MixedPropertyFetch>
@@ -170,6 +171,7 @@
   </file>
   <file src="src/Operation/Aggregate.php">
     <MixedArgument>
+      <code><![CDATA[$this->options['codec']]]></code>
       <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
     <MixedAssignment>
@@ -191,6 +193,8 @@
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
+      <code>$args[0]</code>
+      <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
@@ -205,6 +209,8 @@
       <code>$args[0]</code>
       <code>$args[0]</code>
       <code>$args[0]</code>
+      <code>$args[0]</code>
+      <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
       <code>$args[1]</code>
@@ -244,6 +250,8 @@
       <code>$args[2]</code>
       <code><![CDATA[$args[2]['multi']]]></code>
       <code><![CDATA[$args[2]['multi']]]></code>
+      <code>$operations[$i][$type][0]</code>
+      <code>$operations[$i][$type][1]</code>
       <code>$operations[$i][$type][1]</code>
       <code>$operations[$i][$type][2]</code>
       <code>$operations[$i][$type][2]</code>
@@ -401,6 +409,7 @@
   </file>
   <file src="src/Operation/Find.php">
     <MixedArgument>
+      <code><![CDATA[$this->options['codec']]]></code>
       <code><![CDATA[$this->options['typeMap']]]></code>
     </MixedArgument>
     <MixedArrayAccess>
@@ -427,16 +436,32 @@
       <code><![CDATA[$cmd['upsert']]]></code>
       <code><![CDATA[$options['session']]]></code>
       <code><![CDATA[$options['writeConcern']]]></code>
+      <code>$value</code>
     </MixedAssignment>
     <MixedInferredReturnType>
       <code>array|object|null</code>
     </MixedInferredReturnType>
     <MixedMethodCall>
+      <code>decode</code>
       <code>isInTransaction</code>
     </MixedMethodCall>
     <MixedReturnStatement>
+      <code><![CDATA[$value === null ? $value : $this->options['codec']->decode($value)]]></code>
+      <code><![CDATA[$value === null ? $value : $this->options['codec']->decode($value)]]></code>
       <code><![CDATA[is_object($result) ? ($result->value ?? null) : null]]></code>
       <code><![CDATA[is_object($result) ? ($result->value ?? null) : null]]></code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/Operation/FindOne.php">
+    <MixedAssignment>
+      <code>$document</code>
+    </MixedAssignment>
+    <MixedInferredReturnType>
+      <code>array|object|null</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement>
+      <code>$document === false ? null : $document</code>
+      <code>$document === false ? null : $document</code>
     </MixedReturnStatement>
   </file>
   <file src="src/Operation/FindOneAndDelete.php">
@@ -448,6 +473,9 @@
     <MixedAssignment>
       <code><![CDATA[$options['fields']]]></code>
     </MixedAssignment>
+    <PossiblyInvalidArgument>
+      <code>$replacement</code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="src/Operation/FindOneAndUpdate.php">
     <MixedAssignment>
@@ -464,6 +492,9 @@
     <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
+    <PossiblyInvalidArgument>
+      <code>$document</code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="src/Operation/InsertOne.php">
     <MixedAssignment>
@@ -475,6 +506,9 @@
     <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
+    <PossiblyInvalidArgument>
+      <code>$document</code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="src/Operation/ListIndexes.php">
     <MixedAssignment>
@@ -521,6 +555,11 @@
     <MixedMethodCall>
       <code>isInTransaction</code>
     </MixedMethodCall>
+  </file>
+  <file src="src/Operation/ReplaceOne.php">
+    <PossiblyInvalidArgument>
+      <code>$replacement</code>
+    </PossiblyInvalidArgument>
   </file>
   <file src="src/Operation/Update.php">
     <MixedArgument>

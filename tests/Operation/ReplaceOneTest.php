@@ -3,7 +3,9 @@
 namespace MongoDB\Tests\Operation;
 
 use MongoDB\Exception\InvalidArgumentException;
+use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Operation\ReplaceOne;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 
 class ReplaceOneTest extends TestCase
 {
@@ -47,5 +49,26 @@ class ReplaceOneTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('#(\$replacement is an update pipeline)|(Expected \$replacement to have type "document" \(array or object\))#');
         new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], $replacement);
+    }
+
+    /** @dataProvider provideInvalidConstructorOptions */
+    public function testConstructorOptionsTypeCheck($options): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['y' => 1], $options);
+    }
+
+    public function provideInvalidConstructorOptions()
+    {
+        return $this->createOptionDataProvider([
+            'codec' => $this->getInvalidDocumentCodecValues(),
+        ]);
+    }
+
+    public function testCodecRejectsInvalidDocuments(): void
+    {
+        $this->expectExceptionObject(UnsupportedValueException::invalidEncodableValue([]));
+
+        new ReplaceOne($this->getDatabaseName(), $this->getCollectionName(), ['x' => 1], ['y' => 1], ['codec' => new TestDocumentCodec()]);
     }
 }

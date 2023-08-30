@@ -3,6 +3,9 @@
 namespace MongoDB\Tests;
 
 use Generator;
+use MongoDB\Client;
+
+use function getenv;
 
 /** @runTestsInSeparateProcesses */
 final class ExamplesTest extends FunctionalTestCase
@@ -177,6 +180,39 @@ OUTPUT;
             'file' => __DIR__ . '/../examples/typemap.php',
             'expectedOutput' => $expectedOutput,
         ];
+    }
+
+    /**
+     * MongoDB Atlas Search example requires a MongoDB Atlas M10+ cluster with MongoDB 7.0+ and sample data loaded.
+     * Tips for insiders: if using a cloud-dev server, append ".mongodb.net" to the MONGODB_URI.
+     *
+     * @group atlas
+     */
+    public function testAtlasSearch(): void
+    {
+        $uri = getenv('MONGODB_URI') ?? '';
+        if (! self::isAtlas($uri)) {
+            $this->markTestSkipped('Atlas Search examples are only supported on MongoDB Atlas');
+        }
+
+        $this->skipIfServerVersion('<', '7.0', 'Atlas Search examples require MongoDB 7.0 or later');
+
+        $client = new Client($uri);
+        $collection = $client->selectCollection('sample_airbnb', 'listingsAndReviews');
+        $count = $collection->estimatedDocumentCount();
+        if ($count === 0) {
+            $this->markTestSkipped('Atlas Search examples require the sample_airbnb database with the listingsAndReviews collection');
+        }
+
+        // Clean variables to avoid conflict with example
+        unset($uri, $client, $collection, $count);
+
+        require __DIR__ . '/../examples/atlas-search.php';
+
+        $output = $this->getActualOutputForAssertion();
+        $this->assertStringContainsString("\nCreating the index.\n...", $output);
+        $this->assertStringContainsString("\nPerforming a text search...\n - ", $output);
+        $this->assertStringContainsString("\nEnjoy MongoDB Atlas Search!\n", $output);
     }
 
     public function testChangeStream(): void

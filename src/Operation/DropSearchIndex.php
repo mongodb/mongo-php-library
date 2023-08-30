@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2015-present MongoDB, Inc.
+ * Copyright 2023-present MongoDB, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 namespace MongoDB\Operation;
 
 use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
@@ -31,6 +32,8 @@ use MongoDB\Exception\UnsupportedException;
  */
 class DropSearchIndex implements Executable
 {
+    private const ERROR_CODE_NAMESPACE_NOT_FOUND = 26;
+
     private string $databaseName;
     private string $collectionName;
     private string $name;
@@ -71,12 +74,17 @@ class DropSearchIndex implements Executable
             'name' => $this->name,
         ];
 
-        foreach (['comment'] as $option) {
-            if (isset($this->options[$option])) {
-                $cmd[$option] = $this->options[$option];
-            }
+        if (isset($this->options['comment'])) {
+            $cmd['comment'] = $this->options['comment'];
         }
 
-        $server->executeCommand($this->databaseName, new Command($cmd));
+        try {
+            $server->executeCommand($this->databaseName, new Command($cmd));
+        } catch (CommandException $e) {
+            // Drop operations is idempotent. The server may return an error if the collection does not exist.
+            if ($e->getCode() !== self::ERROR_CODE_NAMESPACE_NOT_FOUND) {
+                throw $e;
+            }
+        }
     }
 }

@@ -22,7 +22,6 @@ use Iterator;
 use MongoDB\BSON\JavascriptInterface;
 use MongoDB\Codec\DocumentCodec;
 use MongoDB\Driver\CursorInterface;
-use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadConcern;
@@ -580,14 +579,7 @@ class Collection
         $operation = new DropSearchIndex($this->databaseName, $this->collectionName, $name);
         $server = select_server($this->manager, $options);
 
-        try {
-            $operation->execute($server);
-        } catch (CommandException $e) {
-            // Suppress namespace not found errors for idempotency
-            if ($e->getCode() !== 26) {
-                throw $e;
-            }
-        }
+        $operation->execute($server);
     }
 
     /**

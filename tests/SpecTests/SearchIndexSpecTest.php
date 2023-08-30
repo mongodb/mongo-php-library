@@ -21,22 +21,29 @@ use const JSON_THROW_ON_ERROR;
 /**
  * Functional tests for the Atlas Search index management.
  *
- * @see https://github.com/mongodb/specifications/blob/master/source/index-management/index-management.rst
+ * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.rst#search-index-management-helpers
  * @group atlas
  */
 class SearchIndexSpecTest extends FunctionalTestCase
 {
-    private const WAIT_TIMEOUT = 300; // 5 minutes
+    private const WAIT_TIMEOUT_SEC = 300;
 
     public function setUp(): void
     {
         if (! self::isAtlas()) {
-            self::markTestSkipped('Search Indexes are only supported on MongoDB Atlas');
+            self::markTestSkipped('Search Indexes are only supported on MongoDB Atlas 7.0+');
         }
 
         parent::setUp();
+
+        $this->skipIfServerVersion('<', '7.0', 'Search Indexes are only supported on MongoDB Atlas 7.0+');
     }
 
+    /**
+     * Case 1: Driver can successfully create and list search indexes
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.rst#case-1-driver-can-successfully-create-and-list-search-indexes
+     */
     public function testCreateAndListSearchIndexes(): void
     {
         $collection = $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
@@ -60,6 +67,11 @@ class SearchIndexSpecTest extends FunctionalTestCase
         );
     }
 
+    /**
+     * Case 2: Driver can successfully create multiple indexes in batch
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.rst#case-2-driver-can-successfully-create-multiple-indexes-in-batch
+     */
     public function testCreateMultipleIndexesInBatch(): void
     {
         $collection = $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
@@ -86,6 +98,11 @@ class SearchIndexSpecTest extends FunctionalTestCase
         }
     }
 
+    /**
+     * Case 3: Driver can successfully drop search indexes
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.rst#case-3-driver-can-successfully-drop-search-indexes
+     */
     public function testDropSearchIndexes(): void
     {
         $collection = $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
@@ -98,15 +115,20 @@ class SearchIndexSpecTest extends FunctionalTestCase
         );
         $this->assertSame($name, $createdName);
 
-        $this->waitForIndexes($collection, fn ($indexes) => $this->allIndexesAreQueryable($indexes));
+        $indexes = $this->waitForIndexes($collection, fn ($indexes) => $this->allIndexesAreQueryable($indexes));
+        $this->assertCount(1, $indexes);
 
         $collection->dropSearchIndex($name);
 
         $indexes = $this->waitForIndexes($collection, fn (array $indexes): bool => count($indexes) === 0);
-
         $this->assertCount(0, $indexes);
     }
 
+    /**
+     * Case 4: Driver can update a search index
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.rst#case-4-driver-can-update-a-search-index
+     */
     public function testUpdateSearchIndex(): void
     {
         $collection = $this->createCollection($this->getDatabaseName(), $this->getCollectionName());
@@ -119,7 +141,8 @@ class SearchIndexSpecTest extends FunctionalTestCase
         );
         $this->assertSame($name, $createdName);
 
-        $this->waitForIndexes($collection, fn ($indexes) => $this->allIndexesAreQueryable($indexes));
+        $indexes = $this->waitForIndexes($collection, fn ($indexes) => $this->allIndexesAreQueryable($indexes));
+        $this->assertCount(1, $indexes);
 
         $mapping = ['mappings' => ['dynamic' => true]];
         $collection->updateSearchIndex($name, $mapping);
@@ -135,6 +158,11 @@ class SearchIndexSpecTest extends FunctionalTestCase
         );
     }
 
+    /**
+     * Case 5: dropSearchIndex suppresses namespace not found errors
+     *
+     * @see https://github.com/mongodb/specifications/blob/master/source/index-management/tests/README.rst#case-5-dropsearchindex-suppresses-namespace-not-found-errors
+     */
     public function testDropSearchIndexSuppressNamespaceNotFoundError(): void
     {
         $collection = $this->dropCollection($this->getDatabaseName(), $this->getCollectionName());
@@ -155,7 +183,7 @@ class SearchIndexSpecTest extends FunctionalTestCase
 
     private function waitForIndexes(Collection $collection, Closure $callback): array
     {
-        $timeout = hrtime()[0] + self::WAIT_TIMEOUT;
+        $timeout = hrtime()[0] + self::WAIT_TIMEOUT_SEC;
         while (hrtime()[0] < $timeout) {
             sleep(5);
             $result = $collection->listSearchIndexes();

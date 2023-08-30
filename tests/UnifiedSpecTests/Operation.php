@@ -548,10 +548,19 @@ final class Operation
                     $options['name'] = $args['model']->name;
                 }
 
+                assertInstanceOf(stdClass::class, $args['model']->definition);
+
                 return $collection->createSearchIndex($args['model']->definition, $options);
 
             case 'createSearchIndexes':
-                return $collection->createSearchIndexes($args['models']);
+                $indexes = array_map(function ($index) {
+                    $index = (array) $index;
+                    assertInstanceOf(stdClass::class, $index['definition']);
+
+                    return $index;
+                }, $args['models']);
+
+                return $collection->createSearchIndexes($indexes);
 
             case 'dropSearchIndex':
                 assertArrayHasKey('name', $args);

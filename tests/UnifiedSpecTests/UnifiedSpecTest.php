@@ -277,7 +277,7 @@ class UnifiedSpecTest extends FunctionalTestCase
     public function testIndexManagement(UnifiedTestCase $test): void
     {
         if (self::isAtlas()) {
-            self::markTestSkipped('Search Indexes tests must run on a non-atlas cluster');
+            self::markTestSkipped('Search Indexes tests must run on a non-Atlas cluster');
         }
 
         if (! self::isEnterprise()) {

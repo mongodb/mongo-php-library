@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2015-present MongoDB, Inc.
+ * Copyright 2023-present MongoDB, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ use MongoDB\Model\SearchIndexInput;
 use function array_column;
 use function array_is_list;
 use function current;
-use function MongoDB\is_document;
+use function is_array;
 use function sprintf;
 
 /**
@@ -49,7 +49,7 @@ class CreateSearchIndexes implements Executable
      *
      * @param string                 $databaseName   Database name
      * @param string                 $collectionName Collection name
-     * @param list<array|object>     $indexes        List of search index specifications
+     * @param array[]                $indexes        List of search index specifications
      * @param array{comment?: mixed} $options        Command options
      * @throws InvalidArgumentException for parameter parsing errors
      */
@@ -60,11 +60,11 @@ class CreateSearchIndexes implements Executable
         }
 
         foreach ($indexes as $i => $index) {
-            if (! is_document($index)) {
-                throw InvalidArgumentException::expectedDocumentType(sprintf('$indexes[%d]', $i), $index);
+            if (! is_array($index)) {
+                throw InvalidArgumentException::invalidType(sprintf('$indexes[%d]', $i), $index, 'array');
             }
 
-            $this->indexes[] = new SearchIndexInput((array) $index);
+            $this->indexes[] = new SearchIndexInput($index);
         }
 
         $this->databaseName = $databaseName;
@@ -87,10 +87,8 @@ class CreateSearchIndexes implements Executable
             'indexes' => $this->indexes,
         ];
 
-        foreach (['comment'] as $option) {
-            if (isset($this->options[$option])) {
-                $cmd[$option] = $this->options[$option];
-            }
+        if (isset($this->options['comment'])) {
+            $cmd['comment'] = $this->options['comment'];
         }
 
         $cursor = $server->executeCommand($this->databaseName, new Command($cmd));

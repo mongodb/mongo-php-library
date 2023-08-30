@@ -324,10 +324,10 @@
   </file>
   <file src="src/Operation/CreateSearchIndexes.php">
     <MixedArgumentTypeCoercion>
-      <code>(array) $index</code>
+      <code>$index</code>
     </MixedArgumentTypeCoercion>
     <MixedAssignment>
-      <code>$cmd[$option]</code>
+      <code><![CDATA[$cmd['comment']]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Operation/DatabaseCommand.php">
@@ -412,7 +412,7 @@
   </file>
   <file src="src/Operation/DropSearchIndex.php">
     <MixedAssignment>
-      <code>$cmd[$option]</code>
+      <code><![CDATA[$cmd['comment']]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Operation/Explain.php">
@@ -596,7 +596,7 @@
   </file>
   <file src="src/Operation/UpdateSearchIndex.php">
     <MixedAssignment>
-      <code>$cmd[$option]</code>
+      <code><![CDATA[$cmd['comment']]]></code>
     </MixedAssignment>
   </file>
   <file src="src/Operation/Watch.php">

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright 2015-present MongoDB, Inc.
+ * Copyright 2023-present MongoDB, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,10 +81,8 @@ class UpdateSearchIndex implements Executable
             'definition' => $this->definition,
         ];
 
-        foreach (['comment'] as $option) {
-            if (isset($this->options[$option])) {
-                $cmd[$option] = $this->options[$option];
-            }
+        if (isset($this->options['comment'])) {
+            $cmd['comment'] = $this->options['comment'];
         }
 
         $server->executeCommand($this->databaseName, new Command($cmd));

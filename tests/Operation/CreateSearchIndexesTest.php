@@ -18,7 +18,7 @@ class CreateSearchIndexesTest extends TestCase
     public function testConstructorIndexDefinitionMustBeADocument($index): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Expected $indexes[0] to have type "document"');
+        $this->expectExceptionMessage('Expected $indexes[0] to have type "array"');
         new CreateSearchIndexes($this->getDatabaseName(), $this->getCollectionName(), [$index], []);
     }
 

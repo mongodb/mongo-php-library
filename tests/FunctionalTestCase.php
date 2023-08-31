@@ -16,7 +16,6 @@ use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\DatabaseCommand;
 use MongoDB\Operation\ListCollections;
-use MongoDB\Tests\SpecTests\DocumentsMatchConstraint;
 use stdClass;
 use UnexpectedValueException;
 
@@ -203,21 +202,6 @@ abstract class FunctionalTestCase extends TestCase
         $this->assertInstanceOf(ObjectId::class, $expectedObjectId);
         $this->assertInstanceOf(ObjectId::class, $actualObjectId);
         $this->assertEquals((string) $expectedObjectId, (string) $actualObjectId);
-    }
-
-    /**
-     * Asserts that two given documents match.
-     *
-     * Extra keys in the actual value's document(s) will be ignored.
-     *
-     * @param array|object $expectedDocument
-     * @param array|object $actualDocument
-     */
-    public static function assertDocumentsMatch($expectedDocument, $actualDocument, string $message = ''): void
-    {
-        $constraint = new DocumentsMatchConstraint($expectedDocument, true, true);
-
-        static::assertThat($actualDocument, $constraint, $message);
     }
 
     /**

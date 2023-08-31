@@ -27,6 +27,7 @@ use function explode;
 use function filter_var;
 use function getenv;
 use function implode;
+use function in_array;
 use function is_array;
 use function is_callable;
 use function is_executable;
@@ -51,12 +52,14 @@ use const PATH_SEPARATOR;
 
 abstract class FunctionalTestCase extends TestCase
 {
+    private const ATLAS_TLD = '/\.(mongodb\.net|mongodb-dev\.net)/';
+
     protected Manager $manager;
 
     private array $configuredFailPoints = [];
 
     /** @var array{int,{Collection,array}} */
-    private $collectionsToCleanup = [];
+    private array $collectionsToCleanup = [];
 
     public function setUp(): void
     {
@@ -517,6 +520,25 @@ abstract class FunctionalTestCase extends TestCase
         if ($this->getServerStorageEngine() !== 'wiredTiger') {
             $this->markTestSkipped('Transactions require WiredTiger storage engine');
         }
+    }
+
+    protected function isEnterprise(): bool
+    {
+        $buildInfo = $this->getPrimaryServer()->executeCommand(
+            $this->getDatabaseName(),
+            new Command(['buildInfo' => 1]),
+        )->toArray()[0];
+
+        if (isset($buildInfo->modules) && is_array($buildInfo->modules)) {
+            return in_array('enterprise', $buildInfo->modules);
+        }
+
+        throw new UnexpectedValueException('Could not determine server modules');
+    }
+
+    public static function isAtlas(?string $uri = null): bool
+    {
+        return preg_match(self::ATLAS_TLD, $uri ?? static::getUri());
     }
 
     /** @see https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/shared-library/ */

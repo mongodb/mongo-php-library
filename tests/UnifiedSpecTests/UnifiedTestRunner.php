@@ -49,8 +49,6 @@ use const FILTER_VALIDATE_BOOLEAN;
  */
 final class UnifiedTestRunner
 {
-    public const ATLAS_TLD = 'mongodb.net';
-
     public const SERVER_ERROR_INTERRUPTED = 11601;
     public const SERVER_ERROR_UNAUTHORIZED = 13;
 
@@ -83,7 +81,7 @@ final class UnifiedTestRunner
         /* Atlas prohibits killAllSessions. Inspect the connection string to
          * determine if we should avoid calling killAllSessions(). This does
          * mean that lingering transactions could block test execution. */
-        if ($this->isServerless() || strpos($internalClientUri, self::ATLAS_TLD) !== false) {
+        if ($this->isServerless() || FunctionalTestCase::isAtlas($internalClientUri)) {
             $this->allowKillAllSessions = false;
         }
 

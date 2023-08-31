@@ -541,6 +541,47 @@ final class Operation
                     array_diff_key($args, ['to' => 1]),
                 );
 
+            case 'createSearchIndex':
+                $options = [];
+                if (isset($args['model']->name)) {
+                    assertIsString($args['model']->name);
+                    $options['name'] = $args['model']->name;
+                }
+
+                assertInstanceOf(stdClass::class, $args['model']->definition);
+
+                return $collection->createSearchIndex($args['model']->definition, $options);
+
+            case 'createSearchIndexes':
+                $indexes = array_map(function ($index) {
+                    $index = (array) $index;
+                    assertInstanceOf(stdClass::class, $index['definition']);
+
+                    return $index;
+                }, $args['models']);
+
+                return $collection->createSearchIndexes($indexes);
+
+            case 'dropSearchIndex':
+                assertArrayHasKey('name', $args);
+                assertIsString($args['name']);
+
+                return $collection->dropSearchIndex($args['name']);
+
+            case 'updateSearchIndex':
+                assertArrayHasKey('name', $args);
+                assertArrayHasKey('definition', $args);
+                assertIsString($args['name']);
+                assertInstanceOf(stdClass::class, $args['definition']);
+
+                return $collection->updateSearchIndex($args['name'], $args['definition']);
+
+            case 'listSearchIndexes':
+                $args += (array) ($args['aggregationOptions'] ?? []);
+                unset($args['aggregationOptions']);
+
+                return $collection->listSearchIndexes($args);
+
             default:
                 Assert::fail('Unsupported collection operation: ' . $this->name);
         }

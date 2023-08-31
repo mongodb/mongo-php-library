@@ -165,19 +165,24 @@ OUTPUT;
         return is_string($dataName) ? $dataName : '';
     }
 
-    public function provideInvalidArrayValues()
+    public function provideInvalidArrayValues(): array
     {
         return $this->wrapValuesForDataProvider($this->getInvalidArrayValues());
     }
 
-    public function provideInvalidDocumentValues()
+    public function provideInvalidDocumentValues(): array
     {
         return $this->wrapValuesForDataProvider($this->getInvalidDocumentValues());
     }
 
-    public function provideInvalidIntegerValues()
+    public function provideInvalidIntegerValues(): array
     {
         return $this->wrapValuesForDataProvider($this->getInvalidIntegerValues());
+    }
+
+    public function provideInvalidStringValues(): array
+    {
+        return $this->wrapValuesForDataProvider($this->getInvalidStringValues());
     }
 
     protected function assertDeprecated(callable $execution): void

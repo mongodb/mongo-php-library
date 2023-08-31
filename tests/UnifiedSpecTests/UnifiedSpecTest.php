@@ -273,6 +273,25 @@ class UnifiedSpecTest extends FunctionalTestCase
         yield from $this->provideTests(__DIR__ . '/valid-fail/*.json');
     }
 
+    /** @dataProvider provideIndexManagementTests */
+    public function testIndexManagement(UnifiedTestCase $test): void
+    {
+        if (self::isAtlas()) {
+            self::markTestSkipped('Search Indexes tests must run on a non-Atlas cluster');
+        }
+
+        if (! self::isEnterprise()) {
+            self::markTestSkipped('Specific Atlas error messages are only available on Enterprise server');
+        }
+
+        self::$runner->run($test);
+    }
+
+    public function provideIndexManagementTests()
+    {
+        yield from $this->provideTests(__DIR__ . '/index-management/*.json');
+    }
+
     private function provideTests(string $pattern): Generator
     {
         foreach (glob($pattern) as $filename) {

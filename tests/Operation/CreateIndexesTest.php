@@ -98,9 +98,4 @@ class CreateIndexesTest extends TestCase
         $this->expectExceptionMessage('Expected "name" option to have type "string"');
         new CreateIndexes($this->getDatabaseName(), $this->getCollectionName(), [['key' => ['x' => 1], 'name' => $name]]);
     }
-
-    public function provideInvalidStringValues()
-    {
-        return $this->wrapValuesForDataProvider($this->getInvalidStringValues());
-    }
 }

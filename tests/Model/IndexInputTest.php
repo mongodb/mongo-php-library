@@ -15,19 +15,23 @@ class IndexInputTest extends TestCase
     public function testConstructorShouldRequireKey(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Required "key" document is missing from index specification');
         new IndexInput([]);
     }
 
-    public function testConstructorShouldRequireKeyToBeArrayOrObject(): void
+    /** @dataProvider provideInvalidDocumentValues */
+    public function testConstructorShouldRequireKeyToBeArrayOrObject($key): void
     {
         $this->expectException(InvalidArgumentException::class);
-        new IndexInput(['key' => 'foo']);
+        $this->expectExceptionMessage('Expected "key" option to have type "document"');
+        new IndexInput(['key' => $key]);
     }
 
     /** @dataProvider provideInvalidFieldOrderValues */
     public function testConstructorShouldRequireKeyFieldOrderToBeNumericOrString($order): void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected order value for "x" field within "key" option to have type "numeric or string"');
         new IndexInput(['key' => ['x' => $order]]);
     }
 
@@ -36,10 +40,12 @@ class IndexInputTest extends TestCase
         return $this->wrapValuesForDataProvider([true, [], new stdClass()]);
     }
 
-    public function testConstructorShouldRequireNameToBeString(): void
+    /** @dataProvider provideInvalidStringValues */
+    public function testConstructorShouldRequireNameToBeString($name): void
     {
         $this->expectException(InvalidArgumentException::class);
-        new IndexInput(['key' => ['x' => 1], 'name' => 1]);
+        $this->expectExceptionMessage('Expected "name" option to have type "string"');
+        new IndexInput(['key' => ['x' => 1], 'name' => $name]);
     }
 
     /**
@@ -67,7 +73,7 @@ class IndexInputTest extends TestCase
 
     public function testBsonSerialization(): void
     {
-        $expected = [
+        $expected = (object) [
             'key' => ['x' => 1],
             'unique' => true,
             'name' => 'x_1',
@@ -79,6 +85,6 @@ class IndexInputTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Serializable::class, $indexInput);
-        $this->assertSame($expected, $indexInput->bsonSerialize());
+        $this->assertEquals($expected, $indexInput->bsonSerialize());
     }
 }

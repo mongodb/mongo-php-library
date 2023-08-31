@@ -14,7 +14,7 @@ class CreateSearchIndexesTest extends TestCase
         new CreateSearchIndexes($this->getDatabaseName(), $this->getCollectionName(), [1 => ['name' => 'index name', 'definition' => ['mappings' => ['dynamic' => true]]]], []);
     }
 
-    /** @dataProvider provideInvalidIndexSpecificationTypes */
+    /** @dataProvider provideInvalidArrayValues */
     public function testConstructorIndexDefinitionMustBeADocument($index): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -43,10 +43,5 @@ class CreateSearchIndexesTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected "definition" option to have type "document"');
         new CreateSearchIndexes($this->getDatabaseName(), $this->getCollectionName(), [['definition' => $definition]], []);
-    }
-
-    public function provideInvalidIndexSpecificationTypes(): array
-    {
-        return $this->wrapValuesForDataProvider($this->getInvalidDocumentValues());
     }
 }

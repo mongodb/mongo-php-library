@@ -16,18 +16,20 @@ class SearchIndexInputTest extends TestCase
         new SearchIndexInput([]);
     }
 
-    public function testConstructorIndexDefinitionMustBeADocument(): void
+    /** @dataProvider provideInvalidDocumentValues */
+    public function testConstructorIndexDefinitionMustBeADocument($definition): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected "definition" option to have type "document"');
-        new SearchIndexInput(['definition' => 'foo']);
+        new SearchIndexInput(['definition' => $definition]);
     }
 
-    public function testConstructorShouldRequireNameToBeString(): void
+    /** @dataProvider provideInvalidStringValues */
+    public function testConstructorShouldRequireNameToBeString($name): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected "name" option to have type "string"');
-        new SearchIndexInput(['definition' => ['mapping' => ['dynamid' => true]], 'name' => 1]);
+        new SearchIndexInput(['definition' => ['mapping' => ['dynamic' => true]], 'name' => $name]);
     }
 
     public function testBsonSerialization(): void

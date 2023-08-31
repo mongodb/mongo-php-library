@@ -19,11 +19,12 @@ class IndexInputTest extends TestCase
         new IndexInput([]);
     }
 
-    public function testConstructorShouldRequireKeyToBeArrayOrObject(): void
+    /** @dataProvider provideInvalidDocumentValues */
+    public function testConstructorShouldRequireKeyToBeArrayOrObject($key): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected "key" option to have type "document"');
-        new IndexInput(['key' => 'foo']);
+        new IndexInput(['key' => $key]);
     }
 
     /** @dataProvider provideInvalidFieldOrderValues */
@@ -39,11 +40,12 @@ class IndexInputTest extends TestCase
         return $this->wrapValuesForDataProvider([true, [], new stdClass()]);
     }
 
-    public function testConstructorShouldRequireNameToBeString(): void
+    /** @dataProvider provideInvalidStringValues */
+    public function testConstructorShouldRequireNameToBeString($name): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected "name" option to have type "string"');
-        new IndexInput(['key' => ['x' => 1], 'name' => 1]);
+        new IndexInput(['key' => ['x' => 1], 'name' => $name]);
     }
 
     /**

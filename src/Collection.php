@@ -898,7 +898,7 @@ class Collection
      * Only available when used against a 7.0+ Atlas cluster.
      *
      * @param array{name?: string} $options Command options
-     * @return Countable&Iterator<array{id: string, name: string, status: string, queryable: bool, latestDefinition: array}>
+     * @return Countable&Iterator
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      * @see ListSearchIndexes::__construct() for supported options

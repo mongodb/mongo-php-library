@@ -577,7 +577,10 @@ final class Operation
                 return $collection->updateSearchIndex($args['name'], $args['definition']);
 
             case 'listSearchIndexes':
-                return $collection->listSearchIndexes($args + (array) ($args['aggregationOptions'] ?? []));
+                $args += (array) ($args['aggregationOptions'] ?? []);
+                unset($args['aggregationOptions']);
+
+                return $collection->listSearchIndexes($args);
 
             default:
                 Assert::fail('Unsupported collection operation: ' . $this->name);

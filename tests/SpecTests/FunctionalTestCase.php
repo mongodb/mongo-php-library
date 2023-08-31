@@ -82,21 +82,6 @@ class FunctionalTestCase extends BaseFunctionalTestCase
     }
 
     /**
-     * Asserts that two given documents match.
-     *
-     * Extra keys in the actual value's document(s) will be ignored.
-     *
-     * @param array|object $expectedDocument
-     * @param array|object $actualDocument
-     */
-    public static function assertDocumentsMatch($expectedDocument, $actualDocument, string $message = ''): void
-    {
-        $constraint = new DocumentsMatchConstraint($expectedDocument, true, true);
-
-        static::assertThat($actualDocument, $constraint, $message);
-    }
-
-    /**
      * Assert omitted top-level fields in command documents.
      *
      * Note: this method may modify the $expected object.

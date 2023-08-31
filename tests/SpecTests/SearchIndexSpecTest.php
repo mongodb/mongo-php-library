@@ -11,12 +11,9 @@ use function bin2hex;
 use function count;
 use function hrtime;
 use function iterator_to_array;
-use function json_encode;
 use function random_bytes;
 use function sleep;
 use function sprintf;
-
-use const JSON_THROW_ON_ERROR;
 
 /**
  * Functional tests for the Atlas Search index management.
@@ -27,6 +24,7 @@ use const JSON_THROW_ON_ERROR;
 class SearchIndexSpecTest extends FunctionalTestCase
 {
     private const WAIT_TIMEOUT_SEC = 300;
+    private const STATUS_READY = 'READY';
 
     public function setUp(): void
     {
@@ -56,15 +54,11 @@ class SearchIndexSpecTest extends FunctionalTestCase
         );
         $this->assertSame($name, $createdName);
 
-        [$index] = $this->waitForIndexes($collection, fn ($indexes) => $this->allIndexesAreQueryable($indexes));
+        $indexes = $this->waitForIndexes($collection, fn ($indexes) => $this->allIndexesAreQueryable($indexes));
 
-        $this->assertSame($name, $index->name);
-
-        // Convert to JSON to compare nested associative arrays and nested objects
-        $this->assertJsonStringEqualsJsonString(
-            json_encode($mapping, JSON_THROW_ON_ERROR),
-            json_encode($index->latestDefinition, JSON_THROW_ON_ERROR),
-        );
+        $this->assertCount(1, $indexes);
+        $this->assertSame($name, $indexes[0]->name);
+        $this->assertDocumentsMatch($mapping, $indexes[0]->latestDefinition);
     }
 
     /**
@@ -86,15 +80,11 @@ class SearchIndexSpecTest extends FunctionalTestCase
 
         $indexes = $this->waitForIndexes($collection, fn ($indexes) => $this->allIndexesAreQueryable($indexes));
 
+        $this->assertCount(2, $indexes);
         foreach ($names as $key => $name) {
             $index = $indexes[$key];
             $this->assertSame($name, $index->name);
-
-            // Convert to JSON to compare nested associative arrays and nested objects
-            $this->assertJsonStringEqualsJsonString(
-                json_encode($mapping, JSON_THROW_ON_ERROR),
-                json_encode($index->latestDefinition, JSON_THROW_ON_ERROR),
-            );
+            $this->assertDocumentsMatch($mapping, $index->latestDefinition);
         }
     }
 
@@ -147,15 +137,11 @@ class SearchIndexSpecTest extends FunctionalTestCase
         $mapping = ['mappings' => ['dynamic' => true]];
         $collection->updateSearchIndex($name, $mapping);
 
-        [$index] = $this->waitForIndexes($collection, fn ($indexes) => $this->allIndexesAreQueryable($indexes));
+        $indexes = $this->waitForIndexes($collection, fn ($indexes) => $this->allIndexesAreQueryable($indexes));
 
-        $this->assertSame($name, $index->name);
-
-        // Convert to JSON to compare nested associative arrays and nested objects
-        $this->assertJsonStringEqualsJsonString(
-            json_encode($mapping, JSON_THROW_ON_ERROR),
-            json_encode($index->latestDefinition, JSON_THROW_ON_ERROR),
-        );
+        $this->assertCount(1, $indexes);
+        $this->assertSame($name, $indexes[0]->name);
+        $this->assertDocumentsMatch($mapping, $indexes[0]->latestDefinition);
     }
 
     /**
@@ -208,7 +194,7 @@ class SearchIndexSpecTest extends FunctionalTestCase
                 return false;
             }
 
-            if (! $index->status === 'READY') {
+            if (! $index->status === self::STATUS_READY) {
                 return false;
             }
         }

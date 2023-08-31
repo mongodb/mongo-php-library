@@ -81,7 +81,7 @@ class DropSearchIndex implements Executable
         try {
             $server->executeCommand($this->databaseName, new Command($cmd));
         } catch (CommandException $e) {
-            // Drop operations is idempotent. The server may return an error if the collection does not exist.
+            // Drop operations are idempotent. The server may return an error if the collection does not exist.
             if ($e->getCode() !== self::ERROR_CODE_NAMESPACE_NOT_FOUND) {
                 throw $e;
             }

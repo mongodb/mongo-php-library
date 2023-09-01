@@ -3,7 +3,8 @@
     {
       "minServerVersion": "4.1.8",
       "topology": [
-        "sharded"
+        "sharded",
+        "load-balanced"
       ],
       "serverless": "forbid"
     }

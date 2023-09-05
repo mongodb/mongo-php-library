@@ -136,6 +136,8 @@ class WritableStream
             '_id' => $options['_id'],
             'chunkSize' => $this->chunkSize,
             'filename' => $filename,
+            'length' => 0,
+            'uploadDate' => new UTCDateTime(0),
         ] + array_intersect_key($options, ['aliases' => 1, 'contentType' => 1, 'metadata' => 1]);
     }
 

@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\GridFS;
 
 use MongoDB\BSON\Binary;
+use MongoDB\BSON\Document;
 use MongoDB\Collection;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -15,6 +16,8 @@ use MongoDB\GridFS\Exception\StreamException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\ListIndexes;
+use MongoDB\Tests\Fixtures\Codec\TestFileCodec;
+use MongoDB\Tests\Fixtures\Document\TestFile;
 
 use function array_merge;
 use function call_user_func;
@@ -68,6 +71,7 @@ class BucketFunctionalTest extends FunctionalTestCase
         return $this->createOptionDataProvider([
             'bucketName' => $this->getInvalidStringValues(true),
             'chunkSizeBytes' => $this->getInvalidIntegerValues(true),
+            'codec' => $this->getInvalidDocumentCodecValues(),
             'disableMD5' => $this->getInvalidBooleanValues(true),
             'readConcern' => $this->getInvalidReadConcernValues(),
             'readPreference' => $this->getInvalidReadPreferenceValues(),
@@ -317,6 +321,29 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertInstanceOf(BSONDocument::class, $fileDocument);
     }
 
+    public function testFindUsesCodec(): void
+    {
+        $this->bucket->uploadFromStream('a', $this->createStream('foo'));
+
+        $cursor = $this->bucket->find([], ['codec' => new TestFileCodec()]);
+        $fileDocument = current($cursor->toArray());
+
+        $this->assertInstanceOf(TestFile::class, $fileDocument);
+        $this->assertSame('a', $fileDocument->filename);
+    }
+
+    public function testFindInheritsBucketCodec(): void
+    {
+        $bucket = new Bucket($this->manager, $this->getDatabaseName(), ['codec' => new TestFileCodec()]);
+        $bucket->uploadFromStream('a', $this->createStream('foo'));
+
+        $cursor = $bucket->find();
+        $fileDocument = current($cursor->toArray());
+
+        $this->assertInstanceOf(TestFile::class, $fileDocument);
+        $this->assertSame('a', $fileDocument->filename);
+    }
+
     public function testFindOne(): void
     {
         $this->bucket->uploadFromStream('a', $this->createStream('foo'));
@@ -337,6 +364,46 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $this->assertInstanceOf(BSONDocument::class, $fileDocument);
         $this->assertSameDocument(['filename' => 'b', 'length' => 6], $fileDocument);
+    }
+
+    public function testFindOneUsesCodec(): void
+    {
+        $this->bucket->uploadFromStream('a', $this->createStream('foo'));
+        $this->bucket->uploadFromStream('b', $this->createStream('foobar'));
+        $this->bucket->uploadFromStream('c', $this->createStream('foobarbaz'));
+
+        $fileDocument = $this->bucket->findOne(
+            ['length' => ['$lte' => 6]],
+            [
+                'sort' => ['length' => -1],
+                'codec' => new TestFileCodec(),
+            ],
+        );
+
+        $this->assertInstanceOf(TestFile::class, $fileDocument);
+        $this->assertSame('b', $fileDocument->filename);
+        $this->assertSame(6, $fileDocument->length);
+    }
+
+    public function testFindOneInheritsBucketCodec(): void
+    {
+        $bucket = new Bucket($this->manager, $this->getDatabaseName(), ['codec' => new TestFileCodec()]);
+
+        $bucket->uploadFromStream('a', $this->createStream('foo'));
+        $bucket->uploadFromStream('b', $this->createStream('foobar'));
+        $bucket->uploadFromStream('c', $this->createStream('foobarbaz'));
+
+        $fileDocument = $bucket->findOne(
+            ['length' => ['$lte' => 6]],
+            [
+                'sort' => ['length' => -1],
+                'codec' => new TestFileCodec(),
+            ],
+        );
+
+        $this->assertInstanceOf(TestFile::class, $fileDocument);
+        $this->assertSame('b', $fileDocument->filename);
+        $this->assertSame(6, $fileDocument->length);
     }
 
     public function testGetBucketNameWithCustomValue(): void
@@ -386,6 +453,22 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertInstanceOf(BSONDocument::class, $fileDocument);
         $this->assertInstanceOf(BSONDocument::class, $fileDocument['metadata']);
         $this->assertSame(['foo' => 'bar'], $fileDocument['metadata']->getArrayCopy());
+    }
+
+    public function testGetFileDocumentForStreamUsesCodec(): void
+    {
+        $bucket = new Bucket($this->manager, $this->getDatabaseName(), ['codec' => new TestFileCodec()]);
+
+        $metadata = ['foo' => 'bar'];
+        $stream = $bucket->openUploadStream('filename', ['_id' => 1, 'metadata' => $metadata]);
+
+        $fileDocument = $bucket->getFileDocumentForStream($stream);
+
+        $this->assertInstanceOf(TestFile::class, $fileDocument);
+
+        $this->assertSame('filename', $fileDocument->filename);
+        $this->assertInstanceOf(Document::class, $fileDocument->metadata);
+        $this->assertSame($metadata, $fileDocument->metadata->toPHP(['root' => 'array']));
     }
 
     public function testGetFileDocumentForStreamWithReadableStream(): void

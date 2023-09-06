@@ -31,8 +31,10 @@ final class TestFileCodec implements DocumentCodec
         $fileObject->id = $value->get('_id');
         $fileObject->length = (int) $value->get('length');
         $fileObject->chunkSize = (int) $value->get('chunkSize');
-        $fileObject->uploadDate = DateTimeImmutable::createFromMutable($value->get('uploadDate')->toDateTime());
         $fileObject->filename = $value->get('filename');
+
+        $uploadDate = $value->get('uploadDate');
+        $fileObject->uploadDate = $uploadDate ? DateTimeImmutable::createFromMutable($uploadDate->toDateTime()) : null;
 
         if ($value->has('metadata')) {
             $fileObject->metadata = $value->get('metadata');

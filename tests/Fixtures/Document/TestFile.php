@@ -24,7 +24,7 @@ final class TestFile
     public $id;
     public int $length;
     public int $chunkSize;
-    public DateTimeImmutable $uploadDate;
+    public ?DateTimeImmutable $uploadDate = null;
     public string $filename;
     public $metadata;
 }

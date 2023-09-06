@@ -18,6 +18,7 @@ use function parse_url;
  * Atlas Data Lake spec tests.
  *
  * @see https://github.com/mongodb/specifications/tree/master/source/atlas-data-lake-testing/tests
+ * @group atlas-data-lake
  */
 class AtlasDataLakeSpecTest extends FunctionalTestCase
 {

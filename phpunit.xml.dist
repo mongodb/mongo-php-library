@@ -22,9 +22,5 @@
         <testsuite name="Default Test Suite">
             <directory>./tests/</directory>
         </testsuite>
-
-        <testsuite name="Atlas Data Lake Test Suite">
-            <file>tests/SpecTests/AtlasDataLakeSpecTest.php</file>
-        </testsuite>
     </testsuites>
 </phpunit>

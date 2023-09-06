@@ -82,6 +82,10 @@ export MONGODB_MULTI_MONGOS_LB_URI="${MONGODB_MULTI_MONGOS_LB_URI}"
 
 # Run the tests, and store the results in a junit result file
 case "$TESTS" in
+   atlas*)
+      php vendor/bin/simple-phpunit $PHPUNIT_OPTS --group atlas
+      ;;
+
    atlas-data-lake*)
       php vendor/bin/simple-phpunit $PHPUNIT_OPTS --group atlas-data-lake
       ;;

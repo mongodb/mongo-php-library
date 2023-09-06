@@ -665,6 +665,13 @@ tasks:
             client_side_encryption_aws_secret_access_key: ""
             TESTS: "csfle-without-aws-creds"
 
+    - name: "test-atlas"
+      commands:
+        - func: "start kms servers"
+        - func: "run tests"
+          vars:
+            TESTS: "atlas"
+
 # }}}
 
 
@@ -871,6 +878,41 @@ axes:
         variables:
           DEPENDENCIES: "lowest"
 
+task_groups:
+  - name: test_atlas_task_group
+    setup_group:
+      - func: "fetch source"
+      - func: "prepare resources"
+      - func: "fix absolute paths"
+      - func: "make files executable"
+      - func: "install dependencies"
+      - command: subprocess.exec
+        params:
+          working_dir: src
+          binary: bash
+          add_expansions_to_env: true
+          env:
+            MONGODB_VERSION: '7.0'
+          args:
+            - ${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh
+      - command: expansions.update
+        params:
+          file: src/atlas-expansion.yml
+    teardown_group:
+      - command: subprocess.exec
+        params:
+          working_dir: src
+          binary: bash
+          add_expansions_to_env: true
+          args:
+            - ${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh
+      - func: "upload test results"
+      - func: "cleanup"
+    setup_group_can_fail_task: true
+    setup_group_timeout_secs: 1800
+    tasks:
+      - test-atlas
+
 buildvariants:
 # Test all PHP versions with latest-stable MongoDB and PHPC on all platforms
 - matrix_name: "test-php-versions"
@@ -981,3 +1023,9 @@ buildvariants:
     - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4", "5.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
   tasks:
     - name: "test-without_aws_creds"
+
+- matrix_name: rhel8-test-atlas
+  matrix_spec: { "os": ["rhel80"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+  display_name: Atlas Tests
+  tasks:
+    - test_atlas_task_group

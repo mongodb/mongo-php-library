@@ -37,6 +37,7 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Find;
 
 use function array_intersect_key;
+use function array_key_exists;
 use function assert;
 use function fopen;
 use function get_resource_type;
@@ -319,7 +320,7 @@ class Bucket
      */
     public function find($filter = [], array $options = [])
     {
-        if ($this->codec && ! isset($options['codec'])) {
+        if ($this->codec && ! array_key_exists('codec', $options)) {
             $options['codec'] = $this->codec;
         }
 
@@ -340,7 +341,7 @@ class Bucket
      */
     public function findOne($filter = [], array $options = [])
     {
-        if ($this->codec && ! isset($options['codec'])) {
+        if ($this->codec && ! array_key_exists('codec', $options)) {
             $options['codec'] = $this->codec;
         }
 

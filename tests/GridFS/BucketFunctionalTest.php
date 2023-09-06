@@ -344,6 +344,18 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertSame('a', $fileDocument->filename);
     }
 
+    public function testFindResetsInheritedBucketCodec(): void
+    {
+        $bucket = new Bucket($this->manager, $this->getDatabaseName(), ['codec' => new TestFileCodec()]);
+        $bucket->uploadFromStream('a', $this->createStream('foo'));
+
+        $cursor = $bucket->find([], ['codec' => null]);
+        $fileDocument = current($cursor->toArray());
+
+        $this->assertInstanceOf(BSONDocument::class, $fileDocument);
+        $this->assertSame('a', $fileDocument->filename);
+    }
+
     public function testFindOne(): void
     {
         $this->bucket->uploadFromStream('a', $this->createStream('foo'));
@@ -395,13 +407,31 @@ class BucketFunctionalTest extends FunctionalTestCase
 
         $fileDocument = $bucket->findOne(
             ['length' => ['$lte' => 6]],
-            [
-                'sort' => ['length' => -1],
-                'codec' => new TestFileCodec(),
-            ],
+            ['sort' => ['length' => -1]],
         );
 
         $this->assertInstanceOf(TestFile::class, $fileDocument);
+        $this->assertSame('b', $fileDocument->filename);
+        $this->assertSame(6, $fileDocument->length);
+    }
+
+    public function testFindOneResetsInheritedBucketCodec(): void
+    {
+        $bucket = new Bucket($this->manager, $this->getDatabaseName(), ['codec' => new TestFileCodec()]);
+
+        $bucket->uploadFromStream('a', $this->createStream('foo'));
+        $bucket->uploadFromStream('b', $this->createStream('foobar'));
+        $bucket->uploadFromStream('c', $this->createStream('foobarbaz'));
+
+        $fileDocument = $bucket->findOne(
+            ['length' => ['$lte' => 6]],
+            [
+                'sort' => ['length' => -1],
+                'codec' => null,
+            ],
+        );
+
+        $this->assertInstanceOf(BSONDocument::class, $fileDocument);
         $this->assertSame('b', $fileDocument->filename);
         $this->assertSame(6, $fileDocument->length);
     }

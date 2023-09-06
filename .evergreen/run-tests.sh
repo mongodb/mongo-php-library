@@ -87,7 +87,7 @@ case "$TESTS" in
       ;;
 
    atlas-data-lake*)
-      php vendor/bin/simple-phpunit $PHPUNIT_OPTS --testsuite "Atlas Data Lake Test Suite"
+      php vendor/bin/simple-phpunit $PHPUNIT_OPTS --group atlas-data-lake
       ;;
 
    csfle)

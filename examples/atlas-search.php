@@ -35,12 +35,16 @@ if (! $uri || ! str_contains($uri, '.mongodb.net')) {
 // They usually take less than 5 minutes to complete.
 define('WAIT_TIMEOUT_SEC', 300);
 
+// The sample dataset is loaded into the "sample_airbnb.listingsAndReviews" collection.
+$databaseName = getenv('MONGODB_DATABASE') ?: 'sample_airbnb';
+$collectionName = getenv('MONGODB_COLLECTION') ?: 'listingsAndReviews';
+
 $client = new Client($uri);
-$collection = $client->selectCollection('sample_airbnb', 'listingsAndReviews');
+$collection = $client->selectCollection($databaseName, $collectionName);
 
 $count = $collection->estimatedDocumentCount();
 if ($count === 0) {
-    echo 'This example requires the sample_airbnb database with the listingsAndReviews collection.', "\n";
+    echo 'This example requires the "', $databaseName, '" database with the "', $collectionName, '" collection.', "\n";
     echo 'Load the sample dataset in your MongoDB Atlas cluster before running this example:', "\n";
     echo '    https://www.mongodb.com/docs/atlas/sample-data/', "\n";
     exit(1);

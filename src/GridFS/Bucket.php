@@ -400,7 +400,7 @@ class Bucket
     {
         $file = $this->getRawFileDocumentForStream($stream);
 
-        if ($this->codec instanceof DocumentCodec) {
+        if ($this->codec) {
             return $this->codec->decode(Document::fromPHP($file));
         }
 

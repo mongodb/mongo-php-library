@@ -228,6 +228,120 @@ code omitted for brevity):
        }
    }
 
+Handling embedded documents
+---------------------------
+
+The previous example showed how to handle a single document. However, sometimes you want to handle fields that contain
+embedded documents. To show this, let's create an address document that we'll be embedding into our ``Person`` document.
+To ensure consistency, we're going to make this a readonly class:
+
+.. code-block:: php
+
+   <?php
+
+   final readonly class Address
+   {
+       public function __construct(
+           public string $street,
+           public string $postCode,
+           public string $city,
+           public string $country,
+       ) {
+   }
+
+We can now create a document codec for this class:
+
+.. code-block:: php
+
+   <?php
+
+   final class AddressCodec implements MongoDB\Codec\DocumentCodec
+   {
+       // Other code omitted for brevity
+       public function decode($value): Person
+       {
+           if (! $this->canDecode($value)) {
+               throw UnsupportedValueException::invalidDecodableValue($value);
+           }
+
+           return new Address(
+               $value->get('street'),
+               $value->get('postCode'),
+               $value->get('city'),
+               $value->get('country'),
+           );
+       }
+
+       public function encode($value): MongoDB\BSON\Document
+       {
+           if (! $this->canEncode($value)) {
+               throw UnsupportedValueException::invalidEncodableValue($value);
+           }
+
+           return MongoDB\BSON\Document::fromPHP([
+               'street' => $value->street,
+               'postCode' => $value->postCode,
+               'city' => $value->city,
+               'country' => $value->country,
+           ]);
+       }
+   }
+
+This codec is quite similar to the ``PersonCodec`` we had before, except that we're not adding an identifier to it. The
+creation of the object also differs, as we have to pass all the fields to the constructor.
+
+In the ``PersonCodec``, we can now extend the ``decode`` and ``encode`` methods to handle the address field. Note that
+the example below excludes some code we've already shown in previous examples.
+
+.. code-block:: php
+
+   <?php
+
+   final class PersonCodec implements MongoDB\Codec\DocumentCodec
+   {
+       private AddressCodec $addressCodec;
+
+       public function __construct()
+       {
+           $this->addressCodec = new AddressCodec();
+       }
+
+       // Other code omitted for brevity
+       public function decode($value): Person
+       {
+           if (! $this->canDecode($value)) {
+               throw UnsupportedValueException::invalidDecodableValue($value);
+           }
+
+           $person = new Person($value->get('name'));
+           $person->id = $value->get('_id');
+
+           if ($value->has('address')) {
+               $person->address = $this->addressCodec->decode($value->get('address'));
+           }
+
+           return $person;
+       }
+
+       public function encode($value): MongoDB\BSON\Document
+       {
+           if (! $this->canEncode($value)) {
+               throw UnsupportedValueException::invalidEncodableValue($value);
+           }
+
+           $data = [
+               '_id' => $value->id,
+               'name' => $value->name,
+           ];
+
+           if ($value->address) {
+               $data['address'] = $this->addressCodec->encode($value->address);
+           }
+
+           return MongoDB\BSON\Document::fromPHP($data);
+       }
+   }
+
 Codec Libraries
 ---------------
 

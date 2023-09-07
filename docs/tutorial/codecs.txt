@@ -1,0 +1,302 @@
+======
+Codecs
+======
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 2
+   :class: singlecol
+
+.. versionadded:: 1.17
+
+Overview
+--------
+
+Codecs are used to decode BSON documents into PHP objects and vice versa. In contrast to other methods, they allow for
+more flexibility and customization of the process and how different data types are handled. They allow separating the
+logic for BSON encoding and decoding from the domain classes, allowing to decode BSON into plain old PHP objects (POPOs).
+
+Document Codec Usage
+--------------------
+
+The main logic is contained in a document codec. This class implements the ``MongoDB\Codec\DocumentCodec`` interface and
+defines what data types can be encoded/decoded and how. The following example defines a ``Person`` class and a codec to
+encode/decode it:
+
+.. code-block:: php
+
+   <?php
+
+   final class Person
+   {
+       public MongoDB\BSON\ObjectId $id;
+       public string $name;
+
+       public function __construct(string $name)
+       {
+           $this->id = new MongoDB\BSON\ObjectId();
+           $this->name = $name;
+       }
+   }
+
+.. code-block:: php
+
+   <?php
+
+   final class PersonCodec implements MongoDB\Codec\DocumentCodec
+   {
+       // These traits define commonly used functionality to avoid duplication
+       use MongoDB\Codec\DecodeIfSupported;
+       use MongoDB\Codec\EncodeIfSupported;
+
+       public function canDecode($value): bool
+       {
+           return $value instanceof MongoDB\BSON\Document && $value->has('name');
+       }
+
+       public function canEncode($value): bool
+       {
+           return $value instanceof Person;
+       }
+
+       public function decode($value): Person
+       {
+           if (! $this->canDecode($value)) {
+               throw UnsupportedValueException::invalidDecodableValue($value);
+           }
+
+           $person = new Person($value->get('name'));
+           $person->id = $value->get('_id');
+
+           return $person;
+       }
+
+       public function encode($value): MongoDB\BSON\Document
+       {
+           if (! $this->canEncode($value)) {
+               throw UnsupportedValueException::invalidEncodableValue($value);
+           }
+
+           return MongoDB\BSON\Document::fromPHP([
+               '_id' => $value->id,
+               'name' => $value->name,
+           ]);
+       }
+   }
+
+To then use this codec with a collection, specify the ``codec`` option when selecting the collection:
+
+.. code-block:: php
+
+   <?php
+
+   $collection = (new MongoDB\Client())->selectCollection('test', 'person', ['codec' => new PersonCodec()]);
+
+   $person = new Person('Jane Doe');
+   $collection->insertOne($person);
+
+   $person = $collection->findOne();
+
+The example above selects a collection and instructs it to use the ``PersonCodec`` for encoding and decoding documents.
+When inserting data, the ``PersonCodec`` is used to encode the document. When retrieving data, the ``PersonCodec`` is
+used to decode BSON data into a ``Person`` instance.
+
+.. note::
+
+   When working on a collection with a codec, all incoming and outgoing data will be handled with the given codec. This
+   affects the following methods: ``aggregate``, ``bulkWrite``, ``find``, ``findOne``, ``findOneAndDelete``,
+   ``findOneAndReplace``, ``findOneAndUpdate``, ``insertMany``, ``insertOne``, and ``replaceOne``. To disable the codec
+   for a specific operation, you can provide ``null`` for the ``codec`` option in the operation.
+
+Generic Codecs
+--------------
+
+The previous example showed how to define a codec for a specific class. However, sometimes you want to define codecs to
+handle a given type in all documents. For such codecs, you can implement the ``MongoDB\Codec\Codec`` interface. The
+following example defines a codec to store ``DateTimeInterface`` instances as BSON dates including the timezone:
+
+.. code-block:: php
+
+   <?php
+
+   final class DateTimeCodec implements MongoDB\Codec\Codec
+   {
+       // These traits define commonly used functionality to avoid duplication
+       use MongoDB\Codec\DecodeIfSupported;
+       use MongoDB\Codec\EncodeIfSupported;
+
+       public function canDecode($value): bool
+       {
+           // For maximum compatibility, this codec supports decoding both UTCDateTime instances and documents with a
+           // UTCDateTime instance and optional timezone
+           return
+               $value instanceof MongoDB\BSON\UTCDateTime ||
+               $value instanceof MongoDB\BSON\Document && $value->has('utc');
+       }
+
+       public function canEncode($value): bool
+       {
+           return $value instanceof DateTimeInterface;
+       }
+
+       public function decode($value): DateTimeImmutable
+       {
+           if (! $this->canDecode($value)) {
+               throw UnsupportedValueException::invalidDecodableValue($value);
+           }
+
+           $utc = $value instanceof MongoDB\BSON\UTCDateTime
+               ? $value
+               : $value->get('utc');
+
+           if (! $utc instanceof UTCDateTime) {
+               throw UnsupportedValueException::invalidDecodableValue($utc);
+           }
+
+           $dateTime = $utc->toDateTime();
+
+           if ($value instanceof MongoDB\BSON\Document && $value->has('tz')) {
+               $dateTime->setTimeZone(new DateTimeZone($value->get('tz')));
+           }
+
+           return DateTimeImmutable::fromMutable($dateTime);
+       }
+
+       public function encode($value): MongoDB\BSON\Document
+       {
+           if (! $this->canEncode($value)) {
+               throw UnsupportedValueException::invalidEncodableValue($value);
+           }
+
+           return MongoDB\BSON\Document::fromPHP([
+               'utc' => new UTCDateTime($value),
+               'tz' => $value->getTimezone()->getName(),
+           ]);
+       }
+   }
+
+This codec can now be leveraged by other codecs encode and decode dates. Let's return to the previous example and add a
+``createdAt`` field that contains the creation date. The modified encode and decode methods would look like this (other
+code omitted for brevity):
+
+.. code-block:: php
+
+   <?php
+
+   final class PersonCodec implements MongoDB\Codec\DocumentCodec
+   {
+       private DateTimeCodec $dateTimeCodec;
+
+       public function __construct()
+       {
+           $this->dateTimeCodec = new DateTimeCodec();
+       }
+
+       // Other code omitted for brevity
+       public function decode($value): Person
+       {
+           if (! $this->canDecode($value)) {
+               throw UnsupportedValueException::invalidDecodableValue($value);
+           }
+
+           $person = new Person($value->get('name'));
+           $person->id = $value->get('_id');
+           $person->createdAt = $this->dateTimeCodec->decode($value->get('createdAt'));
+
+           return $person;
+       }
+
+       public function encode($value): MongoDB\BSON\Document
+       {
+           if (! $this->canEncode($value)) {
+               throw UnsupportedValueException::invalidEncodableValue($value);
+           }
+
+           return MongoDB\BSON\Document::fromPHP([
+               '_id' => $value->id,
+               'name' => $value->name,
+               'createdAt' => $this->dateTimeCodec->encode($value->createdAt),
+           ]);
+       }
+   }
+
+Codec Libraries
+---------------
+
+If you have a number of codecs that you want to use in multiple places, you can create a codec library. A codec library
+contains a list of codecs and checks each codec if it supports a value. If it does, it will use that codec to encode or
+decode the given value. The following code snippet changes the PersonCodec to use a codec library instead of a
+hard-coded ``DateTimeCodec``:
+
+.. code-block:: php
+
+   <?php
+
+   final class PersonCodec implements MongoDB\Codec\DocumentCodec
+   {
+       private MongoDB\Codec\CodecLibrary $library;
+
+       public function __construct(private MongoDB\Codec\CodecLibrary $codecLibrary)
+       {
+       }
+
+       // Other code omitted for brevity
+       public function decode($value): Person
+       {
+           if (! $this->canDecode($value)) {
+               throw UnsupportedValueException::invalidDecodableValue($value);
+           }
+
+           $person = new Person($value->get('name'));
+           $person->id = $value->get('_id');
+           $person->createdAt = $this->codecLibrary->decode($value->get('createdAt'));
+
+           return $person;
+       }
+
+       public function encode($value): MongoDB\BSON\Document
+       {
+           if (! $this->canEncode($value)) {
+               throw UnsupportedValueException::invalidEncodableValue($value);
+           }
+
+           return MongoDB\BSON\Document::fromPHP([
+               '_id' => $value->id,
+               'name' => $value->name,
+               'createdAt' => $this->codecLibrary->encode($value->createdAt),
+           ]);
+       }
+   }
+
+This way, you can configure a global codec library and reuse it in multiple places:
+
+.. code-block:: php
+
+   <?php
+
+    $codecLibrary = new MongoDB\Codec\CodecLibrary([
+         new DateTimeCodec(),
+    ]);
+
+    $personCodec = new PersonCodec($codecLibrary);
+
+.. note::
+
+   Be careful when adding ``DocumentCodec`` instances to a codec library. The codec library will only use the first
+   codec that supports a given value. While this will most likely work fine when encoding to BSON, it can lead to issues
+   when decoding from BSON as you'll have to inspect the BSON document to detect whether the codec supports it. For this
+   reason, the ``codec`` option in a collection does not accept a codec library.
+
+Library-aware Codecs
+~~~~~~~~~~~~~~~~~~~~
+
+If you have a codec that needs to be aware of the codec library, you can implement the ``MongoDB\Codec\LibraryAware``
+interface. When the codec is added to a library, this library is then injected into the codec. This allows you to create
+a common library for all value codecs and re-use it in multiple document codecs.
+
+.. note::
+
+   The ``attachCodecLibrary`` method will not be called if a library-aware codec is never added to a library.

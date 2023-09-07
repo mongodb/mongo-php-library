@@ -13,6 +13,8 @@ use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Document\TestObject;
 use stdClass;
 
+use function array_key_exists;
+use function array_key_first;
 use function current;
 use function iterator_to_array;
 
@@ -182,9 +184,16 @@ class AggregateFunctionalTest extends FunctionalTestCase
 
         $this->assertCount(1, $results);
 
+        $checkResult = $results[0];
+        // Sharded clusters and load balanced servers list plans per shard
+        if (array_key_exists('shards', $results[0])) {
+            $firstShard = array_key_first((array) $results[0]['shards']);
+            $checkResult = (array) $results[0]['shards']->$firstShard;
+        }
+
         /* MongoDB 4.2 may optimize aggregate pipelines into queries, which can
          * result in different explain output (see: SERVER-24860) */
-        $this->assertThat($results[0], $this->logicalOr(
+        $this->assertThat($checkResult, $this->logicalOr(
             $this->arrayHasKey('stages'),
             $this->arrayHasKey('queryPlanner'),
         ));

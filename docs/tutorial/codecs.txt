@@ -15,9 +15,10 @@ Codecs
 Overview
 --------
 
-Codecs are used to decode BSON documents into PHP objects and vice versa. In contrast to other methods, they allow for
-more flexibility and customization of the process and how different data types are handled. They allow separating the
-logic for BSON encoding and decoding from the domain classes, allowing to decode BSON into plain old PHP objects (POPOs).
+Codecs are used to decode BSON documents into PHP objects, and encode PHP objects into BSON documents. In contrast to
+other methods, they allow for more flexibility and customization of the process and how different data types are
+handled. They allow separating the logic for BSON encoding and decoding from the domain classes, allowing to decode BSON
+into plain old PHP objects (POPOs).
 
 Document Codec Usage
 --------------------
@@ -102,14 +103,18 @@ To then use this codec with a collection, specify the ``codec`` option when sele
 
 The example above selects a collection and instructs it to use the ``PersonCodec`` for encoding and decoding documents.
 When inserting data, the ``PersonCodec`` is used to encode the document. When retrieving data, the ``PersonCodec`` is
-used to decode BSON data into a ``Person`` instance.
+used to decode BSON data into a ``Person`` instance. Note that while the ``PersonCodec`` could technically decode any
+BSON document that contains a name field, we wouldn't want to use it for any other documents. Document codecs are meant
+to be used in a collection, or when decoding embedded documents.
 
-.. note::
-
-   When working on a collection with a codec, all incoming and outgoing data will be handled with the given codec. This
-   affects the following methods: ``aggregate``, ``bulkWrite``, ``find``, ``findOne``, ``findOneAndDelete``,
-   ``findOneAndReplace``, ``findOneAndUpdate``, ``insertMany``, ``insertOne``, and ``replaceOne``. To disable the codec
-   for a specific operation, you can provide ``null`` for the ``codec`` option in the operation.
+When working on a collection with a codec, the codec will only accept and return data of that type for certain
+operations. The ``bulkWrite``, ```findOneAndReplace``, ``insertMany``, ``insertOne``, and ``replaceOne`` operations
+will attempt to encode the given data using the provided codec. Trying to insert or replace a document that cannot be
+encoded will result in an exception. The ``aggregate``, ``find``, ``findOne``, ``findOneAndDelete``,
+``findOneAndReplace``, and ``findOneAndUpdate`` operations will attempt to decode returned documents using the provided
+codec. If the codec does not support the data returned, an exception will be thrown. You can disable codec usage for a
+specific operation or use a different codec (e.g. to decode the result of an aggregation pipeline) by specifying the
+``codec`` option for the operation. This will override the collection-level codec.
 
 Generic Codecs
 --------------
@@ -228,7 +233,7 @@ Codec Libraries
 
 If you have a number of codecs that you want to use in multiple places, you can create a codec library. A codec library
 contains a list of codecs and checks each codec if it supports a value. If it does, it will use that codec to encode or
-decode the given value. The following code snippet changes the PersonCodec to use a codec library instead of a
+decode the given value. The following code snippet changes the ``PersonCodec`` to use a codec library instead of a
 hard-coded ``DateTimeCodec``:
 
 .. code-block:: php
@@ -293,9 +298,9 @@ This way, you can configure a global codec library and reuse it in multiple plac
 Library-aware Codecs
 ~~~~~~~~~~~~~~~~~~~~
 
-If you have a codec that needs to be aware of the codec library, you can implement the ``MongoDB\Codec\LibraryAware``
-interface. When the codec is added to a library, this library is then injected into the codec. This allows you to create
-a common library for all value codecs and re-use it in multiple document codecs.
+If you have a codec that needs to be aware of the codec library, you can implement the
+``MongoDB\Codec\KnowsCodecLibrary`` interface. When the codec is added to a library, this library is then injected into
+the codec. This allows you to create a common library for all value codecs and re-use it in multiple document codecs.
 
 .. note::
 

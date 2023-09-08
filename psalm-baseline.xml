@@ -5,6 +5,23 @@
       <code><![CDATA[$clientEncryption->decrypt($document->encryptedField)]]></code>
     </MixedArgument>
   </file>
+  <file src="examples/persistable.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[(object) [
+            '_id' => $this->id,
+            'name' => $this->name,
+            'emails' => $this->emails,
+        ]]]></code>
+      <code><![CDATA[(object) [
+            'type' => $this->type,
+            'address' => $this->address,
+        ]]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code>stdClass</code>
+      <code>stdClass</code>
+    </MoreSpecificReturnType>
+  </file>
   <file src="src/ChangeStream.php">
     <DeprecatedConstant>
       <code>self::CURSOR_NOT_FOUND</code>
@@ -159,6 +176,9 @@
     </MixedArrayOffset>
   </file>
   <file src="src/Model/IndexInput.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[(object) $this->index]]></code>
+    </LessSpecificReturnStatement>
     <MixedArgument>
       <code>$fieldName</code>
       <code><![CDATA[$index['key']]]></code>
@@ -173,6 +193,17 @@
     <MixedReturnStatement>
       <code><![CDATA[$this->index['name']]]></code>
     </MixedReturnStatement>
+    <MoreSpecificReturnType>
+      <code>stdClass</code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Model/SearchIndexInput.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[(object) $this->index]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code>stdClass</code>
+    </MoreSpecificReturnType>
   </file>
   <file src="src/Operation/Aggregate.php">
     <MixedArgument>

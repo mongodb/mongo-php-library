@@ -21,6 +21,9 @@ use MongoDB\Operation\UpdateMany;
 use MongoDB\Operation\UpdateOne;
 use MongoDB\Tests\CommandObserver;
 
+use function array_key_exists;
+use function array_key_first;
+
 class ExplainFunctionalTest extends FunctionalTestCase
 {
     /** @dataProvider provideVerbosityInformation */
@@ -368,21 +371,28 @@ class ExplainFunctionalTest extends FunctionalTestCase
 
     private function assertExplainResult($result, $executionStatsExpected, $allPlansExecutionExpected, $stagesExpected = false): void
     {
+        $checkResult = $result;
+
+        if (array_key_exists('shards', $result)) {
+            $firstShard = array_key_first($result['shards']);
+            $checkResult = $result['shards'][$firstShard];
+        }
+
         if ($stagesExpected) {
-            $this->assertArrayHasKey('stages', $result);
+            $this->assertArrayHasKey('stages', $checkResult);
         } else {
-            $this->assertArrayHasKey('queryPlanner', $result);
+            $this->assertArrayHasKey('queryPlanner', $checkResult);
         }
 
         if ($executionStatsExpected) {
-            $this->assertArrayHasKey('executionStats', $result);
+            $this->assertArrayHasKey('executionStats', $checkResult);
             if ($allPlansExecutionExpected) {
-                $this->assertArrayHasKey('allPlansExecution', $result['executionStats']);
+                $this->assertArrayHasKey('allPlansExecution', $checkResult['executionStats']);
             } else {
-                $this->assertArrayNotHasKey('allPlansExecution', $result['executionStats']);
+                $this->assertArrayNotHasKey('allPlansExecution', $checkResult['executionStats']);
             }
         } else {
-            $this->assertArrayNotHasKey('executionStats', $result);
+            $this->assertArrayNotHasKey('executionStats', $checkResult);
         }
     }
 

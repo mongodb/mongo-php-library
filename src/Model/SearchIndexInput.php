@@ -19,6 +19,7 @@ namespace MongoDB\Model;
 
 use MongoDB\BSON\Serializable;
 use MongoDB\Exception\InvalidArgumentException;
+use stdClass;
 
 use function is_string;
 use function MongoDB\is_document;
@@ -66,7 +67,7 @@ class SearchIndexInput implements Serializable
      * @see \MongoDB\Collection::createSearchIndexes()
      * @see https://php.net/mongodb-bson-serializable.bsonserialize
      */
-    public function bsonSerialize(): object
+    public function bsonSerialize(): stdClass
     {
         return (object) $this->index;
     }

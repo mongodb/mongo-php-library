@@ -7,6 +7,7 @@ use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\Persistable;
 use MongoDB\Client;
 use MongoDB\Model\BSONArray;
+use stdClass;
 use UnexpectedValueException;
 
 use function getenv;
@@ -34,7 +35,7 @@ class PersistableEntry implements Persistable
         return $this->id;
     }
 
-    public function bsonSerialize(): object
+    public function bsonSerialize(): stdClass
     {
         return (object) [
             '_id' => $this->id,
@@ -73,7 +74,7 @@ class PersistableEmail implements Persistable
         $this->address = $address;
     }
 
-    public function bsonSerialize(): object
+    public function bsonSerialize(): stdClass
     {
         return (object) [
             'type' => $this->type,

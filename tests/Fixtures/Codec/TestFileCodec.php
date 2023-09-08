@@ -11,6 +11,8 @@ use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Exception\UnsupportedValueException;
 use MongoDB\Tests\Fixtures\Document\TestFile;
 
+use function assert;
+
 final class TestFileCodec implements DocumentCodec
 {
     use DecodeIfSupported;
@@ -31,13 +33,17 @@ final class TestFileCodec implements DocumentCodec
         $fileObject->id = $value->get('_id');
         $fileObject->length = (int) $value->get('length');
         $fileObject->chunkSize = (int) $value->get('chunkSize');
-        $fileObject->filename = $value->get('filename');
+        $fileObject->filename = (string) $value->get('filename');
 
         $uploadDate = $value->get('uploadDate');
-        $fileObject->uploadDate = $uploadDate ? DateTimeImmutable::createFromMutable($uploadDate->toDateTime()) : null;
+        if ($uploadDate instanceof UTCDateTime) {
+            $fileObject->uploadDate = DateTimeImmutable::createFromMutable($uploadDate->toDateTime());
+        }
 
         if ($value->has('metadata')) {
-            $fileObject->metadata = $value->get('metadata');
+            $metadata = $value->get('metadata');
+            assert($metadata instanceof Document);
+            $fileObject->metadata = $metadata->toPHP();
         }
 
         return $fileObject;

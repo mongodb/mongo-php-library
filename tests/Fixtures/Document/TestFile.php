@@ -18,6 +18,7 @@
 namespace MongoDB\Tests\Fixtures\Document;
 
 use DateTimeImmutable;
+use stdClass;
 
 final class TestFile
 {
@@ -26,5 +27,5 @@ final class TestFile
     public int $chunkSize;
     public ?DateTimeImmutable $uploadDate = null;
     public string $filename;
-    public $metadata;
+    public ?stdClass $metadata = null;
 }

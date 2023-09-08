@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\GridFS;
 
 use MongoDB\BSON\Binary;
-use MongoDB\BSON\Document;
 use MongoDB\Collection;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
@@ -19,6 +18,7 @@ use MongoDB\Operation\ListIndexes;
 use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Codec\TestFileCodec;
 use MongoDB\Tests\Fixtures\Document\TestFile;
+use stdClass;
 
 use function array_merge;
 use function call_user_func;
@@ -509,8 +509,8 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->assertInstanceOf(TestFile::class, $fileDocument);
 
         $this->assertSame('filename', $fileDocument->filename);
-        $this->assertInstanceOf(Document::class, $fileDocument->metadata);
-        $this->assertSame($metadata, $fileDocument->metadata->toPHP(['root' => 'array']));
+        $this->assertInstanceOf(stdClass::class, $fileDocument->metadata);
+        $this->assertSame($metadata, (array) $fileDocument->metadata);
     }
 
     public function testGetFileDocumentForStreamWithReadableStream(): void

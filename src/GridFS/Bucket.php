@@ -171,6 +171,10 @@ class Bucket
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
 
+        if (isset($options['codec']) && isset($options['typeMap'])) {
+            throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
+        }
+
         $this->manager = $manager;
         $this->databaseName = $databaseName;
         $this->bucketName = $options['bucketName'];

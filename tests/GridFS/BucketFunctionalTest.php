@@ -16,6 +16,7 @@ use MongoDB\GridFS\Exception\StreamException;
 use MongoDB\Model\BSONDocument;
 use MongoDB\Model\IndexInfo;
 use MongoDB\Operation\ListIndexes;
+use MongoDB\Tests\Fixtures\Codec\TestDocumentCodec;
 use MongoDB\Tests\Fixtures\Codec\TestFileCodec;
 use MongoDB\Tests\Fixtures\Document\TestFile;
 
@@ -85,6 +86,17 @@ class BucketFunctionalTest extends FunctionalTestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected "chunkSizeBytes" option to be >= 1, 0 given');
         new Bucket($this->manager, $this->getDatabaseName(), ['chunkSizeBytes' => 0]);
+    }
+
+    public function testConstructorWithCodecAndTypeMapOptions(): void
+    {
+        $options = [
+            'codec' => new TestDocumentCodec(),
+            'typeMap' => ['root' => 'array', 'document' => 'array'],
+        ];
+
+        $this->expectExceptionObject(InvalidArgumentException::cannotCombineCodecAndTypeMap());
+        new Bucket($this->manager, $this->getDatabaseName(), $options);
     }
 
     /** @dataProvider provideInputDataAndExpectedChunks */

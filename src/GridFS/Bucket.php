@@ -18,6 +18,8 @@
 namespace MongoDB\GridFS;
 
 use Iterator;
+use MongoDB\BSON\Document;
+use MongoDB\Codec\DocumentCodec;
 use MongoDB\Collection;
 use MongoDB\Driver\CursorInterface;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
@@ -35,6 +37,7 @@ use MongoDB\Model\BSONDocument;
 use MongoDB\Operation\Find;
 
 use function array_intersect_key;
+use function array_key_exists;
 use function assert;
 use function fopen;
 use function get_resource_type;
@@ -74,6 +77,8 @@ class Bucket
     ];
 
     private const STREAM_WRAPPER_PROTOCOL = 'gridfs';
+
+    private ?DocumentCodec $codec = null;
 
     private CollectionWrapper $collectionWrapper;
 
@@ -142,6 +147,10 @@ class Bucket
             throw new InvalidArgumentException(sprintf('Expected "chunkSizeBytes" option to be >= 1, %d given', $options['chunkSizeBytes']));
         }
 
+        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
+            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
+        }
+
         if (! is_bool($options['disableMD5'])) {
             throw InvalidArgumentException::invalidType('"disableMD5" option', $options['disableMD5'], 'boolean');
         }
@@ -162,10 +171,15 @@ class Bucket
             throw InvalidArgumentException::invalidType('"writeConcern" option', $options['writeConcern'], WriteConcern::class);
         }
 
+        if (isset($options['codec']) && isset($options['typeMap'])) {
+            throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
+        }
+
         $this->manager = $manager;
         $this->databaseName = $databaseName;
         $this->bucketName = $options['bucketName'];
         $this->chunkSizeBytes = $options['chunkSizeBytes'];
+        $this->codec = $options['codec'] ?? null;
         $this->disableMD5 = $options['disableMD5'];
         $this->readConcern = $options['readConcern'] ?? $this->manager->getReadConcern();
         $this->readPreference = $options['readPreference'] ?? $this->manager->getReadPreference();
@@ -188,6 +202,7 @@ class Bucket
     {
         return [
             'bucketName' => $this->bucketName,
+            'codec' => $this->codec,
             'databaseName' => $this->databaseName,
             'disableMD5' => $this->disableMD5,
             'manager' => $this->manager,
@@ -309,6 +324,10 @@ class Bucket
      */
     public function find($filter = [], array $options = [])
     {
+        if ($this->codec && ! array_key_exists('codec', $options)) {
+            $options['codec'] = $this->codec;
+        }
+
         return $this->collectionWrapper->findFiles($filter, $options);
     }
 
@@ -326,6 +345,10 @@ class Bucket
      */
     public function findOne($filter = [], array $options = [])
     {
+        if ($this->codec && ! array_key_exists('codec', $options)) {
+            $options['codec'] = $this->codec;
+        }
+
         return $this->collectionWrapper->findOneFile($filter, $options);
     }
 
@@ -380,6 +403,10 @@ class Bucket
     public function getFileDocumentForStream($stream)
     {
         $file = $this->getRawFileDocumentForStream($stream);
+
+        if ($this->codec) {
+            return $this->codec->decode(Document::fromPHP($file));
+        }
 
         // Filter the raw document through the specified type map
         return apply_type_map_to_document($file, $this->typeMap);

@@ -94,7 +94,10 @@ To then use this codec with a collection, specify the ``codec`` option when sele
 
    <?php
 
-   $collection = (new MongoDB\Client())->selectCollection('test', 'person', ['codec' => new PersonCodec()]);
+   $client = new MongoDB\Client();
+   $collection = $client->selectCollection('test', 'person', [
+       'codec' => new PersonCodec(),
+   ]);
 
    $person = new Person('Jane Doe');
    $collection->insertOne($person);
@@ -114,7 +117,7 @@ encoded will result in an exception. The ``aggregate``, ``find``, ``findOne``, `
 ``findOneAndReplace``, and ``findOneAndUpdate`` operations will attempt to decode returned documents using the provided
 codec. If the codec does not support the data returned, an exception will be thrown. You can disable codec usage for a
 specific operation or use a different codec (e.g. to decode the result of an aggregation pipeline) by specifying the
-``codec`` option for the operation. This will override the collection-level codec.
+nullable ``codec`` option for the operation. This will override the collection-level codec.
 
 Generic Codecs
 --------------
@@ -193,12 +196,9 @@ code omitted for brevity):
 
    final class PersonCodec implements MongoDB\Codec\DocumentCodec
    {
-       private DateTimeCodec $dateTimeCodec;
-
-       public function __construct()
-       {
-           $this->dateTimeCodec = new DateTimeCodec();
-       }
+       public function __construct(
+           private readonly DateTimeCodec $dateTimeCodec = new DateTimeCodec(),
+       ) {}
 
        // Other code omitted for brevity
        public function decode($value): Person
@@ -299,12 +299,9 @@ the example below excludes some code we've already shown in previous examples.
 
    final class PersonCodec implements MongoDB\Codec\DocumentCodec
    {
-       private AddressCodec $addressCodec;
-
-       public function __construct()
-       {
-           $this->addressCodec = new AddressCodec();
-       }
+       public function __construct(
+           private readonly AddressCodec $addressCodec = new AddressCodec(),
+       ) {}
 
        // Other code omitted for brevity
        public function decode($value): Person
@@ -356,11 +353,9 @@ hard-coded ``DateTimeCodec``:
 
    final class PersonCodec implements MongoDB\Codec\DocumentCodec
    {
-       private MongoDB\Codec\CodecLibrary $library;
-
-       public function __construct(private MongoDB\Codec\CodecLibrary $codecLibrary)
-       {
-       }
+       public function __construct(
+           private readonly MongoDB\Codec\CodecLibrary $codecLibrary,
+       ) {}
 
        // Other code omitted for brevity
        public function decode($value): Person

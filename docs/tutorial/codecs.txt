@@ -117,7 +117,24 @@ encoded will result in an exception. The ``aggregate``, ``find``, ``findOne``, `
 ``findOneAndReplace``, and ``findOneAndUpdate`` operations will attempt to decode returned documents using the provided
 codec. If the codec does not support the data returned, an exception will be thrown. You can disable codec usage for a
 specific operation or use a different codec (e.g. to decode the result of an aggregation pipeline) by specifying the
-nullable ``codec`` option for the operation. This will override the collection-level codec.
+nullable ``codec`` option for the operation. This will override the collection-level codec:
+
+.. code-block:: php
+
+   <?php
+
+   // Returns a document using the default type map
+   $collection->findOne(['name' => 'Jane Doe'], [
+       'codec' => null,
+   ]);
+
+   // Disables codec usage as the aggregate result will have a different format
+   $collection->aggregate([['$group' => [
+       '_id' => '$accountType',
+       'count' => ['$sum' => 1],
+   ]]], [
+       'codec' => null,
+   ]);
 
 Generic Codecs
 --------------

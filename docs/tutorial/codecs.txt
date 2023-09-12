@@ -16,16 +16,16 @@ Overview
 --------
 
 Codecs are used to decode BSON documents into PHP objects, and encode PHP objects into BSON documents. In contrast to
-other methods, they allow for more flexibility and customization of the process and how different data types are
-handled. They allow separating the logic for BSON encoding and decoding from the domain classes, allowing to decode BSON
-into plain old PHP objects (POPOs).
+other methods (e.g. type maps), codecs allow for greater customization and handling of different data types. They allow
+separating the logic for BSON encoding and decoding from the domain classes, allowing to decode BSON into plain old PHP
+objects (POPOs).
 
-Document Codec Usage
---------------------
+Handling Documents
+------------------
 
 The main logic is contained in a document codec. This class implements the ``MongoDB\Codec\DocumentCodec`` interface and
 defines what data types can be encoded/decoded and how. The following example defines a ``Person`` class and a codec to
-encode/decode it:
+transform it:
 
 .. code-block:: php
 
@@ -33,14 +33,10 @@ encode/decode it:
 
    final class Person
    {
-       public MongoDB\BSON\ObjectId $id;
-       public string $name;
-
-       public function __construct(string $name)
-       {
-           $this->id = new MongoDB\BSON\ObjectId();
-           $this->name = $name;
-       }
+       public function __construct(
+           public string $name,
+           public readonly MongoDB\BSON\ObjectId $id = new MongoDB\BSON\ObjectId(),
+       ) {}
    }
 
 .. code-block:: php
@@ -69,10 +65,10 @@ encode/decode it:
                throw UnsupportedValueException::invalidDecodableValue($value);
            }
 
-           $person = new Person($value->get('name'));
-           $person->id = $value->get('_id');
-
-           return $person;
+           return new Person(
+               $value->get('name'),
+               $value->get('_id'),
+           );
        }
 
        public function encode($value): MongoDB\BSON\Document
@@ -105,19 +101,21 @@ To then use this codec with a collection, specify the ``codec`` option when sele
    $person = $collection->findOne();
 
 The example above selects a collection and instructs it to use the ``PersonCodec`` for encoding and decoding documents.
-When inserting data, the ``PersonCodec`` is used to encode the document. When retrieving data, the ``PersonCodec`` is
-used to decode BSON data into a ``Person`` instance. Note that while the ``PersonCodec`` could technically decode any
+When inserting data, the ``PersonCodec`` is used to encode the document. When retrieving data, the same ``PersonCodec``
+is used to decode BSON data into a ``Person`` instance. Note that while the ``PersonCodec`` could technically decode any
 BSON document that contains a name field, we wouldn't want to use it for any other documents. Document codecs are meant
 to be used in a collection, or when decoding embedded documents.
 
 When working on a collection with a codec, the codec will only accept and return data of that type for certain
-operations. The ``bulkWrite``, ```findOneAndReplace``, ``insertMany``, ``insertOne``, and ``replaceOne`` operations
-will attempt to encode the given data using the provided codec. Trying to insert or replace a document that cannot be
-encoded will result in an exception. The ``aggregate``, ``find``, ``findOne``, ``findOneAndDelete``,
-``findOneAndReplace``, and ``findOneAndUpdate`` operations will attempt to decode returned documents using the provided
-codec. If the codec does not support the data returned, an exception will be thrown. You can disable codec usage for a
-specific operation or use a different codec (e.g. to decode the result of an aggregation pipeline) by specifying the
-nullable ``codec`` option for the operation. This will override the collection-level codec:
+operations. Insert and replace operations (e.g. ``insertOne``, ```findOneAndReplace``, and some ``bulkWrite``
+operations) will attempt to encode the given data using the provided codec. Trying to insert or replace a document that
+cannot be encoded will result in an exception. Read operations (e.g. ``aggregate``, ``find``, and ``findOneAndUpdate``)
+operations will attempt to decode returned documents using the provided codec. If the codec does not support the data
+returned, an exception will be thrown.
+
+You can disable codec usage for a specific operation or use a different codec (e.g. to decode the result of an
+aggregation pipeline) by specifying the ``null`` for the ``codec`` option for any operation. This will override the
+collection-level codec:
 
 .. code-block:: php
 
@@ -136,12 +134,14 @@ nullable ``codec`` option for the operation. This will override the collection-l
        'codec' => null,
    ]);
 
-Generic Codecs
---------------
+Handling Fields and Data Types
+------------------------------
 
-The previous example showed how to define a codec for a specific class. However, sometimes you want to define codecs to
-handle a given type in all documents. For such codecs, you can implement the ``MongoDB\Codec\Codec`` interface. The
-following example defines a codec to store ``DateTimeInterface`` instances as BSON dates including the timezone:
+The previous example showed how to define a codec for a specific class. However, you may want to create a codec that
+handles a particular data type in any document. This can be achieved by implementing the ``MongoDB\Codec\Codec``
+interface.
+
+The following example defines a codec to store ``DateTimeInterface`` instances as BSON dates including the timezone:
 
 .. code-block:: php
 
@@ -203,7 +203,7 @@ following example defines a codec to store ``DateTimeInterface`` instances as BS
        }
    }
 
-This codec can now be leveraged by other codecs encode and decode dates. Let's return to the previous example and add a
+This codec can now be leveraged by other codecs handle date fields. Let's return to the previous example and add a
 ``createdAt`` field that contains the creation date. The modified encode and decode methods would look like this (other
 code omitted for brevity):
 
@@ -213,11 +213,15 @@ code omitted for brevity):
 
    final class PersonCodec implements MongoDB\Codec\DocumentCodec
    {
+       use MongoDB\Codec\DecodeIfSupported;
+       use MongoDB\Codec\EncodeIfSupported;
+
        public function __construct(
            private readonly DateTimeCodec $dateTimeCodec = new DateTimeCodec(),
        ) {}
 
-       // Other code omitted for brevity
+       // Other methods omitted for brevity
+
        public function decode($value): Person
        {
            if (! $this->canDecode($value)) {
@@ -245,12 +249,12 @@ code omitted for brevity):
        }
    }
 
-Handling embedded documents
+Handling Embedded Documents
 ---------------------------
 
-The previous example showed how to handle a single document. However, sometimes you want to handle fields that contain
-embedded documents. To show this, let's create an address document that we'll be embedding into our ``Person`` document.
-To ensure consistency, we're going to make this a readonly class:
+A previous example showed how to handle a single document. However, sometimes you want to handle fields that contain
+embedded documents. We will demonstrate this using an ``Address`` document, which we will embed within a ``Person``
+document. To ensure consistency, we're going to make this a read-only class:
 
 .. code-block:: php
 
@@ -274,7 +278,11 @@ We can now create a document codec for this class:
 
    final class AddressCodec implements MongoDB\Codec\DocumentCodec
    {
-       // Other code omitted for brevity
+       use MongoDB\Codec\DecodeIfSupported;
+       use MongoDB\Codec\EncodeIfSupported;
+
+       // Other methods omitted for brevity
+
        public function decode($value): Person
        {
            if (! $this->canDecode($value)) {
@@ -304,10 +312,7 @@ We can now create a document codec for this class:
        }
    }
 
-This codec is quite similar to the ``PersonCodec`` we had before, except that we're not adding an identifier to it. The
-creation of the object also differs, as we have to pass all the fields to the constructor.
-
-In the ``PersonCodec``, we can now extend the ``decode`` and ``encode`` methods to handle the address field. Note that
+In the ``PersonCodec``, we can now modify the ``decode`` and ``encode`` methods to handle the address field. Note that
 the example below excludes some code we've already shown in previous examples.
 
 .. code-block:: php
@@ -359,10 +364,10 @@ the example below excludes some code we've already shown in previous examples.
 Codec Libraries
 ---------------
 
-If you have a number of codecs that you want to use in multiple places, you can create a codec library. A codec library
-contains a list of codecs and checks each codec if it supports a value. If it does, it will use that codec to encode or
-decode the given value. The following code snippet changes the ``PersonCodec`` to use a codec library instead of a
-hard-coded ``DateTimeCodec``:
+A codec library contains a list of codecs and presents itself as a codec. When encoding or decoding a value, it will
+consult each registered codec in sequence and delegate to the first supporting codec to transform that value.
+
+The following code snippet changes the ``PersonCodec`` to use a codec library instead of a hard-coded ``DateTimeCodec``:
 
 .. code-block:: php
 

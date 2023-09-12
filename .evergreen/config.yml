@@ -766,13 +766,13 @@ axes:
     display_name: Driver Version
     values:
       - id: "oldest-supported"
-        display_name: "PHPC 1.16.0"
+        display_name: "PHPC 1.17.0"
         variables:
-          EXTENSION_VERSION: "1.16.0"
+          EXTENSION_BRANCH: "master"
       - id: "latest-stable"
-        display_name: "PHPC (1.16.x)"
+        display_name: "PHPC (1.17.x)"
         variables:
-          EXTENSION_VERSION: "stable"
+          EXTENSION_BRANCH: "master"
       - id: "latest-dev"
         display_name: "PHPC (1.17-dev)"
         variables:

@@ -25,13 +25,13 @@ jobs:
 
     steps:
       - name: "Checkout library"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
         with:
           path: library
           fetch-depth: 2
 
       - name: "Checkout docs"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
         with:
           repository: mongodb/docs-php-library
           path: docs

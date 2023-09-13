@@ -7,6 +7,7 @@ use MongoDB\Codec\DecodeIfSupported;
 use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Exception\UnsupportedValueException;
 
+/** @template-implements Codec<Document, DateTimeImmutable> */
 final class DateTimeCodec implements Codec
 {
     use DecodeIfSupported;

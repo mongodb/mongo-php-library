@@ -6,6 +6,7 @@ use MongoDB\Codec\DocumentCodec;
 use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Exception\UnsupportedValueException;
 
+/** @template-implements DocumentCodec<Address> */
 final class AddressCodec implements DocumentCodec
 {
     use DecodeIfSupported;

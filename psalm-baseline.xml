@@ -35,16 +35,6 @@
       <code><![CDATA[$mergedDriver['platform']]]></code>
     </MixedAssignment>
   </file>
-  <file src="src/Codec/DecodeIfSupported.php">
-    <MixedInferredReturnType>
-      <code>($value is BSONType ? NativeType : $value)</code>
-    </MixedInferredReturnType>
-  </file>
-  <file src="src/Codec/EncodeIfSupported.php">
-    <MixedInferredReturnType>
-      <code>($value is NativeType ? BSONType : $value)</code>
-    </MixedInferredReturnType>
-  </file>
   <file src="src/Collection.php">
     <MixedArgumentTypeCoercion>
       <code>$options</code>

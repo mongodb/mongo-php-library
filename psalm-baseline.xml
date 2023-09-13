@@ -5,6 +5,30 @@
       <code><![CDATA[$clientEncryption->decrypt($document->encryptedField)]]></code>
     </MixedArgument>
   </file>
+  <file src="examples/atlas-search.php">
+    <MixedArgument>
+      <code><![CDATA[$document['name']]]></code>
+      <code><![CDATA[$index->name]]></code>
+    </MixedArgument>
+    <MixedArrayAccess>
+      <code><![CDATA[$document['name']]]></code>
+    </MixedArrayAccess>
+    <MixedAssignment>
+      <code>$document</code>
+      <code>$index</code>
+      <code>$index</code>
+      <code>$index</code>
+    </MixedAssignment>
+    <MixedPropertyFetch>
+      <code><![CDATA[$index->name]]></code>
+      <code><![CDATA[$index->name]]></code>
+      <code><![CDATA[$index->name]]></code>
+      <code><![CDATA[$index->queryable]]></code>
+    </MixedPropertyFetch>
+    <PossiblyFalseArgument>
+      <code>$uri</code>
+    </PossiblyFalseArgument>
+  </file>
   <file src="examples/persistable.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[(object) [

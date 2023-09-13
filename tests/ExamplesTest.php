@@ -4,6 +4,12 @@ namespace MongoDB\Tests;
 
 use Generator;
 
+use function bin2hex;
+use function getenv;
+use function putenv;
+use function random_bytes;
+use function sprintf;
+
 /** @runTestsInSeparateProcesses */
 final class ExamplesTest extends FunctionalTestCase
 {
@@ -177,6 +183,54 @@ OUTPUT;
             'file' => __DIR__ . '/../examples/typemap.php',
             'expectedOutput' => $expectedOutput,
         ];
+    }
+
+    /**
+     * MongoDB Atlas Search example requires a MongoDB Atlas M10+ cluster with MongoDB 7.0+
+     * Tips for insiders: if using a cloud-dev server, append ".mongodb.net" to the MONGODB_URI.
+     *
+     * @group atlas
+     */
+    public function testAtlasSearch(): void
+    {
+        $uri = getenv('MONGODB_URI') ?? '';
+        if (! self::isAtlas($uri)) {
+            $this->markTestSkipped('Atlas Search examples are only supported on MongoDB Atlas');
+        }
+
+        $this->skipIfServerVersion('<', '7.0', 'Atlas Search examples require MongoDB 7.0 or later');
+
+        // Generate random collection name to avoid conflicts with consecutive runs as the index creation is asynchronous
+        $collectionName = sprintf('%s.%s', $this->getCollectionName(), bin2hex(random_bytes(5)));
+        $databaseName = $this->getDatabaseName();
+        $collection = $this->createCollection($databaseName, $collectionName);
+        $collection->insertMany([
+            ['name' => 'Ribeira Charming Duplex'],
+            ['name' => 'Ocean View Bondi Beach'],
+            ['name' => 'Luxury ocean view Beach Villa 622'],
+            ['name' => 'Ocean & Beach View Condo WBR H204'],
+            ['name' => 'Bondi Beach Spacious Studio With Ocean View'],
+            ['name' => 'New York City - Upper West Side Apt'],
+        ]);
+        putenv(sprintf('MONGODB_DATABASE=%s', $databaseName));
+        putenv(sprintf('MONGODB_COLLECTION=%s', $collectionName));
+
+        $expectedOutput = <<<'OUTPUT'
+
+Creating the index.
+%s
+Performing a text search...
+ - Ocean View Bondi Beach
+ - Luxury ocean view Beach Villa 622
+ - Ocean & Beach View Condo WBR H204
+ - Bondi Beach Spacious Studio With Ocean View
+
+Enjoy MongoDB Atlas Search!
+
+
+OUTPUT;
+
+        $this->assertExampleOutput(__DIR__ . '/../examples/atlas-search.php', $expectedOutput);
     }
 
     public function testChangeStream(): void

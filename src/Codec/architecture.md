@@ -30,14 +30,6 @@ By default, two codecs are provided: an `ArrayCodec` and an `ObjectCodec`. These
 encode and decode values in arrays and `stdClass` instances, respectively. When encoding or decoding an object,
 `ObjectCodec` only handles public properties of the object and ignores private and protected properties.
 
-## Codec Libraries
-
-The `CodecLibrary` class is able to combine several `Decoder`, `Encoder`, and `Codec` instances into a single codec.
-When decoding or encoding a value, the library will use the first instance that supports the value. This allows for
-easier composition of codecs. A `Decoder`, `Encoder`, or `Codec` implementation may choose to implement the
-`KnowsCodecLibrary` interface. In this case, when the codec is added to a library, the library is injected into the
-instance using the `attachCodecLibrary` method. This allows the codec to use the library to decode or encode values.
-
 ## Future Work
 
 ### Using Codecs

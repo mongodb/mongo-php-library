@@ -14,11 +14,17 @@ final class DateTimeCodec implements Codec
 
     public function canDecode($value): bool
     {
-        // For maximum compatibility, this codec supports decoding both UTCDateTime instances and documents with a
-        // UTCDateTime instance and optional timezone
-        return
-            $value instanceof UTCDateTime ||
-            $value instanceof Document && $value->has('utc');
+        /*
+         * This codec inspects the BSON document to ensure it has the fields it expects, and that those fields are of
+         * the correct type. This is a robust approach to avoid decoding document that are not supported and would cause
+         * exceptions.
+         *
+         * For large documents, this can be inefficient as we're inspecting the entire document 4 times (once for each
+         * call to has() and get()). For small documents, this is not a problem.
+         */
+        return $value instanceof Document
+            && $value->has('utc') && $value->get('utc') instanceof UTCDateTime
+            && $value->has('tz') && is_string($value->get('tz'));
     }
 
     public function canEncode($value): bool
@@ -32,19 +38,10 @@ final class DateTimeCodec implements Codec
             throw UnsupportedValueException::invalidDecodableValue($value);
         }
 
-        $utc = $value instanceof UTCDateTime
-            ? $value
-            : $value->get('utc');
-
-        if (! $utc instanceof UTCDateTime) {
-            throw UnsupportedValueException::invalidDecodableValue($utc);
-        }
-
-        $dateTime = $utc->toDateTime();
-
-        if ($value instanceof Document && $value->has('tz')) {
-            $dateTime->setTimeZone(new DateTimeZone($value->get('tz')));
-        }
+        $timeZone = new DateTimeZone($value->get('tz'));
+        $dateTime = $value->get('utc')
+            ->toDateTime()
+            ->setTimeZone($timeZone);
 
         return DateTimeImmutable::createFromMutable($dateTime);
     }

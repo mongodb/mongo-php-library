@@ -12,17 +12,17 @@ final class PersonCodec implements DocumentCodec
     use DecodeIfSupported;
     use EncodeIfSupported;
 
-    public function canDecode($value): bool
+    public function canDecode(mixed $value): bool
     {
         return $value instanceof Document && $value->has('name');
     }
 
-    public function canEncode($value): bool
+    public function canEncode(mixed $value): bool
     {
         return $value instanceof Person;
     }
 
-    public function decode($value): Person
+    public function decode(mixed $value): Person
     {
         if (! $this->canDecode($value)) {
             throw UnsupportedValueException::invalidDecodableValue($value);
@@ -34,7 +34,7 @@ final class PersonCodec implements DocumentCodec
         );
     }
 
-    public function encode($value): Document
+    public function encode(mixed $value): Document
     {
         if (! $this->canEncode($value)) {
             throw UnsupportedValueException::invalidEncodableValue($value);

@@ -7,6 +7,6 @@ final readonly class Address
         public string $postCode,
         public string $city,
         public string $country,
-       ) {
+    ) {
     }
 }

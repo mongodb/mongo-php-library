@@ -1,11 +1,13 @@
 <?php
 
+use MongoDB\BSON\ObjectId;
+
 final class Person
 {
     public function __construct(
         public string $name,
         public readonly DateTime $createdAt = new DateTime(),
-        public readonly MongoDB\BSON\ObjectId $id = new MongoDB\BSON\ObjectId(),
-       ) {
+        public readonly ObjectId $id = new ObjectId(),
+    ) {
     }
 }

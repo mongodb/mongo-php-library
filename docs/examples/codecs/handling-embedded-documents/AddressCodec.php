@@ -11,7 +11,7 @@ final class AddressCodec implements DocumentCodec
     use DecodeIfSupported;
     use EncodeIfSupported;
 
-    public function canDecode($value): bool
+    public function canDecode(mixed $value): bool
     {
         return $value instanceof Document
             && $value->has('street')
@@ -20,12 +20,12 @@ final class AddressCodec implements DocumentCodec
             && $value->has('country');
     }
 
-    public function canEncode($value): bool
+    public function canEncode(mixed $value): bool
     {
         return $value instanceof Address;
     }
 
-    public function decode($value): Address
+    public function decode(mixed $value): Address
     {
         if (! $this->canDecode($value)) {
             throw UnsupportedValueException::invalidDecodableValue($value);
@@ -39,7 +39,7 @@ final class AddressCodec implements DocumentCodec
         );
     }
 
-    public function encode($value): Document
+    public function encode(mixed $value): Document
     {
         if (! $this->canEncode($value)) {
             throw UnsupportedValueException::invalidEncodableValue($value);
@@ -53,4 +53,3 @@ final class AddressCodec implements DocumentCodec
         ]);
     }
 }
-

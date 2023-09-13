@@ -12,7 +12,7 @@ final class DateTimeCodec implements Codec
     use DecodeIfSupported;
     use EncodeIfSupported;
 
-    public function canDecode($value): bool
+    public function canDecode(mixed $value): bool
     {
         /*
          * This codec inspects the BSON document to ensure it has the fields it expects, and that those fields are of
@@ -27,12 +27,12 @@ final class DateTimeCodec implements Codec
             && $value->has('tz') && is_string($value->get('tz'));
     }
 
-    public function canEncode($value): bool
+    public function canEncode(mixed $value): bool
     {
         return $value instanceof DateTimeInterface;
     }
 
-    public function decode($value): DateTimeImmutable
+    public function decode(mixed $value): DateTimeImmutable
     {
         if (! $this->canDecode($value)) {
             throw UnsupportedValueException::invalidDecodableValue($value);
@@ -46,7 +46,7 @@ final class DateTimeCodec implements Codec
         return DateTimeImmutable::createFromMutable($dateTime);
     }
 
-    public function encode($value): Document
+    public function encode(mixed $value): Document
     {
         if (! $this->canEncode($value)) {
             throw UnsupportedValueException::invalidEncodableValue($value);

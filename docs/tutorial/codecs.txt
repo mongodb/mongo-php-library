@@ -106,37 +106,3 @@ The ``PersonCodec`` can now handle the optional ``address`` field when transform
 
 .. literalinclude:: /examples/codecs/handling-embedded-documents/PersonCodec.php
    :language: php
-
-Codec Libraries
----------------
-
-A codec library contains a list of codecs and presents itself as a codec. When encoding or decoding a value, it will
-consult each registered codec in sequence and delegate to the first supporting codec to transform that value.
-
-The following code snippet changes the ``PersonCodec`` to use a codec library instead of a hard-coded ``DateTimeCodec``:
-
-.. literalinclude:: /examples/codecs/codec-library/PersonCodec.php
-   :language: php
-
-This way, you can configure a global codec library and reuse it in multiple places:
-
-.. literalinclude:: /examples/codecs/codec-library/library.php
-   :language: php
-
-.. note::
-
-   Be careful when adding ``DocumentCodec`` instances to a codec library. The codec library will only use the first
-   codec that supports a given value. While this will most likely work fine when encoding to BSON, it can lead to issues
-   when decoding from BSON as you'll have to inspect the BSON document to detect whether the codec supports it. For this
-   reason, the ``codec`` option in a collection does not accept a codec library.
-
-Library-aware Codecs
-~~~~~~~~~~~~~~~~~~~~
-
-If you have a codec that needs to be aware of the codec library, you can implement the
-``MongoDB\Codec\KnowsCodecLibrary`` interface. When the codec is added to a library, this library is then injected into
-the codec. This allows you to create a common library for all value codecs and re-use it in multiple document codecs.
-
-.. note::
-
-   The ``attachCodecLibrary`` method will not be called if a library-aware codec is never added to a library.

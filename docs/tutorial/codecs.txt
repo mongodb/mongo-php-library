@@ -16,9 +16,9 @@ Overview
 --------
 
 Codecs are used to decode BSON documents into PHP objects, and encode PHP objects into BSON documents. In contrast to
-other methods (e.g. type maps), codecs allow for greater customization and handling of different data types. They allow
-separating the logic for BSON encoding and decoding from the domain classes, allowing to decode BSON into plain old PHP
-objects (POPOs).
+other methods (e.g. type maps), codecs allow for greater customization and handling of different data types. They
+separate logic for BSON encoding and decoding from the domain classes, which also enables BSON to be decoded into plain
+old PHP objects.
 
 Handling Documents
 ------------------
@@ -42,14 +42,14 @@ The example above selects a collection and instructs it to use the ``PersonCodec
 When inserting data, the ``PersonCodec`` is used to encode the document. When retrieving data, the same ``PersonCodec``
 is used to decode BSON data into a ``Person`` instance. Note that while the ``PersonCodec`` could technically decode any
 BSON document that contains a name field, we wouldn't want to use it for any other documents. Document codecs are meant
-to be used in a collection, or when decoding embedded documents.
+to be used with a :phpclass:`MongoDB\\Collection`, or when decoding embedded documents.
 
-When working on a collection with a codec, the codec will only accept and return data of that type for certain
-operations. Insert and replace operations (e.g. ``insertOne``, ```findOneAndReplace``, and some ``bulkWrite``
-operations) will attempt to encode the given data using the provided codec. Trying to insert or replace a document that
-cannot be encoded will result in an exception. Read operations (e.g. ``aggregate``, ``find``, and ``findOneAndUpdate``)
-operations will attempt to decode returned documents using the provided codec. If the codec does not support the data
-returned, an exception will be thrown.
+When using a collection with a codec, the codec will only accept and return data of that type for certain operations.
+Insert and replace operations (e.g. ``insertOne``, ```findOneAndReplace``, and some ``bulkWrite`` operations) will
+attempt to encode the given data using the provided codec. Trying to insert or replace a document that cannot be encoded
+will result in an exception. Read operations (e.g. ``aggregate``, ``find``, and ``findOneAndUpdate``) will attempt to
+decode returned documents using the provided codec. If the codec does not support the data returned, an exception will
+be thrown.
 
 You can disable codec usage for a specific operation or use a different codec (e.g. to decode the result of an
 aggregation pipeline) by specifying ``null`` for the ``codec`` option for any operation. Alternatively, specifying a
@@ -67,7 +67,9 @@ The previous example showed how to define a codec for a specific class. However,
 handles a particular data type in any document. This can be achieved by implementing the ``MongoDB\Codec\Codec``
 interface.
 
-The following example defines a codec to store ``DateTimeInterface`` instances as BSON dates including the timezone:
+The following example defines a codec that stores ``DateTimeInterface`` instances as an embedded document containing a
+BSON date and accompanying timezone string. Those same embedded documents can then be translated back into a
+``DateTimeImmutable`` during BSON decoding.
 
 .. literalinclude:: /examples/codecs/handling-data-types/DateTimeCodec.php
    :language: php

@@ -19,8 +19,8 @@ final class DateTimeCodec implements Codec
          * the correct type. This is a robust approach to avoid decoding document that are not supported and would cause
          * exceptions.
          *
-         * For large documents, this can be inefficient as we're inspecting the entire document 4 times (once for each
-         * call to has() and get()). For small documents, this is not a problem.
+         * For large documents, this can be inefficient as we're inspecting the entire document four times (once for
+         * each call to has() and get()). For small documents, this is not a problem.
          */
         return $value instanceof Document
             && $value->has('utc') && $value->get('utc') instanceof UTCDateTime

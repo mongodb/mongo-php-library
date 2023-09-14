@@ -15,8 +15,7 @@ final class DateTimeCodec implements Codec
 
     public function canDecode(mixed $value): bool
     {
-        /*
-         * This codec inspects the BSON document to ensure it has the fields it expects, and that those fields are of
+        /* This codec inspects the BSON document to ensure it has the fields it expects, and that those fields are of
          * the correct type. This is a robust approach to avoid decoding document that are not supported and would cause
          * exceptions.
          *

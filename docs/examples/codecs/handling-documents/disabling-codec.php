@@ -1,7 +1,7 @@
 <?php
 
-// Returns a document using the default type map
-$collection->findOne($filter, ['codec' => null]);
-
-// Disables codec usage as the aggregate result will have a different format
+// Overrides the collection codec, falling back to the default type map
 $collection->aggregate($pipeline, ['codec' => null]);
+
+// Overrides the collection codec, using the specified type map
+$collection->findOne($filter, ['typeMap' => ['root' => 'stdClass']]);

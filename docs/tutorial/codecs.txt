@@ -52,8 +52,8 @@ operations will attempt to decode returned documents using the provided codec. I
 returned, an exception will be thrown.
 
 You can disable codec usage for a specific operation or use a different codec (e.g. to decode the result of an
-aggregation pipeline) by specifying the ``null`` for the ``codec`` option for any operation. This will override the
-collection-level codec:
+aggregation pipeline) by specifying ``null`` for the ``codec`` option for any operation. Alternatively, specifying a
+type map using the ``typeMap`` operation will also override the collection-level codec:
 
 .. literalinclude:: /examples/codecs/handling-documents/disabling-codec.php
    :language: php

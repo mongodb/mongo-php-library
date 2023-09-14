@@ -58,6 +58,8 @@ collection-level codec:
 .. literalinclude:: /examples/codecs/handling-documents/disabling-codec.php
    :language: php
 
+.. _php-codec-handling-data-types:
+
 Handling Fields and Data Types
 ------------------------------
 

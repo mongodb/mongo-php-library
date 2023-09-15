@@ -8,6 +8,7 @@ Tutorials
    /tutorial/connecting
    /tutorial/server-selection
    /tutorial/crud
+   /tutorial/codecs
    /tutorial/collation
    /tutorial/commands
    /tutorial/custom-types

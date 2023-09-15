@@ -3,9 +3,8 @@
 use MongoDB\BSON\Binary;
 use MongoDB\Client;
 use MongoDB\Driver\ClientEncryption;
-use MongoDB\Driver\Exception\ServerException;
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../../../vendor/autoload.php';
 
 $uri = getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/';
 
@@ -32,21 +31,16 @@ $clientEncryption = $client->createClientEncryption([
     ],
 ]);
 
-// Create a data encryption key with an alternate name
-$clientEncryption->createDataKey('local', ['keyAltNames' => ['myDataKey']]);
+/* Create a data encryption key. To store the key ID for later use, you can use
+ * serialize(), var_export(), etc. */
+$keyId = $clientEncryption->createDataKey('local');
 
-/* Attempt to create a second key with the same name to demonstrate that the
- * unique index is enforced. */
-try {
-    $clientEncryption->createDataKey('local', ['keyAltNames' => ['myDataKey']]);
-} catch (ServerException $e) {
-    printf("Error creating key: %s\n", $e->getMessage());
-}
+print_r($keyId);
 
-// Encrypt a value, using the "keyAltName" option instead of "keyId"
+// Encrypt a value using the key that was just created
 $encryptedValue = $clientEncryption->encrypt('mySecret', [
     'algorithm' => ClientEncryption::AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC,
-    'keyAltName' => 'myDataKey',
+    'keyId' => $keyId,
 ]);
 
 print_r($encryptedValue);

@@ -301,7 +301,7 @@ MongoDB\BSON\Binary Object
 OUTPUT;
 
         yield 'create_data_key' => [
-            'file' => __DIR__ . '/../docs/examples/create_data_key.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/create_data_key.php',
             'expectedOutput' => $expectedOutput,
         ];
 
@@ -315,7 +315,7 @@ MongoDB\BSON\Binary Object
 OUTPUT;
 
         yield 'key_alt_name' => [
-            'file' => __DIR__ . '/../docs/examples/key_alt_name.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/key_alt_name.php',
             'expectedOutput' => $expectedOutput,
         ];
 
@@ -347,7 +347,7 @@ Error inserting document: Document failed validation
 OUTPUT;
 
         yield 'csfle-automatic_encryption-local_schema' => [
-            'file' => __DIR__ . '/../docs/examples/csfle-automatic_encryption-local_schema.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/csfle-automatic_encryption-local_schema.php',
             'expectedOutput' => $expectedOutput,
         ];
 
@@ -379,7 +379,7 @@ Error inserting document: Document failed validation
 OUTPUT;
 
         yield 'csfle-automatic_encryption-server_side_schema' => [
-            'file' => __DIR__ . '/../docs/examples/csfle-automatic_encryption-server_side_schema.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/csfle-automatic_encryption-server_side_schema.php',
             'expectedOutput' => $expectedOutput,
         ];
 
@@ -402,7 +402,7 @@ Decrypted: mySecret
 OUTPUT;
 
         yield 'csfle-explicit_encryption' => [
-            'file' => __DIR__ . '/../docs/examples/csfle-explicit_encryption.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/csfle-explicit_encryption.php',
             'expectedOutput' => $expectedOutput,
         ];
 
@@ -419,7 +419,7 @@ MongoDB\Model\BSONDocument Object
 OUTPUT;
 
         yield 'csfle-explicit_encryption_automatic_decryption' => [
-            'file' => __DIR__ . '/../docs/examples/csfle-explicit_encryption_automatic_decryption.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/csfle-explicit_encryption_automatic_decryption.php',
             'expectedOutput' => $expectedOutput,
         ];
     }
@@ -510,7 +510,7 @@ MongoDB\Model\BSONDocument Object
 OUTPUT;
 
         yield 'queryable_encryption-automatic' => [
-            'file' => __DIR__ . '/../docs/examples/queryable_encryption-automatic.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/queryable_encryption-automatic.php',
             'expectedOutput' => $expectedOutput,
         ];
 
@@ -542,7 +542,7 @@ MongoDB\Model\BSONDocument Object
 OUTPUT;
 
         yield 'queryable_encryption-explicit' => [
-            'file' => __DIR__ . '/../docs/examples/queryable_encryption-explicit.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/queryable_encryption-explicit.php',
             'expectedOutput' => $expectedOutput,
         ];
     }

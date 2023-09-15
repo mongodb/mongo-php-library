@@ -19,7 +19,7 @@ abstract class BaseBench
         return self::$collection ??= self::createCollection();
     }
 
-    protected static function createClient(array $options = [], array $driverOptions = []): Client
+    public static function createClient(array $options = [], array $driverOptions = []): Client
     {
         return new Client(self::getUri(), $options, $driverOptions);
     }
@@ -31,12 +31,12 @@ abstract class BaseBench
         return $client->selectCollection(self::getDatabase(), 'perftest');
     }
 
-    protected static function getUri(): string
+    public static function getUri(): string
     {
         return getenv('MONGODB_URI') ?: 'mongodb://localhost:27017/';
     }
 
-    protected static function getDatabase(): string
+    public static function getDatabase(): string
     {
         return getenv('MONGODB_DATABASE') ?: 'phplib_test';
     }

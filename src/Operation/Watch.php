@@ -274,6 +274,23 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         $this->aggregate = $this->createAggregate();
     }
 
+    /**
+     * Execute the operation.
+     *
+     * @see Executable::execute()
+     * @return ChangeStream
+     * @throws UnsupportedException if collation or read concern is used and unsupported
+     * @throws RuntimeException for other driver errors (e.g. connection errors)
+     */
+    public function execute(Server $server)
+    {
+        return new ChangeStream(
+            $this->createChangeStreamIterator($server),
+            fn ($resumeToken, $hasAdvanced): ChangeStreamIterator => $this->resume($resumeToken, $hasAdvanced),
+            $this->codec,
+        );
+    }
+
     /** @internal */
     final public function commandFailed(CommandFailedEvent $event): void
     {
@@ -315,23 +332,6 @@ class Watch implements Executable, /* @internal */ CommandSubscriber
         ) {
             $this->operationTime = $reply->operationTime;
         }
-    }
-
-    /**
-     * Execute the operation.
-     *
-     * @see Executable::execute()
-     * @return ChangeStream
-     * @throws UnsupportedException if collation or read concern is used and unsupported
-     * @throws RuntimeException for other driver errors (e.g. connection errors)
-     */
-    public function execute(Server $server)
-    {
-        return new ChangeStream(
-            $this->createChangeStreamIterator($server),
-            fn ($resumeToken, $hasAdvanced): ChangeStreamIterator => $this->resume($resumeToken, $hasAdvanced),
-            $this->codec,
-        );
     }
 
     /**

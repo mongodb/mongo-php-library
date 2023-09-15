@@ -11,6 +11,7 @@ use RegexIterator;
 use function array_filter;
 use function array_map;
 use function realpath;
+use function str_contains;
 use function str_replace;
 use function strcasecmp;
 use function strlen;
@@ -37,17 +38,10 @@ class PedantryTest extends TestCase
         );
 
         $getSortValue = function (ReflectionMethod $method) {
-            if ($method->getModifiers() & ReflectionMethod::IS_PRIVATE) {
-                return '2' . $method->getName();
-            }
+            $prefix = $method->isPrivate() ? '2' : ($method->isProtected() ? '1' : '0');
+            $prefix .= str_contains($method->getDocComment(), '@internal') ? '1' : '0';
 
-            if ($method->getModifiers() & ReflectionMethod::IS_PROTECTED) {
-                return '1' . $method->getName();
-            }
-
-            if ($method->getModifiers() & ReflectionMethod::IS_PUBLIC) {
-                return '0' . $method->getName();
-            }
+            return $prefix . $method->getName();
         };
 
         $sortedMethods = $methods;

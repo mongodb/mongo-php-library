@@ -4,22 +4,29 @@ namespace MongoDB\Benchmark;
 
 use MongoDB\Client;
 use MongoDB\Collection;
+use MongoDB\Database;
 
 use function getenv;
 
 final class Utils
 {
     private static ?Client $client;
+    private static ?Database $database;
     private static ?Collection $collection;
 
     public static function getClient(): Client
     {
-        return self::$client ??= self::createClient();
+        return self::$client ??= new Client(self::getUri());
+    }
+
+    public static function getDatabase(): Database
+    {
+        return self::$database ??= self::getClient()->selectDatabase(self::getDatabaseName());
     }
 
     public static function getCollection(): Collection
     {
-        return self::$collection ??= self::createCollection();
+        return self::$collection ??= self::getDatabase()->selectCollection(self::getCollectionName());
     }
 
     public static function getUri(): string
@@ -27,18 +34,13 @@ final class Utils
         return getenv('MONGODB_URI') ?: 'mongodb://localhost:27017/';
     }
 
-    public static function getDatabase(): string
+    public static function getDatabaseName(): string
     {
         return getenv('MONGODB_DATABASE') ?: 'phplib_test';
     }
 
-    private static function createClient(): Client
+    public static function getCollectionName(): string
     {
-        return new Client(self::getUri());
-    }
-
-    private static function createCollection(): Collection
-    {
-        return self::getClient()->selectCollection(self::getDatabase(), 'perftest');
+        return 'perftest';
     }
 }

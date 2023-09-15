@@ -17,19 +17,13 @@ use function file_get_contents;
  *
  * @see https://github.com/mongodb/specifications/blob/ddfc8b583d49aaf8c4c19fa01255afb66b36b92e/source/benchmarking/benchmarking.rst#multi-doc-benchmarks
  */
-#[BeforeMethods('prepareDatabase')]
-class MultiDocBench
+final class MultiDocBench
 {
-    public function prepareDatabase(): void
-    {
-        Utils::getCollection()->drop();
-    }
-
     /**
      * @see https://github.com/mongodb/specifications/blob/master/source/benchmarking/benchmarking.rst#find-many-and-empty-the-cursor
      * @param array{options: array} $params
      */
-    #[BeforeMethods('setupFindMany')]
+    #[BeforeMethods('beforeFindMany')]
     #[ParamProviders('provideFindManyParams')]
     public function benchFindMany(array $params): void
     {
@@ -40,11 +34,14 @@ class MultiDocBench
         foreach ($collection->find([], $params['options']) as $document);
     }
 
-    public function setupFindMany(): void
+    public function beforeFindMany(): void
     {
+        $collection = Utils::getCollection();
+        $collection->drop();
+
         $tweet = Data::readJsonFile(Data::TWEET_FILE_PATH);
         $documents = array_fill(0, 9_999, $tweet);
-        Utils::getCollection()->insertMany($documents);
+        $collection->insertMany($documents);
     }
 
     public static function provideFindManyParams(): Generator
@@ -63,7 +60,7 @@ class MultiDocBench
      * @see https://github.com/mongodb/specifications/blob/ddfc8b583d49aaf8c4c19fa01255afb66b36b92e/source/benchmarking/benchmarking.rst#large-doc-bulk-insert
      * @param array{documents: array} $params
      */
-    #[BeforeMethods('setupBulkInsert')]
+    #[BeforeMethods('beforeBulkInsert')]
     #[ParamProviders('provideBulkInsertParams')]
     public function benchBulkInsert(array $params): void
     {
@@ -74,12 +71,11 @@ class MultiDocBench
         $collection->insertMany($params['documents']);
     }
 
-    public function setupBulkInsert(): void
+    public function beforeBulkInsert(): void
     {
-        $collectionName = Utils::getCollection()->getCollectionName();
-        Utils::getClient()
-            ->selectDatabase(Utils::getDatabase())
-            ->createCollection($collectionName);
+        $database = Utils::getDatabase();
+        $database->dropCollection(Utils::getCollectionName());
+        $database->createCollection(Utils::getCollectionName());
     }
 
     public static function provideBulkInsertParams(): Generator

@@ -60,7 +60,7 @@ class EnvironmentProvider implements ProviderInterface
     private function getBuildInfo(Manager $manager): array
     {
         $buildInfo = $manager->executeCommand(
-            Utils::getDatabase(),
+            Utils::getDatabaseName(),
             new Command(['buildInfo' => 1]),
             new ReadPreference(ReadPreference::PRIMARY),
         )->toArray()[0];

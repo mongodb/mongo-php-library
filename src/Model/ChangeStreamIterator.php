@@ -69,71 +69,6 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     private Server $server;
 
     /**
-     * @internal
-     * @param array|object|null $initialResumeToken
-     * @psalm-param CursorInterface<int, TValue>&Iterator<int, TValue> $cursor
-     */
-    public function __construct(CursorInterface $cursor, int $firstBatchSize, $initialResumeToken, ?object $postBatchResumeToken)
-    {
-        if (! $cursor instanceof Iterator) {
-            throw InvalidArgumentException::invalidType(
-                '$cursor',
-                $cursor,
-                CursorInterface::class . '&' . Iterator::class,
-            );
-        }
-
-        if (isset($initialResumeToken) && ! is_document($initialResumeToken)) {
-            throw InvalidArgumentException::expectedDocumentType('$initialResumeToken', $initialResumeToken);
-        }
-
-        parent::__construct($cursor);
-
-        $this->batchSize = $firstBatchSize;
-        $this->isRewindNop = ($firstBatchSize === 0);
-        $this->postBatchResumeToken = $postBatchResumeToken;
-        $this->resumeToken = $initialResumeToken;
-        $this->server = $cursor->getServer();
-    }
-
-    /** @internal */
-    final public function commandFailed(CommandFailedEvent $event): void
-    {
-    }
-
-    /** @internal */
-    final public function commandStarted(CommandStartedEvent $event): void
-    {
-        if ($event->getCommandName() !== 'getMore') {
-            return;
-        }
-
-        $this->batchPosition = 0;
-        $this->batchSize = 0;
-        $this->postBatchResumeToken = null;
-    }
-
-    /** @internal */
-    final public function commandSucceeded(CommandSucceededEvent $event): void
-    {
-        if ($event->getCommandName() !== 'getMore') {
-            return;
-        }
-
-        $reply = $event->getReply();
-
-        if (! isset($reply->cursor->nextBatch) || ! is_array($reply->cursor->nextBatch)) {
-            throw new UnexpectedValueException('getMore command did not return a "cursor.nextBatch" array');
-        }
-
-        $this->batchSize = count($reply->cursor->nextBatch);
-
-        if (isset($reply->cursor->postBatchResumeToken) && is_object($reply->cursor->postBatchResumeToken)) {
-            $this->postBatchResumeToken = $reply->cursor->postBatchResumeToken;
-        }
-    }
-
-    /**
      * @see https://php.net/iteratoriterator.current
      * @return array|object|null
      * @psalm-return TValue|null
@@ -237,6 +172,71 @@ class ChangeStreamIterator extends IteratorIterator implements CommandSubscriber
     public function valid(): bool
     {
         return $this->isValid;
+    }
+
+    /**
+     * @internal
+     * @param array|object|null $initialResumeToken
+     * @psalm-param CursorInterface<int, TValue>&Iterator<int, TValue> $cursor
+     */
+    public function __construct(CursorInterface $cursor, int $firstBatchSize, $initialResumeToken, ?object $postBatchResumeToken)
+    {
+        if (! $cursor instanceof Iterator) {
+            throw InvalidArgumentException::invalidType(
+                '$cursor',
+                $cursor,
+                CursorInterface::class . '&' . Iterator::class,
+            );
+        }
+
+        if (isset($initialResumeToken) && ! is_document($initialResumeToken)) {
+            throw InvalidArgumentException::expectedDocumentType('$initialResumeToken', $initialResumeToken);
+        }
+
+        parent::__construct($cursor);
+
+        $this->batchSize = $firstBatchSize;
+        $this->isRewindNop = ($firstBatchSize === 0);
+        $this->postBatchResumeToken = $postBatchResumeToken;
+        $this->resumeToken = $initialResumeToken;
+        $this->server = $cursor->getServer();
+    }
+
+    /** @internal */
+    final public function commandFailed(CommandFailedEvent $event): void
+    {
+    }
+
+    /** @internal */
+    final public function commandStarted(CommandStartedEvent $event): void
+    {
+        if ($event->getCommandName() !== 'getMore') {
+            return;
+        }
+
+        $this->batchPosition = 0;
+        $this->batchSize = 0;
+        $this->postBatchResumeToken = null;
+    }
+
+    /** @internal */
+    final public function commandSucceeded(CommandSucceededEvent $event): void
+    {
+        if ($event->getCommandName() !== 'getMore') {
+            return;
+        }
+
+        $reply = $event->getReply();
+
+        if (! isset($reply->cursor->nextBatch) || ! is_array($reply->cursor->nextBatch)) {
+            throw new UnexpectedValueException('getMore command did not return a "cursor.nextBatch" array');
+        }
+
+        $this->batchSize = count($reply->cursor->nextBatch);
+
+        if (isset($reply->cursor->postBatchResumeToken) && is_object($reply->cursor->postBatchResumeToken)) {
+            $this->postBatchResumeToken = $reply->cursor->postBatchResumeToken;
+        }
     }
 
     /**

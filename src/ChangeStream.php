@@ -88,22 +88,6 @@ class ChangeStream implements Iterator
     private ?DocumentCodec $codec;
 
     /**
-     * @internal
-     *
-     * @param ResumeCallable $resumeCallable
-     */
-    public function __construct(ChangeStreamIterator $iterator, callable $resumeCallable, ?DocumentCodec $codec = null)
-    {
-        $this->iterator = $iterator;
-        $this->resumeCallable = $resumeCallable;
-        $this->codec = $codec;
-
-        if ($codec) {
-            $this->iterator->getInnerIterator()->setTypeMap(['root' => 'bson']);
-        }
-    }
-
-    /**
      * @see https://php.net/iterator.current
      * @return array|object|null
      */
@@ -198,6 +182,22 @@ class ChangeStream implements Iterator
     public function valid()
     {
         return $this->iterator->valid();
+    }
+
+    /**
+     * @internal
+     *
+     * @param ResumeCallable $resumeCallable
+     */
+    public function __construct(ChangeStreamIterator $iterator, callable $resumeCallable, ?DocumentCodec $codec = null)
+    {
+        $this->iterator = $iterator;
+        $this->resumeCallable = $resumeCallable;
+        $this->codec = $codec;
+
+        if ($codec) {
+            $this->iterator->getInnerIterator()->setTypeMap(['root' => 'bson']);
+        }
     }
 
     /**

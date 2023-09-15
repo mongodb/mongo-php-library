@@ -51,20 +51,6 @@ class MapReduceResult implements IteratorAggregate
     private array $timing;
 
     /**
-     * @internal
-     * @param callable $getIterator Callback that returns a Traversable for mapReduce results
-     * @param stdClass $result      Result document from the mapReduce command
-     * @psalm-param MapReduceCallable $getIterator
-     */
-    public function __construct(callable $getIterator, stdClass $result)
-    {
-        $this->getIterator = $getIterator;
-        $this->executionTimeMS = isset($result->timeMillis) ? (integer) $result->timeMillis : 0;
-        $this->counts = isset($result->counts) ? (array) $result->counts : [];
-        $this->timing = isset($result->timing) ? (array) $result->timing : [];
-    }
-
-    /**
      * Returns various count statistics from the mapReduce command.
      *
      * @return array
@@ -107,5 +93,19 @@ class MapReduceResult implements IteratorAggregate
     public function getTiming()
     {
         return $this->timing;
+    }
+
+    /**
+     * @internal
+     * @param callable $getIterator Callback that returns a Traversable for mapReduce results
+     * @param stdClass $result      Result document from the mapReduce command
+     * @psalm-param MapReduceCallable $getIterator
+     */
+    public function __construct(callable $getIterator, stdClass $result)
+    {
+        $this->getIterator = $getIterator;
+        $this->executionTimeMS = isset($result->timeMillis) ? (integer) $result->timeMillis : 0;
+        $this->counts = isset($result->counts) ? (array) $result->counts : [];
+        $this->timing = isset($result->timing) ? (array) $result->timing : [];
     }
 }

@@ -52,34 +52,6 @@ class BSONIterator implements Iterator
     private array $options;
 
     /**
-     * Constructs a BSON Iterator.
-     *
-     * Supported options:
-     *
-     *  * typeMap (array): Type map for BSON deserialization.
-     *
-     * @internal
-     * @see https://php.net/manual/en/function.mongodb.bson-tophp.php
-     * @param string $data    Concatenated, valid, BSON-encoded documents
-     * @param array  $options Iterator options
-     * @throws InvalidArgumentException for parameter/option parsing errors
-     */
-    public function __construct(string $data, array $options = [])
-    {
-        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
-            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
-        }
-
-        if (! isset($options['typeMap'])) {
-            $options['typeMap'] = [];
-        }
-
-        $this->buffer = $data;
-        $this->bufferLength = strlen($data);
-        $this->options = $options;
-    }
-
-    /**
      * @see https://php.net/iterator.current
      * @return mixed
      */
@@ -129,6 +101,34 @@ class BSONIterator implements Iterator
     public function valid(): bool
     {
         return $this->current !== null;
+    }
+
+    /**
+     * Constructs a BSON Iterator.
+     *
+     * Supported options:
+     *
+     *  * typeMap (array): Type map for BSON deserialization.
+     *
+     * @internal
+     * @see https://php.net/manual/en/function.mongodb.bson-tophp.php
+     * @param string $data    Concatenated, valid, BSON-encoded documents
+     * @param array  $options Iterator options
+     * @throws InvalidArgumentException for parameter/option parsing errors
+     */
+    public function __construct(string $data, array $options = [])
+    {
+        if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
+            throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
+        }
+
+        if (! isset($options['typeMap'])) {
+            $options['typeMap'] = [];
+        }
+
+        $this->buffer = $data;
+        $this->bufferLength = strlen($data);
+        $this->options = $options;
     }
 
     private function advance(): void

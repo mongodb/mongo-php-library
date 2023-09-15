@@ -6,6 +6,7 @@ use MongoDB\Benchmark\BaseBench;
 use MongoDB\BSON\PackedArray;
 use PhpBench\Attributes\BeforeMethods;
 
+use PhpBench\Attributes\Warmup;
 use function array_values;
 use function file_get_contents;
 use function iterator_to_array;
@@ -14,6 +15,7 @@ use function json_decode;
 use const JSON_THROW_ON_ERROR;
 
 #[BeforeMethods('prepareData')]
+#[Warmup(1)]
 final class PackedArrayBench extends BaseBench
 {
     private static PackedArray $array;

@@ -5,12 +5,14 @@ namespace MongoDB\Benchmark\BSON;
 use MongoDB\Benchmark\BaseBench;
 use MongoDB\BSON\Document;
 use PhpBench\Attributes\BeforeMethods;
+use PhpBench\Attributes\Warmup;
 use stdClass;
 
 use function file_get_contents;
 use function iterator_to_array;
 
 #[BeforeMethods('prepareData')]
+#[Warmup(1)]
 final class DocumentBench extends BaseBench
 {
     private static Document $document;

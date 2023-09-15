@@ -12,6 +12,7 @@ use MongoDB\Model\BSONDocument;
 use PhpBench\Attributes\BeforeClassMethods;
 use PhpBench\Attributes\ParamProviders;
 
+use PhpBench\Attributes\Warmup;
 use function array_fill;
 use function array_intersect_key;
 use function assert;
@@ -24,6 +25,7 @@ use function sprintf;
 use const JSON_THROW_ON_ERROR;
 
 #[BeforeClassMethods('prepareDatabase')]
+#[Warmup(1)]
 final class ReadMultipleDocumentsBench extends BaseBench
 {
     public static function prepareDatabase(): void

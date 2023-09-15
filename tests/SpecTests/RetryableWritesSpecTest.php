@@ -34,11 +34,14 @@ class RetryableWritesSpecTest extends FunctionalTestCase
      */
     public function testRetryableWrites(stdClass $test, ?array $runOn, array $data): void
     {
-        $useMultipleMongoses = isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isMongos();
-
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
         }
+
+        // Serverless uses a load balancer fronting a single proxy (PHPLIB-757)
+        $useMultipleMongoses = $this->isMongos() || ($this->isLoadBalanced() && ! $this->isServerless())
+            ? ($test->useMultipleMongoses ?? false)
+            : false;
 
         $context = Context::fromRetryableWrites($test, $this->getDatabaseName(), $this->getCollectionName(), $useMultipleMongoses);
         $this->setContext($context);

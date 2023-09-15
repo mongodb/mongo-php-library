@@ -26,13 +26,12 @@ class EnvironmentProvider implements ProviderInterface
 
     public function getInformation(): Information
     {
-        $client = Utils::getClient();
-        $client->getManager()->selectServer();
+        $manager = Utils::getClient()->getManager();
 
         return new Information('mongodb', array_merge(
             $this->getUri(),
-            $this->getServerInfo($client->getManager()),
-            $this->getBuildInfo($client->getManager()),
+            $this->getServerInfo($manager),
+            $this->getBuildInfo($manager),
         ));
     }
 

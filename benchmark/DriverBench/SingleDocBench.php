@@ -43,7 +43,7 @@ final class SingleDocBench
      * @see https://github.com/mongodb/specifications/blob/ddfc8b583d49aaf8c4c19fa01255afb66b36b92e/source/benchmarking/benchmarking.rst#find-one-by-id
      * @param array{options: array} $params
      */
-    #[BeforeMethods('setupFindOneById')]
+    #[BeforeMethods('beforeFindOneById')]
     #[ParamProviders('provideFindOneByIdParams')]
     #[Revs(1)]
     public function benchFindOneById(array $params): void
@@ -55,7 +55,7 @@ final class SingleDocBench
         }
     }
 
-    public function setupFindOneById(): void
+    public function beforeFindOneById(): void
     {
         $tweet = Data::readJsonFile(Data::TWEET_FILE_PATH);
         $docs = array_map(fn ($id) => $tweet + ['_id' => $id], range(1, 10_000));
@@ -85,7 +85,7 @@ final class SingleDocBench
         $collection = Utils::getCollection();
 
         for ($i = $params['repeat']; $i > 0; $i--) {
-            $collection->insertOne($params['document'], $params['options'] ?? []);
+            $collection->insertOne($params['document']);
         }
     }
 

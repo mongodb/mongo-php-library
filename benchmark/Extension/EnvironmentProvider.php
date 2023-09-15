@@ -51,7 +51,7 @@ class EnvironmentProvider implements ProviderInterface
             Server::TYPE_STANDALONE => 'standalone',
             Server::TYPE_LOAD_BALANCER => 'load-balanced',
             Server::TYPE_RS_PRIMARY => 'replica-set',
-            Server::TYPE_MONGOS => 'shared',
+            Server::TYPE_MONGOS => 'sharded',
             default => 'unknown',
         };
 

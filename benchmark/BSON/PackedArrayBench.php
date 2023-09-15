@@ -2,27 +2,23 @@
 
 namespace MongoDB\Benchmark\BSON;
 
-use MongoDB\Benchmark\BaseBench;
+use MongoDB\Benchmark\Fixtures\Data;
 use MongoDB\BSON\PackedArray;
 use PhpBench\Attributes\BeforeMethods;
-
 use PhpBench\Attributes\Warmup;
-use function array_values;
-use function file_get_contents;
-use function iterator_to_array;
-use function json_decode;
 
-use const JSON_THROW_ON_ERROR;
+use function array_values;
+use function iterator_to_array;
 
 #[BeforeMethods('prepareData')]
 #[Warmup(1)]
-final class PackedArrayBench extends BaseBench
+final class PackedArrayBench
 {
     private static PackedArray $array;
 
     public function prepareData(): void
     {
-        $array = array_values(json_decode(file_get_contents(self::LARGE_FILE_PATH), true, 512, JSON_THROW_ON_ERROR));
+        $array = array_values(Data::readJsonFile(Data::LARGE_FILE_PATH));
 
         self::$array = PackedArray::fromPHP($array);
     }

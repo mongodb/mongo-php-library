@@ -3,6 +3,7 @@
 namespace MongoDB\Benchmark;
 
 use Generator;
+use MongoDB\Benchmark\Fixtures\Data;
 use MongoDB\Benchmark\Fixtures\PassThruCodec;
 use MongoDB\Benchmark\Fixtures\ToObjectCodec;
 use MongoDB\BSON\Document;
@@ -11,29 +12,25 @@ use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 use PhpBench\Attributes\BeforeClassMethods;
 use PhpBench\Attributes\ParamProviders;
-
 use PhpBench\Attributes\Warmup;
+
 use function array_fill;
 use function array_intersect_key;
 use function assert;
-use function file_get_contents;
 use function is_array;
 use function is_object;
-use function json_decode;
 use function sprintf;
-
-use const JSON_THROW_ON_ERROR;
 
 #[BeforeClassMethods('prepareDatabase')]
 #[Warmup(1)]
-final class ReadLargeDocumentBench extends BaseBench
+final class ReadLargeDocumentBench
 {
     public static function prepareDatabase(): void
     {
-        $collection = self::getCollection();
+        $collection = Utils::getCollection();
         $collection->drop();
 
-        $document = json_decode(file_get_contents(self::LARGE_FILE_PATH), false, 512, JSON_THROW_ON_ERROR);
+        $document = Data::readJsonFile(Data::LARGE_FILE_PATH);
 
         $documents = array_fill(0, 10, $document);
 
@@ -88,7 +85,7 @@ final class ReadLargeDocumentBench extends BaseBench
     {
         $options = array_intersect_key($params, ['codec' => true, 'typeMap' => true]);
 
-        $collection = self::getCollection();
+        $collection = Utils::getCollection();
 
         $collection->find([], $options)->toArray();
     }
@@ -98,7 +95,7 @@ final class ReadLargeDocumentBench extends BaseBench
     {
         $options = array_intersect_key($params, ['codec' => true, 'typeMap' => true]);
 
-        $collection = self::getCollection();
+        $collection = Utils::getCollection();
 
         // Exhaust cursor and access identifier on each document
         foreach ($collection->find([], $options) as $document) {
@@ -111,7 +108,7 @@ final class ReadLargeDocumentBench extends BaseBench
     {
         $options = array_intersect_key($params, ['codec' => true, 'typeMap' => true]);
 
-        $collection = self::getCollection();
+        $collection = Utils::getCollection();
 
         // Exhaust cursor and access identifier on each document
         foreach ($collection->find([], $options) as $document) {
@@ -124,7 +121,7 @@ final class ReadLargeDocumentBench extends BaseBench
     {
         $options = array_intersect_key($params, ['codec' => true, 'typeMap' => true]);
 
-        $collection = self::getCollection();
+        $collection = Utils::getCollection();
 
         // Exhaust cursor and access identifier on each document
         foreach ($collection->find([], $options) as $document) {

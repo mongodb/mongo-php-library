@@ -2,7 +2,7 @@
 
 namespace MongoDB\Benchmark\Extension;
 
-use MongoDB\Benchmark\BaseBench;
+use MongoDB\Benchmark\Utils;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
@@ -26,7 +26,7 @@ class EnvironmentProvider implements ProviderInterface
 
     public function getInformation(): Information
     {
-        $client = BaseBench::createClient();
+        $client = Utils::getClient();
         $client->getManager()->selectServer();
 
         return new Information('mongodb', array_merge(
@@ -38,7 +38,7 @@ class EnvironmentProvider implements ProviderInterface
 
     private function getUri(): array
     {
-        $uri = BaseBench::getUri();
+        $uri = Utils::getUri();
         // Obfuscate the password in the URI
         $uri = str_replace(':' . parse_url($uri, PHP_URL_PASS) . '@', ':***@', $uri);
 
@@ -61,7 +61,7 @@ class EnvironmentProvider implements ProviderInterface
     private function getBuildInfo(Manager $manager): array
     {
         $buildInfo = $manager->executeCommand(
-            BaseBench::getDatabase(),
+            Utils::getDatabase(),
             new Command(['buildInfo' => 1]),
             new ReadPreference(ReadPreference::PRIMARY),
         )->toArray()[0];

@@ -1,0 +1,112 @@
+======
+Codecs
+======
+
+.. default-domain:: mongodb
+
+.. contents:: On this page
+   :local:
+   :backlinks: none
+   :depth: 2
+   :class: singlecol
+
+.. versionadded:: 1.17
+
+Overview
+--------
+
+Codecs are used to decode BSON documents into PHP objects, and encode PHP objects into BSON documents. In contrast to
+other methods (e.g. type maps), codecs allow for greater customization and handling of different data types. They
+separate logic for BSON encoding and decoding from the domain classes, which also enables BSON to be decoded into plain
+old PHP objects.
+
+Handling Documents
+------------------
+
+The main logic is contained in a document codec. This class implements the ``MongoDB\Codec\DocumentCodec`` interface and
+defines what data types can be encoded/decoded and how. The following example defines a ``Person`` class and a codec to
+transform it:
+
+.. literalinclude:: /examples/codecs/handling-documents/Person.php
+   :language: php
+
+.. literalinclude:: /examples/codecs/handling-documents/PersonCodec.php
+   :language: php
+
+To then use this codec with a collection, specify the ``codec`` option when selecting the collection:
+
+.. literalinclude:: /examples/codecs/handling-documents/using-codec.php
+   :language: php
+
+The example above selects a collection and instructs it to use the ``PersonCodec`` for encoding and decoding documents.
+When inserting data, the ``PersonCodec`` is used to encode the document. When retrieving data, the same ``PersonCodec``
+is used to decode BSON data into a ``Person`` instance. Note that while the ``PersonCodec`` could technically decode any
+BSON document that contains a name field, we wouldn't want to use it for any other documents. Document codecs are meant
+to be used with a :phpclass:`MongoDB\\Collection`, or when decoding embedded documents.
+
+When using a collection with a codec, the codec will only accept and return data of that type for certain operations.
+Insert and replace operations (e.g. ``insertOne``, ```findOneAndReplace``, and some ``bulkWrite`` operations) will
+attempt to encode the given data using the provided codec. Trying to insert or replace a document that cannot be encoded
+will result in an exception. Read operations (e.g. ``aggregate``, ``find``, and ``findOneAndUpdate``) will attempt to
+decode returned documents using the provided codec. If the codec does not support the data returned, an exception will
+be thrown.
+
+You can disable codec usage for a specific operation or use a different codec (e.g. to decode the result of an
+aggregation pipeline) by specifying ``null`` for the ``codec`` option for any operation. Alternatively, specifying a
+type map using the ``typeMap`` operation will also override the collection-level codec:
+
+.. literalinclude:: /examples/codecs/handling-documents/disabling-codec.php
+   :language: php
+
+.. _php-codec-handling-data-types:
+
+Handling Fields and Data Types
+------------------------------
+
+The previous example showed how to define a codec for a specific class. However, you may want to create a codec that
+handles a particular data type in any document. This can be achieved by implementing the ``MongoDB\Codec\Codec``
+interface.
+
+The following example defines a codec that stores ``DateTimeInterface`` instances as an embedded document containing a
+BSON date and accompanying timezone string. Those same embedded documents can then be translated back into a
+``DateTimeImmutable`` during BSON decoding.
+
+.. literalinclude:: /examples/codecs/handling-data-types/DateTimeCodec.php
+   :language: php
+
+This codec can now be leveraged by other codecs handle date fields.
+
+First, we add a ``createdAt`` field to the ``Person`` class:
+
+.. literalinclude:: /examples/codecs/handling-data-types/Person.php
+   :language: php
+
+Last but not least, we modify the codec to handle the new field:
+
+.. literalinclude:: /examples/codecs/handling-data-types/PersonCodec.php
+   :language: php
+
+Handling Embedded Documents
+---------------------------
+
+A previous example showed how to handle a single document. However, sometimes you want to handle fields that contain
+embedded documents. We will demonstrate this using an ``Address`` document, which we will embed within a ``Person``
+document. To ensure consistency, we're going to make this a read-only class:
+
+.. literalinclude:: /examples/codecs/handling-embedded-documents/Address.php
+   :language: php
+
+We can now create a document codec for this class:
+
+.. literalinclude:: /examples/codecs/handling-embedded-documents/AddressCodec.php
+   :language: php
+
+The ``Person`` class gets a new ``address`` field, but we'll leave this optional:
+
+.. literalinclude:: /examples/codecs/handling-embedded-documents/Person.php
+   :language: php
+
+The ``PersonCodec`` can now handle the optional ``address`` field when transforming data:
+
+.. literalinclude:: /examples/codecs/handling-embedded-documents/PersonCodec.php
+   :language: php

@@ -1,8 +1,10 @@
 {
     "$schema": "./vendor/phpbench/phpbench/phpbench.schema.json",
+    "core.extensions": ["MongoDB\\Benchmark\\Extension\\MongoDBExtension"],
+    "runner.env_enabled_providers": ["mongodb","sampler","git","opcache","php","uname","unix_sysload"],
     "runner.bootstrap": "vendor/autoload.php",
+    "runner.file_pattern": "*Bench.php",
     "runner.path": "benchmark",
     "runner.iterations": 3,
-    "runner.revs": 10,
-    "runner.warmup": 1
+    "runner.revs": 10
 }

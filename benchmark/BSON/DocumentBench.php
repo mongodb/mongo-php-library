@@ -2,22 +2,24 @@
 
 namespace MongoDB\Benchmark\BSON;
 
-use MongoDB\Benchmark\BaseBench;
+use MongoDB\Benchmark\Fixtures\Data;
 use MongoDB\BSON\Document;
 use PhpBench\Attributes\BeforeMethods;
+use PhpBench\Attributes\Warmup;
 use stdClass;
 
 use function file_get_contents;
 use function iterator_to_array;
 
 #[BeforeMethods('prepareData')]
-final class DocumentBench extends BaseBench
+#[Warmup(1)]
+final class DocumentBench
 {
     private static Document $document;
 
     public function prepareData(): void
     {
-        self::$document = Document::fromJSON(file_get_contents(self::LARGE_FILE_PATH));
+        self::$document = Document::fromJSON(file_get_contents(Data::LARGE_FILE_PATH));
     }
 
     public function benchCheckFirst(): void

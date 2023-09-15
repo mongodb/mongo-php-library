@@ -67,7 +67,7 @@ jobs:
           composer-options: "--no-suggest"
 
       - name: "Run phpbench"
-        run: "vendor/bin/phpbench run --report=aggregate --report=bar_chart_time --output html"
+        run: "vendor/bin/phpbench run --report=aggregate --report=bar_chart_time --report=env --output html"
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v3

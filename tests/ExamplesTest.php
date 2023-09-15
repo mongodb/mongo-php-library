@@ -4,6 +4,12 @@ namespace MongoDB\Tests;
 
 use Generator;
 
+use function bin2hex;
+use function getenv;
+use function putenv;
+use function random_bytes;
+use function sprintf;
+
 /** @runTestsInSeparateProcesses */
 final class ExamplesTest extends FunctionalTestCase
 {
@@ -179,6 +185,54 @@ OUTPUT;
         ];
     }
 
+    /**
+     * MongoDB Atlas Search example requires a MongoDB Atlas M10+ cluster with MongoDB 7.0+
+     * Tips for insiders: if using a cloud-dev server, append ".mongodb.net" to the MONGODB_URI.
+     *
+     * @group atlas
+     */
+    public function testAtlasSearch(): void
+    {
+        $uri = getenv('MONGODB_URI') ?? '';
+        if (! self::isAtlas($uri)) {
+            $this->markTestSkipped('Atlas Search examples are only supported on MongoDB Atlas');
+        }
+
+        $this->skipIfServerVersion('<', '7.0', 'Atlas Search examples require MongoDB 7.0 or later');
+
+        // Generate random collection name to avoid conflicts with consecutive runs as the index creation is asynchronous
+        $collectionName = sprintf('%s.%s', $this->getCollectionName(), bin2hex(random_bytes(5)));
+        $databaseName = $this->getDatabaseName();
+        $collection = $this->createCollection($databaseName, $collectionName);
+        $collection->insertMany([
+            ['name' => 'Ribeira Charming Duplex'],
+            ['name' => 'Ocean View Bondi Beach'],
+            ['name' => 'Luxury ocean view Beach Villa 622'],
+            ['name' => 'Ocean & Beach View Condo WBR H204'],
+            ['name' => 'Bondi Beach Spacious Studio With Ocean View'],
+            ['name' => 'New York City - Upper West Side Apt'],
+        ]);
+        putenv(sprintf('MONGODB_DATABASE=%s', $databaseName));
+        putenv(sprintf('MONGODB_COLLECTION=%s', $collectionName));
+
+        $expectedOutput = <<<'OUTPUT'
+
+Creating the index.
+%s
+Performing a text search...
+ - Ocean View Bondi Beach
+ - Luxury ocean view Beach Villa 622
+ - Ocean & Beach View Condo WBR H204
+ - Bondi Beach Spacious Studio With Ocean View
+
+Enjoy MongoDB Atlas Search!
+
+
+OUTPUT;
+
+        $this->assertExampleOutput(__DIR__ . '/../examples/atlas-search.php', $expectedOutput);
+    }
+
     public function testChangeStream(): void
     {
         $this->skipIfChangeStreamIsNotSupported();
@@ -247,7 +301,7 @@ MongoDB\BSON\Binary Object
 OUTPUT;
 
         yield 'create_data_key' => [
-            'file' => __DIR__ . '/../docs/examples/create_data_key.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/create_data_key.php',
             'expectedOutput' => $expectedOutput,
         ];
 
@@ -261,7 +315,7 @@ MongoDB\BSON\Binary Object
 OUTPUT;
 
         yield 'key_alt_name' => [
-            'file' => __DIR__ . '/../docs/examples/key_alt_name.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/key_alt_name.php',
             'expectedOutput' => $expectedOutput,
         ];
 
@@ -293,7 +347,7 @@ Error inserting document: Document failed validation
 OUTPUT;
 
         yield 'csfle-automatic_encryption-local_schema' => [
-            'file' => __DIR__ . '/../docs/examples/csfle-automatic_encryption-local_schema.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/csfle-automatic_encryption-local_schema.php',
             'expectedOutput' => $expectedOutput,
         ];
 
@@ -325,7 +379,7 @@ Error inserting document: Document failed validation
 OUTPUT;
 
         yield 'csfle-automatic_encryption-server_side_schema' => [
-            'file' => __DIR__ . '/../docs/examples/csfle-automatic_encryption-server_side_schema.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/csfle-automatic_encryption-server_side_schema.php',
             'expectedOutput' => $expectedOutput,
         ];
 
@@ -348,7 +402,7 @@ Decrypted: mySecret
 OUTPUT;
 
         yield 'csfle-explicit_encryption' => [
-            'file' => __DIR__ . '/../docs/examples/csfle-explicit_encryption.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/csfle-explicit_encryption.php',
             'expectedOutput' => $expectedOutput,
         ];
 
@@ -365,7 +419,7 @@ MongoDB\Model\BSONDocument Object
 OUTPUT;
 
         yield 'csfle-explicit_encryption_automatic_decryption' => [
-            'file' => __DIR__ . '/../docs/examples/csfle-explicit_encryption_automatic_decryption.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/csfle-explicit_encryption_automatic_decryption.php',
             'expectedOutput' => $expectedOutput,
         ];
     }
@@ -456,7 +510,7 @@ MongoDB\Model\BSONDocument Object
 OUTPUT;
 
         yield 'queryable_encryption-automatic' => [
-            'file' => __DIR__ . '/../docs/examples/queryable_encryption-automatic.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/queryable_encryption-automatic.php',
             'expectedOutput' => $expectedOutput,
         ];
 
@@ -488,7 +542,7 @@ MongoDB\Model\BSONDocument Object
 OUTPUT;
 
         yield 'queryable_encryption-explicit' => [
-            'file' => __DIR__ . '/../docs/examples/queryable_encryption-explicit.php',
+            'file' => __DIR__ . '/../docs/examples/encryption/queryable_encryption-explicit.php',
             'expectedOutput' => $expectedOutput,
         ];
     }

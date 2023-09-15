@@ -102,7 +102,7 @@ Creating a new data encryption key would typically be done on initial
 deployment, but depending on your use case you may want to use more than one
 encryption key (e.g. user-specific encryption keys) or create them dynamically.
 
-.. literalinclude:: /examples/create_data_key.php
+.. literalinclude:: /examples/encryption/create_data_key.php
    :language: php
 
 
@@ -123,7 +123,7 @@ alternative name using the ``keyAltName`` option instead of ``keyId``.
    index on the ``keyAltNames`` field. Client-Side Field Level Encryption
    depends on server-enforced uniqueness of key alternate names.
 
-.. literalinclude:: /examples/key_alt_name.php
+.. literalinclude:: /examples/encryption/key_alt_name.php
    :language: php
 
 
@@ -177,7 +177,7 @@ The following example sets up a collection with automatic encryption using a
 Data in the ``encryptedField`` field is automatically encrypted on insertion and
 decrypted when reading on the client side.
 
-.. literalinclude:: /examples/csfle-automatic_encryption-server_side_schema.php
+.. literalinclude:: /examples/encryption/csfle-automatic_encryption-server_side_schema.php
    :language: php
 
 
@@ -200,7 +200,7 @@ could trick the client into sending unencrypted data that should be encrypted.
    keywords in the automatic encryption rules. To define document validation
    rules, configure :manual:`schema validation </core/schema-validation/>`.
 
-.. literalinclude:: /examples/csfle-automatic_encryption-local_schema.php
+.. literalinclude:: /examples/encryption/csfle-automatic_encryption-local_schema.php
    :language: php
 
 
@@ -211,7 +211,7 @@ Explicit encryption is a MongoDB community feature and does not use
 crypt_shared_ or mongocryptd_. Explicit encryption is provided by the
 :php:`MongoDB\\Driver\\ClientEncryption <mongodb-driver-clientencryption>` class.
 
-.. literalinclude:: /examples/csfle-explicit_encryption.php
+.. literalinclude:: /examples/encryption/csfle-explicit_encryption.php
    :language: php
 
 
@@ -225,7 +225,7 @@ automatic decryption without automatic encryption set the
 :php:`driver option <manual/en/mongodb-driver-manager.construct.php#mongodb-driver-manager.construct-driveroptions>`
 when constructing a client.
 
-.. literalinclude:: /examples/csfle-explicit_encryption_automatic_decryption.php
+.. literalinclude:: /examples/encryption/csfle-explicit_encryption_automatic_decryption.php
    :language: php
 
 
@@ -252,7 +252,7 @@ in the ``encryptedIndexed`` and ``encryptedUnindexed`` fields will be
 automatically encrypted on insertion and decrypted when querying on the client
 side. Additionally, it is possible to query on the ``encryptedIndexed`` field.
 
-.. literalinclude:: /examples/queryable_encryption-automatic.php
+.. literalinclude:: /examples/encryption/queryable_encryption-automatic.php
    :language: php
 
 
@@ -270,5 +270,5 @@ values must be explicitly encrypted (e.g. insertions, query criteria), automatic
 *decryption* for queries is possible by configuring ``encryptedFields`` on the
 collection, as demonstrated in the following example:
 
-.. literalinclude:: /examples/queryable_encryption-explicit.php
+.. literalinclude:: /examples/encryption/queryable_encryption-explicit.php
    :language: php

@@ -155,4 +155,11 @@
     <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
         <exclude-pattern>/tests/SpecTests/ClientSideEncryption/Prose*</exclude-pattern>
     </rule>
+
+    <!-- **************************************** -->
+    <!-- Exclude certain rules for codec examples -->
+    <!-- **************************************** -->
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <exclude-pattern>/docs/examples/codecs/</exclude-pattern>
+    </rule>
 </ruleset>

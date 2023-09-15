@@ -4,7 +4,7 @@ use MongoDB\BSON\Binary;
 use MongoDB\Client;
 use MongoDB\Driver\ClientEncryption;
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../../../vendor/autoload.php';
 
 $uri = getenv('MONGODB_URI') ?: 'mongodb://127.0.0.1/';
 

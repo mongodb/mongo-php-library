@@ -1,9 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.13.1@086b94371304750d1c673315321a55d15fc59015">
-  <file src="docs/examples/csfle-explicit_encryption.php">
+  <file src="docs/examples/encryption/csfle-explicit_encryption.php">
     <MixedArgument>
       <code><![CDATA[$clientEncryption->decrypt($document->encryptedField)]]></code>
     </MixedArgument>
+  </file>
+  <file src="examples/atlas-search.php">
+    <MixedArgument>
+      <code><![CDATA[$document['name']]]></code>
+      <code><![CDATA[$index->name]]></code>
+    </MixedArgument>
+    <MixedArrayAccess>
+      <code><![CDATA[$document['name']]]></code>
+    </MixedArrayAccess>
+    <MixedAssignment>
+      <code>$document</code>
+      <code>$index</code>
+      <code>$index</code>
+      <code>$index</code>
+    </MixedAssignment>
+    <MixedPropertyFetch>
+      <code><![CDATA[$index->name]]></code>
+      <code><![CDATA[$index->name]]></code>
+      <code><![CDATA[$index->name]]></code>
+      <code><![CDATA[$index->queryable]]></code>
+    </MixedPropertyFetch>
+    <PossiblyFalseArgument>
+      <code>$uri</code>
+    </PossiblyFalseArgument>
   </file>
   <file src="examples/persistable.php">
     <LessSpecificReturnStatement>
@@ -34,16 +58,6 @@
     <MixedAssignment>
       <code><![CDATA[$mergedDriver['platform']]]></code>
     </MixedAssignment>
-  </file>
-  <file src="src/Codec/DecodeIfSupported.php">
-    <MixedInferredReturnType>
-      <code>($value is BSONType ? NativeType : $value)</code>
-    </MixedInferredReturnType>
-  </file>
-  <file src="src/Codec/EncodeIfSupported.php">
-    <MixedInferredReturnType>
-      <code>($value is NativeType ? BSONType : $value)</code>
-    </MixedInferredReturnType>
   </file>
   <file src="src/Collection.php">
     <MixedArgumentTypeCoercion>

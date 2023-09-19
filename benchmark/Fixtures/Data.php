@@ -16,6 +16,7 @@ final class Data
     public const LARGE_FILE_PATH = __DIR__ . '/data/large_doc.json';
     public const SMALL_FILE_PATH = __DIR__ . '/data/small_doc.json';
     public const TWEET_FILE_PATH = __DIR__ . '/data/tweet.json';
+    public const LDJSON_FILE_PATH = __DIR__ . '/data/ldjson.json';
 
     public static function readJsonFile(string $path): array
     {

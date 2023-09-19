@@ -43,4 +43,11 @@ final class Utils
     {
         return 'perftest';
     }
+
+    public static function reset(): void
+    {
+        self::$client = null;
+        self::$database = null;
+        self::$collection = null;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace MongoDB\Benchmark\DriverBench;
 
+use Amp\Parallel\Worker\DefaultPool;
 use Generator;
 use MongoDB\Benchmark\Fixtures\Data;
 use MongoDB\Benchmark\Utils;
@@ -14,7 +15,8 @@ use PhpBench\Attributes\ParamProviders;
 use PhpBench\Attributes\Revs;
 use RuntimeException;
 
-use function array_chunk;
+use function Amp\ParallelFunctions\parallelMap;
+use function Amp\Promise\wait;
 use function array_map;
 use function ceil;
 use function count;
@@ -68,8 +70,6 @@ final class ParallelBench
     /**
      * Parallel: LDJSON multi-file import
      * Using single thread
-     *
-     * @see https://github.com/mongodb/specifications/blob/ddfc8b583d49aaf8c4c19fa01255afb66b36b92e/source/benchmarking/benchmarking.rst#ldjson-multi-file-import
      */
     #[BeforeMethods('beforeMultiFileImport')]
     #[Revs(1)]
@@ -85,16 +85,15 @@ final class ParallelBench
      * Parallel: LDJSON multi-file import
      * Using multiple forked threads
      *
-     * @see https://github.com/mongodb/specifications/blob/ddfc8b583d49aaf8c4c19fa01255afb66b36b92e/source/benchmarking/benchmarking.rst#ldjson-multi-file-import
      * @param array{processes:int, files:string[], batchSize:int} $params
      */
     #[BeforeMethods('beforeMultiFileImport')]
-    #[ParamProviders(['provideProcessesParameter', 'provideMultiFileImportParameters'])]
+    #[ParamProviders(['provideProcessesParameter'])]
     #[Revs(1)]
     public function benchMultiFileImportFork(array $params): void
     {
         $pids = [];
-        foreach ($params['files'] as $files) {
+        foreach (self::getFileNames() as $file) {
             // Wait for a child process to finish if we have reached the maximum number of processes
             if (count($pids) >= $params['processes']) {
                 $pid = pcntl_waitpid(-1, $status);
@@ -107,11 +106,7 @@ final class ParallelBench
                 // If we don't reset, we will get the same manager client_zval in the child process
                 // and share the libmongoc client.
                 Utils::reset();
-                $collection = Utils::getCollection();
-
-                foreach ($files as $file) {
-                    self::importFile($file, $collection);
-                }
+                self::importFile($file, Utils::getCollection());
 
                 // Exit the child process
                 exit(0);
@@ -132,21 +127,31 @@ final class ParallelBench
         }
     }
 
+    /**
+     * Parallel: LDJSON multi-file import
+     * Using amphp/parallel-functions with worker pool
+     *
+     * @param array{processes:int, files:string[], batchSize:int} $params
+     */
+    #[BeforeMethods('beforeMultiFileImport')]
+    #[ParamProviders(['provideProcessesParameter'])]
+    #[Revs(1)]
+    public function benchMultiFileImportAmp(array $params): void
+    {
+        wait(parallelMap(
+            self::getFileNames(),
+            // Uses array callable instead of closure to skip complex serialization
+            [self::class, 'importFile'],
+            // The pool size is the number of processes
+            new DefaultPool($params['processes']),
+        ));
+    }
+
     public static function provideProcessesParameter(): Generator
     {
         // Max number of forked processes
         for ($i = 1; $i <= 30; $i = (int) ceil($i * 1.25)) {
-            yield $i . 'fork' => ['processes' => $i];
-        }
-    }
-
-    public static function provideMultiFileImportParameters(): Generator
-    {
-        $files = self::getFileNames();
-
-        // Chunk of file names to be handled by each processes
-        for ($i = 1; $i <= 10; $i += 3) {
-            yield 'by ' . $i => ['files' => array_chunk($files, $i)];
+            yield $i . ' proc' => ['processes' => $i];
         }
     }
 
@@ -166,8 +171,10 @@ final class ParallelBench
         unset($this->files);
     }
 
-    private static function importFile(string $file, Collection $collection): void
+    public static function importFile(string $file, ?Collection $collection = null): void
     {
+        $collection ??= Utils::getCollection();
+
         // Read file contents into BSON documents
         $docs = array_map(
             static fn (string $line) => Document::fromJSON($line),
@@ -186,8 +193,7 @@ final class ParallelBench
 
         return array_map(
             static fn (int $i) => sprintf('%s/%03d.txt', $tempDir, $i),
-            //range(0, 99),
-            range(0, 5),
+            range(0, 99),
         );
     }
 }

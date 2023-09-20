@@ -20,9 +20,11 @@ use function Amp\ParallelFunctions\parallelMap;
 use function Amp\Promise\wait;
 use function array_map;
 use function count;
-use function file;
+use function fclose;
+use function fgets;
 use function file_get_contents;
 use function file_put_contents;
+use function fopen;
 use function is_dir;
 use function mkdir;
 use function pcntl_fork;
@@ -32,10 +34,6 @@ use function sprintf;
 use function str_repeat;
 use function sys_get_temp_dir;
 use function unlink;
-
-use const FILE_IGNORE_NEW_LINES;
-use const FILE_NO_DEFAULT_CONTEXT;
-use const FILE_SKIP_EMPTY_LINES;
 
 /**
  * For accurate results, run benchmarks on a standalone server.
@@ -87,11 +85,17 @@ final class ParallelBench
     {
         $collection = Utils::getCollection();
         foreach (self::getFileNames() as $file) {
+            $docs = [];
             // Read file contents into BSON documents
-            $docs = array_map(
-                static fn (string $line) => Document::fromJSON($line),
-                file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES | FILE_NO_DEFAULT_CONTEXT),
-            );
+            $fh = fopen($file, 'r');
+            while (($line = fgets($fh)) !== false) {
+                if ($line !== '') {
+                    $docs[] = Document::fromJSON($line);
+                }
+            }
+
+            fclose($fh);
+
             // Insert documents in bulk
             $collection->insertMany($docs);
         }
@@ -188,10 +192,14 @@ final class ParallelBench
         $namespace = sprintf('%s.%s', Utils::getDatabaseName(), Utils::getCollectionName());
 
         $bulkWrite = new BulkWrite();
-        foreach (file($file, FILE_IGNORE_NEW_LINES | FILE_NO_DEFAULT_CONTEXT) as $line) {
-            $bulkWrite->insert(Document::fromJSON($line));
+        $fh = fopen($file, 'r');
+        while (($line = fgets($fh)) !== false) {
+            if ($line !== '') {
+                $bulkWrite->insert(Document::fromJSON($line));
+            }
         }
 
+        fclose($fh);
         Utils::getClient()->getManager()->executeBulkWrite($namespace, $bulkWrite);
     }
 

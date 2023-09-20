@@ -32,6 +32,7 @@ use function pcntl_waitpid;
 use function range;
 use function sprintf;
 use function str_repeat;
+use function stream_get_line;
 use function sys_get_temp_dir;
 use function unlink;
 
@@ -43,8 +44,8 @@ use function unlink;
 #[BeforeClassMethods('beforeClass')]
 #[AfterClassMethods('afterClass')]
 #[BeforeMethods('beforeIteration')]
-#[Revs(1)]
 #[Iterations(1)]
+#[Revs(1)]
 final class ParallelMultiFileImportBench
 {
     public static function beforeClass(): void
@@ -175,16 +176,21 @@ final class ParallelMultiFileImportBench
         yield '34 proc' => ['processes' => 34]; // 3 sequences
     }
 
+    /**
+     * We benchmarked the following solutions to read a file line by line:
+     *  - file
+     *  - SplFileObject
+     *  - fgets
+     *  - stream_get_line 🏆
+     */
     public static function importFile(string $file): void
     {
         $namespace = sprintf('%s.%s', Utils::getDatabaseName(), Utils::getCollectionName());
 
         $bulkWrite = new BulkWrite();
         $fh = fopen($file, 'r');
-        while (($line = fgets($fh)) !== false) {
-            if ($line !== '') {
-                $bulkWrite->insert(Document::fromJSON($line));
-            }
+        while (($line = stream_get_line($fh, 10_000, "\n")) !== false) {
+            $bulkWrite->insert(Document::fromJSON($line));
         }
 
         fclose($fh);

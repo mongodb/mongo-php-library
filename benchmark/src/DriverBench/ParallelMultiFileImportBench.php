@@ -38,11 +38,14 @@ use function unlink;
 /**
  * For accurate results, run benchmarks on a standalone server.
  *
- * @see https://github.com/mongodb/specifications/blob/ddfc8b583d49aaf8c4c19fa01255afb66b36b92e/source/benchmarking/benchmarking.rst#parallel
+ * @see https://github.com/mongodb/specifications/blob/ddfc8b583d49aaf8c4c19fa01255afb66b36b92e/source/benchmarking/benchmarking.rst#ldjson-multi-file-import
  */
 #[BeforeClassMethods('beforeClass')]
 #[AfterClassMethods('afterClass')]
-final class ParallelBench
+#[BeforeMethods('beforeIteration')]
+#[Revs(1)]
+#[Iterations(1)]
+final class ParallelMultiFileImportBench
 {
     public static function beforeClass(): void
     {
@@ -60,13 +63,17 @@ final class ParallelBench
         }
     }
 
+    public function beforeIteration(): void
+    {
+        $database = Utils::getDatabase();
+        $database->drop();
+        $database->createCollection(Utils::getCollectionName());
+    }
+
     /**
      * Parallel: LDJSON multi-file import
      * Using Driver's BulkWrite in a single thread
      */
-    #[BeforeMethods('beforeMultiFileImport')]
-    #[Revs(1)]
-    #[Iterations(1)]
     public function benchMultiFileImportBulkWrite(): void
     {
         foreach (self::getFileNames() as $file) {
@@ -75,12 +82,8 @@ final class ParallelBench
     }
 
     /**
-     * Parallel: LDJSON multi-file import
      * Using library's Collection::insertMany in a single thread
      */
-    #[BeforeMethods('beforeMultiFileImport')]
-    #[Revs(1)]
-    #[Iterations(1)]
     public function benchMultiFileImportInsertMany(): void
     {
         $collection = Utils::getCollection();
@@ -102,15 +105,11 @@ final class ParallelBench
     }
 
     /**
-     * Parallel: LDJSON multi-file import
      * Using multiple forked threads
      *
      * @param array{processes:int, files:string[], batchSize:int} $params
      */
-    #[BeforeMethods('beforeMultiFileImport')]
     #[ParamProviders(['provideProcessesParameter'])]
-    #[Revs(1)]
-    #[Iterations(1)]
     public function benchMultiFileImportFork(array $params): void
     {
         $pids = [];
@@ -149,15 +148,11 @@ final class ParallelBench
     }
 
     /**
-     * Parallel: LDJSON multi-file import
      * Using amphp/parallel-functions with worker pool
      *
      * @param array{processes:int, files:string[], batchSize:int} $params
      */
-    #[BeforeMethods('beforeMultiFileImport')]
     #[ParamProviders(['provideProcessesParameter'])]
-    #[Revs(1)]
-    #[Iterations(1)]
     public function benchMultiFileImportAmp(array $params): void
     {
         wait(parallelMap(
@@ -178,13 +173,6 @@ final class ParallelBench
         yield '13 proc' => ['processes' => 13]; // 8 sequences
         yield '20 proc' => ['processes' => 20]; // 5 sequences
         yield '34 proc' => ['processes' => 34]; // 3 sequences
-    }
-
-    public function beforeMultiFileImport(): void
-    {
-        $database = Utils::getDatabase();
-        $database->drop();
-        $database->createCollection(Utils::getCollectionName());
     }
 
     public static function importFile(string $file): void

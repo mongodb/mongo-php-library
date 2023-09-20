@@ -16,7 +16,7 @@ final class Utils
 
     public static function getClient(): Client
     {
-        return self::$client ??= new Client(self::getUri(), ['disableClientPersistence' => true]);
+        return self::$client ??= new Client(self::getUri(), [], ['disableClientPersistence' => true]);
     }
 
     public static function getDatabase(): Database

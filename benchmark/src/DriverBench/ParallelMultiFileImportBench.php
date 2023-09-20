@@ -72,7 +72,6 @@ final class ParallelMultiFileImportBench
     }
 
     /**
-     * Parallel: LDJSON multi-file import
      * Using Driver's BulkWrite in a single thread
      */
     public function benchMultiFileImportBulkWrite(): void
@@ -197,6 +196,11 @@ final class ParallelMultiFileImportBench
         Utils::getClient()->getManager()->executeBulkWrite($namespace, $bulkWrite);
     }
 
+    /**
+     * Using a method to regenerate the file names because we cannot cache the result of the method in a static
+     * property. The benchmark runner will call the method in a different process, so the static property will not be
+     * populated.
+     */
     private static function getFileNames(): array
     {
         $tempDir = sys_get_temp_dir() . '/mongodb-php-benchmark';

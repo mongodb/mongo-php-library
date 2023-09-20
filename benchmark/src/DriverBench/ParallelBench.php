@@ -7,10 +7,11 @@ use Generator;
 use MongoDB\Benchmark\Fixtures\Data;
 use MongoDB\Benchmark\Utils;
 use MongoDB\BSON\Document;
-use MongoDB\Collection;
+use MongoDB\Driver\BulkWrite;
 use PhpBench\Attributes\AfterClassMethods;
 use PhpBench\Attributes\BeforeClassMethods;
 use PhpBench\Attributes\BeforeMethods;
+use PhpBench\Attributes\Iterations;
 use PhpBench\Attributes\ParamProviders;
 use PhpBench\Attributes\Revs;
 use RuntimeException;
@@ -18,7 +19,6 @@ use RuntimeException;
 use function Amp\ParallelFunctions\parallelMap;
 use function Amp\Promise\wait;
 use function array_map;
-use function ceil;
 use function count;
 use function file;
 use function file_get_contents;
@@ -46,9 +46,6 @@ use const FILE_SKIP_EMPTY_LINES;
 #[AfterClassMethods('afterClass')]
 final class ParallelBench
 {
-    /** @var string[] */
-    private static array $files = [];
-
     public static function beforeClass(): void
     {
         // Generate files
@@ -63,21 +60,40 @@ final class ParallelBench
         foreach (self::getFileNames() as $file) {
             unlink($file);
         }
-
-        self::$files = [];
     }
 
     /**
      * Parallel: LDJSON multi-file import
-     * Using single thread
+     * Using Driver's BulkWrite in a single thread
      */
     #[BeforeMethods('beforeMultiFileImport')]
     #[Revs(1)]
-    public function benchMultiFileImport(): void
+    #[Iterations(1)]
+    public function benchMultiFileImportBulkWrite(): void
+    {
+        foreach (self::getFileNames() as $file) {
+            self::importFile($file);
+        }
+    }
+
+    /**
+     * Parallel: LDJSON multi-file import
+     * Using library's Collection::insertMany in a single thread
+     */
+    #[BeforeMethods('beforeMultiFileImport')]
+    #[Revs(1)]
+    #[Iterations(1)]
+    public function benchMultiFileImportInsertMany(): void
     {
         $collection = Utils::getCollection();
         foreach (self::getFileNames() as $file) {
-            self::importFile($file, $collection);
+            // Read file contents into BSON documents
+            $docs = array_map(
+                static fn (string $line) => Document::fromJSON($line),
+                file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES | FILE_NO_DEFAULT_CONTEXT),
+            );
+            // Insert documents in bulk
+            $collection->insertMany($docs);
         }
     }
 
@@ -90,6 +106,7 @@ final class ParallelBench
     #[BeforeMethods('beforeMultiFileImport')]
     #[ParamProviders(['provideProcessesParameter'])]
     #[Revs(1)]
+    #[Iterations(1)]
     public function benchMultiFileImportFork(array $params): void
     {
         $pids = [];
@@ -102,11 +119,11 @@ final class ParallelBench
 
             $pid = pcntl_fork();
             if ($pid === 0) {
-                // If we reset, we can garantee that we get a new manager in the child process
-                // If we don't reset, we will get the same manager client_zval in the child process
-                // and share the libmongoc client.
+                // Reset to ensure that the existing libmongoc client (via the Manager) is not re-used by the child
+                // process. When the child process constructs a new Manager, the differing PID will result in creation
+                // of a new libmongoc client.
                 Utils::reset();
-                self::importFile($file, Utils::getCollection());
+                self::importFile($file);
 
                 // Exit the child process
                 exit(0);
@@ -136,6 +153,7 @@ final class ParallelBench
     #[BeforeMethods('beforeMultiFileImport')]
     #[ParamProviders(['provideProcessesParameter'])]
     #[Revs(1)]
+    #[Iterations(1)]
     public function benchMultiFileImportAmp(array $params): void
     {
         wait(parallelMap(
@@ -149,10 +167,13 @@ final class ParallelBench
 
     public static function provideProcessesParameter(): Generator
     {
-        // Max number of forked processes
-        for ($i = 1; $i <= 30; $i = (int) ceil($i * 1.25)) {
-            yield $i . ' proc' => ['processes' => $i];
-        }
+        yield '1 proc' => ['processes' => 1]; // 100 sequences, to compare to the single thread baseline
+        yield '2 proc' => ['processes' => 2]; // 50 sequences
+        yield '4 proc' => ['processes' => 4]; // 25 sequences
+        yield '8 proc' => ['processes' => 8]; // 13 sequences
+        yield '13 proc' => ['processes' => 13]; // 8 sequences
+        yield '20 proc' => ['processes' => 20]; // 5 sequences
+        yield '34 proc' => ['processes' => 34]; // 3 sequences
     }
 
     public function beforeMultiFileImport(): void
@@ -162,26 +183,16 @@ final class ParallelBench
         $database->createCollection(Utils::getCollectionName());
     }
 
-    public function afterMultiFileImport(): void
+    public static function importFile(string $file): void
     {
-        foreach (self::$files as $file) {
-            unlink($file);
+        $namespace = sprintf('%s.%s', Utils::getDatabaseName(), Utils::getCollectionName());
+
+        $bulkWrite = new BulkWrite();
+        foreach (file($file, FILE_IGNORE_NEW_LINES | FILE_NO_DEFAULT_CONTEXT) as $line) {
+            $bulkWrite->insert(Document::fromJSON($line));
         }
 
-        unset($this->files);
-    }
-
-    public static function importFile(string $file, ?Collection $collection = null): void
-    {
-        $collection ??= Utils::getCollection();
-
-        // Read file contents into BSON documents
-        $docs = array_map(
-            static fn (string $line) => Document::fromJSON($line),
-            file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES | FILE_NO_DEFAULT_CONTEXT),
-        );
-        // Insert documents in bulk
-        $collection->insertMany($docs);
+        Utils::getClient()->getManager()->executeBulkWrite($namespace, $bulkWrite);
     }
 
     private static function getFileNames(): array

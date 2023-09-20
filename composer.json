@@ -37,6 +37,7 @@
         "files": [ "tests/PHPUnit/Functions.php" ]
     },
     "scripts": {
+        "bench": "cd benchmark && composer update && vendor/bin/phpbench run --report=aggregate",
         "checks": [
             "@check:cs",
             "@check:psalm",

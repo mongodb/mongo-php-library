@@ -4,7 +4,7 @@
     "runner.env_enabled_providers": ["mongodb","sampler","git","opcache","php","uname","unix_sysload"],
     "runner.bootstrap": "vendor/autoload.php",
     "runner.file_pattern": "*Bench.php",
-    "runner.path": "benchmark",
+    "runner.path": "src",
     "runner.php_config": { "memory_limit": "1G" },
     "runner.iterations": 3,
     "runner.revs": 10

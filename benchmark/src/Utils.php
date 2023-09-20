@@ -16,7 +16,7 @@ final class Utils
 
     public static function getClient(): Client
     {
-        return self::$client ??= new Client(self::getUri());
+        return self::$client ??= new Client(self::getUri(), [], ['disableClientPersistence' => true]);
     }
 
     public static function getDatabase(): Database
@@ -42,5 +42,12 @@ final class Utils
     public static function getCollectionName(): string
     {
         return 'perftest';
+    }
+
+    public static function reset(): void
+    {
+        self::$client = null;
+        self::$database = null;
+        self::$collection = null;
     }
 }

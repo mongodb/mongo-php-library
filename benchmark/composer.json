@@ -1,0 +1,26 @@
+{
+  "name": "mongodb/mongodb-benchmark",
+  "type": "project",
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../",
+      "symlink": true
+    }
+  ],
+  "require": {
+    "php": ">=8.1",
+    "ext-pcntl": "*",
+    "amphp/parallel-functions": "^1.1",
+    "mongodb/mongodb": "@dev",
+    "phpbench/phpbench": "^1.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "MongoDB\\Benchmark\\": "src/"
+    }
+  },
+  "scripts": {
+    "benchmark": "phpbench run --report=aggregate"
+  }
+}

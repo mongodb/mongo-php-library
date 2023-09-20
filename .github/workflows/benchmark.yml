@@ -64,14 +64,15 @@ jobs:
       - name: "Install dependencies with Composer"
         uses: "ramsey/composer-install@2.2.0"
         with:
-          composer-options: "--no-suggest"
+          composer-options: "--no-suggest --working-dir=./benchmark"
 
       - name: "Run phpbench"
+        working-directory: "./benchmark"
         run: "vendor/bin/phpbench run --report=aggregate --report=bar_chart_time --report=env --output html"
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v3
         with:
           name: phpbench-${{ github.sha }}.html
-          path: .phpbench/html/index.html
+          path: ./benchmark/.phpbench/html/index.html
           retention-days: 3

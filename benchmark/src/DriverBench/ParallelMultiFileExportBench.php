@@ -6,113 +6,89 @@ use Amp\Future;
 use Amp\Parallel\Worker\ContextWorkerFactory;
 use Amp\Parallel\Worker\ContextWorkerPool;
 use Generator;
-use MongoDB\Benchmark\DriverBench\Amp\ImportFileTask;
+use MongoDB\Benchmark\DriverBench\Amp\ExportFileTask;
 use MongoDB\Benchmark\Fixtures\Data;
 use MongoDB\Benchmark\Utils;
 use MongoDB\BSON\Document;
-use MongoDB\Driver\BulkWrite;
 use PhpBench\Attributes\AfterClassMethods;
+use PhpBench\Attributes\AfterMethods;
 use PhpBench\Attributes\BeforeClassMethods;
-use PhpBench\Attributes\BeforeMethods;
 use PhpBench\Attributes\Iterations;
 use PhpBench\Attributes\ParamProviders;
 use PhpBench\Attributes\Revs;
 use RuntimeException;
 
 use function array_chunk;
+use function array_fill;
 use function array_map;
 use function ceil;
-use function fclose;
-use function fgets;
+use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
-use function fopen;
 use function is_dir;
+use function json_encode;
 use function mkdir;
 use function pcntl_fork;
 use function pcntl_waitpid;
 use function range;
 use function sprintf;
-use function str_repeat;
-use function stream_get_line;
 use function sys_get_temp_dir;
 use function unlink;
 
 /**
  * For accurate results, run benchmarks on a standalone server.
  *
- * @see https://github.com/mongodb/specifications/blob/ddfc8b583d49aaf8c4c19fa01255afb66b36b92e/source/benchmarking/benchmarking.rst#ldjson-multi-file-import
+ * @see https://github.com/mongodb/specifications/blob/ddfc8b583d49aaf8c4c19fa01255afb66b36b92e/source/benchmarking/benchmarking.rst#ldjson-multi-file-export
  */
 #[BeforeClassMethods('beforeClass')]
 #[AfterClassMethods('afterClass')]
-#[BeforeMethods('beforeIteration')]
+#[AfterMethods('afterIteration')]
 #[Iterations(1)]
 #[Revs(1)]
-final class ParallelMultiFileImportBench
+final class ParallelMultiFileExportBench
 {
     public static function beforeClass(): void
     {
-        // Generate files
-        $fileContents = str_repeat(file_get_contents(Data::LDJSON_FILE_PATH), 5_000);
-        foreach (self::getFileNames() as $file) {
-            file_put_contents($file, $fileContents);
-        }
+        // Resets the database to ensure that the collection is empty
+        Utils::getDatabase()->drop();
+
+        $doc = Document::fromJSON(file_get_contents(Data::LDJSON_FILE_PATH));
+        Utils::getCollection()->insertMany(array_fill(0, 500_000, $doc));
     }
 
     public static function afterClass(): void
     {
+        Utils::getDatabase()->drop();
+    }
+
+    public function afterIteration(): void
+    {
         foreach (self::getFileNames() as $file) {
-            unlink($file);
+            if (file_exists($file)) {
+                unlink($file);
+            }
         }
     }
 
-    public function beforeIteration(): void
-    {
-        $database = Utils::getDatabase();
-        $database->drop();
-        $database->createCollection(Utils::getCollectionName());
-    }
-
     /**
-     * Using Driver's BulkWrite in a single thread.
-     * The number of files to import in each iteration is controlled by the "chunk" parameter.
+     * Using a single thread to export multiple files.
+     * By executing a single Find command for multiple files, we can reduce the number of roundtrips to the server.
      *
      * @param array{chunk:int} $params
      */
     #[ParamProviders(['provideChunkParams'])]
-    public function benchBulkWrite(array $params): void
+    public function benchSequential(array $params): void
     {
-        foreach (array_chunk(self::getFileNames(), $params['chunk']) as $files) {
-            self::importFile($files);
+        foreach (array_chunk(self::getFileNames(), $params['chunk']) as $i => $files) {
+            self::exportFile($files, [], [
+                'limit' => 5_000 * $params['chunk'],
+                'skip' => 5_000 * $params['chunk'] * $i,
+            ]);
         }
     }
 
     /**
-     * Using library's Collection::insertMany in a single thread
-     */
-    public function benchInsertMany(): void
-    {
-        $collection = Utils::getCollection();
-        foreach (self::getFileNames() as $file) {
-            $docs = [];
-            // Read file contents into BSON documents
-            $fh = fopen($file, 'r');
-            while (($line = fgets($fh)) !== false) {
-                if ($line !== '') {
-                    $docs[] = Document::fromJSON($line);
-                }
-            }
-
-            fclose($fh);
-
-            // Insert documents in bulk
-            $collection->insertMany($docs);
-        }
-    }
-
-    /**
-     * Using multiple forked threads. The number of threads is controlled by the "chunk" parameter,
-     * which is the number of files to import in each thread.
+     * Using multiple forked threads
      *
      * @param array{chunk:int} $params
      */
@@ -126,10 +102,14 @@ final class ParallelMultiFileImportBench
         // of a new libmongoc client.
         Utils::reset();
 
-        foreach (array_chunk(self::getFileNames(), $params['chunk']) as $files) {
+        // Create a child process for each chunk of files
+        foreach (array_chunk(self::getFileNames(), $params['chunk']) as $i => $files) {
             $pid = pcntl_fork();
             if ($pid === 0) {
-                self::importFile($files);
+                self::exportFile($files, [], [
+                    'limit' => 5_000 * $params['chunk'],
+                    'skip' => 5_000 * $params['chunk'] * $i,
+                ]);
 
                 // Exit the child process
                 exit(0);
@@ -153,26 +133,32 @@ final class ParallelMultiFileImportBench
     /**
      * Using amphp/parallel with worker pool
      *
-     * @param array{processes:int} $params
+     * @param array{chunk:int} $params
      */
     #[ParamProviders(['provideChunkParams'])]
     public function benchAmpWorkers(array $params): void
     {
         $workerPool = new ContextWorkerPool(ceil(100 / $params['chunk']), new ContextWorkerFactory());
 
-        $futures = array_map(
-            fn ($files) => $workerPool->submit(new ImportFileTask($files))->getFuture(),
-            array_chunk(self::getFileNames(), $params['chunk']),
-        );
+        $futures = [];
+        foreach (array_chunk(self::getFileNames(), $params['chunk']) as $i => $files) {
+            $futures[] = $workerPool->submit(
+                new ExportFileTask(
+                    files: $files,
+                    options: [
+                        'limit' => 5_000 * $params['chunk'],
+                        'skip' => 5_000 * $params['chunk'] * $i,
+                    ],
+                ),
+            )->getFuture();
+        }
 
         foreach (Future::iterate($futures) as $future) {
             $future->await();
         }
-
-        $workerPool->shutdown();
     }
 
-    public function provideChunkParams(): Generator
+    public static function provideChunkParams(): Generator
     {
         yield 'by 1' => ['chunk' => 1];
         yield 'by 2' => ['chunk' => 2];
@@ -184,27 +170,39 @@ final class ParallelMultiFileImportBench
     }
 
     /**
-     * We benchmarked the following solutions to read a file line by line:
-     *  - file
-     *  - SplFileObject
-     *  - fgets
-     *  - stream_get_line 🏆
+     * Export a query to a file
      */
-    public static function importFile(string|array $files): void
+    public static function exportFile(array|string $files, array $filter = [], array $options = []): void
     {
-        $namespace = sprintf('%s.%s', Utils::getDatabaseName(), Utils::getCollectionName());
+        $options += [
+            // bson typemap is faster on query result, but slower to JSON encode
+            'typeMap' => ['root' => 'array'],
+            // Excludes _id field to be identical to fixtures data
+            'projection' => ['_id' => 0],
+            'sort' => ['_id' => 1],
+        ];
+        $cursor = Utils::getCollection()->find($filter, $options);
+        $cursor->rewind();
 
-        $bulkWrite = new BulkWrite();
         foreach ((array) $files as $file) {
-            $fh = fopen($file, 'r');
-            while (($line = stream_get_line($fh, 10_000, "\n")) !== false) {
-                $bulkWrite->insert(Document::fromJSON($line));
+            // Aggregate file in memory to reduce filesystem operations
+            $data = '';
+            for ($i = 0; $i < 5_000; $i++) {
+                $document = $cursor->current();
+                // Cursor exhausted
+                if (! $document) {
+                    break;
+                }
+
+                // We don't use MongoDB\BSON\Document::toCanonicalExtendedJSON() because
+                // it is slower than json_encode() on an array.
+                $data .= json_encode($document) . "\n";
+                $cursor->next();
             }
 
-            fclose($fh);
+            // Write file in a single operation
+            file_put_contents($file, $data);
         }
-
-        Utils::getClient()->getManager()->executeBulkWrite($namespace, $bulkWrite);
     }
 
     /**

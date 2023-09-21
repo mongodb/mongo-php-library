@@ -10,14 +10,14 @@ use MongoDB\Benchmark\DriverBench\ParallelMultiFileImportBench;
 final class ImportFileTask implements Task
 {
     public function __construct(
-        private string $file,
+        private array $files,
     ) {
     }
 
     public function run(Channel $channel, Cancellation $cancellation): mixed
     {
-        ParallelMultiFileImportBench::importFile($this->file);
+        ParallelMultiFileImportBench::importFile($this->files);
 
-        return null;
+        return $this->files;
     }
 }

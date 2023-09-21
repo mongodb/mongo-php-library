@@ -143,8 +143,6 @@ class TransactionsSpecTest extends FunctionalTestCase
             $this->markTestIncomplete(self::$incompleteTests[$this->dataDescription()]);
         }
 
-        $useMultipleMongoses = isset($test->useMultipleMongoses) && $test->useMultipleMongoses && $this->isMongos();
-
         if (isset($runOn)) {
             $this->checkServerRequirements($runOn);
         }
@@ -155,6 +153,11 @@ class TransactionsSpecTest extends FunctionalTestCase
 
         $databaseName ??= $this->getDatabaseName();
         $collectionName ??= $this->getCollectionName();
+
+        // Serverless uses a load balancer fronting a single proxy (PHPLIB-757)
+        $useMultipleMongoses = $this->isMongos() || ($this->isLoadBalanced() && ! $this->isServerless())
+            ? ($test->useMultipleMongoses ?? false)
+            : false;
 
         $context = Context::fromTransactions($test, $databaseName, $collectionName, $useMultipleMongoses);
         $this->setContext($context);

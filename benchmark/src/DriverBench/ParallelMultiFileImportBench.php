@@ -2,8 +2,11 @@
 
 namespace MongoDB\Benchmark\DriverBench;
 
-use Amp\Parallel\Worker\DefaultPool;
+use Amp\Future;
+use Amp\Parallel\Worker\ContextWorkerFactory;
+use Amp\Parallel\Worker\ContextWorkerPool;
 use Generator;
+use MongoDB\Benchmark\DriverBench\Amp\ImportFileTask;
 use MongoDB\Benchmark\Fixtures\Data;
 use MongoDB\Benchmark\Utils;
 use MongoDB\BSON\Document;
@@ -16,8 +19,6 @@ use PhpBench\Attributes\ParamProviders;
 use PhpBench\Attributes\Revs;
 use RuntimeException;
 
-use function Amp\ParallelFunctions\parallelMap;
-use function Amp\Promise\wait;
 use function array_map;
 use function count;
 use function fclose;
@@ -107,7 +108,7 @@ final class ParallelMultiFileImportBench
     /**
      * Using multiple forked threads
      *
-     * @param array{processes:int, files:string[], batchSize:int} $params
+     * @param array{processes:int} $params
      */
     #[ParamProviders(['provideProcessesParameter'])]
     public function benchMultiFileImportFork(array $params): void
@@ -148,20 +149,25 @@ final class ParallelMultiFileImportBench
     }
 
     /**
-     * Using amphp/parallel-functions with worker pool
+     * Using amphp/parallel with worker pool
      *
-     * @param array{processes:int, files:string[], batchSize:int} $params
+     * @param array{processes:int} $params
      */
     #[ParamProviders(['provideProcessesParameter'])]
     public function benchMultiFileImportAmp(array $params): void
     {
-        wait(parallelMap(
+        $workerPool = new ContextWorkerPool($params['processes'], new ContextWorkerFactory());
+
+        $futures = array_map(
+            fn ($file) => $workerPool->submit(new ImportFileTask($file))->getFuture(),
             self::getFileNames(),
-            // Uses array callable instead of closure to skip complex serialization
-            [self::class, 'importFile'],
-            // The pool size is the number of processes
-            new DefaultPool($params['processes']),
-        ));
+        );
+
+        foreach (Future::iterate($futures) as $future) {
+            $future->await();
+        }
+
+        $workerPool->shutdown();
     }
 
     public static function provideProcessesParameter(): Generator
@@ -172,7 +178,6 @@ final class ParallelMultiFileImportBench
         yield '8 proc' => ['processes' => 8]; // 13 sequences
         yield '13 proc' => ['processes' => 13]; // 8 sequences
         yield '20 proc' => ['processes' => 20]; // 5 sequences
-        yield '34 proc' => ['processes' => 34]; // 3 sequences
     }
 
     /**

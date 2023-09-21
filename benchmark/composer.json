@@ -15,7 +15,7 @@
     "require": {
         "php": ">=8.1",
         "ext-pcntl": "*",
-        "amphp/parallel-functions": "^1.1",
+        "amphp/parallel": "^2.2",
         "mongodb/mongodb": "@dev",
         "phpbench/phpbench": "^1.2"
     },
@@ -26,5 +26,8 @@
     },
     "scripts": {
         "benchmark": "phpbench run --report=aggregate"
+    },
+    "config": {
+        "sort-packages": true
     }
 }

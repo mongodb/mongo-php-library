@@ -81,7 +81,7 @@ $collection->createSearchIndex(
     ['name' => 'default'],
 );
 
-// Wait for the index to be ready.
+// Wait for the index to be queryable.
 wait(function () use ($collection) {
     echo '.';
     foreach ($collection->listSearchIndexes() as $index) {

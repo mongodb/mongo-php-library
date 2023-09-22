@@ -24,8 +24,6 @@ final class ExamplesTest extends FunctionalTestCase
         if ($this->isApiVersionRequired()) {
             $this->markTestSkipped('Examples are not tested when the server requires specifying an API version.');
         }
-
-        self::createTestClient()->dropDatabase('test');
     }
 
     /** @dataProvider provideExamples */

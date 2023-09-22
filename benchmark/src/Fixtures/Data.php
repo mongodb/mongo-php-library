@@ -13,6 +13,9 @@ use const JSON_THROW_ON_ERROR;
 
 final class Data
 {
+    public const DEEP_BSON_PATH = __DIR__ . '/data/deep_bson.json';
+    public const FLAT_BSON_PATH = __DIR__ . '/data/flat_bson.json';
+    public const FULL_BSON_PATH = __DIR__ . '/data/full_bson.json';
     public const LARGE_FILE_PATH = __DIR__ . '/data/large_doc.json';
     public const SMALL_FILE_PATH = __DIR__ . '/data/small_doc.json';
     public const TWEET_FILE_PATH = __DIR__ . '/data/tweet.json';

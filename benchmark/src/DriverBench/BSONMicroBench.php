@@ -16,6 +16,7 @@ use function file_get_contents;
  */
 final class BSONMicroBench
 {
+    /** @param array{document:Document} $params */
     #[ParamProviders('provideParams')]
     public function benchEncoding(array $params): void
     {
@@ -25,12 +26,13 @@ final class BSONMicroBench
         }
     }
 
+    /** @param array{bson:string} $params */
     #[ParamProviders('provideParams')]
     public function benchDecoding(array $params): void
     {
-        $document = $params['document'];
+        $bson = $params['bson'];
         for ($i = 0; $i < 10_000; $i++) {
-            Document::fromBSON($document);
+            Document::fromBSON($bson);
         }
     }
 

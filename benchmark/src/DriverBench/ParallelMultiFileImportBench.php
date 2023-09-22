@@ -97,13 +97,15 @@ final class ParallelMultiFileImportBench
             $docs = [];
             // Read file contents into BSON documents
             $fh = fopen($file, 'r');
-            while (($line = fgets($fh)) !== false) {
-                if ($line !== '') {
-                    $docs[] = Document::fromJSON($line);
+            try {
+                while (($line = fgets($fh)) !== false) {
+                    if ($line !== '') {
+                        $docs[] = Document::fromJSON($line);
+                    }
                 }
+            } finally {
+                fclose($fh);
             }
-
-            fclose($fh);
 
             // Insert documents in bulk
             $collection->insertMany($docs);
@@ -197,11 +199,13 @@ final class ParallelMultiFileImportBench
         $bulkWrite = new BulkWrite();
         foreach ((array) $files as $file) {
             $fh = fopen($file, 'r');
-            while (($line = stream_get_line($fh, 10_000, "\n")) !== false) {
-                $bulkWrite->insert(Document::fromJSON($line));
+            try {
+                while (($line = stream_get_line($fh, 10_000, "\n")) !== false) {
+                    $bulkWrite->insert(Document::fromJSON($line));
+                }
+            } finally {
+                fclose($fh);
             }
-
-            fclose($fh);
         }
 
         Utils::getClient()->getManager()->executeBulkWrite($namespace, $bulkWrite);

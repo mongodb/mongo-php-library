@@ -31,6 +31,7 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\RuntimeException;
 use MongoDB\Operation\ListCollections;
 use MongoDB\Operation\WithTransaction;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
 
@@ -45,6 +46,28 @@ use function is_string;
 use function MongoDB\BSON\fromPHP;
 use function MongoDB\BSON\toPHP;
 use function substr;
+
+/**
+ * Registers a PSR-3 logger to receive log messages from the driver/library.
+ *
+ * Calling this method again with a logger that has already been added will have
+ * no effect.
+ */
+function addLogger(LoggerInterface $logger): void
+{
+    PsrLogAdapter::addLogger($logger);
+}
+
+/**
+ * Unregisters a PSR-3 logger.
+ *
+ * Calling this method with a logger that has not been added will have no
+ * effect.
+ */
+function removeLogger(LoggerInterface $logger): void
+{
+    PsrLogAdapter::removeLogger($logger);
+}
 
 /**
  * Check whether all servers support executing a write stage on a secondary.

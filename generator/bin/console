@@ -1,5 +1,5 @@
 #!/usr/bin/env php
-<?php
+<?php declare(strict_types=1);
 
 use MongoDB\CodeGenerator\Command\GenerateCommand;
 use Symfony\Component\Console\Application;
@@ -13,5 +13,4 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $application = new Application();
 $application->add(new GenerateCommand(__DIR__ . '/../config/config.php'));
-$application->setDefaultCommand('generate');
 $application->run();

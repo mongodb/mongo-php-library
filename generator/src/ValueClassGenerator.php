@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
@@ -6,7 +7,6 @@ use MongoDB\CodeGenerator\Definition\OperatorDefinition;
 use Nette\PhpGenerator\ClassType;
 
 use function assert;
-use function sprintf;
 
 use const PHP_EOL;
 

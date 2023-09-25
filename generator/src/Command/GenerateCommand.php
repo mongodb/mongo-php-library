@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Command;
 
@@ -33,7 +34,7 @@ final class GenerateCommand extends Command
         // @todo This is a hack to get the first pipeline operator config
         $config = $config['pipeline-operators'][0];
 
-        $config = new GeneratorDefinition($config);
+        $config = new GeneratorDefinition(...$config);
         $generatorClass = $config->generatorClass;
         $generator = new $generatorClass($config);
         $generator->createClassesForObjects($yamlReader->read($config->configFile));

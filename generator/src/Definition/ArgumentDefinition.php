@@ -1,19 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Definition;
 
 readonly class ArgumentDefinition
 {
-    public string $name;
-    public string $type;
-    public bool $isOptional;
-    public bool $isVariadic;
-
-    public function __construct(array $config)
-    {
-        $this->name = $config['name'];
-        $this->type = $config['type'];
-        $this->isOptional = $config['isOptional'] ?? false;
-        $this->isVariadic = $config['isVariadic'] ?? false;
+    public function __construct(
+        public string $name,
+        public string $type,
+        public bool $isOptional = false,
+        public bool $isVariadic = false,
+    ) {
     }
 }

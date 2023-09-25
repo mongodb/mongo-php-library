@@ -13,6 +13,7 @@
     <file>src</file>
     <file>docs/examples</file>
     <file>examples</file>
+    <file>generator/src</file>
     <file>tests</file>
     <file>tools</file>
     <file>rector.php</file>

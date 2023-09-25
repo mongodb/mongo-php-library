@@ -1,0 +1,16 @@
+---
+- name: match
+  args:
+    - name: matchExpr
+      type: resolvesToMatchExpression
+      isVariadic: true
+
+- name: sort
+  args:
+    - name: sortSpecification
+      type: resolvesToSortSpecification
+
+- name: limit
+  args:
+    - name: limit
+      type: int

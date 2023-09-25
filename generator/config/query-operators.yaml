@@ -1,0 +1,9 @@
+- name: and
+  args:
+    - name: query
+      type: resolvesToQueryOperator
+      isVariadic: true
+- name: expr
+  args:
+    - name: expression
+      type: resolvesToExpression

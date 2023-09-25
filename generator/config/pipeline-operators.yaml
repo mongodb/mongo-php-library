@@ -1,0 +1,42 @@
+- name: and
+  args:
+    - name: expressions
+      type: resolvesToExpression
+      isVariadic: true
+- name: eq
+  args:
+    - name: expression1
+      type: resolvesToExpression
+    - name: expression2
+      type: resolvesToExpression
+- name: gt
+  args:
+    - name: expression1
+      type: resolvesToExpression
+    - name: expression2
+      type: resolvesToExpression
+- name: lt
+  args:
+    - name: expression1
+      type: resolvesToExpression
+    - name: expression2
+      type: resolvesToExpression
+- name: ne
+  args:
+    - name: expression1
+      type: resolvesToExpression
+    - name: expression2
+      type: resolvesToExpression
+- name: filter
+  usesNamedArgs: true
+  args:
+    - name: input
+      type: resolvesToArrayExpression
+    - name: cond
+      type: resolvesToBoolExpression
+    - name: as
+      type: string
+      isOptional: true
+    - name: limit
+      type: resolvesToNumberExpression
+      isOptional: true

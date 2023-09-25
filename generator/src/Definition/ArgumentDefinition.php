@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Definition;
 
-readonly class ArgumentDefinition
+final readonly class ArgumentDefinition
 {
     public function __construct(
         public string $name,

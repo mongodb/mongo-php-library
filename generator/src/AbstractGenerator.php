@@ -18,6 +18,7 @@ use function implode;
 use function in_array;
 use function is_dir;
 use function mkdir;
+use function sort;
 use function str_starts_with;
 use function ucfirst;
 
@@ -77,6 +78,9 @@ abstract class AbstractGenerator
                 }
             }
         }
+
+        sort($nativeTypes);
+        sort($docTypes);
 
         if ($arg->isOptional) {
             $nativeTypes[] = 'null';

@@ -5,7 +5,7 @@ namespace MongoDB\CodeGenerator\Definition;
 
 use function array_map;
 
-readonly class OperatorDefinition
+final readonly class OperatorDefinition
 {
     /** @var list<ArgumentDefinition> */
     public array $arguments;

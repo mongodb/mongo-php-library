@@ -11,7 +11,7 @@ use function sprintf;
 use function str_ends_with;
 use function str_starts_with;
 
-class GeneratorDefinition
+final readonly class GeneratorDefinition
 {
     public function __construct(
         public readonly string $configFile,

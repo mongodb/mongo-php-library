@@ -9,7 +9,7 @@ use function array_key_exists;
 use function assert;
 use function is_array;
 
-class YamlReader
+final class YamlReader
 {
     /** @var array<string, list<OperatorDefinition>> */
     private array $definitions = [];

@@ -1,14 +1,16 @@
 <?php
 
-use MongoDB\CodeGenerator\ValueClassGenerator;
+use MongoDB\Aggregation\Operator;
+use MongoDB\Query\Operator as QueryOperator;
 use MongoDB\Aggregation\Stage;
+use MongoDB\CodeGenerator\FactoryClassGenerator;
+use MongoDB\CodeGenerator\ValueClassGenerator;
 
 $src = __DIR__ . '/../../src';
 
 return [
     // Stages
     [
-        // Stage expression classes
         'configFile' => __DIR__ . '/stages.yaml',
         'generatorClass' => ValueClassGenerator::class,
         'namespace' => MongoDB\Aggregation\Stage::class,
@@ -17,6 +19,7 @@ return [
         'classNameSuffix' => 'Stage',
     ],
     /*
+    // Stage codec
     [
         // Stage converters
         'configFile' => __DIR__ . '/stages.yaml',
@@ -30,25 +33,23 @@ return [
         'libraryNamespace' => Converter::class,
         'libraryClassName' => 'StageConverter',
     ],
+    */
+    // Stage factory
     [
-        // Factory
         'configFile' => __DIR__ . '/stages.yaml',
         'generatorClass' => FactoryClassGenerator::class,
-        'className' => 'StageFactory',
-        'namespace' => Factory::class,
-        'filePath' => $src . '/Aggregation/Factory/',
-        'supportingNamespace' => Stage::class,
-        'supportingClassNameSuffix' => 'Stage',
+        'namespace' => Stage::class,
+        'filePath' => $src . '/Aggregation/',
+        'classNameSuffix' => 'Stage',
     ],
-    */
 
     // Pipeline operators
     [
         'configFile' => __DIR__ . '/pipeline-operators.yaml',
         'generatorClass' => ValueClassGenerator::class,
-        'namespace' => MongoDB\Aggregation\PipelineOperator::class,
-        'filePath' => $src . '/Aggregation/PipelineOperator/',
-        'classNameSuffix' => 'PipelineOperator',
+        'namespace' => Operator::class,
+        'filePath' => $src . '/Aggregation/Operator/',
+        'classNameSuffix' => 'Operator',
     ],
     /*
     [
@@ -63,26 +64,23 @@ return [
         'libraryNamespace' => Converter::class,
         'libraryClassName' => 'PipelineOperatorConverter',
     ],
+    */
     [
         // Factory
         'configFile' => __DIR__ . '/pipeline-operators.yaml',
         'generatorClass' => FactoryClassGenerator::class,
-        'className' => 'PipelineOperatorFactory',
-        'namespace' => Factory::class,
-        'filePath' => $src . '/Aggregation/Factory/',
-        'supportingNamespace' => PipelineOperator::class,
-        'supportingClassNameSuffix' => 'PipelineOperator',
+        'namespace' => Operator::class,
+        'filePath' => $src . '/Aggregation/',
+        'classNameSuffix' => 'Operator',
     ],
-    */
 
     // Query operators
     [
         'configFile' => __DIR__ . '/query-operators.yaml',
         'generatorClass' => ValueClassGenerator::class,
-        // These are simple value holders, overwriting is explicitly wanted
-        'namespace' => MongoDB\Aggregation\QueryOperator::class,
-        'filePath' => $src . '/Aggregation/QueryOperator/',
-        'classNameSuffix' => 'QueryOperator',
+        'namespace' => QueryOperator::class,
+        'filePath' => $src . '/Query/Operator/',
+        'classNameSuffix' => 'Operator',
     ],
     /*
     [
@@ -97,15 +95,13 @@ return [
         'libraryNamespace' => Converter::class,
         'libraryClassName' => 'QueryOperatorConverter',
     ],
+    */
     [
         // Factory
         'configFile' => __DIR__ . '/query-operators.yaml',
         'generatorClass' => FactoryClassGenerator::class,
-        'className' => 'QueryOperatorFactory',
-        'namespace' => Factory::class,
-        'filePath' => $src . '/Aggregation/Factory/',
-        'supportingNamespace' => QueryOperator::class,
-        'supportingClassNameSuffix' => 'QueryOperator',
+        'namespace' => QueryOperator::class,
+        'filePath' => $src . '/Query/',
+        'classNameSuffix' => 'Operator',
     ],
-    */
 ];

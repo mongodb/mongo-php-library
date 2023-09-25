@@ -21,11 +21,7 @@ class ValueClassGenerator extends AbstractGenerator
 
         $class = new ClassType($this->getClassName($object));
 
-        $constuctor = $class->addMethod('__construct')
-            ->setPrivate()
-            ->setBody('/* intentionally empty */');
-        $constuctorBody = '';
-        $constuctorComment = '';
+        $constuctor = $class->addMethod('__construct');
 
         foreach ($object->arguments as $argument) {
             ['native' => $nativeType, 'doc' => $docType] = $this->generateTypeString($argument);
@@ -49,12 +45,9 @@ class ValueClassGenerator extends AbstractGenerator
                 $constuctor->setVariadic();
             }
 
-            $constuctorComment .= '@param ' . $docType . ' $' . $argument->name . PHP_EOL;
-            $constuctorBody .= '$this->' . $argument->name . ' = $' . $argument->name . ';' . PHP_EOL;
+            $constuctor->addComment('@param ' . $docType . ' $' . $argument->name . PHP_EOL);
+            $constuctor->addBody('$this->' . $argument->name . ' = $' . $argument->name . ';' . PHP_EOL);
         }
-
-        $constuctor->setComment($constuctorComment);
-        $constuctor->setBody($constuctorBody);
 
         return $class;
     }

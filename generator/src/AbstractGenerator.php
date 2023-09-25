@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
+use InvalidArgumentException;
 use MongoDB\Aggregation\Expression;
 use MongoDB\CodeGenerator\Definition\ArgumentDefinition;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
@@ -41,21 +42,25 @@ abstract class AbstractGenerator
 
     public function __construct(GeneratorDefinition $definition)
     {
+        $this->validate($definition);
+
         $this->definition = $definition;
         $this->printer = new PsrPrinter();
     }
 
+    /** @throws InvalidArgumentException when definition is invalid */
+    protected function validate(GeneratorDefinition $definition): void
+    {
+    }
+
     public function createClassesForObjects(array $objects): void
     {
-        array_map(
-            function ($object): void {
-                $this->createFileForClass(
-                    $this->definition->filePath,
-                    $this->createClassForObject($object),
-                );
-            },
-            $objects,
-        );
+        foreach ($objects as $object) {
+            $this->createFileForClass(
+                $this->definition->filePath,
+                $this->createClassForObject($object),
+            );
+        }
     }
 
     abstract public function createClassForObject(object $object): ClassType;

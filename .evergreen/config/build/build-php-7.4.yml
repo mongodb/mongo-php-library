@@ -1,0 +1,11 @@
+# This file is generated automatically - please edit the corresponding template file!
+tasks:
+  - name: "build-php-7.4"
+    tags: ["build", "php7.4"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "7.4"
+      - func: "compile extension"
+        vars:
+          PHP_VERSION: "7.4"

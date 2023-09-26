@@ -1,0 +1,9 @@
+# This file is generated automatically - please edit the corresponding template file!
+tasks:
+  - name: "build-php-8.2"
+    tags: ["build", "php8.2"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "8.2"
+      - func: "compile extension"

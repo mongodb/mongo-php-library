@@ -1,0 +1,10 @@
+tasks:
+  - name: "build-php-%phpVersion%"
+    tags: ["build", "php%phpVersion%"]
+    commands:
+      - func: "locate PHP binaries"
+        vars:
+          PHP_VERSION: "%phpVersion%"
+      - func: "compile extension"
+        vars:
+          PHP_VERSION: "%phpVersion%"

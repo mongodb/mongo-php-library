@@ -1,0 +1,11 @@
+#
+# Build variants to build the driver - these are run for all operating systems and PHP versions we support
+#
+buildvariants:
+  # Debian
+  - name: build-debian11
+    display_name: "Build: Debian 11"
+    tags: ["build", "debian", "x64"]
+    run_on: debian11-small
+    tasks:
+      - name: "build-all-php"

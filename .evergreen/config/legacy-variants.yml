@@ -1,0 +1,354 @@
+axes:
+  # Note: install-dependencies.sh will search for the latest minor version
+  # matching the PHP_VERSION constant
+  - id: php-versions
+    display_name: PHP Version
+    values:
+      - id: "8.2"
+        display_name: "PHP 8.2"
+        variables:
+          PHP_VERSION: "8.2"
+      - id: "8.1"
+        display_name: "PHP 8.1"
+        variables:
+          PHP_VERSION: "8.1"
+      - id: "8.0"
+        display_name: "PHP 8.0"
+        variables:
+          PHP_VERSION: "8.0"
+      - id: "7.4"
+        display_name: "PHP 7.4"
+        variables:
+          PHP_VERSION: "7.4"
+
+  - id: php-edge-versions
+    display_name: PHP Version
+    values:
+      - id: "latest-stable"
+        display_name: "PHP 8.2"
+        variables:
+          PHP_VERSION: "8.2"
+      - id: "oldest-supported"
+        display_name: "PHP 7.4"
+        variables:
+          PHP_VERSION: "7.4"
+
+  - id: mongodb-versions
+    display_name: MongoDB Version
+    values:
+      - id: "latest"
+        display_name: "MongoDB latest"
+        variables:
+          MONGODB_VERSION: "latest"
+      - id: "rapid"
+        display_name: "MongoDB rapid"
+        variables:
+          MONGODB_VERSION: "rapid"
+      - id: "7.0"
+        display_name: "MongoDB 7.0"
+        variables:
+          MONGODB_VERSION: "7.0"
+      - id: "6.0"
+        display_name: "MongoDB 6.0"
+        variables:
+          MONGODB_VERSION: "6.0"
+      - id: "5.0"
+        display_name: "MongoDB 5.0"
+        variables:
+          MONGODB_VERSION: "5.0"
+      - id: "4.4"
+        display_name: "MongoDB 4.4"
+        variables:
+          MONGODB_VERSION: "4.4"
+      - id: "4.2"
+        display_name: "MongoDB 4.2"
+        variables:
+          MONGODB_VERSION: "4.2"
+      - id: "4.0"
+        display_name: "MongoDB 4.0"
+        variables:
+          MONGODB_VERSION: "4.0"
+      - id: "3.6"
+        display_name: "MongoDB 3.6"
+        variables:
+          MONGODB_VERSION: "3.6"
+
+  - id: mongodb-edge-versions
+    display_name: MongoDB Version
+    values:
+      - id: "latest-stable"
+        display_name: "MongoDB 6.0"
+        variables:
+          MONGODB_VERSION: "6.0"
+      - id: "oldest-supported"
+        display_name: "MongoDB 3.6"
+        variables:
+          MONGODB_VERSION: "3.6"
+
+  - id: driver-versions
+    display_name: Driver Version
+    values:
+      - id: "oldest-supported"
+        display_name: "PHPC 1.17.0"
+        variables:
+          EXTENSION_BRANCH: "master"
+      - id: "latest-stable"
+        display_name: "PHPC (1.17.x)"
+        variables:
+          EXTENSION_BRANCH: "master"
+      - id: "latest-dev"
+        display_name: "PHPC (1.17-dev)"
+        variables:
+          EXTENSION_BRANCH: "master"
+
+  - id: os
+    display_name: OS
+    values:
+      # Debian
+      - id: debian11
+        display_name: "Debian 11"
+        run_on: debian11-small
+      - id: debian10
+        display_name: "Debian 10"
+        run_on: debian10-small
+      - id: debian92
+        display_name: "Debian 9.2"
+        run_on: debian92-small
+
+      # RHEL
+      - id: rhel90
+        display_name: "RHEL 9.0"
+        run_on: rhel90-small
+      - id: rhel80
+        display_name: "RHEL 8.0"
+        run_on: rhel80-small
+
+      # Ubuntu LTS
+      - id: ubuntu2204
+        display_name: "Ubuntu 22.04 x64"
+        run_on: ubuntu2204-small
+      - id: ubuntu2204-arm64
+        display_name: "Ubuntu 22.04 ARM64"
+        run_on: ubuntu2204-arm64-small
+      - id: ubuntu2004
+        display_name: "Ubuntu 20.04 x64"
+        run_on: ubuntu2004-small
+      - id: ubuntu2004-arm64
+        display_name: "Ubuntu 20.04 ARM64"
+        run_on: ubuntu2204-arm64-small
+
+  - id: topology
+    display_name: Topology
+    values:
+      - id: standalone
+        display_name: Standalone
+        variables:
+          TOPOLOGY: "server"
+      - id: replicaset
+        display_name: Replica Set
+        variables:
+          TOPOLOGY: "replica_set"
+      - id: sharded-cluster
+        display_name: Sharded Cluster
+        variables:
+          TOPOLOGY: "sharded_cluster"
+
+  - id: auth
+    display_name: Authentication
+    values:
+      - id: auth
+        display_name: Auth
+        variables:
+          AUTH: "auth"
+      - id: noauth
+        display_name: NoAuth
+        variables:
+          AUTH: "noauth"
+
+  - id: ssl
+    display_name: SSL
+    values:
+      - id: ssl
+        display_name: SSL
+        variables:
+          SSL: "ssl"
+      - id: nossl
+        display_name: NoSSL
+        variables:
+          SSL: "nossl"
+
+  - id: storage-engine
+    display_name: Storage
+    values:
+      - id: mmapv1
+        display_name: MMAPv1
+        variables:
+          STORAGE_ENGINE: "mmapv1"
+      - id: wiredtiger
+        display_name: WiredTiger
+        variables:
+          STORAGE_ENGINE: "wiredtiger"
+      - id: inmemory
+        display_name: InMemory
+        variables:
+          STORAGE_ENGINE: "inmemory"
+
+  - id: dependencies
+    display_name: Dependencies
+    values:
+      - id: lowest
+        display_name: Lowest
+        variables:
+          DEPENDENCIES: "lowest"
+
+task_groups:
+  - name: test_atlas_task_group
+    setup_group:
+      - func: "fetch source"
+      - func: "prepare resources"
+      - func: "fix absolute paths"
+      - func: "make files executable"
+      - func: "install dependencies"
+      - command: subprocess.exec
+        params:
+          working_dir: src
+          binary: bash
+          add_expansions_to_env: true
+          env:
+            MONGODB_VERSION: '7.0'
+          args:
+            - ${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh
+      - command: expansions.update
+        params:
+          file: src/atlas-expansion.yml
+    teardown_group:
+      - command: subprocess.exec
+        params:
+          working_dir: src
+          binary: bash
+          add_expansions_to_env: true
+          args:
+            - ${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh
+      - func: "upload test results"
+      - func: "cleanup"
+    setup_group_can_fail_task: true
+    setup_group_timeout_secs: 1800
+    tasks:
+      - test-atlas
+
+buildvariants:
+  # Test all PHP versions with latest-stable MongoDB and PHPC on all platforms
+  - matrix_name: "test-php-versions"
+    matrix_spec:
+      os:
+        - debian11
+        - debian10
+        - rhel90
+        - ubuntu2204
+        - ubuntu2204-arm64
+        - ubuntu2004
+      mongodb-edge-versions: "latest-stable"
+      php-versions: "*"
+      driver-versions: "latest-stable"
+    display_name: "${os}, ${mongodb-edge-versions}, ${php-versions}, ${driver-versions}"
+    exclude_spec:
+      # Exclude "latest-stable" PHP version for Debian 11 (see: test-mongodb-versions matrix)
+      - { "os": "debian11", "mongodb-edge-versions": "latest-stable", "php-versions": "8.2", "driver-versions": "latest-stable" }
+      # Exclude PHP versions older than 8.1 on RHEL 9 and Ubuntu 22.04 (OpenSSL 3 is only supported on PHP 8.1+)
+      - { "os": ["rhel90", "ubuntu2204-arm64", "ubuntu2204"], "php-versions": ["7.4", "8.0"], "mongodb-edge-versions": "*", "driver-versions": "*" }
+    tasks:
+      - name: "test-standalone"
+      - name: "test-replica_set"
+      - name: "test-sharded_cluster"
+
+  # Test all topologies and MongoDB versions with latest-stable PHP and PHPC on Debian
+  - matrix_name: "test-mongodb-versions"
+    matrix_spec: { "os": ["debian92", "debian11"], "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    display_name: "${os}, ${mongodb-versions}, ${php-edge-versions}, ${driver-versions}"
+    exclude_spec:
+      # Debian 9.2 only supports up to MongoDB 5.0
+      - { "os": "debian92", "mongodb-versions": ["6.0", "7.0", "rapid", "latest"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+      - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4", "5.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    tasks:
+      - name: "test-standalone"
+      - name: "test-replica_set"
+      - name: "test-sharded_cluster"
+
+  # Test oldest-supported PHP, MongoDB, and driver versions with lowest dependencies on Debian
+  - matrix_name: "test-oldest-supported"
+    matrix_spec: { "os": "debian92", "mongodb-edge-versions": "oldest-supported", "php-edge-versions": "oldest-supported", "driver-versions": "oldest-supported", "dependencies": "lowest" }
+    display_name: "Lowest Dependencies: ${os}, ${mongodb-edge-versions}, ${php-edge-versions}, ${driver-versions}"
+    tasks:
+      - name: "test-standalone"
+      - name: "test-replica_set"
+      - name: "test-sharded_cluster"
+
+  - matrix_name: "atlas-data-lake-test"
+    matrix_spec: { "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    display_name: "Atlas Data Lake"
+    run_on: debian11
+    expansions:
+      VARIANT: debian11 # Referenced by ADL build script for downloading MQLRun
+    tasks:
+      - name: "test-atlas-data-lake"
+
+  - matrix_name: "test-requireApiVersion"
+    matrix_spec: { "os": "debian11", "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    display_name: "Versioned API - ${mongodb-versions}"
+    exclude_spec:
+      # Stable API is available from MongoDB 5.0+
+      - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    tasks:
+      - .versioned-api
+
+  - matrix_name: "serverless"
+    matrix_spec: { "os": "debian11", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    display_name: "Serverless"
+    tasks:
+      - .serverless
+
+  - matrix_name: "test-loadBalanced"
+    matrix_spec: { "os": "debian11", "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    display_name: "Load balanced - ${mongodb-versions}"
+    exclude_spec:
+      # Load balancer is available from MongoDB 5.0+
+      - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    tasks:
+      - name: "test-loadBalanced"
+
+  # CSFLE tests (crypt_shared and mongocryptd) are tested on RHEL 8 as it's the only version that supports
+  # 4.2 AND 6.0 (which is required for crypt_shared), as well as a somewhat relevant PHP version.
+  # Newer MongoDB version may require adding different operating systems here
+  - matrix_name: "test-csfle-crypt_shared"
+    matrix_spec: { "os": "rhel80", "mongodb-versions": "*", "php-versions": "8.0", "driver-versions": "latest-stable" }
+    display_name: "CSFLE crypt_shared - ${mongodb-versions}"
+    exclude_spec:
+      # MongoDB < 4.2 does not need to be tested.
+      - { "os": "rhel80", "mongodb-versions": ["3.6", "4.0"], "php-versions": "8.0", "driver-versions": "latest-stable" }
+    tasks:
+      - name: "test-csfle-crypt_shared"
+  - matrix_name: "test-csfle-mongocryptd"
+    matrix_spec: { "os": "rhel80", "mongodb-versions": "*", "php-versions": "8.0", "driver-versions": "latest-stable" }
+    display_name: "CSFLE mongocryptd - ${mongodb-versions}"
+    exclude_spec:
+      # MongoDB < 4.2 does not need to be tested.
+      - { "os": "rhel80", "mongodb-versions": ["3.6", "4.0"], "php-versions": "8.0", "driver-versions": "latest-stable" }
+    tasks:
+      - name: "test-csfle-mongocryptd"
+
+  # Run CSFLE tests without AWS credentials (for "On-demand AWS Credentials" prose test)
+  - matrix_name: "test-csfle-without_aws_creds"
+    matrix_spec: { "os": ["debian92", "debian11"], "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    display_name: "CSFLE without_aws_creds - ${mongodb-versions}"
+    exclude_spec:
+      # CSFLE is available from MongoDB 4.2+ and Debian 9.2 only supports up to MongoDB 5.0
+      - { "os": "debian92", "mongodb-versions": ["3.6", "4.0", "6.0", "rapid", "latest"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+      - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4", "5.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    tasks:
+      - name: "test-without_aws_creds"
+
+  - matrix_name: rhel8-test-atlas
+    matrix_spec: { "os": ["rhel80"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
+    display_name: Atlas Tests
+    tasks:
+      - test_atlas_task_group

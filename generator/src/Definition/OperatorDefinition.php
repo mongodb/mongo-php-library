@@ -12,6 +12,7 @@ final readonly class OperatorDefinition
 
     public function __construct(
         public string $name,
+        public ?string $type = null,
         public bool $usesNamedArgs = false,
         array $args = [],
     ) {

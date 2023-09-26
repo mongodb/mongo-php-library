@@ -1,9 +1,11 @@
 - name: and
+  type: resolvesToBoolExpression
   args:
     - name: query
       type: resolvesToQueryOperator
       isVariadic: true
 - name: expr
+  type: resolvesToExpression
   args:
     - name: expression
       type: resolvesToExpression

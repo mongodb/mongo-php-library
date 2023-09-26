@@ -5,10 +5,11 @@ namespace MongoDB\CodeGenerator;
 
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
 use Nette\PhpGenerator\ClassType;
+use RuntimeException;
 
 use function assert;
-
-use const PHP_EOL;
+use function interface_exists;
+use function ucfirst;
 
 /**
  * Generates a value object class for stages and operators.
@@ -20,6 +21,7 @@ class ValueClassGenerator extends AbstractGenerator
         assert($object instanceof OperatorDefinition);
 
         $class = new ClassType($this->getClassName($object));
+        $class->setImplements($this->getInterfaces($object));
 
         $constuctor = $class->addMethod('__construct');
 
@@ -50,5 +52,19 @@ class ValueClassGenerator extends AbstractGenerator
         }
 
         return $class;
+    }
+
+    private function getInterfaces(OperatorDefinition $definition): array
+    {
+        if ($definition->type === null) {
+            return [];
+        }
+
+        $interface = 'MongoDB\\Builder\\Expression\\' . ucfirst($definition->type);
+        if (! interface_exists($interface)) {
+            throw new RuntimeException('Interface ' . $interface . ' does not exist');
+        }
+
+        return [$interface];
     }
 }

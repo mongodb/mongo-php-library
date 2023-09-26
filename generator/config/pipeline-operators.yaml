@@ -1,33 +1,39 @@
 - name: and
+  type: resolvesToBoolExpression
   args:
     - name: expressions
       type: resolvesToExpression
       isVariadic: true
 - name: eq
+  type: resolvesToBoolExpression
   args:
     - name: expression1
       type: resolvesToExpression
     - name: expression2
       type: resolvesToExpression
 - name: gt
+  type: resolvesToBoolExpression
   args:
     - name: expression1
       type: resolvesToExpression
     - name: expression2
       type: resolvesToExpression
 - name: lt
+  type: resolvesToBoolExpression
   args:
     - name: expression1
       type: resolvesToExpression
     - name: expression2
       type: resolvesToExpression
 - name: ne
+  type: resolvesToBoolExpression
   args:
     - name: expression1
       type: resolvesToExpression
     - name: expression2
       type: resolvesToExpression
 - name: filter
+  type: resolvesToArrayExpression
   usesNamedArgs: true
   args:
     - name: input

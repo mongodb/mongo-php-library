@@ -16,10 +16,10 @@ use function dirname;
 use function file_put_contents;
 use function implode;
 use function in_array;
+use function interface_exists;
 use function is_dir;
 use function mkdir;
 use function sort;
-use function str_starts_with;
 use function ucfirst;
 
 /** @internal */
@@ -32,7 +32,7 @@ abstract class AbstractGenerator
         'resolvesToBoolExpression' => [Expression\ResolvesToBoolExpression::class, 'array', 'object', 'string', 'bool'],
         'resolvesToMatchExpression' => ['array', 'object', Expression\ResolvesToMatchExpression::class],
         'resolvesToNumberExpression' => [Expression\ResolvesToBoolExpression::class, 'array', 'object', 'string', 'int', 'float'],
-        'resolvesToQueryOperator' => ['array', 'object', Expression\ResolvesToQuery::class],
+        'resolvesToQueryOperator' => ['array', 'object', Expression\ResolvesToQueryOperator::class],
         'resolvesToSortSpecification' => ['array', 'object', Expression\ResolvesToSortSpecification::class],
     ];
 
@@ -72,11 +72,10 @@ abstract class AbstractGenerator
         $docTypes = $nativeTypes;
 
         foreach ($nativeTypes as $key => $typeName) {
-            // @todo replace with class_exists
-            if (str_starts_with($typeName, 'MongoDB\\')) {
+            if (interface_exists($typeName)) {
                 $nativeTypes[$key] = $docTypes[$key] = '\\' . $typeName;
-
                 // A union cannot contain both object and a class type, which is redundant and causes a PHP error
+                // @todo replace "object" with "stdClass" and force any class object to implement the proper interface
                 if (in_array('object', $nativeTypes, true)) {
                     unset($nativeTypes[$key]);
                 }

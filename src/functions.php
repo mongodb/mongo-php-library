@@ -544,11 +544,11 @@ function with_transaction(Session $session, callable $callback, array $transacti
  */
 function extract_session_from_options(array $options): ?Session
 {
-    if (! isset($options['session']) || ! $options['session'] instanceof Session) {
-        return null;
+    if (isset($options['session']) && $options['session'] instanceof Session) {
+        return $options['session'];
     }
 
-    return $options['session'];
+    return null;
 }
 
 /**
@@ -558,16 +558,19 @@ function extract_session_from_options(array $options): ?Session
  */
 function extract_read_preference_from_options(array $options): ?ReadPreference
 {
-    if (! isset($options['readPreference']) || ! $options['readPreference'] instanceof ReadPreference) {
-        return null;
+    if (isset($options['readPreference']) && $options['readPreference'] instanceof ReadPreference) {
+        return $options['readPreference'];
     }
 
-    return $options['readPreference'];
+    return null;
 }
 
 /**
- * Performs server selection, respecting the readPreference and session options
- * (if given)
+ * Performs server selection, respecting the readPreference and session options.
+ *
+ * The pinned server for an active transaction takes priority, followed by an
+ * operation-level read preference, followed by an active transaction's read
+ * preference, followed by a primary read preference.
  *
  * @internal
  */
@@ -575,16 +578,23 @@ function select_server(Manager $manager, array $options): Server
 {
     $session = extract_session_from_options($options);
     $server = $session instanceof Session ? $session->getServer() : null;
+
+    // Pinned server for an active transaction takes priority
     if ($server !== null) {
         return $server;
     }
 
+    // Operation read preference takes priority
     $readPreference = extract_read_preference_from_options($options);
-    if (! $readPreference instanceof ReadPreference) {
-        // TODO: PHPLIB-476: Read transaction read preference once PHPC-1439 is implemented
-        $readPreference = new ReadPreference(ReadPreference::PRIMARY);
+
+    // Read preference for an active transaction takes priority
+    if ($readPreference === null && $session instanceof Session && $session->isInTransaction()) {
+        /* Session::getTransactionOptions() should always return an array if the
+         * session is in a transaction, but we can be defensive. */
+        $readPreference = extract_read_preference_from_options($session->getTransactionOptions() ?? []);
     }
 
+    // Manager::selectServer() defaults to a primary read preference
     return $manager->selectServer($readPreference);
 }
 

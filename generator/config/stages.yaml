@@ -3,6 +3,7 @@
     - name: matchExpr
       type: resolvesToMatchExpression
       isVariadic: true
+      variadicMin: 1
 - name: sort
   args:
     - name: sortSpecification

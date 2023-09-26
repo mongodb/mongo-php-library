@@ -4,6 +4,7 @@
     - name: expressions
       type: resolvesToExpression
       isVariadic: true
+      variadicMin: 1
 - name: eq
   type: resolvesToBoolExpression
   args:

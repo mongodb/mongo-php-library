@@ -45,6 +45,15 @@ class ValueClassGenerator extends AbstractGenerator
             $constuctorParam->setType($nativeType);
             if ($argument->isVariadic) {
                 $constuctor->setVariadic();
+
+                if ($argument->variadicMin !== null) {
+                    $constuctor->addBody(<<<PHP
+                    if (\count(\${$argument->name}) < {$argument->variadicMin}) {
+                        throw new \InvalidArgumentException(\sprintf('Expected at least %d values, got %d.', $argument->variadicMin, \count(\${$argument->name})));
+                    }
+
+                    PHP);
+                }
             }
 
             $constuctor->addComment('@param ' . $docType . ' $' . $argument->name);

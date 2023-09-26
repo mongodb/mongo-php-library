@@ -10,6 +10,7 @@ final readonly class ArgumentDefinition
         public string $type,
         public bool $isOptional = false,
         public bool $isVariadic = false,
+        public ?int $variadicMin = null,
     ) {
     }
 }

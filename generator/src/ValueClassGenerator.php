@@ -31,7 +31,7 @@ class ValueClassGenerator extends AbstractGenerator
             $property = $class->addProperty($argument->name);
             if ($argument->isVariadic) {
                 $property->setType('array');
-                $propertyComment .= '@param list<' . $docType . '> $' . $argument->name . PHP_EOL;
+                $propertyComment .= '@param list<' . $docType . '> $' . $argument->name;
             } else {
                 $property->setType($nativeType);
             }
@@ -45,8 +45,8 @@ class ValueClassGenerator extends AbstractGenerator
                 $constuctor->setVariadic();
             }
 
-            $constuctor->addComment('@param ' . $docType . ' $' . $argument->name . PHP_EOL);
-            $constuctor->addBody('$this->' . $argument->name . ' = $' . $argument->name . ';' . PHP_EOL);
+            $constuctor->addComment('@param ' . $docType . ' $' . $argument->name);
+            $constuctor->addBody('$this->' . $argument->name . ' = $' . $argument->name . ';');
         }
 
         return $class;

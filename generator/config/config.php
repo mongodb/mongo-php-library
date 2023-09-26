@@ -1,107 +1,59 @@
 <?php
 
-use MongoDB\Aggregation\Operator;
-use MongoDB\Query\Operator as QueryOperator;
-use MongoDB\Aggregation\Stage;
+namespace MongoDB\CodeGenerator\Config;
+
 use MongoDB\CodeGenerator\FactoryClassGenerator;
 use MongoDB\CodeGenerator\ValueClassGenerator;
 
 $src = __DIR__ . '/../../src';
+$tests = __DIR__ . '/../../tests';
 
 return [
-    // Stages
+    // Aggregation Pipeline Stages
     [
         'configFile' => __DIR__ . '/stages.yaml',
         'generatorClass' => ValueClassGenerator::class,
-        'namespace' => MongoDB\Aggregation\Stage::class,
-        'filePath' => $src . '/Aggregation/Stage/',
-        'interfaces' => [Stage::class],
+        'namespace' => 'MongoDB\\Builder\\Stage',
+        'filePath' => $src . '/Builder/Stage',
         'classNameSuffix' => 'Stage',
     ],
-    /*
-    // Stage codec
-    [
-        // Stage converters
-        'configFile' => __DIR__ . '/stages.yaml',
-        'generatorClass' => ConverterClassGenerator::class,
-        'namespace' => Converter\Stage::class,
-        'filePath' => $src . '/Aggregation/Converter/Stage/',
-        'parentClass' => AbstractConverter::class,
-        'classNameSuffix' => 'StageConverter',
-        'supportingNamespace' => Stage::class,
-        'supportingClassNameSuffix' => 'Stage',
-        'libraryNamespace' => Converter::class,
-        'libraryClassName' => 'StageConverter',
-    ],
-    */
-    // Stage factory
     [
         'configFile' => __DIR__ . '/stages.yaml',
         'generatorClass' => FactoryClassGenerator::class,
-        'namespace' => Stage::class,
-        'filePath' => $src . '/Aggregation/',
+        'namespace' => 'MongoDB\\Builder\\Stage',
+        'filePath' => $src . '/Builder/Stage',
         'classNameSuffix' => 'Stage',
     ],
 
-    // Pipeline operators
+    // Aggregation Pipeline Operators
     [
         'configFile' => __DIR__ . '/pipeline-operators.yaml',
         'generatorClass' => ValueClassGenerator::class,
-        'namespace' => Operator::class,
-        'filePath' => $src . '/Aggregation/Operator/',
-        'classNameSuffix' => 'Operator',
+        'namespace' => 'MongoDB\\Builder\\Aggregation',
+        'filePath' => $src . '/Builder/Aggregation',
+        'classNameSuffix' => 'Aggregation',
     ],
-    /*
     [
-        'configFile' => __DIR__ . '/pipeline-operators.yaml',
-        'generatorClass' => ConverterClassGenerator::class,
-        'namespace' => Converter\PipelineOperator::class,
-        'filePath' => $src . '/Aggregation/Converter/PipelineOperator/',
-        'parentClass' => AbstractConverter::class,
-        'classNameSuffix' => 'PipelineOperatorConverter',
-        'supportingNamespace' => PipelineOperator::class,
-        'supportingClassNameSuffix' => 'PipelineOperator',
-        'libraryNamespace' => Converter::class,
-        'libraryClassName' => 'PipelineOperatorConverter',
-    ],
-    */
-    [
-        // Factory
         'configFile' => __DIR__ . '/pipeline-operators.yaml',
         'generatorClass' => FactoryClassGenerator::class,
-        'namespace' => Operator::class,
-        'filePath' => $src . '/Aggregation/',
-        'classNameSuffix' => 'Operator',
+        'namespace' => 'MongoDB\\Builder\\Aggregation',
+        'filePath' => $src . '/Builder/Aggregation',
+        'classNameSuffix' => 'Aggregation',
     ],
 
-    // Query operators
+    // Query Operators
     [
         'configFile' => __DIR__ . '/query-operators.yaml',
         'generatorClass' => ValueClassGenerator::class,
-        'namespace' => QueryOperator::class,
-        'filePath' => $src . '/Query/Operator/',
-        'classNameSuffix' => 'Operator',
+        'namespace' => 'MongoDB\\Builder\\Query',
+        'filePath' => $src . '/Builder/Query',
+        'classNameSuffix' => 'Query',
     ],
-    /*
     [
-        'configFile' => __DIR__ . '/query-operators.yaml',
-        'generatorClass' => ConverterClassGenerator::class,
-        'namespace' => Converter\QueryOperator::class,
-        'filePath' => $src . '/Aggregation/Converter/QueryOperator/',
-        'parentClass' => AbstractConverter::class,
-        'classNameSuffix' => 'QueryOperatorConverter',
-        'supportingNamespace' => QueryOperator::class,
-        'supportingClassNameSuffix' => 'QueryOperator',
-        'libraryNamespace' => Converter::class,
-        'libraryClassName' => 'QueryOperatorConverter',
-    ],
-    */
-    [
-        // Factory
         'configFile' => __DIR__ . '/query-operators.yaml',
         'generatorClass' => FactoryClassGenerator::class,
-        'namespace' => QueryOperator::class,
-        'filePath' => $src . '/Query/',
-        'classNameSuffix' => 'Operator',
+        'namespace' => 'MongoDB\\Builder\\Query',
+        'filePath' => $src . '/Builder/Query',
+        'classNameSuffix' => 'Query',
     ],
 ];

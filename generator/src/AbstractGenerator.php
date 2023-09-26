@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace MongoDB\CodeGenerator;
 
 use InvalidArgumentException;
-use MongoDB\Aggregation\Expression;
+use MongoDB\Builder\Expression;
 use MongoDB\CodeGenerator\Definition\ArgumentDefinition;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use Nette\PhpGenerator\ClassType;
@@ -12,7 +12,6 @@ use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\Printer;
 use Nette\PhpGenerator\PsrPrinter;
 
-use function array_map;
 use function dirname;
 use function file_put_contents;
 use function implode;
@@ -103,12 +102,12 @@ abstract class AbstractGenerator
         return ucfirst($object->name) . $this->definition->classNameSuffix;
     }
 
-    protected function createFileForClass(string $dirname, ClassType $class): void
+    protected function createFileForClass(string $dirname, ClassType $class, ?string $namespace = null): void
     {
-        $fullName = $dirname . $class->getName() . '.php';
+        $fullName = $dirname . '/' . $class->getName() . '.php';
 
         $file = new PhpFile();
-        $namespace = $file->addNamespace($this->definition->namespace);
+        $namespace = $file->addNamespace($namespace ?? $this->definition->namespace);
         $namespace->add($class);
 
         $this->writeFileFromGenerator($fullName, $file);

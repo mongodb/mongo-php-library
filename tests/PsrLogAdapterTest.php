@@ -11,9 +11,9 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 use function func_get_args;
-use function MongoDB\addLogger;
+use function MongoDB\add_logger;
 use function MongoDB\Driver\Monitoring\mongoc_log;
-use function MongoDB\removeLogger;
+use function MongoDB\remove_logger;
 use function sprintf;
 
 class PsrLogAdapterTest extends BaseTestCase
@@ -39,12 +39,12 @@ class PsrLogAdapterTest extends BaseTestCase
         mongoc_log(LogSubscriber::LEVEL_INFO, 'domain1', 'info1');
         PsrLogAdapter::writeLog(PsrLogAdapter::INFO, 'domain2', 'info2');
 
-        addLogger($logger);
+        add_logger($logger);
 
         mongoc_log(LogSubscriber::LEVEL_INFO, 'domain3', 'info3');
         PsrLogAdapter::writeLog(PsrLogAdapter::INFO, 'domain4', 'info4');
 
-        removeLogger($logger);
+        remove_logger($logger);
 
         mongoc_log(LogSubscriber::LEVEL_INFO, 'domain5', 'info5');
         PsrLogAdapter::writeLog(PsrLogAdapter::INFO, 'domain6', 'info6');

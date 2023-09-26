@@ -8,8 +8,8 @@ use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
 
 use function func_get_args;
-use function MongoDB\addLogger;
-use function MongoDB\removeLogger;
+use function MongoDB\add_logger;
+use function MongoDB\remove_logger;
 
 /** @see https://jira.mongodb.org/browse/DRIVERS-2583 */
 class LogNonGenuineHostTest extends TestCase
@@ -20,12 +20,12 @@ class LogNonGenuineHostTest extends TestCase
     {
         $this->logger = $this->createTestPsrLogger();
 
-        addLogger($this->logger);
+        add_logger($this->logger);
     }
 
     public function tearDown(): void
     {
-        removeLogger($this->logger);
+        remove_logger($this->logger);
     }
 
     /** @dataProvider provideCosmosUris */

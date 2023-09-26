@@ -53,7 +53,7 @@ use function substr;
  * Calling this method again with a logger that has already been added will have
  * no effect.
  */
-function addLogger(LoggerInterface $logger): void
+function add_logger(LoggerInterface $logger): void
 {
     PsrLogAdapter::addLogger($logger);
 }
@@ -64,7 +64,7 @@ function addLogger(LoggerInterface $logger): void
  * Calling this method with a logger that has not been added will have no
  * effect.
  */
-function removeLogger(LoggerInterface $logger): void
+function remove_logger(LoggerInterface $logger): void
 {
     PsrLogAdapter::removeLogger($logger);
 }

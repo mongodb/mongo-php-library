@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace MongoDB\Examples;
+namespace MongoDB\Examples\Typemap;
 
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\Unserializable;

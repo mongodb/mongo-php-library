@@ -215,6 +215,7 @@ function get_encrypted_fields_from_server(string $databaseName, string $collecti
  * This method returns true for any array or object, but specifically excludes
  * BSON PackedArray instances
  *
+ * @internal
  * @param mixed $document
  */
 function is_document($document): bool

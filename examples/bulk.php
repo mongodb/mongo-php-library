@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace MongoDB\Examples;
+namespace MongoDB\Examples\Bulk;
 
 use MongoDB\Client;
 use MongoDB\Driver\WriteConcern;

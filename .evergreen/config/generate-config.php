@@ -41,7 +41,7 @@ $allFiles = [];
 $allFiles[] = generateConfigs('build', 'phpVersion', '_template-build-extension.yml', 'build-php-%s', $supportedPhpVersions);
 
 // Test tasks
-//$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-local.yml', 'local-%s', $localServerVersions);
+$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-local.yml', 'local-%s', $localServerVersions);
 //$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-load-balanced.yml', 'load-balanced-%s', $loadBalancedServerVersions);
 //$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-ocsp.yml', 'ocsp-%s', $ocspServerVersions);
 //$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-require-api-version.yml', 'require-api-version-%s', $requireApiServerVersions);

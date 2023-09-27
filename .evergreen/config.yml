@@ -6,6 +6,9 @@ stepback: true
 # Actual testing tasks are marked with `type: test`
 command_type: system
 
+# Fail builds when pre tasks fail.
+pre_error_fails_task: true
+
 # Protect ourselves against rogue test case that runs forever
 # Good rule of thumb: the average length a task takes, times 5, which roughly accounts for variable system performance
 # for various build variants
@@ -16,10 +19,12 @@ exec_timeout_secs: 1800
 pre: &test_setup
   - func: "fetch source"
   - func: "prepare resources"
-  - func: "windows fix"
   - func: "fix absolute paths"
   - func: "make files executable"
   - func: "install dependencies"
+  - func: "locate PHP binaries"
+  - func: "fetch extension"
+  - func: "install composer"
 post: &test_teardown
   - func: "upload mo artifacts"
   - func: "upload test results"
@@ -36,10 +41,19 @@ include:
   - filename: .evergreen/config/build-variants.yml
 
 #  - filename: .evergreen/config/test-tasks.yml
-#  - filename: .evergreen/config/test-variants.yml
+  - filename: .evergreen/config/test-variants.yml
 
   # Automatically generated files
   - filename: .evergreen/config/build/build-php-8.2.yml
   - filename: .evergreen/config/build/build-php-8.1.yml
   - filename: .evergreen/config/build/build-php-8.0.yml
   - filename: .evergreen/config/build/build-php-7.4.yml
+  - filename: .evergreen/config/test/local-latest.yml
+  - filename: .evergreen/config/test/local-rapid.yml
+  - filename: .evergreen/config/test/local-7.0.yml
+  - filename: .evergreen/config/test/local-6.0.yml
+  - filename: .evergreen/config/test/local-5.0.yml
+  - filename: .evergreen/config/test/local-4.4.yml
+  - filename: .evergreen/config/test/local-4.2.yml
+  - filename: .evergreen/config/test/local-4.0.yml
+  - filename: .evergreen/config/test/local-3.6.yml

@@ -1,0 +1,34 @@
+#
+# Test variants - only run for select platforms worth testing on
+#
+buildvariants:
+  # PHP 8.2: test all topologies on all versions of MongoDB
+  - name: test-debian11-php82-local
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 11, PHP 8.2"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-8.2"
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-8.2"
+    tasks:
+      - ".standalone .local !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      - ".replicaset .local !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      - ".sharded .local !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+#  - name: test-debian92-php82-local
+#    tags: ["test", "debian", "x64"]
+#    display_name: "Test: Debian 9.2, PHP 8.2"
+#    run_on: debian92-small
+#    expansions:
+#      FETCH_BUILD_VARIANT: "build-debian92"
+#      FETCH_BUILD_TASK: "build-php-8.2"
+#    depends_on:
+#      - variant: "build-debian92"
+#        name: "build-php-8.2"
+#    tasks:
+#      # Remember to add new major versions here as they are released
+#      - ".standalone .local !.6.0 !.7.0 !.rapid !.latest"
+#      - ".replicaset .local !.6.0 !.7.0 !.rapid !.latest"
+#      - ".sharded .local !.6.0 !.7.0 !.rapid !.latest"

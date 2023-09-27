@@ -431,6 +431,17 @@ functions:
           # Don't use ${file} syntax here because evergreen treats it as an empty expansion.
           [ -f "$file" ] && PHP_VERSION=${PHP_VERSION} EXTENSION_VERSION=${EXTENSION_VERSION} EXTENSION_REPO=${EXTENSION_REPO} EXTENSION_BRANCH=${EXTENSION_BRANCH} DEPENDENCIES=${DEPENDENCIES} sh $file || echo "$file not available, skipping"
 
+  "install composer":
+    - command: shell.exec
+      params:
+        add_expansions_to_env: true
+        working_dir: "src"
+        script: |
+          ${PREPARE_SHELL}
+          file="${PROJECT_DIRECTORY}/.evergreen/install-composer.sh"
+          # Don't use ${file} syntax here because evergreen treats it as an empty expansion.
+          [ -f "$file" ] && PHP_VERSION=${PHP_VERSION} EXTENSION_VERSION=${EXTENSION_VERSION} EXTENSION_REPO=${EXTENSION_REPO} EXTENSION_BRANCH=${EXTENSION_BRANCH} DEPENDENCIES=${DEPENDENCIES} sh $file || echo "$file not available, skipping"
+
   "start load balancer":
     - command: shell.exec
       params:

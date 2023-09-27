@@ -6,22 +6,15 @@
 
 namespace MongoDB\Builder\Aggregation;
 
-use MongoDB\Builder\Expression\ResolvesToBoolExpression;
-use MongoDB\Builder\Expression\ResolvesToExpression;
+use MongoDB\Builder\Expression\ResolvesToBool;
 
-class NeAggregation implements ResolvesToBoolExpression
+class NeAggregation implements ResolvesToBool
 {
-    public array|bool|float|int|null|object|string $expression1;
-    public array|bool|float|int|null|object|string $expression2;
+    public mixed $expression1;
+    public mixed $expression2;
 
-    /**
-     * @param ResolvesToExpression|array|bool|float|int|object|string|null $expression1
-     * @param ResolvesToExpression|array|bool|float|int|object|string|null $expression2
-     */
-    public function __construct(
-        array|bool|float|int|null|object|string $expression1,
-        array|bool|float|int|null|object|string $expression2,
-    ) {
+    public function __construct(mixed $expression1, mixed $expression2)
+    {
         $this->expression1 = $expression1;
         $this->expression2 = $expression2;
     }

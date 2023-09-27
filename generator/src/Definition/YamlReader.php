@@ -12,13 +12,13 @@ use function is_array;
 final class YamlReader
 {
     /** @var array<string, list<OperatorDefinition>> */
-    private array $definitions = [];
+    private static array $definitions = [];
 
     /** @return list<OperatorDefinition> */
     public function read(string $filename): array
     {
-        if (array_key_exists($filename, $this->definitions)) {
-            return $this->definitions[$filename];
+        if (array_key_exists($filename, self::$definitions)) {
+            return self::$definitions[$filename];
         }
 
         $config = Yaml::parseFile($filename);
@@ -30,6 +30,6 @@ final class YamlReader
             $definitions[] = new OperatorDefinition(...$operator);
         }
 
-        return $definitions;
+        return self::$definitions[$filename] = $definitions;
     }
 }

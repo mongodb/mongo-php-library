@@ -7,19 +7,18 @@
 namespace MongoDB\Builder\Aggregation;
 
 use InvalidArgumentException;
-use MongoDB\Builder\Expression\ResolvesToBoolExpression;
-use MongoDB\Builder\Expression\ResolvesToExpression;
+use MongoDB\Builder\Expression\Expression;
+use MongoDB\Builder\Expression\ResolvesToBool;
 
 use function count;
 use function sprintf;
 
-class AndAggregation implements ResolvesToBoolExpression
+class AndAggregation implements ResolvesToBool
 {
-    /** @param list<ResolvesToExpression|array|bool|float|int|object|string|null> $expressions */
+    /** @param list<Expression|mixed> ...$expressions */
     public array $expressions;
 
-    /** @param ResolvesToExpression|array|bool|float|int|object|string|null $expressions */
-    public function __construct(array|bool|float|int|null|object|string ...$expressions)
+    public function __construct(mixed ...$expressions)
     {
         if (count($expressions) < 1) {
             throw new InvalidArgumentException(sprintf('Expected at least %d values, got %d.', 1, count($expressions)));

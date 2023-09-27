@@ -6,17 +6,23 @@
 
 namespace MongoDB\Builder\Query;
 
-use MongoDB\Builder\Expression\ResolvesToBoolExpression;
-use MongoDB\Builder\Expression\ResolvesToQueryOperator;
+use InvalidArgumentException;
+use MongoDB\Builder\Expression\ResolvesToBool;
 
-class AndQuery implements ResolvesToBoolExpression
+use function count;
+use function sprintf;
+
+class AndQuery implements ResolvesToBool
 {
-    /** @param list<ResolvesToQueryOperator|array|object> $query */
+    /** @param list<ResolvesToBool|bool> ...$query */
     public array $query;
 
-    /** @param ResolvesToQueryOperator|array|object $query */
-    public function __construct(array|object ...$query)
+    public function __construct(ResolvesToBool|bool ...$query)
     {
+        if (count($query) < 1) {
+            throw new InvalidArgumentException(sprintf('Expected at least %d values, got %d.', 1, count($query)));
+        }
+
         $this->query = $query;
     }
 }

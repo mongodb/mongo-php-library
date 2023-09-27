@@ -4,124 +4,85 @@ declare(strict_types=1);
 namespace MongoDB\CodeGenerator;
 
 use InvalidArgumentException;
-use MongoDB\Builder\Expression;
-use MongoDB\CodeGenerator\Definition\ArgumentDefinition;
-use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
-use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
+use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\Printer;
 use Nette\PhpGenerator\PsrPrinter;
 
+use function array_pop;
+use function count;
+use function current;
 use function dirname;
+use function explode;
 use function file_put_contents;
 use function implode;
-use function in_array;
-use function interface_exists;
 use function is_dir;
 use function mkdir;
-use function sort;
-use function ucfirst;
+use function sprintf;
+use function str_replace;
+use function str_starts_with;
 
 /** @internal */
 abstract class AbstractGenerator
 {
-    /** @var array<string, list<string|class-string>> */
-    protected array $typeAliases = [
-        'resolvesToExpression' => [Expression\ResolvesToExpression::class, 'array', 'object', 'string', 'int', 'float', 'bool', 'null'],
-        'resolvesToArrayExpression' => [Expression\ResolvesToArrayExpression::class, 'array', 'object', 'string'],
-        'resolvesToBoolExpression' => [Expression\ResolvesToBoolExpression::class, 'array', 'object', 'string', 'bool'],
-        'resolvesToMatchExpression' => ['array', 'object', Expression\ResolvesToMatchExpression::class],
-        'resolvesToNumberExpression' => [Expression\ResolvesToBoolExpression::class, 'array', 'object', 'string', 'int', 'float'],
-        'resolvesToQueryOperator' => ['array', 'object', Expression\ResolvesToQueryOperator::class],
-        'resolvesToSortSpecification' => ['array', 'object', Expression\ResolvesToSortSpecification::class],
-    ];
-
-    protected GeneratorDefinition $definition;
     protected Printer $printer;
 
-    public function __construct(GeneratorDefinition $definition)
-    {
-        $this->validate($definition);
-
-        $this->definition = $definition;
+    public function __construct(
+        private string $rootDir
+    ) {
         $this->printer = new PsrPrinter();
     }
 
-    /** @throws InvalidArgumentException when definition is invalid */
-    protected function validate(GeneratorDefinition $definition): void
+    final protected function splitNamespaceAndClassName(string $fqcn): array
     {
+        $parts = explode('\\', $fqcn);
+        $className = array_pop($parts);
+
+        return [implode('\\', $parts), $className];
     }
 
-    public function createClassesForObjects(array $objects): void
+    protected function writeFile(PhpNamespace $namespace): void
     {
-        foreach ($objects as $object) {
-            $this->createFileForClass(
-                $this->definition->filePath,
-                $this->createClassForObject($object),
-            );
-        }
-    }
-
-    abstract public function createClassForObject(object $object): ClassType;
-
-    /** @return array{native:string,doc:string} */
-    final protected function generateTypeString(ArgumentDefinition $arg): array
-    {
-        $type = $arg->type;
-        $nativeTypes = $this->typeAliases[$type] ?? [$type];
-        $docTypes = $nativeTypes;
-
-        foreach ($nativeTypes as $key => $typeName) {
-            if (interface_exists($typeName)) {
-                $nativeTypes[$key] = $docTypes[$key] = '\\' . $typeName;
-                // A union cannot contain both object and a class type, which is redundant and causes a PHP error
-                // @todo replace "object" with "stdClass" and force any class object to implement the proper interface
-                if (in_array('object', $nativeTypes, true)) {
-                    unset($nativeTypes[$key]);
-                }
-            }
+        $classes = $namespace->getClasses();
+        if (count($classes) !== 1) {
+            throw new InvalidArgumentException(sprintf('Expected exactly one class in namespace "%s", got %d.', $namespace->getName(), count($classes)));
         }
 
-        sort($nativeTypes);
-        sort($docTypes);
+        $filename = $this->rootDir . '/' . $this->getFileName($namespace->getName(), current($classes)->getName());
 
-        if ($arg->isOptional) {
-            $nativeTypes[] = 'null';
-            $docTypes[] = 'null';
-        }
-
-        return [
-            'native' => implode('|', $nativeTypes),
-            'doc' => implode('|', $docTypes),
-        ];
-    }
-
-    protected function getClassName(object $object): string
-    {
-        return ucfirst($object->name) . $this->definition->classNameSuffix;
-    }
-
-    protected function createFileForClass(string $dirname, ClassType $class, ?string $namespace = null): void
-    {
-        $fullName = $dirname . '/' . $class->getName() . '.php';
-
-        $file = new PhpFile();
-        $namespace = $file->addNamespace($namespace ?? $this->definition->namespace);
-        $namespace->add($class);
-
-        $this->writeFileFromGenerator($fullName, $file);
-    }
-
-    protected function writeFileFromGenerator(string $filename, PhpFile $file): void
-    {
         $dirname = dirname($filename);
-
-        $file->setComment('THIS FILE IS AUTO-GENERATED. ANY CHANGES WILL BE LOST!');
-
         if (! is_dir($dirname)) {
             mkdir($dirname, 0775, true);
         }
 
+        $file = new PhpFile();
+        $file->setComment('THIS FILE IS AUTO-GENERATED. ANY CHANGES WILL BE LOST!');
+        $file->addNamespace($namespace);
+
         file_put_contents($filename, $this->printer->printFile($file));
+    }
+
+    /**
+     * Thanks to PSR-4, the file name can be determined from the fully qualified class name.
+     *
+     * @param string ...$fqcn Fully qualified class name, merged if multiple parts
+     * @return string File name relative to the root directory
+     */
+    private function getFileName(string ...$fqcn): string
+    {
+        $fqcn = implode('\\', $fqcn);
+
+        // Config from composer.json
+        $config = [
+            'MongoDB\\Tests\\' => 'tests/',
+            'MongoDB\\' => 'src/',
+        ];
+        foreach ($config as $namespace => $directory) {
+            if (str_starts_with($fqcn, $namespace)) {
+                return $directory . str_replace([$namespace, '\\'], ['', '/'], $fqcn) . '.php';
+            }
+        }
+
+        throw new InvalidArgumentException(sprintf('Could not determine file name for "%s"', $fqcn));
     }
 }

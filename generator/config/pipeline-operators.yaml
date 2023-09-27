@@ -1,49 +1,49 @@
 - name: and
-  type: resolvesToBoolExpression
+  type: resolvesToBool
   args:
     - name: expressions
-      type: resolvesToExpression
+      type: expression
       isVariadic: true
       variadicMin: 1
 - name: eq
-  type: resolvesToBoolExpression
+  type: resolvesToBool
   args:
     - name: expression1
-      type: resolvesToExpression
+      type: expression
     - name: expression2
-      type: resolvesToExpression
+      type: expression
 - name: gt
-  type: resolvesToBoolExpression
+  type: resolvesToBool
   args:
     - name: expression1
-      type: resolvesToExpression
+      type: expression
     - name: expression2
-      type: resolvesToExpression
+      type: expression
 - name: lt
-  type: resolvesToBoolExpression
+  type: resolvesToBool
   args:
     - name: expression1
-      type: resolvesToExpression
+      type: expression
     - name: expression2
-      type: resolvesToExpression
+      type: expression
 - name: ne
-  type: resolvesToBoolExpression
+  type: resolvesToBool
   args:
     - name: expression1
-      type: resolvesToExpression
+      type: expression
     - name: expression2
-      type: resolvesToExpression
+      type: expression
 - name: filter
-  type: resolvesToArrayExpression
+  type: resolvesToArray
   usesNamedArgs: true
   args:
     - name: input
-      type: resolvesToArrayExpression
+      type: resolvesToArray
     - name: cond
-      type: resolvesToBoolExpression
+      type: resolvesToBool
     - name: as
-      type: string
+      type: resolvesToString
       isOptional: true
     - name: limit
-      type: resolvesToNumberExpression
+      type: resolvesToInt
       isOptional: true

@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Command;
 
+use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
-use MongoDB\CodeGenerator\Definition\YamlReader;
+use MongoDB\CodeGenerator\ExpressionClassGenerator;
+use MongoDB\CodeGenerator\OperatorGenerator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,40 +21,50 @@ use function sprintf;
 #[AsCommand(name: 'generate', description: 'Generate code for mongodb/mongodb library')]
 final class GenerateCommand extends Command
 {
-    private YamlReader $yamlReader;
-
     public function __construct(
-        private string $configFile,
+        private string $rootDir,
+        private string $configDir,
     ) {
         parent::__construct();
-
-        $this->yamlReader = new YamlReader();
-    }
-
-    public function configure(): void
-    {
-        $this->addOption('force', 'f', null, 'Force generation of all files');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Generating code for mongodb/mongodb library');
 
-        $config = require $this->configFile;
+        $this->generateExpressionClasses($output);
+
+        $config = require $this->configDir . '/operators.php';
         assert(is_array($config));
 
-        // @todo This is a hack to get the first pipeline operator config
         foreach ($config as $key => $def) {
             assert(is_array($def));
-            $this->generate(new GeneratorDefinition(...$def), $output);
+            $this->generate($def, $output);
         }
 
         return Command::SUCCESS;
     }
 
-    private function generate(GeneratorDefinition $definition, OutputInterface $output): void
+    private function generateExpressionClasses(OutputInterface $output): void
     {
-        $output->writeln(sprintf('Generating code for %s with %s', basename($definition->configFile), $definition->generatorClass));
+        $output->writeln('Generating expression classes');
+
+        $config = require $this->configDir . '/expressions.php';
+        assert(is_array($config));
+
+        $generator = new ExpressionClassGenerator($this->rootDir);
+        foreach ($config as $name => $def) {
+            assert(is_array($def));
+            $def = new ExpressionDefinition($name, ...$def);
+            $generator->generate($def);
+        }
+    }
+
+    private function generate(array $def, OutputInterface $output): void
+    {
+        $definition = new GeneratorDefinition(...$def);
+
+        $output->writeln(sprintf('Generating classes for %s with %s', basename($definition->configFile), $definition->generatorClass));
 
         if (! class_exists($definition->generatorClass)) {
             $output->writeln(sprintf('Generator class %s does not exist', $definition->generatorClass));
@@ -61,7 +73,8 @@ final class GenerateCommand extends Command
         }
 
         $generatorClass = $definition->generatorClass;
-        $generator = new $generatorClass($definition);
-        $generator->createClassesForObjects($this->yamlReader->read($definition->configFile));
+        $generator = new $generatorClass($this->rootDir);
+        assert($generator instanceof OperatorGenerator);
+        $generator->generate($definition);
     }
 }

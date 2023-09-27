@@ -6,33 +6,26 @@
 
 namespace MongoDB\Builder;
 
-use MongoDB\Builder\Expression\ResolvesToExpression;
-use MongoDB\Builder\Expression\ResolvesToQueryOperator;
+use MongoDB\Builder\Expression\ResolvesToBool;
 use MongoDB\Builder\Query\AndQuery;
 use MongoDB\Builder\Query\ExprQuery;
 
 final class Query
 {
+    public static function and(ResolvesToBool|bool ...$query): AndQuery
+    {
+        return new AndQuery(...$query);
+    }
+
+    public static function expr(mixed $expression): ExprQuery
+    {
+        return new ExprQuery($expression);
+    }
+
     /**
      * This class cannot be instantiated.
      */
     private function __construct()
     {
-    }
-
-    /** @param ResolvesToQueryOperator|array|object $query */
-    public static function and(array|object ...$query): Query\AndQuery
-    {
-        return new AndQuery(
-            $query,
-        );
-    }
-
-    /** @param ResolvesToExpression|array|bool|float|int|object|string|null $expression */
-    public static function expr(array|bool|float|int|null|object|string $expression): Query\ExprQuery
-    {
-        return new ExprQuery(
-            $expression,
-        );
     }
 }

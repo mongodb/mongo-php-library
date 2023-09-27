@@ -5,7 +5,7 @@ The `generator` directory is not included in `mongodb/mongodb` package and is no
 
 ## Contributing
 
-Updating the generated code can be done only by modifying the generator code, or it's configuration.
+Updating the generated code can be done only by modifying the generator code, or its configuration.
 
 To run the generator, you need to have PHP 8.2+ installed and Composer.
 

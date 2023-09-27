@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace MongoDB\CodeGenerator\Definition;
 
 use InvalidArgumentException;
-use MongoDB\CodeGenerator\AbstractGenerator;
+use MongoDB\CodeGenerator\OperatorGenerator;
 
 use function is_subclass_of;
 use function sprintf;
@@ -15,7 +15,10 @@ final readonly class GeneratorDefinition
 {
     public function __construct(
         public readonly string $configFile,
-        /** @var class-string<AbstractGenerator> */
+        /**
+         * @var class-string<OperatorGenerator>
+         * @psalm-assert class-string<OperatorGenerator>
+         */
         public readonly string $generatorClass,
         public readonly string $namespace,
         public readonly string $filePath,
@@ -35,8 +38,8 @@ final readonly class GeneratorDefinition
             throw new InvalidArgumentException(sprintf('Namespace must not end with "\\". Got "%s".', $this->namespace));
         }
 
-        if (! is_subclass_of($this->generatorClass, AbstractGenerator::class)) {
-            throw new InvalidArgumentException(sprintf('Generator class "%s" must extend "%s".', $this->generatorClass, AbstractGenerator::class));
+        if (! is_subclass_of($this->generatorClass, OperatorGenerator::class)) {
+            throw new InvalidArgumentException(sprintf('Generator class "%s" must extend "%s".', $this->generatorClass, OperatorGenerator::class));
         }
     }
 }

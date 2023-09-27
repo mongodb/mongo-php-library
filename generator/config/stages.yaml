@@ -1,14 +1,14 @@
 - name: match
   args:
     - name: matchExpr
-      type: resolvesToMatchExpression
+      type: expression
       isVariadic: true
       variadicMin: 1
 - name: sort
   args:
     - name: sortSpecification
-      type: resolvesToSortSpecification
+      type: resolvesToObject
 - name: limit
   args:
     - name: limit
-      type: int
+      type: resolvesToInt

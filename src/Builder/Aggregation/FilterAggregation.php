@@ -6,27 +6,42 @@
 
 namespace MongoDB\Builder\Aggregation;
 
-use MongoDB\Builder\Expression\ResolvesToArrayExpression;
-use MongoDB\Builder\Expression\ResolvesToBoolExpression;
+use InvalidArgumentException;
+use MongoDB\BSON\Int64;
+use MongoDB\BSON\PackedArray;
+use MongoDB\Builder\Expression\Expression;
+use MongoDB\Builder\Expression\ResolvesToArray;
+use MongoDB\Builder\Expression\ResolvesToBool;
+use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\Builder\Expression\ResolvesToString;
+use MongoDB\Model\BSONArray;
 
-class FilterAggregation implements ResolvesToArrayExpression
+use function array_is_list;
+use function is_array;
+use function sprintf;
+
+class FilterAggregation implements ResolvesToArray
 {
-    public array|object|string $input;
-    public array|bool|object|string $cond;
-    public string|null $as;
-    public array|float|int|object|string|null $limit;
+    public PackedArray|ResolvesToArray|BSONArray|array $input;
+    public ResolvesToBool|bool $cond;
+    public ResolvesToString|null|string $as;
+    public Int64|ResolvesToInt|int|null $limit;
 
     /**
-     * @param ResolvesToArrayExpression|array|object|string               $input
-     * @param ResolvesToBoolExpression|array|bool|object|string           $cond
-     * @param ResolvesToBoolExpression|array|float|int|object|string|null $limit
+     * @param BSONArray|PackedArray|ResolvesToArray|list<Expression|mixed> $input
+     * @param ResolvesToString|string|null                                 $as
+     * @param Int64|ResolvesToInt|int|null                                 $limit
      */
     public function __construct(
-        array|object|string $input,
-        array|bool|object|string $cond,
-        string|null $as,
-        array|float|int|object|string|null $limit,
+        PackedArray|ResolvesToArray|BSONArray|array $input,
+        ResolvesToBool|bool $cond,
+        ResolvesToString|null|string $as = null,
+        Int64|ResolvesToInt|int|null $limit = null,
     ) {
+        if (is_array($input) && ! array_is_list($input)) {
+            throw new InvalidArgumentException(sprintf('Expected $input argument to be a list, got an associative array.'));
+        }
+
         $this->input = $input;
         $this->cond = $cond;
         $this->as = $as;

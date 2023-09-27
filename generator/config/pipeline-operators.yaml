@@ -21,6 +21,14 @@
       type: expression
     - name: expression2
       type: expression
+- name: gte
+  encode: array
+  type: resolvesToBool
+  args:
+    - name: expression1
+      type: expression
+    - name: expression2
+      type: expression
 - name: lt
   encode: array
   type: resolvesToBool
@@ -43,7 +51,7 @@
   usesNamedArgs: true
   args:
     - name: input
-      type: resolvesToArray
+      type: [resolvesToArray, fieldPath]
     - name: cond
       type: resolvesToBool
     - name: as

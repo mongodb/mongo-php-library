@@ -15,6 +15,7 @@ use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Builder\Stage\GroupStage;
 use MongoDB\Builder\Stage\LimitStage;
 use MongoDB\Builder\Stage\MatchStage;
+use MongoDB\Builder\Stage\ProjectStage;
 use MongoDB\Builder\Stage\SortStage;
 
 final class Stage
@@ -37,6 +38,12 @@ final class Stage
     public static function match(mixed $query): MatchStage
     {
         return new MatchStage($query);
+    }
+
+    /** @param Document|ResolvesToObject|Serializable|array|object $specifications */
+    public static function project(array|object $specifications): ProjectStage
+    {
+        return new ProjectStage($specifications);
     }
 
     /** @param Document|ResolvesToObject|Serializable|array|object $sortSpecification */

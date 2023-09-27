@@ -25,3 +25,8 @@
     - name: fields
       type: resolvesToObject
       isOptional: true
+- name: project
+  type: stage
+  args:
+    - name: specifications
+      type: resolvesToObject

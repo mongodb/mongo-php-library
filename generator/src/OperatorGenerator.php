@@ -51,7 +51,7 @@ abstract class OperatorGenerator extends AbstractGenerator
     {
         $interface = 'MongoDB\\Builder\\Expression\\' . ucfirst($type);
 
-        if (! interface_exists($interface) || ! is_subclass_of($interface, Expression::class) && $interface !== Expression::class) {
+        if ($interface !== Expression::class && ! is_subclass_of($interface, Expression::class)) {
             throw new InvalidArgumentException(sprintf('Invalid expression type "%s".', $type));
         }
 
@@ -65,8 +65,13 @@ abstract class OperatorGenerator extends AbstractGenerator
      */
     final protected function generateExpressionTypes(ArgumentDefinition $arg): object
     {
-        $interface = $this->getExpressionTypeInterface($arg->type);
-        $docTypes = $nativeTypes = array_merge([$interface], $interface::ACCEPTED_TYPES);
+        $nativeTypes = [];
+        foreach ((array) $arg->type as $type) {
+            $interface = $this->getExpressionTypeInterface($type);
+            $nativeTypes = array_merge($nativeTypes, [$interface], $interface::ACCEPTED_TYPES);
+        }
+
+        $docTypes = $nativeTypes = array_unique($nativeTypes);
         $listCheck = false;
         $use = [];
 

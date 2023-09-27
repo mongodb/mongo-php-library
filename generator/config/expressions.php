@@ -12,11 +12,13 @@ return [
     Expression::class => [
         'types' => ['mixed'],
     ],
+    // @todo if replaced by a string, it must start with $
     FieldPath::class => [
         'class' => true,
         'implements' => [Expression::class],
         'types' => ['string'],
     ],
+    // @todo if replaced by a string, it must start with $$
     Variable::class => [
         'class' => true,
         'implements' => [Expression::class],

@@ -10,6 +10,7 @@ use InvalidArgumentException;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Expression\Expression;
+use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToBool;
 use MongoDB\Builder\Expression\ResolvesToInt;
@@ -25,18 +26,18 @@ class FilterAggregation implements ResolvesToArray
     public const NAME = '$filter';
     public const ENCODE = 'object';
 
-    public PackedArray|ResolvesToArray|BSONArray|array $input;
+    public PackedArray|FieldPath|ResolvesToArray|BSONArray|array|string $input;
     public ResolvesToBool|bool $cond;
     public ResolvesToString|null|string $as;
     public Int64|ResolvesToInt|int|null $limit;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<Expression|mixed> $input
-     * @param ResolvesToString|string|null                                 $as
-     * @param Int64|ResolvesToInt|int|null                                 $limit
+     * @param BSONArray|FieldPath|PackedArray|ResolvesToArray|list<Expression|mixed>|string $input
+     * @param ResolvesToString|string|null                                                  $as
+     * @param Int64|ResolvesToInt|int|null                                                  $limit
      */
     public function __construct(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
+        PackedArray|FieldPath|ResolvesToArray|BSONArray|array|string $input,
         ResolvesToBool|bool $cond,
         ResolvesToString|null|string $as = null,
         Int64|ResolvesToInt|int|null $limit = null,

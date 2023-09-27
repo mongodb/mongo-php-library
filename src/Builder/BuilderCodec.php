@@ -4,8 +4,11 @@ namespace MongoDB\Builder;
 
 use LogicException;
 use MongoDB\Builder\Expression\Expression;
+use MongoDB\Builder\Expression\FieldPath;
+use MongoDB\Builder\Expression\Variable;
 use MongoDB\Builder\Query\OrQuery;
 use MongoDB\Builder\Stage\GroupStage;
+use MongoDB\Builder\Stage\ProjectStage;
 use MongoDB\Builder\Stage\Stage;
 use MongoDB\Codec\Codec;
 use MongoDB\Codec\DecodeIfSupported;
@@ -47,7 +50,7 @@ class BuilderCodec implements Codec
         throw UnsupportedValueException::invalidDecodableValue($value);
     }
 
-    public function encode($value): array|stdClass
+    public function encode($value): array|stdClass|string|int|float|bool|null
     {
         if (! $this->canEncode($value)) {
             throw UnsupportedValueException::invalidEncodableValue($value);
@@ -64,11 +67,29 @@ class BuilderCodec implements Codec
         }
 
         // This specific encoding code if temporary until we have a generic way to encode stages and operators
+        if ($value instanceof FieldPath) {
+            return '$' . $value->expression;
+        }
+
+        if ($value instanceof Variable) {
+            return '$$' . $value->expression;
+        }
+
         if ($value instanceof GroupStage) {
             $result = new stdClass();
             $result->_id = $this->encodeIfSupported($value->_id);
             // Specific: fields are encoded as a map of properties to their values at the top level as _id
             foreach ($value->fields as $key => $val) {
+                $result->{$key} = $this->encodeIfSupported($val);
+            }
+
+            return (object) [$value::NAME => $result];
+        }
+
+        if ($value instanceof ProjectStage) {
+            $result = new stdClass();
+            // Specific: fields are encoded as a map of properties to their values at the top level as _id
+            foreach ($value->specifications as $key => $val) {
                 $result->{$key} = $this->encodeIfSupported($val);
             }
 
@@ -140,7 +161,10 @@ class BuilderCodec implements Codec
     {
         $result = new stdClass();
         foreach ($value as $key => $val) {
-            $result->{'$' . $key} = $this->encodeIfSupported($val);
+            $val = $this->encodeIfSupported($val);
+            if ($val !== null) {
+                $result->{$key} = $val;
+            }
         }
 
         return (object) [$value::NAME => $result];

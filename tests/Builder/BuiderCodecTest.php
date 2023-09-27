@@ -2,12 +2,16 @@
 
 namespace MongoDB\Tests\Builder;
 
+use Generator;
 use MongoDB\Builder\Aggregation;
 use MongoDB\Builder\BuilderCodec;
+use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
 use MongoDB\Tests\TestCase;
+
+use function array_merge;
 
 class BuiderCodecTest extends TestCase
 {
@@ -59,10 +63,58 @@ class BuiderCodecTest extends TestCase
         $this->assertSamePipeline($expected, $pipeline);
     }
 
-    private static function assertSamePipeline(array $expected, Pipeline $actual): void
+    /**
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#examples
+     * @dataProvider provideAggregationFilterLimit
+     */
+    public function testAggregationFilter($limit, $expectedLimit): void
+    {
+        $pipeline = new Pipeline(
+            Stage::project([
+                'items' => Aggregation::filter(
+                    input: Expression::fieldPath('items'),
+                    cond: Aggregation::gte(Expression::variable('item.price'), 100),
+                    as: 'item',
+                    limit: $limit,
+                ),
+            ]),
+        );
+
+        $expected = [
+            (object) [
+                '$project' => (object) [
+                    'items' => (object) [
+                        '$filter' => (object) array_merge([
+                            'input' => '$items',
+                            'as' => 'item',
+                            'cond' => (object) ['$gte' => ['$$item.price', 100]],
+                        ], $expectedLimit),
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSamePipeline($expected, $pipeline);
+    }
+
+    public static function provideAggregationFilterLimit(): Generator
+    {
+        yield 'unspecified limit' => [
+            null,
+            [],
+        ];
+
+        yield 'int limit' => [
+            1,
+            ['limit' => 1],
+        ];
+    }
+
+    private static function assertSamePipeline(array $expected, Pipeline $pipeline): void
     {
         $codec = new BuilderCodec();
+        $actual = $codec->encode($pipeline);
 
-        self::assertEquals($expected, $codec->encode($actual));
+        self::assertEquals($expected, $actual);
     }
 }

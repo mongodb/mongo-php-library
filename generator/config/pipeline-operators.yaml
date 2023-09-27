@@ -6,6 +6,7 @@
       isVariadic: true
       variadicMin: 1
 - name: eq
+  encode: array
   type: resolvesToBool
   args:
     - name: expression1
@@ -13,6 +14,7 @@
     - name: expression2
       type: expression
 - name: gt
+  encode: array
   type: resolvesToBool
   args:
     - name: expression1
@@ -20,6 +22,7 @@
     - name: expression2
       type: expression
 - name: lt
+  encode: array
   type: resolvesToBool
   args:
     - name: expression1
@@ -27,6 +30,7 @@
     - name: expression2
       type: expression
 - name: ne
+  encode: array
   type: resolvesToBool
   args:
     - name: expression1
@@ -34,6 +38,7 @@
     - name: expression2
       type: expression
 - name: filter
+  encode: object
   type: resolvesToArray
   usesNamedArgs: true
   args:
@@ -47,3 +52,8 @@
     - name: limit
       type: resolvesToInt
       isOptional: true
+- name: sum
+  type: resolvesToInt
+  args:
+    - name: expression
+      type: expression

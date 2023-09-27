@@ -15,6 +15,9 @@ use function sprintf;
 
 class AndAggregation implements ResolvesToBool
 {
+    public const NAME = '$and';
+    public const ENCODE = 'single';
+
     /** @param list<Expression|mixed> ...$expressions */
     public array $expressions;
 

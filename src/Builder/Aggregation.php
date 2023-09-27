@@ -14,6 +14,7 @@ use MongoDB\Builder\Aggregation\FilterAggregation;
 use MongoDB\Builder\Aggregation\GtAggregation;
 use MongoDB\Builder\Aggregation\LtAggregation;
 use MongoDB\Builder\Aggregation\NeAggregation;
+use MongoDB\Builder\Aggregation\SumAggregation;
 use MongoDB\Builder\Expression\Expression;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToBool;
@@ -60,6 +61,11 @@ final class Aggregation
     public static function ne(mixed $expression1, mixed $expression2): NeAggregation
     {
         return new NeAggregation($expression1, $expression2);
+    }
+
+    public static function sum(mixed $expression): SumAggregation
+    {
+        return new SumAggregation($expression);
     }
 
     /**

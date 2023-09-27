@@ -22,6 +22,9 @@ use function sprintf;
 
 class FilterAggregation implements ResolvesToArray
 {
+    public const NAME = '$filter';
+    public const ENCODE = 'object';
+
     public PackedArray|ResolvesToArray|BSONArray|array $input;
     public ResolvesToBool|bool $cond;
     public ResolvesToString|null|string $as;

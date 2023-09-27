@@ -10,6 +10,9 @@ use MongoDB\Builder\Expression\ResolvesToBool;
 
 class GtAggregation implements ResolvesToBool
 {
+    public const NAME = '$gt';
+    public const ENCODE = 'array';
+
     public mixed $expression1;
     public mixed $expression2;
 

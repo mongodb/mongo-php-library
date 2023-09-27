@@ -4,13 +4,13 @@
  * THIS FILE IS AUTO-GENERATED. ANY CHANGES WILL BE LOST!
  */
 
-namespace MongoDB\Builder\Query;
+namespace MongoDB\Builder\Aggregation;
 
-use MongoDB\Builder\Expression\Expression;
+use MongoDB\Builder\Expression\ResolvesToInt;
 
-class ExprQuery implements Expression
+class SumAggregation implements ResolvesToInt
 {
-    public const NAME = '$expr';
+    public const NAME = '$sum';
     public const ENCODE = 'single';
 
     public mixed $expression;

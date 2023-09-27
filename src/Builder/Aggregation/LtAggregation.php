@@ -10,6 +10,9 @@ use MongoDB\Builder\Expression\ResolvesToBool;
 
 class LtAggregation implements ResolvesToBool
 {
+    public const NAME = '$lt';
+    public const ENCODE = 'array';
+
     public mixed $expression1;
     public mixed $expression2;
 

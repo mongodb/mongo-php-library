@@ -1,14 +1,27 @@
 - name: match
+  type: stage
   args:
-    - name: matchExpr
+    - name: query
       type: expression
-      isVariadic: true
-      variadicMin: 1
 - name: sort
+  type: stage
   args:
     - name: sortSpecification
       type: resolvesToObject
 - name: limit
+  type: stage
   args:
     - name: limit
       type: resolvesToInt
+- name: group
+  type: stage
+  encode: object
+  args:
+    # @todo _id is not optional but only nullable
+    - name: _id
+      type: expression
+      isOptional: true
+    # @todo fields are optional and encoded at the same level as _id
+    - name: fields
+      type: resolvesToObject
+      isOptional: true

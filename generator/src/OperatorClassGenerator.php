@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
+use MongoDB\Builder\Stage\Stage;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
 use Nette\PhpGenerator\PhpNamespace;
@@ -28,6 +29,10 @@ class OperatorClassGenerator extends OperatorGenerator
         $namespace = new PhpNamespace($definition->namespace);
         $class = $namespace->addClass($this->getOperatorClassName($definition, $operator));
         $class->setImplements($this->getInterfaces($operator));
+
+        // Expose operator metadata as constants
+        $class->addConstant('NAME', '$' . $operator->name);
+        $class->addConstant('ENCODE', $operator->encode ?? 'single');
 
         $constuctor = $class->addMethod('__construct');
         foreach ($operator->arguments as $argument) {
@@ -91,6 +96,10 @@ class OperatorClassGenerator extends OperatorGenerator
     {
         if ($definition->type === null) {
             return [];
+        }
+
+        if ($definition->type === 'stage') {
+            return ['\\' . Stage::class];
         }
 
         $interface = $this->getExpressionTypeInterface($definition->type);

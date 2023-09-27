@@ -10,6 +10,9 @@ use MongoDB\Builder\Expression\ResolvesToBool;
 
 class NeAggregation implements ResolvesToBool
 {
+    public const NAME = '$ne';
+    public const ENCODE = 'array';
+
     public mixed $expression1;
     public mixed $expression2;
 

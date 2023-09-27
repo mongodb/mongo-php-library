@@ -10,6 +10,9 @@ use MongoDB\Builder\Expression\ResolvesToBool;
 
 class EqAggregation implements ResolvesToBool
 {
+    public const NAME = '$eq';
+    public const ENCODE = 'array';
+
     public mixed $expression1;
     public mixed $expression2;
 

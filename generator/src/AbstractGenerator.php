@@ -22,7 +22,6 @@ use function sprintf;
 use function str_replace;
 use function str_starts_with;
 
-/** @internal */
 abstract class AbstractGenerator
 {
     protected Printer $printer;
@@ -33,6 +32,11 @@ abstract class AbstractGenerator
         $this->printer = new PsrPrinter();
     }
 
+    /**
+     * Split the namespace and class name from a fully qualified class name.
+     *
+     * @return array{0: string, 1: string}
+     */
     final protected function splitNamespaceAndClassName(string $fqcn): array
     {
         $parts = explode('\\', $fqcn);
@@ -41,7 +45,7 @@ abstract class AbstractGenerator
         return [implode('\\', $parts), $className];
     }
 
-    protected function writeFile(PhpNamespace $namespace): void
+    final protected function writeFile(PhpNamespace $namespace): void
     {
         $classes = $namespace->getClasses();
         if (count($classes) !== 1) {
@@ -72,7 +76,7 @@ abstract class AbstractGenerator
     {
         $fqcn = implode('\\', $fqcn);
 
-        // Config from composer.json
+        // Config from composer.json autoload
         $config = [
             'MongoDB\\Tests\\' => 'tests/',
             'MongoDB\\' => 'src/',

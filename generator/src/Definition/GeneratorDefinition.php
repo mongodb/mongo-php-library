@@ -21,15 +21,10 @@ final readonly class GeneratorDefinition
          */
         public readonly string $generatorClass,
         public readonly string $namespace,
-        public readonly string $filePath,
         public readonly string $classNameSuffix = '',
         public readonly array $interfaces = [],
         public readonly ?string $parentClass = null,
     ) {
-        if (str_ends_with($this->filePath, '/')) {
-            throw new InvalidArgumentException(sprintf('File path must not end with "/". Got "%s".', $this->filePath));
-        }
-
         if (! str_starts_with($this->namespace, 'MongoDB\\')) {
             throw new InvalidArgumentException(sprintf('Namespace must start with "MongoDB\\". Got "%s".', $this->namespace));
         }

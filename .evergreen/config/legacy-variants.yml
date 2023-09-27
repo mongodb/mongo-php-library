@@ -261,19 +261,6 @@ buildvariants:
       - name: "test-replica_set"
       - name: "test-sharded_cluster"
 
-  # Test all topologies and MongoDB versions with latest-stable PHP and PHPC on Debian
-  - matrix_name: "test-mongodb-versions"
-    matrix_spec: { "os": ["debian92", "debian11"], "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
-    display_name: "${os}, ${mongodb-versions}, ${php-edge-versions}, ${driver-versions}"
-    exclude_spec:
-      # Debian 9.2 only supports up to MongoDB 5.0
-      - { "os": "debian92", "mongodb-versions": ["6.0", "7.0", "rapid", "latest"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
-      - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4", "5.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
-    tasks:
-      - name: "test-standalone"
-      - name: "test-replica_set"
-      - name: "test-sharded_cluster"
-
   # Test oldest-supported PHP, MongoDB, and driver versions with lowest dependencies on Debian
   - matrix_name: "test-oldest-supported"
     matrix_spec: { "os": "debian92", "mongodb-edge-versions": "oldest-supported", "php-edge-versions": "oldest-supported", "driver-versions": "oldest-supported", "dependencies": "lowest" }

@@ -7,3 +7,4 @@ tasks:
         vars:
           PHP_VERSION: "8.2"
       - func: "compile extension"
+      - func: "upload extension"

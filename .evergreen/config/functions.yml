@@ -56,6 +56,62 @@ functions:
       params:
         file: src/expansion.yml
 
+  # Upload build artifacts that other tasks may depend on
+  # Note this URL needs to be totally unique, while predictable for the next task
+  # so it can automatically download the artifacts
+  "upload extension":
+    # Copy compiled extension to source directory for archiving
+    - command: subprocess.exec
+      type: setup
+      params:
+        working_dir: "src"
+        binary: bash
+        args:
+          - -c
+          - cp `${PHP_PATH}/bin/php -r "echo ini_get('extension_dir');"`/mongodb.so .
+    # Compress and upload the entire build directory
+    - command: archive.targz_pack
+      params:
+        target: "${build_id}.tar.gz"
+        source_dir: src
+        include:
+          - "mongodb.so"
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: ${content_type|application/x-gzip}
+        permissions: public-read
+        local_file: ${build_id}.tar.gz
+        remote_file: mongo-php-driver/${build_variant}/${revision}/${task_name}/${version}.tar.gz
+        # TODO: Use separate folder for the library once it exists
+#        remote_file: ${project}/${build_variant}/${revision}/${task_name}/${version}.tar.gz
+
+  "fetch extension":
+    - command: s3.get
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        # TODO: Use separate folder for the library once it exists
+        remote_file: mongo-php-driver/${FETCH_BUILD_VARIANT}/${revision}/${FETCH_BUILD_TASK}/${version}.tar.gz
+#        remote_file: ${project}/${FETCH_BUILD_VARIANT}/${revision}/${FETCH_BUILD_TASK}/${version}.tar.gz
+        local_file: build.tar.gz
+    - command: archive.targz_extract
+      params:
+        destination: src
+        path: build.tar.gz
+    # Move compiled extension to correct ini path
+    - command: subprocess.exec
+      type: setup
+      params:
+        working_dir: "src"
+        binary: bash
+        args:
+          - -c
+          - mv mongodb.so `${PHP_PATH}/bin/php -r "echo ini_get('extension_dir');"`
+
   "prepare resources":
     - command: shell.exec
       params:

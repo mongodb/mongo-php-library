@@ -32,3 +32,41 @@ buildvariants:
       - ".standalone .local !.6.0 !.7.0 !.rapid !.latest"
       - ".replicaset .local !.6.0 !.7.0 !.rapid !.latest"
       - ".sharded .local !.6.0 !.7.0 !.rapid !.latest"
+
+  # Test remaining PHP versions with replica sets on Debian 11 with MongoDB 7.0
+  - name: test-debian11-php81-local
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 11, PHP 8.1"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-8.1"
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-8.1"
+    tasks:
+      - ".replicaset .local .7.0 .auth"
+  - name: test-debian11-php80-local
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 11, PHP 8.0"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-8.0"
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-8.0"
+    tasks:
+      - ".replicaset .local .7.0 .auth"
+  - name: test-debian11-php74-local
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 11, PHP 7.4"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-7.4"
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-7.4"
+    tasks:
+      - ".replicaset .local .7.0 .auth"

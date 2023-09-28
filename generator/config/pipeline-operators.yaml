@@ -48,10 +48,9 @@
 - name: filter
   encode: object
   type: resolvesToArray
-  usesNamedArgs: true
   args:
     - name: input
-      type: [resolvesToArray, fieldPath]
+      type: resolvesToArray
     - name: cond
       type: resolvesToBool
     - name: as

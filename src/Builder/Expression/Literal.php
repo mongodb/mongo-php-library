@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-final class Literal implements Expression
+class Literal implements ExpressionInterface
 {
     public const ACCEPTED_TYPES = ['mixed'];
 

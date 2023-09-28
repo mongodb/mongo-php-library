@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-class FieldPath implements ExpressionInterface
+class DecimalFieldPath extends FieldPath implements ResolvesToDecimal
 {
     public const ACCEPTED_TYPES = ['string'];
 

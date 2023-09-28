@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
-use MongoDB\Builder\Stage\Stage;
+use MongoDB\Builder\Stage\StageInterface;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
 use Nette\PhpGenerator\PhpNamespace;
@@ -27,10 +27,17 @@ class OperatorClassGenerator extends OperatorGenerator
     public function createClass(GeneratorDefinition $definition, OperatorDefinition $operator): PhpNamespace
     {
         $namespace = new PhpNamespace($definition->namespace);
+
+        $interfaces = $this->getInterfaces($operator);
+        foreach ($interfaces as $interface) {
+            $namespace->addUse($interface);
+        }
+
         $class = $namespace->addClass($this->getOperatorClassName($definition, $operator));
-        $class->setImplements($this->getInterfaces($operator));
+        $class->setImplements($interfaces);
 
         // Expose operator metadata as constants
+        // @todo move to encoder class
         $class->addConstant('NAME', '$' . $operator->name);
         $class->addConstant('ENCODE', $operator->encode ?? 'single');
 
@@ -99,7 +106,7 @@ class OperatorClassGenerator extends OperatorGenerator
         }
 
         if ($definition->type === 'stage') {
-            return ['\\' . Stage::class];
+            return ['\\' . StageInterface::class];
         }
 
         $interface = $this->getExpressionTypeInterface($definition->type);

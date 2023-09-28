@@ -6,9 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\BSON\Int64;
-
 interface ResolvesToFloat extends ResolvesToNumber
 {
-    public const ACCEPTED_TYPES = ['int', 'float', Int64::class];
+    public const ACCEPTED_TYPES = ['int', 'float', \MongoDB\BSON\Int64::class];
 }

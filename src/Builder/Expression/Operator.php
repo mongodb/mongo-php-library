@@ -6,10 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\BSON\Document;
-use MongoDB\BSON\Serializable;
-
-interface Operator extends Expression
+interface Operator extends ExpressionInterface
 {
-    public const ACCEPTED_TYPES = ['array', 'stdClass', Document::class, Serializable::class];
+    public const ACCEPTED_TYPES = ['array', 'stdClass', \MongoDB\BSON\Document::class, \MongoDB\BSON\Serializable::class];
 }

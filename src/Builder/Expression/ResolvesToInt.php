@@ -6,9 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\BSON\Int64;
-
 interface ResolvesToInt extends ResolvesToNumber
 {
-    public const ACCEPTED_TYPES = ['int', Int64::class];
+    public const ACCEPTED_TYPES = ['int', \MongoDB\BSON\Int64::class];
 }

@@ -12,7 +12,6 @@ To run the generator, you need to have PHP 8.2+ installed and Composer.
 1. Move to the `generator` directory: `cd generator`
 1. Install dependencies: `composer install`
 1. Run the generator: `bin/console generate`
-1. To apply the coding standards of the project, run `vendor/bin/phpcbf` from the root of the repository: `cd .. && vendor/bin/phpcbf`
 
 ## Configuration
 

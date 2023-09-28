@@ -6,6 +6,7 @@ namespace MongoDB\CodeGenerator\Command;
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\ExpressionClassGenerator;
+use MongoDB\CodeGenerator\ExpressionFactoryGenerator;
 use MongoDB\CodeGenerator\OperatorGenerator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -52,12 +53,16 @@ final class GenerateCommand extends Command
         $config = require $this->configDir . '/expressions.php';
         assert(is_array($config));
 
+        $definitions = [];
         $generator = new ExpressionClassGenerator($this->rootDir);
         foreach ($config as $name => $def) {
             assert(is_array($def));
-            $def = new ExpressionDefinition($name, ...$def);
+            $definitions[$name] = $def = new ExpressionDefinition($name, ...$def);
             $generator->generate($def);
         }
+
+        $generator = new ExpressionFactoryGenerator($this->rootDir);
+        $generator->generate($definitions);
     }
 
     private function generate(array $def, OutputInterface $output): void

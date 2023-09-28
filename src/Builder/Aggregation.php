@@ -16,8 +16,7 @@ use MongoDB\Builder\Aggregation\GteAggregation;
 use MongoDB\Builder\Aggregation\LtAggregation;
 use MongoDB\Builder\Aggregation\NeAggregation;
 use MongoDB\Builder\Aggregation\SumAggregation;
-use MongoDB\Builder\Expression\Expression;
-use MongoDB\Builder\Expression\FieldPath;
+use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToBool;
 use MongoDB\Builder\Expression\ResolvesToInt;
@@ -26,50 +25,78 @@ use MongoDB\Model\BSONArray;
 
 final class Aggregation
 {
+    /**
+     * @param ExpressionInterface|mixed ...$expressions
+     */
     public static function and(mixed ...$expressions): AndAggregation
     {
         return new AndAggregation(...$expressions);
     }
 
+    /**
+     * @param ExpressionInterface|mixed $expression1
+     * @param ExpressionInterface|mixed $expression2
+     */
     public static function eq(mixed $expression1, mixed $expression2): EqAggregation
     {
         return new EqAggregation($expression1, $expression2);
     }
 
     /**
-     * @param BSONArray|FieldPath|PackedArray|ResolvesToArray|list<Expression|mixed>|string $input
-     * @param ResolvesToString|string|null                                                  $as
-     * @param Int64|ResolvesToInt|int|null                                                  $limit
+     * @param BSONArray|PackedArray|ResolvesToArray|list<Expression|mixed> $input
+     * @param ResolvesToBool|bool $cond
+     * @param ResolvesToString|null|string $as
+     * @param Int64|ResolvesToInt|int|null $limit
      */
     public static function filter(
-        PackedArray|FieldPath|ResolvesToArray|BSONArray|array|string $input,
+        PackedArray|ResolvesToArray|BSONArray|array $input,
         ResolvesToBool|bool $cond,
         ResolvesToString|null|string $as = null,
         Int64|ResolvesToInt|int|null $limit = null,
-    ): FilterAggregation {
+    ): FilterAggregation
+    {
         return new FilterAggregation($input, $cond, $as, $limit);
     }
 
+    /**
+     * @param ExpressionInterface|mixed $expression1
+     * @param ExpressionInterface|mixed $expression2
+     */
     public static function gt(mixed $expression1, mixed $expression2): GtAggregation
     {
         return new GtAggregation($expression1, $expression2);
     }
 
+    /**
+     * @param ExpressionInterface|mixed $expression1
+     * @param ExpressionInterface|mixed $expression2
+     */
     public static function gte(mixed $expression1, mixed $expression2): GteAggregation
     {
         return new GteAggregation($expression1, $expression2);
     }
 
+    /**
+     * @param ExpressionInterface|mixed $expression1
+     * @param ExpressionInterface|mixed $expression2
+     */
     public static function lt(mixed $expression1, mixed $expression2): LtAggregation
     {
         return new LtAggregation($expression1, $expression2);
     }
 
+    /**
+     * @param ExpressionInterface|mixed $expression1
+     * @param ExpressionInterface|mixed $expression2
+     */
     public static function ne(mixed $expression1, mixed $expression2): NeAggregation
     {
         return new NeAggregation($expression1, $expression2);
     }
 
+    /**
+     * @param ExpressionInterface|mixed $expression
+     */
     public static function sum(mixed $expression): SumAggregation
     {
         return new SumAggregation($expression);

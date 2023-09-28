@@ -2,6 +2,6 @@
 
 namespace MongoDB\Builder\Stage;
 
-interface Stage
+interface StageInterface
 {
 }

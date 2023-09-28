@@ -6,13 +6,18 @@
 
 namespace MongoDB\Builder\Stage;
 
-class MatchStage implements Stage
+use MongoDB\Builder\Expression\ExpressionInterface;
+
+class MatchStage implements StageInterface
 {
     public const NAME = '$match';
     public const ENCODE = 'single';
 
     public mixed $query;
 
+    /**
+     * @param ExpressionInterface|mixed $query
+     */
     public function __construct(mixed $query)
     {
         $this->query = $query;

@@ -12,7 +12,6 @@ use function ltrim;
 use function str_replace;
 use function usort;
 
-/** @internal */
 final class OperatorFactoryGenerator extends OperatorGenerator
 {
     public function generate(GeneratorDefinition $definition): void

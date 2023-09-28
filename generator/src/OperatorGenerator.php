@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace MongoDB\CodeGenerator;
 
 use InvalidArgumentException;
-use MongoDB\Builder\Expression\Expression;
+use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\CodeGenerator\Definition\ArgumentDefinition;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
@@ -46,12 +46,16 @@ abstract class OperatorGenerator extends AbstractGenerator
         return ucfirst($operator->name) . $definition->classNameSuffix;
     }
 
-    /** @return class-string<Expression> */
+    /** @return class-string<ExpressionInterface> */
     final protected function getExpressionTypeInterface(string $type): string
     {
+        if ('expression' === $type) {
+            return ExpressionInterface::class;
+        }
+
         $interface = 'MongoDB\\Builder\\Expression\\' . ucfirst($type);
 
-        if ($interface !== Expression::class && ! is_subclass_of($interface, Expression::class)) {
+        if (! is_subclass_of($interface, ExpressionInterface::class)) {
             throw new InvalidArgumentException(sprintf('Invalid expression type "%s".', $type));
         }
 
@@ -80,7 +84,7 @@ abstract class OperatorGenerator extends AbstractGenerator
                 $listCheck = true;
                 $nativeTypes[$key] = 'array';
                 $docTypes[$key] = 'list<Expression|mixed>';
-                $use[] = '\\' . Expression::class;
+                $use[] = '\\' . ExpressionInterface::class;
                 continue;
             }
 

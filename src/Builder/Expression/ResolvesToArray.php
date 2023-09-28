@@ -6,10 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\BSON\PackedArray;
-use MongoDB\Model\BSONArray;
-
-interface ResolvesToArray extends Expression
+interface ResolvesToArray extends ExpressionInterface
 {
-    public const ACCEPTED_TYPES = ['list', BSONArray::class, PackedArray::class];
+    public const ACCEPTED_TYPES = ['list', \MongoDB\Model\BSONArray::class, \MongoDB\BSON\PackedArray::class];
 }

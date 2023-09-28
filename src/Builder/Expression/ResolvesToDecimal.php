@@ -6,10 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\BSON\Decimal128;
-use MongoDB\BSON\Int64;
-
 interface ResolvesToDecimal extends ResolvesToNumber
 {
-    public const ACCEPTED_TYPES = ['int', 'float', Int64::class, Decimal128::class];
+    public const ACCEPTED_TYPES = ['int', 'float', \MongoDB\BSON\Int64::class, \MongoDB\BSON\Decimal128::class];
 }

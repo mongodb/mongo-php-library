@@ -8,10 +8,10 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Expression\Expression;
+use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToObject;
 
-class GroupStage implements Stage
+class GroupStage implements StageInterface
 {
     public const NAME = '$group';
     public const ENCODE = 'object';
@@ -20,8 +20,8 @@ class GroupStage implements Stage
     public array|null|object $fields;
 
     /**
-     * @param Expression|mixed|null                                    $_id
-     * @param Document|ResolvesToObject|Serializable|array|object|null $fields
+     * @param ExpressionInterface|mixed|null $_id
+     * @param Document|ResolvesToObject|Serializable|array|null|object $fields
      */
     public function __construct(mixed $_id = null, array|null|object $fields = null)
     {

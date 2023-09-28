@@ -13,7 +13,7 @@ use function sprintf;
 use function str_contains;
 
 /**
- * Generates a value object class for stages and operators.
+ * Generates a value object class for expressions
  */
 class ExpressionClassGenerator extends AbstractGenerator
 {
@@ -22,10 +22,6 @@ class ExpressionClassGenerator extends AbstractGenerator
         $this->writeFile($this->createClassOrInterface($definition));
     }
 
-    /**
-     * @param string $className
-     * @return object{$class:ClassType|InterfaceType, $use:
-     */
     public function createClassOrInterface(ExpressionDefinition $definition): PhpNamespace
     {
         [$namespace, $className] = $this->splitNamespaceAndClassName($definition->name);
@@ -45,7 +41,9 @@ class ExpressionClassGenerator extends AbstractGenerator
         if ($definition->class) {
             $class = $namespace->addClass($className);
             $class->setImplements($definition->implements);
-            $class->setFinal();
+            if ($definition->extends) {
+                $class->setExtends($definition->extends);
+            }
 
             // Replace with promoted property in PHP 8
             $propertyType = Type::union(...$types);
@@ -61,6 +59,7 @@ class ExpressionClassGenerator extends AbstractGenerator
             $class->setExtends($definition->implements);
         }
 
+        // @todo add namespace use for types classes & interfaces
         $types = array_map(
             function (string $type): string|Literal {
                 if (str_contains($type, '\\')) {

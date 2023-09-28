@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-final class Variable implements Expression
+class Variable implements ExpressionInterface
 {
     public const ACCEPTED_TYPES = ['string'];
 

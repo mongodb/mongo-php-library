@@ -3,16 +3,15 @@
 namespace MongoDB\Builder;
 
 use LogicException;
-use MongoDB\Builder\Expression\Expression;
+use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Expression\Variable;
 use MongoDB\Builder\Query\OrQuery;
 use MongoDB\Builder\Stage\GroupStage;
 use MongoDB\Builder\Stage\ProjectStage;
-use MongoDB\Builder\Stage\Stage;
-use MongoDB\Codec\Codec;
-use MongoDB\Codec\DecodeIfSupported;
+use MongoDB\Builder\Stage\StageInterface;
 use MongoDB\Codec\EncodeIfSupported;
+use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 use stdClass;
 
@@ -21,9 +20,8 @@ use function array_merge;
 use function is_array;
 use function sprintf;
 
-class BuilderCodec implements Codec
+class BuilderEncoder implements Encoder
 {
-    use DecodeIfSupported;
     use EncodeIfSupported;
 
     /** The first property is the operator value */
@@ -35,19 +33,9 @@ class BuilderCodec implements Codec
     /** Properties are encoded as a list of values, names are ignored */
     public const ENCODE_AS_ARRAY = 'array';
 
-    public function canDecode($value): false
-    {
-        return false;
-    }
-
     public function canEncode($value): bool
     {
-        return $value instanceof Pipeline || $value instanceof Stage || $value instanceof Expression;
-    }
-
-    public function decode($value)
-    {
-        throw UnsupportedValueException::invalidDecodableValue($value);
+        return $value instanceof Pipeline || $value instanceof StageInterface || $value instanceof ExpressionInterface;
     }
 
     public function encode($value): array|stdClass|string|int|float|bool|null

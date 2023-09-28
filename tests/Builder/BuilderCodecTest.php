@@ -4,7 +4,7 @@ namespace MongoDB\Tests\Builder;
 
 use Generator;
 use MongoDB\Builder\Aggregation;
-use MongoDB\Builder\BuilderCodec;
+use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Query;
@@ -13,7 +13,7 @@ use MongoDB\Tests\TestCase;
 
 use function array_merge;
 
-class BuiderCodecTest extends TestCase
+class BuilderCodecTest extends TestCase
 {
     public function testPipeline(): void
     {
@@ -72,7 +72,7 @@ class BuiderCodecTest extends TestCase
         $pipeline = new Pipeline(
             Stage::project([
                 'items' => Aggregation::filter(
-                    input: Expression::fieldPath('items'),
+                    input: Expression::arrayFieldPath('items'),
                     cond: Aggregation::gte(Expression::variable('item.price'), 100),
                     as: 'item',
                     limit: $limit,
@@ -112,9 +112,10 @@ class BuiderCodecTest extends TestCase
 
     private static function assertSamePipeline(array $expected, Pipeline $pipeline): void
     {
-        $codec = new BuilderCodec();
+        $codec = new BuilderEncoder();
         $actual = $codec->encode($pipeline);
 
+        // @todo walk in array to cast associative array to an object
         self::assertEquals($expected, $actual);
     }
 }

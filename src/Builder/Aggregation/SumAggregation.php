@@ -6,6 +6,7 @@
 
 namespace MongoDB\Builder\Aggregation;
 
+use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToInt;
 
 class SumAggregation implements ResolvesToInt
@@ -15,6 +16,9 @@ class SumAggregation implements ResolvesToInt
 
     public mixed $expression;
 
+    /**
+     * @param ExpressionInterface|mixed $expression
+     */
     public function __construct(mixed $expression)
     {
         $this->expression = $expression;

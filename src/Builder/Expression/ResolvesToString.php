@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-interface ResolvesToString extends Expression
+interface ResolvesToString extends ExpressionInterface
 {
     public const ACCEPTED_TYPES = ['string'];
 }

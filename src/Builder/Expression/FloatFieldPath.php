@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-class FieldPath implements ExpressionInterface
+class FloatFieldPath extends FieldPath implements ResolvesToFloat
 {
     public const ACCEPTED_TYPES = ['string'];
 

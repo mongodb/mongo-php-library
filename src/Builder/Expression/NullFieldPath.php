@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-class FieldPath implements ExpressionInterface
+class NullFieldPath extends FieldPath implements ResolvesToNull
 {
     public const ACCEPTED_TYPES = ['string'];
 

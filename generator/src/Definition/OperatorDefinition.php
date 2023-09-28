@@ -19,7 +19,6 @@ final readonly class OperatorDefinition
         public string $name,
         public ?string $encode = null,
         public ?string $type = null,
-        public bool $usesNamedArgs = false,
         array $args = [],
     ) {
         if ($encode === null && count($args) !== 1) {

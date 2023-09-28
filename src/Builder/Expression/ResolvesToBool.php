@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-interface ResolvesToBool extends Expression
+interface ResolvesToBool extends ExpressionInterface
 {
     public const ACCEPTED_TYPES = ['bool'];
 }

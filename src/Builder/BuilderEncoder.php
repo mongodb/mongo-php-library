@@ -124,17 +124,6 @@ class BuilderEncoder implements Encoder
         throw new LogicException(sprintf('Class "%s" does not have a valid ENCODE constant.', $value::class));
     }
 
-    private function encodeAsSingle($value): stdClass
-    {
-        $result = [];
-        foreach ($value as $val) {
-            $result = $this->encodeIfSupported($val);
-            break;
-        }
-
-        return (object) [$value::NAME => $result];
-    }
-
     private function encodeAsArray($value): stdClass
     {
         $result = [];
@@ -153,6 +142,17 @@ class BuilderEncoder implements Encoder
             if ($val !== null) {
                 $result->{$key} = $val;
             }
+        }
+
+        return (object) [$value::NAME => $result];
+    }
+
+    private function encodeAsSingle($value): stdClass
+    {
+        $result = [];
+        foreach ($value as $val) {
+            $result = $this->encodeIfSupported($val);
+            break;
         }
 
         return (object) [$value::NAME => $result];

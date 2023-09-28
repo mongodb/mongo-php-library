@@ -33,6 +33,12 @@ post: &test_teardown
   - func: "stop mongo-orchestration"
   - func: "cleanup"
 
+# Define aliases for patch builds and PR builds. These only apply if no aliases are defined in project settings
+github_pr_aliases:
+  # Run tests on debian, only testing local replicasets
+  - variant: "test-.*"
+    task: "test-mongodb-.*-replicaset"
+
 # Include files that contain various tasks, task groups, and build variant definitions
 include:
   - filename: .evergreen/config/functions.yml

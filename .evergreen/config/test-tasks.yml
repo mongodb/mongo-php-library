@@ -5,3 +5,11 @@ tasks:
       - func: "run tests"
         vars:
           TESTS: "atlas"
+
+  - name: "test-serverless"
+    tags: ["serverless"]
+    commands:
+      - func: "create serverless instance"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run serverless tests"

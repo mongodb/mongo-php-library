@@ -18,6 +18,7 @@ buildvariants:
       - ".standalone .local !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
       - ".replicaset .local !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
       - ".sharded .local !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      - ".serverless"
   - name: test-debian92-php82-local
     tags: ["test", "debian", "x64"]
     display_name: "Test: Debian 9.2, PHP 8.2"

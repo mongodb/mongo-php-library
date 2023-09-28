@@ -113,12 +113,6 @@ buildvariants:
     tasks:
       - .versioned-api
 
-  - matrix_name: "serverless"
-    matrix_spec: { "os": "debian11", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
-    display_name: "Serverless"
-    tasks:
-      - .serverless
-
   - matrix_name: "test-loadBalanced"
     matrix_spec: { "os": "debian11", "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
     display_name: "Load balanced - ${mongodb-versions}"

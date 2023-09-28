@@ -1,5 +1,0 @@
-tasks:
-  - name: "test-atlas-data-lake"
-    commands:
-      - func: "bootstrap mongohoused"
-      - func: "run atlas data lake test"

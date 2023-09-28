@@ -13,3 +13,8 @@ tasks:
       - func: "start kms servers"
       - func: "set aws temp creds"
       - func: "run serverless tests"
+
+  - name: "test-atlas-data-lake"
+    commands:
+      - func: "bootstrap mongohoused"
+      - func: "run atlas data lake test"

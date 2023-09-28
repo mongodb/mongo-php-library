@@ -11,7 +11,10 @@ use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
 use MongoDB\Tests\TestCase;
 
+use function array_is_list;
 use function array_merge;
+use function array_walk;
+use function is_array;
 
 class BuilderCodecTest extends TestCase
 {
@@ -24,9 +27,9 @@ class BuilderCodecTest extends TestCase
         );
 
         $expected = [
-            (object) ['$match' => (object) ['$eq' => ['$foo', 1]]],
-            (object) ['$match' => (object) ['$ne' => ['$foo', 2]]],
-            (object) ['$limit' => 1],
+            ['$match' => ['$eq' => ['$foo', 1]]],
+            ['$match' => ['$ne' => ['$foo', 2]]],
+            ['$limit' => 1],
         ];
 
         $this->assertSamePipeline($expected, $pipeline);
@@ -44,18 +47,18 @@ class BuilderCodecTest extends TestCase
         );
 
         $expected = [
-            (object) [
-                '$match' => (object) [
+            [
+                '$match' => [
                     '$or' => [
-                        (object) ['score' => (object) ['$gt' => 70, '$lt' => 90]],
-                        (object) ['views' => (object) ['$gte' => 1000]],
+                        ['score' => ['$gt' => 70, '$lt' => 90]],
+                        ['views' => ['$gte' => 1000]],
                     ],
                 ],
             ],
-            (object) [
-                '$group' => (object) [
+            [
+                '$group' => [
                     '_id' => null,
-                    'count' => (object) ['$sum' => 1],
+                    'count' => ['$sum' => 1],
                 ],
             ],
         ];
@@ -81,13 +84,13 @@ class BuilderCodecTest extends TestCase
         );
 
         $expected = [
-            (object) [
-                '$project' => (object) [
-                    'items' => (object) [
-                        '$filter' => (object) array_merge([
+            [
+                '$project' => [
+                    'items' => [
+                        '$filter' => array_merge([
                             'input' => '$items',
                             'as' => 'item',
-                            'cond' => (object) ['$gte' => ['$$item.price', 100]],
+                            'cond' => ['$gte' => ['$$item.price', 100]],
                         ], $expectedLimit),
                     ],
                 ],
@@ -115,7 +118,24 @@ class BuilderCodecTest extends TestCase
         $codec = new BuilderEncoder();
         $actual = $codec->encode($pipeline);
 
-        // @todo walk in array to cast associative array to an object
+        self::objectify($expected);
+
         self::assertEquals($expected, $actual);
+    }
+
+    /**
+     * Recursively convert associative arrays to objects.
+     */
+    private static function objectify(array &$array): void
+    {
+        array_walk($array, function (&$value): void {
+            if (is_array($value)) {
+                self::objectify($value);
+
+                if (! array_is_list($value)) {
+                    $value = (object) $value;
+                }
+            }
+        });
     }
 }

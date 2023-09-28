@@ -34,7 +34,7 @@ install_extension ()
       pecl install -f mongodb
    fi
 
-   sudo cp ${PROJECT_DIRECTORY}/.evergreen/config/php.ini ${PHP_PATH}/lib/php.ini
+   cp ${PROJECT_DIRECTORY}/.evergreen/config/php.ini ${PHP_PATH}/lib/php.ini
 
    php --ri mongodb
 }

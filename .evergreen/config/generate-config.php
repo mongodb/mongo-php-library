@@ -19,20 +19,15 @@ $loadBalancedServerVersions = array_filter(
     // Load balanced supports MongoDB 5.0+
     fn (string $version): bool => in_array($version, ['latest', 'rapid']) || version_compare($version, '5.0', '>='),
 );
-$ocspServerVersions = array_filter(
-    $supportedMongoDBVersions,
-    // OCSP supports MongoDB 4.4+
-    fn (string $version): bool => in_array($version, ['latest', 'rapid']) || version_compare($version, '4.4', '>='),
-);
 $requireApiServerVersions = array_filter(
     $supportedMongoDBVersions,
     // requireApiVersion supports MongoDB 5.0+
     fn (string $version): bool => in_array($version, ['latest', 'rapid']) || version_compare($version, '5.0', '>='),
 );
-$skipCryptSharedServerVersions = array_filter(
+$csfleServerVersions = array_filter(
     $supportedMongoDBVersions,
-    // crypt_shared is available starting with MongoDB 6.0
-    fn (string $version): bool => in_array($version, ['latest', 'rapid']) || version_compare($version, '6.0', '>='),
+    // Test CSFLE on MongoDB 4.2+
+    fn (string $version): bool => in_array($version, ['latest', 'rapid']) || version_compare($version, '4.2', '>='),
 );
 
 $allFiles = [];
@@ -44,8 +39,7 @@ $allFiles[] = generateConfigs('build', 'phpVersion', '_template-build-extension.
 $allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-local.yml', 'local-%s', $localServerVersions);
 $allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-load-balanced.yml', 'load-balanced-%s', $loadBalancedServerVersions);
 $allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-require-api-version.yml', 'require-api-version-%s', $requireApiServerVersions);
-//$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-ocsp.yml', 'ocsp-%s', $ocspServerVersions);
-//$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-skip-crypt-shared.yml', 'skip-crypt-shared-%s', $skipCryptSharedServerVersions);
+$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-csfle.yml', 'csfle-%s', $csfleServerVersions);
 
 echo "Generated config. Use the following list to import files:\n";
 echo implode("\n", array_map('getImportConfig', array_merge(...$allFiles))) . "\n";

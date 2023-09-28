@@ -16,7 +16,7 @@ buildvariants:
         name: "build-php-8.2"
     tasks:
       - ".standalone .local !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
-      - ".replicaset .local !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      - ".replicaset .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
       - ".sharded .local !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
       - ".serverless"
   - name: test-debian92-php82-local
@@ -33,7 +33,7 @@ buildvariants:
     tasks:
       # Remember to add new major versions here as they are released
       - ".standalone .local !.6.0 !.7.0 !.rapid !.latest"
-      - ".replicaset .local !.6.0 !.7.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
       - ".sharded .local !.6.0 !.7.0 !.rapid !.latest"
 
   # Test remaining PHP versions with replica sets on Debian 11 with MongoDB 7.0
@@ -49,7 +49,7 @@ buildvariants:
       - variant: "build-debian11"
         name: "build-php-8.1"
     tasks:
-      - ".replicaset .local .7.0"
+      - ".replicaset .local .7.0 !.csfle"
   - name: test-debian11-php80-local
     tags: ["test", "debian", "x64"]
     display_name: "Test: Debian 11, PHP 8.0"
@@ -62,7 +62,7 @@ buildvariants:
       - variant: "build-debian11"
         name: "build-php-8.0"
     tasks:
-      - ".replicaset .local .7.0"
+      - ".replicaset .local .7.0 !.csfle"
   - name: test-debian11-php74-local
     tags: ["test", "debian", "x64"]
     display_name: "Test: Debian 11, PHP 7.4"
@@ -75,7 +75,7 @@ buildvariants:
       - variant: "build-debian11"
         name: "build-php-7.4"
     tasks:
-      - ".replicaset .local .7.0"
+      - ".replicaset .local .7.0 !.csfle"
 
   # Test Atlas Tests on RHEL 8
   - name: test-rhel80-php82-atlas
@@ -90,4 +90,5 @@ buildvariants:
       - variant: "build-rhel80"
         name: "build-php-8.2"
     tasks:
-      - test_atlas_task_group
+      - "test_atlas_task_group"
+      - ".csfle"

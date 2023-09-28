@@ -68,3 +68,10 @@ include:
   - filename: .evergreen/config/test/require-api-version-7.0.yml
   - filename: .evergreen/config/test/require-api-version-6.0.yml
   - filename: .evergreen/config/test/require-api-version-5.0.yml
+  - filename: .evergreen/config/test/csfle-latest.yml
+  - filename: .evergreen/config/test/csfle-rapid.yml
+  - filename: .evergreen/config/test/csfle-7.0.yml
+  - filename: .evergreen/config/test/csfle-6.0.yml
+  - filename: .evergreen/config/test/csfle-5.0.yml
+  - filename: .evergreen/config/test/csfle-4.4.yml
+  - filename: .evergreen/config/test/csfle-4.2.yml

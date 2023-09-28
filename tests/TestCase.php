@@ -70,7 +70,7 @@ OUTPUT;
         $configuration = [
             '%uri%' => $uri,
             '%database%' => static::getDatabaseName(),
-            '%apiVersion%' => getenv('MONGODB_API_VERSION') ?: 'Not configured',
+            '%apiVersion%' => getenv('API_VERSION') ?: 'Not configured',
             '%cryptSharedAvailable%' => FunctionalTestCase::isCryptSharedLibAvailable() ? 'Available' : 'Not available',
             '%mongocryptdAvailable%' => FunctionalTestCase::isMongocryptdAvailable() ? 'Available' : 'Not available',
         ];

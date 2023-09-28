@@ -43,7 +43,7 @@ final class Aggregation
     }
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<Expression|mixed> $input
+     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input
      * @param ResolvesToBool|bool $cond
      * @param ResolvesToString|null|string $as
      * @param Int64|ResolvesToInt|int|null $limit

@@ -86,7 +86,7 @@ abstract class OperatorGenerator extends AbstractGenerator
             if ($typeName === 'list') {
                 $listCheck = true;
                 $nativeTypes[$key] = 'array';
-                $docTypes[$key] = 'list<Expression|mixed>';
+                $docTypes[$key] = 'list<ExpressionInterface|mixed>';
                 $use[] = '\\' . ExpressionInterface::class;
                 continue;
             }

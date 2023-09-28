@@ -84,7 +84,7 @@ class OperatorClassGenerator extends OperatorGenerator
             if ($type->list) {
                 $constuctor->addBody(<<<PHP
                 if (\is_array(\${$argument->name}) && ! \array_is_list(\${$argument->name})) {
-                    throw new \InvalidArgumentException(\sprintf('Expected \${$argument->name} argument to be a list, got an associative array.'));
+                    throw new \InvalidArgumentException('Expected \${$argument->name} argument to be a list, got an associative array.');
                 }
                 PHP);
             }

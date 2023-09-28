@@ -17,9 +17,11 @@ use stdClass;
 
 use function array_is_list;
 use function array_merge;
+use function get_object_vars;
 use function is_array;
 use function sprintf;
 
+/** @template-implements Encoder<Pipeline|StageInterface|ExpressionInterface, stdClass|array|string> */
 class BuilderEncoder implements Encoder
 {
     use EncodeIfSupported;
@@ -44,7 +46,7 @@ class BuilderEncoder implements Encoder
     /**
      * {@inheritdoc}
      */
-    public function encode($value): array|stdClass|string|int|float|bool|null
+    public function encode($value): stdClass|array|string
     {
         if (! $this->canEncode($value)) {
             throw UnsupportedValueException::invalidEncodableValue($value);
@@ -73,11 +75,11 @@ class BuilderEncoder implements Encoder
             $result = new stdClass();
             $result->_id = $this->encodeIfSupported($value->_id);
             // Specific: fields are encoded as a map of properties to their values at the top level as _id
-            foreach ($value->fields as $key => $val) {
+            foreach ($value->fields ?? [] as $key => $val) {
                 $result->{$key} = $this->encodeIfSupported($val);
             }
 
-            return (object) [$value::NAME => $result];
+            return $this->wrap($value, $result);
         }
 
         if ($value instanceof ProjectStage) {
@@ -87,7 +89,7 @@ class BuilderEncoder implements Encoder
                 $result->{$key} = $this->encodeIfSupported($val);
             }
 
-            return (object) [$value::NAME => $result];
+            return $this->wrap($value, $result);
         }
 
         if ($value instanceof OrQuery) {
@@ -112,7 +114,7 @@ class BuilderEncoder implements Encoder
                 $result[] = $encodedQuery;
             }
 
-            return (object) [$value::NAME => $result];
+            return $this->wrap($value, $result);
         }
 
         // The generic but incomplete encoding code
@@ -133,34 +135,47 @@ class BuilderEncoder implements Encoder
     private function encodeAsArray(ExpressionInterface|StageInterface $value): stdClass
     {
         $result = [];
-        foreach ($value as $val) {
+        /** @var mixed $val */
+        foreach (get_object_vars($value) as $val) {
             $result[] = $this->encodeIfSupported($val);
         }
 
-        return (object) [$value::NAME => $result];
+        return $this->wrap($value, $result);
     }
 
     private function encodeAsObject(ExpressionInterface|StageInterface $value): stdClass
     {
         $result = new stdClass();
-        foreach ($value as $key => $val) {
+        /** @var mixed $val */
+        foreach (get_object_vars($value) as $key => $val) {
+            /** @var mixed $val */
             $val = $this->encodeIfSupported($val);
+            // @todo check for undefined value vs null
             if ($val !== null) {
                 $result->{$key} = $val;
             }
         }
 
-        return (object) [$value::NAME => $result];
+        return $this->wrap($value, $result);
     }
 
     private function encodeAsSingle(ExpressionInterface|StageInterface $value): stdClass
     {
         $result = [];
-        foreach ($value as $val) {
+        /** @var mixed $val */
+        foreach (get_object_vars($value) as $val) {
             $result = $this->encodeIfSupported($val);
             break;
         }
 
-        return (object) [$value::NAME => $result];
+        return $this->wrap($value, $result);
+    }
+
+    private function wrap(ExpressionInterface|StageInterface $value, mixed $result): stdClass
+    {
+        $object = new stdClass();
+        $object->{$value::NAME} = $result;
+
+        return $object;
     }
 }

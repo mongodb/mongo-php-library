@@ -26,7 +26,7 @@ class FilterAggregation implements ResolvesToArray
     public Int64|ResolvesToInt|int|null $limit;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<Expression|mixed> $input
+     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input
      * @param ResolvesToBool|bool $cond
      * @param ResolvesToString|null|string $as
      * @param Int64|ResolvesToInt|int|null $limit
@@ -38,7 +38,7 @@ class FilterAggregation implements ResolvesToArray
         Int64|ResolvesToInt|int|null $limit = null,
     ) {
         if (\is_array($input) && ! \array_is_list($input)) {
-            throw new \InvalidArgumentException(\sprintf('Expected $input argument to be a list, got an associative array.'));
+            throw new \InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
         }
         $this->input = $input;
         $this->cond = $cond;

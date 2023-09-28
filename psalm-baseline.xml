@@ -46,6 +46,30 @@
       <code>stdClass</code>
     </MoreSpecificReturnType>
   </file>
+  <file src="src/Builder/BuilderEncoder.php">
+    <MissingTemplateParam>
+      <code>EncodeIfSupported</code>
+    </MissingTemplateParam>
+    <MixedArgument>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+    </MixedArgument>
+    <MixedAssignment>
+      <code>$encoded[]</code>
+      <code>$expr</code>
+      <code>$expression</code>
+      <code>$field</code>
+      <code>$key</code>
+      <code>$key</code>
+      <code>$query</code>
+      <code>$result</code>
+      <code>$result[]</code>
+      <code>$stage</code>
+      <code>$val</code>
+      <code>$val</code>
+    </MixedAssignment>
+  </file>
   <file src="src/ChangeStream.php">
     <DeprecatedConstant>
       <code>self::CURSOR_NOT_FOUND</code>

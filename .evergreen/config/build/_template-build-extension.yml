@@ -1,11 +1,43 @@
 tasks:
   - name: "build-php-%phpVersion%"
-    tags: ["build", "php%phpVersion%"]
+    tags: ["build", "php%phpVersion%", "stable"]
     commands:
       - func: "locate PHP binaries"
         vars:
           PHP_VERSION: "%phpVersion%"
       - func: "compile extension"
+        # TODO: Remove this variable once PHPC 1.17.0 is released
         vars:
           EXTENSION_BRANCH: "master"
       - func: "upload extension"
+# TODO: Re-enable these tasks once PHPC 1.17.0 is released
+#  - name: "build-php-%phpVersion%-lowest"
+#    tags: ["build", "php%phpVersion%", "lowest"]
+#    commands:
+#      - func: "locate PHP binaries"
+#        vars:
+#          PHP_VERSION: "%phpVersion%"
+#      - func: "compile extension"
+#        vars:
+#         EXTENSION_VERSION: "1.17.0"
+#      - func: "upload extension"
+#  - name: "build-php-%phpVersion%-next-stable"
+#    tags: ["build", "php%phpVersion%", "next-stable"]
+#    commands:
+#      - func: "locate PHP binaries"
+#        vars:
+#          PHP_VERSION: "%phpVersion%"
+#      - func: "compile extension"
+#        vars:
+#          EXTENSION_BRANCH: "v1.17"
+#      - func: "upload extension"
+#  - name: "build-php-%phpVersion%-next-minor"
+#    tags: ["build", "php%phpVersion%", "next-minor"]
+#    commands:
+#      - func: "locate PHP binaries"
+#        vars:
+#          PHP_VERSION: "%phpVersion%"
+#      - func: "compile extension"
+#        vars:
+#          EXTENSION_BRANCH: "master"
+#      - func: "upload extension"

@@ -79,7 +79,25 @@ buildvariants:
     tasks:
       - ".replicaset .local .7.0 !.csfle"
 
-  # Test Atlas Tests on RHEL 8
+  # Test with lowest PHP, PHPC, MongoDB, and dependency versions
+  - name: test-debian92-php74-local-lowest
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 9.2, PHP 7.4, Lowest Dependencies"
+    run_on: debian92-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian92"
+      # TODO: Change to build-php-7.4-lowest once PHPC 1.17.0 is released
+      FETCH_BUILD_TASK: "build-php-7.4"
+      PHP_VERSION: "7.4"
+      DEPENDENCIES: "lowest"
+    depends_on:
+      - variant: "build-debian92"
+        # TODO: Change to build-php-7.4-lowest once PHPC 1.17.0 is released
+        name: "build-php-7.4"
+    tasks:
+      - ".replicaset .local .3.6 !.csfle"
+
+  # Test Atlas and CSFLE on RHEL 8
   - name: test-rhel80-php82-atlas
     tags: ["test", "debian", "x64"]
     display_name: "Test: RHEL 8.0, PHP 8.2"

@@ -33,11 +33,17 @@ class BuilderEncoder implements Encoder
     /** Properties are encoded as a list of values, names are ignored */
     public const ENCODE_AS_ARRAY = 'array';
 
+    /**
+     * {@inheritdoc}
+     */
     public function canEncode($value): bool
     {
         return $value instanceof Pipeline || $value instanceof StageInterface || $value instanceof ExpressionInterface;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function encode($value): array|stdClass|string|int|float|bool|null
     {
         if (! $this->canEncode($value)) {
@@ -124,7 +130,7 @@ class BuilderEncoder implements Encoder
         throw new LogicException(sprintf('Class "%s" does not have a valid ENCODE constant.', $value::class));
     }
 
-    private function encodeAsArray($value): stdClass
+    private function encodeAsArray(ExpressionInterface|StageInterface $value): stdClass
     {
         $result = [];
         foreach ($value as $val) {
@@ -134,7 +140,7 @@ class BuilderEncoder implements Encoder
         return (object) [$value::NAME => $result];
     }
 
-    private function encodeAsObject($value): stdClass
+    private function encodeAsObject(ExpressionInterface|StageInterface $value): stdClass
     {
         $result = new stdClass();
         foreach ($value as $key => $val) {
@@ -147,7 +153,7 @@ class BuilderEncoder implements Encoder
         return (object) [$value::NAME => $result];
     }
 
-    private function encodeAsSingle($value): stdClass
+    private function encodeAsSingle(ExpressionInterface|StageInterface $value): stdClass
     {
         $result = [];
         foreach ($value as $val) {

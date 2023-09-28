@@ -8,8 +8,6 @@ namespace MongoDB\Builder\Expression;
 
 class DecimalFieldPath extends FieldPath implements ResolvesToDecimal
 {
-    public const ACCEPTED_TYPES = ['string'];
-
     public string $expression;
 
     public function __construct(string $expression)

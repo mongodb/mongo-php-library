@@ -8,8 +8,6 @@ namespace MongoDB\Builder\Expression;
 
 class IntFieldPath extends FieldPath implements ResolvesToInt
 {
-    public const ACCEPTED_TYPES = ['string'];
-
     public string $expression;
 
     public function __construct(string $expression)

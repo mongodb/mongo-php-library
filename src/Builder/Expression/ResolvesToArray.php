@@ -8,5 +8,4 @@ namespace MongoDB\Builder\Expression;
 
 interface ResolvesToArray extends ExpressionInterface
 {
-    public const ACCEPTED_TYPES = ['list', \MongoDB\Model\BSONArray::class, \MongoDB\BSON\PackedArray::class];
 }

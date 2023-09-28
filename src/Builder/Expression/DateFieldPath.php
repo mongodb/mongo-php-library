@@ -8,8 +8,6 @@ namespace MongoDB\Builder\Expression;
 
 class DateFieldPath extends FieldPath implements ResolvesToDate
 {
-    public const ACCEPTED_TYPES = ['string'];
-
     public string $expression;
 
     public function __construct(string $expression)

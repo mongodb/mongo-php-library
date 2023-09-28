@@ -8,5 +8,4 @@ namespace MongoDB\Builder\Expression;
 
 interface ExpressionInterface
 {
-    public const ACCEPTED_TYPES = ['mixed'];
 }

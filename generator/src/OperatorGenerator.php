@@ -6,17 +6,18 @@ namespace MongoDB\CodeGenerator;
 use InvalidArgumentException;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\CodeGenerator\Definition\ArgumentDefinition;
+use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
 use MongoDB\CodeGenerator\Definition\YamlReader;
 use Nette\PhpGenerator\Type;
 
+use function array_key_exists;
 use function array_merge;
 use function array_unique;
 use function class_exists;
 use function in_array;
 use function interface_exists;
-use function is_subclass_of;
 use function sort;
 use function sprintf;
 use function ucfirst;
@@ -27,6 +28,8 @@ abstract class OperatorGenerator extends AbstractGenerator
 
     final public function __construct(
         string $rootDir,
+        /** @var array<class-string<ExpressionInterface>, ExpressionDefinition> */
+        private array $expressions
     ) {
         parent::__construct($rootDir);
 
@@ -55,7 +58,7 @@ abstract class OperatorGenerator extends AbstractGenerator
 
         $interface = 'MongoDB\\Builder\\Expression\\' . ucfirst($type);
 
-        if (! is_subclass_of($interface, ExpressionInterface::class)) {
+        if (! array_key_exists($interface, $this->expressions)) {
             throw new InvalidArgumentException(sprintf('Invalid expression type "%s".', $type));
         }
 
@@ -72,7 +75,7 @@ abstract class OperatorGenerator extends AbstractGenerator
         $nativeTypes = [];
         foreach ((array) $arg->type as $type) {
             $interface = $this->getExpressionTypeInterface($type);
-            $nativeTypes = array_merge($nativeTypes, [$interface], $interface::ACCEPTED_TYPES);
+            $nativeTypes = array_merge($nativeTypes, [$interface], $this->expressions[$interface]->types);
         }
 
         $docTypes = $nativeTypes = array_unique($nativeTypes);

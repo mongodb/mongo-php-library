@@ -8,5 +8,4 @@ namespace MongoDB\Builder\Expression;
 
 interface ResolvesToNull extends ExpressionInterface
 {
-    public const ACCEPTED_TYPES = ['null'];
 }

@@ -8,5 +8,4 @@ namespace MongoDB\Builder\Expression;
 
 interface ResolvesToDate extends ExpressionInterface
 {
-    public const ACCEPTED_TYPES = ['DateTimeInterface', 'UTCDateTime'];
 }

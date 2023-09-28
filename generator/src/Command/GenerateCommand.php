@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Command;
 
+use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\ExpressionClassGenerator;
@@ -33,20 +34,14 @@ final class GenerateCommand extends Command
     {
         $output->writeln('Generating code for mongodb/mongodb library');
 
-        $this->generateExpressionClasses($output);
-
-        $config = require $this->configDir . '/operators.php';
-        assert(is_array($config));
-
-        foreach ($config as $key => $def) {
-            assert(is_array($def));
-            $this->generate($def, $output);
-        }
+        $expressions = $this->generateExpressionClasses($output);
+        $this->generateOperatorClasses($expressions, $output);
 
         return Command::SUCCESS;
     }
 
-    private function generateExpressionClasses(OutputInterface $output): void
+    /** @return array<class-string<ExpressionInterface>, ExpressionDefinition> */
+    private function generateExpressionClasses(OutputInterface $output): array
     {
         $output->writeln('Generating expression classes');
 
@@ -63,23 +58,32 @@ final class GenerateCommand extends Command
 
         $generator = new ExpressionFactoryGenerator($this->rootDir);
         $generator->generate($definitions);
+
+        return $definitions;
     }
 
-    private function generate(array $def, OutputInterface $output): void
+    /** @param array<class-string<ExpressionInterface>, ExpressionDefinition> $expressions */
+    private function generateOperatorClasses(array $expressions, OutputInterface $output): void
     {
-        $definition = new GeneratorDefinition(...$def);
+        $config = require $this->configDir . '/operators.php';
+        assert(is_array($config));
 
-        $output->writeln(sprintf('Generating classes for %s with %s', basename($definition->configFile), $definition->generatorClass));
+        foreach ($config as $key => $def) {
+            assert(is_array($def));
+            $definition = new GeneratorDefinition(...$def);
 
-        if (! class_exists($definition->generatorClass)) {
-            $output->writeln(sprintf('Generator class %s does not exist', $definition->generatorClass));
+            $output->writeln(sprintf('Generating classes for %s with %s', basename($definition->configFile), $definition->generatorClass));
 
-            return;
+            if (! class_exists($definition->generatorClass)) {
+                $output->writeln(sprintf('Generator class %s does not exist', $definition->generatorClass));
+
+                return;
+            }
+
+            $generatorClass = $definition->generatorClass;
+            $generator = new $generatorClass($this->rootDir, $expressions);
+            assert($generator instanceof OperatorGenerator);
+            $generator->generate($definition);
         }
-
-        $generatorClass = $definition->generatorClass;
-        $generator = new $generatorClass($this->rootDir);
-        assert($generator instanceof OperatorGenerator);
-        $generator->generate($definition);
     }
 }

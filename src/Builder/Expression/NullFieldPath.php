@@ -8,8 +8,6 @@ namespace MongoDB\Builder\Expression;
 
 class NullFieldPath extends FieldPath implements ResolvesToNull
 {
-    public const ACCEPTED_TYPES = ['string'];
-
     public string $expression;
 
     public function __construct(string $expression)

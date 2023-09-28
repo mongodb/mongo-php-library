@@ -8,5 +8,4 @@ namespace MongoDB\Builder\Expression;
 
 interface ResolvesToBool extends ExpressionInterface
 {
-    public const ACCEPTED_TYPES = ['bool'];
 }

@@ -104,24 +104,6 @@ buildvariants:
     tasks:
       - name: "test-atlas-data-lake"
 
-  - matrix_name: "test-requireApiVersion"
-    matrix_spec: { "os": "debian11", "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
-    display_name: "Versioned API - ${mongodb-versions}"
-    exclude_spec:
-      # Stable API is available from MongoDB 5.0+
-      - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
-    tasks:
-      - .versioned-api
-
-  - matrix_name: "test-loadBalanced"
-    matrix_spec: { "os": "debian11", "mongodb-versions": "*", "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
-    display_name: "Load balanced - ${mongodb-versions}"
-    exclude_spec:
-      # Load balancer is available from MongoDB 5.0+
-      - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
-    tasks:
-      - name: "test-loadBalanced"
-
   # CSFLE tests (crypt_shared and mongocryptd) are tested on RHEL 8 as it's the only version that supports
   # 4.2 AND 6.0 (which is required for crypt_shared), as well as a somewhat relevant PHP version.
   # Newer MongoDB version may require adding different operating systems here

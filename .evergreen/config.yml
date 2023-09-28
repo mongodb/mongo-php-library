@@ -58,3 +58,13 @@ include:
   - filename: .evergreen/config/test/local-4.2.yml
   - filename: .evergreen/config/test/local-4.0.yml
   - filename: .evergreen/config/test/local-3.6.yml
+  - filename: .evergreen/config/test/load-balanced-latest.yml
+  - filename: .evergreen/config/test/load-balanced-rapid.yml
+  - filename: .evergreen/config/test/load-balanced-7.0.yml
+  - filename: .evergreen/config/test/load-balanced-6.0.yml
+  - filename: .evergreen/config/test/load-balanced-5.0.yml
+  - filename: .evergreen/config/test/require-api-version-latest.yml
+  - filename: .evergreen/config/test/require-api-version-rapid.yml
+  - filename: .evergreen/config/test/require-api-version-7.0.yml
+  - filename: .evergreen/config/test/require-api-version-6.0.yml
+  - filename: .evergreen/config/test/require-api-version-5.0.yml

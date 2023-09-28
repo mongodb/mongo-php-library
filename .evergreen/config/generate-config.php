@@ -42,9 +42,9 @@ $allFiles[] = generateConfigs('build', 'phpVersion', '_template-build-extension.
 
 // Test tasks
 $allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-local.yml', 'local-%s', $localServerVersions);
-//$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-load-balanced.yml', 'load-balanced-%s', $loadBalancedServerVersions);
+$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-load-balanced.yml', 'load-balanced-%s', $loadBalancedServerVersions);
+$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-require-api-version.yml', 'require-api-version-%s', $requireApiServerVersions);
 //$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-ocsp.yml', 'ocsp-%s', $ocspServerVersions);
-//$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-require-api-version.yml', 'require-api-version-%s', $requireApiServerVersions);
 //$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-skip-crypt-shared.yml', 'skip-crypt-shared-%s', $skipCryptSharedServerVersions);
 
 echo "Generated config. Use the following list to import files:\n";

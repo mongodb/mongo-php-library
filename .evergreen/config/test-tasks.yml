@@ -1,0 +1,7 @@
+tasks:
+  - name: "test-atlas"
+    commands:
+      - func: "start kms servers"
+      - func: "run tests"
+        vars:
+          TESTS: "atlas"

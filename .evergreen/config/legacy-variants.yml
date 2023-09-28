@@ -158,9 +158,3 @@ buildvariants:
       - { "os": "debian11", "mongodb-versions": ["3.6", "4.0", "4.2", "4.4", "5.0"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
     tasks:
       - name: "test-without_aws_creds"
-
-  - matrix_name: rhel8-test-atlas
-    matrix_spec: { "os": ["rhel80"], "php-edge-versions": "latest-stable", "driver-versions": "latest-stable" }
-    display_name: Atlas Tests
-    tasks:
-      - test_atlas_task_group

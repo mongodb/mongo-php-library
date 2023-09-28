@@ -75,3 +75,18 @@ buildvariants:
         name: "build-php-7.4"
     tasks:
       - ".replicaset .local .7.0"
+
+  # Test Atlas Tests on RHEL 8
+  - name: test-rhel80-php82-atlas
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: RHEL 8.0, PHP 8.2"
+    run_on: rhel80-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-rhel80"
+      FETCH_BUILD_TASK: "build-php-8.2"
+      PHP_VERSION: "8.2"
+    depends_on:
+      - variant: "build-rhel80"
+        name: "build-php-8.2"
+    tasks:
+      - test_atlas_task_group

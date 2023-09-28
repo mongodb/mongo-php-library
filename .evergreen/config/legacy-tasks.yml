@@ -1,34 +1,4 @@
 tasks:
-  - name: "test-standalone"
-    tags: ["standalone"]
-    commands:
-      - func: "bootstrap mongo-orchestration"
-        vars:
-          TOPOLOGY: "server"
-      - func: "start kms servers"
-      - func: "set aws temp creds"
-      - func: "run tests"
-
-  - name: "test-replica_set"
-    tags: ["replica_set"]
-    commands:
-      - func: "bootstrap mongo-orchestration"
-        vars:
-          TOPOLOGY: "replica_set"
-      - func: "start kms servers"
-      - func: "set aws temp creds"
-      - func: "run tests"
-
-  - name: "test-sharded_cluster"
-    tags: ["sharded_cluster"]
-    commands:
-      - func: "bootstrap mongo-orchestration"
-        vars:
-          TOPOLOGY: "sharded_cluster"
-      - func: "start kms servers"
-      - func: "set aws temp creds"
-      - func: "run tests"
-
   - name: "test-atlas-data-lake"
     commands:
       - func: "bootstrap mongohoused"
@@ -121,10 +91,3 @@ tasks:
           client_side_encryption_aws_access_key_id: ""
           client_side_encryption_aws_secret_access_key: ""
           TESTS: "csfle-without-aws-creds"
-
-  - name: "test-atlas"
-    commands:
-      - func: "start kms servers"
-      - func: "run tests"
-        vars:
-          TESTS: "atlas"

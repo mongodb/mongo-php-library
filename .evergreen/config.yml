@@ -40,7 +40,8 @@ include:
   - filename: .evergreen/config/build-task-groups.yml
   - filename: .evergreen/config/build-variants.yml
 
-#  - filename: .evergreen/config/test-tasks.yml
+  - filename: .evergreen/config/test-tasks.yml
+  - filename: .evergreen/config/test-task-groups.yml
   - filename: .evergreen/config/test-variants.yml
 
   # Automatically generated files

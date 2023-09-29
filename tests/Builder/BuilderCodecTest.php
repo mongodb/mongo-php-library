@@ -16,19 +16,23 @@ use function array_merge;
 use function array_walk;
 use function is_array;
 
+/**
+ * @todo This annotation is not enough as this PHP file needs to use named arguments, that can't compile on PHP 7.4
+ * @requires PHP 8.0
+ */
 class BuilderCodecTest extends TestCase
 {
+    /** @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#equality-match */
     public function testPipeline(): void
     {
         $pipeline = new Pipeline(
-            Stage::match(Aggregation::eq('$foo', 1)),
-            Stage::match(Aggregation::ne('$foo', 2)),
+            // @todo array is accepted by the stage class, but we expect an object. The driver accepts both.
+            Stage::match((object) ['author' => 'dave']),
             Stage::limit(1),
         );
 
         $expected = [
-            ['$match' => ['$eq' => ['$foo', 1]]],
-            ['$match' => ['$ne' => ['$foo', 2]]],
+            ['$match' => ['author' => 'dave']],
             ['$limit' => 1],
         ];
 
@@ -70,15 +74,16 @@ class BuilderCodecTest extends TestCase
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#examples
      * @dataProvider provideAggregationFilterLimit
      */
-    public function testAggregationFilter($limit, $expectedLimit): void
+    public function testAggregationFilter(?int $limit, array $expectedLimit): void
     {
         $pipeline = new Pipeline(
             Stage::project([
                 'items' => Aggregation::filter(
-                    input: Expression::arrayFieldPath('items'),
-                    cond: Aggregation::gte(Expression::variable('item.price'), 100),
-                    as: 'item',
-                    limit: $limit,
+                    // @todo use named argument once we can require PHP 8
+                    Expression::arrayFieldPath('items'),
+                    Aggregation::gte(Expression::variable('item.price'), 100),
+                    'item',
+                    $limit,
                 ),
             ]),
         );

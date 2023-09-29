@@ -55,7 +55,7 @@ class BuilderEncoder implements Encoder
         // A pipeline is encoded as a list of stages
         if ($value instanceof Pipeline) {
             $encoded = [];
-            foreach ($value->stages as $stage) {
+            foreach ($value->getIterator() as $stage) {
                 $encoded[] = $this->encodeIfSupported($stage);
             }
 

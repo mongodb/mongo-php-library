@@ -65,7 +65,6 @@
       <code>$query</code>
       <code>$result</code>
       <code>$result[]</code>
-      <code>$stage</code>
       <code>$val</code>
       <code>$val</code>
     </MixedAssignment>
@@ -82,6 +81,11 @@
     <MixedAssignment>
       <code><![CDATA[$mergedDriver['platform']]]></code>
     </MixedAssignment>
+  </file>
+  <file src="src/Codec/EncodeIfSupported.php">
+    <InvalidReturnType>
+      <code>($value is NativeType ? BSONType : $value)</code>
+    </InvalidReturnType>
   </file>
   <file src="src/Collection.php">
     <MixedArgumentTypeCoercion>

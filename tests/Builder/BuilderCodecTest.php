@@ -77,7 +77,7 @@ class BuilderCodecTest extends TestCase
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#examples
      * @dataProvider provideAggregationFilterLimit
      */
-    public function testAggregationFilter(?int $limit, array $expectedLimit): void
+    public function testAggregationFilter(array $limit, array $expectedLimit): void
     {
         $pipeline = new Pipeline(
             Stage::project(
@@ -85,7 +85,7 @@ class BuilderCodecTest extends TestCase
                     Expression::arrayFieldPath('items'),
                     Aggregation::gte(Expression::variable('item.price'), 100),
                     'item',
-                    $limit,
+                    ...$limit,
                 ),
             ),
         );
@@ -110,12 +110,12 @@ class BuilderCodecTest extends TestCase
     public static function provideAggregationFilterLimit(): Generator
     {
         yield 'unspecified limit' => [
-            null,
+            [],
             [],
         ];
 
         yield 'int limit' => [
-            1,
+            [1],
             ['limit' => 1],
         ];
     }

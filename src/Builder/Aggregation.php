@@ -49,14 +49,14 @@ final class Aggregation
     /**
      * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input
      * @param ResolvesToBool|bool $cond
-     * @param ResolvesToString|non-empty-string|null $as
-     * @param Int64|ResolvesToInt|int|null $limit
+     * @param Optional|ResolvesToString|non-empty-string $as
+     * @param Int64|Optional|ResolvesToInt|int $limit
      */
     public static function filter(
         PackedArray|ResolvesToArray|BSONArray|array $input,
         ResolvesToBool|bool $cond,
-        ResolvesToString|null|string $as = null,
-        Int64|ResolvesToInt|int|null $limit = null,
+        Optional|ResolvesToString|string $as = Optional::Undefined,
+        Optional|Int64|ResolvesToInt|int $limit = Optional::Undefined,
     ): FilterAggregation
     {
         return new FilterAggregation($input, $cond, $as, $limit);

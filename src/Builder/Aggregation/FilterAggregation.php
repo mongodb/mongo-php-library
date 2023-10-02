@@ -13,6 +13,7 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToBool;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToString;
+use MongoDB\Builder\Optional;
 use MongoDB\Model\BSONArray;
 
 class FilterAggregation implements ResolvesToArray
@@ -22,20 +23,20 @@ class FilterAggregation implements ResolvesToArray
 
     public PackedArray|ResolvesToArray|BSONArray|array $input;
     public ResolvesToBool|bool $cond;
-    public ResolvesToString|null|string $as;
-    public Int64|ResolvesToInt|int|null $limit;
+    public Optional|ResolvesToString|string $as;
+    public Optional|Int64|ResolvesToInt|int $limit;
 
     /**
      * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input
      * @param ResolvesToBool|bool $cond
-     * @param ResolvesToString|non-empty-string|null $as
-     * @param Int64|ResolvesToInt|int|null $limit
+     * @param Optional|ResolvesToString|non-empty-string $as
+     * @param Int64|Optional|ResolvesToInt|int $limit
      */
     public function __construct(
         PackedArray|ResolvesToArray|BSONArray|array $input,
         ResolvesToBool|bool $cond,
-        ResolvesToString|null|string $as = null,
-        Int64|ResolvesToInt|int|null $limit = null,
+        Optional|ResolvesToString|string $as = Optional::Undefined,
+        Optional|Int64|ResolvesToInt|int $limit = Optional::Undefined,
     ) {
         if (\is_array($input) && ! \array_is_list($input)) {
             throw new \InvalidArgumentException('Expected $input argument to be a list, got an associative array.');

@@ -141,8 +141,7 @@ class BuilderEncoder implements Encoder
         foreach (get_object_vars($value) as $key => $val) {
             /** @var mixed $val */
             $val = $this->encodeIfSupported($val);
-            // @todo check for undefined value vs null
-            if ($val !== null) {
+            if ($val !== Optional::Undefined) {
                 $result->{$key} = $val;
             }
         }

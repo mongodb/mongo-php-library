@@ -6,6 +6,7 @@ namespace MongoDB\CodeGenerator;
 use MongoDB\Builder\Stage\StageInterface;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpNamespace;
 
 use function assert;
@@ -75,7 +76,7 @@ class OperatorClassGenerator extends OperatorGenerator
                     PHP);
                 }
             } elseif ($argument->isOptional) {
-                $constuctorParam->setDefaultValue(null);
+                $constuctorParam->setDefaultValue(new Literal('Optional::Undefined'));
             }
 
             $constuctor->addComment('@param ' . $type->doc . ' $' . $argument->name);

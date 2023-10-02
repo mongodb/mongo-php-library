@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace MongoDB\CodeGenerator;
 
 use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\Builder\Optional;
 use MongoDB\CodeGenerator\Definition\ArgumentDefinition;
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
@@ -112,8 +113,9 @@ abstract class OperatorGenerator extends AbstractGenerator
         }
 
         if ($arg->isOptional) {
-            $nativeTypes[] = 'null';
-            $docTypes[] = 'null';
+            $use[] = '\\' . Optional::class;
+            $docTypes[] = 'Optional';
+            $nativeTypes[] = Optional::class;
         }
 
         // mixed can only be used as a standalone type

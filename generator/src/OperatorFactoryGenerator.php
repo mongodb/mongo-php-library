@@ -5,6 +5,7 @@ namespace MongoDB\CodeGenerator;
 
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
+use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpNamespace;
 
 use function implode;
@@ -52,7 +53,7 @@ final class OperatorFactoryGenerator extends OperatorGenerator
                     $args[] = '...$' . $argument->name;
                 } else {
                     if ($argument->isOptional) {
-                        $parameter->setDefaultValue(null);
+                        $parameter->setDefaultValue(new Literal('Optional::Undefined'));
                     }
 
                     $method->addComment('@param ' . $type->doc . ' $' . $argument->name);

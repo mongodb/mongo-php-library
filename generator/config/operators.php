@@ -9,42 +9,33 @@ return [
     // Aggregation Pipeline Stages
     [
         'configFile' => __DIR__ . '/stages.yaml',
-        'generatorClass' => OperatorClassGenerator::class,
         'namespace' => 'MongoDB\\Builder\\Stage',
         'classNameSuffix' => 'Stage',
-    ],
-    [
-        'configFile' => __DIR__ . '/stages.yaml',
-        'generatorClass' => OperatorFactoryGenerator::class,
-        'namespace' => 'MongoDB\\Builder\\Stage',
-        'classNameSuffix' => 'Stage',
+        'generators' => [
+            OperatorClassGenerator::class,
+            OperatorFactoryGenerator::class,
+        ],
     ],
 
     // Aggregation Pipeline Operators
     [
         'configFile' => __DIR__ . '/pipeline-operators.yaml',
-        'generatorClass' => OperatorClassGenerator::class,
         'namespace' => 'MongoDB\\Builder\\Aggregation',
         'classNameSuffix' => 'Aggregation',
-    ],
-    [
-        'configFile' => __DIR__ . '/pipeline-operators.yaml',
-        'generatorClass' => OperatorFactoryGenerator::class,
-        'namespace' => 'MongoDB\\Builder\\Aggregation',
-        'classNameSuffix' => 'Aggregation',
+        'generators' => [
+            OperatorClassGenerator::class,
+            OperatorFactoryGenerator::class,
+        ],
     ],
 
     // Query Operators
     [
         'configFile' => __DIR__ . '/query-operators.yaml',
-        'generatorClass' => OperatorClassGenerator::class,
         'namespace' => 'MongoDB\\Builder\\Query',
         'classNameSuffix' => 'Query',
-    ],
-    [
-        'configFile' => __DIR__ . '/query-operators.yaml',
-        'generatorClass' => OperatorFactoryGenerator::class,
-        'namespace' => 'MongoDB\\Builder\\Query',
-        'classNameSuffix' => 'Query',
+        'generators' => [
+            OperatorClassGenerator::class,
+            OperatorFactoryGenerator::class,
+        ],
     ],
 ];

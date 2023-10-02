@@ -38,11 +38,9 @@ class ExpressionClassGenerator extends AbstractGenerator
         if ($definition->class) {
             $class = $namespace->addClass($className);
             $class->setImplements($definition->implements);
-            if ($definition->extends) {
-                $class->setExtends($definition->extends);
-            }
+            $class->setExtends($definition->extends);
 
-            // Replace with promoted property in PHP 8
+            // Replace with promoted property in PHP 8.1
             $propertyType = Type::union(...$types);
             $class->addProperty('expression')
                 ->setType($propertyType)

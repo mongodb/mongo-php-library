@@ -68,22 +68,16 @@ final class GenerateCommand extends Command
         $config = require $this->configDir . '/operators.php';
         assert(is_array($config));
 
-        foreach ($config as $key => $def) {
+        foreach ($config as $def) {
             assert(is_array($def));
             $definition = new GeneratorDefinition(...$def);
 
-            $output->writeln(sprintf('Generating classes for %s with %s', basename($definition->configFile), $definition->generatorClass));
-
-            if (! class_exists($definition->generatorClass)) {
-                $output->writeln(sprintf('Generator class %s does not exist', $definition->generatorClass));
-
-                return;
+            foreach ($definition->generators as $generatorClass) {
+                $output->writeln(sprintf('Generating classes for %s with %s', basename($definition->configFile), $generatorClass));
+                $generator = new $generatorClass($this->rootDir, $expressions);
+                assert($generator instanceof OperatorGenerator);
+                $generator->generate($definition);
             }
-
-            $generatorClass = $definition->generatorClass;
-            $generator = new $generatorClass($this->rootDir, $expressions);
-            assert($generator instanceof OperatorGenerator);
-            $generator->generate($definition);
         }
     }
 }

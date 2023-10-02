@@ -16,10 +16,10 @@ final readonly class GeneratorDefinition
     public function __construct(
         public readonly string $configFile,
         /**
-         * @var class-string<OperatorGenerator>
-         * @psalm-assert class-string<OperatorGenerator>
+         * @var list<class-string<OperatorGenerator>>
+         * @psalm-assert list<class-string<OperatorGenerator>>
          */
-        public readonly string $generatorClass,
+        public readonly array $generators,
         public readonly string $namespace,
         public readonly string $classNameSuffix = '',
         public readonly array $interfaces = [],
@@ -33,8 +33,10 @@ final readonly class GeneratorDefinition
             throw new InvalidArgumentException(sprintf('Namespace must not end with "\\". Got "%s".', $this->namespace));
         }
 
-        if (! is_subclass_of($this->generatorClass, OperatorGenerator::class)) {
-            throw new InvalidArgumentException(sprintf('Generator class "%s" must extend "%s".', $this->generatorClass, OperatorGenerator::class));
+        foreach ($this->generators as $class) {
+            if (! is_subclass_of($class, OperatorGenerator::class)) {
+                throw new InvalidArgumentException(sprintf('Generator class "%s" must extend "%s".', $class, OperatorGenerator::class));
+            }
         }
     }
 }

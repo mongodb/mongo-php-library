@@ -15,7 +15,6 @@
     <file>examples</file>
     <file>generator/src</file>
     <file>generator/config</file>
-    <file>generator/bin</file>
     <file>tests</file>
     <file>tools</file>
     <file>rector.php</file>

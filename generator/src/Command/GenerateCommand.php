@@ -9,7 +9,6 @@ use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\ExpressionClassGenerator;
 use MongoDB\CodeGenerator\ExpressionFactoryGenerator;
 use MongoDB\CodeGenerator\OperatorGenerator;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,7 +20,6 @@ use function is_a;
 use function is_array;
 use function sprintf;
 
-#[AsCommand(name: 'generate', description: 'Generate code for mongodb/mongodb library')]
 final class GenerateCommand extends Command
 {
     public function __construct(
@@ -29,6 +27,13 @@ final class GenerateCommand extends Command
         private string $configDir,
     ) {
         parent::__construct();
+    }
+
+    public function configure(): void
+    {
+        $this->setName('generate');
+        $this->setDescription('Generate code for mongodb/mongodb library');
+        $this->setHelp('Generate code for mongodb/mongodb library');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

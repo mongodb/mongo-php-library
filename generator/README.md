@@ -11,7 +11,7 @@ To run the generator, you need to have PHP 8.2+ installed and Composer.
 
 1. Move to the `generator` directory: `cd generator`
 1. Install dependencies: `composer install`
-1. Run the generator: `bin/console generate`
+1. Run the generator: `./generate`
 
 ## Configuration
 

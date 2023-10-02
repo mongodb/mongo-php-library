@@ -64,3 +64,29 @@
   args:
     - name: expression
       type: expression
+- name: min
+  type: expression
+  args:
+    - name: expression
+      type: expression
+- name: max
+  type: expression
+  args:
+    - name: expression
+      type: expression
+- name: subtract
+  type: expression
+  encode: array
+  args:
+    - name: expression1
+      type: expression
+    - name: expression2
+      type: expression
+- name: mod
+  type: expression
+  encode: array
+  args:
+    - name: expression1
+      type: expression
+    - name: expression2
+      type: expression

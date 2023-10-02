@@ -26,15 +26,6 @@ class BuilderEncoder implements Encoder
 {
     use EncodeIfSupported;
 
-    /** The first property is the operator value */
-    public const ENCODE_AS_SINGLE = 'single';
-
-    /** Arguments as encoded as a map of properties to their values */
-    public const ENCODE_AS_OBJECT = 'object';
-
-    /** Properties are encoded as a list of values, names are ignored */
-    public const ENCODE_AS_ARRAY = 'array';
-
     /**
      * {@inheritdoc}
      */

@@ -10,6 +10,8 @@ use function putenv;
 use function random_bytes;
 use function sprintf;
 
+use const PHP_VERSION_ID;
+
 /** @runTestsInSeparateProcesses */
 final class ExamplesTest extends FunctionalTestCase
 {
@@ -42,6 +44,13 @@ OUTPUT;
             'file' => __DIR__ . '/../examples/aggregate.php',
             'expectedOutput' => $expectedOutput,
         ];
+
+        if (PHP_VERSION_ID >= 80000) {
+            yield 'aggregation-builder' => [
+                'file' => __DIR__ . '/../examples/aggregation-builder.php',
+                'expectedOutput' => $expectedOutput,
+            ];
+        }
 
         $expectedOutput = <<<'OUTPUT'
 %s

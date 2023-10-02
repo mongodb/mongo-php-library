@@ -14,7 +14,11 @@ use MongoDB\Builder\Aggregation\FilterAggregation;
 use MongoDB\Builder\Aggregation\GtAggregation;
 use MongoDB\Builder\Aggregation\GteAggregation;
 use MongoDB\Builder\Aggregation\LtAggregation;
+use MongoDB\Builder\Aggregation\MaxAggregation;
+use MongoDB\Builder\Aggregation\MinAggregation;
+use MongoDB\Builder\Aggregation\ModAggregation;
 use MongoDB\Builder\Aggregation\NeAggregation;
+use MongoDB\Builder\Aggregation\SubtractAggregation;
 use MongoDB\Builder\Aggregation\SumAggregation;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToArray;
@@ -86,12 +90,46 @@ final class Aggregation
     }
 
     /**
+     * @param ExpressionInterface|mixed $expression
+     */
+    public static function max(mixed $expression): MaxAggregation
+    {
+        return new MaxAggregation($expression);
+    }
+
+    /**
+     * @param ExpressionInterface|mixed $expression
+     */
+    public static function min(mixed $expression): MinAggregation
+    {
+        return new MinAggregation($expression);
+    }
+
+    /**
+     * @param ExpressionInterface|mixed $expression1
+     * @param ExpressionInterface|mixed $expression2
+     */
+    public static function mod(mixed $expression1, mixed $expression2): ModAggregation
+    {
+        return new ModAggregation($expression1, $expression2);
+    }
+
+    /**
      * @param ExpressionInterface|mixed $expression1
      * @param ExpressionInterface|mixed $expression2
      */
     public static function ne(mixed $expression1, mixed $expression2): NeAggregation
     {
         return new NeAggregation($expression1, $expression2);
+    }
+
+    /**
+     * @param ExpressionInterface|mixed $expression1
+     * @param ExpressionInterface|mixed $expression2
+     */
+    public static function subtract(mixed $expression1, mixed $expression2): SubtractAggregation
+    {
+        return new SubtractAggregation($expression1, $expression2);
     }
 
     /**

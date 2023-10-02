@@ -21,8 +21,9 @@ function typeFieldPath(string $resolvesTo): array
 
 return [
     'null' => ['scalar' => true, 'types' => ['null']],
-    'number' => ['scalar' => true, 'types' => ['int']],
-    'decimal' => ['scalar' => true, 'types' => ['float']],
+    'int' => ['scalar' => true, 'types' => ['int', BSON\Int64::class]],
+    'number' => ['scalar' => true, 'types' => ['int', BSON\Int64::class]],
+    'decimal' => ['scalar' => true, 'types' => ['float', BSON\Decimal128::class]],
     'string' => ['scalar' => true, 'types' => ['string']],
     'boolean' => ['scalar' => true, 'types' => ['bool']],
 

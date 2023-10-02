@@ -8,7 +8,6 @@ namespace MongoDB\Builder;
 
 use MongoDB\BSON\Int64;
 use MongoDB\Builder\Expression\ExpressionInterface;
-use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Stage\GroupStage;
 use MongoDB\Builder\Stage\LimitStage;
 use MongoDB\Builder\Stage\MatchStage;
@@ -27,9 +26,9 @@ final class Stage
     }
 
     /**
-     * @param Int64|ResolvesToInt|int $limit
+     * @param Int64|int $limit
      */
-    public static function limit(Int64|ResolvesToInt|int $limit): LimitStage
+    public static function limit(Int64|int $limit): LimitStage
     {
         return new LimitStage($limit);
     }
@@ -51,9 +50,9 @@ final class Stage
     }
 
     /**
-     * @param int ...$sortSpecification
+     * @param Int64|int ...$sortSpecification
      */
-    public static function sort(int ...$sortSpecification): SortStage
+    public static function sort(Int64|int ...$sortSpecification): SortStage
     {
         return new SortStage(...$sortSpecification);
     }

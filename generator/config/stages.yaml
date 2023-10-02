@@ -6,6 +6,7 @@
 - name: sort
   type: stage
   args:
+    # @todo should generate be a map, not a list
     - name: sortSpecification
       type: number # should be an enum PHPLIB-1269
       isVariadic: true
@@ -13,7 +14,7 @@
   type: stage
   args:
     - name: limit
-      type: resolvesToInt
+      type: int
 - name: group
   type: stage
   encode: object

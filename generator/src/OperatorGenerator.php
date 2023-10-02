@@ -79,7 +79,14 @@ abstract class OperatorGenerator extends AbstractGenerator
         $nativeTypes = [];
         foreach ((array) $arg->type as $type) {
             $interface = $this->getExpressionTypeInterface($type);
-            $nativeTypes = array_merge($nativeTypes, [$interface], $this->expressions[$interface]->types);
+            $types = $this->expressions[$interface]->types;
+
+            // Add the interface to the allowed types if it is not a scalar
+            if (! $this->expressions[$interface]->scalar) {
+                $types = array_merge([$interface], $types);
+            }
+
+            $nativeTypes = array_merge($nativeTypes, $types);
         }
 
         $docTypes = $nativeTypes = array_unique($nativeTypes);

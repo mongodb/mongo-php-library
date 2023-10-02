@@ -9,6 +9,7 @@ use MongoDB\Builder\Expression\Variable;
 use MongoDB\Builder\Query\OrQuery;
 use MongoDB\Builder\Stage\GroupStage;
 use MongoDB\Builder\Stage\ProjectStage;
+use MongoDB\Builder\Stage\SortStage;
 use MongoDB\Builder\Stage\StageInterface;
 use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Codec\Encoder;
@@ -81,6 +82,10 @@ class BuilderEncoder implements Encoder
             }
 
             return $this->wrap($value, $result);
+        }
+
+        if ($value instanceof SortStage) {
+            return $this->wrap($value, (object) $value->sortSpecification);
         }
 
         if ($value instanceof OrQuery) {

@@ -6,22 +6,23 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\BSON\Document;
-use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Expression\ResolvesToObject;
-
 class SortStage implements StageInterface
 {
     public const NAME = '$sort';
     public const ENCODE = 'single';
 
-    public array|object $sortSpecification;
+    /** @param list<int> ...$sortSpecification */
+    public array $sortSpecification;
 
     /**
-     * @param Document|ResolvesToObject|Serializable|array|object $sortSpecification
+     * @param int $sortSpecification
      */
-    public function __construct(array|object $sortSpecification)
+    public function __construct(int ...$sortSpecification)
     {
+        if (\count($sortSpecification) < 1) {
+            throw new \InvalidArgumentException(\sprintf('Expected at least %d values, got %d.', 1, \count($sortSpecification)));
+        }
+
         $this->sortSpecification = $sortSpecification;
     }
 }

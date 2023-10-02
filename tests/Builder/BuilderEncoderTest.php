@@ -20,7 +20,7 @@ use function is_array;
  * @todo This annotation is not enough as this PHP file needs to use named arguments, that can't compile on PHP 7.4
  * @requires PHP 8.0
  */
-class BuilderCodecTest extends TestCase
+class BuilderEncoderTest extends TestCase
 {
     /** @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#equality-match */
     public function testPipeline(): void
@@ -39,6 +39,20 @@ class BuilderCodecTest extends TestCase
         $this->assertSamePipeline($expected, $pipeline);
     }
 
+    /** @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/#ascending-descending-sort */
+    public function testSort(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::sort(...['age' => -1, 'posts' => 1]),
+        );
+
+        $expected = [
+            ['$sort' => ['age' => -1, 'posts' => 1]],
+        ];
+
+        $this->assertSamePipeline($expected, $pipeline);
+    }
+
     /** @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/#perform-a-count */
     public function testPerformCount(): void
     {
@@ -47,10 +61,10 @@ class BuilderCodecTest extends TestCase
                 ['score' => [Query::gt(70), Query::lt(90)]],
                 ['views' => Query::gte(1000)],
             )),
-            Stage::group(
-                _id: null,
-                count: Aggregation::sum(1),
-            ),
+            Stage::group(...[
+                '_id' => null,
+                'count' => Aggregation::sum(1),
+            ]),
         );
 
         $expected = [
@@ -80,14 +94,14 @@ class BuilderCodecTest extends TestCase
     public function testAggregationFilter(array $limit, array $expectedLimit): void
     {
         $pipeline = new Pipeline(
-            Stage::project(
-                items: Aggregation::filter(
+            Stage::project(...[
+                'items' => Aggregation::filter(
                     Expression::arrayFieldPath('items'),
                     Aggregation::gte(Expression::variable('item.price'), 100),
                     'item',
                     ...$limit,
                 ),
-            ),
+            ]),
         );
 
         $expected = [

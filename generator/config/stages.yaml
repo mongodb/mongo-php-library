@@ -17,16 +17,15 @@
   type: stage
   encode: object
   args:
-    # @todo _id is not optional but only nullable
     - name: _id
-      type: expression
-      isOptional: true
-    # @todo fields are optional and encoded at the same level as _id
+      type: [expression, "null"]
     - name: fields
-      type: resolvesToObject
-      isOptional: true
+      type: expression
+      isVariadic: true
+      variadicMin: 0
 - name: project
   type: stage
   args:
     - name: specifications
-      type: resolvesToObject
+      type: expression
+      isVariadic: true

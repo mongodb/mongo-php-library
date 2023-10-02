@@ -20,6 +20,12 @@ function typeFieldPath(string $resolvesTo): array
 }
 
 return [
+    'null' => ['scalar' => true, 'types' => ['null']],
+    'number' => ['scalar' => true, 'types' => ['int']],
+    'decimal' => ['scalar' => true, 'types' => ['float']],
+    'string' => ['scalar' => true, 'types' => ['string']],
+    'boolean' => ['scalar' => true, 'types' => ['bool']],
+
     // Use Interface suffix to avoid confusion with MongoDB\Builder\Expression factory class
     ExpressionInterface::class => [
         'types' => ['mixed'],

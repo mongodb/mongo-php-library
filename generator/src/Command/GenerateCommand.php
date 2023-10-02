@@ -41,7 +41,7 @@ final class GenerateCommand extends Command
         return Command::SUCCESS;
     }
 
-    /** @return array<class-string<ExpressionInterface>, ExpressionDefinition> */
+    /** @return array<string, ExpressionDefinition> */
     private function generateExpressionClasses(OutputInterface $output): array
     {
         $output->writeln('Generating expression classes');

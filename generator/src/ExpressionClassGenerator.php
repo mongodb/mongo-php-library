@@ -16,6 +16,10 @@ class ExpressionClassGenerator extends AbstractGenerator
 {
     public function generate(ExpressionDefinition $definition): void
     {
+        if ($definition->scalar) {
+            return;
+        }
+
         $this->writeFile($this->createClassOrInterface($definition));
     }
 

@@ -49,11 +49,16 @@ abstract class OperatorGenerator extends AbstractGenerator
         return ucfirst($operator->name) . $definition->classNameSuffix;
     }
 
-    /** @return class-string<ExpressionInterface> */
+    /** @return class-string<ExpressionInterface>|string */
     final protected function getExpressionTypeInterface(string $type): string
     {
         if ('expression' === $type) {
             return ExpressionInterface::class;
+        }
+
+        // Scalar types
+        if (array_key_exists($type, $this->expressions)) {
+            return $type;
         }
 
         $interface = 'MongoDB\\Builder\\Expression\\' . ucfirst($type);
@@ -91,9 +96,13 @@ abstract class OperatorGenerator extends AbstractGenerator
                 continue;
             }
 
+            // strings cannot be empty
+            if ($typeName === 'string') {
+                $docTypes[$key] = 'non-empty-string';
+            }
+
             if (interface_exists($typeName) || class_exists($typeName)) {
                 $use[] = $nativeTypes[$key] = '\\' . $typeName;
-                //$nativeTypes[$key] = $docTypes[$key] = '\\' . $typeName;
                 $docTypes[$key] = $this->splitNamespaceAndClassName($typeName)[1];
                 // A union cannot contain both object and a class type
                 if (in_array('object', $nativeTypes, true)) {

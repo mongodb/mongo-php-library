@@ -22,11 +22,11 @@ final class Stage
 {
     /**
      * @param ExpressionInterface|mixed|null $_id
-     * @param Document|ResolvesToObject|Serializable|array|null|object $fields
+     * @param ExpressionInterface|mixed ...$fields
      */
-    public static function group(mixed $_id = null, array|null|object $fields = null): GroupStage
+    public static function group(mixed $_id, mixed ...$fields): GroupStage
     {
-        return new GroupStage($_id, $fields);
+        return new GroupStage($_id, ...$fields);
     }
 
     /**
@@ -46,11 +46,11 @@ final class Stage
     }
 
     /**
-     * @param Document|ResolvesToObject|Serializable|array|object $specifications
+     * @param ExpressionInterface|mixed ...$specifications
      */
-    public static function project(array|object $specifications): ProjectStage
+    public static function project(mixed ...$specifications): ProjectStage
     {
-        return new ProjectStage($specifications);
+        return new ProjectStage(...$specifications);
     }
 
     /**

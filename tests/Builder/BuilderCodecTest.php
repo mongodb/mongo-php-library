@@ -47,7 +47,10 @@ class BuilderCodecTest extends TestCase
                 ['score' => [Query::gt(70), Query::lt(90)]],
                 ['views' => Query::gte(1000)],
             )),
-            Stage::group(null, ['count' => Aggregation::sum(1)]),
+            Stage::group(
+                _id: null,
+                count: Aggregation::sum(1),
+            ),
         );
 
         $expected = [
@@ -77,15 +80,14 @@ class BuilderCodecTest extends TestCase
     public function testAggregationFilter(?int $limit, array $expectedLimit): void
     {
         $pipeline = new Pipeline(
-            Stage::project([
-                'items' => Aggregation::filter(
-                    // @todo use named argument once we can require PHP 8
+            Stage::project(
+                items: Aggregation::filter(
                     Expression::arrayFieldPath('items'),
                     Aggregation::gte(Expression::variable('item.price'), 100),
                     'item',
                     $limit,
                 ),
-            ]),
+            ),
         );
 
         $expected = [

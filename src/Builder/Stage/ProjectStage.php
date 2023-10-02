@@ -6,22 +6,25 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\BSON\Document;
-use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Expression\ResolvesToObject;
+use MongoDB\Builder\Expression\ExpressionInterface;
 
 class ProjectStage implements StageInterface
 {
     public const NAME = '$project';
     public const ENCODE = 'single';
 
-    public array|object $specifications;
+    /** @param list<ExpressionInterface|mixed> ...$specifications */
+    public array $specifications;
 
     /**
-     * @param Document|ResolvesToObject|Serializable|array|object $specifications
+     * @param ExpressionInterface|mixed $specifications
      */
-    public function __construct(array|object $specifications)
+    public function __construct(mixed ...$specifications)
     {
+        if (\count($specifications) < 1) {
+            throw new \InvalidArgumentException(\sprintf('Expected at least %d values, got %d.', 1, \count($specifications)));
+        }
+
         $this->specifications = $specifications;
     }
 }

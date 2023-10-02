@@ -45,7 +45,7 @@ OUTPUT;
             'expectedOutput' => $expectedOutput,
         ];
 
-        if (PHP_VERSION_ID >= 80000) {
+        if (PHP_VERSION_ID >= 80100) {
             yield 'aggregation-builder' => [
                 'file' => __DIR__ . '/../examples/aggregation-builder.php',
                 'expectedOutput' => $expectedOutput,

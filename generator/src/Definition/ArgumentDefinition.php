@@ -9,18 +9,29 @@ use function is_string;
 
 final readonly class ArgumentDefinition
 {
+    public ?int $variadicMin;
+
     public function __construct(
         public string $name,
         /** @psalm-assert string|list<string> $type */
         public string|array $type,
         public bool $isOptional = false,
         public bool $isVariadic = false,
-        public int $variadicMin = 1,
+        ?int $variadicMin = null,
     ) {
         if (is_array($type)) {
             foreach ($type as $t) {
-                assert(is_string($t));
+                assert(is_string($t), json_encode($type));
             }
+        }
+
+        if (! $isVariadic) {
+            assert($variadicMin === null);
+            $this->variadicMin = null;
+        } elseif ($variadicMin === null) {
+            $this->variadicMin = $isOptional ? 0 : 1;
+        } else {
+            $this->variadicMin = $variadicMin;
         }
     }
 }

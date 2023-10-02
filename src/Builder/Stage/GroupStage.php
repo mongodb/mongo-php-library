@@ -6,10 +6,7 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\BSON\Document;
-use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Expression\ExpressionInterface;
-use MongoDB\Builder\Expression\ResolvesToObject;
 
 class GroupStage implements StageInterface
 {
@@ -17,13 +14,15 @@ class GroupStage implements StageInterface
     public const ENCODE = 'object';
 
     public mixed $_id;
-    public array|null|object $fields;
+
+    /** @param list<ExpressionInterface|mixed> ...$fields */
+    public array $fields;
 
     /**
      * @param ExpressionInterface|mixed|null $_id
-     * @param Document|ResolvesToObject|Serializable|array|null|object $fields
+     * @param ExpressionInterface|mixed $fields
      */
-    public function __construct(mixed $_id = null, array|null|object $fields = null)
+    public function __construct(mixed $_id, mixed ...$fields)
     {
         $this->_id = $_id;
         $this->fields = $fields;

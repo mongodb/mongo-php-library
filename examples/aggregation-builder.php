@@ -45,31 +45,28 @@ $collection->insertMany($documents);
 $pipeline = new Pipeline(
     Stage::group(
         _id: null,
-        // @todo accept named arguments for $fields
-        fields: [
-            'totalCount' => Aggregation::sum(1),
-            'evenCount' => Aggregation::sum(
+        totalCount: Aggregation::sum(1),
+        evenCount: Aggregation::sum(
+            Aggregation::mod(
+                Expression::fieldPath('randomValue'),
+                2,
+            ),
+        ),
+        oddCount: Aggregation::sum(
+            Aggregation::subtract(
+                1,
                 Aggregation::mod(
                     Expression::fieldPath('randomValue'),
                     2,
                 ),
             ),
-            'oddCount' => Aggregation::sum(
-                Aggregation::subtract(
-                    1,
-                    Aggregation::mod(
-                        Expression::fieldPath('randomValue'),
-                        2,
-                    ),
-                ),
-            ),
-            'maxValue' => Aggregation::max(
-                Expression::fieldPath('randomValue'),
-            ),
-            'minValue' => Aggregation::min(
-                Expression::fieldPath('randomValue'),
-            ),
-        ],
+        ),
+        maxValue: Aggregation::max(
+            Expression::fieldPath('randomValue'),
+        ),
+        minValue: Aggregation::min(
+            Expression::fieldPath('randomValue'),
+        ),
     ),
 );
 

@@ -28,7 +28,7 @@ class FilterAggregation implements ResolvesToArray
     /**
      * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input
      * @param ResolvesToBool|bool $cond
-     * @param ResolvesToString|null|string $as
+     * @param ResolvesToString|non-empty-string|null $as
      * @param Int64|ResolvesToInt|int|null $limit
      */
     public function __construct(

@@ -11,6 +11,7 @@ final readonly class ExpressionDefinition
         public string $name,
         /** @var list<string|class-string> */
         public array $types,
+        public bool $scalar = false,
         public bool $class = false,
         public ?string $extends = null,
         /** @var list<class-string> */

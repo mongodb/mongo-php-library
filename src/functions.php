@@ -611,7 +611,11 @@ function select_server_for_aggregate_write_stage(Manager $manager, array &$optio
     $readPreference = extract_read_preference_from_options($options);
 
     /* If there is either no read preference or a primary read preference, there
-     * is no special server selection logic to apply. */
+     * is no special server selection logic to apply.
+     *
+     * Note: an alternative read preference could still be inherited from an
+     * active transaction's options, but we can rely on libmongoc to raise a
+     * "read preference in a transaction must be primary" error if necessary. */
     if ($readPreference === null || $readPreference->getModeString() === ReadPreference::PRIMARY) {
         return select_server($manager, $options);
     }
@@ -644,4 +648,19 @@ function select_server_for_aggregate_write_stage(Manager $manager, array &$optio
     assert($server instanceof Server);
 
     return $server;
+}
+
+/**
+ * Performs server selection for a write operation.
+ *
+ * The pinned server for an active transaction takes priority, followed by an
+ * operation-level read preference, followed by a primary read preference. This
+ * is similar to select_server() except that it ignores a read preference from
+ * an active transaction's options.
+ *
+ * @internal
+ */
+function select_server_for_write(Manager $manager, array $options): Server
+{
+    return select_server($manager, $options + ['readPreference' => new ReadPreference(ReadPreference::PRIMARY)]);
 }

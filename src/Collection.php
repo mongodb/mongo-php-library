@@ -260,7 +260,7 @@ class Collection
 
         $operation = new BulkWrite($this->databaseName, $this->collectionName, $operations, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -362,7 +362,7 @@ class Collection
 
         $operation = new CreateIndexes($this->databaseName, $this->collectionName, $indexes, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -418,7 +418,7 @@ class Collection
     public function createSearchIndexes(array $indexes, array $options = []): array
     {
         $operation = new CreateSearchIndexes($this->databaseName, $this->collectionName, $indexes, $options);
-        $server = select_server($this->manager, $options);
+        $server = select_server_for_write($this->manager, $options);
 
         return $operation->execute($server);
     }
@@ -441,7 +441,7 @@ class Collection
 
         $operation = new DeleteMany($this->databaseName, $this->collectionName, $filter, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -462,7 +462,7 @@ class Collection
 
         $operation = new DeleteOne($this->databaseName, $this->collectionName, $filter, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -503,7 +503,7 @@ class Collection
         $options = $this->inheritWriteOptions($options);
         $options = $this->inheritTypeMap($options);
 
-        $server = select_server($this->manager, $options);
+        $server = select_server_for_write($this->manager, $options);
 
         if (! isset($options['encryptedFields'])) {
             $options['encryptedFields'] = get_encrypted_fields_from_driver($this->databaseName, $this->collectionName, $this->manager)
@@ -541,7 +541,7 @@ class Collection
 
         $operation = new DropIndexes($this->databaseName, $this->collectionName, $indexName, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -561,7 +561,7 @@ class Collection
 
         $operation = new DropIndexes($this->databaseName, $this->collectionName, '*', $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -577,7 +577,7 @@ class Collection
     public function dropSearchIndex(string $name, array $options = []): void
     {
         $operation = new DropSearchIndex($this->databaseName, $this->collectionName, $name);
-        $server = select_server($this->manager, $options);
+        $server = select_server_for_write($this->manager, $options);
 
         $operation->execute($server);
     }
@@ -690,7 +690,7 @@ class Collection
 
         $operation = new FindOneAndDelete($this->databaseName, $this->collectionName, $filter, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -720,7 +720,7 @@ class Collection
 
         $operation = new FindOneAndReplace($this->databaseName, $this->collectionName, $filter, $replacement, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -750,7 +750,7 @@ class Collection
 
         $operation = new FindOneAndUpdate($this->databaseName, $this->collectionName, $filter, $update, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -854,7 +854,7 @@ class Collection
 
         $operation = new InsertMany($this->databaseName, $this->collectionName, $documents, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -875,7 +875,7 @@ class Collection
 
         $operation = new InsertOne($this->databaseName, $this->collectionName, $document, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -949,7 +949,7 @@ class Collection
 
         $operation = new MapReduce($this->databaseName, $this->collectionName, $map, $reduce, $out, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -975,7 +975,7 @@ class Collection
 
         $operation = new RenameCollection($this->databaseName, $this->collectionName, $toDatabaseName, $toCollectionName, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -998,7 +998,7 @@ class Collection
 
         $operation = new ReplaceOne($this->databaseName, $this->collectionName, $filter, $replacement, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -1020,7 +1020,7 @@ class Collection
 
         $operation = new UpdateMany($this->databaseName, $this->collectionName, $filter, $update, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -1042,7 +1042,7 @@ class Collection
 
         $operation = new UpdateOne($this->databaseName, $this->collectionName, $filter, $update, $options);
 
-        return $operation->execute(select_server($this->manager, $options));
+        return $operation->execute(select_server_for_write($this->manager, $options));
     }
 
     /**
@@ -1059,7 +1059,7 @@ class Collection
     public function updateSearchIndex(string $name, $definition, array $options = []): void
     {
         $operation = new UpdateSearchIndex($this->databaseName, $this->collectionName, $name, $definition, $options);
-        $server = select_server($this->manager, $options);
+        $server = select_server_for_write($this->manager, $options);
 
         $operation->execute($server);
     }

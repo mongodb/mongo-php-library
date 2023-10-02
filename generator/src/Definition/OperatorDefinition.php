@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Definition;
 
-use InvalidArgumentException;
-
 use function array_map;
+use function assert;
 use function count;
 use function in_array;
 use function sprintf;
@@ -21,13 +20,8 @@ final readonly class OperatorDefinition
         public ?string $type = null,
         array $args = [],
     ) {
-        if ($encode === null && count($args) !== 1) {
-            throw new InvalidArgumentException(sprintf('Operator "%s" have %s arguments, the "encode" parameter must be specified.', $this->name, count($args)));
-        }
-
-        if (! in_array($this->encode, [null, 'array', 'object'], true)) {
-            throw new InvalidArgumentException(sprintf('Operator "%s" expect "encode" value to be "array" or "object". Got "%s".', $this->name, $this->encode));
-        }
+        assert($encode || count($args) === 1, sprintf('Operator "%s" has %d arguments. The "encode" parameter must be specified.', $name, count($args)));
+        assert(in_array($encode, [null, 'array', 'object'], true), sprintf('Operator "%s" expect "encode" value to be "array" or "object". Got "%s".', $name, $encode));
 
         $this->arguments = array_map(
             fn ($arg): ArgumentDefinition => new ArgumentDefinition(...$arg),

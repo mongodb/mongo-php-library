@@ -10,6 +10,7 @@ use Nette\PhpGenerator\Printer;
 use Nette\PhpGenerator\PsrPrinter;
 
 use function array_pop;
+use function assert;
 use function count;
 use function current;
 use function dirname;
@@ -48,15 +49,13 @@ abstract class AbstractGenerator
     final protected function writeFile(PhpNamespace $namespace): void
     {
         $classes = $namespace->getClasses();
-        if (count($classes) !== 1) {
-            throw new InvalidArgumentException(sprintf('Expected exactly one class in namespace "%s", got %d.', $namespace->getName(), count($classes)));
-        }
+        assert(count($classes) === 1, sprintf('Expected exactly one class in namespace "%s", got %d.', $namespace->getName(), count($classes)));
 
         $filename = $this->rootDir . '/' . $this->getFileName($namespace->getName(), current($classes)->getName());
 
         $dirname = dirname($filename);
         if (! is_dir($dirname)) {
-            mkdir($dirname, 0775, true);
+            mkdir($dirname, 0755, true);
         }
 
         $file = new PhpFile();

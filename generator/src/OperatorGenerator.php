@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
-use InvalidArgumentException;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\CodeGenerator\Definition\ArgumentDefinition;
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
@@ -15,6 +14,7 @@ use Nette\PhpGenerator\Type;
 use function array_key_exists;
 use function array_merge;
 use function array_unique;
+use function assert;
 use function class_exists;
 use function in_array;
 use function interface_exists;
@@ -57,16 +57,14 @@ abstract class OperatorGenerator extends AbstractGenerator
         }
 
         $interface = 'MongoDB\\Builder\\Expression\\' . ucfirst($type);
-
-        if (! array_key_exists($interface, $this->expressions)) {
-            throw new InvalidArgumentException(sprintf('Invalid expression type "%s".', $type));
-        }
+        assert(array_key_exists($interface, $this->expressions), sprintf('Invalid expression type "%s".', $type));
 
         return $interface;
     }
 
     /**
-     * Expression types can contain class names, interface, native types or "list"
+     * Expression types can contain class names, interface, native types or "list".
+     * PHPDoc types are more precise than native types, so we use them systematically even if redundant.
      *
      * @return object{native:string,doc:string,use:list<class-string>,list:bool}
      */
@@ -83,9 +81,11 @@ abstract class OperatorGenerator extends AbstractGenerator
         $use = [];
 
         foreach ($nativeTypes as $key => $typeName) {
+            // "list" is a special type of array that needs to be checked in the code
             if ($typeName === 'list') {
                 $listCheck = true;
                 $nativeTypes[$key] = 'array';
+                // @todo allow to specify the type of the elements in the list
                 $docTypes[$key] = 'list<ExpressionInterface|mixed>';
                 $use[] = '\\' . ExpressionInterface::class;
                 continue;

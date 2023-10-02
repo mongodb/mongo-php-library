@@ -14,9 +14,10 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function array_key_exists;
 use function assert;
 use function basename;
-use function class_exists;
+use function is_a;
 use function is_array;
 use function sprintf;
 
@@ -52,6 +53,7 @@ final class GenerateCommand extends Command
         $generator = new ExpressionClassGenerator($this->rootDir);
         foreach ($config as $name => $def) {
             assert(is_array($def));
+            assert(! array_key_exists($name, $definitions), sprintf('Duplicate expression name "%s".', $name));
             $definitions[$name] = $def = new ExpressionDefinition($name, ...$def);
             $generator->generate($def);
         }
@@ -74,8 +76,8 @@ final class GenerateCommand extends Command
 
             foreach ($definition->generators as $generatorClass) {
                 $output->writeln(sprintf('Generating classes for %s with %s', basename($definition->configFile), $generatorClass));
+                assert(is_a($generatorClass, OperatorGenerator::class, true));
                 $generator = new $generatorClass($this->rootDir, $expressions);
-                assert($generator instanceof OperatorGenerator);
                 $generator->generate($definition);
             }
         }

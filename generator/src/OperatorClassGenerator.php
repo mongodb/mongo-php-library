@@ -7,8 +7,8 @@ use MongoDB\Builder\Stage\StageInterface;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
 use Nette\PhpGenerator\PhpNamespace;
-use RuntimeException;
 
+use function assert;
 use function interface_exists;
 use function sprintf;
 
@@ -110,9 +110,7 @@ class OperatorClassGenerator extends OperatorGenerator
         }
 
         $interface = $this->getExpressionTypeInterface($definition->type);
-        if (! interface_exists($interface)) {
-            throw new RuntimeException(sprintf('"%s" is not an interface.', $interface));
-        }
+        assert(interface_exists($interface), sprintf('"%s" is not an interface.', $interface));
 
         return [$interface];
     }

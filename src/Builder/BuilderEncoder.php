@@ -119,13 +119,13 @@ class BuilderEncoder implements Encoder
 
         // The generic but incomplete encoding code
         switch ($value::ENCODE) {
-            case self::ENCODE_AS_SINGLE:
+            case 'single':
                 return $this->encodeAsSingle($value);
 
-            case self::ENCODE_AS_ARRAY:
+            case 'array':
                 return $this->encodeAsArray($value);
 
-            case self::ENCODE_AS_OBJECT:
+            case 'object':
                 return $this->encodeAsObject($value);
         }
 

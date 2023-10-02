@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Definition;
 
-use InvalidArgumentException;
-
+use function assert;
 use function is_array;
 use function is_string;
 
@@ -12,7 +11,7 @@ final readonly class ArgumentDefinition
 {
     public function __construct(
         public string $name,
-        /** @var string|list<string> */
+        /** @psalm-assert string|list<string> $type */
         public string|array $type,
         public bool $isOptional = false,
         public bool $isVariadic = false,
@@ -20,9 +19,7 @@ final readonly class ArgumentDefinition
     ) {
         if (is_array($type)) {
             foreach ($type as $t) {
-                if (! is_string($t)) {
-                    throw new InvalidArgumentException('Argument type must be a string or list of strings');
-                }
+                assert(is_string($t));
             }
         }
     }

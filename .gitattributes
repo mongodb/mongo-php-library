@@ -20,6 +20,7 @@ psalm-baseline.xml export-ignore
 # https://docs.github.com/en/repositories/working-with-files/managing-files/customizing-how-changed-files-appear-on-github
 /src/Builder/Aggregation.php linguist-generated=true
 /src/Builder/Aggregation/*.php linguist-generated=true
+/src/Builder/Expression.php linguist-generated=true
 /src/Builder/Expression/*.php linguist-generated=true
 /src/Builder/Query.php linguist-generated=true
 /src/Builder/Query/*.php linguist-generated=true

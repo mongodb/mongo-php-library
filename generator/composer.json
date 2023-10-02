@@ -14,7 +14,7 @@
     },
     "require": {
         "php": ">=8.2",
-        "ext-mongodb": "*",
+        "ext-mongodb": "^1.16.0",
         "mongodb/mongodb": "@dev",
         "nette/php-generator": "^4",
         "symfony/console": "^6.3",

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Definition;
 
-use InvalidArgumentException;
+use function assert;
 
 final readonly class ExpressionDefinition
 {
@@ -16,8 +16,6 @@ final readonly class ExpressionDefinition
         /** @var list<class-string> */
         public array $implements = [],
     ) {
-        if ($extends && ! $class) {
-            throw new InvalidArgumentException('Cannot specify "extends" when "class" is not true');
-        }
+        assert($class || ! $extends, 'Cannot specify "extends" when "class" is not true');
     }
 }

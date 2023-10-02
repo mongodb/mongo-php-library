@@ -10,6 +10,7 @@ use MongoDB\Builder\Expression\ArrayFieldPath;
 use MongoDB\Builder\Expression\BoolFieldPath;
 use MongoDB\Builder\Expression\DateFieldPath;
 use MongoDB\Builder\Expression\DecimalFieldPath;
+use MongoDB\Builder\Expression\FieldName;
 use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Expression\FloatFieldPath;
 use MongoDB\Builder\Expression\IntFieldPath;
@@ -40,6 +41,11 @@ final class Expression
     public static function decimalFieldPath(string $expression): DecimalFieldPath
     {
         return new DecimalFieldPath($expression);
+    }
+
+    public static function fieldName(string $expression): FieldName
+    {
+        return new FieldName($expression);
     }
 
     public static function fieldPath(string $expression): FieldPath

@@ -24,6 +24,12 @@ return [
     ExpressionInterface::class => [
         'types' => ['mixed'],
     ],
+    // @todo must not start with $
+    // Allows ORMs to translate field names
+    FieldName::class => [
+        'class' => true,
+        'types' => ['string'],
+    ],
     // @todo if replaced by a string, it must start with $
     FieldPath::class => [
         'class' => true,

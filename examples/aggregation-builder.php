@@ -5,7 +5,7 @@ declare(strict_types=1);
  * This example demonstrates how you can use the builder provided by this library to build an aggregation pipeline.
  */
 
-namespace MongoDB\Examples\AggregatationBuilder;
+namespace MongoDB\Examples\AggregationBuilder;
 
 use MongoDB\Builder\Aggregation;
 use MongoDB\Builder\BuilderEncoder;

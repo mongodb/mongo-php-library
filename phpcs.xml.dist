@@ -13,9 +13,15 @@
     <file>src</file>
     <file>docs/examples</file>
     <file>examples</file>
+    <file>generator/src</file>
+    <file>generator/config</file>
     <file>tests</file>
     <file>tools</file>
     <file>rector.php</file>
+
+    <!-- Ignore auto-generated code -->
+    <exclude-pattern>src/Builder/(Aggregation|Expression|Query|Stage)\.php</exclude-pattern>
+    <exclude-pattern>src/Builder/(Aggregation|Expression|Query|Stage)/*\.php</exclude-pattern>
 
     <!-- Target minimum supported PHP version -->
     <config name="php_version" value="70400"/>

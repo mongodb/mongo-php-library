@@ -4,6 +4,7 @@ tests export-ignore
 benchmark export-ignore
 docs export-ignore
 examples export-ignore
+generator export-ignore
 mongo-orchestration export-ignore
 stubs export-ignore
 tools export-ignore
@@ -14,3 +15,15 @@ phpunit.evergreen.xml export-ignore
 phpunit.xml.dist export-ignore
 psalm.xml.dist export-ignore
 psalm-baseline.xml export-ignore
+
+# Keep generated files from displaying in diffs by default
+# https://docs.github.com/en/repositories/working-with-files/managing-files/customizing-how-changed-files-appear-on-github
+/src/Builder/Aggregation.php linguist-generated=true
+/src/Builder/Aggregation/*.php linguist-generated=true
+/src/Builder/Expression.php linguist-generated=true
+/src/Builder/Expression/*.php linguist-generated=true
+/src/Builder/Query.php linguist-generated=true
+/src/Builder/Query/*.php linguist-generated=true
+/src/Builder/Stage.php linguist-generated=true
+/src/Builder/Stage/*.php linguist-generated=true
+/src/Builder/Stage/Stage.php linguist-generated=false

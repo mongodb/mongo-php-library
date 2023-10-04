@@ -1,0 +1,32 @@
+- name: and
+  type: resolvesToBool
+  args:
+    - name: query
+      type: resolvesToBool
+      isVariadic: true
+- name: or
+  type: resolvesToBool
+  args:
+    - name: query
+      type: expression
+      isVariadic: true
+- name: expr
+  type: expression
+  args:
+    - name: expression
+      type: expression
+- name: gt
+  type: resolvesToBool
+  args:
+    - name: value
+      type: expression
+- name: lt
+  type: resolvesToBool
+  args:
+    - name: value
+      type: expression
+- name: gte
+  type: resolvesToBool
+  args:
+    - name: value
+      type: expression

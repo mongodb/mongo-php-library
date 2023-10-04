@@ -13,12 +13,14 @@ use function array_map;
 use function realpath;
 use function str_contains;
 use function str_replace;
+use function str_starts_with;
 use function strcasecmp;
 use function strlen;
 use function substr;
 use function usort;
 
 use const DIRECTORY_SEPARATOR;
+use const PHP_VERSION_ID;
 
 /**
  * Pedantic tests that have nothing to do with functional correctness.
@@ -26,7 +28,7 @@ use const DIRECTORY_SEPARATOR;
 class PedantryTest extends TestCase
 {
     /** @dataProvider provideProjectClassNames */
-    public function testMethodsAreOrderedAlphabeticallyByVisibility($className): void
+    public function testMethodsAreOrderedAlphabeticallyByVisibility(string $className): void
     {
         $class = new ReflectionClass($className);
         $methods = $class->getMethods();
@@ -56,7 +58,7 @@ class PedantryTest extends TestCase
         $this->assertEquals($sortedMethods, $methods);
     }
 
-    public function provideProjectClassNames()
+    public static function provideProjectClassNames(): array
     {
         $classNames = [];
         $srcDir = realpath(__DIR__ . '/../src/');
@@ -74,6 +76,11 @@ class PedantryTest extends TestCase
             }
 
             $className = 'MongoDB\\' . str_replace(DIRECTORY_SEPARATOR, '\\', substr($file->getRealPath(), strlen($srcDir) + 1, -4));
+
+            if (PHP_VERSION_ID < 80000 && str_starts_with($className, 'MongoDB\\Builder\\')) {
+                continue;
+            }
+
             $classNames[$className][] = $className;
         }
 

@@ -37,11 +37,13 @@
                     "$comment": "array: parameters are encoded as an array of values in the order they are defined by the spec",
                     "$comment": "object: parameters are encoded as an object with keys matching the parameter names",
                     "$comment": "single: get the single parameter value",
+                    "$comment": "group: specific for $group stage",
                     "type": "string",
                     "enum": [
                         "array",
                         "object",
-                        "single"
+                        "single",
+                        "group"
                     ]
                 },
                 "description": {
@@ -52,7 +54,7 @@
                     "$comment": "An optional list of parameters for the operator.",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/Parameter"
+                        "$ref": "#/definitions/Argument"
                     }
                 }
             },
@@ -67,7 +69,7 @@
             ],
             "title": "Operator"
         },
-        "Parameter": {
+        "Argument": {
             "type": "object",
             "additionalProperties": false,
             "properties": {
@@ -101,8 +103,8 @@
                     "$comment": "Whether the parameter is variadic or not.",
                     "type": "string",
                     "enum": [
-                        "list",
-                        "map"
+                        "array",
+                        "object"
                     ]
                 },
                 "variadicMin": {
@@ -116,7 +118,7 @@
                 "name",
                 "type"
             ],
-            "title": "Parameter"
+            "title": "Argument"
         }
     }
 }

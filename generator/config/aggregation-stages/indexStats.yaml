@@ -1,0 +1,10 @@
+# $schema: ../schema.json
+name: $indexStats
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/'
+type:
+    - Stage
+encode: object
+description: |
+    Returns statistics regarding the use of each index for the collection.

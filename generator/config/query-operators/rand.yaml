@@ -1,0 +1,10 @@
+# $schema: ../schema.json
+name: $rand
+category:
+    - 'Miscellaneous Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/rand/'
+type:
+    - expression
+encode: object
+description: |
+    Generates a random float between 0 and 1.

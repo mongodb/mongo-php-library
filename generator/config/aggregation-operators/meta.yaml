@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $meta
+category:
+    - 'Text Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/'
+type:
+    - resolvesToDecimal
+encode: single
+description: |
+    Access available per-document metadata related to the aggregation operation.
+arguments:
+    -
+        name: keyword
+        type:
+            - string

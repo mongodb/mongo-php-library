@@ -6,15 +6,19 @@
 
 namespace MongoDB\Builder\Aggregation;
 
+use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToBool;
 
 class GteAggregation implements ResolvesToBool
 {
     public const NAME = '$gte';
-    public const ENCODE = 'array';
+    public const ENCODE = \MongoDB\Builder\Encode::Array;
 
+    /** @param ExpressionInterface|mixed $expression1 */
     public mixed $expression1;
+
+    /** @param ExpressionInterface|mixed $expression2 */
     public mixed $expression2;
 
     /**

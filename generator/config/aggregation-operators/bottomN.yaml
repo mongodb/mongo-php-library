@@ -1,0 +1,32 @@
+# $schema: ../schema.json
+name: $bottomN
+category:
+    - Accumulators
+    - 'Window Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/'
+type:
+    - Accumulator
+encode: object
+description: |
+    Returns an aggregation of the bottom n elements within a group, according to the specified sort order. If the group contains fewer than n elements, $bottomN returns all elements in the group.
+    New in version 5.2.
+    Available in the $group and $setWindowFields stages.
+arguments:
+    -
+        name: 'n'
+        type:
+            - resolvesToInt
+        description: |
+            Limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
+    -
+        name: sortBy
+        type:
+            - SortSpec
+        description: |
+            Specifies the order of results, with syntax similar to $sort.
+    -
+        name: output
+        type:
+            - expression
+        description: |
+            Represents the output for each element in the group and can be any expression.

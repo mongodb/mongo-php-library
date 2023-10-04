@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $searchMeta
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/searchMeta/'
+type:
+    - Stage
+encode: single
+description: |
+    Returns different types of metadata result documents for the Atlas Search query against an Atlas collection.
+    NOTE: $searchMeta is only available for MongoDB Atlas clusters running MongoDB v4.4.9 or higher, and is not available for self-managed deployments.
+arguments:
+    -
+        name: meta
+        type:
+            - object

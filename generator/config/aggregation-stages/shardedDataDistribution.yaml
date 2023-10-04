@@ -1,0 +1,11 @@
+# $schema: ../schema.json
+name: $shardedDataDistribution
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/'
+type:
+    - Stage
+encode: object
+description: |
+    Provides data and size distribution information on sharded collections.
+    New in version 6.0.3.

@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $toDouble
+category:
+    - 'Type Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/'
+type:
+    - resolvesToDouble
+encode: single
+description: |
+    Converts value to a double.
+    New in version 4.0.
+arguments:
+    -
+        name: expression
+        type:
+            - expression

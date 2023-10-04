@@ -1,0 +1,57 @@
+# $schema: ../schema.json
+name: $accumulator
+category:
+    - Accumulators
+    - 'Custom Aggregation Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/'
+type:
+    - Accumulator
+encode: object
+description: |
+    Defines a custom accumulator function.
+    New in version 4.4.
+arguments:
+    -
+        name: init
+        type:
+            - string
+        description: |
+            Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String.
+    -
+        name: initArgs
+        type:
+            - resolvesToArray
+        optional: true
+        description: |
+            Arguments passed to the init function.
+    -
+        name: accumulate
+        type:
+            - string
+        description: |
+            Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String.
+    -
+        name: accumulateArgs
+        type:
+            - resolvesToArray
+        description: |
+            Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function.
+    -
+        name: merge
+        type:
+            - string
+        description: |
+            Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge.
+    -
+        name: finalize
+        type:
+            - string
+        optional: true
+        description: |
+            Function used to update the result of the accumulation.
+    -
+        name: lang
+        type:
+            - string
+        description: |
+            The language used in the $accumulator code.

@@ -1,0 +1,61 @@
+# $schema: ../schema.json
+name: $changeStream
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/'
+type:
+    - Stage
+encode: object
+description: |
+    Returns a Change Stream cursor for the collection or database. This stage can only occur once in an aggregation pipeline and it must occur as the first stage.
+arguments:
+    -
+        name: allChangesForCluster
+        type:
+            - bool
+        optional: true
+        description: |
+            A flag indicating whether the stream should report all changes that occur on the deployment, aside from those on internal databases or collections.
+    -
+        name: fullDocument
+        type:
+            - FullDocument
+        optional: true
+        description: |
+            Specifies whether change notifications include a copy of the full document when modified by update operations.
+    -
+        name: fullDocumentBeforeChange
+        type:
+            - FullDocumentBeforeChange
+        optional: true
+        description: |
+            Valid values are "off", "whenAvailable", or "required". If set to "off", the "fullDocumentBeforeChange" field of the output document is always omitted. If set to "whenAvailable", the "fullDocumentBeforeChange" field will be populated with the pre-image of the document modified by the current change event if such a pre-image is available, and will be omitted otherwise. If set to "required", then the "fullDocumentBeforeChange" field is always populated and an exception is thrown if the pre-image is not              available.
+    -
+        name: resumeAfter
+        type:
+            - int
+        optional: true
+        description: |
+            Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields.
+    -
+        name: showExpandedEvents
+        type:
+            - bool
+        optional: true
+        description: |
+            Specifies whether to include additional change events, such as such as DDL and index operations.
+            New in version 6.0.
+    -
+        name: startAfter
+        type:
+            - object
+        optional: true
+        description: |
+            Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields.
+    -
+        name: startAtOperationTime
+        type:
+            - Timestamp
+        optional: true
+        description: |
+            Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.

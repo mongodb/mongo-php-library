@@ -1,0 +1,23 @@
+# $schema: ../schema.json
+name: $sortArray
+category:
+    - 'Array Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/'
+type:
+    - resolvesToArray
+encode: object
+description: |
+    Sorts the elements of an array.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            The array to be sorted.
+    -
+        name: sortBy
+        type:
+            - SortSpec
+        description: |
+            The document specifies a sort ordering.

@@ -1,0 +1,37 @@
+# $schema: ../schema.json
+name: $convert
+category:
+    - 'Type Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/convert/'
+type:
+    - resolvesToAnything
+encode: object
+description: |
+    Converts a value to a specified type.
+    New in version 4.0.
+arguments:
+    -
+        name: input
+        type:
+            - expression
+    -
+        name: to
+        type:
+            - resolvesToString
+            - resolvesToInt
+    -
+        name: onError
+        type:
+            - expression
+        optional: true
+        description: |
+            The value to return on encountering an error during conversion, including unsupported type conversions. The arguments can be any valid expression.
+            If unspecified, the operation throws an error upon encountering an error and stops.
+    -
+        name: onNull
+        type:
+            - expression
+        optional: true
+        description: |
+            The value to return if the input is null or missing. The arguments can be any valid expression.
+            If unspecified, $convert returns null if the input is null or missing.

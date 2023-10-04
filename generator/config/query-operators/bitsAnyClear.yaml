@@ -1,0 +1,17 @@
+# $schema: ../schema.json
+name: $bitsAnyClear
+category:
+    - 'Bitwise Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/'
+type:
+    - Query
+encode: single
+description: |
+    Matches numeric or binary values in which any bit from a set of bit positions has a value of 0.
+arguments:
+    -
+        name: bitmask
+        type:
+            - int
+            - Binary
+            - list<int>

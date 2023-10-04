@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $gt
+category:
+    - 'Comparison Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/gt/'
+type:
+    - Query
+encode: single
+description: |
+    Matches values that are greater than a specified value.
+arguments:
+    -
+        name: value
+        type:
+            - Constant

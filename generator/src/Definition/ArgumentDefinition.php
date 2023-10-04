@@ -12,14 +12,16 @@ use function sprintf;
 
 final readonly class ArgumentDefinition
 {
+    public ?VariadicType $variadic;
     public ?int $variadicMin;
 
     public function __construct(
         public string $name,
-        /** @psalm-assert string|list<string> $type */
-        public string|array $type,
-        public bool $isOptional = false,
-        public bool $isVariadic = false,
+        /** @psalm-assert list<string> $type */
+        public array $type,
+        public ?string $description = null,
+        public bool $optional = false,
+        ?string $variadic = null,
         ?int $variadicMin = null,
     ) {
         if (is_array($type)) {
@@ -29,13 +31,16 @@ final readonly class ArgumentDefinition
             }
         }
 
-        if (! $isVariadic) {
-            assert($variadicMin === null);
-            $this->variadicMin = null;
-        } elseif ($variadicMin === null) {
-            $this->variadicMin = $isOptional ? 0 : 1;
+        if ($variadic) {
+            $this->variadic = VariadicType::from($variadic);
+            if ($variadicMin === null) {
+                $this->variadicMin = $optional ? 0 : 1;
+            } else {
+                $this->variadicMin = $variadicMin;
+            }
         } else {
-            $this->variadicMin = $variadicMin;
+            $this->variadic = null;
+            $this->variadicMin = null;
         }
     }
 }

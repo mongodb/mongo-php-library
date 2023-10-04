@@ -5,11 +5,16 @@ namespace MongoDB\CodeGenerator;
 
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
+use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpNamespace;
+use RuntimeException;
+use Throwable;
 
 use function implode;
 use function ltrim;
+use function rtrim;
+use function sprintf;
 use function str_replace;
 use function usort;
 
@@ -33,37 +38,11 @@ final class OperatorFactoryGenerator extends OperatorGenerator
         usort($operators, fn (OperatorDefinition $a, OperatorDefinition $b) => $a->name <=> $b->name);
 
         foreach ($operators as $operator) {
-            $operatorClassName = '\\' . $definition->namespace . '\\' . $this->getOperatorClassName($definition, $operator);
-            $namespace->addUse($operatorClassName);
-
-            $method = $class->addMethod($operator->name);
-            $method->setStatic();
-            $args = [];
-            foreach ($operator->arguments as $argument) {
-                $type = $this->generateExpressionTypes($argument);
-                foreach ($type->use as $use) {
-                    $namespace->addUse($use);
-                }
-
-                $parameter = $method->addParameter($argument->name);
-                $parameter->setType($type->native);
-                if ($argument->isVariadic) {
-                    $method->setVariadic();
-                    $method->addComment('@param ' . $type->doc . ' ...$' . $argument->name);
-                    $args[] = '...$' . $argument->name;
-                } else {
-                    if ($argument->isOptional) {
-                        $parameter->setDefaultValue(new Literal('Optional::Undefined'));
-                    }
-
-                    $method->addComment('@param ' . $type->doc . ' $' . $argument->name);
-                    $args[] = '$' . $argument->name;
-                }
+            try {
+                $this->addMethod($definition, $operator, $namespace, $class);
+            } catch (Throwable $e) {
+                throw new RuntimeException(sprintf('Failed to generate class for operator "%s"', $operator->name), 0, $e);
             }
-
-            $operatorShortClassName = ltrim(str_replace($definition->namespace, '', $operatorClassName), '\\');
-            $method->addBody('return new ' . $operatorShortClassName . '(' . implode(', ', $args) . ');');
-            $method->setReturnType($operatorClassName);
         }
 
         // Pedantry requires private methods to be at the end
@@ -71,5 +50,40 @@ final class OperatorFactoryGenerator extends OperatorGenerator
             ->setComment('This class cannot be instantiated.');
 
         return $namespace;
+    }
+
+    private function addMethod(GeneratorDefinition $definition, OperatorDefinition $operator, PhpNamespace $namespace, ClassType $class): void
+    {
+        $operatorClassName = '\\' . $definition->namespace . '\\' . $this->getOperatorClassName($definition, $operator);
+        $namespace->addUse($operatorClassName);
+
+        $method = $class->addMethod(ltrim($operator->name, '$'));
+        $method->setStatic();
+        $args = [];
+        foreach ($operator->arguments as $argument) {
+            $type = $this->generateExpressionTypes($argument);
+            foreach ($type->use as $use) {
+                $namespace->addUse($use);
+            }
+
+            $parameter = $method->addParameter($argument->name);
+            $parameter->setType($type->native);
+            if ($argument->variadic) {
+                $method->setVariadic();
+                $method->addComment('@param ' . $type->doc . ' ...$' . $argument->name . rtrim(' ' . $argument->description));
+                $args[] = '...$' . $argument->name;
+            } else {
+                if ($argument->optional) {
+                    $parameter->setDefaultValue(new Literal('Optional::Undefined'));
+                }
+
+                $method->addComment('@param ' . $type->doc . ' $' . $argument->name . rtrim(' ' . $argument->description));
+                $args[] = '$' . $argument->name;
+            }
+        }
+
+        $operatorShortClassName = ltrim(str_replace($definition->namespace, '', $operatorClassName), '\\');
+        $method->addBody('return new ' . $operatorShortClassName . '(' . implode(', ', $args) . ');');
+        $method->setReturnType($operatorClassName);
     }
 }

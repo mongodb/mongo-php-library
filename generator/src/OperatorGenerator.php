@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
+use MongoDB\Builder\Aggregation\AccumulatorInterface;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Optional;
+use MongoDB\Builder\Query\QueryInterface;
+use MongoDB\Builder\Stage\StageInterface;
 use MongoDB\CodeGenerator\Definition\ArgumentDefinition;
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
@@ -12,13 +15,16 @@ use MongoDB\CodeGenerator\Definition\OperatorDefinition;
 use MongoDB\CodeGenerator\Definition\YamlReader;
 use Nette\PhpGenerator\Type;
 
+use function array_filter;
 use function array_key_exists;
 use function array_merge;
 use function array_unique;
 use function assert;
 use function class_exists;
+use function explode;
 use function in_array;
 use function interface_exists;
+use function ltrim;
 use function sort;
 use function sprintf;
 use function ucfirst;
@@ -39,23 +45,42 @@ abstract class OperatorGenerator extends AbstractGenerator
 
     abstract public function generate(GeneratorDefinition $definition): void;
 
-    /** @return list<OperatorDefinition> */
     final protected function getOperators(GeneratorDefinition $definition): array
     {
-        return $this->yamlReader->read($definition->configFile);
+        // Remove unsupported operators
+        return array_filter(
+            $this->yamlReader->read($definition->configFiles),
+            fn (OperatorDefinition $operator): bool => ! in_array($operator->name, ['$'], true),
+        );
     }
 
     final protected function getOperatorClassName(GeneratorDefinition $definition, OperatorDefinition $operator): string
     {
-        return ucfirst($operator->name) . $definition->classNameSuffix;
+        return ucfirst(ltrim($operator->name, '$')) . $definition->classNameSuffix;
     }
 
     /** @return class-string<ExpressionInterface>|string */
     final protected function getExpressionTypeInterface(string $type): string
     {
-        if ('expression' === $type) {
+        if ('expression' === $type || 'resolvesToAnything' === $type) {
             return ExpressionInterface::class;
         }
+
+        if ('Stage' === $type) {
+            return StageInterface::class;
+        }
+
+        if ('Accumulator' === $type) {
+            return AccumulatorInterface::class;
+        }
+
+        if ('Query' === $type) {
+            return QueryInterface::class;
+        }
+
+        // @todo handle generic types object<T> and array<T>
+        $type = explode('<', $type, 2)[0];
+        $type = explode('{', $type, 2)[0];
 
         // Scalar types
         if (array_key_exists($type, $this->expressions)) {
@@ -77,7 +102,7 @@ abstract class OperatorGenerator extends AbstractGenerator
     final protected function generateExpressionTypes(ArgumentDefinition $arg): object
     {
         $nativeTypes = [];
-        foreach ((array) $arg->type as $type) {
+        foreach ($arg->type as $type) {
             $interface = $this->getExpressionTypeInterface($type);
             $types = $this->expressions[$interface]->types;
 
@@ -87,6 +112,11 @@ abstract class OperatorGenerator extends AbstractGenerator
             }
 
             $nativeTypes = array_merge($nativeTypes, $types);
+        }
+
+        if ($arg->optional) {
+            $use[] = '\\' . Optional::class;
+            $nativeTypes[] = Optional::class;
         }
 
         $docTypes = $nativeTypes = array_unique($nativeTypes);
@@ -117,12 +147,6 @@ abstract class OperatorGenerator extends AbstractGenerator
                     unset($nativeTypes[$key]);
                 }
             }
-        }
-
-        if ($arg->isOptional) {
-            $use[] = '\\' . Optional::class;
-            $docTypes[] = 'Optional';
-            $nativeTypes[] = Optional::class;
         }
 
         // mixed can only be used as a standalone type

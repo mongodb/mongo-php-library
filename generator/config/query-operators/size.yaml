@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $size
+category:
+    - 'Array Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/size/'
+type:
+    - Query
+encode: single
+description: |
+    Selects documents if the array field is a specified size.
+arguments:
+    -
+        name: value
+        type:
+            - int

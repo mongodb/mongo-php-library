@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $bsonSize
+category:
+    - 'Data Size Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/'
+type:
+    - resolvesToInt
+encode: single
+description: |
+    Returns the size in bytes of a given document (i.e. bsontype Object) when encoded as BSON.
+arguments:
+    -
+        name: object
+        type:
+            - resolvesToObject
+            - resolvesToNull

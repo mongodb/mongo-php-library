@@ -1,0 +1,40 @@
+# $schema: ../schema.json
+name: $percentile
+category:
+    - Accumulators
+    - 'Accumulators (in Other Stages)'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/'
+type:
+    - resolvesToArray<scalar>
+    - Accumulator
+encode: object
+description: |
+    Returns an array of scalar values that correspond to specified percentile values.
+    New in version 7.0.
+
+    This operator is available as an accumulator in these stages:
+    $group
+
+    $setWindowFields
+
+    It is also available as an aggregation expression.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToNumber
+        description: |
+            $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
+    -
+        name: p
+        type:
+            - resolvesToArray<resolvesToNumber>
+        description: |
+            $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
+            $percentile returns results in the same order as the elements in p.
+    -
+        name: method
+        type:
+            - AccumulatorPercentile
+        description: |
+            The method that mongod uses to calculate the percentile value. The method must be 'approximate'.

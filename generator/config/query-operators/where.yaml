@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $where
+category:
+    - 'Evaluation Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/where/'
+type:
+    - Query
+encode: single
+description: |
+    Matches documents that satisfy a JavaScript expression.
+arguments:
+    -
+        name: function
+        type:
+            - string

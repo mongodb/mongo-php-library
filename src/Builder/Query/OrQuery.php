@@ -6,26 +6,27 @@
 
 namespace MongoDB\Builder\Query;
 
-use MongoDB\Builder\Expression\ExpressionInterface;
-use MongoDB\Builder\Expression\ResolvesToBool;
+use MongoDB\Builder\Encode;
 
-class OrQuery implements ResolvesToBool
+class OrQuery implements QueryInterface
 {
     public const NAME = '$or';
-    public const ENCODE = 'single';
+    public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<ExpressionInterface|mixed> ...$query */
-    public array $query;
+    /** @param list<QueryInterface|array|object> ...$expression */
+    public array $expression;
 
     /**
-     * @param ExpressionInterface|mixed $query
+     * @param QueryInterface|array|object $expression
      */
-    public function __construct(mixed ...$query)
+    public function __construct(array|object ...$expression)
     {
-        if (\count($query) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values, got %d.', 1, \count($query)));
+        if (! \array_is_list($expression)) {
+            throw new \InvalidArgumentException('Expected $expression arguments to be a list of QueryInterface|array|object, named arguments are not supported');
         }
-
-        $this->query = $query;
+        if (\count($expression) < 1) {
+            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
+        }
+        $this->expression = $expression;
     }
 }

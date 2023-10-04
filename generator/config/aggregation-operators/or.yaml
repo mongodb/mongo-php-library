@@ -1,0 +1,17 @@
+# $schema: ../schema.json
+name: $or
+category:
+    - 'Boolean Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/'
+type:
+    - resolvesToBool
+encode: single
+description: |
+    Returns true when any of its expressions evaluates to true. Accepts any number of argument expressions.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+            - resolvesToBool
+        variadic: array

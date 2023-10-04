@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $setUnion
+category:
+    - 'Set Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setUnion/'
+type:
+    - resolvesToArray
+encode: single
+description: |
+    Returns a set with elements that appear in any of the input sets.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToArray
+        variadic: array

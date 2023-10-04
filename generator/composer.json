@@ -20,6 +20,7 @@
         "symfony/console": "^6.3",
         "symfony/css-selector": "^6.3",
         "symfony/dom-crawler": "^6.3",
+        "symfony/finder": "^6.3",
         "symfony/yaml": "^6.3"
     },
     "license": "Apache-2.0",

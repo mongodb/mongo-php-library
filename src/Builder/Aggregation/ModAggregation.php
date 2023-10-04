@@ -6,23 +6,32 @@
 
 namespace MongoDB\Builder\Aggregation;
 
-use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\BSON\Decimal128;
+use MongoDB\BSON\Int64;
+use MongoDB\Builder\Encode;
+use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\Builder\Expression\ResolvesToNumber;
 
-class ModAggregation implements ExpressionInterface
+class ModAggregation implements ResolvesToInt
 {
     public const NAME = '$mod';
-    public const ENCODE = 'array';
+    public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    public mixed $expression1;
-    public mixed $expression2;
+    /** @param Decimal128|Int64|ResolvesToNumber|float|int $dividend The first argument is the dividend, and the second argument is the divisor; i.e. first argument is divided by the second argument. */
+    public Decimal128|Int64|ResolvesToNumber|float|int $dividend;
+
+    /** @param Decimal128|Int64|ResolvesToNumber|float|int $divisor */
+    public Decimal128|Int64|ResolvesToNumber|float|int $divisor;
 
     /**
-     * @param ExpressionInterface|mixed $expression1
-     * @param ExpressionInterface|mixed $expression2
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $dividend The first argument is the dividend, and the second argument is the divisor; i.e. first argument is divided by the second argument.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $divisor
      */
-    public function __construct(mixed $expression1, mixed $expression2)
-    {
-        $this->expression1 = $expression1;
-        $this->expression2 = $expression2;
+    public function __construct(
+        Decimal128|Int64|ResolvesToNumber|float|int $dividend,
+        Decimal128|Int64|ResolvesToNumber|float|int $divisor,
+    ) {
+        $this->dividend = $dividend;
+        $this->divisor = $divisor;
     }
 }

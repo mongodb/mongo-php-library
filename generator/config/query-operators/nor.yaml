@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $nor
+category:
+    - 'Logical Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nor/'
+type:
+    - Query
+encode: single
+description: |
+    Joins query clauses with a logical NOR returns all documents that fail to match both clauses.
+arguments:
+    -
+        name: expression
+        type:
+            - Query
+        variadic: array

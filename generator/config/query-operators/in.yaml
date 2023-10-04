@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $in
+category:
+    - 'Comparison Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/in/'
+type:
+    - Query
+encode: single
+description: |
+    Matches any of the values specified in an array.
+arguments:
+    -
+        name: value
+        type:
+            - Constant

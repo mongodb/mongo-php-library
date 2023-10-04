@@ -182,7 +182,7 @@ final class ScrapeCommand extends Command
         $spec['category'] = explode(PHP_EOL, $doc['Category']);
         sort($spec['category']);
         $spec['link'] = $doc['Link'];
-        $spec['returnType'] = explode(PHP_EOL, $doc['ReturnType']);
+        $spec['type'] = explode(PHP_EOL, $doc['ReturnType']);
         $spec['encode'] = $doc['Encode'];
 
         if ($doc['Description']) {
@@ -194,18 +194,29 @@ final class ScrapeCommand extends Command
                 assert(isset($arg[$key]), 'Missing Arg' . $key . ' for ' . var_export($doc, true));
             }
 
-            $parameter = [];
-            $parameter['name'] = $arg['Name'];
-            $parameter['type'] = explode(PHP_EOL, $doc['ReturnType']);
+            // Skip if the argument has no name, which means there is no argument
+            if ($arg['Name'] === '') {
+                continue;
+            }
+
+            $argument = [];
+            $argument['name'] = $arg['Name'];
+            $argument['type'] = explode(PHP_EOL, $arg['Type']);
             if (str_contains($arg['Options'], 'Optional')) {
-                $parameter['optional'] = true;
+                $argument['optional'] = true;
+            }
+
+            if (str_contains($arg['Options'], 'Variadic map')) {
+                $argument['variadic'] = 'object';
+            } elseif (str_contains($arg['Options'], 'Variadic list')) {
+                $argument['variadic'] = 'array';
             }
 
             if ($arg['Description']) {
-                $parameter['description'] = $arg['Description'] . PHP_EOL;
+                $argument['description'] = $arg['Description'] . PHP_EOL;
             }
 
-            $spec['parameters'][] = $parameter;
+            $spec['arguments'][] = $argument;
         }
 
         return $spec;
@@ -213,7 +224,7 @@ final class ScrapeCommand extends Command
 
     private function writeYamlFile(string $dirname, array $data): void
     {
-        $yaml = Yaml::dump($data, 3, 4, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
+        $yaml = Yaml::dump($data, 4, 4, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
         $dirname = $this->configDir . '/' . $dirname;
         if (! file_exists($dirname)) {
             mkdir($dirname, 0755);

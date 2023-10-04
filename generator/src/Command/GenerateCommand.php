@@ -80,7 +80,7 @@ final class GenerateCommand extends Command
             $definition = new GeneratorDefinition(...$def);
 
             foreach ($definition->generators as $generatorClass) {
-                $output->writeln(sprintf('Generating classes for %s with %s', basename($definition->configFile), $generatorClass));
+                $output->writeln(sprintf('Generating classes for %s with %s', basename($definition->configFiles), $generatorClass));
                 assert(is_a($generatorClass, OperatorGenerator::class, true));
                 $generator = new $generatorClass($this->rootDir, $expressions);
                 $generator->generate($definition);

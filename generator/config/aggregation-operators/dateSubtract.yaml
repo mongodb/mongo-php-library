@@ -1,0 +1,37 @@
+# $schema: ../schema.json
+name: $dateSubtract
+category:
+    - 'Date Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/'
+type:
+    - resolvesToDate
+encode: object
+description: |
+    Subtracts a number of time units from a date object.
+arguments:
+    -
+        name: startDate
+        type:
+            - resolvesToDate
+            - resolvesToTimestamp
+            - resolvesToObjectId
+        description: |
+            The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+    -
+        name: unit
+        type:
+            - resolvesToString
+        description: |
+            The unit used to measure the amount of time added to the startDate.
+    -
+        name: amount
+        type:
+            - resolvesToInt
+            - resolvesToLong
+    -
+        name: timezone
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.

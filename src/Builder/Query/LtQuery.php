@@ -6,18 +6,18 @@
 
 namespace MongoDB\Builder\Query;
 
-use MongoDB\Builder\Expression\ExpressionInterface;
-use MongoDB\Builder\Expression\ResolvesToBool;
+use MongoDB\Builder\Encode;
 
-class LtQuery implements ResolvesToBool
+class LtQuery implements QueryInterface
 {
     public const NAME = '$lt';
-    public const ENCODE = 'single';
+    public const ENCODE = \MongoDB\Builder\Encode::Single;
 
+    /** @param mixed $value */
     public mixed $value;
 
     /**
-     * @param ExpressionInterface|mixed $value
+     * @param mixed $value
      */
     public function __construct(mixed $value)
     {

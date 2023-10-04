@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $radiansToDegrees
+category:
+    - 'Trigonometry Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/'
+type:
+    - resolvesToDouble
+    - resolvesToDecimal
+encode: single
+description: |
+    Converts a value from radians to degrees.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToNumber

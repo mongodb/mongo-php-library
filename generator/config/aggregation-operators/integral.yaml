@@ -1,0 +1,26 @@
+# $schema: ../schema.json
+name: $integral
+category:
+    - 'Window Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/'
+type:
+    - resolvesToDouble
+    - resolvesToDecimal
+encode: object
+description: |
+    Returns the approximation of the area under a curve.
+    New in version 5.0.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToNumber
+            - resolvesToDate
+    -
+        name: unit
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
+            If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.

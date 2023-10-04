@@ -1,0 +1,19 @@
+# $schema: ../schema.json
+name: $mod
+category:
+    - 'Evaluation Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/mod/'
+type:
+    - Query
+encode: array
+description: |
+    Performs a modulo operation on the value of a field and selects documents with a specified result.
+arguments:
+    -
+        name: divisor
+        type:
+            - int
+    -
+        name: remainder
+        type:
+            - int

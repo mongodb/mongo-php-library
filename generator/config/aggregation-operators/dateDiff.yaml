@@ -1,0 +1,47 @@
+# $schema: ../schema.json
+name: $dateDiff
+category:
+    - 'Date Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/'
+type:
+    - resolvesToInt
+encode: object
+description: |
+    Returns the difference between two dates.
+arguments:
+    -
+        name: startDate
+        type:
+            - resolvesToDate
+            - resolvesToTimestamp
+            - resolvesToObjectId
+        description: |
+            The start of the time period. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+    -
+        name: endDate
+        type:
+            - resolvesToDate
+            - resolvesToTimestamp
+            - resolvesToObjectId
+        description: |
+            The end of the time period. The endDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
+    -
+        name: unit
+        type:
+            - resolvesToString
+        description: |
+            The time measurement unit between the startDate and endDate
+    -
+        name: timezone
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+    -
+        name: startOfWeek
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            Used when the unit is equal to week. Defaults to Sunday. The startOfWeek parameter is an expression that resolves to a case insensitive string

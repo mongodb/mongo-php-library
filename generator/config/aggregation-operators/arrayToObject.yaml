@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $arrayToObject
+category:
+    - 'Array Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/'
+type:
+    - resolvesToObject
+encode: array
+description: |
+    Converts an array of key value pairs to a document.
+arguments:
+    -
+        name: array
+        type:
+            - resolvesToArray

@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $eq
+category:
+    - 'Comparison Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/eq/'
+type:
+    - Query
+encode: single
+description: |
+    Matches values that are equal to a specified value.
+arguments:
+    -
+        name: value
+        type:
+            - Constant

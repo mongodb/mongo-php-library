@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $polygon
+category:
+    - 'Geospatial Geometry Specifiers'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/polygon/'
+type:
+    - Query
+encode: single
+description: |
+    Specifies a polygon to using legacy coordinate pairs for $geoWithin queries. The 2d index supports $center.
+arguments:
+    -
+        name: points
+        type:
+            - array

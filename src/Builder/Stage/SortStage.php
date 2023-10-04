@@ -6,27 +6,21 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\BSON\Document;
-use MongoDB\BSON\Int64;
-use MongoDB\BSON\Serializable;
+use MongoDB\Builder\Encode;
 
 class SortStage implements StageInterface
 {
     public const NAME = '$sort';
-    public const ENCODE = 'single';
+    public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<Document|Int64|Serializable|array|int|object> ...$sortSpecification */
-    public array $sortSpecification;
+    /** @param array|object $sort */
+    public array|object $sort;
 
     /**
-     * @param Document|Int64|Serializable|array|int|object $sortSpecification
+     * @param array|object $sort
      */
-    public function __construct(array|int|object ...$sortSpecification)
+    public function __construct(array|object $sort)
     {
-        if (\count($sortSpecification) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values, got %d.', 1, \count($sortSpecification)));
-        }
-
-        $this->sortSpecification = $sortSpecification;
+        $this->sort = $sort;
     }
 }

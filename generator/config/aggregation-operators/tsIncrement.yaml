@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $tsIncrement
+category:
+    - 'Timestamp Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsIncrement/'
+type:
+    - resolvesToLong
+encode: single
+description: |
+    Returns the incrementing ordinal from a timestamp as a long.
+    New in version 5.1.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToTimestamp

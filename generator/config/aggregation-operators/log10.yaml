@@ -1,0 +1,17 @@
+# $schema: ../schema.json
+name: $log10
+category:
+    - 'Arithmetic Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/log10/'
+type:
+    - resolvesToDouble
+encode: single
+description: |
+    Calculates the log base 10 of a number.
+arguments:
+    -
+        name: number
+        type:
+            - resolvesToNumber
+        description: |
+            Any valid expression as long as it resolves to a non-negative number.

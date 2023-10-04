@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $strLenBytes
+category:
+    - 'String Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/'
+type:
+    - resolvesToInt
+encode: single
+description: |
+    Returns the number of UTF-8 encoded bytes in a string.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToString

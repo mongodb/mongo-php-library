@@ -1,0 +1,17 @@
+# $schema: ../schema.json
+name: $unset
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/'
+type:
+    - Stage
+encode: single
+description: |
+    Removes or excludes fields from documents.
+    Alias for $project stage that removes or excludes fields.
+arguments:
+    -
+        name: field
+        type:
+            - FieldPath
+        variadic: array

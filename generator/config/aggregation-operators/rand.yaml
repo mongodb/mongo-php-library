@@ -1,0 +1,10 @@
+# $schema: ../schema.json
+name: $rand
+category:
+    - 'Miscellaneous Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/'
+type:
+    - resolvesToFloat
+encode: object
+description: |
+    Returns a random float between 0 and 1

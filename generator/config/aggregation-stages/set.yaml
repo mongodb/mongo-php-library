@@ -1,0 +1,17 @@
+# $schema: ../schema.json
+name: $set
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/'
+type:
+    - Stage
+encode: single
+description: |
+    Adds new fields to documents. Outputs documents that contain all existing fields from the input documents and newly added fields.
+    Alias for $addFields.
+arguments:
+    -
+        name: field
+        type:
+            - expression
+        variadic: object

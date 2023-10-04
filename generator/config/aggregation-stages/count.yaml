@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $count
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/'
+type:
+    - Stage
+encode: single
+description: |
+    Returns a count of the number of documents at this stage of the aggregation pipeline.
+    Distinct from the $count aggregation accumulator.
+arguments:
+    -
+        name: field
+        type:
+            - string

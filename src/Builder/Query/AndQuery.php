@@ -6,25 +6,27 @@
 
 namespace MongoDB\Builder\Query;
 
-use MongoDB\Builder\Expression\ResolvesToBool;
+use MongoDB\Builder\Encode;
 
-class AndQuery implements ResolvesToBool
+class AndQuery implements QueryInterface
 {
     public const NAME = '$and';
-    public const ENCODE = 'single';
+    public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<ResolvesToBool|bool> ...$query */
-    public array $query;
+    /** @param list<QueryInterface|array|object> ...$expression */
+    public array $expression;
 
     /**
-     * @param ResolvesToBool|bool $query
+     * @param QueryInterface|array|object $expression
      */
-    public function __construct(ResolvesToBool|bool ...$query)
+    public function __construct(array|object ...$expression)
     {
-        if (\count($query) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values, got %d.', 1, \count($query)));
+        if (! \array_is_list($expression)) {
+            throw new \InvalidArgumentException('Expected $expression arguments to be a list of QueryInterface|array|object, named arguments are not supported');
         }
-
-        $this->query = $query;
+        if (\count($expression) < 1) {
+            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
+        }
+        $this->expression = $expression;
     }
 }

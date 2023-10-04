@@ -8,7 +8,7 @@ use MongoDB\CodeGenerator\OperatorFactoryGenerator;
 return [
     // Aggregation Pipeline Stages
     [
-        'configFile' => __DIR__ . '/stages.yaml',
+        'configFiles' => __DIR__ . '/aggregation-stages',
         'namespace' => 'MongoDB\\Builder\\Stage',
         'classNameSuffix' => 'Stage',
         'generators' => [
@@ -19,7 +19,7 @@ return [
 
     // Aggregation Pipeline Operators
     [
-        'configFile' => __DIR__ . '/pipeline-operators.yaml',
+        'configFiles' => __DIR__ . '/aggregation-operators',
         'namespace' => 'MongoDB\\Builder\\Aggregation',
         'classNameSuffix' => 'Aggregation',
         'generators' => [
@@ -30,7 +30,7 @@ return [
 
     // Query Operators
     [
-        'configFile' => __DIR__ . '/query-operators.yaml',
+        'configFiles' => __DIR__ . '/query-operators',
         'namespace' => 'MongoDB\\Builder\\Query',
         'classNameSuffix' => 'Query',
         'generators' => [

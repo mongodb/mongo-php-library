@@ -1,0 +1,18 @@
+# $schema: ../schema.json
+name: $bitNot
+category:
+    - 'Bitwise Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitNot/'
+type:
+    - resolvesToInt
+    - resolvesToLong
+encode: single
+description: |
+    Returns the result of a bitwise not operation on a single argument or an array that contains a single int or long value.
+    New in version 6.3.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToInt
+            - resolvesToLong

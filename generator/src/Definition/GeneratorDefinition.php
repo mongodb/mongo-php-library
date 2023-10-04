@@ -17,7 +17,7 @@ use function str_starts_with;
 final readonly class GeneratorDefinition
 {
     public function __construct(
-        public string $configFile,
+        public string $configFiles,
         /** @psalm-assert list<class-string<OperatorGenerator>> */
         public array $generators,
         public string $namespace,

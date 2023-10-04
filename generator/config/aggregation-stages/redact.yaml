@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $redact
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/'
+type:
+    - Stage
+encode: single
+description: |
+    Reshapes each document in the stream by restricting the content for each document based on information stored in the documents themselves. Incorporates the functionality of $project and $match. Can be used to implement field level redaction. For each input document, outputs either one or zero documents.
+arguments:
+    -
+        name: expression
+        type:
+            - expression

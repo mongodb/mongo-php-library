@@ -1,0 +1,34 @@
+# $schema: ../schema.json
+name: $reduce
+category:
+    - 'Array Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/'
+type:
+    - resolvesToAnything
+encode: object
+description: |
+    Applies an expression to each element in an array and combines them into a single value.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            Can be any valid expression that resolves to an array.
+            If the argument resolves to a value of null or refers to a missing field, $reduce returns null.
+            If the argument does not resolve to an array or null nor refers to a missing field, $reduce returns an error.
+    -
+        name: initialValue
+        type:
+            - expression
+        description: |
+            The initial cumulative value set before in is applied to the first element of the input array.
+    -
+        name: in
+        type:
+            - expression
+        description: |
+            A valid expression that $reduce applies to each element in the input array in left-to-right order. Wrap the input value with $reverseArray to yield the equivalent of applying the combining expression from right-to-left.
+            During evaluation of the in expression, two variables will be available:
+            - value is the variable that represents the cumulative value of the expression.
+            - this is the variable that refers to the element being processed.

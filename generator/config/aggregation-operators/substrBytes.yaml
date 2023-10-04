@@ -1,0 +1,27 @@
+# $schema: ../schema.json
+name: $substrBytes
+category:
+    - 'String Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/'
+type:
+    - resolvesToString
+encode: array
+description: |
+    Returns the substring of a string. Starts with the character at the specified UTF-8 byte index (zero-based) in the string and continues for the specified number of bytes.
+arguments:
+    -
+        name: string
+        type:
+            - resolvesToString
+    -
+        name: start
+        type:
+            - resolvesToInt
+        description: |
+            If start is a negative number, $substr returns an empty string "".
+    -
+        name: length
+        type:
+            - resolvesToInt
+        description: |
+            If length is a negative number, $substr returns a substring that starts at the specified index and includes the rest of the string.

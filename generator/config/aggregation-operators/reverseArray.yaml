@@ -1,0 +1,17 @@
+# $schema: ../schema.json
+name: $reverseArray
+category:
+    - 'Array Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reverseArray/'
+type:
+    - resolvesToArray
+encode: single
+description: |
+    Returns an array with the elements in reverse order.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToArray
+        description: |
+            The argument can be any valid expression as long as it resolves to an array.

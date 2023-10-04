@@ -1,0 +1,19 @@
+# $schema: ../schema.json
+name: $lte
+category:
+    - 'Comparison Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lte/'
+type:
+    - resolvesToBool
+encode: array
+description: |
+    Returns true if the first value is less than or equal to the second.
+arguments:
+    -
+        name: expression1
+        type:
+            - expression
+    -
+        name: expression2
+        type:
+            - expression

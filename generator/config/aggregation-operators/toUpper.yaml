@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $toUpper
+category:
+    - 'String Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/'
+type:
+    - resolvesToString
+encode: single
+description: |
+    Converts a string to uppercase. Accepts a single argument expression.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToString

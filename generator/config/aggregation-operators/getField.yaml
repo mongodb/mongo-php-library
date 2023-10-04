@@ -1,0 +1,27 @@
+# $schema: ../schema.json
+name: $getField
+category:
+    - 'Miscellaneous Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/'
+type:
+    - resolvesToAnything
+encode: object
+description: |
+    Returns the value of a specified field from a document. You can use $getField to retrieve the value of fields with names that contain periods (.) or start with dollar signs ($).
+    New in version 5.0.
+arguments:
+    -
+        name: field
+        type:
+            - string
+        description: |
+            Field in the input object for which you want to return a value. field can be any valid expression that resolves to a string constant.
+            If field begins with a dollar sign ($), place the field name inside of a $literal expression to return its value.
+    -
+        name: input
+        type:
+            - expression
+        optional: true
+        description: |
+            Default: $$CURRENT
+            A valid expression that contains the field for which you want to return a value. input must resolve to an object, missing, null, or undefined. If omitted, defaults to the document currently being processed in the pipeline ($$CURRENT).

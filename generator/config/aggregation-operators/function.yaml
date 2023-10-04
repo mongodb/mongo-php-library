@@ -1,0 +1,28 @@
+# $schema: ../schema.json
+name: $function
+category:
+    - 'Custom Aggregation Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/'
+type:
+    - resolvesToAnything
+encode: object
+description: |
+    Defines a custom function.
+    New in version 4.4.
+arguments:
+    -
+        name: body
+        type:
+            - string
+        description: |
+            The function definition. You can specify the function definition as either BSON type Code or String.
+    -
+        name: args
+        type:
+            - array
+        description: |
+            Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
+    -
+        name: lang
+        type:
+            - string

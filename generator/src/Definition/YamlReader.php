@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Definition;
 
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
 use function array_key_exists;
@@ -15,21 +16,22 @@ final class YamlReader
     private static array $definitions = [];
 
     /** @return list<OperatorDefinition> */
-    public function read(string $filename): array
+    public function read(string $dirname): array
     {
-        if (array_key_exists($filename, self::$definitions)) {
-            return self::$definitions[$filename];
+        if (array_key_exists($dirname, self::$definitions)) {
+            return self::$definitions[$dirname];
         }
 
-        $config = Yaml::parseFile($filename);
-        assert(is_array($config));
+        $finder = new Finder();
+        $finder->files()->in($dirname)->name('*.yaml');
 
         $definitions = [];
-        foreach ($config as $operator) {
+        foreach ($finder as $file) {
+            $operator = Yaml::parseFile($file->getPathname());
             assert(is_array($operator));
             $definitions[] = new OperatorDefinition(...$operator);
         }
 
-        return self::$definitions[$filename] = $definitions;
+        return self::$definitions[$dirname] = $definitions;
     }
 }

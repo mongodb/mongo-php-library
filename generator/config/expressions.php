@@ -5,6 +5,9 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON;
+use MongoDB\Builder\Aggregation\AccumulatorInterface;
+use MongoDB\Builder\Pipeline;
+use MongoDB\Builder\Query\QueryInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -20,14 +23,44 @@ function typeFieldPath(string $resolvesTo): array
 }
 
 return [
+    'mixed' => ['scalar' => true, 'types' => ['mixed']],
     'null' => ['scalar' => true, 'types' => ['null']],
     'int' => ['scalar' => true, 'types' => ['int', BSON\Int64::class]],
     'double' => ['scalar' => true, 'types' => ['int', BSON\Int64::class, 'float']],
+    'float' => ['scalar' => true, 'types' => ['int', BSON\Int64::class, 'float']],
     'decimal' => ['scalar' => true, 'types' => ['int', BSON\Int64::class, 'float', BSON\Decimal128::class]],
     'number' => ['scalar' => true, 'types' => ['int', BSON\Int64::class, 'float', BSON\Decimal128::class]],
     'string' => ['scalar' => true, 'types' => ['string']],
-    'boolean' => ['scalar' => true, 'types' => ['bool']],
+    'bool' => ['scalar' => true, 'types' => ['bool']],
     'object' => ['scalar' => true, 'types' => ['array', 'object', BSON\Document::class, BSON\Serializable::class]],
+    'Regex' => ['scalar' => true, 'types' => [BSON\Regex::class]],
+    'Constant' => ['scalar' => true, 'types' => ['mixed']],
+    'Binary' => ['scalar' => true, 'types' => ['string', BSON\Binary::class]],
+
+    AccumulatorInterface::class => ['scalar' => true, 'types' => [AccumulatorInterface::class]],
+    QueryInterface::class => ['scalar' => true, 'types' => [QueryInterface::class, 'array', 'object']],
+
+    // @todo merge this types
+    'list' => ['scalar' => true, 'types' => ['list', BSONArray::class, BSON\PackedArray::class]],
+    'array' => ['scalar' => true, 'types' => ['list', BSONArray::class, BSON\PackedArray::class]],
+
+    // @todo fine-tune all this types
+    'Granularity' => ['scalar' => true, 'types' => ['string']],
+    'FullDocument' => ['scalar' => true, 'types' => ['string']],
+    'FullDocumentBeforeChange' => ['scalar' => true, 'types' => ['string']],
+    'AccumulatorPercentile' => ['scalar' => true, 'types' => ['string']],
+    'Timestamp' => ['scalar' => true, 'types' => ['int']],
+    'CollStats' => ['scalar' => true, 'types' => ['object', 'array']],
+    'Range' => ['scalar' => true, 'types' => ['object', 'array']],
+    'FillOut' => ['scalar' => true, 'types' => ['object', 'array']],
+    'WhenMatched' => ['scalar' => true, 'types' => ['string']],
+    'WhenNotMatched' => ['scalar' => true, 'types' => ['string']],
+    'OutCollection' => ['scalar' => true, 'types' => ['string', 'object', 'array']],
+    'Pipeline' => ['scalar' => true, 'types' => [Pipeline::class, 'array']],
+    'SortSpec' => ['scalar' => true, 'types' => ['object', 'array']],
+    'Window' => ['scalar' => true, 'types' => ['object', 'array']],
+    'GeoPoint' => ['scalar' => true, 'types' => ['object', 'array']],
+    'Geometry' => ['scalar' => true, 'types' => ['object', 'array']],
 
     // Use Interface suffix to avoid confusion with MongoDB\Builder\Expression factory class
     ExpressionInterface::class => [
@@ -81,6 +114,16 @@ return [
         'types' => ['DateTimeInterface', 'UTCDateTime'],
     ],
     DateFieldPath::class => typeFieldPath(ResolvesToDate::class),
+    ResolvesToTimestamp::class => [
+        'implements' => [ResolvesToInt::class],
+        'types' => ['int', BSON\Int64::class],
+    ],
+    TimestampFieldPath::class => typeFieldPath(ResolvesToTimestamp::class),
+    ResolvesToObjectId::class => [
+        'implements' => [ExpressionInterface::class],
+        'types' => [BSON\ObjectId::class],
+    ],
+    ObjectIdFieldPath::class => typeFieldPath(ResolvesToObjectId::class),
     ResolvesToObject::class => [
         'implements' => [ExpressionInterface::class],
         'types' => ['array', 'object', BSON\Document::class, BSON\Serializable::class],
@@ -101,6 +144,11 @@ return [
         'types' => ['int', 'float', BSON\Int64::class, BSON\Decimal128::class],
     ],
     DecimalFieldPath::class => typeFieldPath(ResolvesToDecimal::class),
+    ResolvesToDouble::class => [
+        'implements' => [ResolvesToNumber::class],
+        'types' => ['int', BSON\Int64::class, 'float'],
+    ],
+    DoubleFieldPath::class => typeFieldPath(ResolvesToDouble::class),
     ResolvesToFloat::class => [
         'implements' => [ResolvesToNumber::class],
         'types' => ['int', 'float', BSON\Int64::class],
@@ -111,9 +159,19 @@ return [
         'types' => ['int', BSON\Int64::class],
     ],
     IntFieldPath::class => typeFieldPath(ResolvesToInt::class),
+    ResolvesToLong::class => [
+        'implements' => [ResolvesToNumber::class],
+        'types' => ['int', BSON\Int64::class],
+    ],
+    LongFieldPath::class => typeFieldPath(ResolvesToLong::class),
     ResolvesToString::class => [
         'implements' => [ExpressionInterface::class],
         'types' => ['string'],
     ],
     StringFieldPath::class => typeFieldPath(ResolvesToString::class),
+    ResolvesToBinary::class => [
+        'implements' => [ExpressionInterface::class],
+        'types' => ['string', BSON\Binary::class],
+    ],
+    BinaryFieldPath::class => typeFieldPath(ResolvesToBinary::class),
 ];

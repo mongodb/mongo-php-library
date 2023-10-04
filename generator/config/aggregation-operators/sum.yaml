@@ -1,0 +1,20 @@
+# $schema: ../schema.json
+name: $sum
+category:
+    - Accumulators
+    - 'Accumulators (in Other Stages)'
+    - 'Window Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/'
+type:
+    - resolvesToNumber
+    - Accumulator
+encode: single
+description: |
+    Returns a sum of numerical values. Ignores non-numeric values.
+    Changed in version 5.0: Available in the $setWindowFields stage.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToNumber
+        variadic: array

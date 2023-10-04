@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $toObjectId
+category:
+    - 'Type Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/'
+type:
+    - resolvesToObjectId
+encode: single
+description: |
+    Converts value to an ObjectId.
+    New in version 4.0.
+arguments:
+    -
+        name: expression
+        type:
+            - expression

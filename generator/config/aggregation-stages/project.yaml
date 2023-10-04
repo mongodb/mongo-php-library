@@ -1,0 +1,18 @@
+# $schema: ../schema.json
+name: $project
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/'
+type:
+    - Stage
+encode: single
+description: |
+    Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one document.
+arguments:
+    -
+        name: specification
+        type:
+            - bool
+            - int
+            - expression
+        variadic: object

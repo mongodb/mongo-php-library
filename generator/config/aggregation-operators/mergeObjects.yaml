@@ -1,0 +1,19 @@
+# $schema: ../schema.json
+name: $mergeObjects
+category:
+    - Accumulators
+    - 'Object Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/'
+type:
+    - Accumulator
+encode: single
+description: |
+    Combines multiple documents into a single document.
+arguments:
+    -
+        name: document
+        type:
+            - resolvesToObject
+        variadic: array
+        description: |
+            Any valid expression that resolves to a document.

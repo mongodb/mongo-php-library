@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $geoIntersects
+category:
+    - 'Geospatial Query Selectors'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/'
+type:
+    - Query
+encode: single
+description: |
+    Selects geometries that intersect with a GeoJSON geometry. The 2dsphere index supports $geoIntersects.
+arguments:
+    -
+        name: geometry
+        type:
+            - Geometry

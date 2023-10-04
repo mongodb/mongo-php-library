@@ -1,0 +1,21 @@
+# $schema: ../schema.json
+name: $covariancePop
+category:
+    - 'Window Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/'
+type:
+    - resolvesToDouble
+    - resolvesToDecimal
+encode: array
+description: |
+    Returns the population covariance of two numeric expressions.
+    New in version 5.0.
+arguments:
+    -
+        name: expression1
+        type:
+            - resolvesToNumber
+    -
+        name: expression2
+        type:
+            - resolvesToNumber

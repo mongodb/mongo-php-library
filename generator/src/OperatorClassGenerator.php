@@ -3,14 +3,23 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
+use MongoDB\Builder\Aggregation\AccumulatorInterface;
+use MongoDB\Builder\Encode;
+use MongoDB\Builder\Optional;
+use MongoDB\Builder\Query\QueryInterface;
 use MongoDB\Builder\Stage\StageInterface;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
+use MongoDB\CodeGenerator\Definition\VariadicType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpNamespace;
+use Nette\PhpGenerator\Type;
+use RuntimeException;
+use Throwable;
 
 use function assert;
 use function interface_exists;
+use function rtrim;
 use function sprintf;
 
 /**
@@ -21,7 +30,11 @@ class OperatorClassGenerator extends OperatorGenerator
     public function generate(GeneratorDefinition $definition): void
     {
         foreach ($this->getOperators($definition) as $operator) {
-            $this->writeFile($this->createClass($definition, $operator));
+            try {
+                $this->writeFile($this->createClass($definition, $operator));
+            } catch (Throwable $e) {
+                throw new RuntimeException(sprintf('Failed to generate class for operator "%s"', $operator->name), 0, $e);
+            }
         }
     }
 
@@ -39,8 +52,9 @@ class OperatorClassGenerator extends OperatorGenerator
 
         // Expose operator metadata as constants
         // @todo move to encoder class
-        $class->addConstant('NAME', '$' . $operator->name);
-        $class->addConstant('ENCODE', $operator->encode ?? 'single');
+        $namespace->addUse('\\' . Encode::class);
+        $class->addConstant('NAME', $operator->name);
+        $class->addConstant('ENCODE', $operator->encode);
 
         $constuctor = $class->addMethod('__construct');
         foreach ($operator->arguments as $argument) {
@@ -49,49 +63,62 @@ class OperatorClassGenerator extends OperatorGenerator
                 $namespace->addUse($use);
             }
 
-            // Property
-            $propertyComment = '';
             $property = $class->addProperty($argument->name);
-            if ($argument->isVariadic) {
-                $property->setType('array');
-                $propertyComment .= '@param list<' . $type->doc . '> ...$' . $argument->name;
-            } else {
-                $property->setType($type->native);
-            }
-
-            $property->setComment($propertyComment);
-
-            // Constructor
             $constuctorParam = $constuctor->addParameter($argument->name);
             $constuctorParam->setType($type->native);
-            if ($argument->isVariadic) {
+
+            if ($argument->variadic) {
+                $property->setType('array');
                 $constuctor->setVariadic();
 
-                if ($argument->variadicMin > 0) {
+                if ($argument->variadic === VariadicType::Array) {
+                    $property->setComment('@param list<' . $type->doc . '> ...$' . $argument->name . rtrim(' ' . $argument->description));
                     $constuctor->addBody(<<<PHP
-                    if (\count(\${$argument->name}) < {$argument->variadicMin}) {
-                        throw new \InvalidArgumentException(\sprintf('Expected at least %d values, got %d.', $argument->variadicMin, \count(\${$argument->name})));
+                    if (! \array_is_list(\${$argument->name})) {
+                        throw new \InvalidArgumentException('Expected \${$argument->name} arguments to be a list of {$type->doc}, named arguments are not supported');
                     }
-
+                    PHP);
+                } elseif ($argument->variadic === VariadicType::Object) {
+                    $property->setComment('@param array<string, ' . $type->doc . '> ...$' . $argument->name . rtrim(' ' . $argument->description));
+                    $constuctor->addBody(<<<PHP
+                    foreach(\${$argument->name} as \$key => \$value) {
+                        if (! \is_string(\$key)) {
+                            throw new \InvalidArgumentException('Expected \${$argument->name} arguments to be a map of {$type->doc}, named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
+                        }
+                    }
                     PHP);
                 }
-            } elseif ($argument->isOptional) {
-                $constuctorParam->setDefaultValue(new Literal('Optional::Undefined'));
-            }
 
-            $constuctor->addComment('@param ' . $type->doc . ' $' . $argument->name);
-
-            // List type must be validated with array_is_list()
-            if ($type->list) {
-                $constuctor->addBody(<<<PHP
-                if (\is_array(\${$argument->name}) && ! \array_is_list(\${$argument->name})) {
-                    throw new \InvalidArgumentException('Expected \${$argument->name} argument to be a list, got an associative array.');
+                if ($argument->variadicMin !== null) {
+                    $constuctor->addBody(<<<PHP
+                    if (\count(\${$argument->name}) < {$argument->variadicMin}) {
+                        throw new \InvalidArgumentException(\sprintf('Expected at least %d values for \${$argument->name}, got %d.', {$argument->variadicMin}, \count(\${$argument->name})));
+                    }
+                    PHP);
                 }
-                PHP);
+            } else {
+                // Non-variadic arguments
+                $property->setComment('@param ' . $type->doc . ' $' . $argument->name . rtrim(' ' . $argument->description));
+                $property->setType($type->native);
+
+                if ($argument->optional) {
+                    // We use a special Optional::Undefined type to differentiate between null and undefined
+                    $constuctorParam->setDefaultValue(new Literal('Optional::Undefined'));
+                }
+
+                // List type must be validated with array_is_list()
+                if ($type->list) {
+                    $constuctor->addBody(<<<PHP
+                    if (\is_array(\${$argument->name}) && ! \array_is_list(\${$argument->name})) {
+                        throw new \InvalidArgumentException('Expected \${$argument->name} argument to be a list, got an associative array.');
+                    }
+                    PHP);
+                }
             }
 
             // Set property from constructor argument
             $constuctor->addBody('$this->' . $argument->name . ' = $' . $argument->name . ';');
+            $constuctor->addComment('@param ' . $type->doc . ' $' . $argument->name . rtrim(' ' . $argument->description));
         }
 
         return $namespace;
@@ -102,17 +129,25 @@ class OperatorClassGenerator extends OperatorGenerator
      */
     private function getInterfaces(OperatorDefinition $definition): array
     {
-        if ($definition->type === null) {
-            return [];
+        $interfaces = [];
+
+        foreach ($definition->type as $type) {
+            if ($definition->type === 'Stage') {
+                return ['\\' . StageInterface::class];
+            }
+
+            if ($definition->type === 'Query') {
+                return ['\\' . QueryInterface::class];
+            }
+
+            if ($definition->type === 'Accumulator') {
+                return ['\\' . AccumulatorInterface::class];
+            }
+
+            $interfaces[] = $interface = $this->getExpressionTypeInterface($type);
+            assert(interface_exists($interface), sprintf('"%s" is not an interface.', $interface));
         }
 
-        if ($definition->type === 'stage') {
-            return ['\\' . StageInterface::class];
-        }
-
-        $interface = $this->getExpressionTypeInterface($definition->type);
-        assert(interface_exists($interface), sprintf('"%s" is not an interface.', $interface));
-
-        return [$interface];
+        return $interfaces;
     }
 }

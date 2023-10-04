@@ -6,25 +6,31 @@
 
 namespace MongoDB\Builder\Stage;
 
+use MongoDB\BSON\Int64;
+use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 
 class ProjectStage implements StageInterface
 {
     public const NAME = '$project';
-    public const ENCODE = 'single';
+    public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<ExpressionInterface|mixed> ...$specifications */
-    public array $specifications;
+    /** @param array<string, ExpressionInterface|Int64|bool|int|mixed> ...$specification */
+    public array $specification;
 
     /**
-     * @param ExpressionInterface|mixed $specifications
+     * @param ExpressionInterface|Int64|bool|int|mixed $specification
      */
-    public function __construct(mixed ...$specifications)
+    public function __construct(mixed ...$specification)
     {
-        if (\count($specifications) < 1) {
-            throw new \InvalidArgumentException(\sprintf('Expected at least %d values, got %d.', 1, \count($specifications)));
+        foreach($specification as $key => $value) {
+            if (! \is_string($key)) {
+                throw new \InvalidArgumentException('Expected $specification arguments to be a map of ExpressionInterface|Int64|bool|int|mixed, named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
+            }
         }
-
-        $this->specifications = $specifications;
+        if (\count($specification) < 1) {
+            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $specification, got %d.', 1, \count($specification)));
+        }
+        $this->specification = $specification;
     }
 }

@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $lte
+category:
+    - 'Comparison Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/lte/'
+type:
+    - Query
+encode: single
+description: |
+    Matches values that are less than or equal to a specified value.
+arguments:
+    -
+        name: value
+        type:
+            - Constant

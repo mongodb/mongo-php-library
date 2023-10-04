@@ -6,25 +6,36 @@
 
 namespace MongoDB\Builder\Stage;
 
+use MongoDB\Builder\Aggregation\AccumulatorInterface;
+use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 
 class GroupStage implements StageInterface
 {
     public const NAME = '$group';
-    public const ENCODE = 'object';
+    public const ENCODE = \MongoDB\Builder\Encode::Group;
 
+    /** @param ExpressionInterface|mixed $_id The _id expression specifies the group key. If you specify an _id value of null, or any other constant value, the $group stage returns a single document that aggregates values across all of the input documents. */
     public mixed $_id;
 
-    /** @param list<ExpressionInterface|mixed> ...$fields */
-    public array $fields;
+    /** @param array<string, AccumulatorInterface> ...$field Computed using the accumulator operators. */
+    public array $field;
 
     /**
-     * @param ExpressionInterface|mixed|null $_id
-     * @param ExpressionInterface|mixed $fields
+     * @param ExpressionInterface|mixed $_id The _id expression specifies the group key. If you specify an _id value of null, or any other constant value, the $group stage returns a single document that aggregates values across all of the input documents.
+     * @param AccumulatorInterface $field Computed using the accumulator operators.
      */
-    public function __construct(mixed $_id, mixed ...$fields)
+    public function __construct(mixed $_id, AccumulatorInterface ...$field)
     {
         $this->_id = $_id;
-        $this->fields = $fields;
+        foreach($field as $key => $value) {
+            if (! \is_string($key)) {
+                throw new \InvalidArgumentException('Expected $field arguments to be a map of AccumulatorInterface, named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
+            }
+        }
+        if (\count($field) < 1) {
+            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $field, got %d.', 1, \count($field)));
+        }
+        $this->field = $field;
     }
 }

@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $isArray
+category:
+    - 'Array Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/'
+type:
+    - resolvesToBool
+encode: array
+description: |
+    Determines if the operand is an array. Returns a boolean.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+        variadic: array

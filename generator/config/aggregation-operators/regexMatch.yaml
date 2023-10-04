@@ -1,0 +1,30 @@
+# $schema: ../schema.json
+name: $regexMatch
+category:
+    - 'String Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/'
+type:
+    - resolvesToBool
+encode: object
+description: |
+    Applies a regular expression (regex) to a string and returns a boolean that indicates if a match is found or not.
+    New in version 4.2.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToString
+        description: |
+            The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string.
+    -
+        name: regex
+        type:
+            - resolvesToString
+            - Regex
+        description: |
+            The regex pattern to apply. Can be any valid expression that resolves to either a string or regex pattern /<pattern>/. When using the regex /<pattern>/, you can also specify the regex options i and m (but not the s or x options)
+    -
+        name: options
+        type:
+            - string
+        optional: true

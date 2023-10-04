@@ -1,0 +1,29 @@
+# $schema: ../schema.json
+name: $near
+category:
+    - 'Geospatial Query Selectors'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/near/'
+type:
+    - Query
+encode: object
+description: |
+    Returns geospatial objects in proximity to a point. Requires a geospatial index. The 2dsphere and 2d indexes support $near.
+arguments:
+    -
+        name: geometry
+        type:
+            - Geometry
+    -
+        name: maxDistance
+        type:
+            - int
+        optional: true
+        description: |
+            Distance in meters. Limits the results to those documents that are at most the specified distance from the center point.
+    -
+        name: minDistance
+        type:
+            - int
+        optional: true
+        description: |
+            Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.

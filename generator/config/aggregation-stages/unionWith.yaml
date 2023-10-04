@@ -1,0 +1,26 @@
+# $schema: ../schema.json
+name: $unionWith
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/'
+type:
+    - Stage
+encode: object
+description: |
+    Performs a union of two collections; i.e. combines pipeline results from two collections into a single result set.
+    New in version 4.4.
+arguments:
+    -
+        name: coll
+        type:
+            - string
+        description: |
+            The collection or view whose pipeline results you wish to include in the result set.
+    -
+        name: pipeline
+        type:
+            - Pipeline
+        optional: true
+        description: |
+            An aggregation pipeline to apply to the specified coll.
+            The pipeline cannot include the $out and $merge stages. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.

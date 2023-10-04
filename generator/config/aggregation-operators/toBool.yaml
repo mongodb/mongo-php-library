@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $toBool
+category:
+    - 'Type Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/'
+type:
+    - resolvesToBool
+encode: single
+description: |
+    Converts value to a boolean.
+    New in version 4.0.
+arguments:
+    -
+        name: expression
+        type:
+            - expression

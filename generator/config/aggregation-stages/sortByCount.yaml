@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $sortByCount
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/'
+type:
+    - Stage
+encode: object
+description: |
+    Groups incoming documents based on the value of a specified expression, then computes the count of documents in each distinct group.
+arguments:
+    -
+        name: expression
+        type:
+            - expression

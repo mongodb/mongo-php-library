@@ -1,0 +1,24 @@
+# $schema: ../schema.json
+name: $unsetField
+category:
+    - 'Object Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/'
+type:
+    - resolvesToObject
+encode: object
+description: |
+    You can use $unsetField to remove fields with names that contain periods (.) or that start with dollar signs ($).
+    $unsetField is an alias for $setField using $$REMOVE to remove fields.
+arguments:
+    -
+        name: field
+        type:
+            - resolvesToString
+        description: |
+            Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
+    -
+        name: input
+        type:
+            - resolvesToObject
+        description: |
+            Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.

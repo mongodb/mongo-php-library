@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $replaceRoot
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/'
+type:
+    - Stage
+encode: object
+description: |
+    Replaces a document with the specified embedded document. The operation replaces all existing fields in the input document, including the _id field. Specify a document embedded in the input document to promote the embedded document to the top level.
+arguments:
+    -
+        name: newRoot
+        type:
+            - resolvesToObject

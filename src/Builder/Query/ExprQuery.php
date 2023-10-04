@@ -6,13 +6,15 @@
 
 namespace MongoDB\Builder\Query;
 
+use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 
-class ExprQuery implements ExpressionInterface
+class ExprQuery implements QueryInterface
 {
     public const NAME = '$expr';
-    public const ENCODE = 'single';
+    public const ENCODE = \MongoDB\Builder\Encode::Single;
 
+    /** @param ExpressionInterface|mixed $expression */
     public mixed $expression;
 
     /**

@@ -1,0 +1,18 @@
+# $schema: ../schema.json
+name: $isNumber
+category:
+    - 'Type Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/'
+type:
+    - resolvesToBool
+encode: single
+description: |
+    Returns boolean true if the specified expression resolves to an integer, decimal, double, or long.
+    Returns boolean false if the expression resolves to any other BSON type, null, or a missing field.
+    New in version 4.4.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+        variadic: array

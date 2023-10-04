@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $expr
+category:
+    - 'Evaluation Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/expr/'
+type:
+    - Query
+encode: single
+description: |
+    Allows use of aggregation expressions within the query language.
+arguments:
+    -
+        name: expression
+        type:
+            - expression

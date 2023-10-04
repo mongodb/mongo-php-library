@@ -63,17 +63,6 @@ class BuilderEncoder implements Encoder
             return '$$' . $value->expression;
         }
 
-        if ($value instanceof GroupStage) {
-            $result = new stdClass();
-            $result->_id = $this->encodeIfSupported($value->_id);
-            // Specific: fields are encoded as a map of properties to their values at the top level as _id
-            foreach ($value->fields ?? [] as $key => $val) {
-                $result->{$key} = $this->encodeIfSupported($val);
-            }
-
-            return $this->wrap($value, $result);
-        }
-
         if ($value instanceof ProjectStage) {
             $result = new stdClass();
             // Specific: fields are encoded as a map of properties to their values at the top level as _id
@@ -82,10 +71,6 @@ class BuilderEncoder implements Encoder
             }
 
             return $this->wrap($value, $result);
-        }
-
-        if ($value instanceof SortStage) {
-            return $this->wrap($value, (object) $value->sortSpecification);
         }
 
         if ($value instanceof OrQuery) {
@@ -115,14 +100,17 @@ class BuilderEncoder implements Encoder
 
         // The generic but incomplete encoding code
         switch ($value::ENCODE) {
-            case 'single':
+            case Encode::Single:
                 return $this->encodeAsSingle($value);
 
-            case 'array':
+            case Encode::Array:
                 return $this->encodeAsArray($value);
 
-            case 'object':
+            case Encode::Object:
                 return $this->encodeAsObject($value);
+
+            case Encode::Group:
+                return $this->encodeAsGroup($value);
         }
 
         throw new LogicException(sprintf('Class "%s" does not have a valid ENCODE constant.', $value::class));
@@ -161,6 +149,18 @@ class BuilderEncoder implements Encoder
         foreach (get_object_vars($value) as $val) {
             $result = $this->encodeIfSupported($val);
             break;
+        }
+
+        return $this->wrap($value, $result);
+    }
+
+    private function encodeAsGroup(ExpressionInterface|StageInterface $value): stdClass
+    {
+        $result = new stdClass();
+        $result->_id = $this->encodeIfSupported($value->_id);
+        // Specific: fields are encoded as a map of properties to their values at the top level as _id
+        foreach ($value->fields ?? [] as $key => $val) {
+            $result->{$key} = $this->encodeIfSupported($val);
         }
 
         return $this->wrap($value, $result);

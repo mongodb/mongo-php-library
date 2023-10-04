@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $toDecimal
+category:
+    - 'Type Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/'
+type:
+    - resolvesToDecimal
+encode: single
+description: |
+    Converts value to a Decimal128.
+    New in version 4.0.
+arguments:
+    -
+        name: expression
+        type:
+            - expression

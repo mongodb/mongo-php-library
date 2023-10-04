@@ -1,0 +1,17 @@
+# $schema: ../schema.json
+name: $toString
+category:
+    - 'String Expression Operator'
+    - 'Type Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/'
+type:
+    - resolvesToString
+encode: single
+description: |
+    Converts value to a string.
+    New in version 4.0.
+arguments:
+    -
+        name: expression
+        type:
+            - expression

@@ -6,21 +6,30 @@
 
 namespace MongoDB\Builder\Aggregation;
 
-use MongoDB\Builder\Expression\ExpressionInterface;
-use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\BSON\Decimal128;
+use MongoDB\BSON\Int64;
+use MongoDB\Builder\Encode;
+use MongoDB\Builder\Expression\ResolvesToNumber;
 
-class SumAggregation implements ResolvesToInt
+class SumAggregation implements ResolvesToNumber, AccumulatorInterface
 {
     public const NAME = '$sum';
-    public const ENCODE = 'single';
+    public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    public mixed $expression;
+    /** @param list<Decimal128|Int64|ResolvesToNumber|float|int> ...$expression */
+    public array $expression;
 
     /**
-     * @param ExpressionInterface|mixed $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
      */
-    public function __construct(mixed $expression)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int ...$expression)
     {
+        if (! \array_is_list($expression)) {
+            throw new \InvalidArgumentException('Expected $expression arguments to be a list of Decimal128|Int64|ResolvesToNumber|float|int, named arguments are not supported');
+        }
+        if (\count($expression) < 1) {
+            throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
+        }
         $this->expression = $expression;
     }
 }

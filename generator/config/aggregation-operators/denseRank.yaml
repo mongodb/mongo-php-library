@@ -1,0 +1,11 @@
+# $schema: ../schema.json
+name: $denseRank
+category:
+    - 'Window Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/'
+type:
+    - resolvesToInt
+encode: object
+description: |
+    Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition. There are no gaps in the ranks. Ties receive the same rank.
+    New in version 5.0.

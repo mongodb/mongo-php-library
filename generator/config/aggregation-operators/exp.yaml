@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $exp
+category:
+    - 'Arithmetic Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/exp/'
+type:
+    - resolvesToDouble
+encode: single
+description: |
+    Raises e to the specified exponent.
+arguments:
+    -
+        name: exponent
+        type:
+            - resolvesToNumber

@@ -1,0 +1,19 @@
+# $schema: ../schema.json
+name: $arrayElemAt
+category:
+    - 'Array Expression Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/'
+type:
+    - resolvesToAnything
+encode: array
+description: |
+    Returns the element at the specified array index.
+arguments:
+    -
+        name: array
+        type:
+            - resolvesToArray
+    -
+        name: idx
+        type:
+            - resolvesToInt

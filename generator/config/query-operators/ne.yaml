@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $ne
+category:
+    - 'Comparison Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/ne/'
+type:
+    - Query
+encode: single
+description: |
+    Matches all values that are not equal to a specified value.
+arguments:
+    -
+        name: value
+        type:
+            - Constant

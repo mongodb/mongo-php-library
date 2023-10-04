@@ -1,0 +1,25 @@
+# $schema: ../schema.json
+name: $listSearchIndexes
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/'
+type:
+    - Stage
+encode: object
+description: |
+    Returns information about existing Atlas Search indexes on a specified collection.
+arguments:
+    -
+        name: id
+        type:
+            - string
+        optional: true
+        description: |
+            The id of the index to return information about.
+    -
+        name: name
+        type:
+            - string
+        optional: true
+        description: |
+            The name of the index to return information about.

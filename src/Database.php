@@ -282,7 +282,7 @@ class Database
             ? new CreateEncryptedCollection($this->databaseName, $collectionName, $options)
             : new CreateCollection($this->databaseName, $collectionName, $options);
 
-        $server = select_server($this->manager, $options);
+        $server = select_server_for_write($this->manager, $options);
 
         return $operation->execute($server);
     }
@@ -318,7 +318,7 @@ class Database
         }
 
         $operation = new CreateEncryptedCollection($this->databaseName, $collectionName, $options);
-        $server = select_server($this->manager, $options);
+        $server = select_server_for_write($this->manager, $options);
 
         try {
             $operation->createDataKeys($clientEncryption, $kmsProvider, $masterKey, $encryptedFields);
@@ -346,7 +346,7 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server($this->manager, $options);
+        $server = select_server_for_write($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -374,7 +374,7 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server($this->manager, $options);
+        $server = select_server_for_write($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -502,7 +502,7 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server($this->manager, $options);
+        $server = select_server_for_write($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -536,7 +536,7 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server($this->manager, $options);
+        $server = select_server_for_write($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;

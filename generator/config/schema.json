@@ -1,0 +1,122 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/Operator",
+    "definitions": {
+        "Operator": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "$comment": "The name of the operator. Must start with a $",
+                    "type": "string",
+                    "pattern": "^\\$[a-z][a-zA-Z]+$"
+                },
+                "category": {
+                    "$comment": "The category as defined by MongoDB's documentation.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "link": {
+                    "$comment": "The link to the operator's documentation on MongoDB's website.",
+                    "type": "string",
+                    "format": "uri",
+                    "qt-uri-protocols": [
+                        "https"
+                    ]
+                },
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "encode": {
+                    "$comment": "Specifies how operator parameters are encoded.",
+                    "$comment": "array: parameters are encoded as an array of values in the order they are defined by the spec",
+                    "$comment": "object: parameters are encoded as an object with keys matching the parameter names",
+                    "$comment": "single: get the single parameter value",
+                    "type": "string",
+                    "enum": [
+                        "array",
+                        "object",
+                        "single"
+                    ]
+                },
+                "description": {
+                    "$comment": "The description of the argument from MongoDB's documentation.",
+                    "type": "string"
+                },
+                "parameters": {
+                    "$comment": "An optional list of parameters for the operator.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Parameter"
+                    }
+                }
+            },
+            "required": [
+                "category",
+                "description",
+                "encode",
+                "link",
+                "name",
+                "parameters",
+                "returnType"
+            ],
+            "title": "Operator"
+        },
+        "Parameter": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-zA-Z0-9]+$"
+                },
+                "returnType": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "description": {
+                    "$comment": "The description of the argument from MongoDB's documentation.",
+                    "type": "string"
+                },
+                "optional": {
+                    "$comment": "Whether the parameter is optional or not.",
+                    "type": "boolean"
+                },
+                "valueMin": {
+                    "$comment": "The minimum value for a numeric parameter.",
+                    "type": "number"
+                },
+                "valueMax": {
+                    "$comment": "The minimum value for a numeric parameter.",
+                    "type": "number"
+                },
+                "variadic": {
+                    "$comment": "Whether the parameter is variadic or not.",
+                    "type": "string",
+                    "enum": [
+                        "list",
+                        "map"
+                    ]
+                },
+                "variadicMin": {
+                    "$comment": "The minimum number of arguments for a variadic parameter.",
+                    "type": "integer",
+                    "minimum": 0
+                }
+            },
+            "required": [
+                "description",
+                "name",
+                "type"
+            ],
+            "title": "Parameter"
+        }
+    }
+}

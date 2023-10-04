@@ -22,10 +22,12 @@ function typeFieldPath(string $resolvesTo): array
 return [
     'null' => ['scalar' => true, 'types' => ['null']],
     'int' => ['scalar' => true, 'types' => ['int', BSON\Int64::class]],
-    'number' => ['scalar' => true, 'types' => ['int', BSON\Int64::class]],
-    'decimal' => ['scalar' => true, 'types' => ['float', BSON\Decimal128::class]],
+    'double' => ['scalar' => true, 'types' => ['int', BSON\Int64::class, 'float']],
+    'decimal' => ['scalar' => true, 'types' => ['int', BSON\Int64::class, 'float', BSON\Decimal128::class]],
+    'number' => ['scalar' => true, 'types' => ['int', BSON\Int64::class, 'float', BSON\Decimal128::class]],
     'string' => ['scalar' => true, 'types' => ['string']],
     'boolean' => ['scalar' => true, 'types' => ['bool']],
+    'object' => ['scalar' => true, 'types' => ['array', 'object', BSON\Document::class, BSON\Serializable::class]],
 
     // Use Interface suffix to avoid confusion with MongoDB\Builder\Expression factory class
     ExpressionInterface::class => [

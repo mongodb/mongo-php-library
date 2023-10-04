@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder;
 
+use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
+use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Stage\GroupStage;
 use MongoDB\Builder\Stage\LimitStage;
@@ -50,9 +52,9 @@ final class Stage
     }
 
     /**
-     * @param Int64|int ...$sortSpecification
+     * @param Document|Int64|Serializable|array|int|object ...$sortSpecification
      */
-    public static function sort(Int64|int ...$sortSpecification): SortStage
+    public static function sort(array|int|object ...$sortSpecification): SortStage
     {
         return new SortStage(...$sortSpecification);
     }

@@ -8,7 +8,7 @@
   args:
     # @todo should generate be a map, not a list
     - name: sortSpecification
-      type: number # should be an enum PHPLIB-1269
+      type: [int, object] # should be an enum PHPLIB-1269
       isVariadic: true
 - name: limit
   type: stage

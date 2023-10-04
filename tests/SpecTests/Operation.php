@@ -638,6 +638,7 @@ final class Operation
 
             case 'targetedFailPoint':
                 $test->assertInstanceOf(Session::class, $args['session']);
+                $test->assertInstanceOf(Server::class, $args['session']->getServer());
                 $test->configureFailPoint($this->arguments['failPoint'], $args['session']->getServer());
 
                 return null;

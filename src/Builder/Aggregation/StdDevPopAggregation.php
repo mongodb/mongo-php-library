@@ -24,14 +24,12 @@ class StdDevPopAggregation implements ResolvesToDouble, AccumulatorInterface
     public const NAME = '$stdDevPop';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /**
-     * @no-named-arguments
-     * @param list<Decimal128|Int64|ResolvesToNumber|float|int> ...$expression
-     */
+    /** @param list<Decimal128|Int64|ResolvesToNumber|float|int> ...$expression */
     public array $expression;
 
     /**
      * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
+     * @no-named-arguments
      */
     public function __construct(Decimal128|Int64|ResolvesToNumber|float|int ...$expression)
     {

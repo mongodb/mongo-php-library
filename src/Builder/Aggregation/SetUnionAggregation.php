@@ -22,14 +22,12 @@ class SetUnionAggregation implements ResolvesToArray
     public const NAME = '$setUnion';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /**
-     * @no-named-arguments
-     * @param list<BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed>> ...$expression
-     */
+    /** @param list<BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed>> ...$expression */
     public array $expression;
 
     /**
      * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> ...$expression
+     * @no-named-arguments
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array ...$expression)
     {

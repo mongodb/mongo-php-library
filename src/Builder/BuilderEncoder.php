@@ -3,6 +3,7 @@
 namespace MongoDB\Builder;
 
 use LogicException;
+use MongoDB\Builder\Aggregation\AccumulatorInterface;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Expression\Variable;
@@ -14,6 +15,9 @@ use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 use stdClass;
 
+use function array_key_first;
+use function assert;
+use function count;
 use function get_object_vars;
 use function is_array;
 use function sprintf;
@@ -74,6 +78,8 @@ class BuilderEncoder implements Encoder
                 return $this->encodeAsObject($value);
 
             case Encode::Group:
+                assert($value instanceof GroupStage);
+
                 return $this->encodeAsGroup($value);
         }
 
@@ -117,13 +123,18 @@ class BuilderEncoder implements Encoder
      */
     private function encodeAsSingle(ExpressionInterface|StageInterface|QueryInterface $value): stdClass
     {
-        $result = [];
         foreach (get_object_vars($value) as $val) {
             $result = $this->recursiveEncode($val);
-            break;
+
+            // The $sum accumulator is a unary operator
+            if ($value instanceof AccumulatorInterface && is_array($result) && count($result) === 1 && array_key_first($result) === 0) {
+                $result = $result[0];
+            }
+
+            return $this->wrap($value, $result);
         }
 
-        return $this->wrap($value, $result);
+        throw new LogicException(sprintf('Class "%s" does not have a single property.', $value::class));
     }
 
     /**
@@ -134,7 +145,7 @@ class BuilderEncoder implements Encoder
         $result = new stdClass();
         $result->_id = $this->recursiveEncode($value->_id);
 
-        foreach ($value->field ?? [] as $key => $val) {
+        foreach (get_object_vars($value->field) as $key => $val) {
             $result->{$key} = $this->recursiveEncode($val);
         }
 

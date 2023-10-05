@@ -19,14 +19,12 @@ class ConcatAggregation implements ResolvesToString
     public const NAME = '$concat';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /**
-     * @no-named-arguments
-     * @param list<ResolvesToString|non-empty-string> ...$expression
-     */
+    /** @param list<ResolvesToString|non-empty-string> ...$expression */
     public array $expression;
 
     /**
      * @param ResolvesToString|non-empty-string ...$expression
+     * @no-named-arguments
      */
     public function __construct(ResolvesToString|string ...$expression)
     {

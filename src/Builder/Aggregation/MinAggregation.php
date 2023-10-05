@@ -20,14 +20,12 @@ class MinAggregation implements ExpressionInterface, AccumulatorInterface
     public const NAME = '$min';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /**
-     * @no-named-arguments
-     * @param list<ExpressionInterface|mixed> ...$expression
-     */
+    /** @param list<ExpressionInterface|mixed> ...$expression */
     public array $expression;
 
     /**
      * @param ExpressionInterface|mixed ...$expression
+     * @no-named-arguments
      */
     public function __construct(mixed ...$expression)
     {

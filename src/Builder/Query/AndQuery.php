@@ -19,14 +19,12 @@ class AndQuery implements QueryInterface
     public const NAME = '$and';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /**
-     * @no-named-arguments
-     * @param list<QueryInterface|array|stdClass> ...$expression
-     */
+    /** @param list<QueryInterface|array|stdClass> ...$expression */
     public array $expression;
 
     /**
      * @param QueryInterface|array|stdClass ...$expression
+     * @no-named-arguments
      */
     public function __construct(QueryInterface|stdClass|array ...$expression)
     {

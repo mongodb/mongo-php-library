@@ -160,17 +160,7 @@ final class ScrapeCommand extends Command
         return $docs;
     }
 
-    /**
-     * @param array{
-     *            Name: string,
-     *            Category: string,
-     *            Description: string,
-     *            Link: string,
-     *            ReturnType: string,
-     *            Encode: string,
-     *            Args: array{ Name: string, Type: string, Options: string, Description: string }
-     *        } $doc
-     */
+    /** @param array{Name:string,Category:string,Description:string,Link:string,ReturnType:string,Encode:string,Args:array{Name:string,Type:string,Options:string,Description:string}} $doc */
     private function formatSpec(array $doc): array
     {
         foreach (['Name', 'Category', 'Description', 'Link', 'ReturnType', 'Encode', 'Args'] as $key) {

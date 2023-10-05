@@ -53,7 +53,7 @@ class OperatorClassGenerator extends OperatorGenerator
         // @todo move to encoder class
         $namespace->addUse('\\' . Encode::class);
         $class->addComment($operator->description);
-        $class->addComment('@see '.$operator->link);
+        $class->addComment('@see ' . $operator->link);
         $class->addConstant('NAME', $operator->name);
         $class->addConstant('ENCODE', $operator->encode);
 
@@ -82,9 +82,10 @@ class OperatorClassGenerator extends OperatorGenerator
 
                 if ($argument->variadic === VariadicType::Array) {
                     $property->setType('array');
-                    // @see https://psalm.dev/docs/running_psalm/issues/NamedArgumentNotAllowed/
-                    $property->addComment('@no-named-arguments');
                     $property->addComment('@param list<' . $type->doc . '> ...$' . $argument->name . rtrim(' ' . $argument->description));
+                    // Warn that named arguments are not supported
+                    // @see https://psalm.dev/docs/running_psalm/issues/NamedArgumentNotAllowed/
+                    $constuctor->addComment('@no-named-arguments');
                     $constuctor->addBody(<<<PHP
                     if (! \array_is_list(\${$argument->name})) {
                         throw new \InvalidArgumentException('Expected \${$argument->name} arguments to be a list of {$type->doc}, named arguments are not supported');

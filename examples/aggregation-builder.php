@@ -14,8 +14,10 @@ use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Stage;
 use MongoDB\Client;
 
+use function array_is_list;
 use function assert;
 use function getenv;
+use function is_array;
 use function is_object;
 use function MongoDB\BSON\fromPHP;
 use function MongoDB\BSON\toRelaxedExtendedJSON;
@@ -48,7 +50,7 @@ $pipeline = new Pipeline(
         totalCount: Aggregation::sum(1),
         evenCount: Aggregation::sum(
             Aggregation::mod(
-                Expression::fieldPath('randomValue'),
+                Expression::numberFieldPath('randomValue'),
                 2,
             ),
         ),
@@ -56,7 +58,7 @@ $pipeline = new Pipeline(
             Aggregation::subtract(
                 1,
                 Aggregation::mod(
-                    Expression::fieldPath('randomValue'),
+                    Expression::numberFieldPath('randomValue'),
                     2,
                 ),
             ),
@@ -73,6 +75,8 @@ $pipeline = new Pipeline(
 // @todo Accept a Pipeline instance in Collection::aggregate() and automatically encode it
 $encoder = new BuilderEncoder();
 $pipeline = $encoder->encode($pipeline);
+
+assert(is_array($pipeline) && array_is_list($pipeline));
 
 $cursor = $collection->aggregate($pipeline);
 

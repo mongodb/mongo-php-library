@@ -24,14 +24,12 @@ class AddAggregation implements ResolvesToNumber, ResolvesToDate
     public const NAME = '$add';
     public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    /**
-     * @no-named-arguments
-     * @param list<DateTimeInterface|Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int> ...$expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date.
-     */
+    /** @param list<DateTimeInterface|Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int> ...$expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date. */
     public array $expression;
 
     /**
      * @param DateTimeInterface|Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int ...$expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date.
+     * @no-named-arguments
      */
     public function __construct(
         DateTimeInterface|Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int ...$expression,

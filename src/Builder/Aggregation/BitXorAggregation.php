@@ -22,14 +22,12 @@ class BitXorAggregation implements ResolvesToInt, ResolvesToLong
     public const NAME = '$bitXor';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /**
-     * @no-named-arguments
-     * @param list<Int64|ResolvesToInt|ResolvesToLong|int> ...$expression
-     */
+    /** @param list<Int64|ResolvesToInt|ResolvesToLong|int> ...$expression */
     public array $expression;
 
     /**
      * @param Int64|ResolvesToInt|ResolvesToLong|int ...$expression
+     * @no-named-arguments
      */
     public function __construct(Int64|ResolvesToInt|ResolvesToLong|int ...$expression)
     {

@@ -7,6 +7,8 @@ use MongoDB\Builder\Encode;
 use UnexpectedValueException;
 
 use function array_merge;
+use function assert;
+use function count;
 use function sprintf;
 
 final readonly class OperatorDefinition
@@ -28,7 +30,6 @@ final readonly class OperatorDefinition
             'single' => Encode::Single,
             'array' => Encode::Array,
             'object' => Encode::Object,
-            'empty object' => Encode::Object,
             'group' => Encode::Group,
             default => throw new UnexpectedValueException(sprintf('Unexpected "encode" value for operator "%s". Got "%s"', $name, $encode)),
         };
@@ -43,6 +44,12 @@ final readonly class OperatorDefinition
             } else {
                 $requiredArgs[] = $arg;
             }
+        }
+
+        // "single" encode operators must have one required argument
+        if ($this->encode === Encode::Single) {
+            assert(count($requiredArgs) === 1, sprintf('Single encode operator "%s" must have one argument', $name));
+            assert(count($optionalArgs) === 0, sprintf('Single encode operator "%s" argument cannot be optional', $name));
         }
 
         $this->arguments = array_merge($requiredArgs, $optionalArgs);

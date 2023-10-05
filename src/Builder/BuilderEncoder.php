@@ -85,6 +85,12 @@ class BuilderEncoder implements Encoder
         $result = [];
         /** @var mixed $val */
         foreach (get_object_vars($value) as $val) {
+            // Skip optional arguments.
+            // $slice operator has the optional <position> argument in the middle of the array
+            if ($val === Optional::Undefined) {
+                continue;
+            }
+
             $result[] = $this->recursiveEncode($val);
         }
 
@@ -94,13 +100,13 @@ class BuilderEncoder implements Encoder
     private function encodeAsObject(ExpressionInterface|StageInterface|QueryInterface $value): stdClass
     {
         $result = new stdClass();
-        /** @var mixed $val */
         foreach (get_object_vars($value) as $key => $val) {
-            /** @var mixed $val */
-            $val = $this->recursiveEncode($val);
-            if ($val !== Optional::Undefined) {
-                $result->{$key} = $val;
+            // Skip optional arguments. If they have a default value, it is resolved by the server.
+            if ($val === Optional::Undefined) {
+                continue;
             }
+
+            $result->{$key} = $this->recursiveEncode($val);
         }
 
         return $this->wrap($value, $result);

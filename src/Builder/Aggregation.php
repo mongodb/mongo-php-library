@@ -494,10 +494,11 @@ final class Aggregation
      * New in version 6.3.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitXor/
+     * @param Int64|ResolvesToInt|ResolvesToLong|int ...$expression
      */
-    public static function bitXor(): BitXorAggregation
+    public static function bitXor(Int64|ResolvesToInt|ResolvesToLong|int ...$expression): BitXorAggregation
     {
-        return new BitXorAggregation();
+        return new BitXorAggregation(...$expression);
     }
 
     /**

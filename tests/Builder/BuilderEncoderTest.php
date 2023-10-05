@@ -139,6 +139,33 @@ class BuilderEncoderTest extends TestCase
         ];
     }
 
+    /** @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/#example */
+    public function testSlice(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::project(
+                name: 1,
+                threeFavorites: Aggregation::slice(
+                    Expression::arrayFieldPath('items'),
+                    n: 3,
+                ),
+            ),
+        );
+
+        $expected = [
+            [
+                '$project' => [
+                    'name' => 1,
+                    'threeFavorites' => [
+                        '$slice' => ['$items', 3],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSamePipeline($expected, $pipeline);
+    }
+
     private static function assertSamePipeline(array $expected, Pipeline $pipeline): void
     {
         $codec = new BuilderEncoder();

@@ -482,9 +482,13 @@ final class Stage
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
      * @param non-empty-string $db Target collection name to write documents from $out to.
      * @param non-empty-string $coll Target database name to write documents from $out to.
-     * @param Document|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.
+     * @param Document|Optional|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.
      */
-    public static function out(string $db, string $coll, Document|Serializable|stdClass|array $timeseries): OutStage
+    public static function out(
+        string $db,
+        string $coll,
+        Document|Serializable|Optional|stdClass|array $timeseries = Optional::Undefined,
+    ): OutStage
     {
         return new OutStage($db, $coll, $timeseries);
     }

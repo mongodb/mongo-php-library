@@ -58,6 +58,7 @@ use MongoDB\Builder\Query\TextQuery;
 use MongoDB\Builder\Query\TypeQuery;
 use MongoDB\Builder\Query\WhereQuery;
 use MongoDB\Model\BSONArray;
+use stdClass;
 
 final class Query
 {
@@ -70,9 +71,9 @@ final class Query
     }
 
     /**
-     * @param QueryInterface|array|object ...$expression
+     * @param QueryInterface|array|stdClass ...$expression
      */
-    public static function and(array|object ...$expression): AndQuery
+    public static function and(QueryInterface|stdClass|array ...$expression): AndQuery
     {
         return new AndQuery(...$expression);
     }
@@ -146,9 +147,9 @@ final class Query
     }
 
     /**
-     * @param Document|Serializable|array|object $queries
+     * @param Document|Serializable|array|stdClass $queries
      */
-    public static function elemMatch(array|object $queries): ElemMatchQuery
+    public static function elemMatch(Document|Serializable|stdClass|array $queries): ElemMatchQuery
     {
         return new ElemMatchQuery($queries);
     }
@@ -178,17 +179,17 @@ final class Query
     }
 
     /**
-     * @param array|object $geometry
+     * @param array|stdClass $geometry
      */
-    public static function geoIntersects(array|object $geometry): GeoIntersectsQuery
+    public static function geoIntersects(stdClass|array $geometry): GeoIntersectsQuery
     {
         return new GeoIntersectsQuery($geometry);
     }
 
     /**
-     * @param array|object $geometry
+     * @param array|stdClass $geometry
      */
-    public static function geoWithin(array|object $geometry): GeoWithinQuery
+    public static function geoWithin(stdClass|array $geometry): GeoWithinQuery
     {
         return new GeoWithinQuery($geometry);
     }
@@ -196,12 +197,12 @@ final class Query
     /**
      * @param non-empty-string $type
      * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $coordinates
-     * @param Document|Serializable|array|object $crs
+     * @param Document|Serializable|array|stdClass $crs
      */
     public static function geometry(
         string $type,
         PackedArray|BSONArray|array $coordinates,
-        array|object $crs,
+        Document|Serializable|stdClass|array $crs,
     ): GeometryQuery
     {
         return new GeometryQuery($type, $coordinates, $crs);
@@ -232,9 +233,9 @@ final class Query
     }
 
     /**
-     * @param Document|Serializable|array|object $schema
+     * @param Document|Serializable|array|stdClass $schema
      */
-    public static function jsonSchema(array|object $schema): JsonSchemaQuery
+    public static function jsonSchema(Document|Serializable|stdClass|array $schema): JsonSchemaQuery
     {
         return new JsonSchemaQuery($schema);
     }
@@ -299,12 +300,12 @@ final class Query
     }
 
     /**
-     * @param array|object $geometry
+     * @param array|stdClass $geometry
      * @param Int64|Optional|int $maxDistance Distance in meters. Limits the results to those documents that are at most the specified distance from the center point.
      * @param Int64|Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public static function near(
-        array|object $geometry,
+        stdClass|array $geometry,
         Int64|Optional|int $maxDistance = Optional::Undefined,
         Int64|Optional|int $minDistance = Optional::Undefined,
     ): NearQuery
@@ -313,12 +314,12 @@ final class Query
     }
 
     /**
-     * @param array|object $geometry
+     * @param array|stdClass $geometry
      * @param Int64|Optional|int $maxDistance Distance in meters.
      * @param Int64|Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public static function nearSphere(
-        array|object $geometry,
+        stdClass|array $geometry,
         Int64|Optional|int $maxDistance = Optional::Undefined,
         Int64|Optional|int $minDistance = Optional::Undefined,
     ): NearSphereQuery
@@ -335,25 +336,25 @@ final class Query
     }
 
     /**
-     * @param QueryInterface|array|object ...$expression
+     * @param QueryInterface|array|stdClass ...$expression
      */
-    public static function nor(array|object ...$expression): NorQuery
+    public static function nor(QueryInterface|stdClass|array ...$expression): NorQuery
     {
         return new NorQuery(...$expression);
     }
 
     /**
-     * @param QueryInterface|array|object $expression
+     * @param QueryInterface|array|stdClass $expression
      */
-    public static function not(array|object $expression): NotQuery
+    public static function not(QueryInterface|stdClass|array $expression): NotQuery
     {
         return new NotQuery($expression);
     }
 
     /**
-     * @param QueryInterface|array|object ...$expression
+     * @param QueryInterface|array|stdClass ...$expression
      */
-    public static function or(array|object ...$expression): OrQuery
+    public static function or(QueryInterface|stdClass|array ...$expression): OrQuery
     {
         return new OrQuery(...$expression);
     }

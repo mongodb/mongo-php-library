@@ -11,6 +11,7 @@ use MongoDB\BSON\Int64;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
+use stdClass;
 
 class ChangeStreamStage implements StageInterface
 {
@@ -35,8 +36,8 @@ class ChangeStreamStage implements StageInterface
      */
     public Optional|bool $showExpandedEvents;
 
-    /** @param Document|Optional|Serializable|array|object $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields. */
-    public array|object $startAfter;
+    /** @param Document|Optional|Serializable|array|stdClass $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields. */
+    public Document|Serializable|Optional|stdClass|array $startAfter;
 
     /** @param Optional|int $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields. */
     public Optional|int $startAtOperationTime;
@@ -48,7 +49,7 @@ class ChangeStreamStage implements StageInterface
      * @param Int64|Optional|int $resumeAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields.
      * @param Optional|bool $showExpandedEvents Specifies whether to include additional change events, such as such as DDL and index operations.
      * New in version 6.0.
-     * @param Document|Optional|Serializable|array|object $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields.
+     * @param Document|Optional|Serializable|array|stdClass $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields.
      * @param Optional|int $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.
      */
     public function __construct(
@@ -57,7 +58,7 @@ class ChangeStreamStage implements StageInterface
         Optional|string $fullDocumentBeforeChange = Optional::Undefined,
         Int64|Optional|int $resumeAfter = Optional::Undefined,
         Optional|bool $showExpandedEvents = Optional::Undefined,
-        array|object $startAfter = Optional::Undefined,
+        Document|Serializable|Optional|stdClass|array $startAfter = Optional::Undefined,
         Optional|int $startAtOperationTime = Optional::Undefined,
     ) {
         $this->allChangesForCluster = $allChangesForCluster;

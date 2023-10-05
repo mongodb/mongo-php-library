@@ -9,6 +9,7 @@ namespace MongoDB\Builder\Stage;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
+use stdClass;
 
 class OutStage implements StageInterface
 {
@@ -21,15 +22,15 @@ class OutStage implements StageInterface
     /** @param non-empty-string $coll Target database name to write documents from $out to. */
     public string $coll;
 
-    /** @param Document|Serializable|array|object $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace. */
-    public array|object $timeseries;
+    /** @param Document|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace. */
+    public Document|Serializable|stdClass|array $timeseries;
 
     /**
      * @param non-empty-string $db Target collection name to write documents from $out to.
      * @param non-empty-string $coll Target database name to write documents from $out to.
-     * @param Document|Serializable|array|object $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.
+     * @param Document|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.
      */
-    public function __construct(string $db, string $coll, array|object $timeseries)
+    public function __construct(string $db, string $coll, Document|Serializable|stdClass|array $timeseries)
     {
         $this->db = $db;
         $this->coll = $coll;

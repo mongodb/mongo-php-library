@@ -7,6 +7,7 @@
 namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
+use stdClass;
 
 class AndQuery implements QueryInterface
 {
@@ -15,20 +16,20 @@ class AndQuery implements QueryInterface
 
     /**
      * @no-named-arguments
-     * @param list<QueryInterface|array|object> ...$expression
+     * @param list<QueryInterface|array|stdClass> ...$expression
      */
     public array $expression;
 
     /**
-     * @param QueryInterface|array|object $expression
+     * @param QueryInterface|array|stdClass ...$expression
      */
-    public function __construct(array|object ...$expression)
+    public function __construct(QueryInterface|stdClass|array ...$expression)
     {
-        if (! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression arguments to be a list of QueryInterface|array|object, named arguments are not supported');
-        }
         if (\count($expression) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
+        }
+        if (! \array_is_list($expression)) {
+            throw new \InvalidArgumentException('Expected $expression arguments to be a list of QueryInterface|array|stdClass, named arguments are not supported');
         }
         $this->expression = $expression;
     }

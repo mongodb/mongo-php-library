@@ -61,6 +61,7 @@ use MongoDB\Builder\Stage\UnionWithStage;
 use MongoDB\Builder\Stage\UnsetStage;
 use MongoDB\Builder\Stage\UnwindStage;
 use MongoDB\Model\BSONArray;
+use stdClass;
 
 final class Stage
 {
@@ -81,7 +82,7 @@ final class Stage
      * If unspecified, each input document must resolve the groupBy expression to a value within one of the bucket ranges specified by boundaries or the operation throws an error.
      * The default value must be less than the lowest boundaries value, or greater than or equal to the highest boundaries value.
      * The default value can be of a different type than the entries in boundaries.
-     * @param Document|Optional|Serializable|array|object $output A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
+     * @param Document|Optional|Serializable|array|stdClass $output A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
      * If you do not specify an output document, the operation returns a count field containing the number of documents in each bucket.
      * If you specify an output document, only the fields specified in the document are returned; i.e. the count field is not returned unless it is explicitly included in the output document.
      */
@@ -89,7 +90,7 @@ final class Stage
         mixed $groupBy,
         PackedArray|BSONArray|array $boundaries,
         mixed $default = Optional::Undefined,
-        array|object $output = Optional::Undefined,
+        Document|Serializable|Optional|stdClass|array $output = Optional::Undefined,
     ): BucketStage
     {
         return new BucketStage($groupBy, $boundaries, $default, $output);
@@ -98,7 +99,7 @@ final class Stage
     /**
      * @param ExpressionInterface|mixed $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
      * @param Int64|int $buckets A positive 32-bit integer that specifies the number of buckets into which input documents are grouped.
-     * @param Document|Optional|Serializable|array|object $output A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
+     * @param Document|Optional|Serializable|array|stdClass $output A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
      * The default count field is not included in the output document when output is specified. Explicitly specify the count expression as part of the output document to include it.
      * @param Optional|non-empty-string $granularity A string that specifies the preferred number series to use to ensure that the calculated boundary edges end on preferred round numbers or their powers of 10.
      * Available only if the all groupBy values are numeric and none of them are NaN.
@@ -106,7 +107,7 @@ final class Stage
     public static function bucketAuto(
         mixed $groupBy,
         Int64|int $buckets,
-        array|object $output = Optional::Undefined,
+        Document|Serializable|Optional|stdClass|array $output = Optional::Undefined,
         Optional|string $granularity = Optional::Undefined,
     ): BucketAutoStage
     {
@@ -120,7 +121,7 @@ final class Stage
      * @param Int64|Optional|int $resumeAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields.
      * @param Optional|bool $showExpandedEvents Specifies whether to include additional change events, such as such as DDL and index operations.
      * New in version 6.0.
-     * @param Document|Optional|Serializable|array|object $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields.
+     * @param Document|Optional|Serializable|array|stdClass $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields.
      * @param Optional|int $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.
      */
     public static function changeStream(
@@ -129,7 +130,7 @@ final class Stage
         Optional|string $fullDocumentBeforeChange = Optional::Undefined,
         Int64|Optional|int $resumeAfter = Optional::Undefined,
         Optional|bool $showExpandedEvents = Optional::Undefined,
-        array|object $startAfter = Optional::Undefined,
+        Document|Serializable|Optional|stdClass|array $startAfter = Optional::Undefined,
         Optional|int $startAtOperationTime = Optional::Undefined,
     ): ChangeStreamStage
     {
@@ -142,9 +143,9 @@ final class Stage
     }
 
     /**
-     * @param Document|Serializable|array|object $config
+     * @param Document|Serializable|array|stdClass $config
      */
-    public static function collStats(array|object $config): CollStatsStage
+    public static function collStats(Document|Serializable|stdClass|array $config): CollStatsStage
     {
         return new CollStatsStage($config);
     }
@@ -166,12 +167,12 @@ final class Stage
      * @param FieldPath|non-empty-string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
      * Documents that do not contain the specified field continue through the pipeline unmodified.
      * To specify a <field> in an embedded document or in an array, use dot notation.
-     * @param array|object $range Specification for range based densification.
+     * @param array|stdClass $range Specification for range based densification.
      * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed> $partitionByFields The field(s) that will be used as the partition keys.
      */
     public static function densify(
         FieldPath|string $field,
-        array|object $range,
+        stdClass|array $range,
         PackedArray|Optional|BSONArray|array $partitionByFields = Optional::Undefined,
     ): DensifyStage
     {
@@ -199,21 +200,21 @@ final class Stage
     }
 
     /**
-     * @param Document|Serializable|array|object $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
+     * @param Document|Serializable|array|stdClass $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
      * The object name is the name of the field to fill. The object value specifies how the field is filled.
-     * @param Document|Optional|Serializable|array|non-empty-string|object $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
+     * @param Document|Optional|Serializable|array|non-empty-string|stdClass $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
      * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed> $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
-     * @param Optional|array|object $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage.
+     * @param Optional|array|stdClass $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage.
      */
     public static function fill(
-        array|object $output,
-        array|object|string $partitionBy = Optional::Undefined,
+        Document|Serializable|stdClass|array $output,
+        Document|Serializable|Optional|stdClass|array|string $partitionBy = Optional::Undefined,
         PackedArray|Optional|BSONArray|array $partitionByFields = Optional::Undefined,
-        array|object $sortBy = Optional::Undefined,
+        Optional|stdClass|array $sortBy = Optional::Undefined,
     ): FillStage
     {
         return new FillStage($output, $partitionBy, $partitionByFields, $sortBy);
@@ -221,7 +222,7 @@ final class Stage
 
     /**
      * @param non-empty-string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation.
-     * @param array|object $near The point for which to find the closest documents.
+     * @param array|stdClass $near The point for which to find the closest documents.
      * @param Decimal128|Int64|Optional|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
      * @param Optional|non-empty-string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation.
      * @param Optional|non-empty-string $key Specify the geospatial indexed field to use when calculating the distance.
@@ -229,7 +230,7 @@ final class Stage
      * Specify the distance in meters if the specified point is GeoJSON and in radians if the specified point is legacy coordinate pairs.
      * @param Decimal128|Int64|Optional|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
      * Specify the distance in meters for GeoJSON data and in radians for legacy coordinate pairs.
-     * @param Optional|QueryInterface|array|object $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
+     * @param Optional|QueryInterface|array|stdClass $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
      * You cannot specify a $near predicate in the query field of the $geoNear stage.
      * @param Optional|bool $spherical Determines how MongoDB calculates the distance between two points:
      * - When true, MongoDB uses $nearSphere semantics and calculates distances using spherical geometry.
@@ -238,13 +239,13 @@ final class Stage
      */
     public static function geoNear(
         string $distanceField,
-        array|object $near,
+        stdClass|array $near,
         Decimal128|Int64|Optional|float|int $distanceMultiplier = Optional::Undefined,
         Optional|string $includeLocs = Optional::Undefined,
         Optional|string $key = Optional::Undefined,
         Decimal128|Int64|Optional|float|int $maxDistance = Optional::Undefined,
         Decimal128|Int64|Optional|float|int $minDistance = Optional::Undefined,
-        array|object $query = Optional::Undefined,
+        Optional|QueryInterface|stdClass|array $query = Optional::Undefined,
         Optional|bool $spherical = Optional::Undefined,
     ): GeoNearStage
     {
@@ -260,7 +261,7 @@ final class Stage
      * @param non-empty-string $as Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the document.
      * @param Int64|Optional|int $maxDepth Non-negative integral number specifying the maximum recursion depth.
      * @param Optional|non-empty-string $depthField Name of the field to add to each traversed document in the search path. The value of this field is the recursion depth for the document, represented as a NumberLong. Recursion depth value starts at zero, so the first lookup corresponds to zero depth.
-     * @param Optional|QueryInterface|array|object $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
+     * @param Optional|QueryInterface|array|stdClass $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
      */
     public static function graphLookup(
         string $from,
@@ -270,7 +271,7 @@ final class Stage
         string $as,
         Int64|Optional|int $maxDepth = Optional::Undefined,
         Optional|string $depthField = Optional::Undefined,
-        array|object $restrictSearchWithMatch = Optional::Undefined,
+        Optional|QueryInterface|stdClass|array $restrictSearchWithMatch = Optional::Undefined,
     ): GraphLookupStage
     {
         return new GraphLookupStage($from, $startWith, $connectFromField, $connectToField, $as, $maxDepth, $depthField, $restrictSearchWithMatch);
@@ -351,7 +352,7 @@ final class Stage
      * Starting in MongoDB 5.1, the collection specified in the from parameter can be sharded.
      * @param Optional|non-empty-string $localField Specifies the field from the documents input to the $lookup stage. $lookup performs an equality match on the localField to the foreignField from the documents of the from collection. If an input document does not contain the localField, the $lookup treats the field as having a value of null for matching purposes.
      * @param Optional|non-empty-string $foreignField Specifies the field from the documents in the from collection. $lookup performs an equality match on the foreignField to the localField from the input documents. If a document in the from collection does not contain the foreignField, the $lookup treats the value as null for matching purposes.
-     * @param Document|Optional|Serializable|array|object $let Specifies variables to use in the pipeline stages. Use the variable expressions to access the fields from the joined collection's documents that are input to the pipeline.
+     * @param Document|Optional|Serializable|array|stdClass $let Specifies variables to use in the pipeline stages. Use the variable expressions to access the fields from the joined collection's documents that are input to the pipeline.
      * @param Optional|Pipeline|array $pipeline Specifies the pipeline to run on the joined collection. The pipeline determines the resulting documents from the joined collection. To return all documents, specify an empty pipeline [].
      * The pipeline cannot include the $out stage or the $mergestage. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.
      * The pipeline cannot directly access the joined document fields. Instead, define variables for the joined document fields using the let option and then reference the variables in the pipeline stages.
@@ -361,7 +362,7 @@ final class Stage
         Optional|string $from = Optional::Undefined,
         Optional|string $localField = Optional::Undefined,
         Optional|string $foreignField = Optional::Undefined,
-        array|object $let = Optional::Undefined,
+        Document|Serializable|Optional|stdClass|array $let = Optional::Undefined,
         Optional|Pipeline|array $pipeline = Optional::Undefined,
     ): LookupStage
     {
@@ -369,24 +370,24 @@ final class Stage
     }
 
     /**
-     * @param QueryInterface|array|object ...$query
+     * @param QueryInterface|array|stdClass $query
      */
-    public static function match(array|object ...$query): MatchStage
+    public static function match(QueryInterface|stdClass|array $query): MatchStage
     {
-        return new MatchStage(...$query);
+        return new MatchStage($query);
     }
 
     /**
-     * @param array|non-empty-string|object $into The output collection.
+     * @param array|non-empty-string|stdClass $into The output collection.
      * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed>|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
-     * @param Document|Optional|Serializable|array|object $let Specifies variables for use in the whenMatched pipeline.
+     * @param Document|Optional|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline.
      * @param Optional|non-empty-string $whenMatched The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s).
      * @param Optional|non-empty-string $whenNotMatched The behavior of $merge if a result document does not match an existing document in the out collection.
      */
     public static function merge(
-        array|object|string $into,
+        stdClass|array|string $into,
         PackedArray|Optional|BSONArray|array|string $on = Optional::Undefined,
-        array|object $let = Optional::Undefined,
+        Document|Serializable|Optional|stdClass|array $let = Optional::Undefined,
         Optional|string $whenMatched = Optional::Undefined,
         Optional|string $whenNotMatched = Optional::Undefined,
     ): MergeStage
@@ -397,9 +398,9 @@ final class Stage
     /**
      * @param non-empty-string $db Target collection name to write documents from $out to.
      * @param non-empty-string $coll Target database name to write documents from $out to.
-     * @param Document|Serializable|array|object $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.
+     * @param Document|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.
      */
-    public static function out(string $db, string $coll, array|object $timeseries): OutStage
+    public static function out(string $db, string $coll, Document|Serializable|stdClass|array $timeseries): OutStage
     {
         return new OutStage($db, $coll, $timeseries);
     }
@@ -426,17 +427,21 @@ final class Stage
     }
 
     /**
-     * @param Document|ResolvesToObject|Serializable|array|object $newRoot
+     * @param Document|ResolvesToObject|Serializable|array|stdClass $newRoot
      */
-    public static function replaceRoot(array|object $newRoot): ReplaceRootStage
+    public static function replaceRoot(
+        Document|Serializable|ResolvesToObject|stdClass|array $newRoot,
+    ): ReplaceRootStage
     {
         return new ReplaceRootStage($newRoot);
     }
 
     /**
-     * @param Document|ResolvesToObject|Serializable|array|object $expression
+     * @param Document|ResolvesToObject|Serializable|array|stdClass $expression
      */
-    public static function replaceWith(array|object $expression): ReplaceWithStage
+    public static function replaceWith(
+        Document|Serializable|ResolvesToObject|stdClass|array $expression,
+    ): ReplaceWithStage
     {
         return new ReplaceWithStage($expression);
     }
@@ -450,17 +455,17 @@ final class Stage
     }
 
     /**
-     * @param Document|Serializable|array|object $search
+     * @param Document|Serializable|array|stdClass $search
      */
-    public static function search(array|object $search): SearchStage
+    public static function search(Document|Serializable|stdClass|array $search): SearchStage
     {
         return new SearchStage($search);
     }
 
     /**
-     * @param Document|Serializable|array|object $meta
+     * @param Document|Serializable|array|stdClass $meta
      */
-    public static function searchMeta(array|object $meta): SearchMetaStage
+    public static function searchMeta(Document|Serializable|stdClass|array $meta): SearchMetaStage
     {
         return new SearchMetaStage($meta);
     }
@@ -475,16 +480,16 @@ final class Stage
 
     /**
      * @param ExpressionInterface|mixed $partitionBy Specifies an expression to group the documents. In the $setWindowFields stage, the group of documents is known as a partition. Default is one partition for the entire collection.
-     * @param array|object $sortBy Specifies the field(s) to sort the documents by in the partition. Uses the same syntax as the $sort stage. Default is no sorting.
-     * @param Document|Serializable|array|object $output Specifies the field(s) to append to the documents in the output returned by the $setWindowFields stage. Each field is set to the result returned by the window operator.
+     * @param array|stdClass $sortBy Specifies the field(s) to sort the documents by in the partition. Uses the same syntax as the $sort stage. Default is no sorting.
+     * @param Document|Serializable|array|stdClass $output Specifies the field(s) to append to the documents in the output returned by the $setWindowFields stage. Each field is set to the result returned by the window operator.
      * A field can contain dots to specify embedded document fields and array fields. The semantics for the embedded document dotted notation in the $setWindowFields stage are the same as the $addFields and $set stages.
-     * @param Optional|array|object $window Specifies the window boundaries and parameters. Window boundaries are inclusive. Default is an unbounded window, which includes all documents in the partition.
+     * @param Optional|array|stdClass $window Specifies the window boundaries and parameters. Window boundaries are inclusive. Default is an unbounded window, which includes all documents in the partition.
      */
     public static function setWindowFields(
         mixed $partitionBy,
-        array|object $sortBy,
-        array|object $output,
-        array|object $window = Optional::Undefined,
+        stdClass|array $sortBy,
+        Document|Serializable|stdClass|array $output,
+        Optional|stdClass|array $window = Optional::Undefined,
     ): SetWindowFieldsStage
     {
         return new SetWindowFieldsStage($partitionBy, $sortBy, $output, $window);
@@ -504,9 +509,9 @@ final class Stage
     }
 
     /**
-     * @param array|object $sort
+     * @param array|stdClass $sort
      */
-    public static function sort(array|object $sort): SortStage
+    public static function sort(stdClass|array $sort): SortStage
     {
         return new SortStage($sort);
     }

@@ -203,6 +203,7 @@ use MongoDB\Builder\Expression\ResolvesToObjectId;
 use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Expression\ResolvesToTimestamp;
 use MongoDB\Model\BSONArray;
+use stdClass;
 
 final class Aggregation
 {
@@ -424,22 +425,22 @@ final class Aggregation
     }
 
     /**
-     * @param array|object $sortBy Specifies the order of results, with syntax similar to $sort.
+     * @param array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
      * @param ExpressionInterface|mixed $output Represents the output for each element in the group and can be any expression.
      */
-    public static function bottom(array|object $sortBy, mixed $output): BottomAggregation
+    public static function bottom(stdClass|array $sortBy, mixed $output): BottomAggregation
     {
         return new BottomAggregation($sortBy, $output);
     }
 
     /**
      * @param Int64|ResolvesToInt|int $n Limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
-     * @param array|object $sortBy Specifies the order of results, with syntax similar to $sort.
+     * @param array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
      * @param ExpressionInterface|mixed $output Represents the output for each element in the group and can be any expression.
      */
     public static function bottomN(
         Int64|ResolvesToInt|int $n,
-        array|object $sortBy,
+        stdClass|array $sortBy,
         mixed $output,
     ): BottomNAggregation
     {
@@ -447,9 +448,11 @@ final class Aggregation
     }
 
     /**
-     * @param Document|ResolvesToNull|ResolvesToObject|Serializable|array|null|object $object
+     * @param Document|ResolvesToNull|ResolvesToObject|Serializable|array|null|stdClass $object
      */
-    public static function bsonSize(array|null|object $object): BsonSizeAggregation
+    public static function bsonSize(
+        Document|Serializable|ResolvesToNull|ResolvesToObject|stdClass|array|null $object,
+    ): BsonSizeAggregation
     {
         return new BsonSizeAggregation($object);
     }
@@ -1100,11 +1103,11 @@ final class Aggregation
     }
 
     /**
-     * @param Document|Serializable|array|object $vars Assignment block for the variables accessible in the in expression. To assign a variable, specify a string for the variable name and assign a valid expression for the value.
+     * @param Document|Serializable|array|stdClass $vars Assignment block for the variables accessible in the in expression. To assign a variable, specify a string for the variable name and assign a valid expression for the value.
      * The variable assignments have no meaning outside the in expression, not even within the vars block itself.
      * @param ExpressionInterface|mixed $in The expression to evaluate.
      */
-    public static function let(array|object $vars, mixed $in): LetAggregation
+    public static function let(Document|Serializable|stdClass|array $vars, mixed $in): LetAggregation
     {
         return new LetAggregation($vars, $in);
     }
@@ -1240,9 +1243,11 @@ final class Aggregation
     }
 
     /**
-     * @param Document|ResolvesToObject|Serializable|array|object ...$document Any valid expression that resolves to a document.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass ...$document Any valid expression that resolves to a document.
      */
-    public static function mergeObjects(array|object ...$document): MergeObjectsAggregation
+    public static function mergeObjects(
+        Document|Serializable|ResolvesToObject|stdClass|array ...$document,
+    ): MergeObjectsAggregation
     {
         return new MergeObjectsAggregation(...$document);
     }
@@ -1350,9 +1355,11 @@ final class Aggregation
     }
 
     /**
-     * @param Document|ResolvesToObject|Serializable|array|object $object Any valid expression as long as it resolves to a document object. $objectToArray applies to the top-level fields of its argument. If the argument is a document that itself contains embedded document fields, the $objectToArray does not recursively apply to the embedded document fields.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass $object Any valid expression as long as it resolves to a document object. $objectToArray applies to the top-level fields of its argument. If the argument is a document that itself contains embedded document fields, the $objectToArray does not recursively apply to the embedded document fields.
      */
-    public static function objectToArray(array|object $object): ObjectToArrayAggregation
+    public static function objectToArray(
+        Document|Serializable|ResolvesToObject|stdClass|array $object,
+    ): ObjectToArrayAggregation
     {
         return new ObjectToArrayAggregation($object);
     }
@@ -1603,13 +1610,13 @@ final class Aggregation
 
     /**
      * @param ResolvesToString|non-empty-string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
-     * @param Document|ResolvesToObject|Serializable|array|object $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
      * @param ExpressionInterface|mixed $value The value that you want to assign to field. value can be any valid expression.
      * Set to $$REMOVE to remove field from the input document.
      */
     public static function setField(
         ResolvesToString|string $field,
-        array|object $input,
+        Document|Serializable|ResolvesToObject|stdClass|array $input,
         mixed $value,
     ): SetFieldAggregation
     {
@@ -1708,11 +1715,11 @@ final class Aggregation
 
     /**
      * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input The array to be sorted.
-     * @param array|object $sortBy The document specifies a sort ordering.
+     * @param array|stdClass $sortBy The document specifies a sort ordering.
      */
     public static function sortArray(
         PackedArray|ResolvesToArray|BSONArray|array $input,
-        array|object $sortBy,
+        stdClass|array $sortBy,
     ): SortArrayAggregation
     {
         return new SortArrayAggregation($input, $sortBy);
@@ -1961,20 +1968,20 @@ final class Aggregation
     }
 
     /**
-     * @param array|object $sortBy Specifies the order of results, with syntax similar to $sort.
+     * @param array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
      * @param ExpressionInterface|mixed $output Represents the output for each element in the group and can be any expression.
      */
-    public static function top(array|object $sortBy, mixed $output): TopAggregation
+    public static function top(stdClass|array $sortBy, mixed $output): TopAggregation
     {
         return new TopAggregation($sortBy, $output);
     }
 
     /**
      * @param Int64|ResolvesToInt|int $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
-     * @param array|object $sortBy Specifies the order of results, with syntax similar to $sort.
+     * @param array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
      * @param ExpressionInterface|mixed $output Represents the output for each element in the group and can be any expression.
      */
-    public static function topN(Int64|ResolvesToInt|int $n, array|object $sortBy, mixed $output): TopNAggregation
+    public static function topN(Int64|ResolvesToInt|int $n, stdClass|array $sortBy, mixed $output): TopNAggregation
     {
         return new TopNAggregation($n, $sortBy, $output);
     }
@@ -2032,9 +2039,12 @@ final class Aggregation
 
     /**
      * @param ResolvesToString|non-empty-string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
-     * @param Document|ResolvesToObject|Serializable|array|object $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
      */
-    public static function unsetField(ResolvesToString|string $field, array|object $input): UnsetFieldAggregation
+    public static function unsetField(
+        ResolvesToString|string $field,
+        Document|Serializable|ResolvesToObject|stdClass|array $input,
+    ): UnsetFieldAggregation
     {
         return new UnsetFieldAggregation($field, $input);
     }

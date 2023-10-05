@@ -13,4 +13,3 @@ arguments:
         name: query
         type:
             - Query
-        variadic: object

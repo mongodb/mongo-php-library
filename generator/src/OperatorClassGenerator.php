@@ -5,7 +5,6 @@ namespace MongoDB\CodeGenerator;
 
 use MongoDB\Builder\Aggregation\AccumulatorInterface;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
 use MongoDB\Builder\Query\QueryInterface;
 use MongoDB\Builder\Stage\StageInterface;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
@@ -13,8 +12,8 @@ use MongoDB\CodeGenerator\Definition\OperatorDefinition;
 use MongoDB\CodeGenerator\Definition\VariadicType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpNamespace;
-use Nette\PhpGenerator\Type;
 use RuntimeException;
+use stdClass;
 use Throwable;
 
 use function assert;
@@ -68,10 +67,19 @@ class OperatorClassGenerator extends OperatorGenerator
             $constuctorParam->setType($type->native);
 
             if ($argument->variadic) {
-                $property->setType('array');
                 $constuctor->setVariadic();
+                $constuctor->addComment('@param ' . $type->doc . ' ...$' . $argument->name . rtrim(' ' . $argument->description));
+
+                if ($argument->variadicMin !== null) {
+                    $constuctor->addBody(<<<PHP
+                    if (\count(\${$argument->name}) < {$argument->variadicMin}) {
+                        throw new \InvalidArgumentException(\sprintf('Expected at least %d values for \${$argument->name}, got %d.', {$argument->variadicMin}, \count(\${$argument->name})));
+                    }
+                    PHP);
+                }
 
                 if ($argument->variadic === VariadicType::Array) {
+                    $property->setType('array');
                     // @see https://psalm.dev/docs/running_psalm/issues/NamedArgumentNotAllowed/
                     $property->addComment('@no-named-arguments');
                     $property->addComment('@param list<' . $type->doc . '> ...$' . $argument->name . rtrim(' ' . $argument->description));
@@ -81,27 +89,23 @@ class OperatorClassGenerator extends OperatorGenerator
                     }
                     PHP);
                 } elseif ($argument->variadic === VariadicType::Object) {
-                    $property->addComment('@param array<string, ' . $type->doc . '> ...$' . $argument->name . rtrim(' ' . $argument->description));
+                    $namespace->addUse(stdClass::class);
+                    $property->setType(stdClass::class);
+                    $property->addComment('@param stdClass<' . $type->doc . '> ...$' . $argument->name . rtrim(' ' . $argument->description));
                     $constuctor->addBody(<<<PHP
                     foreach(\${$argument->name} as \$key => \$value) {
                         if (! \is_string(\$key)) {
                             throw new \InvalidArgumentException('Expected \${$argument->name} arguments to be a map of {$type->doc}, named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
                         }
                     }
-                    PHP);
-                }
-
-                if ($argument->variadicMin !== null) {
-                    $constuctor->addBody(<<<PHP
-                    if (\count(\${$argument->name}) < {$argument->variadicMin}) {
-                        throw new \InvalidArgumentException(\sprintf('Expected at least %d values for \${$argument->name}, got %d.', {$argument->variadicMin}, \count(\${$argument->name})));
-                    }
+                    \${$argument->name} = (object) \${$argument->name};
                     PHP);
                 }
             } else {
                 // Non-variadic arguments
                 $property->addComment('@param ' . $type->doc . ' $' . $argument->name . rtrim(' ' . $argument->description));
                 $property->setType($type->native);
+                $constuctor->addComment('@param ' . $type->doc . ' $' . $argument->name . rtrim(' ' . $argument->description));
 
                 if ($argument->optional) {
                     // We use a special Optional::Undefined type to differentiate between null and undefined
@@ -120,7 +124,6 @@ class OperatorClassGenerator extends OperatorGenerator
 
             // Set property from constructor argument
             $constuctor->addBody('$this->' . $argument->name . ' = $' . $argument->name . ';');
-            $constuctor->addComment('@param ' . $type->doc . ' $' . $argument->name . rtrim(' ' . $argument->description));
         }
 
         return $namespace;

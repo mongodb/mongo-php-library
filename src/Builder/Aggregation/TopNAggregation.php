@@ -10,6 +10,7 @@ use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToInt;
+use stdClass;
 
 class TopNAggregation implements AccumulatorInterface
 {
@@ -19,18 +20,18 @@ class TopNAggregation implements AccumulatorInterface
     /** @param Int64|ResolvesToInt|int $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group. */
     public Int64|ResolvesToInt|int $n;
 
-    /** @param array|object $sortBy Specifies the order of results, with syntax similar to $sort. */
-    public array|object $sortBy;
+    /** @param array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort. */
+    public stdClass|array $sortBy;
 
     /** @param ExpressionInterface|mixed $output Represents the output for each element in the group and can be any expression. */
     public mixed $output;
 
     /**
      * @param Int64|ResolvesToInt|int $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
-     * @param array|object $sortBy Specifies the order of results, with syntax similar to $sort.
+     * @param array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
      * @param ExpressionInterface|mixed $output Represents the output for each element in the group and can be any expression.
      */
-    public function __construct(Int64|ResolvesToInt|int $n, array|object $sortBy, mixed $output)
+    public function __construct(Int64|ResolvesToInt|int $n, stdClass|array $sortBy, mixed $output)
     {
         $this->n = $n;
         $this->sortBy = $sortBy;

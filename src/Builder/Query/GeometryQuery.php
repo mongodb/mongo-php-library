@@ -12,6 +12,7 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Model\BSONArray;
+use stdClass;
 
 class GeometryQuery implements ExpressionInterface
 {
@@ -24,16 +25,19 @@ class GeometryQuery implements ExpressionInterface
     /** @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $coordinates */
     public PackedArray|BSONArray|array $coordinates;
 
-    /** @param Document|Serializable|array|object $crs */
-    public array|object $crs;
+    /** @param Document|Serializable|array|stdClass $crs */
+    public Document|Serializable|stdClass|array $crs;
 
     /**
      * @param non-empty-string $type
      * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $coordinates
-     * @param Document|Serializable|array|object $crs
+     * @param Document|Serializable|array|stdClass $crs
      */
-    public function __construct(string $type, PackedArray|BSONArray|array $coordinates, array|object $crs)
-    {
+    public function __construct(
+        string $type,
+        PackedArray|BSONArray|array $coordinates,
+        Document|Serializable|stdClass|array $crs,
+    ) {
         $this->type = $type;
         if (\is_array($coordinates) && ! \array_is_list($coordinates)) {
             throw new \InvalidArgumentException('Expected $coordinates argument to be a list, got an associative array.');

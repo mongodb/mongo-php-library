@@ -27,15 +27,15 @@ class AndAggregation implements ResolvesToBool
     public array $expression;
 
     /**
-     * @param Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|bool|float|int|mixed|non-empty-string|null $expression
+     * @param Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|bool|float|int|mixed|non-empty-string|null ...$expression
      */
     public function __construct(mixed ...$expression)
     {
-        if (! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression arguments to be a list of Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|bool|float|int|mixed|non-empty-string|null, named arguments are not supported');
-        }
         if (\count($expression) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
+        }
+        if (! \array_is_list($expression)) {
+            throw new \InvalidArgumentException('Expected $expression arguments to be a list of Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|bool|float|int|mixed|non-empty-string|null, named arguments are not supported');
         }
         $this->expression = $expression;
     }

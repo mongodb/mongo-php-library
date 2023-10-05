@@ -11,6 +11,7 @@ use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Query\QueryInterface;
+use stdClass;
 
 class GeoNearStage implements StageInterface
 {
@@ -20,8 +21,8 @@ class GeoNearStage implements StageInterface
     /** @param non-empty-string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation. */
     public string $distanceField;
 
-    /** @param array|object $near The point for which to find the closest documents. */
-    public array|object $near;
+    /** @param array|stdClass $near The point for which to find the closest documents. */
+    public stdClass|array $near;
 
     /** @param Decimal128|Int64|Optional|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth. */
     public Decimal128|Int64|Optional|float|int $distanceMultiplier;
@@ -45,10 +46,10 @@ class GeoNearStage implements StageInterface
     public Decimal128|Int64|Optional|float|int $minDistance;
 
     /**
-     * @param Optional|QueryInterface|array|object $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
+     * @param Optional|QueryInterface|array|stdClass $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
      * You cannot specify a $near predicate in the query field of the $geoNear stage.
      */
-    public array|object $query;
+    public Optional|QueryInterface|stdClass|array $query;
 
     /**
      * @param Optional|bool $spherical Determines how MongoDB calculates the distance between two points:
@@ -60,7 +61,7 @@ class GeoNearStage implements StageInterface
 
     /**
      * @param non-empty-string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation.
-     * @param array|object $near The point for which to find the closest documents.
+     * @param array|stdClass $near The point for which to find the closest documents.
      * @param Decimal128|Int64|Optional|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
      * @param Optional|non-empty-string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation.
      * @param Optional|non-empty-string $key Specify the geospatial indexed field to use when calculating the distance.
@@ -68,7 +69,7 @@ class GeoNearStage implements StageInterface
      * Specify the distance in meters if the specified point is GeoJSON and in radians if the specified point is legacy coordinate pairs.
      * @param Decimal128|Int64|Optional|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
      * Specify the distance in meters for GeoJSON data and in radians for legacy coordinate pairs.
-     * @param Optional|QueryInterface|array|object $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
+     * @param Optional|QueryInterface|array|stdClass $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
      * You cannot specify a $near predicate in the query field of the $geoNear stage.
      * @param Optional|bool $spherical Determines how MongoDB calculates the distance between two points:
      * - When true, MongoDB uses $nearSphere semantics and calculates distances using spherical geometry.
@@ -77,13 +78,13 @@ class GeoNearStage implements StageInterface
      */
     public function __construct(
         string $distanceField,
-        array|object $near,
+        stdClass|array $near,
         Decimal128|Int64|Optional|float|int $distanceMultiplier = Optional::Undefined,
         Optional|string $includeLocs = Optional::Undefined,
         Optional|string $key = Optional::Undefined,
         Decimal128|Int64|Optional|float|int $maxDistance = Optional::Undefined,
         Decimal128|Int64|Optional|float|int $minDistance = Optional::Undefined,
-        array|object $query = Optional::Undefined,
+        Optional|QueryInterface|stdClass|array $query = Optional::Undefined,
         Optional|bool $spherical = Optional::Undefined,
     ) {
         $this->distanceField = $distanceField;

@@ -15,6 +15,7 @@ use function array_is_list;
 use function array_merge;
 use function array_walk;
 use function is_array;
+use function var_export;
 
 /**
  * @todo This annotation is not enough as this PHP file needs to use named arguments, that can't compile on PHP 7.4
@@ -57,21 +58,24 @@ class BuilderEncoderTest extends TestCase
     public function testPerformCount(): void
     {
         $pipeline = new Pipeline(
-            Stage::match(Query::or(
-                ['score' => [Query::gt(70), Query::lt(90)]],
-                ['views' => Query::gte(1000)],
-            )),
-            Stage::group(...[
-                '_id' => null,
-                'count' => Aggregation::sum(1),
-            ]),
+            Stage::match(
+                Query::or(
+                    (object) ['score' => [Query::gt(70), Query::lt(90)]],
+                    (object) ['views' => Query::gte(1000)],
+                ),
+            ),
+            Stage::group(
+                _id: null,
+                count: Aggregation::sum(1),
+            ),
         );
 
         $expected = [
             [
                 '$match' => [
                     '$or' => [
-                        ['score' => ['$gt' => 70, '$lt' => 90]],
+                        // same as ['score' => ['$gt' => 70, '$lt' => 90]],
+                        ['score' => [['$gt' => 70], ['$lt' => 90]]],
                         ['views' => ['$gte' => 1000]],
                     ],
                 ],
@@ -141,7 +145,7 @@ class BuilderEncoderTest extends TestCase
 
         self::objectify($expected);
 
-        self::assertEquals($expected, $actual);
+        self::assertEquals($expected, $actual, var_export($actual, true));
     }
 
     /**

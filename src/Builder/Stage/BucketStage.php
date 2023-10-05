@@ -14,6 +14,7 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Optional;
 use MongoDB\Model\BSONArray;
+use stdClass;
 
 class BucketStage implements StageInterface
 {
@@ -41,11 +42,11 @@ class BucketStage implements StageInterface
     public mixed $default;
 
     /**
-     * @param Document|Optional|Serializable|array|object $output A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
+     * @param Document|Optional|Serializable|array|stdClass $output A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
      * If you do not specify an output document, the operation returns a count field containing the number of documents in each bucket.
      * If you specify an output document, only the fields specified in the document are returned; i.e. the count field is not returned unless it is explicitly included in the output document.
      */
-    public array|object $output;
+    public Document|Serializable|Optional|stdClass|array $output;
 
     /**
      * @param ExpressionInterface|FieldPath|mixed|non-empty-string $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
@@ -56,7 +57,7 @@ class BucketStage implements StageInterface
      * If unspecified, each input document must resolve the groupBy expression to a value within one of the bucket ranges specified by boundaries or the operation throws an error.
      * The default value must be less than the lowest boundaries value, or greater than or equal to the highest boundaries value.
      * The default value can be of a different type than the entries in boundaries.
-     * @param Document|Optional|Serializable|array|object $output A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
+     * @param Document|Optional|Serializable|array|stdClass $output A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
      * If you do not specify an output document, the operation returns a count field containing the number of documents in each bucket.
      * If you specify an output document, only the fields specified in the document are returned; i.e. the count field is not returned unless it is explicitly included in the output document.
      */
@@ -64,7 +65,7 @@ class BucketStage implements StageInterface
         mixed $groupBy,
         PackedArray|BSONArray|array $boundaries,
         mixed $default = Optional::Undefined,
-        array|object $output = Optional::Undefined,
+        Document|Serializable|Optional|stdClass|array $output = Optional::Undefined,
     ) {
         $this->groupBy = $groupBy;
         if (\is_array($boundaries) && ! \array_is_list($boundaries)) {

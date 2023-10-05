@@ -13,6 +13,7 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Optional;
 use MongoDB\Model\BSONArray;
+use stdClass;
 
 class FillStage implements StageInterface
 {
@@ -20,17 +21,17 @@ class FillStage implements StageInterface
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
     /**
-     * @param Document|Serializable|array|object $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
+     * @param Document|Serializable|array|stdClass $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
      * The object name is the name of the field to fill. The object value specifies how the field is filled.
      */
-    public array|object $output;
+    public Document|Serializable|stdClass|array $output;
 
     /**
-     * @param Document|Optional|Serializable|array|non-empty-string|object $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
+     * @param Document|Optional|Serializable|array|non-empty-string|stdClass $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
      */
-    public array|object|string $partitionBy;
+    public Document|Serializable|Optional|stdClass|array|string $partitionBy;
 
     /**
      * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed> $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
@@ -39,25 +40,25 @@ class FillStage implements StageInterface
      */
     public PackedArray|Optional|BSONArray|array $partitionByFields;
 
-    /** @param Optional|array|object $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage. */
-    public array|object $sortBy;
+    /** @param Optional|array|stdClass $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage. */
+    public Optional|stdClass|array $sortBy;
 
     /**
-     * @param Document|Serializable|array|object $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
+     * @param Document|Serializable|array|stdClass $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
      * The object name is the name of the field to fill. The object value specifies how the field is filled.
-     * @param Document|Optional|Serializable|array|non-empty-string|object $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
+     * @param Document|Optional|Serializable|array|non-empty-string|stdClass $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
      * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed> $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
-     * @param Optional|array|object $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage.
+     * @param Optional|array|stdClass $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage.
      */
     public function __construct(
-        array|object $output,
-        array|object|string $partitionBy = Optional::Undefined,
+        Document|Serializable|stdClass|array $output,
+        Document|Serializable|Optional|stdClass|array|string $partitionBy = Optional::Undefined,
         PackedArray|Optional|BSONArray|array $partitionByFields = Optional::Undefined,
-        array|object $sortBy = Optional::Undefined,
+        Optional|stdClass|array $sortBy = Optional::Undefined,
     ) {
         $this->output = $output;
         $this->partitionBy = $partitionBy;

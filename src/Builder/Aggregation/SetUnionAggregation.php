@@ -24,15 +24,15 @@ class SetUnionAggregation implements ResolvesToArray
     public array $expression;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression
+     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> ...$expression
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array ...$expression)
     {
-        if (! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression arguments to be a list of BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed>, named arguments are not supported');
-        }
         if (\count($expression) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
+        }
+        if (! \array_is_list($expression)) {
+            throw new \InvalidArgumentException('Expected $expression arguments to be a list of BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed>, named arguments are not supported');
         }
         $this->expression = $expression;
     }

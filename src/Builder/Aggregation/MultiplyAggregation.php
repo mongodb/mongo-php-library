@@ -25,16 +25,16 @@ class MultiplyAggregation implements ResolvesToDecimal
     public array $expression;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression The arguments can be any valid expression as long as they resolve to numbers.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression The arguments can be any valid expression as long as they resolve to numbers.
      * Starting in MongoDB 6.1 you can optimize the $multiply operation. To improve performance, group references at the end of the argument list.
      */
     public function __construct(Decimal128|Int64|ResolvesToNumber|float|int ...$expression)
     {
-        if (! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression arguments to be a list of Decimal128|Int64|ResolvesToNumber|float|int, named arguments are not supported');
-        }
         if (\count($expression) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
+        }
+        if (! \array_is_list($expression)) {
+            throw new \InvalidArgumentException('Expected $expression arguments to be a list of Decimal128|Int64|ResolvesToNumber|float|int, named arguments are not supported');
         }
         $this->expression = $expression;
     }

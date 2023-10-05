@@ -6,18 +6,15 @@ use LogicException;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Expression\Variable;
-use MongoDB\Builder\Query\OrQuery;
+use MongoDB\Builder\Query\QueryInterface;
 use MongoDB\Builder\Stage\GroupStage;
 use MongoDB\Builder\Stage\ProjectStage;
-use MongoDB\Builder\Stage\SortStage;
 use MongoDB\Builder\Stage\StageInterface;
 use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
 use stdClass;
 
-use function array_is_list;
-use function array_merge;
 use function get_object_vars;
 use function is_array;
 use function sprintf;
@@ -32,7 +29,10 @@ class BuilderEncoder implements Encoder
      */
     public function canEncode($value): bool
     {
-        return $value instanceof Pipeline || $value instanceof StageInterface || $value instanceof ExpressionInterface;
+        return $value instanceof Pipeline
+            || $value instanceof StageInterface
+            || $value instanceof ExpressionInterface
+            || $value instanceof QueryInterface;
     }
 
     /**
@@ -73,31 +73,6 @@ class BuilderEncoder implements Encoder
             return $this->wrap($value, $result);
         }
 
-        if ($value instanceof OrQuery) {
-            $result = [];
-            foreach ($value->query as $query) {
-                $encodedQuery = new stdClass();
-                foreach ($query as $field => $expression) {
-                    // Specific: $or queries are encoded as a list of expressions
-                    // We need to merge query expressions into a single object
-                    if (is_array($expression) && array_is_list($expression)) {
-                        $mergedExpressions = [];
-                        foreach ($expression as $expr) {
-                            $mergedExpressions = array_merge($mergedExpressions, (array) $this->encodeIfSupported($expr));
-                        }
-
-                        $encodedQuery->{$field} = (object) $mergedExpressions;
-                    } else {
-                        $encodedQuery->{$field} = $this->encodeIfSupported($expression);
-                    }
-                }
-
-                $result[] = $encodedQuery;
-            }
-
-            return $this->wrap($value, $result);
-        }
-
         // The generic but incomplete encoding code
         switch ($value::ENCODE) {
             case Encode::Single:
@@ -116,24 +91,24 @@ class BuilderEncoder implements Encoder
         throw new LogicException(sprintf('Class "%s" does not have a valid ENCODE constant.', $value::class));
     }
 
-    private function encodeAsArray(ExpressionInterface|StageInterface $value): stdClass
+    private function encodeAsArray(ExpressionInterface|StageInterface|QueryInterface $value): stdClass
     {
         $result = [];
         /** @var mixed $val */
         foreach (get_object_vars($value) as $val) {
-            $result[] = $this->encodeIfSupported($val);
+            $result[] = $this->recursiveEncode($val);
         }
 
         return $this->wrap($value, $result);
     }
 
-    private function encodeAsObject(ExpressionInterface|StageInterface $value): stdClass
+    private function encodeAsObject(ExpressionInterface|StageInterface|QueryInterface $value): stdClass
     {
         $result = new stdClass();
         /** @var mixed $val */
         foreach (get_object_vars($value) as $key => $val) {
             /** @var mixed $val */
-            $val = $this->encodeIfSupported($val);
+            $val = $this->recursiveEncode($val);
             if ($val !== Optional::Undefined) {
                 $result->{$key} = $val;
             }
@@ -142,31 +117,53 @@ class BuilderEncoder implements Encoder
         return $this->wrap($value, $result);
     }
 
-    private function encodeAsSingle(ExpressionInterface|StageInterface $value): stdClass
+    private function encodeAsSingle(ExpressionInterface|StageInterface|QueryInterface $value): stdClass
     {
         $result = [];
         /** @var mixed $val */
         foreach (get_object_vars($value) as $val) {
-            $result = $this->encodeIfSupported($val);
+            $result = $this->recursiveEncode($val);
             break;
         }
 
         return $this->wrap($value, $result);
     }
 
-    private function encodeAsGroup(ExpressionInterface|StageInterface $value): stdClass
+    /**
+     * $group stage have a specific encoding because the _id argument is required and others are variadic
+     */
+    private function encodeAsGroup(GroupStage $value): stdClass
     {
         $result = new stdClass();
-        $result->_id = $this->encodeIfSupported($value->_id);
-        // Specific: fields are encoded as a map of properties to their values at the top level as _id
-        foreach ($value->fields ?? [] as $key => $val) {
-            $result->{$key} = $this->encodeIfSupported($val);
+        $result->_id = $this->recursiveEncode($value->_id);
+        // Specific to $group: fields are encoded as a map of properties to their values at the top level as _id
+        foreach ($value->field ?? [] as $key => $val) {
+            $result->{$key} = $this->recursiveEncode($val);
         }
 
         return $this->wrap($value, $result);
     }
 
-    private function wrap(ExpressionInterface|StageInterface $value, mixed $result): stdClass
+    private function recursiveEncode(mixed $value): mixed
+    {
+        if (is_array($value)) {
+            foreach ($value as $key => $val) {
+                $value[$key] = $this->recursiveEncode($val);
+            }
+
+            return $value;
+        }
+
+        if ($value instanceof stdClass) {
+            foreach (get_object_vars($value) as $key => $val) {
+                $value->{$key} = $this->recursiveEncode($val);
+            }
+        }
+
+        return $this->encodeIfSupported($value);
+    }
+
+    private function wrap(ExpressionInterface|StageInterface|QueryInterface $value, mixed $result): stdClass
     {
         $object = new stdClass();
         $object->{$value::NAME} = $result;

@@ -32,13 +32,13 @@ return [
     'number' => ['scalar' => true, 'types' => ['int', BSON\Int64::class, 'float', BSON\Decimal128::class]],
     'string' => ['scalar' => true, 'types' => ['string']],
     'bool' => ['scalar' => true, 'types' => ['bool']],
-    'object' => ['scalar' => true, 'types' => ['array', 'object', BSON\Document::class, BSON\Serializable::class]],
+    'object' => ['scalar' => true, 'types' => ['array', stdClass::class, BSON\Document::class, BSON\Serializable::class]],
     'Regex' => ['scalar' => true, 'types' => [BSON\Regex::class]],
     'Constant' => ['scalar' => true, 'types' => ['mixed']],
     'Binary' => ['scalar' => true, 'types' => ['string', BSON\Binary::class]],
 
     AccumulatorInterface::class => ['scalar' => true, 'types' => [AccumulatorInterface::class]],
-    QueryInterface::class => ['scalar' => true, 'types' => [QueryInterface::class, 'array', 'object']],
+    QueryInterface::class => ['scalar' => true, 'types' => [QueryInterface::class, 'array', stdClass::class]],
 
     // @todo merge this types
     'list' => ['scalar' => true, 'types' => ['list', BSONArray::class, BSON\PackedArray::class]],
@@ -50,17 +50,17 @@ return [
     'FullDocumentBeforeChange' => ['scalar' => true, 'types' => ['string']],
     'AccumulatorPercentile' => ['scalar' => true, 'types' => ['string']],
     'Timestamp' => ['scalar' => true, 'types' => ['int']],
-    'CollStats' => ['scalar' => true, 'types' => ['object', 'array']],
-    'Range' => ['scalar' => true, 'types' => ['object', 'array']],
-    'FillOut' => ['scalar' => true, 'types' => ['object', 'array']],
+    'CollStats' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
+    'Range' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
+    'FillOut' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
     'WhenMatched' => ['scalar' => true, 'types' => ['string']],
     'WhenNotMatched' => ['scalar' => true, 'types' => ['string']],
-    'OutCollection' => ['scalar' => true, 'types' => ['string', 'object', 'array']],
+    'OutCollection' => ['scalar' => true, 'types' => ['string', stdClass::class, 'array']],
     'Pipeline' => ['scalar' => true, 'types' => [Pipeline::class, 'array']],
-    'SortSpec' => ['scalar' => true, 'types' => ['object', 'array']],
-    'Window' => ['scalar' => true, 'types' => ['object', 'array']],
-    'GeoPoint' => ['scalar' => true, 'types' => ['object', 'array']],
-    'Geometry' => ['scalar' => true, 'types' => ['object', 'array']],
+    'SortSpec' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
+    'Window' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
+    'GeoPoint' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
+    'Geometry' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
 
     // Use Interface suffix to avoid confusion with MongoDB\Builder\Expression factory class
     ExpressionInterface::class => [
@@ -126,7 +126,7 @@ return [
     ObjectIdFieldPath::class => typeFieldPath(ResolvesToObjectId::class),
     ResolvesToObject::class => [
         'implements' => [ExpressionInterface::class],
-        'types' => ['array', 'object', BSON\Document::class, BSON\Serializable::class],
+        'types' => ['array', stdClass::class, BSON\Document::class, BSON\Serializable::class],
     ],
     ObjectFieldPath::class => typeFieldPath(ResolvesToObject::class),
     ResolvesToNull::class => [

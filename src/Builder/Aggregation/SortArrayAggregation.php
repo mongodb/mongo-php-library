@@ -11,6 +11,7 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Model\BSONArray;
+use stdClass;
 
 class SortArrayAggregation implements ResolvesToArray
 {
@@ -20,14 +21,14 @@ class SortArrayAggregation implements ResolvesToArray
     /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input The array to be sorted. */
     public PackedArray|ResolvesToArray|BSONArray|array $input;
 
-    /** @param array|object $sortBy The document specifies a sort ordering. */
-    public array|object $sortBy;
+    /** @param array|stdClass $sortBy The document specifies a sort ordering. */
+    public stdClass|array $sortBy;
 
     /**
      * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input The array to be sorted.
-     * @param array|object $sortBy The document specifies a sort ordering.
+     * @param array|stdClass $sortBy The document specifies a sort ordering.
      */
-    public function __construct(PackedArray|ResolvesToArray|BSONArray|array $input, array|object $sortBy)
+    public function __construct(PackedArray|ResolvesToArray|BSONArray|array $input, stdClass|array $sortBy)
     {
         if (\is_array($input) && ! \array_is_list($input)) {
             throw new \InvalidArgumentException('Expected $input argument to be a list, got an associative array.');

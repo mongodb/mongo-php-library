@@ -9,14 +9,15 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
+use stdClass;
 
 class NearSphereQuery implements QueryInterface
 {
     public const NAME = '$nearSphere';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
-    /** @param array|object $geometry */
-    public array|object $geometry;
+    /** @param array|stdClass $geometry */
+    public stdClass|array $geometry;
 
     /** @param Int64|Optional|int $maxDistance Distance in meters. */
     public Int64|Optional|int $maxDistance;
@@ -25,12 +26,12 @@ class NearSphereQuery implements QueryInterface
     public Int64|Optional|int $minDistance;
 
     /**
-     * @param array|object $geometry
+     * @param array|stdClass $geometry
      * @param Int64|Optional|int $maxDistance Distance in meters.
      * @param Int64|Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public function __construct(
-        array|object $geometry,
+        stdClass|array $geometry,
         Int64|Optional|int $maxDistance = Optional::Undefined,
         Int64|Optional|int $minDistance = Optional::Undefined,
     ) {

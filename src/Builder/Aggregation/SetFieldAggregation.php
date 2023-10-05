@@ -12,6 +12,7 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Builder\Expression\ResolvesToString;
+use stdClass;
 
 class SetFieldAggregation implements ResolvesToObject
 {
@@ -21,8 +22,8 @@ class SetFieldAggregation implements ResolvesToObject
     /** @param ResolvesToString|non-empty-string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant. */
     public ResolvesToString|string $field;
 
-    /** @param Document|ResolvesToObject|Serializable|array|object $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined. */
-    public array|object $input;
+    /** @param Document|ResolvesToObject|Serializable|array|stdClass $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined. */
+    public Document|Serializable|ResolvesToObject|stdClass|array $input;
 
     /**
      * @param ExpressionInterface|mixed $value The value that you want to assign to field. value can be any valid expression.
@@ -32,12 +33,15 @@ class SetFieldAggregation implements ResolvesToObject
 
     /**
      * @param ResolvesToString|non-empty-string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
-     * @param Document|ResolvesToObject|Serializable|array|object $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
+     * @param Document|ResolvesToObject|Serializable|array|stdClass $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
      * @param ExpressionInterface|mixed $value The value that you want to assign to field. value can be any valid expression.
      * Set to $$REMOVE to remove field from the input document.
      */
-    public function __construct(ResolvesToString|string $field, array|object $input, mixed $value)
-    {
+    public function __construct(
+        ResolvesToString|string $field,
+        Document|Serializable|ResolvesToObject|stdClass|array $input,
+        mixed $value,
+    ) {
         $this->field = $field;
         $this->input = $input;
         $this->value = $value;

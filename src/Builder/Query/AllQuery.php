@@ -20,15 +20,15 @@ class AllQuery implements QueryInterface
     public array $value;
 
     /**
-     * @param mixed $value
+     * @param mixed ...$value
      */
     public function __construct(mixed ...$value)
     {
-        if (! \array_is_list($value)) {
-            throw new \InvalidArgumentException('Expected $value arguments to be a list of mixed, named arguments are not supported');
-        }
         if (\count($value) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $value, got %d.', 1, \count($value)));
+        }
+        if (! \array_is_list($value)) {
+            throw new \InvalidArgumentException('Expected $value arguments to be a list of mixed, named arguments are not supported');
         }
         $this->value = $value;
     }

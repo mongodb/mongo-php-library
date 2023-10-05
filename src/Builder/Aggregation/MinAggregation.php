@@ -21,15 +21,15 @@ class MinAggregation implements ExpressionInterface, AccumulatorInterface
     public array $expression;
 
     /**
-     * @param ExpressionInterface|mixed $expression
+     * @param ExpressionInterface|mixed ...$expression
      */
     public function __construct(mixed ...$expression)
     {
-        if (! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression arguments to be a list of ExpressionInterface|mixed, named arguments are not supported');
-        }
         if (\count($expression) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
+        }
+        if (! \array_is_list($expression)) {
+            throw new \InvalidArgumentException('Expected $expression arguments to be a list of ExpressionInterface|mixed, named arguments are not supported');
         }
         $this->expression = $expression;
     }

@@ -11,6 +11,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToString;
 
+/**
+ * Deprecated. Use $substrBytes or $substrCP.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substr/
+ */
 class SubstrAggregation implements ResolvesToString
 {
     public const NAME = '$substr';

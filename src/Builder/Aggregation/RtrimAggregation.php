@@ -10,6 +10,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Optional;
 
+/**
+ * Removes whitespace characters, including null, or the specified characters from the end of a string.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/
+ */
 class RtrimAggregation implements ResolvesToString
 {
     public const NAME = '$rtrim';

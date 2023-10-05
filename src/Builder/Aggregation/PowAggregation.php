@@ -11,6 +11,11 @@ use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Raises a number to the specified exponent.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/pow/
+ */
 class PowAggregation implements ResolvesToNumber
 {
     public const NAME = '$pow';

@@ -15,6 +15,11 @@ use MongoDB\Builder\Expression\ResolvesToNull;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 use MongoDB\Builder\Expression\ResolvesToString;
 
+/**
+ * Returns true only when all its expressions evaluate to true. Accepts any number of argument expressions.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/
+ */
 class AndAggregation implements ResolvesToBool
 {
     public const NAME = '$and';

@@ -10,6 +10,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToBool;
 
+/**
+ * Determines if the operand is an array. Returns a boolean.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/
+ */
 class IsArrayAggregation implements ResolvesToBool
 {
     public const NAME = '$isArray';

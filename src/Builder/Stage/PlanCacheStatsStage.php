@@ -8,6 +8,11 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Returns plan cache information for a collection.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/
+ */
 class PlanCacheStatsStage implements StageInterface
 {
     public const NAME = '$planCacheStats';

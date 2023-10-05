@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 
+/**
+ * Generates a random float between 0 and 1.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/rand/
+ */
 class RandQuery implements ExpressionInterface
 {
     public const NAME = '$rand';

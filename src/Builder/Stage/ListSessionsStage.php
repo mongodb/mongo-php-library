@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Optional;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Lists all sessions that have been active long enough to propagate to the system.sessions collection.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/
+ */
 class ListSessionsStage implements StageInterface
 {
     public const NAME = '$listSessions';

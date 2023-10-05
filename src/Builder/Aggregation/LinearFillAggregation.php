@@ -11,6 +11,13 @@ use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Fills null and missing fields in a window using linear interpolation based on surrounding field values.
+ * Available in the $setWindowFields stage.
+ * New in version 5.3.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/
+ */
 class LinearFillAggregation implements ResolvesToNumber
 {
     public const NAME = '$linearFill';

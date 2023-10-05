@@ -10,6 +10,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToInt;
 
+/**
+ * Converts value to an integer.
+ * New in version 4.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/
+ */
 class ToIntAggregation implements ResolvesToInt
 {
     public const NAME = '$toInt';

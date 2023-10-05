@@ -8,6 +8,11 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Matches documents that satisfy a JavaScript expression.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/where/
+ */
 class WhereQuery implements QueryInterface
 {
     public const NAME = '$where';

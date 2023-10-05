@@ -12,6 +12,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Calculates the log base 10 of a number.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/log10/
+ */
 class Log10Aggregation implements ResolvesToDouble
 {
     public const NAME = '$log10';

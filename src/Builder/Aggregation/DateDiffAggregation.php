@@ -9,6 +9,7 @@ namespace MongoDB\Builder\Aggregation;
 use DateTimeInterface;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\ObjectId;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToDate;
 use MongoDB\Builder\Expression\ResolvesToInt;
@@ -17,16 +18,21 @@ use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Expression\ResolvesToTimestamp;
 use MongoDB\Builder\Optional;
 
+/**
+ * Returns the difference between two dates.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/
+ */
 class DateDiffAggregation implements ResolvesToInt
 {
     public const NAME = '$dateDiff';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
     /** @param DateTimeInterface|Int64|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|UTCDateTime|int $startDate The start of the time period. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID. */
-    public \UTCDateTime|DateTimeInterface|Int64|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $startDate;
+    public DateTimeInterface|Int64|ObjectId|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $startDate;
 
     /** @param DateTimeInterface|Int64|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|UTCDateTime|int $endDate The end of the time period. The endDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID. */
-    public \UTCDateTime|DateTimeInterface|Int64|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $endDate;
+    public DateTimeInterface|Int64|ObjectId|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $endDate;
 
     /** @param ResolvesToString|non-empty-string $unit The time measurement unit between the startDate and endDate */
     public ResolvesToString|string $unit;
@@ -45,8 +51,8 @@ class DateDiffAggregation implements ResolvesToInt
      * @param Optional|ResolvesToString|non-empty-string $startOfWeek Used when the unit is equal to week. Defaults to Sunday. The startOfWeek parameter is an expression that resolves to a case insensitive string
      */
     public function __construct(
-        \UTCDateTime|DateTimeInterface|Int64|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $startDate,
-        \UTCDateTime|DateTimeInterface|Int64|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $endDate,
+        DateTimeInterface|Int64|ObjectId|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $startDate,
+        DateTimeInterface|Int64|ObjectId|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $endDate,
         ResolvesToString|string $unit,
         ResolvesToString|Optional|string $timezone = Optional::Undefined,
         ResolvesToString|Optional|string $startOfWeek = Optional::Undefined,

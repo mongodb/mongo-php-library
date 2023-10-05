@@ -13,6 +13,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Matches numeric or binary values in which any bit from a set of bit positions has a value of 1.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/
+ */
 class BitsAnySetQuery implements QueryInterface
 {
     public const NAME = '$bitsAnySet';

@@ -9,6 +9,12 @@ namespace MongoDB\Builder\Aggregation;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 
+/**
+ * Returns the result of an expression for the first document in a group or window.
+ * Changed in version 5.0: Available in the $setWindowFields stage.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/
+ */
 class FirstAggregation implements ExpressionInterface, AccumulatorInterface
 {
     public const NAME = '$first';

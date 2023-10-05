@@ -14,6 +14,11 @@ use MongoDB\Builder\Optional;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
+/**
+ * Creates new documents in a sequence of documents where certain values in a field are missing.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/
+ */
 class DensifyStage implements StageInterface
 {
     public const NAME = '$densify';

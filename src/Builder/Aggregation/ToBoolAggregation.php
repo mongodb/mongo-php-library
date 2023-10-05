@@ -10,6 +10,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToBool;
 
+/**
+ * Converts value to a boolean.
+ * New in version 4.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/
+ */
 class ToBoolAggregation implements ResolvesToBool
 {
     public const NAME = '$toBool';

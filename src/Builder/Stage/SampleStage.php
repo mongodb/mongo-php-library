@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Stage;
 use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 
+/**
+ * Randomly selects the specified number of documents from its input.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/
+ */
 class SampleStage implements StageInterface
 {
     public const NAME = '$sample';

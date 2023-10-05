@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\Builder\Encode;
 use stdClass;
 
+/**
+ * Inverts the effect of a query expression and returns documents that do not match the query expression.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/not/
+ */
 class NotQuery implements QueryInterface
 {
     public const NAME = '$not';

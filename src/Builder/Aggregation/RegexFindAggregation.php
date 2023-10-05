@@ -12,6 +12,12 @@ use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Optional;
 
+/**
+ * Applies a regular expression (regex) to a string and returns information on the first matched substring.
+ * New in version 4.2.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFind/
+ */
 class RegexFindAggregation implements ResolvesToObject
 {
     public const NAME = '$regexFind';

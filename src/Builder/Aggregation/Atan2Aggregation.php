@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToDecimal;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Returns the inverse tangent (arc tangent) of y / x in radians, where y and x are the first and second values passed to the expression respectively.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan2/
+ */
 class Atan2Aggregation implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$atan2';

@@ -14,6 +14,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns the element at the specified array index.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/
+ */
 class ArrayElemAtAggregation implements ExpressionInterface
 {
     public const NAME = '$arrayElemAt';

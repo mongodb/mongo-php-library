@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Stage;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 
+/**
+ * Groups incoming documents based on the value of a specified expression, then computes the count of documents in each distinct group.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/
+ */
 class SortByCountStage implements StageInterface
 {
     public const NAME = '$sortByCount';

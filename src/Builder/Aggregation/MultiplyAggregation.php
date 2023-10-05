@@ -12,6 +12,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToDecimal;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Multiplies numbers to return the product. Accepts any number of argument expressions.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/
+ */
 class MultiplyAggregation implements ResolvesToDecimal
 {
     public const NAME = '$multiply';

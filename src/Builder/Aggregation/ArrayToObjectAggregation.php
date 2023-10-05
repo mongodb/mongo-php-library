@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Converts an array of key value pairs to a document.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/
+ */
 class ArrayToObjectAggregation implements ResolvesToObject
 {
     public const NAME = '$arrayToObject';

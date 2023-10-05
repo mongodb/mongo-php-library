@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToDecimal;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Returns the inverse hyperbolic sine (hyperbolic arc sine) of a value in radians.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/
+ */
 class AsinhAggregation implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$asinh';

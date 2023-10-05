@@ -10,6 +10,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToLong;
 
+/**
+ * Converts value to a long.
+ * New in version 4.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/
+ */
 class ToLongAggregation implements ResolvesToLong
 {
     public const NAME = '$toLong';

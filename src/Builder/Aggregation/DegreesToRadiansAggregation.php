@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToDecimal;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Converts a value from degrees to radians.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/
+ */
 class DegreesToRadiansAggregation implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$degreesToRadians';

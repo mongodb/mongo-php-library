@@ -14,6 +14,11 @@ use MongoDB\Builder\Expression\ResolvesToNumber;
 use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Optional;
 
+/**
+ * Truncates a number to a whole integer or to a specified decimal place.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/trunc/
+ */
 class TruncAggregation implements ResolvesToString
 {
     public const NAME = '$trunc';

@@ -12,6 +12,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Calculates the square root.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sqrt/
+ */
 class SqrtAggregation implements ResolvesToDouble
 {
     public const NAME = '$sqrt';

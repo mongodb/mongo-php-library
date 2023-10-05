@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns a set with elements that appear in any of the input sets.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setUnion/
+ */
 class SetUnionAggregation implements ResolvesToArray
 {
     public const NAME = '$setUnion';

@@ -12,6 +12,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Raises e to the specified exponent.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/exp/
+ */
 class ExpAggregation implements ResolvesToDouble
 {
     public const NAME = '$exp';

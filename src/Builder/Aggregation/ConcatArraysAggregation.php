@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Concatenates arrays to return the concatenated array.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/
+ */
 class ConcatArraysAggregation implements ResolvesToArray
 {
     public const NAME = '$concatArrays';

@@ -8,6 +8,11 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Returns statistics regarding the use of each index for the collection.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/
+ */
 class IndexStatsStage implements StageInterface
 {
     public const NAME = '$indexStats';

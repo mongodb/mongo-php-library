@@ -10,6 +10,7 @@ use DateTimeInterface;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\ObjectId;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToDate;
 use MongoDB\Builder\Expression\ResolvesToNumber;
@@ -18,13 +19,18 @@ use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Expression\ResolvesToTimestamp;
 use MongoDB\Builder\Optional;
 
+/**
+ * Truncates a date.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/
+ */
 class DateTruncAggregation implements ResolvesToDate
 {
     public const NAME = '$dateTrunc';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
     /** @param DateTimeInterface|Int64|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|UTCDateTime|int $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID. */
-    public \UTCDateTime|DateTimeInterface|Int64|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date;
+    public DateTimeInterface|Int64|ObjectId|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date;
 
     /**
      * @param ResolvesToString|non-empty-string $unit The unit of time, specified as an expression that must resolve to one of these strings: year, quarter, week, month, day, hour, minute, second.
@@ -58,7 +64,7 @@ class DateTruncAggregation implements ResolvesToDate
      * unit is week. Defaults to Sunday.
      */
     public function __construct(
-        \UTCDateTime|DateTimeInterface|Int64|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        DateTimeInterface|Int64|ObjectId|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
         ResolvesToString|string $unit,
         Decimal128|Int64|ResolvesToNumber|Optional|float|int $binSize = Optional::Undefined,
         ResolvesToString|Optional|string $timezone = Optional::Undefined,

@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 
+/**
+ * Performs a modulo operation on the value of a field and selects documents with a specified result.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/mod/
+ */
 class ModQuery implements QueryInterface
 {
     public const NAME = '$mod';

@@ -10,6 +10,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToDate;
 
+/**
+ * Converts value to a Date.
+ * New in version 4.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/
+ */
 class ToDateAggregation implements ResolvesToDate
 {
     public const NAME = '$toDate';

@@ -12,6 +12,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use stdClass;
 
+/**
+ * Defines variables for use within the scope of a subexpression and returns the result of the subexpression. Accepts named parameters.
+ * Accepts any number of argument expressions.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/
+ */
 class LetAggregation implements ExpressionInterface
 {
     public const NAME = '$let';

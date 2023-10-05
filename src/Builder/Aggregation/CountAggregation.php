@@ -8,6 +8,13 @@ namespace MongoDB\Builder\Aggregation;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Returns the number of documents in the group or window.
+ * Distinct from the $count pipeline stage.
+ * New in version 5.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/
+ */
 class CountAggregation implements AccumulatorInterface
 {
     public const NAME = '$count';

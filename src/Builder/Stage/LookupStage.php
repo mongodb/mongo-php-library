@@ -13,6 +13,11 @@ use MongoDB\Builder\Optional;
 use MongoDB\Builder\Pipeline;
 use stdClass;
 
+/**
+ * Performs a left outer join to another collection in the same database to filter in documents from the "joined" collection for processing.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/
+ */
 class LookupStage implements StageInterface
 {
     public const NAME = '$lookup';

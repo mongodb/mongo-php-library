@@ -14,6 +14,11 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
+/**
+ * Specifies a geometry in GeoJSON format to geospatial query operators.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/geometry/
+ */
 class GeometryQuery implements ExpressionInterface
 {
     public const NAME = '$geometry';

@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Optional;
 
+/**
+ * Outputs an array containing a sequence of integers according to user-defined inputs.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/range/
+ */
 class RangeAggregation implements ResolvesToArray
 {
     public const NAME = '$range';

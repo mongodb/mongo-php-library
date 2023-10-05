@@ -11,6 +11,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Specifies a rectangular box using legacy coordinate pairs for $geoWithin queries. The 2d index supports $box.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/box/
+ */
 class BoxQuery implements QueryInterface
 {
     public const NAME = '$box';

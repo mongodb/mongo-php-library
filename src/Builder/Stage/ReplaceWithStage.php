@@ -12,6 +12,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToObject;
 use stdClass;
 
+/**
+ * Replaces a document with the specified embedded document. The operation replaces all existing fields in the input document, including the _id field. Specify a document embedded in the input document to promote the embedded document to the top level.
+ * Alias for $replaceRoot.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/
+ */
 class ReplaceWithStage implements StageInterface
 {
     public const NAME = '$replaceWith';

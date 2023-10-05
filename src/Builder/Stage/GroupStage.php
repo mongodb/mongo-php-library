@@ -11,6 +11,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use stdClass;
 
+/**
+ * Groups input documents by a specified identifier expression and applies the accumulator expression(s), if specified, to each group. Consumes all input documents and outputs one document per each distinct group. The output documents only contain the identifier field and, if specified, accumulated fields.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/
+ */
 class GroupStage implements StageInterface
 {
     public const NAME = '$group';

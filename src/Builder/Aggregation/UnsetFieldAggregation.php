@@ -13,6 +13,12 @@ use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Builder\Expression\ResolvesToString;
 use stdClass;
 
+/**
+ * You can use $unsetField to remove fields with names that contain periods (.) or that start with dollar signs ($).
+ * $unsetField is an alias for $setField using $$REMOVE to remove fields.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/
+ */
 class UnsetFieldAggregation implements ResolvesToObject
 {
     public const NAME = '$unsetField';

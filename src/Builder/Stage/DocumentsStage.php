@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns literal documents from input values.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/
+ */
 class DocumentsStage implements StageInterface
 {
     public const NAME = '$documents';

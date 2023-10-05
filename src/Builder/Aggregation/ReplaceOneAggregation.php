@@ -10,6 +10,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToNull;
 use MongoDB\Builder\Expression\ResolvesToString;
 
+/**
+ * Replaces the first instance of a matched string in a given input.
+ * New in version 4.4.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/
+ */
 class ReplaceOneAggregation implements ResolvesToString
 {
     public const NAME = '$replaceOne';

@@ -11,6 +11,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToLong;
 
+/**
+ * Returns the result of a bitwise and operation on an array of int or long values.
+ * New in version 6.3.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/
+ */
 class BitAndAggregation implements ResolvesToInt, ResolvesToLong
 {
     public const NAME = '$bitAnd';

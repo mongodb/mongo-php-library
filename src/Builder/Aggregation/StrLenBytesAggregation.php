@@ -10,6 +10,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToString;
 
+/**
+ * Returns the number of UTF-8 encoded bytes in a string.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/
+ */
 class StrLenBytesAggregation implements ResolvesToInt
 {
     public const NAME = '$strLenBytes';

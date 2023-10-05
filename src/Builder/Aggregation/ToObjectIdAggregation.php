@@ -10,6 +10,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToObjectId;
 
+/**
+ * Converts value to an ObjectId.
+ * New in version 4.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/
+ */
 class ToObjectIdAggregation implements ResolvesToObjectId
 {
     public const NAME = '$toObjectId';

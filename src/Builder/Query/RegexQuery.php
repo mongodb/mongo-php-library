@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\Regex;
 use MongoDB\Builder\Encode;
 
+/**
+ * Selects documents where values match a specified regular expression.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/regex/
+ */
 class RegexQuery implements QueryInterface
 {
     public const NAME = '$regex';

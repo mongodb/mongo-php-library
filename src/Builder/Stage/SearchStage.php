@@ -11,6 +11,12 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use stdClass;
 
+/**
+ * Performs a full-text search of the field or fields in an Atlas collection.
+ * NOTE: $search is only available for MongoDB Atlas clusters, and is not available for self-managed deployments.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/search/
+ */
 class SearchStage implements StageInterface
 {
     public const NAME = '$search';

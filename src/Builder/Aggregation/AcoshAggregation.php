@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToDecimal;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Returns the inverse hyperbolic cosine (hyperbolic arc cosine) of a value in radians.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/
+ */
 class AcoshAggregation implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$acosh';

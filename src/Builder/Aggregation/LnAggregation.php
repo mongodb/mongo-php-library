@@ -12,6 +12,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Calculates the natural log of a number.
+ * $ln is equivalent to $log: [ <number>, Math.E ] expression, where Math.E is a JavaScript representation for Euler's number e.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ln/
+ */
 class LnAggregation implements ResolvesToDouble
 {
     public const NAME = '$ln';

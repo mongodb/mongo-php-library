@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns an array with the elements in reverse order.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/reverseArray/
+ */
 class ReverseArrayAggregation implements ResolvesToArray
 {
     public const NAME = '$reverseArray';

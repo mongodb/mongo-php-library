@@ -11,6 +11,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 use stdClass;
 
+/**
+ * Returns geospatial objects in proximity to a point. Requires a geospatial index. The 2dsphere and 2d indexes support $near.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/near/
+ */
 class NearQuery implements QueryInterface
 {
     public const NAME = '$near';

@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ResolvesToDate;
 use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Optional;
 
+/**
+ * Converts a date/time string to a date object.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/
+ */
 class DateFromStringAggregation implements ResolvesToDate
 {
     public const NAME = '$dateFromString';

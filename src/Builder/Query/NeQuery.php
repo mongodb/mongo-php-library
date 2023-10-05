@@ -8,6 +8,11 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Matches all values that are not equal to a specified value.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/ne/
+ */
 class NeQuery implements QueryInterface
 {
     public const NAME = '$ne';

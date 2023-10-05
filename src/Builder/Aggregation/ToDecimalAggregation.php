@@ -10,6 +10,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToDecimal;
 
+/**
+ * Converts value to a Decimal128.
+ * New in version 4.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/
+ */
 class ToDecimalAggregation implements ResolvesToDecimal
 {
     public const NAME = '$toDecimal';

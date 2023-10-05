@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 
+/**
+ * Limits the number of elements projected from an array. Supports skip and limit slices.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/slice/
+ */
 class SliceQuery implements QueryInterface
 {
     public const NAME = '$slice';

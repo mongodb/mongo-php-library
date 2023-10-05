@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns the number of elements in the array. Accepts a single expression as argument.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/size/
+ */
 class SizeAggregation implements ResolvesToInt
 {
     public const NAME = '$size';

@@ -16,6 +16,11 @@ use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Optional;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Selects a subset of the array to return an array with only the elements that match the filter condition.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/
+ */
 class FilterAggregation implements ResolvesToArray
 {
     public const NAME = '$filter';

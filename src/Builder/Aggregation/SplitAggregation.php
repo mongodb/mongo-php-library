@@ -10,6 +10,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToString;
 
+/**
+ * Splits a string into substrings based on a delimiter. Returns an array of substrings. If the delimiter is not found within the string, returns an array containing the original string.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/
+ */
 class SplitAggregation implements ResolvesToArray
 {
     public const NAME = '$split';

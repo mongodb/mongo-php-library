@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
+/**
+ * Sorts the elements of an array.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/
+ */
 class SortArrayAggregation implements ResolvesToArray
 {
     public const NAME = '$sortArray';

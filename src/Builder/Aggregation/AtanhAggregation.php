@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToDecimal;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Returns the inverse hyperbolic tangent (hyperbolic arc tangent) of a value in radians.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/
+ */
 class AtanhAggregation implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$atanh';

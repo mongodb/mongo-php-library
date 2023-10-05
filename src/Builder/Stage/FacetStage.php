@@ -10,6 +10,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Pipeline;
 use stdClass;
 
+/**
+ * Processes multiple aggregation pipelines within a single stage on the same set of input documents. Enables the creation of multi-faceted aggregations capable of characterizing data across multiple dimensions, or facets, in a single stage.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/
+ */
 class FacetStage implements StageInterface
 {
     public const NAME = '$facet';

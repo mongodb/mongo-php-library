@@ -11,6 +11,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Specifies a circle using legacy coordinate pairs to $geoWithin queries when using planar geometry. The 2d index supports $center.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/center/
+ */
 class CenterQuery implements QueryInterface
 {
     public const NAME = '$center';

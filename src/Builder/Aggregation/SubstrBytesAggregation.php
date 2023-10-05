@@ -11,6 +11,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToString;
 
+/**
+ * Returns the substring of a string. Starts with the character at the specified UTF-8 byte index (zero-based) in the string and continues for the specified number of bytes.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/
+ */
 class SubstrBytesAggregation implements ResolvesToString
 {
     public const NAME = '$substrBytes';

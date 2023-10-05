@@ -13,6 +13,12 @@ use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 use MongoDB\Builder\Optional;
 
+/**
+ * Returns the exponential moving average for the numeric expression.
+ * New in version 5.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/
+ */
 class ExpMovingAvgAggregation implements ResolvesToDouble
 {
     public const NAME = '$expMovingAvg';

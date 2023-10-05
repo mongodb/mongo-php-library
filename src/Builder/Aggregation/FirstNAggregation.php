@@ -14,6 +14,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns a specified number of elements from the beginning of an array. Distinct from the $firstN accumulator.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN-array-element/
+ */
 class FirstNAggregation implements AccumulatorInterface
 {
     public const NAME = '$firstN';

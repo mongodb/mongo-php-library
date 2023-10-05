@@ -16,6 +16,11 @@ use MongoDB\Builder\Optional;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
+/**
+ * Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/
+ */
 class BucketStage implements StageInterface
 {
     public const NAME = '$bucket';

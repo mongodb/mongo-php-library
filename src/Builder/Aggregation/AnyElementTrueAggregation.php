@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToBool;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns true if any elements of a set evaluate to true; otherwise, returns false. Accepts a single argument expression.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/anyElementTrue/
+ */
 class AnyElementTrueAggregation implements ResolvesToBool
 {
     public const NAME = '$anyElementTrue';

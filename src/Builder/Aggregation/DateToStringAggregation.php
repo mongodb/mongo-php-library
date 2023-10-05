@@ -9,6 +9,7 @@ namespace MongoDB\Builder\Aggregation;
 use DateTimeInterface;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\ObjectId;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToDate;
@@ -17,13 +18,18 @@ use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Expression\ResolvesToTimestamp;
 use MongoDB\Builder\Optional;
 
+/**
+ * Returns the date as a formatted string.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToString/
+ */
 class DateToStringAggregation implements ResolvesToString
 {
     public const NAME = '$dateToString';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
     /** @param DateTimeInterface|Int64|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|UTCDateTime|int $date The date to convert to string. Must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID. */
-    public \UTCDateTime|DateTimeInterface|Int64|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date;
+    public DateTimeInterface|Int64|ObjectId|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date;
 
     /**
      * @param Optional|ResolvesToString|non-empty-string $format The date format specification of the dateString. The format can be any expression that evaluates to a string literal, containing 0 or more format specifiers.
@@ -49,7 +55,7 @@ class DateToStringAggregation implements ResolvesToString
      * If unspecified, $dateToString returns null if the date is null or missing.
      */
     public function __construct(
-        \UTCDateTime|DateTimeInterface|Int64|ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
+        DateTimeInterface|Int64|ObjectId|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
         ResolvesToString|Optional|string $format = Optional::Undefined,
         ResolvesToString|Optional|string $timezone = Optional::Undefined,
         mixed $onNull = Optional::Undefined,

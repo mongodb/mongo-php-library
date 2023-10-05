@@ -66,6 +66,9 @@ use stdClass;
 final class Stage
 {
     /**
+     * Adds new fields to documents. Outputs documents that contain all existing fields from the input documents and newly added fields.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/
      * @param ExpressionInterface|mixed ...$expression Specify the name of each field to add and set its value to an aggregation expression or an empty object.
      */
     public static function addFields(mixed ...$expression): AddFieldsStage
@@ -74,6 +77,9 @@ final class Stage
     }
 
     /**
+     * Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/
      * @param ExpressionInterface|FieldPath|mixed|non-empty-string $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
      * Unless $bucket includes a default specification, each input document must resolve the groupBy field path or expression to a value that falls within one of the ranges specified by the boundaries.
      * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $boundaries An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
@@ -97,6 +103,9 @@ final class Stage
     }
 
     /**
+     * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket boundaries are automatically determined in an attempt to evenly distribute the documents into the specified number of buckets.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/
      * @param ExpressionInterface|mixed $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
      * @param Int64|int $buckets A positive 32-bit integer that specifies the number of buckets into which input documents are grouped.
      * @param Document|Optional|Serializable|array|stdClass $output A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
@@ -115,6 +124,9 @@ final class Stage
     }
 
     /**
+     * Returns a Change Stream cursor for the collection or database. This stage can only occur once in an aggregation pipeline and it must occur as the first stage.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/
      * @param Optional|bool $allChangesForCluster A flag indicating whether the stream should report all changes that occur on the deployment, aside from those on internal databases or collections.
      * @param Optional|non-empty-string $fullDocument Specifies whether change notifications include a copy of the full document when modified by update operations.
      * @param Optional|non-empty-string $fullDocumentBeforeChange Valid values are "off", "whenAvailable", or "required". If set to "off", the "fullDocumentBeforeChange" field of the output document is always omitted. If set to "whenAvailable", the "fullDocumentBeforeChange" field will be populated with the pre-image of the document modified by the current change event if such a pre-image is available, and will be omitted otherwise. If set to "required", then the "fullDocumentBeforeChange" field is always populated and an exception is thrown if the pre-image is not              available.
@@ -137,12 +149,21 @@ final class Stage
         return new ChangeStreamStage($allChangesForCluster, $fullDocument, $fullDocumentBeforeChange, $resumeAfter, $showExpandedEvents, $startAfter, $startAtOperationTime);
     }
 
+    /**
+     * Splits large change stream events that exceed 16 MB into smaller fragments returned in a change stream cursor.
+     * You can only use $changeStreamSplitLargeEvent in a $changeStream pipeline and it must be the final stage in the pipeline.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/
+     */
     public static function changeStreamSplitLargeEvent(): ChangeStreamSplitLargeEventStage
     {
         return new ChangeStreamSplitLargeEventStage();
     }
 
     /**
+     * Returns statistics regarding a collection or view.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/
      * @param Document|Serializable|array|stdClass $config
      */
     public static function collStats(Document|Serializable|stdClass|array $config): CollStatsStage
@@ -151,6 +172,10 @@ final class Stage
     }
 
     /**
+     * Returns a count of the number of documents at this stage of the aggregation pipeline.
+     * Distinct from the $count aggregation accumulator.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/
      * @param non-empty-string $field
      */
     public static function count(string $field): CountStage
@@ -158,12 +183,20 @@ final class Stage
         return new CountStage($field);
     }
 
+    /**
+     * Returns information on active and/or dormant operations for the MongoDB deployment. To run, use the db.aggregate() method.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/
+     */
     public static function currentOp(): CurrentOpStage
     {
         return new CurrentOpStage();
     }
 
     /**
+     * Creates new documents in a sequence of documents where certain values in a field are missing.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/
      * @param FieldPath|non-empty-string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
      * Documents that do not contain the specified field continue through the pipeline unmodified.
      * To specify a <field> in an embedded document or in an array, use dot notation.
@@ -180,6 +213,9 @@ final class Stage
     }
 
     /**
+     * Returns literal documents from input values.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/
      * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $documents $documents accepts any valid expression that resolves to an array of objects. This includes:
      * - system variables, such as $$NOW or $$SEARCH_META
      * - $let expressions
@@ -192,6 +228,9 @@ final class Stage
     }
 
     /**
+     * Processes multiple aggregation pipelines within a single stage on the same set of input documents. Enables the creation of multi-faceted aggregations capable of characterizing data across multiple dimensions, or facets, in a single stage.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/
      * @param Pipeline|array ...$facet
      */
     public static function facet(Pipeline|array ...$facet): FacetStage
@@ -200,6 +239,9 @@ final class Stage
     }
 
     /**
+     * Populates null and missing field values within documents.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/
      * @param Document|Serializable|array|stdClass $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
      * The object name is the name of the field to fill. The object value specifies how the field is filled.
      * @param Document|Optional|Serializable|array|non-empty-string|stdClass $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
@@ -221,6 +263,9 @@ final class Stage
     }
 
     /**
+     * Returns an ordered stream of documents based on the proximity to a geospatial point. Incorporates the functionality of $match, $sort, and $limit for geospatial data. The output documents include an additional distance field and can include a location identifier field.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/
      * @param non-empty-string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation.
      * @param array|stdClass $near The point for which to find the closest documents.
      * @param Decimal128|Int64|Optional|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
@@ -253,6 +298,9 @@ final class Stage
     }
 
     /**
+     * Performs a recursive search on a collection. To each output document, adds a new array field that contains the traversal results of the recursive search for that document.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/
      * @param non-empty-string $from Target collection for the $graphLookup operation to search, recursively matching the connectFromField to the connectToField. The from collection must be in the same database as any other collections used in the operation.
      * Starting in MongoDB 5.1, the collection specified in the from parameter can be sharded.
      * @param BSONArray|ExpressionInterface|PackedArray|list<ExpressionInterface|mixed>|mixed $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process.
@@ -278,6 +326,9 @@ final class Stage
     }
 
     /**
+     * Groups input documents by a specified identifier expression and applies the accumulator expression(s), if specified, to each group. Consumes all input documents and outputs one document per each distinct group. The output documents only contain the identifier field and, if specified, accumulated fields.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/
      * @param ExpressionInterface|mixed $_id The _id expression specifies the group key. If you specify an _id value of null, or any other constant value, the $group stage returns a single document that aggregates values across all of the input documents.
      * @param AccumulatorInterface ...$field Computed using the accumulator operators.
      */
@@ -286,12 +337,20 @@ final class Stage
         return new GroupStage($_id, ...$field);
     }
 
+    /**
+     * Returns statistics regarding the use of each index for the collection.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/
+     */
     public static function indexStats(): IndexStatsStage
     {
         return new IndexStatsStage();
     }
 
     /**
+     * Passes the first n documents unmodified to the pipeline where n is the specified limit. For each input document, outputs either one document (for the first n documents) or zero documents (after the first n documents).
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/
      * @param Int64|int $limit
      */
     public static function limit(Int64|int $limit): LimitStage
@@ -300,6 +359,9 @@ final class Stage
     }
 
     /**
+     * Lists all active sessions recently in use on the currently connected mongos or mongod instance. These sessions may have not yet propagated to the system.sessions collection.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/
      * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed> $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
      * @param Optional|bool $allUsers Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster.
      */
@@ -312,6 +374,9 @@ final class Stage
     }
 
     /**
+     * Lists sampled queries for all collections or a specific collection.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/
      * @param Optional|non-empty-string $namespace
      */
     public static function listSampledQueries(
@@ -322,6 +387,9 @@ final class Stage
     }
 
     /**
+     * Returns information about existing Atlas Search indexes on a specified collection.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/
      * @param Optional|non-empty-string $id The id of the index to return information about.
      * @param Optional|non-empty-string $name The name of the index to return information about.
      */
@@ -334,6 +402,9 @@ final class Stage
     }
 
     /**
+     * Lists all sessions that have been active long enough to propagate to the system.sessions collection.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/
      * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed> $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
      * @param Optional|bool $allUsers Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster.
      */
@@ -346,6 +417,9 @@ final class Stage
     }
 
     /**
+     * Performs a left outer join to another collection in the same database to filter in documents from the "joined" collection for processing.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/
      * @param non-empty-string $as Specifies the name of the new array field to add to the input documents. The new array field contains the matching documents from the from collection. If the specified name already exists in the input document, the existing field is overwritten.
      * @param Optional|non-empty-string $from Specifies the collection in the same database to perform the join with.
      * from is optional, you can use a $documents stage in a $lookup stage instead. For an example, see Use a $documents Stage in a $lookup Stage.
@@ -370,6 +444,9 @@ final class Stage
     }
 
     /**
+     * Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. $match uses standard MongoDB queries. For each input document, outputs either one document (a match) or zero documents (no match).
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/
      * @param QueryInterface|array|stdClass $query
      */
     public static function match(QueryInterface|stdClass|array $query): MatchStage
@@ -378,6 +455,10 @@ final class Stage
     }
 
     /**
+     * Writes the resulting documents of the aggregation pipeline to a collection. The stage can incorporate (insert new documents, merge documents, replace documents, keep existing documents, fail the operation, process documents with a custom update pipeline) the results into an output collection. To use the $merge stage, it must be the last stage in the pipeline.
+     * New in version 4.2.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/
      * @param array|non-empty-string|stdClass $into The output collection.
      * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed>|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
      * @param Document|Optional|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline.
@@ -396,6 +477,9 @@ final class Stage
     }
 
     /**
+     * Writes the resulting documents of the aggregation pipeline to a collection. To use the $out stage, it must be the last stage in the pipeline.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
      * @param non-empty-string $db Target collection name to write documents from $out to.
      * @param non-empty-string $coll Target database name to write documents from $out to.
      * @param Document|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.
@@ -405,12 +489,20 @@ final class Stage
         return new OutStage($db, $coll, $timeseries);
     }
 
+    /**
+     * Returns plan cache information for a collection.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/
+     */
     public static function planCacheStats(): PlanCacheStatsStage
     {
         return new PlanCacheStatsStage();
     }
 
     /**
+     * Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one document.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/
      * @param ExpressionInterface|Int64|bool|int|mixed ...$specification
      */
     public static function project(mixed ...$specification): ProjectStage
@@ -419,6 +511,9 @@ final class Stage
     }
 
     /**
+     * Reshapes each document in the stream by restricting the content for each document based on information stored in the documents themselves. Incorporates the functionality of $project and $match. Can be used to implement field level redaction. For each input document, outputs either one or zero documents.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/
      * @param ExpressionInterface|mixed $expression
      */
     public static function redact(mixed $expression): RedactStage
@@ -427,6 +522,9 @@ final class Stage
     }
 
     /**
+     * Replaces a document with the specified embedded document. The operation replaces all existing fields in the input document, including the _id field. Specify a document embedded in the input document to promote the embedded document to the top level.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/
      * @param Document|ResolvesToObject|Serializable|array|stdClass $newRoot
      */
     public static function replaceRoot(
@@ -437,6 +535,10 @@ final class Stage
     }
 
     /**
+     * Replaces a document with the specified embedded document. The operation replaces all existing fields in the input document, including the _id field. Specify a document embedded in the input document to promote the embedded document to the top level.
+     * Alias for $replaceRoot.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/
      * @param Document|ResolvesToObject|Serializable|array|stdClass $expression
      */
     public static function replaceWith(
@@ -447,6 +549,9 @@ final class Stage
     }
 
     /**
+     * Randomly selects the specified number of documents from its input.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/
      * @param Int64|int $size The number of documents to randomly select.
      */
     public static function sample(Int64|int $size): SampleStage
@@ -455,6 +560,10 @@ final class Stage
     }
 
     /**
+     * Performs a full-text search of the field or fields in an Atlas collection.
+     * NOTE: $search is only available for MongoDB Atlas clusters, and is not available for self-managed deployments.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/search/
      * @param Document|Serializable|array|stdClass $search
      */
     public static function search(Document|Serializable|stdClass|array $search): SearchStage
@@ -463,6 +572,10 @@ final class Stage
     }
 
     /**
+     * Returns different types of metadata result documents for the Atlas Search query against an Atlas collection.
+     * NOTE: $searchMeta is only available for MongoDB Atlas clusters running MongoDB v4.4.9 or higher, and is not available for self-managed deployments.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/searchMeta/
      * @param Document|Serializable|array|stdClass $meta
      */
     public static function searchMeta(Document|Serializable|stdClass|array $meta): SearchMetaStage
@@ -471,6 +584,10 @@ final class Stage
     }
 
     /**
+     * Adds new fields to documents. Outputs documents that contain all existing fields from the input documents and newly added fields.
+     * Alias for $addFields.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/
      * @param ExpressionInterface|mixed ...$field
      */
     public static function set(mixed ...$field): SetStage
@@ -479,6 +596,10 @@ final class Stage
     }
 
     /**
+     * Groups documents into windows and applies one or more operators to the documents in each window.
+     * New in version 5.0.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/
      * @param ExpressionInterface|mixed $partitionBy Specifies an expression to group the documents. In the $setWindowFields stage, the group of documents is known as a partition. Default is one partition for the entire collection.
      * @param array|stdClass $sortBy Specifies the field(s) to sort the documents by in the partition. Uses the same syntax as the $sort stage. Default is no sorting.
      * @param Document|Serializable|array|stdClass $output Specifies the field(s) to append to the documents in the output returned by the $setWindowFields stage. Each field is set to the result returned by the window operator.
@@ -495,12 +616,21 @@ final class Stage
         return new SetWindowFieldsStage($partitionBy, $sortBy, $output, $window);
     }
 
+    /**
+     * Provides data and size distribution information on sharded collections.
+     * New in version 6.0.3.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/
+     */
     public static function shardedDataDistribution(): ShardedDataDistributionStage
     {
         return new ShardedDataDistributionStage();
     }
 
     /**
+     * Skips the first n documents where n is the specified skip number and passes the remaining documents unmodified to the pipeline. For each input document, outputs either zero documents (for the first n documents) or one document (if after the first n documents).
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/
      * @param Int64|int $skip
      */
     public static function skip(Int64|int $skip): SkipStage
@@ -509,6 +639,9 @@ final class Stage
     }
 
     /**
+     * Reorders the document stream by a specified sort key. Only the order changes; the documents remain unmodified. For each input document, outputs one document.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/
      * @param array|stdClass $sort
      */
     public static function sort(stdClass|array $sort): SortStage
@@ -517,6 +650,9 @@ final class Stage
     }
 
     /**
+     * Groups incoming documents based on the value of a specified expression, then computes the count of documents in each distinct group.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/
      * @param ExpressionInterface|mixed $expression
      */
     public static function sortByCount(mixed $expression): SortByCountStage
@@ -525,6 +661,10 @@ final class Stage
     }
 
     /**
+     * Performs a union of two collections; i.e. combines pipeline results from two collections into a single result set.
+     * New in version 4.4.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/
      * @param non-empty-string $coll The collection or view whose pipeline results you wish to include in the result set.
      * @param Optional|Pipeline|array $pipeline An aggregation pipeline to apply to the specified coll.
      * The pipeline cannot include the $out and $merge stages. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.
@@ -538,6 +678,10 @@ final class Stage
     }
 
     /**
+     * Removes or excludes fields from documents.
+     * Alias for $project stage that removes or excludes fields.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/
      * @param FieldPath|non-empty-string ...$field
      */
     public static function unset(FieldPath|string ...$field): UnsetStage
@@ -546,6 +690,9 @@ final class Stage
     }
 
     /**
+     * Deconstructs an array field from the input documents to output a document for each element. Each output document replaces the array with an element value. For each input document, outputs n documents where n is the number of array elements and can be zero for an empty array.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/
      * @param ArrayFieldPath|non-empty-string $field
      */
     public static function unwind(ArrayFieldPath|string $field): UnwindStage

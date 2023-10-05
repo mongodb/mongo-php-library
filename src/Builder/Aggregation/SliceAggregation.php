@@ -15,6 +15,11 @@ use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Optional;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns a subset of an array.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/
+ */
 class SliceAggregation implements ResolvesToArray
 {
     public const NAME = '$slice';

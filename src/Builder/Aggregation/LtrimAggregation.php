@@ -10,6 +10,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Optional;
 
+/**
+ * Removes whitespace or the specified characters from the beginning of a string.
+ * New in version 4.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/
+ */
 class LtrimAggregation implements ResolvesToString
 {
     public const NAME = '$ltrim';

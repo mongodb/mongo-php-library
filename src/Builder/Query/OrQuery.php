@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\Builder\Encode;
 use stdClass;
 
+/**
+ * Joins query clauses with a logical OR returns all documents that match the conditions of either clause.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/or/
+ */
 class OrQuery implements QueryInterface
 {
     public const NAME = '$or';

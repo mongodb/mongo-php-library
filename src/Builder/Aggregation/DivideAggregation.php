@@ -12,6 +12,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Returns the result of dividing the first number by the second. Accepts two argument expressions.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/
+ */
 class DivideAggregation implements ResolvesToDouble
 {
     public const NAME = '$divide';

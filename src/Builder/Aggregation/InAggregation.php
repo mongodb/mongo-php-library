@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToBool;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns a boolean indicating whether a specified value is in an array.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/in/
+ */
 class InAggregation implements ResolvesToBool
 {
     public const NAME = '$in';

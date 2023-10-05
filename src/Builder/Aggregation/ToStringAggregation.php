@@ -10,6 +10,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToString;
 
+/**
+ * Converts value to a string.
+ * New in version 4.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/
+ */
 class ToStringAggregation implements ResolvesToString
 {
     public const NAME = '$toString';

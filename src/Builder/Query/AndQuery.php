@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\Builder\Encode;
 use stdClass;
 
+/**
+ * Joins query clauses with a logical AND returns all documents that match the conditions of both clauses.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/and/
+ */
 class AndQuery implements QueryInterface
 {
     public const NAME = '$and';

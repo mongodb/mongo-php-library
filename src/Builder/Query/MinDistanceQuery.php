@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 
+/**
+ * Specifies a minimum distance to limit the results of $near and $nearSphere queries. For use with 2dsphere index only.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/minDistance/
+ */
 class MinDistanceQuery implements QueryInterface
 {
     public const NAME = '$minDistance';

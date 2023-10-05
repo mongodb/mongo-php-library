@@ -8,6 +8,11 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Matches values that are less than a specified value.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/lt/
+ */
 class LtQuery implements QueryInterface
 {
     public const NAME = '$lt';

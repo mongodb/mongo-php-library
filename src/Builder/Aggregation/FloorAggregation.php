@@ -12,6 +12,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Returns the largest integer less than or equal to the specified number.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/
+ */
 class FloorAggregation implements ResolvesToInt
 {
     public const NAME = '$floor';

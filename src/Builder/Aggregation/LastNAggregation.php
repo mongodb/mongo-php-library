@@ -14,6 +14,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns a specified number of elements from the end of an array. Distinct from the $lastN accumulator.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/
+ */
 class LastNAggregation implements ResolvesToArray
 {
     public const NAME = '$lastN';

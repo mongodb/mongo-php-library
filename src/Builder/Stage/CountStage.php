@@ -8,6 +8,12 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Returns a count of the number of documents at this stage of the aggregation pipeline.
+ * Distinct from the $count aggregation accumulator.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/
+ */
 class CountStage implements StageInterface
 {
     public const NAME = '$count';

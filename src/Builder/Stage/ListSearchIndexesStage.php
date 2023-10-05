@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Stage;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 
+/**
+ * Returns information about existing Atlas Search indexes on a specified collection.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/
+ */
 class ListSearchIndexesStage implements StageInterface
 {
     public const NAME = '$listSearchIndexes';

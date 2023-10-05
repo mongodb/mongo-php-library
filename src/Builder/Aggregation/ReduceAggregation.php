@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Applies an expression to each element in an array and combines them into a single value.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/
+ */
 class ReduceAggregation implements ExpressionInterface
 {
     public const NAME = '$reduce';

@@ -11,6 +11,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToFloat;
 
+/**
+ * Randomly select documents at a given rate. Although the exact number of documents selected varies on each run, the quantity chosen approximates the sample rate expressed as a percentage of the total number of documents.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/
+ */
 class SampleRateAggregation implements ExpressionInterface
 {
     public const NAME = '$sampleRate';

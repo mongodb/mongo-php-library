@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\Builder\Encode;
 use stdClass;
 
+/**
+ * Selects geometries that intersect with a GeoJSON geometry. The 2dsphere index supports $geoIntersects.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/
+ */
 class GeoIntersectsQuery implements QueryInterface
 {
     public const NAME = '$geoIntersects';

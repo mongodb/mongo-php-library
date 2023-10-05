@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Optional;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Evaluates a series of case expressions. When it finds an expression which evaluates to true, $switch executes a specified expression and breaks out of the control flow.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/
+ */
 class SwitchAggregation implements ExpressionInterface
 {
     public const NAME = '$switch';

@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToDecimal;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Returns the inverse sin (arc sine) of a value in radians.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/
+ */
 class AsinAggregation implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$asin';

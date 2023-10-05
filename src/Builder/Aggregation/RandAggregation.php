@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Aggregation;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToFloat;
 
+/**
+ * Returns a random float between 0 and 1
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/
+ */
 class RandAggregation implements ResolvesToFloat
 {
     public const NAME = '$rand';

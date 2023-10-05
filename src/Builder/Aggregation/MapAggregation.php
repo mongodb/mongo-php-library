@@ -14,6 +14,11 @@ use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Optional;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Applies a subexpression to each element of an array and returns the array of resulting values in order. Accepts named parameters.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/
+ */
 class MapAggregation implements ResolvesToArray
 {
     public const NAME = '$map';

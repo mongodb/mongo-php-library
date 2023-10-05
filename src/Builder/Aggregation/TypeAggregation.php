@@ -10,6 +10,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToString;
 
+/**
+ * Return the BSON data type of the field.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/type/
+ */
 class TypeAggregation implements ResolvesToString
 {
     public const NAME = '$type';

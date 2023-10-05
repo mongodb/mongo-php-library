@@ -11,6 +11,11 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use stdClass;
 
+/**
+ * Projects the first element in an array that matches the specified $elemMatch condition.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/
+ */
 class ElemMatchQuery implements QueryInterface
 {
     public const NAME = '$elemMatch';

@@ -12,6 +12,12 @@ use MongoDB\Builder\Expression\ResolvesToBool;
 use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Optional;
 
+/**
+ * Applies a regular expression (regex) to a string and returns a boolean that indicates if a match is found or not.
+ * New in version 4.2.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/
+ */
 class RegexMatchAggregation implements ResolvesToBool
 {
     public const NAME = '$regexMatch';

@@ -10,6 +10,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToBool;
 
+/**
+ * Returns true if the values are not equivalent.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/
+ */
 class NeAggregation implements ResolvesToBool
 {
     public const NAME = '$ne';

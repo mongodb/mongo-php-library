@@ -10,6 +10,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 
+/**
+ * Converts value to a double.
+ * New in version 4.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/
+ */
 class ToDoubleAggregation implements ResolvesToDouble
 {
     public const NAME = '$toDouble';

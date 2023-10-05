@@ -14,6 +14,11 @@ use MongoDB\Builder\Expression\ResolvesToNull;
 use MongoDB\Builder\Expression\ResolvesToObject;
 use stdClass;
 
+/**
+ * Returns the size in bytes of a given document (i.e. bsontype Object) when encoded as BSON.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/
+ */
 class BsonSizeAggregation implements ResolvesToInt
 {
     public const NAME = '$bsonSize';

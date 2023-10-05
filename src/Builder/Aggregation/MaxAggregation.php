@@ -9,6 +9,12 @@ namespace MongoDB\Builder\Aggregation;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 
+/**
+ * Returns the maximum value that results from applying an expression to each document.
+ * Changed in version 5.0: Available in the $setWindowFields stage.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/
+ */
 class MaxAggregation implements ExpressionInterface, AccumulatorInterface
 {
     public const NAME = '$max';

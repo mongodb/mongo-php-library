@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Optional;
 
+/**
+ * Searches a string for an occurrence of a substring and returns the UTF-8 code point index of the first occurrence. If the substring is not found, returns -1
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfCP/
+ */
 class IndexOfCPAggregation implements ResolvesToInt
 {
     public const NAME = '$indexOfCP';

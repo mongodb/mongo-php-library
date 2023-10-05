@@ -14,6 +14,12 @@ use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Builder\Expression\ResolvesToString;
 use stdClass;
 
+/**
+ * Adds, updates, or removes a specified field in a document. You can use $setField to add, update, or remove fields with names that contain periods (.) or start with dollar signs ($).
+ * New in version 5.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/
+ */
 class SetFieldAggregation implements ResolvesToObject
 {
     public const NAME = '$setField';

@@ -11,6 +11,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToString;
 
+/**
+ * Returns the substring of a string. Starts with the character at the specified UTF-8 code point (CP) index (zero-based) in the string and continues for the number of code points specified.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/
+ */
 class SubstrCPAggregation implements ResolvesToString
 {
     public const NAME = '$substrCP';

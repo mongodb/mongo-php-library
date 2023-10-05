@@ -10,6 +10,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Pipeline;
 
+/**
+ * Performs a union of two collections; i.e. combines pipeline results from two collections into a single result set.
+ * New in version 4.4.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/
+ */
 class UnionWithStage implements StageInterface
 {
     public const NAME = '$unionWith';

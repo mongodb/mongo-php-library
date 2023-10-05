@@ -12,6 +12,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToObject;
 use stdClass;
 
+/**
+ * Combines multiple documents into a single document.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/
+ */
 class MergeObjectsAggregation implements AccumulatorInterface
 {
     public const NAME = '$mergeObjects';

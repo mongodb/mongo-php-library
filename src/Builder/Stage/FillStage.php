@@ -15,6 +15,11 @@ use MongoDB\Builder\Optional;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
+/**
+ * Populates null and missing field values within documents.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/
+ */
 class FillStage implements StageInterface
 {
     public const NAME = '$fill';

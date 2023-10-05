@@ -11,6 +11,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Defines a custom function.
+ * New in version 4.4.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/
+ */
 class FunctionAggregation implements ExpressionInterface
 {
     public const NAME = '$function';

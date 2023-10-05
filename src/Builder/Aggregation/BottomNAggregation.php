@@ -12,6 +12,13 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use stdClass;
 
+/**
+ * Returns an aggregation of the bottom n elements within a group, according to the specified sort order. If the group contains fewer than n elements, $bottomN returns all elements in the group.
+ * New in version 5.2.
+ * Available in the $group and $setWindowFields stages.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/
+ */
 class BottomNAggregation implements AccumulatorInterface
 {
     public const NAME = '$bottomN';

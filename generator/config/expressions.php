@@ -4,6 +4,7 @@
 
 namespace MongoDB\Builder\Expression;
 
+use DateTimeInterface;
 use MongoDB\BSON;
 use MongoDB\Builder\Aggregation\AccumulatorInterface;
 use MongoDB\Builder\Pipeline;
@@ -111,7 +112,7 @@ return [
     BoolFieldPath::class => typeFieldPath(ResolvesToBool::class),
     ResolvesToDate::class => [
         'implements' => [ExpressionInterface::class],
-        'types' => ['DateTimeInterface', 'UTCDateTime'],
+        'types' => [DateTimeInterface::class, BSON\UTCDateTime::class],
     ],
     DateFieldPath::class => typeFieldPath(ResolvesToDate::class),
     ResolvesToTimestamp::class => [

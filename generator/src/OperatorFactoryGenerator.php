@@ -59,6 +59,8 @@ final class OperatorFactoryGenerator extends OperatorGenerator
 
         $method = $class->addMethod(ltrim($operator->name, '$'));
         $method->setStatic();
+        $method->addComment($operator->description);
+        $method->addComment('@see ' . $operator->link);
         $args = [];
         foreach ($operator->arguments as $argument) {
             $type = $this->generateExpressionTypes($argument);

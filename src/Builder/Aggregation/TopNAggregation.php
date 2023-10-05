@@ -12,6 +12,14 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use stdClass;
 
+/**
+ * Returns an aggregation of the top n fields within a group, according to the specified sort order.
+ * New in version 5.2.
+ *
+ * Available in the $group and $setWindowFields stages.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN/
+ */
 class TopNAggregation implements AccumulatorInterface
 {
     public const NAME = '$topN';

@@ -14,6 +14,11 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Optional;
 use stdClass;
 
+/**
+ * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket boundaries are automatically determined in an attempt to evenly distribute the documents into the specified number of buckets.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/
+ */
 class BucketAutoStage implements StageInterface
 {
     public const NAME = '$bucketAuto';

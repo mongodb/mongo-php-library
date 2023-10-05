@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns a set with elements that appear in all of the input sets. Accepts any number of argument expressions.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIntersection/
+ */
 class SetIntersectionAggregation implements ResolvesToArray
 {
     public const NAME = '$setIntersection';

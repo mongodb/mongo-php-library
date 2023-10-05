@@ -10,6 +10,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToBool;
 
+/**
+ * Returns true when any of its expressions evaluates to true. Accepts any number of argument expressions.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/
+ */
 class OrAggregation implements ResolvesToBool
 {
     public const NAME = '$or';

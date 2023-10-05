@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Stage;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 
+/**
+ * Lists sampled queries for all collections or a specific collection.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/
+ */
 class ListSampledQueriesStage implements StageInterface
 {
     public const NAME = '$listSampledQueries';

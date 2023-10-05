@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Optional;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Lists all active sessions recently in use on the currently connected mongos or mongod instance. These sessions may have not yet propagated to the system.sessions collection.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/
+ */
 class ListLocalSessionsStage implements StageInterface
 {
     public const NAME = '$listLocalSessions';

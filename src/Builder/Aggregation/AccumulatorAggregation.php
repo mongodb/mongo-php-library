@@ -13,6 +13,12 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Optional;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Defines a custom accumulator function.
+ * New in version 4.4.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/
+ */
 class AccumulatorAggregation implements AccumulatorInterface
 {
     public const NAME = '$accumulator';

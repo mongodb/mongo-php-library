@@ -13,6 +13,12 @@ use MongoDB\Builder\Expression\ResolvesToDecimal;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Returns the sample covariance of two numeric expressions.
+ * New in version 5.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/covarianceSamp/
+ */
 class CovarianceSampAggregation implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$covarianceSamp';

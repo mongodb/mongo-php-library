@@ -10,6 +10,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToBool;
 
+/**
+ * A ternary operator that evaluates one expression, and depending on the result, returns the value of one of the other two expressions. Accepts either three expressions in an ordered list or three named parameters.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/
+ */
 class CondAggregation implements ExpressionInterface
 {
     public const NAME = '$cond';

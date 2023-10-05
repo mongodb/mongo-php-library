@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Optional;
 
+/**
+ * Searches an array for an occurrence of a specified value and returns the array index of the first occurrence. Array indexes start at zero.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfArray/
+ */
 class IndexOfArrayAggregation implements ResolvesToInt
 {
     public const NAME = '$indexOfArray';

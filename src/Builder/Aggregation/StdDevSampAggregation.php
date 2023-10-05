@@ -12,6 +12,13 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Calculates the sample standard deviation of the input values. Use if the values encompass a sample of a population of data from which to generalize about the population. $stdDevSamp ignores non-numeric values.
+ * If the values represent the entire population of data or you do not wish to generalize about a larger population, use $stdDevPop instead.
+ * Changed in version 5.0: Available in the $setWindowFields stage.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/
+ */
 class StdDevSampAggregation implements ResolvesToDouble, AccumulatorInterface
 {
     public const NAME = '$stdDevSamp';

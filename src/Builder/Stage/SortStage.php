@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Stage;
 use MongoDB\Builder\Encode;
 use stdClass;
 
+/**
+ * Reorders the document stream by a specified sort key. Only the order changes; the documents remain unmodified. For each input document, outputs one document.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/
+ */
 class SortStage implements StageInterface
 {
     public const NAME = '$sort';

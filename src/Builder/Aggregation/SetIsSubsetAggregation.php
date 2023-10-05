@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToBool;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns true if all elements of the first set appear in the second set, including when the first set equals the second set; i.e. not a strict subset. Accepts exactly two argument expressions.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIsSubset/
+ */
 class SetIsSubsetAggregation implements ResolvesToBool
 {
     public const NAME = '$setIsSubset';

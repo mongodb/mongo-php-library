@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToDecimal;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Returns the hyperbolic tangent of a value that is measured in radians.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/
+ */
 class TanhAggregation implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$tanh';

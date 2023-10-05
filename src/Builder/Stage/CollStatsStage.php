@@ -11,6 +11,11 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use stdClass;
 
+/**
+ * Returns statistics regarding a collection or view.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/
+ */
 class CollStatsStage implements StageInterface
 {
     public const NAME = '$collStats';

@@ -52,6 +52,8 @@ class OperatorClassGenerator extends OperatorGenerator
         // Expose operator metadata as constants
         // @todo move to encoder class
         $namespace->addUse('\\' . Encode::class);
+        $class->addComment($operator->description);
+        $class->addComment('@see '.$operator->link);
         $class->addConstant('NAME', $operator->name);
         $class->addConstant('ENCODE', $operator->encode);
 

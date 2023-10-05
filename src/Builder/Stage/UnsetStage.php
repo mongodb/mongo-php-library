@@ -9,6 +9,12 @@ namespace MongoDB\Builder\Stage;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\FieldPath;
 
+/**
+ * Removes or excludes fields from documents.
+ * Alias for $project stage that removes or excludes fields.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/
+ */
 class UnsetStage implements StageInterface
 {
     public const NAME = '$unset';

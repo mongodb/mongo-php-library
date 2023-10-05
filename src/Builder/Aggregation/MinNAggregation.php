@@ -14,6 +14,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns the n smallest values in an array. Distinct from the $minN accumulator.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/
+ */
 class MinNAggregation implements ResolvesToArray
 {
     public const NAME = '$minN';

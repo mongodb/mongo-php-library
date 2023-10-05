@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToBool;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns true if the input sets have the same distinct elements. Accepts two or more argument expressions.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setEquals/
+ */
 class SetEqualsAggregation implements ResolvesToBool
 {
     public const NAME = '$setEquals';

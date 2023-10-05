@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Stage;
 use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 
+/**
+ * Passes the first n documents unmodified to the pipeline where n is the specified limit. For each input document, outputs either one document (for the first n documents) or zero documents (after the first n documents).
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/
+ */
 class LimitStage implements StageInterface
 {
     public const NAME = '$limit';

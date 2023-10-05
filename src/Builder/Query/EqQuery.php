@@ -8,6 +8,11 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Matches values that are equal to a specified value.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/
+ */
 class EqQuery implements QueryInterface
 {
     public const NAME = '$eq';

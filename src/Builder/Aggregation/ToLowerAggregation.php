@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Aggregation;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToString;
 
+/**
+ * Converts a string to lowercase. Accepts a single argument expression.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/
+ */
 class ToLowerAggregation implements ResolvesToString
 {
     public const NAME = '$toLower';

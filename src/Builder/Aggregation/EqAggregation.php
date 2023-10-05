@@ -10,6 +10,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToBool;
 
+/**
+ * Returns true if the values are equivalent.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/
+ */
 class EqAggregation implements ResolvesToBool
 {
     public const NAME = '$eq';

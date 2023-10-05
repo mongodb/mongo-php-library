@@ -11,6 +11,11 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use stdClass;
 
+/**
+ * Validate documents against the given JSON Schema.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/
+ */
 class JsonSchemaQuery implements QueryInterface
 {
     public const NAME = '$jsonSchema';

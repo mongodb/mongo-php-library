@@ -13,6 +13,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Matches numeric or binary values in which a set of bit positions all have a value of 0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/
+ */
 class BitsAllClearQuery implements QueryInterface
 {
     public const NAME = '$bitsAllClear';

@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\Builder\Encode;
 use stdClass;
 
+/**
+ * Joins query clauses with a logical NOR returns all documents that fail to match both clauses.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/nor/
+ */
 class NorQuery implements QueryInterface
 {
     public const NAME = '$nor';

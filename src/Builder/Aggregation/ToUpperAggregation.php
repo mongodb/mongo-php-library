@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Aggregation;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToString;
 
+/**
+ * Converts a string to uppercase. Accepts a single argument expression.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/
+ */
 class ToUpperAggregation implements ResolvesToString
 {
     public const NAME = '$toUpper';

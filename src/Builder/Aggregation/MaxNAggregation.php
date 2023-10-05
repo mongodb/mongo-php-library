@@ -14,6 +14,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns the n largest values in an array. Distinct from the $maxN accumulator.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN-array-element/
+ */
 class MaxNAggregation implements ResolvesToArray
 {
     public const NAME = '$maxN';

@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Aggregation;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToString;
 
+/**
+ * Concatenates any number of strings.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/
+ */
 class ConcatAggregation implements ResolvesToString
 {
     public const NAME = '$concat';

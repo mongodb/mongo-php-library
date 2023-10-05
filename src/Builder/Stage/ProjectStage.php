@@ -11,6 +11,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use stdClass;
 
+/**
+ * Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one document.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/
+ */
 class ProjectStage implements StageInterface
 {
     public const NAME = '$project';

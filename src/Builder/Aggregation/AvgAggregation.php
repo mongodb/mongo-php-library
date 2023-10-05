@@ -11,6 +11,12 @@ use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Returns an average of numerical values. Ignores non-numeric values.
+ * Changed in version 5.0: Available in the $setWindowFields stage.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/
+ */
 class AvgAggregation implements ResolvesToNumber, AccumulatorInterface
 {
     public const NAME = '$avg';

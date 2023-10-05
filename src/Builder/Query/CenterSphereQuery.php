@@ -11,6 +11,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Specifies a circle using either legacy coordinate pairs or GeoJSON format for $geoWithin queries when using spherical geometry. The 2dsphere and 2d indexes support $centerSphere.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/centerSphere/
+ */
 class CenterSphereQuery implements QueryInterface
 {
     public const NAME = '$centerSphere';

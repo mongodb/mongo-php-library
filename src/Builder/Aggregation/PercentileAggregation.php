@@ -15,6 +15,19 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns an array of scalar values that correspond to specified percentile values.
+ * New in version 7.0.
+ *
+ * This operator is available as an accumulator in these stages:
+ * $group
+ *
+ * $setWindowFields
+ *
+ * It is also available as an aggregation expression.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
+ */
 class PercentileAggregation implements ResolvesToArray, AccumulatorInterface
 {
     public const NAME = '$percentile';

@@ -12,6 +12,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Returns the remainder of the first number divided by the second. Accepts two argument expressions.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/mod/
+ */
 class ModAggregation implements ResolvesToInt
 {
     public const NAME = '$mod';

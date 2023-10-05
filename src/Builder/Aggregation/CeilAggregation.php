@@ -12,6 +12,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Returns the smallest integer greater than or equal to the specified number.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/
+ */
 class CeilAggregation implements ResolvesToInt
 {
     public const NAME = '$ceil';

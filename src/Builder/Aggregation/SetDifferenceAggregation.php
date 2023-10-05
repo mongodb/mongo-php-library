@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Returns a set with elements that appear in the first set but not in the second set; i.e. performs a relative complement of the second set relative to the first. Accepts exactly two argument expressions.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setDifference/
+ */
 class SetDifferenceAggregation implements ResolvesToArray
 {
     public const NAME = '$setDifference';

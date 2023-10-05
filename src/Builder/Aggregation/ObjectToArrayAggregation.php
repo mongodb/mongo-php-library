@@ -13,6 +13,11 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToObject;
 use stdClass;
 
+/**
+ * Converts a document to an array of documents representing key-value pairs.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/objectToArray/
+ */
 class ObjectToArrayAggregation implements ResolvesToArray
 {
     public const NAME = '$objectToArray';

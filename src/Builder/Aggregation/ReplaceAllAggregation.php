@@ -10,6 +10,13 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToNull;
 use MongoDB\Builder\Expression\ResolvesToString;
 
+/**
+ * Replaces all instances of a search string in an input string with a replacement string.
+ * $replaceAll is both case-sensitive and diacritic-sensitive, and ignores any collation present on a collection.
+ * New in version 4.4.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/
+ */
 class ReplaceAllAggregation implements ResolvesToString
 {
     public const NAME = '$replaceAll';

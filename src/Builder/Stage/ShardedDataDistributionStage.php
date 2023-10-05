@@ -8,6 +8,12 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Provides data and size distribution information on sharded collections.
+ * New in version 6.0.3.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shardedDataDistribution/
+ */
 class ShardedDataDistributionStage implements StageInterface
 {
     public const NAME = '$shardedDataDistribution';

@@ -10,6 +10,14 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use stdClass;
 
+/**
+ * Returns the top element within a group according to the specified sort order.
+ * New in version 5.2.
+ *
+ * Available in the $group and $setWindowFields stages.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/
+ */
 class TopAggregation implements AccumulatorInterface
 {
     public const NAME = '$top';

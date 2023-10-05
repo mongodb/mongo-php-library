@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 
+/**
+ * Performs text search.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/
+ */
 class TextQuery implements QueryInterface
 {
     public const NAME = '$text';

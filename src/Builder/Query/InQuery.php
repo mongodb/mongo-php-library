@@ -8,6 +8,11 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Matches any of the values specified in an array.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/in/
+ */
 class InQuery implements QueryInterface
 {
     public const NAME = '$in';

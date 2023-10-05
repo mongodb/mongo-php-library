@@ -12,6 +12,16 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Returns an approximation of the median, the 50th percentile, as a scalar value.
+ * New in version 7.0.
+ * This operator is available as an accumulator in these stages:
+ * $group
+ * $setWindowFields
+ * It is also available as an aggregation expression.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/
+ */
 class MedianAggregation implements ResolvesToDouble, AccumulatorInterface
 {
     public const NAME = '$median';

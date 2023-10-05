@@ -12,6 +12,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Selects documents if a field is of the specified type.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/
+ */
 class TypeQuery implements QueryInterface
 {
     public const NAME = '$type';

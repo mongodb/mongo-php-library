@@ -11,6 +11,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Specifies a polygon to using legacy coordinate pairs for $geoWithin queries. The 2d index supports $center.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/polygon/
+ */
 class PolygonQuery implements QueryInterface
 {
     public const NAME = '$polygon';

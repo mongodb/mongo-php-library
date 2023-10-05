@@ -10,6 +10,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use stdClass;
 
+/**
+ * Adds new fields to documents. Outputs documents that contain all existing fields from the input documents and newly added fields.
+ * Alias for $addFields.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/
+ */
 class SetStage implements StageInterface
 {
     public const NAME = '$set';

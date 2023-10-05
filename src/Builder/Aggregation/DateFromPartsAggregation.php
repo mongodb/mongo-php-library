@@ -14,6 +14,11 @@ use MongoDB\Builder\Expression\ResolvesToNumber;
 use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Optional;
 
+/**
+ * Constructs a BSON Date object given the date's constituent parts.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromParts/
+ */
 class DateFromPartsAggregation implements ResolvesToDate
 {
     public const NAME = '$dateFromParts';

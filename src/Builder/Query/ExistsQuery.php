@@ -8,6 +8,11 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Matches documents that have the specified field.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/exists/
+ */
 class ExistsQuery implements QueryInterface
 {
     public const NAME = '$exists';

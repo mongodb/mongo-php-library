@@ -8,6 +8,11 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Matches values that are greater than or equal to a specified value.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/gte/
+ */
 class GteQuery implements QueryInterface
 {
     public const NAME = '$gte';

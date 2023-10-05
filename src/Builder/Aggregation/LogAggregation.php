@@ -12,6 +12,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
+/**
+ * Calculates the log of a number in the specified base.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/log/
+ */
 class LogAggregation implements ResolvesToDouble
 {
     public const NAME = '$log';

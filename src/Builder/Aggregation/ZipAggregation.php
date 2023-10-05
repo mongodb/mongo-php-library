@@ -12,6 +12,11 @@ use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Model\BSONArray;
 
+/**
+ * Merge two arrays together.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/zip/
+ */
 class ZipAggregation implements ResolvesToArray
 {
     public const NAME = '$zip';

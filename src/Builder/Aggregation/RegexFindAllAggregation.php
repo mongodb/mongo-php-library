@@ -12,6 +12,12 @@ use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToString;
 use MongoDB\Builder\Optional;
 
+/**
+ * Applies a regular expression (regex) to a string and returns information on the all matched substrings.
+ * New in version 4.2.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/
+ */
 class RegexFindAllAggregation implements ResolvesToArray
 {
     public const NAME = '$regexFindAll';

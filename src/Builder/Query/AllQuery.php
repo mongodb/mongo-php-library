@@ -8,6 +8,11 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Matches arrays that contain all elements specified in the query.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/all/
+ */
 class AllQuery implements QueryInterface
 {
     public const NAME = '$all';

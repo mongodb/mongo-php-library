@@ -15,6 +15,11 @@ use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToLong;
 use MongoDB\Builder\Optional;
 
+/**
+ * Rounds a number to to a whole integer or to a specified decimal place.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/round/
+ */
 class RoundAggregation implements ResolvesToInt, ResolvesToDouble, ResolvesToDecimal, ResolvesToLong
 {
     public const NAME = '$round';

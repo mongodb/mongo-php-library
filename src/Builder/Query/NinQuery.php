@@ -8,6 +8,11 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
 
+/**
+ * Matches none of the values specified in an array.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/nin/
+ */
 class NinQuery implements QueryInterface
 {
     public const NAME = '$nin';

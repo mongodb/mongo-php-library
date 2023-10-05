@@ -15,6 +15,11 @@ use MongoDB\Builder\Query\QueryInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
+/**
+ * Performs a recursive search on a collection. To each output document, adds a new array field that contains the traversal results of the recursive search for that document.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/
+ */
 class GraphLookupStage implements StageInterface
 {
     public const NAME = '$graphLookup';

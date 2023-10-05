@@ -10,6 +10,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Optional;
 
+/**
+ * Returns the value of a specified field from a document. You can use $getField to retrieve the value of fields with names that contain periods (.) or start with dollar signs ($).
+ * New in version 5.0.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/
+ */
 class GetFieldAggregation implements ExpressionInterface
 {
     public const NAME = '$getField';

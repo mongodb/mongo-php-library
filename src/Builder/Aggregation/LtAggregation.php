@@ -10,6 +10,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToBool;
 
+/**
+ * Returns true if the first value is less than the second.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lt/
+ */
 class LtAggregation implements ResolvesToBool
 {
     public const NAME = '$lt';

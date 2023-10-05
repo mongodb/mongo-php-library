@@ -11,6 +11,11 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use stdClass;
 
+/**
+ * Writes the resulting documents of the aggregation pipeline to a collection. To use the $out stage, it must be the last stage in the pipeline.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
+ */
 class OutStage implements StageInterface
 {
     public const NAME = '$out';

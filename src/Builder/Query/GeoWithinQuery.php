@@ -9,6 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\Builder\Encode;
 use stdClass;
 
+/**
+ * Selects geometries within a bounding GeoJSON geometry. The 2dsphere and 2d indexes support $geoWithin.
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/
+ */
 class GeoWithinQuery implements QueryInterface
 {
     public const NAME = '$geoWithin';

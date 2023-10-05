@@ -34,6 +34,7 @@ use MongoDB\Operation\WithTransaction;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
+use stdClass;
 
 use function array_is_list;
 use function array_key_first;
@@ -56,6 +57,17 @@ use function substr;
 function add_logger(LoggerInterface $logger): void
 {
     PsrLogAdapter::addLogger($logger);
+}
+
+/**
+ * Create a new stdClass instance with the provided properties.
+ *
+ * @psalm-suppress MoreSpecificReturnType
+ * @psalm-suppress LessSpecificReturnStatement
+ */
+function object(mixed ...$values): stdClass
+{
+    return (object) $values;
 }
 
 /**

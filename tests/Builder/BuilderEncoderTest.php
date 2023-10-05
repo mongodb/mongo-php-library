@@ -15,6 +15,7 @@ use function array_is_list;
 use function array_merge;
 use function array_walk;
 use function is_array;
+use function MongoDB\object;
 use function var_export;
 
 /**
@@ -27,8 +28,7 @@ class BuilderEncoderTest extends TestCase
     public function testPipeline(): void
     {
         $pipeline = new Pipeline(
-            // @todo array is accepted by the stage class, but we expect an object. The driver accepts both.
-            Stage::match((object) ['author' => 'dave']),
+            Stage::match(object(author: 'dave')),
             Stage::limit(1),
         );
 
@@ -44,7 +44,7 @@ class BuilderEncoderTest extends TestCase
     public function testSort(): void
     {
         $pipeline = new Pipeline(
-            Stage::sort((object) ['age' => -1, 'posts' => 1]),
+            Stage::sort(object(age: -1, posts: 1)),
         );
 
         $expected = [
@@ -60,8 +60,8 @@ class BuilderEncoderTest extends TestCase
         $pipeline = new Pipeline(
             Stage::match(
                 Query::or(
-                    (object) ['score' => [Query::gt(70), Query::lt(90)]],
-                    (object) ['views' => Query::gte(1000)],
+                    object(score: [Query::gt(70), Query::lt(90)]),
+                    object(views: Query::gte(1000)),
                 ),
             ),
             Stage::group(
@@ -99,14 +99,14 @@ class BuilderEncoderTest extends TestCase
     public function testAggregationFilter(array $limit, array $expectedLimit): void
     {
         $pipeline = new Pipeline(
-            Stage::project(...[
-                'items' => Aggregation::filter(
+            Stage::project(
+                items: Aggregation::filter(
                     Expression::arrayFieldPath('items'),
                     Aggregation::gte(Expression::variable('item.price'), 100),
                     'item',
                     ...$limit,
                 ),
-            ]),
+            ),
         );
 
         $expected = [

@@ -15,7 +15,10 @@ class OrAggregation implements ResolvesToBool
     public const NAME = '$or';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<ExpressionInterface|ResolvesToBool|bool|mixed> ...$expression */
+    /**
+     * @no-named-arguments
+     * @param list<ExpressionInterface|ResolvesToBool|bool|mixed> ...$expression
+     */
     public array $expression;
 
     /**

@@ -15,7 +15,10 @@ class IsArrayAggregation implements ResolvesToBool
     public const NAME = '$isArray';
     public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    /** @param list<ExpressionInterface|mixed> ...$expression */
+    /**
+     * @no-named-arguments
+     * @param list<ExpressionInterface|mixed> ...$expression
+     */
     public array $expression;
 
     /**

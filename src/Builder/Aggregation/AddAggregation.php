@@ -18,7 +18,10 @@ class AddAggregation implements ResolvesToNumber, ResolvesToDate
     public const NAME = '$add';
     public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    /** @param list<DateTimeInterface|Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int> ...$expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date. */
+    /**
+     * @no-named-arguments
+     * @param list<DateTimeInterface|Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int> ...$expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date.
+     */
     public array $expression;
 
     /**

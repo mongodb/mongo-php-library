@@ -13,7 +13,10 @@ class NorQuery implements QueryInterface
     public const NAME = '$nor';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<QueryInterface|array|object> ...$expression */
+    /**
+     * @no-named-arguments
+     * @param list<QueryInterface|array|object> ...$expression
+     */
     public array $expression;
 
     /**

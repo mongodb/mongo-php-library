@@ -16,7 +16,10 @@ class MergeObjectsAggregation implements AccumulatorInterface
     public const NAME = '$mergeObjects';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<Document|ResolvesToObject|Serializable|array|object> ...$document Any valid expression that resolves to a document. */
+    /**
+     * @no-named-arguments
+     * @param list<Document|ResolvesToObject|Serializable|array|object> ...$document Any valid expression that resolves to a document.
+     */
     public array $document;
 
     /**

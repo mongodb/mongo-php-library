@@ -20,7 +20,10 @@ class AndAggregation implements ResolvesToBool
     public const NAME = '$and';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|bool|float|int|mixed|non-empty-string|null> ...$expression */
+    /**
+     * @no-named-arguments
+     * @param list<Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|bool|float|int|mixed|non-empty-string|null> ...$expression
+     */
     public array $expression;
 
     /**

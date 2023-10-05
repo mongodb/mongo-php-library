@@ -14,7 +14,10 @@ class MaxAggregation implements ExpressionInterface, AccumulatorInterface
     public const NAME = '$max';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<ExpressionInterface|mixed> ...$expression */
+    /**
+     * @no-named-arguments
+     * @param list<ExpressionInterface|mixed> ...$expression
+     */
     public array $expression;
 
     /**

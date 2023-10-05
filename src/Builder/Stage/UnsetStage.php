@@ -14,7 +14,10 @@ class UnsetStage implements StageInterface
     public const NAME = '$unset';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<FieldPath|non-empty-string> ...$field */
+    /**
+     * @no-named-arguments
+     * @param list<FieldPath|non-empty-string> ...$field
+     */
     public array $field;
 
     /**

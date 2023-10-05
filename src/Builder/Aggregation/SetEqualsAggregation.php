@@ -18,7 +18,10 @@ class SetEqualsAggregation implements ResolvesToBool
     public const NAME = '$setEquals';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed>> ...$expression */
+    /**
+     * @no-named-arguments
+     * @param list<BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed>> ...$expression
+     */
     public array $expression;
 
     /**

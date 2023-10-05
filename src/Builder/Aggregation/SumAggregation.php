@@ -16,7 +16,10 @@ class SumAggregation implements ResolvesToNumber, AccumulatorInterface
     public const NAME = '$sum';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<Decimal128|Int64|ResolvesToNumber|float|int> ...$expression */
+    /**
+     * @no-named-arguments
+     * @param list<Decimal128|Int64|ResolvesToNumber|float|int> ...$expression
+     */
     public array $expression;
 
     /**

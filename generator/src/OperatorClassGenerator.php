@@ -72,14 +72,16 @@ class OperatorClassGenerator extends OperatorGenerator
                 $constuctor->setVariadic();
 
                 if ($argument->variadic === VariadicType::Array) {
-                    $property->setComment('@param list<' . $type->doc . '> ...$' . $argument->name . rtrim(' ' . $argument->description));
+                    // @see https://psalm.dev/docs/running_psalm/issues/NamedArgumentNotAllowed/
+                    $property->addComment('@no-named-arguments');
+                    $property->addComment('@param list<' . $type->doc . '> ...$' . $argument->name . rtrim(' ' . $argument->description));
                     $constuctor->addBody(<<<PHP
                     if (! \array_is_list(\${$argument->name})) {
                         throw new \InvalidArgumentException('Expected \${$argument->name} arguments to be a list of {$type->doc}, named arguments are not supported');
                     }
                     PHP);
                 } elseif ($argument->variadic === VariadicType::Object) {
-                    $property->setComment('@param array<string, ' . $type->doc . '> ...$' . $argument->name . rtrim(' ' . $argument->description));
+                    $property->addComment('@param array<string, ' . $type->doc . '> ...$' . $argument->name . rtrim(' ' . $argument->description));
                     $constuctor->addBody(<<<PHP
                     foreach(\${$argument->name} as \$key => \$value) {
                         if (! \is_string(\$key)) {
@@ -98,7 +100,7 @@ class OperatorClassGenerator extends OperatorGenerator
                 }
             } else {
                 // Non-variadic arguments
-                $property->setComment('@param ' . $type->doc . ' $' . $argument->name . rtrim(' ' . $argument->description));
+                $property->addComment('@param ' . $type->doc . ' $' . $argument->name . rtrim(' ' . $argument->description));
                 $property->setType($type->native);
 
                 if ($argument->optional) {

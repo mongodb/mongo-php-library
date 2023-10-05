@@ -13,7 +13,10 @@ class AllQuery implements QueryInterface
     public const NAME = '$all';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<mixed> ...$value */
+    /**
+     * @no-named-arguments
+     * @param list<mixed> ...$value
+     */
     public array $value;
 
     /**

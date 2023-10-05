@@ -5,7 +5,7 @@ on:
     branches:
       - "v*.*"
       - "master"
-      - "feature/*"
+      #- "feature/*"
     paths-ignore:
       - "docs/**"
   push:
@@ -15,6 +15,7 @@ on:
       - "feature/*"
     paths-ignore:
       - "docs/**"
+      - "generator/**"
 
 env:
   PHP_VERSION: "8.2"

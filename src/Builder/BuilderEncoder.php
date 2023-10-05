@@ -8,7 +8,6 @@ use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Expression\Variable;
 use MongoDB\Builder\Query\QueryInterface;
 use MongoDB\Builder\Stage\GroupStage;
-use MongoDB\Builder\Stage\ProjectStage;
 use MongoDB\Builder\Stage\StageInterface;
 use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Codec\Encoder;
@@ -63,16 +62,6 @@ class BuilderEncoder implements Encoder
             return '$$' . $value->expression;
         }
 
-        if ($value instanceof ProjectStage) {
-            $result = new stdClass();
-            // Specific: fields are encoded as a map of properties to their values at the top level as _id
-            foreach ($value->specifications as $key => $val) {
-                $result->{$key} = $this->encodeIfSupported($val);
-            }
-
-            return $this->wrap($value, $result);
-        }
-
         // The generic but incomplete encoding code
         switch ($value::ENCODE) {
             case Encode::Single:
@@ -117,10 +106,12 @@ class BuilderEncoder implements Encoder
         return $this->wrap($value, $result);
     }
 
+    /**
+     * Get the unique property of the operator as value
+     */
     private function encodeAsSingle(ExpressionInterface|StageInterface|QueryInterface $value): stdClass
     {
         $result = [];
-        /** @var mixed $val */
         foreach (get_object_vars($value) as $val) {
             $result = $this->recursiveEncode($val);
             break;
@@ -136,7 +127,7 @@ class BuilderEncoder implements Encoder
     {
         $result = new stdClass();
         $result->_id = $this->recursiveEncode($value->_id);
-        // Specific to $group: fields are encoded as a map of properties to their values at the top level as _id
+
         foreach ($value->field ?? [] as $key => $val) {
             $result->{$key} = $this->recursiveEncode($val);
         }
@@ -144,6 +135,9 @@ class BuilderEncoder implements Encoder
         return $this->wrap($value, $result);
     }
 
+    /**
+     * Nested arrays and objects must be encoded recursively.
+     */
     private function recursiveEncode(mixed $value): mixed
     {
         if (is_array($value)) {

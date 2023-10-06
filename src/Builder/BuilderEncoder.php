@@ -86,6 +86,9 @@ class BuilderEncoder implements Encoder
         throw new LogicException(sprintf('Class "%s" does not have a valid ENCODE constant.', $value::class));
     }
 
+    /**
+     * Encode the value as an array of properties, in the order they are defined in the class.
+     */
     private function encodeAsArray(ExpressionInterface|StageInterface|QueryInterface $value): stdClass
     {
         $result = [];
@@ -98,6 +101,21 @@ class BuilderEncoder implements Encoder
             }
 
             $result[] = $this->recursiveEncode($val);
+        }
+
+        return $this->wrap($value, $result);
+    }
+
+    /**
+     * $group stage have a specific encoding because the _id argument is required and others are variadic
+     */
+    private function encodeAsGroup(GroupStage $value): stdClass
+    {
+        $result = new stdClass();
+        $result->_id = $this->recursiveEncode($value->_id);
+
+        foreach (get_object_vars($value->field) as $key => $val) {
+            $result->{$key} = $this->recursiveEncode($val);
         }
 
         return $this->wrap($value, $result);
@@ -135,21 +153,6 @@ class BuilderEncoder implements Encoder
         }
 
         throw new LogicException(sprintf('Class "%s" does not have a single property.', $value::class));
-    }
-
-    /**
-     * $group stage have a specific encoding because the _id argument is required and others are variadic
-     */
-    private function encodeAsGroup(GroupStage $value): stdClass
-    {
-        $result = new stdClass();
-        $result->_id = $this->recursiveEncode($value->_id);
-
-        foreach (get_object_vars($value->field) as $key => $val) {
-            $result->{$key} = $this->recursiveEncode($val);
-        }
-
-        return $this->wrap($value, $result);
     }
 
     /**

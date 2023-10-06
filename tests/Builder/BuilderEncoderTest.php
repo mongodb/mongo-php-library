@@ -83,8 +83,7 @@ class BuilderEncoderTest extends TestCase
             [
                 '$group' => [
                     '_id' => null,
-                    // same as 'count' => ['$sum' => 1],
-                    'count' => ['$sum' => [1]],
+                    'count' => ['$sum' => 1],
                 ],
             ],
         ];

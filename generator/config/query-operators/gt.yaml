@@ -12,4 +12,4 @@ arguments:
     -
         name: value
         type:
-            - Constant
+            - any

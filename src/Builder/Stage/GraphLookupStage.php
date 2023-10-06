@@ -31,7 +31,7 @@ class GraphLookupStage implements StageInterface
      */
     public string $from;
 
-    /** @param BSONArray|ExpressionInterface|PackedArray|list<ExpressionInterface|mixed>|mixed $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process. */
+    /** @param BSONArray|ExpressionInterface|PackedArray|list|mixed $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process. */
     public mixed $startWith;
 
     /** @param non-empty-string $connectFromField Field name whose value $graphLookup uses to recursively match against the connectToField of other documents in the collection. If the value is an array, each element is individually followed through the traversal process. */
@@ -55,7 +55,7 @@ class GraphLookupStage implements StageInterface
     /**
      * @param non-empty-string $from Target collection for the $graphLookup operation to search, recursively matching the connectFromField to the connectToField. The from collection must be in the same database as any other collections used in the operation.
      * Starting in MongoDB 5.1, the collection specified in the from parameter can be sharded.
-     * @param BSONArray|ExpressionInterface|PackedArray|list<ExpressionInterface|mixed>|mixed $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process.
+     * @param BSONArray|ExpressionInterface|PackedArray|list|mixed $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process.
      * @param non-empty-string $connectFromField Field name whose value $graphLookup uses to recursively match against the connectToField of other documents in the collection. If the value is an array, each element is individually followed through the traversal process.
      * @param non-empty-string $connectToField Field name in other documents against which to match the value of the field specified by the connectFromField parameter.
      * @param non-empty-string $as Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the document.

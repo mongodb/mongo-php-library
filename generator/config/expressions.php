@@ -24,7 +24,7 @@ function typeFieldPath(string $resolvesTo): array
 }
 
 return [
-    'mixed' => ['scalar' => true, 'types' => ['mixed']],
+    'any' => ['scalar' => true, 'types' => ['mixed']],
     'null' => ['scalar' => true, 'types' => ['null']],
     'int' => ['scalar' => true, 'types' => ['int', BSON\Int64::class]],
     'double' => ['scalar' => true, 'types' => ['int', BSON\Int64::class, 'float']],
@@ -35,7 +35,6 @@ return [
     'bool' => ['scalar' => true, 'types' => ['bool']],
     'object' => ['scalar' => true, 'types' => ['array', stdClass::class, BSON\Document::class, BSON\Serializable::class]],
     'Regex' => ['scalar' => true, 'types' => [BSON\Regex::class]],
-    'Constant' => ['scalar' => true, 'types' => ['mixed']],
     'Binary' => ['scalar' => true, 'types' => ['string', BSON\Binary::class]],
 
     AccumulatorInterface::class => ['scalar' => true, 'types' => [AccumulatorInterface::class]],

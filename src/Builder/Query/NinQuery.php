@@ -6,7 +6,10 @@
 
 namespace MongoDB\Builder\Query;
 
+use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\Model\BSONArray;
 
 /**
  * Matches none of the values specified in an array.
@@ -18,14 +21,17 @@ class NinQuery implements QueryInterface
     public const NAME = '$nin';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param mixed $value */
-    public mixed $value;
+    /** @param BSONArray|PackedArray|list $value */
+    public PackedArray|BSONArray|array $value;
 
     /**
-     * @param mixed $value
+     * @param BSONArray|PackedArray|list $value
      */
-    public function __construct(mixed $value)
+    public function __construct(PackedArray|BSONArray|array $value)
     {
+        if (\is_array($value) && ! \array_is_list($value)) {
+            throw new \InvalidArgumentException('Expected $value argument to be a list, got an associative array.');
+        }
         $this->value = $value;
     }
 }

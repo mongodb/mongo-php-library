@@ -24,14 +24,14 @@ class ArrayElemAtAggregation implements ExpressionInterface
     public const NAME = '$arrayElemAt';
     public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $array */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $array */
     public PackedArray|ResolvesToArray|BSONArray|array $array;
 
     /** @param Int64|ResolvesToInt|int $idx */
     public Int64|ResolvesToInt|int $idx;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $array
+     * @param BSONArray|PackedArray|ResolvesToArray|list $array
      * @param Int64|ResolvesToInt|int $idx
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array $array, Int64|ResolvesToInt|int $idx)

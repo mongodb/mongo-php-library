@@ -21,11 +21,11 @@ class PolygonQuery implements QueryInterface
     public const NAME = '$polygon';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $points */
+    /** @param BSONArray|PackedArray|list $points */
     public PackedArray|BSONArray|array $points;
 
     /**
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $points
+     * @param BSONArray|PackedArray|list $points
      */
     public function __construct(PackedArray|BSONArray|array $points)
     {

@@ -23,11 +23,11 @@ class ArrayToObjectAggregation implements ResolvesToObject
     public const NAME = '$arrayToObject';
     public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $array */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $array */
     public PackedArray|ResolvesToArray|BSONArray|array $array;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $array
+     * @param BSONArray|PackedArray|ResolvesToArray|list $array
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array $array)
     {

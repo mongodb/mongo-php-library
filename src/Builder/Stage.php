@@ -82,7 +82,7 @@ final class Stage
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/
      * @param ExpressionInterface|FieldPath|mixed|non-empty-string $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
      * Unless $bucket includes a default specification, each input document must resolve the groupBy field path or expression to a value that falls within one of the ranges specified by the boundaries.
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $boundaries An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
+     * @param BSONArray|PackedArray|list $boundaries An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
      * The specified values must be in ascending order and all of the same type. The exception is if the values are of mixed numeric types, such as:
      * @param ExpressionInterface|Optional|mixed $default A literal that specifies the _id of an additional bucket that contains all documents whose groupBy expression result does not fall into a bucket specified by boundaries.
      * If unspecified, each input document must resolve the groupBy expression to a value within one of the bucket ranges specified by boundaries or the operation throws an error.
@@ -201,7 +201,7 @@ final class Stage
      * Documents that do not contain the specified field continue through the pipeline unmodified.
      * To specify a <field> in an embedded document or in an array, use dot notation.
      * @param array|stdClass $range Specification for range based densification.
-     * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed> $partitionByFields The field(s) that will be used as the partition keys.
+     * @param BSONArray|Optional|PackedArray|list $partitionByFields The field(s) that will be used as the partition keys.
      */
     public static function densify(
         FieldPath|string $field,
@@ -216,7 +216,7 @@ final class Stage
      * Returns literal documents from input values.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $documents $documents accepts any valid expression that resolves to an array of objects. This includes:
+     * @param BSONArray|PackedArray|ResolvesToArray|list $documents $documents accepts any valid expression that resolves to an array of objects. This includes:
      * - system variables, such as $$NOW or $$SEARCH_META
      * - $let expressions
      * - variables in scope from $lookup expressions
@@ -247,7 +247,7 @@ final class Stage
      * @param Document|Optional|Serializable|array|non-empty-string|stdClass $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
-     * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed> $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
+     * @param BSONArray|Optional|PackedArray|list $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
      * @param Optional|array|stdClass $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage.
@@ -303,7 +303,7 @@ final class Stage
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/
      * @param non-empty-string $from Target collection for the $graphLookup operation to search, recursively matching the connectFromField to the connectToField. The from collection must be in the same database as any other collections used in the operation.
      * Starting in MongoDB 5.1, the collection specified in the from parameter can be sharded.
-     * @param BSONArray|ExpressionInterface|PackedArray|list<ExpressionInterface|mixed>|mixed $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process.
+     * @param BSONArray|ExpressionInterface|PackedArray|list|mixed $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process.
      * @param non-empty-string $connectFromField Field name whose value $graphLookup uses to recursively match against the connectToField of other documents in the collection. If the value is an array, each element is individually followed through the traversal process.
      * @param non-empty-string $connectToField Field name in other documents against which to match the value of the field specified by the connectFromField parameter.
      * @param non-empty-string $as Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the document.
@@ -362,7 +362,7 @@ final class Stage
      * Lists all active sessions recently in use on the currently connected mongos or mongod instance. These sessions may have not yet propagated to the system.sessions collection.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/
-     * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed> $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
+     * @param BSONArray|Optional|PackedArray|list $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
      * @param Optional|bool $allUsers Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster.
      */
     public static function listLocalSessions(
@@ -405,7 +405,7 @@ final class Stage
      * Lists all sessions that have been active long enough to propagate to the system.sessions collection.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/
-     * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed> $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
+     * @param BSONArray|Optional|PackedArray|list $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
      * @param Optional|bool $allUsers Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster.
      */
     public static function listSessions(
@@ -460,7 +460,7 @@ final class Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/
      * @param array|non-empty-string|stdClass $into The output collection.
-     * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed>|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
+     * @param BSONArray|Optional|PackedArray|list|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
      * @param Document|Optional|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline.
      * @param Optional|non-empty-string $whenMatched The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s).
      * @param Optional|non-empty-string $whenNotMatched The behavior of $merge if a result document does not match an existing document in the out collection.

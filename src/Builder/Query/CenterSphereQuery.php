@@ -21,11 +21,11 @@ class CenterSphereQuery implements QueryInterface
     public const NAME = '$centerSphere';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $value */
+    /** @param BSONArray|PackedArray|list $value */
     public PackedArray|BSONArray|array $value;
 
     /**
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $value
+     * @param BSONArray|PackedArray|list $value
      */
     public function __construct(PackedArray|BSONArray|array $value)
     {

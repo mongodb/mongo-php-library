@@ -26,12 +26,12 @@ class InAggregation implements ResolvesToBool
     /** @param ExpressionInterface|mixed $expression Any valid expression expression. */
     public mixed $expression;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $array Any valid expression that resolves to an array. */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $array Any valid expression that resolves to an array. */
     public PackedArray|ResolvesToArray|BSONArray|array $array;
 
     /**
      * @param ExpressionInterface|mixed $expression Any valid expression expression.
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $array Any valid expression that resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $array Any valid expression that resolves to an array.
      */
     public function __construct(mixed $expression, PackedArray|ResolvesToArray|BSONArray|array $array)
     {

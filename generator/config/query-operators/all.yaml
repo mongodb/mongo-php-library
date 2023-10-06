@@ -12,5 +12,5 @@ arguments:
     -
         name: value
         type:
-            - mixed
+            - any
         variadic: array

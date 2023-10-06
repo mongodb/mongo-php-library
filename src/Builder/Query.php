@@ -88,7 +88,7 @@ final class Query
      * Matches numeric or binary values in which a set of bit positions all have a value of 0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/
-     * @param BSONArray|Binary|Int64|PackedArray|int|list<ExpressionInterface|mixed>|non-empty-string $bitmask
+     * @param BSONArray|Binary|Int64|PackedArray|int|list|non-empty-string $bitmask
      */
     public static function bitsAllClear(
         Binary|Int64|PackedArray|BSONArray|array|int|string $bitmask,
@@ -101,7 +101,7 @@ final class Query
      * Matches numeric or binary values in which a set of bit positions all have a value of 1.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/
-     * @param BSONArray|Binary|Int64|PackedArray|int|list<ExpressionInterface|mixed>|non-empty-string $bitmask
+     * @param BSONArray|Binary|Int64|PackedArray|int|list|non-empty-string $bitmask
      */
     public static function bitsAllSet(Binary|Int64|PackedArray|BSONArray|array|int|string $bitmask): BitsAllSetQuery
     {
@@ -112,7 +112,7 @@ final class Query
      * Matches numeric or binary values in which any bit from a set of bit positions has a value of 0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/
-     * @param BSONArray|Binary|Int64|PackedArray|int|list<ExpressionInterface|mixed>|non-empty-string $bitmask
+     * @param BSONArray|Binary|Int64|PackedArray|int|list|non-empty-string $bitmask
      */
     public static function bitsAnyClear(
         Binary|Int64|PackedArray|BSONArray|array|int|string $bitmask,
@@ -125,7 +125,7 @@ final class Query
      * Matches numeric or binary values in which any bit from a set of bit positions has a value of 1.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/
-     * @param BSONArray|Binary|Int64|PackedArray|int|list<ExpressionInterface|mixed>|non-empty-string $bitmask
+     * @param BSONArray|Binary|Int64|PackedArray|int|list|non-empty-string $bitmask
      */
     public static function bitsAnySet(Binary|Int64|PackedArray|BSONArray|array|int|string $bitmask): BitsAnySetQuery
     {
@@ -136,7 +136,7 @@ final class Query
      * Specifies a rectangular box using legacy coordinate pairs for $geoWithin queries. The 2d index supports $box.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/box/
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $value
+     * @param BSONArray|PackedArray|list $value
      */
     public static function box(PackedArray|BSONArray|array $value): BoxQuery
     {
@@ -147,7 +147,7 @@ final class Query
      * Specifies a circle using legacy coordinate pairs to $geoWithin queries when using planar geometry. The 2d index supports $center.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/center/
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $value
+     * @param BSONArray|PackedArray|list $value
      */
     public static function center(PackedArray|BSONArray|array $value): CenterQuery
     {
@@ -158,7 +158,7 @@ final class Query
      * Specifies a circle using either legacy coordinate pairs or GeoJSON format for $geoWithin queries when using spherical geometry. The 2dsphere and 2d indexes support $centerSphere.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/centerSphere/
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $value
+     * @param BSONArray|PackedArray|list $value
      */
     public static function centerSphere(PackedArray|BSONArray|array $value): CenterSphereQuery
     {
@@ -236,7 +236,7 @@ final class Query
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geometry/
      * @param non-empty-string $type
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $coordinates
+     * @param BSONArray|PackedArray|list $coordinates
      * @param Document|Serializable|array|stdClass $crs
      */
     public static function geometry(
@@ -285,9 +285,9 @@ final class Query
      * Matches any of the values specified in an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/in/
-     * @param mixed $value
+     * @param BSONArray|PackedArray|list $value
      */
-    public static function in(mixed $value): InQuery
+    public static function in(PackedArray|BSONArray|array $value): InQuery
     {
         return new InQuery($value);
     }
@@ -428,9 +428,9 @@ final class Query
      * Matches none of the values specified in an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nin/
-     * @param mixed $value
+     * @param BSONArray|PackedArray|list $value
      */
-    public static function nin(mixed $value): NinQuery
+    public static function nin(PackedArray|BSONArray|array $value): NinQuery
     {
         return new NinQuery($value);
     }
@@ -472,7 +472,7 @@ final class Query
      * Specifies a polygon to using legacy coordinate pairs for $geoWithin queries. The 2d index supports $center.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/polygon/
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $points
+     * @param BSONArray|PackedArray|list $points
      */
     public static function polygon(PackedArray|BSONArray|array $points): PolygonQuery
     {
@@ -548,7 +548,7 @@ final class Query
      * Selects documents if a field is of the specified type.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/
-     * @param BSONArray|Int64|PackedArray|int|list<ExpressionInterface|mixed>|non-empty-string $type
+     * @param BSONArray|Int64|PackedArray|int|list|non-empty-string $type
      */
     public static function type(Int64|PackedArray|BSONArray|array|int|string $type): TypeQuery
     {

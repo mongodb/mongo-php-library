@@ -226,10 +226,10 @@ final class Aggregation
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/
      * @param non-empty-string $init Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String.
      * @param non-empty-string $accumulate Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String.
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $accumulateArgs Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $accumulateArgs Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function.
      * @param non-empty-string $merge Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge.
      * @param non-empty-string $lang The language used in the $accumulator code.
-     * @param BSONArray|Optional|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $initArgs Arguments passed to the init function.
+     * @param BSONArray|Optional|PackedArray|ResolvesToArray|list $initArgs Arguments passed to the init function.
      * @param Optional|non-empty-string $finalize Function used to update the result of the accumulation.
      */
     public static function accumulator(
@@ -300,7 +300,7 @@ final class Aggregation
      * Returns true if no element of a set evaluates to false, otherwise, returns false. Accepts a single argument expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/allElementsTrue/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> ...$expression
+     * @param BSONArray|PackedArray|ResolvesToArray|list ...$expression
      */
     public static function allElementsTrue(
         PackedArray|ResolvesToArray|BSONArray|array ...$expression,
@@ -324,7 +324,7 @@ final class Aggregation
      * Returns true if any elements of a set evaluate to true; otherwise, returns false. Accepts a single argument expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/anyElementTrue/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression
      */
     public static function anyElementTrue(
         PackedArray|ResolvesToArray|BSONArray|array $expression,
@@ -337,7 +337,7 @@ final class Aggregation
      * Returns the element at the specified array index.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $array
+     * @param BSONArray|PackedArray|ResolvesToArray|list $array
      * @param Int64|ResolvesToInt|int $idx
      */
     public static function arrayElemAt(
@@ -352,7 +352,7 @@ final class Aggregation
      * Converts an array of key value pairs to a document.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $array
+     * @param BSONArray|PackedArray|ResolvesToArray|list $array
      */
     public static function arrayToObject(PackedArray|ResolvesToArray|BSONArray|array $array): ArrayToObjectAggregation
     {
@@ -586,7 +586,7 @@ final class Aggregation
      * Concatenates arrays to return the concatenated array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> ...$array
+     * @param BSONArray|PackedArray|ResolvesToArray|list ...$array
      */
     public static function concatArrays(
         PackedArray|ResolvesToArray|BSONArray|array ...$array,
@@ -1038,7 +1038,7 @@ final class Aggregation
      * Selects a subset of the array to return an array with only the elements that match the filter condition.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input
      * @param ResolvesToBool|bool $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as.
      * @param Optional|non-empty-string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
      * @param Int64|Optional|ResolvesToInt|int $limit A number expression that restricts the number of matching array elements that $filter returns. You cannot specify a limit less than 1. The matching array elements are returned in the order they appear in the input array.
@@ -1070,7 +1070,7 @@ final class Aggregation
      * Returns a specified number of elements from the beginning of an array. Distinct from the $firstN accumulator.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN-array-element/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input An expression that resolves to the array from which to return n elements.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input An expression that resolves to the array from which to return n elements.
      * @param Int64|ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
      */
     public static function firstN(
@@ -1098,7 +1098,7 @@ final class Aggregation
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/
      * @param non-empty-string $body The function definition. You can specify the function definition as either BSON type Code or String.
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
+     * @param BSONArray|PackedArray|list $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
      * @param non-empty-string $lang
      */
     public static function function(
@@ -1180,7 +1180,7 @@ final class Aggregation
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/in/
      * @param ExpressionInterface|mixed $expression Any valid expression expression.
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $array Any valid expression that resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $array Any valid expression that resolves to an array.
      */
     public static function in(mixed $expression, PackedArray|ResolvesToArray|BSONArray|array $array): InAggregation
     {
@@ -1358,7 +1358,7 @@ final class Aggregation
      * Returns a specified number of elements from the end of an array. Distinct from the $lastN accumulator.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input An expression that resolves to the array from which to return n elements.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input An expression that resolves to the array from which to return n elements.
      * @param Int64|ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
      */
     public static function lastN(
@@ -1504,7 +1504,7 @@ final class Aggregation
      * Applies a subexpression to each element of an array and returns the array of resulting values in order. Accepts named parameters.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input An expression that resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input An expression that resolves to an array.
      * @param ExpressionInterface|mixed $in An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as.
      * @param Optional|ResolvesToString|non-empty-string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
      */
@@ -1533,7 +1533,7 @@ final class Aggregation
      * Returns the n largest values in an array. Distinct from the $maxN accumulator.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN-array-element/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input An expression that resolves to the array from which to return the maximal n elements.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input An expression that resolves to the array from which to return the maximal n elements.
      * @param Int64|ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
      */
     public static function maxN(
@@ -1619,7 +1619,7 @@ final class Aggregation
      * Returns the n smallest values in an array. Distinct from the $minN accumulator.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input An expression that resolves to the array from which to return the maximal n elements.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input An expression that resolves to the array from which to return the maximal n elements.
      * @param Int64|ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
      */
     public static function minN(
@@ -1747,7 +1747,7 @@ final class Aggregation
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
      * @param Decimal128|Int64|ResolvesToNumber|float|int $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
      * $percentile returns results in the same order as the elements in p.
      * @param non-empty-string $method The method that mongod uses to calculate the percentile value. The method must be 'approximate'.
      */
@@ -1842,7 +1842,7 @@ final class Aggregation
      * Applies an expression to each element in an array and combines them into a single value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input Can be any valid expression that resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input Can be any valid expression that resolves to an array.
      * If the argument resolves to a value of null or refers to a missing field, $reduce returns null.
      * If the argument does not resolve to an array or null nor refers to a missing field, $reduce returns an error.
      * @param ExpressionInterface|mixed $initialValue The initial cumulative value set before in is applied to the first element of the input array.
@@ -1955,7 +1955,7 @@ final class Aggregation
      * Returns an array with the elements in reverse order.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/reverseArray/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression The argument can be any valid expression as long as it resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression The argument can be any valid expression as long as it resolves to an array.
      */
     public static function reverseArray(
         PackedArray|ResolvesToArray|BSONArray|array $expression,
@@ -2028,8 +2028,8 @@ final class Aggregation
      * Returns a set with elements that appear in the first set but not in the second set; i.e. performs a relative complement of the second set relative to the first. Accepts exactly two argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setDifference/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression1 The arguments can be any valid expression as long as they each resolve to an array.
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression2 The arguments can be any valid expression as long as they each resolve to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression1 The arguments can be any valid expression as long as they each resolve to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression2 The arguments can be any valid expression as long as they each resolve to an array.
      */
     public static function setDifference(
         PackedArray|ResolvesToArray|BSONArray|array $expression1,
@@ -2043,7 +2043,7 @@ final class Aggregation
      * Returns true if the input sets have the same distinct elements. Accepts two or more argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setEquals/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> ...$expression
+     * @param BSONArray|PackedArray|ResolvesToArray|list ...$expression
      */
     public static function setEquals(PackedArray|ResolvesToArray|BSONArray|array ...$expression): SetEqualsAggregation
     {
@@ -2073,7 +2073,7 @@ final class Aggregation
      * Returns a set with elements that appear in all of the input sets. Accepts any number of argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIntersection/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> ...$expression
+     * @param BSONArray|PackedArray|ResolvesToArray|list ...$expression
      */
     public static function setIntersection(
         PackedArray|ResolvesToArray|BSONArray|array ...$expression,
@@ -2086,8 +2086,8 @@ final class Aggregation
      * Returns true if all elements of the first set appear in the second set, including when the first set equals the second set; i.e. not a strict subset. Accepts exactly two argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIsSubset/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression1
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression2
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression1
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression2
      */
     public static function setIsSubset(
         PackedArray|ResolvesToArray|BSONArray|array $expression1,
@@ -2101,7 +2101,7 @@ final class Aggregation
      * Returns a set with elements that appear in any of the input sets.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setUnion/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> ...$expression
+     * @param BSONArray|PackedArray|ResolvesToArray|list ...$expression
      */
     public static function setUnion(PackedArray|ResolvesToArray|BSONArray|array ...$expression): SetUnionAggregation
     {
@@ -2156,7 +2156,7 @@ final class Aggregation
      * Returns the number of elements in the array. Accepts a single expression as argument.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/size/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression The argument for $size can be any expression as long as it resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression The argument for $size can be any expression as long as it resolves to an array.
      */
     public static function size(PackedArray|ResolvesToArray|BSONArray|array $expression): SizeAggregation
     {
@@ -2167,7 +2167,7 @@ final class Aggregation
      * Returns a subset of an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression Any valid expression as long as it resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression Any valid expression as long as it resolves to an array.
      * @param Int64|ResolvesToInt|int $n Any valid expression as long as it resolves to an integer. If position is specified, n must resolve to a positive integer.
      * If positive, $slice returns up to the first n elements in the array. If the position is specified, $slice returns the first n elements starting from the position.
      * If negative, $slice returns up to the last n elements in the array. n cannot resolve to a negative number if <position> is specified.
@@ -2188,7 +2188,7 @@ final class Aggregation
      * Sorts the elements of an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input The array to be sorted.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input The array to be sorted.
      * @param array|stdClass $sortBy The document specifies a sort ordering.
      */
     public static function sortArray(
@@ -2372,7 +2372,7 @@ final class Aggregation
      * Evaluates a series of case expressions. When it finds an expression which evaluates to true, $switch executes a specified expression and breaks out of the control flow.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $branches An array of control branch documents. Each branch is a document with the following fields:
+     * @param BSONArray|PackedArray|list $branches An array of control branch documents. Each branch is a document with the following fields:
      * - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
      * - then Can be any valid expression.
      * The branches array must contain at least one branch document.
@@ -2679,12 +2679,12 @@ final class Aggregation
      * Merge two arrays together.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/zip/
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $inputs An array of expressions that resolve to arrays. The elements of these input arrays combine to form the arrays of the output array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $inputs An array of expressions that resolve to arrays. The elements of these input arrays combine to form the arrays of the output array.
      * If any of the inputs arrays resolves to a value of null or refers to a missing field, $zip returns null.
      * If any of the inputs arrays does not resolve to an array or null nor refers to a missing field, $zip returns an error.
      * @param bool $useLongestLength A boolean which specifies whether the length of the longest array determines the number of arrays in the output array.
      * The default value is false: the shortest array length determines the number of arrays in the output array.
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $defaults An array of default element values to use if the input arrays have different lengths. You must specify useLongestLength: true along with this field, or else $zip will return an error.
+     * @param BSONArray|PackedArray|list $defaults An array of default element values to use if the input arrays have different lengths. You must specify useLongestLength: true along with this field, or else $zip will return an error.
      * If useLongestLength: true but defaults is empty or not specified, $zip uses null as the default value.
      * If specifying a non-empty defaults, you must specify a default for each input array or else $zip will return an error.
      */

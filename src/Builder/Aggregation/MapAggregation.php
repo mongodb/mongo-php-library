@@ -24,7 +24,7 @@ class MapAggregation implements ResolvesToArray
     public const NAME = '$map';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input An expression that resolves to an array. */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $input An expression that resolves to an array. */
     public PackedArray|ResolvesToArray|BSONArray|array $input;
 
     /** @param ExpressionInterface|mixed $in An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as. */
@@ -34,7 +34,7 @@ class MapAggregation implements ResolvesToArray
     public ResolvesToString|Optional|string $as;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input An expression that resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input An expression that resolves to an array.
      * @param ExpressionInterface|mixed $in An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as.
      * @param Optional|ResolvesToString|non-empty-string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
      */

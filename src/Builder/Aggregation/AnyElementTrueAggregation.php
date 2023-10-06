@@ -23,11 +23,11 @@ class AnyElementTrueAggregation implements ResolvesToBool
     public const NAME = '$anyElementTrue';
     public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $expression */
     public PackedArray|ResolvesToArray|BSONArray|array $expression;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array $expression)
     {

@@ -26,7 +26,7 @@ class FilterAggregation implements ResolvesToArray
     public const NAME = '$filter';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $input */
     public PackedArray|ResolvesToArray|BSONArray|array $input;
 
     /** @param ResolvesToBool|bool $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as. */
@@ -42,7 +42,7 @@ class FilterAggregation implements ResolvesToArray
     public Int64|ResolvesToInt|Optional|int $limit;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input
      * @param ResolvesToBool|bool $cond An expression that resolves to a boolean value used to determine if an element should be included in the output array. The expression references each element of the input array individually with the variable name specified in as.
      * @param Optional|non-empty-string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
      * @param Int64|Optional|ResolvesToInt|int $limit A number expression that restricts the number of matching array elements that $filter returns. You cannot specify a limit less than 1. The matching array elements are returned in the order they appear in the input array.

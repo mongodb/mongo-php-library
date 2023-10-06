@@ -29,7 +29,7 @@ class MergeStage implements StageInterface
     /** @param array|non-empty-string|stdClass $into The output collection. */
     public stdClass|array|string $into;
 
-    /** @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed>|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection. */
+    /** @param BSONArray|Optional|PackedArray|list|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection. */
     public PackedArray|Optional|BSONArray|array|string $on;
 
     /** @param Document|Optional|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline. */
@@ -43,7 +43,7 @@ class MergeStage implements StageInterface
 
     /**
      * @param array|non-empty-string|stdClass $into The output collection.
-     * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed>|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
+     * @param BSONArray|Optional|PackedArray|list|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
      * @param Document|Optional|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline.
      * @param Optional|non-empty-string $whenMatched The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s).
      * @param Optional|non-empty-string $whenNotMatched The behavior of $merge if a result document does not match an existing document in the out collection.

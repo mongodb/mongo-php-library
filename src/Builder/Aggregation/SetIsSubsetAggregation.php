@@ -23,15 +23,15 @@ class SetIsSubsetAggregation implements ResolvesToBool
     public const NAME = '$setIsSubset';
     public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression1 */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $expression1 */
     public PackedArray|ResolvesToArray|BSONArray|array $expression1;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression2 */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $expression2 */
     public PackedArray|ResolvesToArray|BSONArray|array $expression2;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression1
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression2
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression1
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression2
      */
     public function __construct(
         PackedArray|ResolvesToArray|BSONArray|array $expression1,

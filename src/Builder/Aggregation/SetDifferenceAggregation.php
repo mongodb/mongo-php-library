@@ -22,15 +22,15 @@ class SetDifferenceAggregation implements ResolvesToArray
     public const NAME = '$setDifference';
     public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression1 The arguments can be any valid expression as long as they each resolve to an array. */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $expression1 The arguments can be any valid expression as long as they each resolve to an array. */
     public PackedArray|ResolvesToArray|BSONArray|array $expression1;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression2 The arguments can be any valid expression as long as they each resolve to an array. */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $expression2 The arguments can be any valid expression as long as they each resolve to an array. */
     public PackedArray|ResolvesToArray|BSONArray|array $expression2;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression1 The arguments can be any valid expression as long as they each resolve to an array.
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression2 The arguments can be any valid expression as long as they each resolve to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression1 The arguments can be any valid expression as long as they each resolve to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression2 The arguments can be any valid expression as long as they each resolve to an array.
      */
     public function __construct(
         PackedArray|ResolvesToArray|BSONArray|array $expression1,

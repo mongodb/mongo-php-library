@@ -23,11 +23,11 @@ class SetEqualsAggregation implements ResolvesToBool
     public const NAME = '$setEquals';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed>> ...$expression */
+    /** @param list<BSONArray|PackedArray|ResolvesToArray|list> ...$expression */
     public array $expression;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> ...$expression
+     * @param BSONArray|PackedArray|ResolvesToArray|list ...$expression
      * @no-named-arguments
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array ...$expression)
@@ -36,7 +36,7 @@ class SetEqualsAggregation implements ResolvesToBool
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }
         if (! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression arguments to be a list of BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed>, named arguments are not supported');
+            throw new \InvalidArgumentException('Expected $expression arguments to be a list of BSONArray|PackedArray|ResolvesToArray|list, named arguments are not supported');
         }
         $this->expression = $expression;
     }

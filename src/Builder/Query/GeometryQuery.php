@@ -27,7 +27,7 @@ class GeometryQuery implements ExpressionInterface
     /** @param non-empty-string $type */
     public string $type;
 
-    /** @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $coordinates */
+    /** @param BSONArray|PackedArray|list $coordinates */
     public PackedArray|BSONArray|array $coordinates;
 
     /** @param Document|Serializable|array|stdClass $crs */
@@ -35,7 +35,7 @@ class GeometryQuery implements ExpressionInterface
 
     /**
      * @param non-empty-string $type
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $coordinates
+     * @param BSONArray|PackedArray|list $coordinates
      * @param Document|Serializable|array|stdClass $crs
      */
     public function __construct(

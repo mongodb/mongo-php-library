@@ -23,14 +23,14 @@ class SortArrayAggregation implements ResolvesToArray
     public const NAME = '$sortArray';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input The array to be sorted. */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $input The array to be sorted. */
     public PackedArray|ResolvesToArray|BSONArray|array $input;
 
     /** @param array|stdClass $sortBy The document specifies a sort ordering. */
     public stdClass|array $sortBy;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input The array to be sorted.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input The array to be sorted.
      * @param array|stdClass $sortBy The document specifies a sort ordering.
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array $input, stdClass|array $sortBy)

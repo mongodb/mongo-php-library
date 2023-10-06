@@ -23,7 +23,7 @@ class SwitchAggregation implements ExpressionInterface
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
     /**
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $branches An array of control branch documents. Each branch is a document with the following fields:
+     * @param BSONArray|PackedArray|list $branches An array of control branch documents. Each branch is a document with the following fields:
      * - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
      * - then Can be any valid expression.
      * The branches array must contain at least one branch document.
@@ -37,7 +37,7 @@ class SwitchAggregation implements ExpressionInterface
     public mixed $default;
 
     /**
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $branches An array of control branch documents. Each branch is a document with the following fields:
+     * @param BSONArray|PackedArray|list $branches An array of control branch documents. Each branch is a document with the following fields:
      * - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
      * - then Can be any valid expression.
      * The branches array must contain at least one branch document.

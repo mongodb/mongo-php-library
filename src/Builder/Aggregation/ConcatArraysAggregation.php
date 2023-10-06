@@ -22,11 +22,11 @@ class ConcatArraysAggregation implements ResolvesToArray
     public const NAME = '$concatArrays';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed>> ...$array */
+    /** @param list<BSONArray|PackedArray|ResolvesToArray|list> ...$array */
     public array $array;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> ...$array
+     * @param BSONArray|PackedArray|ResolvesToArray|list ...$array
      * @no-named-arguments
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array ...$array)
@@ -35,7 +35,7 @@ class ConcatArraysAggregation implements ResolvesToArray
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $array, got %d.', 1, \count($array)));
         }
         if (! \array_is_list($array)) {
-            throw new \InvalidArgumentException('Expected $array arguments to be a list of BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed>, named arguments are not supported');
+            throw new \InvalidArgumentException('Expected $array arguments to be a list of BSONArray|PackedArray|ResolvesToArray|list, named arguments are not supported');
         }
         $this->array = $array;
     }

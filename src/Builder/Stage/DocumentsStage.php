@@ -23,7 +23,7 @@ class DocumentsStage implements StageInterface
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $documents $documents accepts any valid expression that resolves to an array of objects. This includes:
+     * @param BSONArray|PackedArray|ResolvesToArray|list $documents $documents accepts any valid expression that resolves to an array of objects. This includes:
      * - system variables, such as $$NOW or $$SEARCH_META
      * - $let expressions
      * - variables in scope from $lookup expressions
@@ -32,7 +32,7 @@ class DocumentsStage implements StageInterface
     public PackedArray|ResolvesToArray|BSONArray|array $documents;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $documents $documents accepts any valid expression that resolves to an array of objects. This includes:
+     * @param BSONArray|PackedArray|ResolvesToArray|list $documents $documents accepts any valid expression that resolves to an array of objects. This includes:
      * - system variables, such as $$NOW or $$SEARCH_META
      * - $let expressions
      * - variables in scope from $lookup expressions

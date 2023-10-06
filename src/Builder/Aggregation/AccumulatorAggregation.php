@@ -30,7 +30,7 @@ class AccumulatorAggregation implements AccumulatorInterface
     /** @param non-empty-string $accumulate Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String. */
     public string $accumulate;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $accumulateArgs Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function. */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $accumulateArgs Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function. */
     public PackedArray|ResolvesToArray|BSONArray|array $accumulateArgs;
 
     /** @param non-empty-string $merge Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge. */
@@ -39,7 +39,7 @@ class AccumulatorAggregation implements AccumulatorInterface
     /** @param non-empty-string $lang The language used in the $accumulator code. */
     public string $lang;
 
-    /** @param BSONArray|Optional|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $initArgs Arguments passed to the init function. */
+    /** @param BSONArray|Optional|PackedArray|ResolvesToArray|list $initArgs Arguments passed to the init function. */
     public PackedArray|ResolvesToArray|Optional|BSONArray|array $initArgs;
 
     /** @param Optional|non-empty-string $finalize Function used to update the result of the accumulation. */
@@ -48,10 +48,10 @@ class AccumulatorAggregation implements AccumulatorInterface
     /**
      * @param non-empty-string $init Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String.
      * @param non-empty-string $accumulate Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String.
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $accumulateArgs Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $accumulateArgs Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function.
      * @param non-empty-string $merge Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge.
      * @param non-empty-string $lang The language used in the $accumulator code.
-     * @param BSONArray|Optional|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $initArgs Arguments passed to the init function.
+     * @param BSONArray|Optional|PackedArray|ResolvesToArray|list $initArgs Arguments passed to the init function.
      * @param Optional|non-empty-string $finalize Function used to update the result of the accumulation.
      */
     public function __construct(

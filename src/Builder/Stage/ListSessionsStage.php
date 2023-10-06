@@ -22,14 +22,14 @@ class ListSessionsStage implements StageInterface
     public const NAME = '$listSessions';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
-    /** @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed> $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users. */
+    /** @param BSONArray|Optional|PackedArray|list $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users. */
     public PackedArray|Optional|BSONArray|array $users;
 
     /** @param Optional|bool $allUsers Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster. */
     public Optional|bool $allUsers;
 
     /**
-     * @param BSONArray|Optional|PackedArray|list<ExpressionInterface|mixed> $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
+     * @param BSONArray|Optional|PackedArray|list $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
      * @param Optional|bool $allUsers Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster.
      */
     public function __construct(

@@ -23,11 +23,11 @@ class BitsAllSetQuery implements QueryInterface
     public const NAME = '$bitsAllSet';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param BSONArray|Binary|Int64|PackedArray|int|list<ExpressionInterface|mixed>|non-empty-string $bitmask */
+    /** @param BSONArray|Binary|Int64|PackedArray|int|list|non-empty-string $bitmask */
     public Binary|Int64|PackedArray|BSONArray|array|int|string $bitmask;
 
     /**
-     * @param BSONArray|Binary|Int64|PackedArray|int|list<ExpressionInterface|mixed>|non-empty-string $bitmask
+     * @param BSONArray|Binary|Int64|PackedArray|int|list|non-empty-string $bitmask
      */
     public function __construct(Binary|Int64|PackedArray|BSONArray|array|int|string $bitmask)
     {

@@ -23,7 +23,7 @@ class ReduceAggregation implements ExpressionInterface
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input Can be any valid expression that resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input Can be any valid expression that resolves to an array.
      * If the argument resolves to a value of null or refers to a missing field, $reduce returns null.
      * If the argument does not resolve to an array or null nor refers to a missing field, $reduce returns an error.
      */
@@ -41,7 +41,7 @@ class ReduceAggregation implements ExpressionInterface
     public mixed $in;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input Can be any valid expression that resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input Can be any valid expression that resolves to an array.
      * If the argument resolves to a value of null or refers to a missing field, $reduce returns null.
      * If the argument does not resolve to an array or null nor refers to a missing field, $reduce returns an error.
      * @param ExpressionInterface|mixed $initialValue The initial cumulative value set before in is applied to the first element of the input array.

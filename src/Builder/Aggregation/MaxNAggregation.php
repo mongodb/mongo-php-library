@@ -24,14 +24,14 @@ class MaxNAggregation implements ResolvesToArray
     public const NAME = '$maxN';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input An expression that resolves to the array from which to return the maximal n elements. */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $input An expression that resolves to the array from which to return the maximal n elements. */
     public PackedArray|ResolvesToArray|BSONArray|array $input;
 
     /** @param Int64|ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns. */
     public Int64|ResolvesToInt|int $n;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $input An expression that resolves to the array from which to return the maximal n elements.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $input An expression that resolves to the array from which to return the maximal n elements.
      * @param Int64|ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $maxN returns.
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array $input, Int64|ResolvesToInt|int $n)

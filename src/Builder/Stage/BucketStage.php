@@ -33,7 +33,7 @@ class BucketStage implements StageInterface
     public mixed $groupBy;
 
     /**
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $boundaries An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
+     * @param BSONArray|PackedArray|list $boundaries An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
      * The specified values must be in ascending order and all of the same type. The exception is if the values are of mixed numeric types, such as:
      */
     public PackedArray|BSONArray|array $boundaries;
@@ -56,7 +56,7 @@ class BucketStage implements StageInterface
     /**
      * @param ExpressionInterface|FieldPath|mixed|non-empty-string $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
      * Unless $bucket includes a default specification, each input document must resolve the groupBy field path or expression to a value that falls within one of the ranges specified by the boundaries.
-     * @param BSONArray|PackedArray|list<ExpressionInterface|mixed> $boundaries An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
+     * @param BSONArray|PackedArray|list $boundaries An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
      * The specified values must be in ascending order and all of the same type. The exception is if the values are of mixed numeric types, such as:
      * @param ExpressionInterface|Optional|mixed $default A literal that specifies the _id of an additional bucket that contains all documents whose groupBy expression result does not fall into a bucket specified by boundaries.
      * If unspecified, each input document must resolve the groupBy expression to a value within one of the bucket ranges specified by boundaries or the operation throws an error.

@@ -25,7 +25,7 @@ class SliceAggregation implements ResolvesToArray
     public const NAME = '$slice';
     public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression Any valid expression as long as it resolves to an array. */
+    /** @param BSONArray|PackedArray|ResolvesToArray|list $expression Any valid expression as long as it resolves to an array. */
     public PackedArray|ResolvesToArray|BSONArray|array $expression;
 
     /**
@@ -43,7 +43,7 @@ class SliceAggregation implements ResolvesToArray
     public Int64|ResolvesToInt|Optional|int $position;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list<ExpressionInterface|mixed> $expression Any valid expression as long as it resolves to an array.
+     * @param BSONArray|PackedArray|ResolvesToArray|list $expression Any valid expression as long as it resolves to an array.
      * @param Int64|ResolvesToInt|int $n Any valid expression as long as it resolves to an integer. If position is specified, n must resolve to a positive integer.
      * If positive, $slice returns up to the first n elements in the array. If the position is specified, $slice returns the first n elements starting from the position.
      * If negative, $slice returns up to the last n elements in the array. n cannot resolve to a negative number if <position> is specified.

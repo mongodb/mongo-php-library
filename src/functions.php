@@ -61,6 +61,11 @@ function add_logger(LoggerInterface $logger): void
 
 /**
  * Create a new stdClass instance with the provided properties.
+ * Use named arguments to specify the property names.
+ *     object( property1: value1, property2: value2 )
+ *
+ * If property names contain a dot or a dollar characters, use array unpacking syntax.
+ *     object( ...[ 'author.name' => 1, 'array.$' => 1 ] )
  *
  * @psalm-suppress MoreSpecificReturnType
  * @psalm-suppress LessSpecificReturnStatement

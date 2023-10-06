@@ -232,17 +232,6 @@ final class Query
     }
 
     /**
-     * Selects geometries within a bounding GeoJSON geometry. The 2dsphere and 2d indexes support $geoWithin.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/
-     * @param array|stdClass $geometry
-     */
-    public static function geoWithin(stdClass|array $geometry): GeoWithinQuery
-    {
-        return new GeoWithinQuery($geometry);
-    }
-
-    /**
      * Specifies a geometry in GeoJSON format to geospatial query operators.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geometry/
@@ -257,6 +246,17 @@ final class Query
     ): GeometryQuery
     {
         return new GeometryQuery($type, $coordinates, $crs);
+    }
+
+    /**
+     * Selects geometries within a bounding GeoJSON geometry. The 2dsphere and 2d indexes support $geoWithin.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/
+     * @param array|stdClass $geometry
+     */
+    public static function geoWithin(stdClass|array $geometry): GeoWithinQuery
+    {
+        return new GeoWithinQuery($geometry);
     }
 
     /**

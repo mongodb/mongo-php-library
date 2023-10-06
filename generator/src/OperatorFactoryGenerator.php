@@ -16,6 +16,7 @@ use function ltrim;
 use function rtrim;
 use function sprintf;
 use function str_replace;
+use function strcasecmp;
 use function usort;
 
 final class OperatorFactoryGenerator extends OperatorGenerator
@@ -35,7 +36,7 @@ final class OperatorFactoryGenerator extends OperatorGenerator
 
         // Pedantry requires methods to be ordered alphabetically
         $operators = $this->getOperators($definition);
-        usort($operators, fn (OperatorDefinition $a, OperatorDefinition $b) => $a->name <=> $b->name);
+        usort($operators, fn (OperatorDefinition $a, OperatorDefinition $b) => strcasecmp($a->name, $b->name));
 
         foreach ($operators as $operator) {
             try {

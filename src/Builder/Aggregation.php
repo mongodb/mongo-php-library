@@ -2254,6 +2254,21 @@ final class Aggregation
     }
 
     /**
+     * Performs case-insensitive string comparison and returns: 0 if two strings are equivalent, 1 if the first string is greater than the second, and -1 if the first string is less than the second.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/strcasecmp/
+     * @param ResolvesToString|non-empty-string $expression1
+     * @param ResolvesToString|non-empty-string $expression2
+     */
+    public static function strcasecmp(
+        ResolvesToString|string $expression1,
+        ResolvesToString|string $expression2,
+    ): StrcasecmpAggregation
+    {
+        return new StrcasecmpAggregation($expression1, $expression2);
+    }
+
+    /**
      * Returns the number of UTF-8 encoded bytes in a string.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/
@@ -2273,21 +2288,6 @@ final class Aggregation
     public static function strLenCP(ResolvesToString|string $expression): StrLenCPAggregation
     {
         return new StrLenCPAggregation($expression);
-    }
-
-    /**
-     * Performs case-insensitive string comparison and returns: 0 if two strings are equivalent, 1 if the first string is greater than the second, and -1 if the first string is less than the second.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/strcasecmp/
-     * @param ResolvesToString|non-empty-string $expression1
-     * @param ResolvesToString|non-empty-string $expression2
-     */
-    public static function strcasecmp(
-        ResolvesToString|string $expression1,
-        ResolvesToString|string $expression2,
-    ): StrcasecmpAggregation
-    {
-        return new StrcasecmpAggregation($expression1, $expression2);
     }
 
     /**
@@ -2507,29 +2507,6 @@ final class Aggregation
     }
 
     /**
-     * Converts value to a string.
-     * New in version 4.0.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/
-     * @param ExpressionInterface|mixed $expression
-     */
-    public static function toString(mixed $expression): ToStringAggregation
-    {
-        return new ToStringAggregation($expression);
-    }
-
-    /**
-     * Converts a string to uppercase. Accepts a single argument expression.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/
-     * @param ResolvesToString|non-empty-string $expression
-     */
-    public static function toUpper(ResolvesToString|string $expression): ToUpperAggregation
-    {
-        return new ToUpperAggregation($expression);
-    }
-
-    /**
      * Returns the top element within a group according to the specified sort order.
      * New in version 5.2.
      *
@@ -2558,6 +2535,29 @@ final class Aggregation
     public static function topN(Int64|ResolvesToInt|int $n, stdClass|array $sortBy, mixed $output): TopNAggregation
     {
         return new TopNAggregation($n, $sortBy, $output);
+    }
+
+    /**
+     * Converts value to a string.
+     * New in version 4.0.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/
+     * @param ExpressionInterface|mixed $expression
+     */
+    public static function toString(mixed $expression): ToStringAggregation
+    {
+        return new ToStringAggregation($expression);
+    }
+
+    /**
+     * Converts a string to uppercase. Accepts a single argument expression.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/
+     * @param ResolvesToString|non-empty-string $expression
+     */
+    public static function toUpper(ResolvesToString|string $expression): ToUpperAggregation
+    {
+        return new ToUpperAggregation($expression);
     }
 
     /**

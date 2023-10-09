@@ -8,6 +8,7 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\QueryInterface;
 
 /**
  * Performs text search.

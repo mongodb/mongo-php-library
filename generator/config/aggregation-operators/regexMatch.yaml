@@ -20,7 +20,7 @@ arguments:
         name: regex
         type:
             - resolvesToString
-            - Regex
+            - regex
         description: |
             The regex pattern to apply. Can be any valid expression that resolves to either a string or regex pattern /<pattern>/. When using the regex /<pattern>/, you can also specify the regex options i and m (but not the s or x options)
     -

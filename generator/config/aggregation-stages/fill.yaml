@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Populates null and missing field values within documents.

@@ -4,7 +4,7 @@ category:
     - 'Window Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/'
 type:
-    - resolvesToAnything
+    - resolvesToAny
 encode: single
 description: |
     Last observation carried forward. Sets values for null and missing fields in a window to the last non-null value for the field.

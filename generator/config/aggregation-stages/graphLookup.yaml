@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Performs a recursive search on a collection. To each output document, adds a new array field that contains the traversal results of the recursive search for that document.
@@ -58,7 +58,7 @@ arguments:
     -
         name: restrictSearchWithMatch
         type:
-            - Query
+            - query
         optional: true
         description: |
             A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.

@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/search/'
 type:
-    - Stage
+    - stage
 encode: single
 description: |
     Performs a full-text search of the field or fields in an Atlas collection.

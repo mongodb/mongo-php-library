@@ -4,7 +4,7 @@ category:
     - 'Miscellaneous Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/comment/'
 type:
-    - expression
+    - query
 encode: single
 description: |
     Adds a comment to a query predicate.

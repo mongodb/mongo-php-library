@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Groups documents into windows and applies one or more operators to the documents in each window.

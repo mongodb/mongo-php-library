@@ -64,7 +64,7 @@ final class OperatorFactoryGenerator extends OperatorGenerator
         $method->addComment('@see ' . $operator->link);
         $args = [];
         foreach ($operator->arguments as $argument) {
-            $type = $this->generateExpressionTypes($argument);
+            $type = $this->getAcceptedTypes($argument);
             foreach ($type->use as $use) {
                 $namespace->addUse($use);
             }

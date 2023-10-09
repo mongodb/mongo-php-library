@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/'
 type:
-    - Stage
+    - stage
 encode: single
 description: |
     Returns statistics regarding a collection or view.

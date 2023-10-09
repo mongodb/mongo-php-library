@@ -7,7 +7,7 @@
 namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\Builder\Type\ExpressionInterface;
 
 /**
  * Generates a random float between 0 and 1.

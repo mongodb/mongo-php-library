@@ -3,11 +3,8 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
-use MongoDB\Builder\Aggregation\AccumulatorInterface;
-use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\Builder\Expression\ExpressionType;
 use MongoDB\Builder\Optional;
-use MongoDB\Builder\Query\QueryInterface;
-use MongoDB\Builder\Stage\StageInterface;
 use MongoDB\CodeGenerator\Definition\ArgumentDefinition;
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
@@ -35,7 +32,7 @@ abstract class OperatorGenerator extends AbstractGenerator
 
     final public function __construct(
         string $rootDir,
-        /** @var array<class-string<ExpressionInterface>, ExpressionDefinition> */
+        /** @var array<class-string<ExpressionType>, ExpressionDefinition> */
         private array $expressions
     ) {
         parent::__construct($rootDir);
@@ -59,38 +56,20 @@ abstract class OperatorGenerator extends AbstractGenerator
         return ucfirst(ltrim($operator->name, '$')) . $definition->classNameSuffix;
     }
 
-    /** @return class-string<ExpressionInterface>|string */
-    final protected function getExpressionTypeInterface(string $type): string
+    final protected function getType(string $type): ExpressionDefinition
     {
-        if ('expression' === $type || 'resolvesToAnything' === $type) {
-            return ExpressionInterface::class;
-        }
-
-        if ('Stage' === $type) {
-            return StageInterface::class;
-        }
-
-        if ('Accumulator' === $type) {
-            return AccumulatorInterface::class;
-        }
-
-        if ('Query' === $type) {
-            return QueryInterface::class;
-        }
-
         // @todo handle generic types object<T> and array<T>
         $type = explode('<', $type, 2)[0];
         $type = explode('{', $type, 2)[0];
 
-        // Scalar types
-        if (array_key_exists($type, $this->expressions)) {
-            return $type;
-        }
+        $type = match ($type) {
+            'list' => 'array',
+            default => $type,
+        };
 
-        $interface = 'MongoDB\\Builder\\Expression\\' . ucfirst($type);
-        assert(array_key_exists($interface, $this->expressions), sprintf('Invalid expression type "%s".', $type));
+        assert(array_key_exists($type, $this->expressions), sprintf('Invalid expression type "%s".', $type));
 
-        return $interface;
+        return $this->expressions[$type];
     }
 
     /**
@@ -99,19 +78,16 @@ abstract class OperatorGenerator extends AbstractGenerator
      *
      * @return object{native:string,doc:string,use:list<class-string>,list:bool}
      */
-    final protected function generateExpressionTypes(ArgumentDefinition $arg): object
+    final protected function getAcceptedTypes(ArgumentDefinition $arg): object
     {
         $nativeTypes = [];
         foreach ($arg->type as $type) {
-            $interface = $this->getExpressionTypeInterface($type);
-            $types = $this->expressions[$interface]->types;
+            $type = $this->getType($type);
+            $nativeTypes = array_merge($nativeTypes, $type->acceptedTypes);
 
-            // Add the interface to the allowed types if it is not a scalar
-            if (! $this->expressions[$interface]->scalar) {
-                $types = array_merge([$interface], $types);
+            if (isset($type->returnType)) {
+                $nativeTypes[] = $type->returnType;
             }
-
-            $nativeTypes = array_merge($nativeTypes, $types);
         }
 
         if ($arg->optional) {
@@ -129,8 +105,7 @@ abstract class OperatorGenerator extends AbstractGenerator
                 $listCheck = true;
                 $nativeTypes[$key] = 'array';
                 // @todo allow to specify the type of the elements in the list
-                $docTypes[$key] = 'list';
-                $use[] = '\\' . ExpressionInterface::class;
+                $docTypes[$key] = 'array';
                 continue;
             }
 

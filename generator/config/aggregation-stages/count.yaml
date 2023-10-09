@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/'
 type:
-    - Stage
+    - stage
 encode: single
 description: |
     Returns a count of the number of documents at this stage of the aggregation pipeline.

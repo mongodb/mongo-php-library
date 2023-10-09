@@ -4,7 +4,7 @@ category:
     - 'Logical Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/and/'
 type:
-    - Query
+    - query
 encode: single
 description: |
     Joins query clauses with a logical AND returns all documents that match the conditions of both clauses.
@@ -12,5 +12,5 @@ arguments:
     -
         name: expression
         type:
-            - Query
+            - query
         variadic: array

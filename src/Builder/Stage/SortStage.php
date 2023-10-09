@@ -6,7 +6,10 @@
 
 namespace MongoDB\Builder\Stage;
 
+use MongoDB\BSON\Document;
+use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\StageInterface;
 use stdClass;
 
 /**
@@ -19,13 +22,13 @@ class SortStage implements StageInterface
     public const NAME = '$sort';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param array|stdClass $sort */
-    public stdClass|array $sort;
+    /** @param Document|Serializable|array|stdClass $sort */
+    public Document|Serializable|stdClass|array $sort;
 
     /**
-     * @param array|stdClass $sort
+     * @param Document|Serializable|array|stdClass $sort
      */
-    public function __construct(stdClass|array $sort)
+    public function __construct(Document|Serializable|stdClass|array $sort)
     {
         $this->sort = $sort;
     }

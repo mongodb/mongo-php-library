@@ -10,7 +10,7 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -19,7 +19,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/geometry/
  */
-class GeometryQuery implements ExpressionInterface
+class GeometryQuery implements QueryInterface
 {
     public const NAME = '$geometry';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
@@ -27,7 +27,7 @@ class GeometryQuery implements ExpressionInterface
     /** @param non-empty-string $type */
     public string $type;
 
-    /** @param BSONArray|PackedArray|list $coordinates */
+    /** @param BSONArray|PackedArray|array $coordinates */
     public PackedArray|BSONArray|array $coordinates;
 
     /** @param Document|Serializable|array|stdClass $crs */
@@ -35,7 +35,7 @@ class GeometryQuery implements ExpressionInterface
 
     /**
      * @param non-empty-string $type
-     * @param BSONArray|PackedArray|list $coordinates
+     * @param BSONArray|PackedArray|array $coordinates
      * @param Document|Serializable|array|stdClass $crs
      */
     public function __construct(
@@ -47,6 +47,7 @@ class GeometryQuery implements ExpressionInterface
         if (\is_array($coordinates) && ! \array_is_list($coordinates)) {
             throw new \InvalidArgumentException('Expected $coordinates argument to be a list, got an associative array.');
         }
+
         $this->coordinates = $coordinates;
         $this->crs = $crs;
     }

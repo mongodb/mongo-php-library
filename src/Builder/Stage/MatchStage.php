@@ -6,8 +6,11 @@
 
 namespace MongoDB\Builder\Stage;
 
+use MongoDB\BSON\Document;
+use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Query\QueryInterface;
+use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\StageInterface;
 use stdClass;
 
 /**
@@ -20,13 +23,13 @@ class MatchStage implements StageInterface
     public const NAME = '$match';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param QueryInterface|array|stdClass $query */
-    public QueryInterface|stdClass|array $query;
+    /** @param Document|QueryInterface|Serializable|array|stdClass $query */
+    public Document|Serializable|QueryInterface|stdClass|array $query;
 
     /**
-     * @param QueryInterface|array|stdClass $query
+     * @param Document|QueryInterface|Serializable|array|stdClass $query
      */
-    public function __construct(QueryInterface|stdClass|array $query)
+    public function __construct(Document|Serializable|QueryInterface|stdClass|array $query)
     {
         $this->query = $query;
     }

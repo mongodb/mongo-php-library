@@ -10,6 +10,7 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\StageInterface;
 use stdClass;
 
 /**

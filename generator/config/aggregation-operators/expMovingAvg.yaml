@@ -26,7 +26,7 @@ arguments:
     -
         name: alpha
         type:
-            - float
+            - double
         optional: true
         description: |
             A double that specifies the exponential decay value to use in the exponential moving average calculation. A higher alpha value assigns a lower mathematical significance to previous results from the calculation.

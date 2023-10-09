@@ -7,6 +7,7 @@
 namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\StageInterface;
 
 /**
  * Provides data and size distribution information on sharded collections.

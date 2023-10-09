@@ -8,6 +8,7 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\StageInterface;
 
 /**
  * Lists sampled queries for all collections or a specific collection.

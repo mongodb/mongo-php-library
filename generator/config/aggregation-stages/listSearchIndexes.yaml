@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Returns information about existing Atlas Search indexes on a specified collection.

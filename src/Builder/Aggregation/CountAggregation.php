@@ -7,6 +7,7 @@
 namespace MongoDB\Builder\Aggregation;
 
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\AccumulatorInterface;
 
 /**
  * Returns the number of documents in the group or window.

@@ -4,7 +4,7 @@ category:
     - 'Element Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/type/'
 type:
-    - Query
+    - query
 encode: single
 description: |
     Selects documents if a field is of the specified type.

@@ -11,6 +11,8 @@ use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToDecimal;
 use MongoDB\Builder\Expression\ResolvesToDouble;
+use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\Builder\Expression\ResolvesToLong;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 
 /**
@@ -24,19 +26,19 @@ class CovarianceSampAggregation implements ResolvesToDouble, ResolvesToDecimal
     public const NAME = '$covarianceSamp';
     public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    /** @param Decimal128|Int64|ResolvesToNumber|float|int $expression1 */
-    public Decimal128|Int64|ResolvesToNumber|float|int $expression1;
+    /** @param Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|ResolvesToNumber|float|int $expression1 */
+    public Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|ResolvesToNumber|float|int $expression1;
 
-    /** @param Decimal128|Int64|ResolvesToNumber|float|int $expression2 */
-    public Decimal128|Int64|ResolvesToNumber|float|int $expression2;
+    /** @param Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|ResolvesToNumber|float|int $expression2 */
+    public Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|ResolvesToNumber|float|int $expression2;
 
     /**
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression1
-     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression2
+     * @param Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|ResolvesToNumber|float|int $expression1
+     * @param Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|ResolvesToNumber|float|int $expression2
      */
     public function __construct(
-        Decimal128|Int64|ResolvesToNumber|float|int $expression1,
-        Decimal128|Int64|ResolvesToNumber|float|int $expression2,
+        Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|ResolvesToNumber|float|int $expression1,
+        Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|ResolvesToNumber|float|int $expression2,
     ) {
         $this->expression1 = $expression1;
         $this->expression2 = $expression2;

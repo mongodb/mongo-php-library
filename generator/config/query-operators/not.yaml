@@ -4,7 +4,7 @@ category:
     - 'Logical Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/not/'
 type:
-    - Query
+    - query
 encode: single
 description: |
     Inverts the effect of a query expression and returns documents that do not match the query expression.
@@ -12,4 +12,4 @@ arguments:
     -
         name: expression
         type:
-            - Query
+            - query

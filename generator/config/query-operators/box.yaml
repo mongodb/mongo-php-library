@@ -4,7 +4,7 @@ category:
     - 'Geospatial Geometry Specifiers'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/box/'
 type:
-    - Query
+    - query
 encode: single
 description: |
     Specifies a rectangular box using legacy coordinate pairs for $geoWithin queries. The 2d index supports $box.

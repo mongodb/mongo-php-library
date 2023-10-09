@@ -7,10 +7,17 @@
 namespace MongoDB\Builder\Stage;
 
 use MongoDB\BSON\Decimal128;
+use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
+use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Expression\ResolvesToDecimal;
+use MongoDB\Builder\Expression\ResolvesToDouble;
+use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\Builder\Expression\ResolvesToLong;
 use MongoDB\Builder\Optional;
-use MongoDB\Builder\Query\QueryInterface;
+use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\StageInterface;
 use stdClass;
 
 /**
@@ -26,11 +33,11 @@ class GeoNearStage implements StageInterface
     /** @param non-empty-string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation. */
     public string $distanceField;
 
-    /** @param array|stdClass $near The point for which to find the closest documents. */
-    public stdClass|array $near;
+    /** @param Document|Serializable|array|stdClass $near The point for which to find the closest documents. */
+    public Document|Serializable|stdClass|array $near;
 
-    /** @param Decimal128|Int64|Optional|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth. */
-    public Decimal128|Int64|Optional|float|int $distanceMultiplier;
+    /** @param Decimal128|Int64|Optional|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth. */
+    public Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|Optional|float|int $distanceMultiplier;
 
     /** @param Optional|non-empty-string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation. */
     public Optional|string $includeLocs;
@@ -39,22 +46,22 @@ class GeoNearStage implements StageInterface
     public Optional|string $key;
 
     /**
-     * @param Decimal128|Int64|Optional|float|int $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
+     * @param Decimal128|Int64|Optional|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
      * Specify the distance in meters if the specified point is GeoJSON and in radians if the specified point is legacy coordinate pairs.
      */
-    public Decimal128|Int64|Optional|float|int $maxDistance;
+    public Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|Optional|float|int $maxDistance;
 
     /**
-     * @param Decimal128|Int64|Optional|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
+     * @param Decimal128|Int64|Optional|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
      * Specify the distance in meters for GeoJSON data and in radians for legacy coordinate pairs.
      */
-    public Decimal128|Int64|Optional|float|int $minDistance;
+    public Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|Optional|float|int $minDistance;
 
     /**
-     * @param Optional|QueryInterface|array|stdClass $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
+     * @param Document|Optional|QueryInterface|Serializable|array|stdClass $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
      * You cannot specify a $near predicate in the query field of the $geoNear stage.
      */
-    public Optional|QueryInterface|stdClass|array $query;
+    public Document|Serializable|Optional|QueryInterface|stdClass|array $query;
 
     /**
      * @param Optional|bool $spherical Determines how MongoDB calculates the distance between two points:
@@ -66,15 +73,15 @@ class GeoNearStage implements StageInterface
 
     /**
      * @param non-empty-string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation.
-     * @param array|stdClass $near The point for which to find the closest documents.
-     * @param Decimal128|Int64|Optional|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
+     * @param Document|Serializable|array|stdClass $near The point for which to find the closest documents.
+     * @param Decimal128|Int64|Optional|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
      * @param Optional|non-empty-string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation.
      * @param Optional|non-empty-string $key Specify the geospatial indexed field to use when calculating the distance.
-     * @param Decimal128|Int64|Optional|float|int $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
+     * @param Decimal128|Int64|Optional|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
      * Specify the distance in meters if the specified point is GeoJSON and in radians if the specified point is legacy coordinate pairs.
-     * @param Decimal128|Int64|Optional|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
+     * @param Decimal128|Int64|Optional|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
      * Specify the distance in meters for GeoJSON data and in radians for legacy coordinate pairs.
-     * @param Optional|QueryInterface|array|stdClass $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
+     * @param Document|Optional|QueryInterface|Serializable|array|stdClass $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
      * You cannot specify a $near predicate in the query field of the $geoNear stage.
      * @param Optional|bool $spherical Determines how MongoDB calculates the distance between two points:
      * - When true, MongoDB uses $nearSphere semantics and calculates distances using spherical geometry.
@@ -83,13 +90,13 @@ class GeoNearStage implements StageInterface
      */
     public function __construct(
         string $distanceField,
-        stdClass|array $near,
-        Decimal128|Int64|Optional|float|int $distanceMultiplier = Optional::Undefined,
+        Document|Serializable|stdClass|array $near,
+        Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|Optional|float|int $distanceMultiplier = Optional::Undefined,
         Optional|string $includeLocs = Optional::Undefined,
         Optional|string $key = Optional::Undefined,
-        Decimal128|Int64|Optional|float|int $maxDistance = Optional::Undefined,
-        Decimal128|Int64|Optional|float|int $minDistance = Optional::Undefined,
-        Optional|QueryInterface|stdClass|array $query = Optional::Undefined,
+        Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|Optional|float|int $maxDistance = Optional::Undefined,
+        Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|Optional|float|int $minDistance = Optional::Undefined,
+        Document|Serializable|Optional|QueryInterface|stdClass|array $query = Optional::Undefined,
         Optional|bool $spherical = Optional::Undefined,
     ) {
         $this->distanceField = $distanceField;

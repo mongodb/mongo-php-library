@@ -6,7 +6,21 @@
 
 namespace MongoDB\Builder\Query;
 
+use MongoDB\BSON\Binary;
+use MongoDB\BSON\Decimal128;
+use MongoDB\BSON\Document;
+use MongoDB\BSON\Int64;
+use MongoDB\BSON\ObjectId;
+use MongoDB\BSON\PackedArray;
+use MongoDB\BSON\Regex;
+use MongoDB\BSON\Serializable;
+use MongoDB\BSON\Timestamp;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Model\BSONArray;
+use stdClass;
 
 /**
  * Matches arrays that contain all elements specified in the query.
@@ -18,20 +32,21 @@ class AllQuery implements QueryInterface
     public const NAME = '$all';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<mixed> ...$value */
+    /** @param list<BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass> ...$value */
     public array $value;
 
     /**
-     * @param mixed ...$value
+     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass ...$value
      * @no-named-arguments
      */
-    public function __construct(mixed ...$value)
-    {
+    public function __construct(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string ...$value,
+    ) {
         if (\count($value) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $value, got %d.', 1, \count($value)));
         }
         if (! \array_is_list($value)) {
-            throw new \InvalidArgumentException('Expected $value arguments to be a list of mixed, named arguments are not supported');
+            throw new \InvalidArgumentException('Expected $value arguments to be a list (array), named arguments are not supported');
         }
         $this->value = $value;
     }

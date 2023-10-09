@@ -6,10 +6,21 @@
 
 namespace MongoDB\Builder\Aggregation;
 
+use MongoDB\BSON\Binary;
+use MongoDB\BSON\Decimal128;
+use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
+use MongoDB\BSON\ObjectId;
+use MongoDB\BSON\PackedArray;
+use MongoDB\BSON\Regex;
+use MongoDB\BSON\Serializable;
+use MongoDB\BSON\Timestamp;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\Builder\Type\AccumulatorInterface;
+use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Model\BSONArray;
 use stdClass;
 
 /**
@@ -25,24 +36,31 @@ class TopNAggregation implements AccumulatorInterface
     public const NAME = '$topN';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
-    /** @param Int64|ResolvesToInt|int $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group. */
-    public Int64|ResolvesToInt|int $n;
+    /** @param ResolvesToInt|int $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group. */
+    public ResolvesToInt|int $n;
 
-    /** @param array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort. */
-    public stdClass|array $sortBy;
+    /** @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort. */
+    public Document|Serializable|stdClass|array $sortBy;
 
-    /** @param ExpressionInterface|mixed $output Represents the output for each element in the group and can be any expression. */
-    public mixed $output;
+    /** @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $output Represents the output for each element in the group and can be any expression. */
+    public Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $output;
 
     /**
-     * @param Int64|ResolvesToInt|int $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
-     * @param array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
-     * @param ExpressionInterface|mixed $output Represents the output for each element in the group and can be any expression.
+     * @param ResolvesToInt|int $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
+     * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $output Represents the output for each element in the group and can be any expression.
      */
-    public function __construct(Int64|ResolvesToInt|int $n, stdClass|array $sortBy, mixed $output)
-    {
+    public function __construct(
+        ResolvesToInt|int $n,
+        Document|Serializable|stdClass|array $sortBy,
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $output,
+    ) {
         $this->n = $n;
         $this->sortBy = $sortBy;
+        if (\is_array($output) && ! \array_is_list($output)) {
+            throw new \InvalidArgumentException('Expected $output argument to be a list, got an associative array.');
+        }
+
         $this->output = $output;
     }
 }

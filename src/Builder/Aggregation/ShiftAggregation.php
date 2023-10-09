@@ -6,9 +6,22 @@
 
 namespace MongoDB\Builder\Aggregation;
 
+use MongoDB\BSON\Binary;
+use MongoDB\BSON\Decimal128;
+use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
+use MongoDB\BSON\ObjectId;
+use MongoDB\BSON\PackedArray;
+use MongoDB\BSON\Regex;
+use MongoDB\BSON\Serializable;
+use MongoDB\BSON\Timestamp;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\Builder\Expression\ResolvesToAny;
+use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Model\BSONArray;
+use stdClass;
 
 /**
  * Returns the value from an expression applied to a document in a specified position relative to the current document in the $setWindowFields stage partition.
@@ -16,45 +29,56 @@ use MongoDB\Builder\Expression\ExpressionInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/
  */
-class ShiftAggregation implements ExpressionInterface
+class ShiftAggregation implements ResolvesToAny
 {
     public const NAME = '$shift';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
-    /** @param ExpressionInterface|mixed $output Specifies an expression to evaluate and return in the output. */
-    public mixed $output;
+    /** @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $output Specifies an expression to evaluate and return in the output. */
+    public Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $output;
 
     /**
-     * @param Int64|int $by Specifies an integer with a numeric document position relative to the current document in the output.
+     * @param int $by Specifies an integer with a numeric document position relative to the current document in the output.
      * For example:
      * 1 specifies the document position after the current document.
      * -1 specifies the document position before the current document.
      * -2 specifies the document position that is two positions before the current document.
      */
-    public Int64|int $by;
+    public int $by;
 
     /**
-     * @param ExpressionInterface|mixed $default Specifies an optional default expression to evaluate if the document position is outside of the implicit $setWindowFields stage window. The implicit window contains all the documents in the partition.
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $default Specifies an optional default expression to evaluate if the document position is outside of the implicit $setWindowFields stage window. The implicit window contains all the documents in the partition.
      * The default expression must evaluate to a constant value.
      * If you do not specify a default expression, $shift returns null for documents whose positions are outside of the implicit $setWindowFields stage window.
      */
-    public mixed $default;
+    public Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $default;
 
     /**
-     * @param ExpressionInterface|mixed $output Specifies an expression to evaluate and return in the output.
-     * @param Int64|int $by Specifies an integer with a numeric document position relative to the current document in the output.
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $output Specifies an expression to evaluate and return in the output.
+     * @param int $by Specifies an integer with a numeric document position relative to the current document in the output.
      * For example:
      * 1 specifies the document position after the current document.
      * -1 specifies the document position before the current document.
      * -2 specifies the document position that is two positions before the current document.
-     * @param ExpressionInterface|mixed $default Specifies an optional default expression to evaluate if the document position is outside of the implicit $setWindowFields stage window. The implicit window contains all the documents in the partition.
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $default Specifies an optional default expression to evaluate if the document position is outside of the implicit $setWindowFields stage window. The implicit window contains all the documents in the partition.
      * The default expression must evaluate to a constant value.
      * If you do not specify a default expression, $shift returns null for documents whose positions are outside of the implicit $setWindowFields stage window.
      */
-    public function __construct(mixed $output, Int64|int $by, mixed $default)
-    {
+    public function __construct(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $output,
+        int $by,
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $default,
+    ) {
+        if (\is_array($output) && ! \array_is_list($output)) {
+            throw new \InvalidArgumentException('Expected $output argument to be a list, got an associative array.');
+        }
+
         $this->output = $output;
         $this->by = $by;
+        if (\is_array($default) && ! \array_is_list($default)) {
+            throw new \InvalidArgumentException('Expected $default argument to be a list, got an associative array.');
+        }
+
         $this->default = $default;
     }
 }

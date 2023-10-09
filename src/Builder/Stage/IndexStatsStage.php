@@ -7,6 +7,7 @@
 namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\StageInterface;
 
 /**
  * Returns statistics regarding the use of each index for the collection.

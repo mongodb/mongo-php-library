@@ -5,7 +5,7 @@ category:
     - 'Window Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/'
 type:
-    - Accumulator
+    - accumulator
 encode: object
 description: |
     Returns an aggregation of the bottom n elements within a group, according to the specified sort order. If the group contains fewer than n elements, $bottomN returns all elements in the group.

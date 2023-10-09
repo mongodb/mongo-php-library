@@ -8,7 +8,6 @@ namespace MongoDB\Builder\Aggregation;
 
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToObject;
 use MongoDB\Model\BSONArray;
@@ -23,17 +22,18 @@ class ArrayToObjectAggregation implements ResolvesToObject
     public const NAME = '$arrayToObject';
     public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list $array */
+    /** @param BSONArray|PackedArray|ResolvesToArray|array $array */
     public PackedArray|ResolvesToArray|BSONArray|array $array;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list $array
+     * @param BSONArray|PackedArray|ResolvesToArray|array $array
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array $array)
     {
         if (\is_array($array) && ! \array_is_list($array)) {
             throw new \InvalidArgumentException('Expected $array argument to be a list, got an associative array.');
         }
+
         $this->array = $array;
     }
 }

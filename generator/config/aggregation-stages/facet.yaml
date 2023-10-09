@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/'
 type:
-    - Stage
+    - stage
 encode: single
 description: |
     Processes multiple aggregation pipelines within a single stage on the same set of input documents. Enables the creation of multi-faceted aggregations capable of characterizing data across multiple dimensions, or facets, in a single stage.
@@ -12,5 +12,5 @@ arguments:
     -
         name: facet
         type:
-            - Pipeline
+            - pipeline
         variadic: object

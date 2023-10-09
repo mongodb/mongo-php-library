@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
+use LogicException;
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
+use MongoDB\CodeGenerator\Definition\Generate;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\Type;
 
 use function array_map;
+use function var_export;
 
 /**
  * Generates a value object class for expressions
@@ -16,7 +19,7 @@ class ExpressionClassGenerator extends AbstractGenerator
 {
     public function generate(ExpressionDefinition $definition): void
     {
-        if ($definition->scalar) {
+        if (! $definition->generate) {
             return;
         }
 
@@ -25,7 +28,7 @@ class ExpressionClassGenerator extends AbstractGenerator
 
     public function createClassOrInterface(ExpressionDefinition $definition): PhpNamespace
     {
-        [$namespace, $className] = $this->splitNamespaceAndClassName($definition->name);
+        [$namespace, $className] = $this->splitNamespaceAndClassName($definition->returnType);
         $namespace = new PhpNamespace($namespace);
         foreach ($definition->implements as $interface) {
             $namespace->addUse($interface);
@@ -36,10 +39,10 @@ class ExpressionClassGenerator extends AbstractGenerator
                 'list' => 'array',
                 default => $type,
             },
-            $definition->types,
+            $definition->acceptedTypes,
         );
 
-        if ($definition->class) {
+        if ($definition->generate === Generate::PhpClass) {
             $class = $namespace->addClass($className);
             $class->setImplements($definition->implements);
             $class->setExtends($definition->extends);
@@ -53,9 +56,11 @@ class ExpressionClassGenerator extends AbstractGenerator
             $constructor = $class->addMethod('__construct');
             $constructor->addParameter('expression')->setType($propertyType);
             $constructor->addBody('$this->expression = $expression;');
-        } else {
+        } elseif ($definition->generate === Generate::PhpInterface) {
             $class = $namespace->addInterface($className);
             $class->setExtends($definition->implements);
+        } else {
+            throw new LogicException('Unknown generate type: ' . var_export($definition->generate, true));
         }
 
         return $namespace;

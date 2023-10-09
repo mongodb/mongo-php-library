@@ -7,14 +7,14 @@
 namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\Builder\Type\QueryInterface;
 
 /**
  * Adds a comment to a query predicate.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/comment/
  */
-class CommentQuery implements ExpressionInterface
+class CommentQuery implements QueryInterface
 {
     public const NAME = '$comment';
     public const ENCODE = \MongoDB\Builder\Encode::Single;

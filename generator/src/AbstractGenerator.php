@@ -18,6 +18,7 @@ use function explode;
 use function file_put_contents;
 use function implode;
 use function is_dir;
+use function ltrim;
 use function mkdir;
 use function sprintf;
 use function str_replace;
@@ -40,7 +41,7 @@ abstract class AbstractGenerator
      */
     final protected function splitNamespaceAndClassName(string $fqcn): array
     {
-        $parts = explode('\\', $fqcn);
+        $parts = explode('\\', ltrim($fqcn, '\\'));
         $className = array_pop($parts);
 
         return [implode('\\', $parts), $className];

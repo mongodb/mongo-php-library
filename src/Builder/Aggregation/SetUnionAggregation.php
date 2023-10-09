@@ -8,7 +8,6 @@ namespace MongoDB\Builder\Aggregation;
 
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Model\BSONArray;
 
@@ -22,11 +21,11 @@ class SetUnionAggregation implements ResolvesToArray
     public const NAME = '$setUnion';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param list<BSONArray|PackedArray|ResolvesToArray|list> ...$expression */
+    /** @param list<BSONArray|PackedArray|ResolvesToArray|array> ...$expression */
     public array $expression;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list ...$expression
+     * @param BSONArray|PackedArray|ResolvesToArray|array ...$expression
      * @no-named-arguments
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array ...$expression)
@@ -35,7 +34,7 @@ class SetUnionAggregation implements ResolvesToArray
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }
         if (! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression arguments to be a list of BSONArray|PackedArray|ResolvesToArray|list, named arguments are not supported');
+            throw new \InvalidArgumentException('Expected $expression arguments to be a list (array), named arguments are not supported');
         }
         $this->expression = $expression;
     }

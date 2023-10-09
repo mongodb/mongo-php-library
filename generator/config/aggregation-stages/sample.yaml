@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Randomly selects the specified number of documents from its input.

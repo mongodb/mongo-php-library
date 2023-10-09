@@ -4,7 +4,8 @@ category:
     - 'Projection Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/slice/'
 type:
-    - Query
+    - query
+    - projection
 encode: array
 description: |
     Limits the number of elements projected from an array. Supports skip and limit slices.

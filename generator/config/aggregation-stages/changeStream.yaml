@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Returns a Change Stream cursor for the collection or database. This stage can only occur once in an aggregation pipeline and it must occur as the first stage.
@@ -55,7 +55,7 @@ arguments:
     -
         name: startAtOperationTime
         type:
-            - Timestamp
+            - timestamp
         optional: true
         description: |
             Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.

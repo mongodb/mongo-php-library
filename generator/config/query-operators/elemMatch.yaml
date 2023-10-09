@@ -4,7 +4,8 @@ category:
     - 'Projection Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/'
 type:
-    - Query
+    - query
+    - projection
 encode: object
 description: |
     Projects the first element in an array that matches the specified $elemMatch condition.
@@ -12,4 +13,4 @@ arguments:
     -
         name: queries
         type:
-            - object
+            - query

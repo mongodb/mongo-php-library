@@ -6,6 +6,8 @@
 
 namespace MongoDB\Builder\Expression;
 
+use MongoDB\Builder\Type\ExpressionInterface;
+
 class Variable implements ExpressionInterface
 {
     public string $expression;

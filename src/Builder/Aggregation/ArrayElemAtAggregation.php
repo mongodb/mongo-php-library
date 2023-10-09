@@ -6,10 +6,9 @@
 
 namespace MongoDB\Builder\Aggregation;
 
-use MongoDB\BSON\Int64;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\Builder\Expression\ResolvesToAny;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Model\BSONArray;
@@ -19,26 +18,27 @@ use MongoDB\Model\BSONArray;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/
  */
-class ArrayElemAtAggregation implements ExpressionInterface
+class ArrayElemAtAggregation implements ResolvesToAny
 {
     public const NAME = '$arrayElemAt';
     public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    /** @param BSONArray|PackedArray|ResolvesToArray|list $array */
+    /** @param BSONArray|PackedArray|ResolvesToArray|array $array */
     public PackedArray|ResolvesToArray|BSONArray|array $array;
 
-    /** @param Int64|ResolvesToInt|int $idx */
-    public Int64|ResolvesToInt|int $idx;
+    /** @param ResolvesToInt|int $idx */
+    public ResolvesToInt|int $idx;
 
     /**
-     * @param BSONArray|PackedArray|ResolvesToArray|list $array
-     * @param Int64|ResolvesToInt|int $idx
+     * @param BSONArray|PackedArray|ResolvesToArray|array $array
+     * @param ResolvesToInt|int $idx
      */
-    public function __construct(PackedArray|ResolvesToArray|BSONArray|array $array, Int64|ResolvesToInt|int $idx)
+    public function __construct(PackedArray|ResolvesToArray|BSONArray|array $array, ResolvesToInt|int $idx)
     {
         if (\is_array($array) && ! \array_is_list($array)) {
             throw new \InvalidArgumentException('Expected $array argument to be a list, got an associative array.');
         }
+
         $this->array = $array;
         $this->idx = $idx;
     }

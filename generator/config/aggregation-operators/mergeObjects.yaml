@@ -5,7 +5,7 @@ category:
     - 'Object Expression Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/'
 type:
-    - Accumulator
+    - accumulator
 encode: single
 description: |
     Combines multiple documents into a single document.

@@ -4,7 +4,7 @@ category:
     - 'Evaluation Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/regex/'
 type:
-    - Query
+    - query
 encode: single
 description: |
     Selects documents where values match a specified regular expression.
@@ -12,4 +12,4 @@ arguments:
     -
         name: regex
         type:
-            - Regex
+            - regex

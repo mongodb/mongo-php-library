@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Performs a left outer join to another collection in the same database to filter in documents from the "joined" collection for processing.
@@ -42,7 +42,7 @@ arguments:
     -
         name: pipeline
         type:
-            - Pipeline
+            - pipeline
         optional: true
         description: |
             Specifies the pipeline to run on the joined collection. The pipeline determines the resulting documents from the joined collection. To return all documents, specify an empty pipeline [].

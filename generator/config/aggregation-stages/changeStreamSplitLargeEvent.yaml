@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStreamSplitLargeEvent/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Splits large change stream events that exceed 16 MB into smaller fragments returned in a change stream cursor.

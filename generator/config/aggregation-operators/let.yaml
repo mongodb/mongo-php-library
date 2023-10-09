@@ -4,7 +4,7 @@ category:
     - 'Variable Expression Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/'
 type:
-    - resolvesToAnything
+    - resolvesToAny
 encode: object
 description: |
     Defines variables for use within the scope of a subexpression and returns the result of the subexpression. Accepts named parameters.

@@ -5,7 +5,7 @@ category:
     - 'Window Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/'
 type:
-    - Accumulator
+    - accumulator
 encode: object
 description: |
     Returns the number of documents in the group or window.

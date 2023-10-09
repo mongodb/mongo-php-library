@@ -5,7 +5,7 @@ category:
     - 'Window Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/'
 type:
-    - Accumulator
+    - accumulator
 encode: single
 description: |
     Returns an array of values that result from applying an expression to each document.

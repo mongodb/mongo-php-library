@@ -6,8 +6,8 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\StageInterface;
 
 /**
  * Passes the first n documents unmodified to the pipeline where n is the specified limit. For each input document, outputs either one document (for the first n documents) or zero documents (after the first n documents).
@@ -19,13 +19,13 @@ class LimitStage implements StageInterface
     public const NAME = '$limit';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param Int64|int $limit */
-    public Int64|int $limit;
+    /** @param int $limit */
+    public int $limit;
 
     /**
-     * @param Int64|int $limit
+     * @param int $limit
      */
-    public function __construct(Int64|int $limit)
+    public function __construct(int $limit)
     {
         $this->limit = $limit;
     }

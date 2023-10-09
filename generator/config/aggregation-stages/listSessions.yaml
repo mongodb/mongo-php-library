@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Lists all sessions that have been active long enough to propagate to the system.sessions collection.

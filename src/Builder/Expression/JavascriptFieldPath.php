@@ -6,11 +6,11 @@
 
 namespace MongoDB\Builder\Expression;
 
-class Literal implements ExpressionInterface
+class JavascriptFieldPath extends FieldPath implements ResolvesToJavascript
 {
-    public mixed $expression;
+    public string $expression;
 
-    public function __construct(mixed $expression)
+    public function __construct(string $expression)
     {
         $this->expression = $expression;
     }

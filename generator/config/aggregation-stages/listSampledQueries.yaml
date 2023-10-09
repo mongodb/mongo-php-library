@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Lists sampled queries for all collections or a specific collection.

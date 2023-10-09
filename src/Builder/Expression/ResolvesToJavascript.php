@@ -6,6 +6,8 @@
 
 namespace MongoDB\Builder\Expression;
 
-interface ResolvesToBinary extends ExpressionInterface
+use MongoDB\Builder\Type\ExpressionInterface;
+
+interface ResolvesToJavascript extends ExpressionInterface
 {
 }

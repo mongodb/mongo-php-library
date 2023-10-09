@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/'
 type:
-    - Stage
+    - stage
 encode: single
 description: |
     Removes or excludes fields from documents.
@@ -13,5 +13,5 @@ arguments:
     -
         name: field
         type:
-            - FieldPath
+            - fieldPath
         variadic: array

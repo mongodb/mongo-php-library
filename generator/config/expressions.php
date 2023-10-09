@@ -4,174 +4,152 @@
 
 namespace MongoDB\Builder\Expression;
 
-use DateTimeInterface;
 use MongoDB\BSON;
-use MongoDB\Builder\Aggregation\AccumulatorInterface;
 use MongoDB\Builder\Pipeline;
-use MongoDB\Builder\Query\QueryInterface;
+use MongoDB\Builder\Type;
+use MongoDB\CodeGenerator\Definition\Generate;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
-/** @param class-string $resolvesTo */
-function typeFieldPath(string $resolvesTo): array
-{
-    return [
-        'class' => true,
+use function array_merge;
+use function array_unique;
+use function array_values;
+use function ucfirst;
+
+$bsonTypes = [
+    // BSON types
+    // @see https://www.mongodb.com/docs/manual/reference/bson-types/
+    // Ignore deprecated types and min/max keys which are not actual types
+    'double' => ['int', BSON\Int64::class, 'float'],
+    'string' => ['string'],
+    'object' => ['array', stdClass::class, BSON\Document::class, BSON\Serializable::class],
+    'array' => ['list', BSONArray::class, BSON\PackedArray::class],
+    'binData' => ['string', BSON\Binary::class],
+    'objectId' => [BSON\ObjectId::class],
+    'bool' => ['bool'],
+    'date' => [BSON\UTCDateTime::class],
+    'null' => ['null'],
+    'regex' => [BSON\Regex::class],
+    'javascript' => ['string'],
+    'int' => ['int'],
+    'timestamp' => ['int', BSON\Timestamp::class],
+    'long' => ['int', BSON\Int64::class, ResolvesToInt::class],
+    'decimal' => ['int', BSON\Int64::class, 'float', BSON\Decimal128::class],
+];
+
+// "any" accepts all the BSON types. No generic "object".
+$bsonTypes['any'] = array_unique(array_merge(...array_values($bsonTypes)));
+
+// "number" accepts all the numeric types
+$bsonTypes['number'] = [
+    'int', 'float', BSON\Int64::class, BSON\Decimal128::class,
+    ResolvesToInt::class, ResolvesToDouble::class, ResolvesToLong::class, ResolvesToDecimal::class,
+];
+
+$expressions = [];
+
+foreach ($bsonTypes as $name => $acceptedTypes) {
+    $expressions[$name] = ['acceptedTypes' => $acceptedTypes];
+
+    $resolvesTo = 'resolvesTo' . ucfirst($name);
+    $resolvesToInterface = __NAMESPACE__ . '\\' . ucfirst($resolvesTo);
+    $expressions[$resolvesTo] = [
+        'generate' => Generate::PhpInterface,
+        // @todo implement type hierarchy for resolvesToNumber
+        'implements' => [Type\ExpressionInterface::class],
+        'returnType' => $resolvesToInterface,
+        'acceptedTypes' => $acceptedTypes,
+    ];
+
+    $expressions[$name . 'FieldPath'] = [
+        'generate' => Generate::PhpClass,
         'extends' => FieldPath::class,
-        'implements' => [$resolvesTo],
-        'types' => ['string'],
+        'implements' => [$resolvesToInterface],
+        'acceptedTypes' => ['string'],
     ];
 }
 
-return [
-    'any' => ['scalar' => true, 'types' => ['mixed']],
-    'null' => ['scalar' => true, 'types' => ['null']],
-    'int' => ['scalar' => true, 'types' => ['int', BSON\Int64::class]],
-    'double' => ['scalar' => true, 'types' => ['int', BSON\Int64::class, 'float']],
-    'float' => ['scalar' => true, 'types' => ['int', BSON\Int64::class, 'float']],
-    'decimal' => ['scalar' => true, 'types' => ['int', BSON\Int64::class, 'float', BSON\Decimal128::class]],
-    'number' => ['scalar' => true, 'types' => ['int', BSON\Int64::class, 'float', BSON\Decimal128::class]],
-    'string' => ['scalar' => true, 'types' => ['string']],
-    'bool' => ['scalar' => true, 'types' => ['bool']],
-    'object' => ['scalar' => true, 'types' => ['array', stdClass::class, BSON\Document::class, BSON\Serializable::class]],
-    'Regex' => ['scalar' => true, 'types' => [BSON\Regex::class]],
-    'Binary' => ['scalar' => true, 'types' => ['string', BSON\Binary::class]],
+// AnyFieldPath doesn't make sense. Use FieldPath instead.
+unset($expressions['anyFieldPath']);
 
-    AccumulatorInterface::class => ['scalar' => true, 'types' => [AccumulatorInterface::class]],
-    QueryInterface::class => ['scalar' => true, 'types' => [QueryInterface::class, 'array', stdClass::class]],
+return $expressions + [
+    'expression' => [
+        'returnType' => Type\ExpressionInterface::class,
+        'acceptedTypes' => [Type\ExpressionInterface::class, ...$bsonTypes['any']],
+    ],
+    'query' => [
+        'returnType' => Type\QueryInterface::class,
+        'acceptedTypes' => [Type\QueryInterface::class, ...$bsonTypes['object']],
+    ],
+    'projection' => [
+        'returnType' => Type\ProjectionInterface::class,
+        'acceptedTypes' => [Type\ProjectionInterface::class, ...$bsonTypes['object']],
+    ],
+    'accumulator' => [
+        'returnType' => Type\AccumulatorInterface::class,
+        'acceptedTypes' => [Type\AccumulatorInterface::class, ...$bsonTypes['object']],
+    ],
+    'stage' => [
+        'returnType' => Type\StageInterface::class,
+        'acceptedTypes' => [Type\StageInterface::class, ...$bsonTypes['object']],
+    ],
+    'pipeline' => [
+        'acceptedTypes' => [Pipeline::class, ...$bsonTypes['array']],
+    ],
+    'fieldPath' => [
+        'generate' => Generate::PhpClass,
+        'implements' => [Type\ExpressionInterface::class],
+        'acceptedTypes' => ['string'],
+    ],
+    'variable' => [
+        'generate' => Generate::PhpClass,
+        'implements' => [Type\ExpressionInterface::class],
+        'acceptedTypes' => ['string'],
+    ],
 
-    // @todo merge this types
-    'list' => ['scalar' => true, 'types' => ['list', BSONArray::class, BSON\PackedArray::class]],
-    'array' => ['scalar' => true, 'types' => ['list', BSONArray::class, BSON\PackedArray::class]],
+    // @todo add enum values
+    'Granularity' => [
+        'acceptedTypes' => [...$bsonTypes['string']],
+    ],
+    'FullDocument' => [
+        'acceptedTypes' => [...$bsonTypes['string']],
+    ],
+    'FullDocumentBeforeChange' => [
+        'acceptedTypes' => [...$bsonTypes['string']],
+    ],
+    'AccumulatorPercentile' => [
+        'acceptedTypes' => [...$bsonTypes['string']],
+    ],
+    'WhenMatched' => [
+        'acceptedTypes' => [...$bsonTypes['string']],
+    ],
+    'WhenNotMatched' => [
+        'acceptedTypes' => [...$bsonTypes['string']],
+    ],
 
-    // @todo fine-tune all this types
-    'Granularity' => ['scalar' => true, 'types' => ['string']],
-    'FullDocument' => ['scalar' => true, 'types' => ['string']],
-    'FullDocumentBeforeChange' => ['scalar' => true, 'types' => ['string']],
-    'AccumulatorPercentile' => ['scalar' => true, 'types' => ['string']],
-    'Timestamp' => ['scalar' => true, 'types' => ['int']],
-    'CollStats' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
-    'Range' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
-    'FillOut' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
-    'WhenMatched' => ['scalar' => true, 'types' => ['string']],
-    'WhenNotMatched' => ['scalar' => true, 'types' => ['string']],
-    'OutCollection' => ['scalar' => true, 'types' => ['string', stdClass::class, 'array']],
-    'Pipeline' => ['scalar' => true, 'types' => [Pipeline::class, 'array']],
-    'SortSpec' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
-    'Window' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
-    'GeoPoint' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
-    'Geometry' => ['scalar' => true, 'types' => [stdClass::class, 'array']],
-
-    // Use Interface suffix to avoid confusion with MongoDB\Builder\Expression factory class
-    ExpressionInterface::class => [
-        'types' => ['mixed'],
+    // @todo create specific model classes factories
+    'OutCollection' => [
+        'acceptedTypes' => [...$bsonTypes['object']],
     ],
-    // @todo must not start with $
-    // Allows ORMs to translate field names
-    FieldName::class => [
-        'class' => true,
-        'types' => ['string'],
+    'CollStats' => [
+        'acceptedTypes' => [...$bsonTypes['object']],
     ],
-    // @todo if replaced by a string, it must start with $
-    FieldPath::class => [
-        'class' => true,
-        'implements' => [ExpressionInterface::class],
-        'types' => ['string'],
+    'Range' => [
+        'acceptedTypes' => [...$bsonTypes['object']],
     ],
-    // @todo if replaced by a string, it must start with $$
-    Variable::class => [
-        'class' => true,
-        'implements' => [ExpressionInterface::class],
-        'types' => ['string'],
+    'FillOut' => [
+        'acceptedTypes' => [...$bsonTypes['object']],
     ],
-    Literal::class => [
-        'class' => true,
-        'implements' => [ExpressionInterface::class],
-        'types' => ['mixed'],
+    'SortSpec' => [
+        'acceptedTypes' => [...$bsonTypes['object']],
     ],
-    // @todo check for use-case
-    ExpressionObject::class => [
-        'implements' => [ExpressionInterface::class],
-        'types' => ['array', stdClass::class, BSON\Document::class, BSON\Serializable::class],
+    'Window' => [
+        'acceptedTypes' => [...$bsonTypes['object']],
     ],
-    // @todo check for use-case
-    Operator::class => [
-        'implements' => [ExpressionInterface::class],
-        'types' => ['array', stdClass::class, BSON\Document::class, BSON\Serializable::class],
+    'GeoPoint' => [
+        'acceptedTypes' => [...$bsonTypes['object']],
     ],
-    ResolvesToArray::class => [
-        'implements' => [ExpressionInterface::class],
-        'types' => ['list', BSONArray::class, BSON\PackedArray::class],
+    'Geometry' => [
+        'acceptedTypes' => [...$bsonTypes['object']],
     ],
-    ArrayFieldPath::class => typeFieldPath(ResolvesToArray::class),
-    ResolvesToBool::class => [
-        'implements' => [ExpressionInterface::class],
-        'types' => ['bool'],
-    ],
-    BoolFieldPath::class => typeFieldPath(ResolvesToBool::class),
-    ResolvesToDate::class => [
-        'implements' => [ExpressionInterface::class],
-        'types' => [DateTimeInterface::class, BSON\UTCDateTime::class],
-    ],
-    DateFieldPath::class => typeFieldPath(ResolvesToDate::class),
-    ResolvesToTimestamp::class => [
-        'implements' => [ResolvesToInt::class],
-        'types' => ['int', BSON\Int64::class],
-    ],
-    TimestampFieldPath::class => typeFieldPath(ResolvesToTimestamp::class),
-    ResolvesToObjectId::class => [
-        'implements' => [ExpressionInterface::class],
-        'types' => [BSON\ObjectId::class],
-    ],
-    ObjectIdFieldPath::class => typeFieldPath(ResolvesToObjectId::class),
-    ResolvesToObject::class => [
-        'implements' => [ExpressionInterface::class],
-        'types' => ['array', stdClass::class, BSON\Document::class, BSON\Serializable::class],
-    ],
-    ObjectFieldPath::class => typeFieldPath(ResolvesToObject::class),
-    ResolvesToNull::class => [
-        'implements' => [ExpressionInterface::class],
-        'types' => ['null'],
-    ],
-    NullFieldPath::class => typeFieldPath(ResolvesToNull::class),
-    ResolvesToNumber::class => [
-        'implements' => [ExpressionInterface::class],
-        'types' => ['int', 'float', BSON\Int64::class, BSON\Decimal128::class],
-    ],
-    NumberFieldPath::class => typeFieldPath(ResolvesToNumber::class),
-    ResolvesToDecimal::class => [
-        'implements' => [ResolvesToNumber::class],
-        'types' => ['int', 'float', BSON\Int64::class, BSON\Decimal128::class],
-    ],
-    DecimalFieldPath::class => typeFieldPath(ResolvesToDecimal::class),
-    ResolvesToDouble::class => [
-        'implements' => [ResolvesToNumber::class],
-        'types' => ['int', BSON\Int64::class, 'float'],
-    ],
-    DoubleFieldPath::class => typeFieldPath(ResolvesToDouble::class),
-    ResolvesToFloat::class => [
-        'implements' => [ResolvesToNumber::class],
-        'types' => ['int', 'float', BSON\Int64::class],
-    ],
-    FloatFieldPath::class => typeFieldPath(ResolvesToFloat::class),
-    ResolvesToInt::class => [
-        'implements' => [ResolvesToNumber::class],
-        'types' => ['int', BSON\Int64::class],
-    ],
-    IntFieldPath::class => typeFieldPath(ResolvesToInt::class),
-    ResolvesToLong::class => [
-        'implements' => [ResolvesToNumber::class],
-        'types' => ['int', BSON\Int64::class],
-    ],
-    LongFieldPath::class => typeFieldPath(ResolvesToLong::class),
-    ResolvesToString::class => [
-        'implements' => [ExpressionInterface::class],
-        'types' => ['string'],
-    ],
-    StringFieldPath::class => typeFieldPath(ResolvesToString::class),
-    ResolvesToBinary::class => [
-        'implements' => [ExpressionInterface::class],
-        'types' => ['string', BSON\Binary::class],
-    ],
-    BinaryFieldPath::class => typeFieldPath(ResolvesToBinary::class),
 ];

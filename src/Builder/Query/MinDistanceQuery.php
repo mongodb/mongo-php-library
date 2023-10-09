@@ -8,6 +8,7 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\QueryInterface;
 
 /**
  * Specifies a minimum distance to limit the results of $near and $nearSphere queries. For use with 2dsphere index only.

@@ -5,7 +5,7 @@ category:
     - 'Window Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/'
 type:
-    - Accumulator
+    - accumulator
 encode: single
 description: |
     Returns an array of unique expression values for each group. Order of the array elements is undefined.

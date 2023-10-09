@@ -7,14 +7,14 @@
 namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\Builder\Type\ProjectionInterface;
 
 /**
  * Projects the available per-document metadata.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/meta/
  */
-class MetaQuery implements ExpressionInterface
+class MetaQuery implements ProjectionInterface
 {
     public const NAME = '$meta';
     public const ENCODE = \MongoDB\Builder\Encode::Object;

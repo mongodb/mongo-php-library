@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-class BinaryFieldPath extends FieldPath implements ResolvesToBinary
+class RegexFieldPath extends FieldPath implements ResolvesToRegex
 {
     public string $expression;
 

@@ -6,6 +6,8 @@
 
 namespace MongoDB\Builder\Expression;
 
-interface ExpressionObject extends ExpressionInterface
+use MongoDB\Builder\Type\ExpressionInterface;
+
+interface ResolvesToAny extends ExpressionInterface
 {
 }

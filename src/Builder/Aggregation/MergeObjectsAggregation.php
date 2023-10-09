@@ -10,6 +10,7 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToObject;
+use MongoDB\Builder\Type\AccumulatorInterface;
 use stdClass;
 
 /**
@@ -35,7 +36,7 @@ class MergeObjectsAggregation implements AccumulatorInterface
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $document, got %d.', 1, \count($document)));
         }
         if (! \array_is_list($document)) {
-            throw new \InvalidArgumentException('Expected $document arguments to be a list of Document|ResolvesToObject|Serializable|array|stdClass, named arguments are not supported');
+            throw new \InvalidArgumentException('Expected $document arguments to be a list (array), named arguments are not supported');
         }
         $this->document = $document;
     }

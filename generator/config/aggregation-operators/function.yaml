@@ -4,7 +4,7 @@ category:
     - 'Custom Aggregation Expression Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/'
 type:
-    - resolvesToAnything
+    - resolvesToAny
 encode: object
 description: |
     Defines a custom function.

@@ -8,6 +8,7 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\Regex;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\QueryInterface;
 
 /**
  * Selects documents where values match a specified regular expression.

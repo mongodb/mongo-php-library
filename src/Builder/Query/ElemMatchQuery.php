@@ -9,6 +9,8 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\ProjectionInterface;
+use MongoDB\Builder\Type\QueryInterface;
 use stdClass;
 
 /**
@@ -16,18 +18,18 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/
  */
-class ElemMatchQuery implements QueryInterface
+class ElemMatchQuery implements QueryInterface, ProjectionInterface
 {
     public const NAME = '$elemMatch';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
-    /** @param Document|Serializable|array|stdClass $queries */
-    public Document|Serializable|stdClass|array $queries;
+    /** @param Document|QueryInterface|Serializable|array|stdClass $queries */
+    public Document|Serializable|QueryInterface|stdClass|array $queries;
 
     /**
-     * @param Document|Serializable|array|stdClass $queries
+     * @param Document|QueryInterface|Serializable|array|stdClass $queries
      */
-    public function __construct(Document|Serializable|stdClass|array $queries)
+    public function __construct(Document|Serializable|QueryInterface|stdClass|array $queries)
     {
         $this->queries = $queries;
     }

@@ -6,7 +6,7 @@ category:
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/'
 type:
     - resolvesToDouble
-    - Accumulator
+    - accumulator
 encode: object
 description: |
     Returns an approximation of the median, the 50th percentile, as a scalar value.

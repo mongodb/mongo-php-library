@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Command;
 
-use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\Builder\Expression\ExpressionType;
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\ExpressionClassGenerator;
@@ -69,7 +69,7 @@ final class GenerateCommand extends Command
         return $definitions;
     }
 
-    /** @param array<class-string<ExpressionInterface>, ExpressionDefinition> $expressions */
+    /** @param array<class-string<ExpressionType>, ExpressionDefinition> $expressions */
     private function generateOperatorClasses(array $expressions, OutputInterface $output): void
     {
         $config = require $this->configDir . '/operators.php';

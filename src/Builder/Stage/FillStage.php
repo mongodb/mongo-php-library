@@ -10,8 +10,8 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -39,14 +39,14 @@ class FillStage implements StageInterface
     public Document|Serializable|Optional|stdClass|array|string $partitionBy;
 
     /**
-     * @param BSONArray|Optional|PackedArray|list $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
+     * @param BSONArray|Optional|PackedArray|array $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
      */
     public PackedArray|Optional|BSONArray|array $partitionByFields;
 
-    /** @param Optional|array|stdClass $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage. */
-    public Optional|stdClass|array $sortBy;
+    /** @param Document|Optional|Serializable|array|stdClass $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage. */
+    public Document|Serializable|Optional|stdClass|array $sortBy;
 
     /**
      * @param Document|Serializable|array|stdClass $output Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
@@ -54,22 +54,23 @@ class FillStage implements StageInterface
      * @param Document|Optional|Serializable|array|non-empty-string|stdClass $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
-     * @param BSONArray|Optional|PackedArray|list $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
+     * @param BSONArray|Optional|PackedArray|array $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
-     * @param Optional|array|stdClass $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage.
+     * @param Document|Optional|Serializable|array|stdClass $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage.
      */
     public function __construct(
         Document|Serializable|stdClass|array $output,
         Document|Serializable|Optional|stdClass|array|string $partitionBy = Optional::Undefined,
         PackedArray|Optional|BSONArray|array $partitionByFields = Optional::Undefined,
-        Optional|stdClass|array $sortBy = Optional::Undefined,
+        Document|Serializable|Optional|stdClass|array $sortBy = Optional::Undefined,
     ) {
         $this->output = $output;
         $this->partitionBy = $partitionBy;
         if (\is_array($partitionByFields) && ! \array_is_list($partitionByFields)) {
             throw new \InvalidArgumentException('Expected $partitionByFields argument to be a list, got an associative array.');
         }
+
         $this->partitionByFields = $partitionByFields;
         $this->sortBy = $sortBy;
     }

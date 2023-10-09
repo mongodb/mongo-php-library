@@ -4,7 +4,7 @@ category:
     - 'Projection Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/projection/positional/'
 type:
-    - Query
+    - query
 encode: object
 description: |
     Projects the first element in an array that matches the query condition.

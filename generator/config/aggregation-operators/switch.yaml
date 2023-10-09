@@ -4,7 +4,7 @@ category:
     - 'Conditional Expression Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/'
 type:
-    - resolvesToAnything
+    - resolvesToAny
 encode: object
 description: |
     Evaluates a series of case expressions. When it finds an expression which evaluates to true, $switch executes a specified expression and breaks out of the control flow.

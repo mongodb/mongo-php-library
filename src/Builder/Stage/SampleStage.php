@@ -6,8 +6,8 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\StageInterface;
 
 /**
  * Randomly selects the specified number of documents from its input.
@@ -19,13 +19,13 @@ class SampleStage implements StageInterface
     public const NAME = '$sample';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
-    /** @param Int64|int $size The number of documents to randomly select. */
-    public Int64|int $size;
+    /** @param int $size The number of documents to randomly select. */
+    public int $size;
 
     /**
-     * @param Int64|int $size The number of documents to randomly select.
+     * @param int $size The number of documents to randomly select.
      */
-    public function __construct(Int64|int $size)
+    public function __construct(int $size)
     {
         $this->size = $size;
     }

@@ -6,6 +6,8 @@
 
 namespace MongoDB\Builder\Expression;
 
-interface ResolvesToTimestamp extends ResolvesToInt
+use MongoDB\Builder\Type\ExpressionInterface;
+
+interface ResolvesToTimestamp extends ExpressionInterface
 {
 }

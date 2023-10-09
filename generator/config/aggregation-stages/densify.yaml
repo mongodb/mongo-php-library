@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Creates new documents in a sequence of documents where certain values in a field are missing.
@@ -12,7 +12,7 @@ arguments:
     -
         name: field
         type:
-            - FieldPath
+            - fieldPath
         description: |
             The field to densify. The values of the specified field must either be all numeric values or all dates.
             Documents that do not contain the specified field continue through the pipeline unmodified.

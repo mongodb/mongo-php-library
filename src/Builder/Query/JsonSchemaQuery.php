@@ -9,6 +9,7 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\QueryInterface;
 use stdClass;
 
 /**

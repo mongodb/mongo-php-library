@@ -4,7 +4,7 @@ namespace MongoDB\Builder;
 
 use ArrayIterator;
 use IteratorAggregate;
-use MongoDB\Builder\Stage\StageInterface;
+use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use Traversable;
 

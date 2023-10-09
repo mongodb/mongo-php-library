@@ -6,8 +6,8 @@
 
 namespace MongoDB\Builder\Query;
 
-use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\QueryInterface;
 
 /**
  * Selects documents if the array field is a specified size.
@@ -19,13 +19,13 @@ class SizeQuery implements QueryInterface
     public const NAME = '$size';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param Int64|int $value */
-    public Int64|int $value;
+    /** @param int $value */
+    public int $value;
 
     /**
-     * @param Int64|int $value
+     * @param int $value
      */
-    public function __construct(Int64|int $value)
+    public function __construct(int $value)
     {
         $this->value = $value;
     }

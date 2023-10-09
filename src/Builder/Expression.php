@@ -7,21 +7,20 @@
 namespace MongoDB\Builder;
 
 use MongoDB\Builder\Expression\ArrayFieldPath;
-use MongoDB\Builder\Expression\BinaryFieldPath;
+use MongoDB\Builder\Expression\BinDataFieldPath;
 use MongoDB\Builder\Expression\BoolFieldPath;
 use MongoDB\Builder\Expression\DateFieldPath;
 use MongoDB\Builder\Expression\DecimalFieldPath;
 use MongoDB\Builder\Expression\DoubleFieldPath;
-use MongoDB\Builder\Expression\FieldName;
 use MongoDB\Builder\Expression\FieldPath;
-use MongoDB\Builder\Expression\FloatFieldPath;
 use MongoDB\Builder\Expression\IntFieldPath;
-use MongoDB\Builder\Expression\Literal;
+use MongoDB\Builder\Expression\JavascriptFieldPath;
 use MongoDB\Builder\Expression\LongFieldPath;
 use MongoDB\Builder\Expression\NullFieldPath;
 use MongoDB\Builder\Expression\NumberFieldPath;
 use MongoDB\Builder\Expression\ObjectFieldPath;
 use MongoDB\Builder\Expression\ObjectIdFieldPath;
+use MongoDB\Builder\Expression\RegexFieldPath;
 use MongoDB\Builder\Expression\StringFieldPath;
 use MongoDB\Builder\Expression\TimestampFieldPath;
 use MongoDB\Builder\Expression\Variable;
@@ -33,9 +32,9 @@ final class Expression
         return new ArrayFieldPath($expression);
     }
 
-    public static function binaryFieldPath(string $expression): BinaryFieldPath
+    public static function binDataFieldPath(string $expression): BinDataFieldPath
     {
-        return new BinaryFieldPath($expression);
+        return new BinDataFieldPath($expression);
     }
 
     public static function boolFieldPath(string $expression): BoolFieldPath
@@ -58,19 +57,9 @@ final class Expression
         return new DoubleFieldPath($expression);
     }
 
-    public static function fieldName(string $expression): FieldName
-    {
-        return new FieldName($expression);
-    }
-
     public static function fieldPath(string $expression): FieldPath
     {
         return new FieldPath($expression);
-    }
-
-    public static function floatFieldPath(string $expression): FloatFieldPath
-    {
-        return new FloatFieldPath($expression);
     }
 
     public static function intFieldPath(string $expression): IntFieldPath
@@ -78,9 +67,9 @@ final class Expression
         return new IntFieldPath($expression);
     }
 
-    public static function literal(string $expression): Literal
+    public static function javascriptFieldPath(string $expression): JavascriptFieldPath
     {
-        return new Literal($expression);
+        return new JavascriptFieldPath($expression);
     }
 
     public static function longFieldPath(string $expression): LongFieldPath
@@ -106,6 +95,11 @@ final class Expression
     public static function objectIdFieldPath(string $expression): ObjectIdFieldPath
     {
         return new ObjectIdFieldPath($expression);
+    }
+
+    public static function regexFieldPath(string $expression): RegexFieldPath
+    {
+        return new RegexFieldPath($expression);
     }
 
     public static function stringFieldPath(string $expression): StringFieldPath

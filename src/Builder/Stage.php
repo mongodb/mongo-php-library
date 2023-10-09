@@ -6,18 +6,25 @@
 
 namespace MongoDB\Builder;
 
+use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
+use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\PackedArray;
+use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Aggregation\AccumulatorInterface;
+use MongoDB\BSON\Timestamp;
+use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Expression\ArrayFieldPath;
-use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Expression\ResolvesToArray;
+use MongoDB\Builder\Expression\ResolvesToBool;
+use MongoDB\Builder\Expression\ResolvesToDecimal;
+use MongoDB\Builder\Expression\ResolvesToDouble;
+use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\Builder\Expression\ResolvesToLong;
 use MongoDB\Builder\Expression\ResolvesToObject;
-use MongoDB\Builder\Query\QueryInterface;
 use MongoDB\Builder\Stage\AddFieldsStage;
 use MongoDB\Builder\Stage\BucketAutoStage;
 use MongoDB\Builder\Stage\BucketStage;
@@ -60,6 +67,10 @@ use MongoDB\Builder\Stage\SortStage;
 use MongoDB\Builder\Stage\UnionWithStage;
 use MongoDB\Builder\Stage\UnsetStage;
 use MongoDB\Builder\Stage\UnwindStage;
+use MongoDB\Builder\Type\AccumulatorInterface;
+use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Builder\Type\ProjectionInterface;
+use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -69,9 +80,11 @@ final class Stage
      * Adds new fields to documents. Outputs documents that contain all existing fields from the input documents and newly added fields.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/
-     * @param ExpressionInterface|mixed ...$expression Specify the name of each field to add and set its value to an aggregation expression or an empty object.
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass ...$expression Specify the name of each field to add and set its value to an aggregation expression or an empty object.
      */
-    public static function addFields(mixed ...$expression): AddFieldsStage
+    public static function addFields(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string ...$expression,
+    ): AddFieldsStage
     {
         return new AddFieldsStage(...$expression);
     }
@@ -80,11 +93,11 @@ final class Stage
      * Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/
-     * @param ExpressionInterface|FieldPath|mixed|non-empty-string $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|FieldPath|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
      * Unless $bucket includes a default specification, each input document must resolve the groupBy field path or expression to a value that falls within one of the ranges specified by the boundaries.
-     * @param BSONArray|PackedArray|list $boundaries An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
+     * @param BSONArray|PackedArray|array $boundaries An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent pair of values acts as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
      * The specified values must be in ascending order and all of the same type. The exception is if the values are of mixed numeric types, such as:
-     * @param ExpressionInterface|Optional|mixed $default A literal that specifies the _id of an additional bucket that contains all documents whose groupBy expression result does not fall into a bucket specified by boundaries.
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|Optional|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $default A literal that specifies the _id of an additional bucket that contains all documents whose groupBy expression result does not fall into a bucket specified by boundaries.
      * If unspecified, each input document must resolve the groupBy expression to a value within one of the bucket ranges specified by boundaries or the operation throws an error.
      * The default value must be less than the lowest boundaries value, or greater than or equal to the highest boundaries value.
      * The default value can be of a different type than the entries in boundaries.
@@ -93,9 +106,9 @@ final class Stage
      * If you specify an output document, only the fields specified in the document are returned; i.e. the count field is not returned unless it is explicitly included in the output document.
      */
     public static function bucket(
-        mixed $groupBy,
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|FieldPath|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $groupBy,
         PackedArray|BSONArray|array $boundaries,
-        mixed $default = Optional::Undefined,
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|Optional|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $default = Optional::Undefined,
         Document|Serializable|Optional|stdClass|array $output = Optional::Undefined,
     ): BucketStage
     {
@@ -106,16 +119,16 @@ final class Stage
      * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket boundaries are automatically determined in an attempt to evenly distribute the documents into the specified number of buckets.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/
-     * @param ExpressionInterface|mixed $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
-     * @param Int64|int $buckets A positive 32-bit integer that specifies the number of buckets into which input documents are grouped.
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $groupBy An expression to group documents by. To specify a field path, prefix the field name with a dollar sign $ and enclose it in quotes.
+     * @param int $buckets A positive 32-bit integer that specifies the number of buckets into which input documents are grouped.
      * @param Document|Optional|Serializable|array|stdClass $output A document that specifies the fields to include in the output documents in addition to the _id field. To specify the field to include, you must use accumulator expressions.
      * The default count field is not included in the output document when output is specified. Explicitly specify the count expression as part of the output document to include it.
      * @param Optional|non-empty-string $granularity A string that specifies the preferred number series to use to ensure that the calculated boundary edges end on preferred round numbers or their powers of 10.
      * Available only if the all groupBy values are numeric and none of them are NaN.
      */
     public static function bucketAuto(
-        mixed $groupBy,
-        Int64|int $buckets,
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $groupBy,
+        int $buckets,
         Document|Serializable|Optional|stdClass|array $output = Optional::Undefined,
         Optional|string $granularity = Optional::Undefined,
     ): BucketAutoStage
@@ -130,20 +143,20 @@ final class Stage
      * @param Optional|bool $allChangesForCluster A flag indicating whether the stream should report all changes that occur on the deployment, aside from those on internal databases or collections.
      * @param Optional|non-empty-string $fullDocument Specifies whether change notifications include a copy of the full document when modified by update operations.
      * @param Optional|non-empty-string $fullDocumentBeforeChange Valid values are "off", "whenAvailable", or "required". If set to "off", the "fullDocumentBeforeChange" field of the output document is always omitted. If set to "whenAvailable", the "fullDocumentBeforeChange" field will be populated with the pre-image of the document modified by the current change event if such a pre-image is available, and will be omitted otherwise. If set to "required", then the "fullDocumentBeforeChange" field is always populated and an exception is thrown if the pre-image is not              available.
-     * @param Int64|Optional|int $resumeAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields.
+     * @param Optional|int $resumeAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields.
      * @param Optional|bool $showExpandedEvents Specifies whether to include additional change events, such as such as DDL and index operations.
      * New in version 6.0.
      * @param Document|Optional|Serializable|array|stdClass $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields.
-     * @param Optional|int $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.
+     * @param Optional|Timestamp|int $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.
      */
     public static function changeStream(
         Optional|bool $allChangesForCluster = Optional::Undefined,
         Optional|string $fullDocument = Optional::Undefined,
         Optional|string $fullDocumentBeforeChange = Optional::Undefined,
-        Int64|Optional|int $resumeAfter = Optional::Undefined,
+        Optional|int $resumeAfter = Optional::Undefined,
         Optional|bool $showExpandedEvents = Optional::Undefined,
         Document|Serializable|Optional|stdClass|array $startAfter = Optional::Undefined,
-        Optional|int $startAtOperationTime = Optional::Undefined,
+        Timestamp|Optional|int $startAtOperationTime = Optional::Undefined,
     ): ChangeStreamStage
     {
         return new ChangeStreamStage($allChangesForCluster, $fullDocument, $fullDocumentBeforeChange, $resumeAfter, $showExpandedEvents, $startAfter, $startAtOperationTime);
@@ -200,12 +213,12 @@ final class Stage
      * @param FieldPath|non-empty-string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
      * Documents that do not contain the specified field continue through the pipeline unmodified.
      * To specify a <field> in an embedded document or in an array, use dot notation.
-     * @param array|stdClass $range Specification for range based densification.
-     * @param BSONArray|Optional|PackedArray|list $partitionByFields The field(s) that will be used as the partition keys.
+     * @param Document|Serializable|array|stdClass $range Specification for range based densification.
+     * @param BSONArray|Optional|PackedArray|array $partitionByFields The field(s) that will be used as the partition keys.
      */
     public static function densify(
         FieldPath|string $field,
-        stdClass|array $range,
+        Document|Serializable|stdClass|array $range,
         PackedArray|Optional|BSONArray|array $partitionByFields = Optional::Undefined,
     ): DensifyStage
     {
@@ -216,7 +229,7 @@ final class Stage
      * Returns literal documents from input values.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/
-     * @param BSONArray|PackedArray|ResolvesToArray|list $documents $documents accepts any valid expression that resolves to an array of objects. This includes:
+     * @param BSONArray|PackedArray|ResolvesToArray|array $documents $documents accepts any valid expression that resolves to an array of objects. This includes:
      * - system variables, such as $$NOW or $$SEARCH_META
      * - $let expressions
      * - variables in scope from $lookup expressions
@@ -231,9 +244,9 @@ final class Stage
      * Processes multiple aggregation pipelines within a single stage on the same set of input documents. Enables the creation of multi-faceted aggregations capable of characterizing data across multiple dimensions, or facets, in a single stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/
-     * @param Pipeline|array ...$facet
+     * @param BSONArray|PackedArray|Pipeline|array ...$facet
      */
-    public static function facet(Pipeline|array ...$facet): FacetStage
+    public static function facet(PackedArray|Pipeline|BSONArray|array ...$facet): FacetStage
     {
         return new FacetStage(...$facet);
     }
@@ -247,16 +260,16 @@ final class Stage
      * @param Document|Optional|Serializable|array|non-empty-string|stdClass $partitionBy Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
-     * @param BSONArray|Optional|PackedArray|list $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
+     * @param BSONArray|Optional|PackedArray|array $partitionByFields Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
      * If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
      * partitionBy and partitionByFields are mutually exclusive.
-     * @param Optional|array|stdClass $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage.
+     * @param Document|Optional|Serializable|array|stdClass $sortBy Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage.
      */
     public static function fill(
         Document|Serializable|stdClass|array $output,
         Document|Serializable|Optional|stdClass|array|string $partitionBy = Optional::Undefined,
         PackedArray|Optional|BSONArray|array $partitionByFields = Optional::Undefined,
-        Optional|stdClass|array $sortBy = Optional::Undefined,
+        Document|Serializable|Optional|stdClass|array $sortBy = Optional::Undefined,
     ): FillStage
     {
         return new FillStage($output, $partitionBy, $partitionByFields, $sortBy);
@@ -267,15 +280,15 @@ final class Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/
      * @param non-empty-string $distanceField The output field that contains the calculated distance. To specify a field within an embedded document, use dot notation.
-     * @param array|stdClass $near The point for which to find the closest documents.
-     * @param Decimal128|Int64|Optional|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
+     * @param Document|Serializable|array|stdClass $near The point for which to find the closest documents.
+     * @param Decimal128|Int64|Optional|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $distanceMultiplier The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
      * @param Optional|non-empty-string $includeLocs This specifies the output field that identifies the location used to calculate the distance. This option is useful when a location field contains multiple locations. To specify a field within an embedded document, use dot notation.
      * @param Optional|non-empty-string $key Specify the geospatial indexed field to use when calculating the distance.
-     * @param Decimal128|Int64|Optional|float|int $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
+     * @param Decimal128|Int64|Optional|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $maxDistance The maximum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall within the specified distance from the center point.
      * Specify the distance in meters if the specified point is GeoJSON and in radians if the specified point is legacy coordinate pairs.
-     * @param Decimal128|Int64|Optional|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
+     * @param Decimal128|Int64|Optional|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
      * Specify the distance in meters for GeoJSON data and in radians for legacy coordinate pairs.
-     * @param Optional|QueryInterface|array|stdClass $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
+     * @param Document|Optional|QueryInterface|Serializable|array|stdClass $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
      * You cannot specify a $near predicate in the query field of the $geoNear stage.
      * @param Optional|bool $spherical Determines how MongoDB calculates the distance between two points:
      * - When true, MongoDB uses $nearSphere semantics and calculates distances using spherical geometry.
@@ -284,13 +297,13 @@ final class Stage
      */
     public static function geoNear(
         string $distanceField,
-        stdClass|array $near,
-        Decimal128|Int64|Optional|float|int $distanceMultiplier = Optional::Undefined,
+        Document|Serializable|stdClass|array $near,
+        Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|Optional|float|int $distanceMultiplier = Optional::Undefined,
         Optional|string $includeLocs = Optional::Undefined,
         Optional|string $key = Optional::Undefined,
-        Decimal128|Int64|Optional|float|int $maxDistance = Optional::Undefined,
-        Decimal128|Int64|Optional|float|int $minDistance = Optional::Undefined,
-        Optional|QueryInterface|stdClass|array $query = Optional::Undefined,
+        Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|Optional|float|int $maxDistance = Optional::Undefined,
+        Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|Optional|float|int $minDistance = Optional::Undefined,
+        Document|Serializable|Optional|QueryInterface|stdClass|array $query = Optional::Undefined,
         Optional|bool $spherical = Optional::Undefined,
     ): GeoNearStage
     {
@@ -303,23 +316,23 @@ final class Stage
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/
      * @param non-empty-string $from Target collection for the $graphLookup operation to search, recursively matching the connectFromField to the connectToField. The from collection must be in the same database as any other collections used in the operation.
      * Starting in MongoDB 5.1, the collection specified in the from parameter can be sharded.
-     * @param BSONArray|ExpressionInterface|PackedArray|list|mixed $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process.
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process.
      * @param non-empty-string $connectFromField Field name whose value $graphLookup uses to recursively match against the connectToField of other documents in the collection. If the value is an array, each element is individually followed through the traversal process.
      * @param non-empty-string $connectToField Field name in other documents against which to match the value of the field specified by the connectFromField parameter.
      * @param non-empty-string $as Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the document.
-     * @param Int64|Optional|int $maxDepth Non-negative integral number specifying the maximum recursion depth.
+     * @param Optional|int $maxDepth Non-negative integral number specifying the maximum recursion depth.
      * @param Optional|non-empty-string $depthField Name of the field to add to each traversed document in the search path. The value of this field is the recursion depth for the document, represented as a NumberLong. Recursion depth value starts at zero, so the first lookup corresponds to zero depth.
-     * @param Optional|QueryInterface|array|stdClass $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
+     * @param Document|Optional|QueryInterface|Serializable|array|stdClass $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
      */
     public static function graphLookup(
         string $from,
-        mixed $startWith,
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $startWith,
         string $connectFromField,
         string $connectToField,
         string $as,
-        Int64|Optional|int $maxDepth = Optional::Undefined,
+        Optional|int $maxDepth = Optional::Undefined,
         Optional|string $depthField = Optional::Undefined,
-        Optional|QueryInterface|stdClass|array $restrictSearchWithMatch = Optional::Undefined,
+        Document|Serializable|Optional|QueryInterface|stdClass|array $restrictSearchWithMatch = Optional::Undefined,
     ): GraphLookupStage
     {
         return new GraphLookupStage($from, $startWith, $connectFromField, $connectToField, $as, $maxDepth, $depthField, $restrictSearchWithMatch);
@@ -329,10 +342,13 @@ final class Stage
      * Groups input documents by a specified identifier expression and applies the accumulator expression(s), if specified, to each group. Consumes all input documents and outputs one document per each distinct group. The output documents only contain the identifier field and, if specified, accumulated fields.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/
-     * @param ExpressionInterface|mixed $_id The _id expression specifies the group key. If you specify an _id value of null, or any other constant value, the $group stage returns a single document that aggregates values across all of the input documents.
-     * @param AccumulatorInterface ...$field Computed using the accumulator operators.
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $_id The _id expression specifies the group key. If you specify an _id value of null, or any other constant value, the $group stage returns a single document that aggregates values across all of the input documents.
+     * @param AccumulatorInterface|Document|Serializable|array|stdClass ...$field Computed using the accumulator operators.
      */
-    public static function group(mixed $_id, AccumulatorInterface ...$field): GroupStage
+    public static function group(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $_id,
+        Document|Serializable|AccumulatorInterface|stdClass|array ...$field,
+    ): GroupStage
     {
         return new GroupStage($_id, ...$field);
     }
@@ -351,9 +367,9 @@ final class Stage
      * Passes the first n documents unmodified to the pipeline where n is the specified limit. For each input document, outputs either one document (for the first n documents) or zero documents (after the first n documents).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/
-     * @param Int64|int $limit
+     * @param int $limit
      */
-    public static function limit(Int64|int $limit): LimitStage
+    public static function limit(int $limit): LimitStage
     {
         return new LimitStage($limit);
     }
@@ -362,7 +378,7 @@ final class Stage
      * Lists all active sessions recently in use on the currently connected mongos or mongod instance. These sessions may have not yet propagated to the system.sessions collection.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/
-     * @param BSONArray|Optional|PackedArray|list $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
+     * @param BSONArray|Optional|PackedArray|array $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
      * @param Optional|bool $allUsers Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster.
      */
     public static function listLocalSessions(
@@ -405,7 +421,7 @@ final class Stage
      * Lists all sessions that have been active long enough to propagate to the system.sessions collection.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/
-     * @param BSONArray|Optional|PackedArray|list $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
+     * @param BSONArray|Optional|PackedArray|array $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
      * @param Optional|bool $allUsers Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster.
      */
     public static function listSessions(
@@ -427,7 +443,7 @@ final class Stage
      * @param Optional|non-empty-string $localField Specifies the field from the documents input to the $lookup stage. $lookup performs an equality match on the localField to the foreignField from the documents of the from collection. If an input document does not contain the localField, the $lookup treats the field as having a value of null for matching purposes.
      * @param Optional|non-empty-string $foreignField Specifies the field from the documents in the from collection. $lookup performs an equality match on the foreignField to the localField from the input documents. If a document in the from collection does not contain the foreignField, the $lookup treats the value as null for matching purposes.
      * @param Document|Optional|Serializable|array|stdClass $let Specifies variables to use in the pipeline stages. Use the variable expressions to access the fields from the joined collection's documents that are input to the pipeline.
-     * @param Optional|Pipeline|array $pipeline Specifies the pipeline to run on the joined collection. The pipeline determines the resulting documents from the joined collection. To return all documents, specify an empty pipeline [].
+     * @param BSONArray|Optional|PackedArray|Pipeline|array $pipeline Specifies the pipeline to run on the joined collection. The pipeline determines the resulting documents from the joined collection. To return all documents, specify an empty pipeline [].
      * The pipeline cannot include the $out stage or the $mergestage. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.
      * The pipeline cannot directly access the joined document fields. Instead, define variables for the joined document fields using the let option and then reference the variables in the pipeline stages.
      */
@@ -437,7 +453,7 @@ final class Stage
         Optional|string $localField = Optional::Undefined,
         Optional|string $foreignField = Optional::Undefined,
         Document|Serializable|Optional|stdClass|array $let = Optional::Undefined,
-        Optional|Pipeline|array $pipeline = Optional::Undefined,
+        PackedArray|Optional|Pipeline|BSONArray|array $pipeline = Optional::Undefined,
     ): LookupStage
     {
         return new LookupStage($as, $from, $localField, $foreignField, $let, $pipeline);
@@ -447,9 +463,9 @@ final class Stage
      * Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. $match uses standard MongoDB queries. For each input document, outputs either one document (a match) or zero documents (no match).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/
-     * @param QueryInterface|array|stdClass $query
+     * @param Document|QueryInterface|Serializable|array|stdClass $query
      */
-    public static function match(QueryInterface|stdClass|array $query): MatchStage
+    public static function match(Document|Serializable|QueryInterface|stdClass|array $query): MatchStage
     {
         return new MatchStage($query);
     }
@@ -459,14 +475,14 @@ final class Stage
      * New in version 4.2.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/
-     * @param array|non-empty-string|stdClass $into The output collection.
-     * @param BSONArray|Optional|PackedArray|list|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
+     * @param Document|Serializable|array|non-empty-string|stdClass $into The output collection.
+     * @param BSONArray|Optional|PackedArray|array|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
      * @param Document|Optional|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline.
      * @param Optional|non-empty-string $whenMatched The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s).
      * @param Optional|non-empty-string $whenNotMatched The behavior of $merge if a result document does not match an existing document in the out collection.
      */
     public static function merge(
-        stdClass|array|string $into,
+        Document|Serializable|stdClass|array|string $into,
         PackedArray|Optional|BSONArray|array|string $on = Optional::Undefined,
         Document|Serializable|Optional|stdClass|array $let = Optional::Undefined,
         Optional|string $whenMatched = Optional::Undefined,
@@ -507,9 +523,11 @@ final class Stage
      * Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one document.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/
-     * @param ExpressionInterface|Int64|bool|int|mixed ...$specification
+     * @param Document|ProjectionInterface|ResolvesToBool|Serializable|array|bool|int|stdClass ...$specification
      */
-    public static function project(mixed ...$specification): ProjectStage
+    public static function project(
+        Document|Serializable|ResolvesToBool|ProjectionInterface|stdClass|array|bool|int ...$specification,
+    ): ProjectStage
     {
         return new ProjectStage(...$specification);
     }
@@ -518,9 +536,11 @@ final class Stage
      * Reshapes each document in the stream by restricting the content for each document based on information stored in the documents themselves. Incorporates the functionality of $project and $match. Can be used to implement field level redaction. For each input document, outputs either one or zero documents.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/
-     * @param ExpressionInterface|mixed $expression
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
-    public static function redact(mixed $expression): RedactStage
+    public static function redact(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+    ): RedactStage
     {
         return new RedactStage($expression);
     }
@@ -556,9 +576,9 @@ final class Stage
      * Randomly selects the specified number of documents from its input.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/
-     * @param Int64|int $size The number of documents to randomly select.
+     * @param int $size The number of documents to randomly select.
      */
-    public static function sample(Int64|int $size): SampleStage
+    public static function sample(int $size): SampleStage
     {
         return new SampleStage($size);
     }
@@ -592,9 +612,11 @@ final class Stage
      * Alias for $addFields.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/
-     * @param ExpressionInterface|mixed ...$field
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass ...$field
      */
-    public static function set(mixed ...$field): SetStage
+    public static function set(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string ...$field,
+    ): SetStage
     {
         return new SetStage(...$field);
     }
@@ -604,17 +626,17 @@ final class Stage
      * New in version 5.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/
-     * @param ExpressionInterface|mixed $partitionBy Specifies an expression to group the documents. In the $setWindowFields stage, the group of documents is known as a partition. Default is one partition for the entire collection.
-     * @param array|stdClass $sortBy Specifies the field(s) to sort the documents by in the partition. Uses the same syntax as the $sort stage. Default is no sorting.
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $partitionBy Specifies an expression to group the documents. In the $setWindowFields stage, the group of documents is known as a partition. Default is one partition for the entire collection.
+     * @param Document|Serializable|array|stdClass $sortBy Specifies the field(s) to sort the documents by in the partition. Uses the same syntax as the $sort stage. Default is no sorting.
      * @param Document|Serializable|array|stdClass $output Specifies the field(s) to append to the documents in the output returned by the $setWindowFields stage. Each field is set to the result returned by the window operator.
      * A field can contain dots to specify embedded document fields and array fields. The semantics for the embedded document dotted notation in the $setWindowFields stage are the same as the $addFields and $set stages.
-     * @param Optional|array|stdClass $window Specifies the window boundaries and parameters. Window boundaries are inclusive. Default is an unbounded window, which includes all documents in the partition.
+     * @param Document|Optional|Serializable|array|stdClass $window Specifies the window boundaries and parameters. Window boundaries are inclusive. Default is an unbounded window, which includes all documents in the partition.
      */
     public static function setWindowFields(
-        mixed $partitionBy,
-        stdClass|array $sortBy,
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $partitionBy,
+        Document|Serializable|stdClass|array $sortBy,
         Document|Serializable|stdClass|array $output,
-        Optional|stdClass|array $window = Optional::Undefined,
+        Document|Serializable|Optional|stdClass|array $window = Optional::Undefined,
     ): SetWindowFieldsStage
     {
         return new SetWindowFieldsStage($partitionBy, $sortBy, $output, $window);
@@ -635,9 +657,9 @@ final class Stage
      * Skips the first n documents where n is the specified skip number and passes the remaining documents unmodified to the pipeline. For each input document, outputs either zero documents (for the first n documents) or one document (if after the first n documents).
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/
-     * @param Int64|int $skip
+     * @param int $skip
      */
-    public static function skip(Int64|int $skip): SkipStage
+    public static function skip(int $skip): SkipStage
     {
         return new SkipStage($skip);
     }
@@ -646,9 +668,9 @@ final class Stage
      * Reorders the document stream by a specified sort key. Only the order changes; the documents remain unmodified. For each input document, outputs one document.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/
-     * @param array|stdClass $sort
+     * @param Document|Serializable|array|stdClass $sort
      */
-    public static function sort(stdClass|array $sort): SortStage
+    public static function sort(Document|Serializable|stdClass|array $sort): SortStage
     {
         return new SortStage($sort);
     }
@@ -657,9 +679,11 @@ final class Stage
      * Groups incoming documents based on the value of a specified expression, then computes the count of documents in each distinct group.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/
-     * @param ExpressionInterface|mixed $expression
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
-    public static function sortByCount(mixed $expression): SortByCountStage
+    public static function sortByCount(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+    ): SortByCountStage
     {
         return new SortByCountStage($expression);
     }
@@ -670,12 +694,12 @@ final class Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/
      * @param non-empty-string $coll The collection or view whose pipeline results you wish to include in the result set.
-     * @param Optional|Pipeline|array $pipeline An aggregation pipeline to apply to the specified coll.
+     * @param BSONArray|Optional|PackedArray|Pipeline|array $pipeline An aggregation pipeline to apply to the specified coll.
      * The pipeline cannot include the $out and $merge stages. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.
      */
     public static function unionWith(
         string $coll,
-        Optional|Pipeline|array $pipeline = Optional::Undefined,
+        PackedArray|Optional|Pipeline|BSONArray|array $pipeline = Optional::Undefined,
     ): UnionWithStage
     {
         return new UnionWithStage($coll, $pipeline);

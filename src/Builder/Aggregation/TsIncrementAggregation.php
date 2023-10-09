@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Aggregation;
 
-use MongoDB\BSON\Int64;
+use MongoDB\BSON\Timestamp;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToLong;
 use MongoDB\Builder\Expression\ResolvesToTimestamp;
@@ -22,13 +22,13 @@ class TsIncrementAggregation implements ResolvesToLong
     public const NAME = '$tsIncrement';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param Int64|ResolvesToTimestamp|int $expression */
-    public Int64|ResolvesToTimestamp|int $expression;
+    /** @param ResolvesToTimestamp|Timestamp|int $expression */
+    public Timestamp|ResolvesToTimestamp|int $expression;
 
     /**
-     * @param Int64|ResolvesToTimestamp|int $expression
+     * @param ResolvesToTimestamp|Timestamp|int $expression
      */
-    public function __construct(Int64|ResolvesToTimestamp|int $expression)
+    public function __construct(Timestamp|ResolvesToTimestamp|int $expression)
     {
         $this->expression = $expression;
     }

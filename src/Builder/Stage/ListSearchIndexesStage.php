@@ -8,6 +8,7 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\StageInterface;
 
 /**
  * Returns information about existing Atlas Search indexes on a specified collection.

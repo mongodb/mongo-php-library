@@ -7,6 +7,7 @@
 namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\StageInterface;
 
 /**
  * Splits large change stream events that exceed 16 MB into smaller fragments returned in a change stream cursor.

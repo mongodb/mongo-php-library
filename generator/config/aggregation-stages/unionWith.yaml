@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Performs a union of two collections; i.e. combines pipeline results from two collections into a single result set.
@@ -19,7 +19,7 @@ arguments:
     -
         name: pipeline
         type:
-            - Pipeline
+            - pipeline
         optional: true
         description: |
             An aggregation pipeline to apply to the specified coll.

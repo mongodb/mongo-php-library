@@ -7,7 +7,7 @@
 namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\Builder\Type\ExpressionInterface;
 
 /**
  * A special hint that can be provided via the sort() or hint() methods that can be used to force either a forward or reverse collection scan.

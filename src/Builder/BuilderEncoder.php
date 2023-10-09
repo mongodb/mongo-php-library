@@ -3,13 +3,13 @@
 namespace MongoDB\Builder;
 
 use LogicException;
-use MongoDB\Builder\Aggregation\AccumulatorInterface;
-use MongoDB\Builder\Expression\ExpressionInterface;
 use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Expression\Variable;
-use MongoDB\Builder\Query\QueryInterface;
 use MongoDB\Builder\Stage\GroupStage;
-use MongoDB\Builder\Stage\StageInterface;
+use MongoDB\Builder\Type\AccumulatorInterface;
+use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;

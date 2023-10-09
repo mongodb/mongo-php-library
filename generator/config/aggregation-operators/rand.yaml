@@ -4,7 +4,7 @@ category:
     - 'Miscellaneous Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/'
 type:
-    - resolvesToFloat
+    - resolvesToDouble
 encode: object
 description: |
     Returns a random float between 0 and 1

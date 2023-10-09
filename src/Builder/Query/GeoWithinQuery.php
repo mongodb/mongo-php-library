@@ -6,7 +6,10 @@
 
 namespace MongoDB\Builder\Query;
 
+use MongoDB\BSON\Document;
+use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\QueryInterface;
 use stdClass;
 
 /**
@@ -19,13 +22,13 @@ class GeoWithinQuery implements QueryInterface
     public const NAME = '$geoWithin';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param array|stdClass $geometry */
-    public stdClass|array $geometry;
+    /** @param Document|Serializable|array|stdClass $geometry */
+    public Document|Serializable|stdClass|array $geometry;
 
     /**
-     * @param array|stdClass $geometry
+     * @param Document|Serializable|array|stdClass $geometry
      */
-    public function __construct(stdClass|array $geometry)
+    public function __construct(Document|Serializable|stdClass|array $geometry)
     {
         $this->geometry = $geometry;
     }

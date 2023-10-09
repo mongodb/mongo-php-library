@@ -4,7 +4,7 @@ category:
     - 'Geospatial Geometry Specifiers'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geometry/'
 type:
-    - expression
+    - query
 encode: object
 description: |
     Specifies a geometry in GeoJSON format to geospatial query operators.

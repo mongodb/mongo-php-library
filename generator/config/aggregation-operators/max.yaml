@@ -6,8 +6,8 @@ category:
     - 'Window Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/'
 type:
-    - resolvesToAnything
-    - Accumulator
+    - resolvesToAny
+    - accumulator
 encode: single
 description: |
     Returns the maximum value that results from applying an expression to each document.

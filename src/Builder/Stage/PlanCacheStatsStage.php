@@ -7,6 +7,7 @@
 namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\StageInterface;
 
 /**
  * Returns plan cache information for a collection.

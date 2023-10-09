@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Model\BSONArray;
 
 /**
@@ -21,17 +21,18 @@ class PolygonQuery implements QueryInterface
     public const NAME = '$polygon';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param BSONArray|PackedArray|list $points */
+    /** @param BSONArray|PackedArray|array $points */
     public PackedArray|BSONArray|array $points;
 
     /**
-     * @param BSONArray|PackedArray|list $points
+     * @param BSONArray|PackedArray|array $points
      */
     public function __construct(PackedArray|BSONArray|array $points)
     {
         if (\is_array($points) && ! \array_is_list($points)) {
             throw new \InvalidArgumentException('Expected $points argument to be a list, got an associative array.');
         }
+
         $this->points = $points;
     }
 }

@@ -160,10 +160,10 @@ final class ScrapeCommand extends Command
         return $docs;
     }
 
-    /** @param array{Name:string,Category:string,Description:string,Link:string,ReturnType:string,Encode:string,Args:array{Name:string,Type:string,Options:string,Description:string}} $doc */
+    /** @param array{Name:string,Category:string,Description:string,Link:string,Type:string,Encode:string,Args:array{Name:string,Type:string,Options:string,Description:string}} $doc */
     private function formatSpec(array $doc): array
     {
-        foreach (['Name', 'Category', 'Description', 'Link', 'ReturnType', 'Encode', 'Args'] as $key) {
+        foreach (['Name', 'Category', 'Description', 'Link', 'Type', 'Encode', 'Args'] as $key) {
             assert(isset($doc[$key]), 'Missing ' . $key . ' for ' . var_export($doc, true));
         }
 
@@ -172,7 +172,7 @@ final class ScrapeCommand extends Command
         $spec['category'] = explode(PHP_EOL, $doc['Category']);
         sort($spec['category']);
         $spec['link'] = $doc['Link'];
-        $spec['type'] = explode(PHP_EOL, $doc['ReturnType']);
+        $spec['type'] = explode(PHP_EOL, $doc['Type']);
         $spec['encode'] = $doc['Encode'];
 
         if ($doc['Description']) {

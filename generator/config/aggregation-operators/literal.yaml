@@ -4,7 +4,7 @@ category:
     - 'Literal Expression Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/literal/'
 type:
-    - resolvesToAnything
+    - resolvesToAny
 encode: single
 description: |
     Return a value without parsing. Use for values that the aggregation pipeline may interpret as an expression. For example, use a $literal expression to a string that starts with a dollar sign ($) to avoid parsing as a field path.

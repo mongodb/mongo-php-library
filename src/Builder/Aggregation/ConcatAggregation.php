@@ -32,7 +32,7 @@ class ConcatAggregation implements ResolvesToString
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }
         if (! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression arguments to be a list of ResolvesToString|non-empty-string, named arguments are not supported');
+            throw new \InvalidArgumentException('Expected $expression arguments to be a list (array), named arguments are not supported');
         }
         $this->expression = $expression;
     }

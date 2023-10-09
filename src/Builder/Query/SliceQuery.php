@@ -6,30 +6,31 @@
 
 namespace MongoDB\Builder\Query;
 
-use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\ProjectionInterface;
+use MongoDB\Builder\Type\QueryInterface;
 
 /**
  * Limits the number of elements projected from an array. Supports skip and limit slices.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/slice/
  */
-class SliceQuery implements QueryInterface
+class SliceQuery implements QueryInterface, ProjectionInterface
 {
     public const NAME = '$slice';
     public const ENCODE = \MongoDB\Builder\Encode::Array;
 
-    /** @param Int64|int $limit */
-    public Int64|int $limit;
+    /** @param int $limit */
+    public int $limit;
 
-    /** @param Int64|int $skip */
-    public Int64|int $skip;
+    /** @param int $skip */
+    public int $skip;
 
     /**
-     * @param Int64|int $limit
-     * @param Int64|int $skip
+     * @param int $limit
+     * @param int $skip
      */
-    public function __construct(Int64|int $limit, Int64|int $skip)
+    public function __construct(int $limit, int $skip)
     {
         $this->limit = $limit;
         $this->skip = $skip;

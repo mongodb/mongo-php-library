@@ -26,4 +26,3 @@ psalm-baseline.xml export-ignore
 /src/Builder/Query/*.php linguist-generated=true
 /src/Builder/Stage.php linguist-generated=true
 /src/Builder/Stage/*.php linguist-generated=true
-/src/Builder/Stage/Stage.php linguist-generated=false

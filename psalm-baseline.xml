@@ -109,9 +109,6 @@
     </NamedArgumentNotAllowed>
   </file>
   <file src="src/Builder/Stage/AddFieldsStage.php">
-    <MixedAssignment>
-      <code>$value</code>
-    </MixedAssignment>
     <PropertyTypeCoercion>
       <code>$expression</code>
     </PropertyTypeCoercion>
@@ -127,17 +124,11 @@
     </PropertyTypeCoercion>
   </file>
   <file src="src/Builder/Stage/ProjectStage.php">
-    <MixedAssignment>
-      <code>$value</code>
-    </MixedAssignment>
     <PropertyTypeCoercion>
       <code>$specification</code>
     </PropertyTypeCoercion>
   </file>
   <file src="src/Builder/Stage/SetStage.php">
-    <MixedAssignment>
-      <code>$value</code>
-    </MixedAssignment>
     <PropertyTypeCoercion>
       <code>$field</code>
     </PropertyTypeCoercion>

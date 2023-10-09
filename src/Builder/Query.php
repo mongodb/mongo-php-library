@@ -7,12 +7,19 @@
 namespace MongoDB\Builder;
 
 use MongoDB\BSON\Binary;
+use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
+use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\BSON\Timestamp;
+use MongoDB\BSON\UTCDateTime;
+use MongoDB\Builder\Expression\ResolvesToDecimal;
+use MongoDB\Builder\Expression\ResolvesToDouble;
+use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\Builder\Expression\ResolvesToLong;
 use MongoDB\Builder\Query\AllQuery;
 use MongoDB\Builder\Query\AndQuery;
 use MongoDB\Builder\Query\BitsAllClearQuery;
@@ -49,7 +56,6 @@ use MongoDB\Builder\Query\NorQuery;
 use MongoDB\Builder\Query\NotQuery;
 use MongoDB\Builder\Query\OrQuery;
 use MongoDB\Builder\Query\PolygonQuery;
-use MongoDB\Builder\Query\QueryInterface;
 use MongoDB\Builder\Query\RandQuery;
 use MongoDB\Builder\Query\RegexQuery;
 use MongoDB\Builder\Query\SizeQuery;
@@ -57,6 +63,8 @@ use MongoDB\Builder\Query\SliceQuery;
 use MongoDB\Builder\Query\TextQuery;
 use MongoDB\Builder\Query\TypeQuery;
 use MongoDB\Builder\Query\WhereQuery;
+use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -66,9 +74,11 @@ final class Query
      * Matches arrays that contain all elements specified in the query.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/all/
-     * @param mixed ...$value
+     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass ...$value
      */
-    public static function all(mixed ...$value): AllQuery
+    public static function all(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string ...$value,
+    ): AllQuery
     {
         return new AllQuery(...$value);
     }
@@ -77,9 +87,9 @@ final class Query
      * Joins query clauses with a logical AND returns all documents that match the conditions of both clauses.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/and/
-     * @param QueryInterface|array|stdClass ...$expression
+     * @param Document|QueryInterface|Serializable|array|stdClass ...$expression
      */
-    public static function and(QueryInterface|stdClass|array ...$expression): AndQuery
+    public static function and(Document|Serializable|QueryInterface|stdClass|array ...$expression): AndQuery
     {
         return new AndQuery(...$expression);
     }
@@ -88,11 +98,9 @@ final class Query
      * Matches numeric or binary values in which a set of bit positions all have a value of 0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/
-     * @param BSONArray|Binary|Int64|PackedArray|int|list|non-empty-string $bitmask
+     * @param BSONArray|Binary|PackedArray|array|int|non-empty-string $bitmask
      */
-    public static function bitsAllClear(
-        Binary|Int64|PackedArray|BSONArray|array|int|string $bitmask,
-    ): BitsAllClearQuery
+    public static function bitsAllClear(Binary|PackedArray|BSONArray|array|int|string $bitmask): BitsAllClearQuery
     {
         return new BitsAllClearQuery($bitmask);
     }
@@ -101,9 +109,9 @@ final class Query
      * Matches numeric or binary values in which a set of bit positions all have a value of 1.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/
-     * @param BSONArray|Binary|Int64|PackedArray|int|list|non-empty-string $bitmask
+     * @param BSONArray|Binary|PackedArray|array|int|non-empty-string $bitmask
      */
-    public static function bitsAllSet(Binary|Int64|PackedArray|BSONArray|array|int|string $bitmask): BitsAllSetQuery
+    public static function bitsAllSet(Binary|PackedArray|BSONArray|array|int|string $bitmask): BitsAllSetQuery
     {
         return new BitsAllSetQuery($bitmask);
     }
@@ -112,11 +120,9 @@ final class Query
      * Matches numeric or binary values in which any bit from a set of bit positions has a value of 0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/
-     * @param BSONArray|Binary|Int64|PackedArray|int|list|non-empty-string $bitmask
+     * @param BSONArray|Binary|PackedArray|array|int|non-empty-string $bitmask
      */
-    public static function bitsAnyClear(
-        Binary|Int64|PackedArray|BSONArray|array|int|string $bitmask,
-    ): BitsAnyClearQuery
+    public static function bitsAnyClear(Binary|PackedArray|BSONArray|array|int|string $bitmask): BitsAnyClearQuery
     {
         return new BitsAnyClearQuery($bitmask);
     }
@@ -125,9 +131,9 @@ final class Query
      * Matches numeric or binary values in which any bit from a set of bit positions has a value of 1.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/
-     * @param BSONArray|Binary|Int64|PackedArray|int|list|non-empty-string $bitmask
+     * @param BSONArray|Binary|PackedArray|array|int|non-empty-string $bitmask
      */
-    public static function bitsAnySet(Binary|Int64|PackedArray|BSONArray|array|int|string $bitmask): BitsAnySetQuery
+    public static function bitsAnySet(Binary|PackedArray|BSONArray|array|int|string $bitmask): BitsAnySetQuery
     {
         return new BitsAnySetQuery($bitmask);
     }
@@ -136,7 +142,7 @@ final class Query
      * Specifies a rectangular box using legacy coordinate pairs for $geoWithin queries. The 2d index supports $box.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/box/
-     * @param BSONArray|PackedArray|list $value
+     * @param BSONArray|PackedArray|array $value
      */
     public static function box(PackedArray|BSONArray|array $value): BoxQuery
     {
@@ -147,7 +153,7 @@ final class Query
      * Specifies a circle using legacy coordinate pairs to $geoWithin queries when using planar geometry. The 2d index supports $center.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/center/
-     * @param BSONArray|PackedArray|list $value
+     * @param BSONArray|PackedArray|array $value
      */
     public static function center(PackedArray|BSONArray|array $value): CenterQuery
     {
@@ -158,7 +164,7 @@ final class Query
      * Specifies a circle using either legacy coordinate pairs or GeoJSON format for $geoWithin queries when using spherical geometry. The 2dsphere and 2d indexes support $centerSphere.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/centerSphere/
-     * @param BSONArray|PackedArray|list $value
+     * @param BSONArray|PackedArray|array $value
      */
     public static function centerSphere(PackedArray|BSONArray|array $value): CenterSphereQuery
     {
@@ -180,9 +186,9 @@ final class Query
      * Projects the first element in an array that matches the specified $elemMatch condition.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/
-     * @param Document|Serializable|array|stdClass $queries
+     * @param Document|QueryInterface|Serializable|array|stdClass $queries
      */
-    public static function elemMatch(Document|Serializable|stdClass|array $queries): ElemMatchQuery
+    public static function elemMatch(Document|Serializable|QueryInterface|stdClass|array $queries): ElemMatchQuery
     {
         return new ElemMatchQuery($queries);
     }
@@ -191,9 +197,11 @@ final class Query
      * Matches values that are equal to a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/
-     * @param mixed $value
+     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value
      */
-    public static function eq(mixed $value): EqQuery
+    public static function eq(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
+    ): EqQuery
     {
         return new EqQuery($value);
     }
@@ -213,9 +221,11 @@ final class Query
      * Allows use of aggregation expressions within the query language.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/expr/
-     * @param ExpressionInterface|mixed $expression
+     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
-    public static function expr(mixed $expression): ExprQuery
+    public static function expr(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+    ): ExprQuery
     {
         return new ExprQuery($expression);
     }
@@ -224,9 +234,9 @@ final class Query
      * Selects geometries that intersect with a GeoJSON geometry. The 2dsphere index supports $geoIntersects.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/
-     * @param array|stdClass $geometry
+     * @param Document|Serializable|array|stdClass $geometry
      */
-    public static function geoIntersects(stdClass|array $geometry): GeoIntersectsQuery
+    public static function geoIntersects(Document|Serializable|stdClass|array $geometry): GeoIntersectsQuery
     {
         return new GeoIntersectsQuery($geometry);
     }
@@ -236,7 +246,7 @@ final class Query
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geometry/
      * @param non-empty-string $type
-     * @param BSONArray|PackedArray|list $coordinates
+     * @param BSONArray|PackedArray|array $coordinates
      * @param Document|Serializable|array|stdClass $crs
      */
     public static function geometry(
@@ -252,9 +262,9 @@ final class Query
      * Selects geometries within a bounding GeoJSON geometry. The 2dsphere and 2d indexes support $geoWithin.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/
-     * @param array|stdClass $geometry
+     * @param Document|Serializable|array|stdClass $geometry
      */
-    public static function geoWithin(stdClass|array $geometry): GeoWithinQuery
+    public static function geoWithin(Document|Serializable|stdClass|array $geometry): GeoWithinQuery
     {
         return new GeoWithinQuery($geometry);
     }
@@ -263,9 +273,11 @@ final class Query
      * Matches values that are greater than a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/gt/
-     * @param mixed $value
+     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value
      */
-    public static function gt(mixed $value): GtQuery
+    public static function gt(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
+    ): GtQuery
     {
         return new GtQuery($value);
     }
@@ -274,9 +286,11 @@ final class Query
      * Matches values that are greater than or equal to a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/gte/
-     * @param mixed $value
+     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value
      */
-    public static function gte(mixed $value): GteQuery
+    public static function gte(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
+    ): GteQuery
     {
         return new GteQuery($value);
     }
@@ -285,7 +299,7 @@ final class Query
      * Matches any of the values specified in an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/in/
-     * @param BSONArray|PackedArray|list $value
+     * @param BSONArray|PackedArray|array $value
      */
     public static function in(PackedArray|BSONArray|array $value): InQuery
     {
@@ -307,9 +321,11 @@ final class Query
      * Matches values that are less than a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/lt/
-     * @param mixed $value
+     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value
      */
-    public static function lt(mixed $value): LtQuery
+    public static function lt(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
+    ): LtQuery
     {
         return new LtQuery($value);
     }
@@ -318,9 +334,11 @@ final class Query
      * Matches values that are less than or equal to a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/lte/
-     * @param mixed $value
+     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value
      */
-    public static function lte(mixed $value): LteQuery
+    public static function lte(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
+    ): LteQuery
     {
         return new LteQuery($value);
     }
@@ -329,9 +347,11 @@ final class Query
      * Specifies a maximum distance to limit the results of $near and $nearSphere queries. The 2dsphere and 2d indexes support $maxDistance.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/maxDistance/
-     * @param Int64|float|int $value
+     * @param Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $value
      */
-    public static function maxDistance(Int64|float|int $value): MaxDistanceQuery
+    public static function maxDistance(
+        Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $value,
+    ): MaxDistanceQuery
     {
         return new MaxDistanceQuery($value);
     }
@@ -361,10 +381,10 @@ final class Query
      * Performs a modulo operation on the value of a field and selects documents with a specified result.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/mod/
-     * @param Int64|int $divisor
-     * @param Int64|int $remainder
+     * @param int $divisor
+     * @param int $remainder
      */
-    public static function mod(Int64|int $divisor, Int64|int $remainder): ModQuery
+    public static function mod(int $divisor, int $remainder): ModQuery
     {
         return new ModQuery($divisor, $remainder);
     }
@@ -383,9 +403,11 @@ final class Query
      * Matches all values that are not equal to a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/ne/
-     * @param mixed $value
+     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value
      */
-    public static function ne(mixed $value): NeQuery
+    public static function ne(
+        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
+    ): NeQuery
     {
         return new NeQuery($value);
     }
@@ -394,14 +416,14 @@ final class Query
      * Returns geospatial objects in proximity to a point. Requires a geospatial index. The 2dsphere and 2d indexes support $near.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/near/
-     * @param array|stdClass $geometry
-     * @param Int64|Optional|int $maxDistance Distance in meters. Limits the results to those documents that are at most the specified distance from the center point.
-     * @param Int64|Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
+     * @param Document|Serializable|array|stdClass $geometry
+     * @param Optional|int $maxDistance Distance in meters. Limits the results to those documents that are at most the specified distance from the center point.
+     * @param Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public static function near(
-        stdClass|array $geometry,
-        Int64|Optional|int $maxDistance = Optional::Undefined,
-        Int64|Optional|int $minDistance = Optional::Undefined,
+        Document|Serializable|stdClass|array $geometry,
+        Optional|int $maxDistance = Optional::Undefined,
+        Optional|int $minDistance = Optional::Undefined,
     ): NearQuery
     {
         return new NearQuery($geometry, $maxDistance, $minDistance);
@@ -411,14 +433,14 @@ final class Query
      * Returns geospatial objects in proximity to a point on a sphere. Requires a geospatial index. The 2dsphere and 2d indexes support $nearSphere.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/
-     * @param array|stdClass $geometry
-     * @param Int64|Optional|int $maxDistance Distance in meters.
-     * @param Int64|Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
+     * @param Document|Serializable|array|stdClass $geometry
+     * @param Optional|int $maxDistance Distance in meters.
+     * @param Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public static function nearSphere(
-        stdClass|array $geometry,
-        Int64|Optional|int $maxDistance = Optional::Undefined,
-        Int64|Optional|int $minDistance = Optional::Undefined,
+        Document|Serializable|stdClass|array $geometry,
+        Optional|int $maxDistance = Optional::Undefined,
+        Optional|int $minDistance = Optional::Undefined,
     ): NearSphereQuery
     {
         return new NearSphereQuery($geometry, $maxDistance, $minDistance);
@@ -428,7 +450,7 @@ final class Query
      * Matches none of the values specified in an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nin/
-     * @param BSONArray|PackedArray|list $value
+     * @param BSONArray|PackedArray|array $value
      */
     public static function nin(PackedArray|BSONArray|array $value): NinQuery
     {
@@ -439,9 +461,9 @@ final class Query
      * Joins query clauses with a logical NOR returns all documents that fail to match both clauses.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nor/
-     * @param QueryInterface|array|stdClass ...$expression
+     * @param Document|QueryInterface|Serializable|array|stdClass ...$expression
      */
-    public static function nor(QueryInterface|stdClass|array ...$expression): NorQuery
+    public static function nor(Document|Serializable|QueryInterface|stdClass|array ...$expression): NorQuery
     {
         return new NorQuery(...$expression);
     }
@@ -450,9 +472,9 @@ final class Query
      * Inverts the effect of a query expression and returns documents that do not match the query expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/not/
-     * @param QueryInterface|array|stdClass $expression
+     * @param Document|QueryInterface|Serializable|array|stdClass $expression
      */
-    public static function not(QueryInterface|stdClass|array $expression): NotQuery
+    public static function not(Document|Serializable|QueryInterface|stdClass|array $expression): NotQuery
     {
         return new NotQuery($expression);
     }
@@ -461,9 +483,9 @@ final class Query
      * Joins query clauses with a logical OR returns all documents that match the conditions of either clause.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/or/
-     * @param QueryInterface|array|stdClass ...$expression
+     * @param Document|QueryInterface|Serializable|array|stdClass ...$expression
      */
-    public static function or(QueryInterface|stdClass|array ...$expression): OrQuery
+    public static function or(Document|Serializable|QueryInterface|stdClass|array ...$expression): OrQuery
     {
         return new OrQuery(...$expression);
     }
@@ -472,7 +494,7 @@ final class Query
      * Specifies a polygon to using legacy coordinate pairs for $geoWithin queries. The 2d index supports $center.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/polygon/
-     * @param BSONArray|PackedArray|list $points
+     * @param BSONArray|PackedArray|array $points
      */
     public static function polygon(PackedArray|BSONArray|array $points): PolygonQuery
     {
@@ -504,9 +526,9 @@ final class Query
      * Selects documents if the array field is a specified size.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/size/
-     * @param Int64|int $value
+     * @param int $value
      */
-    public static function size(Int64|int $value): SizeQuery
+    public static function size(int $value): SizeQuery
     {
         return new SizeQuery($value);
     }
@@ -515,10 +537,10 @@ final class Query
      * Limits the number of elements projected from an array. Supports skip and limit slices.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/slice/
-     * @param Int64|int $limit
-     * @param Int64|int $skip
+     * @param int $limit
+     * @param int $skip
      */
-    public static function slice(Int64|int $limit, Int64|int $skip): SliceQuery
+    public static function slice(int $limit, int $skip): SliceQuery
     {
         return new SliceQuery($limit, $skip);
     }
@@ -548,9 +570,9 @@ final class Query
      * Selects documents if a field is of the specified type.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/
-     * @param BSONArray|Int64|PackedArray|int|list|non-empty-string $type
+     * @param BSONArray|PackedArray|array|int|non-empty-string $type
      */
-    public static function type(Int64|PackedArray|BSONArray|array|int|string $type): TypeQuery
+    public static function type(PackedArray|BSONArray|array|int|string $type): TypeQuery
     {
         return new TypeQuery($type);
     }

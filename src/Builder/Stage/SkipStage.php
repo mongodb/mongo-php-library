@@ -6,8 +6,8 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\StageInterface;
 
 /**
  * Skips the first n documents where n is the specified skip number and passes the remaining documents unmodified to the pipeline. For each input document, outputs either zero documents (for the first n documents) or one document (if after the first n documents).
@@ -19,13 +19,13 @@ class SkipStage implements StageInterface
     public const NAME = '$skip';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param Int64|int $skip */
-    public Int64|int $skip;
+    /** @param int $skip */
+    public int $skip;
 
     /**
-     * @param Int64|int $skip
+     * @param int $skip
      */
-    public function __construct(Int64|int $skip)
+    public function __construct(int $skip)
     {
         $this->skip = $skip;
     }

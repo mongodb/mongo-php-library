@@ -4,7 +4,7 @@ category:
     - 'Array Expression Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/'
 type:
-    - resolvesToAnything
+    - resolvesToAny
 encode: array
 description: |
     Returns the element at the specified array index.

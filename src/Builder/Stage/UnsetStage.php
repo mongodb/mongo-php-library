@@ -8,6 +8,7 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\FieldPath;
+use MongoDB\Builder\Type\StageInterface;
 
 /**
  * Removes or excludes fields from documents.
@@ -33,7 +34,7 @@ class UnsetStage implements StageInterface
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $field, got %d.', 1, \count($field)));
         }
         if (! \array_is_list($field)) {
-            throw new \InvalidArgumentException('Expected $field arguments to be a list of FieldPath|non-empty-string, named arguments are not supported');
+            throw new \InvalidArgumentException('Expected $field arguments to be a list (array), named arguments are not supported');
         }
         $this->field = $field;
     }

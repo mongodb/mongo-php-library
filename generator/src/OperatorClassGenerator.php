@@ -3,10 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
-use MongoDB\Builder\Aggregation\AccumulatorInterface;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Query\QueryInterface;
-use MongoDB\Builder\Stage\StageInterface;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
 use MongoDB\CodeGenerator\Definition\VariadicType;
@@ -59,7 +56,7 @@ class OperatorClassGenerator extends OperatorGenerator
 
         $constuctor = $class->addMethod('__construct');
         foreach ($operator->arguments as $argument) {
-            $type = $this->generateExpressionTypes($argument);
+            $type = $this->getAcceptedTypes($argument);
             foreach ($type->use as $use) {
                 $namespace->addUse($use);
             }
@@ -88,7 +85,7 @@ class OperatorClassGenerator extends OperatorGenerator
                     $constuctor->addComment('@no-named-arguments');
                     $constuctor->addBody(<<<PHP
                     if (! \array_is_list(\${$argument->name})) {
-                        throw new \InvalidArgumentException('Expected \${$argument->name} arguments to be a list of {$type->doc}, named arguments are not supported');
+                        throw new \InvalidArgumentException('Expected \${$argument->name} arguments to be a list (array), named arguments are not supported');
                     }
                     PHP);
                 } elseif ($argument->variadic === VariadicType::Object) {
@@ -98,7 +95,7 @@ class OperatorClassGenerator extends OperatorGenerator
                     $constuctor->addBody(<<<PHP
                     foreach(\${$argument->name} as \$key => \$value) {
                         if (! \is_string(\$key)) {
-                            throw new \InvalidArgumentException('Expected \${$argument->name} arguments to be a map of {$type->doc}, named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
+                            throw new \InvalidArgumentException('Expected \${$argument->name} arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
                         }
                     }
                     \${$argument->name} = (object) \${$argument->name};
@@ -121,6 +118,7 @@ class OperatorClassGenerator extends OperatorGenerator
                     if (\is_array(\${$argument->name}) && ! \array_is_list(\${$argument->name})) {
                         throw new \InvalidArgumentException('Expected \${$argument->name} argument to be a list, got an associative array.');
                     }
+
                     PHP);
                 }
             }
@@ -140,19 +138,7 @@ class OperatorClassGenerator extends OperatorGenerator
         $interfaces = [];
 
         foreach ($definition->type as $type) {
-            if ($definition->type === 'Stage') {
-                return ['\\' . StageInterface::class];
-            }
-
-            if ($definition->type === 'Query') {
-                return ['\\' . QueryInterface::class];
-            }
-
-            if ($definition->type === 'Accumulator') {
-                return ['\\' . AccumulatorInterface::class];
-            }
-
-            $interfaces[] = $interface = $this->getExpressionTypeInterface($type);
+            $interfaces[] = $interface = $this->getType($type)->returnType;
             assert(interface_exists($interface), sprintf('"%s" is not an interface.', $interface));
         }
 

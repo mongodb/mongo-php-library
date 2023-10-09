@@ -5,7 +5,7 @@ category:
     - 'Window Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN/'
 type:
-    - Accumulator
+    - accumulator
 encode: object
 description: |
     Returns an aggregation of the top n fields within a group, according to the specified sort order.

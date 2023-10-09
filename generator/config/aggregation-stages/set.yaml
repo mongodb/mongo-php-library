@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/'
 type:
-    - Stage
+    - stage
 encode: single
 description: |
     Adds new fields to documents. Outputs documents that contain all existing fields from the input documents and newly added fields.

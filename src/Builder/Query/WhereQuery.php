@@ -7,6 +7,7 @@
 namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\QueryInterface;
 
 /**
  * Matches documents that satisfy a JavaScript expression.

@@ -4,7 +4,7 @@ category:
     - 'Geospatial Query Selectors'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/'
 type:
-    - Query
+    - query
 encode: single
 description: |
     Selects geometries within a bounding GeoJSON geometry. The 2dsphere and 2d indexes support $geoWithin.

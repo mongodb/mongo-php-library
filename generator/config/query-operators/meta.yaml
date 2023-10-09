@@ -4,7 +4,7 @@ category:
     - 'Projection Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/meta/'
 type:
-    - expression
+    - projection
 encode: object
 description: |
     Projects the available per-document metadata.

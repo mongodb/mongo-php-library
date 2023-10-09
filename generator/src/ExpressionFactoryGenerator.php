@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace MongoDB\CodeGenerator;
 
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
+use MongoDB\CodeGenerator\Definition\Generate;
 use Nette\PhpGenerator\PhpNamespace;
 
 use function lcfirst;
@@ -28,18 +29,18 @@ final class ExpressionFactoryGenerator extends AbstractGenerator
         usort($expressions, fn (ExpressionDefinition $a, ExpressionDefinition $b) => $a->name <=> $b->name);
 
         foreach ($expressions as $expression) {
-            if (! $expression->class) {
+            if ($expression->generate !== Generate::PhpClass) {
                 continue;
             }
 
-            $namespace->addUse($expression->name);
-            $expressionShortClassName = $this->splitNamespaceAndClassName($expression->name)[1];
+            $namespace->addUse($expression->returnType);
+            $expressionShortClassName = $this->splitNamespaceAndClassName($expression->returnType)[1];
 
             $method = $class->addMethod(lcfirst($expressionShortClassName));
             $method->setStatic();
             $method->addParameter('expression')->setType('string');
             $method->addBody('return new ' . $expressionShortClassName . '($expression);');
-            $method->setReturnType($expression->name);
+            $method->setReturnType($expression->returnType);
         }
 
         // Pedantry requires private methods to be at the end

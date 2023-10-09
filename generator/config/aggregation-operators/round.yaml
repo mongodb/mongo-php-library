@@ -25,7 +25,7 @@ arguments:
     -
         name: place
         type:
-            - ResolvesToInt
+            - resolvesToInt
         optional: true
         description: |
             Can be any valid expression that resolves to an integer between -20 and 100, exclusive.

@@ -6,9 +6,12 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\BSON\Int64;
+use MongoDB\BSON\Document;
+use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\ExpressionInterface;
+use MongoDB\Builder\Expression\ResolvesToBool;
+use MongoDB\Builder\Type\ProjectionInterface;
+use MongoDB\Builder\Type\StageInterface;
 use stdClass;
 
 /**
@@ -21,20 +24,21 @@ class ProjectStage implements StageInterface
     public const NAME = '$project';
     public const ENCODE = \MongoDB\Builder\Encode::Single;
 
-    /** @param stdClass<ExpressionInterface|Int64|bool|int|mixed> ...$specification */
+    /** @param stdClass<Document|ProjectionInterface|ResolvesToBool|Serializable|array|bool|int|stdClass> ...$specification */
     public stdClass $specification;
 
     /**
-     * @param ExpressionInterface|Int64|bool|int|mixed ...$specification
+     * @param Document|ProjectionInterface|ResolvesToBool|Serializable|array|bool|int|stdClass ...$specification
      */
-    public function __construct(mixed ...$specification)
-    {
+    public function __construct(
+        Document|Serializable|ResolvesToBool|ProjectionInterface|stdClass|array|bool|int ...$specification,
+    ) {
         if (\count($specification) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $specification, got %d.', 1, \count($specification)));
         }
         foreach($specification as $key => $value) {
             if (! \is_string($key)) {
-                throw new \InvalidArgumentException('Expected $specification arguments to be a map of ExpressionInterface|Int64|bool|int|mixed, named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
+                throw new \InvalidArgumentException('Expected $specification arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
             }
         }
         $specification = (object) $specification;

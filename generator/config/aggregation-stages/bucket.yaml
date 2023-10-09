@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.

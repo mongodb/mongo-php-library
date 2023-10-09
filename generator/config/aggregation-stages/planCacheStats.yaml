@@ -4,7 +4,7 @@ category:
     - Stage
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/'
 type:
-    - Stage
+    - stage
 encode: object
 description: |
     Returns plan cache information for a collection.

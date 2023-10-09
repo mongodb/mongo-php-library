@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-class FloatFieldPath extends FieldPath implements ResolvesToFloat
+class BinDataFieldPath extends FieldPath implements ResolvesToBinData
 {
     public string $expression;
 

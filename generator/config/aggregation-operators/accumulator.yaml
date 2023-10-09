@@ -5,7 +5,7 @@ category:
     - 'Custom Aggregation Expression Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/'
 type:
-    - Accumulator
+    - accumulator
 encode: object
 description: |
     Defines a custom accumulator function.

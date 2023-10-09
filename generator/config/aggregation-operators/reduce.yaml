@@ -4,7 +4,7 @@ category:
     - 'Array Expression Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/'
 type:
-    - resolvesToAnything
+    - resolvesToAny
 encode: object
 description: |
     Applies an expression to each element in an array and combines them into a single value.

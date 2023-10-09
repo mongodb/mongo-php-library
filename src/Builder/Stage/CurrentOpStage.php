@@ -7,6 +7,7 @@
 namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\StageInterface;
 
 /**
  * Returns information on active and/or dormant operations for the MongoDB deployment. To run, use the db.aggregate() method.

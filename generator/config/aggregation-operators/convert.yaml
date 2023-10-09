@@ -4,7 +4,7 @@ category:
     - 'Type Expression Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/convert/'
 type:
-    - resolvesToAnything
+    - resolvesToAny
 encode: object
 description: |
     Converts a value to a specified type.

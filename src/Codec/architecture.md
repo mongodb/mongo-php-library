@@ -24,12 +24,6 @@ for documents where a more specific `DocumentCodec` is provided. The `DocumentCo
 and `encode` methods from the base `Codec` interface to narrow the return types. Document codecs guarantee to always
 encode to a BSON document instance and decode to a PHP object.
 
-## Built-in Codecs
-
-By default, two codecs are provided: an `ArrayCodec` and an `ObjectCodec`. These two codecs are used to recursively
-encode and decode values in arrays and `stdClass` instances, respectively. When encoding or decoding an object,
-`ObjectCodec` only handles public properties of the object and ignores private and protected properties.
-
 ## Future Work
 
 ### Using Codecs

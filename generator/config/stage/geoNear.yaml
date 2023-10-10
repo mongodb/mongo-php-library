@@ -55,7 +55,7 @@ arguments:
     -
         name: near
         type:
-            - GeoPoint
+            - object # GeoPoint
         description: |
             The point for which to find the closest documents.
     -
@@ -64,7 +64,7 @@ arguments:
             - query
         optional: true
         description: |
-            imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
+            Limits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
             You cannot specify a $near predicate in the query field of the $geoNear stage.
     -
         name: spherical

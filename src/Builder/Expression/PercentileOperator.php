@@ -12,7 +12,11 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\WindowInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Returns an array of scalar values that correspond to specified percentile values.
@@ -56,8 +60,8 @@ class PercentileOperator implements ResolvesToArray, AccumulatorInterface, Windo
         string $method,
     ) {
         $this->input = $input;
-        if (\is_array($p) && ! \array_is_list($p)) {
-            throw new \InvalidArgumentException('Expected $p argument to be a list, got an associative array.');
+        if (is_array($p) && ! array_is_list($p)) {
+            throw new InvalidArgumentException('Expected $p argument to be a list, got an associative array.');
         }
 
         $this->p = $p;

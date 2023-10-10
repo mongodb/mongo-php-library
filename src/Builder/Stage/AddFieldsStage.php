@@ -20,8 +20,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function is_string;
 
 /**
  * Adds new fields to documents. Outputs documents that contain all existing fields from the input documents and newly added fields.
@@ -46,8 +49,8 @@ class AddFieldsStage implements StageInterface
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }
         foreach($expression as $key => $value) {
-            if (! \is_string($key)) {
-                throw new \InvalidArgumentException('Expected $expression arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
+            if (! is_string($key)) {
+                throw new InvalidArgumentException('Expected $expression arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
             }
         }
         $expression = (object) $expression;

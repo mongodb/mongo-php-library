@@ -10,8 +10,11 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function is_string;
 
 /**
  * Processes multiple aggregation pipelines within a single stage on the same set of input documents. Enables the creation of multi-faceted aggregations capable of characterizing data across multiple dimensions, or facets, in a single stage.
@@ -35,8 +38,8 @@ class FacetStage implements StageInterface
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $facet, got %d.', 1, \count($facet)));
         }
         foreach($facet as $key => $value) {
-            if (! \is_string($key)) {
-                throw new \InvalidArgumentException('Expected $facet arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
+            if (! is_string($key)) {
+                throw new InvalidArgumentException('Expected $facet arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
             }
         }
         $facet = (object) $facet;

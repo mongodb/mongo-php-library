@@ -11,7 +11,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Performs a union of two collections; i.e. combines pipeline results from two collections into a single result set.
@@ -43,8 +47,8 @@ class UnionWithStage implements StageInterface
         Optional|PackedArray|Pipeline|BSONArray|array $pipeline = Optional::Undefined,
     ) {
         $this->coll = $coll;
-        if (\is_array($pipeline) && ! \array_is_list($pipeline)) {
-            throw new \InvalidArgumentException('Expected $pipeline argument to be a list, got an associative array.');
+        if (is_array($pipeline) && ! array_is_list($pipeline)) {
+            throw new InvalidArgumentException('Expected $pipeline argument to be a list, got an associative array.');
         }
 
         $this->pipeline = $pipeline;

@@ -10,7 +10,11 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\AccumulatorInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Defines a custom accumulator function.
@@ -64,15 +68,15 @@ class AccumulatorOperator implements AccumulatorInterface
     ) {
         $this->init = $init;
         $this->accumulate = $accumulate;
-        if (\is_array($accumulateArgs) && ! \array_is_list($accumulateArgs)) {
-            throw new \InvalidArgumentException('Expected $accumulateArgs argument to be a list, got an associative array.');
+        if (is_array($accumulateArgs) && ! array_is_list($accumulateArgs)) {
+            throw new InvalidArgumentException('Expected $accumulateArgs argument to be a list, got an associative array.');
         }
 
         $this->accumulateArgs = $accumulateArgs;
         $this->merge = $merge;
         $this->lang = $lang;
-        if (\is_array($initArgs) && ! \array_is_list($initArgs)) {
-            throw new \InvalidArgumentException('Expected $initArgs argument to be a list, got an associative array.');
+        if (is_array($initArgs) && ! array_is_list($initArgs)) {
+            throw new InvalidArgumentException('Expected $initArgs argument to be a list, got an associative array.');
         }
 
         $this->initArgs = $initArgs;

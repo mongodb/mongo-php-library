@@ -21,8 +21,12 @@ use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.
@@ -81,8 +85,8 @@ class BucketStage implements StageInterface
         Optional|Document|Serializable|stdClass|array $output = Optional::Undefined,
     ) {
         $this->groupBy = $groupBy;
-        if (\is_array($boundaries) && ! \array_is_list($boundaries)) {
-            throw new \InvalidArgumentException('Expected $boundaries argument to be a list, got an associative array.');
+        if (is_array($boundaries) && ! array_is_list($boundaries)) {
+            throw new InvalidArgumentException('Expected $boundaries argument to be a list, got an associative array.');
         }
 
         $this->boundaries = $boundaries;

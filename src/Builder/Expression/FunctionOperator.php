@@ -8,7 +8,11 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Defines a custom function.
@@ -38,8 +42,8 @@ class FunctionOperator implements ResolvesToAny
     public function __construct(string $body, PackedArray|BSONArray|array $args, string $lang)
     {
         $this->body = $body;
-        if (\is_array($args) && ! \array_is_list($args)) {
-            throw new \InvalidArgumentException('Expected $args argument to be a list, got an associative array.');
+        if (is_array($args) && ! array_is_list($args)) {
+            throw new InvalidArgumentException('Expected $args argument to be a list, got an associative array.');
         }
 
         $this->args = $args;

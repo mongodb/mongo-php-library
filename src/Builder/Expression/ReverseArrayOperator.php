@@ -8,7 +8,11 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Returns an array with the elements in reverse order.
@@ -28,8 +32,8 @@ class ReverseArrayOperator implements ResolvesToArray
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array $expression)
     {
-        if (\is_array($expression) && ! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression argument to be a list, got an associative array.');
+        if (is_array($expression) && ! array_is_list($expression)) {
+            throw new InvalidArgumentException('Expected $expression argument to be a list, got an associative array.');
         }
 
         $this->expression = $expression;

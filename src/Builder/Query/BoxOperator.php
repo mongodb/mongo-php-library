@@ -9,7 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Specifies a rectangular box using legacy coordinate pairs for $geoWithin queries. The 2d index supports $box.
@@ -29,8 +33,8 @@ class BoxOperator implements QueryInterface
      */
     public function __construct(PackedArray|BSONArray|array $value)
     {
-        if (\is_array($value) && ! \array_is_list($value)) {
-            throw new \InvalidArgumentException('Expected $value argument to be a list, got an associative array.');
+        if (is_array($value) && ! array_is_list($value)) {
+            throw new InvalidArgumentException('Expected $value argument to be a list, got an associative array.');
         }
 
         $this->value = $value;

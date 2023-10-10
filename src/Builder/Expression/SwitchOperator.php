@@ -19,8 +19,12 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Evaluates a series of case expressions. When it finds an expression which evaluates to true, $switch executes a specified expression and breaks out of the control flow.
@@ -58,8 +62,8 @@ class SwitchOperator implements ResolvesToAny
         PackedArray|BSONArray|array $branches,
         Optional|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $default = Optional::Undefined,
     ) {
-        if (\is_array($branches) && ! \array_is_list($branches)) {
-            throw new \InvalidArgumentException('Expected $branches argument to be a list, got an associative array.');
+        if (is_array($branches) && ! array_is_list($branches)) {
+            throw new InvalidArgumentException('Expected $branches argument to be a list, got an associative array.');
         }
 
         $this->branches = $branches;

@@ -10,6 +10,9 @@ use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encode;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function array_is_list;
 
 /**
  * Adds numbers to return the sum, or adds numbers and a date to return a new date. If adding numbers and a date, treats the numbers as milliseconds. Accepts any number of argument expressions, but at most, one expression can resolve to a date.
@@ -34,8 +37,8 @@ class AddOperator implements ResolvesToNumber, ResolvesToDate
         if (\count($expression) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }
-        if (! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression arguments to be a list (array), named arguments are not supported');
+        if (! array_is_list($expression)) {
+            throw new InvalidArgumentException('Expected $expression arguments to be a list (array), named arguments are not supported');
         }
         $this->expression = $expression;
     }

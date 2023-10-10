@@ -10,7 +10,11 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Lists all sessions that have been active long enough to propagate to the system.sessions collection.
@@ -36,8 +40,8 @@ class ListSessionsStage implements StageInterface
         Optional|PackedArray|BSONArray|array $users = Optional::Undefined,
         Optional|bool $allUsers = Optional::Undefined,
     ) {
-        if (\is_array($users) && ! \array_is_list($users)) {
-            throw new \InvalidArgumentException('Expected $users argument to be a list, got an associative array.');
+        if (is_array($users) && ! array_is_list($users)) {
+            throw new InvalidArgumentException('Expected $users argument to be a list, got an associative array.');
         }
 
         $this->users = $users;

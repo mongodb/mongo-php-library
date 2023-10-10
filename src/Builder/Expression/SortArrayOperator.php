@@ -10,8 +10,12 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Sorts the elements of an array.
@@ -37,8 +41,8 @@ class SortArrayOperator implements ResolvesToArray
         PackedArray|ResolvesToArray|BSONArray|array $input,
         Document|Serializable|stdClass|array $sortBy,
     ) {
-        if (\is_array($input) && ! \array_is_list($input)) {
-            throw new \InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
+        if (is_array($input) && ! array_is_list($input)) {
+            throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
         }
 
         $this->input = $input;

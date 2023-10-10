@@ -12,8 +12,12 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Creates new documents in a sequence of documents where certain values in a field are missing.
@@ -52,8 +56,8 @@ class DensifyStage implements StageInterface
     ) {
         $this->field = $field;
         $this->range = $range;
-        if (\is_array($partitionByFields) && ! \array_is_list($partitionByFields)) {
-            throw new \InvalidArgumentException('Expected $partitionByFields argument to be a list, got an associative array.');
+        if (is_array($partitionByFields) && ! array_is_list($partitionByFields)) {
+            throw new InvalidArgumentException('Expected $partitionByFields argument to be a list, got an associative array.');
         }
 
         $this->partitionByFields = $partitionByFields;

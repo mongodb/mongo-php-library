@@ -12,8 +12,12 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Populates null and missing field values within documents.
@@ -67,8 +71,8 @@ class FillStage implements StageInterface
     ) {
         $this->output = $output;
         $this->partitionBy = $partitionBy;
-        if (\is_array($partitionByFields) && ! \array_is_list($partitionByFields)) {
-            throw new \InvalidArgumentException('Expected $partitionByFields argument to be a list, got an associative array.');
+        if (is_array($partitionByFields) && ! array_is_list($partitionByFields)) {
+            throw new InvalidArgumentException('Expected $partitionByFields argument to be a list, got an associative array.');
         }
 
         $this->partitionByFields = $partitionByFields;

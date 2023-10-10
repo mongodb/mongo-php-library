@@ -10,7 +10,11 @@ use MongoDB\BSON\Binary;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Matches numeric or binary values in which any bit from a set of bit positions has a value of 0.
@@ -30,8 +34,8 @@ class BitsAnyClearOperator implements QueryInterface
      */
     public function __construct(Binary|PackedArray|BSONArray|array|int|string $bitmask)
     {
-        if (\is_array($bitmask) && ! \array_is_list($bitmask)) {
-            throw new \InvalidArgumentException('Expected $bitmask argument to be a list, got an associative array.');
+        if (is_array($bitmask) && ! array_is_list($bitmask)) {
+            throw new InvalidArgumentException('Expected $bitmask argument to be a list, got an associative array.');
         }
 
         $this->bitmask = $bitmask;

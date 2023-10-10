@@ -10,7 +10,11 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\ProjectionInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Returns a subset of an array.
@@ -53,8 +57,8 @@ class SliceOperator implements ResolvesToArray, ProjectionInterface
         ResolvesToInt|int $n,
         Optional|ResolvesToInt|int $position = Optional::Undefined,
     ) {
-        if (\is_array($expression) && ! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression argument to be a list, got an associative array.');
+        if (is_array($expression) && ! array_is_list($expression)) {
+            throw new InvalidArgumentException('Expected $expression argument to be a list, got an associative array.');
         }
 
         $this->expression = $expression;

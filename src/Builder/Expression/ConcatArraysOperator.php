@@ -8,7 +8,10 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
 
 /**
  * Concatenates arrays to return the concatenated array.
@@ -32,8 +35,8 @@ class ConcatArraysOperator implements ResolvesToArray
         if (\count($array) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $array, got %d.', 1, \count($array)));
         }
-        if (! \array_is_list($array)) {
-            throw new \InvalidArgumentException('Expected $array arguments to be a list (array), named arguments are not supported');
+        if (! array_is_list($array)) {
+            throw new InvalidArgumentException('Expected $array arguments to be a list (array), named arguments are not supported');
         }
         $this->array = $array;
     }

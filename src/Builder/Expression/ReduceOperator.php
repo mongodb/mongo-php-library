@@ -18,8 +18,12 @@ use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Applies an expression to each element in an array and combines them into a single value.
@@ -64,8 +68,8 @@ class ReduceOperator implements ResolvesToAny
         Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $initialValue,
         Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $in,
     ) {
-        if (\is_array($input) && ! \array_is_list($input)) {
-            throw new \InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
+        if (is_array($input) && ! array_is_list($input)) {
+            throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
         }
 
         $this->input = $input;

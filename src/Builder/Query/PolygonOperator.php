@@ -9,7 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Specifies a polygon to using legacy coordinate pairs for $geoWithin queries. The 2d index supports $center.
@@ -29,8 +33,8 @@ class PolygonOperator implements QueryInterface
      */
     public function __construct(PackedArray|BSONArray|array $points)
     {
-        if (\is_array($points) && ! \array_is_list($points)) {
-            throw new \InvalidArgumentException('Expected $points argument to be a list, got an associative array.');
+        if (is_array($points) && ! array_is_list($points)) {
+            throw new InvalidArgumentException('Expected $points argument to be a list, got an associative array.');
         }
 
         $this->points = $points;

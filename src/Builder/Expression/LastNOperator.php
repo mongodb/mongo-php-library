@@ -9,7 +9,11 @@ namespace MongoDB\Builder\Expression;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\WindowInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Returns a specified number of elements from the end of an array. Distinct from the $lastN accumulator.
@@ -33,8 +37,8 @@ class LastNOperator implements ResolvesToArray, WindowInterface
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array $input, ResolvesToInt|int $n)
     {
-        if (\is_array($input) && ! \array_is_list($input)) {
-            throw new \InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
+        if (is_array($input) && ! array_is_list($input)) {
+            throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
         }
 
         $this->input = $input;

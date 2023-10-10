@@ -7,6 +7,7 @@ use MongoDB\Builder\Encode;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
 use MongoDB\CodeGenerator\Definition\VariadicType;
+use MongoDB\Exception\InvalidArgumentException;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpNamespace;
 use RuntimeException;
@@ -83,19 +84,23 @@ class OperatorClassGenerator extends OperatorGenerator
                     // Warn that named arguments are not supported
                     // @see https://psalm.dev/docs/running_psalm/issues/NamedArgumentNotAllowed/
                     $constuctor->addComment('@no-named-arguments');
+                    $namespace->addUseFunction('array_is_list');
+                    $namespace->addUse(InvalidArgumentException::class);
                     $constuctor->addBody(<<<PHP
-                    if (! \array_is_list(\${$argument->name})) {
-                        throw new \InvalidArgumentException('Expected \${$argument->name} arguments to be a list (array), named arguments are not supported');
+                    if (! array_is_list(\${$argument->name})) {
+                        throw new InvalidArgumentException('Expected \${$argument->name} arguments to be a list (array), named arguments are not supported');
                     }
                     PHP);
                 } elseif ($argument->variadic === VariadicType::Object) {
                     $namespace->addUse(stdClass::class);
                     $property->setType(stdClass::class);
                     $property->addComment('@param stdClass<' . $type->doc . '> ...$' . $argument->name . rtrim(' ' . $argument->description));
+                    $namespace->addUseFunction('is_string');
+                    $namespace->addUse(InvalidArgumentException::class);
                     $constuctor->addBody(<<<PHP
                     foreach(\${$argument->name} as \$key => \$value) {
-                        if (! \is_string(\$key)) {
-                            throw new \InvalidArgumentException('Expected \${$argument->name} arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
+                        if (! is_string(\$key)) {
+                            throw new InvalidArgumentException('Expected \${$argument->name} arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
                         }
                     }
                     \${$argument->name} = (object) \${$argument->name};
@@ -114,9 +119,12 @@ class OperatorClassGenerator extends OperatorGenerator
 
                 // List type must be validated with array_is_list()
                 if ($type->list) {
+                    $namespace->addUseFunction('is_array');
+                    $namespace->addUseFunction('array_is_list');
+                    $namespace->addUse(InvalidArgumentException::class);
                     $constuctor->addBody(<<<PHP
-                    if (\is_array(\${$argument->name}) && ! \array_is_list(\${$argument->name})) {
-                        throw new \InvalidArgumentException('Expected \${$argument->name} argument to be a list, got an associative array.');
+                    if (is_array(\${$argument->name}) && ! array_is_list(\${$argument->name})) {
+                        throw new InvalidArgumentException('Expected \${$argument->name} argument to be a list, got an associative array.');
                     }
 
                     PHP);

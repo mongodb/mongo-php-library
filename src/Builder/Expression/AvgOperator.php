@@ -11,6 +11,9 @@ use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\WindowInterface;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function array_is_list;
 
 /**
  * Returns an average of numerical values. Ignores non-numeric values.
@@ -35,8 +38,8 @@ class AvgOperator implements ResolvesToNumber, AccumulatorInterface, WindowInter
         if (\count($expression) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }
-        if (! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression arguments to be a list (array), named arguments are not supported');
+        if (! array_is_list($expression)) {
+            throw new InvalidArgumentException('Expected $expression arguments to be a list (array), named arguments are not supported');
         }
         $this->expression = $expression;
     }

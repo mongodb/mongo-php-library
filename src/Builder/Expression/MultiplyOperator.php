@@ -9,6 +9,9 @@ namespace MongoDB\Builder\Expression;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function array_is_list;
 
 /**
  * Multiplies numbers to return the product. Accepts any number of argument expressions.
@@ -36,8 +39,8 @@ class MultiplyOperator implements ResolvesToDecimal
         if (\count($expression) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }
-        if (! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression arguments to be a list (array), named arguments are not supported');
+        if (! array_is_list($expression)) {
+            throw new InvalidArgumentException('Expected $expression arguments to be a list (array), named arguments are not supported');
         }
         $this->expression = $expression;
     }

@@ -20,8 +20,11 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\WindowInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function array_is_list;
 
 /**
  * Returns the minimum value that results from applying an expression to each document.
@@ -47,8 +50,8 @@ class MinOperator implements ResolvesToAny, AccumulatorInterface, WindowInterfac
         if (\count($expression) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));
         }
-        if (! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression arguments to be a list (array), named arguments are not supported');
+        if (! array_is_list($expression)) {
+            throw new InvalidArgumentException('Expected $expression arguments to be a list (array), named arguments are not supported');
         }
         $this->expression = $expression;
     }

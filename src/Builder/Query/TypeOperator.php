@@ -9,7 +9,11 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Selects documents if a field is of the specified type.
@@ -29,8 +33,8 @@ class TypeOperator implements QueryInterface
      */
     public function __construct(PackedArray|BSONArray|array|int|string $type)
     {
-        if (\is_array($type) && ! \array_is_list($type)) {
-            throw new \InvalidArgumentException('Expected $type argument to be a list, got an associative array.');
+        if (is_array($type) && ! array_is_list($type)) {
+            throw new InvalidArgumentException('Expected $type argument to be a list, got an associative array.');
         }
 
         $this->type = $type;

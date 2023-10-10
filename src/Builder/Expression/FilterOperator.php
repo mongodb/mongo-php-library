@@ -10,7 +10,11 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\ProjectionInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Selects a subset of the array to return an array with only the elements that match the filter condition.
@@ -50,8 +54,8 @@ class FilterOperator implements ResolvesToArray, ProjectionInterface
         Optional|string $as = Optional::Undefined,
         Optional|ResolvesToInt|int $limit = Optional::Undefined,
     ) {
-        if (\is_array($input) && ! \array_is_list($input)) {
-            throw new \InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
+        if (is_array($input) && ! array_is_list($input)) {
+            throw new InvalidArgumentException('Expected $input argument to be a list, got an associative array.');
         }
 
         $this->input = $input;

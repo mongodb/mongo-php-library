@@ -19,8 +19,11 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function array_is_list;
 
 /**
  * Matches arrays that contain all elements specified in the query.
@@ -45,8 +48,8 @@ class AllOperator implements QueryInterface
         if (\count($value) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $value, got %d.', 1, \count($value)));
         }
-        if (! \array_is_list($value)) {
-            throw new \InvalidArgumentException('Expected $value arguments to be a list (array), named arguments are not supported');
+        if (! array_is_list($value)) {
+            throw new InvalidArgumentException('Expected $value arguments to be a list (array), named arguments are not supported');
         }
         $this->value = $value;
     }

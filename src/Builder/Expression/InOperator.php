@@ -18,8 +18,12 @@ use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Returns a boolean indicating whether a specified value is in an array.
@@ -46,8 +50,8 @@ class InOperator implements ResolvesToBool
         PackedArray|ResolvesToArray|BSONArray|array $array,
     ) {
         $this->expression = $expression;
-        if (\is_array($array) && ! \array_is_list($array)) {
-            throw new \InvalidArgumentException('Expected $array argument to be a list, got an associative array.');
+        if (is_array($array) && ! array_is_list($array)) {
+            throw new InvalidArgumentException('Expected $array argument to be a list, got an associative array.');
         }
 
         $this->array = $array;

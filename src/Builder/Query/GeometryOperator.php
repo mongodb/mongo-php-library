@@ -11,8 +11,12 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Specifies a geometry in GeoJSON format to geospatial query operators.
@@ -44,8 +48,8 @@ class GeometryOperator implements QueryInterface
         Document|Serializable|stdClass|array $crs,
     ) {
         $this->type = $type;
-        if (\is_array($coordinates) && ! \array_is_list($coordinates)) {
-            throw new \InvalidArgumentException('Expected $coordinates argument to be a list, got an associative array.');
+        if (is_array($coordinates) && ! array_is_list($coordinates)) {
+            throw new InvalidArgumentException('Expected $coordinates argument to be a list, got an associative array.');
         }
 
         $this->coordinates = $coordinates;

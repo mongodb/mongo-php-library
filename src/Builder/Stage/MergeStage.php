@@ -12,8 +12,12 @@ use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Writes the resulting documents of the aggregation pipeline to a collection. The stage can incorporate (insert new documents, merge documents, replace documents, keep existing documents, fail the operation, process documents with a custom update pipeline) the results into an output collection. To use the $merge stage, it must be the last stage in the pipeline.
@@ -56,8 +60,8 @@ class MergeStage implements StageInterface
         Optional|string $whenNotMatched = Optional::Undefined,
     ) {
         $this->into = $into;
-        if (\is_array($on) && ! \array_is_list($on)) {
-            throw new \InvalidArgumentException('Expected $on argument to be a list, got an associative array.');
+        if (is_array($on) && ! array_is_list($on)) {
+            throw new InvalidArgumentException('Expected $on argument to be a list, got an associative array.');
         }
 
         $this->on = $on;

@@ -10,7 +10,11 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToArray;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Returns literal documents from input values.
@@ -40,8 +44,8 @@ class DocumentsStage implements StageInterface
      */
     public function __construct(PackedArray|ResolvesToArray|BSONArray|array $documents)
     {
-        if (\is_array($documents) && ! \array_is_list($documents)) {
-            throw new \InvalidArgumentException('Expected $documents argument to be a list, got an associative array.');
+        if (is_array($documents) && ! array_is_list($documents)) {
+            throw new InvalidArgumentException('Expected $documents argument to be a list, got an associative array.');
         }
 
         $this->documents = $documents;

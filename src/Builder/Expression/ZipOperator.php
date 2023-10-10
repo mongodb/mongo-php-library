@@ -8,7 +8,11 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Merge two arrays together.
@@ -55,14 +59,14 @@ class ZipOperator implements ResolvesToArray
         bool $useLongestLength,
         PackedArray|BSONArray|array $defaults,
     ) {
-        if (\is_array($inputs) && ! \array_is_list($inputs)) {
-            throw new \InvalidArgumentException('Expected $inputs argument to be a list, got an associative array.');
+        if (is_array($inputs) && ! array_is_list($inputs)) {
+            throw new InvalidArgumentException('Expected $inputs argument to be a list, got an associative array.');
         }
 
         $this->inputs = $inputs;
         $this->useLongestLength = $useLongestLength;
-        if (\is_array($defaults) && ! \array_is_list($defaults)) {
-            throw new \InvalidArgumentException('Expected $defaults argument to be a list, got an associative array.');
+        if (is_array($defaults) && ! array_is_list($defaults)) {
+            throw new InvalidArgumentException('Expected $defaults argument to be a list, got an associative array.');
         }
 
         $this->defaults = $defaults;

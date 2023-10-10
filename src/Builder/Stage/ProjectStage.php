@@ -12,7 +12,10 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToBool;
 use MongoDB\Builder\Type\ProjectionInterface;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
+
+use function is_string;
 
 /**
  * Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one document.
@@ -37,8 +40,8 @@ class ProjectStage implements StageInterface
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $specification, got %d.', 1, \count($specification)));
         }
         foreach($specification as $key => $value) {
-            if (! \is_string($key)) {
-                throw new \InvalidArgumentException('Expected $specification arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
+            if (! is_string($key)) {
+                throw new InvalidArgumentException('Expected $specification arguments to be a map (object), named arguments (<name>:<value>) or array unpacking ...[\'<name>\' => <value>] must be used');
             }
         }
         $specification = (object) $specification;

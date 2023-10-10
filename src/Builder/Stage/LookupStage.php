@@ -13,8 +13,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function array_is_list;
+use function is_array;
 
 /**
  * Performs a left outer join to another collection in the same database to filter in documents from the "joined" collection for processing.
@@ -77,8 +81,8 @@ class LookupStage implements StageInterface
         $this->localField = $localField;
         $this->foreignField = $foreignField;
         $this->let = $let;
-        if (\is_array($pipeline) && ! \array_is_list($pipeline)) {
-            throw new \InvalidArgumentException('Expected $pipeline argument to be a list, got an associative array.');
+        if (is_array($pipeline) && ! array_is_list($pipeline)) {
+            throw new InvalidArgumentException('Expected $pipeline argument to be a list, got an associative array.');
         }
 
         $this->pipeline = $pipeline;

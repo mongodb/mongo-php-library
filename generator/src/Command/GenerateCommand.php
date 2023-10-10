@@ -72,7 +72,7 @@ final class GenerateCommand extends Command
     /** @param array<class-string<ExpressionType>, ExpressionDefinition> $expressions */
     private function generateOperatorClasses(array $expressions, OutputInterface $output): void
     {
-        $config = require $this->configDir . '/operators.php';
+        $config = require $this->configDir . '/definitions.php';
         assert(is_array($config));
 
         foreach ($config as $def) {

@@ -8,6 +8,7 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ArrayFieldPath;
+use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\StageInterface;
 
 /**
@@ -20,14 +21,33 @@ class UnwindStage implements StageInterface
     public const NAME = '$unwind';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
-    /** @param ArrayFieldPath|non-empty-string $field */
-    public ArrayFieldPath|string $field;
+    /** @param ArrayFieldPath|non-empty-string $path Field path to an array field. */
+    public ArrayFieldPath|string $path;
+
+    /** @param Optional|non-empty-string $includeArrayIndex The name of a new field to hold the array index of the element. The name cannot start with a dollar sign $. */
+    public Optional|string $includeArrayIndex;
 
     /**
-     * @param ArrayFieldPath|non-empty-string $field
+     * @param Optional|bool $preserveNullAndEmptyArrays If true, if the path is null, missing, or an empty array, $unwind outputs the document.
+     * If false, if path is null, missing, or an empty array, $unwind does not output a document.
+     * The default value is false.
      */
-    public function __construct(ArrayFieldPath|string $field)
-    {
-        $this->field = $field;
+    public Optional|bool $preserveNullAndEmptyArrays;
+
+    /**
+     * @param ArrayFieldPath|non-empty-string $path Field path to an array field.
+     * @param Optional|non-empty-string $includeArrayIndex The name of a new field to hold the array index of the element. The name cannot start with a dollar sign $.
+     * @param Optional|bool $preserveNullAndEmptyArrays If true, if the path is null, missing, or an empty array, $unwind outputs the document.
+     * If false, if path is null, missing, or an empty array, $unwind does not output a document.
+     * The default value is false.
+     */
+    public function __construct(
+        ArrayFieldPath|string $path,
+        Optional|string $includeArrayIndex = Optional::Undefined,
+        Optional|bool $preserveNullAndEmptyArrays = Optional::Undefined,
+    ) {
+        $this->path = $path;
+        $this->includeArrayIndex = $includeArrayIndex;
+        $this->preserveNullAndEmptyArrays = $preserveNullAndEmptyArrays;
     }
 }

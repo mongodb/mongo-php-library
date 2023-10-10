@@ -1,0 +1,28 @@
+# $schema: ../schema.json
+name: $bottom
+category:
+    - Accumulators
+    - 'Window Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottom/'
+type:
+    - accumulator
+    - window
+encode: object
+description: |
+    Returns the bottom element within a group according to the specified sort order.
+    New in version 5.2.
+
+    Available in the $group and $setWindowFields stages.
+arguments:
+    -
+        name: sortBy
+        type:
+            - SortSpec
+        description: |
+            Specifies the order of results, with syntax similar to $sort.
+    -
+        name: output
+        type:
+            - expression
+        description: |
+            Represents the output for each element in the group and can be any expression.

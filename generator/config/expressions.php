@@ -23,7 +23,7 @@ $bsonTypes = [
     'double' => ['int', BSON\Int64::class, 'float'],
     'string' => ['string'],
     'object' => ['array', stdClass::class, BSON\Document::class, BSON\Serializable::class],
-    'array' => ['list', BSONArray::class, BSON\PackedArray::class],
+    'array' => ['array', BSONArray::class, BSON\PackedArray::class],
     'binData' => ['string', BSON\Binary::class],
     'objectId' => [BSON\ObjectId::class],
     'bool' => ['bool'],
@@ -41,13 +41,10 @@ $bsonTypes = [
 $bsonTypes['any'] = array_unique(array_merge(...array_values($bsonTypes)));
 
 // "number" accepts all the numeric types
-$bsonTypes['number'] = [
-    'int', 'float', BSON\Int64::class, BSON\Decimal128::class,
-    ResolvesToInt::class, ResolvesToDouble::class, ResolvesToLong::class, ResolvesToDecimal::class,
-];
+$bsonTypes['number'] = array_unique(array_merge($bsonTypes['int'], $bsonTypes['double'], $bsonTypes['long'], $bsonTypes['decimal']));
 
 $expressions = [];
-
+$resolvesToInterfaces = [];
 foreach ($bsonTypes as $name => $acceptedTypes) {
     $expressions[$name] = ['acceptedTypes' => $acceptedTypes];
 
@@ -55,22 +52,27 @@ foreach ($bsonTypes as $name => $acceptedTypes) {
     $resolvesToInterface = __NAMESPACE__ . '\\' . ucfirst($resolvesTo);
     $expressions[$resolvesTo] = [
         'generate' => Generate::PhpInterface,
-        // @todo implement type hierarchy for resolvesToNumber
         'implements' => [Type\ExpressionInterface::class],
         'returnType' => $resolvesToInterface,
         'acceptedTypes' => $acceptedTypes,
     ];
 
-    $expressions[$name . 'FieldPath'] = [
-        'generate' => Generate::PhpClass,
-        'extends' => FieldPath::class,
-        'implements' => [$resolvesToInterface],
-        'acceptedTypes' => ['string'],
-    ];
+    if ($name !== 'any') {
+        $expressions[$name . 'FieldPath'] = [
+            'generate' => Generate::PhpClass,
+            'extends' => FieldPath::class,
+            'implements' => [$resolvesToInterface],
+            'acceptedTypes' => ['string'],
+        ];
+        $resolvesToInterfaces[] = $resolvesToInterface;
+    }
 }
 
-// AnyFieldPath doesn't make sense. Use FieldPath instead.
-unset($expressions['anyFieldPath']);
+$expressions['resolvesToLong']['implements'] = [ResolvesToInt::class];
+$expressions['resolvesToInt']['implements'] = [ResolvesToNumber::class];
+$expressions['resolvesToDecimal']['implements'] = [ResolvesToDouble::class];
+$expressions['resolvesToDouble']['implements'] = [ResolvesToNumber::class];
+$expressions['resolvesToAny']['implements'] = $resolvesToInterfaces;
 
 return $expressions + [
     'expression' => [
@@ -89,6 +91,10 @@ return $expressions + [
         'returnType' => Type\AccumulatorInterface::class,
         'acceptedTypes' => [Type\AccumulatorInterface::class, ...$bsonTypes['object']],
     ],
+    'window' => [
+        'returnType' => Type\WindowInterface::class,
+        'acceptedTypes' => [Type\WindowInterface::class, ...$bsonTypes['object']],
+    ],
     'stage' => [
         'returnType' => Type\StageInterface::class,
         'acceptedTypes' => [Type\StageInterface::class, ...$bsonTypes['object']],
@@ -103,7 +109,7 @@ return $expressions + [
     ],
     'variable' => [
         'generate' => Generate::PhpClass,
-        'implements' => [Type\ExpressionInterface::class],
+        'implements' => [ResolvesToAny::class],
         'acceptedTypes' => ['string'],
     ],
 

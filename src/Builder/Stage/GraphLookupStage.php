@@ -59,8 +59,8 @@ class GraphLookupStage implements StageInterface
     /** @param Optional|non-empty-string $depthField Name of the field to add to each traversed document in the search path. The value of this field is the recursion depth for the document, represented as a NumberLong. Recursion depth value starts at zero, so the first lookup corresponds to zero depth. */
     public Optional|string $depthField;
 
-    /** @param Document|Optional|QueryInterface|Serializable|array|stdClass $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax. */
-    public Document|Serializable|Optional|QueryInterface|stdClass|array $restrictSearchWithMatch;
+    /** @param Optional|Document|QueryInterface|Serializable|array|stdClass $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax. */
+    public Optional|Document|Serializable|QueryInterface|stdClass|array $restrictSearchWithMatch;
 
     /**
      * @param non-empty-string $from Target collection for the $graphLookup operation to search, recursively matching the connectFromField to the connectToField. The from collection must be in the same database as any other collections used in the operation.
@@ -71,7 +71,7 @@ class GraphLookupStage implements StageInterface
      * @param non-empty-string $as Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the document.
      * @param Optional|int $maxDepth Non-negative integral number specifying the maximum recursion depth.
      * @param Optional|non-empty-string $depthField Name of the field to add to each traversed document in the search path. The value of this field is the recursion depth for the document, represented as a NumberLong. Recursion depth value starts at zero, so the first lookup corresponds to zero depth.
-     * @param Document|Optional|QueryInterface|Serializable|array|stdClass $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
+     * @param Optional|Document|QueryInterface|Serializable|array|stdClass $restrictSearchWithMatch A document specifying additional conditions for the recursive search. The syntax is identical to query filter syntax.
      */
     public function __construct(
         string $from,
@@ -81,13 +81,9 @@ class GraphLookupStage implements StageInterface
         string $as,
         Optional|int $maxDepth = Optional::Undefined,
         Optional|string $depthField = Optional::Undefined,
-        Document|Serializable|Optional|QueryInterface|stdClass|array $restrictSearchWithMatch = Optional::Undefined,
+        Optional|Document|Serializable|QueryInterface|stdClass|array $restrictSearchWithMatch = Optional::Undefined,
     ) {
         $this->from = $from;
-        if (\is_array($startWith) && ! \array_is_list($startWith)) {
-            throw new \InvalidArgumentException('Expected $startWith argument to be a list, got an associative array.');
-        }
-
         $this->startWith = $startWith;
         $this->connectFromField = $connectFromField;
         $this->connectToField = $connectToField;

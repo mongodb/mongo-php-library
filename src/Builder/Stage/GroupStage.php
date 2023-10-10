@@ -48,10 +48,6 @@ class GroupStage implements StageInterface
         Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $_id,
         Document|Serializable|AccumulatorInterface|stdClass|array ...$field,
     ) {
-        if (\is_array($_id) && ! \array_is_list($_id)) {
-            throw new \InvalidArgumentException('Expected $_id argument to be a list, got an associative array.');
-        }
-
         $this->_id = $_id;
         if (\count($field) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $field, got %d.', 1, \count($field)));

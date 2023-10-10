@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $nin
+category:
+    - 'Comparison Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nin/'
+type:
+    - query
+encode: single
+description: |
+    Matches none of the values specified in an array.
+arguments:
+    -
+        name: value
+        type:
+            - array # of expression

@@ -5,9 +5,9 @@ namespace MongoDB\CodeGenerator;
 
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
-use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Literal;
 use Nette\PhpGenerator\PhpNamespace;
+use Nette\PhpGenerator\TraitType;
 use RuntimeException;
 use Throwable;
 
@@ -23,16 +23,14 @@ final class OperatorFactoryGenerator extends OperatorGenerator
 {
     public function generate(GeneratorDefinition $definition): void
     {
-        $this->writeFile($this->createFactoryClass($definition));
+        $this->writeFile($this->createFactoryTrait($definition));
     }
 
-    private function createFactoryClass(GeneratorDefinition $definition): PhpNamespace
+    private function createFactoryTrait(GeneratorDefinition $definition): PhpNamespace
     {
-        // Use the operators namespace as factory class name.
-        [$namespace, $className] = $this->splitNamespaceAndClassName($definition->namespace);
-        $namespace = new PhpNamespace($namespace);
-        $class = $namespace->addClass($className);
-        $class->setFinal();
+        $namespace = new PhpNamespace($definition->namespace);
+        $trait = $namespace->addTrait('FactoryTrait');
+        $trait->addComment('@internal');
 
         // Pedantry requires methods to be ordered alphabetically
         $operators = $this->getOperators($definition);
@@ -40,25 +38,21 @@ final class OperatorFactoryGenerator extends OperatorGenerator
 
         foreach ($operators as $operator) {
             try {
-                $this->addMethod($definition, $operator, $namespace, $class);
+                $this->addMethod($definition, $operator, $namespace, $trait);
             } catch (Throwable $e) {
                 throw new RuntimeException(sprintf('Failed to generate class for operator "%s"', $operator->name), 0, $e);
             }
         }
 
-        // Pedantry requires private methods to be at the end
-        $class->addMethod('__construct')->setPrivate()
-            ->setComment('This class cannot be instantiated.');
-
         return $namespace;
     }
 
-    private function addMethod(GeneratorDefinition $definition, OperatorDefinition $operator, PhpNamespace $namespace, ClassType $class): void
+    private function addMethod(GeneratorDefinition $definition, OperatorDefinition $operator, PhpNamespace $namespace, TraitType $trait): void
     {
         $operatorClassName = '\\' . $definition->namespace . '\\' . $this->getOperatorClassName($definition, $operator);
         $namespace->addUse($operatorClassName);
 
-        $method = $class->addMethod(ltrim($operator->name, '$'));
+        $method = $trait->addMethod(ltrim($operator->name, '$'));
         $method->setStatic();
         $method->addComment($operator->description);
         $method->addComment('@see ' . $operator->link);

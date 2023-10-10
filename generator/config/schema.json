@@ -29,7 +29,31 @@
                 "type": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "string",
+                        "enum": [
+                            "accumulator",
+                            "projection",
+                            "stage",
+                            "query",
+                            "window",
+                            "resolvesToAny",
+                            "resolvesToNumber",
+                            "resolvesToDouble",
+                            "resolvesToString",
+                            "resolvesToObject",
+                            "resolvesToArray",
+                            "resolvesToBinData",
+                            "resolvesToObjectId",
+                            "resolvesToBool",
+                            "resolvesToDate",
+                            "resolvesToNull",
+                            "resolvesToRegex",
+                            "resolvesToJavascript",
+                            "resolvesToInt",
+                            "resolvesToTimestamp",
+                            "resolvesTolong",
+                            "resolvesToDecimal"
+                        ]
                     }
                 },
                 "encode": {
@@ -74,12 +98,35 @@
             "properties": {
                 "name": {
                     "type": "string",
-                    "pattern": "^[a-z][a-zA-Z0-9]+$"
+                    "pattern": "^([a-z][a-zA-Z0-9]*|N)$"
                 },
                 "type": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "string",
+                        "enum": [
+                            "accumulator",
+                            "query",
+                            "pipeline",
+                            "window",
+                            "expression",
+                            "resolvesToNumber", "numberFieldPath", "number",
+                            "resolvesToDouble", "doubleFieldPath", "double",
+                            "resolvesToString", "stringFieldPath", "string",
+                            "resolvesToObject", "objectFieldPath", "object",
+                            "resolvesToArray", "arrayFieldPath", "array",
+                            "resolvesToBinData", "binDataFieldPath", "binData",
+                            "resolvesToObjectId", "objectIdFieldPath", "objectId",
+                            "resolvesToBool", "boolFieldPath", "bool",
+                            "resolvesToDate", "dateFieldPath", "date",
+                            "resolvesToNull", "nullFieldPath", "null",
+                            "resolvesToRegex", "regexFieldPath", "regex",
+                            "resolvesToJavascript", "javascriptFieldPath", "javascript",
+                            "resolvesToInt", "intFieldPath", "int",
+                            "resolvesToTimestamp", "timestampFieldPath", "timestamp",
+                            "resolvesTolong", "longFieldPath", "long",
+                            "resolvesToDecimal", "decimalFieldPath", "decimal"
+                        ]
                     }
                 },
                 "description": {

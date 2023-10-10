@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
-use MongoDB\Builder\Expression\ExpressionType;
+use MongoDB\BSON\Document;
+use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Optional;
 use MongoDB\CodeGenerator\Definition\ArgumentDefinition;
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
@@ -11,6 +12,7 @@ use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
 use MongoDB\CodeGenerator\Definition\YamlReader;
 use Nette\PhpGenerator\Type;
+use stdClass;
 
 use function array_filter;
 use function array_key_exists;
@@ -18,13 +20,13 @@ use function array_merge;
 use function array_unique;
 use function assert;
 use function class_exists;
-use function explode;
 use function in_array;
 use function interface_exists;
 use function ltrim;
 use function sort;
 use function sprintf;
 use function ucfirst;
+use function usort;
 
 abstract class OperatorGenerator extends AbstractGenerator
 {
@@ -32,7 +34,7 @@ abstract class OperatorGenerator extends AbstractGenerator
 
     final public function __construct(
         string $rootDir,
-        /** @var array<class-string<ExpressionType>, ExpressionDefinition> */
+        /** @var array<string, ExpressionDefinition> */
         private array $expressions
     ) {
         parent::__construct($rootDir);
@@ -58,15 +60,6 @@ abstract class OperatorGenerator extends AbstractGenerator
 
     final protected function getType(string $type): ExpressionDefinition
     {
-        // @todo handle generic types object<T> and array<T>
-        $type = explode('<', $type, 2)[0];
-        $type = explode('{', $type, 2)[0];
-
-        $type = match ($type) {
-            'list' => 'array',
-            default => $type,
-        };
-
         assert(array_key_exists($type, $this->expressions), sprintf('Invalid expression type "%s".', $type));
 
         return $this->expressions[$type];
@@ -78,7 +71,7 @@ abstract class OperatorGenerator extends AbstractGenerator
      *
      * @return object{native:string,doc:string,use:list<class-string>,list:bool}
      */
-    final protected function getAcceptedTypes(ArgumentDefinition $arg): object
+    final protected function getAcceptedTypes(ArgumentDefinition $arg): stdClass
     {
         $nativeTypes = [];
         foreach ($arg->type as $type) {
@@ -96,19 +89,9 @@ abstract class OperatorGenerator extends AbstractGenerator
         }
 
         $docTypes = $nativeTypes = array_unique($nativeTypes);
-        $listCheck = false;
         $use = [];
 
         foreach ($nativeTypes as $key => $typeName) {
-            // "list" is a special type of array that needs to be checked in the code
-            if ($typeName === 'list') {
-                $listCheck = true;
-                $nativeTypes[$key] = 'array';
-                // @todo allow to specify the type of the elements in the list
-                $docTypes[$key] = 'array';
-                continue;
-            }
-
             // strings cannot be empty
             if ($typeName === 'string') {
                 $docTypes[$key] = 'non-empty-string';
@@ -124,13 +107,17 @@ abstract class OperatorGenerator extends AbstractGenerator
             }
         }
 
+        // If an array is expected, but not an object, we can check for a list
+        $listCheck = in_array('\\' . PackedArray::class, $nativeTypes, true)
+            && ! in_array('\\' . Document::class, $nativeTypes, true);
+
         // mixed can only be used as a standalone type
         if (in_array('mixed', $nativeTypes, true)) {
             $nativeTypes = ['mixed'];
         }
 
-        sort($nativeTypes);
-        sort($docTypes);
+        usort($nativeTypes, self::sortTypesCallback(...));
+        usort($docTypes, self::sortTypesCallback(...));
         sort($use);
 
         return (object) [
@@ -139,5 +126,23 @@ abstract class OperatorGenerator extends AbstractGenerator
             'use' => array_unique($use),
             'list' => $listCheck,
         ];
+    }
+
+    /**
+     * usort() callback for sorting types.
+     * "Optional" is always first, for documentation of optional parameters,
+     * then types are sorted alphabetically.
+     */
+    private static function sortTypesCallback(string $type1, string $type2): int
+    {
+        if ($type1 === 'Optional' || $type1 === '\\' . Optional::class) {
+            return -1;
+        }
+
+        if ($type2 === 'Optional' || $type2 === '\\' . Optional::class) {
+            return 1;
+        }
+
+        return $type1 <=> $type2;
     }
 }

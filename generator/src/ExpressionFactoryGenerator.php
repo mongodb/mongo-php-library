@@ -21,9 +21,9 @@ final class ExpressionFactoryGenerator extends AbstractGenerator
     /** @param array<class-string, ExpressionDefinition> $expressions */
     private function createFactoryClass(array $expressions): PhpNamespace
     {
-        $namespace = new PhpNamespace('MongoDB\\Builder');
-        $class = $namespace->addClass('Expression');
-        $class->setFinal();
+        $namespace = new PhpNamespace('MongoDB\\Builder\\Expression');
+        $trait = $namespace->addTrait('ExpressionFactoryTrait');
+        $trait->addComment('@internal');
 
         // Pedantry requires methods to be ordered alphabetically
         usort($expressions, fn (ExpressionDefinition $a, ExpressionDefinition $b) => $a->name <=> $b->name);
@@ -36,16 +36,12 @@ final class ExpressionFactoryGenerator extends AbstractGenerator
             $namespace->addUse($expression->returnType);
             $expressionShortClassName = $this->splitNamespaceAndClassName($expression->returnType)[1];
 
-            $method = $class->addMethod(lcfirst($expressionShortClassName));
+            $method = $trait->addMethod(lcfirst($expressionShortClassName));
             $method->setStatic();
-            $method->addParameter('expression')->setType('string');
-            $method->addBody('return new ' . $expressionShortClassName . '($expression);');
+            $method->addParameter('name')->setType('string');
+            $method->addBody('return new ' . $expressionShortClassName . '($name);');
             $method->setReturnType($expression->returnType);
         }
-
-        // Pedantry requires private methods to be at the end
-        $class->addMethod('__construct')->setPrivate()
-            ->setComment('This class cannot be instantiated.');
 
         return $namespace;
     }

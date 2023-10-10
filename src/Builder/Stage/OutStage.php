@@ -29,18 +29,18 @@ class OutStage implements StageInterface
     /** @param non-empty-string $coll Target database name to write documents from $out to. */
     public string $coll;
 
-    /** @param Document|Optional|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace. */
-    public Document|Serializable|Optional|stdClass|array $timeseries;
+    /** @param Optional|Document|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace. */
+    public Optional|Document|Serializable|stdClass|array $timeseries;
 
     /**
      * @param non-empty-string $db Target collection name to write documents from $out to.
      * @param non-empty-string $coll Target database name to write documents from $out to.
-     * @param Document|Optional|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.
+     * @param Optional|Document|Serializable|array|stdClass $timeseries If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.
      */
     public function __construct(
         string $db,
         string $coll,
-        Document|Serializable|Optional|stdClass|array $timeseries = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $timeseries = Optional::Undefined,
     ) {
         $this->db = $db;
         $this->coll = $coll;

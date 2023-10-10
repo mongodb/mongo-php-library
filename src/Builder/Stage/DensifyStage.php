@@ -10,7 +10,6 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Model\BSONArray;
@@ -27,29 +26,29 @@ class DensifyStage implements StageInterface
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
     /**
-     * @param FieldPath|non-empty-string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
+     * @param non-empty-string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
      * Documents that do not contain the specified field continue through the pipeline unmodified.
      * To specify a <field> in an embedded document or in an array, use dot notation.
      */
-    public FieldPath|string $field;
+    public string $field;
 
     /** @param Document|Serializable|array|stdClass $range Specification for range based densification. */
     public Document|Serializable|stdClass|array $range;
 
-    /** @param BSONArray|Optional|PackedArray|array $partitionByFields The field(s) that will be used as the partition keys. */
-    public PackedArray|Optional|BSONArray|array $partitionByFields;
+    /** @param Optional|BSONArray|PackedArray|array $partitionByFields The field(s) that will be used as the partition keys. */
+    public Optional|PackedArray|BSONArray|array $partitionByFields;
 
     /**
-     * @param FieldPath|non-empty-string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
+     * @param non-empty-string $field The field to densify. The values of the specified field must either be all numeric values or all dates.
      * Documents that do not contain the specified field continue through the pipeline unmodified.
      * To specify a <field> in an embedded document or in an array, use dot notation.
      * @param Document|Serializable|array|stdClass $range Specification for range based densification.
-     * @param BSONArray|Optional|PackedArray|array $partitionByFields The field(s) that will be used as the partition keys.
+     * @param Optional|BSONArray|PackedArray|array $partitionByFields The field(s) that will be used as the partition keys.
      */
     public function __construct(
-        FieldPath|string $field,
+        string $field,
         Document|Serializable|stdClass|array $range,
-        PackedArray|Optional|BSONArray|array $partitionByFields = Optional::Undefined,
+        Optional|PackedArray|BSONArray|array $partitionByFields = Optional::Undefined,
     ) {
         $this->field = $field;
         $this->range = $range;

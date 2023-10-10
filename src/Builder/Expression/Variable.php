@@ -6,9 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Type\ExpressionInterface;
-
-class Variable implements ExpressionInterface
+class Variable implements ResolvesToAny
 {
     public string $expression;
 

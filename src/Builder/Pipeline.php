@@ -9,7 +9,6 @@ use MongoDB\Exception\InvalidArgumentException;
 use Traversable;
 
 use function array_is_list;
-use function array_merge;
 
 /** @template-implements IteratorAggregate<StageInterface> */
 class Pipeline implements IteratorAggregate
@@ -17,19 +16,25 @@ class Pipeline implements IteratorAggregate
     /** @var StageInterface[] */
     private array $stages = [];
 
-    public function __construct(StageInterface ...$stages)
+    public function __construct(StageInterface|Pipeline ...$stages)
     {
         $this->add(...$stages);
     }
 
     /** @return $this */
-    public function add(StageInterface ...$stages): static
+    public function add(StageInterface|Pipeline ...$stages): static
     {
         if (! array_is_list($stages)) {
             throw new InvalidArgumentException('Expected $stages argument to be a list, got an associative array.');
         }
 
-        $this->stages = array_merge($this->stages, $stages);
+        foreach ($stages as $stage) {
+            if ($stage instanceof Pipeline) {
+                $this->add(...$stage->stages);
+            } else {
+                $this->stages[] = $stage;
+            }
+        }
 
         return $this;
     }

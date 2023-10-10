@@ -6,8 +6,6 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Type\ExpressionInterface;
-
-interface ResolvesToAny extends ExpressionInterface
+interface ResolvesToAny extends ResolvesToDouble, ResolvesToString, ResolvesToObject, ResolvesToArray, ResolvesToBinData, ResolvesToObjectId, ResolvesToBool, ResolvesToDate, ResolvesToNull, ResolvesToRegex, ResolvesToJavascript, ResolvesToInt, ResolvesToTimestamp, ResolvesToLong, ResolvesToDecimal, ResolvesToNumber
 {
 }

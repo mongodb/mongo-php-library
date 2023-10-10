@@ -1,0 +1,17 @@
+# $schema: ../schema.json
+name: $type
+category:
+    - 'Element Query Operators'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/type/'
+type:
+    - query
+encode: single
+description: |
+    Selects documents if a field is of the specified type.
+arguments:
+    -
+        name: type
+        type:
+            - int
+            - string
+            - array # of int or string

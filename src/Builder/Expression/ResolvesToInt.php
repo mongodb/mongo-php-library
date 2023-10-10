@@ -6,8 +6,6 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Type\ExpressionInterface;
-
-interface ResolvesToInt extends ExpressionInterface
+interface ResolvesToInt extends ResolvesToNumber
 {
 }

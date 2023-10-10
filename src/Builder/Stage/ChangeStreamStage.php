@@ -42,11 +42,11 @@ class ChangeStreamStage implements StageInterface
      */
     public Optional|bool $showExpandedEvents;
 
-    /** @param Document|Optional|Serializable|array|stdClass $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields. */
-    public Document|Serializable|Optional|stdClass|array $startAfter;
+    /** @param Optional|Document|Serializable|array|stdClass $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields. */
+    public Optional|Document|Serializable|stdClass|array $startAfter;
 
     /** @param Optional|Timestamp|int $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields. */
-    public Timestamp|Optional|int $startAtOperationTime;
+    public Optional|Timestamp|int $startAtOperationTime;
 
     /**
      * @param Optional|bool $allChangesForCluster A flag indicating whether the stream should report all changes that occur on the deployment, aside from those on internal databases or collections.
@@ -55,7 +55,7 @@ class ChangeStreamStage implements StageInterface
      * @param Optional|int $resumeAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with startAfter or startAtOperationTime fields.
      * @param Optional|bool $showExpandedEvents Specifies whether to include additional change events, such as such as DDL and index operations.
      * New in version 6.0.
-     * @param Document|Optional|Serializable|array|stdClass $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields.
+     * @param Optional|Document|Serializable|array|stdClass $startAfter Specifies a resume token as the logical starting point for the change stream. Cannot be used with resumeAfter or startAtOperationTime fields.
      * @param Optional|Timestamp|int $startAtOperationTime Specifies a time as the logical starting point for the change stream. Cannot be used with resumeAfter or startAfter fields.
      */
     public function __construct(
@@ -64,8 +64,8 @@ class ChangeStreamStage implements StageInterface
         Optional|string $fullDocumentBeforeChange = Optional::Undefined,
         Optional|int $resumeAfter = Optional::Undefined,
         Optional|bool $showExpandedEvents = Optional::Undefined,
-        Document|Serializable|Optional|stdClass|array $startAfter = Optional::Undefined,
-        Timestamp|Optional|int $startAtOperationTime = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $startAfter = Optional::Undefined,
+        Optional|Timestamp|int $startAtOperationTime = Optional::Undefined,
     ) {
         $this->allChangesForCluster = $allChangesForCluster;
         $this->fullDocument = $fullDocument;

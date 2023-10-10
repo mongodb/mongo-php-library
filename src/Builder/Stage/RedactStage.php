@@ -42,10 +42,6 @@ class RedactStage implements StageInterface
     public function __construct(
         Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
     ) {
-        if (\is_array($expression) && ! \array_is_list($expression)) {
-            throw new \InvalidArgumentException('Expected $expression argument to be a list, got an associative array.');
-        }
-
         $this->expression = $expression;
     }
 }

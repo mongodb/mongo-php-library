@@ -26,14 +26,14 @@ class MergeStage implements StageInterface
     public const NAME = '$merge';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
-    /** @param Document|Serializable|array|non-empty-string|stdClass $into The output collection. */
-    public Document|Serializable|stdClass|array|string $into;
+    /** @param non-empty-string $into The output collection. */
+    public string $into;
 
-    /** @param BSONArray|Optional|PackedArray|array|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection. */
-    public PackedArray|Optional|BSONArray|array|string $on;
+    /** @param Optional|BSONArray|PackedArray|array|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection. */
+    public Optional|PackedArray|BSONArray|array|string $on;
 
-    /** @param Document|Optional|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline. */
-    public Document|Serializable|Optional|stdClass|array $let;
+    /** @param Optional|Document|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline. */
+    public Optional|Document|Serializable|stdClass|array $let;
 
     /** @param Optional|non-empty-string $whenMatched The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s). */
     public Optional|string $whenMatched;
@@ -42,16 +42,16 @@ class MergeStage implements StageInterface
     public Optional|string $whenNotMatched;
 
     /**
-     * @param Document|Serializable|array|non-empty-string|stdClass $into The output collection.
-     * @param BSONArray|Optional|PackedArray|array|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
-     * @param Document|Optional|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline.
+     * @param non-empty-string $into The output collection.
+     * @param Optional|BSONArray|PackedArray|array|non-empty-string $on Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches an existing document in the output collection.
+     * @param Optional|Document|Serializable|array|stdClass $let Specifies variables for use in the whenMatched pipeline.
      * @param Optional|non-empty-string $whenMatched The behavior of $merge if a result document and an existing document in the collection have the same value for the specified on field(s).
      * @param Optional|non-empty-string $whenNotMatched The behavior of $merge if a result document does not match an existing document in the out collection.
      */
     public function __construct(
-        Document|Serializable|stdClass|array|string $into,
-        PackedArray|Optional|BSONArray|array|string $on = Optional::Undefined,
-        Document|Serializable|Optional|stdClass|array $let = Optional::Undefined,
+        string $into,
+        Optional|PackedArray|BSONArray|array|string $on = Optional::Undefined,
+        Optional|Document|Serializable|stdClass|array $let = Optional::Undefined,
         Optional|string $whenMatched = Optional::Undefined,
         Optional|string $whenNotMatched = Optional::Undefined,
     ) {

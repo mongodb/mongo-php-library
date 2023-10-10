@@ -3,7 +3,6 @@
 namespace MongoDB\Tests\Builder;
 
 use Generator;
-use MongoDB\Builder\Aggregation;
 use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
@@ -20,7 +19,7 @@ use function var_export;
 
 /**
  * @todo This annotation is not enough as this PHP file needs to use named arguments, that can't compile on PHP 7.4
- * @requires PHP 8.0
+ * @requires PHP 8.1
  */
 class BuilderEncoderTest extends TestCase
 {
@@ -66,7 +65,7 @@ class BuilderEncoderTest extends TestCase
             ),
             Stage::group(
                 _id: null,
-                count: Aggregation::sum(1),
+                count: Expression::sum(1),
             ),
         );
 
@@ -93,15 +92,15 @@ class BuilderEncoderTest extends TestCase
 
     /**
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#examples
-     * @dataProvider provideAggregationFilterLimit
+     * @dataProvider provideExpressionFilterLimit
      */
-    public function testAggregationFilter(array $limit, array $expectedLimit): void
+    public function testExpressionFilter(array $limit, array $expectedLimit): void
     {
         $pipeline = new Pipeline(
             Stage::project(
-                items: Aggregation::filter(
+                items: Expression::filter(
                     Expression::arrayFieldPath('items'),
-                    Aggregation::gte(Expression::variable('item.price'), 100),
+                    Expression::gte(Expression::variable('item.price'), 100),
                     'item',
                     ...$limit,
                 ),
@@ -125,7 +124,7 @@ class BuilderEncoderTest extends TestCase
         $this->assertSamePipeline($expected, $pipeline);
     }
 
-    public static function provideAggregationFilterLimit(): Generator
+    public static function provideExpressionFilterLimit(): Generator
     {
         yield 'unspecified limit' => [
             [],
@@ -144,7 +143,7 @@ class BuilderEncoderTest extends TestCase
         $pipeline = new Pipeline(
             Stage::project(
                 name: 1,
-                threeFavorites: Aggregation::slice(
+                threeFavorites: Expression::slice(
                     Expression::arrayFieldPath('items'),
                     n: 3,
                 ),
@@ -157,6 +156,37 @@ class BuilderEncoderTest extends TestCase
                     'name' => 1,
                     'threeFavorites' => [
                         '$slice' => ['$items', 3],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSamePipeline($expected, $pipeline);
+    }
+
+    public function testSetWindowFields(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::setWindowFields(
+                partitionBy: Expression::year(Expression::dateFieldPath('orderDate')),
+                sortBy: object(orderDate: 1),
+                output: object(
+                    cumulativeQuantityForYear: Expression::sum(Expression::intFieldPath('quantity')),
+                    maximumQuantityForYear: Expression::max(Expression::intFieldPath('quantity')),
+                ),
+            ),
+        );
+
+        $expected = [
+            [
+                '$setWindowFields' => [
+                    // "date" key is optional for $year, but we always add it for consistency
+                    'partitionBy' => ['$year' => ['date' => '$orderDate']],
+                    'sortBy' => ['orderDate' => 1],
+                    'output' => [
+                        // @todo add "window" parameter
+                        'cumulativeQuantityForYear' => ['$sum' => '$quantity'],
+                        'maximumQuantityForYear' => ['$max' => '$quantity'],
                     ],
                 ],
             ],

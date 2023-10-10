@@ -1,0 +1,21 @@
+# $schema: ../schema.json
+name: $documents
+category:
+    - Stage
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/'
+type:
+    - stage
+encode: single
+description: |
+    Returns literal documents from input values.
+arguments:
+    -
+        name: documents
+        type:
+            - resolvesToArray # of object
+        description: |
+            $documents accepts any valid expression that resolves to an array of objects. This includes:
+            - system variables, such as $$NOW or $$SEARCH_META
+            - $let expressions
+            - variables in scope from $lookup expressions
+            Expressions that do not resolve to a current document, like $myField or $$ROOT, will result in an error.

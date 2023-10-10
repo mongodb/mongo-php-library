@@ -10,6 +10,7 @@ use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Builder\Type\WindowInterface;
 use MongoDB\Codec\EncodeIfSupported;
 use MongoDB\Codec\Encoder;
 use MongoDB\Exception\UnsupportedValueException;
@@ -22,7 +23,7 @@ use function get_object_vars;
 use function is_array;
 use function sprintf;
 
-/** @template-implements Encoder<Pipeline|StageInterface|ExpressionInterface, stdClass|array|string> */
+/** @template-implements Encoder<Pipeline|StageInterface|ExpressionInterface|QueryInterface, stdClass|array|string> */
 class BuilderEncoder implements Encoder
 {
     use EncodeIfSupported;
@@ -35,7 +36,9 @@ class BuilderEncoder implements Encoder
         return $value instanceof Pipeline
             || $value instanceof StageInterface
             || $value instanceof ExpressionInterface
-            || $value instanceof QueryInterface;
+            || $value instanceof QueryInterface
+            || $value instanceof AccumulatorInterface
+            || $value instanceof WindowInterface;
     }
 
     /**

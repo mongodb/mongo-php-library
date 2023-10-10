@@ -55,7 +55,7 @@ class GeoNearStage implements StageInterface
     public Optional|Decimal128|Int64|ResolvesToInt|float|int $minDistance;
 
     /**
-     * @param Optional|Document|QueryInterface|Serializable|array|stdClass $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
+     * @param Optional|Document|QueryInterface|Serializable|array|stdClass $query Limits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
      * You cannot specify a $near predicate in the query field of the $geoNear stage.
      */
     public Optional|Document|Serializable|QueryInterface|stdClass|array $query;
@@ -78,7 +78,7 @@ class GeoNearStage implements StageInterface
      * Specify the distance in meters if the specified point is GeoJSON and in radians if the specified point is legacy coordinate pairs.
      * @param Optional|Decimal128|Int64|ResolvesToInt|float|int $minDistance The minimum distance from the center point that the documents can be. MongoDB limits the results to those documents that fall outside the specified distance from the center point.
      * Specify the distance in meters for GeoJSON data and in radians for legacy coordinate pairs.
-     * @param Optional|Document|QueryInterface|Serializable|array|stdClass $query imits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
+     * @param Optional|Document|QueryInterface|Serializable|array|stdClass $query Limits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.
      * You cannot specify a $near predicate in the query field of the $geoNear stage.
      * @param Optional|bool $spherical Determines how MongoDB calculates the distance between two points:
      * - When true, MongoDB uses $nearSphere semantics and calculates distances using spherical geometry.

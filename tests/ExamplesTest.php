@@ -10,8 +10,6 @@ use function putenv;
 use function random_bytes;
 use function sprintf;
 
-use const PHP_VERSION_ID;
-
 /** @runTestsInSeparateProcesses */
 final class ExamplesTest extends FunctionalTestCase
 {

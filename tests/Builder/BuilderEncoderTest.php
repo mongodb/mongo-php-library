@@ -208,9 +208,7 @@ class BuilderEncoderTest extends TestCase
         $this->assertSamePipeline($expected, $pipeline);
     }
 
-    /**
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/
-     */
+    /** @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/ */
     public function testRedactStage(): void
     {
         $pipeline = new Pipeline(

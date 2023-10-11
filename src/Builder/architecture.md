@@ -88,7 +88,7 @@ result types would be rejected.
 We rely on the server will reject the query if the expression is not of the expected type.
 
 
-# Query & Filter
+## Query & Filter
 
 The `query` are used in a `$match`, `$geoNear` or `$graphLookup` stages and `$elemMatch` operator.
 The `filter` are used compose query. A query is a map of field name to filter and/or a list of other queries.
@@ -127,10 +127,7 @@ Stage::match(Query::query(...));
 
 # Projection
 
-
-
-
-
+Projection operators have a dedicated namespace and interface.
 
 # Specificities
 

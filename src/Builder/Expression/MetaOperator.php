@@ -13,7 +13,7 @@ use MongoDB\Builder\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/
  */
-class MetaOperator implements ResolvesToDecimal
+class MetaOperator implements ResolvesToAny
 {
     public const NAME = '$meta';
     public const ENCODE = \MongoDB\Builder\Encode::Single;

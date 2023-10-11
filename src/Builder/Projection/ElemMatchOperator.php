@@ -4,12 +4,12 @@
  * THIS FILE IS AUTO-GENERATED. ANY CHANGES WILL BE LOST!
  */
 
-namespace MongoDB\Builder\Query;
+namespace MongoDB\Builder\Projection;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Type\QueryFilterInterface;
+use MongoDB\Builder\Type\ProjectionInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
 use stdClass;
@@ -18,11 +18,11 @@ use function is_array;
 use function is_object;
 
 /**
- * The $elemMatch operator matches documents that contain an array field with at least one element that matches all the specified query criteria.
+ * Projects the first element in an array that matches the specified $elemMatch condition.
  *
- * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/
+ * @see https://www.mongodb.com/docs/manual/reference/operator/projection/elemMatch/
  */
-class ElemMatchOperator implements QueryFilterInterface
+class ElemMatchOperator implements ProjectionInterface
 {
     public const NAME = '$elemMatch';
     public const ENCODE = \MongoDB\Builder\Encode::Object;

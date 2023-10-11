@@ -1,16 +1,15 @@
 # $schema: ../schema.json
 name: $elemMatch
 category:
-    - 'Projection Operators'
+    - 'Array Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/'
 type:
     - filter
-    - projection
 encode: object
 description: |
-    Projects the first element in an array that matches the specified $elemMatch condition.
+    The $elemMatch operator matches documents that contain an array field with at least one element that matches all the specified query criteria.
 arguments:
     -
-        name: queries
+        name: query
         type:
             - query

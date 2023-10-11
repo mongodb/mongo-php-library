@@ -4,7 +4,7 @@
  * THIS FILE IS AUTO-GENERATED. ANY CHANGES WILL BE LOST!
  */
 
-namespace MongoDB\Builder\Query;
+namespace MongoDB\Builder\Projection;
 
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\ProjectionInterface;

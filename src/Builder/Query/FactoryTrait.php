@@ -142,14 +142,14 @@ trait FactoryTrait
     }
 
     /**
-     * Projects the first element in an array that matches the specified $elemMatch condition.
+     * The $elemMatch operator matches documents that contain an array field with at least one element that matches all the specified query criteria.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/
-     * @param Document|QueryInterface|Serializable|array|stdClass $queries
+     * @param Document|QueryInterface|Serializable|array|stdClass $query
      */
-    public static function elemMatch(Document|Serializable|QueryInterface|stdClass|array $queries): ElemMatchOperator
+    public static function elemMatch(Document|Serializable|QueryInterface|stdClass|array $query): ElemMatchOperator
     {
-        return new ElemMatchOperator($queries);
+        return new ElemMatchOperator($query);
     }
 
     /**
@@ -318,16 +318,6 @@ trait FactoryTrait
     }
 
     /**
-     * Projects the available per-document metadata.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/query/meta/
-     */
-    public static function meta(): MetaOperator
-    {
-        return new MetaOperator();
-    }
-
-    /**
      * Specifies a minimum distance to limit the results of $near and $nearSphere queries. For use with 2dsphere index only.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/minDistance/
@@ -492,18 +482,6 @@ trait FactoryTrait
     public static function size(int $value): SizeOperator
     {
         return new SizeOperator($value);
-    }
-
-    /**
-     * Limits the number of elements projected from an array. Supports skip and limit slices.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/projection/slice/
-     * @param int $limit
-     * @param int $skip
-     */
-    public static function slice(int $limit, int $skip): SliceOperator
-    {
-        return new SliceOperator($limit, $skip);
     }
 
     /**

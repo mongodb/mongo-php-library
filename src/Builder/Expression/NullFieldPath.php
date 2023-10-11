@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class NullFieldPath extends FieldPath implements ResolvesToNull
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class NullFieldPath implements FieldPathInterface, ResolvesToNull
 {
     public string $expression;
 

@@ -8,6 +8,8 @@ use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
 use MongoDB\CodeGenerator\Definition\Generate;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\Type;
+use RuntimeException;
+use Throwable;
 
 use function array_map;
 use function var_export;
@@ -23,7 +25,11 @@ class ExpressionClassGenerator extends AbstractGenerator
             return;
         }
 
-        $this->writeFile($this->createClassOrInterface($definition));
+        try {
+            $this->writeFile($this->createClassOrInterface($definition));
+        } catch (Throwable $e) {
+            throw new RuntimeException('Failed to generate expression class for ' . $definition->name, 0, $e);
+        }
     }
 
     public function createClassOrInterface(ExpressionDefinition $definition): PhpNamespace

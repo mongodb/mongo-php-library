@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class RegexFieldPath extends FieldPath implements ResolvesToRegex
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class RegexFieldPath implements FieldPathInterface, ResolvesToRegex
 {
     public string $expression;
 

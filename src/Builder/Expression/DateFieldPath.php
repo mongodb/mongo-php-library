@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class DateFieldPath extends FieldPath implements ResolvesToDate
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class DateFieldPath implements FieldPathInterface, ResolvesToDate
 {
     public string $expression;
 

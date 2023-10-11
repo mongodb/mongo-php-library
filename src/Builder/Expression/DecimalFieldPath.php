@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class DecimalFieldPath extends FieldPath implements ResolvesToDecimal
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class DecimalFieldPath implements FieldPathInterface, ResolvesToDecimal
 {
     public string $expression;
 

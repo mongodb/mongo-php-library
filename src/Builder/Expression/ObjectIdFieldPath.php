@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class ObjectIdFieldPath extends FieldPath implements ResolvesToObjectId
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class ObjectIdFieldPath implements FieldPathInterface, ResolvesToObjectId
 {
     public string $expression;
 

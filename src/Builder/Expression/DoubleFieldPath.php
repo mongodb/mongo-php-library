@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class DoubleFieldPath extends FieldPath implements ResolvesToDouble
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class DoubleFieldPath implements FieldPathInterface, ResolvesToDouble
 {
     public string $expression;
 

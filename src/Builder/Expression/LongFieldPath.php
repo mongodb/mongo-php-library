@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class LongFieldPath extends FieldPath implements ResolvesToLong
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class LongFieldPath implements FieldPathInterface, ResolvesToLong
 {
     public string $expression;
 

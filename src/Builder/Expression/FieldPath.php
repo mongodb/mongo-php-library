@@ -6,9 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Builder\Type\FieldPathInterface;
 
-class FieldPath implements ExpressionInterface
+class FieldPath implements FieldPathInterface, ResolvesToAny
 {
     public string $expression;
 

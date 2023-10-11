@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class BoolFieldPath extends FieldPath implements ResolvesToBool
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class BoolFieldPath implements FieldPathInterface, ResolvesToBool
 {
     public string $expression;
 

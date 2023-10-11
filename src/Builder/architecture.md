@@ -106,11 +106,11 @@ Create a FieldPathInterface for encoding needs.
 ## Query & Field Query
 
 The `query` are used in a `$match`, `$geoNear` or `$graphLookup` stages and `$elemMatch` operator.
-The `fieldQuery` are used compose query. A query is a map of field name to filter and/or a list of other queries.
+The `fieldQuery` are used compose query. A query is a map of field name to fieldQuery and/or a list of other queries.
 
 Queries can be created with `$and`, `$or`, `$nor`, `$jsonSchema`, `$text`, `$comment` operators or with the `QueryObject`
-class when composed with filter. 
-The factory function `Query::query()` accepts variadic arguments which can be named (for `filter` with field
+class when composed with `fieldQuery`. 
+The factory function `Query::query()` accepts variadic arguments which can be named (for `fieldQuery` with field
 path) or sequential (for `query` without field path). This function is used by stages that accept a `query` as parameter
 to create the `QueryObject`. The encoder handle this object specifically to merge all the queries in a single object.
 
@@ -138,7 +138,7 @@ Stage::match(
     bar:    Query::no  Query🚬::gt(...)),
     // Use array unpacking for complex field path
     ...['foo.$.baz' =>  Query::eq(...)],
-    // Multiple filters on the same field
+    // Multiple fieldQueries on the same field
     baz:    Query::lt(...),  Query::gt(...)],
 )
 ```

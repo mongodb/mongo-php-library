@@ -3,13 +3,13 @@
 namespace MongoDB\Builder;
 
 use LogicException;
-use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Expression\Variable;
 use MongoDB\Builder\Stage\GroupStage;
 use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\CombinedFieldQuery;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Builder\Type\FieldPathInterface;
 use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\OutputWindow;
@@ -73,7 +73,7 @@ class BuilderEncoder implements Encoder
         }
 
         // This specific encoding code if temporary until we have a generic way to encode stages and operators
-        if ($value instanceof FieldPath) {
+        if ($value instanceof FieldPathInterface) {
             return '$' . $value->expression;
         }
 

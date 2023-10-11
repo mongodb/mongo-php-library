@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class JavascriptFieldPath extends FieldPath implements ResolvesToJavascript
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class JavascriptFieldPath implements FieldPathInterface, ResolvesToJavascript
 {
     public string $expression;
 

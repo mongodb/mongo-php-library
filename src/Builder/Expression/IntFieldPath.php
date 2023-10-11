@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class IntFieldPath extends FieldPath implements ResolvesToInt
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class IntFieldPath implements FieldPathInterface, ResolvesToInt
 {
     public string $expression;
 

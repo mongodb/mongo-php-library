@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class TimestampFieldPath extends FieldPath implements ResolvesToTimestamp
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class TimestampFieldPath implements FieldPathInterface, ResolvesToTimestamp
 {
     public string $expression;
 

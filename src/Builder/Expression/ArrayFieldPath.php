@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class ArrayFieldPath extends FieldPath implements ResolvesToArray
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class ArrayFieldPath implements FieldPathInterface, ResolvesToArray
 {
     public string $expression;
 

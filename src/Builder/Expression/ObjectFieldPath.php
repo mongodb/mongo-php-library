@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class ObjectFieldPath extends FieldPath implements ResolvesToObject
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class ObjectFieldPath implements FieldPathInterface, ResolvesToObject
 {
     public string $expression;
 

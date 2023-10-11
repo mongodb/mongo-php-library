@@ -6,7 +6,9 @@
 
 namespace MongoDB\Builder\Expression;
 
-class BinDataFieldPath extends FieldPath implements ResolvesToBinData
+use MongoDB\Builder\Type\FieldPathInterface;
+
+class BinDataFieldPath implements FieldPathInterface, ResolvesToBinData
 {
     public string $expression;
 

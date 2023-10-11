@@ -37,7 +37,7 @@ $bsonTypes = [
     'decimal' => ['int', BSON\Int64::class, 'float', BSON\Decimal128::class],
 ];
 
-// "any" accepts all the BSON types. No generic "object".
+// "any" accepts all the BSON types. No generic "object" or "mixed"
 $bsonTypes['any'] = array_unique(array_merge(...array_values($bsonTypes)));
 
 // "number" accepts all the numeric types
@@ -57,15 +57,18 @@ foreach ($bsonTypes as $name => $acceptedTypes) {
         'acceptedTypes' => $acceptedTypes,
     ];
 
-    if ($name !== 'any') {
-        $expressions[$name . 'FieldPath'] = [
-            'generate' => Generate::PhpClass,
-            'extends' => FieldPath::class,
-            'implements' => [$resolvesToInterface],
-            'acceptedTypes' => ['string'],
-        ];
+    $fieldPathName = $name . 'FieldPath';
+    if ($name === 'any') {
+        $fieldPathName = 'fieldPath';
+    } else {
         $resolvesToInterfaces[] = $resolvesToInterface;
     }
+
+    $expressions[$fieldPathName] = [
+        'generate' => Generate::PhpClass,
+        'implements' => [Type\FieldPathInterface::class, $resolvesToInterface],
+        'acceptedTypes' => ['string'],
+    ];
 }
 
 $expressions['resolvesToLong']['implements'] = [ResolvesToInt::class];
@@ -105,11 +108,6 @@ return $expressions + [
     ],
     'pipeline' => [
         'acceptedTypes' => [Pipeline::class, ...$bsonTypes['array']],
-    ],
-    'fieldPath' => [
-        'generate' => Generate::PhpClass,
-        'implements' => [Type\ExpressionInterface::class],
-        'acceptedTypes' => ['string'],
     ],
     'variable' => [
         'generate' => Generate::PhpClass,

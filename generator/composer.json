@@ -18,8 +18,6 @@
         "mongodb/mongodb": "@dev",
         "nette/php-generator": "^4",
         "symfony/console": "^6.3",
-        "symfony/css-selector": "^6.3",
-        "symfony/dom-crawler": "^6.3",
         "symfony/finder": "^6.3",
         "symfony/yaml": "^6.3"
     },

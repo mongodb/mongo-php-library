@@ -7,14 +7,14 @@
 namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\QueryFilterInterface;
 
 /**
  * Performs a modulo operation on the value of a field and selects documents with a specified result.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/mod/
  */
-class ModOperator implements QueryInterface
+class ModOperator implements QueryFilterInterface
 {
     public const NAME = '$mod';
     public const ENCODE = \MongoDB\Builder\Encode::Array;

@@ -21,9 +21,13 @@ use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\QueryObject;
 use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
+
+use function is_array;
+use function is_object;
 
 /**
  * Performs a recursive search on a collection. To each output document, adds a new array field that contains the traversal results of the recursive search for that document.
@@ -90,6 +94,10 @@ class GraphLookupStage implements StageInterface
         $this->as = $as;
         $this->maxDepth = $maxDepth;
         $this->depthField = $depthField;
+        if (is_array($restrictSearchWithMatch) || is_object($restrictSearchWithMatch)) {
+            $restrictSearchWithMatch = QueryObject::create($restrictSearchWithMatch);
+        }
+
         $this->restrictSearchWithMatch = $restrictSearchWithMatch;
     }
 }

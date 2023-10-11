@@ -4,7 +4,7 @@ category:
     - 'Projection Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/'
 type:
-    - query
+    - filter
     - projection
 encode: object
 description: |

@@ -14,8 +14,12 @@ use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\QueryObject;
 use MongoDB\Builder\Type\StageInterface;
 use stdClass;
+
+use function is_array;
+use function is_object;
 
 /**
  * Returns an ordered stream of documents based on the proximity to a geospatial point. Incorporates the functionality of $match, $sort, and $limit for geospatial data. The output documents include an additional distance field and can include a location identifier field.
@@ -103,6 +107,10 @@ class GeoNearStage implements StageInterface
         $this->key = $key;
         $this->maxDistance = $maxDistance;
         $this->minDistance = $minDistance;
+        if (is_array($query) || is_object($query)) {
+            $query = QueryObject::create($query);
+        }
+
         $this->query = $query;
         $this->spherical = $spherical;
     }

@@ -4,7 +4,7 @@ category:
     - 'Bitwise Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/'
 type:
-    - query
+    - filter
 encode: single
 description: |
     Matches numeric or binary values in which a set of bit positions all have a value of 1.

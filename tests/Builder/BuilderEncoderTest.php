@@ -27,7 +27,7 @@ class BuilderEncoderTest extends TestCase
     public function testPipeline(): void
     {
         $pipeline = new Pipeline(
-            Stage::match(object(author: 'dave')),
+            Stage::match(author: 'dave'),
             Stage::limit(1),
         );
 
@@ -59,8 +59,8 @@ class BuilderEncoderTest extends TestCase
         $pipeline = new Pipeline(
             Stage::match(
                 Query::or(
-                    object(score: [Query::gt(70), Query::lt(90)]),
-                    object(views: Query::gte(1000)),
+                    Query::query(score: [Query::gt(70), Query::lt(90)]),
+                    Query::query(views: Query::gte(1000)),
                 ),
             ),
             Stage::group(
@@ -73,8 +73,7 @@ class BuilderEncoderTest extends TestCase
             [
                 '$match' => [
                     '$or' => [
-                        // same as ['score' => ['$gt' => 70, '$lt' => 90]],
-                        ['score' => [['$gt' => 70], ['$lt' => 90]]],
+                        ['score' => ['$gt' => 70, '$lt' => 90]],
                         ['views' => ['$gte' => 1000]],
                     ],
                 ],

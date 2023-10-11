@@ -4,7 +4,7 @@ category:
     - 'Element Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/exists/'
 type:
-    - query
+    - filter
 encode: single
 description: |
     Matches documents that have the specified field.

@@ -8,14 +8,13 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\ProjectionInterface;
-use MongoDB\Builder\Type\QueryInterface;
 
 /**
  * Limits the number of elements projected from an array. Supports skip and limit slices.
  *
- * @see https://www.mongodb.com/docs/manual/reference/operator/query/slice/
+ * @see https://www.mongodb.com/docs/manual/reference/operator/projection/slice/
  */
-class SliceOperator implements QueryInterface, ProjectionInterface
+class SliceOperator implements ProjectionInterface
 {
     public const NAME = '$slice';
     public const ENCODE = \MongoDB\Builder\Encode::Array;

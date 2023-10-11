@@ -4,7 +4,7 @@ category:
     - 'Geospatial Geometry Specifiers'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/center/'
 type:
-    - query
+    - geometry
 encode: single
 description: |
     Specifies a circle using legacy coordinate pairs to $geoWithin queries when using planar geometry. The 2d index supports $center.

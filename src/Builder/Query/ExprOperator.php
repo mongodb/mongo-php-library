@@ -19,7 +19,7 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Type\ExpressionInterface;
-use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\QueryFilterInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -28,7 +28,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/expr/
  */
-class ExprOperator implements QueryInterface
+class ExprOperator implements QueryFilterInterface
 {
     public const NAME = '$expr';
     public const ENCODE = \MongoDB\Builder\Encode::Single;

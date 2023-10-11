@@ -2,9 +2,8 @@
 name: $slice
 category:
     - 'Projection Operators'
-link: 'https://www.mongodb.com/docs/manual/reference/operator/query/slice/'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/projection/slice/'
 type:
-    - query
     - projection
 encode: array
 description: |

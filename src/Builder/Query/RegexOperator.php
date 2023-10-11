@@ -8,14 +8,14 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\Regex;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\QueryFilterInterface;
 
 /**
  * Selects documents where values match a specified regular expression.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/regex/
  */
-class RegexOperator implements QueryInterface
+class RegexOperator implements QueryFilterInterface
 {
     public const NAME = '$regex';
     public const ENCODE = \MongoDB\Builder\Encode::Single;

@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\GeometryInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -20,7 +20,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/center/
  */
-class CenterOperator implements QueryInterface
+class CenterOperator implements GeometryInterface
 {
     public const NAME = '$center';
     public const ENCODE = \MongoDB\Builder\Encode::Single;

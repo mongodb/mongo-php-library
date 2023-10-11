@@ -79,6 +79,10 @@ return $expressions + [
         'returnType' => Type\ExpressionInterface::class,
         'acceptedTypes' => [Type\ExpressionInterface::class, ...$bsonTypes['any']],
     ],
+    'filter' => [
+        'returnType' => Type\QueryFilterInterface::class,
+        'acceptedTypes' => [Type\QueryFilterInterface::class, ...$bsonTypes['any']],
+    ],
     'query' => [
         'returnType' => Type\QueryInterface::class,
         'acceptedTypes' => [Type\QueryInterface::class, ...$bsonTypes['object']],
@@ -111,6 +115,10 @@ return $expressions + [
         'generate' => Generate::PhpClass,
         'implements' => [ResolvesToAny::class],
         'acceptedTypes' => ['string'],
+    ],
+    'geometry' => [
+        'returnType' => Type\GeometryInterface::class,
+        'acceptedTypes' => [Type\GeometryInterface::class, ...$bsonTypes['object']],
     ],
 
     // @todo add enum values
@@ -153,9 +161,6 @@ return $expressions + [
         'acceptedTypes' => [...$bsonTypes['object']],
     ],
     'GeoPoint' => [
-        'acceptedTypes' => [...$bsonTypes['object']],
-    ],
-    'Geometry' => [
         'acceptedTypes' => [...$bsonTypes['object']],
     ],
 ];

@@ -4,7 +4,7 @@ category:
     - 'Comparison Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/ne/'
 type:
-    - query
+    - filter
 encode: single
 description: |
     Matches all values that are not equal to a specified value.

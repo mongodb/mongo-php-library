@@ -9,7 +9,7 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\QueryFilterInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -21,7 +21,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/
  */
-class BitsAnySetOperator implements QueryInterface
+class BitsAnySetOperator implements QueryFilterInterface
 {
     public const NAME = '$bitsAnySet';
     public const ENCODE = \MongoDB\Builder\Encode::Single;

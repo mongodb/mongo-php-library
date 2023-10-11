@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace MongoDB\CodeGenerator;
 
 use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\QueryObject;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
 use MongoDB\CodeGenerator\Definition\VariadicType;
@@ -125,6 +126,18 @@ class OperatorClassGenerator extends OperatorGenerator
                     $constuctor->addBody(<<<PHP
                     if (is_array(\${$argument->name}) && ! array_is_list(\${$argument->name})) {
                         throw new InvalidArgumentException('Expected \${$argument->name} argument to be a list, got an associative array.');
+                    }
+
+                    PHP);
+                }
+
+                if ($type->query) {
+                    $namespace->addUseFunction('is_array');
+                    $namespace->addUseFunction('is_object');
+                    $namespace->addUse(QueryObject::class);
+                    $constuctor->addBody(<<<PHP
+                    if (is_array(\${$argument->name}) || is_object(\${$argument->name})) {
+                        \${$argument->name} = QueryObject::create(\${$argument->name});
                     }
 
                     PHP);

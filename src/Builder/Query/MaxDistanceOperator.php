@@ -10,14 +10,14 @@ use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
-use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\QueryFilterInterface;
 
 /**
  * Specifies a maximum distance to limit the results of $near and $nearSphere queries. The 2dsphere and 2d indexes support $maxDistance.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/maxDistance/
  */
-class MaxDistanceOperator implements QueryInterface
+class MaxDistanceOperator implements QueryFilterInterface
 {
     public const NAME = '$maxDistance';
     public const ENCODE = \MongoDB\Builder\Encode::Single;

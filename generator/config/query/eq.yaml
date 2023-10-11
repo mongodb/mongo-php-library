@@ -4,7 +4,7 @@ category:
     - 'Comparison Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/eq/'
 type:
-    - query
+    - filter
 encode: single
 description: |
     Matches values that are equal to a specified value.

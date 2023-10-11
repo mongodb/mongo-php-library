@@ -88,82 +88,42 @@ result types would be rejected.
 We rely on the server will reject the query if the expression is not of the expected type.
 
 
-# Query
+# Query & Filter
 
-The `query` are not `expression`. They are used in a `$match`, `$geoNear` or `$graphLookup` stage.
-The query operators must implement the `QueryInterface` so that we can type hint the query parameter of the stages.
+The `query` are used in a `$match`, `$geoNear` or `$graphLookup` stages and `$elemMatch` operator.
+The `filter` are used compose query. A query is a map of field name to filter and/or a list of other queries.
 
-Encoding of queries is different from encoding of expressions.
-The query is encoded as a map of `fieldName: { $operator: value }` mixed with the specific operators `$and`, `$nor`, `$or`.
+Queries can be create with `$and`, `$or`, `$nor` operators or with the `Query` factory class, but also with a specific
+helper function `Query::query()` that accepts variadic named arguments.
 
-We use named arguments to map each field name to a filter or a list of filters.
-
+We customize the `Stage::match()` factory function to shortcut the `Query::query()` function.
 ```php
-$pipeline = [
-    matchStage(
-        // $or, $and, $nor can't have a field name
-        // An exception will be thrown if a field name is used
-        Query::or(
-            foo: Query::eq(...),
-            Query::and(
-                bar: Query::eq(...),
-                baz: Query::eq(...),
-            )
+Stage::match(
+    // $or, $and, $nor can't have a field name
+    // An exception will be thrown if a field name is used
+    Query::or(
+        Query::query(foo: Query::eq(...)),
+        Query::and(
+            Query::query(bar: Query::eq(...)),
+            Query::query(baz: Query::eq(...)),
         )
-        // Equality query on a field
-        foo: '...',
-        // Negate a query with $not
-        bar: Query::not(Query::gt(...))
-        // Use array unpacking for complex field path
-        ...['foo.$.baz' => Query::eq(...)],
-        // Multiple filters on the same field
-        baz: [Query::lt(...), Query::gt(...)]
     )
-];
+    // Equality query on a field
+    foo: '...',
+    // Negate a query with $not
+    bar: Query::not(Query::gt(...))
+    // Use array unpacking for complex field path
+    ...['foo.$.baz' => Query::eq(...)],
+    // Multiple filters on the same field
+    baz: [Query::lt(...), Query::gt(...)]
+)
 ```
 
-Strengths:
-- Syntax is close to the MongoDB syntax
-
-Weaknesses:
-- New syntax for multiple filters on the same field, risk of confusion with implicit `$eq` array value.
-- Need to use array unpacking for complex field path
-
-**Alternative to discuss**: Use the same syntax for query and expression operators.
-
+Without the custom factory function, the queries would be written with a single root query object.
 ```php
-$pipeline = [
-    matchStage(
-        // $or, $and, $nor can't have a field name
-        // An exception will be thrown if a field name is used
-        Query::or(
-            Query::eq('foo', ...),
-            Query::and(
-                Query::eq('bar', ...),
-                Query::eq('baz', ...),
-            )
-        )
-        // Equality query on a field
-        Query::eq('foo', '...'),
-        // Negate a query with $not
-        Query::not(Query::gt('bar', ...))
-        // Use array unpacking for complex field path
-        Query::eq('foo.$.baz', ...),
-        // Multiple filters on the same field
-        Query::lt('baz', ...),
-        Query::gt('baz', ...)
-    )
-];
+Stage::match(Query::or(Query::query(...), Query::query(...)));
+Stage::match(Query::query(...));
 ```
-
-Strengths:
-- Same syntax as Java driver
-- Same syntax for query and expression operators. But we cannot use the same factory function because value argument
-  don't have the same type (a value for query, an expression for expression operators
-
-Weaknesses:
-- New syntax for multiple filters on the same field, risk of confusion with implicit `$eq` array value.
-- Need to use array unpacking for complex field path
 
 # Projection
 
@@ -296,5 +256,8 @@ The `$regex` query requires a `MongoDB\BSON\Regex` object as parameter. We creat
 this object from a string.
 
 ```php
-function regex(MongoDB\BSON\Regex|string $pattern, string $flags = ''): RegexQuery
+function regex(MongoDB\BSON\Regex|string $pattern, string $flags = ''): RegexOperator
 ```
+
+## `$` positional projection
+

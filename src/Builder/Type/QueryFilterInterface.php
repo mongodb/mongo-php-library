@@ -3,10 +3,10 @@
 namespace MongoDB\Builder\Type;
 
 /**
- * Query are operator and object that can be used in $match stage.
+ * Filter are the operator part of a query, associated with a field path.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/
  */
-interface QueryInterface
+interface QueryFilterInterface
 {
 }

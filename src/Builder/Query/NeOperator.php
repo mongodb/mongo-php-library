@@ -18,7 +18,7 @@ use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
-use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\QueryFilterInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/ne/
  */
-class NeOperator implements QueryInterface
+class NeOperator implements QueryFilterInterface
 {
     public const NAME = '$ne';
     public const ENCODE = \MongoDB\Builder\Encode::Single;

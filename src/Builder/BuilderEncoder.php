@@ -7,8 +7,11 @@ use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Expression\Variable;
 use MongoDB\Builder\Stage\GroupStage;
 use MongoDB\Builder\Type\AccumulatorInterface;
+use MongoDB\Builder\Type\CombinedQueryFilter;
 use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Builder\Type\QueryFilterInterface;
 use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\QueryObject;
 use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Builder\Type\WindowInterface;
 use MongoDB\Codec\EncodeIfSupported;
@@ -19,8 +22,10 @@ use stdClass;
 use function array_key_first;
 use function assert;
 use function count;
+use function get_debug_type;
 use function get_object_vars;
 use function is_array;
+use function is_object;
 use function sprintf;
 
 /** @template-implements Encoder<Pipeline|StageInterface|ExpressionInterface|QueryInterface, stdClass|array|string> */
@@ -37,6 +42,7 @@ class BuilderEncoder implements Encoder
             || $value instanceof StageInterface
             || $value instanceof ExpressionInterface
             || $value instanceof QueryInterface
+            || $value instanceof QueryFilterInterface
             || $value instanceof AccumulatorInterface
             || $value instanceof WindowInterface;
     }
@@ -67,6 +73,14 @@ class BuilderEncoder implements Encoder
 
         if ($value instanceof Variable) {
             return '$$' . $value->expression;
+        }
+
+        if ($value instanceof QueryObject) {
+            return $this->encodeQueryObject($value);
+        }
+
+        if ($value instanceof CombinedQueryFilter) {
+            return $this->encodeCombinedFilter($value);
         }
 
         // The generic but incomplete encoding code
@@ -142,7 +156,7 @@ class BuilderEncoder implements Encoder
     /**
      * Get the unique property of the operator as value
      */
-    private function encodeAsSingle(ExpressionInterface|StageInterface|QueryInterface $value): stdClass
+    private function encodeAsSingle(ExpressionInterface|StageInterface|QueryInterface|QueryFilterInterface $value): stdClass
     {
         foreach (get_object_vars($value) as $val) {
             $result = $this->recursiveEncode($val);
@@ -156,6 +170,45 @@ class BuilderEncoder implements Encoder
         }
 
         throw new LogicException(sprintf('Class "%s" does not have a single property.', $value::class));
+    }
+
+    private function encodeCombinedFilter(CombinedQueryFilter $filter): stdClass
+    {
+        $result = new stdClass();
+        foreach ($filter->filters as $filter) {
+            $filter = $this->recursiveEncode($filter);
+            if (is_object($filter)) {
+                $filter = get_object_vars($filter);
+            } elseif (! is_array($filter)) {
+                throw new LogicException(sprintf('Query filters must an array or an object. Got "%s"', get_debug_type($filter)));
+            }
+
+            foreach ($filter as $key => $value) {
+                $result->{$key} = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Query objects are encoded by merging query operator with field path to filter operators in the same object.
+     */
+    private function encodeQueryObject(QueryObject $query): stdClass
+    {
+        $result = new stdClass();
+        foreach ($query->queries as $key => $value) {
+            if ($value instanceof QueryInterface) {
+                // The sub-objects is merged into the main object, replacing duplicate keys
+                foreach (get_object_vars($this->recursiveEncode($value)) as $subKey => $subValue) {
+                    $result->{$subKey} = $subValue;
+                }
+            } else {
+                $result->{$key} = $this->encodeIfSupported($value);
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -180,7 +233,7 @@ class BuilderEncoder implements Encoder
         return $this->encodeIfSupported($value);
     }
 
-    private function wrap(ExpressionInterface|StageInterface|QueryInterface $value, mixed $result): stdClass
+    private function wrap(ExpressionInterface|StageInterface|QueryInterface|QueryFilterInterface $value, mixed $result): stdClass
     {
         $object = new stdClass();
         $object->{$value::NAME} = $result;

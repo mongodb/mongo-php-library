@@ -4,7 +4,7 @@ category:
     - 'Geospatial Geometry Specifiers'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/minDistance/'
 type:
-    - query
+    - filter
 encode: single
 description: |
     Specifies a minimum distance to limit the results of $near and $nearSphere queries. For use with 2dsphere index only.

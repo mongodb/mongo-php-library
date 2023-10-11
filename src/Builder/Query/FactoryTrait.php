@@ -19,6 +19,7 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Builder\Type\GeometryInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
@@ -192,9 +193,11 @@ trait FactoryTrait
      * Selects geometries that intersect with a GeoJSON geometry. The 2dsphere index supports $geoIntersects.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/
-     * @param Document|Serializable|array|stdClass $geometry
+     * @param Document|GeometryInterface|Serializable|array|stdClass $geometry
      */
-    public static function geoIntersects(Document|Serializable|stdClass|array $geometry): GeoIntersectsOperator
+    public static function geoIntersects(
+        Document|Serializable|GeometryInterface|stdClass|array $geometry,
+    ): GeoIntersectsOperator
     {
         return new GeoIntersectsOperator($geometry);
     }
@@ -220,9 +223,11 @@ trait FactoryTrait
      * Selects geometries within a bounding GeoJSON geometry. The 2dsphere and 2d indexes support $geoWithin.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/
-     * @param Document|Serializable|array|stdClass $geometry
+     * @param Document|GeometryInterface|Serializable|array|stdClass $geometry
      */
-    public static function geoWithin(Document|Serializable|stdClass|array $geometry): GeoWithinOperator
+    public static function geoWithin(
+        Document|Serializable|GeometryInterface|stdClass|array $geometry,
+    ): GeoWithinOperator
     {
         return new GeoWithinOperator($geometry);
     }
@@ -372,12 +377,12 @@ trait FactoryTrait
      * Returns geospatial objects in proximity to a point. Requires a geospatial index. The 2dsphere and 2d indexes support $near.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/near/
-     * @param Document|Serializable|array|stdClass $geometry
+     * @param Document|GeometryInterface|Serializable|array|stdClass $geometry
      * @param Optional|int $maxDistance Distance in meters. Limits the results to those documents that are at most the specified distance from the center point.
      * @param Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public static function near(
-        Document|Serializable|stdClass|array $geometry,
+        Document|Serializable|GeometryInterface|stdClass|array $geometry,
         Optional|int $maxDistance = Optional::Undefined,
         Optional|int $minDistance = Optional::Undefined,
     ): NearOperator
@@ -389,12 +394,12 @@ trait FactoryTrait
      * Returns geospatial objects in proximity to a point on a sphere. Requires a geospatial index. The 2dsphere and 2d indexes support $nearSphere.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/
-     * @param Document|Serializable|array|stdClass $geometry
+     * @param Document|GeometryInterface|Serializable|array|stdClass $geometry
      * @param Optional|int $maxDistance Distance in meters.
      * @param Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public static function nearSphere(
-        Document|Serializable|stdClass|array $geometry,
+        Document|Serializable|GeometryInterface|stdClass|array $geometry,
         Optional|int $maxDistance = Optional::Undefined,
         Optional|int $minDistance = Optional::Undefined,
     ): NearSphereOperator
@@ -428,9 +433,9 @@ trait FactoryTrait
      * Inverts the effect of a query expression and returns documents that do not match the query expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/not/
-     * @param Document|QueryInterface|Serializable|array|stdClass $expression
+     * @param Document|QueryInterface|Regex|Serializable|array|stdClass $expression
      */
-    public static function not(Document|Serializable|QueryInterface|stdClass|array $expression): NotOperator
+    public static function not(Document|Regex|Serializable|QueryInterface|stdClass|array $expression): NotOperator
     {
         return new NotOperator($expression);
     }
@@ -492,7 +497,7 @@ trait FactoryTrait
     /**
      * Limits the number of elements projected from an array. Supports skip and limit slices.
      *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/query/slice/
+     * @see https://www.mongodb.com/docs/manual/reference/operator/projection/slice/
      * @param int $limit
      * @param int $skip
      */

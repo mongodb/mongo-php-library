@@ -10,7 +10,7 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\GeometryInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
@@ -23,7 +23,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/geometry/
  */
-class GeometryOperator implements QueryInterface
+class GeometryOperator implements GeometryInterface
 {
     public const NAME = '$geometry';
     public const ENCODE = \MongoDB\Builder\Encode::Object;

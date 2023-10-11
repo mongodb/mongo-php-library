@@ -4,7 +4,7 @@ category:
     - 'Geospatial Query Selectors'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/'
 type:
-    - query
+    - filter
 encode: object
 description: |
     Returns geospatial objects in proximity to a point on a sphere. Requires a geospatial index. The 2dsphere and 2d indexes support $nearSphere.
@@ -12,7 +12,7 @@ arguments:
     -
         name: geometry
         type:
-            - Geometry
+            - geometry
     -
         name: maxDistance
         type:

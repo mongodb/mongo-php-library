@@ -4,7 +4,7 @@ category:
     - 'Evaluation Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/expr/'
 type:
-    - query
+    - filter
 encode: single
 description: |
     Allows use of aggregation expressions within the query language.

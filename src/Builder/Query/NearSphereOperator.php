@@ -10,7 +10,8 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Encode;
 use MongoDB\Builder\Optional;
-use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\GeometryInterface;
+use MongoDB\Builder\Type\QueryFilterInterface;
 use stdClass;
 
 /**
@@ -18,13 +19,13 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/
  */
-class NearSphereOperator implements QueryInterface
+class NearSphereOperator implements QueryFilterInterface
 {
     public const NAME = '$nearSphere';
     public const ENCODE = \MongoDB\Builder\Encode::Object;
 
-    /** @param Document|Serializable|array|stdClass $geometry */
-    public Document|Serializable|stdClass|array $geometry;
+    /** @param Document|GeometryInterface|Serializable|array|stdClass $geometry */
+    public Document|Serializable|GeometryInterface|stdClass|array $geometry;
 
     /** @param Optional|int $maxDistance Distance in meters. */
     public Optional|int $maxDistance;
@@ -33,12 +34,12 @@ class NearSphereOperator implements QueryInterface
     public Optional|int $minDistance;
 
     /**
-     * @param Document|Serializable|array|stdClass $geometry
+     * @param Document|GeometryInterface|Serializable|array|stdClass $geometry
      * @param Optional|int $maxDistance Distance in meters.
      * @param Optional|int $minDistance Distance in meters. Limits the results to those documents that are at least the specified distance from the center point.
      */
     public function __construct(
-        Document|Serializable|stdClass|array $geometry,
+        Document|Serializable|GeometryInterface|stdClass|array $geometry,
         Optional|int $maxDistance = Optional::Undefined,
         Optional|int $minDistance = Optional::Undefined,
     ) {

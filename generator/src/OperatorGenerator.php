@@ -69,11 +69,12 @@ abstract class OperatorGenerator extends AbstractGenerator
      * Expression types can contain class names, interface, native types or "list".
      * PHPDoc types are more precise than native types, so we use them systematically even if redundant.
      *
-     * @return object{native:string,doc:string,use:list<class-string>,list:bool}
+     * @return object{native:string,doc:string,use:list<class-string>,list:bool,query:bool}
      */
     final protected function getAcceptedTypes(ArgumentDefinition $arg): stdClass
     {
         $nativeTypes = [];
+
         foreach ($arg->type as $type) {
             $type = $this->getType($type);
             $nativeTypes = array_merge($nativeTypes, $type->acceptedTypes);
@@ -111,6 +112,9 @@ abstract class OperatorGenerator extends AbstractGenerator
         $listCheck = in_array('\\' . PackedArray::class, $nativeTypes, true)
             && ! in_array('\\' . Document::class, $nativeTypes, true);
 
+        // If the argument is a query, we need to convert it to a QueryObject
+        $isQuery = in_array('query', $arg->type, true);
+
         // mixed can only be used as a standalone type
         if (in_array('mixed', $nativeTypes, true)) {
             $nativeTypes = ['mixed'];
@@ -125,6 +129,7 @@ abstract class OperatorGenerator extends AbstractGenerator
             'doc' => Type::union(...array_unique($docTypes)),
             'use' => array_unique($use),
             'list' => $listCheck,
+            'query' => $isQuery,
         ];
     }
 

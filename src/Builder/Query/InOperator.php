@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Encode;
-use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\QueryFilterInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -20,7 +20,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/in/
  */
-class InOperator implements QueryInterface
+class InOperator implements QueryFilterInterface
 {
     public const NAME = '$in';
     public const ENCODE = \MongoDB\Builder\Encode::Single;

@@ -4,7 +4,7 @@ category:
     - 'Bitwise Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/'
 type:
-    - query
+    - filter
 encode: single
 description: |
     Matches numeric or binary values in which any bit from a set of bit positions has a value of 0.

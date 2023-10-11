@@ -4,7 +4,7 @@ category:
     - 'Array Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/size/'
 type:
-    - query
+    - filter
 encode: single
 description: |
     Selects documents if the array field is a specified size.

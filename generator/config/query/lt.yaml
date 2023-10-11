@@ -4,7 +4,7 @@ category:
     - 'Comparison Query Operators'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/lt/'
 type:
-    - query
+    - filter
 encode: single
 description: |
     Matches values that are less than a specified value.

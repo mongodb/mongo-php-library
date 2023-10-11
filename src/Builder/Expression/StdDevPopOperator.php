@@ -8,7 +8,6 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Exception\InvalidArgumentException;
 
@@ -21,7 +20,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/
  */
-class StdDevPopOperator implements ResolvesToDouble, AccumulatorInterface
+class StdDevPopOperator implements ResolvesToDouble
 {
     public const NAME = '$stdDevPop';
     public const ENCODE = Encode::Single;

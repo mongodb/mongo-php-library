@@ -53,7 +53,7 @@
                             "resolvesToJavascript",
                             "resolvesToInt",
                             "resolvesToTimestamp",
-                            "resolvesTolong",
+                            "resolvesToLong",
                             "resolvesToDecimal"
                         ]
                     }

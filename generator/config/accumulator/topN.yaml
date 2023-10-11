@@ -1,22 +1,28 @@
 # $schema: ../schema.json
-name: $top
+name: $topN
 category:
     - Accumulators
     - 'Window Operator'
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN/'
 type:
     - accumulator
 encode: object
 description: |
-    Returns the top element within a group according to the specified sort order.
+    Returns an aggregation of the top n fields within a group, according to the specified sort order.
     New in version 5.2.
 
     Available in the $group and $setWindowFields stages.
 arguments:
     -
+        name: 'n'
+        type:
+            - resolvesToInt
+        description: |
+            limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
+    -
         name: sortBy
         type:
-            - SortSpec
+            - object # SortSpec
         description: |
             Specifies the order of results, with syntax similar to $sort.
     -

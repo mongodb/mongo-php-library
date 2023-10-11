@@ -1,14 +1,14 @@
 # $schema: ../schema.json
-name: $lastN
+name: $firstN
 category:
     - 'Array Expression Operator'
-link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/'
 type:
-    - resolvesToArray
+    - accumulator
     - window
 encode: object
 description: |
-    Returns a specified number of elements from the end of an array. Distinct from the $lastN accumulator.
+    Returns a specified number of elements from the beginning of an array. Distinct from the $firstN accumulator.
 arguments:
     -
         name: input

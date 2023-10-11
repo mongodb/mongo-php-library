@@ -17,7 +17,18 @@ return [
         ],
     ],
 
-    // Aggregation Pipeline Operators
+    // Aggregation Pipeline Accumulator and Window Operators
+    [
+        'configFiles' => __DIR__ . '/accumulator',
+        'namespace' => 'MongoDB\\Builder\\Accumulator',
+        'classNameSuffix' => 'Accumulator',
+        'generators' => [
+            OperatorClassGenerator::class,
+            OperatorFactoryGenerator::class,
+        ],
+    ],
+
+    // Aggregation Pipeline Expression
     [
         'configFiles' => __DIR__ . '/expression',
         'namespace' => 'MongoDB\\Builder\\Expression',

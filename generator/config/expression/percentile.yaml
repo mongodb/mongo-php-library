@@ -6,8 +6,6 @@ category:
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/'
 type:
     - resolvesToArray # of scalar
-    - accumulator
-    - window
 encode: object
 description: |
     Returns an array of scalar values that correspond to specified percentile values.

@@ -1,0 +1,19 @@
+# $schema: ../schema.json
+name: $max
+category:
+    - Accumulators
+    - 'Accumulators (in Other Stages)'
+    - 'Window Operator'
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/'
+type:
+    - accumulator
+    - window
+encode: single
+description: |
+    Returns the maximum value that results from applying an expression to each document.
+    Changed in version 5.0: Available in the $setWindowFields stage.
+arguments:
+    -
+        name: expression
+        type:
+            - expression

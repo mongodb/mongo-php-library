@@ -3,6 +3,7 @@
 namespace MongoDB\Tests\Builder;
 
 use Generator;
+use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
@@ -163,6 +164,7 @@ class BuilderEncoderTest extends TestCase
         $this->assertSamePipeline($expected, $pipeline);
     }
 
+    /** @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/#use-documents-window-to-obtain-cumulative-and-maximum-quantity-for-each-year */
     public function testSetWindowFields(): void
     {
         $pipeline = new Pipeline(
@@ -170,8 +172,14 @@ class BuilderEncoderTest extends TestCase
                 partitionBy: Expression::year(Expression::dateFieldPath('orderDate')),
                 sortBy: object(orderDate: 1),
                 output: object(
-                    cumulativeQuantityForYear: Expression::sum(Expression::intFieldPath('quantity')),
-                    maximumQuantityForYear: Expression::max(Expression::intFieldPath('quantity')),
+                    cumulativeQuantityForYear: Accumulator::outputWindow(
+                        Accumulator::sum(Expression::intFieldPath('quantity')),
+                        documents: ['unbounded', 'current'],
+                    ),
+                    maximumQuantityForYear: Accumulator::outputWindow(
+                        Accumulator::max(Expression::intFieldPath('quantity')),
+                        documents: ['unbounded', 'unbounded'],
+                    ),
                 ),
             ),
         );
@@ -183,9 +191,14 @@ class BuilderEncoderTest extends TestCase
                     'partitionBy' => ['$year' => ['date' => '$orderDate']],
                     'sortBy' => ['orderDate' => 1],
                     'output' => [
-                        // @todo add "window" parameter
-                        'cumulativeQuantityForYear' => ['$sum' => '$quantity'],
-                        'maximumQuantityForYear' => ['$max' => '$quantity'],
+                        'cumulativeQuantityForYear' => [
+                            '$sum' => '$quantity',
+                            'window' => ['documents' => ['unbounded', 'current']],
+                        ],
+                        'maximumQuantityForYear' => [
+                            '$max' => '$quantity',
+                            'window' => ['documents' => ['unbounded', 'unbounded']],
+                        ],
                     ],
                 ],
             ],

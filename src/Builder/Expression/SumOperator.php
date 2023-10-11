@@ -8,7 +8,6 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Exception\InvalidArgumentException;
 
@@ -20,7 +19,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/
  */
-class SumOperator implements ResolvesToNumber, AccumulatorInterface
+class SumOperator implements ResolvesToNumber
 {
     public const NAME = '$sum';
     public const ENCODE = Encode::Single;

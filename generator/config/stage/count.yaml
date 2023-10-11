@@ -14,3 +14,5 @@ arguments:
         name: field
         type:
             - string
+        description: |
+            Name of the output field which has the count as its value. It must be a non-empty string, must not start with $ and must not contain the . character.

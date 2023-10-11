@@ -8,9 +8,7 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
-use MongoDB\Builder\Type\WindowInterface;
 
 /**
  * Returns an approximation of the median, the 50th percentile, as a scalar value.
@@ -22,7 +20,7 @@ use MongoDB\Builder\Type\WindowInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/
  */
-class MedianOperator implements ResolvesToDouble, AccumulatorInterface, WindowInterface
+class MedianOperator implements ResolvesToDouble
 {
     public const NAME = '$median';
     public const ENCODE = Encode::Object;

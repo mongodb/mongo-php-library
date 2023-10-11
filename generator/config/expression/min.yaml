@@ -7,8 +7,6 @@ category:
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/'
 type:
     - resolvesToAny
-    - accumulator
-    - window
 encode: single
 description: |
     Returns the minimum value that results from applying an expression to each document.

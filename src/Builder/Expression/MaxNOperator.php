@@ -7,9 +7,7 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
-use MongoDB\Builder\Type\WindowInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -21,7 +19,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN-array-element/
  */
-class MaxNOperator implements ResolvesToArray, AccumulatorInterface, WindowInterface
+class MaxNOperator implements ResolvesToArray
 {
     public const NAME = '$maxN';
     public const ENCODE = Encode::Object;

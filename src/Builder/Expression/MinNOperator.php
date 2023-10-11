@@ -7,9 +7,7 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
-use MongoDB\Builder\Type\WindowInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -21,7 +19,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/
  */
-class MinNOperator implements ResolvesToArray, AccumulatorInterface, WindowInterface
+class MinNOperator implements ResolvesToArray
 {
     public const NAME = '$minN';
     public const ENCODE = Encode::Object;

@@ -149,7 +149,7 @@ trait FactoryTrait
      * Distinct from the $count aggregation accumulator.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/
-     * @param non-empty-string $field
+     * @param non-empty-string $field Name of the output field which has the count as its value. It must be a non-empty string, must not start with $ and must not contain the . character.
      */
     public static function count(string $field): CountStage
     {

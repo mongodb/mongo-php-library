@@ -2,14 +2,15 @@
 
 The Aggregation Builder is a set of classes and functions that represent all the stages and operators of the MongoDB.
 
-This feature use of PHP 8.1 features: named arguments, union types, enum.
+# Package
+
+The design for the query builder requires that we use PHP 8.1 capacities: named arguments and union types. 
 Since the `mongodb/mongodb` library have to stay compatible with PHP 7.4, this new feature is implemented in a separate
 package `mongodb/builder` that requires PHP 8.1. The implementation being experimental and the API not stable at the
-moment, the package will be tagged with a `0.x` version more often than the `mongodb/mongodb` package.
-Once this package is stable, and `mongodb/mongodb` requires PHP 8.1, the code will be merged in the `mongodb/mongodb`
-and the package `mongodb/builder` will be abandoned.
+moment, the package will be tagged with a `0.x`. Once this package is stable, and `mongodb/mongodb` requires PHP 8.1,
+the code will be merged in the `mongodb/mongodb` and the package `mongodb/builder` will be abandoned.
 
-# Definition
+# Operator Definition
 
 Operators are defined in Yaml files, independently of the implementation. These definitions are used to generate the PHP
 code and could be used to generate other implementations: other languages or other libraries like Doctrine or Laravel.
@@ -23,6 +24,7 @@ Operators are categorized by where they can be used:
 - A `stage` is the root operator of aggregations pipelines.
 - A `expression` is used in `stage` parameters and can be converted to `query` with `$expr`. 
 - A `query` is used in stages `$match`, `$geoNear` and `$graphLookup`. It could be used in `find` commands.
+- A `filter` is used to compose `query` when affected to a field path.
 - An `accumulator` is not an expression. It can be used in these stages: `$group`, `$bucket`, `$bucketAuto`, `$setWindowFields`.
 - A `window` operator is used in `$setWindowFields` stage. 
 
@@ -94,19 +96,21 @@ result types would be rejected.
 
 We rely on the server will reject the query if the expression is not of the expected type.
 
-
 ## Query & Filter
 
 The `query` are used in a `$match`, `$geoNear` or `$graphLookup` stages and `$elemMatch` operator.
 The `filter` are used compose query. A query is a map of field name to filter and/or a list of other queries.
 
-Queries can be create with `$and`, `$or`, `$nor` operators or with the `Query` factory class, but also with a specific
-helper function `Query::query()` that accepts variadic named arguments.
+Queries can be created with `$and`, `$or`, `$nor`, `$jsonSchema`, `$text`, `$comment` operators or with the `QueryObject`
+class when composed with filter. 
+The factory function `Query::query()` accepts variadic arguments which can be named (for `filter` with field
+path) or sequential (for `query` without field path). This function is used by stages that accept a `query` as parameter
+to create the `QueryObject`. The encoder handle this object specifically to merge all the queries in a single object.
 
 We customize the `Stage::match()` factory function to shortcut the `Query::query()` function.
 ```php
 Stage::match(
-    // $or, $and, $nor can't have a field name
+    // $or, $and, $nor, $comment, $jsonSchema, $text can't have a field name
     // An exception will be thrown if a field name is used
     Query::or(
         Query::query(foo: Query::eq(...)),
@@ -114,27 +118,41 @@ Stage::match(
             Query::query(bar: Query::eq(...)),
             Query::query(baz: Query::eq(...)),
         )
-    )
+    ),
+    Query::comment('...'),
     // Equality query on a field
     foo: '...',
     // Negate a query with $not
-    bar: Query::not(Query::gt(...))
+    bar: Query::not(Query::gt(...)),
     // Use array unpacking for complex field path
     ...['foo.$.baz' => Query::eq(...)],
     // Multiple filters on the same field
-    baz: [Query::lt(...), Query::gt(...)]
+    baz: [Query::lt(...), Query::gt(...)],
 )
 ```
 
-Without the custom factory function, the queries would be written with a single root query object.
+Without the custom factory function for `$match` stage, the queries would be written with a single root query object.
 ```php
 Stage::match(Query::or(Query::query(...), Query::query(...)));
 Stage::match(Query::query(...));
 ```
 
-# Projection
+**Notes:**
+- Before PHP 8.1, we cannot combine named arguments and argument unpacking
+- Arguments must be provided in this order: sequential arguments, array unpacking positional, array unpacking named, named arguments.
+```php
+variadic('positional', ...['unpacked positional'], ...['key' => 'unpacked named'], name: 'named');
+```
+- PHP triggers a fatal error if an unpacked named argument conflicts with an other named argument.
+```php
+variadic(...['name' => 'unpacked named'], name: 'named');
+// Uncaught Error: Named parameter $name overwrites previous argument
+```
 
-Projection operators have a dedicated namespace and interface.
+## Projection
+
+Projection operators have a dedicated namespace and interface to not be confused expression operators with the same
+name.
 
 # Specificities
 
@@ -142,7 +160,7 @@ Some operators have specificities that are not covered by the generic builder.
 
 ## `$group` stage: required and variadic parameters in the same object
 
-To encode, the required `_id` parameter is renderred at the same level of the list for fields. 
+To encode, the required `_id` parameter is rendered at the same level of the list for fields. 
 
 **Implementation:** The `GroupStage` has a special `Encode::Group` value exploited by the encoder.
 
@@ -166,12 +184,11 @@ a `date` and an optional `timezone` properties.
 { <operator>: { date: <dateExpression>, timezone: <tzExpression> } }
 ```
 
-
 In order to normalize encoding, we always use an object with `date` and `timezone` properties and never the short form
 even if the timezone is not specified.
 
 Date Expression can be `ResolveToDate`, `ResolveToTimestamp` or `ResolveToObjectId`. But we don't introduce a new
-meta type like `number` or `any` as we can list this types directly in the config.
+meta type like `number` or `any` as we can list this types directly in the Yaml config.
 
 ## `$setWindowFields` stage's output
 
@@ -199,12 +216,14 @@ output: {
 We create a helper with a specific encoding that merges the operator and the window parameters.
 
 ```php
-function windowOutput(
-    WindowInterface $operator,
-    Optional|array $documents,
-    Optional|array $range,
-    Optional|string $unit
-): WindowInterface
+class Window {
+    public static function output(
+        WindowInterface $operator,
+        Optional|array $documents,
+        Optional|array $range,
+        Optional|string $unit
+    ): WindowInterface;
+}
 ```
 
 Which is encoded to:
@@ -224,7 +243,7 @@ And used like this:
 $setWindowFields = Stage::setWindowFields(
     // ... other parameters
     output: object(
-        cumulativeQuantityForYear: windowOutput(
+        cumulativeQuantityForYear: Window::output(
             Expression::sum(Expression::fieldPath('quantity')),
             documents: [null, 0],
             range: [null, 0],

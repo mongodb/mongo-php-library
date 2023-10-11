@@ -15,9 +15,11 @@ arguments:
             - resolvesToArray
         description: |
             The array to be sorted.
+            The result is null if the expression: is missing, evaluates to null, or evaluates to undefined
+            If the expression evaluates to any other non-array value, the document returns an error.
     -
         name: sortBy
         type:
-            - SortSpec
+            - object # SortSpec
         description: |
             The document specifies a sort ordering.

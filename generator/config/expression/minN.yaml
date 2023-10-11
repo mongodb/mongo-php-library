@@ -5,8 +5,6 @@ category:
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/'
 type:
     - resolvesToArray
-    - accumulator
-    - window
 encode: object
 description: |
     Returns the n smallest values in an array. Distinct from the $minN accumulator.

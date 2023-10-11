@@ -38,32 +38,6 @@ trait FactoryTrait
     }
 
     /**
-     * Defines a custom accumulator function.
-     * New in version 4.4.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/
-     * @param non-empty-string $init Function used to initialize the state. The init function receives its arguments from the initArgs array expression. You can specify the function definition as either BSON type Code or String.
-     * @param non-empty-string $accumulate Function used to accumulate documents. The accumulate function receives its arguments from the current state and accumulateArgs array expression. The result of the accumulate function becomes the new state. You can specify the function definition as either BSON type Code or String.
-     * @param BSONArray|PackedArray|ResolvesToArray|array $accumulateArgs Arguments passed to the accumulate function. You can use accumulateArgs to specify what field value(s) to pass to the accumulate function.
-     * @param non-empty-string $merge Function used to merge two internal states. merge must be either a String or Code BSON type. merge returns the combined result of the two merged states. For information on when the merge function is called, see Merge Two States with $merge.
-     * @param non-empty-string $lang The language used in the $accumulator code.
-     * @param Optional|BSONArray|PackedArray|ResolvesToArray|array $initArgs Arguments passed to the init function.
-     * @param Optional|non-empty-string $finalize Function used to update the result of the accumulation.
-     */
-    public static function accumulator(
-        string $init,
-        string $accumulate,
-        PackedArray|ResolvesToArray|BSONArray|array $accumulateArgs,
-        string $merge,
-        string $lang,
-        Optional|PackedArray|ResolvesToArray|BSONArray|array $initArgs = Optional::Undefined,
-        Optional|string $finalize = Optional::Undefined,
-    ): AccumulatorOperator
-    {
-        return new AccumulatorOperator($init, $accumulate, $accumulateArgs, $merge, $lang, $initArgs, $finalize);
-    }
-
-    /**
      * Returns the inverse cosine (arc cosine) of a value in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/
@@ -100,20 +74,6 @@ trait FactoryTrait
     ): AddOperator
     {
         return new AddOperator(...$expression);
-    }
-
-    /**
-     * Returns an array of unique expression values for each group. Order of the array elements is undefined.
-     * Changed in version 5.0: Available in the $setWindowFields stage.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
-     */
-    public static function addToSet(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
-    ): AddToSetOperator
-    {
-        return new AddToSetOperator($expression);
     }
 
     /**
@@ -324,43 +284,6 @@ trait FactoryTrait
     }
 
     /**
-     * Returns the bottom element within a group according to the specified sort order.
-     * New in version 5.2.
-     *
-     * Available in the $group and $setWindowFields stages.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottom/
-     * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $output Represents the output for each element in the group and can be any expression.
-     */
-    public static function bottom(
-        Document|Serializable|stdClass|array $sortBy,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $output,
-    ): BottomOperator
-    {
-        return new BottomOperator($sortBy, $output);
-    }
-
-    /**
-     * Returns an aggregation of the bottom n elements within a group, according to the specified sort order. If the group contains fewer than n elements, $bottomN returns all elements in the group.
-     * New in version 5.2.
-     * Available in the $group and $setWindowFields stages.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/
-     * @param ResolvesToInt|int $n Limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
-     * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $output Represents the output for each element in the group and can be any expression.
-     */
-    public static function bottomN(
-        ResolvesToInt|int $n,
-        Document|Serializable|stdClass|array $sortBy,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $output,
-    ): BottomNOperator
-    {
-        return new BottomNOperator($n, $sortBy, $output);
-    }
-
-    /**
      * Returns the size in bytes of a given document (i.e. bsontype Object) when encoded as BSON.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/
@@ -482,51 +405,6 @@ trait FactoryTrait
     public static function cosh(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): CoshOperator
     {
         return new CoshOperator($expression);
-    }
-
-    /**
-     * Returns the number of documents in the group or window.
-     * Distinct from the $count pipeline stage.
-     * New in version 5.0.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/
-     * @param non-empty-string $field
-     */
-    public static function count(string $field): CountOperator
-    {
-        return new CountOperator($field);
-    }
-
-    /**
-     * Returns the population covariance of two numeric expressions.
-     * New in version 5.0.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression1
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression2
-     */
-    public static function covariancePop(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression1,
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression2,
-    ): CovariancePopOperator
-    {
-        return new CovariancePopOperator($expression1, $expression2);
-    }
-
-    /**
-     * Returns the sample covariance of two numeric expressions.
-     * New in version 5.0.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/covarianceSamp/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression1
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression2
-     */
-    public static function covarianceSamp(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression1,
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression2,
-    ): CovarianceSampOperator
-    {
-        return new CovarianceSampOperator($expression1, $expression2);
     }
 
     /**
@@ -767,34 +645,6 @@ trait FactoryTrait
     }
 
     /**
-     * Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition. There are no gaps in the ranks. Ties receive the same rank.
-     * New in version 5.0.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/
-     */
-    public static function denseRank(): DenseRankOperator
-    {
-        return new DenseRankOperator();
-    }
-
-    /**
-     * Returns the average rate of change within the specified window.
-     * New in version 5.0.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/
-     * @param Decimal128|Int64|ResolvesToDate|ResolvesToInt|ResolvesToNumber|UTCDateTime|float|int $input
-     * @param Optional|non-empty-string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
-     * If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
-     */
-    public static function derivative(
-        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToInt|ResolvesToNumber|float|int $input,
-        Optional|string $unit = Optional::Undefined,
-    ): DerivativeOperator
-    {
-        return new DerivativeOperator($input, $unit);
-    }
-
-    /**
      * Returns the result of dividing the first number by the second. Accepts two argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/
@@ -807,17 +657,6 @@ trait FactoryTrait
     ): DivideOperator
     {
         return new DivideOperator($dividend, $divisor);
-    }
-
-    /**
-     * Returns the position of a document (known as the document number) in the $setWindowFields stage partition. Ties result in different adjacent document numbers.
-     * New in version 5.0.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documentNumber/
-     */
-    public static function documentNumber(): DocumentNumberOperator
-    {
-        return new DocumentNumberOperator();
     }
 
     /**
@@ -847,27 +686,6 @@ trait FactoryTrait
     }
 
     /**
-     * Returns the exponential moving average for the numeric expression.
-     * New in version 5.0.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $input
-     * @param Optional|int $N An integer that specifies the number of historical documents that have a significant mathematical weight in the exponential moving average calculation, with the most recent documents contributing the most weight.
-     * You must specify either N or alpha. You cannot specify both.
-     * The N value is used in this formula to calculate the current result based on the expression value from the current document being read and the previous result of the calculation:
-     * @param Optional|Int64|float|int $alpha A double that specifies the exponential decay value to use in the exponential moving average calculation. A higher alpha value assigns a lower mathematical significance to previous results from the calculation.
-     * You must specify either N or alpha. You cannot specify both.
-     */
-    public static function expMovingAvg(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $input,
-        Optional|int $N = Optional::Undefined,
-        Optional|Int64|float|int $alpha = Optional::Undefined,
-    ): ExpMovingAvgOperator
-    {
-        return new ExpMovingAvgOperator($input, $N, $alpha);
-    }
-
-    /**
      * Selects a subset of the array to return an array with only the elements that match the filter condition.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/
@@ -885,35 +703,6 @@ trait FactoryTrait
     ): FilterOperator
     {
         return new FilterOperator($input, $cond, $as, $limit);
-    }
-
-    /**
-     * Returns the result of an expression for the first document in a group or window.
-     * Changed in version 5.0: Available in the $setWindowFields stage.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
-     */
-    public static function first(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
-    ): FirstOperator
-    {
-        return new FirstOperator($expression);
-    }
-
-    /**
-     * Returns a specified number of elements from the beginning of an array. Distinct from the $firstN accumulator.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN-array-element/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements.
-     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
-     */
-    public static function firstN(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
-        ResolvesToInt|int $n,
-    ): FirstNOperator
-    {
-        return new FirstNOperator($input, $n);
     }
 
     /**
@@ -1192,35 +981,6 @@ trait FactoryTrait
     }
 
     /**
-     * Returns the result of an expression for the last document in a group or window.
-     * Changed in version 5.0: Available in the $setWindowFields stage.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
-     */
-    public static function last(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
-    ): LastOperator
-    {
-        return new LastOperator($expression);
-    }
-
-    /**
-     * Returns a specified number of elements from the end of an array. Distinct from the $lastN accumulator.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/
-     * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements.
-     * @param ResolvesToInt|int $n An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.
-     */
-    public static function lastN(
-        PackedArray|ResolvesToArray|BSONArray|array $input,
-        ResolvesToInt|int $n,
-    ): LastNOperator
-    {
-        return new LastNOperator($input, $n);
-    }
-
-    /**
      * Defines variables for use within the scope of a subexpression and returns the result of the subexpression. Accepts named parameters.
      * Accepts any number of argument expressions.
      *
@@ -1433,19 +1193,6 @@ trait FactoryTrait
     }
 
     /**
-     * Combines multiple documents into a single document.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/
-     * @param Document|ResolvesToObject|Serializable|array|stdClass ...$document Any valid expression that resolves to a document.
-     */
-    public static function mergeObjects(
-        Document|Serializable|ResolvesToObject|stdClass|array ...$document,
-    ): MergeObjectsOperator
-    {
-        return new MergeObjectsOperator(...$document);
-    }
-
-    /**
      * Access available per-document metadata related to the aggregation operation.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/
@@ -1652,20 +1399,6 @@ trait FactoryTrait
     ): PowOperator
     {
         return new PowOperator($number, $exponent);
-    }
-
-    /**
-     * Returns an array of values that result from applying an expression to each document.
-     * Changed in version 5.0: Available in the $setWindowFields stage.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
-     */
-    public static function push(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
-    ): PushOperator
-    {
-        return new PushOperator($expression);
     }
 
     /**
@@ -1988,30 +1721,6 @@ trait FactoryTrait
     }
 
     /**
-     * Returns the value from an expression applied to a document in a specified position relative to the current document in the $setWindowFields stage partition.
-     * New in version 5.0.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $output Specifies an expression to evaluate and return in the output.
-     * @param int $by Specifies an integer with a numeric document position relative to the current document in the output.
-     * For example:
-     * 1 specifies the document position after the current document.
-     * -1 specifies the document position before the current document.
-     * -2 specifies the document position that is two positions before the current document.
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $default Specifies an optional default expression to evaluate if the document position is outside of the implicit $setWindowFields stage window. The implicit window contains all the documents in the partition.
-     * The default expression must evaluate to a constant value.
-     * If you do not specify a default expression, $shift returns null for documents whose positions are outside of the implicit $setWindowFields stage window.
-     */
-    public static function shift(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $output,
-        int $by,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $default,
-    ): ShiftOperator
-    {
-        return new ShiftOperator($output, $by, $default);
-    }
-
-    /**
      * Returns the sine of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/
@@ -2072,6 +1781,8 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/
      * @param BSONArray|PackedArray|ResolvesToArray|array $input The array to be sorted.
+     * The result is null if the expression: is missing, evaluates to null, or evaluates to undefined
+     * If the expression evaluates to any other non-array value, the document returns an error.
      * @param Document|Serializable|array|stdClass $sortBy The document specifies a sort ordering.
      */
     public static function sortArray(
@@ -2123,7 +1834,6 @@ trait FactoryTrait
     /**
      * Calculates the sample standard deviation of the input values. Use if the values encompass a sample of a population of data from which to generalize about the population. $stdDevSamp ignores non-numeric values.
      * If the values represent the entire population of data or you do not wish to generalize about a larger population, use $stdDevPop instead.
-     * Changed in version 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/
      * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int ...$expression
@@ -2400,44 +2110,6 @@ trait FactoryTrait
     ): ToObjectIdOperator
     {
         return new ToObjectIdOperator($expression);
-    }
-
-    /**
-     * Returns the top element within a group according to the specified sort order.
-     * New in version 5.2.
-     *
-     * Available in the $group and $setWindowFields stages.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/
-     * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $output Represents the output for each element in the group and can be any expression.
-     */
-    public static function top(
-        Document|Serializable|stdClass|array $sortBy,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $output,
-    ): TopOperator
-    {
-        return new TopOperator($sortBy, $output);
-    }
-
-    /**
-     * Returns an aggregation of the top n fields within a group, according to the specified sort order.
-     * New in version 5.2.
-     *
-     * Available in the $group and $setWindowFields stages.
-     *
-     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN/
-     * @param ResolvesToInt|int $n limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
-     * @param Document|Serializable|array|stdClass $sortBy Specifies the order of results, with syntax similar to $sort.
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $output Represents the output for each element in the group and can be any expression.
-     */
-    public static function topN(
-        ResolvesToInt|int $n,
-        Document|Serializable|stdClass|array $sortBy,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $output,
-    ): TopNOperator
-    {
-        return new TopNOperator($n, $sortBy, $output);
     }
 
     /**

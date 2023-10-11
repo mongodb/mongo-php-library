@@ -7,7 +7,6 @@ category:
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/'
 type:
     - resolvesToDouble
-    - accumulator
 encode: single
 description: |
     Calculates the population standard deviation of the input values. Use if the values encompass the entire population of data you want to represent and do not wish to generalize about a larger population. $stdDevPop ignores non-numeric values.

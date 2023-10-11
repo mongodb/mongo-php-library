@@ -20,11 +20,11 @@ class CountStage implements StageInterface
     public const NAME = '$count';
     public const ENCODE = Encode::Single;
 
-    /** @param non-empty-string $field */
+    /** @param non-empty-string $field Name of the output field which has the count as its value. It must be a non-empty string, must not start with $ and must not contain the . character. */
     public string $field;
 
     /**
-     * @param non-empty-string $field
+     * @param non-empty-string $field Name of the output field which has the count as its value. It must be a non-empty string, must not start with $ and must not contain the . character.
      */
     public function __construct(string $field)
     {

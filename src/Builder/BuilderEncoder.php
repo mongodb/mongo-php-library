@@ -11,6 +11,7 @@ use MongoDB\Builder\Type\CombinedQueryFilter;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\Optional;
+use MongoDB\Builder\Type\OutputWindow;
 use MongoDB\Builder\Type\QueryFilterInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
@@ -23,11 +24,11 @@ use stdClass;
 
 use function array_key_first;
 use function assert;
-use function count;
 use function get_debug_type;
 use function get_object_vars;
 use function is_array;
 use function is_object;
+use function MongoDB\is_first_key_operator;
 use function sprintf;
 
 /** @template-implements Encoder<Pipeline|StageInterface|ExpressionInterface|QueryInterface, stdClass|array|string> */
@@ -85,6 +86,10 @@ class BuilderEncoder implements Encoder
             return $this->encodeCombinedFilter($value);
         }
 
+        if ($value instanceof OutputWindow) {
+            return $this->encodeOutputWindow($value);
+        }
+
         // The generic but incomplete encoding code
         switch ($value::ENCODE) {
             case Encode::Single:
@@ -108,7 +113,7 @@ class BuilderEncoder implements Encoder
     /**
      * Encode the value as an array of properties, in the order they are defined in the class.
      */
-    private function encodeAsArray(ExpressionInterface|StageInterface|QueryInterface $value): stdClass
+    private function encodeAsArray(object $value): stdClass
     {
         $result = [];
         /** @var mixed $val */
@@ -140,7 +145,7 @@ class BuilderEncoder implements Encoder
         return $this->wrap($value, $result);
     }
 
-    private function encodeAsObject(ExpressionInterface|StageInterface|QueryInterface $value): stdClass
+    private function encodeAsObject(object $value): stdClass
     {
         $result = new stdClass();
         foreach (get_object_vars($value) as $key => $val) {
@@ -158,15 +163,10 @@ class BuilderEncoder implements Encoder
     /**
      * Get the unique property of the operator as value
      */
-    private function encodeAsSingle(ExpressionInterface|StageInterface|QueryInterface|QueryFilterInterface $value): stdClass
+    private function encodeAsSingle(AccumulatorInterface|ExpressionInterface|StageInterface|QueryInterface|QueryFilterInterface|WindowInterface $value): stdClass
     {
         foreach (get_object_vars($value) as $val) {
             $result = $this->recursiveEncode($val);
-
-            // The $sum accumulator is a unary operator
-            if ($value instanceof AccumulatorInterface && is_array($result) && count($result) === 1 && array_key_first($result) === 0) {
-                $result = $result[0];
-            }
 
             return $this->wrap($value, $result);
         }
@@ -214,6 +214,36 @@ class BuilderEncoder implements Encoder
     }
 
     /**
+     * For the $setWindowFields stage output parameter, the optional window parameter is encoded in the same object
+     * of the window operator.
+     *
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/
+     */
+    private function encodeOutputWindow(OutputWindow $outputWindow): stdClass
+    {
+        $result = $this->recursiveEncode($outputWindow->operator);
+
+        // Transform the result into an stdClass if a document is provided
+        if (! $outputWindow->operator instanceof WindowInterface && (is_array($result) || is_object($result))) {
+            if (! is_first_key_operator($result)) {
+                throw new LogicException(sprintf('Expected $operator to be an operator. Got "%s"', array_key_first($result)));
+            }
+
+            $result = (object) $result;
+        }
+
+        if ($result instanceof stdClass) {
+            throw new LogicException(sprintf('Expected $operator to be an stdClass. Got "%s"', get_debug_type($result)));
+        }
+
+        if ($outputWindow->window !== Optional::Undefined) {
+            $result->window = $this->recursiveEncode($outputWindow->window);
+        }
+
+        return $result;
+    }
+
+    /**
      * Nested arrays and objects must be encoded recursively.
      */
     private function recursiveEncode(mixed $value): mixed
@@ -235,7 +265,7 @@ class BuilderEncoder implements Encoder
         return $this->encodeIfSupported($value);
     }
 
-    private function wrap(ExpressionInterface|StageInterface|QueryInterface|QueryFilterInterface $value, mixed $result): stdClass
+    private function wrap(object $value, mixed $result): stdClass
     {
         $object = new stdClass();
         $object->{$value::NAME} = $result;

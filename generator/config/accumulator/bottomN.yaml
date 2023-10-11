@@ -22,7 +22,7 @@ arguments:
     -
         name: sortBy
         type:
-            - SortSpec
+            - object # SortSpec
         description: |
             Specifies the order of results, with syntax similar to $sort.
     -

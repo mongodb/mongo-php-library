@@ -7,7 +7,6 @@ category:
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/'
 type:
     - resolvesToNumber
-    - accumulator
 encode: single
 description: |
     Returns a sum of numerical values. Ignores non-numeric values.

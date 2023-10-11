@@ -9,9 +9,7 @@ namespace MongoDB\Builder\Expression;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
-use MongoDB\Builder\Type\WindowInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -31,7 +29,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
  */
-class PercentileOperator implements ResolvesToArray, AccumulatorInterface, WindowInterface
+class PercentileOperator implements ResolvesToArray
 {
     public const NAME = '$percentile';
     public const ENCODE = Encode::Object;

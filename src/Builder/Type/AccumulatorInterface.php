@@ -3,7 +3,7 @@
 namespace MongoDB\Builder\Type;
 
 /**
- * Aggregation Pipeline Accumulators
+ * Aggregation Pipeline Accumulators for $group stage.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/#accumulators
  */

@@ -5,7 +5,6 @@ category:
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/'
 type:
     - resolvesToArray
-    - projection
 encode: object
 description: |
     Selects a subset of the array to return an array with only the elements that match the filter condition.

@@ -12,6 +12,7 @@ use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\OutputWindow;
+use MongoDB\Builder\Type\ProjectionInterface;
 use MongoDB\Builder\Type\QueryFilterInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
@@ -29,6 +30,7 @@ use function get_object_vars;
 use function is_array;
 use function is_object;
 use function MongoDB\is_first_key_operator;
+use function property_exists;
 use function sprintf;
 
 /** @template-implements Encoder<Pipeline|StageInterface|ExpressionInterface|QueryInterface, stdClass|array|string> */
@@ -47,6 +49,7 @@ class BuilderEncoder implements Encoder
             || $value instanceof QueryInterface
             || $value instanceof QueryFilterInterface
             || $value instanceof AccumulatorInterface
+            || $value instanceof ProjectionInterface
             || $value instanceof WindowInterface;
     }
 
@@ -203,9 +206,17 @@ class BuilderEncoder implements Encoder
             if ($value instanceof QueryInterface) {
                 // The sub-objects is merged into the main object, replacing duplicate keys
                 foreach (get_object_vars($this->recursiveEncode($value)) as $subKey => $subValue) {
+                    if (property_exists($result, $subKey)) {
+                        throw new LogicException(sprintf('Duplicate key "%s" in query object', $subKey));
+                    }
+
                     $result->{$subKey} = $subValue;
                 }
             } else {
+                if (property_exists($result, $key)) {
+                    throw new LogicException(sprintf('Duplicate key "%s" in query object', $key));
+                }
+
                 $result->{$key} = $this->encodeIfSupported($value);
             }
         }
@@ -226,14 +237,14 @@ class BuilderEncoder implements Encoder
         // Transform the result into an stdClass if a document is provided
         if (! $outputWindow->operator instanceof WindowInterface && (is_array($result) || is_object($result))) {
             if (! is_first_key_operator($result)) {
-                throw new LogicException(sprintf('Expected $operator to be an operator. Got "%s"', array_key_first($result)));
+                throw new LogicException(sprintf('Expected OutputWindow::$operator to be an operator. Got "%s"', array_key_first($result)));
             }
 
             $result = (object) $result;
         }
 
-        if ($result instanceof stdClass) {
-            throw new LogicException(sprintf('Expected $operator to be an stdClass. Got "%s"', get_debug_type($result)));
+        if (! $result instanceof stdClass) {
+            throw new LogicException(sprintf('Expected OutputWindow::$operator to be an stdClass, array or WindowInterface. Got "%s"', get_debug_type($result)));
         }
 
         if ($outputWindow->window !== Optional::Undefined) {

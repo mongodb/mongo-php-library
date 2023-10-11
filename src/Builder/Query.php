@@ -8,6 +8,7 @@ use MongoDB\Builder\Query\RegexOperator;
 use MongoDB\Builder\Type\QueryFilterInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
+use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
 
 use function is_string;
@@ -26,7 +27,7 @@ enum Query
         if (is_string($regex)) {
             $regex = new Regex($regex, $flags ?? '');
         } elseif (is_string($flags)) {
-            $regex = new Regex($regex->getPattern(), $flags);
+            throw new InvalidArgumentException('Regex flags must be specified as part of the Regex object');
         }
 
         return self::generatedRegex($regex);

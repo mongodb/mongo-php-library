@@ -66,7 +66,7 @@ class BuilderEncoderTest extends TestCase
             ),
             Stage::group(
                 _id: null,
-                count: Expression::sum(1),
+                count: Accumulator::sum(1),
             ),
         );
 
@@ -199,6 +199,39 @@ class BuilderEncoderTest extends TestCase
                             '$max' => '$quantity',
                             'window' => ['documents' => ['unbounded', 'unbounded']],
                         ],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSamePipeline($expected, $pipeline);
+    }
+
+    /**
+     * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/
+     */
+    public function testRedactStage(): void
+    {
+        $pipeline = new Pipeline(
+            Stage::match(status: 'A'),
+            Stage::redact(
+                Expression::cond(
+                    if: Expression::eq(Expression::fieldPath('level'), 5),
+                    then: '$$PRUNE',
+                    else: '$$DESCEND',
+                ),
+            ),
+        );
+        $expected = [
+            [
+                '$match' => ['status' => 'A'],
+            ],
+            [
+                '$redact' => [
+                    '$cond' => [
+                        'if' => ['$eq' => ['$level', 5]],
+                        'then' => '$$PRUNE',
+                        'else' => '$$DESCEND',
                     ],
                 ],
             ],

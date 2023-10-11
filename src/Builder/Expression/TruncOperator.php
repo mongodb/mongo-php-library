@@ -8,8 +8,8 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 
 /**
  * Truncates a number to a whole integer or to a specified decimal place.
@@ -19,7 +19,7 @@ use MongoDB\Builder\Optional;
 class TruncOperator implements ResolvesToString
 {
     public const NAME = '$trunc';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /**
      * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.

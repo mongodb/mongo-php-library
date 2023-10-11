@@ -9,7 +9,7 @@ namespace MongoDB\Builder\Expression;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
@@ -25,7 +25,7 @@ use function is_array;
 class SortArrayOperator implements ResolvesToArray
 {
     public const NAME = '$sortArray';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param BSONArray|PackedArray|ResolvesToArray|array $input The array to be sorted. */
     public PackedArray|ResolvesToArray|BSONArray|array $input;

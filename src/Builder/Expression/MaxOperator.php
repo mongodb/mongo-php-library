@@ -16,8 +16,8 @@ use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\AccumulatorInterface;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\WindowInterface;
 use MongoDB\Exception\InvalidArgumentException;
@@ -35,7 +35,7 @@ use function array_is_list;
 class MaxOperator implements ResolvesToAny, AccumulatorInterface, WindowInterface
 {
     public const NAME = '$max';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param list<BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass> ...$expression */
     public array $expression;

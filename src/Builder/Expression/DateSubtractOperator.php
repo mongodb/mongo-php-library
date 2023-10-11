@@ -10,8 +10,8 @@ use MongoDB\BSON\Int64;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 
 /**
  * Subtracts a number of time units from a date object.
@@ -21,7 +21,7 @@ use MongoDB\Builder\Optional;
 class DateSubtractOperator implements ResolvesToDate
 {
     public const NAME = '$dateSubtract';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a Date, a Timestamp, or an ObjectID. */
     public ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $startDate;

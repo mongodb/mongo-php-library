@@ -7,8 +7,8 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Regex;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 
 /**
  * Applies a regular expression (regex) to a string and returns a boolean that indicates if a match is found or not.
@@ -19,7 +19,7 @@ use MongoDB\Builder\Optional;
 class RegexMatchOperator implements ResolvesToBool
 {
     public const NAME = '$regexMatch';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param ResolvesToString|non-empty-string $input The string on which you wish to apply the regex pattern. Can be a string or any valid expression that resolves to a string. */
     public ResolvesToString|string $input;

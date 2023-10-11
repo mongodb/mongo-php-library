@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\WindowInterface;
 
 /**
@@ -18,7 +18,7 @@ use MongoDB\Builder\Type\WindowInterface;
 class DenseRankOperator implements WindowInterface
 {
     public const NAME = '$denseRank';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     public function __construct()
     {

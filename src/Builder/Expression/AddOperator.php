@@ -9,7 +9,7 @@ namespace MongoDB\Builder\Expression;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Exception\InvalidArgumentException;
 
 use function array_is_list;
@@ -22,7 +22,7 @@ use function array_is_list;
 class AddOperator implements ResolvesToNumber, ResolvesToDate
 {
     public const NAME = '$add';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param list<Decimal128|Int64|ResolvesToDate|ResolvesToInt|ResolvesToNumber|UTCDateTime|float|int> ...$expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date. */
     public array $expression;

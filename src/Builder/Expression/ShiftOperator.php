@@ -16,7 +16,7 @@ use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\WindowInterface;
 use MongoDB\Model\BSONArray;
@@ -31,7 +31,7 @@ use stdClass;
 class ShiftOperator implements WindowInterface
 {
     public const NAME = '$shift';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $output Specifies an expression to evaluate and return in the output. */
     public Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $output;

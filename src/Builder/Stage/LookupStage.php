@@ -9,9 +9,9 @@ namespace MongoDB\Builder\Stage;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
 use MongoDB\Builder\Pipeline;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
@@ -28,7 +28,7 @@ use function is_array;
 class LookupStage implements StageInterface
 {
     public const NAME = '$lookup';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param non-empty-string $as Specifies the name of the new array field to add to the input documents. The new array field contains the matching documents from the from collection. If the specified name already exists in the input document, the existing field is overwritten. */
     public string $as;

@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Returns the hyperbolic cosine of a value that is measured in radians.
@@ -18,7 +18,7 @@ use MongoDB\Builder\Encode;
 class CoshOperator implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$cosh';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /**
      * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $cosh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.

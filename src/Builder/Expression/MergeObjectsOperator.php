@@ -8,8 +8,8 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\AccumulatorInterface;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
 
@@ -23,7 +23,7 @@ use function array_is_list;
 class MergeObjectsOperator implements AccumulatorInterface
 {
     public const NAME = '$mergeObjects';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param list<Document|ResolvesToObject|Serializable|array|stdClass> ...$document Any valid expression that resolves to a document. */
     public array $document;

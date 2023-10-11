@@ -9,8 +9,8 @@ namespace MongoDB\Builder\Expression;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 
 /**
  * Returns the approximation of the area under a curve.
@@ -21,7 +21,7 @@ use MongoDB\Builder\Optional;
 class IntegralOperator implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$integral';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param Decimal128|Int64|ResolvesToDate|ResolvesToInt|ResolvesToNumber|UTCDateTime|float|int $input */
     public Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToInt|ResolvesToNumber|float|int $input;

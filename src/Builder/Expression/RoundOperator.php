@@ -8,8 +8,8 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 
 /**
  * Rounds a number to to a whole integer or to a specified decimal place.
@@ -19,7 +19,7 @@ use MongoDB\Builder\Optional;
 class RoundOperator implements ResolvesToInt, ResolvesToDouble, ResolvesToDecimal, ResolvesToLong
 {
     public const NAME = '$round';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /**
      * @param Decimal128|Int64|ResolvesToDecimal|ResolvesToDouble|ResolvesToInt|ResolvesToLong|float|int $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.

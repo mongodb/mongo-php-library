@@ -8,8 +8,8 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\StageInterface;
 use stdClass;
 
@@ -21,7 +21,7 @@ use stdClass;
 class OutStage implements StageInterface
 {
     public const NAME = '$out';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param non-empty-string $db Target collection name to write documents from $out to. */
     public string $db;

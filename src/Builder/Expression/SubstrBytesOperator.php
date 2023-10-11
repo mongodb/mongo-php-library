@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Returns the substring of a string. Starts with the character at the specified UTF-8 byte index (zero-based) in the string and continues for the specified number of bytes.
@@ -16,7 +16,7 @@ use MongoDB\Builder\Encode;
 class SubstrBytesOperator implements ResolvesToString
 {
     public const NAME = '$substrBytes';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param ResolvesToString|non-empty-string $string */
     public ResolvesToString|string $string;

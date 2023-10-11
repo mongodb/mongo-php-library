@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Converts a value from degrees to radians.
@@ -18,7 +18,7 @@ use MongoDB\Builder\Encode;
 class DegreesToRadiansOperator implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$degreesToRadians';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /**
      * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $degreesToRadians takes any valid expression that resolves to a number.

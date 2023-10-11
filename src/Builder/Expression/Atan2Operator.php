@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Returns the inverse tangent (arc tangent) of y / x in radians, where y and x are the first and second values passed to the expression respectively.
@@ -18,7 +18,7 @@ use MongoDB\Builder\Encode;
 class Atan2Operator implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$atan2';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /**
      * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $y $atan2 takes any valid expression that resolves to a number.

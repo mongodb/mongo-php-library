@@ -7,7 +7,7 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -22,7 +22,7 @@ use function is_array;
 class ReverseArrayOperator implements ResolvesToArray
 {
     public const NAME = '$reverseArray';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param BSONArray|PackedArray|ResolvesToArray|array $expression The argument can be any valid expression as long as it resolves to an array. */
     public PackedArray|ResolvesToArray|BSONArray|array $expression;

@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Splits a string into substrings based on a delimiter. Returns an array of substrings. If the delimiter is not found within the string, returns an array containing the original string.
@@ -16,7 +16,7 @@ use MongoDB\Builder\Encode;
 class SplitOperator implements ResolvesToArray
 {
     public const NAME = '$split';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param ResolvesToString|non-empty-string $string The string to be split. string expression can be any valid expression as long as it resolves to a string. */
     public ResolvesToString|string $string;

@@ -1,6 +1,6 @@
 <?php
 
-namespace MongoDB\Builder;
+namespace MongoDB\Builder\Type;
 
 /**
  * Allow to omit optional arguments in operator builders.

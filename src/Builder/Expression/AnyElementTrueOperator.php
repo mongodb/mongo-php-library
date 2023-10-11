@@ -7,7 +7,7 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -22,7 +22,7 @@ use function is_array;
 class AnyElementTrueOperator implements ResolvesToBool
 {
     public const NAME = '$anyElementTrue';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param BSONArray|PackedArray|ResolvesToArray|array $expression */
     public PackedArray|ResolvesToArray|BSONArray|array $expression;

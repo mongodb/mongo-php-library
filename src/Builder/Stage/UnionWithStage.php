@@ -7,9 +7,9 @@
 namespace MongoDB\Builder\Stage;
 
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
 use MongoDB\Builder\Pipeline;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
@@ -26,7 +26,7 @@ use function is_array;
 class UnionWithStage implements StageInterface
 {
     public const NAME = '$unionWith';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param non-empty-string $coll The collection or view whose pipeline results you wish to include in the result set. */
     public string $coll;

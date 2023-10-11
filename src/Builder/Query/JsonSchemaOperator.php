@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\QueryInterface;
 use stdClass;
 
@@ -20,7 +20,7 @@ use stdClass;
 class JsonSchemaOperator implements QueryInterface
 {
     public const NAME = '$jsonSchema';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param Document|Serializable|array|stdClass $schema */
     public Document|Serializable|stdClass|array $schema;

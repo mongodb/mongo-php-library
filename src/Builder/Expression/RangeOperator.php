@@ -6,8 +6,8 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 
 /**
  * Outputs an array containing a sequence of integers according to user-defined inputs.
@@ -17,7 +17,7 @@ use MongoDB\Builder\Optional;
 class RangeOperator implements ResolvesToArray
 {
     public const NAME = '$range';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param ResolvesToInt|int $start An integer that specifies the start of the sequence. Can be any valid expression that resolves to an integer. */
     public ResolvesToInt|int $start;

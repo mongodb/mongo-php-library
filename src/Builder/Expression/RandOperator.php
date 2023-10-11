@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Returns a random float between 0 and 1
@@ -16,7 +16,7 @@ use MongoDB\Builder\Encode;
 class RandOperator implements ResolvesToDouble
 {
     public const NAME = '$rand';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     public function __construct()
     {

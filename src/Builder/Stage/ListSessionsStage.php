@@ -7,8 +7,8 @@
 namespace MongoDB\Builder\Stage;
 
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
@@ -24,7 +24,7 @@ use function is_array;
 class ListSessionsStage implements StageInterface
 {
     public const NAME = '$listSessions';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param Optional|BSONArray|PackedArray|array $users Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users. */
     public Optional|PackedArray|BSONArray|array $users;

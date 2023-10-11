@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Calculates the square root.
@@ -18,7 +18,7 @@ use MongoDB\Builder\Encode;
 class SqrtOperator implements ResolvesToDouble
 {
     public const NAME = '$sqrt';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number The argument can be any valid expression as long as it resolves to a non-negative number. */
     public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number;

@@ -6,8 +6,8 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\AccumulatorInterface;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\WindowInterface;
 
 /**
@@ -20,7 +20,7 @@ use MongoDB\Builder\Type\WindowInterface;
 class CountOperator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$count';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param non-empty-string $field */
     public string $field;

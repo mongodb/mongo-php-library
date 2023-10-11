@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Returns the number of UTF-8 encoded bytes in a string.
@@ -16,7 +16,7 @@ use MongoDB\Builder\Encode;
 class StrLenBytesOperator implements ResolvesToInt
 {
     public const NAME = '$strLenBytes';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param ResolvesToString|non-empty-string $expression */
     public ResolvesToString|string $expression;

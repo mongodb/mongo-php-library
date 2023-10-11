@@ -7,7 +7,7 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -22,7 +22,7 @@ use function is_array;
 class ZipOperator implements ResolvesToArray
 {
     public const NAME = '$zip';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /**
      * @param BSONArray|PackedArray|ResolvesToArray|array $inputs An array of expressions that resolve to arrays. The elements of these input arrays combine to form the arrays of the output array.

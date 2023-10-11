@@ -7,7 +7,7 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Exception\InvalidArgumentException;
 
 use function array_is_list;
@@ -21,7 +21,7 @@ use function array_is_list;
 class BitXorOperator implements ResolvesToInt, ResolvesToLong
 {
     public const NAME = '$bitXor';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param list<Int64|ResolvesToInt|ResolvesToLong|int> ...$expression */
     public array $expression;

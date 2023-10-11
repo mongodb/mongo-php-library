@@ -16,9 +16,9 @@ use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -30,7 +30,7 @@ use stdClass;
 class IndexOfArrayOperator implements ResolvesToInt
 {
     public const NAME = '$indexOfArray';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /**
      * @param ResolvesToString|non-empty-string $array Can be any valid expression as long as it resolves to an array.

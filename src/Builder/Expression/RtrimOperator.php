@@ -6,8 +6,8 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 
 /**
  * Removes whitespace characters, including null, or the specified characters from the end of a string.
@@ -17,7 +17,7 @@ use MongoDB\Builder\Optional;
 class RtrimOperator implements ResolvesToString
 {
     public const NAME = '$rtrim';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param ResolvesToString|non-empty-string $input The string to trim. The argument can be any valid expression that resolves to a string. */
     public ResolvesToString|string $input;

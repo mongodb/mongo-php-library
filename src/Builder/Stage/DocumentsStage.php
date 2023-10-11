@@ -7,8 +7,8 @@
 namespace MongoDB\Builder\Stage;
 
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToArray;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
@@ -24,7 +24,7 @@ use function is_array;
 class DocumentsStage implements StageInterface
 {
     public const NAME = '$documents';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /**
      * @param BSONArray|PackedArray|ResolvesToArray|array $documents $documents accepts any valid expression that resolves to an array of objects. This includes:

@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\StageInterface;
 
 /**
@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\StageInterface;
 class SampleStage implements StageInterface
 {
     public const NAME = '$sample';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param int $size The number of documents to randomly select. */
     public int $size;

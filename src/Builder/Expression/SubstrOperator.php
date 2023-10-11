@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Deprecated. Use $substrBytes or $substrCP.
@@ -16,7 +16,7 @@ use MongoDB\Builder\Encode;
 class SubstrOperator implements ResolvesToString
 {
     public const NAME = '$substr';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param ResolvesToString|non-empty-string $string */
     public ResolvesToString|string $string;

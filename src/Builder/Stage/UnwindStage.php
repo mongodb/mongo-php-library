@@ -6,9 +6,9 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ArrayFieldPath;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\StageInterface;
 
 /**
@@ -19,7 +19,7 @@ use MongoDB\Builder\Type\StageInterface;
 class UnwindStage implements StageInterface
 {
     public const NAME = '$unwind';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param ArrayFieldPath|non-empty-string $path Field path to an array field. */
     public ArrayFieldPath|string $path;

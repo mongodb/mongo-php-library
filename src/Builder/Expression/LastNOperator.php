@@ -7,7 +7,7 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\WindowInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
@@ -23,7 +23,7 @@ use function is_array;
 class LastNOperator implements ResolvesToArray, WindowInterface
 {
     public const NAME = '$lastN';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to the array from which to return n elements. */
     public PackedArray|ResolvesToArray|BSONArray|array $input;

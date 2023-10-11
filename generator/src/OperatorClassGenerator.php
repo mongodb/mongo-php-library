@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\QueryObject;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;
 use MongoDB\CodeGenerator\Definition\OperatorDefinition;
@@ -50,11 +50,11 @@ class OperatorClassGenerator extends OperatorGenerator
 
         // Expose operator metadata as constants
         // @todo move to encoder class
-        $namespace->addUse('\\' . Encode::class);
         $class->addComment($operator->description);
         $class->addComment('@see ' . $operator->link);
         $class->addConstant('NAME', $operator->name);
-        $class->addConstant('ENCODE', $operator->encode);
+        $namespace->addUse(Encode::class);
+        $class->addConstant('ENCODE', new Literal('Encode::' . $operator->encode->name));
 
         $constuctor = $class->addMethod('__construct');
         foreach ($operator->arguments as $argument) {

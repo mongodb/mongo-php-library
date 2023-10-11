@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\StageInterface;
 
 /**
@@ -18,7 +18,7 @@ use MongoDB\Builder\Type\StageInterface;
 class CountStage implements StageInterface
 {
     public const NAME = '$count';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param non-empty-string $field */
     public string $field;

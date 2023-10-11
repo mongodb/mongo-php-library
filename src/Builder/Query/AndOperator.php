@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
@@ -23,7 +23,7 @@ use function array_is_list;
 class AndOperator implements QueryInterface
 {
     public const NAME = '$and';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param list<Document|QueryInterface|Serializable|array|stdClass> ...$expression */
     public array $expression;

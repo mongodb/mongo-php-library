@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Returns the largest integer less than or equal to the specified number.
@@ -18,7 +18,7 @@ use MongoDB\Builder\Encode;
 class FloorOperator implements ResolvesToInt
 {
     public const NAME = '$floor';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression */
     public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression;

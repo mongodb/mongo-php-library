@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Query;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\QueryFilterInterface;
 
 /**
@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\QueryFilterInterface;
 class ModOperator implements QueryFilterInterface
 {
     public const NAME = '$mod';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param int $divisor */
     public int $divisor;

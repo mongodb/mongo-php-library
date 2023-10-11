@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Access available per-document metadata related to the aggregation operation.
@@ -16,7 +16,7 @@ use MongoDB\Builder\Encode;
 class MetaOperator implements ResolvesToAny
 {
     public const NAME = '$meta';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param non-empty-string $keyword */
     public string $keyword;

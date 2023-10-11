@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Query;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 
 /**
@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\ExpressionInterface;
 class NaturalOperator implements ExpressionInterface
 {
     public const NAME = '$natural';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     public function __construct()
     {

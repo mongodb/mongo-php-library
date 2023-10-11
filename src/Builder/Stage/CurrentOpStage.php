@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\StageInterface;
 
 /**
@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\StageInterface;
 class CurrentOpStage implements StageInterface
 {
     public const NAME = '$currentOp';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     public function __construct()
     {

@@ -7,8 +7,8 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\ProjectionInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
@@ -24,7 +24,7 @@ use function is_array;
 class FilterOperator implements ResolvesToArray, ProjectionInterface
 {
     public const NAME = '$filter';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param BSONArray|PackedArray|ResolvesToArray|array $input */
     public PackedArray|ResolvesToArray|BSONArray|array $input;

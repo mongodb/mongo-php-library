@@ -6,8 +6,8 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\StageInterface;
 
 /**
@@ -18,7 +18,7 @@ use MongoDB\Builder\Type\StageInterface;
 class ListSampledQueriesStage implements StageInterface
 {
     public const NAME = '$listSampledQueries';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param Optional|non-empty-string $namespace */
     public Optional|string $namespace;

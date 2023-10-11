@@ -16,8 +16,8 @@ use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\Builder\Optional;
 use MongoDB\Builder\Type\ExpressionInterface;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Model\BSONArray;
 use stdClass;
 

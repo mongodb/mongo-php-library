@@ -7,7 +7,7 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -21,7 +21,7 @@ use function array_is_list;
 class AllElementsTrueOperator implements ResolvesToBool
 {
     public const NAME = '$allElementsTrue';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param list<BSONArray|PackedArray|ResolvesToArray|array> ...$expression */
     public array $expression;

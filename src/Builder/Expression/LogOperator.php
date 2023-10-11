@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Calculates the log of a number in the specified base.
@@ -18,7 +18,7 @@ use MongoDB\Builder\Encode;
 class LogOperator implements ResolvesToDouble
 {
     public const NAME = '$log';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number. */
     public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number;

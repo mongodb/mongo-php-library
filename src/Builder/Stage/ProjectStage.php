@@ -8,8 +8,8 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToBool;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ProjectionInterface;
 use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Exception\InvalidArgumentException;
@@ -25,7 +25,7 @@ use function is_string;
 class ProjectStage implements StageInterface
 {
     public const NAME = '$project';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param stdClass<Document|ProjectionInterface|ResolvesToBool|Serializable|array|bool|int|stdClass> ...$specification */
     public stdClass $specification;

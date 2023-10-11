@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Exception\InvalidArgumentException;
 
 use function array_is_list;
@@ -19,7 +19,7 @@ use function array_is_list;
 class ConcatOperator implements ResolvesToString
 {
     public const NAME = '$concat';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param list<ResolvesToString|non-empty-string> ...$expression */
     public array $expression;

@@ -7,8 +7,8 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\ProjectionInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
@@ -24,7 +24,7 @@ use function is_array;
 class SliceOperator implements ResolvesToArray, ProjectionInterface
 {
     public const NAME = '$slice';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param BSONArray|PackedArray|ResolvesToArray|array $expression Any valid expression as long as it resolves to an array. */
     public PackedArray|ResolvesToArray|BSONArray|array $expression;

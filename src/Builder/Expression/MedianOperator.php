@@ -8,8 +8,8 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
 use MongoDB\Builder\Type\AccumulatorInterface;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\WindowInterface;
 
 /**
@@ -25,7 +25,7 @@ use MongoDB\Builder\Type\WindowInterface;
 class MedianOperator implements ResolvesToDouble, AccumulatorInterface, WindowInterface
 {
     public const NAME = '$median';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it. */
     public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $input;

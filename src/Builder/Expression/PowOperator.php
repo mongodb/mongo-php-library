@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Raises a number to the specified exponent.
@@ -18,7 +18,7 @@ use MongoDB\Builder\Encode;
 class PowOperator implements ResolvesToNumber
 {
     public const NAME = '$pow';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number */
     public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number;

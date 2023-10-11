@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Query;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\QueryInterface;
 
 /**
@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\QueryInterface;
 class WhereOperator implements QueryInterface
 {
     public const NAME = '$where';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param non-empty-string $function */
     public string $function;

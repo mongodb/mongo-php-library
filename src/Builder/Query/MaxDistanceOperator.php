@@ -8,8 +8,8 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\QueryFilterInterface;
 
 /**
@@ -20,7 +20,7 @@ use MongoDB\Builder\Type\QueryFilterInterface;
 class MaxDistanceOperator implements QueryFilterInterface
 {
     public const NAME = '$maxDistance';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param Decimal128|Int64|ResolvesToInt|float|int $value */
     public Decimal128|Int64|ResolvesToInt|float|int $value;

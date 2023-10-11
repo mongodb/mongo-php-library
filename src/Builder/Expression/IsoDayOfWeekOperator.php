@@ -9,8 +9,8 @@ namespace MongoDB\Builder\Expression;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 
 /**
  * Returns the weekday number in ISO 8601 format, ranging from 1 (for Monday) to 7 (for Sunday).
@@ -20,7 +20,7 @@ use MongoDB\Builder\Optional;
 class IsoDayOfWeekOperator implements ResolvesToInt
 {
     public const NAME = '$isoDayOfWeek';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to which the operator is applied. date must be a valid expression that resolves to a Date, a Timestamp, or an ObjectID. */
     public ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date;

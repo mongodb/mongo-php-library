@@ -7,7 +7,7 @@
 namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\QueryFilterInterface;
 
 /**
@@ -18,7 +18,7 @@ use MongoDB\Builder\Type\QueryFilterInterface;
 class MinDistanceOperator implements QueryFilterInterface
 {
     public const NAME = '$minDistance';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param Int64|float|int $value */
     public Int64|float|int $value;

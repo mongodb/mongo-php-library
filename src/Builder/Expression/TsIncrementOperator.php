@@ -7,7 +7,7 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Timestamp;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Returns the incrementing ordinal from a timestamp as a long.
@@ -18,7 +18,7 @@ use MongoDB\Builder\Encode;
 class TsIncrementOperator implements ResolvesToLong
 {
     public const NAME = '$tsIncrement';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param ResolvesToTimestamp|Timestamp|int $expression */
     public Timestamp|ResolvesToTimestamp|int $expression;

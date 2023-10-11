@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace MongoDB\CodeGenerator\Definition;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use UnexpectedValueException;
 
 use function array_merge;

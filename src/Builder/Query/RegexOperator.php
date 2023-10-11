@@ -7,7 +7,7 @@
 namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\Regex;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\QueryFilterInterface;
 
 /**
@@ -18,7 +18,7 @@ use MongoDB\Builder\Type\QueryFilterInterface;
 class RegexOperator implements QueryFilterInterface
 {
     public const NAME = '$regex';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param Regex $regex */
     public Regex $regex;

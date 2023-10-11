@@ -8,8 +8,8 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\ResolvesToObject;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\StageInterface;
 use stdClass;
 
@@ -22,7 +22,7 @@ use stdClass;
 class ReplaceWithStage implements StageInterface
 {
     public const NAME = '$replaceWith';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param Document|ResolvesToObject|Serializable|array|stdClass $expression */
     public Document|Serializable|ResolvesToObject|stdClass|array $expression;

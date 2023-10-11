@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Projection;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ProjectionInterface;
 
 /**
@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\ProjectionInterface;
 class SliceOperator implements ProjectionInterface
 {
     public const NAME = '$slice';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param int $limit */
     public int $limit;

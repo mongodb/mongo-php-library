@@ -6,8 +6,8 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 
 /**
  * Searches a string for an occurrence of a substring and returns the UTF-8 code point index of the first occurrence. If the substring is not found, returns -1
@@ -17,7 +17,7 @@ use MongoDB\Builder\Optional;
 class IndexOfCPOperator implements ResolvesToInt
 {
     public const NAME = '$indexOfCP';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /**
      * @param ResolvesToString|non-empty-string $string Can be any valid expression as long as it resolves to a string.

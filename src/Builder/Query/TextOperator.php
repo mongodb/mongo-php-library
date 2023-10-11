@@ -6,8 +6,8 @@
 
 namespace MongoDB\Builder\Query;
 
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\QueryInterface;
 
 /**
@@ -18,7 +18,7 @@ use MongoDB\Builder\Type\QueryInterface;
 class TextOperator implements QueryInterface
 {
     public const NAME = '$text';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param non-empty-string $search A string of terms that MongoDB parses and uses to query the text index. MongoDB performs a logical OR search of the terms unless specified as a phrase. */
     public string $search;

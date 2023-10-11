@@ -8,8 +8,8 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 
 /**
  * Constructs a BSON Date object given the date's constituent parts.
@@ -19,7 +19,7 @@ use MongoDB\Builder\Optional;
 class DateFromPartsOperator implements ResolvesToDate
 {
     public const NAME = '$dateFromParts';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $year Calendar year. Can be any expression that evaluates to a number. */
     public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $year;

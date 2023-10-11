@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Performs case-insensitive string comparison and returns: 0 if two strings are equivalent, 1 if the first string is greater than the second, and -1 if the first string is less than the second.
@@ -16,7 +16,7 @@ use MongoDB\Builder\Encode;
 class StrcasecmpOperator implements ResolvesToInt
 {
     public const NAME = '$strcasecmp';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param ResolvesToString|non-empty-string $expression1 */
     public ResolvesToString|string $expression1;

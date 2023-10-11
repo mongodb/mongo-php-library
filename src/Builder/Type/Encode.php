@@ -1,6 +1,6 @@
 <?php
 
-namespace MongoDB\Builder;
+namespace MongoDB\Builder\Type;
 
 /**
  * Defines how to encode a stage or an operator into BSON.

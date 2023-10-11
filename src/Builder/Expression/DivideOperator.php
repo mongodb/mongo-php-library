@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Returns the result of dividing the first number by the second. Accepts two argument expressions.
@@ -18,7 +18,7 @@ use MongoDB\Builder\Encode;
 class DivideOperator implements ResolvesToDouble
 {
     public const NAME = '$divide';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $dividend The first argument is the dividend, and the second argument is the divisor; i.e. the first argument is divided by the second argument. */
     public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $dividend;

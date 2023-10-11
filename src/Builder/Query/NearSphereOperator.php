@@ -8,9 +8,9 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\GeometryInterface;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\QueryFilterInterface;
 use stdClass;
 
@@ -22,7 +22,7 @@ use stdClass;
 class NearSphereOperator implements QueryFilterInterface
 {
     public const NAME = '$nearSphere';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param Document|GeometryInterface|Serializable|array|stdClass $geometry */
     public Document|Serializable|GeometryInterface|stdClass|array $geometry;

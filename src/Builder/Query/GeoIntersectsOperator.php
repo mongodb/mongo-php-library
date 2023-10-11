@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\GeometryInterface;
 use MongoDB\Builder\Type\QueryFilterInterface;
 use stdClass;
@@ -21,7 +21,7 @@ use stdClass;
 class GeoIntersectsOperator implements QueryFilterInterface
 {
     public const NAME = '$geoIntersects';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param Document|GeometryInterface|Serializable|array|stdClass $geometry */
     public Document|Serializable|GeometryInterface|stdClass|array $geometry;

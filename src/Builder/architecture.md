@@ -2,6 +2,13 @@
 
 The Aggregation Builder is a set of classes and functions that represent all the stages and operators of the MongoDB.
 
+This feature use of PHP 8.1 features: named arguments, union types, enum.
+Since the `mongodb/mongodb` library have to stay compatible with PHP 7.4, this new feature is implemented in a separate
+package `mongodb/builder` that requires PHP 8.1. The implementation being experimental and the API not stable at the
+moment, the package will be tagged with a `0.x` version more often than the `mongodb/mongodb` package.
+Once this package is stable, and `mongodb/mongodb` requires PHP 8.1, the code will be merged in the `mongodb/mongodb`
+and the package `mongodb/builder` will be abandoned.
+
 # Definition
 
 Operators are defined in Yaml files, independently of the implementation. These definitions are used to generate the PHP

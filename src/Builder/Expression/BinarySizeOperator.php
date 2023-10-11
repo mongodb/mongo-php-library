@@ -7,7 +7,7 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Binary;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Returns the size of a given string or binary data value's content in bytes.
@@ -17,7 +17,7 @@ use MongoDB\Builder\Encode;
 class BinarySizeOperator implements ResolvesToInt
 {
     public const NAME = '$binarySize';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|non-empty-string|null $expression */
     public Binary|ResolvesToBinData|ResolvesToNull|ResolvesToString|null|string $expression;

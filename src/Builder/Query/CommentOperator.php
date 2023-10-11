@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Query;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\QueryInterface;
 
 /**
@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\QueryInterface;
 class CommentOperator implements QueryInterface
 {
     public const NAME = '$comment';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param non-empty-string $comment */
     public string $comment;

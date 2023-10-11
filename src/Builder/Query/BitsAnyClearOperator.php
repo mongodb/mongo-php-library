@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Query;
 
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\QueryFilterInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
@@ -24,7 +24,7 @@ use function is_array;
 class BitsAnyClearOperator implements QueryFilterInterface
 {
     public const NAME = '$bitsAnyClear';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param BSONArray|Binary|PackedArray|array|int|non-empty-string $bitmask */
     public Binary|PackedArray|BSONArray|array|int|string $bitmask;

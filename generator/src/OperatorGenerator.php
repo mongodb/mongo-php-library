@@ -5,7 +5,7 @@ namespace MongoDB\CodeGenerator;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\CodeGenerator\Definition\ArgumentDefinition;
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
 use MongoDB\CodeGenerator\Definition\GeneratorDefinition;

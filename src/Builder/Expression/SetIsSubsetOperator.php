@@ -7,7 +7,7 @@
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\PackedArray;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 
@@ -22,7 +22,7 @@ use function is_array;
 class SetIsSubsetOperator implements ResolvesToBool
 {
     public const NAME = '$setIsSubset';
-    public const ENCODE = \MongoDB\Builder\Encode::Array;
+    public const ENCODE = Encode::Array;
 
     /** @param BSONArray|PackedArray|ResolvesToArray|array $expression1 */
     public PackedArray|ResolvesToArray|BSONArray|array $expression1;

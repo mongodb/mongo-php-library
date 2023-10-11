@@ -9,7 +9,7 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\QueryFilterInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
@@ -26,7 +26,7 @@ use function is_object;
 class NotOperator implements QueryFilterInterface
 {
     public const NAME = '$not';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param Document|QueryInterface|Regex|Serializable|array|stdClass $expression */
     public Document|Regex|Serializable|QueryInterface|stdClass|array $expression;

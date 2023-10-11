@@ -6,7 +6,7 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Converts a string to lowercase. Accepts a single argument expression.
@@ -16,7 +16,7 @@ use MongoDB\Builder\Encode;
 class ToLowerOperator implements ResolvesToString
 {
     public const NAME = '$toLower';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param ResolvesToString|non-empty-string $expression */
     public ResolvesToString|string $expression;

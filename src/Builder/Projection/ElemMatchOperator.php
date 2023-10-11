@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Projection;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ProjectionInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
@@ -25,7 +25,7 @@ use function is_object;
 class ElemMatchOperator implements ProjectionInterface
 {
     public const NAME = '$elemMatch';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param Document|QueryInterface|Serializable|array|stdClass $query */
     public Document|Serializable|QueryInterface|stdClass|array $query;

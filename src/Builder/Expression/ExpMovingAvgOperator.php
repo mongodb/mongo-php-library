@@ -8,8 +8,8 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
-use MongoDB\Builder\Optional;
+use MongoDB\Builder\Type\Encode;
+use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\WindowInterface;
 
 /**
@@ -21,7 +21,7 @@ use MongoDB\Builder\Type\WindowInterface;
 class ExpMovingAvgOperator implements WindowInterface
 {
     public const NAME = '$expMovingAvg';
-    public const ENCODE = \MongoDB\Builder\Encode::Object;
+    public const ENCODE = Encode::Object;
 
     /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $input */
     public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $input;

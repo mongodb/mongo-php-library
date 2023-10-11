@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Stage;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\StageInterface;
 use stdClass;
 
@@ -20,7 +20,7 @@ use stdClass;
 class CollStatsStage implements StageInterface
 {
     public const NAME = '$collStats';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param Document|Serializable|array|stdClass $config */
     public Document|Serializable|stdClass|array $config;

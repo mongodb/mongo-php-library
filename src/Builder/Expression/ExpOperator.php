@@ -8,7 +8,7 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Encode;
+use MongoDB\Builder\Type\Encode;
 
 /**
  * Raises e to the specified exponent.
@@ -18,7 +18,7 @@ use MongoDB\Builder\Encode;
 class ExpOperator implements ResolvesToDouble
 {
     public const NAME = '$exp';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent */
     public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent;

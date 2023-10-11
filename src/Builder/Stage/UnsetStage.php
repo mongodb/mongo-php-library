@@ -6,8 +6,8 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\Builder\Encode;
 use MongoDB\Builder\Expression\FieldPath;
+use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\StageInterface;
 use MongoDB\Exception\InvalidArgumentException;
 
@@ -22,7 +22,7 @@ use function array_is_list;
 class UnsetStage implements StageInterface
 {
     public const NAME = '$unset';
-    public const ENCODE = \MongoDB\Builder\Encode::Single;
+    public const ENCODE = Encode::Single;
 
     /** @param list<FieldPath|non-empty-string> ...$field */
     public array $field;

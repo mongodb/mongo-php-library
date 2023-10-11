@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $indexOfBytes
-category:
-    - 'String Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfBytes/'
 type:
     - resolvesToInt

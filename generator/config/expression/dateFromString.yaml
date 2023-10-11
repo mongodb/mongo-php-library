@@ -1,8 +1,6 @@
 # $schema: ../schema.json
 name: $dateFromString
-category:
-    - 'Date Expression Operator'
-    - 'String Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromString/'
 type:
     - resolvesToDate

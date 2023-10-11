@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $and
-category:
-    - 'Boolean Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/'
 type:
     - resolvesToBool

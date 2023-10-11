@@ -1,7 +1,5 @@
 # $schema: ../schema.json
 name: $getField
-category:
-    - 'Miscellaneous Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/'
 type:
     - resolvesToAny

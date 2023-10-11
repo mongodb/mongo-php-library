@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $near
-category:
-    - 'Geospatial Query Selectors'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/near/'
 type:
     - filter

@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $bitNot
-category:
-    - 'Bitwise Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitNot/'
 type:
     - resolvesToInt

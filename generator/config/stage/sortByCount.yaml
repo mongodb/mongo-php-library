@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $sortByCount
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/'
 type:
     - stage

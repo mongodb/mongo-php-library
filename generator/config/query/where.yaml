@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $where
-category:
-    - 'Evaluation Query Operators'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/where/'
 type:
     - query

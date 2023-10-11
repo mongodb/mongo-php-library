@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $not
-category:
-    - 'Logical Query Operators'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/not/'
 type:
     - filter

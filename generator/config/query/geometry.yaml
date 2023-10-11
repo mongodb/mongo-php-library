@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $geometry
-category:
-    - 'Geospatial Geometry Specifiers'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geometry/'
 type:
     - geometry

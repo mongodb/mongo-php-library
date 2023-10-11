@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $binarySize
-category:
-    - 'Data Size Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/'
 type:
     - resolvesToInt

@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $trim
-category:
-    - 'String Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/'
 type:
     - resolvesToString

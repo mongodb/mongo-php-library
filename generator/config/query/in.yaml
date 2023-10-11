@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $in
-category:
-    - 'Comparison Query Operators'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/in/'
 type:
     - filter

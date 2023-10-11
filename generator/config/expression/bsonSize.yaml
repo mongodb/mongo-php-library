@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $bsonSize
-category:
-    - 'Data Size Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/'
 type:
     - resolvesToInt

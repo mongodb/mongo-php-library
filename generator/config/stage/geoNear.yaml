@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $geoNear
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/'
 type:
     - stage

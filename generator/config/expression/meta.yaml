@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $meta
-category:
-    - 'Text Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/meta/'
 type:
     - resolvesToAny

@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $search
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/search/'
 type:
     - stage

@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $regexFindAll
-category:
-    - 'String Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/'
 type:
     - resolvesToArray # of object

@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $count
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/'
 type:
     - stage

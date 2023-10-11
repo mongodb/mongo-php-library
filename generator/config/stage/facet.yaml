@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $facet
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/'
 type:
     - stage

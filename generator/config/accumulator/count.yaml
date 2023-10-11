@@ -1,8 +1,6 @@
 # $schema: ../schema.json
 name: $count
-category:
-    - Accumulators
-    - 'Window Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/'
 type:
     - accumulator

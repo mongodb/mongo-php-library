@@ -1,8 +1,6 @@
 # $schema: ../schema.json
 name: $topN
-category:
-    - Accumulators
-    - 'Window Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN/'
 type:
     - accumulator

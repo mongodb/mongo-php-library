@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $toObjectId
-category:
-    - 'Type Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/'
 type:
     - resolvesToObjectId

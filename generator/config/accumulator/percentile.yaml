@@ -1,8 +1,6 @@
 # $schema: ../schema.json
 name: $percentile
-category:
-    - Accumulators
-    - 'Accumulators (in Other Stages)'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/'
 type:
     - accumulator

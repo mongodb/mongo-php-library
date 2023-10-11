@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $round
-category:
-    - 'Arithmetic Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/round/'
 type:
     - resolvesToInt

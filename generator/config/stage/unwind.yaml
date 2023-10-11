@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $unwind
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/'
 type:
     - stage

@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $ne
-category:
-    - 'Comparison Query Operators'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/ne/'
 type:
     - filter

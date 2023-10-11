@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $center
-category:
-    - 'Geospatial Geometry Specifiers'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/center/'
 type:
     - geometry

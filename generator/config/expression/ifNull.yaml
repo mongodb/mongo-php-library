@@ -1,7 +1,5 @@
 # $schema: ../schema.json
 name: $ifNull
-category:
-    - 'Conditional Expression Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/'
 type:
     - resolvesToAny

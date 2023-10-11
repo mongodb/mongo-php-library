@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $geoIntersects
-category:
-    - 'Geospatial Query Selectors'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/'
 type:
     - filter

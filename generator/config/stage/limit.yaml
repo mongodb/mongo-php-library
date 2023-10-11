@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $limit
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/'
 type:
     - stage

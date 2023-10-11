@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $lookup
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/'
 type:
     - stage

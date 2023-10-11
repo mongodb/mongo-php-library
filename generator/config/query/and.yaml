@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $and
-category:
-    - 'Logical Query Operators'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/and/'
 type:
     - query

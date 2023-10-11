@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $bucketAuto
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/'
 type:
     - stage

@@ -1,8 +1,6 @@
 # $schema: ../schema.json
 name: $toString
-category:
-    - 'String Expression Operator'
-    - 'Type Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/'
 type:
     - resolvesToString

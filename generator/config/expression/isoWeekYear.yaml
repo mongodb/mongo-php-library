@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $isoWeekYear
-category:
-    - 'Date Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeekYear/'
 type:
     - resolvesToInt

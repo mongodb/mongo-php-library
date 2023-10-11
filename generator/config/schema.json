@@ -11,13 +11,6 @@
                     "type": "string",
                     "pattern": "^\\$[a-z][a-zA-Z]+$"
                 },
-                "category": {
-                    "$comment": "The category as defined by MongoDB's documentation.",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
                 "link": {
                     "$comment": "The link to the operator's documentation on MongoDB's website.",
                     "type": "string",
@@ -85,7 +78,6 @@
                 }
             },
             "required": [
-                "category",
                 "description",
                 "encode",
                 "link",

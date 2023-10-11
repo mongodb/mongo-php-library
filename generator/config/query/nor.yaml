@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $nor
-category:
-    - 'Logical Query Operators'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/nor/'
 type:
     - query

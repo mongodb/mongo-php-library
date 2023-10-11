@@ -1,9 +1,6 @@
 # $schema: ../schema.json
 name: $first
-category:
-    - Accumulators
-    - 'Accumulators (in Other Stages)'
-    - 'Window Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/'
 type:
     - accumulator

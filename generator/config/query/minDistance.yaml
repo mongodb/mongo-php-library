@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $minDistance
-category:
-    - 'Geospatial Geometry Specifiers'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/minDistance/'
 type:
     - filter

@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $elemMatch
-category:
-    - 'Array Query Operators'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/'
 type:
     - filter

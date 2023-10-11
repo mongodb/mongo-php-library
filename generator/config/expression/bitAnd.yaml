@@ -1,7 +1,5 @@
 # $schema: ../schema.json
 name: $bitAnd
-category:
-    - 'Bitwise Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/'
 type:
     - resolvesToInt

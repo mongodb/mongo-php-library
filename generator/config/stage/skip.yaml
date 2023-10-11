@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $skip
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/'
 type:
     - stage

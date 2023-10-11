@@ -1,7 +1,5 @@
 # $schema: ../schema.json
 name: $atan2
-category:
-    - 'Trigonometry Expression Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan2/'
 type:
     - resolvesToDouble

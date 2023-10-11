@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $planCacheStats
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/'
 type:
     - stage

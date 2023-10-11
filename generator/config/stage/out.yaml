@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $out
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/'
 type:
     - stage

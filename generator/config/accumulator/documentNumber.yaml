@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $documentNumber
-category:
-    - 'Window Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/documentNumber/'
 type:
     - window

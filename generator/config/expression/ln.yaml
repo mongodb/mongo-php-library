@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $ln
-category:
-    - 'Arithmetic Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ln/'
 type:
     - resolvesToDouble

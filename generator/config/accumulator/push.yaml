@@ -1,8 +1,6 @@
 # $schema: ../schema.json
 name: $push
-category:
-    - Accumulators
-    - 'Window Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/'
 type:
     - accumulator

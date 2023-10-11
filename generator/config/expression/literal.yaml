@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $literal
-category:
-    - 'Literal Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/literal/'
 type:
     - resolvesToAny

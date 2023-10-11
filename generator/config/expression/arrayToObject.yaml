@@ -1,7 +1,5 @@
 # $schema: ../schema.json
 name: $arrayToObject
-category:
-    - 'Array Expression Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/'
 type:
     - resolvesToObject

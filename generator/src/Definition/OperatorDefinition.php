@@ -19,7 +19,6 @@ final readonly class OperatorDefinition
 
     public function __construct(
         public string $name,
-        public array $category,
         public string $link,
         string $encode,
         public array $type,

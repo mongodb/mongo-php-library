@@ -1,8 +1,6 @@
 # $schema: ../schema.json
 name: $add
-category:
-    - 'Arithmetic Expression Operator'
-    - 'Date Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/'
 type:
     - resolvesToNumber

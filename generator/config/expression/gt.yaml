@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $gt
-category:
-    - 'Comparison Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/gt/'
 type:
     - resolvesToBool

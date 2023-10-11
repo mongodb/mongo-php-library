@@ -1,7 +1,5 @@
 # $schema: ../schema.json
 name: $locf
-category:
-    - 'Window Operator'
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/'
 type:
     - resolvesToAny

@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $rand
-category:
-    - 'Miscellaneous Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rand/'
 type:
     - resolvesToDouble

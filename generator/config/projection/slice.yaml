@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $slice
-category:
-    - 'Projection Operators'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/projection/slice/'
 type:
     - projection

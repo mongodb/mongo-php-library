@@ -2,7 +2,6 @@
 <?php declare(strict_types=1);
 
 use MongoDB\CodeGenerator\Command\GenerateCommand;
-use MongoDB\CodeGenerator\Command\ScrapeCommand;
 use Symfony\Component\Console\Application;
 
 if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
@@ -14,6 +13,5 @@ require __DIR__ . '/vendor/autoload.php';
 
 $application = new Application();
 $application->add(new GenerateCommand(__DIR__ . '/../', __DIR__ . '/config'));
-$application->add(new ScrapeCommand(__DIR__ . '/config'));
 $application->setDefaultCommand('generate');
 $application->run();

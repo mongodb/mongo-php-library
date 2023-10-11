@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $dateFromParts
-category:
-    - 'Date Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromParts/'
 type:
     - resolvesToDate

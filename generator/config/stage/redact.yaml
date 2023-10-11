@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $redact
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/'
 type:
     - stage

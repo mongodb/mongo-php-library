@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $box
-category:
-    - 'Geospatial Geometry Specifiers'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/box/'
 type:
     - geometry

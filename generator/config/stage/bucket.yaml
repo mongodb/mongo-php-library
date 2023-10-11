@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $bucket
-category:
-    - Stage
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/'
 type:
     - stage

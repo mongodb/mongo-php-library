@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $regexFind
-category:
-    - 'String Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFind/'
 type:
     - resolvesToObject

@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $bitsAnySet
-category:
-    - 'Bitwise Query Operators'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/'
 type:
     - filter

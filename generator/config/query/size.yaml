@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $size
-category:
-    - 'Array Query Operators'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/size/'
 type:
     - filter

@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $toLower
-category:
-    - 'String Expression Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/'
 type:
     - resolvesToString

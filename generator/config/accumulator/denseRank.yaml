@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $denseRank
-category:
-    - 'Window Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/denseRank/'
 type:
     - window

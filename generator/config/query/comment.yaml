@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $comment
-category:
-    - 'Miscellaneous Query Operators'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/comment/'
 type:
     - query

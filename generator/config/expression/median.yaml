@@ -1,8 +1,6 @@
 # $schema: ../schema.json
 name: $median
-category:
-    - Accumulators
-    - 'Accumulators (in Other Stages)'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/'
 type:
     - resolvesToDouble

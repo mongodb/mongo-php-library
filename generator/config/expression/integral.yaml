@@ -1,7 +1,6 @@
 # $schema: ../schema.json
 name: $integral
-category:
-    - 'Window Operator'
+
 link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/'
 type:
     - resolvesToDouble

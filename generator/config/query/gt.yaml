@@ -3,7 +3,7 @@ name: $gt
 
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/gt/'
 type:
-    - filter
+    - fieldQuery
 encode: single
 description: |
     Matches values that are greater than a specified value.

@@ -9,6 +9,7 @@ Since the `mongodb/mongodb` library have to stay compatible with PHP 7.4, this n
 package `mongodb/builder` that requires PHP 8.1. The implementation being experimental and the API not stable at the
 moment, the package will be tagged with a `0.x`. Once this package is stable, and `mongodb/mongodb` requires PHP 8.1,
 the code will be merged in the `mongodb/mongodb` and the package `mongodb/builder` will be abandoned.
+Once merged, `mongodb/mongodb` will have a "replace" rule.
 
 # Operator Definition
 
@@ -44,12 +45,11 @@ $pipeline1 = new Pipeline(
 $pipeline2 = new Pipeline(
     Stage::match(...),
     Stage::limit(...),
-    ... $pipeline1->getStage()
+    $pipeline1,
+    Stage::limit(...),
 );
 ```
-We explicitly don't allow to inject a pipeline in the list of stages as pipelines are not immutable: if `$pipeline1`
-is modified, `$pipeline2` get the modifications. Using the array unpacking operator, make it clear the stages are
-extracted.
+Pipeline object are immutable/read-only.
 
 ## Stage
 
@@ -70,6 +70,8 @@ because that's the most common way to represent maps in PHP. But we recommend to
 create `stdClass`. It ensures the type is correct for empty arrays or list that would be converted to array instead of
 object.
 
+BSONTypes are skipped when encoding.
+
 ### Type hierarchy
 
 The most specific interface implements the less specific one. For example, `resolvesToInt` implements `resolvesToLong`,
@@ -79,10 +81,10 @@ The type hierarchy is designed with two aspects in mind: the operator parameters
 
 #### Number
 
-If an operator resolves to a `number`, we don't know if it is an `int`, a `float`, a `decimal` or a `long`.
-But if it resolves to an `int`, we know it is a `long`, a `number` and an `expression`.
+If an operator resolves to a `number`, we don't know if it is an `int`, a `float`, a `decimal`, or a `long`.
+But if it resolves to an `int`, we know it is a `long`, a `number`, and an `expression`.
 
-If an operator accepts a `number`, it also accepts an `int`, a `float`, a `decimal` or a `long`.
+If an operator accepts a `number`, it also accepts an `int`, a `float`, a `decimal`, or a `long`.
 So we use the `resolvesToNumber` type. As `resolvesToInt` implements `resolvesToNumber`, it is also accepted.
 
 ### Any
@@ -96,10 +98,15 @@ result types would be rejected.
 
 We rely on the server will reject the query if the expression is not of the expected type.
 
-## Query & Filter
+### Field Path
+
+FieldPath satisfies any types (implements resolvesToAny interface) because we don't know the type of the field.
+Create a FieldPathInterface for encoding needs.
+
+## Query & Field Query
 
 The `query` are used in a `$match`, `$geoNear` or `$graphLookup` stages and `$elemMatch` operator.
-The `filter` are used compose query. A query is a map of field name to filter and/or a list of other queries.
+The `fieldQuery` are used compose query. A query is a map of field name to filter and/or a list of other queries.
 
 Queries can be created with `$and`, `$or`, `$nor`, `$jsonSchema`, `$text`, `$comment` operators or with the `QueryObject`
 class when composed with filter. 
@@ -109,25 +116,30 @@ to create the `QueryObject`. The encoder handle this object specifically to merg
 
 We customize the `Stage::match()` factory function to shortcut the `Query::query()` function.
 ```php
+$or = Query::or(...);
+$and = Query::and(...);
+
+['eq' => $eq, 'and' => $and] = Query::functions();
+
 Stage::match(
     // $or, $and, $nor, $comment, $jsonSchema, $text can't have a field name
     // An exception will be thrown if a field name is used
     Query::or(
-        Query::query(foo: Query::eq(...)),
+        Query::query(foo:  Query::eq(...)),
         Query::and(
-            Query::query(bar: Query::eq(...)),
-            Query::query(baz: Query::eq(...)),
+            Query::query(bar:  Query::eq(...)),
+            Query::query(baz:  Query::eq(...)),
         )
     ),
     Query::comment('...'),
     // Equality query on a field
     foo: '...',
     // Negate a query with $not
-    bar: Query::not(Query::gt(...)),
+    bar:    Query::no  Query🚬::gt(...)),
     // Use array unpacking for complex field path
-    ...['foo.$.baz' => Query::eq(...)],
+    ...['foo.$.baz' =>  Query::eq(...)],
     // Multiple filters on the same field
-    baz: [Query::lt(...), Query::gt(...)],
+    baz:    Query::lt(...),  Query::gt(...)],
 )
 ```
 
@@ -181,6 +193,7 @@ a `date` and an optional `timezone` properties.
 
 ```
 { <operator>: <dateExpression> }
+{ <operator>: { date: <dateExpression> } }
 { <operator>: { date: <dateExpression>, timezone: <tzExpression> } }
 ```
 

@@ -3,7 +3,7 @@ name: $exists
 
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/exists/'
 type:
-    - filter
+    - fieldQuery
 encode: single
 description: |
     Matches documents that have the specified field.

@@ -3,7 +3,7 @@ name: $gte
 
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/gte/'
 type:
-    - filter
+    - fieldQuery
 encode: single
 description: |
     Matches values that are greater than or equal to a specified value.

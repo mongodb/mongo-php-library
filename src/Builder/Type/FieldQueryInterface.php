@@ -3,10 +3,10 @@
 namespace MongoDB\Builder\Type;
 
 /**
- * Filter are the operator part of a query, associated with a field path.
+ * Query operators that need to be associated with a field path.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/
  */
-interface QueryFilterInterface
+interface FieldQueryInterface
 {
 }

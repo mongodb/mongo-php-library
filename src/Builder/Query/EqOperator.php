@@ -18,7 +18,7 @@ use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Type\Encode;
-use MongoDB\Builder\Type\QueryFilterInterface;
+use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/
  */
-class EqOperator implements QueryFilterInterface
+class EqOperator implements FieldQueryInterface
 {
     public const NAME = '$eq';
     public const ENCODE = Encode::Single;

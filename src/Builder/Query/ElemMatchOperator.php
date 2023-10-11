@@ -9,7 +9,7 @@ namespace MongoDB\Builder\Query;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Type\Encode;
-use MongoDB\Builder\Type\QueryFilterInterface;
+use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
 use stdClass;
@@ -22,7 +22,7 @@ use function is_object;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/
  */
-class ElemMatchOperator implements QueryFilterInterface
+class ElemMatchOperator implements FieldQueryInterface
 {
     public const NAME = '$elemMatch';
     public const ENCODE = Encode::Object;

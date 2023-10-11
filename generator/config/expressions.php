@@ -79,9 +79,9 @@ return $expressions + [
         'returnType' => Type\ExpressionInterface::class,
         'acceptedTypes' => [Type\ExpressionInterface::class, ...$bsonTypes['any']],
     ],
-    'filter' => [
-        'returnType' => Type\QueryFilterInterface::class,
-        'acceptedTypes' => [Type\QueryFilterInterface::class, ...$bsonTypes['any']],
+    'fieldQuery' => [
+        'returnType' => Type\FieldQueryInterface::class,
+        'acceptedTypes' => [Type\FieldQueryInterface::class, ...$bsonTypes['any']],
     ],
     'query' => [
         'returnType' => Type\QueryInterface::class,

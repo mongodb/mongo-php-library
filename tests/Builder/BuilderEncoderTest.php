@@ -7,6 +7,7 @@ use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
+use MongoDB\Builder\Projection;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
 use MongoDB\Tests\TestCase;
@@ -98,7 +99,7 @@ class BuilderEncoderTest extends TestCase
     {
         $pipeline = new Pipeline(
             Stage::project(
-                items: Expression::filter(
+                items: Projection::filter(
                     Expression::arrayFieldPath('items'),
                     Expression::gte(Expression::variable('item.price'), 100),
                     'item',

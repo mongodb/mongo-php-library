@@ -3,7 +3,7 @@ name: $not
 
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/not/'
 type:
-    - filter
+    - fieldQuery
 encode: single
 description: |
     Inverts the effect of a query expression and returns documents that do not match the query expression.

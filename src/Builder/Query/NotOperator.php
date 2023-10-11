@@ -10,7 +10,7 @@ use MongoDB\BSON\Document;
 use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Type\Encode;
-use MongoDB\Builder\Type\QueryFilterInterface;
+use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
 use stdClass;
@@ -23,7 +23,7 @@ use function is_object;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/not/
  */
-class NotOperator implements QueryFilterInterface
+class NotOperator implements FieldQueryInterface
 {
     public const NAME = '$not';
     public const ENCODE = Encode::Single;

@@ -3,7 +3,7 @@ name: $eq
 
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/eq/'
 type:
-    - filter
+    - fieldQuery
 encode: single
 description: |
     Matches values that are equal to a specified value.

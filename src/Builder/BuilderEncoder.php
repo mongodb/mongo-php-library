@@ -7,13 +7,13 @@ use MongoDB\Builder\Expression\FieldPath;
 use MongoDB\Builder\Expression\Variable;
 use MongoDB\Builder\Stage\GroupStage;
 use MongoDB\Builder\Type\AccumulatorInterface;
-use MongoDB\Builder\Type\CombinedQueryFilter;
+use MongoDB\Builder\Type\CombinedFieldQuery;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\OutputWindow;
 use MongoDB\Builder\Type\ProjectionInterface;
-use MongoDB\Builder\Type\QueryFilterInterface;
+use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
 use MongoDB\Builder\Type\StageInterface;
@@ -47,7 +47,7 @@ class BuilderEncoder implements Encoder
             || $value instanceof StageInterface
             || $value instanceof ExpressionInterface
             || $value instanceof QueryInterface
-            || $value instanceof QueryFilterInterface
+            || $value instanceof FieldQueryInterface
             || $value instanceof AccumulatorInterface
             || $value instanceof ProjectionInterface
             || $value instanceof WindowInterface;
@@ -85,7 +85,7 @@ class BuilderEncoder implements Encoder
             return $this->encodeQueryObject($value);
         }
 
-        if ($value instanceof CombinedQueryFilter) {
+        if ($value instanceof CombinedFieldQuery) {
             return $this->encodeCombinedFilter($value);
         }
 
@@ -166,7 +166,7 @@ class BuilderEncoder implements Encoder
     /**
      * Get the unique property of the operator as value
      */
-    private function encodeAsSingle(AccumulatorInterface|ExpressionInterface|StageInterface|QueryInterface|QueryFilterInterface|WindowInterface $value): stdClass
+    private function encodeAsSingle(AccumulatorInterface|ExpressionInterface|StageInterface|QueryInterface|FieldQueryInterface|WindowInterface $value): stdClass
     {
         foreach (get_object_vars($value) as $val) {
             $result = $this->recursiveEncode($val);
@@ -177,7 +177,7 @@ class BuilderEncoder implements Encoder
         throw new LogicException(sprintf('Class "%s" does not have a single property.', $value::class));
     }
 
-    private function encodeCombinedFilter(CombinedQueryFilter $filter): stdClass
+    private function encodeCombinedFilter(CombinedFieldQuery $filter): stdClass
     {
         $result = new stdClass();
         foreach ($filter->filters as $filter) {

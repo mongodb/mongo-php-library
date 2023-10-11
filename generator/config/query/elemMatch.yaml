@@ -3,7 +3,7 @@ name: $elemMatch
 
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/'
 type:
-    - filter
+    - fieldQuery
 encode: object
 description: |
     The $elemMatch operator matches documents that contain an array field with at least one element that matches all the specified query criteria.

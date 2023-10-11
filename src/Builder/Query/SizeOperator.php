@@ -7,14 +7,14 @@
 namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Type\Encode;
-use MongoDB\Builder\Type\QueryFilterInterface;
+use MongoDB\Builder\Type\FieldQueryInterface;
 
 /**
  * Selects documents if the array field is a specified size.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/size/
  */
-class SizeOperator implements QueryFilterInterface
+class SizeOperator implements FieldQueryInterface
 {
     public const NAME = '$size';
     public const ENCODE = Encode::Single;

@@ -3,7 +3,7 @@ name: $regex
 
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/regex/'
 type:
-    - filter
+    - fieldQuery
 encode: single
 description: |
     Selects documents where values match a specified regular expression.

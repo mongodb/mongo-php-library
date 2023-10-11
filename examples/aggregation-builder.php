@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Examples\AggregationBuilder;
 
+use MongoDB\Builder\Accumulator;
 use MongoDB\Builder\BuilderEncoder;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Pipeline;
@@ -46,18 +47,18 @@ $collection->insertMany($documents);
 $pipeline = new Pipeline(
     Stage::group(
         _id: null,
-        totalCount: Expression::sum(1),
-        evenCount: Expression::sum(
+        totalCount: Accumulator::sum(1),
+        evenCount: Accumulator::sum(
             Expression::mod(Expression::numberFieldPath('randomValue'), 2),
         ),
-        oddCount: Expression::sum(
+        oddCount: Accumulator::sum(
             Expression::subtract(
                 1,
                 Expression::mod(Expression::numberFieldPath('randomValue'), 2),
             ),
         ),
-        maxValue: Expression::max(Expression::numberFieldPath('randomValue')),
-        minValue: Expression::min(Expression::numberfieldPath('randomValue')),
+        maxValue: Accumulator::max(Expression::numberFieldPath('randomValue')),
+        minValue: Accumulator::min(Expression::numberfieldPath('randomValue')),
     ),
 );
 

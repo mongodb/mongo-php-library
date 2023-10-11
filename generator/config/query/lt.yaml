@@ -3,7 +3,7 @@ name: $lt
 
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/lt/'
 type:
-    - filter
+    - fieldQuery
 encode: single
 description: |
     Matches values that are less than a specified value.

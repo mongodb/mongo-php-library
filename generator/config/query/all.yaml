@@ -3,7 +3,7 @@ name: $all
 
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/all/'
 type:
-    - filter
+    - fieldQuery
 encode: single
 description: |
     Matches arrays that contain all elements specified in the query.

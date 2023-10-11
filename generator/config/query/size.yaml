@@ -3,7 +3,7 @@ name: $size
 
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/size/'
 type:
-    - filter
+    - fieldQuery
 encode: single
 description: |
     Selects documents if the array field is a specified size.

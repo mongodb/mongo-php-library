@@ -5,7 +5,7 @@ namespace MongoDB\Builder;
 use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Query\RegexOperator;
-use MongoDB\Builder\Type\QueryFilterInterface;
+use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
 use MongoDB\Exception\InvalidArgumentException;
@@ -33,7 +33,7 @@ enum Query
         return self::generatedRegex($regex);
     }
 
-    public static function query(QueryFilterInterface|QueryInterface|Serializable|array|bool|float|int|null|stdClass|string ...$query): QueryInterface
+    public static function query(FieldQueryInterface|QueryInterface|Serializable|array|bool|float|int|null|stdClass|string ...$query): QueryInterface
     {
         return QueryObject::create($query);
     }

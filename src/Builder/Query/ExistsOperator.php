@@ -7,14 +7,14 @@
 namespace MongoDB\Builder\Query;
 
 use MongoDB\Builder\Type\Encode;
-use MongoDB\Builder\Type\QueryFilterInterface;
+use MongoDB\Builder\Type\FieldQueryInterface;
 
 /**
  * Matches documents that have the specified field.
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/exists/
  */
-class ExistsOperator implements QueryFilterInterface
+class ExistsOperator implements FieldQueryInterface
 {
     public const NAME = '$exists';
     public const ENCODE = Encode::Single;

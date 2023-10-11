@@ -3,7 +3,7 @@ name: $geoIntersects
 
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/'
 type:
-    - filter
+    - fieldQuery
 encode: single
 description: |
     Selects geometries that intersect with a GeoJSON geometry. The 2dsphere index supports $geoIntersects.

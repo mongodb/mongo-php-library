@@ -59,7 +59,7 @@ final class QueryObject implements QueryInterface
                 if (count($query) === 1) {
                     $query = $query[0];
                 } else {
-                    $query = new CombinedQueryFilter($query);
+                    $query = new CombinedFieldQuery($query);
                 }
             }
 
@@ -75,7 +75,7 @@ final class QueryObject implements QueryInterface
         }
 
         foreach ($values as $value) {
-            if ($value instanceof QueryFilterInterface) {
+            if ($value instanceof FieldQueryInterface) {
                 return true;
             }
         }

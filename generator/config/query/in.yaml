@@ -3,7 +3,7 @@ name: $in
 
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/in/'
 type:
-    - filter
+    - fieldQuery
 encode: single
 description: |
     Matches any of the values specified in an array.

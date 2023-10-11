@@ -3,7 +3,7 @@ name: $bitsAnySet
 
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/'
 type:
-    - filter
+    - fieldQuery
 encode: single
 description: |
     Matches numeric or binary values in which any bit from a set of bit positions has a value of 1.

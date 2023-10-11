@@ -18,7 +18,7 @@ use MongoDB\BSON\Timestamp;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Type\Encode;
-use MongoDB\Builder\Type\QueryFilterInterface;
+use MongoDB\Builder\Type\FieldQueryInterface;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
@@ -30,7 +30,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/all/
  */
-class AllOperator implements QueryFilterInterface
+class AllOperator implements FieldQueryInterface
 {
     public const NAME = '$all';
     public const ENCODE = Encode::Single;

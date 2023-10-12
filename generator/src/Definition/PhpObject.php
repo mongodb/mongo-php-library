@@ -5,7 +5,7 @@ namespace MongoDB\CodeGenerator\Definition;
 /**
  * Type of PHP object to generate
  */
-enum Generate: string
+enum PhpObject: string
 {
     case PhpClass = 'class';
     case PhpInterface = 'interface';

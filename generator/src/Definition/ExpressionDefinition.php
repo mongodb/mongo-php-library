@@ -24,10 +24,10 @@ final readonly class ExpressionDefinition
         /** @var list<class-string> */
         public array $implements = [],
         public array $values = [],
-        public ?Generate $generate = null,
+        public ?PhpObject $generate = null,
     ) {
-        assert($generate === Generate::PhpClass || ! $extends, $name . ': Cannot specify "extends" when "generate" is not "class"');
-        assert($generate === Generate::PhpEnum || ! $this->values, $name . ': Cannot specify "values" when "generate" is not "enum"');
+        assert($generate === PhpObject::PhpClass || ! $extends, $name . ': Cannot specify "extends" when "generate" is not "class"');
+        assert($generate === PhpObject::PhpEnum || ! $this->values, $name . ': Cannot specify "values" when "generate" is not "enum"');
         assert($returnType === null || interface_exists($returnType), $name . ': Return type must be an interface');
 
         foreach ($acceptedTypes as $acceptedType) {

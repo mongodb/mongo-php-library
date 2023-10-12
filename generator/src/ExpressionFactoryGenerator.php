@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace MongoDB\CodeGenerator;
 
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
-use MongoDB\CodeGenerator\Definition\Generate;
+use MongoDB\CodeGenerator\Definition\PhpObject;
 use Nette\PhpGenerator\PhpNamespace;
 
 use function lcfirst;
@@ -29,7 +29,7 @@ final class ExpressionFactoryGenerator extends AbstractGenerator
         usort($expressions, fn (ExpressionDefinition $a, ExpressionDefinition $b) => $a->name <=> $b->name);
 
         foreach ($expressions as $expression) {
-            if ($expression->generate !== Generate::PhpClass) {
+            if ($expression->generate !== PhpObject::PhpClass) {
                 continue;
             }
 

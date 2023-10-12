@@ -7,7 +7,7 @@ namespace MongoDB\Builder\Expression;
 use MongoDB\BSON;
 use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Type;
-use MongoDB\CodeGenerator\Definition\Generate;
+use MongoDB\CodeGenerator\Definition\PhpObject;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -51,7 +51,7 @@ foreach ($bsonTypes as $name => $acceptedTypes) {
     $resolvesTo = 'resolvesTo' . ucfirst($name);
     $resolvesToInterface = __NAMESPACE__ . '\\' . ucfirst($resolvesTo);
     $expressions[$resolvesTo] = [
-        'generate' => Generate::PhpInterface,
+        'generate' => PhpObject::PhpInterface,
         'implements' => [Type\ExpressionInterface::class],
         'returnType' => $resolvesToInterface,
         'acceptedTypes' => $acceptedTypes,
@@ -65,7 +65,7 @@ foreach ($bsonTypes as $name => $acceptedTypes) {
     }
 
     $expressions[$fieldPathName] = [
-        'generate' => Generate::PhpClass,
+        'generate' => PhpObject::PhpClass,
         'implements' => [Type\FieldPathInterface::class, $resolvesToInterface],
         'acceptedTypes' => ['string'],
     ];
@@ -110,7 +110,7 @@ return $expressions + [
         'acceptedTypes' => [Pipeline::class, ...$bsonTypes['array']],
     ],
     'variable' => [
-        'generate' => Generate::PhpClass,
+        'generate' => PhpObject::PhpClass,
         'implements' => [ResolvesToAny::class],
         'acceptedTypes' => ['string'],
     ],

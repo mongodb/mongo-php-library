@@ -5,7 +5,7 @@ namespace MongoDB\CodeGenerator;
 
 use LogicException;
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
-use MongoDB\CodeGenerator\Definition\Generate;
+use MongoDB\CodeGenerator\Definition\PhpObject;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\Type;
 use RuntimeException;
@@ -48,7 +48,7 @@ class ExpressionClassGenerator extends AbstractGenerator
             $definition->acceptedTypes,
         );
 
-        if ($definition->generate === Generate::PhpClass) {
+        if ($definition->generate === PhpObject::PhpClass) {
             $class = $namespace->addClass($className);
             $class->setReadOnly();
             $class->setImplements($definition->implements);
@@ -63,7 +63,7 @@ class ExpressionClassGenerator extends AbstractGenerator
             $constructor = $class->addMethod('__construct');
             $constructor->addParameter('name')->setType($propertyType);
             $constructor->addBody('$this->name = $name;');
-        } elseif ($definition->generate === Generate::PhpInterface) {
+        } elseif ($definition->generate === PhpObject::PhpInterface) {
             $class = $namespace->addInterface($className);
             $class->setExtends($definition->implements);
         } else {

@@ -19,7 +19,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/
  */
-class SumOperator implements ResolvesToNumber
+readonly class SumOperator implements ResolvesToNumber
 {
     public const NAME = '$sum';
     public const ENCODE = Encode::Single;

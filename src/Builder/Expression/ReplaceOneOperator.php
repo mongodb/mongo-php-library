@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/
  */
-class ReplaceOneOperator implements ResolvesToString
+readonly class ReplaceOneOperator implements ResolvesToString
 {
     public const NAME = '$replaceOne';
     public const ENCODE = Encode::Object;

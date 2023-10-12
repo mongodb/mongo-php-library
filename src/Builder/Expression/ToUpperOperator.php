@@ -13,7 +13,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/
  */
-class ToUpperOperator implements ResolvesToString
+readonly class ToUpperOperator implements ResolvesToString
 {
     public const NAME = '$toUpper';
     public const ENCODE = Encode::Single;

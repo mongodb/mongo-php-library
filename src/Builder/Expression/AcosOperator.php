@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/
  */
-class AcosOperator implements ResolvesToDouble, ResolvesToDecimal
+readonly class AcosOperator implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$acos';
     public const ENCODE = Encode::Single;

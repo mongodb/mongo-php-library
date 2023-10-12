@@ -16,7 +16,7 @@ use MongoDB\Builder\Type\StageInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/
  */
-class UnwindStage implements StageInterface
+readonly class UnwindStage implements StageInterface
 {
     public const NAME = '$unwind';
     public const ENCODE = Encode::Object;

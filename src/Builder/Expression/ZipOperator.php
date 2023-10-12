@@ -19,7 +19,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/zip/
  */
-class ZipOperator implements ResolvesToArray
+readonly class ZipOperator implements ResolvesToArray
 {
     public const NAME = '$zip';
     public const ENCODE = Encode::Object;

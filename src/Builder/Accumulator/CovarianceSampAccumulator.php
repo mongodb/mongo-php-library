@@ -19,7 +19,7 @@ use MongoDB\Builder\Type\WindowInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/covarianceSamp/
  */
-class CovarianceSampAccumulator implements WindowInterface
+readonly class CovarianceSampAccumulator implements WindowInterface
 {
     public const NAME = '$covarianceSamp';
     public const ENCODE = Encode::Array;

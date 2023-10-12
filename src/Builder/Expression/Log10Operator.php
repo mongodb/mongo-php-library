@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/log10/
  */
-class Log10Operator implements ResolvesToDouble
+readonly class Log10Operator implements ResolvesToDouble
 {
     public const NAME = '$log10';
     public const ENCODE = Encode::Single;

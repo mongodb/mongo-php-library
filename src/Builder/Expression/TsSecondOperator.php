@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsSecond/
  */
-class TsSecondOperator implements ResolvesToLong
+readonly class TsSecondOperator implements ResolvesToLong
 {
     public const NAME = '$tsSecond';
     public const ENCODE = Encode::Single;

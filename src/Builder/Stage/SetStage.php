@@ -32,7 +32,7 @@ use function is_string;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/
  */
-class SetStage implements StageInterface
+readonly class SetStage implements StageInterface
 {
     public const NAME = '$set';
     public const ENCODE = Encode::Single;

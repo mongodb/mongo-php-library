@@ -20,7 +20,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/polygon/
  */
-class PolygonOperator implements GeometryInterface
+readonly class PolygonOperator implements GeometryInterface
 {
     public const NAME = '$polygon';
     public const ENCODE = Encode::Single;

@@ -31,7 +31,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottomN/
  */
-class BottomNAccumulator implements AccumulatorInterface, WindowInterface
+readonly class BottomNAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$bottomN';
     public const ENCODE = Encode::Object;

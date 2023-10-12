@@ -26,7 +26,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/
  */
-class NeOperator implements ResolvesToBool
+readonly class NeOperator implements ResolvesToBool
 {
     public const NAME = '$ne';
     public const ENCODE = Encode::Array;

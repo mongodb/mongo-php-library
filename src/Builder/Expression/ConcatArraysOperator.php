@@ -18,7 +18,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concatArrays/
  */
-class ConcatArraysOperator implements ResolvesToArray
+readonly class ConcatArraysOperator implements ResolvesToArray
 {
     public const NAME = '$concatArrays';
     public const ENCODE = Encode::Single;

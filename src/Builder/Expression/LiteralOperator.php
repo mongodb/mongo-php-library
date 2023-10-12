@@ -25,7 +25,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/literal/
  */
-class LiteralOperator implements ResolvesToAny
+readonly class LiteralOperator implements ResolvesToAny
 {
     public const NAME = '$literal';
     public const ENCODE = Encode::Single;

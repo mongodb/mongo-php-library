@@ -46,6 +46,7 @@ class OperatorClassGenerator extends OperatorGenerator
         }
 
         $class = $namespace->addClass($this->getOperatorClassName($definition, $operator));
+        $class->setReadOnly();
         $class->setImplements($interfaces);
 
         // Expose operator metadata as constants

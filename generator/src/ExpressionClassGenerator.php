@@ -50,18 +50,19 @@ class ExpressionClassGenerator extends AbstractGenerator
 
         if ($definition->generate === Generate::PhpClass) {
             $class = $namespace->addClass($className);
+            $class->setReadOnly();
             $class->setImplements($definition->implements);
             $class->setExtends($definition->extends);
 
             // Replace with promoted property in PHP 8.1
             $propertyType = Type::union(...$types);
-            $class->addProperty('expression')
+            $class->addProperty('name')
                 ->setType($propertyType)
                 ->setPublic();
 
             $constructor = $class->addMethod('__construct');
-            $constructor->addParameter('expression')->setType($propertyType);
-            $constructor->addBody('$this->expression = $expression;');
+            $constructor->addParameter('name')->setType($propertyType);
+            $constructor->addBody('$this->name = $name;');
         } elseif ($definition->generate === Generate::PhpInterface) {
             $class = $namespace->addInterface($className);
             $class->setExtends($definition->implements);

@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/
  */
-class DegreesToRadiansOperator implements ResolvesToDouble, ResolvesToDecimal
+readonly class DegreesToRadiansOperator implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$degreesToRadians';
     public const ENCODE = Encode::Single;

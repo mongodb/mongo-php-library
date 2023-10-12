@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/
  */
-class TrimOperator implements ResolvesToString
+readonly class TrimOperator implements ResolvesToString
 {
     public const NAME = '$trim';
     public const ENCODE = Encode::Object;

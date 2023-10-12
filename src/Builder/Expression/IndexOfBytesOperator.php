@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfBytes/
  */
-class IndexOfBytesOperator implements ResolvesToInt
+readonly class IndexOfBytesOperator implements ResolvesToInt
 {
     public const NAME = '$indexOfBytes';
     public const ENCODE = Encode::Array;

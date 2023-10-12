@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/second/
  */
-class SecondOperator implements ResolvesToInt
+readonly class SecondOperator implements ResolvesToInt
 {
     public const NAME = '$second';
     public const ENCODE = Encode::Object;

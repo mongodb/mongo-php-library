@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitNot/
  */
-class BitNotOperator implements ResolvesToInt, ResolvesToLong
+readonly class BitNotOperator implements ResolvesToInt, ResolvesToLong
 {
     public const NAME = '$bitNot';
     public const ENCODE = Encode::Single;

@@ -26,7 +26,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/
  */
-class EqOperator implements ResolvesToBool
+readonly class EqOperator implements ResolvesToBool
 {
     public const NAME = '$eq';
     public const ENCODE = Encode::Array;

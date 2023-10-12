@@ -18,7 +18,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/
  */
-class GeoWithinOperator implements FieldQueryInterface
+readonly class GeoWithinOperator implements FieldQueryInterface
 {
     public const NAME = '$geoWithin';
     public const ENCODE = Encode::Single;

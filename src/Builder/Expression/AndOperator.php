@@ -29,7 +29,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/
  */
-class AndOperator implements ResolvesToBool
+readonly class AndOperator implements ResolvesToBool
 {
     public const NAME = '$and';
     public const ENCODE = Encode::Single;

@@ -13,7 +13,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/strcasecmp/
  */
-class StrcasecmpOperator implements ResolvesToInt
+readonly class StrcasecmpOperator implements ResolvesToInt
 {
     public const NAME = '$strcasecmp';
     public const ENCODE = Encode::Array;

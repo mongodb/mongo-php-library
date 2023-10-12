@@ -23,7 +23,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/accumulator/
  */
-class AccumulatorAccumulator implements AccumulatorInterface
+readonly class AccumulatorAccumulator implements AccumulatorInterface
 {
     public const NAME = '$accumulator';
     public const ENCODE = Encode::Object;

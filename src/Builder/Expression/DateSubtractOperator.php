@@ -18,7 +18,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateSubtract/
  */
-class DateSubtractOperator implements ResolvesToDate
+readonly class DateSubtractOperator implements ResolvesToDate
 {
     public const NAME = '$dateSubtract';
     public const ENCODE = Encode::Object;

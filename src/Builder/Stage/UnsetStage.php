@@ -19,7 +19,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset/
  */
-class UnsetStage implements StageInterface
+readonly class UnsetStage implements StageInterface
 {
     public const NAME = '$unset';
     public const ENCODE = Encode::Single;

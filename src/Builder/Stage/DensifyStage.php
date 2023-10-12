@@ -24,7 +24,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/densify/
  */
-class DensifyStage implements StageInterface
+readonly class DensifyStage implements StageInterface
 {
     public const NAME = '$densify';
     public const ENCODE = Encode::Object;

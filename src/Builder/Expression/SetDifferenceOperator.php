@@ -19,7 +19,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setDifference/
  */
-class SetDifferenceOperator implements ResolvesToArray
+readonly class SetDifferenceOperator implements ResolvesToArray
 {
     public const NAME = '$setDifference';
     public const ENCODE = Encode::Array;

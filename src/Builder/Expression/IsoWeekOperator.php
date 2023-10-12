@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/
  */
-class IsoWeekOperator implements ResolvesToInt
+readonly class IsoWeekOperator implements ResolvesToInt
 {
     public const NAME = '$isoWeek';
     public const ENCODE = Encode::Object;

@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\FieldQueryInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/regex/
  */
-class RegexOperator implements FieldQueryInterface
+readonly class RegexOperator implements FieldQueryInterface
 {
     public const NAME = '$regex';
     public const ENCODE = Encode::Single;

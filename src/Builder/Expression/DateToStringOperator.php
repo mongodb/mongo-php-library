@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToString/
  */
-class DateToStringOperator implements ResolvesToString
+readonly class DateToStringOperator implements ResolvesToString
 {
     public const NAME = '$dateToString';
     public const ENCODE = Encode::Object;

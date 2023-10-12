@@ -18,7 +18,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/
  */
-class ReplaceRootStage implements StageInterface
+readonly class ReplaceRootStage implements StageInterface
 {
     public const NAME = '$replaceRoot';
     public const ENCODE = Encode::Object;

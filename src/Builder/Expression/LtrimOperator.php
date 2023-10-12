@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/
  */
-class LtrimOperator implements ResolvesToString
+readonly class LtrimOperator implements ResolvesToString
 {
     public const NAME = '$ltrim';
     public const ENCODE = Encode::Object;

@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/
  */
-class AtanhOperator implements ResolvesToDouble, ResolvesToDecimal
+readonly class AtanhOperator implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$atanh';
     public const ENCODE = Encode::Single;

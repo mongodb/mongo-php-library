@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan2/
  */
-class Atan2Operator implements ResolvesToDouble, ResolvesToDecimal
+readonly class Atan2Operator implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$atan2';
     public const ENCODE = Encode::Array;

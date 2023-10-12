@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/
  */
-class SetFieldOperator implements ResolvesToObject
+readonly class SetFieldOperator implements ResolvesToObject
 {
     public const NAME = '$setField';
     public const ENCODE = Encode::Object;

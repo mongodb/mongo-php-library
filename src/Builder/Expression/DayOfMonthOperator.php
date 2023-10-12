@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfMonth/
  */
-class DayOfMonthOperator implements ResolvesToInt
+readonly class DayOfMonthOperator implements ResolvesToInt
 {
     public const NAME = '$dayOfMonth';
     public const ENCODE = Encode::Object;

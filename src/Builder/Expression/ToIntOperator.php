@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/
  */
-class ToIntOperator implements ResolvesToInt
+readonly class ToIntOperator implements ResolvesToInt
 {
     public const NAME = '$toInt';
     public const ENCODE = Encode::Single;

@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\StageInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/
  */
-class SkipStage implements StageInterface
+readonly class SkipStage implements StageInterface
 {
     public const NAME = '$skip';
     public const ENCODE = Encode::Single;

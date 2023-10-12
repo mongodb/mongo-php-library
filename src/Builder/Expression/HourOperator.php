@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/
  */
-class HourOperator implements ResolvesToInt
+readonly class HourOperator implements ResolvesToInt
 {
     public const NAME = '$hour';
     public const ENCODE = Encode::Object;

@@ -20,7 +20,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/
  */
-class MedianOperator implements ResolvesToDouble
+readonly class MedianOperator implements ResolvesToDouble
 {
     public const NAME = '$median';
     public const ENCODE = Encode::Object;

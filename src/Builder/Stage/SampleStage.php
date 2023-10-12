@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\StageInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/
  */
-class SampleStage implements StageInterface
+readonly class SampleStage implements StageInterface
 {
     public const NAME = '$sample';
     public const ENCODE = Encode::Object;

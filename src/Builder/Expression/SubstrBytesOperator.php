@@ -13,7 +13,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/
  */
-class SubstrBytesOperator implements ResolvesToString
+readonly class SubstrBytesOperator implements ResolvesToString
 {
     public const NAME = '$substrBytes';
     public const ENCODE = Encode::Array;

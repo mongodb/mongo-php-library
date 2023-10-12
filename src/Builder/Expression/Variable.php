@@ -6,12 +6,12 @@
 
 namespace MongoDB\Builder\Expression;
 
-class Variable implements ResolvesToAny
+readonly class Variable implements ResolvesToAny
 {
-    public string $expression;
+    public string $name;
 
-    public function __construct(string $expression)
+    public function __construct(string $name)
     {
-        $this->expression = $expression;
+        $this->name = $name;
     }
 }

@@ -21,7 +21,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/
  */
-class BitsAnySetOperator implements FieldQueryInterface
+readonly class BitsAnySetOperator implements FieldQueryInterface
 {
     public const NAME = '$bitsAnySet';
     public const ENCODE = Encode::Single;

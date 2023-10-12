@@ -20,7 +20,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/and/
  */
-class AndOperator implements QueryInterface
+readonly class AndOperator implements QueryInterface
 {
     public const NAME = '$and';
     public const ENCODE = Encode::Single;

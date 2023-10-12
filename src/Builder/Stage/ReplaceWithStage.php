@@ -19,7 +19,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceWith/
  */
-class ReplaceWithStage implements StageInterface
+readonly class ReplaceWithStage implements StageInterface
 {
     public const NAME = '$replaceWith';
     public const ENCODE = Encode::Single;

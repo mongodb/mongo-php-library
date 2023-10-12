@@ -18,7 +18,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/
  */
-class MultiplyOperator implements ResolvesToDecimal
+readonly class MultiplyOperator implements ResolvesToDecimal
 {
     public const NAME = '$multiply';
     public const ENCODE = Encode::Single;

@@ -26,7 +26,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/type/
  */
-class TypeOperator implements ResolvesToString
+readonly class TypeOperator implements ResolvesToString
 {
     public const NAME = '$type';
     public const ENCODE = Encode::Single;

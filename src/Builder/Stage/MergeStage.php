@@ -25,7 +25,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/
  */
-class MergeStage implements StageInterface
+readonly class MergeStage implements StageInterface
 {
     public const NAME = '$merge';
     public const ENCODE = Encode::Object;

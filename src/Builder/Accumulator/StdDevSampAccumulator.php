@@ -20,7 +20,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/
  */
-class StdDevSampAccumulator implements AccumulatorInterface
+readonly class StdDevSampAccumulator implements AccumulatorInterface
 {
     public const NAME = '$stdDevSamp';
     public const ENCODE = Encode::Single;

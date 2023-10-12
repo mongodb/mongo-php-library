@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\StageInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSearchIndexes/
  */
-class ListSearchIndexesStage implements StageInterface
+readonly class ListSearchIndexesStage implements StageInterface
 {
     public const NAME = '$listSearchIndexes';
     public const ENCODE = Encode::Object;

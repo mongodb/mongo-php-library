@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sqrt/
  */
-class SqrtOperator implements ResolvesToDouble
+readonly class SqrtOperator implements ResolvesToDouble
 {
     public const NAME = '$sqrt';
     public const ENCODE = Encode::Single;

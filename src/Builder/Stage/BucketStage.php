@@ -33,7 +33,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/
  */
-class BucketStage implements StageInterface
+readonly class BucketStage implements StageInterface
 {
     public const NAME = '$bucket';
     public const ENCODE = Encode::Object;

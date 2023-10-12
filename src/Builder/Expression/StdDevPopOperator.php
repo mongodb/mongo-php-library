@@ -20,7 +20,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/
  */
-class StdDevPopOperator implements ResolvesToDouble
+readonly class StdDevPopOperator implements ResolvesToDouble
 {
     public const NAME = '$stdDevPop';
     public const ENCODE = Encode::Single;

@@ -17,7 +17,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unsetField/
  */
-class UnsetFieldOperator implements ResolvesToObject
+readonly class UnsetFieldOperator implements ResolvesToObject
 {
     public const NAME = '$unsetField';
     public const ENCODE = Encode::Object;

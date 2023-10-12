@@ -22,7 +22,7 @@ use function is_string;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/
  */
-class ProjectStage implements StageInterface
+readonly class ProjectStage implements StageInterface
 {
     public const NAME = '$project';
     public const ENCODE = Encode::Single;

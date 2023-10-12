@@ -20,7 +20,7 @@ use MongoDB\Builder\Type\WindowInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/
  */
-class AvgAccumulator implements AccumulatorInterface, WindowInterface
+readonly class AvgAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$avg';
     public const ENCODE = Encode::Single;

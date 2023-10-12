@@ -29,7 +29,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/
  */
-class IsArrayOperator implements ResolvesToBool
+readonly class IsArrayOperator implements ResolvesToBool
 {
     public const NAME = '$isArray';
     public const ENCODE = Encode::Array;

@@ -22,7 +22,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/
  */
-class LastNAccumulator implements WindowInterface
+readonly class LastNAccumulator implements WindowInterface
 {
     public const NAME = '$lastN';
     public const ENCODE = Encode::Object;

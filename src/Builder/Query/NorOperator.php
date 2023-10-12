@@ -20,7 +20,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/nor/
  */
-class NorOperator implements QueryInterface
+readonly class NorOperator implements QueryInterface
 {
     public const NAME = '$nor';
     public const ENCODE = Encode::Single;

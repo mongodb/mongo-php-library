@@ -30,7 +30,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/
  */
-class FirstAccumulator implements AccumulatorInterface, WindowInterface
+readonly class FirstAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$first';
     public const ENCODE = Encode::Single;

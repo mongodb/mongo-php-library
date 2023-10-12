@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/
  */
-class SinOperator implements ResolvesToDouble, ResolvesToDecimal
+readonly class SinOperator implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$sin';
     public const ENCODE = Encode::Single;

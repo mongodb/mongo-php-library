@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/
  */
-class ToBoolOperator implements ResolvesToBool
+readonly class ToBoolOperator implements ResolvesToBool
 {
     public const NAME = '$toBool';
     public const ENCODE = Encode::Single;

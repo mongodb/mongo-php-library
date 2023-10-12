@@ -30,7 +30,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/
  */
-class SetWindowFieldsStage implements StageInterface
+readonly class SetWindowFieldsStage implements StageInterface
 {
     public const NAME = '$setWindowFields';
     public const ENCODE = Encode::Object;

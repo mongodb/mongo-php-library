@@ -23,7 +23,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/geometry/
  */
-class GeometryOperator implements GeometryInterface
+readonly class GeometryOperator implements GeometryInterface
 {
     public const NAME = '$geometry';
     public const ENCODE = Encode::Object;

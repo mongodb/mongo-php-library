@@ -20,7 +20,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/or/
  */
-class OrOperator implements QueryInterface
+readonly class OrOperator implements QueryInterface
 {
     public const NAME = '$or';
     public const ENCODE = Encode::Single;

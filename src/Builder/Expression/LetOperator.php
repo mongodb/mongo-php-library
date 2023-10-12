@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/
  */
-class LetOperator implements ResolvesToAny
+readonly class LetOperator implements ResolvesToAny
 {
     public const NAME = '$let';
     public const ENCODE = Encode::Object;

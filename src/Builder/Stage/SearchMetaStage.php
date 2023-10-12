@@ -18,7 +18,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/searchMeta/
  */
-class SearchMetaStage implements StageInterface
+readonly class SearchMetaStage implements StageInterface
 {
     public const NAME = '$searchMeta';
     public const ENCODE = Encode::Single;

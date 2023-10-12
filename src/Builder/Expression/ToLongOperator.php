@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/
  */
-class ToLongOperator implements ResolvesToLong
+readonly class ToLongOperator implements ResolvesToLong
 {
     public const NAME = '$toLong';
     public const ENCODE = Encode::Single;

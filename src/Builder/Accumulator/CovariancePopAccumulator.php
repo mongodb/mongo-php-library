@@ -19,7 +19,7 @@ use MongoDB\Builder\Type\WindowInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/covariancePop/
  */
-class CovariancePopAccumulator implements WindowInterface
+readonly class CovariancePopAccumulator implements WindowInterface
 {
     public const NAME = '$covariancePop';
     public const ENCODE = Encode::Array;

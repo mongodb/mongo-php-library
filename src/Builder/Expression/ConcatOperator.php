@@ -16,7 +16,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/
  */
-class ConcatOperator implements ResolvesToString
+readonly class ConcatOperator implements ResolvesToString
 {
     public const NAME = '$concat';
     public const ENCODE = Encode::Single;

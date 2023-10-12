@@ -31,7 +31,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/
  */
-class MapOperator implements ResolvesToArray
+readonly class MapOperator implements ResolvesToArray
 {
     public const NAME = '$map';
     public const ENCODE = Encode::Object;

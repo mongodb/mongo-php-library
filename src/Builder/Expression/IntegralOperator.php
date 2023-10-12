@@ -18,7 +18,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/
  */
-class IntegralOperator implements ResolvesToDouble, ResolvesToDecimal
+readonly class IntegralOperator implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$integral';
     public const ENCODE = Encode::Object;

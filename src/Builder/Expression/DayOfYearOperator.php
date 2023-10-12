@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfYear/
  */
-class DayOfYearOperator implements ResolvesToInt
+readonly class DayOfYearOperator implements ResolvesToInt
 {
     public const NAME = '$dayOfYear';
     public const ENCODE = Encode::Object;

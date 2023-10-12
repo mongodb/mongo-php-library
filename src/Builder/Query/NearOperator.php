@@ -19,7 +19,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/near/
  */
-class NearOperator implements FieldQueryInterface
+readonly class NearOperator implements FieldQueryInterface
 {
     public const NAME = '$near';
     public const ENCODE = Encode::Object;

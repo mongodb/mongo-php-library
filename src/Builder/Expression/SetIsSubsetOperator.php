@@ -19,7 +19,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIsSubset/
  */
-class SetIsSubsetOperator implements ResolvesToBool
+readonly class SetIsSubsetOperator implements ResolvesToBool
 {
     public const NAME = '$setIsSubset';
     public const ENCODE = Encode::Array;

@@ -8,12 +8,12 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\Builder\Type\FieldPathInterface;
 
-class NullFieldPath implements FieldPathInterface, ResolvesToNull
+readonly class NullFieldPath implements FieldPathInterface, ResolvesToNull
 {
-    public string $expression;
+    public string $name;
 
-    public function __construct(string $expression)
+    public function __construct(string $name)
     {
-        $this->expression = $expression;
+        $this->name = $name;
     }
 }

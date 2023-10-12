@@ -8,12 +8,12 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\Builder\Type\FieldPathInterface;
 
-class NumberFieldPath implements FieldPathInterface, ResolvesToNumber
+readonly class NumberFieldPath implements FieldPathInterface, ResolvesToNumber
 {
-    public string $expression;
+    public string $name;
 
-    public function __construct(string $expression)
+    public function __construct(string $name)
     {
-        $this->expression = $expression;
+        $this->name = $name;
     }
 }

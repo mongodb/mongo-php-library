@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\QueryInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/text/
  */
-class TextOperator implements QueryInterface
+readonly class TextOperator implements QueryInterface
 {
     public const NAME = '$text';
     public const ENCODE = Encode::Object;

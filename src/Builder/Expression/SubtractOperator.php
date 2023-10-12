@@ -16,7 +16,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/
  */
-class SubtractOperator implements ResolvesToNumber, ResolvesToDate
+readonly class SubtractOperator implements ResolvesToNumber, ResolvesToDate
 {
     public const NAME = '$subtract';
     public const ENCODE = Encode::Array;

@@ -8,12 +8,12 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\Builder\Type\FieldPathInterface;
 
-class DoubleFieldPath implements FieldPathInterface, ResolvesToDouble
+readonly class DoubleFieldPath implements FieldPathInterface, ResolvesToDouble
 {
-    public string $expression;
+    public string $name;
 
-    public function __construct(string $expression)
+    public function __construct(string $name)
     {
-        $this->expression = $expression;
+        $this->name = $name;
     }
 }

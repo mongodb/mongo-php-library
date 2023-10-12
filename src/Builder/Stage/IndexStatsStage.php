@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\StageInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/
  */
-class IndexStatsStage implements StageInterface
+readonly class IndexStatsStage implements StageInterface
 {
     public const NAME = '$indexStats';
     public const ENCODE = Encode::Object;

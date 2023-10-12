@@ -30,7 +30,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/
  */
-class MinOperator implements ResolvesToAny
+readonly class MinOperator implements ResolvesToAny
 {
     public const NAME = '$min';
     public const ENCODE = Encode::Single;

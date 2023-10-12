@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateDiff/
  */
-class DateDiffOperator implements ResolvesToInt
+readonly class DateDiffOperator implements ResolvesToInt
 {
     public const NAME = '$dateDiff';
     public const ENCODE = Encode::Object;

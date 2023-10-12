@@ -13,7 +13,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/
  */
-class SplitOperator implements ResolvesToArray
+readonly class SplitOperator implements ResolvesToArray
 {
     public const NAME = '$split';
     public const ENCODE = Encode::Array;

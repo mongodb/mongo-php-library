@@ -13,7 +13,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/
  */
-class SubstrCPOperator implements ResolvesToString
+readonly class SubstrCPOperator implements ResolvesToString
 {
     public const NAME = '$substrCP';
     public const ENCODE = Encode::Array;

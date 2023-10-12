@@ -30,7 +30,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/
  */
-class MaxAccumulator implements AccumulatorInterface, WindowInterface
+readonly class MaxAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$max';
     public const ENCODE = Encode::Single;

@@ -28,7 +28,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/expr/
  */
-class ExprOperator implements FieldQueryInterface
+readonly class ExprOperator implements FieldQueryInterface
 {
     public const NAME = '$expr';
     public const ENCODE = Encode::Single;

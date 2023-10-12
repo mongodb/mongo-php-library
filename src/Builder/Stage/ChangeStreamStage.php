@@ -19,7 +19,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/changeStream/
  */
-class ChangeStreamStage implements StageInterface
+readonly class ChangeStreamStage implements StageInterface
 {
     public const NAME = '$changeStream';
     public const ENCODE = Encode::Object;

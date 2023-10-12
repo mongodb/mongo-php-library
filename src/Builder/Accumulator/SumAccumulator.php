@@ -20,7 +20,7 @@ use MongoDB\Builder\Type\WindowInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/
  */
-class SumAccumulator implements AccumulatorInterface, WindowInterface
+readonly class SumAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$sum';
     public const ENCODE = Encode::Single;

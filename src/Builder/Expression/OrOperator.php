@@ -29,7 +29,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/
  */
-class OrOperator implements ResolvesToBool
+readonly class OrOperator implements ResolvesToBool
 {
     public const NAME = '$or';
     public const ENCODE = Encode::Single;

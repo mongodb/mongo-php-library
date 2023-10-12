@@ -19,7 +19,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/
  */
-class AvgOperator implements ResolvesToNumber
+readonly class AvgOperator implements ResolvesToNumber
 {
     public const NAME = '$avg';
     public const ENCODE = Encode::Single;

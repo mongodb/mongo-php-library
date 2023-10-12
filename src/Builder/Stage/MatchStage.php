@@ -22,7 +22,7 @@ use function is_object;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/
  */
-class MatchStage implements StageInterface
+readonly class MatchStage implements StageInterface
 {
     public const NAME = '$match';
     public const ENCODE = Encode::Single;

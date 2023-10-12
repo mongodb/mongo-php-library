@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/year/
  */
-class YearOperator implements ResolvesToInt
+readonly class YearOperator implements ResolvesToInt
 {
     public const NAME = '$year';
     public const ENCODE = Encode::Object;

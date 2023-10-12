@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sampleRate/
  */
-class SampleRateOperator implements ResolvesToAny
+readonly class SampleRateOperator implements ResolvesToAny
 {
     public const NAME = '$sampleRate';
     public const ENCODE = Encode::Single;

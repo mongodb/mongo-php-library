@@ -26,7 +26,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lt/
  */
-class LtOperator implements ResolvesToBool
+readonly class LtOperator implements ResolvesToBool
 {
     public const NAME = '$lt';
     public const ENCODE = Encode::Array;

@@ -26,7 +26,7 @@ use function is_object;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/
  */
-class GeoNearStage implements StageInterface
+readonly class GeoNearStage implements StageInterface
 {
     public const NAME = '$geoNear';
     public const ENCODE = Encode::Object;

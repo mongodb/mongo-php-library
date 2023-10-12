@@ -31,7 +31,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/top/
  */
-class TopAccumulator implements AccumulatorInterface
+readonly class TopAccumulator implements AccumulatorInterface
 {
     public const NAME = '$top';
     public const ENCODE = Encode::Object;

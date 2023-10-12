@@ -30,7 +30,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bottom/
  */
-class BottomAccumulator implements AccumulatorInterface, WindowInterface
+readonly class BottomAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$bottom';
     public const ENCODE = Encode::Object;

@@ -18,7 +18,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/search/
  */
-class SearchStage implements StageInterface
+readonly class SearchStage implements StageInterface
 {
     public const NAME = '$search';
     public const ENCODE = Encode::Single;

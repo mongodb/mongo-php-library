@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/gte/
  */
-class GteOperator implements FieldQueryInterface
+readonly class GteOperator implements FieldQueryInterface
 {
     public const NAME = '$gte';
     public const ENCODE = Encode::Single;

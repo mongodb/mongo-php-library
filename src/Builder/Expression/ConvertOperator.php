@@ -28,7 +28,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/convert/
  */
-class ConvertOperator implements ResolvesToAny
+readonly class ConvertOperator implements ResolvesToAny
 {
     public const NAME = '$convert';
     public const ENCODE = Encode::Object;

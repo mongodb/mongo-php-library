@@ -21,7 +21,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documents/
  */
-class DocumentsStage implements StageInterface
+readonly class DocumentsStage implements StageInterface
 {
     public const NAME = '$documents';
     public const ENCODE = Encode::Single;

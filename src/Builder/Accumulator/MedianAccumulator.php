@@ -24,7 +24,7 @@ use MongoDB\Builder\Type\WindowInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/
  */
-class MedianAccumulator implements AccumulatorInterface, WindowInterface
+readonly class MedianAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$median';
     public const ENCODE = Encode::Object;

@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/pow/
  */
-class PowOperator implements ResolvesToNumber
+readonly class PowOperator implements ResolvesToNumber
 {
     public const NAME = '$pow';
     public const ENCODE = Encode::Array;

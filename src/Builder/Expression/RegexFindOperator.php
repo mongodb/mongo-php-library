@@ -16,7 +16,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFind/
  */
-class RegexFindOperator implements ResolvesToObject
+readonly class RegexFindOperator implements ResolvesToObject
 {
     public const NAME = '$regexFind';
     public const ENCODE = Encode::Object;

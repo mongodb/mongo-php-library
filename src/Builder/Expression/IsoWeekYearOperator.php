@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeekYear/
  */
-class IsoWeekYearOperator implements ResolvesToInt
+readonly class IsoWeekYearOperator implements ResolvesToInt
 {
     public const NAME = '$isoWeekYear';
     public const ENCODE = Encode::Object;

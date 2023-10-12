@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateToParts/
  */
-class DateToPartsOperator implements ResolvesToObject
+readonly class DateToPartsOperator implements ResolvesToObject
 {
     public const NAME = '$dateToParts';
     public const ENCODE = Encode::Object;

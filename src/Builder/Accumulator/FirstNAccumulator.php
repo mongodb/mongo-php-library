@@ -23,7 +23,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/
  */
-class FirstNAccumulator implements AccumulatorInterface, WindowInterface
+readonly class FirstNAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$firstN';
     public const ENCODE = Encode::Object;

@@ -20,7 +20,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/centerSphere/
  */
-class CenterSphereOperator implements GeometryInterface
+readonly class CenterSphereOperator implements GeometryInterface
 {
     public const NAME = '$centerSphere';
     public const ENCODE = Encode::Single;

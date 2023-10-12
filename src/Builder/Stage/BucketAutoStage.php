@@ -29,7 +29,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/
  */
-class BucketAutoStage implements StageInterface
+readonly class BucketAutoStage implements StageInterface
 {
     public const NAME = '$bucketAuto';
     public const ENCODE = Encode::Object;

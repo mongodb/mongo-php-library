@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/lt/
  */
-class LtOperator implements FieldQueryInterface
+readonly class LtOperator implements FieldQueryInterface
 {
     public const NAME = '$lt';
     public const ENCODE = Encode::Single;

@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/
  */
-class LinearFillOperator implements ResolvesToNumber
+readonly class LinearFillOperator implements ResolvesToNumber
 {
     public const NAME = '$linearFill';
     public const ENCODE = Encode::Single;

@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/lte/
  */
-class LteOperator implements FieldQueryInterface
+readonly class LteOperator implements FieldQueryInterface
 {
     public const NAME = '$lte';
     public const ENCODE = Encode::Single;

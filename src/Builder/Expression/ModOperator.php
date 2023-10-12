@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/mod/
  */
-class ModOperator implements ResolvesToInt
+readonly class ModOperator implements ResolvesToInt
 {
     public const NAME = '$mod';
     public const ENCODE = Encode::Array;

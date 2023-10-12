@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/exp/
  */
-class ExpOperator implements ResolvesToDouble
+readonly class ExpOperator implements ResolvesToDouble
 {
     public const NAME = '$exp';
     public const ENCODE = Encode::Single;

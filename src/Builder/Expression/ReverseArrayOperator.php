@@ -19,7 +19,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/reverseArray/
  */
-class ReverseArrayOperator implements ResolvesToArray
+readonly class ReverseArrayOperator implements ResolvesToArray
 {
     public const NAME = '$reverseArray';
     public const ENCODE = Encode::Single;

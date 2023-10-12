@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/
  */
-class ToDoubleOperator implements ResolvesToDouble
+readonly class ToDoubleOperator implements ResolvesToDouble
 {
     public const NAME = '$toDouble';
     public const ENCODE = Encode::Single;

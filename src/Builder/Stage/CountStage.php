@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\StageInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/
  */
-class CountStage implements StageInterface
+readonly class CountStage implements StageInterface
 {
     public const NAME = '$count';
     public const ENCODE = Encode::Single;

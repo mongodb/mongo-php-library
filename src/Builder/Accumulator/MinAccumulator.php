@@ -30,7 +30,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/
  */
-class MinAccumulator implements AccumulatorInterface, WindowInterface
+readonly class MinAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$min';
     public const ENCODE = Encode::Single;

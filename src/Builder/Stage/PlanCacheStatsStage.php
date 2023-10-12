@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\StageInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/planCacheStats/
  */
-class PlanCacheStatsStage implements StageInterface
+readonly class PlanCacheStatsStage implements StageInterface
 {
     public const NAME = '$planCacheStats';
     public const ENCODE = Encode::Object;

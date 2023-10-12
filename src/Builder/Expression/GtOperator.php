@@ -26,7 +26,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/gt/
  */
-class GtOperator implements ResolvesToBool
+readonly class GtOperator implements ResolvesToBool
 {
     public const NAME = '$gt';
     public const ENCODE = Encode::Array;

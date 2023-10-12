@@ -24,7 +24,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/
  */
-class FillStage implements StageInterface
+readonly class FillStage implements StageInterface
 {
     public const NAME = '$fill';
     public const ENCODE = Encode::Object;

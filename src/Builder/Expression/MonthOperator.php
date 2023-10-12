@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/month/
  */
-class MonthOperator implements ResolvesToInt
+readonly class MonthOperator implements ResolvesToInt
 {
     public const NAME = '$month';
     public const ENCODE = Encode::Object;

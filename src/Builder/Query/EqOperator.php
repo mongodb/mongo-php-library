@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/
  */
-class EqOperator implements FieldQueryInterface
+readonly class EqOperator implements FieldQueryInterface
 {
     public const NAME = '$eq';
     public const ENCODE = Encode::Single;

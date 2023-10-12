@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/
  */
-class CoshOperator implements ResolvesToDouble, ResolvesToDecimal
+readonly class CoshOperator implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$cosh';
     public const ENCODE = Encode::Single;

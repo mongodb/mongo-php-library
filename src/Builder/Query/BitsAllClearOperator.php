@@ -21,7 +21,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/
  */
-class BitsAllClearOperator implements FieldQueryInterface
+readonly class BitsAllClearOperator implements FieldQueryInterface
 {
     public const NAME = '$bitsAllClear';
     public const ENCODE = Encode::Single;

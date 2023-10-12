@@ -26,7 +26,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/
  */
-class CondOperator implements ResolvesToAny
+readonly class CondOperator implements ResolvesToAny
 {
     public const NAME = '$cond';
     public const ENCODE = Encode::Object;

@@ -30,7 +30,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/all/
  */
-class AllOperator implements FieldQueryInterface
+readonly class AllOperator implements FieldQueryInterface
 {
     public const NAME = '$all';
     public const ENCODE = Encode::Single;

@@ -25,7 +25,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/
  */
-class LookupStage implements StageInterface
+readonly class LookupStage implements StageInterface
 {
     public const NAME = '$lookup';
     public const ENCODE = Encode::Object;

@@ -19,7 +19,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateTrunc/
  */
-class DateTruncOperator implements ResolvesToDate
+readonly class DateTruncOperator implements ResolvesToDate
 {
     public const NAME = '$dateTrunc';
     public const ENCODE = Encode::Object;

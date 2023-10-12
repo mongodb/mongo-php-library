@@ -74,11 +74,11 @@ class BuilderEncoder implements Encoder
 
         // This specific encoding code if temporary until we have a generic way to encode stages and operators
         if ($value instanceof FieldPathInterface) {
-            return '$' . $value->expression;
+            return '$' . $value->name;
         }
 
         if ($value instanceof Variable) {
-            return '$$' . $value->expression;
+            return '$$' . $value->name;
         }
 
         if ($value instanceof QueryObject) {

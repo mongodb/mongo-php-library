@@ -19,7 +19,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/size/
  */
-class SizeOperator implements ResolvesToInt
+readonly class SizeOperator implements ResolvesToInt
 {
     public const NAME = '$size';
     public const ENCODE = Encode::Single;

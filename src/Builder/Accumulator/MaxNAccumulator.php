@@ -23,7 +23,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN/
  */
-class MaxNAccumulator implements AccumulatorInterface, WindowInterface
+readonly class MaxNAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$maxN';
     public const ENCODE = Encode::Object;

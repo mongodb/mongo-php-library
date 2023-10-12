@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/
  */
-class WeekOperator implements ResolvesToInt
+readonly class WeekOperator implements ResolvesToInt
 {
     public const NAME = '$week';
     public const ENCODE = Encode::Object;

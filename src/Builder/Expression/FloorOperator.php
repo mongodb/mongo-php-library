@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/
  */
-class FloorOperator implements ResolvesToInt
+readonly class FloorOperator implements ResolvesToInt
 {
     public const NAME = '$floor';
     public const ENCODE = Encode::Single;

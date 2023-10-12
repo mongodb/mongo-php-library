@@ -23,7 +23,7 @@ use function is_object;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/not/
  */
-class NotOperator implements FieldQueryInterface
+readonly class NotOperator implements FieldQueryInterface
 {
     public const NAME = '$not';
     public const ENCODE = Encode::Single;

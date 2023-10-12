@@ -19,7 +19,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/maxN-array-element/
  */
-class MaxNOperator implements ResolvesToArray
+readonly class MaxNOperator implements ResolvesToArray
 {
     public const NAME = '$maxN';
     public const ENCODE = Encode::Object;

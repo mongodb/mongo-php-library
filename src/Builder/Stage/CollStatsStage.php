@@ -17,7 +17,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/
  */
-class CollStatsStage implements StageInterface
+readonly class CollStatsStage implements StageInterface
 {
     public const NAME = '$collStats';
     public const ENCODE = Encode::Single;

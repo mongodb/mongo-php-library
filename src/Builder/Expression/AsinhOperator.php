@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/
  */
-class AsinhOperator implements ResolvesToDouble, ResolvesToDecimal
+readonly class AsinhOperator implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$asinh';
     public const ENCODE = Encode::Single;

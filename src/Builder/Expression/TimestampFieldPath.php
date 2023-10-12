@@ -8,12 +8,12 @@ namespace MongoDB\Builder\Expression;
 
 use MongoDB\Builder\Type\FieldPathInterface;
 
-class TimestampFieldPath implements FieldPathInterface, ResolvesToTimestamp
+readonly class TimestampFieldPath implements FieldPathInterface, ResolvesToTimestamp
 {
-    public string $expression;
+    public string $name;
 
-    public function __construct(string $expression)
+    public function __construct(string $name)
     {
-        $this->expression = $expression;
+        $this->name = $name;
     }
 }

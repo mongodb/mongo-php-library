@@ -16,7 +16,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/trunc/
  */
-class TruncOperator implements ResolvesToString
+readonly class TruncOperator implements ResolvesToString
 {
     public const NAME = '$trunc';
     public const ENCODE = Encode::Array;

@@ -22,7 +22,7 @@ use function is_object;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/projection/elemMatch/
  */
-class ElemMatchOperator implements ProjectionInterface
+readonly class ElemMatchOperator implements ProjectionInterface
 {
     public const NAME = '$elemMatch';
     public const ENCODE = Encode::Object;

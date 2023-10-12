@@ -20,7 +20,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/
  */
-class FunctionOperator implements ResolvesToAny
+readonly class FunctionOperator implements ResolvesToAny
 {
     public const NAME = '$function';
     public const ENCODE = Encode::Object;

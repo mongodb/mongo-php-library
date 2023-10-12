@@ -24,7 +24,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/
  */
-class FilterOperator implements ProjectionInterface
+readonly class FilterOperator implements ProjectionInterface
 {
     public const NAME = '$filter';
     public const ENCODE = Encode::Object;

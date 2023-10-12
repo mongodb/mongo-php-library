@@ -13,7 +13,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/
  */
-class StrLenBytesOperator implements ResolvesToInt
+readonly class StrLenBytesOperator implements ResolvesToInt
 {
     public const NAME = '$strLenBytes';
     public const ENCODE = Encode::Single;

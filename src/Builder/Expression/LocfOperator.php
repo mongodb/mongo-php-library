@@ -28,7 +28,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/
  */
-class LocfOperator implements ResolvesToAny
+readonly class LocfOperator implements ResolvesToAny
 {
     public const NAME = '$locf';
     public const ENCODE = Encode::Single;

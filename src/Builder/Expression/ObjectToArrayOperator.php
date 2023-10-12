@@ -16,7 +16,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/objectToArray/
  */
-class ObjectToArrayOperator implements ResolvesToArray
+readonly class ObjectToArrayOperator implements ResolvesToArray
 {
     public const NAME = '$objectToArray';
     public const ENCODE = Encode::Single;

@@ -13,7 +13,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/
  */
-class ToLowerOperator implements ResolvesToString
+readonly class ToLowerOperator implements ResolvesToString
 {
     public const NAME = '$toLower';
     public const ENCODE = Encode::Single;

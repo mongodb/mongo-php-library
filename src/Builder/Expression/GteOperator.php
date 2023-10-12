@@ -26,7 +26,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/
  */
-class GteOperator implements ResolvesToBool
+readonly class GteOperator implements ResolvesToBool
 {
     public const NAME = '$gte';
     public const ENCODE = Encode::Array;

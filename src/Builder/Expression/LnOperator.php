@@ -16,7 +16,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ln/
  */
-class LnOperator implements ResolvesToDouble
+readonly class LnOperator implements ResolvesToDouble
 {
     public const NAME = '$ln';
     public const ENCODE = Encode::Single;

@@ -18,7 +18,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setEquals/
  */
-class SetEqualsOperator implements ResolvesToBool
+readonly class SetEqualsOperator implements ResolvesToBool
 {
     public const NAME = '$setEquals';
     public const ENCODE = Encode::Single;

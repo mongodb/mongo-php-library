@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\ProjectionInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/projection/slice/
  */
-class SliceOperator implements ProjectionInterface
+readonly class SliceOperator implements ProjectionInterface
 {
     public const NAME = '$slice';
     public const ENCODE = Encode::Array;

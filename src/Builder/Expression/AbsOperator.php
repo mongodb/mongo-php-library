@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/
  */
-class AbsOperator implements ResolvesToNumber
+readonly class AbsOperator implements ResolvesToNumber
 {
     public const NAME = '$abs';
     public const ENCODE = Encode::Single;

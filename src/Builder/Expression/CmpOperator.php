@@ -26,7 +26,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cmp/
  */
-class CmpOperator implements ResolvesToInt
+readonly class CmpOperator implements ResolvesToInt
 {
     public const NAME = '$cmp';
     public const ENCODE = Encode::Array;

@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\StageInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/
  */
-class LimitStage implements StageInterface
+readonly class LimitStage implements StageInterface
 {
     public const NAME = '$limit';
     public const ENCODE = Encode::Single;

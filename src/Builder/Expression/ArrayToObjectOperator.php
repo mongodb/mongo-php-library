@@ -19,7 +19,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayToObject/
  */
-class ArrayToObjectOperator implements ResolvesToObject
+readonly class ArrayToObjectOperator implements ResolvesToObject
 {
     public const NAME = '$arrayToObject';
     public const ENCODE = Encode::Array;

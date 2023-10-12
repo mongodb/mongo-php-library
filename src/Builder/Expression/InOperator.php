@@ -30,7 +30,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/in/
  */
-class InOperator implements ResolvesToBool
+readonly class InOperator implements ResolvesToBool
 {
     public const NAME = '$in';
     public const ENCODE = Encode::Array;

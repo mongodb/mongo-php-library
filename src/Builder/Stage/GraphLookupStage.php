@@ -34,7 +34,7 @@ use function is_object;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/
  */
-class GraphLookupStage implements StageInterface
+readonly class GraphLookupStage implements StageInterface
 {
     public const NAME = '$graphLookup';
     public const ENCODE = Encode::Object;

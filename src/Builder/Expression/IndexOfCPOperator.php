@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfCP/
  */
-class IndexOfCPOperator implements ResolvesToInt
+readonly class IndexOfCPOperator implements ResolvesToInt
 {
     public const NAME = '$indexOfCP';
     public const ENCODE = Encode::Array;

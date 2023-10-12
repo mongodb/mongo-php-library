@@ -20,7 +20,7 @@ use MongoDB\Builder\Type\WindowInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/
  */
-class ExpMovingAvgAccumulator implements WindowInterface
+readonly class ExpMovingAvgAccumulator implements WindowInterface
 {
     public const NAME = '$expMovingAvg';
     public const ENCODE = Encode::Object;

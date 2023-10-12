@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\QueryInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/comment/
  */
-class CommentOperator implements QueryInterface
+readonly class CommentOperator implements QueryInterface
 {
     public const NAME = '$comment';
     public const ENCODE = Encode::Single;

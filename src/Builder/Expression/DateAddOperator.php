@@ -18,7 +18,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateAdd/
  */
-class DateAddOperator implements ResolvesToDate
+readonly class DateAddOperator implements ResolvesToDate
 {
     public const NAME = '$dateAdd';
     public const ENCODE = Encode::Object;

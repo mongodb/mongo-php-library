@@ -28,7 +28,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/
  */
-class GetFieldOperator implements ResolvesToAny
+readonly class GetFieldOperator implements ResolvesToAny
 {
     public const NAME = '$getField';
     public const ENCODE = Encode::Object;

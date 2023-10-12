@@ -21,7 +21,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/
  */
-class ListSessionsStage implements StageInterface
+readonly class ListSessionsStage implements StageInterface
 {
     public const NAME = '$listSessions';
     public const ENCODE = Encode::Object;

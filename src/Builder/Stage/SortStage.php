@@ -17,7 +17,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/
  */
-class SortStage implements StageInterface
+readonly class SortStage implements StageInterface
 {
     public const NAME = '$sort';
     public const ENCODE = Encode::Single;

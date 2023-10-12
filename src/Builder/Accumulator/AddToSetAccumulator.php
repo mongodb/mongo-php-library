@@ -30,7 +30,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addToSet/
  */
-class AddToSetAccumulator implements AccumulatorInterface, WindowInterface
+readonly class AddToSetAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$addToSet';
     public const ENCODE = Encode::Single;

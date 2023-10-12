@@ -22,7 +22,7 @@ use MongoDB\Builder\Type\WindowInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/derivative/
  */
-class DerivativeAccumulator implements WindowInterface
+readonly class DerivativeAccumulator implements WindowInterface
 {
     public const NAME = '$derivative';
     public const ENCODE = Encode::Object;

@@ -18,7 +18,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
  */
-class OutStage implements StageInterface
+readonly class OutStage implements StageInterface
 {
     public const NAME = '$out';
     public const ENCODE = Encode::Object;

@@ -32,7 +32,7 @@ use function is_string;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/
  */
-class GroupStage implements StageInterface
+readonly class GroupStage implements StageInterface
 {
     public const NAME = '$group';
     public const ENCODE = Encode::Group;

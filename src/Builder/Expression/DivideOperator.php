@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/
  */
-class DivideOperator implements ResolvesToDouble
+readonly class DivideOperator implements ResolvesToDouble
 {
     public const NAME = '$divide';
     public const ENCODE = Encode::Array;

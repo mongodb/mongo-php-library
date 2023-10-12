@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/range/
  */
-class RangeOperator implements ResolvesToArray
+readonly class RangeOperator implements ResolvesToArray
 {
     public const NAME = '$range';
     public const ENCODE = Encode::Array;

@@ -19,7 +19,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/
  */
-class AddOperator implements ResolvesToNumber, ResolvesToDate
+readonly class AddOperator implements ResolvesToNumber, ResolvesToDate
 {
     public const NAME = '$add';
     public const ENCODE = Encode::Array;

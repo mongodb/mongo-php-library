@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/millisecond/
  */
-class MillisecondOperator implements ResolvesToInt
+readonly class MillisecondOperator implements ResolvesToInt
 {
     public const NAME = '$millisecond';
     public const ENCODE = Encode::Object;

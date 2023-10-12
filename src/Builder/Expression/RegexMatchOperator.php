@@ -16,7 +16,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexMatch/
  */
-class RegexMatchOperator implements ResolvesToBool
+readonly class RegexMatchOperator implements ResolvesToBool
 {
     public const NAME = '$regexMatch';
     public const ENCODE = Encode::Object;

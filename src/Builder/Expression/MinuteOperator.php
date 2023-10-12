@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/
  */
-class MinuteOperator implements ResolvesToInt
+readonly class MinuteOperator implements ResolvesToInt
 {
     public const NAME = '$minute';
     public const ENCODE = Encode::Object;

@@ -18,7 +18,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitOr/
  */
-class BitOrOperator implements ResolvesToInt, ResolvesToLong
+readonly class BitOrOperator implements ResolvesToInt, ResolvesToLong
 {
     public const NAME = '$bitOr';
     public const ENCODE = Encode::Single;

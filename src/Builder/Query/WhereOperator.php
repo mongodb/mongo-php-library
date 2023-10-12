@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\QueryInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/where/
  */
-class WhereOperator implements QueryInterface
+readonly class WhereOperator implements QueryInterface
 {
     public const NAME = '$where';
     public const ENCODE = Encode::Single;

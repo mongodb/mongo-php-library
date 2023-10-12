@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/
  */
-class CosOperator implements ResolvesToDouble, ResolvesToDecimal
+readonly class CosOperator implements ResolvesToDouble, ResolvesToDecimal
 {
     public const NAME = '$cos';
     public const ENCODE = Encode::Single;

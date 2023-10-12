@@ -26,7 +26,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/not/
  */
-class NotOperator implements ResolvesToBool
+readonly class NotOperator implements ResolvesToBool
 {
     public const NAME = '$not';
     public const ENCODE = Encode::Single;

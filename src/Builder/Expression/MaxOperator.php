@@ -30,7 +30,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/
  */
-class MaxOperator implements ResolvesToAny
+readonly class MaxOperator implements ResolvesToAny
 {
     public const NAME = '$max';
     public const ENCODE = Encode::Single;

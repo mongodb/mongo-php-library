@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/binarySize/
  */
-class BinarySizeOperator implements ResolvesToInt
+readonly class BinarySizeOperator implements ResolvesToInt
 {
     public const NAME = '$binarySize';
     public const ENCODE = Encode::Single;

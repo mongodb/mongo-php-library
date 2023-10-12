@@ -20,7 +20,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/center/
  */
-class CenterOperator implements GeometryInterface
+readonly class CenterOperator implements GeometryInterface
 {
     public const NAME = '$center';
     public const ENCODE = Encode::Single;

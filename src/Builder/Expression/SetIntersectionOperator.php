@@ -18,7 +18,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setIntersection/
  */
-class SetIntersectionOperator implements ResolvesToArray
+readonly class SetIntersectionOperator implements ResolvesToArray
 {
     public const NAME = '$setIntersection';
     public const ENCODE = Encode::Single;

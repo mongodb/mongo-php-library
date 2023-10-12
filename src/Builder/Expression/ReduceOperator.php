@@ -30,7 +30,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/reduce/
  */
-class ReduceOperator implements ResolvesToAny
+readonly class ReduceOperator implements ResolvesToAny
 {
     public const NAME = '$reduce';
     public const ENCODE = Encode::Object;

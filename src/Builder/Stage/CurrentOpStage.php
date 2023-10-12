@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\StageInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/
  */
-class CurrentOpStage implements StageInterface
+readonly class CurrentOpStage implements StageInterface
 {
     public const NAME = '$currentOp';
     public const ENCODE = Encode::Object;

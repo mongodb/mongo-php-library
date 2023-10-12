@@ -19,7 +19,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/minN-array-element/
  */
-class MinNOperator implements ResolvesToArray
+readonly class MinNOperator implements ResolvesToArray
 {
     public const NAME = '$minN';
     public const ENCODE = Encode::Object;

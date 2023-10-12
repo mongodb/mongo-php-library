@@ -34,7 +34,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
  */
-class PercentileAccumulator implements AccumulatorInterface, WindowInterface
+readonly class PercentileAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$percentile';
     public const ENCODE = Encode::Object;

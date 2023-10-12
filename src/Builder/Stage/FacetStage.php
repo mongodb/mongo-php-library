@@ -21,7 +21,7 @@ use function is_string;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/
  */
-class FacetStage implements StageInterface
+readonly class FacetStage implements StageInterface
 {
     public const NAME = '$facet';
     public const ENCODE = Encode::Single;

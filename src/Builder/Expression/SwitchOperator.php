@@ -31,7 +31,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/
  */
-class SwitchOperator implements ResolvesToAny
+readonly class SwitchOperator implements ResolvesToAny
 {
     public const NAME = '$switch';
     public const ENCODE = Encode::Object;

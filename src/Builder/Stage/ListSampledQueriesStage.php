@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\StageInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSampledQueries/
  */
-class ListSampledQueriesStage implements StageInterface
+readonly class ListSampledQueriesStage implements StageInterface
 {
     public const NAME = '$listSampledQueries';
     public const ENCODE = Encode::Object;

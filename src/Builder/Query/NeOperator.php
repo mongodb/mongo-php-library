@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/ne/
  */
-class NeOperator implements FieldQueryInterface
+readonly class NeOperator implements FieldQueryInterface
 {
     public const NAME = '$ne';
     public const ENCODE = Encode::Single;

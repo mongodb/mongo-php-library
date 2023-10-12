@@ -31,7 +31,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/
  */
-class IsNumberOperator implements ResolvesToBool
+readonly class IsNumberOperator implements ResolvesToBool
 {
     public const NAME = '$isNumber';
     public const ENCODE = Encode::Single;

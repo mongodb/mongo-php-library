@@ -18,7 +18,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bitAnd/
  */
-class BitAndOperator implements ResolvesToInt, ResolvesToLong
+readonly class BitAndOperator implements ResolvesToInt, ResolvesToLong
 {
     public const NAME = '$bitAnd';
     public const ENCODE = Encode::Single;

@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoDayOfWeek/
  */
-class IsoDayOfWeekOperator implements ResolvesToInt
+readonly class IsoDayOfWeekOperator implements ResolvesToInt
 {
     public const NAME = '$isoDayOfWeek';
     public const ENCODE = Encode::Object;

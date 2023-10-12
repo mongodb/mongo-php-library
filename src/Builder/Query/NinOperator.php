@@ -20,7 +20,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/nin/
  */
-class NinOperator implements FieldQueryInterface
+readonly class NinOperator implements FieldQueryInterface
 {
     public const NAME = '$nin';
     public const ENCODE = Encode::Single;

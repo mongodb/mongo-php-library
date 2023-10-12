@@ -30,7 +30,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/push/
  */
-class PushAccumulator implements AccumulatorInterface, WindowInterface
+readonly class PushAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$push';
     public const ENCODE = Encode::Single;

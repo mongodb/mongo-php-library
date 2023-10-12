@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\WindowInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/documentNumber/
  */
-class DocumentNumberAccumulator implements WindowInterface
+readonly class DocumentNumberAccumulator implements WindowInterface
 {
     public const NAME = '$documentNumber';
     public const ENCODE = Encode::Object;

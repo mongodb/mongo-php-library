@@ -18,7 +18,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/
  */
-class GeoIntersectsOperator implements FieldQueryInterface
+readonly class GeoIntersectsOperator implements FieldQueryInterface
 {
     public const NAME = '$geoIntersects';
     public const ENCODE = Encode::Single;

@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/
  */
-class RtrimOperator implements ResolvesToString
+readonly class RtrimOperator implements ResolvesToString
 {
     public const NAME = '$rtrim';
     public const ENCODE = Encode::Object;

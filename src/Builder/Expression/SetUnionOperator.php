@@ -18,7 +18,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setUnion/
  */
-class SetUnionOperator implements ResolvesToArray
+readonly class SetUnionOperator implements ResolvesToArray
 {
     public const NAME = '$setUnion';
     public const ENCODE = Encode::Single;

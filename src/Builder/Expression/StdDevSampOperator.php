@@ -19,7 +19,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/
  */
-class StdDevSampOperator implements ResolvesToDouble
+readonly class StdDevSampOperator implements ResolvesToDouble
 {
     public const NAME = '$stdDevSamp';
     public const ENCODE = Encode::Single;

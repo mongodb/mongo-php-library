@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/
  */
-class CeilOperator implements ResolvesToInt
+readonly class CeilOperator implements ResolvesToInt
 {
     public const NAME = '$ceil';
     public const ENCODE = Encode::Single;

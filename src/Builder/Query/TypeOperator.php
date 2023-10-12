@@ -20,7 +20,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/type/
  */
-class TypeOperator implements FieldQueryInterface
+readonly class TypeOperator implements FieldQueryInterface
 {
     public const NAME = '$type';
     public const ENCODE = Encode::Single;

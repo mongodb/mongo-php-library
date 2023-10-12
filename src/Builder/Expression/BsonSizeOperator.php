@@ -16,7 +16,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/
  */
-class BsonSizeOperator implements ResolvesToInt
+readonly class BsonSizeOperator implements ResolvesToInt
 {
     public const NAME = '$bsonSize';
     public const ENCODE = Encode::Single;

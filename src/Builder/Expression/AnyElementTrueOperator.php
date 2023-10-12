@@ -19,7 +19,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/anyElementTrue/
  */
-class AnyElementTrueOperator implements ResolvesToBool
+readonly class AnyElementTrueOperator implements ResolvesToBool
 {
     public const NAME = '$anyElementTrue';
     public const ENCODE = Encode::Array;

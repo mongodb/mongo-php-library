@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/
  */
-class ToObjectIdOperator implements ResolvesToObjectId
+readonly class ToObjectIdOperator implements ResolvesToObjectId
 {
     public const NAME = '$toObjectId';
     public const ENCODE = Encode::Single;

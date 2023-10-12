@@ -19,7 +19,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/
  */
-class NearSphereOperator implements FieldQueryInterface
+readonly class NearSphereOperator implements FieldQueryInterface
 {
     public const NAME = '$nearSphere';
     public const ENCODE = Encode::Object;

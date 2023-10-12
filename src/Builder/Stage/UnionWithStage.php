@@ -23,7 +23,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionWith/
  */
-class UnionWithStage implements StageInterface
+readonly class UnionWithStage implements StageInterface
 {
     public const NAME = '$unionWith';
     public const ENCODE = Encode::Object;

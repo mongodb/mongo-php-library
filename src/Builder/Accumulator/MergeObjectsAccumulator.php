@@ -21,7 +21,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/mergeObjects/
  */
-class MergeObjectsAccumulator implements AccumulatorInterface
+readonly class MergeObjectsAccumulator implements AccumulatorInterface
 {
     public const NAME = '$mergeObjects';
     public const ENCODE = Encode::Single;

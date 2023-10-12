@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\FieldQueryInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/minDistance/
  */
-class MinDistanceOperator implements FieldQueryInterface
+readonly class MinDistanceOperator implements FieldQueryInterface
 {
     public const NAME = '$minDistance';
     public const ENCODE = Encode::Single;

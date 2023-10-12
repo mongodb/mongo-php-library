@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/
  */
-class ToStringOperator implements ResolvesToString
+readonly class ToStringOperator implements ResolvesToString
 {
     public const NAME = '$toString';
     public const ENCODE = Encode::Single;

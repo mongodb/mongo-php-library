@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\FieldQueryInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/mod/
  */
-class ModOperator implements FieldQueryInterface
+readonly class ModOperator implements FieldQueryInterface
 {
     public const NAME = '$mod';
     public const ENCODE = Encode::Array;

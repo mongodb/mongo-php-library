@@ -22,7 +22,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/
  */
-class SortArrayOperator implements ResolvesToArray
+readonly class SortArrayOperator implements ResolvesToArray
 {
     public const NAME = '$sortArray';
     public const ENCODE = Encode::Object;

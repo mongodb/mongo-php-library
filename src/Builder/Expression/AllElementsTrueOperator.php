@@ -18,7 +18,7 @@ use function array_is_list;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/allElementsTrue/
  */
-class AllElementsTrueOperator implements ResolvesToBool
+readonly class AllElementsTrueOperator implements ResolvesToBool
 {
     public const NAME = '$allElementsTrue';
     public const ENCODE = Encode::Array;

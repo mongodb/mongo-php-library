@@ -28,7 +28,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/
  */
-class RedactStage implements StageInterface
+readonly class RedactStage implements StageInterface
 {
     public const NAME = '$redact';
     public const ENCODE = Encode::Single;

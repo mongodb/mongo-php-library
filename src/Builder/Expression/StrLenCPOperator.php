@@ -13,7 +13,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/
  */
-class StrLenCPOperator implements ResolvesToInt
+readonly class StrLenCPOperator implements ResolvesToInt
 {
     public const NAME = '$strLenCP';
     public const ENCODE = Encode::Single;

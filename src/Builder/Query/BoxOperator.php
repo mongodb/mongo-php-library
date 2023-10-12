@@ -20,7 +20,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/box/
  */
-class BoxOperator implements GeometryInterface
+readonly class BoxOperator implements GeometryInterface
 {
     public const NAME = '$box';
     public const ENCODE = Encode::Single;

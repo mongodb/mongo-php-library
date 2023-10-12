@@ -29,7 +29,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/shift/
  */
-class ShiftAccumulator implements WindowInterface
+readonly class ShiftAccumulator implements WindowInterface
 {
     public const NAME = '$shift';
     public const ENCODE = Encode::Object;

@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/
  */
-class ToDateOperator implements ResolvesToDate
+readonly class ToDateOperator implements ResolvesToDate
 {
     public const NAME = '$toDate';
     public const ENCODE = Encode::Single;

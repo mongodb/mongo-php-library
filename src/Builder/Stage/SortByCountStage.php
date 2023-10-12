@@ -28,7 +28,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/
  */
-class SortByCountStage implements StageInterface
+readonly class SortByCountStage implements StageInterface
 {
     public const NAME = '$sortByCount';
     public const ENCODE = Encode::Object;

@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexOfArray/
  */
-class IndexOfArrayOperator implements ResolvesToInt
+readonly class IndexOfArrayOperator implements ResolvesToInt
 {
     public const NAME = '$indexOfArray';
     public const ENCODE = Encode::Array;

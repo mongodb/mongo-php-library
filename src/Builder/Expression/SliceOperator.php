@@ -21,7 +21,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/slice/
  */
-class SliceOperator implements ResolvesToArray, ProjectionInterface
+readonly class SliceOperator implements ResolvesToArray, ProjectionInterface
 {
     public const NAME = '$slice';
     public const ENCODE = Encode::Array;

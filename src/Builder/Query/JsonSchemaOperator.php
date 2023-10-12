@@ -17,7 +17,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/
  */
-class JsonSchemaOperator implements QueryInterface
+readonly class JsonSchemaOperator implements QueryInterface
 {
     public const NAME = '$jsonSchema';
     public const ENCODE = Encode::Single;

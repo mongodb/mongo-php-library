@@ -27,7 +27,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/
  */
-class ToDecimalOperator implements ResolvesToDecimal
+readonly class ToDecimalOperator implements ResolvesToDecimal
 {
     public const NAME = '$toDecimal';
     public const ENCODE = Encode::Single;

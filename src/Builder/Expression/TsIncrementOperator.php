@@ -15,7 +15,7 @@ use MongoDB\Builder\Type\Encode;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tsIncrement/
  */
-class TsIncrementOperator implements ResolvesToLong
+readonly class TsIncrementOperator implements ResolvesToLong
 {
     public const NAME = '$tsIncrement';
     public const ENCODE = Encode::Single;

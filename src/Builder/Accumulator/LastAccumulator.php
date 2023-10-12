@@ -30,7 +30,7 @@ use stdClass;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/
  */
-class LastAccumulator implements AccumulatorInterface, WindowInterface
+readonly class LastAccumulator implements AccumulatorInterface, WindowInterface
 {
     public const NAME = '$last';
     public const ENCODE = Encode::Single;

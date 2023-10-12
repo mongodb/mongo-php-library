@@ -31,7 +31,7 @@ use function is_string;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/
  */
-class AddFieldsStage implements StageInterface
+readonly class AddFieldsStage implements StageInterface
 {
     public const NAME = '$addFields';
     public const ENCODE = Encode::Single;

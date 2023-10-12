@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\FieldQueryInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/maxDistance/
  */
-class MaxDistanceOperator implements FieldQueryInterface
+readonly class MaxDistanceOperator implements FieldQueryInterface
 {
     public const NAME = '$maxDistance';
     public const ENCODE = Encode::Single;

@@ -29,7 +29,7 @@ use function is_array;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
  */
-class PercentileOperator implements ResolvesToArray
+readonly class PercentileOperator implements ResolvesToArray
 {
     public const NAME = '$percentile';
     public const ENCODE = Encode::Object;

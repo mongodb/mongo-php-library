@@ -14,7 +14,7 @@ use MongoDB\Builder\Type\FieldQueryInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/size/
  */
-class SizeOperator implements FieldQueryInterface
+readonly class SizeOperator implements FieldQueryInterface
 {
     public const NAME = '$size';
     public const ENCODE = Encode::Single;

@@ -16,7 +16,7 @@ use MongoDB\Builder\Type\Optional;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/regexFindAll/
  */
-class RegexFindAllOperator implements ResolvesToArray
+readonly class RegexFindAllOperator implements ResolvesToArray
 {
     public const NAME = '$regexFindAll';
     public const ENCODE = Encode::Object;

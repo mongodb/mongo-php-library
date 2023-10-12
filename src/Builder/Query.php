@@ -13,6 +13,11 @@ use stdClass;
 
 use function is_string;
 
+/**
+ * Factories for Query Operators
+ *
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/
+ */
 enum Query
 {
     use Query\FactoryTrait {

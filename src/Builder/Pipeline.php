@@ -9,34 +9,43 @@ use MongoDB\Exception\InvalidArgumentException;
 use Traversable;
 
 use function array_is_list;
+use function array_merge;
 
-/** @template-implements IteratorAggregate<StageInterface> */
-class Pipeline implements IteratorAggregate
+/**
+ * An aggregation pipeline consists of one or more stages that process documents.
+ *
+ * @see https://www.mongodb.com/docs/manual/core/aggregation-pipeline/
+ *
+ * @psalm-immutable
+ * @template-implements IteratorAggregate<StageInterface>
+ */
+readonly class Pipeline implements IteratorAggregate
 {
     /** @var StageInterface[] */
-    private array $stages = [];
+    private array $stages;
 
-    public function __construct(StageInterface|Pipeline ...$stages)
+    /** @no-named-arguments */
+    public function __construct(StageInterface|Pipeline ...$stagesOrPipelines)
     {
-        $this->add(...$stages);
-    }
-
-    /** @return $this */
-    public function add(StageInterface|Pipeline ...$stages): static
-    {
-        if (! array_is_list($stages)) {
-            throw new InvalidArgumentException('Expected $stages argument to be a list, got an associative array.');
+        if (! array_is_list($stagesOrPipelines)) {
+            throw new InvalidArgumentException('Named arguments are not supported for pipelines');
         }
 
-        foreach ($stages as $stage) {
-            if ($stage instanceof Pipeline) {
-                $this->add(...$stage->stages);
+        if (empty($stagesOrPipelines)) {
+            throw new InvalidArgumentException('At least one stage must be provided');
+        }
+
+        $stages = [];
+
+        foreach ($stagesOrPipelines as $stageOrPipeline) {
+            if ($stageOrPipeline instanceof Pipeline) {
+                $stages = array_merge($stages, $stageOrPipeline->stages);
             } else {
-                $this->stages[] = $stage;
+                $stages[] = $stageOrPipeline;
             }
         }
 
-        return $this;
+        $this->stages = $stages;
     }
 
     public function getIterator(): Traversable

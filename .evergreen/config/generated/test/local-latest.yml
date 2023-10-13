@@ -1,0 +1,34 @@
+# This file is generated automatically - please edit the "templates/test/local.yml" template file instead.
+tasks:
+  - name: "test-mongodb-latest-standalone-noauth-nossl"
+    tags: ["standalone", "local", "latest"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "server"
+          MONGODB_VERSION: "latest"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+
+  - name: "test-mongodb-latest-replicaset-noauth-nossl"
+    tags: ["replicaset", "local", "latest"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "replica_set"
+          MONGODB_VERSION: "latest"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+
+  - name: "test-mongodb-latest-sharded-noauth-nossl"
+    tags: ["sharded", "local", "latest"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "sharded_cluster"
+          MONGODB_VERSION: "latest"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"

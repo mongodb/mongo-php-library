@@ -9,10 +9,9 @@ command_type: system
 # Fail builds when pre tasks fail.
 pre_error_fails_task: true
 
-# Protect ourselves against rogue test case that runs forever
-# Good rule of thumb: the average length a task takes, times 5, which roughly accounts for variable system performance
-# for various build variants
-exec_timeout_secs: 1800
+# Protect ourselves against rogue test case that runs forever. Tasks are killed after 10 minutes, which shouldn't occur
+# under normal circumstances.
+exec_timeout_secs: 600
 
 # These pre and post rules apply to all tasks not part of a task group, which should only ever be tests against local
 # MongoDB instances. All other tasks that require special preparation should be run from within a task group
@@ -51,33 +50,33 @@ include:
   - filename: .evergreen/config/test-variants.yml
 
   # Automatically generated files
-  - filename: .evergreen/config/build/build-php-8.2.yml
-  - filename: .evergreen/config/build/build-php-8.1.yml
-  - filename: .evergreen/config/build/build-php-8.0.yml
-  - filename: .evergreen/config/build/build-php-7.4.yml
-  - filename: .evergreen/config/test/local-latest.yml
-  - filename: .evergreen/config/test/local-rapid.yml
-  - filename: .evergreen/config/test/local-7.0.yml
-  - filename: .evergreen/config/test/local-6.0.yml
-  - filename: .evergreen/config/test/local-5.0.yml
-  - filename: .evergreen/config/test/local-4.4.yml
-  - filename: .evergreen/config/test/local-4.2.yml
-  - filename: .evergreen/config/test/local-4.0.yml
-  - filename: .evergreen/config/test/local-3.6.yml
-  - filename: .evergreen/config/test/load-balanced-latest.yml
-  - filename: .evergreen/config/test/load-balanced-rapid.yml
-  - filename: .evergreen/config/test/load-balanced-7.0.yml
-  - filename: .evergreen/config/test/load-balanced-6.0.yml
-  - filename: .evergreen/config/test/load-balanced-5.0.yml
-  - filename: .evergreen/config/test/require-api-version-latest.yml
-  - filename: .evergreen/config/test/require-api-version-rapid.yml
-  - filename: .evergreen/config/test/require-api-version-7.0.yml
-  - filename: .evergreen/config/test/require-api-version-6.0.yml
-  - filename: .evergreen/config/test/require-api-version-5.0.yml
-  - filename: .evergreen/config/test/csfle-latest.yml
-  - filename: .evergreen/config/test/csfle-rapid.yml
-  - filename: .evergreen/config/test/csfle-7.0.yml
-  - filename: .evergreen/config/test/csfle-6.0.yml
-  - filename: .evergreen/config/test/csfle-5.0.yml
-  - filename: .evergreen/config/test/csfle-4.4.yml
-  - filename: .evergreen/config/test/csfle-4.2.yml
+  - filename: .evergreen/config/generated/build/build-php-8.2.yml
+  - filename: .evergreen/config/generated/build/build-php-8.1.yml
+  - filename: .evergreen/config/generated/build/build-php-8.0.yml
+  - filename: .evergreen/config/generated/build/build-php-7.4.yml
+  - filename: .evergreen/config/generated/test/local-latest.yml
+  - filename: .evergreen/config/generated/test/local-rapid.yml
+  - filename: .evergreen/config/generated/test/local-7.0.yml
+  - filename: .evergreen/config/generated/test/local-6.0.yml
+  - filename: .evergreen/config/generated/test/local-5.0.yml
+  - filename: .evergreen/config/generated/test/local-4.4.yml
+  - filename: .evergreen/config/generated/test/local-4.2.yml
+  - filename: .evergreen/config/generated/test/local-4.0.yml
+  - filename: .evergreen/config/generated/test/local-3.6.yml
+  - filename: .evergreen/config/generated/test/load-balanced-latest.yml
+  - filename: .evergreen/config/generated/test/load-balanced-rapid.yml
+  - filename: .evergreen/config/generated/test/load-balanced-7.0.yml
+  - filename: .evergreen/config/generated/test/load-balanced-6.0.yml
+  - filename: .evergreen/config/generated/test/load-balanced-5.0.yml
+  - filename: .evergreen/config/generated/test/require-api-version-latest.yml
+  - filename: .evergreen/config/generated/test/require-api-version-rapid.yml
+  - filename: .evergreen/config/generated/test/require-api-version-7.0.yml
+  - filename: .evergreen/config/generated/test/require-api-version-6.0.yml
+  - filename: .evergreen/config/generated/test/require-api-version-5.0.yml
+  - filename: .evergreen/config/generated/test/csfle-latest.yml
+  - filename: .evergreen/config/generated/test/csfle-rapid.yml
+  - filename: .evergreen/config/generated/test/csfle-7.0.yml
+  - filename: .evergreen/config/generated/test/csfle-6.0.yml
+  - filename: .evergreen/config/generated/test/csfle-5.0.yml
+  - filename: .evergreen/config/generated/test/csfle-4.4.yml
+  - filename: .evergreen/config/generated/test/csfle-4.2.yml

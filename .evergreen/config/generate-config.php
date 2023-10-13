@@ -2,13 +2,23 @@
 <?php
 
 // Supported PHP versions. Add new versions to the beginning of the list
-$supportedPhpVersions = ['8.2', '8.1', '8.0', '7.4'];
+$supportedPhpVersions = [
+    '8.2',
+    '8.1',
+    '8.0',
+    '7.4'
+];
 
 // Supported MongoDB versions. Add new versions after "rapid"
 $supportedMongoDBVersions = [
-    'latest', 'rapid',
-    '7.0', '6.0', '5.0',
-    '4.4', '4.2', '4.0',
+    'latest',
+    'rapid',
+    '7.0',
+    '6.0',
+    '5.0',
+    '4.4',
+    '4.2',
+    '4.0',
     '3.6',
 ];
 
@@ -33,13 +43,13 @@ $csfleServerVersions = array_filter(
 $allFiles = [];
 
 // Build tasks
-$allFiles[] = generateConfigs('build', 'phpVersion', '_template-build-extension.yml', 'build-php-%s', $supportedPhpVersions);
+$allFiles[] = generateConfigs('build', 'phpVersion', 'build-extension.yml', 'build-php-%s', $supportedPhpVersions);
 
 // Test tasks
-$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-local.yml', 'local-%s', $localServerVersions);
-$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-load-balanced.yml', 'load-balanced-%s', $loadBalancedServerVersions);
-$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-require-api-version.yml', 'require-api-version-%s', $requireApiServerVersions);
-$allFiles[] = generateConfigs('test', 'mongodbVersion', '_template-csfle.yml', 'csfle-%s', $csfleServerVersions);
+$allFiles[] = generateConfigs('test', 'mongodbVersion', 'local.yml', 'local-%s', $localServerVersions);
+$allFiles[] = generateConfigs('test', 'mongodbVersion', 'load-balanced.yml', 'load-balanced-%s', $loadBalancedServerVersions);
+$allFiles[] = generateConfigs('test', 'mongodbVersion', 'require-api-version.yml', 'require-api-version-%s', $requireApiServerVersions);
+$allFiles[] = generateConfigs('test', 'mongodbVersion', 'csfle.yml', 'csfle-%s', $csfleServerVersions);
 
 echo "Generated config. Use the following list to import files:\n";
 echo implode("\n", array_map('getImportConfig', array_merge(...$allFiles))) . "\n";
@@ -56,13 +66,17 @@ function generateConfigs(
     string $outputFormat,
     array $versions,
 ): array {
-    $template = file_get_contents(__DIR__ . '/' . $directory . '/' . $templateFile);
-    $header = '# This file is generated automatically - please edit the corresponding template file!';
+    $templateRelativePath = 'templates/' . $directory . '/' . $templateFile;
+    $template = file_get_contents(__DIR__ . '/' . $templateRelativePath);
+    $header = sprintf(
+        '# This file is generated automatically - please edit the "%s" template file instead.',
+        $templateRelativePath
+    );
 
     $files = [];
 
     foreach ($versions as $version) {
-        $filename = sprintf('/%s/' . $outputFormat . '.yml', $directory, $version);
+        $filename = sprintf('/generated/%s/' . $outputFormat . '.yml', $directory, $version);
         $files[] = '.evergreen/config' . $filename;
 
         $replacements = ['%' . $replacementName . '%' => $version];
@@ -72,4 +86,3 @@ function generateConfigs(
 
     return $files;
 }
-

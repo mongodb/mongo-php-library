@@ -1,0 +1,17 @@
+tasks:
+  - name: "test-mongodb-%mongodbVersion%-loadbalanced"
+    tags: ["loadbalanced", "local", "%mongodbVersion%"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "sharded_cluster"
+          MONGODB_VERSION: "%mongodbVersion%"
+          LOAD_BALANCER: "true"
+          SSL: "yes"
+      - func: "start load balancer"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
+          SSL: "yes"

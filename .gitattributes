@@ -16,7 +16,4 @@ psalm.xml.dist export-ignore
 psalm-baseline.xml export-ignore
 
 # Prevent generated build files from showing diffs in pull requests
-.evergreen/config/build/*.yml linguist-generated=true
-.evergreen/config/build/_template*.yml linguist-generated=false
-.evergreen/config/test/*.yml linguist-generated=true
-.evergreen/config/test/_template*.yml linguist-generated=false
+.evergreen/config/generated/** linguist-generated=true

@@ -19,6 +19,7 @@ buildvariants:
       - ".standalone .local !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
       - ".replicaset .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
       - ".sharded .local !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      - ".loadbalanced .local !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
       - ".serverless"
       - "test-atlas-data-lake"
   - name: test-debian92-php82-local
@@ -37,6 +38,7 @@ buildvariants:
       - ".standalone .local !.6.0 !.7.0 !.rapid !.latest"
       - ".replicaset .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
       - ".sharded .local !.6.0 !.7.0 !.rapid !.latest"
+      - ".loadbalanced .local !.6.0 !.7.0 !.rapid !.latest"
 
   # Test remaining PHP versions with replica sets on Debian 11 with MongoDB 7.0
   - name: test-debian11-php81-local

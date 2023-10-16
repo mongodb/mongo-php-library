@@ -10,13 +10,10 @@ use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
-use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
-use MongoDB\BSON\Timestamp;
-use MongoDB\BSON\UTCDateTime;
-use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\GeometryInterface;
 use MongoDB\Builder\Type\Optional;
@@ -33,11 +30,9 @@ trait FactoryTrait
      * Matches arrays that contain all elements specified in the query.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/all/
-     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass ...$value
+     * @param Type|array|bool|float|int|non-empty-string|null|stdClass ...$value
      */
-    public static function all(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string ...$value,
-    ): AllOperator
+    public static function all(Type|stdClass|array|bool|float|int|null|string ...$value): AllOperator
     {
         return new AllOperator(...$value);
     }
@@ -156,11 +151,9 @@ trait FactoryTrait
      * Matches values that are equal to a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/eq/
-     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
      */
-    public static function eq(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
-    ): EqOperator
+    public static function eq(Type|stdClass|array|bool|float|int|null|string $value): EqOperator
     {
         return new EqOperator($value);
     }
@@ -180,10 +173,10 @@ trait FactoryTrait
      * Allows use of aggregation expressions within the query language.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/expr/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function expr(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): ExprOperator
     {
         return new ExprOperator($expression);
@@ -236,11 +229,9 @@ trait FactoryTrait
      * Matches values that are greater than a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/gt/
-     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
      */
-    public static function gt(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
-    ): GtOperator
+    public static function gt(Type|stdClass|array|bool|float|int|null|string $value): GtOperator
     {
         return new GtOperator($value);
     }
@@ -249,11 +240,9 @@ trait FactoryTrait
      * Matches values that are greater than or equal to a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/gte/
-     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
      */
-    public static function gte(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
-    ): GteOperator
+    public static function gte(Type|stdClass|array|bool|float|int|null|string $value): GteOperator
     {
         return new GteOperator($value);
     }
@@ -284,11 +273,9 @@ trait FactoryTrait
      * Matches values that are less than a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/lt/
-     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
      */
-    public static function lt(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
-    ): LtOperator
+    public static function lt(Type|stdClass|array|bool|float|int|null|string $value): LtOperator
     {
         return new LtOperator($value);
     }
@@ -297,11 +284,9 @@ trait FactoryTrait
      * Matches values that are less than or equal to a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/lte/
-     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
      */
-    public static function lte(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
-    ): LteOperator
+    public static function lte(Type|stdClass|array|bool|float|int|null|string $value): LteOperator
     {
         return new LteOperator($value);
     }
@@ -310,9 +295,9 @@ trait FactoryTrait
      * Specifies a maximum distance to limit the results of $near and $nearSphere queries. The 2dsphere and 2d indexes support $maxDistance.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/maxDistance/
-     * @param Decimal128|Int64|ResolvesToInt|float|int $value
+     * @param Decimal128|Int64|float|int $value
      */
-    public static function maxDistance(Decimal128|Int64|ResolvesToInt|float|int $value): MaxDistanceOperator
+    public static function maxDistance(Decimal128|Int64|float|int $value): MaxDistanceOperator
     {
         return new MaxDistanceOperator($value);
     }
@@ -354,11 +339,9 @@ trait FactoryTrait
      * Matches all values that are not equal to a specified value.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/ne/
-     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
      */
-    public static function ne(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
-    ): NeOperator
+    public static function ne(Type|stdClass|array|bool|float|int|null|string $value): NeOperator
     {
         return new NeOperator($value);
     }

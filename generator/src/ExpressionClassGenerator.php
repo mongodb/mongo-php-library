@@ -12,6 +12,7 @@ use RuntimeException;
 use Throwable;
 
 use function array_map;
+use function ucfirst;
 use function var_export;
 
 /**
@@ -64,8 +65,15 @@ class ExpressionClassGenerator extends AbstractGenerator
             $constructor->addParameter('name')->setType($propertyType);
             $constructor->addBody('$this->name = $name;');
         } elseif ($definition->generate === PhpObject::PhpInterface) {
-            $class = $namespace->addInterface($className);
-            $class->setExtends($definition->implements);
+            $interface = $namespace->addInterface($className);
+            $interface->setExtends($definition->implements);
+        } elseif ($definition->generate === PhpObject::PhpEnum) {
+            $enum = $namespace->addEnum($className);
+            $enum->setType('string');
+            array_map(
+                fn (string $case) => $enum->addCase(ucfirst($case), $case),
+                $definition->values,
+            );
         } else {
             throw new LogicException('Unknown generate type: ' . var_export($definition->generate, true));
         }

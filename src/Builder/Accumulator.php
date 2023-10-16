@@ -9,6 +9,12 @@ use MongoDB\Builder\Type\OutputWindow;
 use MongoDB\Builder\Type\WindowInterface;
 use stdClass;
 
+/**
+ * Factories for Aggregation Pipeline Accumulator and Window Operators
+ *
+ * @see https://www.mongodb.com/docs/v3.4/reference/operator/aggregation-group/
+ * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setWindowFields/
+ */
 enum Accumulator
 {
     use Accumulator\FactoryTrait;

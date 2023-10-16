@@ -11,9 +11,6 @@ use MongoDB\CodeGenerator\Definition\PhpObject;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
-use function array_merge;
-use function array_unique;
-use function array_values;
 use function ucfirst;
 
 $bsonTypes = [
@@ -30,18 +27,18 @@ $bsonTypes = [
     'date' => [BSON\UTCDateTime::class],
     'null' => ['null'],
     'regex' => [BSON\Regex::class],
-    'javascript' => ['string'],
+    'javascript' => ['string', BSON\Javascript::class],
     'int' => ['int'],
     'timestamp' => ['int', BSON\Timestamp::class],
-    'long' => ['int', BSON\Int64::class, ResolvesToInt::class],
+    'long' => ['int', BSON\Int64::class],
     'decimal' => ['int', BSON\Int64::class, 'float', BSON\Decimal128::class],
 ];
 
 // "any" accepts all the BSON types. No generic "object" or "mixed"
-$bsonTypes['any'] = array_unique(array_merge(...array_values($bsonTypes)));
+$bsonTypes['any'] = ['bool', 'int', 'float', 'string', 'array', 'null', stdClass::class, BSON\Type::class];
 
 // "number" accepts all the numeric types
-$bsonTypes['number'] = array_unique(array_merge($bsonTypes['int'], $bsonTypes['double'], $bsonTypes['long'], $bsonTypes['decimal']));
+$bsonTypes['number'] = ['int', 'float', BSON\Int64::class, BSON\Decimal128::class];
 
 $expressions = [];
 $resolvesToInterfaces = [];

@@ -6,20 +6,10 @@
 
 namespace MongoDB\Builder\Expression;
 
-use MongoDB\BSON\Binary;
-use MongoDB\BSON\Decimal128;
-use MongoDB\BSON\Document;
-use MongoDB\BSON\Int64;
-use MongoDB\BSON\ObjectId;
-use MongoDB\BSON\PackedArray;
-use MongoDB\BSON\Regex;
-use MongoDB\BSON\Serializable;
-use MongoDB\BSON\Timestamp;
-use MongoDB\BSON\UTCDateTime;
+use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Exception\InvalidArgumentException;
-use MongoDB\Model\BSONArray;
 use stdClass;
 
 use function array_is_list;
@@ -34,15 +24,15 @@ readonly class OrOperator implements ResolvesToBool
     public const NAME = '$or';
     public const ENCODE = Encode::Single;
 
-    /** @param list<BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToBool|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass> ...$expression */
+    /** @param list<ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|non-empty-string|null|stdClass> ...$expression */
     public array $expression;
 
     /**
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToBool|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      * @no-named-arguments
      */
     public function __construct(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToBool|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string ...$expression,
+        Type|ResolvesToBool|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
     ) {
         if (\count($expression) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));

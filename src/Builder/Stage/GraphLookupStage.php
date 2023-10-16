@@ -6,26 +6,21 @@
 
 namespace MongoDB\Builder\Stage;
 
-use MongoDB\BSON\Binary;
-use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
-use MongoDB\BSON\Int64;
-use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\PackedArray;
-use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
-use MongoDB\BSON\Timestamp;
-use MongoDB\BSON\UTCDateTime;
-use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
 use MongoDB\Builder\Type\StageInterface;
+use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
+use function array_is_list;
 use function is_array;
 use function is_object;
 
@@ -45,8 +40,8 @@ readonly class GraphLookupStage implements StageInterface
      */
     public string $from;
 
-    /** @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process. */
-    public Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $startWith;
+    /** @param BSONArray|ExpressionInterface|PackedArray|Type|array|bool|float|int|non-empty-string|null|stdClass $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process. */
+    public PackedArray|Type|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $startWith;
 
     /** @param non-empty-string $connectFromField Field name whose value $graphLookup uses to recursively match against the connectToField of other documents in the collection. If the value is an array, each element is individually followed through the traversal process. */
     public string $connectFromField;
@@ -69,7 +64,7 @@ readonly class GraphLookupStage implements StageInterface
     /**
      * @param non-empty-string $from Target collection for the $graphLookup operation to search, recursively matching the connectFromField to the connectToField. The from collection must be in the same database as any other collections used in the operation.
      * Starting in MongoDB 5.1, the collection specified in the from parameter can be sharded.
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process.
+     * @param BSONArray|ExpressionInterface|PackedArray|Type|array|bool|float|int|non-empty-string|null|stdClass $startWith Expression that specifies the value of the connectFromField with which to start the recursive search. Optionally, startWith may be array of values, each of which is individually followed through the traversal process.
      * @param non-empty-string $connectFromField Field name whose value $graphLookup uses to recursively match against the connectToField of other documents in the collection. If the value is an array, each element is individually followed through the traversal process.
      * @param non-empty-string $connectToField Field name in other documents against which to match the value of the field specified by the connectFromField parameter.
      * @param non-empty-string $as Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the document.
@@ -79,7 +74,7 @@ readonly class GraphLookupStage implements StageInterface
      */
     public function __construct(
         string $from,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $startWith,
+        PackedArray|Type|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $startWith,
         string $connectFromField,
         string $connectToField,
         string $as,
@@ -88,6 +83,10 @@ readonly class GraphLookupStage implements StageInterface
         Optional|Document|Serializable|QueryInterface|stdClass|array $restrictSearchWithMatch = Optional::Undefined,
     ) {
         $this->from = $from;
+        if (is_array($startWith) && ! array_is_list($startWith)) {
+            throw new InvalidArgumentException('Expected $startWith argument to be a list, got an associative array.');
+        }
+
         $this->startWith = $startWith;
         $this->connectFromField = $connectFromField;
         $this->connectToField = $connectToField;

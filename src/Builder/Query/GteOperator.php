@@ -6,20 +6,9 @@
 
 namespace MongoDB\Builder\Query;
 
-use MongoDB\BSON\Binary;
-use MongoDB\BSON\Decimal128;
-use MongoDB\BSON\Document;
-use MongoDB\BSON\Int64;
-use MongoDB\BSON\ObjectId;
-use MongoDB\BSON\PackedArray;
-use MongoDB\BSON\Regex;
-use MongoDB\BSON\Serializable;
-use MongoDB\BSON\Timestamp;
-use MongoDB\BSON\UTCDateTime;
-use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\FieldQueryInterface;
-use MongoDB\Model\BSONArray;
 use stdClass;
 
 /**
@@ -32,15 +21,14 @@ readonly class GteOperator implements FieldQueryInterface
     public const NAME = '$gte';
     public const ENCODE = Encode::Single;
 
-    /** @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value */
-    public Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value;
+    /** @param Type|array|bool|float|int|non-empty-string|null|stdClass $value */
+    public Type|stdClass|array|bool|float|int|null|string $value;
 
     /**
-     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value
+     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value
      */
-    public function __construct(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
-    ) {
+    public function __construct(Type|stdClass|array|bool|float|int|null|string $value)
+    {
         $this->value = $value;
     }
 }

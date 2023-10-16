@@ -15,6 +15,7 @@ use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
 use MongoDB\BSON\Timestamp;
+use MongoDB\BSON\Type;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\Optional;
@@ -30,9 +31,9 @@ trait FactoryTrait
      * Returns the absolute value of a number.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $value
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $value
      */
-    public static function abs(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $value): AbsOperator
+    public static function abs(Decimal128|Int64|ResolvesToNumber|float|int $value): AbsOperator
     {
         return new AbsOperator($value);
     }
@@ -41,11 +42,11 @@ trait FactoryTrait
      * Returns the inverse cosine (arc cosine) of a value in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $acos takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $acos takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
      * $acos returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $acos returns values as a double. $acos can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function acos(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): AcosOperator
+    public static function acos(Decimal128|Int64|ResolvesToNumber|float|int $expression): AcosOperator
     {
         return new AcosOperator($expression);
     }
@@ -54,11 +55,11 @@ trait FactoryTrait
      * Returns the inverse hyperbolic cosine (hyperbolic arc cosine) of a value in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $acosh takes any valid expression that resolves to a number between 1 and +Infinity, e.g. 1 <= value <= +Infinity.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $acosh takes any valid expression that resolves to a number between 1 and +Infinity, e.g. 1 <= value <= +Infinity.
      * $acosh returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $acosh returns values as a double. $acosh can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function acosh(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): AcoshOperator
+    public static function acosh(Decimal128|Int64|ResolvesToNumber|float|int $expression): AcoshOperator
     {
         return new AcoshOperator($expression);
     }
@@ -67,10 +68,10 @@ trait FactoryTrait
      * Adds numbers to return the sum, or adds numbers and a date to return a new date. If adding numbers and a date, treats the numbers as milliseconds. Accepts any number of argument expressions, but at most, one expression can resolve to a date.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/
-     * @param Decimal128|Int64|ResolvesToDate|ResolvesToInt|ResolvesToNumber|UTCDateTime|float|int ...$expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date.
+     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int ...$expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date.
      */
     public static function add(
-        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToInt|ResolvesToNumber|float|int ...$expression,
+        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int ...$expression,
     ): AddOperator
     {
         return new AddOperator(...$expression);
@@ -93,10 +94,10 @@ trait FactoryTrait
      * Returns true only when all its expressions evaluate to true. Accepts any number of argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/and/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToBool|ResolvesToInt|ResolvesToNull|ResolvesToNumber|ResolvesToString|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function and(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToBool|ResolvesToInt|ResolvesToNull|ResolvesToNumber|ResolvesToString|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string ...$expression,
+        Decimal128|Int64|Type|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
     ): AndOperator
     {
         return new AndOperator(...$expression);
@@ -145,11 +146,11 @@ trait FactoryTrait
      * Returns the inverse sin (arc sine) of a value in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $asin takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $asin takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
      * $asin returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $asin returns values as a double. $asin can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function asin(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): AsinOperator
+    public static function asin(Decimal128|Int64|ResolvesToNumber|float|int $expression): AsinOperator
     {
         return new AsinOperator($expression);
     }
@@ -158,11 +159,11 @@ trait FactoryTrait
      * Returns the inverse hyperbolic sine (hyperbolic arc sine) of a value in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $asinh takes any valid expression that resolves to a number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $asinh takes any valid expression that resolves to a number.
      * $asinh returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $asinh returns values as a double. $asinh can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function asinh(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): AsinhOperator
+    public static function asinh(Decimal128|Int64|ResolvesToNumber|float|int $expression): AsinhOperator
     {
         return new AsinhOperator($expression);
     }
@@ -171,11 +172,11 @@ trait FactoryTrait
      * Returns the inverse tangent (arc tangent) of a value in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $atan takes any valid expression that resolves to a number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $atan takes any valid expression that resolves to a number.
      * $atan returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $atan returns values as a double. $atan can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function atan(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): AtanOperator
+    public static function atan(Decimal128|Int64|ResolvesToNumber|float|int $expression): AtanOperator
     {
         return new AtanOperator($expression);
     }
@@ -184,14 +185,14 @@ trait FactoryTrait
      * Returns the inverse tangent (arc tangent) of y / x in radians, where y and x are the first and second values passed to the expression respectively.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan2/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $y $atan2 takes any valid expression that resolves to a number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $y $atan2 takes any valid expression that resolves to a number.
      * $atan2 returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $atan returns values as a double. $atan2 can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $x
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $x
      */
     public static function atan2(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $y,
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $x,
+        Decimal128|Int64|ResolvesToNumber|float|int $y,
+        Decimal128|Int64|ResolvesToNumber|float|int $x,
     ): Atan2Operator
     {
         return new Atan2Operator($y, $x);
@@ -201,11 +202,11 @@ trait FactoryTrait
      * Returns the inverse hyperbolic tangent (hyperbolic arc tangent) of a value in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $atanh takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $atanh takes any valid expression that resolves to a number between -1 and 1, e.g. -1 <= value <= 1.
      * $atanh returns values in radians. Use $radiansToDegrees operator to convert the output value from radians to degrees.
      * By default $atanh returns values as a double. $atanh can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function atanh(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): AtanhOperator
+    public static function atanh(Decimal128|Int64|ResolvesToNumber|float|int $expression): AtanhOperator
     {
         return new AtanhOperator($expression);
     }
@@ -215,9 +216,9 @@ trait FactoryTrait
      * Changed in version 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int ...$expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
      */
-    public static function avg(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int ...$expression): AvgOperator
+    public static function avg(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): AvgOperator
     {
         return new AvgOperator(...$expression);
     }
@@ -300,9 +301,9 @@ trait FactoryTrait
      * Returns the smallest integer greater than or equal to the specified number.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression If the argument resolves to a value of null or refers to a field that is missing, $ceil returns null. If the argument resolves to NaN, $ceil returns NaN.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression If the argument resolves to a value of null or refers to a field that is missing, $ceil returns null. If the argument resolves to NaN, $ceil returns NaN.
      */
-    public static function ceil(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): CeilOperator
+    public static function ceil(Decimal128|Int64|ResolvesToNumber|float|int $expression): CeilOperator
     {
         return new CeilOperator($expression);
     }
@@ -311,12 +312,12 @@ trait FactoryTrait
      * Returns 0 if the two values are equivalent, 1 if the first value is greater than the second, and -1 if the first value is less than the second.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cmp/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
      */
     public static function cmp(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression1,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression2,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression2,
     ): CmpOperator
     {
         return new CmpOperator($expression1, $expression2);
@@ -349,13 +350,13 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/
      * @param ResolvesToBool|bool $if
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $then
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $else
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $then
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $else
      */
     public static function cond(
         ResolvesToBool|bool $if,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $then,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $else,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $then,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $else,
     ): CondOperator
     {
         return new CondOperator($if, $then, $else);
@@ -366,18 +367,18 @@ trait FactoryTrait
      * New in version 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/convert/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $input
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $input
      * @param ResolvesToInt|ResolvesToString|int|non-empty-string $to
-     * @param Optional|BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $onError The value to return on encountering an error during conversion, including unsupported type conversions. The arguments can be any valid expression.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $onError The value to return on encountering an error during conversion, including unsupported type conversions. The arguments can be any valid expression.
      * If unspecified, the operation throws an error upon encountering an error and stops.
-     * @param Optional|BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $onNull The value to return if the input is null or missing. The arguments can be any valid expression.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $onNull The value to return if the input is null or missing. The arguments can be any valid expression.
      * If unspecified, $convert returns null if the input is null or missing.
      */
     public static function convert(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $input,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input,
         ResolvesToInt|ResolvesToString|int|string $to,
-        Optional|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $onError = Optional::Undefined,
-        Optional|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $onNull = Optional::Undefined,
+        Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $onError = Optional::Undefined,
+        Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $onNull = Optional::Undefined,
     ): ConvertOperator
     {
         return new ConvertOperator($input, $to, $onError, $onNull);
@@ -387,10 +388,10 @@ trait FactoryTrait
      * Returns the cosine of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $cos takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $cos takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
      * By default $cos returns values as a double. $cos can also return values as a 128-bit decimal as long as the <expression> resolves to a 128-bit decimal value.
      */
-    public static function cos(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): CosOperator
+    public static function cos(Decimal128|Int64|ResolvesToNumber|float|int $expression): CosOperator
     {
         return new CosOperator($expression);
     }
@@ -399,10 +400,10 @@ trait FactoryTrait
      * Returns the hyperbolic cosine of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $cosh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $cosh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
      * By default $cosh returns values as a double. $cosh can also return values as a 128-bit decimal if the <expression> resolves to a 128-bit decimal value.
      */
-    public static function cosh(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): CoshOperator
+    public static function cosh(Decimal128|Int64|ResolvesToNumber|float|int $expression): CoshOperator
     {
         return new CoshOperator($expression);
     }
@@ -451,29 +452,29 @@ trait FactoryTrait
      * Constructs a BSON Date object given the date's constituent parts.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/dateFromParts/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $year Calendar year. Can be any expression that evaluates to a number.
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $isoWeekYear ISO Week Date Year. Can be any expression that evaluates to a number.
-     * @param Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $month Month. Defaults to 1.
-     * @param Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $isoWeek Week of year. Defaults to 1.
-     * @param Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $day Day of month. Defaults to 1.
-     * @param Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $isoDayOfWeek Day of week (Monday 1 - Sunday 7). Defaults to 1.
-     * @param Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $hour Hour. Defaults to 0.
-     * @param Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $minute Minute. Defaults to 0.
-     * @param Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $second Second. Defaults to 0.
-     * @param Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $millisecond Millisecond. Defaults to 0.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $year Calendar year. Can be any expression that evaluates to a number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $isoWeekYear ISO Week Date Year. Can be any expression that evaluates to a number.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $month Month. Defaults to 1.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoWeek Week of year. Defaults to 1.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $day Day of month. Defaults to 1.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoDayOfWeek Day of week (Monday 1 - Sunday 7). Defaults to 1.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $hour Hour. Defaults to 0.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $minute Minute. Defaults to 0.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $second Second. Defaults to 0.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $millisecond Millisecond. Defaults to 0.
      * @param Optional|ResolvesToString|non-empty-string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      */
     public static function dateFromParts(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $year,
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $isoWeekYear,
-        Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $month = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $isoWeek = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $day = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $isoDayOfWeek = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $hour = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $minute = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $second = Optional::Undefined,
-        Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $millisecond = Optional::Undefined,
+        Decimal128|Int64|ResolvesToNumber|float|int $year,
+        Decimal128|Int64|ResolvesToNumber|float|int $isoWeekYear,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int $month = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoWeek = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int $day = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int $isoDayOfWeek = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int $hour = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int $minute = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int $second = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int $millisecond = Optional::Undefined,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
     ): DateFromPartsOperator
     {
@@ -488,17 +489,17 @@ trait FactoryTrait
      * @param Optional|ResolvesToString|non-empty-string $format The date format specification of the dateString. The format can be any expression that evaluates to a string literal, containing 0 or more format specifiers.
      * If unspecified, $dateFromString uses "%Y-%m-%dT%H:%M:%S.%LZ" as the default format but accepts a variety of formats and attempts to parse the dateString if possible.
      * @param Optional|ResolvesToString|non-empty-string $timezone The time zone to use to format the date.
-     * @param Optional|BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $onError If $dateFromString encounters an error while parsing the given dateString, it outputs the result value of the provided onError expression. This result value can be of any type.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $onError If $dateFromString encounters an error while parsing the given dateString, it outputs the result value of the provided onError expression. This result value can be of any type.
      * If you do not specify onError, $dateFromString throws an error if it cannot parse dateString.
-     * @param Optional|BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $onNull If the dateString provided to $dateFromString is null or missing, it outputs the result value of the provided onNull expression. This result value can be of any type.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $onNull If the dateString provided to $dateFromString is null or missing, it outputs the result value of the provided onNull expression. This result value can be of any type.
      * If you do not specify onNull and dateString is null or missing, then $dateFromString outputs null.
      */
     public static function dateFromString(
         ResolvesToString|string $dateString,
         Optional|ResolvesToString|string $format = Optional::Undefined,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
-        Optional|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $onError = Optional::Undefined,
-        Optional|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $onNull = Optional::Undefined,
+        Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $onError = Optional::Undefined,
+        Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $onNull = Optional::Undefined,
     ): DateFromStringOperator
     {
         return new DateFromStringOperator($dateString, $format, $timezone, $onError, $onNull);
@@ -548,14 +549,14 @@ trait FactoryTrait
      * @param Optional|ResolvesToString|non-empty-string $format The date format specification of the dateString. The format can be any expression that evaluates to a string literal, containing 0 or more format specifiers.
      * If unspecified, $dateFromString uses "%Y-%m-%dT%H:%M:%S.%LZ" as the default format but accepts a variety of formats and attempts to parse the dateString if possible.
      * @param Optional|ResolvesToString|non-empty-string $timezone The time zone to use to format the date.
-     * @param Optional|BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $onNull The value to return if the date is null or missing.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $onNull The value to return if the date is null or missing.
      * If unspecified, $dateToString returns null if the date is null or missing.
      */
     public static function dateToString(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
         Optional|ResolvesToString|string $format = Optional::Undefined,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
-        Optional|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $onNull = Optional::Undefined,
+        Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $onNull = Optional::Undefined,
     ): DateToStringOperator
     {
         return new DateToStringOperator($date, $format, $timezone, $onNull);
@@ -568,7 +569,7 @@ trait FactoryTrait
      * @param ObjectId|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|Timestamp|UTCDateTime|int $date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an ObjectID.
      * @param ResolvesToString|non-empty-string $unit The unit of time, specified as an expression that must resolve to one of these strings: year, quarter, week, month, day, hour, minute, second.
      * Together, binSize and unit specify the time period used in the $dateTrunc calculation.
-     * @param Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $binSize The numeric time value, specified as an expression that must resolve to a positive non-zero number. Defaults to 1.
+     * @param Optional|Decimal128|Int64|ResolvesToNumber|float|int $binSize The numeric time value, specified as an expression that must resolve to a positive non-zero number. Defaults to 1.
      * Together, binSize and unit specify the time period used in the $dateTrunc calculation.
      * @param Optional|ResolvesToString|non-empty-string $timezone The timezone to carry out the operation. $timezone must be a valid expression that resolves to a string formatted as either an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      * @param Optional|non-empty-string $startOfWeek The start of the week. Used when
@@ -577,7 +578,7 @@ trait FactoryTrait
     public static function dateTrunc(
         ObjectId|Timestamp|UTCDateTime|ResolvesToDate|ResolvesToObjectId|ResolvesToTimestamp|int $date,
         ResolvesToString|string $unit,
-        Optional|Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $binSize = Optional::Undefined,
+        Optional|Decimal128|Int64|ResolvesToNumber|float|int $binSize = Optional::Undefined,
         Optional|ResolvesToString|string $timezone = Optional::Undefined,
         Optional|string $startOfWeek = Optional::Undefined,
     ): DateTruncOperator
@@ -634,11 +635,11 @@ trait FactoryTrait
      * Converts a value from degrees to radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $degreesToRadians takes any valid expression that resolves to a number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $degreesToRadians takes any valid expression that resolves to a number.
      * By default $degreesToRadians returns values as a double. $degreesToRadians can also return values as a 128-bit decimal as long as the <expression> resolves to a 128-bit decimal value.
      */
     public static function degreesToRadians(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression,
+        Decimal128|Int64|ResolvesToNumber|float|int $expression,
     ): DegreesToRadiansOperator
     {
         return new DegreesToRadiansOperator($expression);
@@ -648,12 +649,12 @@ trait FactoryTrait
      * Returns the result of dividing the first number by the second. Accepts two argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $dividend The first argument is the dividend, and the second argument is the divisor; i.e. the first argument is divided by the second argument.
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $divisor
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $dividend The first argument is the dividend, and the second argument is the divisor; i.e. the first argument is divided by the second argument.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $divisor
      */
     public static function divide(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $dividend,
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $divisor,
+        Decimal128|Int64|ResolvesToNumber|float|int $dividend,
+        Decimal128|Int64|ResolvesToNumber|float|int $divisor,
     ): DivideOperator
     {
         return new DivideOperator($dividend, $divisor);
@@ -663,12 +664,12 @@ trait FactoryTrait
      * Returns true if the values are equivalent.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
      */
     public static function eq(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression1,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression2,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression2,
     ): EqOperator
     {
         return new EqOperator($expression1, $expression2);
@@ -678,9 +679,9 @@ trait FactoryTrait
      * Raises e to the specified exponent.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/exp/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $exponent
      */
-    public static function exp(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent): ExpOperator
+    public static function exp(Decimal128|Int64|ResolvesToNumber|float|int $exponent): ExpOperator
     {
         return new ExpOperator($exponent);
     }
@@ -709,9 +710,9 @@ trait FactoryTrait
      * Returns the largest integer less than or equal to the specified number.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
      */
-    public static function floor(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): FloorOperator
+    public static function floor(Decimal128|Int64|ResolvesToNumber|float|int $expression): FloorOperator
     {
         return new FloorOperator($expression);
     }
@@ -737,12 +738,12 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/
      * @param non-empty-string $field Field in the input object for which you want to return a value. field can be any valid expression that resolves to a string constant.
      * If field begins with a dollar sign ($), place the field name inside of a $literal expression to return its value.
-     * @param Optional|BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $input Default: $$CURRENT
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $input Default: $$CURRENT
      * A valid expression that contains the field for which you want to return a value. input must resolve to an object, missing, null, or undefined. If omitted, defaults to the document currently being processed in the pipeline ($$CURRENT).
      */
     public static function getField(
         string $field,
-        Optional|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $input = Optional::Undefined,
+        Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $input = Optional::Undefined,
     ): GetFieldOperator
     {
         return new GetFieldOperator($field, $input);
@@ -752,12 +753,12 @@ trait FactoryTrait
      * Returns true if the first value is greater than the second.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/gt/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
      */
     public static function gt(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression1,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression2,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression2,
     ): GtOperator
     {
         return new GtOperator($expression1, $expression2);
@@ -767,12 +768,12 @@ trait FactoryTrait
      * Returns true if the first value is greater than or equal to the second.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/gte/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
      */
     public static function gte(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression1,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression2,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression2,
     ): GteOperator
     {
         return new GteOperator($expression1, $expression2);
@@ -797,10 +798,10 @@ trait FactoryTrait
      * Returns either the non-null result of the first expression or the result of the second expression if the first expression results in a null result. Null result encompasses instances of undefined values or missing fields. Accepts two expressions as arguments. The result of the second expression can be null.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function ifNull(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string ...$expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
     ): IfNullOperator
     {
         return new IfNullOperator(...$expression);
@@ -810,11 +811,11 @@ trait FactoryTrait
      * Returns a boolean indicating whether a specified value is in an array.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/in/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression Any valid expression expression.
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression Any valid expression expression.
      * @param BSONArray|PackedArray|ResolvesToArray|array $array Any valid expression that resolves to an array.
      */
     public static function in(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
         PackedArray|ResolvesToArray|BSONArray|array $array,
     ): InOperator
     {
@@ -828,7 +829,7 @@ trait FactoryTrait
      * @param ResolvesToString|non-empty-string $array Can be any valid expression as long as it resolves to an array.
      * If the array expression resolves to a value of null or refers to a field that is missing, $indexOfArray returns null.
      * If the array expression does not resolve to an array or null nor refers to a missing field, $indexOfArray returns an error.
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $search
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $search
      * @param Optional|ResolvesToInt|int $start An integer, or a number that can be represented as integers (such as 2.0), that specifies the starting index position for the search. Can be any valid expression that resolves to a non-negative integral number.
      * If unspecified, the starting index position for the search is the beginning of the string.
      * @param Optional|ResolvesToInt|int $end An integer, or a number that can be represented as integers (such as 2.0), that specifies the ending index position for the search. Can be any valid expression that resolves to a non-negative integral number. If you specify a <end> index value, you should also specify a <start> index value; otherwise, $indexOfArray uses the <end> value as the <start> index value instead of the <end> value.
@@ -836,7 +837,7 @@ trait FactoryTrait
      */
     public static function indexOfArray(
         ResolvesToString|string $array,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $search,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $search,
         Optional|ResolvesToInt|int $start = Optional::Undefined,
         Optional|ResolvesToInt|int $end = Optional::Undefined,
     ): IndexOfArrayOperator
@@ -895,12 +896,12 @@ trait FactoryTrait
      * New in version 5.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/integral/
-     * @param Decimal128|Int64|ResolvesToDate|ResolvesToInt|ResolvesToNumber|UTCDateTime|float|int $input
+     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $input
      * @param Optional|ResolvesToString|non-empty-string $unit A string that specifies the time unit. Use one of these strings: "week", "day","hour", "minute", "second", "millisecond".
      * If the sortBy field is not a date, you must omit a unit. If you specify a unit, you must specify a date in the sortBy field.
      */
     public static function integral(
-        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToInt|ResolvesToNumber|float|int $input,
+        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int $input,
         Optional|ResolvesToString|string $unit = Optional::Undefined,
     ): IntegralOperator
     {
@@ -911,10 +912,10 @@ trait FactoryTrait
      * Determines if the operand is an array. Returns a boolean.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function isArray(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string ...$expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
     ): IsArrayOperator
     {
         return new IsArrayOperator(...$expression);
@@ -926,10 +927,10 @@ trait FactoryTrait
      * New in version 4.4.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function isNumber(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string ...$expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
     ): IsNumberOperator
     {
         return new IsNumberOperator(...$expression);
@@ -987,11 +988,11 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/let/
      * @param Document|Serializable|array|stdClass $vars Assignment block for the variables accessible in the in expression. To assign a variable, specify a string for the variable name and assign a valid expression for the value.
      * The variable assignments have no meaning outside the in expression, not even within the vars block itself.
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $in The expression to evaluate.
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $in The expression to evaluate.
      */
     public static function let(
         Document|Serializable|stdClass|array $vars,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $in,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
     ): LetOperator
     {
         return new LetOperator($vars, $in);
@@ -1003,11 +1004,9 @@ trait FactoryTrait
      * New in version 5.3.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/linearFill/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
      */
-    public static function linearFill(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression,
-    ): LinearFillOperator
+    public static function linearFill(Decimal128|Int64|ResolvesToNumber|float|int $expression): LinearFillOperator
     {
         return new LinearFillOperator($expression);
     }
@@ -1016,11 +1015,9 @@ trait FactoryTrait
      * Return a value without parsing. Use for values that the aggregation pipeline may interpret as an expression. For example, use a $literal expression to a string that starts with a dollar sign ($) to avoid parsing as a field path.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/literal/
-     * @param BSONArray|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value If the value is an expression, $literal does not evaluate the expression but instead returns the unparsed expression.
+     * @param Type|array|bool|float|int|non-empty-string|null|stdClass $value If the value is an expression, $literal does not evaluate the expression but instead returns the unparsed expression.
      */
-    public static function literal(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|BSONArray|stdClass|array|bool|float|int|null|string $value,
-    ): LiteralOperator
+    public static function literal(Type|stdClass|array|bool|float|int|null|string $value): LiteralOperator
     {
         return new LiteralOperator($value);
     }
@@ -1030,9 +1027,9 @@ trait FactoryTrait
      * $ln is equivalent to $log: [ <number>, Math.E ] expression, where Math.E is a JavaScript representation for Euler's number e.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ln/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number. For more information on expressions, see Expressions.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number. For more information on expressions, see Expressions.
      */
-    public static function ln(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number): LnOperator
+    public static function ln(Decimal128|Int64|ResolvesToNumber|float|int $number): LnOperator
     {
         return new LnOperator($number);
     }
@@ -1043,10 +1040,10 @@ trait FactoryTrait
      * New in version 5.2.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function locf(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): LocfOperator
     {
         return new LocfOperator($expression);
@@ -1056,12 +1053,12 @@ trait FactoryTrait
      * Calculates the log of a number in the specified base.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/log/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number.
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $base Any valid expression as long as it resolves to a positive number greater than 1.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $base Any valid expression as long as it resolves to a positive number greater than 1.
      */
     public static function log(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number,
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $base,
+        Decimal128|Int64|ResolvesToNumber|float|int $number,
+        Decimal128|Int64|ResolvesToNumber|float|int $base,
     ): LogOperator
     {
         return new LogOperator($number, $base);
@@ -1071,9 +1068,9 @@ trait FactoryTrait
      * Calculates the log base 10 of a number.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/log10/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $number Any valid expression as long as it resolves to a non-negative number.
      */
-    public static function log10(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number): Log10Operator
+    public static function log10(Decimal128|Int64|ResolvesToNumber|float|int $number): Log10Operator
     {
         return new Log10Operator($number);
     }
@@ -1082,12 +1079,12 @@ trait FactoryTrait
      * Returns true if the first value is less than the second.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lt/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
      */
     public static function lt(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression1,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression2,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression2,
     ): LtOperator
     {
         return new LtOperator($expression1, $expression2);
@@ -1097,12 +1094,12 @@ trait FactoryTrait
      * Returns true if the first value is less than or equal to the second.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lte/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
      */
     public static function lte(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression1,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression2,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression2,
     ): LteOperator
     {
         return new LteOperator($expression1, $expression2);
@@ -1131,12 +1128,12 @@ trait FactoryTrait
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/
      * @param BSONArray|PackedArray|ResolvesToArray|array $input An expression that resolves to an array.
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $in An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as.
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $in An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as.
      * @param Optional|ResolvesToString|non-empty-string $as A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
      */
     public static function map(
         PackedArray|ResolvesToArray|BSONArray|array $input,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $in,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
         Optional|ResolvesToString|string $as = Optional::Undefined,
     ): MapOperator
     {
@@ -1148,10 +1145,10 @@ trait FactoryTrait
      * Changed in version 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/max/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function max(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string ...$expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
     ): MaxOperator
     {
         return new MaxOperator(...$expression);
@@ -1181,13 +1178,10 @@ trait FactoryTrait
      * It is also available as an aggregation expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $input $median calculates the 50th percentile value of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $median calculation ignores it.
      * @param non-empty-string $method The method that mongod uses to calculate the 50th percentile value. The method must be 'approximate'.
      */
-    public static function median(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $input,
-        string $method,
-    ): MedianOperator
+    public static function median(Decimal128|Int64|ResolvesToNumber|float|int $input, string $method): MedianOperator
     {
         return new MedianOperator($input, $method);
     }
@@ -1223,10 +1217,10 @@ trait FactoryTrait
      * Changed in version 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/min/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function min(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string ...$expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
     ): MinOperator
     {
         return new MinOperator(...$expression);
@@ -1266,12 +1260,12 @@ trait FactoryTrait
      * Returns the remainder of the first number divided by the second. Accepts two argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/mod/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $dividend The first argument is the dividend, and the second argument is the divisor; i.e. first argument is divided by the second argument.
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $divisor
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $dividend The first argument is the dividend, and the second argument is the divisor; i.e. first argument is divided by the second argument.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $divisor
      */
     public static function mod(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $dividend,
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $divisor,
+        Decimal128|Int64|ResolvesToNumber|float|int $dividend,
+        Decimal128|Int64|ResolvesToNumber|float|int $divisor,
     ): ModOperator
     {
         return new ModOperator($dividend, $divisor);
@@ -1296,12 +1290,10 @@ trait FactoryTrait
      * Multiplies numbers to return the product. Accepts any number of argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int ...$expression The arguments can be any valid expression as long as they resolve to numbers.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression The arguments can be any valid expression as long as they resolve to numbers.
      * Starting in MongoDB 6.1 you can optimize the $multiply operation. To improve performance, group references at the end of the argument list.
      */
-    public static function multiply(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int ...$expression,
-    ): MultiplyOperator
+    public static function multiply(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): MultiplyOperator
     {
         return new MultiplyOperator(...$expression);
     }
@@ -1310,12 +1302,12 @@ trait FactoryTrait
      * Returns true if the values are not equivalent.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression1
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression2
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression1
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression2
      */
     public static function ne(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression1,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression2,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression1,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression2,
     ): NeOperator
     {
         return new NeOperator($expression1, $expression2);
@@ -1325,10 +1317,10 @@ trait FactoryTrait
      * Returns the boolean value that is the opposite of its argument expression. Accepts a single argument expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/not/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToBool|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function not(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToBool|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+        Type|ResolvesToBool|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): NotOperator
     {
         return new NotOperator($expression);
@@ -1351,10 +1343,10 @@ trait FactoryTrait
      * Returns true when any of its expressions evaluates to true. Accepts any number of argument expressions.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/or/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToBool|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass ...$expression
+     * @param ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|non-empty-string|null|stdClass ...$expression
      */
     public static function or(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToBool|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string ...$expression,
+        Type|ResolvesToBool|ExpressionInterface|stdClass|array|bool|float|int|null|string ...$expression,
     ): OrOperator
     {
         return new OrOperator(...$expression);
@@ -1372,13 +1364,13 @@ trait FactoryTrait
      * It is also available as an aggregation expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentile/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $input $percentile calculates the percentile values of this data. input must be a field name or an expression that evaluates to a numeric type. If the expression cannot be converted to a numeric type, the $percentile calculation ignores it.
      * @param BSONArray|PackedArray|ResolvesToArray|array $p $percentile calculates a percentile value for each element in p. The elements represent percentages and must evaluate to numeric values in the range 0.0 to 1.0, inclusive.
      * $percentile returns results in the same order as the elements in p.
      * @param non-empty-string $method The method that mongod uses to calculate the percentile value. The method must be 'approximate'.
      */
     public static function percentile(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $input,
+        Decimal128|Int64|ResolvesToNumber|float|int $input,
         PackedArray|ResolvesToArray|BSONArray|array $p,
         string $method,
     ): PercentileOperator
@@ -1390,12 +1382,12 @@ trait FactoryTrait
      * Raises a number to the specified exponent.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/pow/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $number
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $exponent
      */
     public static function pow(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number,
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent,
+        Decimal128|Int64|ResolvesToNumber|float|int $number,
+        Decimal128|Int64|ResolvesToNumber|float|int $exponent,
     ): PowOperator
     {
         return new PowOperator($number, $exponent);
@@ -1405,10 +1397,10 @@ trait FactoryTrait
      * Converts a value from radians to degrees.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
      */
     public static function radiansToDegrees(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression,
+        Decimal128|Int64|ResolvesToNumber|float|int $expression,
     ): RadiansToDegreesOperator
     {
         return new RadiansToDegreesOperator($expression);
@@ -1459,16 +1451,16 @@ trait FactoryTrait
      * @param BSONArray|PackedArray|ResolvesToArray|array $input Can be any valid expression that resolves to an array.
      * If the argument resolves to a value of null or refers to a missing field, $reduce returns null.
      * If the argument does not resolve to an array or null nor refers to a missing field, $reduce returns an error.
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $initialValue The initial cumulative value set before in is applied to the first element of the input array.
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $in A valid expression that $reduce applies to each element in the input array in left-to-right order. Wrap the input value with $reverseArray to yield the equivalent of applying the combining expression from right-to-left.
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $initialValue The initial cumulative value set before in is applied to the first element of the input array.
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $in A valid expression that $reduce applies to each element in the input array in left-to-right order. Wrap the input value with $reverseArray to yield the equivalent of applying the combining expression from right-to-left.
      * During evaluation of the in expression, two variables will be available:
      * - value is the variable that represents the cumulative value of the expression.
      * - this is the variable that refers to the element being processed.
      */
     public static function reduce(
         PackedArray|ResolvesToArray|BSONArray|array $input,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $initialValue,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $in,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $initialValue,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $in,
     ): ReduceOperator
     {
         return new ReduceOperator($input, $initialValue, $in);
@@ -1669,13 +1661,13 @@ trait FactoryTrait
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/setField/
      * @param ResolvesToString|non-empty-string $field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to a string constant.
      * @param Document|ResolvesToObject|Serializable|array|stdClass $input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or undefined.
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $value The value that you want to assign to field. value can be any valid expression.
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $value The value that you want to assign to field. value can be any valid expression.
      * Set to $$REMOVE to remove field from the input document.
      */
     public static function setField(
         ResolvesToString|string $field,
         Document|Serializable|ResolvesToObject|stdClass|array $input,
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $value,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $value,
     ): SetFieldOperator
     {
         return new SetFieldOperator($field, $input, $value);
@@ -1724,10 +1716,10 @@ trait FactoryTrait
      * Returns the sine of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $sin takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $sin takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
      * By default $sin returns values as a double. $sin can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function sin(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): SinOperator
+    public static function sin(Decimal128|Int64|ResolvesToNumber|float|int $expression): SinOperator
     {
         return new SinOperator($expression);
     }
@@ -1736,10 +1728,10 @@ trait FactoryTrait
      * Returns the hyperbolic sine of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $sinh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $sinh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
      * By default $sinh returns values as a double. $sinh can also return values as a 128-bit decimal if the expression resolves to a 128-bit decimal value.
      */
-    public static function sinh(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): SinhOperator
+    public static function sinh(Decimal128|Int64|ResolvesToNumber|float|int $expression): SinhOperator
     {
         return new SinhOperator($expression);
     }
@@ -1809,9 +1801,9 @@ trait FactoryTrait
      * Calculates the square root.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sqrt/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number The argument can be any valid expression as long as it resolves to a non-negative number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $number The argument can be any valid expression as long as it resolves to a non-negative number.
      */
-    public static function sqrt(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number): SqrtOperator
+    public static function sqrt(Decimal128|Int64|ResolvesToNumber|float|int $number): SqrtOperator
     {
         return new SqrtOperator($number);
     }
@@ -1822,11 +1814,9 @@ trait FactoryTrait
      * Changed in version 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevPop/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int ...$expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
      */
-    public static function stdDevPop(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int ...$expression,
-    ): StdDevPopOperator
+    public static function stdDevPop(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): StdDevPopOperator
     {
         return new StdDevPopOperator(...$expression);
     }
@@ -1836,11 +1826,9 @@ trait FactoryTrait
      * If the values represent the entire population of data or you do not wish to generalize about a larger population, use $stdDevPop instead.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/stdDevSamp/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int ...$expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
      */
-    public static function stdDevSamp(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int ...$expression,
-    ): StdDevSampOperator
+    public static function stdDevSamp(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): StdDevSampOperator
     {
         return new StdDevSampOperator(...$expression);
     }
@@ -1937,12 +1925,12 @@ trait FactoryTrait
      * Returns the result of subtracting the second value from the first. If the two values are numbers, return the difference. If the two values are dates, return the difference in milliseconds. If the two values are a date and a number in milliseconds, return the resulting date. Accepts two argument expressions. If the two values are a date and a number, specify the date argument first as it is not meaningful to subtract a date from a number.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/
-     * @param Decimal128|Int64|ResolvesToDate|ResolvesToInt|ResolvesToNumber|UTCDateTime|float|int $expression1
-     * @param Decimal128|Int64|ResolvesToDate|ResolvesToInt|ResolvesToNumber|UTCDateTime|float|int $expression2
+     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $expression1
+     * @param Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int $expression2
      */
     public static function subtract(
-        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToInt|ResolvesToNumber|float|int $expression1,
-        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToInt|ResolvesToNumber|float|int $expression2,
+        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int $expression1,
+        Decimal128|Int64|UTCDateTime|ResolvesToDate|ResolvesToNumber|float|int $expression2,
     ): SubtractOperator
     {
         return new SubtractOperator($expression1, $expression2);
@@ -1953,9 +1941,9 @@ trait FactoryTrait
      * Changed in version 5.0: Available in the $setWindowFields stage.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int ...$expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
      */
-    public static function sum(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int ...$expression): SumOperator
+    public static function sum(Decimal128|Int64|ResolvesToNumber|float|int ...$expression): SumOperator
     {
         return new SumOperator(...$expression);
     }
@@ -1968,12 +1956,12 @@ trait FactoryTrait
      * - case Can be any valid expression that resolves to a boolean. If the result is not a boolean, it is coerced to a boolean value. More information about how MongoDB evaluates expressions as either true or false can be found here.
      * - then Can be any valid expression.
      * The branches array must contain at least one branch document.
-     * @param Optional|BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $default The path to take if no branch case expression evaluates to true.
+     * @param Optional|ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $default The path to take if no branch case expression evaluates to true.
      * Although optional, if default is unspecified and no branch case evaluates to true, $switch returns an error.
      */
     public static function switch(
         PackedArray|BSONArray|array $branches,
-        Optional|Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $default = Optional::Undefined,
+        Optional|Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $default = Optional::Undefined,
     ): SwitchOperator
     {
         return new SwitchOperator($branches, $default);
@@ -1983,10 +1971,10 @@ trait FactoryTrait
      * Returns the tangent of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $tan takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $tan takes any valid expression that resolves to a number. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the result to radians.
      * By default $tan returns values as a double. $tan can also return values as a 128-bit decimal as long as the expression resolves to a 128-bit decimal value.
      */
-    public static function tan(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): TanOperator
+    public static function tan(Decimal128|Int64|ResolvesToNumber|float|int $expression): TanOperator
     {
         return new TanOperator($expression);
     }
@@ -1995,10 +1983,10 @@ trait FactoryTrait
      * Returns the hyperbolic tangent of a value that is measured in radians.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression $tanh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression $tanh takes any valid expression that resolves to a number, measured in radians. If the expression returns a value in degrees, use the $degreesToRadians operator to convert the value to radians.
      * By default $tanh returns values as a double. $tanh can also return values as a 128-bit decimal if the expression resolves to a 128-bit decimal value.
      */
-    public static function tanh(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression): TanhOperator
+    public static function tanh(Decimal128|Int64|ResolvesToNumber|float|int $expression): TanhOperator
     {
         return new TanhOperator($expression);
     }
@@ -2008,10 +1996,10 @@ trait FactoryTrait
      * New in version 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function toBool(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): ToBoolOperator
     {
         return new ToBoolOperator($expression);
@@ -2022,10 +2010,10 @@ trait FactoryTrait
      * New in version 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDate/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function toDate(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): ToDateOperator
     {
         return new ToDateOperator($expression);
@@ -2036,10 +2024,10 @@ trait FactoryTrait
      * New in version 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDecimal/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function toDecimal(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): ToDecimalOperator
     {
         return new ToDecimalOperator($expression);
@@ -2050,10 +2038,10 @@ trait FactoryTrait
      * New in version 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toDouble/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function toDouble(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): ToDoubleOperator
     {
         return new ToDoubleOperator($expression);
@@ -2064,10 +2052,10 @@ trait FactoryTrait
      * New in version 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toInt/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function toInt(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): ToIntOperator
     {
         return new ToIntOperator($expression);
@@ -2078,10 +2066,10 @@ trait FactoryTrait
      * New in version 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLong/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function toLong(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): ToLongOperator
     {
         return new ToLongOperator($expression);
@@ -2103,10 +2091,10 @@ trait FactoryTrait
      * New in version 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function toObjectId(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): ToObjectIdOperator
     {
         return new ToObjectIdOperator($expression);
@@ -2117,10 +2105,10 @@ trait FactoryTrait
      * New in version 4.0.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function toString(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): ToStringOperator
     {
         return new ToStringOperator($expression);
@@ -2159,12 +2147,12 @@ trait FactoryTrait
      * Truncates a number to a whole integer or to a specified decimal place.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/trunc/
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $number Can be any valid expression that resolves to a number. Specifically, the expression must resolve to an integer, double, decimal, or long.
      * $trunc returns an error if the expression resolves to a non-numeric data type.
      * @param Optional|ResolvesToInt|int $place Can be any valid expression that resolves to an integer between -20 and 100, exclusive. e.g. -20 < place < 100. Defaults to 0.
      */
     public static function trunc(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number,
+        Decimal128|Int64|ResolvesToNumber|float|int $number,
         Optional|ResolvesToInt|int $place = Optional::Undefined,
     ): TruncOperator
     {
@@ -2199,10 +2187,10 @@ trait FactoryTrait
      * Return the BSON data type of the field.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/type/
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
     public static function type(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
+        Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression,
     ): TypeOperator
     {
         return new TypeOperator($expression);

@@ -20,13 +20,13 @@ readonly class AbsOperator implements ResolvesToNumber
     public const NAME = '$abs';
     public const ENCODE = Encode::Single;
 
-    /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $value */
-    public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $value;
+    /** @param Decimal128|Int64|ResolvesToNumber|float|int $value */
+    public Decimal128|Int64|ResolvesToNumber|float|int $value;
 
     /**
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $value
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $value
      */
-    public function __construct(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $value)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int $value)
     {
         $this->value = $value;
     }

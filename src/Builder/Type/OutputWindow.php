@@ -51,7 +51,7 @@ class OutputWindow implements WindowInterface
 
         if ($range !== Optional::Undefined) {
             if (! array_is_list($range) || ! count($range) === 2) {
-                throw new InvalidArgumentException('Expected $range argument to be a list of 2 string or int.');
+                throw new InvalidArgumentException('Expected $range argument to be a list of 2 string or numeric.');
             }
 
             $window ??= new stdClass();

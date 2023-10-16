@@ -22,13 +22,13 @@ readonly class LinearFillOperator implements ResolvesToNumber
     public const NAME = '$linearFill';
     public const ENCODE = Encode::Single;
 
-    /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression */
-    public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression;
+    /** @param Decimal128|Int64|ResolvesToNumber|float|int $expression */
+    public Decimal128|Int64|ResolvesToNumber|float|int $expression;
 
     /**
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
      */
-    public function __construct(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int $expression)
     {
         $this->expression = $expression;
     }

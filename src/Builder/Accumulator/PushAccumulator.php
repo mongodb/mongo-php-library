@@ -6,22 +6,11 @@
 
 namespace MongoDB\Builder\Accumulator;
 
-use MongoDB\BSON\Binary;
-use MongoDB\BSON\Decimal128;
-use MongoDB\BSON\Document;
-use MongoDB\BSON\Int64;
-use MongoDB\BSON\ObjectId;
-use MongoDB\BSON\PackedArray;
-use MongoDB\BSON\Regex;
-use MongoDB\BSON\Serializable;
-use MongoDB\BSON\Timestamp;
-use MongoDB\BSON\UTCDateTime;
-use MongoDB\Builder\Expression\ResolvesToInt;
+use MongoDB\BSON\Type;
 use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\WindowInterface;
-use MongoDB\Model\BSONArray;
 use stdClass;
 
 /**
@@ -35,15 +24,14 @@ readonly class PushAccumulator implements AccumulatorInterface, WindowInterface
     public const NAME = '$push';
     public const ENCODE = Encode::Single;
 
-    /** @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression */
-    public Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression;
+    /** @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression */
+    public Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression;
 
     /**
-     * @param BSONArray|Binary|Decimal128|Document|ExpressionInterface|Int64|ObjectId|PackedArray|Regex|ResolvesToInt|Serializable|Timestamp|UTCDateTime|array|bool|float|int|non-empty-string|null|stdClass $expression
+     * @param ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass $expression
      */
-    public function __construct(
-        Binary|Decimal128|Document|Int64|ObjectId|PackedArray|Regex|Serializable|Timestamp|UTCDateTime|ResolvesToInt|ExpressionInterface|BSONArray|stdClass|array|bool|float|int|null|string $expression,
-    ) {
+    public function __construct(Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $expression)
+    {
         $this->expression = $expression;
     }
 }

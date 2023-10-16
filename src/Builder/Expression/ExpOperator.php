@@ -20,13 +20,13 @@ readonly class ExpOperator implements ResolvesToDouble
     public const NAME = '$exp';
     public const ENCODE = Encode::Single;
 
-    /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent */
-    public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent;
+    /** @param Decimal128|Int64|ResolvesToNumber|float|int $exponent */
+    public Decimal128|Int64|ResolvesToNumber|float|int $exponent;
 
     /**
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $exponent
      */
-    public function __construct(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int $exponent)
     {
         $this->exponent = $exponent;
     }

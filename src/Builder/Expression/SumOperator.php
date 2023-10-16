@@ -24,14 +24,14 @@ readonly class SumOperator implements ResolvesToNumber
     public const NAME = '$sum';
     public const ENCODE = Encode::Single;
 
-    /** @param list<Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int> ...$expression */
+    /** @param list<Decimal128|Int64|ResolvesToNumber|float|int> ...$expression */
     public array $expression;
 
     /**
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int ...$expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int ...$expression
      * @no-named-arguments
      */
-    public function __construct(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int ...$expression)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int ...$expression)
     {
         if (\count($expression) < 1) {
             throw new \InvalidArgumentException(\sprintf('Expected at least %d values for $expression, got %d.', 1, \count($expression)));

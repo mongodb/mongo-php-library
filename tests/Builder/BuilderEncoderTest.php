@@ -208,6 +208,46 @@ class BuilderEncoderTest extends TestCase
         $this->assertSamePipeline($expected, $pipeline);
     }
 
+    public function testUnionWith(): void
+    {
+        $unionWith = Stage::unionWith(...);
+        $match = Stage::match(...);
+        $project = Stage::project(...);
+        $pipeline = new Pipeline(
+            $unionWith(
+                coll: 'orders',
+                pipeline: new Pipeline(
+                    $match(status: 'A'),
+                    $project(
+                        item: 1,
+                        status: 1,
+                    ),
+                ),
+            ),
+        );
+
+        $expected = [
+            [
+                '$unionWith' => [
+                    'coll' => 'orders',
+                    'pipeline' => [
+                        [
+                            '$match' => ['status' => 'A'],
+                        ],
+                        [
+                            '$project' => [
+                                'item' => 1,
+                                'status' => 1,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSamePipeline($expected, $pipeline);
+    }
+
     /** @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/ */
     public function testRedactStage(): void
     {

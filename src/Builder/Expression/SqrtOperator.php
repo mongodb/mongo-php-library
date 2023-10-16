@@ -20,13 +20,13 @@ readonly class SqrtOperator implements ResolvesToDouble
     public const NAME = '$sqrt';
     public const ENCODE = Encode::Single;
 
-    /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number The argument can be any valid expression as long as it resolves to a non-negative number. */
-    public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number;
+    /** @param Decimal128|Int64|ResolvesToNumber|float|int $number The argument can be any valid expression as long as it resolves to a non-negative number. */
+    public Decimal128|Int64|ResolvesToNumber|float|int $number;
 
     /**
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number The argument can be any valid expression as long as it resolves to a non-negative number.
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $number The argument can be any valid expression as long as it resolves to a non-negative number.
      */
-    public function __construct(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int $number)
     {
         $this->number = $number;
     }

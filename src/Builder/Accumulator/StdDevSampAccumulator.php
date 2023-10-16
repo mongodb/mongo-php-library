@@ -8,7 +8,6 @@ namespace MongoDB\Builder\Accumulator;
 
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Int64;
-use MongoDB\Builder\Expression\ResolvesToInt;
 use MongoDB\Builder\Expression\ResolvesToNumber;
 use MongoDB\Builder\Type\AccumulatorInterface;
 use MongoDB\Builder\Type\Encode;
@@ -25,13 +24,13 @@ readonly class StdDevSampAccumulator implements AccumulatorInterface
     public const NAME = '$stdDevSamp';
     public const ENCODE = Encode::Single;
 
-    /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression */
-    public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression;
+    /** @param Decimal128|Int64|ResolvesToNumber|float|int $expression */
+    public Decimal128|Int64|ResolvesToNumber|float|int $expression;
 
     /**
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $expression
      */
-    public function __construct(Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $expression)
+    public function __construct(Decimal128|Int64|ResolvesToNumber|float|int $expression)
     {
         $this->expression = $expression;
     }

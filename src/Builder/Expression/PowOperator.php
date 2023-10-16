@@ -20,19 +20,19 @@ readonly class PowOperator implements ResolvesToNumber
     public const NAME = '$pow';
     public const ENCODE = Encode::Array;
 
-    /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number */
-    public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number;
+    /** @param Decimal128|Int64|ResolvesToNumber|float|int $number */
+    public Decimal128|Int64|ResolvesToNumber|float|int $number;
 
-    /** @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent */
-    public Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent;
+    /** @param Decimal128|Int64|ResolvesToNumber|float|int $exponent */
+    public Decimal128|Int64|ResolvesToNumber|float|int $exponent;
 
     /**
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number
-     * @param Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $number
+     * @param Decimal128|Int64|ResolvesToNumber|float|int $exponent
      */
     public function __construct(
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $number,
-        Decimal128|Int64|ResolvesToInt|ResolvesToNumber|float|int $exponent,
+        Decimal128|Int64|ResolvesToNumber|float|int $number,
+        Decimal128|Int64|ResolvesToNumber|float|int $exponent,
     ) {
         $this->number = $number;
         $this->exponent = $exponent;

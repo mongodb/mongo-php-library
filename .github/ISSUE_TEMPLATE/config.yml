@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: MongoDB PHP library
+    url: https://github.com/mongodb/mongo-php-library/issues/new/choose
+    about: Experiencing a problem with mongo-php-builder? Please report it through the mongo-php-library repository.

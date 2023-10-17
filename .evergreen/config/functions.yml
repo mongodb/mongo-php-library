@@ -482,3 +482,19 @@ functions:
         binary: bash
         args:
           - .evergreen/compile-extension.sh
+
+  "run benchmark":
+    - command: shell.exec
+      type: test
+      params:
+        working_dir: "src/benchmark"
+        script: |
+          ${PREPARE_SHELL}
+          export PATH="${PHP_PATH}/bin:$PATH"
+          
+          php -i | grep memory_limit
+          
+          lscpu
+          
+          php ../composer.phar install --no-suggest
+          vendor/bin/phpbench run --report=env --report=aggregate --output html

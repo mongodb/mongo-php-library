@@ -1,0 +1,13 @@
+# $schema: ../schema.json
+name: $eq
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/eq/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Matches values that are equal to a specified value.
+arguments:
+    -
+        name: value
+        type:
+            - any

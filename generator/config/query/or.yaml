@@ -1,0 +1,14 @@
+# $schema: ../schema.json
+name: $or
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/or/'
+type:
+    - query
+encode: single
+description: |
+    Joins query clauses with a logical OR returns all documents that match the conditions of either clause.
+arguments:
+    -
+        name: expression
+        type:
+            - query
+        variadic: array

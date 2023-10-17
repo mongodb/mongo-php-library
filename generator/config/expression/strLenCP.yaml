@@ -1,0 +1,13 @@
+# $schema: ../schema.json
+name: $strLenCP
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/'
+type:
+    - resolvesToInt
+encode: single
+description: |
+    Returns the number of UTF-8 code points in a string.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToString

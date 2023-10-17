@@ -1,0 +1,13 @@
+# $schema: ../schema.json
+name: $jsonSchema
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/'
+type:
+    - query
+encode: single
+description: |
+    Validate documents against the given JSON Schema.
+arguments:
+    -
+        name: schema
+        type:
+            - object

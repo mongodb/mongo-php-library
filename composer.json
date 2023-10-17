@@ -1,6 +1,6 @@
 {
     "name": "mongodb/builder",
-    "description": "MongoDB driver query and aggregation builders",
+    "description": "Query and Aggregation Builder for MongoDB",
     "keywords": ["database", "driver", "mongodb", "persistence"],
     "homepage": "https://jira.mongodb.org/browse/PHPLIB",
     "license": "Apache-2.0",
@@ -10,7 +10,9 @@
         { "name": "Jérôme Tamarelle", "email": "jerome.tamarelle@mongodb.com" }
     ],
     "require": {
-        "php": "^8.1"
+        "php": ">=8.1",
+        "ext-mongodb": "^1.17.0",
+        "mongodb/mongodb": "^1.17.0@dev"
     },
     "require-dev": {
         "doctrine/coding-standard": "^11.1",
@@ -20,7 +22,8 @@
         "vimeo/psalm": "^5.13"
     },
     "autoload": {
-        "psr-4": { "MongoDB\\": "src/" }
+        "psr-4": { "MongoDB\\": "src/" },
+        "files": [ "src/functions.php" ]
     },
     "autoload-dev": {
         "psr-4": {

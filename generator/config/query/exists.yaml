@@ -1,0 +1,13 @@
+# $schema: ../schema.json
+name: $exists
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/exists/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Matches documents that have the specified field.
+arguments:
+    -
+        name: exists
+        type:
+            - bool

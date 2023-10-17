@@ -1,0 +1,28 @@
+# $schema: ../schema.json
+name: $out
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/'
+type:
+    - stage
+encode: object
+description: |
+    Writes the resulting documents of the aggregation pipeline to a collection. To use the $out stage, it must be the last stage in the pipeline.
+arguments:
+    -
+        name: db
+        type:
+            - string
+        description: |
+            Target collection name to write documents from $out to.
+    -
+        name: coll
+        type:
+            - string
+        description: |
+            Target database name to write documents from $out to.
+    -
+        name: timeseries
+        type:
+            - object
+        optional: true
+        description: |
+            If set, the aggregation stage will use these options to create or replace a time-series collection in the given namespace.

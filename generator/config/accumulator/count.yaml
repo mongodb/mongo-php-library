@@ -1,0 +1,11 @@
+# $schema: ../schema.json
+name: $count
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/'
+type:
+    - accumulator
+    - window
+encode: object
+description: |
+    Returns the number of documents in the group or window.
+    Distinct from the $count pipeline stage.
+    New in MongoDB 5.0.

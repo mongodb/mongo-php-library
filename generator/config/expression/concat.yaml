@@ -1,0 +1,14 @@
+# $schema: ../schema.json
+name: $concat
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/'
+type:
+    - resolvesToString
+encode: single
+description: |
+    Concatenates any number of strings.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToString
+        variadic: array

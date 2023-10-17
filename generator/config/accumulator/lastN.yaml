@@ -1,0 +1,21 @@
+# $schema: ../schema.json
+name: $lastN
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/'
+type:
+    - window
+encode: object
+description: |
+    Returns a specified number of elements from the end of an array. Distinct from the $lastN accumulator.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            An expression that resolves to the array from which to return n elements.
+    -
+        name: 'n'
+        type:
+            - resolvesToInt
+        description: |
+            An expression that resolves to a positive integer. The integer specifies the number of array elements that $firstN returns.

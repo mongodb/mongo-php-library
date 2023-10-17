@@ -1,0 +1,13 @@
+# $schema: ../schema.json
+name: $regex
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/regex/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Selects documents where values match a specified regular expression.
+arguments:
+    -
+        name: regex
+        type:
+            - regex

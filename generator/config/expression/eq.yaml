@@ -1,0 +1,17 @@
+# $schema: ../schema.json
+name: $eq
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/'
+type:
+    - resolvesToBool
+encode: array
+description: |
+    Returns true if the values are equivalent.
+arguments:
+    -
+        name: expression1
+        type:
+            - expression
+    -
+        name: expression2
+        type:
+            - expression

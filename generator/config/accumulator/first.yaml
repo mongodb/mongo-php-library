@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $first
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/first/'
+type:
+    - accumulator
+    - window
+encode: single
+description: |
+    Returns the result of an expression for the first document in a group or window.
+    Changed in MongoDB 5.0: Available in the $setWindowFields stage.
+arguments:
+    -
+        name: expression
+        type:
+            - expression

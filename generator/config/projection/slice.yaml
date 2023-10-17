@@ -1,0 +1,17 @@
+# $schema: ../schema.json
+name: $slice
+link: 'https://www.mongodb.com/docs/manual/reference/operator/projection/slice/'
+type:
+    - projection
+encode: array
+description: |
+    Limits the number of elements projected from an array. Supports skip and limit slices.
+arguments:
+    -
+        name: limit
+        type:
+            - int
+    -
+        name: skip
+        type:
+            - int

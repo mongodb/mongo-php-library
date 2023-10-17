@@ -1,0 +1,14 @@
+# $schema: ../schema.json
+name: $all
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/all/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Matches arrays that contain all elements specified in the query.
+arguments:
+    -
+        name: value
+        type:
+            - any
+        variadic: array

@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $locf
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/locf/'
+type:
+    - resolvesToAny
+encode: single
+description: |
+    Last observation carried forward. Sets values for null and missing fields in a window to the last non-null value for the field.
+    Available in the $setWindowFields stage.
+    New in MongoDB 5.2.
+arguments:
+    -
+        name: expression
+        type:
+            - expression

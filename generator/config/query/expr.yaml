@@ -1,0 +1,13 @@
+# $schema: ../schema.json
+name: $expr
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/expr/'
+type:
+    - fieldQuery
+encode: single
+description: |
+    Allows use of aggregation expressions within the query language.
+arguments:
+    -
+        name: expression
+        type:
+            - expression

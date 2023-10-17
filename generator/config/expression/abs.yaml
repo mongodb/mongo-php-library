@@ -1,0 +1,13 @@
+# $schema: ../schema.json
+name: $abs
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/'
+type:
+    - resolvesToNumber
+encode: single
+description: |
+    Returns the absolute value of a number.
+arguments:
+    -
+        name: value
+        type:
+            - resolvesToNumber

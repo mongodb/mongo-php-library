@@ -1,0 +1,14 @@
+# $schema: ../schema.json
+name: $ifNull
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/ifNull/'
+type:
+    - resolvesToAny
+encode: single
+description: |
+    Returns either the non-null result of the first expression or the result of the second expression if the first expression results in a null result. Null result encompasses instances of undefined values or missing fields. Accepts two expressions as arguments. The result of the second expression can be null.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+        variadic: array

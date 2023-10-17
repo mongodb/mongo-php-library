@@ -1,0 +1,62 @@
+name: "Static Analysis"
+
+on:
+  pull_request:
+    branches:
+      - "[0-9]+.[0-9]+"
+      - "feature/*"
+    paths-ignore:
+      - "docs/**"
+  push:
+    branches:
+      - "[0-9]+.[0-9]+"
+      - "feature/*"
+    paths-ignore:
+      - "docs/**"
+
+env:
+  PHP_VERSION: "8.2"
+  DRIVER_VERSION: "mongodb/mongo-php-driver@master"
+
+jobs:
+  psalm:
+    name: "Psalm"
+    runs-on: "ubuntu-22.04"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+
+      - name: Setup cache environment
+        id: extcache
+        uses: shivammathur/cache-extensions@v1
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: "mongodb-${{ ENV.DRIVER_VERSION }}"
+          key: "extcache-v1"
+
+      - name: Cache extensions
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.extcache.outputs.dir }}
+          key: ${{ steps.extcache.outputs.key }}
+          restore-keys: ${{ steps.extcache.outputs.key }}
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          extensions: "mongodb-${{ ENV.DRIVER_VERSION }}"
+          php-version: "${{ env.PHP_VERSION }}"
+          tools: "cs2pr"
+
+      - name: "Show driver information"
+        run: "php --ri mongodb"
+
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@2.2.0"
+        with:
+          composer-options: "--no-suggest"
+
+      - name: "Run Psalm"
+        run: "vendor/bin/psalm --show-info=false --stats --output-format=github --threads=$(nproc)"

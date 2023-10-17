@@ -1,0 +1,30 @@
+# $schema: ../schema.json
+name: $topN
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/topN/'
+type:
+    - accumulator
+encode: object
+description: |
+    Returns an aggregation of the top n fields within a group, according to the specified sort order.
+    New in MongoDB 5.2.
+
+    Available in the $group and $setWindowFields stages.
+arguments:
+    -
+        name: 'n'
+        type:
+            - resolvesToInt
+        description: |
+            limits the number of results per group and has to be a positive integral expression that is either a constant or depends on the _id value for $group.
+    -
+        name: sortBy
+        type:
+            - object # SortSpec
+        description: |
+            Specifies the order of results, with syntax similar to $sort.
+    -
+        name: output
+        type:
+            - expression
+        description: |
+            Represents the output for each element in the group and can be any expression.

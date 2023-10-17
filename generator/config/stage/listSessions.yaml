@@ -1,0 +1,23 @@
+# $schema: ../schema.json
+name: $listSessions
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/'
+type:
+    - stage
+encode: object
+description: |
+    Lists all sessions that have been active long enough to propagate to the system.sessions collection.
+arguments:
+    -
+        name: users
+        type:
+            - array
+        optional: true
+        description: |
+            Returns all sessions for the specified users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster to list sessions for other users.
+    -
+        name: allUsers
+        type:
+            - bool
+        optional: true
+        description: |
+            Returns all sessions for all users. If running with access control, the authenticated user must have privileges with listSessions action on the cluster.

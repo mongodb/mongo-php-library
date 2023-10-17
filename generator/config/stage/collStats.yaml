@@ -1,0 +1,13 @@
+# $schema: ../schema.json
+name: $collStats
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/'
+type:
+    - stage
+encode: single
+description: |
+    Returns statistics regarding a collection or view.
+arguments:
+    -
+        name: config
+        type:
+            - object

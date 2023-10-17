@@ -1,13 +1,16 @@
 .* export-ignore
 *.md export-ignore
+generator export-ignore
 tests export-ignore
-docs export-ignore
-examples export-ignore
-mongo-orchestration export-ignore
-stubs export-ignore
-tools export-ignore
 phpcs.xml.dist export-ignore
-phpunit.evergreen.xml export-ignore
 phpunit.xml.dist export-ignore
 psalm.xml.dist export-ignore
 psalm-baseline.xml export-ignore
+
+# Keep generated files from displaying in diffs by default
+# https://docs.github.com/en/repositories/working-with-files/managing-files/customizing-how-changed-files-appear-on-github
+/src/Builder/Accumulator/*.php linguist-generated=true
+/src/Builder/Expression/*.php linguist-generated=true
+/src/Builder/Query/*.php linguist-generated=true
+/src/Builder/Projection/*.php linguist-generated=true
+/src/Builder/Stage/*.php linguist-generated=true

@@ -1,0 +1,16 @@
+# $schema: ../schema.json
+name: $addFields
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/'
+type:
+    - stage
+encode: single
+description: |
+    Adds new fields to documents. Outputs documents that contain all existing fields from the input documents and newly added fields.
+arguments:
+    -
+        name: expression
+        type:
+            - expression
+        variadic: object
+        description: |
+            Specify the name of each field to add and set its value to an aggregation expression or an empty object.

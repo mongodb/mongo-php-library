@@ -1,0 +1,28 @@
+# $schema: ../schema.json
+name: $map
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/'
+type:
+    - resolvesToArray
+encode: object
+description: |
+    Applies a subexpression to each element of an array and returns the array of resulting values in order. Accepts named parameters.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToArray
+        description: |
+            An expression that resolves to an array.
+    -
+        name: as
+        type:
+            - resolvesToString
+        optional: true
+        description: |
+            A name for the variable that represents each individual element of the input array. If no name is specified, the variable name defaults to this.
+    -
+        name: in
+        type:
+            - expression
+        description: |
+            An expression that is applied to each element of the input array. The expression references each element individually with the variable name specified in as.

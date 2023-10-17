@@ -1,0 +1,8 @@
+# $schema: ../schema.json
+name: $currentOp
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/'
+type:
+    - stage
+encode: object
+description: |
+    Returns information on active and/or dormant operations for the MongoDB deployment. To run, use the db.aggregate() method.

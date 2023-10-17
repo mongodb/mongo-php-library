@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ruleset>
+    <arg name="basepath" value="." />
+    <arg name="extensions" value="php" />
+    <arg name="parallel" value="80" />
+    <arg name="cache" value=".phpcs-cache" />
+    <arg name="colors" />
+
+    <!-- Ignore warnings (n), show progress of the run (p), and show sniff names (s) -->
+    <arg value="nps"/>
+
+    <file>src</file>
+    <file>generator/src</file>
+    <file>generator/config</file>
+    <file>tests</file>
+
+    <!-- Ignore auto-generated code -->
+    <exclude-pattern>src/Builder/(Accumulator|Expression|Query|Projection|Stage)/*\.php</exclude-pattern>
+
+    <!-- Target minimum supported PHP version -->
+    <config name="php_version" value="80100"/>
+
+    <!-- ****************************************** -->
+    <!-- Import rules from doctrine/coding-standard -->
+    <!-- ****************************************** -->
+    <rule ref="Doctrine">
+        <!-- **************************************** -->
+        <!-- Exclude sniffs that force unwanted style -->
+        <!-- **************************************** -->
+        <exclude name="Generic.Formatting.MultipleStatementAlignment" />
+        <exclude name="Squiz.Commenting.FunctionComment.ThrowsNoFullStop" />
+
+        <!-- ************************************************ -->
+        <!-- Exclude sniffs that may cause functional changes -->
+        <!-- ************************************************ -->
+        <exclude name="Generic.PHP.ForbiddenFunctions.FoundWithAlternative" />
+        <exclude name="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison" />
+        <exclude name="SlevomatCodingStandard.ControlStructures.EarlyExit" />
+        <exclude name="SlevomatCodingStandard.ControlStructures.UselessIfConditionWithReturn" />
+        <exclude name="SlevomatCodingStandard.Functions.StaticClosure" />
+        <exclude name="SlevomatCodingStandard.Functions.UnusedInheritedVariablePassedToClosure" />
+        <exclude name="SlevomatCodingStandard.Operators.DisallowEqualOperators" />
+
+        <!-- ********************* -->
+        <!-- Exclude broken sniffs -->
+        <!-- ********************* -->
+
+        <!-- Sniff currently broken when casting arrays, see https://github.com/squizlabs/PHP_CodeSniffer/issues/2937#issuecomment-615498860 -->
+        <exclude name="Squiz.Arrays.ArrayDeclaration.ValueNoNewline" />
+
+        <!-- Disable forbidden annotation sniff as excluding @api from the list doesn't work -->
+        <exclude name="SlevomatCodingStandard.Commenting.ForbiddenAnnotations.AnnotationForbidden" />
+    </rule>
+
+
+    <!-- **************************************** -->
+    <!-- Enable rules not enforced by Doctrine CS -->
+    <!-- **************************************** -->
+
+    <!-- Require arrow functions where possible -->
+    <rule ref="SlevomatCodingStandard.Functions.RequireArrowFunction"/>
+    <!-- Forbid fully qualified names even for colliding names -->
+    <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly">
+        <properties>
+            <property name="allowFallbackGlobalConstants" value="false"/>
+            <property name="allowFallbackGlobalFunctions" value="false"/>
+            <property name="allowFullyQualifiedGlobalClasses" value="false"/>
+            <property name="allowFullyQualifiedGlobalConstants" value="false"/>
+            <property name="allowFullyQualifiedGlobalFunctions" value="false"/>
+            <property phpcs-only="true" name="allowFullyQualifiedNameForCollidingClasses" value="false"/>
+            <property phpcs-only="true" name="allowFullyQualifiedNameForCollidingConstants" value="false"/>
+            <property phpcs-only="true" name="allowFullyQualifiedNameForCollidingFunctions" value="false"/>
+            <property name="searchAnnotations" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- ************************************************************************** -->
+    <!-- Require type hints for all parameters, properties, and return types in src -->
+    <!-- ************************************************************************** -->
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint">
+        <exclude-pattern>tests</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint">
+        <exclude-pattern>tests</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint">
+        <exclude-pattern>tests</exclude-pattern>
+    </rule>
+</ruleset>

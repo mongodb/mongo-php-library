@@ -1,0 +1,31 @@
+# $schema: ../schema.json
+name: $expMovingAvg
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/expMovingAvg/'
+type:
+    - window
+encode: object
+description: |
+    Returns the exponential moving average for the numeric expression.
+    New in MongoDB 5.0.
+arguments:
+    -
+        name: input
+        type:
+            - resolvesToNumber
+    -
+        name: 'N'
+        type:
+            - int
+        optional: true
+        description: |
+            An integer that specifies the number of historical documents that have a significant mathematical weight in the exponential moving average calculation, with the most recent documents contributing the most weight.
+            You must specify either N or alpha. You cannot specify both.
+            The N value is used in this formula to calculate the current result based on the expression value from the current document being read and the previous result of the calculation:
+    -
+        name: alpha
+        type:
+            - double
+        optional: true
+        description: |
+            A double that specifies the exponential decay value to use in the exponential moving average calculation. A higher alpha value assigns a lower mathematical significance to previous results from the calculation.
+            You must specify either N or alpha. You cannot specify both.

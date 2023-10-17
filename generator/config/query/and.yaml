@@ -1,0 +1,14 @@
+# $schema: ../schema.json
+name: $and
+link: 'https://www.mongodb.com/docs/manual/reference/operator/query/and/'
+type:
+    - query
+encode: single
+description: |
+    Joins query clauses with a logical AND returns all documents that match the conditions of both clauses.
+arguments:
+    -
+        name: expression
+        type:
+            - query
+        variadic: array

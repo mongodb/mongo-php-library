@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $size
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/size/'
+type:
+    - resolvesToInt
+encode: single
+description: |
+    Returns the number of elements in the array. Accepts a single expression as argument.
+arguments:
+    -
+        name: expression
+        type:
+            - resolvesToArray
+        description: |
+            The argument for $size can be any expression as long as it resolves to an array.

@@ -1,0 +1,9 @@
+# $schema: ../schema.json
+name: $rank
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/rank/'
+type:
+    - resolvesToInt
+encode: object
+description: |
+    Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition.
+    New in MongoDB 5.0.

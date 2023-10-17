@@ -1,0 +1,42 @@
+# $schema: ../schema.json
+name: $fill
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/fill/'
+type:
+    - stage
+encode: object
+description: |
+    Populates null and missing field values within documents.
+arguments:
+    -
+        name: partitionBy
+        type:
+            - object # of expression
+            - string
+        optional: true
+        description: |
+            Specifies an expression to group the documents. In the $fill stage, a group of documents is known as a partition.
+            If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection. 
+            partitionBy and partitionByFields are mutually exclusive.
+    -
+        name: partitionByFields
+        type:
+            - array # of string
+        optional: true
+        description: |
+            Specifies an array of fields as the compound key to group the documents. In the $fill stage, each group of documents is known as a partition.
+            If you omit partitionBy and partitionByFields, $fill uses one partition for the entire collection.
+            partitionBy and partitionByFields are mutually exclusive.
+    -
+        name: sortBy
+        type:
+            - object # SortSpec
+        optional: true
+        description: |
+            Specifies the field or fields to sort the documents within each partition. Uses the same syntax as the $sort stage.
+    -
+        name: output
+        type:
+            - object # of object{value:expression} or object{method:string}>
+        description: |
+            Specifies an object containing each field for which to fill missing values. You can specify multiple fields in the output object.
+            The object name is the name of the field to fill. The object value specifies how the field is filled.

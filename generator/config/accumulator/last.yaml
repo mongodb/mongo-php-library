@@ -1,0 +1,15 @@
+# $schema: ../schema.json
+name: $last
+link: 'https://www.mongodb.com/docs/manual/reference/operator/aggregation/last/'
+type:
+    - accumulator
+    - window
+encode: single
+description: |
+    Returns the result of an expression for the last document in a group or window.
+    Changed in MongoDB 5.0: Available in the $setWindowFields stage.
+arguments:
+    -
+        name: expression
+        type:
+            - expression

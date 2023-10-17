@@ -27,8 +27,8 @@ tasks:
         vars:
           TESTS: "csfle"
 
-  - name: "test-mongodb-5.0-replicaset-no-aws-creds"
-    tags: ["replicaset", "local", "5.0"]
+  - name: "test-mongodb-5.0-no-aws-creds"
+    tags: ["replicaset", "local", "5.0", "csfle"]
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:

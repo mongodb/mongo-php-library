@@ -19,13 +19,11 @@ pre:
   - func: "fetch source"
   - func: "prepare resources"
   - func: "fix absolute paths"
-  - func: "make files executable"
   - func: "install dependencies"
   - func: "locate PHP binaries"
   - func: "fetch extension"
   - func: "install composer"
 post:
-  - func: "upload mo artifacts"
   - func: "upload test results"
   - func: "delete serverless instance"
   - func: "stop load balancer"

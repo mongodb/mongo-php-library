@@ -4,7 +4,6 @@ task_groups:
       - func: "fetch source"
       - func: "prepare resources"
       - func: "fix absolute paths"
-      - func: "make files executable"
       - func: "install dependencies"
       - func: "locate PHP binaries"
       - func: "fetch extension"

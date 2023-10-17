@@ -1,6 +1,10 @@
 #!/bin/sh
 set -o errexit  # Exit the script with error if any of the commands fail
 
+# Supported environment variables
+DEPENDENCIES=${DEPENDENCIES:-} # Specify "lowest" to prefer lowest dependencies
+COMPOSER_FLAGS="${COMPOSER_FLAGS:-}" # Optional, additional Composer flags
+
 PATH="$PHP_PATH/bin:$PATH"
 
 install_composer ()

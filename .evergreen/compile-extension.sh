@@ -28,10 +28,10 @@ install_extension ()
       cd ${PROJECT_DIRECTORY}
    elif [ "${EXTENSION_VERSION}" != "" ]; then
       echo "Installing driver version ${EXTENSION_VERSION} from PECL"
-      pecl install -f mongodb-${EXTENSION_VERSION}
+      MAKEFLAGS=-j20 pecl install -f mongodb-${EXTENSION_VERSION}
    else
       echo "Installing latest driver version from PECL"
-      pecl install -f mongodb
+      MAKEFLAGS=-j20 pecl install -f mongodb
    fi
 
    cp ${PROJECT_DIRECTORY}/.evergreen/config/php.ini ${PHP_PATH}/lib/php.ini

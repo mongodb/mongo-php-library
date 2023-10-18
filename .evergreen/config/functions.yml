@@ -1,0 +1,484 @@
+functions:
+  "fetch source":
+    # Executes git clone and applies the submitted patch, if any
+    - command: git.get_project
+      params:
+        directory: "src"
+    # Make an evergreen exapanstion file with dynamic values
+    - command: shell.exec
+      params:
+        working_dir: "src"
+        script: |
+          # Get the current unique version of this checkout
+          if [ "${is_patch}" = "true" ]; then
+             CURRENT_VERSION=$(git describe)-patch-${version_id}
+          else
+             CURRENT_VERSION=latest
+          fi
+          
+          export DRIVERS_TOOLS="$(pwd)/../drivers-tools"
+          export PROJECT_DIRECTORY="$(pwd)"
+          
+          # Python has cygwin path problems on Windows. Detect prospective mongo-orchestration home directory
+          if [ "Windows_NT" = "$OS" ]; then # Magic variable in cygwin
+             export DRIVERS_TOOLS=$(cygpath -m $DRIVERS_TOOLS)
+             export PROJECT_DIRECTORY=$(cygpath -m $PROJECT_DIRECTORY)
+          fi
+          
+          export MONGO_ORCHESTRATION_HOME="$DRIVERS_TOOLS/.evergreen/orchestration"
+          export MONGODB_BINARIES="$DRIVERS_TOOLS/mongodb/bin"
+          export UPLOAD_BUCKET="${project}"
+          
+          cat <<EOT > expansion.yml
+          CURRENT_VERSION: "$CURRENT_VERSION"
+          DRIVERS_TOOLS: "$DRIVERS_TOOLS"
+          MONGO_ORCHESTRATION_HOME: "$MONGO_ORCHESTRATION_HOME"
+          MONGODB_BINARIES: "$MONGODB_BINARIES"
+          UPLOAD_BUCKET: "$UPLOAD_BUCKET"
+          PROJECT_DIRECTORY: "$PROJECT_DIRECTORY"
+          PREPARE_SHELL: |
+             set -o errexit
+             export DRIVERS_TOOLS="$DRIVERS_TOOLS"
+             export MONGO_ORCHESTRATION_HOME="$MONGO_ORCHESTRATION_HOME"
+             export MONGODB_BINARIES="$MONGODB_BINARIES"
+             export UPLOAD_BUCKET="$UPLOAD_BUCKET"
+             export PROJECT_DIRECTORY="$PROJECT_DIRECTORY"
+          
+             export TMPDIR="$MONGO_ORCHESTRATION_HOME/db"
+             export PATH="$MONGODB_BINARIES:$PATH"
+             export PROJECT="${project}"
+          EOT
+          # See what we've done
+          cat expansion.yml
+
+    # Load the expansion file to make an evergreen variable with the current unique version
+    - command: expansions.update
+      params:
+        file: src/expansion.yml
+
+  # Upload build artifacts that other tasks may depend on
+  # Note this URL needs to be totally unique, while predictable for the next task
+  # so it can automatically download the artifacts
+  "upload extension":
+    # Copy compiled extension to source directory for archiving
+    - command: subprocess.exec
+      type: setup
+      params:
+        working_dir: "src"
+        binary: bash
+        args:
+          - -c
+          - cp `${PHP_PATH}/bin/php -r "echo ini_get('extension_dir');"`/mongodb.so .
+    # Compress and upload the entire build directory
+    - command: archive.targz_pack
+      params:
+        target: "${build_id}.tar.gz"
+        source_dir: src
+        include:
+          - "mongodb.so"
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: ${content_type|application/x-gzip}
+        permissions: public-read
+        local_file: ${build_id}.tar.gz
+        remote_file: mongo-php-driver/${build_variant}/${revision}/${task_name}/${version}.tar.gz
+        # TODO: Use separate folder for the library once it exists
+#        remote_file: ${project}/${build_variant}/${revision}/${task_name}/${version}.tar.gz
+
+  "fetch extension":
+    - command: s3.get
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        # TODO: Use separate folder for the library once it exists
+        remote_file: mongo-php-driver/${FETCH_BUILD_VARIANT}/${revision}/${FETCH_BUILD_TASK}/${version}.tar.gz
+#        remote_file: ${project}/${FETCH_BUILD_VARIANT}/${revision}/${FETCH_BUILD_TASK}/${version}.tar.gz
+        local_file: build.tar.gz
+    - command: archive.targz_extract
+      params:
+        destination: src
+        path: build.tar.gz
+    # Move compiled extension to correct ini path
+    - command: subprocess.exec
+      type: setup
+      params:
+        working_dir: "src"
+        binary: bash
+        args:
+          - -c
+          - mv mongodb.so `${PHP_PATH}/bin/php -r "echo ini_get('extension_dir');"`
+
+  "prepare resources":
+    - command: shell.exec
+      params:
+        script: |
+          ${PREPARE_SHELL}
+          rm -rf $DRIVERS_TOOLS
+          if [ "${project}" = "drivers-tools" ]; then
+            # If this was a patch build, doing a fresh clone would not actually test the patch
+            cp -R ${PROJECT_DIRECTORY}/ $DRIVERS_TOOLS
+          else
+            git clone https://github.com/mongodb-labs/drivers-evergreen-tools.git --depth 1 $DRIVERS_TOOLS
+          fi
+          echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
+
+  "upload test results":
+    - command: attach.xunit_results
+      params:
+        # Uploading test results does not work when using ${PROJECT_DIRECTORY},
+        # so we use an absolute path to work around this
+        file: "src/test-results.xml"
+    - command: attach.results
+      params:
+        file_location: "${DRIVERS_TOOLS}/results.json"
+
+  "bootstrap mongo-orchestration":
+    - command: shell.exec
+      params:
+        script: |
+          ${PREPARE_SHELL}
+          SKIP_CRYPT_SHARED=${SKIP_CRYPT_SHARED} SKIP_LEGACY_SHELL=true MONGODB_VERSION=${MONGODB_VERSION} ORCHESTRATION_FILE=${ORCHESTRATION_FILE} TOPOLOGY=${TOPOLOGY} AUTH=${AUTH} SSL=${SSL} STORAGE_ENGINE=${STORAGE_ENGINE} LOAD_BALANCER=${LOAD_BALANCER} REQUIRE_API_VERSION=${REQUIRE_API_VERSION} sh ${DRIVERS_TOOLS}/.evergreen/run-orchestration.sh
+    # run-orchestration generates expansion file with MONGODB_URI and CRYPT_SHARED_LIB_PATH
+    - command: expansions.update
+      params:
+        file: mo-expansion.yml
+
+  "stop mongo-orchestration":
+    - command: shell.exec
+      params:
+        script: |
+          ${PREPARE_SHELL}
+          sh ${DRIVERS_TOOLS}/.evergreen/stop-orchestration.sh
+
+  "bootstrap mongohoused":
+    - command: shell.exec
+      params:
+        script: |
+          VARIANT=${VARIANT} DRIVERS_TOOLS="${DRIVERS_TOOLS}" sh ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake/build-mongohouse-local.sh
+    - command: shell.exec
+      params:
+        background: true
+        script: |
+          DRIVERS_TOOLS="${DRIVERS_TOOLS}" sh ${DRIVERS_TOOLS}/.evergreen/atlas_data_lake/run-mongohouse-local.sh
+
+  "create serverless instance":
+    - command: shell.exec
+      params:
+        working_dir: "src"
+        script: |
+          ${PREPARE_SHELL}
+          SERVERLESS_DRIVERS_GROUP=${SERVERLESS_DRIVERS_GROUP} \
+          SERVERLESS_API_PUBLIC_KEY=${SERVERLESS_API_PUBLIC_KEY} \
+          SERVERLESS_API_PRIVATE_KEY=${SERVERLESS_API_PRIVATE_KEY} \
+          bash ${DRIVERS_TOOLS}/.evergreen/serverless/create-instance.sh
+    - command: expansions.update
+      params:
+        file: src/serverless-expansion.yml
+    - command: shell.exec
+      params:
+        shell: bash
+        script: |
+          ${PREPARE_SHELL}
+
+          if [ -z "${SERVERLESS_MONGODB_VERSION}" ]; then
+            echo "expected SERVERLESS_MONGODB_VERSION to be set"
+            exit 1
+          fi
+
+          . ${DRIVERS_TOOLS}/.evergreen/find-python3.sh
+          PYTHON_BINARY="$(find_python3)" || exit 1
+
+          # Download the enterprise server download for current platform to $MONGODB_BINARIES.
+          # This is required for tests that need mongocryptd.
+          # $MONGODB_BINARIES is added to the $PATH in fetch-source.
+          ${PYTHON_BINARY} ${DRIVERS_TOOLS}/.evergreen/mongodl.py \
+              --component archive \
+              --version ${SERVERLESS_MONGODB_VERSION} \
+              --edition enterprise \
+              --out $MONGODB_BINARIES \
+              --strip-path-components 2
+
+          # Download the crypt_shared dynamic library for the current platform.
+          ${PYTHON_BINARY} ${DRIVERS_TOOLS}/.evergreen/mongodl.py \
+            --component crypt_shared \
+            --version ${SERVERLESS_MONGODB_VERSION} \
+            --edition enterprise \
+            --out . \
+            --only "**/mongo_crypt_v1.*" \
+            --strip-path-components 1
+
+          # Find the crypt_shared library file in the current directory and set the CRYPT_SHARED_LIB_PATH to
+          # the path of that file. Only look for .so, .dll, or .dylib files to prevent matching any other
+          # downloaded files.
+          CRYPT_SHARED_LIB_PATH="$(find $(pwd) -maxdepth 1 -type f \
+            -name 'mongo_crypt_v1.so' -o \
+            -name 'mongo_crypt_v1.dll' -o \
+            -name 'mongo_crypt_v1.dylib')"
+
+          echo "CRYPT_SHARED_LIB_PATH: $CRYPT_SHARED_LIB_PATH" >> crypt-expansion.yml
+
+    # Load the expansion file to make an evergreen variable with the current unique version
+    - command: expansions.update
+      params:
+        file: crypt-expansion.yml
+
+  "delete serverless instance":
+    - command: shell.exec
+      params:
+        script: |
+          # Only run if a serverless instance was started
+          if [ -n "${SERVERLESS_INSTANCE_NAME}" ]; then
+            SERVERLESS_INSTANCE_NAME=${SERVERLESS_INSTANCE_NAME} \
+            SERVERLESS_DRIVERS_GROUP=${SERVERLESS_DRIVERS_GROUP} \
+            SERVERLESS_API_PUBLIC_KEY=${SERVERLESS_API_PUBLIC_KEY} \
+            SERVERLESS_API_PRIVATE_KEY=${SERVERLESS_API_PRIVATE_KEY} \
+            bash ${DRIVERS_TOOLS}/.evergreen/serverless/delete-instance.sh
+          fi
+
+  "run tests":
+    - command: shell.exec
+      type: test
+      params:
+        working_dir: "src"
+        script: |
+          ${PREPARE_SHELL}
+          export AWS_ACCESS_KEY_ID="${client_side_encryption_aws_access_key_id}"
+          export AWS_SECRET_ACCESS_KEY="${client_side_encryption_aws_secret_access_key}"
+          export AWS_TEMP_ACCESS_KEY_ID="${client_side_encryption_aws_temp_access_key_id}"
+          export AWS_TEMP_SECRET_ACCESS_KEY="${client_side_encryption_aws_temp_secret_access_key_key}"
+          export AWS_TEMP_SESSION_TOKEN="${client_side_encryption_aws_temp_session_token}"
+          export AZURE_TENANT_ID="${client_side_encryption_azure_tenant_id}"
+          export AZURE_CLIENT_ID="${client_side_encryption_azure_client_id}"
+          export AZURE_CLIENT_SECRET="${client_side_encryption_azure_client_secret}"
+          export GCP_EMAIL="${client_side_encryption_gcp_email}"
+          export GCP_PRIVATE_KEY="${client_side_encryption_gcp_privatekey}"
+          export KMIP_ENDPOINT="${client_side_encryption_kmip_endpoint}"
+          export KMS_ENDPOINT_EXPIRED="${client_side_encryption_kms_endpoint_expired}"
+          export KMS_ENDPOINT_WRONG_HOST="${client_side_encryption_kms_endpoint_wrong_host}"
+          export KMS_ENDPOINT_REQUIRE_CLIENT_CERT="${client_side_encryption_kms_endpoint_require_client_cert}"
+          export KMS_TLS_CA_FILE="${client_side_encryption_kms_tls_ca_file}"
+          export KMS_TLS_CERTIFICATE_KEY_FILE="${client_side_encryption_kms_tls_certificate_key_file}"
+          export PATH="${PHP_PATH}/bin:$PATH"
+
+          API_VERSION=${API_VERSION} \
+          CRYPT_SHARED_LIB_PATH=${CRYPT_SHARED_LIB_PATH} \
+          MONGODB_URI="${MONGODB_URI}" \
+          MONGODB_SINGLE_MONGOS_LB_URI="${SINGLE_MONGOS_LB_URI}" \
+          MONGODB_MULTI_MONGOS_LB_URI="${MULTI_MONGOS_LB_URI}" \
+          PHP_VERSION=${PHP_VERSION} \
+          SSL=${SSL} \
+          TESTS=${TESTS} \
+          sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+
+  "run atlas data lake test":
+    - command: shell.exec
+      type: test
+      params:
+        working_dir: "src"
+        script: |
+          ${PREPARE_SHELL}
+          export PATH="${PHP_PATH}/bin:$PATH"
+          
+          MONGODB_URI="mongodb://mhuser:pencil@127.0.0.1:27017" \
+          TESTS="atlas-data-lake" \
+          sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+
+  "run serverless tests":
+    - command: shell.exec
+      type: test
+      params:
+        working_dir: "src"
+        script: |
+          ${PREPARE_SHELL}
+          export AWS_ACCESS_KEY_ID="${client_side_encryption_aws_access_key_id}"
+          export AWS_SECRET_ACCESS_KEY="${client_side_encryption_aws_secret_access_key}"
+          export AWS_TEMP_ACCESS_KEY_ID="${client_side_encryption_aws_temp_access_key_id}"
+          export AWS_TEMP_SECRET_ACCESS_KEY="${client_side_encryption_aws_temp_secret_access_key_key}"
+          export AWS_TEMP_SESSION_TOKEN="${client_side_encryption_aws_temp_session_token}"
+          export AZURE_TENANT_ID="${client_side_encryption_azure_tenant_id}"
+          export AZURE_CLIENT_ID="${client_side_encryption_azure_client_id}"
+          export AZURE_CLIENT_SECRET="${client_side_encryption_azure_client_secret}"
+          export GCP_EMAIL="${client_side_encryption_gcp_email}"
+          export GCP_PRIVATE_KEY="${client_side_encryption_gcp_privatekey}"
+          export KMIP_ENDPOINT="${client_side_encryption_kmip_endpoint}"
+          export KMS_ENDPOINT_EXPIRED="${client_side_encryption_kms_endpoint_expired}"
+          export KMS_ENDPOINT_WRONG_HOST="${client_side_encryption_kms_endpoint_wrong_host}"
+          export KMS_ENDPOINT_REQUIRE_CLIENT_CERT="${client_side_encryption_kms_endpoint_require_client_cert}"
+          export KMS_TLS_CA_FILE="${client_side_encryption_kms_tls_ca_file}"
+          export KMS_TLS_CERTIFICATE_KEY_FILE="${client_side_encryption_kms_tls_certificate_key_file}"
+          export MONGODB_IS_SERVERLESS=on
+          export MONGODB_USERNAME=${SERVERLESS_ATLAS_USER}
+          export MONGODB_PASSWORD=${SERVERLESS_ATLAS_PASSWORD}
+          export PATH="${PHP_PATH}/bin:$PATH"
+
+          CRYPT_SHARED_LIB_PATH=${CRYPT_SHARED_LIB_PATH} \
+          MONGODB_URI="${SERVERLESS_URI}" \
+          TESTS="serverless" \
+          sh ${PROJECT_DIRECTORY}/.evergreen/run-tests.sh
+
+  "cleanup":
+    - command: shell.exec
+      params:
+        script: |
+          ${PREPARE_SHELL}
+          rm -rf $DRIVERS_TOOLS || true
+
+  "fix absolute paths":
+    - command: shell.exec
+      params:
+        script: |
+          ${PREPARE_SHELL}
+          for filename in $(find ${DRIVERS_TOOLS} -name \*.json); do
+            perl -p -i -e "s|ABSOLUTE_PATH_REPLACEMENT_TOKEN|${DRIVERS_TOOLS}|g" $filename
+          done
+
+  "install dependencies":
+    - command: shell.exec
+      params:
+        working_dir: "src"
+        script: |
+          ${PREPARE_SHELL}
+          file="${PROJECT_DIRECTORY}/.evergreen/install-dependencies.sh"
+          # Don't use ${file} syntax here because evergreen treats it as an empty expansion.
+          [ -f "$file" ] && sh $file || echo "$file not available, skipping"
+
+  "install composer":
+    - command: shell.exec
+      params:
+        add_expansions_to_env: true
+        working_dir: "src"
+        script: |
+          ${PREPARE_SHELL}
+          file="${PROJECT_DIRECTORY}/.evergreen/install-composer.sh"
+          # Don't use ${file} syntax here because evergreen treats it as an empty expansion.
+          [ -f "$file" ] && DEPENDENCIES=${DEPENDENCIES} sh $file || echo "$file not available, skipping"
+
+  "start load balancer":
+    - command: shell.exec
+      params:
+        script: |
+          MONGODB_URI="${MONGODB_URI}" ${DRIVERS_TOOLS}/.evergreen/run-load-balancer.sh start
+    - command: expansions.update
+      params:
+        file: lb-expansion.yml
+
+  "stop load balancer":
+    - command: shell.exec
+      params:
+        script: |
+          # Only run if a load balancer was started
+          if [ -n "${SINGLE_MONGOS_LB_URI}" ]; then
+            ${DRIVERS_TOOLS}/.evergreen/run-load-balancer.sh stop
+          fi
+
+  "start kms servers":
+    - command: shell.exec
+      # Init venv without background:true to install dependencies
+      params:
+        shell: bash
+        script: |-
+          set -o errexit
+          cd ${DRIVERS_TOOLS}/.evergreen/csfle
+          . ./activate-kmstlsvenv.sh
+    - command: shell.exec
+      params:
+        background: true
+        shell: bash
+        # Use different ports for KMS HTTP servers to avoid conflicts with load balancers
+        script: |-
+          set -o errexit
+          cd ${DRIVERS_TOOLS}/.evergreen/csfle
+          . ./activate-kmstlsvenv.sh
+          python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/expired.pem --port 8100 &
+          python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/wrong-host.pem --port 8101 &
+          python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/server.pem --port 8102 --require_client_cert &
+          python -u kms_kmip_server.py --port 5698 &
+    - command: expansions.update
+      params:
+        updates:
+          - key: client_side_encryption_kms_tls_ca_file
+            value: ${DRIVERS_TOOLS}/.evergreen/x509gen/ca.pem
+          - key: client_side_encryption_kms_tls_certificate_key_file
+            value: ${DRIVERS_TOOLS}/.evergreen/x509gen/client.pem
+          - key: client_side_encryption_kms_endpoint_expired
+            value: 127.0.0.1:8100
+          - key: client_side_encryption_kms_endpoint_wrong_host
+            value: 127.0.0.1:8101
+          - key: client_side_encryption_kms_endpoint_require_client_cert
+            value: 127.0.0.1:8102
+          - key: client_side_encryption_kmip_endpoint
+            value: localhost:5698
+
+  "set aws temp creds":
+    - command: shell.exec
+      params:
+        shell: bash
+        script: |-
+          set -o errexit
+
+          export AWS_ACCESS_KEY_ID="${client_side_encryption_aws_access_key_id}"
+          export AWS_SECRET_ACCESS_KEY="${client_side_encryption_aws_secret_access_key}"
+          export AWS_DEFAULT_REGION="us-east-1"
+
+          pushd ${DRIVERS_TOOLS}/.evergreen/csfle
+          . ./activate-kmstlsvenv.sh
+          . ./set-temp-creds.sh
+          popd
+
+          if [ -z "$CSFLE_AWS_TEMP_ACCESS_KEY_ID" ]; then
+            echo "Failed to set AWS temporary credentials!"
+            exit 1
+          fi
+
+          cat <<EOT > aws-expansion.yml
+          client_side_encryption_aws_temp_access_key_id: "$CSFLE_AWS_TEMP_ACCESS_KEY_ID"
+          client_side_encryption_aws_temp_secret_access_key_key: "$CSFLE_AWS_TEMP_SECRET_ACCESS_KEY"
+          client_side_encryption_aws_temp_session_token: "$CSFLE_AWS_TEMP_SESSION_TOKEN"
+          EOT
+    - command: expansions.update
+      params:
+        file: aws-expansion.yml
+
+  "locate PHP binaries":
+    - command: shell.exec
+      params:
+        shell: bash
+        add_expansions_to_env: true
+        script: |
+          if [ ! -d "/opt/php" ]; then
+          echo "PHP is not available"
+          exit 1
+          fi
+
+          if [ -d "/opt/php/${PHP_VERSION}-64bit/bin" ]; then
+            export PHP_PATH="/opt/php/${PHP_VERSION}-64bit"
+          else
+          # Try to find the newest version matching our constant
+            export PHP_PATH=`find /opt/php/ -maxdepth 1 -type d -name "${PHP_VERSION}*-64bit" -print | sort -V -r | head -n 1`
+          fi
+
+          if [ ! -d "$PHP_PATH" ]; then
+            echo "Could not find PHP binaries for version ${PHP_VERSION}. Listing available versions..."
+            ls -1 /opt/php
+            exit 1
+          fi
+
+          echo "Found PHP: $PHP_PATH"
+          echo 'PHP_PATH: "'$PHP_PATH'"' > php-expansion.yml
+    - command: expansions.update
+      params:
+        file: php-expansion.yml
+
+  "compile extension":
+    - command: subprocess.exec
+      type: test
+      params:
+        working_dir: src
+        add_expansions_to_env: true
+        binary: bash
+        args:
+          - .evergreen/compile-extension.sh

@@ -1,0 +1,18 @@
+# This file is generated automatically - please edit the "templates/test/load-balanced.yml" template file instead.
+tasks:
+  - name: "test-mongodb-7.0-loadbalanced"
+    tags: ["loadbalanced", "local", "7.0"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "sharded_cluster"
+          MONGODB_VERSION: "7.0"
+          LOAD_BALANCER: "true"
+          SSL: "yes"
+      - func: "start load balancer"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          MONGODB_URI: "${SINGLE_MONGOS_LB_URI}"
+          SSL: "yes"

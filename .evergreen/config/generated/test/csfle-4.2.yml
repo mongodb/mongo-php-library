@@ -1,0 +1,42 @@
+# This file is generated automatically - please edit the "templates/test/csfle.yml" template file instead.
+tasks:
+  - name: "test-mongodb-4.2-crypt-shared"
+    tags: ["replicaset", "local", "4.2", "csfle"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "replica_set"
+          MONGODB_VERSION: "4.2"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          TESTS: "csfle"
+
+  - name: "test-mongodb-4.2-mongocryptd"
+    tags: ["replicaset", "local", "4.2", "csfle"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "replica_set"
+          SKIP_CRYPT_SHARED: "yes"
+          MONGODB_VERSION: "4.2"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          TESTS: "csfle"
+
+  - name: "test-mongodb-4.2-no-aws-creds"
+    tags: ["replicaset", "local", "4.2", "csfle"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "replica_set"
+          MONGODB_VERSION: "4.2"
+      - func: "start kms servers"
+      - func: "run tests"
+        vars:
+          client_side_encryption_aws_access_key_id: ""
+          client_side_encryption_aws_secret_access_key: ""
+          TESTS: "csfle-without-aws-creds"

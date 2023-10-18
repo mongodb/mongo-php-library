@@ -1,0 +1,116 @@
+#
+# Test variants - only run for select platforms worth testing on
+#
+buildvariants:
+  # PHP 8.2: test all topologies on all versions of MongoDB
+  - name: test-debian11-php82-local
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 11, PHP 8.2"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-8.2"
+      PHP_VERSION: "8.2"
+      VARIANT: debian11 # Referenced by ADL build script for downloading MQLRun
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-8.2"
+    tasks:
+      - ".standalone .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      - ".replicaset .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      - ".sharded .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      - ".loadbalanced .local !.csfle !.3.6 !.4.0 !.4.2 !.4.4 !.5.0"
+      - ".serverless"
+      - "test-atlas-data-lake"
+  - name: test-debian92-php82-local
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 9.2, PHP 8.2"
+    run_on: debian92-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian92"
+      FETCH_BUILD_TASK: "build-php-8.2"
+      PHP_VERSION: "8.2"
+    depends_on:
+      - variant: "build-debian92"
+        name: "build-php-8.2"
+    tasks:
+      # Remember to add new major versions here as they are released
+      - ".standalone .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
+      - ".replicaset .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
+      - ".sharded .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
+      - ".loadbalanced .local !.csfle !.6.0 !.7.0 !.rapid !.latest"
+
+  # Test remaining PHP versions with replica sets on Debian 11 with MongoDB 7.0
+  - name: test-debian11-php81-local
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 11, PHP 8.1"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-8.1"
+      PHP_VERSION: "8.1"
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-8.1"
+    tasks:
+      - ".replicaset .local .7.0 !.csfle"
+  - name: test-debian11-php80-local
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 11, PHP 8.0"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-8.0"
+      PHP_VERSION: "8.0"
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-8.0"
+    tasks:
+      - ".replicaset .local .7.0 !.csfle"
+  - name: test-debian11-php74-local
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 11, PHP 7.4"
+    run_on: debian11-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian11"
+      FETCH_BUILD_TASK: "build-php-7.4"
+      PHP_VERSION: "7.4"
+    depends_on:
+      - variant: "build-debian11"
+        name: "build-php-7.4"
+    tasks:
+      - ".replicaset .local .7.0 !.csfle"
+
+  # Test with lowest PHP, PHPC, MongoDB, and dependency versions
+  - name: test-debian92-php74-local-lowest
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: Debian 9.2, PHP 7.4, Lowest Dependencies"
+    run_on: debian92-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-debian92"
+      # TODO: Change to build-php-7.4-lowest once PHPC 1.17.0 is released
+      FETCH_BUILD_TASK: "build-php-7.4"
+      PHP_VERSION: "7.4"
+      DEPENDENCIES: "lowest"
+    depends_on:
+      - variant: "build-debian92"
+        # TODO: Change to build-php-7.4-lowest once PHPC 1.17.0 is released
+        name: "build-php-7.4"
+    tasks:
+      - ".replicaset .local .3.6 !.csfle"
+
+  # Test Atlas and CSFLE on RHEL 8
+  - name: test-rhel80-php82-atlas
+    tags: ["test", "debian", "x64"]
+    display_name: "Test: RHEL 8.0, PHP 8.2"
+    run_on: rhel80-small
+    expansions:
+      FETCH_BUILD_VARIANT: "build-rhel80"
+      FETCH_BUILD_TASK: "build-php-8.2"
+      PHP_VERSION: "8.2"
+    depends_on:
+      - variant: "build-rhel80"
+        name: "build-php-8.2"
+    tasks:
+      - "test_atlas_task_group"
+      - ".csfle"

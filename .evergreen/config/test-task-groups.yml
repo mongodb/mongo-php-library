@@ -1,0 +1,36 @@
+task_groups:
+  - name: test_atlas_task_group
+    setup_group:
+      - func: "fetch source"
+      - func: "prepare resources"
+      - func: "fix absolute paths"
+      - func: "install dependencies"
+      - func: "locate PHP binaries"
+      - func: "fetch extension"
+      - func: "install composer"
+      - command: subprocess.exec
+        params:
+          working_dir: src
+          binary: bash
+          add_expansions_to_env: true
+          env:
+            MONGODB_VERSION: '7.0'
+          args:
+            - ${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh
+      - command: expansions.update
+        params:
+          file: src/atlas-expansion.yml
+    teardown_group:
+      - command: subprocess.exec
+        params:
+          working_dir: src
+          binary: bash
+          add_expansions_to_env: true
+          args:
+            - ${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh
+      - func: "upload test results"
+      - func: "cleanup"
+    setup_group_can_fail_task: true
+    setup_group_timeout_secs: 1800
+    tasks:
+      - test-atlas

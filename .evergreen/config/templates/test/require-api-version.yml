@@ -1,0 +1,29 @@
+tasks:
+  - name: "test-requireApiVersion-%mongodbVersion%"
+    tags: ["standalone", "local", "%mongodbVersion%", "versioned_api"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "server"
+          AUTH: "auth"
+          REQUIRE_API_VERSION: "yes"
+          MONGODB_VERSION: "%mongodbVersion%"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          API_VERSION: "1"
+
+  - name: "test-acceptApiVersion2-%mongodbVersion%"
+    tags: ["standalone", "local", "%mongodbVersion%", "versioned_api"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "server"
+          ORCHESTRATION_FILE: "versioned-api-testing.json"
+          MONGODB_VERSION: "%mongodbVersion%"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          TESTS: "versioned-api"

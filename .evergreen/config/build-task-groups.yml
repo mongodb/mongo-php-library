@@ -1,0 +1,32 @@
+variables:
+  build_setup: &build_setup
+    - func: "fetch source"
+    - func: "prepare resources"
+    - func: "fix absolute paths"
+    - func: "install dependencies"
+  build_teardown: &build_teardown
+    - func: "cleanup"
+
+task_groups:
+  # Builds all versions of PHP
+  - name: "build-all-php"
+    # Keep this number in sync with the number of PHP versions to allow for parallel builds
+    max_hosts: 4
+    setup_task: *build_setup
+    setup_task_can_fail_task: true
+    setup_task_timeout_secs: 1800
+    teardown_task: *build_teardown
+    tasks:
+      - ".build"
+
+  # Builds all versions of PHP that support OpenSSL 3 (PHP 8.1+)
+  - name: "build-php-openssl3"
+    # Keep this number in sync with the number of PHP versions to allow for parallel builds
+    # Subtract 2 versions as PHP 7.4 and 8.0 are not built with OpenSSL 3
+    max_hosts: 2
+    setup_task: *build_setup
+    setup_task_can_fail_task: true
+    setup_task_timeout_secs: 1800
+    teardown_task: *build_teardown
+    tasks:
+      - ".build !.php7.4 !.php8.0"

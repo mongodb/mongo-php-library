@@ -1,0 +1,34 @@
+# This file is generated automatically - please edit the "templates/test/local.yml" template file instead.
+tasks:
+  - name: "test-mongodb-rapid-standalone-noauth-nossl"
+    tags: ["standalone", "local", "rapid"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "server"
+          MONGODB_VERSION: "rapid"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+
+  - name: "test-mongodb-rapid-replicaset-noauth-nossl"
+    tags: ["replicaset", "local", "rapid"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "replica_set"
+          MONGODB_VERSION: "rapid"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+
+  - name: "test-mongodb-rapid-sharded-noauth-nossl"
+    tags: ["sharded", "local", "rapid"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "sharded_cluster"
+          MONGODB_VERSION: "rapid"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"

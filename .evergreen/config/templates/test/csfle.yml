@@ -1,0 +1,41 @@
+tasks:
+  - name: "test-mongodb-%mongodbVersion%-crypt-shared"
+    tags: ["replicaset", "local", "%mongodbVersion%", "csfle"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "replica_set"
+          MONGODB_VERSION: "%mongodbVersion%"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          TESTS: "csfle"
+
+  - name: "test-mongodb-%mongodbVersion%-mongocryptd"
+    tags: ["replicaset", "local", "%mongodbVersion%", "csfle"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "replica_set"
+          SKIP_CRYPT_SHARED: "yes"
+          MONGODB_VERSION: "%mongodbVersion%"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+        vars:
+          TESTS: "csfle"
+
+  - name: "test-mongodb-%mongodbVersion%-no-aws-creds"
+    tags: ["replicaset", "local", "%mongodbVersion%", "csfle"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "replica_set"
+          MONGODB_VERSION: "%mongodbVersion%"
+      - func: "start kms servers"
+      - func: "run tests"
+        vars:
+          client_side_encryption_aws_access_key_id: ""
+          client_side_encryption_aws_secret_access_key: ""
+          TESTS: "csfle-without-aws-creds"

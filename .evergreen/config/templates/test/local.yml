@@ -1,0 +1,33 @@
+tasks:
+  - name: "test-mongodb-%mongodbVersion%-standalone-noauth-nossl"
+    tags: ["standalone", "local", "%mongodbVersion%"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "server"
+          MONGODB_VERSION: "%mongodbVersion%"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+
+  - name: "test-mongodb-%mongodbVersion%-replicaset-noauth-nossl"
+    tags: ["replicaset", "local", "%mongodbVersion%"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "replica_set"
+          MONGODB_VERSION: "%mongodbVersion%"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"
+
+  - name: "test-mongodb-%mongodbVersion%-sharded-noauth-nossl"
+    tags: ["sharded", "local", "%mongodbVersion%"]
+    commands:
+      - func: "bootstrap mongo-orchestration"
+        vars:
+          TOPOLOGY: "sharded_cluster"
+          MONGODB_VERSION: "%mongodbVersion%"
+      - func: "start kms servers"
+      - func: "set aws temp creds"
+      - func: "run tests"

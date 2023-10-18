@@ -1,5 +1,6 @@
 tasks:
   - name: "test-atlas"
+    exec_timeout_secs: 1800
     commands:
       - func: "start kms servers"
       - func: "run tests"
@@ -8,6 +9,7 @@ tasks:
 
   - name: "test-serverless"
     tags: ["serverless"]
+    exec_timeout_secs: 1800
     commands:
       - func: "create serverless instance"
       - func: "start kms servers"

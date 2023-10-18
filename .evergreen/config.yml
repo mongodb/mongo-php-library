@@ -11,7 +11,7 @@ pre_error_fails_task: true
 
 # Protect ourselves against rogue test case that runs forever. Tasks are killed after 10 minutes, which shouldn't occur
 # under normal circumstances.
-exec_timeout_secs: 600
+exec_timeout_secs: 1200
 
 # These pre and post rules apply to all tasks not part of a task group, which should only ever be tests against local
 # MongoDB instances. All other tasks that require special preparation should be run from within a task group

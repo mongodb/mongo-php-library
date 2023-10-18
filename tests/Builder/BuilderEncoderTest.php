@@ -12,6 +12,7 @@ use MongoDB\Builder\Pipeline;
 use MongoDB\Builder\Projection;
 use MongoDB\Builder\Query;
 use MongoDB\Builder\Stage;
+use MongoDB\Builder\Variable;
 use PHPUnit\Framework\TestCase;
 
 use function array_is_list;
@@ -252,8 +253,8 @@ class BuilderEncoderTest extends TestCase
             Stage::redact(
                 Expression::cond(
                     if: Expression::eq(Expression::fieldPath('level'), 5),
-                    then: Expression::variable('PRUNE'),
-                    else: Expression::variable('DESCEND'),
+                    then: Variable::prune(),
+                    else: Variable::descend(),
                 ),
             ),
         );

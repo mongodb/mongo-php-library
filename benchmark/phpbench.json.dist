@@ -6,6 +6,5 @@
     "runner.file_pattern": "*Bench.php",
     "runner.path": "src",
     "runner.php_config": { "memory_limit": "1G" },
-    "runner.iterations": 3,
-    "runner.revs": 10
+    "runner.iterations": 3
 }

@@ -5,12 +5,14 @@ namespace MongoDB\Benchmark\BSON;
 use MongoDB\Benchmark\Fixtures\Data;
 use MongoDB\BSON\PackedArray;
 use PhpBench\Attributes\BeforeMethods;
+use PhpBench\Attributes\Revs;
 use PhpBench\Attributes\Warmup;
 
 use function array_values;
 use function iterator_to_array;
 
 #[BeforeMethods('prepareData')]
+#[Revs(10)]
 #[Warmup(1)]
 final class PackedArrayBench
 {

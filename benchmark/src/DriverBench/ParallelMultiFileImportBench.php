@@ -16,7 +16,6 @@ use PhpBench\Attributes\BeforeClassMethods;
 use PhpBench\Attributes\BeforeMethods;
 use PhpBench\Attributes\Iterations;
 use PhpBench\Attributes\ParamProviders;
-use PhpBench\Attributes\Revs;
 use RuntimeException;
 
 use function array_chunk;
@@ -47,7 +46,6 @@ use function unlink;
 #[AfterClassMethods('afterClass')]
 #[BeforeMethods('beforeIteration')]
 #[Iterations(1)]
-#[Revs(1)]
 final class ParallelMultiFileImportBench
 {
     public static function beforeClass(): void

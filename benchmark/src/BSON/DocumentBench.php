@@ -5,6 +5,7 @@ namespace MongoDB\Benchmark\BSON;
 use MongoDB\Benchmark\Fixtures\Data;
 use MongoDB\BSON\Document;
 use PhpBench\Attributes\BeforeMethods;
+use PhpBench\Attributes\Revs;
 use PhpBench\Attributes\Warmup;
 use stdClass;
 
@@ -12,6 +13,7 @@ use function file_get_contents;
 use function iterator_to_array;
 
 #[BeforeMethods('prepareData')]
+#[Revs(10)]
 #[Warmup(1)]
 final class DocumentBench
 {

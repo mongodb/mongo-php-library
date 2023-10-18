@@ -492,9 +492,5 @@ functions:
           ${PREPARE_SHELL}
           export PATH="${PHP_PATH}/bin:$PATH"
           
-          php -i | grep memory_limit
-          
-          lscpu
-          
           php ../composer.phar install --no-suggest
-          vendor/bin/phpbench run --report=env --report=aggregate --output html
+          vendor/bin/phpbench run --report=env --report=evergreen --report=aggregate --output html

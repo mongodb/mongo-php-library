@@ -29,3 +29,6 @@ tasks:
           TOPOLOGY: "server"
           MONGODB_VERSION: "v6.0-perf"
       - func: "run benchmark"
+      - command: perf.send
+        params:
+          file: src/benchmark/.phpbench/results.json

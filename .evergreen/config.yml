@@ -9,7 +9,7 @@ command_type: system
 # Fail builds when pre tasks fail.
 pre_error_fails_task: true
 
-# Protect ourselves against rogue test case that runs forever. Tasks are killed after 10 minutes, which shouldn't occur
+# Protect ourselves against rogue test case that runs forever. Tasks are killed after 20 minutes, which shouldn't occur
 # under normal circumstances.
 exec_timeout_secs: 1200
 

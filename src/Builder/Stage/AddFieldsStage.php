@@ -27,7 +27,7 @@ class AddFieldsStage implements StageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var stdClass<ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass> ...$expression Specify the name of each field to add and set its value to an aggregation expression or an empty object. */
+    /** @var stdClass<ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass> $expression Specify the name of each field to add and set its value to an aggregation expression or an empty object. */
     public readonly stdClass $expression;
 
     /**

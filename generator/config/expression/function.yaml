@@ -11,9 +11,10 @@ arguments:
     -
         name: body
         type:
-            - string
+            - javascript
         description: |
-            The function definition. You can specify the function definition as either BSON type Code or String.
+            The function definition. You can specify the function definition as either BSON\JavaScript or string.
+            function(arg1, arg2, ...) { ... }
     -
         name: args
         type:
@@ -24,3 +25,4 @@ arguments:
         name: lang
         type:
             - string
+        default: js

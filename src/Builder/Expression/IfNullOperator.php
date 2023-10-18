@@ -26,7 +26,7 @@ class IfNullOperator implements ResolvesToAny, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass> ...$expression */
+    /** @var list<ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass> $expression */
     public readonly array $expression;
 
     /**

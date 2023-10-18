@@ -26,7 +26,7 @@ class AddOperator implements ResolvesToNumber, ResolvesToDate, OperatorInterface
 {
     public const ENCODE = Encode::Array;
 
-    /** @var list<Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int> ...$expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date. */
+    /** @var list<Decimal128|Int64|ResolvesToDate|ResolvesToNumber|UTCDateTime|float|int> $expression The arguments can be any valid expression as long as they resolve to either all numbers or to numbers and a date. */
     public readonly array $expression;
 
     /**

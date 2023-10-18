@@ -9,7 +9,7 @@
                 "name": {
                     "$comment": "The name of the operator. Must start with a $",
                     "type": "string",
-                    "pattern": "^\\$[a-z][a-zA-Z]+$"
+                    "pattern": "^\\$[a-z0-9][a-zA-Z0-9]*$"
                 },
                 "link": {
                     "$comment": "The link to the operator's documentation on MongoDB's website.",
@@ -28,6 +28,7 @@
                             "projection",
                             "stage",
                             "query",
+                            "fieldQuery",
                             "filter",
                             "window",
                             "geometry",
@@ -92,7 +93,7 @@
             "properties": {
                 "name": {
                     "type": "string",
-                    "pattern": "^([a-z][a-zA-Z0-9]*|N)$"
+                    "pattern": "^(_?[a-z][a-zA-Z0-9]*|N)$"
                 },
                 "type": {
                     "type": "array",
@@ -105,6 +106,8 @@
                             "window",
                             "expression",
                             "geometry",
+                            "projection",
+                            "fieldPath",
                             "any",
                             "resolvesToNumber", "numberFieldPath", "number",
                             "resolvesToDouble", "doubleFieldPath", "double",
@@ -120,7 +123,7 @@
                             "resolvesToJavascript", "javascriptFieldPath", "javascript",
                             "resolvesToInt", "intFieldPath", "int",
                             "resolvesToTimestamp", "timestampFieldPath", "timestamp",
-                            "resolvesTolong", "longFieldPath", "long",
+                            "resolvesToLong", "longFieldPath", "long",
                             "resolvesToDecimal", "decimalFieldPath", "decimal"
                         ]
                     }
@@ -153,6 +156,10 @@
                     "$comment": "The minimum number of arguments for a variadic parameter.",
                     "type": "integer",
                     "minimum": 0
+                },
+                "default": {
+                    "$comment": "The default value for the argument.",
+                    "type": ["string", "number", "boolean"]
                 }
             },
             "required": [

@@ -26,7 +26,7 @@ class OrOperator implements ResolvesToBool, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|non-empty-string|null|stdClass> ...$expression */
+    /** @var list<ExpressionInterface|ResolvesToBool|Type|array|bool|float|int|non-empty-string|null|stdClass> $expression */
     public readonly array $expression;
 
     /**

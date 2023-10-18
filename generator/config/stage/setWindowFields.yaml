@@ -17,7 +17,7 @@ arguments:
     -
         name: sortBy
         type:
-            - SortSpec
+            - object # SortSpec
         description: |
             Specifies the field(s) to sort the documents by in the partition. Uses the same syntax as the $sort stage. Default is no sorting.
     -
@@ -30,7 +30,7 @@ arguments:
     -
         name: window
         type:
-            - Window
+            - window
         optional: true
         description: |
             Specifies the window boundaries and parameters. Window boundaries are inclusive. Default is an unbounded window, which includes all documents in the partition.

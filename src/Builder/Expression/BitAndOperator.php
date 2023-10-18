@@ -25,7 +25,7 @@ class BitAndOperator implements ResolvesToInt, ResolvesToLong, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<Int64|ResolvesToInt|ResolvesToLong|int> ...$expression */
+    /** @var list<Int64|ResolvesToInt|ResolvesToLong|int> $expression */
     public readonly array $expression;
 
     /**

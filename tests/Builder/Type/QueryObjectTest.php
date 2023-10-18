@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Tests\Builder\Type;
 
+use Generator;
 use MongoDB\BSON\Regex;
 use MongoDB\Builder\Query\CommentOperator;
 use MongoDB\Builder\Query\EqOperator;
@@ -13,8 +14,6 @@ use MongoDB\Builder\Type\CombinedFieldQuery;
 use MongoDB\Builder\Type\QueryInterface;
 use MongoDB\Builder\Type\QueryObject;
 use PHPUnit\Framework\TestCase;
-
-use function array_keys;
 
 class QueryObjectTest extends TestCase
 {
@@ -45,22 +44,20 @@ class QueryObjectTest extends TestCase
         $this->assertCount($expectedCount, $queryObject->queries);
     }
 
-    public function provideQueryObjectValue(): array
+    public function provideQueryObjectValue(): Generator
     {
-        return [
-            'int' => [['foo' => 1]],
-            'float' => [['foo' => 1.1]],
-            'string' => [['foo' => 'bar']],
-            'bool' => [['foo' => true]],
-            'null' => [['foo' => null]],
-            'regex' => [['foo' => new Regex('foo')]],
-            'object' => [['foo' => (object) ['bar' => 'baz']]],
-            'list' => [['foo' => ['bar', 'baz']]],
-            'operator as array' => [['foo' => ['$eq' => 1]]],
-            'operator as object' => [['foo' => (object) ['$eq' => 1]]],
-            'field query operator' => [['foo' => new EqOperator(1)]],
-            'query operator' => [[new CommentOperator('foo'), 'foo' => 1], 2],
-        ];
+        yield 'int' => [['foo' => 1]];
+        yield 'float' => [['foo' => 1.1]];
+        yield 'string' => [['foo' => 'bar']];
+        yield 'bool' => [['foo' => true]];
+        yield 'null' => [['foo' => null]];
+        yield 'regex' => [['foo' => new Regex('foo')]];
+        yield 'object' => [['foo' => (object) ['bar' => 'baz']]];
+        yield 'list' => [['foo' => ['bar', 'baz']]];
+        yield 'operator as array' => [['foo' => ['$eq' => 1]]];
+        yield 'operator as object' => [['foo' => (object) ['$eq' => 1]]];
+        yield 'field query operator' => [['foo' => new EqOperator(1)]];
+        yield 'query operator' => [[new CommentOperator('foo'), 'foo' => 1], 2];
     }
 
     public function testFieldQueryList(): void

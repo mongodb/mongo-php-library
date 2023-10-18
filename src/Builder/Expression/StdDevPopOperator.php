@@ -27,7 +27,7 @@ class StdDevPopOperator implements ResolvesToDouble, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<Decimal128|Int64|ResolvesToNumber|float|int> ...$expression */
+    /** @var list<Decimal128|Int64|ResolvesToNumber|float|int> $expression */
     public readonly array $expression;
 
     /**

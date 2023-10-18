@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Expression;
 
+use MongoDB\BSON\Javascript;
 use MongoDB\BSON\PackedArray;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
@@ -27,8 +28,11 @@ class FunctionOperator implements ResolvesToAny, OperatorInterface
 {
     public const ENCODE = Encode::Object;
 
-    /** @var non-empty-string $body The function definition. You can specify the function definition as either BSON type Code or String. */
-    public readonly string $body;
+    /**
+     * @var Javascript|non-empty-string $body The function definition. You can specify the function definition as either BSON\JavaScript or string.
+     * function(arg1, arg2, ...) { ... }
+     */
+    public readonly Javascript|string $body;
 
     /** @var BSONArray|PackedArray|array $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ]. */
     public readonly PackedArray|BSONArray|array $args;
@@ -37,11 +41,12 @@ class FunctionOperator implements ResolvesToAny, OperatorInterface
     public readonly string $lang;
 
     /**
-     * @param non-empty-string $body The function definition. You can specify the function definition as either BSON type Code or String.
+     * @param Javascript|non-empty-string $body The function definition. You can specify the function definition as either BSON\JavaScript or string.
+     * function(arg1, arg2, ...) { ... }
      * @param BSONArray|PackedArray|array $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
      * @param non-empty-string $lang
      */
-    public function __construct(string $body, PackedArray|BSONArray|array $args, string $lang)
+    public function __construct(Javascript|string $body, PackedArray|BSONArray|array $args, string $lang = 'js')
     {
         $this->body = $body;
         if (is_array($args) && ! array_is_list($args)) {

@@ -26,7 +26,7 @@ class MultiplyOperator implements ResolvesToDecimal, OperatorInterface
     public const ENCODE = Encode::Single;
 
     /**
-     * @var list<Decimal128|Int64|ResolvesToNumber|float|int> ...$expression The arguments can be any valid expression as long as they resolve to numbers.
+     * @var list<Decimal128|Int64|ResolvesToNumber|float|int> $expression The arguments can be any valid expression as long as they resolve to numbers.
      * Starting in MongoDB 6.1 you can optimize the $multiply operation. To improve performance, group references at the end of the argument list.
      */
     public readonly array $expression;

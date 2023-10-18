@@ -25,7 +25,7 @@ class SetUnionOperator implements ResolvesToArray, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<BSONArray|PackedArray|ResolvesToArray|array> ...$expression */
+    /** @var list<BSONArray|PackedArray|ResolvesToArray|array> $expression */
     public readonly array $expression;
 
     /**

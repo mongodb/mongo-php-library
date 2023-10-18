@@ -17,14 +17,14 @@ arguments:
     -
         name: fullDocument
         type:
-            - FullDocument
+            - string # FullDocument
         optional: true
         description: |
             Specifies whether change notifications include a copy of the full document when modified by update operations.
     -
         name: fullDocumentBeforeChange
         type:
-            - FullDocumentBeforeChange
+            - string # FullDocumentBeforeChange
         optional: true
         description: |
             Valid values are "off", "whenAvailable", or "required". If set to "off", the "fullDocumentBeforeChange" field of the output document is always omitted. If set to "whenAvailable", the "fullDocumentBeforeChange" field will be populated with the pre-image of the document modified by the current change event if such a pre-image is available, and will be omitted otherwise. If set to "required", then the "fullDocumentBeforeChange" field is always populated and an exception is thrown if the pre-image is not              available.

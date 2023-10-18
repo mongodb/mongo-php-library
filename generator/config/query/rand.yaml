@@ -2,7 +2,7 @@
 name: $rand
 link: 'https://www.mongodb.com/docs/manual/reference/operator/query/rand/'
 type:
-    - expression
+    - resolvesToDouble
 encode: object
 description: |
     Generates a random float between 0 and 1.

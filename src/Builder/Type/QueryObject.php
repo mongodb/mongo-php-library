@@ -6,7 +6,6 @@ namespace MongoDB\Builder\Type;
 
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Regex;
-use MongoDB\BSON\Serializable;
 use MongoDB\Exception\InvalidArgumentException;
 use stdClass;
 
@@ -18,7 +17,8 @@ use function sprintf;
 /**
  * Helper class to validate query objects.
  *
- * Queries are a mix of query operators ($or, $and, $nor...) and field query operators ($eq, $gt, $in...) associated to a field path.
+ * Queries are a mix of query operators ($or, $and, $nor, $jsonSchema...) and field query operators ($eq, $gt, $in...)
+ * associated to a field path.
  */
 final class QueryObject implements QueryInterface
 {
@@ -34,11 +34,12 @@ final class QueryObject implements QueryInterface
         return new self($queries);
     }
 
-    private function __construct(
-        Serializable|array|stdClass $queriesOrArrayOfQueries,
-    ) {
+    /** @param array<object|array> $queriesOrArrayOfQueries */
+    private function __construct(array $queriesOrArrayOfQueries)
+    {
         $seenQueryOperators = [];
         $queries = [];
+
         foreach ($queriesOrArrayOfQueries as $fieldPath => $query) {
             if ($query instanceof QueryInterface) {
                 if ($query instanceof OperatorInterface) {
@@ -53,7 +54,7 @@ final class QueryObject implements QueryInterface
                 continue;
             }
 
-            // Convert list of filters into $and
+            // Convert list of filters into CombinedFieldQuery
             if (self::isListOfFilters($query)) {
                 if (count($query) === 1) {
                     $query = $query[0];
@@ -62,19 +63,20 @@ final class QueryObject implements QueryInterface
                 }
             }
 
-            // Numbers are valid field paths, nothing to validate.
             $queries[$fieldPath] = $query;
         }
 
         $this->queries = $queries;
     }
 
+    /** @psalm-assert-if-true list<mixed> $values */
     private static function isListOfFilters(mixed $values): bool
     {
         if (! is_array($values) || ! array_is_list($values)) {
             return false;
         }
 
+        /** @var mixed $value */
         foreach ($values as $value) {
             if ($value instanceof FieldQueryInterface) {
                 return true;

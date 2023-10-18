@@ -18,13 +18,15 @@ final class ArgumentDefinition
 
     public function __construct(
         public string $name,
-        /** @psalm-assert list<string> $type */
+        /** @var list<string> */
         public array $type,
         public string|null $description = null,
         public bool $optional = false,
         string|null $variadic = null,
         int|null $variadicMin = null,
+        public mixed $default = null,
     ) {
+        assert($this->optional === false || $this->default === null, 'Optional arguments cannot have a default value');
         if (is_array($type)) {
             assert(array_is_list($type), 'Type must be a list or a single string');
             foreach ($type as $t) {

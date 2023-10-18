@@ -10,4 +10,4 @@ arguments:
     -
         name: sort
         type:
-            - SortSpec
+            - object # SortSpec

@@ -25,7 +25,7 @@ class AllElementsTrueOperator implements ResolvesToBool, OperatorInterface
 {
     public const ENCODE = Encode::Array;
 
-    /** @var list<BSONArray|PackedArray|ResolvesToArray|array> ...$expression */
+    /** @var list<BSONArray|PackedArray|ResolvesToArray|array> $expression */
     public readonly array $expression;
 
     /**

@@ -23,7 +23,7 @@ class ConcatOperator implements ResolvesToString, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<ResolvesToString|non-empty-string> ...$expression */
+    /** @var list<ResolvesToString|non-empty-string> $expression */
     public readonly array $expression;
 
     /**

@@ -24,6 +24,9 @@
     <!-- Import rules from doctrine/coding-standard -->
     <!-- ****************************************** -->
     <rule ref="Doctrine">
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix"/>
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming.SuperfluousPrefix"/>
+
         <!-- **************************************** -->
         <!-- Exclude sniffs that force unwanted style -->
         <!-- **************************************** -->

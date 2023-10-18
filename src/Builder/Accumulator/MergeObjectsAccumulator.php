@@ -28,7 +28,7 @@ class MergeObjectsAccumulator implements AccumulatorInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<Document|ResolvesToObject|Serializable|array|stdClass> ...$document Any valid expression that resolves to a document. */
+    /** @var list<Document|ResolvesToObject|Serializable|array|stdClass> $document Any valid expression that resolves to a document. */
     public readonly array $document;
 
     /**

@@ -25,7 +25,7 @@ class ConcatArraysOperator implements ResolvesToArray, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<BSONArray|PackedArray|ResolvesToArray|array> ...$array */
+    /** @var list<BSONArray|PackedArray|ResolvesToArray|array> $array */
     public readonly array $array;
 
     /**

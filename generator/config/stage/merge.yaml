@@ -40,7 +40,7 @@ arguments:
     -
         name: whenNotMatched
         type:
-            - WhenNotMatched
+            - string # WhenNotMatched
         optional: true
         description: |
             The behavior of $merge if a result document does not match an existing document in the out collection.

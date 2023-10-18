@@ -28,7 +28,7 @@ class AndOperator implements ResolvesToBool, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|Type|array|bool|float|int|non-empty-string|null|stdClass> ...$expression */
+    /** @var list<Decimal128|ExpressionInterface|Int64|ResolvesToBool|ResolvesToNull|ResolvesToNumber|ResolvesToString|Type|array|bool|float|int|non-empty-string|null|stdClass> $expression */
     public readonly array $expression;
 
     /**

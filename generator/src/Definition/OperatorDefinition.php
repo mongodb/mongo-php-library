@@ -23,6 +23,7 @@ final class OperatorDefinition
         public string $name,
         public string $link,
         string $encode,
+        /** @var list<string> */
         public array $type,
         public string|null $description = null,
         array $arguments = [],

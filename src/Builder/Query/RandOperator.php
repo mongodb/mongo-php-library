@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Query;
 
+use MongoDB\Builder\Expression\ResolvesToDouble;
 use MongoDB\Builder\Type\Encode;
-use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\OperatorInterface;
 
 /**
@@ -17,7 +17,7 @@ use MongoDB\Builder\Type\OperatorInterface;
  *
  * @see https://www.mongodb.com/docs/manual/reference/operator/query/rand/
  */
-class RandOperator implements ExpressionInterface, OperatorInterface
+class RandOperator implements ResolvesToDouble, OperatorInterface
 {
     public const ENCODE = Encode::Object;
 

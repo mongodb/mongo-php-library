@@ -13,7 +13,7 @@ use function usort;
 
 final class ExpressionFactoryGenerator extends AbstractGenerator
 {
-    /** @param array<class-string, ExpressionDefinition> $definitions */
+    /** @param array<string, ExpressionDefinition> $expressions */
     public function generate(array $expressions): void
     {
         $this->writeFile($this->createFactoryClass($expressions));

@@ -29,7 +29,7 @@ class ProjectStage implements StageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var stdClass<Document|ProjectionInterface|ResolvesToBool|Serializable|array|bool|int|stdClass> ...$specification */
+    /** @var stdClass<Document|ProjectionInterface|ResolvesToBool|Serializable|array|bool|int|stdClass> $specification */
     public readonly stdClass $specification;
 
     /**

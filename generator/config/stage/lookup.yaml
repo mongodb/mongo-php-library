@@ -44,7 +44,7 @@ arguments:
         optional: true
         description: |
             Specifies the pipeline to run on the joined collection. The pipeline determines the resulting documents from the joined collection. To return all documents, specify an empty pipeline [].
-            The pipeline cannot include the $out stage or the $mergestage. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.
+            The pipeline cannot include the $out stage or the $merge stage. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.
             The pipeline cannot directly access the joined document fields. Instead, define variables for the joined document fields using the let option and then reference the variables in the pipeline stages.
     -
         name: as

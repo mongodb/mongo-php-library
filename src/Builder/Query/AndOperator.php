@@ -27,7 +27,7 @@ class AndOperator implements QueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var list<Document|QueryInterface|Serializable|array|stdClass> ...$expression */
+    /** @var list<Document|QueryInterface|Serializable|array|stdClass> $expression */
     public readonly array $expression;
 
     /**

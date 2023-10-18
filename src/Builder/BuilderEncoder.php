@@ -244,7 +244,7 @@ class BuilderEncoder implements Encoder
         // Transform the result into an stdClass if a document is provided
         if (! $outputWindow->operator instanceof WindowInterface && (is_array($result) || is_object($result))) {
             if (! is_first_key_operator($result)) {
-                throw new LogicException(sprintf('Expected OutputWindow::$operator to be an operator. Got "%s"', array_key_first($result)));
+                throw new LogicException(sprintf('Expected OutputWindow::$operator to be an operator. Got "%s"', array_key_first((array) $result)));
             }
 
             $result = (object) $result;

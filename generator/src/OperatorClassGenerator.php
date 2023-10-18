@@ -86,7 +86,7 @@ class OperatorClassGenerator extends OperatorGenerator
 
                 if ($argument->variadic === VariadicType::Array) {
                     $property->setType('array');
-                    $property->addComment('@var list<' . $type->doc . '> ...$' . $argument->name . rtrim(' ' . $argument->description));
+                    $property->addComment('@var list<' . $type->doc . '> $' . $argument->name . rtrim(' ' . $argument->description));
                     // Warn that named arguments are not supported
                     // @see https://psalm.dev/docs/running_psalm/issues/NamedArgumentNotAllowed/
                     $constuctor->addComment('@no-named-arguments');
@@ -100,7 +100,7 @@ class OperatorClassGenerator extends OperatorGenerator
                 } elseif ($argument->variadic === VariadicType::Object) {
                     $namespace->addUse(stdClass::class);
                     $property->setType(stdClass::class);
-                    $property->addComment('@var stdClass<' . $type->doc . '> ...$' . $argument->name . rtrim(' ' . $argument->description));
+                    $property->addComment('@var stdClass<' . $type->doc . '> $' . $argument->name . rtrim(' ' . $argument->description));
                     $namespace->addUseFunction('is_string');
                     $namespace->addUse(InvalidArgumentException::class);
                     $constuctor->addBody(<<<PHP
@@ -121,6 +121,8 @@ class OperatorClassGenerator extends OperatorGenerator
                 if ($argument->optional) {
                     // We use a special Optional::Undefined type to differentiate between null and undefined
                     $constuctorParam->setDefaultValue(new Literal('Optional::Undefined'));
+                } elseif ($argument->default !== null) {
+                    $constuctorParam->setDefaultValue($argument->default);
                 }
 
                 // List type must be validated with array_is_list()
@@ -162,6 +164,8 @@ class OperatorClassGenerator extends OperatorGenerator
 
     /**
      * Operator classes interfaces are defined by their return type as a MongoDB expression.
+     *
+     * @return list<class-string>
      */
     private function getInterfaces(OperatorDefinition $definition): array
     {

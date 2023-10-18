@@ -93,6 +93,9 @@ class BuilderEncoderTest extends TestCase
     /**
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/#examples
      *
+     * @param list<int>          $limit
+     * @param array<string, int> $expectedLimit
+     *
      * @dataProvider provideExpressionFilterLimit
      */
     public function testExpressionFilter(array $limit, array $expectedLimit): void
@@ -100,10 +103,10 @@ class BuilderEncoderTest extends TestCase
         $pipeline = new Pipeline(
             Stage::project(
                 items: Projection::filter(
-                    Expression::arrayFieldPath('items'),
-                    Expression::gte(Expression::variable('item.price'), 100),
-                    'item',
                     ...$limit,
+                    input: Expression::arrayFieldPath('items'),
+                    cond: Expression::gte(Expression::variable('item.price'), 100),
+                    as:'item',
                 ),
             ),
         );
@@ -133,7 +136,7 @@ class BuilderEncoderTest extends TestCase
         ];
 
         yield 'int limit' => [
-            [1],
+            ['limit' => 1],
             ['limit' => 1],
         ];
     }
@@ -276,6 +279,7 @@ class BuilderEncoderTest extends TestCase
         $this->assertSamePipeline($expected, $pipeline);
     }
 
+    /** @param list<array<string, mixed>> $expected */
     private static function assertSamePipeline(array $expected, Pipeline $pipeline): void
     {
         $codec = new BuilderEncoder();
@@ -288,6 +292,8 @@ class BuilderEncoderTest extends TestCase
 
     /**
      * Recursively convert associative arrays to objects.
+     *
+     * @param array<mixed> $array
      */
     private static function objectify(array &$array): void
     {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder;
 
-use MongoDB\BSON\Document;
 use MongoDB\BSON\Serializable;
 use MongoDB\Builder\Stage\MatchStage;
 use MongoDB\Builder\Type\FieldQueryInterface;
@@ -22,7 +21,7 @@ enum Stage
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/
      *
-     * @param Document|FieldQueryInterface|QueryInterface|Serializable|array|stdClass|null $queries
+     * @param FieldQueryInterface|QueryInterface|Serializable|array<mixed>|bool|float|int|stdClass|string|null ...$queries The query predicates to match
      */
     public static function match(FieldQueryInterface|QueryInterface|Serializable|array|bool|float|int|stdClass|string|null ...$queries): MatchStage
     {

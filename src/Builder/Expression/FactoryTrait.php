@@ -12,6 +12,7 @@ use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
+use MongoDB\BSON\Javascript;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Regex;
@@ -287,7 +288,7 @@ trait FactoryTrait
     }
 
     /**
-     * Returns the size in bytes of a given document (i.e. bsontype Object) when encoded as BSON.
+     * Returns the size in bytes of a given document (i.e. BSON type Object) when encoded as BSON.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bsonSize/
      * @param Document|ResolvesToNull|ResolvesToObject|Serializable|array|null|stdClass $object
@@ -724,11 +725,16 @@ trait FactoryTrait
      * New in MongoDB 4.4.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/function/
-     * @param non-empty-string $body The function definition. You can specify the function definition as either BSON type Code or String.
+     * @param Javascript|non-empty-string $body The function definition. You can specify the function definition as either BSON\JavaScript or string.
+     * function(arg1, arg2, ...) { ... }
      * @param BSONArray|PackedArray|array $args Arguments passed to the function body. If the body function does not take an argument, you can specify an empty array [ ].
      * @param non-empty-string $lang
      */
-    public static function function(string $body, PackedArray|BSONArray|array $args, string $lang): FunctionOperator
+    public static function function(
+        Javascript|string $body,
+        PackedArray|BSONArray|array $args,
+        string $lang,
+    ): FunctionOperator
     {
         return new FunctionOperator($body, $args, $lang);
     }

@@ -12,6 +12,7 @@ use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\Document;
 use MongoDB\BSON\Int64;
+use MongoDB\BSON\Javascript;
 use MongoDB\BSON\PackedArray;
 use MongoDB\BSON\Regex;
 use MongoDB\BSON\Serializable;
@@ -330,7 +331,7 @@ trait FactoryTrait
     /**
      * A special hint that can be provided via the sort() or hint() methods that can be used to force either a forward or reverse collection scan.
      *
-     * @see https://www.mongodb.com/docs/v7.0/reference/operator/meta/natural/
+     * @see https://www.mongodb.com/docs/manual/reference/operator/meta/natural/
      */
     public static function natural(): NaturalOperator
     {
@@ -505,9 +506,9 @@ trait FactoryTrait
      * Matches documents that satisfy a JavaScript expression.
      *
      * @see https://www.mongodb.com/docs/manual/reference/operator/query/where/
-     * @param non-empty-string $function
+     * @param Javascript|non-empty-string $function
      */
-    public static function where(string $function): WhereOperator
+    public static function where(Javascript|string $function): WhereOperator
     {
         return new WhereOperator($function);
     }

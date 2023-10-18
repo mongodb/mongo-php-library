@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace MongoDB\Builder\Query;
 
+use MongoDB\BSON\Javascript;
 use MongoDB\Builder\Type\Encode;
 use MongoDB\Builder\Type\OperatorInterface;
 use MongoDB\Builder\Type\QueryInterface;
@@ -21,13 +22,13 @@ class WhereOperator implements QueryInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var non-empty-string $function */
-    public readonly string $function;
+    /** @var Javascript|non-empty-string $function */
+    public readonly Javascript|string $function;
 
     /**
-     * @param non-empty-string $function
+     * @param Javascript|non-empty-string $function
      */
-    public function __construct(string $function)
+    public function __construct(Javascript|string $function)
     {
         $this->function = $function;
     }

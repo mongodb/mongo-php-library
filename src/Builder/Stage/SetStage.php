@@ -28,7 +28,7 @@ class SetStage implements StageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var stdClass<ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass> ...$field */
+    /** @var stdClass<ExpressionInterface|Type|array|bool|float|int|non-empty-string|null|stdClass> $field */
     public readonly stdClass $field;
 
     /**

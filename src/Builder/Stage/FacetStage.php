@@ -28,7 +28,7 @@ class FacetStage implements StageInterface, OperatorInterface
 {
     public const ENCODE = Encode::Single;
 
-    /** @var stdClass<BSONArray|PackedArray|Pipeline|array> ...$facet */
+    /** @var stdClass<BSONArray|PackedArray|Pipeline|array> $facet */
     public readonly stdClass $facet;
 
     /**

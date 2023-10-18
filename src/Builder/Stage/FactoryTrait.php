@@ -26,6 +26,7 @@ use MongoDB\Builder\Type\ExpressionInterface;
 use MongoDB\Builder\Type\Optional;
 use MongoDB\Builder\Type\ProjectionInterface;
 use MongoDB\Builder\Type\QueryInterface;
+use MongoDB\Builder\Type\WindowInterface;
 use MongoDB\Model\BSONArray;
 use stdClass;
 
@@ -402,7 +403,7 @@ trait FactoryTrait
      * @param Optional|non-empty-string $foreignField Specifies the field from the documents in the from collection. $lookup performs an equality match on the foreignField to the localField from the input documents. If a document in the from collection does not contain the foreignField, the $lookup treats the value as null for matching purposes.
      * @param Optional|Document|Serializable|array|stdClass $let Specifies variables to use in the pipeline stages. Use the variable expressions to access the fields from the joined collection's documents that are input to the pipeline.
      * @param Optional|BSONArray|PackedArray|Pipeline|array $pipeline Specifies the pipeline to run on the joined collection. The pipeline determines the resulting documents from the joined collection. To return all documents, specify an empty pipeline [].
-     * The pipeline cannot include the $out stage or the $mergestage. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.
+     * The pipeline cannot include the $out stage or the $merge stage. Starting in v6.0, the pipeline can contain the Atlas Search $search stage as the first stage inside the pipeline.
      * The pipeline cannot directly access the joined document fields. Instead, define variables for the joined document fields using the let option and then reference the variables in the pipeline stages.
      */
     public static function lookup(
@@ -586,13 +587,13 @@ trait FactoryTrait
      * @param Document|Serializable|array|stdClass $sortBy Specifies the field(s) to sort the documents by in the partition. Uses the same syntax as the $sort stage. Default is no sorting.
      * @param Document|Serializable|array|stdClass $output Specifies the field(s) to append to the documents in the output returned by the $setWindowFields stage. Each field is set to the result returned by the window operator.
      * A field can contain dots to specify embedded document fields and array fields. The semantics for the embedded document dotted notation in the $setWindowFields stage are the same as the $addFields and $set stages.
-     * @param Optional|Document|Serializable|array|stdClass $window Specifies the window boundaries and parameters. Window boundaries are inclusive. Default is an unbounded window, which includes all documents in the partition.
+     * @param Optional|Document|Serializable|WindowInterface|array|stdClass $window Specifies the window boundaries and parameters. Window boundaries are inclusive. Default is an unbounded window, which includes all documents in the partition.
      */
     public static function setWindowFields(
         Type|ExpressionInterface|stdClass|array|bool|float|int|null|string $partitionBy,
         Document|Serializable|stdClass|array $sortBy,
         Document|Serializable|stdClass|array $output,
-        Optional|Document|Serializable|stdClass|array $window = Optional::Undefined,
+        Optional|Document|Serializable|WindowInterface|stdClass|array $window = Optional::Undefined,
     ): SetWindowFieldsStage
     {
         return new SetWindowFieldsStage($partitionBy, $sortBy, $output, $window);

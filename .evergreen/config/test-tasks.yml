@@ -22,7 +22,7 @@ tasks:
       - func: "run atlas data lake test"
 
   - name: "run-benchmark"
-    exec_timeout_secs: 7200
+    exec_timeout_secs: 3600
     commands:
       - func: "bootstrap mongo-orchestration"
         vars:

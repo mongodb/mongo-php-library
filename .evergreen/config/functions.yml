@@ -483,6 +483,7 @@ functions:
         args:
           - .evergreen/compile-extension.sh
 
+  # Run benchmarks. The filter skips the benchAmpWorkers subjects as they fail due to socket exceptions
   "run benchmark":
     - command: shell.exec
       type: test
@@ -493,4 +494,4 @@ functions:
           export PATH="${PHP_PATH}/bin:$PATH"
           
           php ../composer.phar install --no-suggest
-          vendor/bin/phpbench run --report=env --report=evergreen --report=aggregate --output html
+          vendor/bin/phpbench run --report=env --report=evergreen --report=aggregate --output html --filter='bench(?!AmpWorkers)'

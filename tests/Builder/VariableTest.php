@@ -7,10 +7,26 @@ namespace MongoDB\Tests\Builder;
 use Generator;
 use MongoDB\Builder\Expression;
 use MongoDB\Builder\Variable;
+use MongoDB\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class VariableTest extends TestCase
 {
+    public function testVariable(): void
+    {
+        $variable = Variable::variable('foo');
+        $this->assertSame('foo', $variable->name);
+        $this->assertInstanceOf(Expression\ResolvesToAny::class, $variable);
+        $this->assertInstanceOf(Expression\Variable::class, $variable);
+    }
+
+    public function testVariableRejectDollarPrefix(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new Expression\Variable('$$foo');
+    }
+
     /** @dataProvider provideVariableBuilders */
     public function testSystemVariables($factory): void
     {

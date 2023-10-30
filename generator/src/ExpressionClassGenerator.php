@@ -7,6 +7,7 @@ namespace MongoDB\CodeGenerator;
 use LogicException;
 use MongoDB\CodeGenerator\Definition\ExpressionDefinition;
 use MongoDB\CodeGenerator\Definition\PhpObject;
+use MongoDB\Exception\InvalidArgumentException;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\Type;
 use RuntimeException;
@@ -64,6 +65,17 @@ class ExpressionClassGenerator extends AbstractGenerator
 
             $constructor = $class->addMethod('__construct');
             $constructor->addParameter('name')->setType($propertyType);
+
+            $namespace->addUse(InvalidArgumentException::class);
+            $namespace->addUseFunction('sprintf');
+            $namespace->addUseFunction('str_starts_with');
+            $constructor->addBody(<<<PHP
+            if (str_starts_with(\$name, '$')) {
+                throw new InvalidArgumentException(sprintf('Name cannot start with a dollar sign: "%s"', \$name));
+            }
+
+            PHP);
+
             $constructor->addBody('$this->name = $name;');
         } elseif ($definition->generate === PhpObject::PhpInterface) {
             $interface = $namespace->addInterface($className);

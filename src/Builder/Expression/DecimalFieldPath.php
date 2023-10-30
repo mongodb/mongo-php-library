@@ -9,6 +9,10 @@ declare(strict_types=1);
 namespace MongoDB\Builder\Expression;
 
 use MongoDB\Builder\Type\FieldPathInterface;
+use MongoDB\Exception\InvalidArgumentException;
+
+use function sprintf;
+use function str_starts_with;
 
 class DecimalFieldPath implements FieldPathInterface, ResolvesToDecimal
 {
@@ -16,6 +20,10 @@ class DecimalFieldPath implements FieldPathInterface, ResolvesToDecimal
 
     public function __construct(string $name)
     {
+        if (str_starts_with($name, '$')) {
+            throw new InvalidArgumentException(sprintf('Name cannot start with a dollar sign: "%s"', $name));
+        }
+
         $this->name = $name;
     }
 }
